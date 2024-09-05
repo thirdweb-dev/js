@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isProposalIndexSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isProposalIndexSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isProposalIndexSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeProposalIndexResult } from "thirdweb/extensions/vote";
- * const result = decodeProposalIndexResult("...");
+ * const result = decodeProposalIndexResultResult("...");
  * ```
  */
 export function decodeProposalIndexResult(result: Hex) {

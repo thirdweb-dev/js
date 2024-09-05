@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIdRegistrySupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isIdRegistrySupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isIdRegistrySupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeIdRegistryResult } from "thirdweb/extensions/farcaster";
- * const result = decodeIdRegistryResult("...");
+ * const result = decodeIdRegistryResultResult("...");
  * ```
  */
 export function decodeIdRegistryResult(result: Hex) {

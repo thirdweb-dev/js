@@ -39,7 +39,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isHasRoleSupported } from "thirdweb/extensions/permissions";
- *
  * const supported = isHasRoleSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isHasRoleSupported(availableSelectors: string[]) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeHasRoleParams } "thirdweb/extensions/permissions";
+ * import { encodeHasRoleParams } from "thirdweb/extensions/permissions";
  * const result = encodeHasRoleParams({
  *  role: ...,
  *  account: ...,
@@ -75,7 +74,7 @@ export function encodeHasRoleParams(options: HasRoleParams) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeHasRole } "thirdweb/extensions/permissions";
+ * import { encodeHasRole } from "thirdweb/extensions/permissions";
  * const result = encodeHasRole({
  *  role: ...,
  *  account: ...,
@@ -97,7 +96,7 @@ export function encodeHasRole(options: HasRoleParams) {
  * @example
  * ```ts
  * import { decodeHasRoleResult } from "thirdweb/extensions/permissions";
- * const result = decodeHasRoleResult("...");
+ * const result = decodeHasRoleResultResult("...");
  * ```
  */
 export function decodeHasRoleResult(result: Hex) {

@@ -77,7 +77,7 @@ export function isSetSharedMetadataSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeSetSharedMetadataParams } "thirdweb/extensions/erc721";
+ * import { encodeSetSharedMetadataParams } from "thirdweb/extensions/erc721";
  * const result = encodeSetSharedMetadataParams({
  *  metadata: ...,
  * });
@@ -96,7 +96,7 @@ export function encodeSetSharedMetadataParams(
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeSetSharedMetadata } "thirdweb/extensions/erc721";
+ * import { encodeSetSharedMetadata } from "thirdweb/extensions/erc721";
  * const result = encodeSetSharedMetadata({
  *  metadata: ...,
  * });
@@ -118,6 +118,7 @@ export function encodeSetSharedMetadata(options: SetSharedMetadataParams) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setSharedMetadata } from "thirdweb/extensions/erc721";
  *
  * const transaction = setSharedMetadata({
@@ -129,8 +130,7 @@ export function encodeSetSharedMetadata(options: SetSharedMetadataParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setSharedMetadata(

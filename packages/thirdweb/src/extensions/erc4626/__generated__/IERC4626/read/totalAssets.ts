@@ -22,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTotalAssetsSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isTotalAssetsSupported(["0x..."]);
  * ```
  */
@@ -41,7 +40,7 @@ export function isTotalAssetsSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeTotalAssetsResult } from "thirdweb/extensions/erc4626";
- * const result = decodeTotalAssetsResult("...");
+ * const result = decodeTotalAssetsResultResult("...");
  * ```
  */
 export function decodeTotalAssetsResult(result: Hex) {

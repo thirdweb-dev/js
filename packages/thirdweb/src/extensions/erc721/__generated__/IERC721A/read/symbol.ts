@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isSymbolSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isSymbolSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isSymbolSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeSymbolResult } from "thirdweb/extensions/erc721";
- * const result = decodeSymbolResult("...");
+ * const result = decodeSymbolResultResult("...");
  * ```
  */
 export function decodeSymbolResult(result: Hex) {

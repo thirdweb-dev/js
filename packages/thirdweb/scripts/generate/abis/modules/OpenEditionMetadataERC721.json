@@ -1,0 +1,7 @@
+[
+  "function encodeBytesOnInstall() pure returns (bytes)",
+  "function onTokenURI(uint256 _id) view returns (string)",
+  "function setSharedMetadata((string name, string description, string imageURI, string animationURI) _metadata)",
+  "event BatchMetadataUpdate(uint256 _fromTokenId, uint256 _toTokenId)",
+  "event SharedMetadataUpdated(string name, string description, string imageURI, string animationURI)"
+]

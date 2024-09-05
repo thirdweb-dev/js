@@ -55,7 +55,7 @@ export function isSetTokenURISupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeSetTokenURIParams } "thirdweb/extensions/erc721";
+ * import { encodeSetTokenURIParams } from "thirdweb/extensions/erc721";
  * const result = encodeSetTokenURIParams({
  *  tokenId: ...,
  *  uri: ...,
@@ -73,7 +73,7 @@ export function encodeSetTokenURIParams(options: SetTokenURIParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeSetTokenURI } "thirdweb/extensions/erc721";
+ * import { encodeSetTokenURI } from "thirdweb/extensions/erc721";
  * const result = encodeSetTokenURI({
  *  tokenId: ...,
  *  uri: ...,
@@ -96,6 +96,7 @@ export function encodeSetTokenURI(options: SetTokenURIParams) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setTokenURI } from "thirdweb/extensions/erc721";
  *
  * const transaction = setTokenURI({
@@ -108,8 +109,7 @@ export function encodeSetTokenURI(options: SetTokenURIParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setTokenURI(

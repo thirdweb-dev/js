@@ -35,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isMaxWithdrawSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isMaxWithdrawSupported(["0x..."]);
  * ```
  */
@@ -53,7 +52,7 @@ export function isMaxWithdrawSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMaxWithdrawParams } "thirdweb/extensions/erc4626";
+ * import { encodeMaxWithdrawParams } from "thirdweb/extensions/erc4626";
  * const result = encodeMaxWithdrawParams({
  *  owner: ...,
  * });
@@ -70,7 +69,7 @@ export function encodeMaxWithdrawParams(options: MaxWithdrawParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMaxWithdraw } "thirdweb/extensions/erc4626";
+ * import { encodeMaxWithdraw } from "thirdweb/extensions/erc4626";
  * const result = encodeMaxWithdraw({
  *  owner: ...,
  * });
@@ -93,7 +92,7 @@ export function encodeMaxWithdraw(options: MaxWithdrawParams) {
  * @example
  * ```ts
  * import { decodeMaxWithdrawResult } from "thirdweb/extensions/erc4626";
- * const result = decodeMaxWithdrawResult("...");
+ * const result = decodeMaxWithdrawResultResult("...");
  * ```
  */
 export function decodeMaxWithdrawResult(result: Hex) {

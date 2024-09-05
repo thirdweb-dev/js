@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isStartTokenIdSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isStartTokenIdSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isStartTokenIdSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeStartTokenIdResult } from "thirdweb/extensions/erc721";
- * const result = decodeStartTokenIdResult("...");
+ * const result = decodeStartTokenIdResultResult("...");
  * ```
  */
 export function decodeStartTokenIdResult(result: Hex) {

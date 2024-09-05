@@ -24,7 +24,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetPlatformFeeInfoSupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isGetPlatformFeeInfoSupported(["0x..."]);
  * ```
  */
@@ -43,7 +42,7 @@ export function isGetPlatformFeeInfoSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetPlatformFeeInfoResult } from "thirdweb/extensions/marketplace";
- * const result = decodeGetPlatformFeeInfoResult("...");
+ * const result = decodeGetPlatformFeeInfoResultResult("...");
  * ```
  */
 export function decodeGetPlatformFeeInfoResult(result: Hex) {

@@ -53,7 +53,7 @@ export function isCollectAuctionTokensSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCollectAuctionTokensParams } "thirdweb/extensions/marketplace";
+ * import { encodeCollectAuctionTokensParams } from "thirdweb/extensions/marketplace";
  * const result = encodeCollectAuctionTokensParams({
  *  auctionId: ...,
  * });
@@ -72,7 +72,7 @@ export function encodeCollectAuctionTokensParams(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCollectAuctionTokens } "thirdweb/extensions/marketplace";
+ * import { encodeCollectAuctionTokens } from "thirdweb/extensions/marketplace";
  * const result = encodeCollectAuctionTokens({
  *  auctionId: ...,
  * });
@@ -96,6 +96,7 @@ export function encodeCollectAuctionTokens(
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { collectAuctionTokens } from "thirdweb/extensions/marketplace";
  *
  * const transaction = collectAuctionTokens({
@@ -107,8 +108,7 @@ export function encodeCollectAuctionTokens(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function collectAuctionTokens(

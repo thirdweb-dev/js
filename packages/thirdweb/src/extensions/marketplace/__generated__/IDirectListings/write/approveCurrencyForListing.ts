@@ -68,7 +68,7 @@ export function isApproveCurrencyForListingSupported(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeApproveCurrencyForListingParams } "thirdweb/extensions/marketplace";
+ * import { encodeApproveCurrencyForListingParams } from "thirdweb/extensions/marketplace";
  * const result = encodeApproveCurrencyForListingParams({
  *  listingId: ...,
  *  currency: ...,
@@ -93,7 +93,7 @@ export function encodeApproveCurrencyForListingParams(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeApproveCurrencyForListing } "thirdweb/extensions/marketplace";
+ * import { encodeApproveCurrencyForListing } from "thirdweb/extensions/marketplace";
  * const result = encodeApproveCurrencyForListing({
  *  listingId: ...,
  *  currency: ...,
@@ -119,6 +119,7 @@ export function encodeApproveCurrencyForListing(
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { approveCurrencyForListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = approveCurrencyForListing({
@@ -132,8 +133,7 @@ export function encodeApproveCurrencyForListing(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function approveCurrencyForListing(

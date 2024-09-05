@@ -50,7 +50,7 @@ export function isGetSenderAddressSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetSenderAddressParams } "thirdweb/extensions/erc4337";
+ * import { encodeGetSenderAddressParams } from "thirdweb/extensions/erc4337";
  * const result = encodeGetSenderAddressParams({
  *  initCode: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeGetSenderAddressParams(options: GetSenderAddressParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetSenderAddress } "thirdweb/extensions/erc4337";
+ * import { encodeGetSenderAddress } from "thirdweb/extensions/erc4337";
  * const result = encodeGetSenderAddress({
  *  initCode: ...,
  * });
@@ -89,6 +89,7 @@ export function encodeGetSenderAddress(options: GetSenderAddressParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { getSenderAddress } from "thirdweb/extensions/erc4337";
  *
  * const transaction = getSenderAddress({
@@ -100,8 +101,7 @@ export function encodeGetSenderAddress(options: GetSenderAddressParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function getSenderAddress(

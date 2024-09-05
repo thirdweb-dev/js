@@ -50,7 +50,7 @@ export function isCancelOfferSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCancelOfferParams } "thirdweb/extensions/marketplace";
+ * import { encodeCancelOfferParams } from "thirdweb/extensions/marketplace";
  * const result = encodeCancelOfferParams({
  *  offerId: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeCancelOfferParams(options: CancelOfferParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCancelOffer } "thirdweb/extensions/marketplace";
+ * import { encodeCancelOffer } from "thirdweb/extensions/marketplace";
  * const result = encodeCancelOffer({
  *  offerId: ...,
  * });
@@ -89,6 +89,7 @@ export function encodeCancelOffer(options: CancelOfferParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { cancelOffer } from "thirdweb/extensions/marketplace";
  *
  * const transaction = cancelOffer({
@@ -100,8 +101,7 @@ export function encodeCancelOffer(options: CancelOfferParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function cancelOffer(

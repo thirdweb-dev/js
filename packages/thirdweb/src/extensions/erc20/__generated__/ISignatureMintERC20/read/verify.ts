@@ -91,7 +91,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isVerifySupported } from "thirdweb/extensions/erc20";
- *
  * const supported = isVerifySupported(["0x..."]);
  * ```
  */
@@ -109,7 +108,7 @@ export function isVerifySupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeVerifyParams } "thirdweb/extensions/erc20";
+ * import { encodeVerifyParams } from "thirdweb/extensions/erc20";
  * const result = encodeVerifyParams({
  *  req: ...,
  *  signature: ...,
@@ -127,7 +126,7 @@ export function encodeVerifyParams(options: VerifyParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeVerify } "thirdweb/extensions/erc20";
+ * import { encodeVerify } from "thirdweb/extensions/erc20";
  * const result = encodeVerify({
  *  req: ...,
  *  signature: ...,
@@ -149,7 +148,7 @@ export function encodeVerify(options: VerifyParams) {
  * @example
  * ```ts
  * import { decodeVerifyResult } from "thirdweb/extensions/erc20";
- * const result = decodeVerifyResult("...");
+ * const result = decodeVerifyResultResult("...");
  * ```
  */
 export function decodeVerifyResult(result: Hex) {

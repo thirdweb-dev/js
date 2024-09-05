@@ -22,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetChainIdSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetChainIdSupported(["0x..."]);
  * ```
  */
@@ -41,7 +40,7 @@ export function isGetChainIdSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetChainIdResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetChainIdResult("...");
+ * const result = decodeGetChainIdResultResult("...");
  * ```
  */
 export function decodeGetChainIdResult(result: Hex) {

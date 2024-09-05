@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isBALLOT_TYPEHASHSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isBALLOT_TYPEHASHSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isBALLOT_TYPEHASHSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeBALLOT_TYPEHASHResult } from "thirdweb/extensions/vote";
- * const result = decodeBALLOT_TYPEHASHResult("...");
+ * const result = decodeBALLOT_TYPEHASHResultResult("...");
  * ```
  */
 export function decodeBALLOT_TYPEHASHResult(result: Hex) {

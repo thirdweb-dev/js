@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetFollowTimestampSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetFollowTimestampSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isGetFollowTimestampSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetFollowTimestampParams } "thirdweb/extensions/lens";
+ * import { encodeGetFollowTimestampParams } from "thirdweb/extensions/lens";
  * const result = encodeGetFollowTimestampParams({
  *  followTokenId: ...,
  * });
@@ -74,7 +73,7 @@ export function encodeGetFollowTimestampParams(
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetFollowTimestamp } "thirdweb/extensions/lens";
+ * import { encodeGetFollowTimestamp } from "thirdweb/extensions/lens";
  * const result = encodeGetFollowTimestamp({
  *  followTokenId: ...,
  * });
@@ -97,7 +96,7 @@ export function encodeGetFollowTimestamp(options: GetFollowTimestampParams) {
  * @example
  * ```ts
  * import { decodeGetFollowTimestampResult } from "thirdweb/extensions/lens";
- * const result = decodeGetFollowTimestampResult("...");
+ * const result = decodeGetFollowTimestampResultResult("...");
  * ```
  */
 export function decodeGetFollowTimestampResult(result: Hex) {

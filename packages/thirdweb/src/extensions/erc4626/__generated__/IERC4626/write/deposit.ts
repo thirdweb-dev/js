@@ -60,7 +60,7 @@ export function isDepositSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeDepositParams } "thirdweb/extensions/erc4626";
+ * import { encodeDepositParams } from "thirdweb/extensions/erc4626";
  * const result = encodeDepositParams({
  *  assets: ...,
  *  receiver: ...,
@@ -78,7 +78,7 @@ export function encodeDepositParams(options: DepositParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeDeposit } "thirdweb/extensions/erc4626";
+ * import { encodeDeposit } from "thirdweb/extensions/erc4626";
  * const result = encodeDeposit({
  *  assets: ...,
  *  receiver: ...,
@@ -99,6 +99,7 @@ export function encodeDeposit(options: DepositParams) {
  * @extension ERC4626
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { deposit } from "thirdweb/extensions/erc4626";
  *
  * const transaction = deposit({
@@ -111,8 +112,7 @@ export function encodeDeposit(options: DepositParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function deposit(

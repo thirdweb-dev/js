@@ -35,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPreviewRedeemSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isPreviewRedeemSupported(["0x..."]);
  * ```
  */
@@ -53,7 +52,7 @@ export function isPreviewRedeemSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewRedeemParams } "thirdweb/extensions/erc4626";
+ * import { encodePreviewRedeemParams } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewRedeemParams({
  *  shares: ...,
  * });
@@ -70,7 +69,7 @@ export function encodePreviewRedeemParams(options: PreviewRedeemParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewRedeem } "thirdweb/extensions/erc4626";
+ * import { encodePreviewRedeem } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewRedeem({
  *  shares: ...,
  * });
@@ -93,7 +92,7 @@ export function encodePreviewRedeem(options: PreviewRedeemParams) {
  * @example
  * ```ts
  * import { decodePreviewRedeemResult } from "thirdweb/extensions/erc4626";
- * const result = decodePreviewRedeemResult("...");
+ * const result = decodePreviewRedeemResultResult("...");
  * ```
  */
 export function decodePreviewRedeemResult(result: Hex) {

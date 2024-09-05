@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isNextTokenIdSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isNextTokenIdSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isNextTokenIdSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeNextTokenIdResult } from "thirdweb/extensions/erc1155";
- * const result = decodeNextTokenIdResult("...");
+ * const result = decodeNextTokenIdResultResult("...");
  * ```
  */
 export function decodeNextTokenIdResult(result: Hex) {

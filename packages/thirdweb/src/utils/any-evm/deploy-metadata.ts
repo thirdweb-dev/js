@@ -144,6 +144,11 @@ export type ExtendedMetadata = {
         publisherAddress: string;
       }[]
     | undefined;
+  defaultModules?: {
+    moduleName: string;
+    moduleVersion: string;
+    publisherAddress: string;
+  }[];
   publisher?: string | undefined;
   audit?: string | undefined;
   logo?: string | undefined;

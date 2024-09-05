@@ -60,7 +60,7 @@ export function isSetSaleRecipientForTokenSupported(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSetSaleRecipientForTokenParams } "thirdweb/extensions/erc1155";
+ * import { encodeSetSaleRecipientForTokenParams } from "thirdweb/extensions/erc1155";
  * const result = encodeSetSaleRecipientForTokenParams({
  *  tokenId: ...,
  *  saleRecipient: ...,
@@ -83,7 +83,7 @@ export function encodeSetSaleRecipientForTokenParams(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSetSaleRecipientForToken } "thirdweb/extensions/erc1155";
+ * import { encodeSetSaleRecipientForToken } from "thirdweb/extensions/erc1155";
  * const result = encodeSetSaleRecipientForToken({
  *  tokenId: ...,
  *  saleRecipient: ...,
@@ -108,6 +108,7 @@ export function encodeSetSaleRecipientForToken(
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setSaleRecipientForToken } from "thirdweb/extensions/erc1155";
  *
  * const transaction = setSaleRecipientForToken({
@@ -120,8 +121,7 @@ export function encodeSetSaleRecipientForToken(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setSaleRecipientForToken(

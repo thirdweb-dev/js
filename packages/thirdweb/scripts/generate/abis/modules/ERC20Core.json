@@ -1,0 +1,6 @@
+[
+  "function burn(address from, uint256 amount, bytes data) payable",
+  "function initialize(string _name, string _symbol, string _contractURI, address _owner, address[] _modules, bytes[] _moduleInstallData) payable",
+  "function mint(address to, uint256 amount, bytes data) payable",
+  "function mintWithSignature(address to, uint256 amount, bytes data, bytes signature) payable"
+]

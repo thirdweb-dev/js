@@ -42,7 +42,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isCurrencyPriceForListingSupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isCurrencyPriceForListingSupported(["0x..."]);
  * ```
  */
@@ -62,7 +61,7 @@ export function isCurrencyPriceForListingSupported(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCurrencyPriceForListingParams } "thirdweb/extensions/marketplace";
+ * import { encodeCurrencyPriceForListingParams } from "thirdweb/extensions/marketplace";
  * const result = encodeCurrencyPriceForListingParams({
  *  listingId: ...,
  *  currency: ...,
@@ -82,7 +81,7 @@ export function encodeCurrencyPriceForListingParams(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCurrencyPriceForListing } "thirdweb/extensions/marketplace";
+ * import { encodeCurrencyPriceForListing } from "thirdweb/extensions/marketplace";
  * const result = encodeCurrencyPriceForListing({
  *  listingId: ...,
  *  currency: ...,
@@ -108,7 +107,7 @@ export function encodeCurrencyPriceForListing(
  * @example
  * ```ts
  * import { decodeCurrencyPriceForListingResult } from "thirdweb/extensions/marketplace";
- * const result = decodeCurrencyPriceForListingResult("...");
+ * const result = decodeCurrencyPriceForListingResultResult("...");
  * ```
  */
 export function decodeCurrencyPriceForListingResult(result: Hex) {

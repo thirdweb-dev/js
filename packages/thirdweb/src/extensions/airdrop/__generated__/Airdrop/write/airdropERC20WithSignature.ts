@@ -101,7 +101,7 @@ export function isAirdropERC20WithSignatureSupported(
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropERC20WithSignatureParams } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropERC20WithSignatureParams } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropERC20WithSignatureParams({
  *  req: ...,
  *  signature: ...,
@@ -121,7 +121,7 @@ export function encodeAirdropERC20WithSignatureParams(
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropERC20WithSignature } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropERC20WithSignature } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropERC20WithSignature({
  *  req: ...,
  *  signature: ...,
@@ -146,6 +146,7 @@ export function encodeAirdropERC20WithSignature(
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { airdropERC20WithSignature } from "thirdweb/extensions/airdrop";
  *
  * const transaction = airdropERC20WithSignature({
@@ -158,8 +159,7 @@ export function encodeAirdropERC20WithSignature(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function airdropERC20WithSignature(

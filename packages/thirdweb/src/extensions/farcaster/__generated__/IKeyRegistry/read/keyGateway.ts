@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isKeyGatewaySupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isKeyGatewaySupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isKeyGatewaySupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeKeyGatewayResult } from "thirdweb/extensions/farcaster";
- * const result = decodeKeyGatewayResult("...");
+ * const result = decodeKeyGatewayResultResult("...");
  * ```
  */
 export function decodeKeyGatewayResult(result: Hex) {

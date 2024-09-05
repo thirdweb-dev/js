@@ -39,7 +39,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAccountsSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isGetAccountsSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isGetAccountsSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetAccountsParams } "thirdweb/extensions/erc4337";
+ * import { encodeGetAccountsParams } from "thirdweb/extensions/erc4337";
  * const result = encodeGetAccountsParams({
  *  start: ...,
  *  end: ...,
@@ -75,7 +74,7 @@ export function encodeGetAccountsParams(options: GetAccountsParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetAccounts } "thirdweb/extensions/erc4337";
+ * import { encodeGetAccounts } from "thirdweb/extensions/erc4337";
  * const result = encodeGetAccounts({
  *  start: ...,
  *  end: ...,
@@ -99,7 +98,7 @@ export function encodeGetAccounts(options: GetAccountsParams) {
  * @example
  * ```ts
  * import { decodeGetAccountsResult } from "thirdweb/extensions/erc4337";
- * const result = decodeGetAccountsResult("...");
+ * const result = decodeGetAccountsResultResult("...");
  * ```
  */
 export function decodeGetAccountsResult(result: Hex) {

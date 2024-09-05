@@ -39,7 +39,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isBalanceOfSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isBalanceOfSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isBalanceOfSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeBalanceOfParams } "thirdweb/extensions/erc1155";
+ * import { encodeBalanceOfParams } from "thirdweb/extensions/erc1155";
  * const result = encodeBalanceOfParams({
  *  owner: ...,
  *  tokenId: ...,
@@ -75,7 +74,7 @@ export function encodeBalanceOfParams(options: BalanceOfParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeBalanceOf } "thirdweb/extensions/erc1155";
+ * import { encodeBalanceOf } from "thirdweb/extensions/erc1155";
  * const result = encodeBalanceOf({
  *  owner: ...,
  *  tokenId: ...,
@@ -99,7 +98,7 @@ export function encodeBalanceOf(options: BalanceOfParams) {
  * @example
  * ```ts
  * import { decodeBalanceOfResult } from "thirdweb/extensions/erc1155";
- * const result = decodeBalanceOfResult("...");
+ * const result = decodeBalanceOfResultResult("...");
  * ```
  */
 export function decodeBalanceOfResult(result: Hex) {

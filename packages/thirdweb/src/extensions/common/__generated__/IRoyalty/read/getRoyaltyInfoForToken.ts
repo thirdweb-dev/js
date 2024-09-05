@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetRoyaltyInfoForTokenSupported } from "thirdweb/extensions/common";
- *
  * const supported = isGetRoyaltyInfoForTokenSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isGetRoyaltyInfoForTokenSupported(
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeGetRoyaltyInfoForTokenParams } "thirdweb/extensions/common";
+ * import { encodeGetRoyaltyInfoForTokenParams } from "thirdweb/extensions/common";
  * const result = encodeGetRoyaltyInfoForTokenParams({
  *  tokenId: ...,
  * });
@@ -76,7 +75,7 @@ export function encodeGetRoyaltyInfoForTokenParams(
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeGetRoyaltyInfoForToken } "thirdweb/extensions/common";
+ * import { encodeGetRoyaltyInfoForToken } from "thirdweb/extensions/common";
  * const result = encodeGetRoyaltyInfoForToken({
  *  tokenId: ...,
  * });
@@ -101,7 +100,7 @@ export function encodeGetRoyaltyInfoForToken(
  * @example
  * ```ts
  * import { decodeGetRoyaltyInfoForTokenResult } from "thirdweb/extensions/common";
- * const result = decodeGetRoyaltyInfoForTokenResult("...");
+ * const result = decodeGetRoyaltyInfoForTokenResultResult("...");
  * ```
  */
 export function decodeGetRoyaltyInfoForTokenResult(result: Hex) {

@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isNextTokenIdToClaimSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isNextTokenIdToClaimSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isNextTokenIdToClaimSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeNextTokenIdToClaimResult } from "thirdweb/extensions/erc721";
- * const result = decodeNextTokenIdToClaimResult("...");
+ * const result = decodeNextTokenIdToClaimResultResult("...");
  * ```
  */
 export function decodeNextTokenIdToClaimResult(result: Hex) {

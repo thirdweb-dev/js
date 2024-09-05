@@ -65,7 +65,7 @@ export function isRemoveForSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRemoveForParams } "thirdweb/extensions/farcaster";
+ * import { encodeRemoveForParams } from "thirdweb/extensions/farcaster";
  * const result = encodeRemoveForParams({
  *  fidOwner: ...,
  *  key: ...,
@@ -90,7 +90,7 @@ export function encodeRemoveForParams(options: RemoveForParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRemoveFor } "thirdweb/extensions/farcaster";
+ * import { encodeRemoveFor } from "thirdweb/extensions/farcaster";
  * const result = encodeRemoveFor({
  *  fidOwner: ...,
  *  key: ...,
@@ -115,6 +115,7 @@ export function encodeRemoveFor(options: RemoveForParams) {
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { removeFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = removeFor({
@@ -129,8 +130,7 @@ export function encodeRemoveFor(options: RemoveForParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function removeFor(

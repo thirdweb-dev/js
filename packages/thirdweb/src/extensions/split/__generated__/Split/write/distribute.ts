@@ -33,13 +33,13 @@ export function isDistributeSupported(availableSelectors: string[]) {
  * @extension SPLIT
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { distribute } from "thirdweb/extensions/split";
  *
  * const transaction = distribute();
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function distribute(options: BaseTransactionOptions) {

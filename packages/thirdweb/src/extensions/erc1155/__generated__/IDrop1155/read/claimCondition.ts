@@ -39,7 +39,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isClaimConditionSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isClaimConditionSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isClaimConditionSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeClaimConditionParams } "thirdweb/extensions/erc1155";
+ * import { encodeClaimConditionParams } from "thirdweb/extensions/erc1155";
  * const result = encodeClaimConditionParams({
  *  tokenId: ...,
  * });
@@ -74,7 +73,7 @@ export function encodeClaimConditionParams(options: ClaimConditionParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeClaimCondition } "thirdweb/extensions/erc1155";
+ * import { encodeClaimCondition } from "thirdweb/extensions/erc1155";
  * const result = encodeClaimCondition({
  *  tokenId: ...,
  * });
@@ -97,7 +96,7 @@ export function encodeClaimCondition(options: ClaimConditionParams) {
  * @example
  * ```ts
  * import { decodeClaimConditionResult } from "thirdweb/extensions/erc1155";
- * const result = decodeClaimConditionResult("...");
+ * const result = decodeClaimConditionResultResult("...");
  * ```
  */
 export function decodeClaimConditionResult(result: Hex) {

@@ -24,7 +24,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetDefaultRoyaltyInfoSupported } from "thirdweb/extensions/common";
- *
  * const supported = isGetDefaultRoyaltyInfoSupported(["0x..."]);
  * ```
  */
@@ -43,7 +42,7 @@ export function isGetDefaultRoyaltyInfoSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetDefaultRoyaltyInfoResult } from "thirdweb/extensions/common";
- * const result = decodeGetDefaultRoyaltyInfoResult("...");
+ * const result = decodeGetDefaultRoyaltyInfoResultResult("...");
  * ```
  */
 export function decodeGetDefaultRoyaltyInfoResult(result: Hex) {

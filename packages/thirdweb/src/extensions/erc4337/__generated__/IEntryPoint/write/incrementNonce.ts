@@ -50,7 +50,7 @@ export function isIncrementNonceSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeIncrementNonceParams } "thirdweb/extensions/erc4337";
+ * import { encodeIncrementNonceParams } from "thirdweb/extensions/erc4337";
  * const result = encodeIncrementNonceParams({
  *  key: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeIncrementNonceParams(options: IncrementNonceParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeIncrementNonce } "thirdweb/extensions/erc4337";
+ * import { encodeIncrementNonce } from "thirdweb/extensions/erc4337";
  * const result = encodeIncrementNonce({
  *  key: ...,
  * });
@@ -89,6 +89,7 @@ export function encodeIncrementNonce(options: IncrementNonceParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { incrementNonce } from "thirdweb/extensions/erc4337";
  *
  * const transaction = incrementNonce({
@@ -100,8 +101,7 @@ export function encodeIncrementNonce(options: IncrementNonceParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function incrementNonce(

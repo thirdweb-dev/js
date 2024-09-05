@@ -65,7 +65,7 @@ export function isApproveBuyerForListingSupported(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeApproveBuyerForListingParams } "thirdweb/extensions/marketplace";
+ * import { encodeApproveBuyerForListingParams } from "thirdweb/extensions/marketplace";
  * const result = encodeApproveBuyerForListingParams({
  *  listingId: ...,
  *  buyer: ...,
@@ -90,7 +90,7 @@ export function encodeApproveBuyerForListingParams(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeApproveBuyerForListing } "thirdweb/extensions/marketplace";
+ * import { encodeApproveBuyerForListing } from "thirdweb/extensions/marketplace";
  * const result = encodeApproveBuyerForListing({
  *  listingId: ...,
  *  buyer: ...,
@@ -116,6 +116,7 @@ export function encodeApproveBuyerForListing(
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { approveBuyerForListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = approveBuyerForListing({
@@ -129,8 +130,7 @@ export function encodeApproveBuyerForListing(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function approveBuyerForListing(

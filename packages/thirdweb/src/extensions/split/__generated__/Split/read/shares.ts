@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isSharesSupported } from "thirdweb/extensions/split";
- *
  * const supported = isSharesSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isSharesSupported(availableSelectors: string[]) {
  * @extension SPLIT
  * @example
  * ```ts
- * import { encodeSharesParams } "thirdweb/extensions/split";
+ * import { encodeSharesParams } from "thirdweb/extensions/split";
  * const result = encodeSharesParams({
  *  account: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeSharesParams(options: SharesParams) {
  * @extension SPLIT
  * @example
  * ```ts
- * import { encodeShares } "thirdweb/extensions/split";
+ * import { encodeShares } from "thirdweb/extensions/split";
  * const result = encodeShares({
  *  account: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeShares(options: SharesParams) {
  * @example
  * ```ts
  * import { decodeSharesResult } from "thirdweb/extensions/split";
- * const result = decodeSharesResult("...");
+ * const result = decodeSharesResultResult("...");
  * ```
  */
 export function decodeSharesResult(result: Hex) {

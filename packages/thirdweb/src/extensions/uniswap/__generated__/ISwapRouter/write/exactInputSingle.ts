@@ -102,7 +102,7 @@ export function isExactInputSingleSupported(availableSelectors: string[]) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeExactInputSingleParams } "thirdweb/extensions/uniswap";
+ * import { encodeExactInputSingleParams } from "thirdweb/extensions/uniswap";
  * const result = encodeExactInputSingleParams({
  *  params: ...,
  * });
@@ -119,7 +119,7 @@ export function encodeExactInputSingleParams(options: ExactInputSingleParams) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeExactInputSingle } "thirdweb/extensions/uniswap";
+ * import { encodeExactInputSingle } from "thirdweb/extensions/uniswap";
  * const result = encodeExactInputSingle({
  *  params: ...,
  * });
@@ -141,6 +141,7 @@ export function encodeExactInputSingle(options: ExactInputSingleParams) {
  * @extension UNISWAP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { exactInputSingle } from "thirdweb/extensions/uniswap";
  *
  * const transaction = exactInputSingle({
@@ -152,8 +153,7 @@ export function encodeExactInputSingle(options: ExactInputSingleParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function exactInputSingle(

@@ -34,7 +34,6 @@ const FN_OUTPUTS = [] as const;
  * @example
  * ```ts
  * import { isVerifyClaimSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isVerifyClaimSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isVerifyClaimSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeVerifyClaimParams } "thirdweb/extensions/erc721";
+ * import { encodeVerifyClaimParams } from "thirdweb/extensions/erc721";
  * const result = encodeVerifyClaimParams({
  *  claimer: ...,
  *  quantity: ...,
@@ -70,7 +69,7 @@ export function encodeVerifyClaimParams(options: VerifyClaimParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeVerifyClaim } "thirdweb/extensions/erc721";
+ * import { encodeVerifyClaim } from "thirdweb/extensions/erc721";
  * const result = encodeVerifyClaim({
  *  claimer: ...,
  *  quantity: ...,

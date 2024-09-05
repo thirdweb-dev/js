@@ -92,7 +92,7 @@ export function isMakeOfferSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeMakeOfferParams } "thirdweb/extensions/marketplace";
+ * import { encodeMakeOfferParams } from "thirdweb/extensions/marketplace";
  * const result = encodeMakeOfferParams({
  *  params: ...,
  * });
@@ -109,7 +109,7 @@ export function encodeMakeOfferParams(options: MakeOfferParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeMakeOffer } "thirdweb/extensions/marketplace";
+ * import { encodeMakeOffer } from "thirdweb/extensions/marketplace";
  * const result = encodeMakeOffer({
  *  params: ...,
  * });
@@ -131,6 +131,7 @@ export function encodeMakeOffer(options: MakeOfferParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { makeOffer } from "thirdweb/extensions/marketplace";
  *
  * const transaction = makeOffer({
@@ -142,8 +143,7 @@ export function encodeMakeOffer(options: MakeOfferParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function makeOffer(

@@ -52,7 +52,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAllRulesSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isGetAllRulesSupported(["0x..."]);
  * ```
  */
@@ -71,7 +70,7 @@ export function isGetAllRulesSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetAllRulesResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeGetAllRulesResult("...");
+ * const result = decodeGetAllRulesResultResult("...");
  * ```
  */
 export function decodeGetAllRulesResult(result: Hex) {

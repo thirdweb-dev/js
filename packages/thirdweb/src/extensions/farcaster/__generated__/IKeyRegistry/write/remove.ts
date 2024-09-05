@@ -50,7 +50,7 @@ export function isRemoveSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRemoveParams } "thirdweb/extensions/farcaster";
+ * import { encodeRemoveParams } from "thirdweb/extensions/farcaster";
  * const result = encodeRemoveParams({
  *  key: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeRemoveParams(options: RemoveParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRemove } "thirdweb/extensions/farcaster";
+ * import { encodeRemove } from "thirdweb/extensions/farcaster";
  * const result = encodeRemove({
  *  key: ...,
  * });
@@ -87,6 +87,7 @@ export function encodeRemove(options: RemoveParams) {
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { remove } from "thirdweb/extensions/farcaster";
  *
  * const transaction = remove({
@@ -98,8 +99,7 @@ export function encodeRemove(options: RemoveParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function remove(

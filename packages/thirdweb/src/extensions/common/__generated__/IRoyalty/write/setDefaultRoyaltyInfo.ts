@@ -61,7 +61,7 @@ export function isSetDefaultRoyaltyInfoSupported(availableSelectors: string[]) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetDefaultRoyaltyInfoParams } "thirdweb/extensions/common";
+ * import { encodeSetDefaultRoyaltyInfoParams } from "thirdweb/extensions/common";
  * const result = encodeSetDefaultRoyaltyInfoParams({
  *  royaltyRecipient: ...,
  *  royaltyBps: ...,
@@ -84,7 +84,7 @@ export function encodeSetDefaultRoyaltyInfoParams(
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetDefaultRoyaltyInfo } "thirdweb/extensions/common";
+ * import { encodeSetDefaultRoyaltyInfo } from "thirdweb/extensions/common";
  * const result = encodeSetDefaultRoyaltyInfo({
  *  royaltyRecipient: ...,
  *  royaltyBps: ...,
@@ -109,6 +109,7 @@ export function encodeSetDefaultRoyaltyInfo(
  * @extension COMMON
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setDefaultRoyaltyInfo } from "thirdweb/extensions/common";
  *
  * const transaction = setDefaultRoyaltyInfo({
@@ -121,8 +122,7 @@ export function encodeSetDefaultRoyaltyInfo(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setDefaultRoyaltyInfo(

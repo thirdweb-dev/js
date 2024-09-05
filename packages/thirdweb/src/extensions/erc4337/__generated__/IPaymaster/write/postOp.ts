@@ -63,7 +63,7 @@ export function isPostOpSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodePostOpParams } "thirdweb/extensions/erc4337";
+ * import { encodePostOpParams } from "thirdweb/extensions/erc4337";
  * const result = encodePostOpParams({
  *  mode: ...,
  *  context: ...,
@@ -86,7 +86,7 @@ export function encodePostOpParams(options: PostOpParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodePostOp } "thirdweb/extensions/erc4337";
+ * import { encodePostOp } from "thirdweb/extensions/erc4337";
  * const result = encodePostOp({
  *  mode: ...,
  *  context: ...,
@@ -108,6 +108,7 @@ export function encodePostOp(options: PostOpParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { postOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = postOp({
@@ -121,8 +122,7 @@ export function encodePostOp(options: PostOpParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function postOp(

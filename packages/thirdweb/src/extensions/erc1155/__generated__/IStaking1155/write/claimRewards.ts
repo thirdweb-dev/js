@@ -50,7 +50,7 @@ export function isClaimRewardsSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeClaimRewardsParams } "thirdweb/extensions/erc1155";
+ * import { encodeClaimRewardsParams } from "thirdweb/extensions/erc1155";
  * const result = encodeClaimRewardsParams({
  *  tokenId: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeClaimRewardsParams(options: ClaimRewardsParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeClaimRewards } "thirdweb/extensions/erc1155";
+ * import { encodeClaimRewards } from "thirdweb/extensions/erc1155";
  * const result = encodeClaimRewards({
  *  tokenId: ...,
  * });
@@ -89,6 +89,7 @@ export function encodeClaimRewards(options: ClaimRewardsParams) {
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { claimRewards } from "thirdweb/extensions/erc1155";
  *
  * const transaction = claimRewards({
@@ -100,8 +101,7 @@ export function encodeClaimRewards(options: ClaimRewardsParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function claimRewards(

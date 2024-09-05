@@ -15,7 +15,7 @@ import {
   sendTransaction,
   waitForReceipt,
 } from "thirdweb";
-import { installPublishedModule } from "thirdweb/extensions/modular";
+import { installPublishedModule } from "thirdweb/modules";
 import { download } from "thirdweb/storage";
 import { encodeAbiParameters, resolveImplementation } from "thirdweb/utils";
 import type { Account } from "thirdweb/wallets";
@@ -81,11 +81,9 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
 
       const installTransaction = installPublishedModule({
         contract,
-        chain: contract.chain,
-        client: contract.client,
         account,
         moduleName: watch("moduleContract"),
-        publisherAddress: watch("publisherAddress"),
+        publisher: watch("publisherAddress"),
         version: watch("version"),
         moduleData,
       });

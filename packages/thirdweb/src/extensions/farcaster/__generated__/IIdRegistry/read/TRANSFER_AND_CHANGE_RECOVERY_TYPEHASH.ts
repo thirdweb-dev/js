@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTRANSFER_AND_CHANGE_RECOVERY_TYPEHASHSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isTRANSFER_AND_CHANGE_RECOVERY_TYPEHASHSupported(["0x..."]);
  * ```
  */
@@ -42,7 +41,7 @@ export function isTRANSFER_AND_CHANGE_RECOVERY_TYPEHASHSupported(
  * @example
  * ```ts
  * import { decodeTRANSFER_AND_CHANGE_RECOVERY_TYPEHASHResult } from "thirdweb/extensions/farcaster";
- * const result = decodeTRANSFER_AND_CHANGE_RECOVERY_TYPEHASHResult("...");
+ * const result = decodeTRANSFER_AND_CHANGE_RECOVERY_TYPEHASHResultResult("...");
  * ```
  */
 export function decodeTRANSFER_AND_CHANGE_RECOVERY_TYPEHASHResult(result: Hex) {

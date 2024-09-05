@@ -53,7 +53,7 @@ export function isSetRoyaltyEngineSupported(availableSelectors: string[]) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetRoyaltyEngineParams } "thirdweb/extensions/common";
+ * import { encodeSetRoyaltyEngineParams } from "thirdweb/extensions/common";
  * const result = encodeSetRoyaltyEngineParams({
  *  royaltyEngineAddress: ...,
  * });
@@ -70,7 +70,7 @@ export function encodeSetRoyaltyEngineParams(options: SetRoyaltyEngineParams) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetRoyaltyEngine } "thirdweb/extensions/common";
+ * import { encodeSetRoyaltyEngine } from "thirdweb/extensions/common";
  * const result = encodeSetRoyaltyEngine({
  *  royaltyEngineAddress: ...,
  * });
@@ -92,6 +92,7 @@ export function encodeSetRoyaltyEngine(options: SetRoyaltyEngineParams) {
  * @extension COMMON
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setRoyaltyEngine } from "thirdweb/extensions/common";
  *
  * const transaction = setRoyaltyEngine({
@@ -103,8 +104,7 @@ export function encodeSetRoyaltyEngine(options: SetRoyaltyEngineParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setRoyaltyEngine(

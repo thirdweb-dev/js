@@ -46,7 +46,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isReverseSupported } from "thirdweb/extensions/ens";
- *
  * const supported = isReverseSupported(["0x..."]);
  * ```
  */
@@ -64,7 +63,7 @@ export function isReverseSupported(availableSelectors: string[]) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeReverseParams } "thirdweb/extensions/ens";
+ * import { encodeReverseParams } from "thirdweb/extensions/ens";
  * const result = encodeReverseParams({
  *  reverseName: ...,
  * });
@@ -81,7 +80,7 @@ export function encodeReverseParams(options: ReverseParams) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeReverse } "thirdweb/extensions/ens";
+ * import { encodeReverse } from "thirdweb/extensions/ens";
  * const result = encodeReverse({
  *  reverseName: ...,
  * });
@@ -102,7 +101,7 @@ export function encodeReverse(options: ReverseParams) {
  * @example
  * ```ts
  * import { decodeReverseResult } from "thirdweb/extensions/ens";
- * const result = decodeReverseResult("...");
+ * const result = decodeReverseResultResult("...");
  * ```
  */
 export function decodeReverseResult(result: Hex) {

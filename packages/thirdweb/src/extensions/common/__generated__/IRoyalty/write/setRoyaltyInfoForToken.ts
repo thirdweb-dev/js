@@ -65,7 +65,7 @@ export function isSetRoyaltyInfoForTokenSupported(
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetRoyaltyInfoForTokenParams } "thirdweb/extensions/common";
+ * import { encodeSetRoyaltyInfoForTokenParams } from "thirdweb/extensions/common";
  * const result = encodeSetRoyaltyInfoForTokenParams({
  *  tokenId: ...,
  *  recipient: ...,
@@ -90,7 +90,7 @@ export function encodeSetRoyaltyInfoForTokenParams(
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetRoyaltyInfoForToken } "thirdweb/extensions/common";
+ * import { encodeSetRoyaltyInfoForToken } from "thirdweb/extensions/common";
  * const result = encodeSetRoyaltyInfoForToken({
  *  tokenId: ...,
  *  recipient: ...,
@@ -116,6 +116,7 @@ export function encodeSetRoyaltyInfoForToken(
  * @extension COMMON
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setRoyaltyInfoForToken } from "thirdweb/extensions/common";
  *
  * const transaction = setRoyaltyInfoForToken({
@@ -129,8 +130,7 @@ export function encodeSetRoyaltyInfoForToken(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setRoyaltyInfoForToken(

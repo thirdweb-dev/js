@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isProposalSnapshotSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isProposalSnapshotSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isProposalSnapshotSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeProposalSnapshotParams } "thirdweb/extensions/vote";
+ * import { encodeProposalSnapshotParams } from "thirdweb/extensions/vote";
  * const result = encodeProposalSnapshotParams({
  *  proposalId: ...,
  * });
@@ -72,7 +71,7 @@ export function encodeProposalSnapshotParams(options: ProposalSnapshotParams) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeProposalSnapshot } "thirdweb/extensions/vote";
+ * import { encodeProposalSnapshot } from "thirdweb/extensions/vote";
  * const result = encodeProposalSnapshot({
  *  proposalId: ...,
  * });
@@ -95,7 +94,7 @@ export function encodeProposalSnapshot(options: ProposalSnapshotParams) {
  * @example
  * ```ts
  * import { decodeProposalSnapshotResult } from "thirdweb/extensions/vote";
- * const result = decodeProposalSnapshotResult("...");
+ * const result = decodeProposalSnapshotResultResult("...");
  * ```
  */
 export function decodeProposalSnapshotResult(result: Hex) {

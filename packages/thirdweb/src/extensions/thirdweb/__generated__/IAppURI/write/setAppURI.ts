@@ -50,7 +50,7 @@ export function isSetAppURISupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeSetAppURIParams } "thirdweb/extensions/thirdweb";
+ * import { encodeSetAppURIParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeSetAppURIParams({
  *  uri: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeSetAppURIParams(options: SetAppURIParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeSetAppURI } "thirdweb/extensions/thirdweb";
+ * import { encodeSetAppURI } from "thirdweb/extensions/thirdweb";
  * const result = encodeSetAppURI({
  *  uri: ...,
  * });
@@ -89,6 +89,7 @@ export function encodeSetAppURI(options: SetAppURIParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setAppURI } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = setAppURI({
@@ -100,8 +101,7 @@ export function encodeSetAppURI(options: SetAppURIParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setAppURI(

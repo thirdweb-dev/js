@@ -65,7 +65,7 @@ export function isClaimERC721Supported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeClaimERC721Params } "thirdweb/extensions/airdrop";
+ * import { encodeClaimERC721Params } from "thirdweb/extensions/airdrop";
  * const result = encodeClaimERC721Params({
  *  token: ...,
  *  receiver: ...,
@@ -90,7 +90,7 @@ export function encodeClaimERC721Params(options: ClaimERC721Params) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeClaimERC721 } "thirdweb/extensions/airdrop";
+ * import { encodeClaimERC721 } from "thirdweb/extensions/airdrop";
  * const result = encodeClaimERC721({
  *  token: ...,
  *  receiver: ...,
@@ -115,6 +115,7 @@ export function encodeClaimERC721(options: ClaimERC721Params) {
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { claimERC721 } from "thirdweb/extensions/airdrop";
  *
  * const transaction = claimERC721({
@@ -129,8 +130,7 @@ export function encodeClaimERC721(options: ClaimERC721Params) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function claimERC721(

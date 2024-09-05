@@ -69,7 +69,7 @@ export function isOnERC721ReceivedSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeOnERC721ReceivedParams } "thirdweb/extensions/erc721";
+ * import { encodeOnERC721ReceivedParams } from "thirdweb/extensions/erc721";
  * const result = encodeOnERC721ReceivedParams({
  *  operator: ...,
  *  from: ...,
@@ -94,7 +94,7 @@ export function encodeOnERC721ReceivedParams(options: OnERC721ReceivedParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeOnERC721Received } "thirdweb/extensions/erc721";
+ * import { encodeOnERC721Received } from "thirdweb/extensions/erc721";
  * const result = encodeOnERC721Received({
  *  operator: ...,
  *  from: ...,
@@ -119,6 +119,7 @@ export function encodeOnERC721Received(options: OnERC721ReceivedParams) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { onERC721Received } from "thirdweb/extensions/erc721";
  *
  * const transaction = onERC721Received({
@@ -133,8 +134,7 @@ export function encodeOnERC721Received(options: OnERC721ReceivedParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function onERC721Received(

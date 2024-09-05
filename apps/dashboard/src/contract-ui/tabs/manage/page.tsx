@@ -5,7 +5,7 @@ import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { UserXIcon } from "lucide-react";
 import { useMemo } from "react";
 import { getContract } from "thirdweb";
-import { getInstalledModules, owner } from "thirdweb/extensions/modular";
+import { getInstalledModules, owner } from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { useV5DashboardChain } from "../../../lib/v5-adapter";
 import { InstalledModulesTable } from "./components/InstalledModulesTable";

@@ -42,7 +42,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isBalanceOfBatchSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isBalanceOfBatchSupported(["0x..."]);
  * ```
  */
@@ -60,7 +59,7 @@ export function isBalanceOfBatchSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeBalanceOfBatchParams } "thirdweb/extensions/erc1155";
+ * import { encodeBalanceOfBatchParams } from "thirdweb/extensions/erc1155";
  * const result = encodeBalanceOfBatchParams({
  *  owners: ...,
  *  tokenIds: ...,
@@ -78,7 +77,7 @@ export function encodeBalanceOfBatchParams(options: BalanceOfBatchParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeBalanceOfBatch } "thirdweb/extensions/erc1155";
+ * import { encodeBalanceOfBatch } from "thirdweb/extensions/erc1155";
  * const result = encodeBalanceOfBatch({
  *  owners: ...,
  *  tokenIds: ...,
@@ -102,7 +101,7 @@ export function encodeBalanceOfBatch(options: BalanceOfBatchParams) {
  * @example
  * ```ts
  * import { decodeBalanceOfBatchResult } from "thirdweb/extensions/erc1155";
- * const result = decodeBalanceOfBatchResult("...");
+ * const result = decodeBalanceOfBatchResultResult("...");
  * ```
  */
 export function decodeBalanceOfBatchResult(result: Hex) {

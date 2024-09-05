@@ -75,7 +75,7 @@ export function isExecuteSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeExecuteParams } "thirdweb/extensions/vote";
+ * import { encodeExecuteParams } from "thirdweb/extensions/vote";
  * const result = encodeExecuteParams({
  *  targets: ...,
  *  values: ...,
@@ -100,7 +100,7 @@ export function encodeExecuteParams(options: ExecuteParams) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeExecute } "thirdweb/extensions/vote";
+ * import { encodeExecute } from "thirdweb/extensions/vote";
  * const result = encodeExecute({
  *  targets: ...,
  *  values: ...,
@@ -123,6 +123,7 @@ export function encodeExecute(options: ExecuteParams) {
  * @extension VOTE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { execute } from "thirdweb/extensions/vote";
  *
  * const transaction = execute({
@@ -137,8 +138,7 @@ export function encodeExecute(options: ExecuteParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function execute(

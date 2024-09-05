@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetPastTotalSupplySupported } from "thirdweb/extensions/erc20";
- *
  * const supported = isGetPastTotalSupplySupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isGetPastTotalSupplySupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeGetPastTotalSupplyParams } "thirdweb/extensions/erc20";
+ * import { encodeGetPastTotalSupplyParams } from "thirdweb/extensions/erc20";
  * const result = encodeGetPastTotalSupplyParams({
  *  blockNumber: ...,
  * });
@@ -74,7 +73,7 @@ export function encodeGetPastTotalSupplyParams(
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeGetPastTotalSupply } "thirdweb/extensions/erc20";
+ * import { encodeGetPastTotalSupply } from "thirdweb/extensions/erc20";
  * const result = encodeGetPastTotalSupply({
  *  blockNumber: ...,
  * });
@@ -97,7 +96,7 @@ export function encodeGetPastTotalSupply(options: GetPastTotalSupplyParams) {
  * @example
  * ```ts
  * import { decodeGetPastTotalSupplyResult } from "thirdweb/extensions/erc20";
- * const result = decodeGetPastTotalSupplyResult("...");
+ * const result = decodeGetPastTotalSupplyResultResult("...");
  * ```
  */
 export function decodeGetPastTotalSupplyResult(result: Hex) {

@@ -63,7 +63,7 @@ export function isOnSignerAddedSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeOnSignerAddedParams } "thirdweb/extensions/erc4337";
+ * import { encodeOnSignerAddedParams } from "thirdweb/extensions/erc4337";
  * const result = encodeOnSignerAddedParams({
  *  signer: ...,
  *  creatorAdmin: ...,
@@ -86,7 +86,7 @@ export function encodeOnSignerAddedParams(options: OnSignerAddedParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeOnSignerAdded } "thirdweb/extensions/erc4337";
+ * import { encodeOnSignerAdded } from "thirdweb/extensions/erc4337";
  * const result = encodeOnSignerAdded({
  *  signer: ...,
  *  creatorAdmin: ...,
@@ -110,6 +110,7 @@ export function encodeOnSignerAdded(options: OnSignerAddedParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { onSignerAdded } from "thirdweb/extensions/erc4337";
  *
  * const transaction = onSignerAdded({
@@ -123,8 +124,7 @@ export function encodeOnSignerAdded(options: OnSignerAddedParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function onSignerAdded(

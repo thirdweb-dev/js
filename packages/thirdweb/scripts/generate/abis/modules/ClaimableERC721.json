@@ -1,0 +1,9 @@
+[
+  "function encodeBytesBeforeMintERC721((address currency, uint256 pricePerUnit, bytes32[] recipientAllowlistProof) params) pure returns (bytes)",
+  "function encodeBytesBeforeMintWithSignatureERC721((uint48 startTimestamp, uint48 endTimestamp, address currency, uint256 maxMintPerWallet, uint256 pricePerUnit, bytes32 uid) params) pure returns (bytes)",
+  "function encodeBytesOnInstall(address primarySaleRecipient) pure returns (bytes)",
+  "function getClaimCondition() view returns ((uint256 availableSupply, bytes32 allowlistMerkleRoot, uint256 pricePerUnit, address currency, uint256 maxMintPerWallet, uint48 startTimestamp, uint48 endTimestamp, string auxData) claimCondition)",
+  "function getSaleConfig() view returns (address primarySaleRecipient)",
+  "function setClaimCondition((uint256 availableSupply, bytes32 allowlistMerkleRoot, uint256 pricePerUnit, address currency, uint256 maxMintPerWallet, uint48 startTimestamp, uint48 endTimestamp, string auxData) _claimCondition)",
+  "function setSaleConfig(address _primarySaleRecipient)"
+]

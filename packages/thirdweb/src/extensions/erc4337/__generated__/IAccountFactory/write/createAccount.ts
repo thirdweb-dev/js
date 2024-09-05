@@ -60,7 +60,7 @@ export function isCreateAccountSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeCreateAccountParams } "thirdweb/extensions/erc4337";
+ * import { encodeCreateAccountParams } from "thirdweb/extensions/erc4337";
  * const result = encodeCreateAccountParams({
  *  admin: ...,
  *  data: ...,
@@ -78,7 +78,7 @@ export function encodeCreateAccountParams(options: CreateAccountParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeCreateAccount } "thirdweb/extensions/erc4337";
+ * import { encodeCreateAccount } from "thirdweb/extensions/erc4337";
  * const result = encodeCreateAccount({
  *  admin: ...,
  *  data: ...,
@@ -101,6 +101,7 @@ export function encodeCreateAccount(options: CreateAccountParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { createAccount } from "thirdweb/extensions/erc4337";
  *
  * const transaction = createAccount({
@@ -113,8 +114,7 @@ export function encodeCreateAccount(options: CreateAccountParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function createAccount(

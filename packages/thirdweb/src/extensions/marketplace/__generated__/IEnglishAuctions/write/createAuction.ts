@@ -112,7 +112,7 @@ export function isCreateAuctionSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCreateAuctionParams } "thirdweb/extensions/marketplace";
+ * import { encodeCreateAuctionParams } from "thirdweb/extensions/marketplace";
  * const result = encodeCreateAuctionParams({
  *  params: ...,
  * });
@@ -129,7 +129,7 @@ export function encodeCreateAuctionParams(options: CreateAuctionParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCreateAuction } "thirdweb/extensions/marketplace";
+ * import { encodeCreateAuction } from "thirdweb/extensions/marketplace";
  * const result = encodeCreateAuction({
  *  params: ...,
  * });
@@ -151,6 +151,7 @@ export function encodeCreateAuction(options: CreateAuctionParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { createAuction } from "thirdweb/extensions/marketplace";
  *
  * const transaction = createAuction({
@@ -162,8 +163,7 @@ export function encodeCreateAuction(options: CreateAuctionParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function createAuction(

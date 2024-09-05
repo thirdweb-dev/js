@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTotalOffersSupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isTotalOffersSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isTotalOffersSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeTotalOffersResult } from "thirdweb/extensions/marketplace";
- * const result = decodeTotalOffersResult("...");
+ * const result = decodeTotalOffersResultResult("...");
  * ```
  */
 export function decodeTotalOffersResult(result: Hex) {

@@ -28,13 +28,23 @@ export async function generateFromAbi(
   const overloadedWrites = new Set<string>();
   // split functions into read and write
   const readFunctions: AbiFunction[] = [];
+  const encodeFunctions: AbiFunction[] = [];
   const writeFunctions: AbiFunction[] = [];
+  const installFunctions: AbiFunction[] = [];
   for (const f of functions) {
     if (f.stateMutability === "view" || f.stateMutability === "pure") {
       if (overloadedReads.has(f.name)) {
         continue;
       }
-      readFunctions.push(f);
+      if (f.name.startsWith("encodeBytesOnInstall")) {
+        // installable modules all need a encodeBytesOnInstall function in the abi file
+        installFunctions.push(f);
+      }
+      if (f.name.startsWith("encode") && f.inputs.length > 0) {
+        encodeFunctions.push(f);
+      } else {
+        readFunctions.push(f);
+      }
       overloadedReads.add(f.name);
     } else {
       if (overloadedWrites.has(f.name)) {
@@ -55,7 +65,7 @@ export async function generateFromAbi(
       events.map(async (e) => {
         await writeFile(
           join(outFolder, extensionFileName, "./events", `${e.name}.ts`),
-          await format(generateEvent(e, extensionName), {
+          await format(generateEvent(e, extensionName, extensionFileName), {
             parser: "babel-ts",
             trailingComma: "all",
           }),
@@ -74,7 +84,48 @@ export async function generateFromAbi(
       readFunctions.map(async (f) => {
         await writeFile(
           join(outFolder, extensionFileName, "./read", `${f.name}.ts`),
-          await format(generateReadFunction(f, extensionName), {
+          await format(
+            generateReadFunction(f, extensionName, extensionFileName),
+            {
+              parser: "babel-ts",
+              trailingComma: "all",
+            },
+          ),
+          "utf-8",
+        );
+      }),
+    );
+  }
+  if (encodeFunctions.length) {
+    // make a folder for the read functions
+    await mkdir(join(outFolder, extensionFileName, "./encode"), {
+      recursive: true,
+    });
+    // process every read function
+    await Promise.all(
+      encodeFunctions.map(async (f) => {
+        await writeFile(
+          join(outFolder, extensionFileName, "./encode", `${f.name}.ts`),
+          await format(generateEncodeFunction(f, extensionName), {
+            parser: "babel-ts",
+            trailingComma: "all",
+          }),
+          "utf-8",
+        );
+      }),
+    );
+  }
+  if (installFunctions.length) {
+    // make a folder for the read functions
+    await mkdir(join(outFolder, extensionFileName, "./module"), {
+      recursive: true,
+    });
+    // process every read function
+    await Promise.all(
+      installFunctions.map(async (f) => {
+        await writeFile(
+          join(outFolder, extensionFileName, "./module/install.ts"),
+          await format(generateInstallFunction(extensionFileName, f), {
             parser: "babel-ts",
             trailingComma: "all",
           }),
@@ -93,10 +144,13 @@ export async function generateFromAbi(
       writeFunctions.map(async (f) => {
         await writeFile(
           join(outFolder, extensionFileName, "./write", `${f.name}.ts`),
-          await format(generateWriteFunction(f, extensionName), {
-            parser: "babel-ts",
-            trailingComma: "all",
-          }),
+          await format(
+            generateWriteFunction(f, extensionName, extensionFileName),
+            {
+              parser: "babel-ts",
+              trailingComma: "all",
+            },
+          ),
           "utf-8",
         );
       }),
@@ -104,10 +158,19 @@ export async function generateFromAbi(
   }
 }
 
-function generateWriteFunction(f: AbiFunction, extensionName: string): string {
+function generateWriteFunction(
+  f: AbiFunction,
+  extensionName: string,
+  extensionFileName: string,
+): string {
   const preparedMethod = prepareMethod(f);
   const needsAbiParamToPrimitiveType = f.inputs.length > 0;
   const inputTypeName = `${uppercaseFirstLetter(f.name)}Params`;
+  const info = getFunctionOrModuleInfo(
+    f.name,
+    extensionName,
+    extensionFileName,
+  );
 
   return `${
     needsAbiParamToPrimitiveType
@@ -153,14 +216,12 @@ const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
  * Checks if the \`${f.name}\` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the \`${f.name}\` method is supported.
- * @extension ${extensionName.toUpperCase()}
+ * ${info.getTsDocTag()}
  * @example
  * \`\`\`ts
- * import { is${uppercaseFirstLetter(
-   f.name,
- )}Supported } from "thirdweb/extensions/${extensionName}";
+ * ${info.getImportPath("supported")}
  * 
- * const supported = is${uppercaseFirstLetter(f.name)}Supported(["0x..."]);
+ * const supported = ${info.getFnName("supported")}(["0x..."]);
  * \`\`\`
  */
 export function is${uppercaseFirstLetter(f.name)}Supported(availableSelectors: string[]) {
@@ -173,13 +234,11 @@ ${
  * Encodes the parameters for the "${f.name}" function.
  * @param options - The options for the ${f.name} function.
  * @returns The encoded ABI parameters.
- * @extension ${extensionName.toUpperCase()}
+ * ${info.getTsDocTag()}
  * @example
  * \`\`\`ts
- * import { encode${uppercaseFirstLetter(
-   f.name,
- )}Params } "thirdweb/extensions/${extensionName}";
- * const result = encode${uppercaseFirstLetter(f.name)}Params({\n * ${f.inputs
+ * ${info.getImportPath("encodeParams")}
+ * const result = ${info.getFnName("encodeParams")}({\n * ${f.inputs
    .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
    .join("\n * ")}\n * });
  * \`\`\`
@@ -200,13 +259,11 @@ ${
  * Encodes the "${f.name}" function into a Hex string with its parameters.
  * @param options - The options for the ${f.name} function.
  * @returns The encoded hexadecimal string.
- * @extension ${extensionName.toUpperCase()}
+ * ${info.getTsDocTag()}
  * @example
  * \`\`\`ts
- * import { encode${uppercaseFirstLetter(
-   f.name,
- )} } "thirdweb/extensions/${extensionName}";
- * const result = encode${uppercaseFirstLetter(f.name)}({\n * ${f.inputs
+ * ${info.getImportPath("encode")}
+ * const result = ${info.getFnName("encode")}({\n * ${f.inputs
    .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
    .join("\n * ")}\n * });
  * \`\`\`
@@ -223,12 +280,13 @@ export function encode${uppercaseFirstLetter(f.name)}(options: ${inputTypeName})
  * Prepares a transaction to call the "${f.name}" function on the contract.
  * @param options - The options for the "${f.name}" function.
  * @returns A prepared transaction object.
- * @extension ${extensionName.toUpperCase()}
+ * ${info.getTsDocTag()}
  * @example
  * \`\`\`ts
- * import { ${f.name} } from "thirdweb/extensions/${extensionName}";
+ * import { sendTransaction } from "thirdweb";
+ * ${info.getImportPath("function")}
  * 
- * const transaction = ${f.name}(${
+ * const transaction = ${info.getFnName("function")}(${
    f.inputs.length > 0
      ? `{\n *  contract,\n * ${f.inputs
          .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
@@ -237,8 +295,7 @@ export function encode${uppercaseFirstLetter(f.name)}(options: ${inputTypeName})
  });
  * 
  * // Send the transaction
- * ...
- * 
+ * await sendTransaction({ transaction, account });
  * \`\`\`
  */
 export function ${f.name}(
@@ -287,9 +344,89 @@ export function ${f.name}(
 `;
 }
 
-function generateReadFunction(f: AbiFunction, extensionName: string): string {
+function getFunctionOrModuleInfo(
+  abiName: string,
+  extensionName: string,
+  extensionFileName: string,
+) {
+  // TODO: should make every extension an exported named object: ERC20.balanceOf, etc.
+  const isModule =
+    extensionName === "modules" &&
+    extensionFileName !== "IModularCore" &&
+    extensionFileName !== "IModule" &&
+    extensionFileName !== "OwnableRoles";
+  const moduleName = extensionFileName;
+
+  function getFnName(
+    type:
+      | "function"
+      | "encode"
+      | "decode"
+      | "encodeParams"
+      | "supported"
+      | "event",
+  ) {
+    const detectName = `is${uppercaseFirstLetter(abiName)}Supported`;
+    const encodeName = `encode${uppercaseFirstLetter(abiName)}`;
+    const encodeParamsName = `encode${uppercaseFirstLetter(abiName)}Params`;
+    const decodeName = `decode${uppercaseFirstLetter(abiName)}Result`;
+    switch (type) {
+      case "function":
+        return isModule ? `${moduleName}.${abiName}` : abiName;
+      case "encode":
+        return isModule ? `${moduleName}.${encodeName}` : encodeName;
+      case "decode":
+        return isModule ? `${moduleName}.${decodeName}` : decodeName;
+      case "encodeParams":
+        return isModule
+          ? `${moduleName}.${encodeParamsName}`
+          : encodeParamsName;
+      case "supported":
+        return isModule ? `${moduleName}.${detectName}` : detectName;
+      case "event":
+        return isModule
+          ? `${moduleName}.${eventNameToPreparedEventName(abiName)}`
+          : eventNameToPreparedEventName(abiName);
+    }
+  }
+  function getImportPath(
+    type:
+      | "function"
+      | "encode"
+      | "decode"
+      | "encodeParams"
+      | "supported"
+      | "event",
+  ) {
+    const importPath = isModule
+      ? `import { ${moduleName} } from "thirdweb/modules";`
+      : `import { ${getFnName(type)} } from "thirdweb/extensions/${extensionName}";`;
+    return importPath;
+  }
+  function getTsDocTag() {
+    return isModule
+      ? `@module ${moduleName}`
+      : `@extension ${extensionName.toUpperCase()}`;
+  }
+  return {
+    getFnName,
+    getImportPath,
+    getTsDocTag,
+  };
+}
+
+function generateReadFunction(
+  f: AbiFunction,
+  extensionName: string,
+  extensionFileName: string,
+): string {
   const preparedMethod = prepareMethod(f);
   const needsAbiParamToPrimitiveType = f.inputs.length > 0;
+  const info = getFunctionOrModuleInfo(
+    f.name,
+    extensionName,
+    extensionFileName,
+  );
   return `${
     needsAbiParamToPrimitiveType
       ? `import type { AbiParameterToPrimitiveType } from "abitype";\n`
@@ -335,14 +472,11 @@ const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
  * Checks if the \`${f.name}\` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the \`${f.name}\` method is supported.
- * @extension ${extensionName.toUpperCase()}
+ * ${info.getTsDocTag()}
  * @example
  * \`\`\`ts
- * import { is${uppercaseFirstLetter(
-   f.name,
- )}Supported } from "thirdweb/extensions/${extensionName}";
- * 
- * const supported = is${uppercaseFirstLetter(f.name)}Supported(["0x..."]);
+ * ${info.getImportPath("supported")}
+ * const supported = ${info.getFnName("supported")}(["0x..."]);
  * \`\`\`
  */
 export function is${uppercaseFirstLetter(f.name)}Supported(availableSelectors: string[]) {
@@ -355,13 +489,11 @@ ${
  * Encodes the parameters for the "${f.name}" function.
  * @param options - The options for the ${f.name} function.
  * @returns The encoded ABI parameters.
- * @extension ${extensionName.toUpperCase()}
+ * ${info.getTsDocTag()}
  * @example
  * \`\`\`ts
- * import { encode${uppercaseFirstLetter(
-   f.name,
- )}Params } "thirdweb/extensions/${extensionName}";
- * const result = encode${uppercaseFirstLetter(f.name)}Params({\n * ${f.inputs
+ * ${info.getImportPath("encodeParams")}
+ * const result = ${info.getFnName("encodeParams")}({\n * ${f.inputs
    .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
    .join("\n * ")}\n * });
  * \`\`\`
@@ -382,13 +514,11 @@ ${
  * Encodes the "${f.name}" function into a Hex string with its parameters.
  * @param options - The options for the ${f.name} function.
  * @returns The encoded hexadecimal string.
- * @extension ${extensionName.toUpperCase()}
+ * ${info.getTsDocTag()}
  * @example
  * \`\`\`ts
- * import { encode${uppercaseFirstLetter(
-   f.name,
- )} } "thirdweb/extensions/${extensionName}";
- * const result = encode${uppercaseFirstLetter(f.name)}({\n * ${f.inputs
+ * ${info.getImportPath("encode")}
+ * const result = ${info.getFnName("encode")}({\n * ${f.inputs
    .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
    .join("\n * ")}\n * });
  * \`\`\`
@@ -409,13 +539,11 @@ ${
   * Decodes the result of the ${f.name} function call.
   * @param result - The hexadecimal result to decode.
   * @returns The decoded result as per the FN_OUTPUTS definition.
-  * @extension ${extensionName.toUpperCase()}
+  * ${info.getTsDocTag()}
   * @example
   * \`\`\`ts
-  * import { decode${uppercaseFirstLetter(
-    f.name,
-  )}Result } from "thirdweb/extensions/${extensionName}";
-  * const result = decode${uppercaseFirstLetter(f.name)}Result("...");
+  * ${info.getImportPath("decode")}
+  * const result = ${info.getFnName("decode")}Result("...");
   * \`\`\`
   */
 export function decode${uppercaseFirstLetter(f.name)}Result(result: Hex) {
@@ -434,12 +562,12 @@ export function decode${uppercaseFirstLetter(f.name)}Result(result: Hex) {
  * Calls the "${f.name}" function on the contract.
  * @param options - The options for the ${f.name} function.
  * @returns The parsed result of the function call.
- * @extension ${extensionName.toUpperCase()}
+ * ${info.getTsDocTag()}
  * @example
  * \`\`\`ts
- * import { ${f.name} } from "thirdweb/extensions/${extensionName}";
+ * ${info.getImportPath("function")}
  * 
- * const result = await ${f.name}({
+ * const result = await ${info.getFnName("function")}({
  *  contract, ${
    f.inputs.length > 0
      ? `\n * ${f.inputs
@@ -466,8 +594,203 @@ export async function ${f.name}(
 `;
 }
 
-function generateEvent(e: AbiEvent, extensionName: string): string {
+function generateInstallFunction(moduleName: string, f: AbiFunction): string {
+  const needsParams =
+    f.name.startsWith("encodeBytesOnInstall") && f.inputs.length > 0;
+  return `
+import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import type { PreparedTransaction } from "../../../../../transaction/prepare-transaction.js";
+import type { Address } from "../../../../../utils/address.js";
+import type { Account } from "../../../../../wallets/interfaces/wallet.js";
+${
+  needsParams
+    ? `import {
+  type EncodeBytesOnInstallParams,
+  encodeBytesOnInstallParams,
+} from "../encode/encodeBytesOnInstall.js";`
+    : ""
+}
+import { getOrDeployModule } from "../../../common/getOrDeployModule.js";
+import { installPublishedModule } from "../../../common/installPublishedModule.js";
+
+const contractId = "${moduleName}";
+
+/**
+ * Convenience function to add the ${moduleName} module as a default module on a core contract.
+ * @param params - The parameters for the module.
+ * @returns - The module function.
+ * @example
+ * \`\`\`ts
+ * import { ${moduleName}, deployModularContract } from "thirdweb/modules";
+ *
+ * const deployed = deployModularContract({
+ *   client,
+ *   chain,
+ *   account,
+ *   core: "${moduleName.slice(moduleName.indexOf("ERC"))}",
+ *   params: {
+ *     name: "My Modular Contract",
+ *   },
+ *   modules: [
+ *     ${moduleName}.module(${
+   needsParams
+     ? `{\n * ${f.inputs
+         .map((x) => `       ${removeLeadingUnderscore(x.name)}: ...,`)
+         .join("\n * ")}\n *     })`
+     : ")"
+ },
+ *   ],
+ * });
+ * \`\`\`
+ * @module ${moduleName}
+ */
+export function module(${needsParams ? "params: EncodeBytesOnInstallParams & { publisher?: string }" : "params?: { publisher?: string }"}) {
+  return async (args: {
+    client: ThirdwebClient;
+    chain: Chain;
+    account: Account;
+  }) => {
+    // deploys if needed
+    const moduleContract = await getOrDeployModule({
+      account: args.account,
+      chain: args.chain,
+      client: args.client,
+      contractId,
+      publisher: params?.publisher,
+    });
+    return {
+      module: moduleContract.address as Address,
+      data: ${needsParams ? "encodeInstall(params)" : `"0x" as const`},
+    };
+  };
+}
+  
+/**
+ * Installs the ${moduleName} module on a core contract.
+ * @param options
+ * @returns the transaction to install the module
+ * @example
+ * \`\`\`ts
+ * import { ${moduleName} } from "thirdweb/modules";
+ *
+ * const transaction  = ${moduleName}.install({
+ *  contract: coreContract,
+ *  account: account,
+ ${
+   needsParams
+     ? `*  params: {\n * ${f.inputs
+         .map((x) => `    ${removeLeadingUnderscore(x.name)}: ...,`)
+         .join("\n * ")}\n *  },`
+     : ""
+ }
+ * });
+ *
+ * await sendTransaction({
+ *  transaction,
+ *  account,
+ * });
+ * \`\`\`
+ * @module ${moduleName}
+ */
+export function install(options: {
+  contract: ThirdwebContract;
+  account: Account;
+  ${needsParams ? "params: EncodeBytesOnInstallParams & { publisher?: string };" : "params?: { publisher?: string }"}
+}): PreparedTransaction {
+  return installPublishedModule({
+    account: options.account,
+    contract: options.contract,
+    moduleName: contractId,
+    moduleData: ${needsParams ? "encodeInstall(options.params)" : `"0x" as const`},
+    publisher: options.params?.publisher,
+  });
+}
+
+/**
+ * Encodes the install data for the ${moduleName} module.
+ * @param params - The parameters for the module.
+ * @returns - The encoded data.
+ * @module ${moduleName}
+ */
+export const encodeInstall = ${needsParams ? "encodeBytesOnInstallParams" : "() => '0x'"}
+`;
+}
+
+function generateEncodeFunction(f: AbiFunction, extensionName: string): string {
+  const preparedMethod = prepareMethod(f);
+  const needsAbiParamToPrimitiveType = f.inputs.length > 0;
+  return `${
+    needsAbiParamToPrimitiveType
+      ? `import type { AbiParameterToPrimitiveType } from "abitype";\n`
+      : ""
+  }
+${
+  f.inputs.length > 0
+    ? `import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";`
+    : ""
+}
+
+${
+  f.inputs.length > 0
+    ? `/**
+ * Represents the parameters for the "${f.name}" function.
+ */
+export type ${uppercaseFirstLetter(f.name)}Params = {
+  ${f.inputs
+    .map(
+      (x) =>
+        `${removeLeadingUnderscore(
+          x.name,
+        )}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
+    )
+    .join("\n")}
+};`
+    : ""
+}
+
+export const FN_SELECTOR = "${preparedMethod[0]}" as const;
+const FN_INPUTS = ${JSON.stringify(preparedMethod[1], null, 2)} as const;
+
+${
+  f.inputs.length > 0
+    ? `/**
+ * Encodes the parameters for the "${f.name}" function.
+ * @param options - The options for the ${f.name} function.
+ * @returns The encoded ABI parameters.
+ * @extension ${extensionName.toUpperCase()}
+ * @example
+ * \`\`\`ts
+ * import { encode${uppercaseFirstLetter(
+   f.name,
+ )}Params } "thirdweb/extensions/${extensionName}";
+ * const result = encode${uppercaseFirstLetter(f.name)}Params({\n * ${f.inputs
+   .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+   .join("\n * ")}\n * });
+ * \`\`\`
+ */
+export function ${f.name}Params(options: ${uppercaseFirstLetter(f.name)}Params) {
+  return encodeAbiParameters(FN_INPUTS, [${f.inputs
+    .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
+    .join(", ")}]);
+}
+`
+    : ""
+}`;
+}
+
+function generateEvent(
+  e: AbiEvent,
+  extensionName: string,
+  extensionFileName: string,
+): string {
   const indexedInputs = e.inputs.filter((x) => x.indexed);
+  const info = getFunctionOrModuleInfo(
+    e.name,
+    extensionName,
+    extensionFileName,
+  );
 
   return `import { prepareEvent } from "../../../../../event/prepare-event.js";
 ${
@@ -496,18 +819,16 @@ export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
      : ""
  }
  * @returns The prepared event object.
- * @extension ${extensionName.toUpperCase()}
+ * ${info.getTsDocTag()}
  * @example
  * \`\`\`ts
  * import { getContractEvents } from "thirdweb";
- * import { ${eventNameToPreparedEventName(
-   e.name,
- )} } from "thirdweb/extensions/${extensionName}";
+ * ${info.getImportPath("event")}
  * 
  * const events = await getContractEvents({
  * contract,
  * events: [
- *  ${eventNameToPreparedEventName(e.name)}(${
+ *  ${info.getFnName("event")}(${
    indexedInputs.length > 0
      ? `{\n * ${indexedInputs
          .map((x) => ` ${x.name}: ...,`)

@@ -35,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isRecoveryOfSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isRecoveryOfSupported(["0x..."]);
  * ```
  */
@@ -53,7 +52,7 @@ export function isRecoveryOfSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRecoveryOfParams } "thirdweb/extensions/farcaster";
+ * import { encodeRecoveryOfParams } from "thirdweb/extensions/farcaster";
  * const result = encodeRecoveryOfParams({
  *  fid: ...,
  * });
@@ -70,7 +69,7 @@ export function encodeRecoveryOfParams(options: RecoveryOfParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRecoveryOf } "thirdweb/extensions/farcaster";
+ * import { encodeRecoveryOf } from "thirdweb/extensions/farcaster";
  * const result = encodeRecoveryOf({
  *  fid: ...,
  * });
@@ -93,7 +92,7 @@ export function encodeRecoveryOf(options: RecoveryOfParams) {
  * @example
  * ```ts
  * import { decodeRecoveryOfResult } from "thirdweb/extensions/farcaster";
- * const result = decodeRecoveryOfResult("...");
+ * const result = decodeRecoveryOfResultResult("...");
  * ```
  */
 export function decodeRecoveryOfResult(result: Hex) {

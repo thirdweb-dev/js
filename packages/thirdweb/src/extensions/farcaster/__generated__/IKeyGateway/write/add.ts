@@ -68,7 +68,7 @@ export function isAddSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeAddParams } "thirdweb/extensions/farcaster";
+ * import { encodeAddParams } from "thirdweb/extensions/farcaster";
  * const result = encodeAddParams({
  *  keyType: ...,
  *  key: ...,
@@ -93,7 +93,7 @@ export function encodeAddParams(options: AddParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeAdd } "thirdweb/extensions/farcaster";
+ * import { encodeAdd } from "thirdweb/extensions/farcaster";
  * const result = encodeAdd({
  *  keyType: ...,
  *  key: ...,
@@ -116,6 +116,7 @@ export function encodeAdd(options: AddParams) {
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { add } from "thirdweb/extensions/farcaster";
  *
  * const transaction = add({
@@ -130,8 +131,7 @@ export function encodeAdd(options: AddParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function add(

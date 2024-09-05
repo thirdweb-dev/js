@@ -63,7 +63,7 @@ export function isRemoveSupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeRemoveParams } "thirdweb/extensions/thirdweb";
+ * import { encodeRemoveParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeRemoveParams({
  *  deployer: ...,
  *  deployment: ...,
@@ -86,7 +86,7 @@ export function encodeRemoveParams(options: RemoveParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeRemove } "thirdweb/extensions/thirdweb";
+ * import { encodeRemove } from "thirdweb/extensions/thirdweb";
  * const result = encodeRemove({
  *  deployer: ...,
  *  deployment: ...,
@@ -108,6 +108,7 @@ export function encodeRemove(options: RemoveParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { remove } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = remove({
@@ -121,8 +122,7 @@ export function encodeRemove(options: RemoveParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function remove(

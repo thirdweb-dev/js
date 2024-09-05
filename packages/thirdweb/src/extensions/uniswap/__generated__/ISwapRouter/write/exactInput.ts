@@ -87,7 +87,7 @@ export function isExactInputSupported(availableSelectors: string[]) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeExactInputParams } "thirdweb/extensions/uniswap";
+ * import { encodeExactInputParams } from "thirdweb/extensions/uniswap";
  * const result = encodeExactInputParams({
  *  params: ...,
  * });
@@ -104,7 +104,7 @@ export function encodeExactInputParams(options: ExactInputParams) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeExactInput } "thirdweb/extensions/uniswap";
+ * import { encodeExactInput } from "thirdweb/extensions/uniswap";
  * const result = encodeExactInput({
  *  params: ...,
  * });
@@ -126,6 +126,7 @@ export function encodeExactInput(options: ExactInputParams) {
  * @extension UNISWAP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { exactInput } from "thirdweb/extensions/uniswap";
  *
  * const transaction = exactInput({
@@ -137,8 +138,7 @@ export function encodeExactInput(options: ExactInputParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function exactInput(

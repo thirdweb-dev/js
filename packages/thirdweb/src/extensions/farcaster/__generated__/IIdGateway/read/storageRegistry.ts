@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isStorageRegistrySupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isStorageRegistrySupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isStorageRegistrySupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeStorageRegistryResult } from "thirdweb/extensions/farcaster";
- * const result = decodeStorageRegistryResult("...");
+ * const result = decodeStorageRegistryResultResult("...");
  * ```
  */
 export function decodeStorageRegistryResult(result: Hex) {

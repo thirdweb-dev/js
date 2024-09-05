@@ -33,13 +33,13 @@ export function isUnlockStakeSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { unlockStake } from "thirdweb/extensions/erc4337";
  *
  * const transaction = unlockStake();
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function unlockStake(options: BaseTransactionOptions) {

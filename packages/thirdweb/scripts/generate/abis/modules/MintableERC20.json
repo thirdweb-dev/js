@@ -1,0 +1,6 @@
+[
+  "function encodeBytesBeforeMintWithSignatureERC20((uint48 startTimestamp, uint48 endTimestamp, address currency, uint256 pricePerUnit, bytes32 uid) params) pure returns (bytes)",
+  "function encodeBytesOnInstall(address primarySaleRecipient) pure returns (bytes)",
+  "function getSaleConfig() view returns (address primarySaleRecipient)",
+  "function setSaleConfig(address _primarySaleRecipient) nonpayable"
+]

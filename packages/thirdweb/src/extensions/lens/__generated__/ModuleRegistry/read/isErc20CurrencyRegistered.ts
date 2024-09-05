@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsErc20CurrencyRegisteredSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isIsErc20CurrencyRegisteredSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isIsErc20CurrencyRegisteredSupported(
  * @extension LENS
  * @example
  * ```ts
- * import { encodeIsErc20CurrencyRegisteredParams } "thirdweb/extensions/lens";
+ * import { encodeIsErc20CurrencyRegisteredParams } from "thirdweb/extensions/lens";
  * const result = encodeIsErc20CurrencyRegisteredParams({
  *  currencyAddress: ...,
  * });
@@ -76,7 +75,7 @@ export function encodeIsErc20CurrencyRegisteredParams(
  * @extension LENS
  * @example
  * ```ts
- * import { encodeIsErc20CurrencyRegistered } "thirdweb/extensions/lens";
+ * import { encodeIsErc20CurrencyRegistered } from "thirdweb/extensions/lens";
  * const result = encodeIsErc20CurrencyRegistered({
  *  currencyAddress: ...,
  * });
@@ -101,7 +100,7 @@ export function encodeIsErc20CurrencyRegistered(
  * @example
  * ```ts
  * import { decodeIsErc20CurrencyRegisteredResult } from "thirdweb/extensions/lens";
- * const result = decodeIsErc20CurrencyRegisteredResult("...");
+ * const result = decodeIsErc20CurrencyRegisteredResultResult("...");
  * ```
  */
 export function decodeIsErc20CurrencyRegisteredResult(result: Hex) {

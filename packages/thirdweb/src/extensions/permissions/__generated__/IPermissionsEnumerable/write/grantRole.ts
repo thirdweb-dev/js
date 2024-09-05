@@ -55,7 +55,7 @@ export function isGrantRoleSupported(availableSelectors: string[]) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeGrantRoleParams } "thirdweb/extensions/permissions";
+ * import { encodeGrantRoleParams } from "thirdweb/extensions/permissions";
  * const result = encodeGrantRoleParams({
  *  role: ...,
  *  account: ...,
@@ -73,7 +73,7 @@ export function encodeGrantRoleParams(options: GrantRoleParams) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeGrantRole } "thirdweb/extensions/permissions";
+ * import { encodeGrantRole } from "thirdweb/extensions/permissions";
  * const result = encodeGrantRole({
  *  role: ...,
  *  account: ...,
@@ -96,6 +96,7 @@ export function encodeGrantRole(options: GrantRoleParams) {
  * @extension PERMISSIONS
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { grantRole } from "thirdweb/extensions/permissions";
  *
  * const transaction = grantRole({
@@ -108,8 +109,7 @@ export function encodeGrantRole(options: GrantRoleParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function grantRole(

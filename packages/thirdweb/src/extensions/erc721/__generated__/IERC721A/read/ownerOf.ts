@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isOwnerOfSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isOwnerOfSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isOwnerOfSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeOwnerOfParams } "thirdweb/extensions/erc721";
+ * import { encodeOwnerOfParams } from "thirdweb/extensions/erc721";
  * const result = encodeOwnerOfParams({
  *  tokenId: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeOwnerOfParams(options: OwnerOfParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeOwnerOf } "thirdweb/extensions/erc721";
+ * import { encodeOwnerOf } from "thirdweb/extensions/erc721";
  * const result = encodeOwnerOf({
  *  tokenId: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeOwnerOf(options: OwnerOfParams) {
  * @example
  * ```ts
  * import { decodeOwnerOfResult } from "thirdweb/extensions/erc721";
- * const result = decodeOwnerOfResult("...");
+ * const result = decodeOwnerOfResultResult("...");
  * ```
  */
 export function decodeOwnerOfResult(result: Hex) {

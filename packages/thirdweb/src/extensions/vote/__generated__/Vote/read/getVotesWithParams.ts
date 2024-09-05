@@ -47,7 +47,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetVotesWithParamsSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isGetVotesWithParamsSupported(["0x..."]);
  * ```
  */
@@ -65,7 +64,7 @@ export function isGetVotesWithParamsSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeGetVotesWithParamsParams } "thirdweb/extensions/vote";
+ * import { encodeGetVotesWithParamsParams } from "thirdweb/extensions/vote";
  * const result = encodeGetVotesWithParamsParams({
  *  account: ...,
  *  blockNumber: ...,
@@ -90,7 +89,7 @@ export function encodeGetVotesWithParamsParams(
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeGetVotesWithParams } "thirdweb/extensions/vote";
+ * import { encodeGetVotesWithParams } from "thirdweb/extensions/vote";
  * const result = encodeGetVotesWithParams({
  *  account: ...,
  *  blockNumber: ...,
@@ -115,7 +114,7 @@ export function encodeGetVotesWithParams(options: GetVotesWithParamsParams) {
  * @example
  * ```ts
  * import { decodeGetVotesWithParamsResult } from "thirdweb/extensions/vote";
- * const result = decodeGetVotesWithParamsResult("...");
+ * const result = decodeGetVotesWithParamsResultResult("...");
  * ```
  */
 export function decodeGetVotesWithParamsResult(result: Hex) {

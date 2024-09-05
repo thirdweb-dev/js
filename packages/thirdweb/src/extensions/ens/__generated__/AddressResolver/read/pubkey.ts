@@ -39,7 +39,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPubkeySupported } from "thirdweb/extensions/ens";
- *
  * const supported = isPubkeySupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isPubkeySupported(availableSelectors: string[]) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodePubkeyParams } "thirdweb/extensions/ens";
+ * import { encodePubkeyParams } from "thirdweb/extensions/ens";
  * const result = encodePubkeyParams({
  *  name: ...,
  * });
@@ -74,7 +73,7 @@ export function encodePubkeyParams(options: PubkeyParams) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodePubkey } "thirdweb/extensions/ens";
+ * import { encodePubkey } from "thirdweb/extensions/ens";
  * const result = encodePubkey({
  *  name: ...,
  * });
@@ -95,7 +94,7 @@ export function encodePubkey(options: PubkeyParams) {
  * @example
  * ```ts
  * import { decodePubkeyResult } from "thirdweb/extensions/ens";
- * const result = decodePubkeyResult("...");
+ * const result = decodePubkeyResultResult("...");
  * ```
  */
 export function decodePubkeyResult(result: Hex) {

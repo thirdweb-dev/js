@@ -61,7 +61,7 @@ export function isUnpublishContractSupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeUnpublishContractParams } "thirdweb/extensions/thirdweb";
+ * import { encodeUnpublishContractParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeUnpublishContractParams({
  *  publisher: ...,
  *  contractId: ...,
@@ -84,7 +84,7 @@ export function encodeUnpublishContractParams(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeUnpublishContract } "thirdweb/extensions/thirdweb";
+ * import { encodeUnpublishContract } from "thirdweb/extensions/thirdweb";
  * const result = encodeUnpublishContract({
  *  publisher: ...,
  *  contractId: ...,
@@ -107,6 +107,7 @@ export function encodeUnpublishContract(options: UnpublishContractParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { unpublishContract } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = unpublishContract({
@@ -119,8 +120,7 @@ export function encodeUnpublishContract(options: UnpublishContractParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function unpublishContract(

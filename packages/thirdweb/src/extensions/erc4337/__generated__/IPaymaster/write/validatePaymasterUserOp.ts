@@ -136,7 +136,7 @@ export function isValidatePaymasterUserOpSupported(
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeValidatePaymasterUserOpParams } "thirdweb/extensions/erc4337";
+ * import { encodeValidatePaymasterUserOpParams } from "thirdweb/extensions/erc4337";
  * const result = encodeValidatePaymasterUserOpParams({
  *  userOp: ...,
  *  userOpHash: ...,
@@ -161,7 +161,7 @@ export function encodeValidatePaymasterUserOpParams(
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeValidatePaymasterUserOp } "thirdweb/extensions/erc4337";
+ * import { encodeValidatePaymasterUserOp } from "thirdweb/extensions/erc4337";
  * const result = encodeValidatePaymasterUserOp({
  *  userOp: ...,
  *  userOpHash: ...,
@@ -187,6 +187,7 @@ export function encodeValidatePaymasterUserOp(
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { validatePaymasterUserOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = validatePaymasterUserOp({
@@ -200,8 +201,7 @@ export function encodeValidatePaymasterUserOp(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function validatePaymasterUserOp(

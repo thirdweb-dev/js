@@ -53,7 +53,7 @@ export function isCancelDirectListingSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCancelDirectListingParams } "thirdweb/extensions/marketplace";
+ * import { encodeCancelDirectListingParams } from "thirdweb/extensions/marketplace";
  * const result = encodeCancelDirectListingParams({
  *  listingId: ...,
  * });
@@ -72,7 +72,7 @@ export function encodeCancelDirectListingParams(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCancelDirectListing } "thirdweb/extensions/marketplace";
+ * import { encodeCancelDirectListing } from "thirdweb/extensions/marketplace";
  * const result = encodeCancelDirectListing({
  *  listingId: ...,
  * });
@@ -94,6 +94,7 @@ export function encodeCancelDirectListing(options: CancelDirectListingParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { cancelDirectListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = cancelDirectListing({
@@ -105,8 +106,7 @@ export function encodeCancelDirectListing(options: CancelDirectListingParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function cancelDirectListing(

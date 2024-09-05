@@ -84,7 +84,7 @@ export function isCreateRuleMultiplicativeSupported(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeCreateRuleMultiplicativeParams } "thirdweb/extensions/thirdweb";
+ * import { encodeCreateRuleMultiplicativeParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeCreateRuleMultiplicativeParams({
  *  rule: ...,
  * });
@@ -103,7 +103,7 @@ export function encodeCreateRuleMultiplicativeParams(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeCreateRuleMultiplicative } "thirdweb/extensions/thirdweb";
+ * import { encodeCreateRuleMultiplicative } from "thirdweb/extensions/thirdweb";
  * const result = encodeCreateRuleMultiplicative({
  *  rule: ...,
  * });
@@ -127,6 +127,7 @@ export function encodeCreateRuleMultiplicative(
  * @extension THIRDWEB
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { createRuleMultiplicative } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = createRuleMultiplicative({
@@ -138,8 +139,7 @@ export function encodeCreateRuleMultiplicative(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function createRuleMultiplicative(

@@ -39,7 +39,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isAllowanceSupported } from "thirdweb/extensions/erc20";
- *
  * const supported = isAllowanceSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isAllowanceSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeAllowanceParams } "thirdweb/extensions/erc20";
+ * import { encodeAllowanceParams } from "thirdweb/extensions/erc20";
  * const result = encodeAllowanceParams({
  *  owner: ...,
  *  spender: ...,
@@ -75,7 +74,7 @@ export function encodeAllowanceParams(options: AllowanceParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeAllowance } "thirdweb/extensions/erc20";
+ * import { encodeAllowance } from "thirdweb/extensions/erc20";
  * const result = encodeAllowance({
  *  owner: ...,
  *  spender: ...,
@@ -99,7 +98,7 @@ export function encodeAllowance(options: AllowanceParams) {
  * @example
  * ```ts
  * import { decodeAllowanceResult } from "thirdweb/extensions/erc20";
- * const result = decodeAllowanceResult("...");
+ * const result = decodeAllowanceResultResult("...");
  * ```
  */
 export function decodeAllowanceResult(result: Hex) {

@@ -82,7 +82,7 @@ export function isRegisterForSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRegisterForParams } "thirdweb/extensions/farcaster";
+ * import { encodeRegisterForParams } from "thirdweb/extensions/farcaster";
  * const result = encodeRegisterForParams({
  *  to: ...,
  *  recovery: ...,
@@ -109,7 +109,7 @@ export function encodeRegisterForParams(options: RegisterForParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRegisterFor } "thirdweb/extensions/farcaster";
+ * import { encodeRegisterFor } from "thirdweb/extensions/farcaster";
  * const result = encodeRegisterFor({
  *  to: ...,
  *  recovery: ...,
@@ -135,6 +135,7 @@ export function encodeRegisterFor(options: RegisterForParams) {
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { registerFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = registerFor({
@@ -150,8 +151,7 @@ export function encodeRegisterFor(options: RegisterForParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function registerFor(

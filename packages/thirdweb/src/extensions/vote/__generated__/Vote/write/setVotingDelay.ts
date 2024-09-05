@@ -53,7 +53,7 @@ export function isSetVotingDelaySupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeSetVotingDelayParams } "thirdweb/extensions/vote";
+ * import { encodeSetVotingDelayParams } from "thirdweb/extensions/vote";
  * const result = encodeSetVotingDelayParams({
  *  newVotingDelay: ...,
  * });
@@ -70,7 +70,7 @@ export function encodeSetVotingDelayParams(options: SetVotingDelayParams) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeSetVotingDelay } "thirdweb/extensions/vote";
+ * import { encodeSetVotingDelay } from "thirdweb/extensions/vote";
  * const result = encodeSetVotingDelay({
  *  newVotingDelay: ...,
  * });
@@ -92,6 +92,7 @@ export function encodeSetVotingDelay(options: SetVotingDelayParams) {
  * @extension VOTE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setVotingDelay } from "thirdweb/extensions/vote";
  *
  * const transaction = setVotingDelay({
@@ -103,8 +104,7 @@ export function encodeSetVotingDelay(options: SetVotingDelayParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setVotingDelay(

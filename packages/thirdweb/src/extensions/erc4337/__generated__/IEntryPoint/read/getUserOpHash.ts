@@ -96,7 +96,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetUserOpHashSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isGetUserOpHashSupported(["0x..."]);
  * ```
  */
@@ -114,7 +113,7 @@ export function isGetUserOpHashSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetUserOpHashParams } "thirdweb/extensions/erc4337";
+ * import { encodeGetUserOpHashParams } from "thirdweb/extensions/erc4337";
  * const result = encodeGetUserOpHashParams({
  *  userOp: ...,
  * });
@@ -131,7 +130,7 @@ export function encodeGetUserOpHashParams(options: GetUserOpHashParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetUserOpHash } "thirdweb/extensions/erc4337";
+ * import { encodeGetUserOpHash } from "thirdweb/extensions/erc4337";
  * const result = encodeGetUserOpHash({
  *  userOp: ...,
  * });
@@ -154,7 +153,7 @@ export function encodeGetUserOpHash(options: GetUserOpHashParams) {
  * @example
  * ```ts
  * import { decodeGetUserOpHashResult } from "thirdweb/extensions/erc4337";
- * const result = decodeGetUserOpHashResult("...");
+ * const result = decodeGetUserOpHashResultResult("...");
  * ```
  */
 export function decodeGetUserOpHashResult(result: Hex) {

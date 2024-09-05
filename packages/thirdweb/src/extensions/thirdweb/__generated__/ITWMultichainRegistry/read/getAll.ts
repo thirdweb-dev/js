@@ -49,7 +49,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAllSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isGetAllSupported(["0x..."]);
  * ```
  */
@@ -67,7 +66,7 @@ export function isGetAllSupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetAllParams } "thirdweb/extensions/thirdweb";
+ * import { encodeGetAllParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetAllParams({
  *  deployer: ...,
  * });
@@ -84,7 +83,7 @@ export function encodeGetAllParams(options: GetAllParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetAll } "thirdweb/extensions/thirdweb";
+ * import { encodeGetAll } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetAll({
  *  deployer: ...,
  * });
@@ -105,7 +104,7 @@ export function encodeGetAll(options: GetAllParams) {
  * @example
  * ```ts
  * import { decodeGetAllResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeGetAllResult("...");
+ * const result = decodeGetAllResultResult("...");
  * ```
  */
 export function decodeGetAllResult(result: Hex) {

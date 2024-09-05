@@ -78,7 +78,7 @@ export function isDelegateBySigSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeDelegateBySigParams } "thirdweb/extensions/erc20";
+ * import { encodeDelegateBySigParams } from "thirdweb/extensions/erc20";
  * const result = encodeDelegateBySigParams({
  *  delegatee: ...,
  *  nonce: ...,
@@ -107,7 +107,7 @@ export function encodeDelegateBySigParams(options: DelegateBySigParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeDelegateBySig } "thirdweb/extensions/erc20";
+ * import { encodeDelegateBySig } from "thirdweb/extensions/erc20";
  * const result = encodeDelegateBySig({
  *  delegatee: ...,
  *  nonce: ...,
@@ -134,6 +134,7 @@ export function encodeDelegateBySig(options: DelegateBySigParams) {
  * @extension ERC20
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { delegateBySig } from "thirdweb/extensions/erc20";
  *
  * const transaction = delegateBySig({
@@ -150,8 +151,7 @@ export function encodeDelegateBySig(options: DelegateBySigParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function delegateBySig(

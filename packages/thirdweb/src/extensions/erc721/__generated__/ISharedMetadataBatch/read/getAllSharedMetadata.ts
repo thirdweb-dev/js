@@ -50,7 +50,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAllSharedMetadataSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isGetAllSharedMetadataSupported(["0x..."]);
  * ```
  */
@@ -69,7 +68,7 @@ export function isGetAllSharedMetadataSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetAllSharedMetadataResult } from "thirdweb/extensions/erc721";
- * const result = decodeGetAllSharedMetadataResult("...");
+ * const result = decodeGetAllSharedMetadataResultResult("...");
  * ```
  */
 export function decodeGetAllSharedMetadataResult(result: Hex) {

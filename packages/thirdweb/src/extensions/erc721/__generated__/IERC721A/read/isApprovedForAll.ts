@@ -39,7 +39,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsApprovedForAllSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isIsApprovedForAllSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isIsApprovedForAllSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeIsApprovedForAllParams } "thirdweb/extensions/erc721";
+ * import { encodeIsApprovedForAllParams } from "thirdweb/extensions/erc721";
  * const result = encodeIsApprovedForAllParams({
  *  owner: ...,
  *  operator: ...,
@@ -75,7 +74,7 @@ export function encodeIsApprovedForAllParams(options: IsApprovedForAllParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeIsApprovedForAll } "thirdweb/extensions/erc721";
+ * import { encodeIsApprovedForAll } from "thirdweb/extensions/erc721";
  * const result = encodeIsApprovedForAll({
  *  owner: ...,
  *  operator: ...,
@@ -99,7 +98,7 @@ export function encodeIsApprovedForAll(options: IsApprovedForAllParams) {
  * @example
  * ```ts
  * import { decodeIsApprovedForAllResult } from "thirdweb/extensions/erc721";
- * const result = decodeIsApprovedForAllResult("...");
+ * const result = decodeIsApprovedForAllResultResult("...");
  * ```
  */
 export function decodeIsApprovedForAllResult(result: Hex) {

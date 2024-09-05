@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isDelegatesSupported } from "thirdweb/extensions/erc20";
- *
  * const supported = isDelegatesSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isDelegatesSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeDelegatesParams } "thirdweb/extensions/erc20";
+ * import { encodeDelegatesParams } from "thirdweb/extensions/erc20";
  * const result = encodeDelegatesParams({
  *  account: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeDelegatesParams(options: DelegatesParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeDelegates } "thirdweb/extensions/erc20";
+ * import { encodeDelegates } from "thirdweb/extensions/erc20";
  * const result = encodeDelegates({
  *  account: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeDelegates(options: DelegatesParams) {
  * @example
  * ```ts
  * import { decodeDelegatesResult } from "thirdweb/extensions/erc20";
- * const result = decodeDelegatesResult("...");
+ * const result = decodeDelegatesResultResult("...");
  * ```
  */
 export function decodeDelegatesResult(result: Hex) {

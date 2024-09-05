@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isNoncesSupported } from "thirdweb/extensions/erc20";
- *
  * const supported = isNoncesSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isNoncesSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeNoncesParams } "thirdweb/extensions/erc20";
+ * import { encodeNoncesParams } from "thirdweb/extensions/erc20";
  * const result = encodeNoncesParams({
  *  owner: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeNoncesParams(options: NoncesParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeNonces } "thirdweb/extensions/erc20";
+ * import { encodeNonces } from "thirdweb/extensions/erc20";
  * const result = encodeNonces({
  *  owner: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeNonces(options: NoncesParams) {
  * @example
  * ```ts
  * import { decodeNoncesResult } from "thirdweb/extensions/erc20";
- * const result = decodeNoncesResult("...");
+ * const result = decodeNoncesResultResult("...");
  * ```
  */
 export function decodeNoncesResult(result: Hex) {

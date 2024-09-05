@@ -38,7 +38,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetBlockHashSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetBlockHashSupported(["0x..."]);
  * ```
  */
@@ -56,7 +55,7 @@ export function isGetBlockHashSupported(availableSelectors: string[]) {
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeGetBlockHashParams } "thirdweb/extensions/multicall3";
+ * import { encodeGetBlockHashParams } from "thirdweb/extensions/multicall3";
  * const result = encodeGetBlockHashParams({
  *  blockNumber: ...,
  * });
@@ -73,7 +72,7 @@ export function encodeGetBlockHashParams(options: GetBlockHashParams) {
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeGetBlockHash } "thirdweb/extensions/multicall3";
+ * import { encodeGetBlockHash } from "thirdweb/extensions/multicall3";
  * const result = encodeGetBlockHash({
  *  blockNumber: ...,
  * });
@@ -96,7 +95,7 @@ export function encodeGetBlockHash(options: GetBlockHashParams) {
  * @example
  * ```ts
  * import { decodeGetBlockHashResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetBlockHashResult("...");
+ * const result = decodeGetBlockHashResultResult("...");
  * ```
  */
 export function decodeGetBlockHashResult(result: Hex) {

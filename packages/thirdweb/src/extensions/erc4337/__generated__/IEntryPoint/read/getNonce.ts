@@ -40,7 +40,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetNonceSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isGetNonceSupported(["0x..."]);
  * ```
  */
@@ -58,7 +57,7 @@ export function isGetNonceSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetNonceParams } "thirdweb/extensions/erc4337";
+ * import { encodeGetNonceParams } from "thirdweb/extensions/erc4337";
  * const result = encodeGetNonceParams({
  *  sender: ...,
  *  key: ...,
@@ -76,7 +75,7 @@ export function encodeGetNonceParams(options: GetNonceParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetNonce } "thirdweb/extensions/erc4337";
+ * import { encodeGetNonce } from "thirdweb/extensions/erc4337";
  * const result = encodeGetNonce({
  *  sender: ...,
  *  key: ...,
@@ -98,7 +97,7 @@ export function encodeGetNonce(options: GetNonceParams) {
  * @example
  * ```ts
  * import { decodeGetNonceResult } from "thirdweb/extensions/erc4337";
- * const result = decodeGetNonceResult("...");
+ * const result = decodeGetNonceResultResult("...");
  * ```
  */
 export function decodeGetNonceResult(result: Hex) {

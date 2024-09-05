@@ -58,7 +58,7 @@ export function isCloseAuctionSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCloseAuctionParams } "thirdweb/extensions/marketplace";
+ * import { encodeCloseAuctionParams } from "thirdweb/extensions/marketplace";
  * const result = encodeCloseAuctionParams({
  *  listingId: ...,
  *  closeFor: ...,
@@ -76,7 +76,7 @@ export function encodeCloseAuctionParams(options: CloseAuctionParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCloseAuction } "thirdweb/extensions/marketplace";
+ * import { encodeCloseAuction } from "thirdweb/extensions/marketplace";
  * const result = encodeCloseAuction({
  *  listingId: ...,
  *  closeFor: ...,
@@ -99,6 +99,7 @@ export function encodeCloseAuction(options: CloseAuctionParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { closeAuction } from "thirdweb/extensions/marketplace";
  *
  * const transaction = closeAuction({
@@ -111,8 +112,7 @@ export function encodeCloseAuction(options: CloseAuctionParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function closeAuction(

@@ -1,7 +1,0 @@
-[
-  "function getModuleConfig() pure returns ((bool registerInstallationCallback, bytes4[] requiredInterfaces, bytes4[] supportedInterfaces, (bytes4 selector)[] callbackFunctions, (bytes4 selector, uint256 permissionBits)[] fallbackFunctions) config)",
-  "function onTokenURI(uint256 _id) view returns (string uri)",
-  "function setTokenURI(uint256 _id, string _uri)",
-  "event MetadataUpdate(uint256 id)",
-  "error MetadataNoMetadataForTokenId()"
-]

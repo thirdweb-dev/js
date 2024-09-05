@@ -55,7 +55,7 @@ export function isMulticallSupported(availableSelectors: string[]) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeMulticallParams } "thirdweb/extensions/common";
+ * import { encodeMulticallParams } from "thirdweb/extensions/common";
  * const result = encodeMulticallParams({
  *  data: ...,
  * });
@@ -72,7 +72,7 @@ export function encodeMulticallParams(options: MulticallParams) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeMulticall } "thirdweb/extensions/common";
+ * import { encodeMulticall } from "thirdweb/extensions/common";
  * const result = encodeMulticall({
  *  data: ...,
  * });
@@ -94,6 +94,7 @@ export function encodeMulticall(options: MulticallParams) {
  * @extension COMMON
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { multicall } from "thirdweb/extensions/common";
  *
  * const transaction = multicall({
@@ -105,8 +106,7 @@ export function encodeMulticall(options: MulticallParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function multicall(

@@ -102,7 +102,7 @@ export function isCreateListingSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCreateListingParams } "thirdweb/extensions/marketplace";
+ * import { encodeCreateListingParams } from "thirdweb/extensions/marketplace";
  * const result = encodeCreateListingParams({
  *  params: ...,
  * });
@@ -119,7 +119,7 @@ export function encodeCreateListingParams(options: CreateListingParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCreateListing } "thirdweb/extensions/marketplace";
+ * import { encodeCreateListing } from "thirdweb/extensions/marketplace";
  * const result = encodeCreateListing({
  *  params: ...,
  * });
@@ -141,6 +141,7 @@ export function encodeCreateListing(options: CreateListingParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { createListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = createListing({
@@ -152,8 +153,7 @@ export function encodeCreateListing(options: CreateListingParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function createListing(

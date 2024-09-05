@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetLocalNameSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetLocalNameSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isGetLocalNameSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetLocalNameParams } "thirdweb/extensions/lens";
+ * import { encodeGetLocalNameParams } from "thirdweb/extensions/lens";
  * const result = encodeGetLocalNameParams({
  *  tokenId: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeGetLocalNameParams(options: GetLocalNameParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetLocalName } "thirdweb/extensions/lens";
+ * import { encodeGetLocalName } from "thirdweb/extensions/lens";
  * const result = encodeGetLocalName({
  *  tokenId: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeGetLocalName(options: GetLocalNameParams) {
  * @example
  * ```ts
  * import { decodeGetLocalNameResult } from "thirdweb/extensions/lens";
- * const result = decodeGetLocalNameResult("...");
+ * const result = decodeGetLocalNameResultResult("...");
  * ```
  */
 export function decodeGetLocalNameResult(result: Hex) {

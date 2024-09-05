@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isOwnerSupported } from "thirdweb/extensions/airdrop";
- *
  * const supported = isOwnerSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isOwnerSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeOwnerResult } from "thirdweb/extensions/airdrop";
- * const result = decodeOwnerResult("...");
+ * const result = decodeOwnerResultResult("...");
  * ```
  */
 export function decodeOwnerResult(result: Hex) {

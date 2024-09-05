@@ -1,0 +1,6 @@
+[
+  "function encodeBytesOnInstall() pure returns (bytes)",
+  "function getNextTokenId() view returns (uint256)",
+  "error SequentialTokenIdInvalidTokenId()",
+  "error UpdateTokenIdCallbackERC1155NotImplemented()"
+]
