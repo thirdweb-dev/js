@@ -1,11 +1,3 @@
-import {
-  type Abi,
-  type AddContractInput,
-  type FeatureName,
-  type ValidContractInstance,
-  detectFeatures as detectFeaturesFromSdk,
-  isExtensionEnabled,
-} from "@thirdweb-dev/sdk";
 import { MULTICHAIN_REGISTRY_CONTRACT } from "constants/contracts";
 import {
   DASHBOARD_ENGINE_RELAYER_URL,
@@ -14,30 +6,14 @@ import {
 import { prepareContractCall, sendAndConfirmTransaction } from "thirdweb";
 import type { Account } from "thirdweb/wallets";
 
-export function detectFeatures<TContract extends ValidContractInstance | null>(
-  contract: ValidContractInstance | null | undefined,
-  features: FeatureName[],
-  strategy: "any" | "all" = "any",
-): contract is TContract {
-  if (!contract) {
-    return false;
-  }
-  if (!("abi" in contract)) {
-    return false;
-  }
+type ContractInput = {
+  address: string;
+  chainId: number;
+};
 
-  const extensions = detectFeaturesFromSdk(contract.abi as Abi);
-
-  if (strategy === "any") {
-    return features.some((feature) =>
-      isExtensionEnabled(contract.abi as Abi, feature, extensions),
-    );
-  }
-
-  return features.every((feature) =>
-    isExtensionEnabled(contract.abi as Abi, feature, extensions),
-  );
-}
+type AddContractInput = ContractInput & {
+  metadataURI?: string;
+};
 
 export async function addContractToMultiChainRegistry(
   contractData: AddContractInput,

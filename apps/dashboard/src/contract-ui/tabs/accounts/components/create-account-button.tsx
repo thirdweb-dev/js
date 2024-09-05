@@ -1,13 +1,12 @@
 import { Tooltip } from "@chakra-ui/react";
-import {
-  useAccountsForAddress,
-  useContract,
-  useCreateAccount,
-  useIsAccountDeployed,
-} from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import type { ThirdwebContract } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import * as ERC4337Ext from "thirdweb/extensions/erc4337";
+import {
+  useActiveAccount,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
 import { Button, Card, Text } from "tw-components";
 
 interface CreateAccountButtonProps {
@@ -18,26 +17,35 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   contract,
   ...restButtonProps
 }) => {
-  const contractQuery = useContract(contract.address);
-  const { mutate: createAccount, isLoading } = useCreateAccount(
-    contractQuery?.contract,
-  );
+  const sendTxMutation = useSendAndConfirmTransaction();
 
   const address = useActiveAccount()?.address;
-  const { data: isAccountDeployed } = useIsAccountDeployed(
-    contractQuery.contract,
-    address,
-  );
-  const { data: accountsForAddress } = useAccountsForAddress(
-    contractQuery.contract,
-    address,
+
+  const isAccountDeployedQuery = useReadContract(ERC4337Ext.isAccountDeployed, {
+    contract,
+    adminSigner: address || "",
+    data: "0x",
+    queryOptions: {
+      enabled: !!address,
+    },
+  });
+
+  const accountsForAddressQuery = useReadContract(
+    ERC4337Ext.getAccountsOfSigner,
+    {
+      contract,
+      signer: address || "",
+      queryOptions: {
+        enabled: !!address,
+      },
+    },
   );
 
-  if (!contractQuery.contract || !address) {
+  if (!address) {
     return null;
   }
 
-  if (isAccountDeployed && accountsForAddress?.length) {
+  if (isAccountDeployedQuery.data && accountsForAddressQuery.data?.length) {
     return (
       <Tooltip
         label={
@@ -62,10 +70,17 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   return (
     <TransactionButton
       colorScheme="primary"
-      onClick={() => createAccount(address)}
-      isLoading={isLoading}
+      onClick={() => {
+        const tx = ERC4337Ext.createAccount({
+          contract,
+          admin: address,
+          data: "0x",
+        });
+        sendTxMutation.mutate(tx);
+      }}
+      isLoading={sendTxMutation.isPending}
       transactionCount={1}
-      isDisabled={isAccountDeployed}
+      isDisabled={isAccountDeployedQuery.data}
       {...restButtonProps}
     >
       Create Account

@@ -2,8 +2,6 @@ import {
   useIsAdmin,
   useIsMinter,
 } from "@3rdweb-sdk/react/hooks/useContractRoles";
-import { useBatchesToReveal, useContract } from "@thirdweb-dev/react";
-import { detectFeatures } from "components/contract-components/utils";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { useTabHref } from "contract-ui/utils";
 import { useMemo } from "react";
@@ -37,7 +35,6 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
   isErc721,
 }) => {
   const functionSelectorQuery = useContractFunctionSelectors(contract);
-  const contractQuery = useContract(contract.address);
   const nftHref = useTabHref("nfts");
   const tokenHref = useTabHref("tokens");
   const accountsHref = useTabHref("accounts");
@@ -80,8 +77,10 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     },
   );
 
-  // need to replace!
-  const batchesToReveal = useBatchesToReveal(contractQuery.contract);
+  const batchesToReveal = useReadContract(ERC721Ext.getBatchesToReveal, {
+    contract,
+    queryOptions: { enabled: isErc721 },
+  });
 
   const steps: Step[] = [
     {
@@ -278,10 +277,9 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     });
   }
 
-  const isRevealable = detectFeatures(contractQuery.contract, [
-    "ERC721Revealable",
-    "ERC1155Revealable",
-  ]);
+  const isRevealable = ERC721Ext.isGetBaseURICountSupported(
+    functionSelectorQuery.data,
+  );
   const needsReveal = batchesToReveal.data?.length;
   if (isRevealable && needsReveal) {
     steps.push({

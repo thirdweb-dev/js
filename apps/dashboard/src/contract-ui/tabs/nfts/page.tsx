@@ -1,7 +1,4 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import { detectFeatures } from "components/contract-components/utils";
 import { useRouter } from "next/router";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
@@ -31,7 +28,6 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   contract,
   isErc721,
 }) => {
-  const contractQuery = useContract(contract.address);
   const router = useRouter();
   const tokenId = router.query?.paths?.[2];
   const functionSelectorQuery = useContractFunctionSelectors(contract);
@@ -82,23 +78,16 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     );
   })();
 
-  const isRevealable = detectFeatures(contractQuery.contract, [
-    "ERC721Revealable",
-  ]);
-
-  const detectedRevealableState = extensionDetectedState({
-    contractQuery,
-    feature: ["ERC721Revealable"],
-  });
+  const isRevealable = ERC721Ext.isGetBaseURICountSupported(
+    functionSelectorQuery.data,
+  );
 
   return (
     <Flex direction="column" gap={6}>
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">Contract NFTs</Heading>
         <Flex gap={2} flexDir={{ base: "column", md: "row" }}>
-          {detectedRevealableState === "enabled" && contractQuery?.contract && (
-            <NFTRevealButton contractQuery={contractQuery} />
-          )}
+          {isRevealable && <NFTRevealButton contract={contract} />}
           {isERC721ClaimToSupported && (
             /**
              * This button is used for claiming NFT Drop contract (erc721) only!
@@ -117,8 +106,8 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           )}
           {isLazyMintable && (
             <BatchLazyMintButton
-              contractQuery={contractQuery}
               isRevealable={isRevealable}
+              isErc721={isErc721}
               contract={contract}
             />
           )}

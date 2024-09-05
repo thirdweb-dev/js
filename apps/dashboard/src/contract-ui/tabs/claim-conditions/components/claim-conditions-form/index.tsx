@@ -621,8 +621,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
               {controlledFields.some((field) => field.fromSdk) && (
                 <ResetClaimEligibility
                   isErc20={isErc20}
-                  contract={contract}
-                  isColumn={isColumn}
+                  contract={contractV5}
                   tokenId={tokenId}
                 />
               )}

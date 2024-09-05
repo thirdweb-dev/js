@@ -24,6 +24,18 @@ export {
 } from "../../extensions/erc4337/account/removeSessionKey.js";
 
 export {
+  isAccountDeployed,
+  type IsAccountDeployedParams,
+  isIsAccountDeployedSupported,
+} from "../../extensions/erc4337/account/isAccountDeployed.js";
+
+export {
+  createAccount,
+  type CreateAccountParams,
+  isCreateAccountSupported,
+} from "../../extensions/erc4337/__generated__/IAccountFactory/write/createAccount.js";
+
+export {
   getAllActiveSigners,
   isGetAllActiveSignersSupported,
 } from "../../extensions/erc4337/__generated__/IAccountPermissions/read/getAllActiveSigners.js";
