@@ -3,10 +3,9 @@ export * as MintableERC20 from "../../extensions/modules/MintableERC20/index.js"
 export * as MintableERC721 from "../../extensions/modules/MintableERC721/index.js";
 export * as MintableERC1155 from "../../extensions/modules/MintableERC1155/index.js";
 export * as ClaimableERC20 from "../../extensions/modules/ClaimableERC20/index.js";
-export * as SimpleMetadataERC721 from "../../extensions/modules/SimpleMetadataERC721/index.js";
-export * as SimpleMetadataERC1155 from "../../extensions/modules/SimpleMetadataERC1155/index.js";
 export * as OpenEditionMetadataERC721 from "../../extensions/modules/OpenEditionMetadataERC721/index.js";
 export * as BatchMetadataERC721 from "../../extensions/modules/BatchMetadataERC721/index.js";
+export * as SequentialTokenIdERC1155 from "../../extensions/modules/SequentialTokenIdERC1155/index.js";
 
 // Common
 export { grantMinterRole } from "../../extensions/modules/common/grantMinterRole.js";

@@ -12,6 +12,8 @@ import {
 } from "../../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { balanceOf } from "../../erc1155/__generated__/IERC1155/read/balanceOf.js";
+import { getNFTs } from "../../erc1155/read/getNFTs.js";
+import { getOwnedNFTs } from "../../erc1155/read/getOwnedNFTs.js";
 import { deployModularContract } from "../../prebuilts/deploy-modular.js";
 import * as BatchMetadataERC1155 from "../BatchMetadataERC1155/index.js";
 import { getInstalledModules } from "../__generated__/IModularCore/read/getInstalledModules.js";
@@ -25,6 +27,7 @@ describe("ModularClaimableERC1155", () => {
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
       core: "ERC1155",
+      publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
       params: {
         name: "TestDropERC1155",
         symbol: "TT",
@@ -32,8 +35,11 @@ describe("ModularClaimableERC1155", () => {
       modules: [
         ClaimableERC1155.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
+          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
         }),
-        BatchMetadataERC1155.module(),
+        BatchMetadataERC1155.module({
+          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
+        }),
       ],
     });
     contract = getContract({
@@ -128,18 +134,18 @@ describe("ModularClaimableERC1155", () => {
     });
     expect(balance).toBe(1n);
 
-    // TODO re-enable this once we update the published contracts
-    // const all = await getNFTs({
-    //   contract,
-    // });
-    // expect(all.length).toBe(1);
+    const all = await getNFTs({
+      contract,
+    });
+    expect(all.length).toBe(10);
 
-    // const owned = await getOwnedNFTs({
-    //   address: TEST_ACCOUNT_A.address,
-    //   contract,
-    // });
-    // expect(owned.length).toBe(1);
-    // expect(owned[0].metadata.name).toBe("Test Open Edition 0");
+    const owned = await getOwnedNFTs({
+      address: TEST_ACCOUNT_A.address,
+      contract,
+    });
+    expect(owned.length).toBe(1);
+    expect(owned?.[0]?.metadata.name).toBe("Test 0");
+    expect(owned?.[0]?.quantityOwned).toBe(1n);
   });
 
   it("should claim tokens with allowlist", async () => {

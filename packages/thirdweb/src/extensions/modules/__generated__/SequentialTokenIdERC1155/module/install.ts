@@ -8,15 +8,15 @@ import type { Account } from "../../../../../wallets/interfaces/wallet.js";
 import { getOrDeployModule } from "../../../common/getOrDeployModule.js";
 import { installPublishedModule } from "../../../common/installPublishedModule.js";
 
-const contractId = "SimpleMetadataERC1155";
+const contractId = "SequentialTokenIdERC1155";
 
 /**
- * Convenience function to add the SimpleMetadataERC1155 module as a default module on a core contract.
+ * Convenience function to add the SequentialTokenIdERC1155 module as a default module on a core contract.
  * @param params - The parameters for the module.
  * @returns - The module function.
  * @example
  * ```ts
- * import { SimpleMetadataERC1155, deployModularContract } from "thirdweb/modules";
+ * import { SequentialTokenIdERC1155, deployModularContract } from "thirdweb/modules";
  *
  * const deployed = deployModularContract({
  *   client,
@@ -27,11 +27,11 @@ const contractId = "SimpleMetadataERC1155";
  *     name: "My Modular Contract",
  *   },
  *   modules: [
- *     SimpleMetadataERC1155.module(),
+ *     SequentialTokenIdERC1155.module(),
  *   ],
  * });
  * ```
- * @module SimpleMetadataERC1155
+ * @module SequentialTokenIdERC1155
  */
 export function module(params?: { publisher?: string }) {
   return async (args: {
@@ -55,14 +55,14 @@ export function module(params?: { publisher?: string }) {
 }
 
 /**
- * Installs the SimpleMetadataERC1155 module on a core contract.
+ * Installs the SequentialTokenIdERC1155 module on a core contract.
  * @param options
  * @returns the transaction to install the module
  * @example
  * ```ts
- * import { SimpleMetadataERC1155 } from "thirdweb/modules";
+ * import { SequentialTokenIdERC1155 } from "thirdweb/modules";
  *
- * const transaction  = SimpleMetadataERC1155.install({
+ * const transaction  = SequentialTokenIdERC1155.install({
  *  contract: coreContract,
  *  account: account,
  
@@ -73,7 +73,7 @@ export function module(params?: { publisher?: string }) {
  *  account,
  * });
  * ```
- * @module SimpleMetadataERC1155
+ * @module SequentialTokenIdERC1155
  */
 export function install(options: {
   contract: ThirdwebContract;
@@ -90,9 +90,9 @@ export function install(options: {
 }
 
 /**
- * Encodes the install data for the SimpleMetadataERC1155 module.
+ * Encodes the install data for the SequentialTokenIdERC1155 module.
  * @param params - The parameters for the module.
  * @returns - The encoded data.
- * @module SimpleMetadataERC1155
+ * @module SequentialTokenIdERC1155
  */
 export const encodeInstall = () => "0x";

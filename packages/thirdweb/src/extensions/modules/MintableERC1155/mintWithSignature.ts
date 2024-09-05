@@ -1,3 +1,4 @@
+import { maxUint256 } from "viem";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
@@ -102,7 +103,7 @@ export async function generateMintSignature(
 
   const payload = {
     to: mintRequest.recipient,
-    tokenId: mintRequest.tokenId,
+    tokenId: mintRequest.tokenId ?? maxUint256,
     amount: mintRequest.quantity,
     baseURI: metadataURI,
     data: encodeBytesBeforeMintWithSignatureERC1155Params({
@@ -127,7 +128,7 @@ export async function generateMintSignature(
 type GeneratePayloadInput = {
   recipient: Address;
   quantity: bigint;
-  tokenId: bigint; // TODO (modular) this should be optional
+  tokenId?: bigint;
   currency?: Address;
   pricePerUnit?: bigint;
   uid?: Hex;

@@ -1,5 +1,0 @@
-[
-  "function encodeBytesOnInstall() pure returns (bytes)",
-  "function setTokenURI(uint256 _id, string _uri)",
-  "event MetadataUpdate(uint256 id)"
-]

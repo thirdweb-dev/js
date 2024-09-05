@@ -17,11 +17,11 @@ const FN_OUTPUTS = [
  * Checks if the `encodeBytesOnInstall` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `encodeBytesOnInstall` method is supported.
- * @module DelayedRevealBatchMetadataERC721
+ * @module SequentialTokenIdERC1155
  * @example
  * ```ts
- * import { DelayedRevealBatchMetadataERC721 } from "thirdweb/modules";
- * const supported = DelayedRevealBatchMetadataERC721.isEncodeBytesOnInstallSupported(["0x..."]);
+ * import { SequentialTokenIdERC1155 } from "thirdweb/modules";
+ * const supported = SequentialTokenIdERC1155.isEncodeBytesOnInstallSupported(["0x..."]);
  * ```
  */
 export function isEncodeBytesOnInstallSupported(availableSelectors: string[]) {
@@ -35,11 +35,11 @@ export function isEncodeBytesOnInstallSupported(availableSelectors: string[]) {
  * Decodes the result of the encodeBytesOnInstall function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
- * @module DelayedRevealBatchMetadataERC721
+ * @module SequentialTokenIdERC1155
  * @example
  * ```ts
- * import { DelayedRevealBatchMetadataERC721 } from "thirdweb/modules";
- * const result = DelayedRevealBatchMetadataERC721.decodeEncodeBytesOnInstallResultResult("...");
+ * import { SequentialTokenIdERC1155 } from "thirdweb/modules";
+ * const result = SequentialTokenIdERC1155.decodeEncodeBytesOnInstallResultResult("...");
  * ```
  */
 export function decodeEncodeBytesOnInstallResult(result: Hex) {
@@ -50,12 +50,12 @@ export function decodeEncodeBytesOnInstallResult(result: Hex) {
  * Calls the "encodeBytesOnInstall" function on the contract.
  * @param options - The options for the encodeBytesOnInstall function.
  * @returns The parsed result of the function call.
- * @module DelayedRevealBatchMetadataERC721
+ * @module SequentialTokenIdERC1155
  * @example
  * ```ts
- * import { DelayedRevealBatchMetadataERC721 } from "thirdweb/modules";
+ * import { SequentialTokenIdERC1155 } from "thirdweb/modules";
  *
- * const result = await DelayedRevealBatchMetadataERC721.encodeBytesOnInstall({
+ * const result = await SequentialTokenIdERC1155.encodeBytesOnInstall({
  *  contract,
  * });
  *

@@ -13,6 +13,7 @@ import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and
 import { balanceOf } from "../../erc721/__generated__/IERC721A/read/balanceOf.js";
 import { tokenURI } from "../../erc721/__generated__/IERC721A/read/tokenURI.js";
 import { getNFT } from "../../erc721/read/getNFT.js";
+import { getNFTs } from "../../erc721/read/getNFTs.js";
 import * as BatchMetadataERC721 from "../../modules/BatchMetadataERC721/index.js";
 import { deployModularContract } from "../../prebuilts/deploy-modular.js";
 import { getInstalledModules } from "../__generated__/IModularCore/read/getInstalledModules.js";
@@ -101,6 +102,11 @@ describe("ModularTokenERC721", () => {
 
     expect(balance).toBe(1n);
 
+    const nfts = await getNFTs({ contract });
+    console.log(nfts);
+    expect(nfts.length).toBe(1);
+    expect(nfts?.[0]?.metadata.name).toBe("Test");
+
     const nft = await getNFT({
       contract,
       tokenId: 0n,
@@ -138,6 +144,7 @@ describe("ModularTokenERC721", () => {
     });
     expect(balance).toBe(1n);
   });
+
   it("should mint tokens with batch metadata", async () => {
     // should have minted 2 tokens at this point
     await sendAndConfirmTransaction({

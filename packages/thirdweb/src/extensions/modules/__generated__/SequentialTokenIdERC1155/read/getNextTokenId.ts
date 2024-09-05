@@ -5,26 +5,26 @@ import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
-export const FN_SELECTOR = "0xfec7ff72" as const;
+export const FN_SELECTOR = "0xcaa0f92a" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "bytes",
+    type: "uint256",
   },
 ] as const;
 
 /**
- * Checks if the `encodeBytesOnInstall` method is supported by the given contract.
+ * Checks if the `getNextTokenId` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
- * @returns A boolean indicating if the `encodeBytesOnInstall` method is supported.
- * @module SimpleMetadataERC721
+ * @returns A boolean indicating if the `getNextTokenId` method is supported.
+ * @module SequentialTokenIdERC1155
  * @example
  * ```ts
- * import { SimpleMetadataERC721 } from "thirdweb/modules";
- * const supported = SimpleMetadataERC721.isEncodeBytesOnInstallSupported(["0x..."]);
+ * import { SequentialTokenIdERC1155 } from "thirdweb/modules";
+ * const supported = SequentialTokenIdERC1155.isGetNextTokenIdSupported(["0x..."]);
  * ```
  */
-export function isEncodeBytesOnInstallSupported(availableSelectors: string[]) {
+export function isGetNextTokenIdSupported(availableSelectors: string[]) {
   return detectMethod({
     availableSelectors,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
@@ -32,36 +32,36 @@ export function isEncodeBytesOnInstallSupported(availableSelectors: string[]) {
 }
 
 /**
- * Decodes the result of the encodeBytesOnInstall function call.
+ * Decodes the result of the getNextTokenId function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
- * @module SimpleMetadataERC721
+ * @module SequentialTokenIdERC1155
  * @example
  * ```ts
- * import { SimpleMetadataERC721 } from "thirdweb/modules";
- * const result = SimpleMetadataERC721.decodeEncodeBytesOnInstallResultResult("...");
+ * import { SequentialTokenIdERC1155 } from "thirdweb/modules";
+ * const result = SequentialTokenIdERC1155.decodeGetNextTokenIdResultResult("...");
  * ```
  */
-export function decodeEncodeBytesOnInstallResult(result: Hex) {
+export function decodeGetNextTokenIdResult(result: Hex) {
   return decodeAbiParameters(FN_OUTPUTS, result)[0];
 }
 
 /**
- * Calls the "encodeBytesOnInstall" function on the contract.
- * @param options - The options for the encodeBytesOnInstall function.
+ * Calls the "getNextTokenId" function on the contract.
+ * @param options - The options for the getNextTokenId function.
  * @returns The parsed result of the function call.
- * @module SimpleMetadataERC721
+ * @module SequentialTokenIdERC1155
  * @example
  * ```ts
- * import { SimpleMetadataERC721 } from "thirdweb/modules";
+ * import { SequentialTokenIdERC1155 } from "thirdweb/modules";
  *
- * const result = await SimpleMetadataERC721.encodeBytesOnInstall({
+ * const result = await SequentialTokenIdERC1155.getNextTokenId({
  *  contract,
  * });
  *
  * ```
  */
-export async function encodeBytesOnInstall(options: BaseTransactionOptions) {
+export async function getNextTokenId(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
