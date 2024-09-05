@@ -4,7 +4,10 @@ import { extensionDetectedState } from "components/buttons/ExtensionDetectButton
 import { detectFeatures } from "components/contract-components/utils";
 import { useRouter } from "next/router";
 import type { ThirdwebContract } from "thirdweb";
+import * as ERC721Ext from "thirdweb/extensions/erc721";
+import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { Card, Heading, LinkButton, Text } from "tw-components";
+import { useContractFunctionSelectors } from "../../hooks/useContractFunctionSelectors";
 import { BatchLazyMintButton } from "./components/batch-lazy-mint-button";
 import { NFTClaimButton } from "./components/claim-button";
 import { NFTLazyMintButton } from "./components/lazy-mint-button";
@@ -31,84 +34,61 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   const contractQuery = useContract(contract.address);
   const router = useRouter();
   const tokenId = router.query?.paths?.[2];
+  const functionSelectorQuery = useContractFunctionSelectors(contract);
 
   if (tokenId && isOnlyNumbers(tokenId)) {
     return (
-      <TokenIdPage
-        contractQueryV4={contractQuery}
-        contract={contract}
-        tokenId={tokenId}
-        isErc721={isErc721}
-      />
+      <TokenIdPage contract={contract} tokenId={tokenId} isErc721={isErc721} />
     );
   }
 
-  if (contractQuery.isLoading) {
+  if (functionSelectorQuery.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
 
-  const detectedClaimState = extensionDetectedState({
-    contractQuery,
-    feature: [
-      "ERC721ClaimPhasesV1",
-      "ERC721ClaimPhasesV2",
-      "ERC721ClaimConditionsV1",
-      "ERC721ClaimConditionsV2",
-      "ERC721ClaimCustom",
-    ],
-  });
+  const isERC721ClaimToSupported = ERC721Ext.isClaimToSupported(
+    functionSelectorQuery.data,
+  );
+  const canShowSupplyCards =
+    ERC721Ext.isTotalSupplySupported(functionSelectorQuery.data) &&
+    ERC721Ext.isNextTokenIdToMintSupported(functionSelectorQuery.data);
 
-  const isErc721Claimable = detectFeatures(contractQuery?.contract, [
-    "ERC721ClaimPhasesV1",
-    "ERC721ClaimPhasesV2",
-    "ERC721ClaimConditionsV1",
-    "ERC721ClaimConditionsV2",
-    "ERC721ClaimCustom",
-  ]);
+  const isLazyMintable = isErc721
+    ? ERC721Ext.isLazyMintSupported(functionSelectorQuery.data)
+    : ERC1155Ext.isLazyMintSupported(functionSelectorQuery.data);
 
-  const detectedState = detectFeatures(contractQuery?.contract, [
-    "ERC721Enumerable",
-    "ERC1155Enumerable",
-    "ERC721Supply",
-  ]);
+  const isMintToSupported = isErc721
+    ? ERC721Ext.isMintToSupported(functionSelectorQuery.data)
+    : ERC1155Ext.isMintToSupported(functionSelectorQuery.data);
 
-  const detectedLzyMintState = extensionDetectedState({
-    contractQuery,
-    feature: [
-      "ERC721LazyMintable",
-      "ERC1155LazyMintableV1",
-      "ERC1155LazyMintableV2",
-    ],
-  });
+  const isSetSharedMetadataSupported = ERC721Ext.isSetSharedMetadataSupported(
+    functionSelectorQuery.data,
+  );
+
+  const canRenderNFTTable = (() => {
+    if (isErc721) {
+      return (
+        ERC721Ext.isTotalSupplySupported(functionSelectorQuery.data) &&
+        ERC721Ext.isNextTokenIdToMintSupported(functionSelectorQuery.data) &&
+        ERC721Ext.isGetNFTsSupported(functionSelectorQuery.data)
+      );
+    }
+    // otherwise erc1155
+    return (
+      ERC1155Ext.isTotalSupplySupported(functionSelectorQuery.data) &&
+      ERC1155Ext.isNextTokenIdToMintSupported(functionSelectorQuery.data) &&
+      ERC1155Ext.isGetNFTsSupported(functionSelectorQuery.data)
+    );
+  })();
 
   const isRevealable = detectFeatures(contractQuery.contract, [
     "ERC721Revealable",
-    "ERC1155Revealable",
   ]);
 
   const detectedRevealableState = extensionDetectedState({
     contractQuery,
-    feature: ["ERC721Revealable", "ERC1155Revealable"],
-  });
-
-  const detectedMintableState = extensionDetectedState({
-    contractQuery,
-    feature: ["ERC721Mintable", "ERC1155Mintable"],
-  });
-
-  const detectedLazyMintableState = extensionDetectedState({
-    contractQuery,
-    feature: [
-      "ERC721LazyMintable",
-      "ERC1155LazyMintableV1",
-      "ERC1155LazyMintableV2",
-    ],
-  });
-
-  const detectedSharedMetadataState = extensionDetectedState({
-    contractQuery,
-    feature: ["ERC721SharedMetadata"],
+    feature: ["ERC721Revealable"],
   });
 
   return (
@@ -119,39 +99,33 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           {detectedRevealableState === "enabled" && contractQuery?.contract && (
             <NFTRevealButton contractQuery={contractQuery} />
           )}
-          {detectedClaimState && contractQuery?.contract && isErc721 && (
+          {isERC721ClaimToSupported && (
             /**
              * This button is used for claiming NFT Drop contract (erc721) only!
              * For Edition Drop we have a dedicated ClaimTabERC1155 inside each Edition's page
              */
-            <NFTClaimButton
-              contractAddress={contractQuery.contract.getAddress()}
-              chainId={contractQuery.contract.chainId}
-            />
+            <NFTClaimButton contract={contract} />
           )}
-          {detectedMintableState === "enabled" && contractQuery?.contract && (
+          {isMintToSupported && (
             <NFTMintButton contract={contract} isErc721={isErc721} />
           )}
-          {detectedSharedMetadataState === "enabled" &&
-            contractQuery?.contract && (
-              <NFTSharedMetadataButton contract={contract} />
-            )}
-          {detectedLazyMintableState === "enabled" &&
-            contractQuery?.contract && (
-              <NFTLazyMintButton contract={contract} isErc721={isErc721} />
-            )}
-          {detectedLzyMintState === "enabled" &&
-            contractQuery?.contract &&
-            contract && (
-              <BatchLazyMintButton
-                contractQuery={contractQuery}
-                isRevealable={isRevealable}
-                contract={contract}
-              />
-            )}
+          {isSetSharedMetadataSupported && (
+            <NFTSharedMetadataButton contract={contract} />
+          )}
+          {isLazyMintable && (
+            <NFTLazyMintButton contract={contract} isErc721={isErc721} />
+          )}
+          {isLazyMintable && (
+            <BatchLazyMintButton
+              contractQuery={contractQuery}
+              isRevealable={isRevealable}
+              contract={contract}
+            />
+          )}
         </Flex>
       </Flex>
-      {!detectedState ? (
+      {canShowSupplyCards && <SupplyCards contract={contract} />}
+      {canRenderNFTTable ? (
         <Card as={Flex} flexDir="column" gap={3}>
           {/* TODO  extract this out into it's own component and make it better */}
           <Heading size="subtitle.md">
@@ -175,9 +149,8 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
         </Card>
       ) : (
         <>
-          {isErc721Claimable && contract && <SupplyCards contract={contract} />}
-          {contract && contractQuery.contract && (
-            <NFTGetAllTable contract={contract} />
+          {contract && (
+            <NFTGetAllTable contract={contract} isErc721={isErc721} />
           )}
         </>
       )}

@@ -1,4 +1,3 @@
-import { thirdwebClient } from "@/constants/client";
 import {
   DrawerBody,
   DrawerFooter,
@@ -11,10 +10,9 @@ import {
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { ZERO_ADDRESS, getContract } from "thirdweb";
+import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc721";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
@@ -27,20 +25,10 @@ import {
 
 const CLAIM_FORM_ID = "nft-claim-form";
 interface NFTClaimFormProps {
-  contractAddress: string;
-  chainId: number;
+  contract: ThirdwebContract;
 }
 
-export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({
-  contractAddress,
-  chainId,
-}) => {
-  const chain = useV5DashboardChain(chainId);
-  const contract = getContract({
-    address: contractAddress,
-    chain: chain,
-    client: thirdwebClient,
-  });
+export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({ contract }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const { register, handleSubmit, formState } = useForm({
