@@ -1,23 +1,19 @@
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { thirdwebClient } from "@/constants/client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { Box } from "@chakra-ui/react";
-import {
-  type DropContract,
-  useResetClaimConditions,
-} from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { CircleHelpIcon } from "lucide-react";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
+import * as ERC20Ext from "thirdweb/extensions/erc20";
+import * as ERC721Ext from "thirdweb/extensions/erc721";
+import * as ERC1155Ext from "thirdweb/extensions/erc1155";
+import { useSendAndConfirmTransaction } from "thirdweb/react";
 
 interface ResetClaimEligibilityProps {
   isErc20: boolean;
-  contract: DropContract;
+  contract: ThirdwebContract;
   tokenId?: string;
-  isColumn?: true;
 }
 
 export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
@@ -26,7 +22,9 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   isErc20,
 }) => {
   const trackEvent = useTrack();
-  const resetClaimConditions = useResetClaimConditions(contract, tokenId);
+
+  const sendTxMutation = useSendAndConfirmTransaction();
+
   const txNotification = useTxNotifications(
     "Successfully reset claim eligibility",
     "Failed to reset claim eligibility",
@@ -41,7 +39,27 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
       label: "attempt",
     });
 
-    resetClaimConditions.mutate(undefined, {
+    const tx = (() => {
+      switch (true) {
+        // erc 20
+        case isErc20: {
+          return ERC20Ext.resetClaimEligibility({ contract });
+        }
+        // erc 1155
+        case tokenId !== undefined: {
+          return ERC1155Ext.resetClaimEligibility({
+            contract,
+            tokenId: BigInt(tokenId),
+          });
+        }
+        // assume erc 721
+        default: {
+          return ERC721Ext.resetClaimEligibility({ contract });
+        }
+      }
+    })();
+
+    sendTxMutation.mutate(tx, {
       onSuccess: () => {
         txNotification.onSuccess();
         trackEvent({
@@ -62,27 +80,19 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
     });
   };
 
-  const chain = useV5DashboardChain(contract?.chainId);
-
-  if (!contract || !chain) {
+  if (!contract) {
     return null;
   }
 
-  const contractV5 = getContract({
-    address: contract.getAddress(),
-    chain,
-    client: thirdwebClient,
-  });
-
   return (
-    <AdminOnly contract={contractV5} fallback={<Box pb={5} />}>
+    <AdminOnly contract={contract} fallback={<div className="pb-5" />}>
       <TransactionButton
         colorScheme="secondary"
         bg="bgBlack"
         color="bgWhite"
         transactionCount={1}
         type="button"
-        isLoading={resetClaimConditions.isLoading}
+        isLoading={sendTxMutation.isPending}
         onClick={handleResetClaimEligibility}
         loadingText="Resetting..."
         size="sm"

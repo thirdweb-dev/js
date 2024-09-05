@@ -199,6 +199,7 @@ export {
 export {
   type BatchToReveal,
   getBatchesToReveal,
+  isGetBaseURICountSupported,
 } from "../../extensions/erc721/lazyMinting/read/getBatchesToReveal.js";
 export {
   updateMetadata,

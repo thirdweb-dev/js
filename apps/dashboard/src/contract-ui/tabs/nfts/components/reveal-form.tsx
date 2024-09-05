@@ -1,4 +1,3 @@
-import { thirdwebClient } from "@/constants/client";
 import {
   DrawerBody,
   DrawerFooter,
@@ -9,51 +8,41 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import {
-  type NFTContract,
-  type RevealableContract,
-  useBatchesToReveal,
-  useRevealLazyMint,
-} from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
+import { type BatchToReveal, reveal } from "thirdweb/extensions/erc721";
+import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { FormErrorMessage, FormLabel, Heading } from "tw-components";
 
 const REVEAL_FORM_ID = "reveal-form";
+
 interface NFTRevealFormProps {
-  contract: NFTContract;
+  contract: ThirdwebContract;
+  batchesToReveal: BatchToReveal[];
 }
 
-export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({ contract }) => {
+export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({
+  contract,
+  batchesToReveal,
+}) => {
   const trackEvent = useTrack();
-  const reveal = useRevealLazyMint(contract as RevealableContract);
-  const { data: batchesToReveal } = useBatchesToReveal(
-    contract as RevealableContract,
-  );
+
+  const sendTxMutation = useSendAndConfirmTransaction();
+
   const {
     register,
     handleSubmit,
     formState: { errors, isDirty },
   } = useForm<{ batchId: string; password: string }>();
   const modalContext = useModalContext();
-  const chain = useV5DashboardChain(contract?.chainId);
-  const contractV5 =
-    contract && chain
-      ? getContract({
-          address: contract.getAddress(),
-          chain: chain,
-          client: thirdwebClient,
-        })
-      : null;
 
   const { onSuccess, onError } = useTxNotifications(
     "Batch revealed successfully",
     "Error revealing batch upload",
-    contractV5,
+    contract,
   );
 
   return (
@@ -72,37 +61,38 @@ export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({ contract }) => {
               action: "batch-upload-reveal",
               label: "attempt",
             });
-            reveal.mutate(
-              {
-                batchId: data.batchId,
-                password: data.password,
+
+            const tx = reveal({
+              contract,
+              batchId: BigInt(data.batchId),
+              password: data.password,
+            });
+
+            sendTxMutation.mutate(tx, {
+              onSuccess: () => {
+                trackEvent({
+                  category: "nft",
+                  action: "batch-upload-reveal",
+                  label: "success",
+                });
+                onSuccess();
+                modalContext.onClose();
               },
-              {
-                onSuccess: () => {
-                  trackEvent({
-                    category: "nft",
-                    action: "batch-upload-reveal",
-                    label: "success",
-                  });
-                  onSuccess();
-                  modalContext.onClose();
-                },
-                onError: (error) => {
-                  trackEvent({
-                    category: "nft",
-                    action: "batch-upload-reveal",
-                    label: "error",
-                  });
-                  onError(error);
-                },
+              onError: (error) => {
+                trackEvent({
+                  category: "nft",
+                  action: "batch-upload-reveal",
+                  label: "error",
+                });
+                onError(error);
               },
-            );
+            });
           })}
         >
           <FormControl isRequired isInvalid={!!errors.password} mr={4}>
             <FormLabel>Select a batch</FormLabel>
             <Select {...register("batchId")} autoFocus>
-              {batchesToReveal?.map((batch) => (
+              {batchesToReveal.map((batch) => (
                 <option
                   key={batch.batchId.toString()}
                   value={batch.batchId.toString()}
@@ -128,7 +118,7 @@ export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({ contract }) => {
       <DrawerFooter>
         <TransactionButton
           transactionCount={1}
-          isLoading={reveal.isLoading}
+          isLoading={sendTxMutation.isPending}
           form={REVEAL_FORM_ID}
           type="submit"
           colorScheme="primary"
