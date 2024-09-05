@@ -1,3 +1,4 @@
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   ButtonGroup,
   Code,
@@ -15,6 +16,7 @@ import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useEffect, useId, useMemo } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { FaCircleInfo } from "react-icons/fa6";
 import { FiPlay } from "react-icons/fi";
 import { toast } from "sonner";
 import {
@@ -22,9 +24,11 @@ import {
   prepareContractCall,
   readContract,
   resolveMethod,
+  simulateTransaction,
+  toSerializableTransaction,
   toWei,
 } from "thirdweb";
-import { useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { parseAbiParams, stringify } from "thirdweb/utils";
 import {
   Button,
@@ -123,6 +127,60 @@ function useAsyncRead(contract: ThirdwebContract, functionName: string) {
   );
 }
 
+function useSimulateTransaction() {
+  const from = useActiveAccount()?.address;
+  return useMutation(
+    async ({
+      contract,
+      functionName,
+      params,
+      value,
+    }: {
+      contract: ThirdwebContract;
+      functionName: string;
+      params: unknown[];
+      value?: bigint;
+    }) => {
+      if (!from) {
+        return toast.error("No account connected");
+      }
+      const transaction = prepareContractCall({
+        contract,
+        method: resolveMethod(functionName),
+        params,
+        value,
+      });
+      try {
+        const [simulateResult, populatedTransaction] = await Promise.all([
+          simulateTransaction({
+            from,
+            transaction,
+          }),
+          toSerializableTransaction({
+            from,
+            transaction,
+          }),
+        ]);
+        return `--- ✅ Simulation succeeded ---
+Result: ${simulateResult.length ? simulateResult.join(", ") : "Method did not return a result."}
+Transaction data:
+${Object.keys(populatedTransaction)
+  .map((key) => {
+    let _val = populatedTransaction[key as keyof typeof populatedTransaction];
+    if (key === "value" && !_val) {
+      _val = 0;
+    }
+    return `${key}: ${_val}\n`;
+  })
+  .join("")}`;
+      } catch (err) {
+        return `--- ❌ Simulation failed ---
+${(err as Error).message || ""}`;
+      }
+    },
+  );
+}
+
 export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   abiFunction,
   contract,
@@ -166,6 +224,8 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
     error: readError,
   } = useAsyncRead(contract, abiFunction.name);
 
+  const txSimulation = useSimulateTransaction();
+
   const formattedReadData: string = useMemo(
     () => (readData ? formatResponseData(readData) : ""),
     [readData],
@@ -187,6 +247,43 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
       });
     }
   }, [abiFunction, form, readFn]);
+
+  const handleContractRead = form.handleSubmit((d) => {
+    const types = abiFunction.inputs.map((o) => o.type);
+    const formatted = formatContractCall(d.params);
+    readFn({ args: formatted, types });
+  });
+
+  const handleContractWrite = form.handleSubmit((d) => {
+    if (!abiFunction.name) {
+      return toast.error("Cannot detect function name");
+    }
+    const types = abiFunction.inputs.map((o) => o.type);
+    const formatted = formatContractCall(d.params);
+    const params = parseAbiParams(types, formatted);
+    const transaction = prepareContractCall({
+      contract,
+      method: resolveMethod(abiFunction.name),
+      params,
+      value: d.value ? toWei(d.value) : undefined,
+    });
+    mutate(transaction);
+  });
+
+  const handleContractSimulation = form.handleSubmit((d) => {
+    if (!abiFunction.name) {
+      return toast.error("Cannot detect function name");
+    }
+    const types = abiFunction.inputs.map((o) => o.type);
+    const formatted = formatContractCall(d.params);
+    const params = parseAbiParams(types, formatted);
+    txSimulation.mutate({
+      contract,
+      params,
+      functionName: abiFunction.name,
+      value: d.value ? toWei(d.value) : undefined,
+    });
+  });
 
   return (
     <FormProvider {...form}>
@@ -210,32 +307,6 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
           gap={2}
           as="form"
           id={formId}
-          onSubmit={form.handleSubmit((d) => {
-            if (d.params) {
-              const formatted = formatContractCall(d.params);
-              if (
-                contract &&
-                (abiFunction.stateMutability === "view" ||
-                  abiFunction.stateMutability === "pure")
-              ) {
-                const types = abiFunction.inputs.map((o) => o.type);
-                readFn({ args: formatted, types });
-              } else {
-                if (!abiFunction.name) {
-                  return toast.error("Cannot detect function name");
-                }
-                const types = abiFunction.inputs.map((o) => o.type);
-                const params = parseAbiParams(types, formatted);
-                const transaction = prepareContractCall({
-                  contract,
-                  method: resolveMethod(abiFunction.name),
-                  params,
-                  value: d.value ? toWei(d.value) : undefined,
-                });
-                mutate(transaction);
-              }
-            }
-          })}
         >
           {fields.length > 0 && (
             <>
@@ -311,7 +382,9 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 {formatError(error as any)}
               </Text>
             </>
-          ) : data !== undefined || readData !== undefined ? (
+          ) : data !== undefined ||
+            readData !== undefined ||
+            txSimulation.data ? (
             <>
               <Divider />
               <Heading size="label.sm">Output</Heading>
@@ -319,7 +392,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 w="full"
                 position="relative"
                 language="json"
-                code={formatResponseData(data || readData)}
+                code={formatResponseData(data || readData || txSimulation.data)}
               />
               {formattedReadData.startsWith("ipfs://") && (
                 <Text size="label.sm">
@@ -345,22 +418,36 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               rightIcon={<Icon as={FiPlay} />}
               colorScheme="primary"
               isLoading={readLoading}
-              type="submit"
+              onClick={handleContractRead}
               form={formId}
             >
               Run
             </Button>
           ) : (
-            <TransactionButton
-              isDisabled={!abiFunction}
-              colorScheme="primary"
-              transactionCount={1}
-              isLoading={mutationLoading}
-              type="submit"
-              form={formId}
-            >
-              Execute
-            </TransactionButton>
+            <>
+              <Button
+                onClick={handleContractSimulation}
+                isDisabled={!abiFunction}
+                isLoading={txSimulation.isLoading}
+              >
+                <ToolTipLabel label="Simulate the transaction to see its potential outcome without actually sending it to the network. This action doesn't cost gas.">
+                  <span className="mr-3">
+                    <FaCircleInfo size={20} />
+                  </span>
+                </ToolTipLabel>
+                Simulate
+              </Button>
+              <TransactionButton
+                isDisabled={!abiFunction}
+                colorScheme="primary"
+                transactionCount={1}
+                isLoading={mutationLoading}
+                form={formId}
+                onClick={handleContractWrite}
+              >
+                Execute
+              </TransactionButton>
+            </>
           )}
         </ButtonGroup>
       </Card>
