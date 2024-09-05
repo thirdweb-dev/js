@@ -11,6 +11,7 @@ import * as ERC20Ext from "thirdweb/extensions/erc20";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
+import * as ModularExt from "thirdweb/extensions/modular";
 import * as PermissionExt from "thirdweb/extensions/permissions";
 import * as ThirdwebExt from "thirdweb/extensions/thirdweb";
 import { useReadContract } from "thirdweb/react";
@@ -221,6 +222,13 @@ export function useContractRouteConfig(
     hasERC1155ClaimConditions,
   ]);
 
+  const isModularCore = useMemo(() => {
+    return [
+      ModularExt.isGetInstalledModulesSupported(functionSelectorQuery.data),
+      ModularExt.isInstallModuleSupported(functionSelectorQuery.data),
+    ].every(Boolean);
+  }, [functionSelectorQuery.data]);
+
   // old
   const ensQuery = useEns(contract.address);
 
@@ -238,17 +246,9 @@ export function useContractRouteConfig(
       feature: "DirectListings",
     });
 
-    const detectedModularExtension = extensionDetectedState({
-      contractQuery,
-      feature: ["ModularCore"],
-    });
-
-    // claim condition related stuff
-
     return {
       detectedEnglishAuctions,
       detectedDirectListings,
-      detectedModularExtension,
     };
   }, [contractQuery]);
 
@@ -301,13 +301,17 @@ export function useContractRouteConfig(
           isPermissionsEnumerable={isPermissionsEnumerable}
         />
       ),
-      isEnabled: contractQuery.isLoading ? "loading" : "enabled",
+      isEnabled: "enabled",
       isDefault: true,
     },
     {
       title: "Modules",
       path: "modules",
-      isEnabled: contractData.detectedModularExtension,
+      isEnabled: isModularCore
+        ? "enabled"
+        : functionSelectorQuery.isLoading
+          ? "loading"
+          : "disabled",
       isDefault: true,
       component: LazyContractEditModulesPage,
     },
