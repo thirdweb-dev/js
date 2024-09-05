@@ -1,9 +1,7 @@
-import { Box, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
-import { Card, Heading, LinkButton, Text } from "tw-components";
 import { useContractFunctionSelectors } from "../../hooks/useContractFunctionSelectors";
 import { BatchLazyMintButton } from "./components/batch-lazy-mint-button";
 import { NFTClaimButton } from "./components/claim-button";
@@ -64,18 +62,10 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
 
   const canRenderNFTTable = (() => {
     if (isErc721) {
-      return (
-        ERC721Ext.isTotalSupplySupported(functionSelectorQuery.data) &&
-        ERC721Ext.isNextTokenIdToMintSupported(functionSelectorQuery.data) &&
-        ERC721Ext.isGetNFTsSupported(functionSelectorQuery.data)
-      );
+      return ERC721Ext.isGetNFTsSupported(functionSelectorQuery.data);
     }
     // otherwise erc1155
-    return (
-      ERC1155Ext.isTotalSupplySupported(functionSelectorQuery.data) &&
-      ERC1155Ext.isNextTokenIdToMintSupported(functionSelectorQuery.data) &&
-      ERC1155Ext.isGetNFTsSupported(functionSelectorQuery.data)
-    );
+    return ERC1155Ext.isGetNFTsSupported(functionSelectorQuery.data);
   })();
 
   const isRevealable = ERC721Ext.isGetBaseURICountSupported(
@@ -83,10 +73,10 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   );
 
   return (
-    <Flex direction="column" gap={6}>
-      <Flex direction="row" justify="space-between" align="center">
-        <Heading size="title.sm">Contract NFTs</Heading>
-        <Flex gap={2} flexDir={{ base: "column", md: "row" }}>
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-row justify-between items-center">
+        <h2 className="font-bold text-xl">Contract NFTs</h2>
+        <div className="flex gap-2 flex-col md:flex-row">
           {isRevealable && <NFTRevealButton contract={contract} />}
           {isERC721ClaimToSupported && (
             /**
@@ -111,38 +101,12 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
               contract={contract}
             />
           )}
-        </Flex>
-      </Flex>
+        </div>
+      </div>
       {canShowSupplyCards && <SupplyCards contract={contract} />}
-      {canRenderNFTTable ? (
-        <Card as={Flex} flexDir="column" gap={3}>
-          {/* TODO  extract this out into it's own component and make it better */}
-          <Heading size="subtitle.md">
-            No Supply/Enumerable extension enabled
-          </Heading>
-          <Text>
-            To be able to see the list of the NFTs minted on your contract, you
-            will have to extend the{" "}
-            {isErc721 ? "ERC721Supply" : "ERC1155Enumerable"} extension in your
-            contract.
-          </Text>
-          <Box>
-            <LinkButton
-              isExternal
-              href="https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Supply"
-              colorScheme="purple"
-            >
-              Learn more
-            </LinkButton>
-          </Box>
-        </Card>
-      ) : (
-        <>
-          {contract && (
-            <NFTGetAllTable contract={contract} isErc721={isErc721} />
-          )}
-        </>
+      {canRenderNFTTable && (
+        <NFTGetAllTable contract={contract} isErc721={isErc721} />
       )}
-    </Flex>
+    </div>
   );
 };
