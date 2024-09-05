@@ -11,6 +11,25 @@ export type MintParams = {
   quantity: string | number;
 };
 
+/**
+ * Mints tokens to a specified address via a ClaimableERC20 module.
+ * @param options The options for minting tokens.
+ * @returns A transaction to mint tokens.
+ * @example
+ * ```typescript
+ * import { ClaimableERC20 } from "thirdweb/modules";
+ *
+ * const transaction = ClaimableERC20.mint({
+ *   contract,
+ *   to: "0x...", // Address to mint tokens to
+ *   quantity: "0.1", // Amount of tokens to mint (in decimals)
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ * @module ClaimableERC20
+ */
 export function mint(options: BaseTransactionOptions<MintParams>) {
   return generatedMint({
     contract: options.contract,

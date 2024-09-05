@@ -15,6 +15,30 @@ export type EditionMintParams = {
   tokenId?: bigint;
 };
 
+/**
+ * Mints ERC1155 tokens to a specified address via a MintableERC1155 module.
+ * @param options The options for minting tokens.
+ * @returns A transaction to mint tokens.
+ * @example
+ * ```typescript
+ * import { MintableERC1155 } from "thirdweb/modules";
+ *
+ * const transaction = MintableERC1155.mintWithRole({
+ *   contract,
+ *   to: "0x...", // Address to mint tokens to
+ *   amount: 2, // Amount of tokens to mint
+ *   nft: {
+ *     name: "My NFT",
+ *     description: "This is my NFT",
+ *     image: "ipfs://...",
+ *   },
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ * @module MintableERC1155
+ */
 export function mintWithRole(
   options: BaseTransactionOptions<EditionMintParams>,
 ) {

@@ -19,6 +19,40 @@ import {
   encodeBytesBeforeMintWithSignatureERC721Params,
 } from "../__generated__/MintableERC721/encode/encodeBytesBeforeMintWithSignatureERC721.js";
 
+/**
+ * Mints ERC721 tokens to a specified address with a signature via a MintableERC721 module.
+ * @param options The options for minting tokens.
+ * @returns A transaction to mint tokens.
+ * @example
+ * ```typescript
+ * import { MintableERC721 } from "thirdweb/modules";
+ *
+ * // generate the payload and signature, this is typically done on the server
+ * const { payload, signature } = await MintableERC721.generateMintSignature({
+ *   account,
+ *   contract,
+ *   nfts: [{
+ *    name: "My NFT",
+ *    description: "My NFT",
+ *    image: "https://example.com/image.png",
+ *   }],
+ *   mintRequest: {
+ *     recipient: "0x...",
+ *   },
+ * });
+ *
+ * // prepare the transaction, this is typically done on the client
+ * const transaction = MintableERC721.mintWithSignature({
+ *   contract,
+ *   payload,
+ *   signature,
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ * @module MintableERC721
+ */
 export function mintWithSignature(
   options: BaseTransactionOptions<
     Awaited<ReturnType<typeof generateMintSignature>>
@@ -47,13 +81,15 @@ export type GenerateMintSignatureOptions = {
 };
 
 /**
- * Generates the payload and signature for minting an ERC721 token.
- * @param options - The options for the minting process.
+ * Generates a payload and signature for minting ERC721 tokens via a MintableERC721 module.
+ * @param options The options for generating the payload and signature.
+ * @returns The payload and signature.
  * @example
- * ```ts
- * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/ERC721";
+ * ```typescript
+ * import { MintableERC20 } from "thirdweb/modules";
  *
- * const { payload, signature } = await generateMintSignature({
+ * // generate the payload and signature, this is typically done on the server
+ * const { payload, signature } = await MintableERC721.generateMintSignature({
  *   account,
  *   contract,
  *   nfts: [{
@@ -66,15 +102,17 @@ export type GenerateMintSignatureOptions = {
  *   },
  * });
  *
- * const transaction = mintWithSignature({
+ * // prepare the transaction, this is typically done on the client
+ * const transaction = MintableERC20.mintWithSignature({
  *   contract,
  *   payload,
  *   signature,
  * });
+ *
+ * // Send the transaction
  * await sendTransaction({ transaction, account });
  * ```
- * @extension ERC721
- * @returns A promise that resolves to the payload and signature.
+ * @module MintableERC721
  */
 export async function generateMintSignature(
   options: GenerateMintSignatureOptions,

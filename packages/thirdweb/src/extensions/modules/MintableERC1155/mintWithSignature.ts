@@ -14,6 +14,41 @@ import {
   encodeBytesBeforeMintWithSignatureERC1155Params,
 } from "../__generated__/MintableERC1155/encode/encodeBytesBeforeMintWithSignatureERC1155.js";
 
+/**
+ * Mints ERC1155 tokens to a specified address with a signature via a MintableERC1155 module.
+ * @param options The options for minting tokens.
+ * @returns A transaction to mint tokens.
+ * @example
+ * ```typescript
+ * import { MintableERC1155 } from "thirdweb/modules";
+ *
+ * // generate the payload and signature, this is typically done on the server
+ * const { payload, signature } = await MintableERC1155.generateMintSignature({
+ *   account,
+ *   contract,
+ *   nft: {
+ *     name: "My NFT",
+ *     description: "This is my NFT",
+ *     image: "ipfs://...",
+ *   },
+ *   mintRequest: {
+ *     recipient: "0x...",
+ *     quantity: "10",
+ *   },
+ * });
+ *
+ * // prepare the transaction, this is typically done on the client
+ * const transaction = MintableERC1155.mintWithSignature({
+ *   contract,
+ *   payload,
+ *   signature,
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ * @module MintableERC1155
+ */
 export function mintWithSignature(
   options: BaseTransactionOptions<
     Awaited<ReturnType<typeof generateMintSignature>>
@@ -43,30 +78,39 @@ export type GenerateMintSignatureOptions = {
 };
 
 /**
- * Generates the payload and signature for minting an ERC1155 token.
- * @param options - The options for the minting process.
+ * Generates a payload and signature for minting ERC1155 tokens with a signature.
+ * @param options The options for generating the payload and signature.
+ * @returns The payload and signature.
  * @example
- * ```ts
- * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/ERC1155";
+ * ```typescript
+ * import { MintableERC1155 } from "thirdweb/modules";
  *
- * const { payload, signature } = await generateMintSignature({
+ * // generate the payload and signature, this is typically done on the server
+ * const { payload, signature } = await MintableERC1155.generateMintSignature({
  *   account,
  *   contract,
+ *   nft: {
+ *     name: "My NFT",
+ *     description: "This is my NFT",
+ *     image: "ipfs://...",
+ *   },
  *   mintRequest: {
  *     recipient: "0x...",
  *     quantity: "10",
  *   },
  * });
  *
- * const transaction = mintWithSignature({
+ * // prepare the transaction, this is typically done on the client
+ * const transaction = MintableERC1155.mintWithSignature({
  *   contract,
  *   payload,
  *   signature,
  * });
+ *
+ * // Send the transaction
  * await sendTransaction({ transaction, account });
  * ```
- * @extension ERC1155
- * @returns A promise that resolves to the payload and signature.
+ * @module MintableERC1155
  */
 export async function generateMintSignature(
   options: GenerateMintSignatureOptions,

@@ -13,6 +13,25 @@ export type MintParams = {
   quantity: string | number;
 };
 
+/**
+ * Mints ERC1155 tokens to a specified address via a ClaimableERC1155 module.
+ * @param options The options for minting tokens.
+ * @returns A transaction to mint tokens.
+ * @example
+ * ```typescript
+ * import { ClaimableERC1155 } from "thirdweb/modules";
+ *
+ * const transaction = ClaimableERC1155.mint({
+ *   contract,
+ *   to: "0x...", // Address to mint tokens to
+ *   quantity: 2, // Amount of tokens to mint
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ * @module ClaimableERC1155
+ */
 export function mint(options: BaseTransactionOptions<MintParams>) {
   return generatedMint({
     contract: options.contract,
