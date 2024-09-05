@@ -3,11 +3,11 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import type { Hex } from "../../../../utils/encoding/hex.js";
 import { fetchTokenMetadata } from "../../../../utils/nft/fetchTokenMetadata.js";
 import type { NFTMetadata } from "../../../../utils/nft/parseNft.js";
-import { getBaseURICount } from "../../__generated__/IBatchMintMetadata/read/getBaseURICount.js";
-import { getBatchIdAtIndex } from "../../__generated__/IBatchMintMetadata/read/getBatchIdAtIndex.js";
-import { encryptedData } from "../../__generated__/IDelayedReveal/read/encryptedData.js";
-import { baseURIIndices } from "../../__generated__/IDrop/read/baseURIIndices.js";
-import { tokenURI } from "../../__generated__/IERC721A/read/tokenURI.js";
+import * as GetBaseURICount from "../../__generated__/IBatchMintMetadata/read/getBaseURICount.js";
+import * as GetBatchIdAtIndex from "../../__generated__/IBatchMintMetadata/read/getBatchIdAtIndex.js";
+import * as EncryptedData from "../../__generated__/IDelayedReveal/read/encryptedData.js";
+import * as BaseURIIndicies from "../../__generated__/IDrop/read/baseURIIndices.js";
+import * as TokenURI from "../../__generated__/IERC721A/read/tokenURI.js";
 
 /**
  * @extension ERC721
@@ -39,7 +39,7 @@ export interface BatchToReveal {
 export async function getBatchesToReveal(
   options: BaseTransactionOptions,
 ): Promise<BatchToReveal[]> {
-  const count = await getBaseURICount({
+  const count = await GetBaseURICount.getBaseURICount({
     contract: options.contract,
   });
   if (count === 0n) {
@@ -50,13 +50,13 @@ export async function getBatchesToReveal(
   const uriIndices = await Promise.all(
     countRangeArray.map(async (batchId) => {
       try {
-        return await getBatchIdAtIndex({
+        return await GetBatchIdAtIndex.getBatchIdAtIndex({
           contract: options.contract,
           index: BigInt(batchId),
         });
       } catch {
         try {
-          return await baseURIIndices({
+          return await BaseURIIndicies.baseURIIndices({
             contract: options.contract,
             index: BigInt(batchId),
           });
@@ -74,7 +74,7 @@ export async function getBatchesToReveal(
 
   const tokenMetadatas = await Promise.all(
     Array.from([0, ...uriIndicesWithZeroStart]).map(async (i) => {
-      const uri = await tokenURI({
+      const uri = await TokenURI.tokenURI({
         contract: options.contract,
         tokenId: BigInt(i),
       });
@@ -88,7 +88,7 @@ export async function getBatchesToReveal(
 
   const encryptedUriData = await Promise.all(
     Array.from([...uriIndices]).map((i) =>
-      encryptedData({
+      EncryptedData.encryptedData({
         contract: options.contract,
         index: BigInt(i),
       }),
@@ -117,4 +117,26 @@ export async function getBatchesToReveal(
       placeholderMetadata: metadata,
     }))
     .filter((_, index) => (encryptedBaseUris[index]?.length || 0) > 0);
+}
+
+/**
+ * Checks if the `getBatchesToReveal` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `getBatchesToReveal` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isGetBatchesToRevealSupported } from "thirdweb/extensions/erc721";
+ *
+ * const supported = isGetBatchesToRevealSupported(["0x..."]);
+ * ```
+ */
+export function isGetBaseURICountSupported(availableSelectors: string[]) {
+  return [
+    GetBaseURICount.isGetBaseURICountSupported(availableSelectors),
+    GetBatchIdAtIndex.isGetBatchIdAtIndexSupported(availableSelectors),
+    EncryptedData.isEncryptedDataSupported(availableSelectors),
+    BaseURIIndicies.isBaseURIIndicesSupported(availableSelectors),
+    TokenURI.isTokenURISupported(availableSelectors),
+  ].every(Boolean);
 }
