@@ -24,7 +24,6 @@ const TRACKING_CATEGORY = "contract_overview";
 
 export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
   contract,
-
   isErc1155,
   isErc20,
   isErc721,
@@ -35,7 +34,12 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
   return (
     <SimpleGrid columns={{ base: 1, xl: 10 }} gap={20}>
       <GridItem as={Flex} colSpan={{ xl: 7 }} direction="column" gap={16}>
-        <ContractChecklist contract={contract} />
+        <ContractChecklist
+          isErc721={isErc721}
+          isErc1155={isErc1155}
+          isErc20={isErc20}
+          contract={contract}
+        />
 
         <AnalyticsOverview
           contractAddress={contract.address}
@@ -73,8 +77,6 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
       </GridItem>
       <GridItem colSpan={{ xl: 3 }} as={Flex} direction="column" gap={6}>
         <PublishedBy contractAddress={contract.address} />
-        {/* TODO: this is broken because it relies on something that no longer exists on contract instance */}
-        {/* {contract?.abi && <Extensions abi={contract?.abi} />} */}
       </GridItem>
     </SimpleGrid>
   );
