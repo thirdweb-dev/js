@@ -28,7 +28,6 @@ describe("ModularTokenERC1155", () => {
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
-      publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
       core: "ERC1155",
       params: {
         name: "TestTokenERC1155",
@@ -37,14 +36,9 @@ describe("ModularTokenERC1155", () => {
       modules: [
         MintableERC1155.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
-          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
         }),
-        BatchMetadataERC1155.module({
-          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
-        }),
-        SequentialTokenIdERC1155.module({
-          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
-        }),
+        BatchMetadataERC1155.module(),
+        SequentialTokenIdERC1155.module(),
       ],
     });
     contract = getContract({

@@ -28,7 +28,6 @@ describe("ModularTokenERC721", () => {
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
       core: "ERC721",
-      publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
       params: {
         name: "TestTokenERC721",
         symbol: "TT",
@@ -36,11 +35,8 @@ describe("ModularTokenERC721", () => {
       modules: [
         MintableERC721.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
-          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7",
         }),
-        BatchMetadataERC721.module({
-          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7",
-        }),
+        BatchMetadataERC721.module(),
       ],
     });
     contract = getContract({

@@ -23,7 +23,7 @@ export type InstallPublishedModuleOptions = {
  * @extension MODULAR
  * @example
  * ```ts
- * import { installPublishedModule } from "thirdweb/extensions/modular";
+ * import { installPublishedModule } from "thirdweb/modules";
  * const transaction = installPublishedModule({
  *  client,
  *  chain,

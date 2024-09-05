@@ -27,7 +27,6 @@ describe("ModularClaimableERC1155", () => {
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
       core: "ERC1155",
-      publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
       params: {
         name: "TestDropERC1155",
         symbol: "TT",
@@ -35,11 +34,8 @@ describe("ModularClaimableERC1155", () => {
       modules: [
         ClaimableERC1155.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
-          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
         }),
-        BatchMetadataERC1155.module({
-          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
-        }),
+        BatchMetadataERC1155.module(),
       ],
     });
     contract = getContract({

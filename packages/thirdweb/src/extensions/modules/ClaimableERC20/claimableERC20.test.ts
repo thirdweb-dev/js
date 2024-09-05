@@ -24,7 +24,6 @@ describe("ModularDropERC20", () => {
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
       core: "ERC20",
-      publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
       params: {
         name: "TestDropERC20",
         symbol: "TT",
@@ -32,7 +31,6 @@ describe("ModularDropERC20", () => {
       modules: [
         ClaimableERC20.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
-          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
         }),
       ],
     });

@@ -21,7 +21,7 @@ export type UninstallPublishedModuleOptions = {
  * @extension MODULAR
  * @example
  * ```ts
- * import { uninstallPublishedModule } from "thirdweb/extensions/modular";
+ * import { uninstallPublishedModule } from "thirdweb/modules";
  * const transaction = uninstallPublishedModule({
  *  client,
  *  chain,

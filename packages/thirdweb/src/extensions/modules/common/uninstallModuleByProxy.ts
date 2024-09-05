@@ -25,7 +25,7 @@ export type UninstallModuleByProxyOptions = {
  * @extension MODULAR
  * @example
  * ```ts
- * import { uninstallModuleByProxy } from "thirdweb/extensions/modular";
+ * import { uninstallModuleByProxy } from "thirdweb/modules";
  * const transaction = uninstallModuleByProxy({
  *  client,
  *  chain,
