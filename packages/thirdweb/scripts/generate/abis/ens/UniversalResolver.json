@@ -3,49 +3,9 @@
   "function resolve(bytes name, bytes data, string[] gateways) external view returns (bytes, address)",
   "function reverse(bytes reverseName) external view returns (string, address, address, address)",
   "function reverse(bytes reverseName, string[] gateways) external view returns (string, address, address, address)",
-  {
-    "inputs": [],
-    "name": "ResolverNotFound",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ResolverWildcardNotSupported",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ResolverNotContract",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "name": "returnData",
-        "type": "bytes"
-      }
-    ],
-    "name": "ResolverError",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "name": "status",
-            "type": "uint16"
-          },
-          {
-            "name": "message",
-            "type": "string"
-          }
-        ],
-        "name": "errors",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "HttpError",
-    "type": "error"
-  }
+  "error ResolverNotFound()",
+  "error ResolverWildcardNotSupported()",
+  "error ResolverNotContract()",
+  "error ResolverError(bytes returnData)",
+  "error HttpError((uint16 status, string message)[] errors)"
 ]

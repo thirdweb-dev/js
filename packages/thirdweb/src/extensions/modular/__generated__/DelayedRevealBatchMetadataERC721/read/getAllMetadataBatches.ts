@@ -9,30 +9,23 @@ export const FN_SELECTOR = "0xe6c23512" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "tuple[]",
-    internalType:
-      "struct DelayedRevealBatchMetadataERC721.DelayedRevealMetadataBatch[]",
     components: [
       {
+        type: "uint256",
         name: "startTokenIdInclusive",
-        type: "uint256",
-        internalType: "uint256",
       },
       {
+        type: "uint256",
         name: "endTokenIdInclusive",
-        type: "uint256",
-        internalType: "uint256",
       },
       {
-        name: "baseURI",
         type: "string",
-        internalType: "string",
+        name: "baseURI",
       },
       {
-        name: "encryptedData",
         type: "bytes",
-        internalType: "bytes",
+        name: "encryptedData",
       },
     ],
   },

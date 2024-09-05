@@ -9,51 +9,41 @@ export const FN_SELECTOR = "0x89e04e0e" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "tuple",
-    internalType: "struct IModuleConfig.ModuleConfig",
     components: [
       {
-        name: "registerInstallationCallback",
         type: "bool",
-        internalType: "bool",
+        name: "registerInstallationCallback",
       },
       {
+        type: "bytes4[]",
         name: "requiredInterfaces",
-        type: "bytes4[]",
-        internalType: "bytes4[]",
       },
       {
+        type: "bytes4[]",
         name: "supportedInterfaces",
-        type: "bytes4[]",
-        internalType: "bytes4[]",
       },
       {
-        name: "callbackFunctions",
         type: "tuple[]",
-        internalType: "struct IModuleConfig.CallbackFunction[]",
+        name: "callbackFunctions",
         components: [
           {
-            name: "selector",
             type: "bytes4",
-            internalType: "bytes4",
+            name: "selector",
           },
         ],
       },
       {
-        name: "fallbackFunctions",
         type: "tuple[]",
-        internalType: "struct IModuleConfig.FallbackFunction[]",
+        name: "fallbackFunctions",
         components: [
           {
-            name: "selector",
             type: "bytes4",
-            internalType: "bytes4",
+            name: "selector",
           },
           {
-            name: "permissionBits",
             type: "uint256",
-            internalType: "uint256",
+            name: "permissionBits",
           },
         ],
       },

@@ -13,17 +13,15 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type AirdropERC20Params = WithOverrides<{
   tokenAddress: AbiParameterToPrimitiveType<{
-    name: "_tokenAddress";
     type: "address";
-    internalType: "address";
+    name: "_tokenAddress";
   }>;
   contents: AbiParameterToPrimitiveType<{
-    name: "_contents";
     type: "tuple[]";
-    internalType: "struct Airdrop.AirdropContentERC20[]";
+    name: "_contents";
     components: [
-      { name: "recipient"; type: "address"; internalType: "address" },
-      { name: "amount"; type: "uint256"; internalType: "uint256" },
+      { type: "address"; name: "recipient" },
+      { type: "uint256"; name: "amount" },
     ];
   }>;
 }>;
@@ -31,24 +29,20 @@ export type AirdropERC20Params = WithOverrides<{
 export const FN_SELECTOR = "0x56b0b449" as const;
 const FN_INPUTS = [
   {
-    name: "_tokenAddress",
     type: "address",
-    internalType: "address",
+    name: "_tokenAddress",
   },
   {
-    name: "_contents",
     type: "tuple[]",
-    internalType: "struct Airdrop.AirdropContentERC20[]",
+    name: "_contents",
     components: [
       {
-        name: "recipient",
         type: "address",
-        internalType: "address",
+        name: "recipient",
       },
       {
-        name: "amount",
         type: "uint256",
-        internalType: "uint256",
+        name: "amount",
       },
     ],
   },

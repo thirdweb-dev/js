@@ -10,26 +10,19 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "previewMint" function.
  */
 export type PreviewMintParams = {
-  shares: AbiParameterToPrimitiveType<{
-    name: "shares";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  shares: AbiParameterToPrimitiveType<{ type: "uint256"; name: "shares" }>;
 };
 
 export const FN_SELECTOR = "0xb3d7f6b9" as const;
 const FN_INPUTS = [
   {
-    name: "shares",
     type: "uint256",
-    internalType: "uint256",
+    name: "shares",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "uint256",
-    internalType: "uint256",
   },
 ] as const;
 

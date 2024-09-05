@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type TokenRoyaltyUpdateEventFilters = Partial<{
   tokenId: AbiParameterToPrimitiveType<{
-    name: "tokenId";
     type: "uint256";
+    name: "tokenId";
     indexed: true;
-    internalType: "uint256";
   }>;
   recipient: AbiParameterToPrimitiveType<{
-    name: "recipient";
     type: "address";
+    name: "recipient";
     indexed: true;
-    internalType: "address";
   }>;
 }>;
 

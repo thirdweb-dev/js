@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type OwnershipHandoverCanceledEventFilters = Partial<{
   pendingOwner: AbiParameterToPrimitiveType<{
-    name: "pendingOwner";
     type: "address";
+    name: "pendingOwner";
     indexed: true;
-    internalType: "address";
   }>;
 }>;
 

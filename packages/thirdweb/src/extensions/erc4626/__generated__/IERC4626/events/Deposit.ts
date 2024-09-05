@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type DepositEventFilters = Partial<{
   caller: AbiParameterToPrimitiveType<{
-    name: "caller";
     type: "address";
+    name: "caller";
     indexed: true;
-    internalType: "address";
   }>;
   owner: AbiParameterToPrimitiveType<{
-    name: "owner";
     type: "address";
+    name: "owner";
     indexed: true;
-    internalType: "address";
   }>;
 }>;
 
