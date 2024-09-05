@@ -27,7 +27,6 @@ import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { PayTokenIcon } from "../PayTokenIcon.js";
 import { Step } from "../Stepper.js";
 import type { PayerInfo } from "../types.js";
-import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
 import { addPendingTx } from "./pendingSwapTx.js";
 
@@ -111,7 +110,7 @@ export function SwapConfirmationScreen(props: {
 
       {/* Fees  */}
       <ConfirmItem label="Fees">
-        <SwapFees quote={props.quote} align="right" />
+        <SwapFeesRightAligned quote={props.quote} />
       </ConfirmItem>
 
       {/* Time  */}
@@ -327,5 +326,41 @@ function ConfirmItem(props: {
       </Container>
       <Line />
     </>
+  );
+}
+
+/**
+ * @internal
+ */
+export function SwapFeesRightAligned(props: {
+  quote: BuyWithCryptoQuote;
+}) {
+  return (
+    <Container
+      flex="column"
+      gap="xs"
+      style={{
+        alignItems: "flex-end",
+      }}
+    >
+      {props.quote.processingFees.map((fee) => {
+        const feeAmount = formatNumber(Number(fee.amount), 6);
+        return (
+          <Container
+            key={`${fee.token.chainId}_${fee.token.tokenAddress}_${feeAmount}`}
+            flex="row"
+            gap="xxs"
+          >
+            <Text color="primaryText" size="sm">
+              {feeAmount === 0 ? "~" : ""}
+              {feeAmount} {fee.token.symbol}
+            </Text>
+            <Text color="secondaryText" size="sm">
+              (${(fee.amountUSDCents / 100).toFixed(2)})
+            </Text>
+          </Container>
+        );
+      })}
+    </Container>
   );
 }

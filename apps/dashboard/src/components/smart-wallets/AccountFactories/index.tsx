@@ -1,14 +1,14 @@
+import { Button } from "@/components/ui/button";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Flex, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import type { BasicContract } from "contract-ui/types/types";
 import { useSupportedChains } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
-import { FiPlus } from "react-icons/fi";
+import { PlusIcon } from "lucide-react";
 import { polygon } from "thirdweb/chains";
 import invariant from "tiny-invariant";
-import { Heading, Text, TrackedLinkButton } from "tw-components";
 import { FactoryContracts } from "./factory-contracts";
 
 const useFactories = () => {
@@ -56,43 +56,31 @@ export const AccountFactories: React.FC<AccountFactoriesProps> = ({
 }) => {
   const factories = useFactories();
   return (
-    <Flex flexDir="column" gap={8}>
-      <Flex
-        flexDir={{ base: "column", lg: "row" }}
-        gap={8}
-        justifyContent={"space-between"}
-        alignItems={"left"}
-      >
-        <Flex flexDir={"column"} gap={4}>
-          <Heading size="title.md" as="h1">
-            Your account factories
-          </Heading>
-          <Text>
-            Click an account factory contract to view analytics and accounts
-            created.
-          </Text>
-        </Flex>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col lg:flex-row gap-3 lg:gap-8 lg:justify-between lg:items-center">
+        <p className="text-muted-foreground text-sm">
+          Click an account factory contract to view analytics and accounts
+          created.
+        </p>
 
-        <TrackedLinkButton
-          leftIcon={<FiPlus />}
-          category={trackingCategory}
-          label="create-factory"
-          colorScheme="primary"
-          href="/explore/smart-wallet"
-        >
-          Deploy an Account Factory
-        </TrackedLinkButton>
-      </Flex>
+        <Button variant="outline" asChild size="sm">
+          <TrackedLinkTW
+            category={trackingCategory}
+            label="create-factory"
+            href="/explore/smart-wallet"
+            className="gap-2 text-sm"
+          >
+            <PlusIcon className="size-3" />
+            Deploy Account Factory
+          </TrackedLinkTW>
+        </Button>
+      </div>
 
-      {factories.isLoading ? (
-        <Spinner />
-      ) : (
-        <FactoryContracts
-          contracts={(factories.data || []) as BasicContract[]}
-          isLoading={factories.isLoading}
-          isFetched={factories.isFetched}
-        />
-      )}
-    </Flex>
+      <FactoryContracts
+        contracts={(factories.data || []) as BasicContract[]}
+        isLoading={factories.isLoading}
+        isFetched={factories.isFetched}
+      />
+    </div>
   );
 };

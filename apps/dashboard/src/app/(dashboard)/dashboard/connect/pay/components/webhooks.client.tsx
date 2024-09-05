@@ -35,7 +35,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
@@ -56,15 +55,15 @@ type Webhook = {
 };
 
 export type WebhooksPageProps = {
-  apiKey: ApiKey;
+  clientId: string;
 };
 
 export function WebhooksPage(props: WebhooksPageProps) {
   const webhooksQuery = useQuery({
-    queryKey: ["webhooks", props.apiKey.key],
+    queryKey: ["webhooks", props.clientId],
     queryFn: async () => {
       const res = await fetch(
-        `/api/server-proxy/pay/webhooks/get-all?clientId=${props.apiKey.key}`,
+        `/api/server-proxy/pay/webhooks/get-all?clientId=${props.clientId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -84,7 +83,7 @@ export function WebhooksPage(props: WebhooksPageProps) {
     return (
       <div className="border border-border rounded-lg p-8 text-center flex flex-col items-center gap-8">
         <h2 className="text-xl font-semibold">No webhooks configured yet.</h2>
-        <CreateWebhookButton apiKey={props.apiKey}>
+        <CreateWebhookButton clientId={props.clientId}>
           <Button variant="primary" className="gap-1">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
@@ -104,7 +103,7 @@ export function WebhooksPage(props: WebhooksPageProps) {
             <TableHead>Secret</TableHead>
             <TableHead>Created</TableHead>
             <TableHead className="text-right">
-              <CreateWebhookButton apiKey={props.apiKey}>
+              <CreateWebhookButton clientId={props.clientId}>
                 <Button size="sm" variant="primary" className="gap-1">
                   <PlusIcon className="size-4" />
                   <span>Create New Webhook</span>
@@ -133,7 +132,7 @@ export function WebhooksPage(props: WebhooksPageProps) {
               </TableCell>
               <TableCell className="text-right">
                 <DeleteWebhookButton
-                  apiKey={props.apiKey}
+                  clientId={props.clientId}
                   webhookId={webhook.id}
                 >
                   <Button variant="ghost" size="icon">
@@ -171,13 +170,13 @@ function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...values, clientId: props.apiKey.key }),
+        body: JSON.stringify({ ...values, clientId: props.clientId }),
       });
       const json = await res.json();
       return json.result as string;
     },
     onSuccess: () => {
-      return queryClient.invalidateQueries(["webhooks", props.apiKey.key]);
+      return queryClient.invalidateQueries(["webhooks", props.clientId]);
     },
   });
   return (
@@ -287,13 +286,13 @@ function DeleteWebhookButton(
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id, clientId: props.apiKey.key }),
+        body: JSON.stringify({ id, clientId: props.clientId }),
       });
       const json = await res.json();
       return json.result as string;
     },
     onSuccess: () => {
-      return queryClient.invalidateQueries(["webhooks", props.apiKey.key]);
+      return queryClient.invalidateQueries(["webhooks", props.clientId]);
     },
   });
   return (

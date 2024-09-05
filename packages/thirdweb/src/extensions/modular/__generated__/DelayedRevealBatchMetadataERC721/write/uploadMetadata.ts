@@ -12,39 +12,24 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "uploadMetadata" function.
  */
 export type UploadMetadataParams = WithOverrides<{
-  amount: AbiParameterToPrimitiveType<{
-    name: "_amount";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  baseURI: AbiParameterToPrimitiveType<{
-    name: "_baseURI";
-    type: "string";
-    internalType: "string";
-  }>;
-  data: AbiParameterToPrimitiveType<{
-    name: "_data";
-    type: "bytes";
-    internalType: "bytes";
-  }>;
+  amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_amount" }>;
+  baseURI: AbiParameterToPrimitiveType<{ type: "string"; name: "_baseURI" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 }>;
 
 export const FN_SELECTOR = "0xcebbeb5a" as const;
 const FN_INPUTS = [
   {
-    name: "_amount",
     type: "uint256",
-    internalType: "uint256",
+    name: "_amount",
   },
   {
-    name: "_baseURI",
     type: "string",
-    internalType: "string",
+    name: "_baseURI",
   },
   {
-    name: "_data",
     type: "bytes",
-    internalType: "bytes",
+    name: "_data",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

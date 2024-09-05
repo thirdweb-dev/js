@@ -12,29 +12,19 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "uninstallModule" function.
  */
 export type UninstallModuleParams = WithOverrides<{
-  module: AbiParameterToPrimitiveType<{
-    name: "_module";
-    type: "address";
-    internalType: "address";
-  }>;
-  data: AbiParameterToPrimitiveType<{
-    name: "_data";
-    type: "bytes";
-    internalType: "bytes";
-  }>;
+  module: AbiParameterToPrimitiveType<{ type: "address"; name: "_module" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 }>;
 
 export const FN_SELECTOR = "0x70c109cd" as const;
 const FN_INPUTS = [
   {
-    name: "_module",
     type: "address",
-    internalType: "address",
+    name: "_module",
   },
   {
-    name: "_data",
     type: "bytes",
-    internalType: "bytes",
+    name: "_data",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

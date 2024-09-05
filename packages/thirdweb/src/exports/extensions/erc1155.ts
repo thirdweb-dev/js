@@ -11,12 +11,20 @@ export {
 export {
   getNFTs,
   type GetNFTsParams,
+  isGetNFTsSupported,
 } from "../../extensions/erc1155/read/getNFTs.js";
 export {
   getOwnedNFTs,
   type GetOwnedNFTsParams,
 } from "../../extensions/erc1155/read/getOwnedNFTs.js";
-export { nextTokenIdToMint } from "../../extensions/erc1155/__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
+export {
+  nextTokenIdToMint,
+  isNextTokenIdToMintSupported,
+} from "../../extensions/erc1155/__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
+export {
+  getOwnedTokenIds,
+  type GetOwnedTokenIdsParams,
+} from "../../extensions/erc1155/read/getOwnedTokenIds.js";
 export {
   uri,
   /**
@@ -28,6 +36,7 @@ export {
 export {
   totalSupply,
   type TotalSupplyParams,
+  isTotalSupplySupported,
 } from "../../extensions/erc1155/__generated__/IERC1155/read/totalSupply.js";
 export {
   balanceOf,
@@ -43,6 +52,7 @@ export {
 export {
   burn,
   type BurnParams,
+  isBurnSupported,
 } from "../../extensions/erc1155/__generated__/IBurnableERC1155/write/burn.js";
 export {
   burnBatch,
@@ -64,10 +74,12 @@ export {
 export {
   mintTo,
   type MintToParams,
+  isMintToSupported,
 } from "../../extensions/erc1155/write/mintTo.js";
 export {
   mintAdditionalSupplyTo,
   type MintAdditionalSupplyToParams,
+  isMintAdditionalSupplyToSupported,
 } from "../../extensions/erc1155/write/mintAdditionalSupplyTo.js";
 export {
   setTokenURI,
@@ -78,37 +90,55 @@ export { freezeMetadata } from "../../extensions/erc1155/__generated__/INFTMetad
 /**
  * DROPS extension for ERC1155
  */
-export { getActiveClaimCondition } from "../../extensions/erc1155/drops/read/getActiveClaimCondition.js";
-export { claimCondition } from "../../extensions/erc1155/__generated__/DropSinglePhase1155/read/claimCondition.js";
+// READ
 export {
-  claimTo,
-  type ClaimToParams,
-} from "../../extensions/erc1155/drops/write/claimTo.js";
-
-export {
-  lazyMint,
-  type LazyMintParams,
-} from "../../extensions/erc1155/write/lazyMint.js";
-
-export {
-  setClaimConditions,
-  type SetClaimConditionsParams,
-} from "../../extensions/erc1155/drops/write/setClaimConditions.js";
-
-export {
-  updateMetadata,
-  type UpdateMetadataParams,
-} from "../../extensions/erc1155/drops/write/updateMetadata.js";
-
-export {
-  updateTokenURI,
-  type UpdateTokenURIParams,
-} from "../../extensions/erc1155/write/updateTokenURI.js";
-
+  getActiveClaimCondition,
+  isGetActiveClaimConditionSupported,
+} from "../../extensions/erc1155/drops/read/getActiveClaimCondition.js";
 export {
   getClaimConditionById,
   type GetClaimConditionByIdParams,
+  isGetClaimConditionByIdSupported,
 } from "../../extensions/erc1155/__generated__/IDrop1155/read/getClaimConditionById.js";
+export {
+  getClaimConditions,
+  type GetClaimConditionsParams,
+  isGetClaimConditionsSupported,
+} from "../../extensions/erc1155/drops/read/getClaimConditions.js";
+
+// WRITE
+export {
+  claimTo,
+  type ClaimToParams,
+  isClaimToSupported,
+} from "../../extensions/erc1155/drops/write/claimTo.js";
+export {
+  lazyMint,
+  type LazyMintParams,
+  isLazyMintSupported,
+} from "../../extensions/erc1155/write/lazyMint.js";
+export {
+  setClaimConditions,
+  type SetClaimConditionsParams,
+  isSetClaimConditionsSupported,
+} from "../../extensions/erc1155/drops/write/setClaimConditions.js";
+export {
+  resetClaimEligibility,
+  type ResetClaimEligibilityParams,
+  isResetClaimEligibilitySupported,
+} from "../../extensions/erc1155/drops/write/resetClaimEligibility.js";
+
+// METADATA
+export {
+  updateMetadata,
+  type UpdateMetadataParams,
+  isUpdateMetadataSupported,
+} from "../../extensions/erc1155/drops/write/updateMetadata.js";
+export {
+  updateTokenURI,
+  type UpdateTokenURIParams,
+  isUpdateTokenURISupported,
+} from "../../extensions/erc1155/write/updateTokenURI.js";
 
 /**
  * SIGNATURE extension for ERC1155

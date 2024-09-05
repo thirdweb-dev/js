@@ -1,6 +1,6 @@
 import { maxUint256, padHex } from "viem";
 import {
-  ADDRESS_ZERO,
+  ZERO_ADDRESS,
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
@@ -85,7 +85,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     // early exit if no merkle root is set
     if (!cc.merkleRoot || cc.merkleRoot === padHex("0x", { size: 32 })) {
       return {
-        currency: ADDRESS_ZERO,
+        currency: ZERO_ADDRESS,
         proof: [],
         quantityLimitPerWallet: 0n,
         pricePerToken: maxUint256,
@@ -105,7 +105,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     // if no proof is found, we'll try the empty proof
     if (!allowListProof) {
       return {
-        currency: ADDRESS_ZERO,
+        currency: ZERO_ADDRESS,
         proof: [],
         quantityLimitPerWallet: 0n,
         pricePerToken: maxUint256,
@@ -118,7 +118,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
   // currency and price need to match the allowlist proof if set
   // if default values in the allowlist proof, fallback to the claim condition
   const currency =
-    allowlistProof.currency && allowlistProof.currency !== ADDRESS_ZERO
+    allowlistProof.currency && allowlistProof.currency !== ZERO_ADDRESS
       ? allowlistProof.currency
       : cc.currency;
   const pricePerToken =

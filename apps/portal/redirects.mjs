@@ -525,6 +525,7 @@ const paymentRedirects = {
 	"/connect/pay/buy-with-crypto/fee-sharing": "/connect/pay/fee-sharing",
 	"/connect/pay/build-a-custom-experience": "/connect/pay/guides/build-a-custom-experience",
 	"/connect/pay/enable-test-mode": "/connect/pay/guides/enable-test-mode",
+	"/connect/pay/guides/enable-test-mode": "/connect/pay/testing-pay",
 };
 
 const contractRedirects = {

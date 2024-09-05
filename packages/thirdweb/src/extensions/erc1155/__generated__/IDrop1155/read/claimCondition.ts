@@ -10,61 +10,24 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "claimCondition" function.
  */
 export type ClaimConditionParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    name: "_tokenId";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
 };
 
 export const FN_SELECTOR = "0xe9703d25" as const;
 const FN_INPUTS = [
   {
-    name: "_tokenId",
     type: "uint256",
-    internalType: "uint256",
+    name: "_tokenId",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "startTimestamp",
     type: "uint256",
-    internalType: "uint256",
+    name: "currentStartId",
   },
   {
-    name: "maxClaimableSupply",
     type: "uint256",
-    internalType: "uint256",
-  },
-  {
-    name: "supplyClaimed",
-    type: "uint256",
-    internalType: "uint256",
-  },
-  {
-    name: "quantityLimitPerWallet",
-    type: "uint256",
-    internalType: "uint256",
-  },
-  {
-    name: "merkleRoot",
-    type: "bytes32",
-    internalType: "bytes32",
-  },
-  {
-    name: "pricePerToken",
-    type: "uint256",
-    internalType: "uint256",
-  },
-  {
-    name: "currency",
-    type: "address",
-    internalType: "address",
-  },
-  {
-    name: "metadata",
-    type: "string",
-    internalType: "string",
+    name: "count",
   },
 ] as const;
 

@@ -1,64 +1,37 @@
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import {
-  type RevealableContract,
-  type useContract,
-  useDelayedRevealLazyMint,
-  useLazyMint,
-} from "@thirdweb-dev/react";
 import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
-import {
-  ProgressBox,
-  type UploadProgressEvent,
-} from "core-ui/batch-upload/progress-box";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useState } from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
 import type { ThirdwebContract } from "thirdweb";
-import { nextTokenIdToMint } from "thirdweb/extensions/erc721";
-import { useReadContract } from "thirdweb/react";
+import * as ERC721Ext from "thirdweb/extensions/erc721";
+import * as ERC1155Ext from "thirdweb/extensions/erc1155";
+import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 
 interface BatchLazyMintButtonProps {
-  contractQuery: ReturnType<typeof useContract>;
   isRevealable: boolean;
   contract: ThirdwebContract;
+  isErc721: boolean;
 }
 
 export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
-  contractQuery,
   contract,
   isRevealable,
-  ...restButtonProps
+  isErc721,
 }) => {
-  const contractV4 = contractQuery.contract;
   const trackEvent = useTrack();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // Both ERC721 and ERC1155 have the same function signature for nextTokenIdToMint,
-  // so we can just use either one.
-  const nextTokenIdToMintQuery = useReadContract(nextTokenIdToMint, {
-    contract,
-  });
-  const [progress, setProgress] = useState<UploadProgressEvent>({
-    progress: 0,
-    total: 100,
-  });
-
-  const mintBatchMutation = useLazyMint(
-    contractV4,
-    (event: UploadProgressEvent) => {
-      setProgress(event);
+  const nextTokenIdToMintQuery = useReadContract(
+    isErc721 ? ERC721Ext.nextTokenIdToMint : ERC1155Ext.nextTokenIdToMint,
+    {
+      contract,
     },
   );
 
-  const mintDelayedRevealBatchMutation = useDelayedRevealLazyMint(
-    contractV4 as RevealableContract,
-    (event: UploadProgressEvent) => {
-      setProgress(event);
-    },
-  );
+  const sendTxMutation = useSendAndConfirmTransaction();
 
   const txNotifications = useTxNotifications(
     "Batch uploaded successfully",
@@ -88,17 +61,38 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
               label: "attempt",
             });
             try {
-              if (revealType === "instant") {
-                // instant reveal
-                await mintBatchMutation.mutateAsync(data);
-              } else {
-                // otherwise it's delayed reveal
-                await mintDelayedRevealBatchMutation.mutateAsync({
-                  metadatas: data.metadata,
-                  placeholder: data.placeholderMetadata,
-                  password: data.password,
-                });
-              }
+              const tx = (() => {
+                switch (true) {
+                  // lazy mint erc721
+                  case revealType === "instant" && isErc721: {
+                    return ERC721Ext.lazyMint({
+                      contract,
+                      nfts: data.metadatas,
+                    });
+                  }
+                  // lazy mint erc1155
+                  case revealType === "instant" && !isErc721: {
+                    return ERC1155Ext.lazyMint({
+                      contract,
+                      nfts: data.metadatas,
+                    });
+                  }
+                  // delayed reveal erc721
+                  case revealType === "delayed": {
+                    return ERC721Ext.createDelayedRevealBatch({
+                      contract,
+                      metadata: data.metadata,
+                      password: data.password,
+                      placeholderMetadata: data.placeholderMetadata,
+                    });
+                  }
+                  default: {
+                    throw new Error("Invalid reveal type");
+                  }
+                }
+              })();
+
+              await sendTxMutation.mutateAsync(tx);
 
               trackEvent({
                 category: "nft",
@@ -115,25 +109,15 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
                 error,
               });
               txNotifications.onError(error);
-            } finally {
-              setProgress({
-                progress: 0,
-                total: 100,
-              });
             }
           }}
           nextTokenIdToMint={nextTokenIdToMintQuery.data || 0n}
           isRevealable={isRevealable}
-        >
-          {mintBatchMutation.isLoading ? (
-            <ProgressBox progress={progress} />
-          ) : null}
-        </BatchLazyMint>
+        />
       </Drawer>
       <Button
         colorScheme="primary"
         leftIcon={<Icon as={RiCheckboxMultipleBlankLine} />}
-        {...restButtonProps}
         onClick={onOpen}
       >
         Batch Upload

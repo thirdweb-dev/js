@@ -1,7 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { getMulticallSetClaimConditionTransactions } from "../../../../utils/extensions/drops/get-multicall-set-claim-claim-conditon-transactions.js";
 import type { ClaimConditionsInput } from "../../../../utils/extensions/drops/types.js";
-import { multicall } from "../../../common/__generated__/IMulticall/write/multicall.js";
+import { isSetContractURISupported } from "../../../common/__generated__/IContractMetadata/write/setContractURI.js";
+import {
+  isMulticallSupported,
+  multicall,
+} from "../../../common/__generated__/IMulticall/write/multicall.js";
+import { isGetContractMetadataSupported } from "../../../common/read/getContractMetadata.js";
+import { isSetClaimConditionsSupported as isSetClaimConditionsSupportedGenerated } from "../../__generated__/IDrop/write/setClaimConditions.js";
 
 /**
  * @extension ERC721
@@ -53,4 +59,27 @@ export function setClaimConditions(
       };
     },
   });
+}
+
+/**
+ * Checks if the `setClaimConditions` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `setClaimConditions` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isSetClaimConditionsSupported } from "thirdweb/extensions/erc721";
+ *
+ * const supported = isSetClaimConditionsSupported(["0x..."]);
+ * ```
+ */
+export function isSetClaimConditionsSupported(availableSelectors: string[]) {
+  return (
+    isMulticallSupported(availableSelectors) &&
+    // needed for setting contract metadata
+    isGetContractMetadataSupported(availableSelectors) &&
+    isSetContractURISupported(availableSelectors) &&
+    // needs to actually be able to set the claim Conditions
+    isSetClaimConditionsSupportedGenerated(availableSelectors)
+  );
 }

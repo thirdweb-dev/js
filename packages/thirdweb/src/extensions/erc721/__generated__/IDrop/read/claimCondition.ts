@@ -9,44 +9,12 @@ export const FN_SELECTOR = "0xd637ed59" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "startTimestamp",
     type: "uint256",
-    internalType: "uint256",
+    name: "currentStartId",
   },
   {
-    name: "maxClaimableSupply",
     type: "uint256",
-    internalType: "uint256",
-  },
-  {
-    name: "supplyClaimed",
-    type: "uint256",
-    internalType: "uint256",
-  },
-  {
-    name: "quantityLimitPerWallet",
-    type: "uint256",
-    internalType: "uint256",
-  },
-  {
-    name: "merkleRoot",
-    type: "bytes32",
-    internalType: "bytes32",
-  },
-  {
-    name: "pricePerToken",
-    type: "uint256",
-    internalType: "uint256",
-  },
-  {
-    name: "currency",
-    type: "address",
-    internalType: "address",
-  },
-  {
-    name: "metadata",
-    type: "string",
-    internalType: "string",
+    name: "count",
   },
 ] as const;
 

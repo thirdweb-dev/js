@@ -26,7 +26,16 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface PayConfigProps {
-  apiKey: ApiKey;
+  apiKey: Pick<
+    ApiKey,
+    | "services"
+    | "id"
+    | "name"
+    | "domains"
+    | "bundleIds"
+    | "services"
+    | "redirectUrls"
+  >;
 }
 
 const TRACKING_CATEGORY = "pay";

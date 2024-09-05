@@ -20,10 +20,10 @@ export type SetClaimConditionsParams = WithOverrides<{
       { type: "uint256"; name: "maxClaimableSupply" },
       { type: "uint256"; name: "supplyClaimed" },
       { type: "uint256"; name: "quantityLimitPerWallet" },
-      { type: "uint256"; name: "waitTimeInSecondsBetweenClaims" },
       { type: "bytes32"; name: "merkleRoot" },
       { type: "uint256"; name: "pricePerToken" },
       { type: "address"; name: "currency" },
+      { type: "string"; name: "metadata" },
     ];
   }>;
   resetClaimEligibility: AbiParameterToPrimitiveType<{
@@ -32,7 +32,7 @@ export type SetClaimConditionsParams = WithOverrides<{
   }>;
 }>;
 
-export const FN_SELECTOR = "0xe23b8164" as const;
+export const FN_SELECTOR = "0x74bc7db7" as const;
 const FN_INPUTS = [
   {
     type: "tuple[]",
@@ -55,10 +55,6 @@ const FN_INPUTS = [
         name: "quantityLimitPerWallet",
       },
       {
-        type: "uint256",
-        name: "waitTimeInSecondsBetweenClaims",
-      },
-      {
         type: "bytes32",
         name: "merkleRoot",
       },
@@ -69,6 +65,10 @@ const FN_INPUTS = [
       {
         type: "address",
         name: "currency",
+      },
+      {
+        type: "string",
+        name: "metadata",
       },
     ],
   },

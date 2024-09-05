@@ -10,61 +10,48 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "getClaimConditionByTokenId" function.
  */
 export type GetClaimConditionByTokenIdParams = {
-  id: AbiParameterToPrimitiveType<{
-    name: "_id";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_id" }>;
 };
 
 export const FN_SELECTOR = "0x29a20bf4" as const;
 const FN_INPUTS = [
   {
-    name: "_id",
     type: "uint256",
-    internalType: "uint256",
+    name: "_id",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "claimCondition",
     type: "tuple",
-    internalType: "struct ClaimableERC1155.ClaimCondition",
+    name: "claimCondition",
     components: [
       {
+        type: "uint256",
         name: "availableSupply",
-        type: "uint256",
-        internalType: "uint256",
       },
       {
-        name: "allowlistMerkleRoot",
         type: "bytes32",
-        internalType: "bytes32",
+        name: "allowlistMerkleRoot",
       },
       {
-        name: "pricePerUnit",
         type: "uint256",
-        internalType: "uint256",
+        name: "pricePerUnit",
       },
       {
-        name: "currency",
         type: "address",
-        internalType: "address",
+        name: "currency",
       },
       {
+        type: "uint48",
         name: "startTimestamp",
-        type: "uint48",
-        internalType: "uint48",
       },
       {
+        type: "uint48",
         name: "endTimestamp",
-        type: "uint48",
-        internalType: "uint48",
       },
       {
-        name: "auxData",
         type: "string",
-        internalType: "string",
+        name: "auxData",
       },
     ],
   },

@@ -44,7 +44,7 @@ export default async function TeamLayout(props: {
         <TeamTabs
           links={[
             {
-              href: `/team/${props.params.team_slug}/${props.params.project_slug}/connect`,
+              href: `/team/${props.params.team_slug}/${props.params.project_slug}/connect/analytics`,
               name: "Connect",
             },
             {

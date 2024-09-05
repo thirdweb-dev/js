@@ -1,37 +1,24 @@
-import { thirdwebClient } from "@/constants/client";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { useBatchesToReveal, type useContract } from "@thirdweb-dev/react";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { FiEye } from "react-icons/fi";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
+import { getBatchesToReveal } from "thirdweb/extensions/erc721";
+import { useReadContract } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 import { NFTRevealForm } from "./reveal-form";
 
 interface NFTRevealButtonProps {
-  contractQuery: ReturnType<typeof useContract>;
+  contract: ThirdwebContract;
 }
 
 export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
-  contractQuery,
-  ...restButtonProps
+  contract,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const contractV4 = contractQuery.contract;
-  const chain = useV5DashboardChain(contractV4?.chainId);
-  const contract =
-    contractV4 && chain
-      ? getContract({
-          address: contractV4.getAddress(),
-          chain: chain,
-          client: thirdwebClient,
-        })
-      : null;
-  const { data: batchesToReveal } = useBatchesToReveal(contractV4);
-  if (!contract || !contractV4) {
-    return null;
-  }
-  return batchesToReveal?.length ? (
+  const batchesQuery = useReadContract(getBatchesToReveal, {
+    contract,
+  });
+  return batchesQuery.data?.length ? (
     <MinterOnly contract={contract}>
       <Drawer
         allowPinchZoom
@@ -40,12 +27,14 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
         onClose={onClose}
         isOpen={isOpen}
       >
-        <NFTRevealForm contract={contractV4} />
+        <NFTRevealForm
+          contract={contract}
+          batchesToReveal={batchesQuery.data}
+        />
       </Drawer>
       <Button
         colorScheme="primary"
         leftIcon={<Icon as={FiEye} />}
-        {...restButtonProps}
         onClick={onOpen}
       >
         Reveal NFTs

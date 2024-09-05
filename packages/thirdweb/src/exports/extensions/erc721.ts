@@ -5,12 +5,17 @@ export { isERC721 } from "../../extensions/erc721/read/isERC721.js";
 export {
   getNFT,
   type GetNFTParams,
+  isGetNFTSupported,
 } from "../../extensions/erc721/read/getNFT.js";
 export {
   getNFTs,
   type GetNFTsParams,
+  isGetNFTsSupported,
 } from "../../extensions/erc721/read/getNFTs.js";
-export { nextTokenIdToMint } from "../../extensions/erc721/__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
+export {
+  nextTokenIdToMint,
+  isNextTokenIdToMintSupported,
+} from "../../extensions/erc721/__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
 export {
   ownerOf,
   type OwnerOfParams,
@@ -20,7 +25,10 @@ export {
   tokenURI,
   type TokenURIParams,
 } from "../../extensions/erc721/__generated__/IERC721A/read/tokenURI.js";
-export { totalSupply } from "../../extensions/erc721/__generated__/IERC721A/read/totalSupply.js";
+export {
+  totalSupply,
+  isTotalSupplySupported,
+} from "../../extensions/erc721/__generated__/IERC721A/read/totalSupply.js";
 export {
   balanceOf,
   type BalanceOfParams,
@@ -57,6 +65,7 @@ export {
 export {
   mintTo,
   type MintToParams,
+  isMintToSupported,
 } from "../../extensions/erc721/write/mintTo.js";
 export {
   transferFrom,
@@ -65,6 +74,7 @@ export {
 export {
   burn,
   type BurnParams,
+  isBurnSupported,
 } from "../../extensions/erc721/__generated__/IBurnableERC721/write/burn.js";
 export {
   setApprovalForAll,
@@ -82,21 +92,44 @@ export {
 /**
  * DROPS extension for ERC721
  */
-export { getClaimConditionById } from "../../extensions/erc721/__generated__/IDrop/read/getClaimConditionById.js";
-export { claimCondition } from "../../extensions/erc721/__generated__/DropSinglePhase/read/claimCondition.js";
-export { getActiveClaimCondition } from "../../extensions/erc721/drops/read/getActiveClaimCondition.js";
+// READ
+export {
+  getClaimConditionById,
+  isGetClaimConditionByIdSupported,
+} from "../../extensions/erc721/__generated__/IDrop/read/getClaimConditionById.js";
+export {
+  getActiveClaimConditionId,
+  isGetActiveClaimConditionIdSupported,
+} from "../../extensions/erc721/__generated__/IDrop/read/getActiveClaimConditionId.js";
+export {
+  getClaimConditions,
+  isGetClaimConditionsSupported,
+} from "../../extensions/erc721/drops/read/getClaimConditions.js";
+export {
+  getActiveClaimCondition,
+  isGetActiveClaimConditionSupported,
+} from "../../extensions/erc721/drops/read/getActiveClaimCondition.js";
+
+// WRITE
 export {
   claimTo,
   type ClaimToParams,
+  isClaimToSupported,
 } from "../../extensions/erc721/drops/write/claimTo.js";
 export {
   lazyMint,
   type LazyMintParams,
+  isLazyMintSupported,
 } from "../../extensions/erc721/write/lazyMint.js";
 export {
   setClaimConditions,
   type SetClaimConditionsParams,
+  isSetClaimConditionsSupported,
 } from "../../extensions/erc721/drops/write/setClaimConditions.js";
+export {
+  resetClaimEligibility,
+  isResetClaimEligibilitySupported,
+} from "../../extensions/erc721/drops/write/resetClaimEligibility.js";
 
 /**
  * SIGNATURE extension for ERC721
@@ -110,10 +143,14 @@ export {
 /**
  * SHARED METADATA extension for ERC721
  */
-export { sharedMetadata } from "../../extensions/erc721/__generated__/ISharedMetadata/read/sharedMetadata.js";
+export {
+  sharedMetadata,
+  isSharedMetadataSupported,
+} from "../../extensions/erc721/__generated__/ISharedMetadata/read/sharedMetadata.js";
 export {
   setSharedMetadata,
   type SetSharedMetadataParams,
+  isSetSharedMetadataSupported,
 } from "../../extensions/erc721/write/setSharedMetadata.js";
 
 /**
@@ -162,12 +199,15 @@ export {
 export {
   type BatchToReveal,
   getBatchesToReveal,
+  isGetBaseURICountSupported,
 } from "../../extensions/erc721/lazyMinting/read/getBatchesToReveal.js";
 export {
   updateMetadata,
   type UpdateMetadataParams,
+  isUpdateMetadataSupported,
 } from "../../extensions/erc721/drops/write/updateMetadata.js";
 export {
   updateTokenURI,
   type UpdateTokenURIParams,
+  isUpdateTokenURISupported,
 } from "../../extensions/erc721/write/updateTokenURI.js";

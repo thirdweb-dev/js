@@ -58,9 +58,25 @@ export {
 /**
  * DROPS extension for ERC20
  */
-export { getClaimConditionById } from "../../extensions/erc20/__generated__/IDropERC20/read/getClaimConditionById.js";
-export { claimCondition } from "../../extensions/erc20/__generated__/DropSinglePhase/read/claimCondition.js";
-export { getActiveClaimCondition } from "../../extensions/erc20/drops/read/getActiveClaimCondition.js";
+// READ
+export {
+  getClaimConditionById,
+  isGetClaimConditionByIdSupported,
+} from "../../extensions/erc20/__generated__/IDropERC20/read/getClaimConditionById.js";
+export {
+  getActiveClaimConditionId,
+  isGetActiveClaimConditionIdSupported,
+} from "../../extensions/erc20/__generated__/IDropERC20/read/getActiveClaimConditionId.js";
+export {
+  getClaimConditions,
+  isGetClaimConditionsSupported,
+} from "../../extensions/erc20/drops/read/getClaimConditions.js";
+export {
+  getActiveClaimCondition,
+  isGetActiveClaimConditionSupported,
+} from "../../extensions/erc20/drops/read/getActiveClaimCondition.js";
+
+// WRITE
 export {
   claimTo,
   type ClaimToParams,
@@ -69,7 +85,12 @@ export {
 export {
   setClaimConditions,
   type SetClaimConditionsParams,
+  isSetClaimConditionsSupported,
 } from "../../extensions/erc20/drops/write/setClaimConditions.js";
+export {
+  resetClaimEligibility,
+  isResetClaimEligibilitySupported,
+} from "../../extensions/erc20/drops/write/resetClaimEligibility.js";
 
 /**
  * SIGNATURE extension for ERC20
