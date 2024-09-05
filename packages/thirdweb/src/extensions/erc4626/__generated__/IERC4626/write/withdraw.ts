@@ -12,46 +12,30 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "withdraw" function.
  */
 export type WithdrawParams = WithOverrides<{
-  assets: AbiParameterToPrimitiveType<{
-    name: "assets";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  receiver: AbiParameterToPrimitiveType<{
-    name: "receiver";
-    type: "address";
-    internalType: "address";
-  }>;
-  owner: AbiParameterToPrimitiveType<{
-    name: "owner";
-    type: "address";
-    internalType: "address";
-  }>;
+  assets: AbiParameterToPrimitiveType<{ type: "uint256"; name: "assets" }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
+  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 }>;
 
 export const FN_SELECTOR = "0xb460af94" as const;
 const FN_INPUTS = [
   {
-    name: "assets",
     type: "uint256",
-    internalType: "uint256",
+    name: "assets",
   },
   {
+    type: "address",
     name: "receiver",
-    type: "address",
-    internalType: "address",
   },
   {
-    name: "owner",
     type: "address",
-    internalType: "address",
+    name: "owner",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "shares",
     type: "uint256",
-    internalType: "uint256",
+    name: "shares",
   },
 ] as const;
 

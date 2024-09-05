@@ -12,36 +12,25 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "reveal" function.
  */
 export type RevealParams = WithOverrides<{
-  index: AbiParameterToPrimitiveType<{
-    name: "_index";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  key: AbiParameterToPrimitiveType<{
-    name: "_key";
-    type: "bytes";
-    internalType: "bytes";
-  }>;
+  index: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_index" }>;
+  key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_key" }>;
 }>;
 
 export const FN_SELECTOR = "0xce805642" as const;
 const FN_INPUTS = [
   {
-    name: "_index",
     type: "uint256",
-    internalType: "uint256",
+    name: "_index",
   },
   {
-    name: "_key",
     type: "bytes",
-    internalType: "bytes",
+    name: "_key",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "revealedURI",
     type: "string",
-    internalType: "string",
+    name: "revealedURI",
   },
 ] as const;
 

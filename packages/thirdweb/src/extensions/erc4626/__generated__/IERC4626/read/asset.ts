@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0x38d52e0f" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "assetTokenAddress",
     type: "address",
-    internalType: "contract ERC20",
+    name: "assetTokenAddress",
   },
 ] as const;
 

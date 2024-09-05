@@ -11,35 +11,29 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type EncodeBytesOnInstallParams = {
   royaltyRecipient: AbiParameterToPrimitiveType<{
-    name: "royaltyRecipient";
     type: "address";
-    internalType: "address";
+    name: "royaltyRecipient";
   }>;
   royaltyBps: AbiParameterToPrimitiveType<{
-    name: "royaltyBps";
     type: "uint256";
-    internalType: "uint256";
+    name: "royaltyBps";
   }>;
 };
 
 export const FN_SELECTOR = "0x9adb1e41" as const;
 const FN_INPUTS = [
   {
-    name: "royaltyRecipient",
     type: "address",
-    internalType: "address",
+    name: "royaltyRecipient",
   },
   {
-    name: "royaltyBps",
     type: "uint256",
-    internalType: "uint256",
+    name: "royaltyBps",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "bytes",
-    internalType: "bytes",
   },
 ] as const;
 

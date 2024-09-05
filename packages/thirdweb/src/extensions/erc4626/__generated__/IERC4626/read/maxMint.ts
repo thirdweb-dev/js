@@ -10,26 +10,20 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "maxMint" function.
  */
 export type MaxMintParams = {
-  receiver: AbiParameterToPrimitiveType<{
-    name: "receiver";
-    type: "address";
-    internalType: "address";
-  }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
 };
 
 export const FN_SELECTOR = "0xc63d75b6" as const;
 const FN_INPUTS = [
   {
-    name: "receiver",
     type: "address",
-    internalType: "address",
+    name: "receiver",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "maxShares",
     type: "uint256",
-    internalType: "uint256",
+    name: "maxShares",
   },
 ] as const;
 

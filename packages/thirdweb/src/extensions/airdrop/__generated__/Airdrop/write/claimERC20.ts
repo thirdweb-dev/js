@@ -12,49 +12,29 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "claimERC20" function.
  */
 export type ClaimERC20Params = WithOverrides<{
-  token: AbiParameterToPrimitiveType<{
-    name: "_token";
-    type: "address";
-    internalType: "address";
-  }>;
-  receiver: AbiParameterToPrimitiveType<{
-    name: "_receiver";
-    type: "address";
-    internalType: "address";
-  }>;
-  quantity: AbiParameterToPrimitiveType<{
-    name: "_quantity";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  proofs: AbiParameterToPrimitiveType<{
-    name: "_proofs";
-    type: "bytes32[]";
-    internalType: "bytes32[]";
-  }>;
+  token: AbiParameterToPrimitiveType<{ type: "address"; name: "_token" }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "_receiver" }>;
+  quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
+  proofs: AbiParameterToPrimitiveType<{ type: "bytes32[]"; name: "_proofs" }>;
 }>;
 
 export const FN_SELECTOR = "0xecf3d3d4" as const;
 const FN_INPUTS = [
   {
+    type: "address",
     name: "_token",
-    type: "address",
-    internalType: "address",
   },
   {
+    type: "address",
     name: "_receiver",
-    type: "address",
-    internalType: "address",
   },
   {
-    name: "_quantity",
     type: "uint256",
-    internalType: "uint256",
+    name: "_quantity",
   },
   {
-    name: "_proofs",
     type: "bytes32[]",
-    internalType: "bytes32[]",
+    name: "_proofs",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
