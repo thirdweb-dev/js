@@ -141,8 +141,7 @@ describe(
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         account: TEST_ACCOUNT_A,
-        core: "ERC20", // FIXME use ERC20 core from tw deployer
-        publisher: "0x4fA9230f4E8978462cE7Bf8e6b5a2588da5F4264",
+        core: "ERC20",
         params: {
           name: "TestModularERC20",
           symbol: "TT",

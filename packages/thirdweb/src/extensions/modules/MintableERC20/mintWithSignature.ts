@@ -21,6 +21,7 @@ import {
  * import { MintableERC20 } from "thirdweb/modules";
  *
  * // generate the payload and signature, this is typically done on the server
+ * // requires to be generated with a wallet that has the MINTER_ROLE
  * const { payload, signature } = await MintableERC20.generateMintSignature({
  *   account,
  *   contract,
@@ -31,6 +32,7 @@ import {
  * });
  *
  * // prepare the transaction, this is typically done on the client
+ * // can be executed by any wallet
  * const transaction = MintableERC20.mintWithSignature({
  *   contract,
  *   payload,
@@ -76,6 +78,7 @@ export type GenerateMintSignatureOptions = {
  * import { MintableERC20 } from "thirdweb/modules";
  *
  * // generate the payload and signature, this is typically done on the server
+ * // requires to be generated with a wallet that has the MINTER_ROLE
  * const { payload, signature } = await MintableERC20.generateMintSignature({
  *   account,
  *   contract,
@@ -85,6 +88,8 @@ export type GenerateMintSignatureOptions = {
  *   },
  * });
  *
+ * // prepare the transaction, this is typically done on the client
+ * // can be executed by any wallet
  * const transaction = MintableERC20.mintWithSignature({
  *   contract,
  *   payload,
