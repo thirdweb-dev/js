@@ -11,7 +11,6 @@ import {
   Tabs,
   Textarea,
 } from "@chakra-ui/react";
-import type { ExtraPublishMetadata } from "@thirdweb-dev/sdk";
 import { compare, validate } from "compare-versions";
 import { FileInput } from "components/shared/FileInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -19,6 +18,7 @@ import { SelectOption } from "core-ui/batch-upload/lazy-mint-form/select-option"
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useFormContext } from "react-hook-form";
+import type { CoreMetadata } from "thirdweb/utils";
 import {
   Card,
   FormErrorMessage,
@@ -35,6 +35,10 @@ interface LandingFieldsetProps {
   latestVersion: string | undefined;
   placeholderVersion: string;
 }
+
+type ExtraPublishMetadata = Omit<CoreMetadata, "logo"> & {
+  logo?: File | string;
+};
 
 export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
   latestVersion,

@@ -131,7 +131,7 @@ export type CompilerMetadata = Prettify<
   }
 >;
 
-export type ExtendedMetadata = {
+export type CoreMetadata = {
   name: string;
   version: string;
   metadataUri: string;
@@ -184,5 +184,8 @@ export type ExtendedMetadata = {
     }
   >;
   compositeAbi?: Abi;
+};
+
+export type ExtendedMetadata = CoreMetadata & {
   [key: string]: unknown;
 };
