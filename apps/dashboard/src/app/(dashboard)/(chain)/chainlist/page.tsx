@@ -1,4 +1,12 @@
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import Fuse from "fuse.js";
 import { PlusIcon } from "lucide-react";
 import type { Metadata } from "next";
@@ -226,17 +234,19 @@ async function ChainsData(props: {
             <p className="text-2xl">No Results found</p>
           </div>
         ) : props.activeView === "table" ? (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <tbody>
-                <tr className="rounded-lg border-b">
+          <TableContainer>
+            <Table>
+              <TableHeader>
+                <TableRow>
                   {/* empty space for the icon */}
-                  <th />
-                  <TableHeading>Name</TableHeading>
-                  <TableHeading>Chain ID</TableHeading>
-                  <TableHeading>Native Token</TableHeading>
-                  <TableHeading>Enabled Services</TableHeading>
-                </tr>
+                  <TableHead />
+                  <TableHead>Name</TableHead>
+                  <TableHead>Chain ID</TableHead>
+                  <TableHead>Native Token</TableHead>
+                  <TableHead>Enabled Services</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {paginatedChains.map((chain) => (
                   <ChainListRow
                     key={chain.chainId}
@@ -259,9 +269,9 @@ async function ChainsData(props: {
                     iconUrl={chain.icon?.url}
                   />
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </TableBody>
+            </Table>
+          </TableContainer>
         ) : (
           <ul className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {paginatedChains.map((chain) => (
@@ -313,14 +323,6 @@ async function ChainsData(props: {
         )}
       </p>
     </>
-  );
-}
-
-function TableHeading(props: { children: React.ReactNode }) {
-  return (
-    <th className="text-left p-4 font-medium text-muted-foreground min-w-[150px]">
-      {props.children}
-    </th>
   );
 }
 

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import type { Meta, StoryObj } from "@storybook/react";
 import { StarIcon } from "lucide-react";
-import { BadgeContainer } from "./utils";
+import { BadgeContainer } from "../../../stories/utils";
 
 const meta = {
   title: "Shadcn/Buttons",

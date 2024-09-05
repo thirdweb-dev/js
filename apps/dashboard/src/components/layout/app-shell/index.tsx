@@ -180,6 +180,7 @@ const AppHeader: React.FC = () => {
       <TabLinks
         className="w-full"
         tabContainerClassName="px-4 lg:px-6"
+        shadowColor="transparent"
         links={[
           {
             href: "/dashboard",

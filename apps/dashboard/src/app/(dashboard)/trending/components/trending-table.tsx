@@ -1,9 +1,9 @@
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableHeader,
   TableRow,
@@ -33,7 +33,7 @@ export function TrendingContractSection(props: {
   return (
     props.topContracts.length > 0 && (
       <div>
-        <ScrollShadow scrollableClassName="rounded-lg border">
+        <TableContainer>
           <Table className="w-full">
             <TableHeader>
               <TableRow className="bg-muted/50">
@@ -145,7 +145,7 @@ export function TrendingContractSection(props: {
               ))}
             </TableBody>
           </Table>
-        </ScrollShadow>
+        </TableContainer>
 
         {props.showPagination && (
           <div className="w-full flex flex-row gap-4 justify-end mt-10">
