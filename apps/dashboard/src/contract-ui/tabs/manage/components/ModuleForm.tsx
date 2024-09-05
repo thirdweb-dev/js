@@ -81,11 +81,9 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
 
       const installTransaction = installPublishedModule({
         contract,
-        chain: contract.chain,
-        client: contract.client,
         account,
         moduleName: watch("moduleContract"),
-        publisherAddress: watch("publisherAddress"),
+        publisher: watch("publisherAddress"),
         version: watch("version"),
         moduleData,
       });

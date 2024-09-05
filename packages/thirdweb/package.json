@@ -138,7 +138,7 @@
       "utils": ["./dist/types/exports/utils.d.ts"],
       "wallets": ["./dist/types/exports/wallets.d.ts"],
       "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
-      "modules/*": ["./dist/types/exports/modules/*.d.ts"]
+      "modules": ["./dist/types/exports/modules.d.ts"]
     }
   },
   "browser": {
