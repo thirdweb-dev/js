@@ -54,16 +54,16 @@ type UpdateNftMetadataForm = {
   nft: NFT;
 
   /**
-   * If isDropContract (NFT Drop, Edition Drop) -> use `updateMetadata`
+   * If useUpdateMetadata (NFT Drop, Edition Drop) -> use `updateMetadata`
    * else (NFT Collection, Edition) -> use `setTokenURI`
    */
-  isDropContract: boolean;
+  useUpdateMetadata: boolean;
 };
 
 export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
   contract,
   nft,
-  isDropContract,
+  useUpdateMetadata,
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
@@ -207,7 +207,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
                 nft.metadata.animation_url,
             });
 
-            const transaction = isDropContract
+            const transaction = useUpdateMetadata
               ? // For Drop contracts, we need to call the `updateBatchBaseURI` method
                 nft.type === "ERC721"
                 ? updateMetadata721({

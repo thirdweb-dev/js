@@ -30,7 +30,6 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   contractQuery,
   contract,
   isRevealable,
-  ...restButtonProps
 }) => {
   const contractV4 = contractQuery.contract;
   const trackEvent = useTrack();
@@ -133,7 +132,6 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
       <Button
         colorScheme="primary"
         leftIcon={<Icon as={RiCheckboxMultipleBlankLine} />}
-        {...restButtonProps}
         onClick={onOpen}
       >
         Batch Upload
