@@ -8,6 +8,7 @@ import {
 } from "../../utils/any-evm/deploy-metadata.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { resolveImplementation } from "../../utils/bytecode/resolveImplementation.js";
+import { withCache } from "../../utils/promise/withCache.js";
 
 import { type ThirdwebContract, getContract } from "../contract.js";
 
@@ -29,28 +30,27 @@ export async function fetchPublishedContractMetadata(options: {
   version?: string;
 }): Promise<FetchDeployMetadataResult> {
   const cacheKey = `${options.contractId}-${options.publisher}-${options.version}`;
-  const cached = cache.get(cacheKey);
-  // 1 hour cache
-  if (cached && Date.now() - cached.timestamp < 1000 * 60 * 60) {
-    return cached.data;
-  }
-  const publishedContract = await fetchPublishedContract({
-    client: options.client,
-    publisherAddress: options.publisher || THIRDWEB_DEPLOYER,
-    contractId: options.contractId,
-    version: options.version,
-  });
-  if (!publishedContract.publishMetadataUri) {
-    throw new Error(
-      `No published metadata URI found for ${options.contractId}`,
-    );
-  }
-  const data = await fetchDeployMetadata({
-    client: options.client,
-    uri: publishedContract.publishMetadataUri,
-  });
-  cache.set(cacheKey, { data, timestamp: Date.now() });
-  return data;
+  return withCache(
+    async () => {
+      const publishedContract = await fetchPublishedContract({
+        client: options.client,
+        publisherAddress: options.publisher || THIRDWEB_DEPLOYER,
+        contractId: options.contractId,
+        version: options.version,
+      });
+      if (!publishedContract.publishMetadataUri) {
+        throw new Error(
+          `No published metadata URI found for ${options.contractId}`,
+        );
+      }
+      const data = await fetchDeployMetadata({
+        client: options.client,
+        uri: publishedContract.publishMetadataUri,
+      });
+      return data;
+    },
+    { cacheKey, cacheTime: 1000 * 60 * 60 },
+  );
 }
 
 // TODO: clean this up
