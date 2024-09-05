@@ -1,5 +1,21 @@
 # thirdweb
 
+## 5.51.0
+
+### Minor Changes
+
+- [#4392](https://github.com/thirdweb-dev/js/pull/4392) [`c5b9d1c`](https://github.com/thirdweb-dev/js/commit/c5b9d1c5dd592b2334d01f2c5036dd5850984041) Thanks [@jnsdls](https://github.com/jnsdls)! - [Extensions] Erc20 Drop ClaimCondition enhancements
+
+- [#4391](https://github.com/thirdweb-dev/js/pull/4391) [`f9c351c`](https://github.com/thirdweb-dev/js/commit/f9c351c22d9c869770dad13332f9c23d8cb84ed7) Thanks [@jnsdls](https://github.com/jnsdls)! - [Extensions] Erc721 Drop ClaimCondition enhancements
+
+- [`54f0294`](https://github.com/thirdweb-dev/js/commit/54f0294e5edd9940fe2b412c6cfed4fb97c02b87) Thanks [@jnsdls](https://github.com/jnsdls)! - [Extensions] Erc1155 Drop ClaimCondition enhancements
+
+### Patch Changes
+
+- [#4393](https://github.com/thirdweb-dev/js/pull/4393) [`f383fc7`](https://github.com/thirdweb-dev/js/commit/f383fc74842cfe642cd05d8f33b68139ba9f4f2b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - resolve implementation for matic proxy implementation slot
+
+- [`a098224`](https://github.com/thirdweb-dev/js/commit/a09822429b0ac2f6bd2cf716f44d784fe7a0b7ab) Thanks [@jnsdls](https://github.com/jnsdls)! - remove unusable singlephase claim condition extension
+
 ## 5.50.1
 
 ### Patch Changes
