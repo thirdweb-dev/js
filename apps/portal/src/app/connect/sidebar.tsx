@@ -453,7 +453,10 @@ export const sidebar: SideBar = {
 							name: "Webhooks",
 							href: `${paySlug}/webhooks`,
 						},
-
+						{
+							name: "Testing Pay",
+							href: `${paySlug}/testing-pay`,
+						},
 						{
 							name: "Guides",
 							isCollapsible: true,
@@ -467,12 +470,9 @@ export const sidebar: SideBar = {
 									name: "Build a Custom Experience",
 									href: `${paySlug}/guides/build-a-custom-experience`,
 								},
-								{
-									name: "Enable Test Mode",
-									href: `${paySlug}/guides/test-mode`,
-								},
 							],
 						},
+
 						{
 							name: "Customization",
 							isCollapsible: true,
