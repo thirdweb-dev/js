@@ -27,6 +27,7 @@ describe("ModularOpenEditionERC721", () => {
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
       core: "ERC721",
+      publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
       params: {
         name: "TestDropERC721",
         symbol: "TT",
@@ -34,8 +35,11 @@ describe("ModularOpenEditionERC721", () => {
       modules: [
         ClaimableERC721.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
+          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
         }),
-        OpenEditionMetadataERC721.module(),
+        OpenEditionMetadataERC721.module({
+          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
+        }),
       ],
     });
     contract = getContract({
@@ -135,7 +139,7 @@ describe("ModularOpenEditionERC721", () => {
       contract,
     });
     expect(owned.length).toBe(1);
-    expect(owned[0].metadata.name).toBe("Test Open Edition 0");
+    expect(owned[0]?.metadata.name).toBe("Test Open Edition 0");
   });
 
   it("should claim tokens with allowlist", async () => {
