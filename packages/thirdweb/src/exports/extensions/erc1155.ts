@@ -16,6 +16,10 @@ export {
   getOwnedNFTs,
   type GetOwnedNFTsParams,
 } from "../../extensions/erc1155/read/getOwnedNFTs.js";
+export {
+  getOwnedTokenIds,
+  type GetOwnedTokenIdsParams,
+} from "../../extensions/erc1155/read/getOwnedTokenIds.js";
 export { nextTokenIdToMint } from "../../extensions/erc1155/__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
 export {
   uri,
