@@ -1,5 +1,5 @@
-import { getBytecode } from "../../../contract/actions/get-bytecode.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import * as PredictAddress from "../__generated__/IAccountFactory/read/getAddress.js";
 
 export {
@@ -29,9 +29,8 @@ export async function isAccountDeployed(
   options: BaseTransactionOptions<PredictAddress.GetAddressParams>,
 ): Promise<boolean> {
   const predictedAddress = await PredictAddress.getAddress(options);
-  const bytecode = await getBytecode({
+  return isContractDeployed({
     ...options.contract,
     address: predictedAddress,
   });
-  return bytecode !== "0x";
 }
