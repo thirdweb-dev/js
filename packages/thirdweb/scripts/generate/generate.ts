@@ -896,7 +896,18 @@ async function main() {
       const abi = JSON.parse(
         await readFile(join(ABI_FOLDER, folder, file), "utf-8"),
       );
-      await generateFromAbi(abi, OUT_PATH, extensionName, folder);
+
+      const humanizedAbi = abi.map((elem: Abi[number] | string) =>
+        typeof elem === "string" ? elem : formatAbiItem(elem),
+      );
+      // if any element of the abi is NOT a string, convert it to humanreadable (might as well) -> write it back to the file
+      await writeFile(
+        join(ABI_FOLDER, folder, file),
+        JSON.stringify(humanizedAbi, null, 2),
+        "utf-8",
+      );
+      // then generate the files from the abi
+      await generateFromAbi(humanizedAbi, OUT_PATH, extensionName, folder);
     }
   }
 }

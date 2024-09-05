@@ -12,59 +12,34 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "claimERC1155" function.
  */
 export type ClaimERC1155Params = WithOverrides<{
-  token: AbiParameterToPrimitiveType<{
-    name: "_token";
-    type: "address";
-    internalType: "address";
-  }>;
-  receiver: AbiParameterToPrimitiveType<{
-    name: "_receiver";
-    type: "address";
-    internalType: "address";
-  }>;
-  tokenId: AbiParameterToPrimitiveType<{
-    name: "_tokenId";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  quantity: AbiParameterToPrimitiveType<{
-    name: "_quantity";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  proofs: AbiParameterToPrimitiveType<{
-    name: "_proofs";
-    type: "bytes32[]";
-    internalType: "bytes32[]";
-  }>;
+  token: AbiParameterToPrimitiveType<{ type: "address"; name: "_token" }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "_receiver" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
+  quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
+  proofs: AbiParameterToPrimitiveType<{ type: "bytes32[]"; name: "_proofs" }>;
 }>;
 
 export const FN_SELECTOR = "0xc6fa26ab" as const;
 const FN_INPUTS = [
   {
+    type: "address",
     name: "_token",
-    type: "address",
-    internalType: "address",
   },
   {
+    type: "address",
     name: "_receiver",
-    type: "address",
-    internalType: "address",
   },
   {
+    type: "uint256",
     name: "_tokenId",
-    type: "uint256",
-    internalType: "uint256",
   },
   {
+    type: "uint256",
     name: "_quantity",
-    type: "uint256",
-    internalType: "uint256",
   },
   {
-    name: "_proofs",
     type: "bytes32[]",
-    internalType: "bytes32[]",
+    name: "_proofs",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

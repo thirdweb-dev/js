@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0xa8b0574e" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "address",
-    name: "coinbase",
     type: "address",
+    name: "coinbase",
   },
 ] as const;
 

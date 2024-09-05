@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0x01e1d114" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "totalManagedAssets",
     type: "uint256",
-    internalType: "uint256",
+    name: "totalManagedAssets",
   },
 ] as const;
 

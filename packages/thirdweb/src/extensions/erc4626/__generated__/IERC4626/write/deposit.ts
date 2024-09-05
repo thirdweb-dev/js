@@ -12,36 +12,25 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "deposit" function.
  */
 export type DepositParams = WithOverrides<{
-  assets: AbiParameterToPrimitiveType<{
-    name: "assets";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  receiver: AbiParameterToPrimitiveType<{
-    name: "receiver";
-    type: "address";
-    internalType: "address";
-  }>;
+  assets: AbiParameterToPrimitiveType<{ type: "uint256"; name: "assets" }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
 }>;
 
 export const FN_SELECTOR = "0x6e553f65" as const;
 const FN_INPUTS = [
   {
-    name: "assets",
     type: "uint256",
-    internalType: "uint256",
+    name: "assets",
   },
   {
-    name: "receiver",
     type: "address",
-    internalType: "address",
+    name: "receiver",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "shares",
     type: "uint256",
-    internalType: "uint256",
+    name: "shares",
   },
 ] as const;
 

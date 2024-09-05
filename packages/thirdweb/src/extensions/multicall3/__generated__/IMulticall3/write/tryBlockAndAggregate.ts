@@ -13,73 +13,62 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type TryBlockAndAggregateParams = WithOverrides<{
   requireSuccess: AbiParameterToPrimitiveType<{
-    internalType: "bool";
-    name: "requireSuccess";
     type: "bool";
+    name: "requireSuccess";
   }>;
   calls: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "target"; type: "address" },
-      { internalType: "bytes"; name: "callData"; type: "bytes" },
-    ];
-    internalType: "struct Multicall3.Call[]";
-    name: "calls";
     type: "tuple[]";
+    name: "calls";
+    components: [
+      { type: "address"; name: "target" },
+      { type: "bytes"; name: "callData" },
+    ];
   }>;
 }>;
 
 export const FN_SELECTOR = "0x399542e9" as const;
 const FN_INPUTS = [
   {
-    internalType: "bool",
-    name: "requireSuccess",
     type: "bool",
+    name: "requireSuccess",
   },
   {
+    type: "tuple[]",
+    name: "calls",
     components: [
       {
-        internalType: "address",
-        name: "target",
         type: "address",
+        name: "target",
       },
       {
-        internalType: "bytes",
-        name: "callData",
         type: "bytes",
+        name: "callData",
       },
     ],
-    internalType: "struct Multicall3.Call[]",
-    name: "calls",
-    type: "tuple[]",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "uint256",
-    name: "blockNumber",
     type: "uint256",
+    name: "blockNumber",
   },
   {
-    internalType: "bytes32",
-    name: "blockHash",
     type: "bytes32",
+    name: "blockHash",
   },
   {
+    type: "tuple[]",
+    name: "returnData",
     components: [
       {
-        internalType: "bool",
-        name: "success",
         type: "bool",
+        name: "success",
       },
       {
-        internalType: "bytes",
-        name: "returnData",
         type: "bytes",
+        name: "returnData",
       },
     ],
-    internalType: "struct Multicall3.Result[]",
-    name: "returnData",
-    type: "tuple[]",
   },
 ] as const;
 

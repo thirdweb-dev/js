@@ -13,82 +13,67 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type AirdropERC1155WithSignatureParams = WithOverrides<{
   req: AbiParameterToPrimitiveType<{
-    name: "req";
     type: "tuple";
-    internalType: "struct Airdrop.AirdropRequestERC1155";
+    name: "req";
     components: [
-      { name: "uid"; type: "bytes32"; internalType: "bytes32" },
-      { name: "tokenAddress"; type: "address"; internalType: "address" },
-      { name: "expirationTimestamp"; type: "uint256"; internalType: "uint256" },
+      { type: "bytes32"; name: "uid" },
+      { type: "address"; name: "tokenAddress" },
+      { type: "uint256"; name: "expirationTimestamp" },
       {
-        name: "contents";
         type: "tuple[]";
-        internalType: "struct Airdrop.AirdropContentERC1155[]";
+        name: "contents";
         components: [
-          { name: "recipient"; type: "address"; internalType: "address" },
-          { name: "tokenId"; type: "uint256"; internalType: "uint256" },
-          { name: "amount"; type: "uint256"; internalType: "uint256" },
+          { type: "address"; name: "recipient" },
+          { type: "uint256"; name: "tokenId" },
+          { type: "uint256"; name: "amount" },
         ];
       },
     ];
   }>;
-  signature: AbiParameterToPrimitiveType<{
-    name: "signature";
-    type: "bytes";
-    internalType: "bytes";
-  }>;
+  signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 }>;
 
 export const FN_SELECTOR = "0xd0d4afd6" as const;
 const FN_INPUTS = [
   {
-    name: "req",
     type: "tuple",
-    internalType: "struct Airdrop.AirdropRequestERC1155",
+    name: "req",
     components: [
       {
-        name: "uid",
         type: "bytes32",
-        internalType: "bytes32",
+        name: "uid",
       },
       {
-        name: "tokenAddress",
         type: "address",
-        internalType: "address",
+        name: "tokenAddress",
       },
       {
-        name: "expirationTimestamp",
         type: "uint256",
-        internalType: "uint256",
+        name: "expirationTimestamp",
       },
       {
-        name: "contents",
         type: "tuple[]",
-        internalType: "struct Airdrop.AirdropContentERC1155[]",
+        name: "contents",
         components: [
           {
-            name: "recipient",
             type: "address",
-            internalType: "address",
+            name: "recipient",
           },
           {
+            type: "uint256",
             name: "tokenId",
-            type: "uint256",
-            internalType: "uint256",
           },
           {
-            name: "amount",
             type: "uint256",
-            internalType: "uint256",
+            name: "amount",
           },
         ],
       },
     ],
   },
   {
-    name: "signature",
     type: "bytes",
-    internalType: "bytes",
+    name: "signature",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

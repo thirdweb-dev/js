@@ -11,7 +11,6 @@ import {
   Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import type { useContract } from "@thirdweb-dev/react";
 import { useNFTDrawerTabs } from "core-ui/nft-drawer/useNftDrawerTabs";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { useRouter } from "next/router";
@@ -43,14 +42,12 @@ function isValidUrl(possibleUrl?: string | null) {
 }
 
 interface TokenIdPageProps {
-  contractQueryV4?: ReturnType<typeof useContract>;
   tokenId: string;
   contract: ThirdwebContract;
   isErc721: boolean;
 }
 
 export const TokenIdPage: React.FC<TokenIdPageProps> = ({
-  contractQueryV4,
   contract,
   tokenId,
   isErc721,
@@ -65,7 +62,6 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   const url = `/${chainSlug}/${contract.address}/nfts`;
 
   const tabs = useNFTDrawerTabs({
-    oldContract: contractQueryV4?.contract,
     contract,
     tokenId,
   });

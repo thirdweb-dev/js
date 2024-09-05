@@ -12,39 +12,30 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "setMerkleRoot" function.
  */
 export type SetMerkleRootParams = WithOverrides<{
-  token: AbiParameterToPrimitiveType<{
-    name: "_token";
-    type: "address";
-    internalType: "address";
-  }>;
+  token: AbiParameterToPrimitiveType<{ type: "address"; name: "_token" }>;
   tokenMerkleRoot: AbiParameterToPrimitiveType<{
-    name: "_tokenMerkleRoot";
     type: "bytes32";
-    internalType: "bytes32";
+    name: "_tokenMerkleRoot";
   }>;
   resetClaimStatus: AbiParameterToPrimitiveType<{
-    name: "_resetClaimStatus";
     type: "bool";
-    internalType: "bool";
+    name: "_resetClaimStatus";
   }>;
 }>;
 
 export const FN_SELECTOR = "0x8259a87b" as const;
 const FN_INPUTS = [
   {
-    name: "_token",
     type: "address",
-    internalType: "address",
+    name: "_token",
   },
   {
-    name: "_tokenMerkleRoot",
     type: "bytes32",
-    internalType: "bytes32",
+    name: "_tokenMerkleRoot",
   },
   {
-    name: "_resetClaimStatus",
     type: "bool",
-    internalType: "bool",
+    name: "_resetClaimStatus",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

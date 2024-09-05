@@ -15,11 +15,6 @@ import { type ThirdwebContract, getContract } from "../contract.js";
 const CONTRACT_PUBLISHER_ADDRESS = "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808"; // Polygon only
 export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
-const cache = new Map<
-  string,
-  { data: FetchDeployMetadataResult; timestamp: number }
->();
-
 /**
  * @internal
  */

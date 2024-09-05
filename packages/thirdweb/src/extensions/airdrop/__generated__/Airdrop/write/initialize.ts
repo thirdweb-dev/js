@@ -13,18 +13,16 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type InitializeParams = WithOverrides<{
   defaultAdmin: AbiParameterToPrimitiveType<{
-    name: "_defaultAdmin";
     type: "address";
-    internalType: "address";
+    name: "_defaultAdmin";
   }>;
 }>;
 
 export const FN_SELECTOR = "0xc4d66de8" as const;
 const FN_INPUTS = [
   {
-    name: "_defaultAdmin",
     type: "address",
-    internalType: "address",
+    name: "_defaultAdmin",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

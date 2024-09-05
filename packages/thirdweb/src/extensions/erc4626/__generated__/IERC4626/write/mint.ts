@@ -12,36 +12,25 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "mint" function.
  */
 export type MintParams = WithOverrides<{
-  shares: AbiParameterToPrimitiveType<{
-    name: "shares";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  receiver: AbiParameterToPrimitiveType<{
-    name: "receiver";
-    type: "address";
-    internalType: "address";
-  }>;
+  shares: AbiParameterToPrimitiveType<{ type: "uint256"; name: "shares" }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
 }>;
 
 export const FN_SELECTOR = "0x94bf804d" as const;
 const FN_INPUTS = [
   {
-    name: "shares",
     type: "uint256",
-    internalType: "uint256",
+    name: "shares",
   },
   {
-    name: "receiver",
     type: "address",
-    internalType: "address",
+    name: "receiver",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "assets",
     type: "uint256",
-    internalType: "uint256",
+    name: "assets",
   },
 ] as const;
 

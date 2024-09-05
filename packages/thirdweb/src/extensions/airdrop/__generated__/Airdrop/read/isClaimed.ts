@@ -10,46 +10,29 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "isClaimed" function.
  */
 export type IsClaimedParams = {
-  receiver: AbiParameterToPrimitiveType<{
-    name: "_receiver";
-    type: "address";
-    internalType: "address";
-  }>;
-  token: AbiParameterToPrimitiveType<{
-    name: "_token";
-    type: "address";
-    internalType: "address";
-  }>;
-  tokenId: AbiParameterToPrimitiveType<{
-    name: "_tokenId";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "_receiver" }>;
+  token: AbiParameterToPrimitiveType<{ type: "address"; name: "_token" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
 };
 
 export const FN_SELECTOR = "0xd12acf73" as const;
 const FN_INPUTS = [
   {
+    type: "address",
     name: "_receiver",
-    type: "address",
-    internalType: "address",
   },
   {
+    type: "address",
     name: "_token",
-    type: "address",
-    internalType: "address",
   },
   {
-    name: "_tokenId",
     type: "uint256",
-    internalType: "uint256",
+    name: "_tokenId",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "bool",
-    internalType: "bool",
   },
 ] as const;
 
