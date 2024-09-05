@@ -1,6 +1,6 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { uri } from "../__generated__/IERC1155/read/uri.js";
-import { mintTo as generatedMintTo } from "../__generated__/IMintableERC1155/write/mintTo.js";
+import * as URI from "../__generated__/IERC1155/read/uri.js";
+import * as MintTo from "../__generated__/IMintableERC1155/write/mintTo.js";
 
 /**
  * @extension ERC1155
@@ -35,11 +35,11 @@ export type MintAdditionalSupplyToParams = {
 export function mintAdditionalSupplyTo(
   options: BaseTransactionOptions<MintAdditionalSupplyToParams>,
 ) {
-  return generatedMintTo({
+  return MintTo.mintTo({
     contract: options.contract,
     asyncParams: async () => {
       // we'll be re-using the exising token URI
-      const tokenUri = await uri({
+      const tokenUri = await URI.uri({
         contract: options.contract,
         tokenId: options.tokenId,
       });
@@ -52,4 +52,25 @@ export function mintAdditionalSupplyTo(
       };
     },
   });
+}
+
+/**
+ * Checks if the `mintAdditionalSupplyTo` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `mintAdditionalSupplyTo` method is supported.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { isMintAdditionalSupplyToSupported } from "thirdweb/extensions/erc1155";
+ *
+ * const supported = isMintAdditionalSupplyToSupported(["0x..."]);
+ * ```
+ */
+export function isMintAdditionalSupplyToSupported(
+  availableSelectors: string[],
+) {
+  return (
+    MintTo.isMintToSupported(availableSelectors) &&
+    URI.isUriSupported(availableSelectors)
+  );
 }
