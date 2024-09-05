@@ -143,7 +143,10 @@ export {
 /**
  * SHARED METADATA extension for ERC721
  */
-export { sharedMetadata } from "../../extensions/erc721/__generated__/ISharedMetadata/read/sharedMetadata.js";
+export {
+  sharedMetadata,
+  isSharedMetadataSupported,
+} from "../../extensions/erc721/__generated__/ISharedMetadata/read/sharedMetadata.js";
 export {
   setSharedMetadata,
   type SetSharedMetadataParams,
