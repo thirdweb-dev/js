@@ -15,7 +15,7 @@ import {
   sendTransaction,
   waitForReceipt,
 } from "thirdweb";
-import { installPublishedModule } from "thirdweb/extensions/modules";
+import { installPublishedModule } from "thirdweb/modules";
 import { download } from "thirdweb/storage";
 import { encodeAbiParameters, resolveImplementation } from "thirdweb/utils";
 import type { Account } from "thirdweb/wallets";

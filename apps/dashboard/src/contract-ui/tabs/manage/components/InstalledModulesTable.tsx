@@ -26,7 +26,7 @@ import {
   sendTransaction,
   waitForReceipt,
 } from "thirdweb";
-import { uninstallModuleByProxy } from "thirdweb/extensions/modules";
+import { uninstallModuleByProxy } from "thirdweb/modules";
 import type { Account } from "thirdweb/wallets";
 import { useModuleContractInfo } from "./moduleContractInfo";
 
