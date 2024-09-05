@@ -1,18 +1,18 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import type { ClaimCondition } from "../../../../utils/extensions/drops/types.js";
 import * as SinglePhase from "../../__generated__/DropSinglePhase/read/claimCondition.js";
-import * as MultiPhase from "../../__generated__/IDrop/read/claimCondition.js";
-import * as MultiById from "../../__generated__/IDrop/read/getClaimConditionById.js";
+import * as MultiPhase from "../../__generated__/IDropERC20/read/claimCondition.js";
+import * as MultiById from "../../__generated__/IDropERC20/read/getClaimConditionById.js";
 
 /**
  * Retrieves all claim conditions.
  * @param options - The transaction options.
  * @returns A promise that resolves to all claim conditions.
  * @throws An error if the claim conditions are unsupported by the contract.
- * @extension ERC721
+ * @extension ERC20
  * @example
  * ```ts
- * import { getClaimConditions } from "thirdweb/extensions/erc721";
+ * import { getClaimConditions } from "thirdweb/extensions/erc20";
  * const conditions = await getClaimConditions({ contract });
  * ```
  */
