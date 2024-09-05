@@ -1,4 +1,4 @@
-import { writeFileSync } from "fs";
+import { writeFileSync } from "node:fs";
 import { extractSearchData } from "../src/app/api/search/extraction";
 
 async function main() {
