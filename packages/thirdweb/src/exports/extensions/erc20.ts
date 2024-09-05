@@ -59,7 +59,6 @@ export {
  * DROPS extension for ERC20
  */
 // READ
-// multi-phase --
 export {
   getClaimConditionById,
   isGetClaimConditionByIdSupported,
@@ -72,19 +71,10 @@ export {
   getClaimConditions,
   isGetClaimConditionsSupported,
 } from "../../extensions/erc20/drops/read/getClaimConditions.js";
-// --
-// single phase --
-export {
-  claimCondition,
-  isClaimConditionSupported,
-} from "../../extensions/erc20/__generated__/DropSinglePhase/read/claimCondition.js";
-// --
-// multi and single phase --
 export {
   getActiveClaimCondition,
   isGetActiveClaimConditionSupported,
 } from "../../extensions/erc20/drops/read/getActiveClaimCondition.js";
-// --
 
 // WRITE
 export {
