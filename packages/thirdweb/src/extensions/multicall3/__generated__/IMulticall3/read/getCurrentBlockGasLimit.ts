@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0x86d516e8" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "uint256",
-    name: "gaslimit",
     type: "uint256",
+    name: "gaslimit",
   },
 ] as const;
 

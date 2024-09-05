@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0x8da5cb5b" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "result",
     type: "address",
-    internalType: "address",
+    name: "result",
   },
 ] as const;
 

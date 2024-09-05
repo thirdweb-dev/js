@@ -12,29 +12,19 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "revokeRoles" function.
  */
 export type RevokeRolesParams = WithOverrides<{
-  user: AbiParameterToPrimitiveType<{
-    name: "user";
-    type: "address";
-    internalType: "address";
-  }>;
-  roles: AbiParameterToPrimitiveType<{
-    name: "roles";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  user: AbiParameterToPrimitiveType<{ type: "address"; name: "user" }>;
+  roles: AbiParameterToPrimitiveType<{ type: "uint256"; name: "roles" }>;
 }>;
 
 export const FN_SELECTOR = "0x4a4ee7b1" as const;
 const FN_INPUTS = [
   {
-    name: "user",
     type: "address",
-    internalType: "address",
+    name: "user",
   },
   {
-    name: "roles",
     type: "uint256",
-    internalType: "uint256",
+    name: "roles",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

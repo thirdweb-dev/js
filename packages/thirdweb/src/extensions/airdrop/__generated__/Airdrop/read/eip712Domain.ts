@@ -9,39 +9,32 @@ export const FN_SELECTOR = "0x84b0196e" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "fields",
     type: "bytes1",
-    internalType: "bytes1",
+    name: "fields",
   },
   {
+    type: "string",
     name: "name",
-    type: "string",
-    internalType: "string",
   },
   {
+    type: "string",
     name: "version",
-    type: "string",
-    internalType: "string",
   },
   {
-    name: "chainId",
     type: "uint256",
-    internalType: "uint256",
+    name: "chainId",
   },
   {
-    name: "verifyingContract",
     type: "address",
-    internalType: "address",
+    name: "verifyingContract",
   },
   {
-    name: "salt",
     type: "bytes32",
-    internalType: "bytes32",
+    name: "salt",
   },
   {
-    name: "extensions",
     type: "uint256[]",
-    internalType: "uint256[]",
+    name: "extensions",
   },
 ] as const;
 

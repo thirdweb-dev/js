@@ -1,1 +1,3 @@
-["function proxiableUUID() view returns (bytes32)"]
+[
+  "function proxiableUUID() view returns (bytes32)"
+]

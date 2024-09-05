@@ -12,46 +12,29 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "beforeMintERC20" function.
  */
 export type BeforeMintERC20Params = WithOverrides<{
-  to: AbiParameterToPrimitiveType<{
-    name: "_to";
-    type: "address";
-    internalType: "address";
-  }>;
-  quantity: AbiParameterToPrimitiveType<{
-    name: "_quantity";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  data: AbiParameterToPrimitiveType<{
-    name: "_data";
-    type: "bytes";
-    internalType: "bytes";
-  }>;
+  to: AbiParameterToPrimitiveType<{ type: "address"; name: "_to" }>;
+  quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 }>;
 
 export const FN_SELECTOR = "0x7ce7cf07" as const;
 const FN_INPUTS = [
   {
-    name: "_to",
     type: "address",
-    internalType: "address",
+    name: "_to",
   },
   {
-    name: "_quantity",
     type: "uint256",
-    internalType: "uint256",
+    name: "_quantity",
   },
   {
-    name: "_data",
     type: "bytes",
-    internalType: "bytes",
+    name: "_data",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "bytes",
-    internalType: "bytes",
   },
 ] as const;
 

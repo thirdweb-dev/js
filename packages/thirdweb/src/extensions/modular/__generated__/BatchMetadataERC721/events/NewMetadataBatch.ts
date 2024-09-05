@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type NewMetadataBatchEventFilters = Partial<{
   startTokenIdInclusive: AbiParameterToPrimitiveType<{
-    name: "startTokenIdInclusive";
     type: "uint256";
+    name: "startTokenIdInclusive";
     indexed: true;
-    internalType: "uint256";
   }>;
   endTokenIdNonInclusive: AbiParameterToPrimitiveType<{
-    name: "endTokenIdNonInclusive";
     type: "uint256";
+    name: "endTokenIdNonInclusive";
     indexed: true;
-    internalType: "uint256";
   }>;
 }>;
 
