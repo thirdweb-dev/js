@@ -83,7 +83,6 @@ export {
  * DROPS extension for ERC721
  */
 // READ
-// multi-phase --
 export {
   getClaimConditionById,
   isGetClaimConditionByIdSupported,
@@ -96,19 +95,10 @@ export {
   getClaimConditions,
   isGetClaimConditionsSupported,
 } from "../../extensions/erc721/drops/read/getClaimConditions.js";
-// --
-// single phase --
-export {
-  claimCondition,
-  isClaimConditionSupported,
-} from "../../extensions/erc721/__generated__/DropSinglePhase/read/claimCondition.js";
-// --
-// multi and single phase --
 export {
   getActiveClaimCondition,
   isGetActiveClaimConditionSupported,
 } from "../../extensions/erc721/drops/read/getActiveClaimCondition.js";
-// --
 
 // WRITE
 export {
