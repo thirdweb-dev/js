@@ -1,6 +1,5 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import type { ClaimCondition } from "../../../../utils/extensions/drops/types.js";
-import * as SinglePhase from "../../__generated__/DropSinglePhase/read/claimCondition.js";
 import * as GetActiveId from "../../__generated__/IDrop/read/getActiveClaimConditionId.js";
 import * as ById from "../../__generated__/IDrop/read/getClaimConditionById.js";
 
@@ -19,44 +18,12 @@ import * as ById from "../../__generated__/IDrop/read/getClaimConditionById.js";
 export async function getActiveClaimCondition(
   options: BaseTransactionOptions,
 ): Promise<ClaimCondition> {
-  const getActiveClaimConditionMultiPhase = async () => {
+  try {
     const conditionId = await GetActiveId.getActiveClaimConditionId(options);
     return ById.getClaimConditionById({ ...options, conditionId });
-  };
-  const getActiveClaimConditionSinglePhase = async () => {
-    const [
-      startTimestamp,
-      maxClaimableSupply,
-      supplyClaimed,
-      quantityLimitPerWallet,
-      merkleRoot,
-      pricePerToken,
-      currency,
-      metadata,
-    ] = await SinglePhase.claimCondition(options);
-    return {
-      startTimestamp,
-      maxClaimableSupply,
-      supplyClaimed,
-      quantityLimitPerWallet,
-      merkleRoot,
-      pricePerToken,
-      currency,
-      metadata,
-    };
-  };
-
-  // The contract's phase type is unknown, so try both options and return whichever resolves, prioritizing multi-phase
-  const results = await Promise.allSettled([
-    getActiveClaimConditionMultiPhase(),
-    getActiveClaimConditionSinglePhase(),
-  ]);
-
-  const condition = results.find((result) => result.status === "fulfilled");
-  if (condition?.status === "fulfilled") {
-    return condition.value;
+  } catch {
+    throw new Error("Claim condition not found");
   }
-  throw new Error("Claim condition not found");
 }
 
 /**
@@ -74,11 +41,7 @@ export async function getActiveClaimCondition(
 export function isGetActiveClaimConditionSupported(
   availableSelectors: string[],
 ) {
-  // if single phase is supported, return true
-  if (SinglePhase.isClaimConditionSupported(availableSelectors)) {
-    return true;
-  }
-  // otherwise check that both multi phase functions are supported
+  // check that both multi phase functions are supported
   return (
     GetActiveId.isGetActiveClaimConditionIdSupported(availableSelectors) &&
     ById.isGetClaimConditionByIdSupported(availableSelectors)
