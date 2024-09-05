@@ -82,21 +82,54 @@ export {
 /**
  * DROPS extension for ERC721
  */
-export { getClaimConditionById } from "../../extensions/erc721/__generated__/IDrop/read/getClaimConditionById.js";
-export { claimCondition } from "../../extensions/erc721/__generated__/DropSinglePhase/read/claimCondition.js";
-export { getActiveClaimCondition } from "../../extensions/erc721/drops/read/getActiveClaimCondition.js";
+// READ
+// multi-phase --
+export {
+  getClaimConditionById,
+  isGetClaimConditionByIdSupported,
+} from "../../extensions/erc721/__generated__/IDrop/read/getClaimConditionById.js";
+export {
+  getActiveClaimConditionId,
+  isGetActiveClaimConditionIdSupported,
+} from "../../extensions/erc721/__generated__/IDrop/read/getActiveClaimConditionId.js";
+export {
+  getClaimConditions,
+  isGetClaimConditionsSupported,
+} from "../../extensions/erc721/drops/read/getClaimConditions.js";
+// --
+// single phase --
+export {
+  claimCondition,
+  isClaimConditionSupported,
+} from "../../extensions/erc721/__generated__/DropSinglePhase/read/claimCondition.js";
+// --
+// multi and single phase --
+export {
+  getActiveClaimCondition,
+  isGetActiveClaimConditionSupported,
+} from "../../extensions/erc721/drops/read/getActiveClaimCondition.js";
+// --
+
+// WRITE
 export {
   claimTo,
   type ClaimToParams,
+  isClaimToSupported,
 } from "../../extensions/erc721/drops/write/claimTo.js";
 export {
   lazyMint,
   type LazyMintParams,
+  isLazyMintSupported,
 } from "../../extensions/erc721/write/lazyMint.js";
 export {
   setClaimConditions,
   type SetClaimConditionsParams,
+  isSetClaimConditionsSupported,
 } from "../../extensions/erc721/drops/write/setClaimConditions.js";
+export {
+  resetClaimEligibility,
+  isResetClaimEligibilitySupported,
+} from "../../extensions/erc721/drops/write/resetClaimEligibility.js";
 
 /**
  * SIGNATURE extension for ERC721

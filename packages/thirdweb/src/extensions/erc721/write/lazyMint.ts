@@ -4,8 +4,11 @@ import {
   uploadOrExtractURIs,
 } from "../../../utils/ipfs.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
-import { nextTokenIdToMint } from "../__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
-import { lazyMint as generatedLazyMint } from "../__generated__/ILazyMint/write/lazyMint.js";
+import {
+  isNextTokenIdToMintSupported,
+  nextTokenIdToMint,
+} from "../__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
+import * as LazyMint from "../__generated__/ILazyMint/write/lazyMint.js";
 
 /**
  * @extension ERC721
@@ -39,7 +42,7 @@ export type LazyMintParams = {
  * ```
  */
 export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {
-  return generatedLazyMint({
+  return LazyMint.lazyMint({
     contract: options.contract,
     asyncParams: async () => {
       const startFileNumber = await nextTokenIdToMint({
@@ -62,4 +65,24 @@ export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {
       } as const;
     },
   });
+}
+
+/**
+ * Checks if the `lazyMint` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `lazyMint` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isLazyMintSupported } from "thirdweb/extensions/erc721";
+ *
+ * const supported = isLazyMintSupported(["0x..."]);
+ * ```
+ */
+export function isLazyMintSupported(availableSelectors: string[]) {
+  return (
+    LazyMint.isLazyMintSupported(availableSelectors) &&
+    // required because we use it in the lazyMint function
+    isNextTokenIdToMintSupported(availableSelectors)
+  );
 }

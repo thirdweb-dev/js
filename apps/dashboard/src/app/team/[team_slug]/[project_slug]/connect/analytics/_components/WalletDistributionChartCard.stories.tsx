@@ -4,7 +4,7 @@ import {
   mobileViewport,
 } from "../../../../../../../stories/utils";
 import { WalletDistributionChartCard } from "./WalletDistributionChartCard";
-import { createWalletStatusStub } from "./storyUtils";
+import { createWalletStatsStub } from "./storyUtils";
 
 const meta = {
   title: "Charts/Connect/Wallet Distribution",
@@ -33,35 +33,35 @@ function Component() {
     <div className="min-h-screen bg-background p-4 text-foreground gap-6 max-w-[1000px] flex flex-col mx-auto">
       <BadgeContainer label="30 days">
         <WalletDistributionChartCard
-          walletStats={createWalletStatusStub(30)}
+          walletStats={createWalletStatsStub(30)}
           isLoading={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="60 days">
         <WalletDistributionChartCard
-          walletStats={createWalletStatusStub(60)}
+          walletStats={createWalletStatsStub(60)}
           isLoading={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="10 days">
         <WalletDistributionChartCard
-          walletStats={createWalletStatusStub(10)}
+          walletStats={createWalletStatsStub(10)}
           isLoading={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="0 days">
         <WalletDistributionChartCard
-          walletStats={createWalletStatusStub(0)}
+          walletStats={createWalletStatsStub(0)}
           isLoading={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Loading">
         <WalletDistributionChartCard
-          walletStats={createWalletStatusStub(0)}
+          walletStats={createWalletStatsStub(0)}
           isLoading={true}
         />
       </BadgeContainer>

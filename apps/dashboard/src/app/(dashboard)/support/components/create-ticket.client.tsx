@@ -116,7 +116,7 @@ export function CreateTicket() {
       </DialogTrigger>
 
       {/* Check this */}
-      <DialogContent>
+      <DialogContent className="max-h-full overflow-x-auto">
         <form ref={formRef} action={formAction}>
           <DialogHeader>
             <DialogTitle>Get in touch</DialogTitle>

@@ -1,12 +1,17 @@
 import { getContract } from "../../src/contract/contract.js";
 import { USDT_ABI } from "./abis/usdt.js";
-import { FORKED_ETHEREUM_CHAIN } from "./chains.js";
+import { FORKED_ETHEREUM_CHAIN, FORKED_POLYGON_CHAIN } from "./chains.js";
 import { TEST_CLIENT } from "./test-clients.js";
 
 // ERC20
 
 export const USDT_CONTRACT_ADDRESS =
   "0xdAC17F958D2ee523a2206206994597C13D831ec7";
+
+  export const POLYGON_USDT_CONTRACT_ADDRESS =
+  "0xc2132d05d31c914a87c6611c10748aeb04b58e8f";
+
+  export const POLYGON_USDT_IMPLEMENTATION = "0x7FFB3d637014488b63fb9858E279385685AFc1e2";
 
 export const USDT_CONTRACT = getContract({
   client: TEST_CLIENT,
@@ -19,6 +24,12 @@ export const USDT_CONTRACT_WITH_ABI = getContract({
   address: USDT_CONTRACT_ADDRESS,
   chain: FORKED_ETHEREUM_CHAIN,
   abi: USDT_ABI,
+});
+
+export const POLYGON_USDT_PROXY_CONTRACT = getContract({
+  client: TEST_CLIENT,
+  address: POLYGON_USDT_CONTRACT_ADDRESS,
+  chain: FORKED_POLYGON_CHAIN,
 });
 
 // ERC721

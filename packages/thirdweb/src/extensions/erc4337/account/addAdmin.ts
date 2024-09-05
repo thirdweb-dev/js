@@ -1,6 +1,9 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import { setPermissionsForSigner } from "../__generated__/IAccountPermissions/write/setPermissionsForSigner.js";
+import {
+  isSetPermissionsForSignerSupported,
+  setPermissionsForSigner,
+} from "../__generated__/IAccountPermissions/write/setPermissionsForSigner.js";
 import { defaultPermissionsForAdmin, signPermissionRequest } from "./common.js";
 
 /**
@@ -52,4 +55,20 @@ export function addAdmin(options: BaseTransactionOptions<AddAdminOptions>) {
       return { signature, req };
     },
   });
+}
+
+/**
+ * Checks if the `isAddAdminSupported` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `isAddAdminSupported` method is supported.
+ * @extension ERC4337
+ * @example
+ * ```ts
+ * import { isAddAdminSupported } from "thirdweb/extensions/erc4337";
+ *
+ * const supported = isAddAdminSupported(["0x..."]);
+ * ```
+ */
+export function isAddAdminSupported(availableSelectors: string[]) {
+  return isSetPermissionsForSignerSupported(availableSelectors);
 }

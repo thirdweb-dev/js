@@ -1,48 +1,15 @@
-import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
-import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import { ButtonGroup, Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
-import {
-  Card,
-  Heading,
-  LinkButton,
-  Text,
-  TrackedLinkButton,
-} from "tw-components";
+import { Heading, TrackedLinkButton } from "tw-components";
 import { AccountsCount } from "./components/accounts-count";
 import { AccountsTable } from "./components/accounts-table";
 import { CreateAccountButton } from "./components/create-account-button";
 
 interface AccountsPageProps {
   contract: ThirdwebContract;
-  detectedAccountFactory: ExtensionDetectedState;
 }
 
-export const AccountsPage: React.FC<AccountsPageProps> = ({
-  contract,
-  detectedAccountFactory,
-}) => {
-  if (!detectedAccountFactory) {
-    return (
-      <Card as={Flex} flexDir="column" gap={3}>
-        {/* TODO  extract this out into it's own component and make it better */}
-        <Heading size="subtitle.md">No Accounts extension enabled</Heading>
-        <Text>
-          To enable Accounts factory features you will have to extend an
-          interface on your contract.
-        </Text>
-        <Box>
-          <LinkButton
-            isExternal
-            href="https://portal.thirdweb.com/contracts/build/extensions/erc-4337/SmartWalletFactory"
-            colorScheme="purple"
-          >
-            Learn more
-          </LinkButton>
-        </Box>
-      </Card>
-    );
-  }
-
+export const AccountsPage: React.FC<AccountsPageProps> = ({ contract }) => {
   return (
     <Flex direction="column" gap={6}>
       <Flex

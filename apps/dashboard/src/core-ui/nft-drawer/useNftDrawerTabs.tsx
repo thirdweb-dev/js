@@ -81,9 +81,6 @@ export function useNFTDrawerTabs({
         // erc1155
         "ERC1155ClaimConditionsV2",
         "ERC1155ClaimPhasesV2",
-        // erc20
-        "ERC20ClaimConditionsV2",
-        "ERC20ClaimPhasesV2",
       ]),
     [oldContract],
   );
@@ -94,18 +91,17 @@ export function useNFTDrawerTabs({
         "ERC721ClaimPhasesV2",
         // erc1155
         "ERC1155ClaimPhasesV2",
-        // erc20
-        "ERC20ClaimPhasesV2",
       ]),
     [oldContract],
   );
   const contractInfo = useMemo(() => {
     return {
       hasNewClaimConditions,
-      isErc20: detectFeatures(oldContract, ["ERC20"]),
+      // it cannot be erc20 since were in the NFT DRAWER TABS!
+      isErc20: false,
       isMultiPhase: hasMultiPhaseClaimConditions,
     };
-  }, [oldContract, hasNewClaimConditions, hasMultiPhaseClaimConditions]);
+  }, [hasNewClaimConditions, hasMultiPhaseClaimConditions]);
 
   return useMemo(() => {
     const isMintable = detectFeatures(oldContract, ["ERC1155Mintable"]);

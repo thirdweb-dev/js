@@ -14,7 +14,7 @@ export function Table(props: { children: React.ReactNode }) {
 
 export function Tr(props: { children: React.ReactNode }) {
 	return (
-		<tr className="border-b p-4 pb-3 pl-8 pt-0 text-left font-medium text-f-200">
+		<tr className="text-f-200 border-b p-4 pb-3 pl-8 pt-0 text-left font-medium">
 			{props.children}
 		</tr>
 	);
@@ -26,7 +26,7 @@ export function TBody(props: { children: React.ReactNode }) {
 
 export function Th(props: { children: React.ReactNode }) {
 	return (
-		<th className="border-b bg-b-700 p-4 pb-3 pl-8 text-left text-base font-semibold text-f-100">
+		<th className="bg-b-700 text-f-100 border-b p-4 pb-3 pl-8 text-left text-base font-semibold">
 			{props.children}
 		</th>
 	);
@@ -34,7 +34,7 @@ export function Th(props: { children: React.ReactNode }) {
 
 export function Td(props: { children: React.ReactNode }) {
 	return (
-		<td className="w-min p-4 pl-8 text-base leading-relaxed text-f-200">
+		<td className="text-f-200  p-4 pl-8 text-base leading-relaxed">
 			{props.children}
 		</td>
 	);

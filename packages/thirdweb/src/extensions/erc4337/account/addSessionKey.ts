@@ -1,6 +1,9 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import { setPermissionsForSigner } from "../__generated__/IAccountPermissions/write/setPermissionsForSigner.js";
+import {
+  isSetPermissionsForSignerSupported,
+  setPermissionsForSigner,
+} from "../__generated__/IAccountPermissions/write/setPermissionsForSigner.js";
 import { signPermissionRequest, toContractPermissions } from "./common.js";
 import type { AccountPermissions } from "./types.js";
 
@@ -66,4 +69,20 @@ export function addSessionKey(
       return { signature, req };
     },
   });
+}
+
+/**
+ * Checks if the `isAddSessionKeySupported` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `isAddSessionKeySupported` method is supported.
+ * @extension ERC4337
+ * @example
+ * ```ts
+ * import { isAddSessionKeySupported } from "thirdweb/extensions/erc4337";
+ *
+ * const supported = isAddSessionKeySupported(["0x..."]);
+ * ```
+ */
+export function isAddSessionKeySupported(availableSelectors: string[]) {
+  return isSetPermissionsForSignerSupported(availableSelectors);
 }

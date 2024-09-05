@@ -6,5 +6,6 @@
   "function getClaimConditionById(uint256 _conditionId) view returns ((uint256 startTimestamp, uint256 maxClaimableSupply, uint256 supplyClaimed, uint256 quantityLimitPerWallet, bytes32 merkleRoot, uint256 pricePerToken, address currency, string metadata) condition)",
   "function setClaimConditions((uint256 startTimestamp, uint256 maxClaimableSupply, uint256 supplyClaimed, uint256 quantityLimitPerWallet, bytes32 merkleRoot, uint256 pricePerToken, address currency, string metadata)[] phases, bool resetClaimEligibility)",
   "function nextTokenIdToClaim() view returns (uint256)",
-  "function baseURIIndices(uint256 index) view returns (uint256)"
+  "function baseURIIndices(uint256 index) view returns (uint256)",
+  "function claimCondition() view returns (uint256 currentStartId, uint256 count)"
 ]

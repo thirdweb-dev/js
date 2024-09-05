@@ -10,6 +10,8 @@ import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import {
   NFT_DROP_CONTRACT,
   NFT_DROP_IMPLEMENTATION,
+  POLYGON_USDT_IMPLEMENTATION,
+  POLYGON_USDT_PROXY_CONTRACT,
 } from "../../../test/src/test-contracts.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { getContract } from "../../contract/contract.js";
@@ -20,6 +22,13 @@ describe("Resolve implementation", async () => {
   it("should extract implementation address for minimal proxy contract", async () => {
     const resolved = resolveImplementation(NFT_DROP_CONTRACT);
     expect((await resolved).address).to.equal(NFT_DROP_IMPLEMENTATION);
+  });
+
+  it("should extract implementation address for matic proxy contract", async () => {
+    const resolved = resolveImplementation(POLYGON_USDT_PROXY_CONTRACT);
+    expect((await resolved).address).to.equal(
+      POLYGON_USDT_IMPLEMENTATION.toLowerCase(),
+    );
   });
 
   it("should extract implementation address for ERC1967 proxy contract", async () => {
