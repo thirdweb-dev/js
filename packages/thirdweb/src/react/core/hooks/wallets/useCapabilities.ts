@@ -1,8 +1,4 @@
-import {
-  type UseQueryOptions,
-  type UseQueryResult,
-  useQuery,
-} from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import {
   type GetCapabilitiesResult,
   getCapabilities,
@@ -25,7 +21,10 @@ import { useActiveWallet } from "./useActiveWallet.js";
  * @extension EIP5792
  */
 export function useCapabilities(options?: {
-  queryOptions?: Pick<UseQueryOptions, "enabled" | "retry">;
+  queryOptions?: {
+    enabled?: boolean;
+    retry?: number;
+  };
 }): UseQueryResult<GetCapabilitiesResult> {
   const wallet = useActiveWallet();
   return useQuery({

@@ -491,9 +491,7 @@ export function toEthersSigner(
  * @returns The aligned transaction object.
  * @internal
  */
-function alignTxToEthers(
-  tx: TransactionSerializable,
-): ethers6.TransactionRequest {
+function alignTxToEthers(tx: TransactionSerializable) {
   const { type: viemType, ...rest } = tx;
 
   // massage "type" to fit ethers
@@ -519,8 +517,7 @@ function alignTxToEthers(
   return {
     ...rest,
     type,
-    accessList: tx.accessList as ethers6.AccessListish | null | undefined,
-  };
+  } as ethers6.TransactionRequest;
 }
 
 async function alignTxFromEthers(options: {
