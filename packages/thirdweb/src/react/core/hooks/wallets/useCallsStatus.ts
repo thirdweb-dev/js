@@ -1,8 +1,4 @@
-import {
-  type UseQueryOptions,
-  type UseQueryResult,
-  useQuery,
-} from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getCallsStatus } from "../../../../wallets/eip5792/get-calls-status.js";
 import type { GetCallsStatusResponse } from "../../../../wallets/eip5792/types.js";
@@ -25,7 +21,10 @@ import { useActiveWallet } from "./useActiveWallet.js";
 export function useCallsStatus(options: {
   bundleId: string;
   client: ThirdwebClient;
-  queryOptions?: Pick<UseQueryOptions, "enabled" | "retry">;
+  queryOptions?: {
+    enabled?: boolean;
+    retry?: number;
+  };
 }): UseQueryResult<GetCallsStatusResponse> {
   const { client, bundleId } = options;
   const wallet = useActiveWallet();
