@@ -35,6 +35,8 @@ export const OPSponsoredChains = [
   7560,
   // Redstone
   690,
+  // Ancient8
+  888888888,
 ];
 
 export const defaultChains: Chain[] = [

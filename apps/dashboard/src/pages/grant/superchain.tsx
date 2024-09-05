@@ -71,6 +71,12 @@ const superchains = [
     src: require("../../../public/assets/grant/superchain/icon-redstone.png"),
   },
   {
+    id: "ancient8",
+    name: "Ancient8",
+    link: "/ancient8?switch",
+    src: require("../../../public/assets/grant/superchain/icon-ancient8.png"),
+  },
+  {
     id: "lisk",
     name: "Lisk",
     link: "/lisk-sepolia-testnet",
