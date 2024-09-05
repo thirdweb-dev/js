@@ -35,8 +35,8 @@ export function mint(options: BaseTransactionOptions<MintParams>) {
         decimals({ contract: options.contract }),
       ]);
 
-      const amountInUnits = amount / BigInt(10 ** tokenDecimals);
-      const totalPrice = cc.pricePerUnit * amountInUnits;
+      const totalPrice =
+        (cc.pricePerUnit * amount) / BigInt(10 ** tokenDecimals);
       const value = isNativeTokenAddress(cc.currency) ? totalPrice : 0n;
       const erc20Value =
         !isNativeTokenAddress(cc.currency) && cc.pricePerUnit > 0n
