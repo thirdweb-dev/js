@@ -15,41 +15,66 @@ export const sidebar: SideBar = {
 			icon: <ZapIcon />,
 		},
 		{
-			name: "Classes",
-			isCollapsible: false,
-			links: [
-				{
-					name: "Thirdweb Function Library",
-					href: `/unreal/thirdweb-function-library`,
-				},
-				{
-					name: "Thirdweb Subsystem",
-					href: `/unreal/thirdweb-subsystem`,
-				},
-				{
-					name: "Thirdweb Wallet Handle",
-					href: `/unreal/thirdweb-wallet-handle`,
-				},
-				{
-					name: "Thirdweb Runtime Settings",
-					href: `/unreal/thirdweb-runtime-settings`,
-				},{
-					name: "Thirdweb Common",
-					href: `/unreal/thirdweb-common`,
-				},
-				{
-					name: "Thirdweb",
-					href: `/unreal/thirdweb`,
-				},
-			],
-		},
-		{
 			name: "Blueprints",
-			isCollapsible: false,
+			isCollapsible: true,
 			links: [
 				{
 					name: "Overview",
 					href: "/unreal/blueprints",
+				},
+				{
+					name: "Private Key Wallets",
+					href: `/unreal/blueprints/private-key-wallet`,
+				},
+				{
+					name: "In App Wallets",
+					href: `/unreal/blueprints/in-app-wallet`,
+				},
+				{
+					name: "Smart Wallets",
+					href: `/unreal/blueprints/smart-wallet`,
+				},
+				{
+					name: "Utilities",
+					href: `/unreal/blueprints/utilities`,
+				},
+			],
+		},
+		{
+			name: "C++",
+			isCollapsible: true,
+			links: [
+				{
+					name: "Namespaces",
+					isCollapsible: false,
+					links: [
+						{
+							name: "Thirdweb",
+							href: `/unreal/cpp/thirdweb`,
+						},
+						{
+							name: "ThirdwebUtils",
+							href: "/unreal/cpp/thirdweb-utils",
+						},
+					],
+				},
+				{
+					name: "Classes",
+					isCollapsible: false,
+					links: [
+						{
+							name: "Common",
+							href: `/unreal/cpp/common`,
+						},
+						{
+							name: "Runtime Settings",
+							href: `/unreal/cpp/runtime-settings`,
+						},
+						{
+							name: "Wallet Handle",
+							href: `/unreal/cpp/wallet-handle`,
+						},
+					],
 				},
 			],
 		},

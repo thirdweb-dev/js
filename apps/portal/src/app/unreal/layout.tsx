@@ -1,7 +1,7 @@
 import { DocLayout } from "@/components/Layouts/DocLayout";
 import { sidebar } from "./sidebar";
 import { createMetadata } from "@/components/Document";
-import { PlatformSelector } from "../../components/others/PlatformSelector";
+import { PlatformSelector } from "@/components/others/PlatformSelector";
 
 export default async function Layout(props: { children: React.ReactNode }) {
 	return (
