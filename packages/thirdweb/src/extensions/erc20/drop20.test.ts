@@ -265,7 +265,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           [TransactionError: Error - !Qty
 
           contract: ${contract.address}
-          chainId: 31337]
+          chainId: ${contract.chain.id}]
         `);
 
         // we now try to claim just ONE more token
@@ -423,8 +423,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         [TransactionError: Error - !Qty
 
-        contract: 0x61Ae22E7240C7e5853749AF49f2552CB8D7C3e35
-        chainId: 31337]
+        contract: ${contract.address}
+        chainId: ${contract.chain.id}]
       `);
 
       // reset claim eligibility

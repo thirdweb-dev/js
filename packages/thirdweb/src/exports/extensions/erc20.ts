@@ -85,6 +85,7 @@ export {
 export {
   setClaimConditions,
   type SetClaimConditionsParams,
+  isSetClaimConditionsSupported,
 } from "../../extensions/erc20/drops/write/setClaimConditions.js";
 export {
   resetClaimEligibility,
