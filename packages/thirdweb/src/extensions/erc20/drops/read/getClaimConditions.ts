@@ -1,6 +1,5 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import type { ClaimCondition } from "../../../../utils/extensions/drops/types.js";
-import * as SinglePhase from "../../__generated__/DropSinglePhase/read/claimCondition.js";
 import * as MultiPhase from "../../__generated__/IDropERC20/read/claimCondition.js";
 import * as MultiById from "../../__generated__/IDropERC20/read/getClaimConditionById.js";
 
@@ -19,53 +18,24 @@ import * as MultiById from "../../__generated__/IDropERC20/read/getClaimConditio
 export async function getClaimConditions(
   options: BaseTransactionOptions,
 ): Promise<ClaimCondition[]> {
-  const [multi, single] = await Promise.allSettled([
-    (async () => {
-      const [startId, count] = await MultiPhase.claimCondition(options);
+  try {
+    const [startId, count] = await MultiPhase.claimCondition(options);
 
-      const conditionPromises: Array<
-        ReturnType<typeof MultiById.getClaimConditionById>
-      > = [];
-      for (let i = startId; i < count; i++) {
-        conditionPromises.push(
-          MultiById.getClaimConditionById({
-            ...options,
-            conditionId: i,
-          }),
-        );
-      }
-      return Promise.all(conditionPromises);
-    })(),
-    SinglePhase.claimCondition(options).then(
-      ([
-        startTimestamp,
-        maxClaimableSupply,
-        supplyClaimed,
-        quantityLimitPerWallet,
-        merkleRoot,
-        pricePerToken,
-        currency,
-        metadata,
-      ]) => ({
-        startTimestamp,
-        maxClaimableSupply,
-        supplyClaimed,
-        quantityLimitPerWallet,
-        merkleRoot,
-        pricePerToken,
-        currency,
-        metadata,
-      }),
-    ),
-  ]);
-  if (multi.status === "fulfilled") {
-    return multi.value;
+    const conditionPromises: Array<
+      ReturnType<typeof MultiById.getClaimConditionById>
+    > = [];
+    for (let i = startId; i < count; i++) {
+      conditionPromises.push(
+        MultiById.getClaimConditionById({
+          ...options,
+          conditionId: i,
+        }),
+      );
+    }
+    return Promise.all(conditionPromises);
+  } catch {
+    throw new Error("Claim condition not found");
   }
-  if (single.status === "fulfilled") {
-    return [single.value];
-  }
-
-  throw new Error("Claim condition not found");
 }
 
 /**
@@ -81,10 +51,6 @@ export async function getClaimConditions(
  * ```
  */
 export function isGetClaimConditionsSupported(availableSelectors: string[]) {
-  // if single phase is supported, return true
-  if (SinglePhase.isClaimConditionSupported(availableSelectors)) {
-    return true;
-  }
   // if multi phase is supported, return true
   return (
     MultiPhase.isClaimConditionSupported(availableSelectors) &&
