@@ -1,5 +1,4 @@
 import type { ThirdwebClient } from "../client/client.js";
-
 import type { FileOrBufferOrString } from "../storage/upload/types.js";
 
 export type ResolveSchemeOptions = {
@@ -109,23 +108,32 @@ export async function uploadOrExtractURIs<
  * @internal
  */
 export function getBaseUriFromBatch(uris: string[]): string {
-  const urisWithSlashes = uris.map((uri) => new URL(uri));
-  const baseUri = urisWithSlashes[0];
-  for (let i = 0; i < urisWithSlashes.length; i++) {
-    const uri = urisWithSlashes[i];
-    if (baseUri?.host !== uri?.host) {
-      throw new Error(
-        `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
-      );
+  const [base, ...rest] = uris.map((uri) => {
+    // remove query parameters
+    // biome-ignore lint/style/noParameterAssign: lemme do my stuff
+    [uri] = uri.split("?") as [string];
+    // remove fragments
+    // biome-ignore lint/style/noParameterAssign: lemme do my stuff
+    [uri] = uri.split("#") as [string];
+
+    // if the URI ends with a `/`, remove it
+    if (uri.endsWith("/")) {
+      // biome-ignore lint/style/noParameterAssign: lemme do my stuff
+      uri = uri.slice(0, -1);
     }
+
+    // remove the last part of the URI & add the trailing `/`
+    return `${uri.split("/").slice(0, -1).join("/")}/`;
+  });
+
+  if (!base) {
+    throw new Error("Batch of URIs is empty");
   }
 
-  if (!baseUri) {
-    throw new Error("No base URI found in the batch");
+  if (rest.some((uri) => uri !== base)) {
+    throw new Error("All URIs in the batch must have the same base URI");
   }
-
-  // Ensure that baseUri ends with trailing slash
-  return `${baseUri.protocol}//${baseUri.host}/`;
+  return base;
 }
 
 function isUriList<T extends FileOrBufferOrString | Record<string, unknown>>(

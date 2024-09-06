@@ -1,4 +1,3 @@
-import { thirdwebClient } from "@/constants/client";
 import {
   Accordion,
   AccordionButton,
@@ -28,7 +27,6 @@ import type { ThirdwebContract } from "thirdweb";
 import { lazyMint as lazyMint721 } from "thirdweb/extensions/erc721";
 import { lazyMint as lazyMint1155 } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { upload } from "thirdweb/storage";
 import {
   Button,
   FormErrorMessage,
@@ -156,32 +154,13 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
               onError("Please connect your wallet to mint.");
               return;
             }
-            let imageUri = "";
-            if (data.image) {
-              imageUri = await upload({
-                client: thirdwebClient,
-                files: [data.image],
-              });
-            }
-            let animationUri = "";
-            if (data.animation_url) {
-              animationUri = await upload({
-                client: thirdwebClient,
-                files: [data.animation_url],
-              });
-            }
-            const dataWithCustom = {
-              ...data,
-              image: imageUri || data.customImage,
-              animation_url: animationUri || data.customAnimationUrl,
-            };
 
             trackEvent({
               category: "nft",
               action: "lazy-mint",
               label: "attempt",
             });
-            const nfts = [parseAttributes(dataWithCustom)];
+            const nfts = [parseAttributes(data)];
             const transaction = isErc721
               ? lazyMint721({ contract, nfts })
               : lazyMint1155({ contract, nfts });
