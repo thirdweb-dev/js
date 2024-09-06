@@ -486,9 +486,10 @@ async function populateUserOp_v0_6(args: {
  * ```ts
  * import { signUserOp } from "thirdweb/wallets/smart";
  *
- * const userOp = createUnsignedUserOp(...);
+ * const userOp = await createUnsignedUserOp(...);
  *
  * const signedUserOp = await signUserOp({
+ *  client,
  *  userOp,
  *  chain,
  *  adminAccount,

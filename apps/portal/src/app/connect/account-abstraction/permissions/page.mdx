@@ -66,8 +66,8 @@ import { addAdmin } from "thirdweb/extensions/erc4337";
 import { smartWallet } from "thirdweb/wallets";
 import { sendTransaction, getContract } from "thirdweb";
 
-const smartWallet = new smartWallet(config);
-const smartAccount = await smartWallet.connect({
+const wallet = new smartWallet(config);
+const smartAccount = await wallet.connect({
 	client,
 	personalAccount,
 });
@@ -134,7 +134,7 @@ const onClick = () => {
 			client,
 		}),
 		account: smartAccount,
-		sessionKeyAddress: "0x...", // the address of the new session key
+		sessionKeyAddress: "0x...", // the address of the account allowed to use the session key
 		permissions: {
 			approvedTargets: "*", // the addresses of allowed contracts, or '*' for any contract
 			nativeTokenLimitPerTransaction: 0.1, // the maximum amount of native token (in ETH) that the session key can spend per transaction
@@ -151,11 +151,11 @@ const onClick = () => {
 <TabsContent value="typescript">
 
 ```ts
-import { addAdmin } from "thirdweb/extensions/erc4337";
-import { smartWallet } from "thirdweb/wallets";
+import { addSessionKey } from "thirdweb/extensions/erc4337";
+import { wallet } from "thirdweb/wallets";
 import { sendTransaction, getContract } from "thirdweb";
 
-const smartWallet = new smartWallet(config);
+const wallet = new smartWallet(config);
 const smartAccount = await smartWallet.connect({
 	client,
 	personalAccount,
