@@ -195,7 +195,7 @@ export function useNFTDrawerTabs({
         },
       ]);
     }
-    if (supportsUpdateTokenURI && nft) {
+    if ((supportsUpdateTokenURI || supportsUpdateMetadata) && nft) {
       tabs = tabs.concat([
         {
           title: "Update Metadata",

@@ -11,7 +11,8 @@ import { APIHeader } from "../../../components/blocks/APIHeader";
 export const metadata: Metadata = {
   metadataBase,
   title: "Auth | thirdweb Connect",
-  description: "lorem ipsum",
+  description:
+    "Authenticate users to your backend using only their wallet. This is a secure and easy way to authenticate users without requiring them to create an additional account.",
 };
 
 export default function Page() {

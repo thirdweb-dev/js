@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   Accordion,
   AccordionButton,
@@ -27,6 +28,7 @@ import type { ThirdwebContract } from "thirdweb";
 import { lazyMint as lazyMint721 } from "thirdweb/extensions/erc721";
 import { lazyMint as lazyMint1155 } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { upload } from "thirdweb/storage";
 import {
   Button,
   FormErrorMessage,
@@ -142,23 +144,36 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
   return (
     <>
       <DrawerHeader>
-        <Heading>"Mint NFT"</Heading>
+        <Heading>Mint NFT</Heading>
       </DrawerHeader>
       <DrawerBody>
         <Stack
           spacing={6}
           as="form"
           id={LAZY_MINT_FORM_ID}
-          onSubmit={handleSubmit((data) => {
+          onSubmit={handleSubmit(async (data) => {
             if (!address) {
               onError("Please connect your wallet to mint.");
               return;
             }
-
+            let imageUri = "";
+            if (data.image) {
+              imageUri = await upload({
+                client: thirdwebClient,
+                files: [data.image],
+              });
+            }
+            let animationUri = "";
+            if (data.animation_url) {
+              animationUri = await upload({
+                client: thirdwebClient,
+                files: [data.animation_url],
+              });
+            }
             const dataWithCustom = {
               ...data,
-              image: data.image || data.customImage,
-              animation_url: data.animation_url || data.customAnimationUrl,
+              image: imageUri || data.customImage,
+              animation_url: animationUri || data.customAnimationUrl,
             };
 
             trackEvent({
