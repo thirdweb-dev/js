@@ -22,13 +22,12 @@ export function ConnectedButton(
   const theme = parseTheme(props.theme);
   const { account, wallet } = props;
   const walletChain = useActiveWalletChain();
-  const { ensAvatarQuery, addressOrENS, balanceQuery } =
-    useConnectedWalletDetails(
-      props.client,
-      walletChain,
-      account,
-      props.detailsButton?.displayBalanceToken,
-    );
+  const { pfp, name, balanceQuery } = useConnectedWalletDetails(
+    props.client,
+    walletChain,
+    account,
+    props.detailsButton?.displayBalanceToken,
+  );
   return (
     <ThemedButton
       theme={theme}
@@ -41,12 +40,7 @@ export function ConnectedButton(
       }}
     >
       <View style={styles.row}>
-        <WalletImage
-          theme={theme}
-          size={40}
-          wallet={wallet}
-          ensAvatar={ensAvatarQuery.data}
-        />
+        <WalletImage theme={theme} size={40} wallet={wallet} avatar={pfp} />
         <View style={styles.col}>
           <ThemedText
             theme={theme}
@@ -55,7 +49,7 @@ export function ConnectedButton(
               color: theme.colors.primaryButtonText,
             }}
           >
-            {addressOrENS}
+            {name}
           </ThemedText>
           {balanceQuery.data ? (
             <ThemedText

@@ -21,9 +21,9 @@ export const WalletImage = (props: {
   theme: Theme;
   wallet: Wallet;
   size: number;
-  ensAvatar?: string | null;
+  avatar?: string | null;
 }) => {
-  const { wallet, ensAvatar, size } = props;
+  const { wallet, avatar, size } = props;
 
   const { data: imageData } = useQuery({
     queryKey: ["wallet-image", wallet.id, wallet.getAccount()?.address],
@@ -56,10 +56,10 @@ export const WalletImage = (props: {
 
       return WALLET_ICON;
     },
-    enabled: !ensAvatar,
+    enabled: !avatar,
   });
 
-  const data = ensAvatar || imageData || WALLET_ICON;
+  const data = avatar || imageData || WALLET_ICON;
   return <RNImage theme={props.theme} data={data} size={size} />;
 };
 
