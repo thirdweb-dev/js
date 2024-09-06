@@ -57,7 +57,7 @@ export function WalletDistributionChartCard(props: {
       if (!chartData) {
         _chartDataMap.set(data.walletType, data[chartToShow]);
       } else {
-        _chartDataMap.set(data.walletType, data[chartToShow]);
+        _chartDataMap.set(data.walletType, chartData + data[chartToShow]);
       }
     }
 
@@ -77,11 +77,13 @@ export function WalletDistributionChartCard(props: {
     }
 
     const _chartData: ChartData[] = Array.from(_chartDataMap).map(
-      ([walletType, totalWallets]) => ({
-        walletType,
-        totalWallets,
-        fill: _chartConfig[walletType].color || "transparent",
-      }),
+      ([walletType, totalWallets]) => {
+        return {
+          walletType,
+          totalWallets,
+          fill: _chartConfig[walletType].color || "transparent",
+        };
+      },
     );
 
     //  sort the data
