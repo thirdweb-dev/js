@@ -45,7 +45,11 @@ export type SendTransactionPayModalConfig =
       locale?: LocaleId;
       supportedTokens?: SupportedTokens;
       theme?: Theme | "light" | "dark";
-      buyWithCrypto?: false;
+      buyWithCrypto?:
+        | false
+        | {
+            testMode?: boolean;
+          };
       buyWithFiat?:
         | false
         | {
