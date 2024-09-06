@@ -70,6 +70,9 @@ function formatResponseData(data: unknown): string {
 }
 
 function formatError(error: Error): string {
+  if ((error as Error).message) {
+    return (error as Error).message;
+  }
   // biome-ignore lint/suspicious/noExplicitAny: FIXME
   if ((error as any).reason) {
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
