@@ -285,7 +285,7 @@ const reactNativeRedirects = {
 
 const unityRedirects = {
 	// top level
-	"/unity": "/unity/v4",
+	"/unity": "/unity/v5",
 	"/unity/getting-started": "/unity/v4/getting-started",
 	// core
 	"/unity/thirdwebmanager": "/unity/v4/thirdwebmanager",

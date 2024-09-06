@@ -14,6 +14,10 @@ export const sidebar: SideBar = {
 			href: sdkSlug,
 		},
 		{
+			name: "Migration Guide",
+			href: `${sdkSlug}/migration-guide`,
+		},
+		{
 			name: "Getting Started",
 			href: `${sdkSlug}/getting-started`,
 			icon: <ZapIcon />,
@@ -35,6 +39,10 @@ export const sidebar: SideBar = {
 				{
 					name: "In-App Wallet",
 					href: `${walletProvidersSlug}/in-app-wallet`,
+				},
+				{
+					name: "Ecosystem Wallet",
+					href: `${walletProvidersSlug}/ecosystem-wallet`,
 				},
 				{
 					name: "Account Abstraction",
@@ -73,6 +81,6 @@ export const sidebar: SideBar = {
 					href: `${sdkSlug}/contracts`,
 				}
 			],
-		},
+		}
 	],
 };
