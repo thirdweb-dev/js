@@ -36,11 +36,14 @@ export type SupportedChainAndTokens = Array<{
 
 export async function fetchBuySupportedDestinations(
   client: ThirdwebClient,
+  isTestMode?: boolean,
 ): Promise<SupportedChainAndTokens> {
   return withCache(
     async () => {
       const fetchWithHeaders = getClientFetch(client);
-      const res = await fetchWithHeaders(getPaySupportedDestinations());
+      const res = await fetchWithHeaders(
+        `${getPaySupportedDestinations()}?isTestMode=${isTestMode}`,
+      );
       const data = (await res.json()) as Response;
       return data.result.map((item) => ({
         chain: defineChain({
@@ -59,11 +62,14 @@ export async function fetchBuySupportedDestinations(
 /**
  * @internal
  */
-export function useBuySupportedDestinations(client: ThirdwebClient) {
+export function useBuySupportedDestinations(
+  client: ThirdwebClient,
+  isTestMode?: boolean,
+) {
   return useQuery({
     queryKey: ["destination-tokens", client],
     queryFn: async () => {
-      return fetchBuySupportedDestinations(client);
+      return fetchBuySupportedDestinations(client, isTestMode);
     },
   });
 }

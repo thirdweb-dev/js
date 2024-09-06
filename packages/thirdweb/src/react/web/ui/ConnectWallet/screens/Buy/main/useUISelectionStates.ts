@@ -50,7 +50,8 @@ export function useToTokenSelectionStates(options: {
       // use active chain if its supported as destination
       supportedDestinations.find((x) => x.chain.id === activeChain?.id)
         ?.chain ||
-      // default to polygon
+      // default to the first chain in supportedDestinations, or polygon if nothing is found at all
+      supportedDestinations[0]?.chain ||
       polygon,
   );
 
