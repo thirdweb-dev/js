@@ -33,9 +33,9 @@ This section involves the basic settings to configure the SDK:
 - `Show Debug Logs`: Whether to show thirdweb SDK debug logs.
 - `Opt Out Usage Analytics`: Whether to opt out of Connect usage analytics, such as the number of wallets connected to your game.
 
-### Wallet Settings
+### WalletConnect Settings
 
-This section allows you to define wallet-specific settings:
+This section allows you to define WalletConnect-specific settings:
 
 - `Supported Chains`: A list of chains that the wallets should be able to connect to by default. Each chain is defined by a chain ID.
 
@@ -133,6 +133,10 @@ Links another `InAppWallet` account to the main wallet and returns a list of lin
 The `InAppWalletModal` prefab is a simple and customizable OTP verification modal for `InAppWallet` providers. It is used to verify and finalize the user's wallet connection.
 
 It will be automatically activated when connecting to an `InAppWallet` provider.
+
+### EcosystemWalletModal
+
+Similar use case as `InAppWalletModal`, but for `EcosystemWallet` providers.
 
 ### WalletConnectModal
 
