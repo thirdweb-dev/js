@@ -1,5 +1,136 @@
 # thirdweb
 
+## 5.52.0
+
+### Minor Changes
+
+- [#4349](https://github.com/thirdweb-dev/js/pull/4349) [`a2d2291`](https://github.com/thirdweb-dev/js/commit/a2d22911bc8d5119e18a1f88f1929e39f449fc55) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds social profile retrieval for Farcaster, Lens, and ENS.
+
+  ```ts
+  import { getSocialProfiles } from "thirdweb/social";
+  const profiles = await getSocialProfiles({
+    address: "0x...",
+    client,
+  });
+  ```
+
+  ```json
+  [
+    {
+      "type": "ens",
+      "name": "joenrv.eth",
+      "avatar": "ipfs://bafybeic2wvtpv5hpdyeuy6o77yd5fp2ndfygppd6drdxvtfd2jouijn72m",
+      "metadata": {
+        "name": "joenrv.eth"
+      }
+    },
+    {
+      "type": "farcaster",
+      "name": "joaquim",
+      "bio": "Eng Lead @ thirdweb",
+      "avatar": "https://lh3.googleusercontent.com/EUELPFJzdDNcc3qSaEMekh0_W16acnS8MSvWizt-7HPaQhfJsNFC5HA0W4NKcy6CN9zmV7d4Crqg2B8qM9BpiveqVTl2GPBQ16Ax2IQ",
+      "metadata": {
+        "fid": 2735,
+        "bio": "Eng Lead @ thirdweb",
+        "pfp": "https://lh3.googleusercontent.com/EUELPFJzdDNcc3qSaEMekh0_W16acnS8MSvWizt-7HPaQhfJsNFC5HA0W4NKcy6CN9zmV7d4Crqg2B8qM9BpiveqVTl2GPBQ16Ax2IQ",
+        "username": "joaquim",
+        "addresses": [
+          "0x2247d5d238d0f9d37184d8332ae0289d1ad9991b",
+          "0xf7970369310b541b8a84086c8c1c81d3beb85e0e"
+        ]
+      }
+    },
+    {
+      "type": "lens",
+      "name": "joaquim",
+      "bio": "Lead engineer @thirdweb",
+      "avatar": "https://ik.imagekit.io/lens/media-snapshot/557708cc7581172234133c10d473058ace362c5f547fa86cee5be2abe1478e5b.png",
+      "metadata": {
+        "name": "joaquim",
+        "bio": "Lead engineer @thirdweb",
+        "picture": "https://ik.imagekit.io/lens/media-snapshot/557708cc7581172234133c10d473058ace362c5f547fa86cee5be2abe1478e5b.png"
+      }
+    }
+  ]
+  ```
+
+  ```tsx
+  import { useSocialProfiles } from "thirdweb/react";
+  const { data: profiles } = useSocialProfiles({
+    client,
+    address: "0x...",
+  });
+  ```
+
+- [#3413](https://github.com/thirdweb-dev/js/pull/3413) [`87d6b6a`](https://github.com/thirdweb-dev/js/commit/87d6b6a5b5ba4a51a852829446b730e4bf09e264) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support for modular contracts
+
+  # Deploy and Interact with modular contracts programmatically
+
+  ### Deploy a modular contract
+
+  ```ts
+  import {
+    ClaimableERC721,
+    BatchMetadataERC721,
+    deployModularContract,
+  } from "thirdweb/modules";
+
+  const deployed = deployModularContract({
+     client,
+     chain,
+     account,
+     core: "ERC721",
+     params: {
+       name: "My Modular NFT Contract",
+     },
+     modules: [
+       ClaimableERC721.module({
+          primarySaleRecipient: ...,
+       }),
+       BatchMetadataERC721.module(),
+     ],
+  });
+  ```
+
+  ### Interact with a modular contract
+
+  ```ts
+  import { ClaimableERC721 } from "thirdweb/modules";
+
+  const contract = getContract({
+    client,
+    chain,
+    address,
+  });
+
+  const transaction = ClaimableERC721.mint({
+    contract,
+    to: account.address,
+    quantity: 1,
+  });
+
+  await sendTransaction({
+    transaction,
+    account,
+  });
+  ```
+
+### Patch Changes
+
+- [#4444](https://github.com/thirdweb-dev/js/pull/4444) [`9cefe5f`](https://github.com/thirdweb-dev/js/commit/9cefe5f2df9a4cc2eb01a2f5f3d08c610a8c7783) Thanks [@edwardysun](https://github.com/edwardysun)! - Add buyWithCrypto testMode in useSendTransaction
+
+- [#4447](https://github.com/thirdweb-dev/js/pull/4447) [`f0d0f37`](https://github.com/thirdweb-dev/js/commit/f0d0f377dcad1e0a30d0d41515084acda86870af) Thanks [@jnsdls](https://github.com/jnsdls)! - fix baseURI extraction logic
+
+- [#4435](https://github.com/thirdweb-dev/js/pull/4435) [`e7bf498`](https://github.com/thirdweb-dev/js/commit/e7bf4989959f8d1aad17d20a18be1d0f8cffbdf2) Thanks [@edwardysun](https://github.com/edwardysun)! - Add testMode to buyWithCrypto pay options
+
+- [#4345](https://github.com/thirdweb-dev/js/pull/4345) [`fa6809d`](https://github.com/thirdweb-dev/js/commit/fa6809d5003d63edf34cab4a1840cb57b3b8931d) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add ERC1155 getOwnedTokenIds + more tests
+
+- [#4450](https://github.com/thirdweb-dev/js/pull/4450) [`775ab6d`](https://github.com/thirdweb-dev/js/commit/775ab6d5c3e18affd726ac4f9a6f1728537ed463) Thanks [@MananTank](https://github.com/MananTank)! - Add options for hiding buttons on details modal on useWalletDetailsModal
+
+- [#4443](https://github.com/thirdweb-dev/js/pull/4443) [`498d543`](https://github.com/thirdweb-dev/js/commit/498d543bdc921da91e92ceb880844bd5ced2371c) Thanks [@MananTank](https://github.com/MananTank)! - Fix getFunctionId
+
+- [#4446](https://github.com/thirdweb-dev/js/pull/4446) [`f39e1ba`](https://github.com/thirdweb-dev/js/commit/f39e1bab8f7a9089f709b5094502e3f802af5c4e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improve React Query caching performance
+
 ## 5.51.0
 
 ### Minor Changes
