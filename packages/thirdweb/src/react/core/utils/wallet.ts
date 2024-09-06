@@ -5,11 +5,13 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { resolveAvatar } from "../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../extensions/ens/resolve-name.js";
 import { shortenAddress } from "../../../utils/address.js";
+import { parseAvatarRecord } from "../../../utils/ens/avatar.js";
 import { getWalletInfo } from "../../../wallets/__generated__/getWalletInfo.js";
 import type { Account, Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../wallets/wallet-info.js";
 import type { WalletId } from "../../../wallets/wallet-types.js";
 import { useWalletBalance } from "../hooks/others/useWalletBalance.js";
+import { useSocialProfiles } from "../social/useSocialProfiles.js";
 
 /**
  * Get the ENS name and avatar for an address
@@ -98,6 +100,11 @@ export function useConnectedWalletDetails(
     ensName: ensNameQuery.data,
   });
 
+  const socialProfileQuery = useSocialProfiles({
+    client,
+    address: activeAccount?.address,
+  });
+
   const shortAddress = activeAccount?.address
     ? shortenAddress(activeAccount.address, 4)
     : "";
@@ -110,11 +117,31 @@ export function useConnectedWalletDetails(
   });
 
   const addressOrENS = ensNameQuery.data || shortAddress;
+  const pfpUnresolved = socialProfileQuery.data?.filter((p) => p.avatar)[0]
+    ?.avatar;
+
+  const { data: pfp } = useQuery({
+    queryKey: ["ens-avatar", pfpUnresolved],
+    queryFn: async () => {
+      if (!pfpUnresolved) {
+        return undefined;
+      }
+      return parseAvatarRecord({ client, uri: pfpUnresolved });
+    },
+    enabled: !!pfpUnresolved,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+  const name =
+    socialProfileQuery.data?.filter((p) => p.name)[0]?.name || addressOrENS;
 
   return {
+    socialProfileQuery,
     ensNameQuery,
     ensAvatarQuery,
     addressOrENS,
+    pfp,
+    name,
     shortAddress,
     balanceQuery,
   };
