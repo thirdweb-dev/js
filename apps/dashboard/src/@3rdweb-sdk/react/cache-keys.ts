@@ -15,8 +15,21 @@ export const accountKeys = {
     [...accountKeys.wallet(walletAddress), "me"] as const,
   usage: (walletAddress: string) =>
     [...accountKeys.wallet(walletAddress), "usage"] as const,
-  walletStats: (walletAddress: string, clientId: string) =>
-    [...accountKeys.wallet(walletAddress), "wallets", clientId] as const,
+  walletStats: (
+    walletAddress: string,
+    clientId: string,
+    from: string,
+    to: string,
+    period: string,
+  ) =>
+    [
+      ...accountKeys.wallet(walletAddress),
+      "wallets",
+      clientId,
+      from,
+      to,
+      period,
+    ] as const,
   credits: (walletAddress: string) =>
     [...accountKeys.wallet(walletAddress), "credits"] as const,
   billingSession: (walletAddress: string) =>

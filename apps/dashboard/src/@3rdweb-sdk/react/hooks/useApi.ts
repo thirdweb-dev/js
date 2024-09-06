@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { THIRDWEB_API_HOST } from "constants/urls";
+import { THIRDWEB_ANALYTICS_API_HOST, THIRDWEB_API_HOST } from "constants/urls";
 import type { ChainMetadata } from "thirdweb/chains";
 import invariant from "tiny-invariant";
 import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
@@ -229,13 +229,10 @@ export interface UsageBillableByService {
 }
 
 export interface WalletStats {
-  timeSeries: {
-    dayTime: string;
-    clientId: string;
-    walletType: string;
-    totalWallets: number;
-    uniqueWallets: number;
-  }[];
+  date: string;
+  uniqueWalletsConnected: number;
+  totalConnections: number;
+  walletType: string;
 }
 
 interface BillingProduct {
@@ -349,32 +346,95 @@ export function useAccountCredits() {
   });
 }
 
-export function useWalletStats(clientId: string | undefined) {
+async function getWalletUsage(args: {
+  clientId: string;
+  from?: Date;
+  to?: Date;
+  period?: "day" | "week" | "month" | "year" | "all";
+}) {
+  const { clientId, from, to, period } = args;
+
+  const searchParams = new URLSearchParams();
+  searchParams.append("clientId", clientId);
+  if (from) {
+    searchParams.append("from", from.toISOString());
+  }
+  if (to) {
+    searchParams.append("to", to.toISOString());
+  }
+  if (period) {
+    searchParams.append("period", period);
+  }
+  const res = await fetch(
+    `${THIRDWEB_ANALYTICS_API_HOST}/v1/wallets?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  const json = await res.json();
+
+  if (res.status !== 200) {
+    throw new Error(json.message);
+  }
+
+  return json.data;
+}
+
+export function useWalletUsageAggregate(args: {
+  clientId: string;
+  from?: Date;
+  to?: Date;
+}) {
+  const { clientId, from, to } = args;
   const { user, isLoggedIn } = useLoggedInUser();
 
   return useQuery({
     queryKey: accountKeys.walletStats(
       user?.address as string,
       clientId as string,
+      from?.toISOString() || "",
+      to?.toISOString() || "",
+      "all",
     ),
     queryFn: async () => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/account/wallets?clientId=${clientId}`,
-        {
-          method: "GET",
+      return getWalletUsage({
+        clientId,
+        from,
+        to,
+        period: "all",
+      });
+    },
+    enabled: !!clientId && !!user?.address && isLoggedIn,
+  });
+}
 
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      const json = await res.json();
+export function useWalletUsagePeriod(args: {
+  clientId: string;
+  from?: Date;
+  to?: Date;
+  period: "day" | "week" | "month" | "year";
+}) {
+  const { clientId, from, to, period } = args;
+  const { user, isLoggedIn } = useLoggedInUser();
 
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data as WalletStats;
+  return useQuery({
+    queryKey: accountKeys.walletStats(
+      user?.address as string,
+      clientId as string,
+      from?.toISOString() || "",
+      to?.toISOString() || "",
+      period,
+    ),
+    queryFn: async () => {
+      return getWalletUsage({
+        clientId,
+        from,
+        to,
+        period,
+      });
     },
     enabled: !!clientId && !!user?.address && isLoggedIn,
   });
