@@ -544,9 +544,6 @@ function ConnectButtonInner(
         showAllWallets: props.showAllWallets,
         walletConnect: props.walletConnect,
         wallets: props.wallets,
-        hideReceiveFunds: props.detailsModal?.hideReceiveFunds,
-        hideSendFunds: props.detailsModal?.hideSendFunds,
-        hideBuyFunds: props.detailsModal?.hideBuyFunds,
       }}
     />
   );

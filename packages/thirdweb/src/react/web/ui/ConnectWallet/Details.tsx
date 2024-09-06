@@ -1150,9 +1150,6 @@ export type DetailsModalConnectOptions = {
   chains?: Chain[];
   recommendedWallets?: Wallet[];
   showAllWallets?: boolean;
-  hideSendFunds?: boolean;
-  hideReceiveFunds?: boolean;
-  hideBuyFunds?: boolean;
 };
 
 export type UseWalletDetailsModalOptions = {
@@ -1376,6 +1373,27 @@ export type UseWalletDetailsModalOptions = {
    * Use custom avatar URL for the connected wallet image in the `ConnectButton` Details Modal, overriding ENS avatar or Blobbie icon.
    */
   connectedAccountAvatarUrl?: string;
+
+  /**
+   * Hide the "Send Funds" button in the Details Modal.
+   *
+   * By default the "Send Funds" button is shown.
+   */
+  hideSendFunds?: boolean;
+
+  /**
+   * Hide the "Receive Funds" button in the Details Modal.
+   *
+   * By default the "Receive Funds" button is shown.
+   */
+  hideReceiveFunds?: boolean;
+
+  /**
+   * Hide the "Buy Funds" button in the Details Modal.
+   *
+   * By default the "Buy Funds" button is shown.
+   */
+  hideBuyFunds?: boolean;
 };
 
 /**
@@ -1430,6 +1448,9 @@ export function useWalletDetailsModal() {
               showTestnetFaucet: props.showTestnetFaucet,
               connectedAccountName: props.connectedAccountName,
               connectedAccountAvatarUrl: props.connectedAccountAvatarUrl,
+              hideBuyFunds: props.hideBuyFunds,
+              hideReceiveFunds: props.hideReceiveFunds,
+              hideSendFunds: props.hideSendFunds,
             }}
             displayBalanceToken={props.displayBalanceToken}
             theme={props.theme || "dark"}
