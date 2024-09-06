@@ -10,26 +10,20 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "previewRedeem" function.
  */
 export type PreviewRedeemParams = {
-  shares: AbiParameterToPrimitiveType<{
-    name: "shares";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  shares: AbiParameterToPrimitiveType<{ type: "uint256"; name: "shares" }>;
 };
 
 export const FN_SELECTOR = "0x4cdad506" as const;
 const FN_INPUTS = [
   {
-    name: "shares",
     type: "uint256",
-    internalType: "uint256",
+    name: "shares",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "assets",
     type: "uint256",
-    internalType: "uint256",
+    name: "assets",
   },
 ] as const;
 
@@ -41,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPreviewRedeemSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isPreviewRedeemSupported(["0x..."]);
  * ```
  */
@@ -59,7 +52,7 @@ export function isPreviewRedeemSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewRedeemParams } "thirdweb/extensions/erc4626";
+ * import { encodePreviewRedeemParams } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewRedeemParams({
  *  shares: ...,
  * });
@@ -76,7 +69,7 @@ export function encodePreviewRedeemParams(options: PreviewRedeemParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewRedeem } "thirdweb/extensions/erc4626";
+ * import { encodePreviewRedeem } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewRedeem({
  *  shares: ...,
  * });
@@ -99,7 +92,7 @@ export function encodePreviewRedeem(options: PreviewRedeemParams) {
  * @example
  * ```ts
  * import { decodePreviewRedeemResult } from "thirdweb/extensions/erc4626";
- * const result = decodePreviewRedeemResult("...");
+ * const result = decodePreviewRedeemResultResult("...");
  * ```
  */
 export function decodePreviewRedeemResult(result: Hex) {

@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0x3408e470" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "uint256",
-    name: "chainid",
     type: "uint256",
+    name: "chainid",
   },
 ] as const;
 
@@ -23,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetChainIdSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetChainIdSupported(["0x..."]);
  * ```
  */
@@ -42,7 +40,7 @@ export function isGetChainIdSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetChainIdResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetChainIdResult("...");
+ * const result = decodeGetChainIdResultResult("...");
  * ```
  */
 export function decodeGetChainIdResult(result: Hex) {

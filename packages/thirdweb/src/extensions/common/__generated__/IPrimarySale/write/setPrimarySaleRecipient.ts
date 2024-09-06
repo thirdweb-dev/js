@@ -55,7 +55,7 @@ export function isSetPrimarySaleRecipientSupported(
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetPrimarySaleRecipientParams } "thirdweb/extensions/common";
+ * import { encodeSetPrimarySaleRecipientParams } from "thirdweb/extensions/common";
  * const result = encodeSetPrimarySaleRecipientParams({
  *  saleRecipient: ...,
  * });
@@ -74,7 +74,7 @@ export function encodeSetPrimarySaleRecipientParams(
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetPrimarySaleRecipient } "thirdweb/extensions/common";
+ * import { encodeSetPrimarySaleRecipient } from "thirdweb/extensions/common";
  * const result = encodeSetPrimarySaleRecipient({
  *  saleRecipient: ...,
  * });
@@ -98,6 +98,7 @@ export function encodeSetPrimarySaleRecipient(
  * @extension COMMON
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setPrimarySaleRecipient } from "thirdweb/extensions/common";
  *
  * const transaction = setPrimarySaleRecipient({
@@ -109,8 +110,7 @@ export function encodeSetPrimarySaleRecipient(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setPrimarySaleRecipient(

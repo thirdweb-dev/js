@@ -42,7 +42,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsCurrencyApprovedForListingSupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isIsCurrencyApprovedForListingSupported(["0x..."]);
  * ```
  */
@@ -62,7 +61,7 @@ export function isIsCurrencyApprovedForListingSupported(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeIsCurrencyApprovedForListingParams } "thirdweb/extensions/marketplace";
+ * import { encodeIsCurrencyApprovedForListingParams } from "thirdweb/extensions/marketplace";
  * const result = encodeIsCurrencyApprovedForListingParams({
  *  listingId: ...,
  *  currency: ...,
@@ -82,7 +81,7 @@ export function encodeIsCurrencyApprovedForListingParams(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeIsCurrencyApprovedForListing } "thirdweb/extensions/marketplace";
+ * import { encodeIsCurrencyApprovedForListing } from "thirdweb/extensions/marketplace";
  * const result = encodeIsCurrencyApprovedForListing({
  *  listingId: ...,
  *  currency: ...,
@@ -108,7 +107,7 @@ export function encodeIsCurrencyApprovedForListing(
  * @example
  * ```ts
  * import { decodeIsCurrencyApprovedForListingResult } from "thirdweb/extensions/marketplace";
- * const result = decodeIsCurrencyApprovedForListingResult("...");
+ * const result = decodeIsCurrencyApprovedForListingResultResult("...");
  * ```
  */
 export function decodeIsCurrencyApprovedForListingResult(result: Hex) {

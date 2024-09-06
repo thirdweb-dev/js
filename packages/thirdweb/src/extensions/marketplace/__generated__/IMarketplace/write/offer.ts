@@ -82,7 +82,7 @@ export function isOfferSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeOfferParams } "thirdweb/extensions/marketplace";
+ * import { encodeOfferParams } from "thirdweb/extensions/marketplace";
  * const result = encodeOfferParams({
  *  listingId: ...,
  *  quantityWanted: ...,
@@ -109,7 +109,7 @@ export function encodeOfferParams(options: OfferParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeOffer } "thirdweb/extensions/marketplace";
+ * import { encodeOffer } from "thirdweb/extensions/marketplace";
  * const result = encodeOffer({
  *  listingId: ...,
  *  quantityWanted: ...,
@@ -133,6 +133,7 @@ export function encodeOffer(options: OfferParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { offer } from "thirdweb/extensions/marketplace";
  *
  * const transaction = offer({
@@ -148,8 +149,7 @@ export function encodeOffer(options: OfferParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function offer(

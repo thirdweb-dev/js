@@ -1,0 +1,7 @@
+[
+  "function encodeBytesOnInstall() pure returns (bytes)",
+  "function isTransferEnabled() view returns (bool)",
+  "function isTransferEnabledFor(address target) view returns (bool)",
+  "function setTransferable(bool enableTransfer)",
+  "function setTransferableFor(address target, bool enableTransfer)"
+]

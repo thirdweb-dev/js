@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetProfileIdAllowedToRecoverSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetProfileIdAllowedToRecoverSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isGetProfileIdAllowedToRecoverSupported(
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetProfileIdAllowedToRecoverParams } "thirdweb/extensions/lens";
+ * import { encodeGetProfileIdAllowedToRecoverParams } from "thirdweb/extensions/lens";
  * const result = encodeGetProfileIdAllowedToRecoverParams({
  *  followTokenId: ...,
  * });
@@ -76,7 +75,7 @@ export function encodeGetProfileIdAllowedToRecoverParams(
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetProfileIdAllowedToRecover } "thirdweb/extensions/lens";
+ * import { encodeGetProfileIdAllowedToRecover } from "thirdweb/extensions/lens";
  * const result = encodeGetProfileIdAllowedToRecover({
  *  followTokenId: ...,
  * });
@@ -101,7 +100,7 @@ export function encodeGetProfileIdAllowedToRecover(
  * @example
  * ```ts
  * import { decodeGetProfileIdAllowedToRecoverResult } from "thirdweb/extensions/lens";
- * const result = decodeGetProfileIdAllowedToRecoverResult("...");
+ * const result = decodeGetProfileIdAllowedToRecoverResultResult("...");
  * ```
  */
 export function decodeGetProfileIdAllowedToRecoverResult(result: Hex) {

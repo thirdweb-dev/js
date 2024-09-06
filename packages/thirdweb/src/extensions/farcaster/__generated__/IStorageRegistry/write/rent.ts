@@ -60,7 +60,7 @@ export function isRentSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRentParams } "thirdweb/extensions/farcaster";
+ * import { encodeRentParams } from "thirdweb/extensions/farcaster";
  * const result = encodeRentParams({
  *  fid: ...,
  *  units: ...,
@@ -78,7 +78,7 @@ export function encodeRentParams(options: RentParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRent } "thirdweb/extensions/farcaster";
+ * import { encodeRent } from "thirdweb/extensions/farcaster";
  * const result = encodeRent({
  *  fid: ...,
  *  units: ...,
@@ -99,6 +99,7 @@ export function encodeRent(options: RentParams) {
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { rent } from "thirdweb/extensions/farcaster";
  *
  * const transaction = rent({
@@ -111,8 +112,7 @@ export function encodeRent(options: RentParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function rent(

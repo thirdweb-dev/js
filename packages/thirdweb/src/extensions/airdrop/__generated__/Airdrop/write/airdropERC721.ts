@@ -13,17 +13,15 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type AirdropERC721Params = WithOverrides<{
   tokenAddress: AbiParameterToPrimitiveType<{
-    name: "_tokenAddress";
     type: "address";
-    internalType: "address";
+    name: "_tokenAddress";
   }>;
   contents: AbiParameterToPrimitiveType<{
-    name: "_contents";
     type: "tuple[]";
-    internalType: "struct Airdrop.AirdropContentERC721[]";
+    name: "_contents";
     components: [
-      { name: "recipient"; type: "address"; internalType: "address" },
-      { name: "tokenId"; type: "uint256"; internalType: "uint256" },
+      { type: "address"; name: "recipient" },
+      { type: "uint256"; name: "tokenId" },
     ];
   }>;
 }>;
@@ -31,24 +29,20 @@ export type AirdropERC721Params = WithOverrides<{
 export const FN_SELECTOR = "0x6d582ebe" as const;
 const FN_INPUTS = [
   {
-    name: "_tokenAddress",
     type: "address",
-    internalType: "address",
+    name: "_tokenAddress",
   },
   {
-    name: "_contents",
     type: "tuple[]",
-    internalType: "struct Airdrop.AirdropContentERC721[]",
+    name: "_contents",
     components: [
       {
-        name: "recipient",
         type: "address",
-        internalType: "address",
+        name: "recipient",
       },
       {
-        name: "tokenId",
         type: "uint256",
-        internalType: "uint256",
+        name: "tokenId",
       },
     ],
   },
@@ -81,7 +75,7 @@ export function isAirdropERC721Supported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropERC721Params } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropERC721Params } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropERC721Params({
  *  tokenAddress: ...,
  *  contents: ...,
@@ -102,7 +96,7 @@ export function encodeAirdropERC721Params(options: AirdropERC721Params) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropERC721 } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropERC721 } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropERC721({
  *  tokenAddress: ...,
  *  contents: ...,
@@ -125,6 +119,7 @@ export function encodeAirdropERC721(options: AirdropERC721Params) {
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { airdropERC721 } from "thirdweb/extensions/airdrop";
  *
  * const transaction = airdropERC721({
@@ -137,8 +132,7 @@ export function encodeAirdropERC721(options: AirdropERC721Params) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function airdropERC721(

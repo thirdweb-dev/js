@@ -80,7 +80,7 @@ export function isPermitSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodePermitParams } "thirdweb/extensions/erc20";
+ * import { encodePermitParams } from "thirdweb/extensions/erc20";
  * const result = encodePermitParams({
  *  owner: ...,
  *  spender: ...,
@@ -111,7 +111,7 @@ export function encodePermitParams(options: PermitParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodePermit } "thirdweb/extensions/erc20";
+ * import { encodePermit } from "thirdweb/extensions/erc20";
  * const result = encodePermit({
  *  owner: ...,
  *  spender: ...,
@@ -137,6 +137,7 @@ export function encodePermit(options: PermitParams) {
  * @extension ERC20
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { permit } from "thirdweb/extensions/erc20";
  *
  * const transaction = permit({
@@ -154,8 +155,7 @@ export function encodePermit(options: PermitParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function permit(

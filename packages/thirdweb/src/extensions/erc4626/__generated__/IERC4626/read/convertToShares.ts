@@ -10,26 +10,20 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "convertToShares" function.
  */
 export type ConvertToSharesParams = {
-  assets: AbiParameterToPrimitiveType<{
-    name: "assets";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  assets: AbiParameterToPrimitiveType<{ type: "uint256"; name: "assets" }>;
 };
 
 export const FN_SELECTOR = "0xc6e6f592" as const;
 const FN_INPUTS = [
   {
-    name: "assets",
     type: "uint256",
-    internalType: "uint256",
+    name: "assets",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "shares",
     type: "uint256",
-    internalType: "uint256",
+    name: "shares",
   },
 ] as const;
 
@@ -41,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isConvertToSharesSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isConvertToSharesSupported(["0x..."]);
  * ```
  */
@@ -59,7 +52,7 @@ export function isConvertToSharesSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeConvertToSharesParams } "thirdweb/extensions/erc4626";
+ * import { encodeConvertToSharesParams } from "thirdweb/extensions/erc4626";
  * const result = encodeConvertToSharesParams({
  *  assets: ...,
  * });
@@ -76,7 +69,7 @@ export function encodeConvertToSharesParams(options: ConvertToSharesParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeConvertToShares } "thirdweb/extensions/erc4626";
+ * import { encodeConvertToShares } from "thirdweb/extensions/erc4626";
  * const result = encodeConvertToShares({
  *  assets: ...,
  * });
@@ -99,7 +92,7 @@ export function encodeConvertToShares(options: ConvertToSharesParams) {
  * @example
  * ```ts
  * import { decodeConvertToSharesResult } from "thirdweb/extensions/erc4626";
- * const result = decodeConvertToSharesResult("...");
+ * const result = decodeConvertToSharesResultResult("...");
  * ```
  */
 export function decodeConvertToSharesResult(result: Hex) {

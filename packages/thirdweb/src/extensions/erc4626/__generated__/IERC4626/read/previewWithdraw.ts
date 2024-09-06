@@ -10,26 +10,20 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "previewWithdraw" function.
  */
 export type PreviewWithdrawParams = {
-  assets: AbiParameterToPrimitiveType<{
-    name: "assets";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  assets: AbiParameterToPrimitiveType<{ type: "uint256"; name: "assets" }>;
 };
 
 export const FN_SELECTOR = "0x0a28a477" as const;
 const FN_INPUTS = [
   {
-    name: "assets",
     type: "uint256",
-    internalType: "uint256",
+    name: "assets",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "shares",
     type: "uint256",
-    internalType: "uint256",
+    name: "shares",
   },
 ] as const;
 
@@ -41,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPreviewWithdrawSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isPreviewWithdrawSupported(["0x..."]);
  * ```
  */
@@ -59,7 +52,7 @@ export function isPreviewWithdrawSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewWithdrawParams } "thirdweb/extensions/erc4626";
+ * import { encodePreviewWithdrawParams } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewWithdrawParams({
  *  assets: ...,
  * });
@@ -76,7 +69,7 @@ export function encodePreviewWithdrawParams(options: PreviewWithdrawParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewWithdraw } "thirdweb/extensions/erc4626";
+ * import { encodePreviewWithdraw } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewWithdraw({
  *  assets: ...,
  * });
@@ -99,7 +92,7 @@ export function encodePreviewWithdraw(options: PreviewWithdrawParams) {
  * @example
  * ```ts
  * import { decodePreviewWithdrawResult } from "thirdweb/extensions/erc4626";
- * const result = decodePreviewWithdrawResult("...");
+ * const result = decodePreviewWithdrawResultResult("...");
  * ```
  */
 export function decodePreviewWithdrawResult(result: Hex) {

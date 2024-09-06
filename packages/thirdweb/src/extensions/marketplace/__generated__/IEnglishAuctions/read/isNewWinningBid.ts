@@ -45,7 +45,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsNewWinningBidSupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isIsNewWinningBidSupported(["0x..."]);
  * ```
  */
@@ -63,7 +62,7 @@ export function isIsNewWinningBidSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeIsNewWinningBidParams } "thirdweb/extensions/marketplace";
+ * import { encodeIsNewWinningBidParams } from "thirdweb/extensions/marketplace";
  * const result = encodeIsNewWinningBidParams({
  *  auctionId: ...,
  *  bidAmount: ...,
@@ -81,7 +80,7 @@ export function encodeIsNewWinningBidParams(options: IsNewWinningBidParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeIsNewWinningBid } "thirdweb/extensions/marketplace";
+ * import { encodeIsNewWinningBid } from "thirdweb/extensions/marketplace";
  * const result = encodeIsNewWinningBid({
  *  auctionId: ...,
  *  bidAmount: ...,
@@ -105,7 +104,7 @@ export function encodeIsNewWinningBid(options: IsNewWinningBidParams) {
  * @example
  * ```ts
  * import { decodeIsNewWinningBidResult } from "thirdweb/extensions/marketplace";
- * const result = decodeIsNewWinningBidResult("...");
+ * const result = decodeIsNewWinningBidResultResult("...");
  * ```
  */
 export function decodeIsNewWinningBidResult(result: Hex) {

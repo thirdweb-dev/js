@@ -1,15 +1,18 @@
+import type { Chain } from "../../../chains/types.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 import {
   ZERO_ADDRESS,
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
-import { getContractMetadata } from "../../../extensions/common/read/getContractMetadata.js";
 import { MerkleTree } from "../../../merkletree/MerkleTree.js";
 import { download } from "../../../storage/download.js";
 import type { Address } from "../../address.js";
+import type { Hex } from "../../encoding/hex.js";
 import { convertQuantity } from "./convert-quantity.js";
 import { hashEntry } from "./hash-entry.js";
 import type {
+  OverrideEntry,
   OverrideProof,
   ShardData,
   ShardedMerkleTreeInfo,
@@ -18,24 +21,22 @@ import type {
 export async function fetchProofsForClaimer(options: {
   contract: ThirdwebContract;
   claimer: string;
-  merkleRoot: string;
+  merkleTreeUri: string;
   tokenDecimals: number;
+  hashEntry?: (options: {
+    entry: OverrideEntry;
+    chain: Chain;
+    client: ThirdwebClient;
+    tokenDecimals: number;
+  }) => Promise<Hex>;
 }): Promise<OverrideProof | null> {
-  const { contract, merkleRoot, claimer } = options;
-  // 1. fetch merkle data from contract URI
-  const metadata = await getContractMetadata({
-    contract,
-  });
-  const merkleData: Record<string, string> = metadata.merkle || {};
-  const snapshotUri = merkleData[merkleRoot];
+  const { contract, merkleTreeUri, claimer } = options;
+  const hashEntryFn = options.hashEntry || hashEntry;
 
-  if (!snapshotUri) {
-    return null;
-  }
   // 2. download snapshot data
   const response = await download({
     client: contract.client,
-    uri: snapshotUri,
+    uri: merkleTreeUri,
   });
   const merkleInfo: ShardedMerkleTreeInfo = await response.json();
 
@@ -61,7 +62,7 @@ export async function fetchProofsForClaimer(options: {
   // 4. hash all the entries in that shard and construct the sub merkle tree
   const hashedEntries = await Promise.all(
     shardData.entries.map(async (entry) => {
-      return hashEntry({
+      return hashEntryFn({
         entry,
         chain: contract.chain,
         client: contract.client,
@@ -79,7 +80,7 @@ export async function fetchProofsForClaimer(options: {
   }
   const proof = tree
     .getHexProof(
-      await hashEntry({
+      await hashEntryFn({
         entry,
         chain: contract.chain,
         client: contract.client,

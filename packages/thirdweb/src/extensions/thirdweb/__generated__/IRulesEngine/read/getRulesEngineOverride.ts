@@ -22,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetRulesEngineOverrideSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isGetRulesEngineOverrideSupported(["0x..."]);
  * ```
  */
@@ -43,7 +42,7 @@ export function isGetRulesEngineOverrideSupported(
  * @example
  * ```ts
  * import { decodeGetRulesEngineOverrideResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeGetRulesEngineOverrideResult("...");
+ * const result = decodeGetRulesEngineOverrideResultResult("...");
  * ```
  */
 export function decodeGetRulesEngineOverrideResult(result: Hex) {

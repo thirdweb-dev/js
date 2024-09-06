@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsAuctionExpiredSupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isIsAuctionExpiredSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isIsAuctionExpiredSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeIsAuctionExpiredParams } "thirdweb/extensions/marketplace";
+ * import { encodeIsAuctionExpiredParams } from "thirdweb/extensions/marketplace";
  * const result = encodeIsAuctionExpiredParams({
  *  auctionId: ...,
  * });
@@ -72,7 +71,7 @@ export function encodeIsAuctionExpiredParams(options: IsAuctionExpiredParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeIsAuctionExpired } "thirdweb/extensions/marketplace";
+ * import { encodeIsAuctionExpired } from "thirdweb/extensions/marketplace";
  * const result = encodeIsAuctionExpired({
  *  auctionId: ...,
  * });
@@ -95,7 +94,7 @@ export function encodeIsAuctionExpired(options: IsAuctionExpiredParams) {
  * @example
  * ```ts
  * import { decodeIsAuctionExpiredResult } from "thirdweb/extensions/marketplace";
- * const result = decodeIsAuctionExpiredResult("...");
+ * const result = decodeIsAuctionExpiredResultResult("...");
  * ```
  */
 export function decodeIsAuctionExpiredResult(result: Hex) {

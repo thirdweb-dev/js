@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isSupportsInterfaceSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isSupportsInterfaceSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isSupportsInterfaceSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSupportsInterfaceParams } "thirdweb/extensions/erc1155";
+ * import { encodeSupportsInterfaceParams } from "thirdweb/extensions/erc1155";
  * const result = encodeSupportsInterfaceParams({
  *  interfaceId: ...,
  * });
@@ -74,7 +73,7 @@ export function encodeSupportsInterfaceParams(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSupportsInterface } "thirdweb/extensions/erc1155";
+ * import { encodeSupportsInterface } from "thirdweb/extensions/erc1155";
  * const result = encodeSupportsInterface({
  *  interfaceId: ...,
  * });
@@ -97,7 +96,7 @@ export function encodeSupportsInterface(options: SupportsInterfaceParams) {
  * @example
  * ```ts
  * import { decodeSupportsInterfaceResult } from "thirdweb/extensions/erc1155";
- * const result = decodeSupportsInterfaceResult("...");
+ * const result = decodeSupportsInterfaceResultResult("...");
  * ```
  */
 export function decodeSupportsInterfaceResult(result: Hex) {

@@ -62,7 +62,7 @@ export function isCastVoteSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeCastVoteParams } "thirdweb/extensions/vote";
+ * import { encodeCastVoteParams } from "thirdweb/extensions/vote";
  * const result = encodeCastVoteParams({
  *  proposalId: ...,
  *  support: ...,
@@ -80,7 +80,7 @@ export function encodeCastVoteParams(options: CastVoteParams) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeCastVote } "thirdweb/extensions/vote";
+ * import { encodeCastVote } from "thirdweb/extensions/vote";
  * const result = encodeCastVote({
  *  proposalId: ...,
  *  support: ...,
@@ -101,6 +101,7 @@ export function encodeCastVote(options: CastVoteParams) {
  * @extension VOTE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { castVote } from "thirdweb/extensions/vote";
  *
  * const transaction = castVote({
@@ -113,8 +114,7 @@ export function encodeCastVote(options: CastVoteParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function castVote(

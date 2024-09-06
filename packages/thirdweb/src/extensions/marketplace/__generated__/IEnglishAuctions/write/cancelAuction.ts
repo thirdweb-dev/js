@@ -53,7 +53,7 @@ export function isCancelAuctionSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCancelAuctionParams } "thirdweb/extensions/marketplace";
+ * import { encodeCancelAuctionParams } from "thirdweb/extensions/marketplace";
  * const result = encodeCancelAuctionParams({
  *  auctionId: ...,
  * });
@@ -70,7 +70,7 @@ export function encodeCancelAuctionParams(options: CancelAuctionParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCancelAuction } "thirdweb/extensions/marketplace";
+ * import { encodeCancelAuction } from "thirdweb/extensions/marketplace";
  * const result = encodeCancelAuction({
  *  auctionId: ...,
  * });
@@ -92,6 +92,7 @@ export function encodeCancelAuction(options: CancelAuctionParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { cancelAuction } from "thirdweb/extensions/marketplace";
  *
  * const transaction = cancelAuction({
@@ -103,8 +104,7 @@ export function encodeCancelAuction(options: CancelAuctionParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function cancelAuction(

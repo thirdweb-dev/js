@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isProposalThresholdSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isProposalThresholdSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isProposalThresholdSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeProposalThresholdResult } from "thirdweb/extensions/vote";
- * const result = decodeProposalThresholdResult("...");
+ * const result = decodeProposalThresholdResultResult("...");
  * ```
  */
 export function decodeProposalThresholdResult(result: Hex) {

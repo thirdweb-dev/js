@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetRoleAdminSupported } from "thirdweb/extensions/permissions";
- *
  * const supported = isGetRoleAdminSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isGetRoleAdminSupported(availableSelectors: string[]) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeGetRoleAdminParams } "thirdweb/extensions/permissions";
+ * import { encodeGetRoleAdminParams } from "thirdweb/extensions/permissions";
  * const result = encodeGetRoleAdminParams({
  *  role: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeGetRoleAdminParams(options: GetRoleAdminParams) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeGetRoleAdmin } "thirdweb/extensions/permissions";
+ * import { encodeGetRoleAdmin } from "thirdweb/extensions/permissions";
  * const result = encodeGetRoleAdmin({
  *  role: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeGetRoleAdmin(options: GetRoleAdminParams) {
  * @example
  * ```ts
  * import { decodeGetRoleAdminResult } from "thirdweb/extensions/permissions";
- * const result = decodeGetRoleAdminResult("...");
+ * const result = decodeGetRoleAdminResultResult("...");
  * ```
  */
 export function decodeGetRoleAdminResult(result: Hex) {

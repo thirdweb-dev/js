@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isSupportsInterfaceSupported } from "thirdweb/extensions/common";
- *
  * const supported = isSupportsInterfaceSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isSupportsInterfaceSupported(availableSelectors: string[]) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSupportsInterfaceParams } "thirdweb/extensions/common";
+ * import { encodeSupportsInterfaceParams } from "thirdweb/extensions/common";
  * const result = encodeSupportsInterfaceParams({
  *  interfaceId: ...,
  * });
@@ -74,7 +73,7 @@ export function encodeSupportsInterfaceParams(
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSupportsInterface } "thirdweb/extensions/common";
+ * import { encodeSupportsInterface } from "thirdweb/extensions/common";
  * const result = encodeSupportsInterface({
  *  interfaceId: ...,
  * });
@@ -97,7 +96,7 @@ export function encodeSupportsInterface(options: SupportsInterfaceParams) {
  * @example
  * ```ts
  * import { decodeSupportsInterfaceResult } from "thirdweb/extensions/common";
- * const result = decodeSupportsInterfaceResult("...");
+ * const result = decodeSupportsInterfaceResultResult("...");
  * ```
  */
 export function decodeSupportsInterfaceResult(result: Hex) {

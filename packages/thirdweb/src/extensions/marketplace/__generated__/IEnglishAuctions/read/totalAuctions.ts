@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTotalAuctionsSupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isTotalAuctionsSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isTotalAuctionsSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeTotalAuctionsResult } from "thirdweb/extensions/marketplace";
- * const result = decodeTotalAuctionsResult("...");
+ * const result = decodeTotalAuctionsResultResult("...");
  * ```
  */
 export function decodeTotalAuctionsResult(result: Hex) {

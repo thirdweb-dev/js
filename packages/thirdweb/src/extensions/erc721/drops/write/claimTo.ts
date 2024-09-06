@@ -1,6 +1,7 @@
 import type { Address } from "abitype";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { getClaimParams } from "../../../../utils/extensions/drops/get-claim-params.js";
+import { isGetContractMetadataSupported } from "../../../common/read/getContractMetadata.js";
 import {
   claim,
   isClaimSupported,
@@ -67,6 +68,8 @@ export function isClaimToSupported(availableSelectors: string[]) {
   return (
     isClaimSupported(availableSelectors) &&
     // required to check if the contract supports the getActiveClaimCondition method
-    isGetActiveClaimConditionSupported(availableSelectors)
+    isGetActiveClaimConditionSupported(availableSelectors) &&
+    // requires contractMetadata for claimer proofs
+    isGetContractMetadataSupported(availableSelectors)
   );
 }

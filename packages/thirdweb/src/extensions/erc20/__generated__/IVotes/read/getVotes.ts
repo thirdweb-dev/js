@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetVotesSupported } from "thirdweb/extensions/erc20";
- *
  * const supported = isGetVotesSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isGetVotesSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeGetVotesParams } "thirdweb/extensions/erc20";
+ * import { encodeGetVotesParams } from "thirdweb/extensions/erc20";
  * const result = encodeGetVotesParams({
  *  account: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeGetVotesParams(options: GetVotesParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeGetVotes } "thirdweb/extensions/erc20";
+ * import { encodeGetVotes } from "thirdweb/extensions/erc20";
  * const result = encodeGetVotes({
  *  account: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeGetVotes(options: GetVotesParams) {
  * @example
  * ```ts
  * import { decodeGetVotesResult } from "thirdweb/extensions/erc20";
- * const result = decodeGetVotesResult("...");
+ * const result = decodeGetVotesResultResult("...");
  * ```
  */
 export function decodeGetVotesResult(result: Hex) {

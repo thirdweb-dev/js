@@ -119,7 +119,7 @@ export function isInitializeSupported(availableSelectors: string[]) {
  * @extension PREBUILTS
  * @example
  * ```ts
- * import { encodeInitializeParams } "thirdweb/extensions/prebuilts";
+ * import { encodeInitializeParams } from "thirdweb/extensions/prebuilts";
  * const result = encodeInitializeParams({
  *  defaultAdmin: ...,
  *  name: ...,
@@ -156,7 +156,7 @@ export function encodeInitializeParams(options: InitializeParams) {
  * @extension PREBUILTS
  * @example
  * ```ts
- * import { encodeInitialize } "thirdweb/extensions/prebuilts";
+ * import { encodeInitialize } from "thirdweb/extensions/prebuilts";
  * const result = encodeInitialize({
  *  defaultAdmin: ...,
  *  name: ...,
@@ -187,6 +187,7 @@ export function encodeInitialize(options: InitializeParams) {
  * @extension PREBUILTS
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { initialize } from "thirdweb/extensions/prebuilts";
  *
  * const transaction = initialize({
@@ -207,8 +208,7 @@ export function encodeInitialize(options: InitializeParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function initialize(

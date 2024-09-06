@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isADD_TYPEHASHSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isADD_TYPEHASHSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isADD_TYPEHASHSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeADD_TYPEHASHResult } from "thirdweb/extensions/farcaster";
- * const result = decodeADD_TYPEHASHResult("...");
+ * const result = decodeADD_TYPEHASHResultResult("...");
  * ```
  */
 export function decodeADD_TYPEHASHResult(result: Hex) {

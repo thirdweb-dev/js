@@ -33,13 +33,13 @@ export function isFreezeMetadataSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { freezeMetadata } from "thirdweb/extensions/erc721";
  *
  * const transaction = freezeMetadata();
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function freezeMetadata(options: BaseTransactionOptions) {

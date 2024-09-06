@@ -31,34 +31,23 @@ import {
   useTable,
 } from "react-table";
 import type { NFT, ThirdwebContract } from "thirdweb";
-import {
-  nextTokenIdToMint as erc721NextTokenIdToMint,
-  totalSupply as erc721TotalSupply,
-  getNFTs as getErc721NFTs,
-  isERC721,
-} from "thirdweb/extensions/erc721";
-import {
-  nextTokenIdToMint as erc1155NextTokenIdToMint,
-  getNFTs as getErc1155NFTs,
-  isERC1155,
-} from "thirdweb/extensions/erc1155";
+import * as ERC721Ext from "thirdweb/extensions/erc721";
+import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface ContractOverviewNFTGetAllProps {
   contract: ThirdwebContract;
+  isErc721: boolean;
 }
 export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   contract,
+  isErc721,
 }) => {
-  const { data: isErc721, isLoading: checking721 } = useReadContract(isERC721, {
-    contract,
-  });
-  const { data: isErc1155, isLoading: checking1155 } = useReadContract(
-    isERC1155,
-    { contract },
-  );
+  // if it's not erc721, it's erc1155
+  const isErc1155 = !isErc721;
+
   const router = useRouter();
 
   const tableColumns = useMemo(() => {
@@ -132,36 +121,24 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
 
   const getNFTsQuery = useReadContract(
-    isErc1155 ? getErc1155NFTs : getErc721NFTs,
+    isErc1155 ? ERC1155Ext.getNFTs : ERC721Ext.getNFTs,
     {
       contract,
       start: queryParams.start,
       count: queryParams.count,
       includeOwners: true,
-      queryOptions: {
-        // Only load once finishing checking if the contract is either 721 or 1155
-        enabled: !checking1155 && !checking721,
-      },
     },
   );
 
   // TODO: Add support for ERC1155 total circulating supply
   const nextTokenIdToMintQuery = useReadContract(
-    isErc1155 ? erc1155NextTokenIdToMint : erc721NextTokenIdToMint,
+    isErc1155 ? ERC1155Ext.nextTokenIdToMint : ERC721Ext.nextTokenIdToMint,
     {
       contract,
-      queryOptions: {
-        // Only load once finishing checking if the contract is either 721 or 1155
-        enabled: !checking1155 && !checking721,
-      },
     },
   );
-  const totalSupplyQuery = useReadContract(erc721TotalSupply, {
+  const totalSupplyQuery = useReadContract(ERC721Ext.totalSupply, {
     contract,
-    queryOptions: {
-      // Only load once finishing checking if the contract is either 721 or 1155
-      enabled: !checking1155 && !checking721,
-    },
   });
 
   // Anything bigger and the table breaks

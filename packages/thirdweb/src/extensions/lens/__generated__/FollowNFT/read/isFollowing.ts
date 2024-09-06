@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsFollowingSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isIsFollowingSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isIsFollowingSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeIsFollowingParams } "thirdweb/extensions/lens";
+ * import { encodeIsFollowingParams } from "thirdweb/extensions/lens";
  * const result = encodeIsFollowingParams({
  *  followerProfileId: ...,
  * });
@@ -72,7 +71,7 @@ export function encodeIsFollowingParams(options: IsFollowingParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeIsFollowing } "thirdweb/extensions/lens";
+ * import { encodeIsFollowing } from "thirdweb/extensions/lens";
  * const result = encodeIsFollowing({
  *  followerProfileId: ...,
  * });
@@ -95,7 +94,7 @@ export function encodeIsFollowing(options: IsFollowingParams) {
  * @example
  * ```ts
  * import { decodeIsFollowingResult } from "thirdweb/extensions/lens";
- * const result = decodeIsFollowingResult("...");
+ * const result = decodeIsFollowingResultResult("...");
  * ```
  */
 export function decodeIsFollowingResult(result: Hex) {

@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isNoncesSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isNoncesSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isNoncesSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeNoncesParams } "thirdweb/extensions/farcaster";
+ * import { encodeNoncesParams } from "thirdweb/extensions/farcaster";
  * const result = encodeNoncesParams({
  *  account: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeNoncesParams(options: NoncesParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeNonces } "thirdweb/extensions/farcaster";
+ * import { encodeNonces } from "thirdweb/extensions/farcaster";
  * const result = encodeNonces({
  *  account: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeNonces(options: NoncesParams) {
  * @example
  * ```ts
  * import { decodeNoncesResult } from "thirdweb/extensions/farcaster";
- * const result = decodeNoncesResult("...");
+ * const result = decodeNoncesResultResult("...");
  * ```
  */
 export function decodeNoncesResult(result: Hex) {

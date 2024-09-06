@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isNameSupported } from "thirdweb/extensions/ens";
- *
  * const supported = isNameSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isNameSupported(availableSelectors: string[]) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeNameParams } "thirdweb/extensions/ens";
+ * import { encodeNameParams } from "thirdweb/extensions/ens";
  * const result = encodeNameParams({
  *  node: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeNameParams(options: NameParams) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeName } "thirdweb/extensions/ens";
+ * import { encodeName } from "thirdweb/extensions/ens";
  * const result = encodeName({
  *  node: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeName(options: NameParams) {
  * @example
  * ```ts
  * import { decodeNameResult } from "thirdweb/extensions/ens";
- * const result = decodeNameResult("...");
+ * const result = decodeNameResultResult("...");
  * ```
  */
 export function decodeNameResult(result: Hex) {

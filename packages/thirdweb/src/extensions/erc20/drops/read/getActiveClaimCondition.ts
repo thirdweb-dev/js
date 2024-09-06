@@ -1,6 +1,5 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import type { ClaimCondition } from "../../../../utils/extensions/drops/types.js";
-import * as Single from "../../__generated__/DropSinglePhase/read/claimCondition.js";
 import * as MultiActiveId from "../../__generated__/IDropERC20/read/getActiveClaimConditionId.js";
 import * as MultiById from "../../__generated__/IDropERC20/read/getClaimConditionById.js";
 
@@ -19,57 +18,19 @@ import * as MultiById from "../../__generated__/IDropERC20/read/getClaimConditio
 export async function getActiveClaimCondition(
   options: BaseTransactionOptions,
 ): Promise<ClaimCondition> {
-  const getActiveClaimConditionMultiPhase = async () => {
+  try {
     const conditionId = await MultiActiveId.getActiveClaimConditionId(options);
     return MultiById.getClaimConditionById({ ...options, conditionId });
-  };
-  const getActiveClaimConditionSinglePhase = async () => {
-    const [
-      startTimestamp,
-      maxClaimableSupply,
-      supplyClaimed,
-      quantityLimitPerWallet,
-      merkleRoot,
-      pricePerToken,
-      currency,
-      metadata,
-    ] = await Single.claimCondition(options);
-    return {
-      startTimestamp,
-      maxClaimableSupply,
-      supplyClaimed,
-      quantityLimitPerWallet,
-      merkleRoot,
-      pricePerToken,
-      currency,
-      metadata,
-    };
-  };
-
-  // The contract's phase type is unknown, so try both options and return whichever resolves, prioritizing multi-phase
-  const results = await Promise.allSettled([
-    getActiveClaimConditionMultiPhase(),
-    getActiveClaimConditionSinglePhase(),
-  ]);
-
-  const condition = results.find((result) => result.status === "fulfilled");
-  if (condition?.status === "fulfilled") {
-    return condition.value;
+  } catch {
+    throw new Error("Claim condition not found");
   }
-  throw new Error("Claim condition not found");
 }
 
 export function isGetActiveClaimConditionSupported(
   availableSelectors: string[],
 ) {
-  // either needs to have the single-phase claim condition or the multi-phase claim condition
-  return [
-    // either the single-phase claim condition is supported
-    Single.isClaimConditionSupported(availableSelectors),
-    // or the multi-phase claim condition is supported (both methods are required)
-    [
-      MultiActiveId.isGetActiveClaimConditionIdSupported(availableSelectors),
-      MultiById.isGetClaimConditionByIdSupported(availableSelectors),
-    ].every(Boolean),
-  ].some(Boolean);
+  return (
+    MultiActiveId.isGetActiveClaimConditionIdSupported(availableSelectors) &&
+    MultiById.isGetClaimConditionByIdSupported(availableSelectors)
+  );
 }

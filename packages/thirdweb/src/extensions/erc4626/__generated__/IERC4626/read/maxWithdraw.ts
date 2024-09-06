@@ -10,26 +10,20 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "maxWithdraw" function.
  */
 export type MaxWithdrawParams = {
-  owner: AbiParameterToPrimitiveType<{
-    name: "owner";
-    type: "address";
-    internalType: "address";
-  }>;
+  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 };
 
 export const FN_SELECTOR = "0xce96cb77" as const;
 const FN_INPUTS = [
   {
-    name: "owner",
     type: "address",
-    internalType: "address",
+    name: "owner",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "maxAssets",
     type: "uint256",
-    internalType: "uint256",
+    name: "maxAssets",
   },
 ] as const;
 
@@ -41,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isMaxWithdrawSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isMaxWithdrawSupported(["0x..."]);
  * ```
  */
@@ -59,7 +52,7 @@ export function isMaxWithdrawSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMaxWithdrawParams } "thirdweb/extensions/erc4626";
+ * import { encodeMaxWithdrawParams } from "thirdweb/extensions/erc4626";
  * const result = encodeMaxWithdrawParams({
  *  owner: ...,
  * });
@@ -76,7 +69,7 @@ export function encodeMaxWithdrawParams(options: MaxWithdrawParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMaxWithdraw } "thirdweb/extensions/erc4626";
+ * import { encodeMaxWithdraw } from "thirdweb/extensions/erc4626";
  * const result = encodeMaxWithdraw({
  *  owner: ...,
  * });
@@ -99,7 +92,7 @@ export function encodeMaxWithdraw(options: MaxWithdrawParams) {
  * @example
  * ```ts
  * import { decodeMaxWithdrawResult } from "thirdweb/extensions/erc4626";
- * const result = decodeMaxWithdrawResult("...");
+ * const result = decodeMaxWithdrawResultResult("...");
  * ```
  */
 export function decodeMaxWithdrawResult(result: Hex) {

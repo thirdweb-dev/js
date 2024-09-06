@@ -133,7 +133,7 @@ export function isValidateUserOpSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeValidateUserOpParams } "thirdweb/extensions/erc4337";
+ * import { encodeValidateUserOpParams } from "thirdweb/extensions/erc4337";
  * const result = encodeValidateUserOpParams({
  *  userOp: ...,
  *  userOpHash: ...,
@@ -156,7 +156,7 @@ export function encodeValidateUserOpParams(options: ValidateUserOpParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeValidateUserOp } "thirdweb/extensions/erc4337";
+ * import { encodeValidateUserOp } from "thirdweb/extensions/erc4337";
  * const result = encodeValidateUserOp({
  *  userOp: ...,
  *  userOpHash: ...,
@@ -180,6 +180,7 @@ export function encodeValidateUserOp(options: ValidateUserOpParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { validateUserOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = validateUserOp({
@@ -193,8 +194,7 @@ export function encodeValidateUserOp(options: ValidateUserOpParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function validateUserOp(

@@ -64,6 +64,7 @@ export type PayUIOptions = Prettify<
     buyWithCrypto?:
       | false
       | {
+          testMode?: boolean;
           prefillSource?: {
             chain: Chain;
             token?: TokenInfo;

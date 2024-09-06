@@ -67,7 +67,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetProfileSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetProfileSupported(["0x..."]);
  * ```
  */
@@ -85,7 +84,7 @@ export function isGetProfileSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetProfileParams } "thirdweb/extensions/lens";
+ * import { encodeGetProfileParams } from "thirdweb/extensions/lens";
  * const result = encodeGetProfileParams({
  *  profileId: ...,
  * });
@@ -102,7 +101,7 @@ export function encodeGetProfileParams(options: GetProfileParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetProfile } "thirdweb/extensions/lens";
+ * import { encodeGetProfile } from "thirdweb/extensions/lens";
  * const result = encodeGetProfile({
  *  profileId: ...,
  * });
@@ -125,7 +124,7 @@ export function encodeGetProfile(options: GetProfileParams) {
  * @example
  * ```ts
  * import { decodeGetProfileResult } from "thirdweb/extensions/lens";
- * const result = decodeGetProfileResult("...");
+ * const result = decodeGetProfileResultResult("...");
  * ```
  */
 export function decodeGetProfileResult(result: Hex) {

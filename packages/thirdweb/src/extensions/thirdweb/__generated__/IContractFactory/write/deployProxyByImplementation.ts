@@ -69,7 +69,7 @@ export function isDeployProxyByImplementationSupported(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeDeployProxyByImplementationParams } "thirdweb/extensions/thirdweb";
+ * import { encodeDeployProxyByImplementationParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeDeployProxyByImplementationParams({
  *  implementation: ...,
  *  data: ...,
@@ -94,7 +94,7 @@ export function encodeDeployProxyByImplementationParams(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeDeployProxyByImplementation } "thirdweb/extensions/thirdweb";
+ * import { encodeDeployProxyByImplementation } from "thirdweb/extensions/thirdweb";
  * const result = encodeDeployProxyByImplementation({
  *  implementation: ...,
  *  data: ...,
@@ -120,6 +120,7 @@ export function encodeDeployProxyByImplementation(
  * @extension THIRDWEB
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { deployProxyByImplementation } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = deployProxyByImplementation({
@@ -133,8 +134,7 @@ export function encodeDeployProxyByImplementation(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function deployProxyByImplementation(

@@ -55,7 +55,7 @@ export function isRevokeRoleSupported(availableSelectors: string[]) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeRevokeRoleParams } "thirdweb/extensions/permissions";
+ * import { encodeRevokeRoleParams } from "thirdweb/extensions/permissions";
  * const result = encodeRevokeRoleParams({
  *  role: ...,
  *  account: ...,
@@ -73,7 +73,7 @@ export function encodeRevokeRoleParams(options: RevokeRoleParams) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeRevokeRole } "thirdweb/extensions/permissions";
+ * import { encodeRevokeRole } from "thirdweb/extensions/permissions";
  * const result = encodeRevokeRole({
  *  role: ...,
  *  account: ...,
@@ -96,6 +96,7 @@ export function encodeRevokeRole(options: RevokeRoleParams) {
  * @extension PERMISSIONS
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { revokeRole } from "thirdweb/extensions/permissions";
  *
  * const transaction = revokeRole({
@@ -108,8 +109,7 @@ export function encodeRevokeRole(options: RevokeRoleParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function revokeRole(

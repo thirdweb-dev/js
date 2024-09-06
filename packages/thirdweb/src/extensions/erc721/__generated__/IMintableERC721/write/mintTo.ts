@@ -59,7 +59,7 @@ export function isMintToSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeMintToParams } "thirdweb/extensions/erc721";
+ * import { encodeMintToParams } from "thirdweb/extensions/erc721";
  * const result = encodeMintToParams({
  *  to: ...,
  *  uri: ...,
@@ -77,7 +77,7 @@ export function encodeMintToParams(options: MintToParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeMintTo } "thirdweb/extensions/erc721";
+ * import { encodeMintTo } from "thirdweb/extensions/erc721";
  * const result = encodeMintTo({
  *  to: ...,
  *  uri: ...,
@@ -98,6 +98,7 @@ export function encodeMintTo(options: MintToParams) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { mintTo } from "thirdweb/extensions/erc721";
  *
  * const transaction = mintTo({
@@ -110,8 +111,7 @@ export function encodeMintTo(options: MintToParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function mintTo(

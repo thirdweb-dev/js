@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type WithdrawEventFilters = Partial<{
   caller: AbiParameterToPrimitiveType<{
-    name: "caller";
     type: "address";
+    name: "caller";
     indexed: true;
-    internalType: "address";
   }>;
   receiver: AbiParameterToPrimitiveType<{
-    name: "receiver";
     type: "address";
+    name: "receiver";
     indexed: true;
-    internalType: "address";
   }>;
   owner: AbiParameterToPrimitiveType<{
-    name: "owner";
     type: "address";
+    name: "owner";
     indexed: true;
-    internalType: "address";
   }>;
 }>;
 

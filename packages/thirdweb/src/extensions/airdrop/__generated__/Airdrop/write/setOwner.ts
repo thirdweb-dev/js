@@ -12,19 +12,14 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "setOwner" function.
  */
 export type SetOwnerParams = WithOverrides<{
-  newOwner: AbiParameterToPrimitiveType<{
-    name: "_newOwner";
-    type: "address";
-    internalType: "address";
-  }>;
+  newOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "_newOwner" }>;
 }>;
 
 export const FN_SELECTOR = "0x13af4035" as const;
 const FN_INPUTS = [
   {
-    name: "_newOwner",
     type: "address",
-    internalType: "address",
+    name: "_newOwner",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -55,7 +50,7 @@ export function isSetOwnerSupported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeSetOwnerParams } "thirdweb/extensions/airdrop";
+ * import { encodeSetOwnerParams } from "thirdweb/extensions/airdrop";
  * const result = encodeSetOwnerParams({
  *  newOwner: ...,
  * });
@@ -72,7 +67,7 @@ export function encodeSetOwnerParams(options: SetOwnerParams) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeSetOwner } "thirdweb/extensions/airdrop";
+ * import { encodeSetOwner } from "thirdweb/extensions/airdrop";
  * const result = encodeSetOwner({
  *  newOwner: ...,
  * });
@@ -92,6 +87,7 @@ export function encodeSetOwner(options: SetOwnerParams) {
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setOwner } from "thirdweb/extensions/airdrop";
  *
  * const transaction = setOwner({
@@ -103,8 +99,7 @@ export function encodeSetOwner(options: SetOwnerParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setOwner(

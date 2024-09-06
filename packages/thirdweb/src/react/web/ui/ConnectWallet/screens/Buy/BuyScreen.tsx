@@ -97,7 +97,13 @@ export type BuyScreenProps = {
  * @internal
  */
 export default function BuyScreen(props: BuyScreenProps) {
-  const supportedDestinationsQuery = useBuySupportedDestinations(props.client);
+  const isTestMode = props.payOptions.buyWithCrypto
+    ? props.payOptions.buyWithCrypto.testMode
+    : undefined;
+  const supportedDestinationsQuery = useBuySupportedDestinations(
+    props.client,
+    isTestMode,
+  );
 
   if (!supportedDestinationsQuery.data) {
     return <LoadingScreen />;

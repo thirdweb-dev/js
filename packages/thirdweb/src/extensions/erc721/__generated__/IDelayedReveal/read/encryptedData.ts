@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isEncryptedDataSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isEncryptedDataSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isEncryptedDataSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeEncryptedDataParams } "thirdweb/extensions/erc721";
+ * import { encodeEncryptedDataParams } from "thirdweb/extensions/erc721";
  * const result = encodeEncryptedDataParams({
  *  index: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeEncryptedDataParams(options: EncryptedDataParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeEncryptedData } "thirdweb/extensions/erc721";
+ * import { encodeEncryptedData } from "thirdweb/extensions/erc721";
  * const result = encodeEncryptedData({
  *  index: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeEncryptedData(options: EncryptedDataParams) {
  * @example
  * ```ts
  * import { decodeEncryptedDataResult } from "thirdweb/extensions/erc721";
- * const result = decodeEncryptedDataResult("...");
+ * const result = decodeEncryptedDataResultResult("...");
  * ```
  */
 export function decodeEncryptedDataResult(result: Hex) {

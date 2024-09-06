@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0x01e1d114" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "totalManagedAssets",
     type: "uint256",
-    internalType: "uint256",
+    name: "totalManagedAssets",
   },
 ] as const;
 
@@ -23,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTotalAssetsSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isTotalAssetsSupported(["0x..."]);
  * ```
  */
@@ -42,7 +40,7 @@ export function isTotalAssetsSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeTotalAssetsResult } from "thirdweb/extensions/erc4626";
- * const result = decodeTotalAssetsResult("...");
+ * const result = decodeTotalAssetsResultResult("...");
  * ```
  */
 export function decodeTotalAssetsResult(result: Hex) {

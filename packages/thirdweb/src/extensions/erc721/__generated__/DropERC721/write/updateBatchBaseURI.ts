@@ -55,7 +55,7 @@ export function isUpdateBatchBaseURISupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeUpdateBatchBaseURIParams } "thirdweb/extensions/erc721";
+ * import { encodeUpdateBatchBaseURIParams } from "thirdweb/extensions/erc721";
  * const result = encodeUpdateBatchBaseURIParams({
  *  index: ...,
  *  uri: ...,
@@ -75,7 +75,7 @@ export function encodeUpdateBatchBaseURIParams(
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeUpdateBatchBaseURI } "thirdweb/extensions/erc721";
+ * import { encodeUpdateBatchBaseURI } from "thirdweb/extensions/erc721";
  * const result = encodeUpdateBatchBaseURI({
  *  index: ...,
  *  uri: ...,
@@ -98,6 +98,7 @@ export function encodeUpdateBatchBaseURI(options: UpdateBatchBaseURIParams) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { updateBatchBaseURI } from "thirdweb/extensions/erc721";
  *
  * const transaction = updateBatchBaseURI({
@@ -110,8 +111,7 @@ export function encodeUpdateBatchBaseURI(options: UpdateBatchBaseURIParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function updateBatchBaseURI(

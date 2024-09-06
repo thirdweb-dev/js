@@ -50,7 +50,7 @@ export function isDeleteRuleSupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeDeleteRuleParams } "thirdweb/extensions/thirdweb";
+ * import { encodeDeleteRuleParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeDeleteRuleParams({
  *  ruleId: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeDeleteRuleParams(options: DeleteRuleParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeDeleteRule } "thirdweb/extensions/thirdweb";
+ * import { encodeDeleteRule } from "thirdweb/extensions/thirdweb";
  * const result = encodeDeleteRule({
  *  ruleId: ...,
  * });
@@ -89,6 +89,7 @@ export function encodeDeleteRule(options: DeleteRuleParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { deleteRule } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = deleteRule({
@@ -100,8 +101,7 @@ export function encodeDeleteRule(options: DeleteRuleParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function deleteRule(

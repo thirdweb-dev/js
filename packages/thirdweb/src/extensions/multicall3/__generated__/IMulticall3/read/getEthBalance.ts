@@ -10,26 +10,20 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "getEthBalance" function.
  */
 export type GetEthBalanceParams = {
-  addr: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "addr";
-    type: "address";
-  }>;
+  addr: AbiParameterToPrimitiveType<{ type: "address"; name: "addr" }>;
 };
 
 export const FN_SELECTOR = "0x4d2301cc" as const;
 const FN_INPUTS = [
   {
-    internalType: "address",
-    name: "addr",
     type: "address",
+    name: "addr",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "uint256",
-    name: "balance",
     type: "uint256",
+    name: "balance",
   },
 ] as const;
 
@@ -41,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetEthBalanceSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetEthBalanceSupported(["0x..."]);
  * ```
  */
@@ -59,7 +52,7 @@ export function isGetEthBalanceSupported(availableSelectors: string[]) {
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeGetEthBalanceParams } "thirdweb/extensions/multicall3";
+ * import { encodeGetEthBalanceParams } from "thirdweb/extensions/multicall3";
  * const result = encodeGetEthBalanceParams({
  *  addr: ...,
  * });
@@ -76,7 +69,7 @@ export function encodeGetEthBalanceParams(options: GetEthBalanceParams) {
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeGetEthBalance } "thirdweb/extensions/multicall3";
+ * import { encodeGetEthBalance } from "thirdweb/extensions/multicall3";
  * const result = encodeGetEthBalance({
  *  addr: ...,
  * });
@@ -99,7 +92,7 @@ export function encodeGetEthBalance(options: GetEthBalanceParams) {
  * @example
  * ```ts
  * import { decodeGetEthBalanceResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetEthBalanceResult("...");
+ * const result = decodeGetEthBalanceResultResult("...");
  * ```
  */
 export function decodeGetEthBalanceResult(result: Hex) {

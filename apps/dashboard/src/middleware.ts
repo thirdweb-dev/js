@@ -41,11 +41,6 @@ export async function middleware(request: NextRequest) {
       );
     }
   }
-  // /login redirect
-  if (pathname === "/login" && authCookie) {
-    // if the user is logged in, redirect to dashboard
-    return redirect(request, "/dashboard");
-  }
 
   // remove '/' in front and then split by '/'
   const paths = pathname.slice(1).split("/");

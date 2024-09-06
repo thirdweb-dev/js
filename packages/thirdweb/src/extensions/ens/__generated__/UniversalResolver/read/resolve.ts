@@ -42,7 +42,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isResolveSupported } from "thirdweb/extensions/ens";
- *
  * const supported = isResolveSupported(["0x..."]);
  * ```
  */
@@ -60,7 +59,7 @@ export function isResolveSupported(availableSelectors: string[]) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeResolveParams } "thirdweb/extensions/ens";
+ * import { encodeResolveParams } from "thirdweb/extensions/ens";
  * const result = encodeResolveParams({
  *  name: ...,
  *  data: ...,
@@ -78,7 +77,7 @@ export function encodeResolveParams(options: ResolveParams) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeResolve } "thirdweb/extensions/ens";
+ * import { encodeResolve } from "thirdweb/extensions/ens";
  * const result = encodeResolve({
  *  name: ...,
  *  data: ...,
@@ -100,7 +99,7 @@ export function encodeResolve(options: ResolveParams) {
  * @example
  * ```ts
  * import { decodeResolveResult } from "thirdweb/extensions/ens";
- * const result = decodeResolveResult("...");
+ * const result = decodeResolveResultResult("...");
  * ```
  */
 export function decodeResolveResult(result: Hex) {

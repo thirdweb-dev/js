@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0x38d52e0f" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "assetTokenAddress",
     type: "address",
-    internalType: "contract ERC20",
+    name: "assetTokenAddress",
   },
 ] as const;
 
@@ -23,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isAssetSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isAssetSupported(["0x..."]);
  * ```
  */
@@ -42,7 +40,7 @@ export function isAssetSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeAssetResult } from "thirdweb/extensions/erc4626";
- * const result = decodeAssetResult("...");
+ * const result = decodeAssetResultResult("...");
  * ```
  */
 export function decodeAssetResult(result: Hex) {

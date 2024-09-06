@@ -1,6 +1,6 @@
-import { Center, Divider, Flex } from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
+import { ChevronDownIcon } from "lucide-react";
 import type { SetStateAction } from "react";
-import { Button } from "tw-components";
 
 interface ShowMoreButtonProps {
   limit: number;
@@ -14,18 +14,16 @@ export const ShowMoreButton: React.FC<ShowMoreButtonProps> = ({
   setShowMoreLimit,
 }) => {
   return (
-    <Flex flexDir="column">
-      <Divider color="borderColor" />
-      <Center>
-        <Button
-          onClick={() => setShowMoreLimit(showMoreLimit + limit)}
-          variant="ghost"
-          my={3}
-          size="sm"
-        >
-          Show more
-        </Button>
-      </Center>
-    </Flex>
+    <div className="flex justify-center py-4 border-t border-border">
+      <Button
+        onClick={() => setShowMoreLimit(showMoreLimit + limit)}
+        variant="ghost"
+        size="sm"
+        className="gap-2"
+      >
+        Show more
+        <ChevronDownIcon className="size-4" />
+      </Button>
+    </div>
   );
 };

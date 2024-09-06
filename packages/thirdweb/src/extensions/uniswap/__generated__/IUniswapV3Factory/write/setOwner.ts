@@ -50,7 +50,7 @@ export function isSetOwnerSupported(availableSelectors: string[]) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeSetOwnerParams } "thirdweb/extensions/uniswap";
+ * import { encodeSetOwnerParams } from "thirdweb/extensions/uniswap";
  * const result = encodeSetOwnerParams({
  *  newOwner: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeSetOwnerParams(options: SetOwnerParams) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeSetOwner } "thirdweb/extensions/uniswap";
+ * import { encodeSetOwner } from "thirdweb/extensions/uniswap";
  * const result = encodeSetOwner({
  *  newOwner: ...,
  * });
@@ -87,6 +87,7 @@ export function encodeSetOwner(options: SetOwnerParams) {
  * @extension UNISWAP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setOwner } from "thirdweb/extensions/uniswap";
  *
  * const transaction = setOwner({
@@ -98,8 +99,7 @@ export function encodeSetOwner(options: SetOwnerParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setOwner(

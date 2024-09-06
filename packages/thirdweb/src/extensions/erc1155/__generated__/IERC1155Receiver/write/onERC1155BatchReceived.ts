@@ -76,7 +76,7 @@ export function isOnERC1155BatchReceivedSupported(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeOnERC1155BatchReceivedParams } "thirdweb/extensions/erc1155";
+ * import { encodeOnERC1155BatchReceivedParams } from "thirdweb/extensions/erc1155";
  * const result = encodeOnERC1155BatchReceivedParams({
  *  operator: ...,
  *  from: ...,
@@ -105,7 +105,7 @@ export function encodeOnERC1155BatchReceivedParams(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeOnERC1155BatchReceived } "thirdweb/extensions/erc1155";
+ * import { encodeOnERC1155BatchReceived } from "thirdweb/extensions/erc1155";
  * const result = encodeOnERC1155BatchReceived({
  *  operator: ...,
  *  from: ...,
@@ -133,6 +133,7 @@ export function encodeOnERC1155BatchReceived(
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { onERC1155BatchReceived } from "thirdweb/extensions/erc1155";
  *
  * const transaction = onERC1155BatchReceived({
@@ -148,8 +149,7 @@ export function encodeOnERC1155BatchReceived(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function onERC1155BatchReceived(

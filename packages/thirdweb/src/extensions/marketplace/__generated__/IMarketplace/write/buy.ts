@@ -76,7 +76,7 @@ export function isBuySupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeBuyParams } "thirdweb/extensions/marketplace";
+ * import { encodeBuyParams } from "thirdweb/extensions/marketplace";
  * const result = encodeBuyParams({
  *  listingId: ...,
  *  buyFor: ...,
@@ -103,7 +103,7 @@ export function encodeBuyParams(options: BuyParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeBuy } "thirdweb/extensions/marketplace";
+ * import { encodeBuy } from "thirdweb/extensions/marketplace";
  * const result = encodeBuy({
  *  listingId: ...,
  *  buyFor: ...,
@@ -127,6 +127,7 @@ export function encodeBuy(options: BuyParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { buy } from "thirdweb/extensions/marketplace";
  *
  * const transaction = buy({
@@ -142,8 +143,7 @@ export function encodeBuy(options: BuyParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function buy(

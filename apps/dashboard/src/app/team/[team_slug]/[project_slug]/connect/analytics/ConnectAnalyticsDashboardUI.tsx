@@ -7,19 +7,20 @@ import { WalletConnectorsChartCard } from "./_components/WalletConnectorsChartCa
 import { WalletDistributionChartCard } from "./_components/WalletDistributionChartCard";
 
 export function ConnectAnalyticsDashboardUI(props: {
-  walletStats: WalletStats;
+  walletUsage: WalletStats[];
+  aggregateWalletUsage: WalletStats[];
   isLoading: boolean;
 }) {
   const { totalWallets, uniqueWallets } = useMemo(() => {
-    return props.walletStats.timeSeries.reduce(
+    return props.aggregateWalletUsage.reduce(
       (acc, curr) => {
-        acc.totalWallets += curr.totalWallets;
-        acc.uniqueWallets += curr.uniqueWallets;
+        acc.totalWallets += curr.totalConnections;
+        acc.uniqueWallets += curr.uniqueWalletsConnected;
         return acc;
       },
       { uniqueWallets: 0, totalWallets: 0 },
     );
-  }, [props.walletStats]);
+  }, [props.aggregateWalletUsage]);
 
   return (
     <div className="flex flex-col gap-4 lg:gap-6">
@@ -34,17 +35,17 @@ export function ConnectAnalyticsDashboardUI(props: {
       </div>
 
       <DailyConnectionsChartCard
-        walletStats={props.walletStats}
+        walletStats={props.walletUsage}
         isLoading={props.isLoading}
       />
 
       <WalletConnectorsChartCard
-        walletStats={props.walletStats}
+        walletStats={props.walletUsage}
         isLoading={props.isLoading}
       />
 
       <WalletDistributionChartCard
-        walletStats={props.walletStats}
+        walletStats={props.walletUsage}
         isLoading={props.isLoading}
       />
     </div>
@@ -60,7 +61,7 @@ const Stat: React.FC<{
     <dl className="bg-muted/50 rounded-lg border border-border p-4 lg:p-6 flex items-center gap-4 justify-between">
       <div>
         <dd className="text-3xl lg:text-5xl font-semibold tracking-tight">
-          {value}
+          {value?.toLocaleString()}
         </dd>
         <dt className="text-sm lg:text-lg font-medium text-muted-foreground tracking-tight">
           {label}

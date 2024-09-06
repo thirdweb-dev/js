@@ -96,7 +96,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isVerifySignerPermissionRequestSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isVerifySignerPermissionRequestSupported(["0x..."]);
  * ```
  */
@@ -116,7 +115,7 @@ export function isVerifySignerPermissionRequestSupported(
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeVerifySignerPermissionRequestParams } "thirdweb/extensions/erc4337";
+ * import { encodeVerifySignerPermissionRequestParams } from "thirdweb/extensions/erc4337";
  * const result = encodeVerifySignerPermissionRequestParams({
  *  req: ...,
  *  signature: ...,
@@ -136,7 +135,7 @@ export function encodeVerifySignerPermissionRequestParams(
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeVerifySignerPermissionRequest } "thirdweb/extensions/erc4337";
+ * import { encodeVerifySignerPermissionRequest } from "thirdweb/extensions/erc4337";
  * const result = encodeVerifySignerPermissionRequest({
  *  req: ...,
  *  signature: ...,
@@ -162,7 +161,7 @@ export function encodeVerifySignerPermissionRequest(
  * @example
  * ```ts
  * import { decodeVerifySignerPermissionRequestResult } from "thirdweb/extensions/erc4337";
- * const result = decodeVerifySignerPermissionRequestResult("...");
+ * const result = decodeVerifySignerPermissionRequestResultResult("...");
  * ```
  */
 export function decodeVerifySignerPermissionRequestResult(result: Hex) {

@@ -42,7 +42,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetContentURISupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetContentURISupported(["0x..."]);
  * ```
  */
@@ -60,7 +59,7 @@ export function isGetContentURISupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetContentURIParams } "thirdweb/extensions/lens";
+ * import { encodeGetContentURIParams } from "thirdweb/extensions/lens";
  * const result = encodeGetContentURIParams({
  *  profileId: ...,
  *  pubId: ...,
@@ -78,7 +77,7 @@ export function encodeGetContentURIParams(options: GetContentURIParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetContentURI } "thirdweb/extensions/lens";
+ * import { encodeGetContentURI } from "thirdweb/extensions/lens";
  * const result = encodeGetContentURI({
  *  profileId: ...,
  *  pubId: ...,
@@ -102,7 +101,7 @@ export function encodeGetContentURI(options: GetContentURIParams) {
  * @example
  * ```ts
  * import { decodeGetContentURIResult } from "thirdweb/extensions/lens";
- * const result = decodeGetContentURIResult("...");
+ * const result = decodeGetContentURIResultResult("...");
  * ```
  */
 export function decodeGetContentURIResult(result: Hex) {

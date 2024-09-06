@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTotalReleasedSupported } from "thirdweb/extensions/split";
- *
  * const supported = isTotalReleasedSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isTotalReleasedSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeTotalReleasedResult } from "thirdweb/extensions/split";
- * const result = decodeTotalReleasedResult("...");
+ * const result = decodeTotalReleasedResultResult("...");
  * ```
  */
 export function decodeTotalReleasedResult(result: Hex) {

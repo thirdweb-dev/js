@@ -13,12 +13,11 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type AirdropNativeTokenParams = WithOverrides<{
   contents: AbiParameterToPrimitiveType<{
-    name: "_contents";
     type: "tuple[]";
-    internalType: "struct Airdrop.AirdropContentERC20[]";
+    name: "_contents";
     components: [
-      { name: "recipient"; type: "address"; internalType: "address" },
-      { name: "amount"; type: "uint256"; internalType: "uint256" },
+      { type: "address"; name: "recipient" },
+      { type: "uint256"; name: "amount" },
     ];
   }>;
 }>;
@@ -26,19 +25,16 @@ export type AirdropNativeTokenParams = WithOverrides<{
 export const FN_SELECTOR = "0x0d5818f7" as const;
 const FN_INPUTS = [
   {
-    name: "_contents",
     type: "tuple[]",
-    internalType: "struct Airdrop.AirdropContentERC20[]",
+    name: "_contents",
     components: [
       {
-        name: "recipient",
         type: "address",
-        internalType: "address",
+        name: "recipient",
       },
       {
-        name: "amount",
         type: "uint256",
-        internalType: "uint256",
+        name: "amount",
       },
     ],
   },
@@ -71,7 +67,7 @@ export function isAirdropNativeTokenSupported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropNativeTokenParams } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropNativeTokenParams } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropNativeTokenParams({
  *  contents: ...,
  * });
@@ -90,7 +86,7 @@ export function encodeAirdropNativeTokenParams(
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropNativeToken } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropNativeToken } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropNativeToken({
  *  contents: ...,
  * });
@@ -112,6 +108,7 @@ export function encodeAirdropNativeToken(options: AirdropNativeTokenParams) {
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { airdropNativeToken } from "thirdweb/extensions/airdrop";
  *
  * const transaction = airdropNativeToken({
@@ -123,8 +120,7 @@ export function encodeAirdropNativeToken(options: AirdropNativeTokenParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function airdropNativeToken(

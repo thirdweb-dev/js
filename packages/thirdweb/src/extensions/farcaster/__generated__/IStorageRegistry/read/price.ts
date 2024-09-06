@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPriceSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isPriceSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isPriceSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodePriceParams } "thirdweb/extensions/farcaster";
+ * import { encodePriceParams } from "thirdweb/extensions/farcaster";
  * const result = encodePriceParams({
  *  units: ...,
  * });
@@ -69,7 +68,7 @@ export function encodePriceParams(options: PriceParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodePrice } "thirdweb/extensions/farcaster";
+ * import { encodePrice } from "thirdweb/extensions/farcaster";
  * const result = encodePrice({
  *  units: ...,
  * });
@@ -90,7 +89,7 @@ export function encodePrice(options: PriceParams) {
  * @example
  * ```ts
  * import { decodePriceResult } from "thirdweb/extensions/farcaster";
- * const result = decodePriceResult("...");
+ * const result = decodePriceResultResult("...");
  * ```
  */
 export function decodePriceResult(result: Hex) {

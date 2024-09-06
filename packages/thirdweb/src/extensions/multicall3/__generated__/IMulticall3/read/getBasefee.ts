@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0x3e64a696" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "uint256",
-    name: "basefee",
     type: "uint256",
+    name: "basefee",
   },
 ] as const;
 
@@ -23,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetBasefeeSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetBasefeeSupported(["0x..."]);
  * ```
  */
@@ -42,7 +40,7 @@ export function isGetBasefeeSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetBasefeeResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetBasefeeResult("...");
+ * const result = decodeGetBasefeeResultResult("...");
  * ```
  */
 export function decodeGetBasefeeResult(result: Hex) {

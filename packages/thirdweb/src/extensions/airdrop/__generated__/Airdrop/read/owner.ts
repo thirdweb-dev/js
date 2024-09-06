@@ -9,9 +9,7 @@ export const FN_SELECTOR = "0x8da5cb5b" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "address",
-    internalType: "address",
   },
 ] as const;
 
@@ -23,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isOwnerSupported } from "thirdweb/extensions/airdrop";
- *
  * const supported = isOwnerSupported(["0x..."]);
  * ```
  */
@@ -42,7 +39,7 @@ export function isOwnerSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeOwnerResult } from "thirdweb/extensions/airdrop";
- * const result = decodeOwnerResult("...");
+ * const result = decodeOwnerResultResult("...");
  * ```
  */
 export function decodeOwnerResult(result: Hex) {

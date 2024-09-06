@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetActiveClaimConditionIdSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isGetActiveClaimConditionIdSupported(["0x..."]);
  * ```
  */
@@ -54,7 +53,7 @@ export function isGetActiveClaimConditionIdSupported(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeGetActiveClaimConditionIdParams } "thirdweb/extensions/erc1155";
+ * import { encodeGetActiveClaimConditionIdParams } from "thirdweb/extensions/erc1155";
  * const result = encodeGetActiveClaimConditionIdParams({
  *  tokenId: ...,
  * });
@@ -73,7 +72,7 @@ export function encodeGetActiveClaimConditionIdParams(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeGetActiveClaimConditionId } "thirdweb/extensions/erc1155";
+ * import { encodeGetActiveClaimConditionId } from "thirdweb/extensions/erc1155";
  * const result = encodeGetActiveClaimConditionId({
  *  tokenId: ...,
  * });
@@ -98,7 +97,7 @@ export function encodeGetActiveClaimConditionId(
  * @example
  * ```ts
  * import { decodeGetActiveClaimConditionIdResult } from "thirdweb/extensions/erc1155";
- * const result = decodeGetActiveClaimConditionIdResult("...");
+ * const result = decodeGetActiveClaimConditionIdResultResult("...");
  * ```
  */
 export function decodeGetActiveClaimConditionIdResult(result: Hex) {

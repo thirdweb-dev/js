@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isFeeAmountTickSpacingSupported } from "thirdweb/extensions/uniswap";
- *
  * const supported = isFeeAmountTickSpacingSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isFeeAmountTickSpacingSupported(availableSelectors: string[]) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeFeeAmountTickSpacingParams } "thirdweb/extensions/uniswap";
+ * import { encodeFeeAmountTickSpacingParams } from "thirdweb/extensions/uniswap";
  * const result = encodeFeeAmountTickSpacingParams({
  *  fee: ...,
  * });
@@ -71,7 +70,7 @@ export function encodeFeeAmountTickSpacingParams(
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeFeeAmountTickSpacing } "thirdweb/extensions/uniswap";
+ * import { encodeFeeAmountTickSpacing } from "thirdweb/extensions/uniswap";
  * const result = encodeFeeAmountTickSpacing({
  *  fee: ...,
  * });
@@ -96,7 +95,7 @@ export function encodeFeeAmountTickSpacing(
  * @example
  * ```ts
  * import { decodeFeeAmountTickSpacingResult } from "thirdweb/extensions/uniswap";
- * const result = decodeFeeAmountTickSpacingResult("...");
+ * const result = decodeFeeAmountTickSpacingResultResult("...");
  * ```
  */
 export function decodeFeeAmountTickSpacingResult(result: Hex) {

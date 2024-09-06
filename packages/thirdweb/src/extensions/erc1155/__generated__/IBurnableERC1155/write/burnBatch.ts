@@ -60,7 +60,7 @@ export function isBurnBatchSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeBurnBatchParams } "thirdweb/extensions/erc1155";
+ * import { encodeBurnBatchParams } from "thirdweb/extensions/erc1155";
  * const result = encodeBurnBatchParams({
  *  account: ...,
  *  ids: ...,
@@ -83,7 +83,7 @@ export function encodeBurnBatchParams(options: BurnBatchParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeBurnBatch } "thirdweb/extensions/erc1155";
+ * import { encodeBurnBatch } from "thirdweb/extensions/erc1155";
  * const result = encodeBurnBatch({
  *  account: ...,
  *  ids: ...,
@@ -107,6 +107,7 @@ export function encodeBurnBatch(options: BurnBatchParams) {
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { burnBatch } from "thirdweb/extensions/erc1155";
  *
  * const transaction = burnBatch({
@@ -120,8 +121,7 @@ export function encodeBurnBatch(options: BurnBatchParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function burnBatch(

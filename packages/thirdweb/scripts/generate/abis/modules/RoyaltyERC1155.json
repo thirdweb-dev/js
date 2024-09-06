@@ -1,0 +1,14 @@
+[
+  "function encodeBytesOnInstall(address royaltyRecipient, uint16 royaltyBps, address transferValidator) pure returns (bytes)",
+  "function getDefaultRoyaltyInfo() view returns (address, uint16)",
+  "function getRoyaltyInfoForToken(uint256 _tokenId) view returns (address, uint16)",
+  "function getTransferValidationFunction() pure returns (bytes4 functionSignature, bool isViewFunction)",
+  "function getTransferValidator() view returns (address validator)",
+  "function royaltyInfo(uint256 _tokenId, uint256 _salePrice) view returns (address receiver, uint256 royaltyAmount)",
+  "function setDefaultRoyaltyInfo(address _royaltyRecipient, uint16 _royaltyBps)",
+  "function setRoyaltyInfoForToken(uint256 _tokenId, address _recipient, uint16 _bps)",
+  "function setTransferValidator(address validator)",
+  "event DefaultRoyaltyUpdated(address indexed recipient, uint16 bps)",
+  "event TokenRoyaltyUpdated(uint256 indexed tokenId, address indexed recipient, uint16 bps)",
+  "event TransferValidatorUpdated(address oldValidator, address newValidator)"
+]

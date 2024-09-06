@@ -196,21 +196,14 @@ export async function isLoggedIn(address: string) {
     cookieStore.delete(cookieName);
     return false;
   }
-  // if the address matches what we expect, we're logged in
-  if (getAddress(json.data.creatorWalletAddress) === getAddress(address)) {
-    // set the active account cookie again
-    cookieStore.set(COOKIE_ACTIVE_ACCOUNT, getAddress(address), {
-      httpOnly: false,
-      secure: true,
-      sameSite: "strict",
-      // 3 days
-      maxAge: 3 * 24 * 60 * 60,
-    });
-    return true;
-  }
 
-  // not logged in
-  // clear the cookie
-  cookieStore.delete(cookieName);
-  return false;
+  // set the active account cookie again
+  cookieStore.set(COOKIE_ACTIVE_ACCOUNT, getAddress(address), {
+    httpOnly: false,
+    secure: true,
+    sameSite: "strict",
+    // 3 days
+    maxAge: 3 * 24 * 60 * 60,
+  });
+  return true;
 }

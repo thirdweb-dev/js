@@ -65,7 +65,7 @@ export function isCreatePoolSupported(availableSelectors: string[]) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeCreatePoolParams } "thirdweb/extensions/uniswap";
+ * import { encodeCreatePoolParams } from "thirdweb/extensions/uniswap";
  * const result = encodeCreatePoolParams({
  *  tokenA: ...,
  *  tokenB: ...,
@@ -88,7 +88,7 @@ export function encodeCreatePoolParams(options: CreatePoolParams) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeCreatePool } "thirdweb/extensions/uniswap";
+ * import { encodeCreatePool } from "thirdweb/extensions/uniswap";
  * const result = encodeCreatePool({
  *  tokenA: ...,
  *  tokenB: ...,
@@ -112,6 +112,7 @@ export function encodeCreatePool(options: CreatePoolParams) {
  * @extension UNISWAP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { createPool } from "thirdweb/extensions/uniswap";
  *
  * const transaction = createPool({
@@ -125,8 +126,7 @@ export function encodeCreatePool(options: CreatePoolParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function createPool(

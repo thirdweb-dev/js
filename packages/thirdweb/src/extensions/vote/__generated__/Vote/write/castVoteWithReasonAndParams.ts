@@ -74,7 +74,7 @@ export function isCastVoteWithReasonAndParamsSupported(
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeCastVoteWithReasonAndParamsParams } "thirdweb/extensions/vote";
+ * import { encodeCastVoteWithReasonAndParamsParams } from "thirdweb/extensions/vote";
  * const result = encodeCastVoteWithReasonAndParamsParams({
  *  proposalId: ...,
  *  support: ...,
@@ -101,7 +101,7 @@ export function encodeCastVoteWithReasonAndParamsParams(
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeCastVoteWithReasonAndParams } "thirdweb/extensions/vote";
+ * import { encodeCastVoteWithReasonAndParams } from "thirdweb/extensions/vote";
  * const result = encodeCastVoteWithReasonAndParams({
  *  proposalId: ...,
  *  support: ...,
@@ -128,6 +128,7 @@ export function encodeCastVoteWithReasonAndParams(
  * @extension VOTE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { castVoteWithReasonAndParams } from "thirdweb/extensions/vote";
  *
  * const transaction = castVoteWithReasonAndParams({
@@ -142,8 +143,7 @@ export function encodeCastVoteWithReasonAndParams(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function castVoteWithReasonAndParams(

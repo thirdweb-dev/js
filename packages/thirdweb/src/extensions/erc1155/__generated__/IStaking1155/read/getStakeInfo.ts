@@ -43,7 +43,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetStakeInfoSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isGetStakeInfoSupported(["0x..."]);
  * ```
  */
@@ -61,7 +60,7 @@ export function isGetStakeInfoSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeGetStakeInfoParams } "thirdweb/extensions/erc1155";
+ * import { encodeGetStakeInfoParams } from "thirdweb/extensions/erc1155";
  * const result = encodeGetStakeInfoParams({
  *  staker: ...,
  * });
@@ -78,7 +77,7 @@ export function encodeGetStakeInfoParams(options: GetStakeInfoParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeGetStakeInfo } "thirdweb/extensions/erc1155";
+ * import { encodeGetStakeInfo } from "thirdweb/extensions/erc1155";
  * const result = encodeGetStakeInfo({
  *  staker: ...,
  * });
@@ -101,7 +100,7 @@ export function encodeGetStakeInfo(options: GetStakeInfoParams) {
  * @example
  * ```ts
  * import { decodeGetStakeInfoResult } from "thirdweb/extensions/erc1155";
- * const result = decodeGetStakeInfoResult("...");
+ * const result = decodeGetStakeInfoResultResult("...");
  * ```
  */
 export function decodeGetStakeInfoResult(result: Hex) {

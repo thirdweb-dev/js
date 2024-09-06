@@ -63,7 +63,7 @@ export function isRevealSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeRevealParams } "thirdweb/extensions/erc721";
+ * import { encodeRevealParams } from "thirdweb/extensions/erc721";
  * const result = encodeRevealParams({
  *  identifier: ...,
  *  key: ...,
@@ -81,7 +81,7 @@ export function encodeRevealParams(options: RevealParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeReveal } "thirdweb/extensions/erc721";
+ * import { encodeReveal } from "thirdweb/extensions/erc721";
  * const result = encodeReveal({
  *  identifier: ...,
  *  key: ...,
@@ -102,6 +102,7 @@ export function encodeReveal(options: RevealParams) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { reveal } from "thirdweb/extensions/erc721";
  *
  * const transaction = reveal({
@@ -114,8 +115,7 @@ export function encodeReveal(options: RevealParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function reveal(

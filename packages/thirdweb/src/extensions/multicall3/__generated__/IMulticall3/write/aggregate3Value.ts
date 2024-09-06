@@ -13,65 +13,56 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type Aggregate3ValueParams = WithOverrides<{
   calls: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "target"; type: "address" },
-      { internalType: "bool"; name: "allowFailure"; type: "bool" },
-      { internalType: "uint256"; name: "value"; type: "uint256" },
-      { internalType: "bytes"; name: "callData"; type: "bytes" },
-    ];
-    internalType: "struct Multicall3.Call3Value[]";
-    name: "calls";
     type: "tuple[]";
+    name: "calls";
+    components: [
+      { type: "address"; name: "target" },
+      { type: "bool"; name: "allowFailure" },
+      { type: "uint256"; name: "value" },
+      { type: "bytes"; name: "callData" },
+    ];
   }>;
 }>;
 
 export const FN_SELECTOR = "0x174dea71" as const;
 const FN_INPUTS = [
   {
+    type: "tuple[]",
+    name: "calls",
     components: [
       {
-        internalType: "address",
-        name: "target",
         type: "address",
+        name: "target",
       },
       {
-        internalType: "bool",
-        name: "allowFailure",
         type: "bool",
+        name: "allowFailure",
       },
       {
-        internalType: "uint256",
-        name: "value",
         type: "uint256",
+        name: "value",
       },
       {
-        internalType: "bytes",
-        name: "callData",
         type: "bytes",
+        name: "callData",
       },
     ],
-    internalType: "struct Multicall3.Call3Value[]",
-    name: "calls",
-    type: "tuple[]",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
+    name: "returnData",
     components: [
       {
-        internalType: "bool",
-        name: "success",
         type: "bool",
+        name: "success",
       },
       {
-        internalType: "bytes",
-        name: "returnData",
         type: "bytes",
+        name: "returnData",
       },
     ],
-    internalType: "struct Multicall3.Result[]",
-    name: "returnData",
-    type: "tuple[]",
   },
 ] as const;
 
@@ -101,7 +92,7 @@ export function isAggregate3ValueSupported(availableSelectors: string[]) {
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeAggregate3ValueParams } "thirdweb/extensions/multicall3";
+ * import { encodeAggregate3ValueParams } from "thirdweb/extensions/multicall3";
  * const result = encodeAggregate3ValueParams({
  *  calls: ...,
  * });
@@ -118,7 +109,7 @@ export function encodeAggregate3ValueParams(options: Aggregate3ValueParams) {
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeAggregate3Value } "thirdweb/extensions/multicall3";
+ * import { encodeAggregate3Value } from "thirdweb/extensions/multicall3";
  * const result = encodeAggregate3Value({
  *  calls: ...,
  * });
@@ -140,6 +131,7 @@ export function encodeAggregate3Value(options: Aggregate3ValueParams) {
  * @extension MULTICALL3
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { aggregate3Value } from "thirdweb/extensions/multicall3";
  *
  * const transaction = aggregate3Value({
@@ -151,8 +143,7 @@ export function encodeAggregate3Value(options: Aggregate3ValueParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function aggregate3Value(

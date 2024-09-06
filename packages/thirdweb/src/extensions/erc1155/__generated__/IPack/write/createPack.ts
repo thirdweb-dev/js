@@ -123,7 +123,7 @@ export function isCreatePackSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeCreatePackParams } "thirdweb/extensions/erc1155";
+ * import { encodeCreatePackParams } from "thirdweb/extensions/erc1155";
  * const result = encodeCreatePackParams({
  *  contents: ...,
  *  numOfRewardUnits: ...,
@@ -152,7 +152,7 @@ export function encodeCreatePackParams(options: CreatePackParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeCreatePack } "thirdweb/extensions/erc1155";
+ * import { encodeCreatePack } from "thirdweb/extensions/erc1155";
  * const result = encodeCreatePack({
  *  contents: ...,
  *  numOfRewardUnits: ...,
@@ -179,6 +179,7 @@ export function encodeCreatePack(options: CreatePackParams) {
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { createPack } from "thirdweb/extensions/erc1155";
  *
  * const transaction = createPack({
@@ -195,8 +196,7 @@ export function encodeCreatePack(options: CreatePackParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function createPack(

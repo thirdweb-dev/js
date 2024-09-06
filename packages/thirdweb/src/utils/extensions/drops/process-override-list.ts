@@ -16,7 +16,14 @@ export async function processOverrideList(options: {
   overrides: OverrideEntry[];
   tokenDecimals: number;
   shardNybbles?: number;
+  hashEntry?: (options: {
+    entry: OverrideEntry;
+    chain: Chain;
+    client: ThirdwebClient;
+    tokenDecimals: number;
+  }) => Promise<Hex>;
 }) {
+  const hashEntryFn = options.hashEntry || hashEntry;
   const shardNybbles = options.shardNybbles || 2;
   // 2. shard them into a map where the key is the first n digits of the address
   const shards: Record<string, OverrideEntry[]> = {};
@@ -37,7 +44,7 @@ export async function processOverrideList(options: {
       new MerkleTree(
         await Promise.all(
           entries.map(async (entry) => {
-            return hashEntry({
+            return hashEntryFn({
               entry,
               chain: options.chain,
               client: options.client,

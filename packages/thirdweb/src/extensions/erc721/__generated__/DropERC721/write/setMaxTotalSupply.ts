@@ -53,7 +53,7 @@ export function isSetMaxTotalSupplySupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeSetMaxTotalSupplyParams } "thirdweb/extensions/erc721";
+ * import { encodeSetMaxTotalSupplyParams } from "thirdweb/extensions/erc721";
  * const result = encodeSetMaxTotalSupplyParams({
  *  maxTotalSupply: ...,
  * });
@@ -72,7 +72,7 @@ export function encodeSetMaxTotalSupplyParams(
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeSetMaxTotalSupply } "thirdweb/extensions/erc721";
+ * import { encodeSetMaxTotalSupply } from "thirdweb/extensions/erc721";
  * const result = encodeSetMaxTotalSupply({
  *  maxTotalSupply: ...,
  * });
@@ -94,6 +94,7 @@ export function encodeSetMaxTotalSupply(options: SetMaxTotalSupplyParams) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setMaxTotalSupply } from "thirdweb/extensions/erc721";
  *
  * const transaction = setMaxTotalSupply({
@@ -105,8 +106,7 @@ export function encodeSetMaxTotalSupply(options: SetMaxTotalSupplyParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setMaxTotalSupply(

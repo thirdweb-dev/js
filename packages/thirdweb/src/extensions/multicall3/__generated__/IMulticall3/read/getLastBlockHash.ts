@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0x27e86d6e" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "bytes32",
-    name: "blockHash",
     type: "bytes32",
+    name: "blockHash",
   },
 ] as const;
 
@@ -23,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetLastBlockHashSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetLastBlockHashSupported(["0x..."]);
  * ```
  */
@@ -42,7 +40,7 @@ export function isGetLastBlockHashSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetLastBlockHashResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetLastBlockHashResult("...");
+ * const result = decodeGetLastBlockHashResultResult("...");
  * ```
  */
 export function decodeGetLastBlockHashResult(result: Hex) {

@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isDecimalsSupported } from "thirdweb/extensions/erc20";
- *
  * const supported = isDecimalsSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isDecimalsSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeDecimalsResult } from "thirdweb/extensions/erc20";
- * const result = decodeDecimalsResult("...");
+ * const result = decodeDecimalsResultResult("...");
  * ```
  */
 export function decodeDecimalsResult(result: Hex) {

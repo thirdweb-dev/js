@@ -10,26 +10,20 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "previewDeposit" function.
  */
 export type PreviewDepositParams = {
-  assets: AbiParameterToPrimitiveType<{
-    name: "assets";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  assets: AbiParameterToPrimitiveType<{ type: "uint256"; name: "assets" }>;
 };
 
 export const FN_SELECTOR = "0xef8b30f7" as const;
 const FN_INPUTS = [
   {
-    name: "assets",
     type: "uint256",
-    internalType: "uint256",
+    name: "assets",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "shares",
     type: "uint256",
-    internalType: "uint256",
+    name: "shares",
   },
 ] as const;
 
@@ -41,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPreviewDepositSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isPreviewDepositSupported(["0x..."]);
  * ```
  */
@@ -59,7 +52,7 @@ export function isPreviewDepositSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewDepositParams } "thirdweb/extensions/erc4626";
+ * import { encodePreviewDepositParams } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewDepositParams({
  *  assets: ...,
  * });
@@ -76,7 +69,7 @@ export function encodePreviewDepositParams(options: PreviewDepositParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewDeposit } "thirdweb/extensions/erc4626";
+ * import { encodePreviewDeposit } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewDeposit({
  *  assets: ...,
  * });
@@ -99,7 +92,7 @@ export function encodePreviewDeposit(options: PreviewDepositParams) {
  * @example
  * ```ts
  * import { decodePreviewDepositResult } from "thirdweb/extensions/erc4626";
- * const result = decodePreviewDepositResult("...");
+ * const result = decodePreviewDepositResultResult("...");
  * ```
  */
 export function decodePreviewDepositResult(result: Hex) {

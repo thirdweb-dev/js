@@ -12,6 +12,10 @@ const walletProviders: SidebarLink = (() => {
 				href: `${parentSlug}/in-app-wallet`,
 			},
 			{
+				name: "Ecosystem Wallet",
+				href: `${parentSlug}/ecosystem-wallet`,
+			},
+			{
 				name: "Account Abstraction",
 				href: `${parentSlug}/account-abstraction`,
 			},

@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isBaseURIIndicesSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isBaseURIIndicesSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isBaseURIIndicesSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeBaseURIIndicesParams } "thirdweb/extensions/erc721";
+ * import { encodeBaseURIIndicesParams } from "thirdweb/extensions/erc721";
  * const result = encodeBaseURIIndicesParams({
  *  index: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeBaseURIIndicesParams(options: BaseURIIndicesParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeBaseURIIndices } "thirdweb/extensions/erc721";
+ * import { encodeBaseURIIndices } from "thirdweb/extensions/erc721";
  * const result = encodeBaseURIIndices({
  *  index: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeBaseURIIndices(options: BaseURIIndicesParams) {
  * @example
  * ```ts
  * import { decodeBaseURIIndicesResult } from "thirdweb/extensions/erc721";
- * const result = decodeBaseURIIndicesResult("...");
+ * const result = decodeBaseURIIndicesResultResult("...");
  * ```
  */
 export function decodeBaseURIIndicesResult(result: Hex) {

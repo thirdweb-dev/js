@@ -44,7 +44,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetFeeInfoSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isGetFeeInfoSupported(["0x..."]);
  * ```
  */
@@ -62,7 +61,7 @@ export function isGetFeeInfoSupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetFeeInfoParams } "thirdweb/extensions/thirdweb";
+ * import { encodeGetFeeInfoParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetFeeInfoParams({
  *  proxy: ...,
  *  type: ...,
@@ -80,7 +79,7 @@ export function encodeGetFeeInfoParams(options: GetFeeInfoParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetFeeInfo } "thirdweb/extensions/thirdweb";
+ * import { encodeGetFeeInfo } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetFeeInfo({
  *  proxy: ...,
  *  type: ...,
@@ -104,7 +103,7 @@ export function encodeGetFeeInfo(options: GetFeeInfoParams) {
  * @example
  * ```ts
  * import { decodeGetFeeInfoResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeGetFeeInfoResult("...");
+ * const result = decodeGetFeeInfoResultResult("...");
  * ```
  */
 export function decodeGetFeeInfoResult(result: Hex) {

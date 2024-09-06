@@ -58,7 +58,7 @@ export function isEnableFeeAmountSupported(availableSelectors: string[]) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeEnableFeeAmountParams } "thirdweb/extensions/uniswap";
+ * import { encodeEnableFeeAmountParams } from "thirdweb/extensions/uniswap";
  * const result = encodeEnableFeeAmountParams({
  *  fee: ...,
  *  tickSpacing: ...,
@@ -76,7 +76,7 @@ export function encodeEnableFeeAmountParams(options: EnableFeeAmountParams) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeEnableFeeAmount } "thirdweb/extensions/uniswap";
+ * import { encodeEnableFeeAmount } from "thirdweb/extensions/uniswap";
  * const result = encodeEnableFeeAmount({
  *  fee: ...,
  *  tickSpacing: ...,
@@ -99,6 +99,7 @@ export function encodeEnableFeeAmount(options: EnableFeeAmountParams) {
  * @extension UNISWAP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { enableFeeAmount } from "thirdweb/extensions/uniswap";
  *
  * const transaction = enableFeeAmount({
@@ -111,8 +112,7 @@ export function encodeEnableFeeAmount(options: EnableFeeAmountParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function enableFeeAmount(

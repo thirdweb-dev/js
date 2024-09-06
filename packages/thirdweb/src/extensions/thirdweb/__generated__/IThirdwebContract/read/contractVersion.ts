@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isContractVersionSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isContractVersionSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isContractVersionSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeContractVersionResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeContractVersionResult("...");
+ * const result = decodeContractVersionResultResult("...");
  * ```
  */
 export function decodeContractVersionResult(result: Hex) {

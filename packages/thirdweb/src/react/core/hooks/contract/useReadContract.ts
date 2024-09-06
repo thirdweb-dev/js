@@ -1,5 +1,4 @@
 import {
-  type UseQueryOptions,
   type UseQueryResult,
   queryOptions as defineQuery,
   useQuery,
@@ -18,14 +17,12 @@ import type {
 import type { PreparedMethod } from "../../../../utils/abi/prepare-method.js";
 import { getFunctionId } from "../../../../utils/function-id.js";
 import { stringify } from "../../../../utils/json.js";
-import type { Prettify } from "../../../../utils/type-utils.js";
 
-type PickedQueryOptions = Prettify<
-  Pick<UseQueryOptions, "enabled"> & {
-    refetchInterval?: number;
-    retry?: number;
-  }
->;
+type PickedQueryOptions = {
+  enabled?: boolean;
+  refetchInterval?: number;
+  retry?: number;
+};
 
 /**
  * A hook to read state from a contract that automatically updates when the contract changes.

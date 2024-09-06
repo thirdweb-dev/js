@@ -44,7 +44,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAllSignersSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isGetAllSignersSupported(["0x..."]);
  * ```
  */
@@ -63,7 +62,7 @@ export function isGetAllSignersSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetAllSignersResult } from "thirdweb/extensions/erc4337";
- * const result = decodeGetAllSignersResult("...");
+ * const result = decodeGetAllSignersResultResult("...");
  * ```
  */
 export function decodeGetAllSignersResult(result: Hex) {

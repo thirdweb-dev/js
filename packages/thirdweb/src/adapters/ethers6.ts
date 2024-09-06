@@ -235,7 +235,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
  * @returns The ethers.js provider.
  * @internal
  */
-function toEthersProvider(
+export function toEthersProvider(
   ethers: Ethers6,
   client: ThirdwebClient,
   chain: Chain,
@@ -260,7 +260,7 @@ function toEthersProvider(
  * @returns A Promise that resolves to an ethers.js Contract.
  * @internal
  */
-async function toEthersContract<abi extends Abi = []>(
+export async function toEthersContract<abi extends Abi = []>(
   ethers: Ethers6,
   twContract: ThirdwebContract<abi>,
   account?: Account,
@@ -302,7 +302,7 @@ type FromEthersContractOptions = {
  * @returns A promise that resolves to a ThirdwebContract instance.
  * @internal
  */
-async function fromEthersContract<abi extends Abi>({
+export async function fromEthersContract<abi extends Abi>({
   client,
   ethersContract,
   chain,
@@ -321,7 +321,9 @@ async function fromEthersContract<abi extends Abi>({
  * @returns - A Promise that resolves to an Account object.
  * @internal
  */
-async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
+export async function fromEthersSigner(
+  signer: ethers6.Signer,
+): Promise<Account> {
   const address = await signer.getAddress();
   const account: Account = {
     address,
@@ -491,9 +493,7 @@ export function toEthersSigner(
  * @returns The aligned transaction object.
  * @internal
  */
-function alignTxToEthers(
-  tx: TransactionSerializable,
-): ethers6.TransactionRequest {
+function alignTxToEthers(tx: TransactionSerializable) {
   const { type: viemType, ...rest } = tx;
 
   // massage "type" to fit ethers
@@ -519,8 +519,7 @@ function alignTxToEthers(
   return {
     ...rest,
     type,
-    accessList: tx.accessList as ethers6.AccessListish | null | undefined,
-  };
+  } as ethers6.TransactionRequest;
 }
 
 async function alignTxFromEthers(options: {

@@ -14,8 +14,9 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
 }) => {
   const { name, ...restOfInputProps } = inputProps;
   const inputName = name as string;
+  const [_localInput, setLocalInput] = useState<string | undefined>();
   const inputNameWatch = form.watch(inputName);
-  const [localInput, setLocalInput] = useState(inputNameWatch);
+  const localInput = _localInput === undefined ? inputNameWatch : _localInput;
   const address = useActiveAccount()?.address;
 
   const ensQuery = useEns(localInput);

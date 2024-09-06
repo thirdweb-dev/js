@@ -12,36 +12,25 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "deposit" function.
  */
 export type DepositParams = WithOverrides<{
-  assets: AbiParameterToPrimitiveType<{
-    name: "assets";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  receiver: AbiParameterToPrimitiveType<{
-    name: "receiver";
-    type: "address";
-    internalType: "address";
-  }>;
+  assets: AbiParameterToPrimitiveType<{ type: "uint256"; name: "assets" }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
 }>;
 
 export const FN_SELECTOR = "0x6e553f65" as const;
 const FN_INPUTS = [
   {
-    name: "assets",
     type: "uint256",
-    internalType: "uint256",
+    name: "assets",
   },
   {
-    name: "receiver",
     type: "address",
-    internalType: "address",
+    name: "receiver",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "shares",
     type: "uint256",
-    internalType: "uint256",
+    name: "shares",
   },
 ] as const;
 
@@ -71,7 +60,7 @@ export function isDepositSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeDepositParams } "thirdweb/extensions/erc4626";
+ * import { encodeDepositParams } from "thirdweb/extensions/erc4626";
  * const result = encodeDepositParams({
  *  assets: ...,
  *  receiver: ...,
@@ -89,7 +78,7 @@ export function encodeDepositParams(options: DepositParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeDeposit } "thirdweb/extensions/erc4626";
+ * import { encodeDeposit } from "thirdweb/extensions/erc4626";
  * const result = encodeDeposit({
  *  assets: ...,
  *  receiver: ...,
@@ -110,6 +99,7 @@ export function encodeDeposit(options: DepositParams) {
  * @extension ERC4626
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { deposit } from "thirdweb/extensions/erc4626";
  *
  * const transaction = deposit({
@@ -122,8 +112,7 @@ export function encodeDeposit(options: DepositParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function deposit(

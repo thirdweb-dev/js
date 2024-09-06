@@ -53,7 +53,7 @@ export function isUpdateQuorumNumeratorSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeUpdateQuorumNumeratorParams } "thirdweb/extensions/vote";
+ * import { encodeUpdateQuorumNumeratorParams } from "thirdweb/extensions/vote";
  * const result = encodeUpdateQuorumNumeratorParams({
  *  newQuorumNumerator: ...,
  * });
@@ -72,7 +72,7 @@ export function encodeUpdateQuorumNumeratorParams(
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeUpdateQuorumNumerator } "thirdweb/extensions/vote";
+ * import { encodeUpdateQuorumNumerator } from "thirdweb/extensions/vote";
  * const result = encodeUpdateQuorumNumerator({
  *  newQuorumNumerator: ...,
  * });
@@ -96,6 +96,7 @@ export function encodeUpdateQuorumNumerator(
  * @extension VOTE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { updateQuorumNumerator } from "thirdweb/extensions/vote";
  *
  * const transaction = updateQuorumNumerator({
@@ -107,8 +108,7 @@ export function encodeUpdateQuorumNumerator(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function updateQuorumNumerator(

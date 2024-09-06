@@ -55,7 +55,7 @@ export function isSetRulesEngineOverrideSupported(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeSetRulesEngineOverrideParams } "thirdweb/extensions/thirdweb";
+ * import { encodeSetRulesEngineOverrideParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeSetRulesEngineOverrideParams({
  *  rulesEngineAddress: ...,
  * });
@@ -74,7 +74,7 @@ export function encodeSetRulesEngineOverrideParams(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeSetRulesEngineOverride } "thirdweb/extensions/thirdweb";
+ * import { encodeSetRulesEngineOverride } from "thirdweb/extensions/thirdweb";
  * const result = encodeSetRulesEngineOverride({
  *  rulesEngineAddress: ...,
  * });
@@ -98,6 +98,7 @@ export function encodeSetRulesEngineOverride(
  * @extension THIRDWEB
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setRulesEngineOverride } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = setRulesEngineOverride({
@@ -109,8 +110,7 @@ export function encodeSetRulesEngineOverride(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setRulesEngineOverride(

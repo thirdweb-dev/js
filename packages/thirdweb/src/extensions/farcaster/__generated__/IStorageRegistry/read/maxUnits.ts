@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isMaxUnitsSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isMaxUnitsSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isMaxUnitsSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeMaxUnitsResult } from "thirdweb/extensions/farcaster";
- * const result = decodeMaxUnitsResult("...");
+ * const result = decodeMaxUnitsResultResult("...");
  * ```
  */
 export function decodeMaxUnitsResult(result: Hex) {

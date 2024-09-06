@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetFollowerProfileIdSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetFollowerProfileIdSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isGetFollowerProfileIdSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetFollowerProfileIdParams } "thirdweb/extensions/lens";
+ * import { encodeGetFollowerProfileIdParams } from "thirdweb/extensions/lens";
  * const result = encodeGetFollowerProfileIdParams({
  *  followTokenId: ...,
  * });
@@ -74,7 +73,7 @@ export function encodeGetFollowerProfileIdParams(
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetFollowerProfileId } "thirdweb/extensions/lens";
+ * import { encodeGetFollowerProfileId } from "thirdweb/extensions/lens";
  * const result = encodeGetFollowerProfileId({
  *  followTokenId: ...,
  * });
@@ -99,7 +98,7 @@ export function encodeGetFollowerProfileId(
  * @example
  * ```ts
  * import { decodeGetFollowerProfileIdResult } from "thirdweb/extensions/lens";
- * const result = decodeGetFollowerProfileIdResult("...");
+ * const result = decodeGetFollowerProfileIdResultResult("...");
  * ```
  */
 export function decodeGetFollowerProfileIdResult(result: Hex) {

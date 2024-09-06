@@ -59,7 +59,7 @@ export function isTransferSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeTransferParams } "thirdweb/extensions/erc20";
+ * import { encodeTransferParams } from "thirdweb/extensions/erc20";
  * const result = encodeTransferParams({
  *  to: ...,
  *  value: ...,
@@ -77,7 +77,7 @@ export function encodeTransferParams(options: TransferParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeTransfer } "thirdweb/extensions/erc20";
+ * import { encodeTransfer } from "thirdweb/extensions/erc20";
  * const result = encodeTransfer({
  *  to: ...,
  *  value: ...,
@@ -98,6 +98,7 @@ export function encodeTransfer(options: TransferParams) {
  * @extension ERC20
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { transfer } from "thirdweb/extensions/erc20";
  *
  * const transaction = transfer({
@@ -110,8 +111,7 @@ export function encodeTransfer(options: TransferParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function transfer(

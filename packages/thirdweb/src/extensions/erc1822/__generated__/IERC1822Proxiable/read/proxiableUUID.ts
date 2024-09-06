@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isProxiableUUIDSupported } from "thirdweb/extensions/erc1822";
- *
  * const supported = isProxiableUUIDSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isProxiableUUIDSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeProxiableUUIDResult } from "thirdweb/extensions/erc1822";
- * const result = decodeProxiableUUIDResult("...");
+ * const result = decodeProxiableUUIDResultResult("...");
  * ```
  */
 export function decodeProxiableUUIDResult(result: Hex) {

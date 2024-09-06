@@ -2,6 +2,8 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { withCache } from "../../../utils/promise/withCache.js";
 import { decimals as generatedDecimals } from "../__generated__/IERC20/read/decimals.js";
 
+export { isDecimalsSupported } from "../__generated__/IERC20/read/decimals.js";
+
 /**
  * Retrieves the number of decimal places for a given ERC20 contract.
  * @param options - The options for the transaction.

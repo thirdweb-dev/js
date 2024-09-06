@@ -50,7 +50,7 @@ export function isFreezeBatchBaseURISupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeFreezeBatchBaseURIParams } "thirdweb/extensions/erc721";
+ * import { encodeFreezeBatchBaseURIParams } from "thirdweb/extensions/erc721";
  * const result = encodeFreezeBatchBaseURIParams({
  *  index: ...,
  * });
@@ -69,7 +69,7 @@ export function encodeFreezeBatchBaseURIParams(
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeFreezeBatchBaseURI } "thirdweb/extensions/erc721";
+ * import { encodeFreezeBatchBaseURI } from "thirdweb/extensions/erc721";
  * const result = encodeFreezeBatchBaseURI({
  *  index: ...,
  * });
@@ -91,6 +91,7 @@ export function encodeFreezeBatchBaseURI(options: FreezeBatchBaseURIParams) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { freezeBatchBaseURI } from "thirdweb/extensions/erc721";
  *
  * const transaction = freezeBatchBaseURI({
@@ -102,8 +103,7 @@ export function encodeFreezeBatchBaseURI(options: FreezeBatchBaseURIParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function freezeBatchBaseURI(

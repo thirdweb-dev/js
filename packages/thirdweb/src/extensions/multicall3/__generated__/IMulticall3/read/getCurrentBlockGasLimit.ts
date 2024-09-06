@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0x86d516e8" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "uint256",
-    name: "gaslimit",
     type: "uint256",
+    name: "gaslimit",
   },
 ] as const;
 
@@ -23,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetCurrentBlockGasLimitSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetCurrentBlockGasLimitSupported(["0x..."]);
  * ```
  */
@@ -44,7 +42,7 @@ export function isGetCurrentBlockGasLimitSupported(
  * @example
  * ```ts
  * import { decodeGetCurrentBlockGasLimitResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetCurrentBlockGasLimitResult("...");
+ * const result = decodeGetCurrentBlockGasLimitResultResult("...");
  * ```
  */
 export function decodeGetCurrentBlockGasLimitResult(result: Hex) {

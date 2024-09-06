@@ -26,7 +26,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isClaimConditionSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isClaimConditionSupported(["0x..."]);
  * ```
  */
@@ -45,7 +44,7 @@ export function isClaimConditionSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeClaimConditionResult } from "thirdweb/extensions/erc721";
- * const result = decodeClaimConditionResult("...");
+ * const result = decodeClaimConditionResultResult("...");
  * ```
  */
 export function decodeClaimConditionResult(result: Hex) {

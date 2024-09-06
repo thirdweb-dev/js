@@ -1,5 +1,4 @@
 import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { type Column, type Row, useTable } from "react-table";
 import { Text } from "tw-components";
@@ -111,8 +110,6 @@ interface TableRowProps {
 }
 
 const TableRow: React.FC<TableRowProps> = ({ row, context }) => {
-  const router = useRouter();
-
   return (
     <Tr
       borderBottomWidth={1}
@@ -127,13 +124,8 @@ const TableRow: React.FC<TableRowProps> = ({ row, context }) => {
       }}
       pointerEvents={row?.original?.contractId ? "auto" : "none"}
       onClick={() => {
-        router.push(
-          actionUrlPath(context, row.original.contractId),
-          undefined,
-          {
-            scroll: true,
-          },
-        );
+        // always open in new tab
+        window.open(actionUrlPath(context, row.original.contractId));
       }}
       {...row.getRowProps()}
     >

@@ -61,7 +61,7 @@ export function isWithdrawToSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeWithdrawToParams } "thirdweb/extensions/erc4337";
+ * import { encodeWithdrawToParams } from "thirdweb/extensions/erc4337";
  * const result = encodeWithdrawToParams({
  *  withdrawAddress: ...,
  *  withdrawAmount: ...,
@@ -82,7 +82,7 @@ export function encodeWithdrawToParams(options: WithdrawToParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeWithdrawTo } "thirdweb/extensions/erc4337";
+ * import { encodeWithdrawTo } from "thirdweb/extensions/erc4337";
  * const result = encodeWithdrawTo({
  *  withdrawAddress: ...,
  *  withdrawAmount: ...,
@@ -105,6 +105,7 @@ export function encodeWithdrawTo(options: WithdrawToParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { withdrawTo } from "thirdweb/extensions/erc4337";
  *
  * const transaction = withdrawTo({
@@ -117,8 +118,7 @@ export function encodeWithdrawTo(options: WithdrawToParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function withdrawTo(

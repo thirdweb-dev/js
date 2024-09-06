@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0x0f28c97d" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "uint256",
-    name: "timestamp",
     type: "uint256",
+    name: "timestamp",
   },
 ] as const;
 
@@ -23,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetCurrentBlockTimestampSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetCurrentBlockTimestampSupported(["0x..."]);
  * ```
  */
@@ -44,7 +42,7 @@ export function isGetCurrentBlockTimestampSupported(
  * @example
  * ```ts
  * import { decodeGetCurrentBlockTimestampResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetCurrentBlockTimestampResult("...");
+ * const result = decodeGetCurrentBlockTimestampResultResult("...");
  * ```
  */
 export function decodeGetCurrentBlockTimestampResult(result: Hex) {

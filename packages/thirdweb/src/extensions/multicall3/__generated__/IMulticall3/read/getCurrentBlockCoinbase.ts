@@ -9,9 +9,8 @@ export const FN_SELECTOR = "0xa8b0574e" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "address",
-    name: "coinbase",
     type: "address",
+    name: "coinbase",
   },
 ] as const;
 
@@ -23,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetCurrentBlockCoinbaseSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetCurrentBlockCoinbaseSupported(["0x..."]);
  * ```
  */
@@ -44,7 +42,7 @@ export function isGetCurrentBlockCoinbaseSupported(
  * @example
  * ```ts
  * import { decodeGetCurrentBlockCoinbaseResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetCurrentBlockCoinbaseResult("...");
+ * const result = decodeGetCurrentBlockCoinbaseResultResult("...");
  * ```
  */
 export function decodeGetCurrentBlockCoinbaseResult(result: Hex) {

@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isReleasedSupported } from "thirdweb/extensions/split";
- *
  * const supported = isReleasedSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isReleasedSupported(availableSelectors: string[]) {
  * @extension SPLIT
  * @example
  * ```ts
- * import { encodeReleasedParams } "thirdweb/extensions/split";
+ * import { encodeReleasedParams } from "thirdweb/extensions/split";
  * const result = encodeReleasedParams({
  *  account: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeReleasedParams(options: ReleasedParams) {
  * @extension SPLIT
  * @example
  * ```ts
- * import { encodeReleased } "thirdweb/extensions/split";
+ * import { encodeReleased } from "thirdweb/extensions/split";
  * const result = encodeReleased({
  *  account: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeReleased(options: ReleasedParams) {
  * @example
  * ```ts
  * import { decodeReleasedResult } from "thirdweb/extensions/split";
- * const result = decodeReleasedResult("...");
+ * const result = decodeReleasedResultResult("...");
  * ```
  */
 export function decodeReleasedResult(result: Hex) {

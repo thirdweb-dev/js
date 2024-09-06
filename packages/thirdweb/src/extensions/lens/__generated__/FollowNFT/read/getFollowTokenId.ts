@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetFollowTokenIdSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetFollowTokenIdSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isGetFollowTokenIdSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetFollowTokenIdParams } "thirdweb/extensions/lens";
+ * import { encodeGetFollowTokenIdParams } from "thirdweb/extensions/lens";
  * const result = encodeGetFollowTokenIdParams({
  *  followerProfileId: ...,
  * });
@@ -72,7 +71,7 @@ export function encodeGetFollowTokenIdParams(options: GetFollowTokenIdParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetFollowTokenId } "thirdweb/extensions/lens";
+ * import { encodeGetFollowTokenId } from "thirdweb/extensions/lens";
  * const result = encodeGetFollowTokenId({
  *  followerProfileId: ...,
  * });
@@ -95,7 +94,7 @@ export function encodeGetFollowTokenId(options: GetFollowTokenIdParams) {
  * @example
  * ```ts
  * import { decodeGetFollowTokenIdResult } from "thirdweb/extensions/lens";
- * const result = decodeGetFollowTokenIdResult("...");
+ * const result = decodeGetFollowTokenIdResultResult("...");
  * ```
  */
 export function decodeGetFollowTokenIdResult(result: Hex) {

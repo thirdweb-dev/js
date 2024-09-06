@@ -13,18 +13,16 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type InitializeParams = WithOverrides<{
   defaultAdmin: AbiParameterToPrimitiveType<{
-    name: "_defaultAdmin";
     type: "address";
-    internalType: "address";
+    name: "_defaultAdmin";
   }>;
 }>;
 
 export const FN_SELECTOR = "0xc4d66de8" as const;
 const FN_INPUTS = [
   {
-    name: "_defaultAdmin",
     type: "address",
-    internalType: "address",
+    name: "_defaultAdmin",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -55,7 +53,7 @@ export function isInitializeSupported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeInitializeParams } "thirdweb/extensions/airdrop";
+ * import { encodeInitializeParams } from "thirdweb/extensions/airdrop";
  * const result = encodeInitializeParams({
  *  defaultAdmin: ...,
  * });
@@ -72,7 +70,7 @@ export function encodeInitializeParams(options: InitializeParams) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeInitialize } "thirdweb/extensions/airdrop";
+ * import { encodeInitialize } from "thirdweb/extensions/airdrop";
  * const result = encodeInitialize({
  *  defaultAdmin: ...,
  * });
@@ -94,6 +92,7 @@ export function encodeInitialize(options: InitializeParams) {
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { initialize } from "thirdweb/extensions/airdrop";
  *
  * const transaction = initialize({
@@ -105,8 +104,7 @@ export function encodeInitialize(options: InitializeParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function initialize(

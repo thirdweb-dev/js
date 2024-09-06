@@ -1,12 +1,13 @@
+import { Badge } from "@/components/ui/badge";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import { thirdwebClient } from "@/constants/client";
 import { useDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
-import { Skeleton } from "@chakra-ui/react";
 import type { BasicContract } from "contract-ui/types/types";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { useV5DashboardChain } from "lib/v5-adapter";
+import Link from "next/link";
 import { memo } from "react";
 import { getContract } from "thirdweb";
-import { ChakraNextLink, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { usePublishedContractsFromDeploy } from "../hooks";
 
@@ -31,21 +32,23 @@ export const AsyncContractNameCell = memo(
     const contractMetadata = useDashboardContractMetadata(contract);
 
     return (
-      <Skeleton
-        isLoaded={!contractMetadata.isFetching}
-        borderRadius={20}
-        className="min-w-[300px] "
-      >
-        <ChakraNextLink
-          href={`/${chainSlug}/${cell.address}`}
-          passHref
-          className="hover:no-underline"
-        >
-          <span>
-            {contractMetadata.data?.name || shortenIfAddress(cell.address)}
-          </span>
-        </ChakraNextLink>
-      </Skeleton>
+      <SkeletonContainer
+        loadedData={
+          contractMetadata.isFetching ? undefined : contractMetadata.data?.name
+        }
+        skeletonData={"Custom Contract"}
+        render={(v) => {
+          return (
+            <Link
+              href={`/${chainSlug}/${cell.address}`}
+              passHref
+              className="text-foreground"
+            >
+              {v || shortenIfAddress(cell.address)}
+            </Link>
+          );
+        }}
+      />
     );
   },
 );
@@ -76,24 +79,30 @@ export const AsyncContractTypeCell = memo(
     const contractType =
       publishedContractsFromDeployQuery.data?.[0]?.displayName ||
       publishedContractsFromDeployQuery.data?.[0]?.name;
+
     return (
-      <Skeleton
-        isLoaded={
-          !publishedContractsFromDeployQuery.isInitialLoading ||
-          publishedContractsFromDeployQuery.isLoadingError
-        }
-        borderRadius={20}
-      >
-        {contractType ? (
-          <Text noOfLines={1} maxWidth={200} isTruncated>
-            {contractType}
-          </Text>
-        ) : (
-          <Text fontStyle="italic" opacity={0.5}>
-            {contractMetadata.data?.contractType || "Custom"}
-          </Text>
-        )}
-      </Skeleton>
+      <SkeletonContainer
+        loadedData={contractType || contractMetadata.data?.contractType}
+        skeletonData={"Custom Contract"}
+        render={(v) => {
+          if (v === contractType) {
+            return (
+              <Badge
+                className="line-clamp-1 max-w-[200px] truncate inline-block py-1"
+                variant="outline"
+              >
+                {v}
+              </Badge>
+            );
+          }
+
+          return (
+            <Badge variant="outline" className="inline-block py-1">
+              {v || "Custom"}
+            </Badge>
+          );
+        }}
+      />
     );
   },
 );

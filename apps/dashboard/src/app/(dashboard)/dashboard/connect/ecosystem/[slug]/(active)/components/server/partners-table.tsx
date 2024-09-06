@@ -2,9 +2,17 @@ import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Table, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import type { Ecosystem, Partner } from "../../../../types";
@@ -27,50 +35,36 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
   }
 
   return (
-    <table className="w-full">
-      <thead>
-        <tr className="border-b bg-muted/50">
-          <TableHeading>Name</TableHeading>
-          <TableHeading className="hidden md:table-cell">Domains</TableHeading>
-          <TableHeading className="hidden md:table-cell">
-            Bundle ID
-          </TableHeading>
-          <TableHeading className="hidden sm:table-cell">
-            Partner ID
-          </TableHeading>
-          <TableHeading className="hidden lg:table-cell">
-            Wallet Prompts
-          </TableHeading>
-          {/* Empty space for delete button */}
-          <th className="table-cell" />
-        </tr>
-      </thead>
-      <tbody>
-        {[...partners].reverse().map((partner: Partner) => (
-          <TableRow key={partner.id} partner={partner} ecosystem={ecosystem} />
-        ))}
-      </tbody>
-    </table>
+    <TableContainer>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead className="hidden md:table-cell">Domains</TableHead>
+            <TableHead className="hidden md:table-cell">Bundle ID</TableHead>
+            <TableHead className="hidden sm:table-cell">Partner ID</TableHead>
+            <TableHead className="hidden lg:table-cell">
+              Wallet Prompts
+            </TableHead>
+            {/* Empty space for delete button */}
+            <th className="table-cell" />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {[...partners].reverse().map((partner: Partner) => (
+            <EcosystemRow
+              key={partner.id}
+              partner={partner}
+              ecosystem={ecosystem}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 
-function TableHeading(props: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <th
-      className={cn(
-        "text-xs p-4 font-semibold tracking-wide text-left uppercase text-muted-foreground",
-        props.className,
-      )}
-    >
-      {props.children}
-    </th>
-  );
-}
-
-function TableRow(props: {
+function EcosystemRow(props: {
   partner: Partner;
   ecosystem: Ecosystem;
 }) {
@@ -83,40 +77,40 @@ function TableRow(props: {
   });
 
   return (
-    <tr
+    <TableRow
       className={cn(
-        "relative border-b hover:bg-muted/50",
+        "relative hover:bg-muted/50",
         isDeleting && "animate-pulse",
       )}
     >
-      <TableData className="truncate align-top max-w-32">
+      <TableCell className="truncate align-top max-w-32">
         {props.partner.name}
-      </TableData>
-      <TableData className="hidden align-top md:table-cell max-w-32 text-wrap">
+      </TableCell>
+      <TableCell className="hidden align-top md:table-cell max-w-32 text-wrap">
         {props.partner.allowlistedDomains.map((domain) => (
           <div key={domain}>{domain}</div>
         ))}
-      </TableData>
-      <TableData className="hidden align-top max-w-32 md:table-cell">
+      </TableCell>
+      <TableCell className="hidden align-top max-w-32 md:table-cell">
         {props.partner.allowlistedBundleIds.map((domain) => (
           <div key={domain} className="truncate">
             {domain}
           </div>
         ))}
-      </TableData>
-      <TableData className="hidden align-top max-w-32 sm:table-cell">
+      </TableCell>
+      <TableCell className="hidden align-top max-w-32 sm:table-cell">
         <ToolTipLabel label={props.partner.id}>
           <div className="truncate">
             <CopyButton text={props.partner.id} className="mr-1" />
             {props.partner.id}
           </div>
         </ToolTipLabel>
-      </TableData>
-      <TableData className="hidden align-top lg:table-cell">
+      </TableCell>
+      <TableCell className="hidden align-top lg:table-cell">
         {props.partner.permissions.includes("PROMPT_USER_V1")
           ? "Prompt user"
           : "Never prompt"}
-      </TableData>
+      </TableCell>
       <td className="table-cell py-1 align-middle">
         <div className="flex gap-1.5 justify-end">
           <UpdatePartnerModal
@@ -170,15 +164,6 @@ function TableRow(props: {
           </ConfirmationDialog>
         </div>
       </td>
-    </tr>
-  );
-}
-
-function TableData({
-  children,
-  className,
-}: { children: React.ReactNode; className?: string }) {
-  return (
-    <td className={cn("p-4 text-muted-foreground", className)}>{children}</td>
+    </TableRow>
   );
 }

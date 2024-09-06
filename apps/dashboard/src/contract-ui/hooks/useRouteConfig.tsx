@@ -13,6 +13,7 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import * as PermissionExt from "thirdweb/extensions/permissions";
 import * as ThirdwebExt from "thirdweb/extensions/thirdweb";
+import * as ModularExt from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import { useAnalyticsSupportedForChain } from "../../data/analytics/hooks";
 import { useContractFunctionSelectors } from "./useContractFunctionSelectors";
@@ -169,6 +170,65 @@ export function useContractRouteConfig(
     ].every(Boolean);
   }, [functionSelectorQuery.data]);
 
+  const hasERC721ClaimConditions = useMemo(() => {
+    return [
+      // reads
+      ERC721Ext.isGetClaimConditionByIdSupported(functionSelectorQuery.data),
+      ERC721Ext.isGetActiveClaimConditionIdSupported(
+        functionSelectorQuery.data,
+      ),
+      ERC721Ext.isGetClaimConditionsSupported(functionSelectorQuery.data),
+      ERC721Ext.isGetActiveClaimConditionSupported(functionSelectorQuery.data),
+      // writes
+      ERC721Ext.isSetClaimConditionsSupported(functionSelectorQuery.data),
+      ERC721Ext.isResetClaimEligibilitySupported(functionSelectorQuery.data),
+    ].every(Boolean);
+  }, [functionSelectorQuery.data]);
+
+  const hasERC20ClaimConditions = useMemo(() => {
+    return [
+      // reads
+      ERC20Ext.isGetClaimConditionByIdSupported(functionSelectorQuery.data),
+      ERC20Ext.isGetActiveClaimConditionIdSupported(functionSelectorQuery.data),
+      ERC20Ext.isGetClaimConditionsSupported(functionSelectorQuery.data),
+      ERC20Ext.isGetActiveClaimConditionSupported(functionSelectorQuery.data),
+      // writes
+      ERC20Ext.isSetClaimConditionsSupported(functionSelectorQuery.data),
+      ERC20Ext.isResetClaimEligibilitySupported(functionSelectorQuery.data),
+    ].every(Boolean);
+  }, [functionSelectorQuery.data]);
+
+  const hasERC1155ClaimConditions = useMemo(() => {
+    return [
+      // reads
+      ERC1155Ext.isGetClaimConditionByIdSupported(functionSelectorQuery.data),
+      ERC1155Ext.isGetClaimConditionsSupported(functionSelectorQuery.data),
+      ERC1155Ext.isGetActiveClaimConditionSupported(functionSelectorQuery.data),
+      // writes
+      ERC1155Ext.isSetClaimConditionsSupported(functionSelectorQuery.data),
+      ERC1155Ext.isResetClaimEligibilitySupported(functionSelectorQuery.data),
+    ].every(Boolean);
+  }, [functionSelectorQuery.data]);
+
+  const hasClaimConditions = useMemo(() => {
+    return [
+      hasERC721ClaimConditions,
+      hasERC20ClaimConditions,
+      hasERC1155ClaimConditions,
+    ].some(Boolean);
+  }, [
+    hasERC721ClaimConditions,
+    hasERC20ClaimConditions,
+    hasERC1155ClaimConditions,
+  ]);
+
+  const isModularCore = useMemo(() => {
+    return [
+      ModularExt.isGetInstalledModulesSupported(functionSelectorQuery.data),
+      ModularExt.isInstallModuleSupported(functionSelectorQuery.data),
+    ].every(Boolean);
+  }, [functionSelectorQuery.data]);
+
   // old
   const ensQuery = useEns(contract.address);
 
@@ -186,63 +246,9 @@ export function useContractRouteConfig(
       feature: "DirectListings",
     });
 
-    const detectedModularExtension = extensionDetectedState({
-      contractQuery,
-      feature: ["ModularCore"],
-    });
-
-    // claim condition related stuff
-    const claimconditionExtensionDetection = extensionDetectedState({
-      contractQuery,
-      feature: [
-        // erc 721
-        "ERC721ClaimPhasesV1",
-        "ERC721ClaimPhasesV2",
-        "ERC721ClaimConditionsV1",
-        "ERC721ClaimConditionsV2",
-
-        // erc 20
-        "ERC20ClaimConditionsV1",
-        "ERC20ClaimConditionsV2",
-        "ERC20ClaimPhasesV1",
-        "ERC20ClaimPhasesV2",
-      ],
-    });
-
-    const hasNewClaimConditions = extensionDetectedState({
-      contractQuery,
-      feature: [
-        // erc721
-        "ERC721ClaimConditionsV2",
-        "ERC721ClaimPhasesV2",
-        // erc1155
-        "ERC1155ClaimConditionsV2",
-        "ERC1155ClaimPhasesV2",
-        // erc20
-        "ERC20ClaimConditionsV2",
-        "ERC20ClaimPhasesV2",
-      ],
-    });
-
-    const hasMultiPhaseClaimConditions = extensionDetectedState({
-      contractQuery,
-      feature: [
-        // erc721
-        "ERC721ClaimPhasesV2",
-        // erc1155
-        "ERC1155ClaimPhasesV2",
-        // erc20
-        "ERC20ClaimPhasesV2",
-      ],
-    });
-
     return {
-      claimconditionExtensionDetection,
       detectedEnglishAuctions,
       detectedDirectListings,
-      detectedModularExtension,
-      hasNewClaimConditions,
-      hasMultiPhaseClaimConditions,
     };
   }, [contractQuery]);
 
@@ -256,7 +262,7 @@ export function useContractRouteConfig(
         return "marketplace-v3";
       }
       // others only matter if claim conditions are detected
-      if (contractData.hasNewClaimConditions) {
+      if (hasClaimConditions) {
         // if erc721 its that
         if (isERC721Query.data) {
           return "erc721";
@@ -270,7 +276,12 @@ export function useContractRouteConfig(
       }
       // otherwise null
       return null;
-    }, [contractData, isERC721Query.data, isERC1155Query.data]);
+    }, [
+      contractData,
+      hasClaimConditions,
+      isERC721Query.data,
+      isERC1155Query.data,
+    ]);
 
   return [
     {
@@ -290,13 +301,17 @@ export function useContractRouteConfig(
           isPermissionsEnumerable={isPermissionsEnumerable}
         />
       ),
-      isEnabled: contractQuery.isLoading ? "loading" : "enabled",
+      isEnabled: "enabled",
       isDefault: true,
     },
     {
       title: "Modules",
       path: "modules",
-      isEnabled: contractData.detectedModularExtension,
+      isEnabled: isModularCore
+        ? "enabled"
+        : functionSelectorQuery.isLoading
+          ? "loading"
+          : "disabled",
       isDefault: true,
       component: LazyContractEditModulesPage,
     },
@@ -419,18 +434,16 @@ export function useContractRouteConfig(
     {
       title: "Claim Conditions",
       path: "claim-conditions",
-      isEnabled: contractData.claimconditionExtensionDetection,
+      isEnabled:
+        hasERC721ClaimConditions || hasERC20ClaimConditions
+          ? "enabled"
+          : functionSelectorQuery.isLoading
+            ? "loading"
+            : "disabled",
       component: () => (
         <LazyContractClaimConditionsPage
           contract={contract}
-          claimconditionExtensionDetection={
-            contractData.claimconditionExtensionDetection
-          }
           isERC20={isERC20}
-          hasNewClaimConditions={
-            contractData.hasNewClaimConditions === "enabled"
-          }
-          isMultiPhase={contractData.hasMultiPhaseClaimConditions === "enabled"}
         />
       ),
     },

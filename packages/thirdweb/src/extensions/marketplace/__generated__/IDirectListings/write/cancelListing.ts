@@ -53,7 +53,7 @@ export function isCancelListingSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCancelListingParams } "thirdweb/extensions/marketplace";
+ * import { encodeCancelListingParams } from "thirdweb/extensions/marketplace";
  * const result = encodeCancelListingParams({
  *  listingId: ...,
  * });
@@ -70,7 +70,7 @@ export function encodeCancelListingParams(options: CancelListingParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeCancelListing } "thirdweb/extensions/marketplace";
+ * import { encodeCancelListing } from "thirdweb/extensions/marketplace";
  * const result = encodeCancelListing({
  *  listingId: ...,
  * });
@@ -92,6 +92,7 @@ export function encodeCancelListing(options: CancelListingParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { cancelListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = cancelListing({
@@ -103,8 +104,7 @@ export function encodeCancelListing(options: CancelListingParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function cancelListing(

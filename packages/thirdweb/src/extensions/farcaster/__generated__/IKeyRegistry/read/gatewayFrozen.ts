@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGatewayFrozenSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isGatewayFrozenSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isGatewayFrozenSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGatewayFrozenResult } from "thirdweb/extensions/farcaster";
- * const result = decodeGatewayFrozenResult("...");
+ * const result = decodeGatewayFrozenResultResult("...");
  * ```
  */
 export function decodeGatewayFrozenResult(result: Hex) {

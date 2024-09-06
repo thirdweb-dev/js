@@ -53,7 +53,7 @@ export function isAddStakeSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeAddStakeParams } "thirdweb/extensions/erc4337";
+ * import { encodeAddStakeParams } from "thirdweb/extensions/erc4337";
  * const result = encodeAddStakeParams({
  *  unstakeDelaySec: ...,
  * });
@@ -70,7 +70,7 @@ export function encodeAddStakeParams(options: AddStakeParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeAddStake } "thirdweb/extensions/erc4337";
+ * import { encodeAddStake } from "thirdweb/extensions/erc4337";
  * const result = encodeAddStake({
  *  unstakeDelaySec: ...,
  * });
@@ -90,6 +90,7 @@ export function encodeAddStake(options: AddStakeParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { addStake } from "thirdweb/extensions/erc4337";
  *
  * const transaction = addStake({
@@ -101,8 +102,7 @@ export function encodeAddStake(options: AddStakeParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function addStake(

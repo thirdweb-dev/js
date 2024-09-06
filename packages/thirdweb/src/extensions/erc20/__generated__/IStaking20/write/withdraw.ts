@@ -50,7 +50,7 @@ export function isWithdrawSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeWithdrawParams } "thirdweb/extensions/erc20";
+ * import { encodeWithdrawParams } from "thirdweb/extensions/erc20";
  * const result = encodeWithdrawParams({
  *  amount: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeWithdrawParams(options: WithdrawParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeWithdraw } "thirdweb/extensions/erc20";
+ * import { encodeWithdraw } from "thirdweb/extensions/erc20";
  * const result = encodeWithdraw({
  *  amount: ...,
  * });
@@ -87,6 +87,7 @@ export function encodeWithdraw(options: WithdrawParams) {
  * @extension ERC20
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { withdraw } from "thirdweb/extensions/erc20";
  *
  * const transaction = withdraw({
@@ -98,8 +99,7 @@ export function encodeWithdraw(options: WithdrawParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function withdraw(

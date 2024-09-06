@@ -60,7 +60,7 @@ export function isBurnSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeBurnParams } "thirdweb/extensions/erc1155";
+ * import { encodeBurnParams } from "thirdweb/extensions/erc1155";
  * const result = encodeBurnParams({
  *  account: ...,
  *  id: ...,
@@ -83,7 +83,7 @@ export function encodeBurnParams(options: BurnParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeBurn } "thirdweb/extensions/erc1155";
+ * import { encodeBurn } from "thirdweb/extensions/erc1155";
  * const result = encodeBurn({
  *  account: ...,
  *  id: ...,
@@ -105,6 +105,7 @@ export function encodeBurn(options: BurnParams) {
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { burn } from "thirdweb/extensions/erc1155";
  *
  * const transaction = burn({
@@ -118,8 +119,7 @@ export function encodeBurn(options: BurnParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function burn(

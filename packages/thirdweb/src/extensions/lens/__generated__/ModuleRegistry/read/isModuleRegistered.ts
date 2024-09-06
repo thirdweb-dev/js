@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsModuleRegisteredSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isIsModuleRegisteredSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isIsModuleRegisteredSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeIsModuleRegisteredParams } "thirdweb/extensions/lens";
+ * import { encodeIsModuleRegisteredParams } from "thirdweb/extensions/lens";
  * const result = encodeIsModuleRegisteredParams({
  *  moduleAddress: ...,
  * });
@@ -74,7 +73,7 @@ export function encodeIsModuleRegisteredParams(
  * @extension LENS
  * @example
  * ```ts
- * import { encodeIsModuleRegistered } "thirdweb/extensions/lens";
+ * import { encodeIsModuleRegistered } from "thirdweb/extensions/lens";
  * const result = encodeIsModuleRegistered({
  *  moduleAddress: ...,
  * });
@@ -97,7 +96,7 @@ export function encodeIsModuleRegistered(options: IsModuleRegisteredParams) {
  * @example
  * ```ts
  * import { decodeIsModuleRegisteredResult } from "thirdweb/extensions/lens";
- * const result = decodeIsModuleRegisteredResult("...");
+ * const result = decodeIsModuleRegisteredResultResult("...");
  * ```
  */
 export function decodeIsModuleRegisteredResult(result: Hex) {

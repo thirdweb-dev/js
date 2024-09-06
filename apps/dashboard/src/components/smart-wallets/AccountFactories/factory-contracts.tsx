@@ -1,4 +1,7 @@
-import { Skeleton } from "@chakra-ui/react";
+"use client";
+
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { AsyncContractNameCell } from "components/contract-components/tables/cells";
@@ -7,8 +10,6 @@ import { AsyncFactoryAccountCell } from "components/smart-wallets/AccountFactori
 import type { BasicContract } from "contract-ui/types/types";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { getChainMetadata } from "thirdweb/chains";
-import { Text } from "tw-components";
-import { shortenIfAddress } from "utils/usedapp-external";
 
 interface FactoryContractsProps {
   contracts: BasicContract[];
@@ -31,7 +32,14 @@ const columns = [
   }),
   columnHelper.accessor("address", {
     header: "Contract address",
-    cell: (cell) => <Text>{shortenIfAddress(cell.getValue())}</Text>,
+    cell: (cell) => (
+      <CopyAddressButton
+        address={cell.getValue()}
+        copyIconPosition="left"
+        variant="ghost"
+        className="-translate-x-2"
+      />
+    ),
   }),
   columnHelper.accessor((row) => row, {
     header: "Accounts",
@@ -49,9 +57,14 @@ function NetworkName(props: { id: number }) {
   });
 
   return (
-    <Skeleton isLoaded={!!chainQuery.data}>
-      <Text>{chainQuery.data?.name || "..."}</Text>
-    </Skeleton>
+    <SkeletonContainer
+      className="inline-block"
+      loadedData={chainQuery.data?.name}
+      skeletonData={"Ethereum Mainnet"}
+      render={(v) => {
+        return <p className="text-muted-foreground text-sm">{v}</p>;
+      }}
+    />
   );
 }
 

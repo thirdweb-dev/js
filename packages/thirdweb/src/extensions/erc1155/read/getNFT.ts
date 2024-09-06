@@ -4,6 +4,8 @@ import { type NFT, parseNFT } from "../../../utils/nft/parseNft.js";
 import { totalSupply } from "../__generated__/IERC1155/read/totalSupply.js";
 import { uri } from "../__generated__/IERC1155/read/uri.js";
 
+export { isUriSupported as isGetNFTSupported } from "../__generated__/IERC1155/read/uri.js";
+
 /**
  * Parameters for getting an NFT.
  * @extension ERC1155

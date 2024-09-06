@@ -55,7 +55,7 @@ export function isRenounceRoleSupported(availableSelectors: string[]) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeRenounceRoleParams } "thirdweb/extensions/permissions";
+ * import { encodeRenounceRoleParams } from "thirdweb/extensions/permissions";
  * const result = encodeRenounceRoleParams({
  *  role: ...,
  *  account: ...,
@@ -73,7 +73,7 @@ export function encodeRenounceRoleParams(options: RenounceRoleParams) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeRenounceRole } "thirdweb/extensions/permissions";
+ * import { encodeRenounceRole } from "thirdweb/extensions/permissions";
  * const result = encodeRenounceRole({
  *  role: ...,
  *  account: ...,
@@ -96,6 +96,7 @@ export function encodeRenounceRole(options: RenounceRoleParams) {
  * @extension PERMISSIONS
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { renounceRole } from "thirdweb/extensions/permissions";
  *
  * const transaction = renounceRole({
@@ -108,8 +109,7 @@ export function encodeRenounceRole(options: RenounceRoleParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function renounceRole(

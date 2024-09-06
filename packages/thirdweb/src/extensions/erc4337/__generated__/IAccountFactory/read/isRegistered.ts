@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsRegisteredSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isIsRegisteredSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isIsRegisteredSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeIsRegisteredParams } "thirdweb/extensions/erc4337";
+ * import { encodeIsRegisteredParams } from "thirdweb/extensions/erc4337";
  * const result = encodeIsRegisteredParams({
  *  account: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeIsRegisteredParams(options: IsRegisteredParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeIsRegistered } "thirdweb/extensions/erc4337";
+ * import { encodeIsRegistered } from "thirdweb/extensions/erc4337";
  * const result = encodeIsRegistered({
  *  account: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeIsRegistered(options: IsRegisteredParams) {
  * @example
  * ```ts
  * import { decodeIsRegisteredResult } from "thirdweb/extensions/erc4337";
- * const result = decodeIsRegisteredResult("...");
+ * const result = decodeIsRegisteredResultResult("...");
  * ```
  */
 export function decodeIsRegisteredResult(result: Hex) {

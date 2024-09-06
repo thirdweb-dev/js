@@ -83,7 +83,7 @@ export function isAddForSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeAddForParams } "thirdweb/extensions/farcaster";
+ * import { encodeAddForParams } from "thirdweb/extensions/farcaster";
  * const result = encodeAddForParams({
  *  fidOwner: ...,
  *  keyType: ...,
@@ -114,7 +114,7 @@ export function encodeAddForParams(options: AddForParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeAddFor } "thirdweb/extensions/farcaster";
+ * import { encodeAddFor } from "thirdweb/extensions/farcaster";
  * const result = encodeAddFor({
  *  fidOwner: ...,
  *  keyType: ...,
@@ -140,6 +140,7 @@ export function encodeAddFor(options: AddForParams) {
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { addFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = addFor({
@@ -157,8 +158,7 @@ export function encodeAddFor(options: AddForParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function addFor(

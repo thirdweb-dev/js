@@ -12,46 +12,30 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "withdraw" function.
  */
 export type WithdrawParams = WithOverrides<{
-  assets: AbiParameterToPrimitiveType<{
-    name: "assets";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  receiver: AbiParameterToPrimitiveType<{
-    name: "receiver";
-    type: "address";
-    internalType: "address";
-  }>;
-  owner: AbiParameterToPrimitiveType<{
-    name: "owner";
-    type: "address";
-    internalType: "address";
-  }>;
+  assets: AbiParameterToPrimitiveType<{ type: "uint256"; name: "assets" }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
+  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 }>;
 
 export const FN_SELECTOR = "0xb460af94" as const;
 const FN_INPUTS = [
   {
-    name: "assets",
     type: "uint256",
-    internalType: "uint256",
+    name: "assets",
   },
   {
+    type: "address",
     name: "receiver",
-    type: "address",
-    internalType: "address",
   },
   {
-    name: "owner",
     type: "address",
-    internalType: "address",
+    name: "owner",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "shares",
     type: "uint256",
-    internalType: "uint256",
+    name: "shares",
   },
 ] as const;
 
@@ -81,7 +65,7 @@ export function isWithdrawSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeWithdrawParams } "thirdweb/extensions/erc4626";
+ * import { encodeWithdrawParams } from "thirdweb/extensions/erc4626";
  * const result = encodeWithdrawParams({
  *  assets: ...,
  *  receiver: ...,
@@ -104,7 +88,7 @@ export function encodeWithdrawParams(options: WithdrawParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeWithdraw } "thirdweb/extensions/erc4626";
+ * import { encodeWithdraw } from "thirdweb/extensions/erc4626";
  * const result = encodeWithdraw({
  *  assets: ...,
  *  receiver: ...,
@@ -126,6 +110,7 @@ export function encodeWithdraw(options: WithdrawParams) {
  * @extension ERC4626
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { withdraw } from "thirdweb/extensions/erc4626";
  *
  * const transaction = withdraw({
@@ -139,8 +124,7 @@ export function encodeWithdraw(options: WithdrawParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function withdraw(

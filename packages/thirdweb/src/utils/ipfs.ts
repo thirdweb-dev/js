@@ -109,10 +109,11 @@ export async function uploadOrExtractURIs<
  * @internal
  */
 export function getBaseUriFromBatch(uris: string[]): string {
-  const baseUri = uris[0]?.substring(0, uris[0].lastIndexOf("/"));
-  for (let i = 0; i < uris.length; i++) {
-    const uri = uris[i]?.substring(0, uris[i]?.lastIndexOf("/"));
-    if (baseUri !== uri) {
+  const urisWithSlashes = uris.map((uri) => new URL(uri));
+  const baseUri = urisWithSlashes[0];
+  for (let i = 0; i < urisWithSlashes.length; i++) {
+    const uri = urisWithSlashes[i];
+    if (baseUri?.host !== uri?.host) {
       throw new Error(
         `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
       );
@@ -124,7 +125,7 @@ export function getBaseUriFromBatch(uris: string[]): string {
   }
 
   // Ensure that baseUri ends with trailing slash
-  return `${baseUri.replace(/\/$/, "")}/`;
+  return `${baseUri.protocol}//${baseUri.host}/`;
 }
 
 function isUriList<T extends FileOrBufferOrString | Record<string, unknown>>(

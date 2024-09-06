@@ -142,7 +142,7 @@ export function isHandleAggregatedOpsSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeHandleAggregatedOpsParams } "thirdweb/extensions/erc4337";
+ * import { encodeHandleAggregatedOpsParams } from "thirdweb/extensions/erc4337";
  * const result = encodeHandleAggregatedOpsParams({
  *  opsPerAggregator: ...,
  *  beneficiary: ...,
@@ -165,7 +165,7 @@ export function encodeHandleAggregatedOpsParams(
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeHandleAggregatedOps } "thirdweb/extensions/erc4337";
+ * import { encodeHandleAggregatedOps } from "thirdweb/extensions/erc4337";
  * const result = encodeHandleAggregatedOps({
  *  opsPerAggregator: ...,
  *  beneficiary: ...,
@@ -188,6 +188,7 @@ export function encodeHandleAggregatedOps(options: HandleAggregatedOpsParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { handleAggregatedOps } from "thirdweb/extensions/erc4337";
  *
  * const transaction = handleAggregatedOps({
@@ -200,8 +201,7 @@ export function encodeHandleAggregatedOps(options: HandleAggregatedOpsParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function handleAggregatedOps(

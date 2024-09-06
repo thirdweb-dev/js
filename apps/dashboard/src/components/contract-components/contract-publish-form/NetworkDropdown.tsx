@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
-import type { SizeProp } from "chakra-react-select/dist/types/types";
+import type { SizeProp } from "chakra-react-select";
 import { useSupportedChains } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";

@@ -55,7 +55,7 @@ export function isApproveSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeApproveParams } "thirdweb/extensions/erc721";
+ * import { encodeApproveParams } from "thirdweb/extensions/erc721";
  * const result = encodeApproveParams({
  *  to: ...,
  *  tokenId: ...,
@@ -73,7 +73,7 @@ export function encodeApproveParams(options: ApproveParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeApprove } "thirdweb/extensions/erc721";
+ * import { encodeApprove } from "thirdweb/extensions/erc721";
  * const result = encodeApprove({
  *  to: ...,
  *  tokenId: ...,
@@ -94,6 +94,7 @@ export function encodeApprove(options: ApproveParams) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { approve } from "thirdweb/extensions/erc721";
  *
  * const transaction = approve({
@@ -106,8 +107,7 @@ export function encodeApprove(options: ApproveParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function approve(

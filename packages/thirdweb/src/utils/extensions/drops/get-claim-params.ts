@@ -4,6 +4,7 @@ import {
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
+import { getContractMetadata } from "../../../extensions/common/read/getContractMetadata.js";
 import type { Hex } from "../../encoding/hex.js";
 import type { OverrideProof } from "./types.js";
 
@@ -96,10 +97,26 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
       "./fetch-proofs-for-claimers.js"
     );
 
+    // 1. fetch merkle data from contract URI
+    const metadata = await getContractMetadata({
+      contract: options.contract,
+    });
+    const merkleData: Record<string, string> = metadata.merkle || {};
+    const snapshotUri = merkleData[cc.merkleRoot];
+
+    if (!snapshotUri) {
+      return {
+        currency: ZERO_ADDRESS,
+        proof: [],
+        quantityLimitPerWallet: 0n,
+        pricePerToken: maxUint256,
+      } satisfies OverrideProof;
+    }
+
     const allowListProof = await fetchProofsForClaimer({
       contract: options.contract,
       claimer: options.from || options.to, // receiver and claimer can be different, always prioritize the claimer for allowlists
-      merkleRoot: cc.merkleRoot,
+      merkleTreeUri: snapshotUri,
       tokenDecimals,
     });
     // if no proof is found, we'll try the empty proof

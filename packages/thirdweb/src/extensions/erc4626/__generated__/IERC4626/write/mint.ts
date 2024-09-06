@@ -12,36 +12,25 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "mint" function.
  */
 export type MintParams = WithOverrides<{
-  shares: AbiParameterToPrimitiveType<{
-    name: "shares";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  receiver: AbiParameterToPrimitiveType<{
-    name: "receiver";
-    type: "address";
-    internalType: "address";
-  }>;
+  shares: AbiParameterToPrimitiveType<{ type: "uint256"; name: "shares" }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
 }>;
 
 export const FN_SELECTOR = "0x94bf804d" as const;
 const FN_INPUTS = [
   {
-    name: "shares",
     type: "uint256",
-    internalType: "uint256",
+    name: "shares",
   },
   {
-    name: "receiver",
     type: "address",
-    internalType: "address",
+    name: "receiver",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "assets",
     type: "uint256",
-    internalType: "uint256",
+    name: "assets",
   },
 ] as const;
 
@@ -71,7 +60,7 @@ export function isMintSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMintParams } "thirdweb/extensions/erc4626";
+ * import { encodeMintParams } from "thirdweb/extensions/erc4626";
  * const result = encodeMintParams({
  *  shares: ...,
  *  receiver: ...,
@@ -89,7 +78,7 @@ export function encodeMintParams(options: MintParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMint } "thirdweb/extensions/erc4626";
+ * import { encodeMint } from "thirdweb/extensions/erc4626";
  * const result = encodeMint({
  *  shares: ...,
  *  receiver: ...,
@@ -110,6 +99,7 @@ export function encodeMint(options: MintParams) {
  * @extension ERC4626
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { mint } from "thirdweb/extensions/erc4626";
  *
  * const transaction = mint({
@@ -122,8 +112,7 @@ export function encodeMint(options: MintParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function mint(

@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTokenSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isTokenSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isTokenSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeTokenResult } from "thirdweb/extensions/vote";
- * const result = decodeTokenResult("...");
+ * const result = decodeTokenResultResult("...");
  * ```
  */
 export function decodeTokenResult(result: Hex) {
