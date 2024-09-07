@@ -117,14 +117,11 @@ export const ApplyForOpCreditsModal: React.FC = () => {
                   size="label.sm"
                   px={3}
                   bgColor={creditsRecord.color}
+                  color="#fff"
+                  textTransform="capitalize"
+                  fontWeight="bold"
                 >
-                  <Text
-                    color="#fff"
-                    textTransform="capitalize"
-                    fontWeight="bold"
-                  >
-                    {creditsRecord.title}
-                  </Text>
+                  {creditsRecord.title}
                 </Badge>
               </Box>
               <Flex alignItems="center" gap={2} flexDir="column">
