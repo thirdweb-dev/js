@@ -57,6 +57,10 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   );
   const { onCopy, hasCopied } = useClipboard(codeValue || code);
 
+  if (!code) {
+    return null;
+  }
+
   return (
     <Highlight
       code={prefix ? `${prefix} ${code}` : code}
