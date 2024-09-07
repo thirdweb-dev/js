@@ -27,7 +27,7 @@ export default function Layout(props: {
   return (
     <div>
       {/* Huge page title  */}
-      <div className="py-10 border-b">
+      <div className="py-10 border-b border-border">
         <div className="container max-w-[1200px]">
           <h1 className="text-3xl tracking-tight font-semibold">
             Team Settings

@@ -46,7 +46,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             className="font-normal text-sm flex flex-row gap-2 items-center"
           >
             {/* TODO - replace with team image */}
-            <div className="bg-muted border size-6 rounded-full" />
+            <div className="bg-muted border border-border size-6 rounded-full" />
 
             <span> {currentTeam.name} </span>
             <Badge
@@ -146,7 +146,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
             )}
           >
             {/* TODO - replace with team image */}
-            <div className="bg-muted border size-7 rounded-full" />
+            <div className="bg-muted border border-border size-7 rounded-full" />
 
             {!props.currentProject && (
               <span className="font-semibold">{currentTeam.name}</span>

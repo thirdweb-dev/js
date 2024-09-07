@@ -2,9 +2,20 @@ import type React from "react";
 import { cn } from "../../lib/utils";
 import { NavLink } from "../ui/NavLink";
 
+export type SidebarLink = {
+  href: string;
+  label: React.ReactNode;
+  exactMatch?: boolean;
+  tracking?: {
+    category: string;
+    action: string;
+    label: string;
+  };
+};
+
 export type SidebarContentProps = {
   header?: React.ReactNode;
-  links: { href: string; label: React.ReactNode; exactMatch?: boolean }[];
+  links: SidebarLink[];
   className?: string;
 };
 

@@ -29,7 +29,7 @@ export function AccountButton(props: {
           variant="ghost"
         >
           {/* TODO - replace with account image */}
-          <div className="size-9 rounded-full bg-muted border" />
+          <div className="size-9 rounded-full bg-muted border border-border" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -37,7 +37,7 @@ export function AccountButton(props: {
         align="end"
         sideOffset={16}
       >
-        <div className="p-4 pb-5 border-b">
+        <div className="p-4 pb-5 border-b border-border">
           <p className="text-sm text-muted-foreground">{props.email}</p>
           <div className="h-3" />
           <div className="[&>button]:!w-full">{props.connectButton}</div>
@@ -54,7 +54,7 @@ export function AccountButton(props: {
           <div className="flex justify-between gap-2 items-center">
             <p className="text-muted-foreground text-sm">Theme</p>
 
-            <div className="ml-auto flex items-center border px-2 py-0.5 rounded-lg gap-1">
+            <div className="ml-auto flex items-center border border-border px-2 py-0.5 rounded-lg gap-1">
               <Button
                 size="icon"
                 onClick={() => setTheme("light")}

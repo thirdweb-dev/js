@@ -110,7 +110,7 @@ function Story() {
 
 function CompVariants() {
   return (
-    <div className="py-10 border-t">
+    <div className="py-10 border-t border-border">
       <div className="max-w-[1000px] mx-auto px-4">
         <h2 className="text-3xl font-semibold py-4"> Invite Variants </h2>
 

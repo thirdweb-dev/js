@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import type { EngineTier } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, Spacer, Stack } from "@chakra-ui/react";

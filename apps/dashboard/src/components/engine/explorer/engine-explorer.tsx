@@ -1,3 +1,5 @@
+"use client";
+
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import "../../../css/swagger-ui.css";
 import "swagger-ui-react/swagger-ui.css";

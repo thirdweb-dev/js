@@ -21,7 +21,7 @@ export function SettingsCard(props: {
     <div className="border rounded-lg bg-muted/50 relative">
       <div
         className={cn(
-          "border-b px-4 lg:px-6 py-6 relative",
+          "border-b border-border px-4 lg:px-6 py-6 relative",
           props.noPermissionText && "cursor-not-allowed",
         )}
       >

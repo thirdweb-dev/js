@@ -1,4 +1,8 @@
+"use client";
+
+import { UnorderedList } from "@/components/ui/List/List";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import { useEngineInstances } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useTrack } from "hooks/analytics/useTrack";
 import {
@@ -9,11 +13,11 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { UnorderedList } from "../../@/components/ui/List/List";
-import { Button } from "../../@/components/ui/button";
 import { EngineInstancesTable } from "./engine-instances-table";
 
-export const EngineInstancesList = () => {
+export const EngineInstancesList = (props: {
+  engineLinkPrefix: string;
+}) => {
   const instancesQuery = useEngineInstances();
   const instances = instancesQuery.data ?? [];
   const trackEvent = useTrack();
@@ -55,7 +59,10 @@ export const EngineInstancesList = () => {
         <div className="h-6" />
 
         <div className="flex gap-3">
-          <CreateEngineLink label="Get Started" />
+          <CreateEngineLink
+            label="Get Started"
+            engineLinkPrefix={props.engineLinkPrefix}
+          />
 
           <Button
             asChild
@@ -68,7 +75,7 @@ export const EngineInstancesList = () => {
             }}
             variant="outline"
           >
-            <Link href={"/dashboard/engine/sandbox"} className="gap-2">
+            <Link href={`${props.engineLinkPrefix}/sandbox`} className="gap-2">
               Try Demo
               <RocketIcon className="size-4 text-muted-foreground" />
             </Link>
@@ -82,7 +89,10 @@ export const EngineInstancesList = () => {
             Already have an Engine Instance?
           </p>
 
-          <ImportEngineLink label="Import" />
+          <ImportEngineLink
+            label="Import"
+            engineLinkPrefix={props.engineLinkPrefix}
+          />
         </div>
 
         <div className="h-20" />
@@ -96,8 +106,14 @@ export const EngineInstancesList = () => {
       <div className="flex flex-col md:flex-row gap-4 justify-between md:items-center">
         <h1 className="text-4xl font-bold">Engine</h1>
         <div className="flex flex-row gap-2">
-          <ImportEngineLink label="Import" />
-          <CreateEngineLink label="Create Engine Instance" />
+          <ImportEngineLink
+            label="Import"
+            engineLinkPrefix={props.engineLinkPrefix}
+          />
+          <CreateEngineLink
+            label="Create Engine Instance"
+            engineLinkPrefix={props.engineLinkPrefix}
+          />
         </div>
       </div>
 
@@ -108,6 +124,7 @@ export const EngineInstancesList = () => {
         isFetched={instancesQuery.isFetched}
         isLoading={instancesQuery.isLoading}
         refetch={instancesQuery.refetch}
+        engineLinkPrefix={props.engineLinkPrefix}
       />
 
       <div className="h-10" />
@@ -140,6 +157,7 @@ function LearnMoreCard() {
 
 function CreateEngineLink(props: {
   label: string;
+  engineLinkPrefix: string;
 }) {
   const trackEvent = useTrack();
 
@@ -155,7 +173,7 @@ function CreateEngineLink(props: {
         });
       }}
     >
-      <Link href={"/dashboard/engine/create"} className="gap-2">
+      <Link href={`${props.engineLinkPrefix}/create`} className="gap-2">
         <PlusIcon className="size-4" />
         {props.label}
       </Link>
@@ -165,6 +183,7 @@ function CreateEngineLink(props: {
 
 function ImportEngineLink(props: {
   label: string;
+  engineLinkPrefix: string;
 }) {
   const trackEvent = useTrack();
 
@@ -179,7 +198,7 @@ function ImportEngineLink(props: {
         });
       }}
     >
-      <Link href={"/dashboard/engine/import"} className="gap-2">
+      <Link href={`${props.engineLinkPrefix}/import`} className="gap-2">
         <CloudDownloadIcon className="size-4" />
         {props.label}
       </Link>
