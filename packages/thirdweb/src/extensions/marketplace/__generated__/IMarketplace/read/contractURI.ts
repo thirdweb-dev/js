@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isContractURISupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isContractURISupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isContractURISupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeContractURIResult } from "thirdweb/extensions/marketplace";
- * const result = decodeContractURIResult("...");
+ * const result = decodeContractURIResultResult("...");
  * ```
  */
 export function decodeContractURIResult(result: Hex) {

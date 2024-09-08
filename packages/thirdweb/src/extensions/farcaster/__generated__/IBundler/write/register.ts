@@ -132,7 +132,7 @@ export function isRegisterSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRegisterParams } "thirdweb/extensions/farcaster";
+ * import { encodeRegisterParams } from "thirdweb/extensions/farcaster";
  * const result = encodeRegisterParams({
  *  registerParams: ...,
  *  signerParams: ...,
@@ -155,7 +155,7 @@ export function encodeRegisterParams(options: RegisterParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRegister } "thirdweb/extensions/farcaster";
+ * import { encodeRegister } from "thirdweb/extensions/farcaster";
  * const result = encodeRegister({
  *  registerParams: ...,
  *  signerParams: ...,
@@ -177,6 +177,7 @@ export function encodeRegister(options: RegisterParams) {
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { register } from "thirdweb/extensions/farcaster";
  *
  * const transaction = register({
@@ -190,8 +191,7 @@ export function encodeRegister(options: RegisterParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function register(

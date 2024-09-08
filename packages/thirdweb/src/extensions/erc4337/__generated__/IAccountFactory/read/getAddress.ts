@@ -42,7 +42,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAddressSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isGetAddressSupported(["0x..."]);
  * ```
  */
@@ -60,7 +59,7 @@ export function isGetAddressSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetAddressParams } "thirdweb/extensions/erc4337";
+ * import { encodeGetAddressParams } from "thirdweb/extensions/erc4337";
  * const result = encodeGetAddressParams({
  *  adminSigner: ...,
  *  data: ...,
@@ -78,7 +77,7 @@ export function encodeGetAddressParams(options: GetAddressParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetAddress } "thirdweb/extensions/erc4337";
+ * import { encodeGetAddress } from "thirdweb/extensions/erc4337";
  * const result = encodeGetAddress({
  *  adminSigner: ...,
  *  data: ...,
@@ -102,7 +101,7 @@ export function encodeGetAddress(options: GetAddressParams) {
  * @example
  * ```ts
  * import { decodeGetAddressResult } from "thirdweb/extensions/erc4337";
- * const result = decodeGetAddressResult("...");
+ * const result = decodeGetAddressResultResult("...");
  * ```
  */
 export function decodeGetAddressResult(result: Hex) {

@@ -1,0 +1,9 @@
+[
+  "function getInstalledModules() view returns ((address implementation, (bool registerInstallationCallback, bytes4[] requiredInterfaces, bytes4[] supportedInterfaces, (bytes4 selector)[] callbackFunctions, (bytes4 selector, uint256 permissionBits)[] fallbackFunctions) config)[])",
+  "function getSupportedCallbackFunctions() pure returns ((bytes4 selector, uint8 mode)[])",
+  "function installModule(address moduleContract, bytes data) payable",
+  "function supportsInterface(bytes4 interfaceID) view returns (bool)",
+  "function uninstallModule(address moduleContract, bytes data) payable",
+  "event ModuleInstalled(address caller, address implementation, address installedModule)",
+  "event ModuleUninstalled(address caller, address implementation, address installedModule)"
+]

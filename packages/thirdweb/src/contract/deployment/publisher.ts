@@ -8,6 +8,7 @@ import {
 } from "../../utils/any-evm/deploy-metadata.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { resolveImplementation } from "../../utils/bytecode/resolveImplementation.js";
+import { withCache } from "../../utils/promise/withCache.js";
 
 import { type ThirdwebContract, getContract } from "../contract.js";
 
@@ -23,22 +24,28 @@ export async function fetchPublishedContractMetadata(options: {
   publisher?: string;
   version?: string;
 }): Promise<FetchDeployMetadataResult> {
-  // TODO LRU cache
-  const publishedContract = await fetchPublishedContract({
-    client: options.client,
-    publisherAddress: options.publisher || THIRDWEB_DEPLOYER,
-    contractId: options.contractId,
-    version: options.version,
-  });
-  if (!publishedContract.publishMetadataUri) {
-    throw new Error(
-      `No published metadata URI found for ${options.contractId}`,
-    );
-  }
-  return fetchDeployMetadata({
-    client: options.client,
-    uri: publishedContract.publishMetadataUri,
-  });
+  const cacheKey = `${options.contractId}-${options.publisher}-${options.version}`;
+  return withCache(
+    async () => {
+      const publishedContract = await fetchPublishedContract({
+        client: options.client,
+        publisherAddress: options.publisher || THIRDWEB_DEPLOYER,
+        contractId: options.contractId,
+        version: options.version,
+      });
+      if (!publishedContract.publishMetadataUri) {
+        throw new Error(
+          `No published metadata URI found for ${options.contractId}`,
+        );
+      }
+      const data = await fetchDeployMetadata({
+        client: options.client,
+        uri: publishedContract.publishMetadataUri,
+      });
+      return data;
+    },
+    { cacheKey, cacheTime: 1000 * 60 * 60 },
+  );
 }
 
 // TODO: clean this up

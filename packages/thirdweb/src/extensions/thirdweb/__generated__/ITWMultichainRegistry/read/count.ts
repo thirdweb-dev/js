@@ -35,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isCountSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isCountSupported(["0x..."]);
  * ```
  */
@@ -53,7 +52,7 @@ export function isCountSupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeCountParams } "thirdweb/extensions/thirdweb";
+ * import { encodeCountParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeCountParams({
  *  deployer: ...,
  * });
@@ -70,7 +69,7 @@ export function encodeCountParams(options: CountParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeCount } "thirdweb/extensions/thirdweb";
+ * import { encodeCount } from "thirdweb/extensions/thirdweb";
  * const result = encodeCount({
  *  deployer: ...,
  * });
@@ -91,7 +90,7 @@ export function encodeCount(options: CountParams) {
  * @example
  * ```ts
  * import { decodeCountResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeCountResult("...");
+ * const result = decodeCountResultResult("...");
  * ```
  */
 export function decodeCountResult(result: Hex) {

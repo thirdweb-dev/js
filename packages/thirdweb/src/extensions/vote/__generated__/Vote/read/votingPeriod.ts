@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isVotingPeriodSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isVotingPeriodSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isVotingPeriodSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeVotingPeriodResult } from "thirdweb/extensions/vote";
- * const result = decodeVotingPeriodResult("...");
+ * const result = decodeVotingPeriodResultResult("...");
  * ```
  */
 export function decodeVotingPeriodResult(result: Hex) {

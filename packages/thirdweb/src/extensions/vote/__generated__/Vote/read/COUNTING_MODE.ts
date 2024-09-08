@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isCOUNTING_MODESupported } from "thirdweb/extensions/vote";
- *
  * const supported = isCOUNTING_MODESupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isCOUNTING_MODESupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeCOUNTING_MODEResult } from "thirdweb/extensions/vote";
- * const result = decodeCOUNTING_MODEResult("...");
+ * const result = decodeCOUNTING_MODEResultResult("...");
  * ```
  */
 export function decodeCOUNTING_MODEResult(result: Hex) {

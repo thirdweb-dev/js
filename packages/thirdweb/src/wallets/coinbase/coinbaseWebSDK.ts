@@ -418,7 +418,6 @@ export async function connectCoinbaseWalletSDK(
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
   })) as string[];
-  console.log("accounts", accounts);
 
   if (!accounts[0]) {
     throw new Error("No accounts found");

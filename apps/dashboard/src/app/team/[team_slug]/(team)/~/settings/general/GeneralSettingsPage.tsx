@@ -121,8 +121,8 @@ function TeamSlugFormControl(props: {
       }}
       noPermissionText={undefined} // TODO
     >
-      <div className="relative border rounded-lg flex md:w-[450px]">
-        <div className="bg-muted/50 text-muted-foreground/80 self-stretch flex items-center px-3 text-sm border-r rounded-l-lg font-mono">
+      <div className="relative border border-border rounded-lg flex md:w-[450px]">
+        <div className="bg-muted/50 text-muted-foreground/80 self-stretch flex items-center px-3 text-sm border-r border-border rounded-l-lg font-mono">
           thirdweb.com/team/
         </div>
         <Input

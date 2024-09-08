@@ -72,7 +72,7 @@ export function isGetRoyaltySupported(availableSelectors: string[]) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeGetRoyaltyParams } "thirdweb/extensions/common";
+ * import { encodeGetRoyaltyParams } from "thirdweb/extensions/common";
  * const result = encodeGetRoyaltyParams({
  *  tokenAddress: ...,
  *  tokenId: ...,
@@ -95,7 +95,7 @@ export function encodeGetRoyaltyParams(options: GetRoyaltyParams) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeGetRoyalty } "thirdweb/extensions/common";
+ * import { encodeGetRoyalty } from "thirdweb/extensions/common";
  * const result = encodeGetRoyalty({
  *  tokenAddress: ...,
  *  tokenId: ...,
@@ -119,6 +119,7 @@ export function encodeGetRoyalty(options: GetRoyaltyParams) {
  * @extension COMMON
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { getRoyalty } from "thirdweb/extensions/common";
  *
  * const transaction = getRoyalty({
@@ -132,8 +133,7 @@ export function encodeGetRoyalty(options: GetRoyaltyParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function getRoyalty(

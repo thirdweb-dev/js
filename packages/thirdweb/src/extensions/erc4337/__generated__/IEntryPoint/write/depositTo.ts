@@ -50,7 +50,7 @@ export function isDepositToSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeDepositToParams } "thirdweb/extensions/erc4337";
+ * import { encodeDepositToParams } from "thirdweb/extensions/erc4337";
  * const result = encodeDepositToParams({
  *  account: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeDepositToParams(options: DepositToParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeDepositTo } "thirdweb/extensions/erc4337";
+ * import { encodeDepositTo } from "thirdweb/extensions/erc4337";
  * const result = encodeDepositTo({
  *  account: ...,
  * });
@@ -89,6 +89,7 @@ export function encodeDepositTo(options: DepositToParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { depositTo } from "thirdweb/extensions/erc4337";
  *
  * const transaction = depositTo({
@@ -100,8 +101,7 @@ export function encodeDepositTo(options: DepositToParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function depositTo(

@@ -23,6 +23,7 @@ import plumeCTA from "./temp-assets/plumeCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
 import soneiumBanner from "./temp-assets/soneiumBanner.png";
+import soneiumCTA from "./temp-assets/soneiumCTA.png";
 import superpositionBanner from "./temp-assets/superpositionBanner.png";
 import superpositionCTA from "./temp-assets/superpositionCTA.png";
 import thirdwebBanner from "./temp-assets/thirdweb-banner.png";
@@ -173,6 +174,8 @@ const chainMetaRecord = {
       "Ancient8 is building an ETH gaming Layer 2 built with OP Stack, offering a suite of Web3 gaming infrastructure tools that serve as the distribution and marketing channel for games globally. With Space3 Game Publishing Platform, Ancient8 Gaming Guild, Reneverse Web3 Ads engine, A8ID, and Gosu Network, Ancient8 is dedicated to onboard millions of gamers to Web3 gaming, while providing unparalleled support to game developers looking to reach more players. Ancient8’s products have helped 100+ Web3 games and 200K+ users better navigate Web3.\n\nAncient8 has raised $10M in total financing from leading investors including Pantera, Dragonfly, Hashed, Makers Fund, Mechanism, Coinbase, IOSG, Jump and Animoca.",
     // TODO: add CTA
     headerImgUrl: ancient8Banner.src,
+    cta: OP_CTA,
+    gasSponsored: true,
   },
   // mantle
   5000: {
@@ -274,12 +277,8 @@ const chainMetaRecord = {
     headerImgUrl: thirdwebBanner.src,
     about:
       "Monetize your passion, your way. Discover the freedom to grow with our creator-focused platform.",
-    cta: {
-      backgroundImageUrl: thirdwebCTA.src,
-      title: "",
-      buttonLink: "https://www.donatuz.org/",
-      buttonText: "Learn more",
-    },
+    cta: OP_CTA,
+    gasSponsored: true,
   },
   //Fuse
   122: {
@@ -395,7 +394,7 @@ const chainMetaRecord = {
     about:
       "Soneium, an Ethereum layer-2 developed by Sony Block Solutions Labs. This versatile chain is a general-purpose blockchain platform that aims to evoke emotion, empower creativity, and meet diverse needs to go mainstream. Soneium will be simplifying blockchain experiences while empowering developers, creators, and communities. Built on accessibility, scalability, and efficiency, it aims to solve real-world problems across industries globally. Soneium will change the way we interact with the internet, opening up a world of innovative applications and unlimited potential for users worldwide.",
     cta: {
-      backgroundImageUrl: soneiumBanner.src,
+      backgroundImageUrl: soneiumCTA.src,
       title: "Begin your journey with Soneium Spark",
       buttonLink:
         "https://soneium.org/en/blog/soneium-minato-testnet-is-live-along-with-soneium-spark-incubation-program/",

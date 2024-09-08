@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsTrustedForwarderSupported } from "thirdweb/extensions/erc2771";
- *
  * const supported = isIsTrustedForwarderSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isIsTrustedForwarderSupported(availableSelectors: string[]) {
  * @extension ERC2771
  * @example
  * ```ts
- * import { encodeIsTrustedForwarderParams } "thirdweb/extensions/erc2771";
+ * import { encodeIsTrustedForwarderParams } from "thirdweb/extensions/erc2771";
  * const result = encodeIsTrustedForwarderParams({
  *  forwarder: ...,
  * });
@@ -74,7 +73,7 @@ export function encodeIsTrustedForwarderParams(
  * @extension ERC2771
  * @example
  * ```ts
- * import { encodeIsTrustedForwarder } "thirdweb/extensions/erc2771";
+ * import { encodeIsTrustedForwarder } from "thirdweb/extensions/erc2771";
  * const result = encodeIsTrustedForwarder({
  *  forwarder: ...,
  * });
@@ -97,7 +96,7 @@ export function encodeIsTrustedForwarder(options: IsTrustedForwarderParams) {
  * @example
  * ```ts
  * import { decodeIsTrustedForwarderResult } from "thirdweb/extensions/erc2771";
- * const result = decodeIsTrustedForwarderResult("...");
+ * const result = decodeIsTrustedForwarderResultResult("...");
  * ```
  */
 export function decodeIsTrustedForwarderResult(result: Hex) {

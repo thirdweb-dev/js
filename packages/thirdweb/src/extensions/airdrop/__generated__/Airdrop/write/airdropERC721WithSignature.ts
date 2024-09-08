@@ -101,7 +101,7 @@ export function isAirdropERC721WithSignatureSupported(
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropERC721WithSignatureParams } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropERC721WithSignatureParams } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropERC721WithSignatureParams({
  *  req: ...,
  *  signature: ...,
@@ -121,7 +121,7 @@ export function encodeAirdropERC721WithSignatureParams(
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropERC721WithSignature } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropERC721WithSignature } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropERC721WithSignature({
  *  req: ...,
  *  signature: ...,
@@ -146,6 +146,7 @@ export function encodeAirdropERC721WithSignature(
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { airdropERC721WithSignature } from "thirdweb/extensions/airdrop";
  *
  * const transaction = airdropERC721WithSignature({
@@ -158,8 +159,7 @@ export function encodeAirdropERC721WithSignature(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function airdropERC721WithSignature(

@@ -39,7 +39,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsValidSignatureSupported } from "thirdweb/extensions/erc1271";
- *
  * const supported = isIsValidSignatureSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isIsValidSignatureSupported(availableSelectors: string[]) {
  * @extension ERC1271
  * @example
  * ```ts
- * import { encodeIsValidSignatureParams } "thirdweb/extensions/erc1271";
+ * import { encodeIsValidSignatureParams } from "thirdweb/extensions/erc1271";
  * const result = encodeIsValidSignatureParams({
  *  hash: ...,
  *  signature: ...,
@@ -75,7 +74,7 @@ export function encodeIsValidSignatureParams(options: IsValidSignatureParams) {
  * @extension ERC1271
  * @example
  * ```ts
- * import { encodeIsValidSignature } "thirdweb/extensions/erc1271";
+ * import { encodeIsValidSignature } from "thirdweb/extensions/erc1271";
  * const result = encodeIsValidSignature({
  *  hash: ...,
  *  signature: ...,
@@ -99,7 +98,7 @@ export function encodeIsValidSignature(options: IsValidSignatureParams) {
  * @example
  * ```ts
  * import { decodeIsValidSignatureResult } from "thirdweb/extensions/erc1271";
- * const result = decodeIsValidSignatureResult("...");
+ * const result = decodeIsValidSignatureResultResult("...");
  * ```
  */
 export function decodeIsValidSignatureResult(result: Hex) {

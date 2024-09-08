@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetBatchIdAtIndexSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isGetBatchIdAtIndexSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isGetBatchIdAtIndexSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeGetBatchIdAtIndexParams } "thirdweb/extensions/erc1155";
+ * import { encodeGetBatchIdAtIndexParams } from "thirdweb/extensions/erc1155";
  * const result = encodeGetBatchIdAtIndexParams({
  *  index: ...,
  * });
@@ -71,7 +70,7 @@ export function encodeGetBatchIdAtIndexParams(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeGetBatchIdAtIndex } "thirdweb/extensions/erc1155";
+ * import { encodeGetBatchIdAtIndex } from "thirdweb/extensions/erc1155";
  * const result = encodeGetBatchIdAtIndex({
  *  index: ...,
  * });
@@ -94,7 +93,7 @@ export function encodeGetBatchIdAtIndex(options: GetBatchIdAtIndexParams) {
  * @example
  * ```ts
  * import { decodeGetBatchIdAtIndexResult } from "thirdweb/extensions/erc1155";
- * const result = decodeGetBatchIdAtIndexResult("...");
+ * const result = decodeGetBatchIdAtIndexResultResult("...");
  * ```
  */
 export function decodeGetBatchIdAtIndexResult(result: Hex) {

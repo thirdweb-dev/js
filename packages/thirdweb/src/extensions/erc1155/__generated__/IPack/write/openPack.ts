@@ -80,7 +80,7 @@ export function isOpenPackSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeOpenPackParams } "thirdweb/extensions/erc1155";
+ * import { encodeOpenPackParams } from "thirdweb/extensions/erc1155";
  * const result = encodeOpenPackParams({
  *  packId: ...,
  *  amountToOpen: ...,
@@ -98,7 +98,7 @@ export function encodeOpenPackParams(options: OpenPackParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeOpenPack } "thirdweb/extensions/erc1155";
+ * import { encodeOpenPack } from "thirdweb/extensions/erc1155";
  * const result = encodeOpenPack({
  *  packId: ...,
  *  amountToOpen: ...,
@@ -119,6 +119,7 @@ export function encodeOpenPack(options: OpenPackParams) {
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { openPack } from "thirdweb/extensions/erc1155";
  *
  * const transaction = openPack({
@@ -131,8 +132,7 @@ export function encodeOpenPack(options: OpenPackParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function openPack(

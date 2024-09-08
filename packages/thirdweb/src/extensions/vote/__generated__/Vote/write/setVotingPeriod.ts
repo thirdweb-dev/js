@@ -53,7 +53,7 @@ export function isSetVotingPeriodSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeSetVotingPeriodParams } "thirdweb/extensions/vote";
+ * import { encodeSetVotingPeriodParams } from "thirdweb/extensions/vote";
  * const result = encodeSetVotingPeriodParams({
  *  newVotingPeriod: ...,
  * });
@@ -70,7 +70,7 @@ export function encodeSetVotingPeriodParams(options: SetVotingPeriodParams) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeSetVotingPeriod } "thirdweb/extensions/vote";
+ * import { encodeSetVotingPeriod } from "thirdweb/extensions/vote";
  * const result = encodeSetVotingPeriod({
  *  newVotingPeriod: ...,
  * });
@@ -92,6 +92,7 @@ export function encodeSetVotingPeriod(options: SetVotingPeriodParams) {
  * @extension VOTE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setVotingPeriod } from "thirdweb/extensions/vote";
  *
  * const transaction = setVotingPeriod({
@@ -103,8 +104,7 @@ export function encodeSetVotingPeriod(options: SetVotingPeriodParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setVotingPeriod(

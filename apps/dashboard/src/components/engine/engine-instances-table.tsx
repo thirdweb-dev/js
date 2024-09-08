@@ -49,6 +49,7 @@ interface EngineInstancesTableProps {
   isLoading: boolean;
   isFetched: boolean;
   refetch: ReturnType<typeof useEngineInstances>["refetch"];
+  engineLinkPrefix: string;
 }
 
 export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
@@ -56,6 +57,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
   isLoading,
   isFetched,
   refetch,
+  engineLinkPrefix,
 }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
@@ -122,7 +124,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
             ) : (
               <div className="flex flex-col gap-0.5">
                 <Link
-                  href={`/dashboard/engine/${id}`}
+                  href={`${engineLinkPrefix}/${id}`}
                   className="text-foreground flex text-lg font-semibold items-center before:absolute before:inset-0 before:bg-transparent"
                 >
                   {name}

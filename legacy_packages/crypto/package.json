@@ -37,11 +37,11 @@
     "crypto-js": "^4.2.0",
     "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
-    "ethers": "^5.7.2",
+    "ethers": "5.7.2",
     "js-awe": "^1.0.65",
     "tinybench": "^2.6.0",
     "typescript": "5.5.4",
-    "viem": "2.21.1"
+    "viem": "2.21.2"
   },
   "scripts": {
     "format": "biome format ./src --write",

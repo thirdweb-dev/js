@@ -44,7 +44,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetStakeInfoForTokenSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isGetStakeInfoForTokenSupported(["0x..."]);
  * ```
  */
@@ -62,7 +61,7 @@ export function isGetStakeInfoForTokenSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeGetStakeInfoForTokenParams } "thirdweb/extensions/erc1155";
+ * import { encodeGetStakeInfoForTokenParams } from "thirdweb/extensions/erc1155";
  * const result = encodeGetStakeInfoForTokenParams({
  *  tokenId: ...,
  *  staker: ...,
@@ -82,7 +81,7 @@ export function encodeGetStakeInfoForTokenParams(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeGetStakeInfoForToken } "thirdweb/extensions/erc1155";
+ * import { encodeGetStakeInfoForToken } from "thirdweb/extensions/erc1155";
  * const result = encodeGetStakeInfoForToken({
  *  tokenId: ...,
  *  staker: ...,
@@ -108,7 +107,7 @@ export function encodeGetStakeInfoForToken(
  * @example
  * ```ts
  * import { decodeGetStakeInfoForTokenResult } from "thirdweb/extensions/erc1155";
- * const result = decodeGetStakeInfoForTokenResult("...");
+ * const result = decodeGetStakeInfoForTokenResultResult("...");
  * ```
  */
 export function decodeGetStakeInfoForTokenResult(result: Hex) {

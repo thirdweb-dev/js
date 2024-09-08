@@ -93,7 +93,7 @@ export function isPublishContractSupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodePublishContractParams } "thirdweb/extensions/thirdweb";
+ * import { encodePublishContractParams } from "thirdweb/extensions/thirdweb";
  * const result = encodePublishContractParams({
  *  publisher: ...,
  *  contractId: ...,
@@ -122,7 +122,7 @@ export function encodePublishContractParams(options: PublishContractParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodePublishContract } "thirdweb/extensions/thirdweb";
+ * import { encodePublishContract } from "thirdweb/extensions/thirdweb";
  * const result = encodePublishContract({
  *  publisher: ...,
  *  contractId: ...,
@@ -149,6 +149,7 @@ export function encodePublishContract(options: PublishContractParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { publishContract } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = publishContract({
@@ -165,8 +166,7 @@ export function encodePublishContract(options: PublishContractParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function publishContract(

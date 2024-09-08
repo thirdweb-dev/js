@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isQuorumDenominatorSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isQuorumDenominatorSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isQuorumDenominatorSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeQuorumDenominatorResult } from "thirdweb/extensions/vote";
- * const result = decodeQuorumDenominatorResult("...");
+ * const result = decodeQuorumDenominatorResultResult("...");
  * ```
  */
 export function decodeQuorumDenominatorResult(result: Hex) {

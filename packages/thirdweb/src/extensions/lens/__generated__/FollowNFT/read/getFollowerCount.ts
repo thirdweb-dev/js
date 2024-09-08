@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetFollowerCountSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetFollowerCountSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isGetFollowerCountSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetFollowerCountResult } from "thirdweb/extensions/lens";
- * const result = decodeGetFollowerCountResult("...");
+ * const result = decodeGetFollowerCountResultResult("...");
  * ```
  */
 export function decodeGetFollowerCountResult(result: Hex) {

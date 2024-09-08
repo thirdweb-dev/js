@@ -33,13 +33,13 @@ export function isDepositSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { deposit } from "thirdweb/extensions/erc20";
  *
  * const transaction = deposit();
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function deposit(options: BaseTransactionOptions) {

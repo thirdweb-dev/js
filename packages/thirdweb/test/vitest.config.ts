@@ -1,5 +1,4 @@
 import { join } from "node:path";
-// @ts-expect-error - no types
 import codspeedPlugin from "@codspeed/vitest-plugin";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
@@ -7,6 +6,7 @@ import { defineConfig } from "vitest/config";
 const plugins = process.env.CI ? [codspeedPlugin()] : [];
 
 export default defineConfig({
+  // @ts-expect-error - this is a valid vite config
   plugins: [...plugins, react()],
   test: {
     alias: {

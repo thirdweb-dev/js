@@ -110,7 +110,7 @@ export function isSetClaimConditionsSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSetClaimConditionsParams } "thirdweb/extensions/erc1155";
+ * import { encodeSetClaimConditionsParams } from "thirdweb/extensions/erc1155";
  * const result = encodeSetClaimConditionsParams({
  *  tokenId: ...,
  *  phases: ...,
@@ -135,7 +135,7 @@ export function encodeSetClaimConditionsParams(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSetClaimConditions } "thirdweb/extensions/erc1155";
+ * import { encodeSetClaimConditions } from "thirdweb/extensions/erc1155";
  * const result = encodeSetClaimConditions({
  *  tokenId: ...,
  *  phases: ...,
@@ -159,6 +159,7 @@ export function encodeSetClaimConditions(options: SetClaimConditionsParams) {
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setClaimConditions } from "thirdweb/extensions/erc1155";
  *
  * const transaction = setClaimConditions({
@@ -172,8 +173,7 @@ export function encodeSetClaimConditions(options: SetClaimConditionsParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setClaimConditions(

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEngineContractSubscription } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, FormControl, Switch } from "@chakra-ui/react";
 import { useState } from "react";

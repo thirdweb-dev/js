@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isVotingDelaySupported } from "thirdweb/extensions/vote";
- *
  * const supported = isVotingDelaySupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isVotingDelaySupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeVotingDelayResult } from "thirdweb/extensions/vote";
- * const result = decodeVotingDelayResult("...");
+ * const result = decodeVotingDelayResultResult("...");
  * ```
  */
 export function decodeVotingDelayResult(result: Hex) {

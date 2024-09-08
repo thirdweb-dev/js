@@ -1,40 +1,112 @@
+"use client";
+
+import { MobileSidebar } from "@/components/blocks/MobileSidebar";
+import { Sidebar, type SidebarLink } from "@/components/blocks/Sidebar";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { ArrowLeftIcon, CircleAlertIcon } from "lucide-react";
-import Link from "next/link";
-import { useCallback, useMemo } from "react";
-import invariant from "tiny-invariant";
-import { CopyTextButton } from "../../@/components/ui/CopyTextButton";
-import { Button } from "../../@/components/ui/button";
-import { Separator } from "../../@/components/ui/separator";
-import { useDashboardRouter } from "../../@/lib/DashboardRouter";
 import {
   type EngineInstance,
   useEngineInstances,
-} from "../../@3rdweb-sdk/react/hooks/useEngine";
-import { SidebarNav } from "../../core-ui/sidebar/nav";
-import type { Route } from "../../core-ui/sidebar/types";
-import { useTrack } from "../../hooks/analytics/useTrack";
+} from "@3rdweb-sdk/react/hooks/useEngine";
+import { ArrowLeftIcon, ChevronDownIcon, CircleAlertIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import invariant from "tiny-invariant";
 import { EngineVersionBadge } from "./badges/version";
 import { useHasEnginePermission } from "./useHasEnginePermission";
 
-export type ActivePage =
-  | "overview"
-  | "explorer"
-  | "relayers"
-  | "contract-subscriptions"
-  | "admins"
-  | "access-tokens"
-  | "webhooks"
-  | "configuration"
-  | "metrics";
+const sidebarLinkMeta: Array<{ pathId: string; label: string }> = [
+  {
+    pathId: "",
+    label: "Overview",
+  },
+  {
+    pathId: "explorer",
+    label: "Explorer",
+  },
+  {
+    pathId: "relayers",
+    label: "Relayers",
+  },
+  {
+    pathId: "contract-subscriptions",
+    label: "Contract Subscriptions",
+  },
+  {
+    pathId: "admins",
+    label: "Admins",
+  },
+  {
+    pathId: "access-tokens",
+    label: "Access Tokens",
+  },
+  {
+    pathId: "webhooks",
+    label: "Webhooks",
+  },
+  {
+    pathId: "configuration",
+    label: "Configuration",
+  },
+  {
+    pathId: "metrics",
+    label: "Metrics",
+  },
+];
 
 const NEXT_PUBLIC_DEMO_ENGINE_URL = process.env.NEXT_PUBLIC_DEMO_ENGINE_URL;
 
-export function EnginePageLayout(props: {
+export function EngineSidebarLayout(props: {
   engineId: string;
-  activePage: ActivePage;
+  rootPath: string;
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname();
+  const links: SidebarLink[] = sidebarLinkMeta.map((linkMeta) => {
+    return {
+      href: `${props.rootPath}/${props.engineId}${linkMeta.pathId === "" ? "" : `/${linkMeta.pathId}`}`,
+      label: linkMeta.label,
+      exactMatch: true,
+      tracking: {
+        category: "engine",
+        action: "navigate-tab",
+        label: linkMeta.label,
+      },
+    };
+  });
+
+  const activeLink = links.find((link) => pathname === link.href);
+
+  return (
+    <div className="flex gap-6">
+      <Sidebar links={links} />
+      <div className="grow max-sm:w-full pt-6 pb-10">
+        <MobileSidebar
+          links={links}
+          trigger={
+            <Button
+              className="w-full lg:hidden text-left justify-between gap-2 mb-6"
+              variant="outline"
+            >
+              {activeLink?.label || "Connect"}
+              <ChevronDownIcon className="size-5 text-muted-foreground" />
+            </Button>
+          }
+        />
+
+        {props.children}
+      </div>
+    </div>
+  );
+}
+
+export function WithEngineInstance(props: {
+  engineId: string;
   content: React.FC<{ instance: EngineInstance }>;
+  rootPath: string;
 }) {
   const { data } = useAccount();
 
@@ -54,21 +126,21 @@ export function EnginePageLayout(props: {
     };
 
     return (
-      <RenderInstance
+      <RenderEngineInstanceHeader
         instance={sandboxEngine}
-        activePage={props.activePage}
         content={props.content}
+        rootPath={props.rootPath}
       />
     );
   }
 
-  return <QueryAndRenderInstance {...props} />;
+  return <QueryAndRenderInstanceHeader {...props} />;
 }
 
-function QueryAndRenderInstance(props: {
-  activePage: ActivePage;
+function QueryAndRenderInstanceHeader(props: {
   engineId: string;
   content: React.FC<{ instance: EngineInstance }>;
+  rootPath: string;
 }) {
   const instancesQuery = useEngineInstances();
   const instance = instancesQuery.data?.find((x) => x.id === props.engineId);
@@ -78,22 +150,26 @@ function QueryAndRenderInstance(props: {
   }
 
   if (!instance) {
-    return <EngineErrorPage>Engine Instance Not Found</EngineErrorPage>;
+    return (
+      <EngineErrorPage rootPath={props.rootPath}>
+        Engine Instance Not Found
+      </EngineErrorPage>
+    );
   }
 
   return (
     <EnsurePermissionAndRenderInstance
       instance={instance}
-      activePage={props.activePage}
       content={props.content}
+      rootPath={props.rootPath}
     />
   );
 }
 
 function EnsurePermissionAndRenderInstance(props: {
-  activePage: ActivePage;
   content: React.FC<{ instance: EngineInstance }>;
   instance: EngineInstance;
+  rootPath: string;
 }) {
   const permissionQuery = useHasEnginePermission({
     instanceUrl: props.instance.url,
@@ -106,7 +182,7 @@ function EnsurePermissionAndRenderInstance(props: {
   if (permissionQuery.error instanceof Error) {
     if (permissionQuery.error.message.includes("Failed to fetch")) {
       return (
-        <EngineErrorPage>
+        <EngineErrorPage rootPath={props.rootPath}>
           <p>Unable to connect to Engine</p>
 
           <p>Ensure that your Engine is publicly accessible</p>
@@ -115,7 +191,7 @@ function EnsurePermissionAndRenderInstance(props: {
     }
 
     return (
-      <EngineErrorPage>
+      <EngineErrorPage rootPath={props.rootPath}>
         <p>There was an unexpected error reaching your Engine instance</p>
         <p>Try again or contact us if this issue persists.</p>
       </EngineErrorPage>
@@ -136,112 +212,30 @@ function EnsurePermissionAndRenderInstance(props: {
   }
 
   return (
-    <RenderInstance
+    <RenderEngineInstanceHeader
+      rootPath={props.rootPath}
       instance={props.instance}
-      activePage={props.activePage}
       content={props.content}
     />
   );
 }
 
-function RenderInstance(props: {
+function RenderEngineInstanceHeader(props: {
   instance: EngineInstance;
-  activePage: ActivePage;
   content: React.FC<{ instance: EngineInstance }>;
+  rootPath: string;
 }) {
-  const { instance, activePage } = props;
-  const router = useDashboardRouter();
-  const trackEvent = useTrack();
-
-  const handleClick = useCallback(
-    (id: ActivePage) => {
-      trackEvent({
-        category: "engine",
-        action: "navigate-tab",
-        label: id,
-        url: instance.url,
-      });
-      if (id === "overview") {
-        router.push(`/dashboard/engine/${instance.id}`);
-      } else {
-        router.push(`/dashboard/engine/${instance.id}/${id}`);
-      }
-    },
-    [instance.url, instance.id, trackEvent, router],
-  );
-
-  const links = useMemo(
-    () =>
-      [
-        {
-          path: `/dashboard/engine/${instance.id}`,
-          title: "Overview",
-          name: "overview",
-          onClick: () => handleClick("overview"),
-        },
-        {
-          path: `/dashboard/engine/${instance.id}/explorer`,
-          title: "Explorer",
-          name: "explorer",
-          onClick: () => handleClick("explorer"),
-        },
-        {
-          path: `/dashboard/engine/${instance.id}/relayers`,
-          title: "Relayers",
-          name: "relayers",
-          onClick: () => handleClick("relayers"),
-        },
-        {
-          path: `/dashboard/engine/${instance.id}/contract-subscriptions`,
-          title: "Contract Subscriptions",
-          name: "contract-subscriptions",
-          onClick: () => handleClick("contract-subscriptions"),
-        },
-        {
-          path: `/dashboard/engine/${instance.id}/admins`,
-          title: "Admins",
-          name: "admins",
-          onClick: () => handleClick("admins"),
-        },
-        {
-          path: `/dashboard/engine/${instance.id}/access-tokens`,
-          title: "Access Tokens",
-          name: "access-tokens",
-          onClick: () => handleClick("access-tokens"),
-        },
-        {
-          path: `/dashboard/engine/${instance.id}/webhooks`,
-          title: "Webhooks",
-          name: "webhooks",
-          onClick: () => handleClick("webhooks"),
-        },
-        {
-          path: `/dashboard/engine/${instance.id}/configuration`,
-          title: "Configuration",
-          name: "configuration",
-          onClick: () => handleClick("configuration"),
-        },
-        {
-          path: `/dashboard/engine/${instance.id}/metrics`,
-          title: "Metrics",
-          name: "metrics",
-          onClick: () => handleClick("metrics"),
-        },
-      ] satisfies Route[],
-    [handleClick, instance.id],
-  );
+  const { instance } = props;
 
   return (
-    <>
-      <SidebarNav links={links} activePage={activePage} title="Engine" />
-
+    <div>
       <div className="flex">
         <Button
           variant="ghost"
           className="px-2 py-1 -translate-x-2 flex items-center gap-2 text-muted-foreground hover:text-foreground h-auto"
         >
           <Link
-            href="/dashboard/engine"
+            href={props.rootPath}
             aria-label="Go Back"
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
           >
@@ -281,17 +275,18 @@ function RenderInstance(props: {
       <div className="h-10 " />
 
       <props.content instance={instance} />
-    </>
+    </div>
   );
 }
 
 function EngineErrorPage(props: {
   children: React.ReactNode;
+  rootPath: string;
 }) {
   return (
     <div>
       <Link
-        href="/dashboard/engine"
+        href={props.rootPath}
         className="gap-2 flex items-center text-muted-foreground hover:text-foreground"
       >
         <ArrowLeftIcon className="size-5" />

@@ -55,7 +55,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetFollowDataSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetFollowDataSupported(["0x..."]);
  * ```
  */
@@ -73,7 +72,7 @@ export function isGetFollowDataSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetFollowDataParams } "thirdweb/extensions/lens";
+ * import { encodeGetFollowDataParams } from "thirdweb/extensions/lens";
  * const result = encodeGetFollowDataParams({
  *  followTokenId: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeGetFollowDataParams(options: GetFollowDataParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetFollowData } "thirdweb/extensions/lens";
+ * import { encodeGetFollowData } from "thirdweb/extensions/lens";
  * const result = encodeGetFollowData({
  *  followTokenId: ...,
  * });
@@ -113,7 +112,7 @@ export function encodeGetFollowData(options: GetFollowDataParams) {
  * @example
  * ```ts
  * import { decodeGetFollowDataResult } from "thirdweb/extensions/lens";
- * const result = decodeGetFollowDataResult("...");
+ * const result = decodeGetFollowDataResultResult("...");
  * ```
  */
 export function decodeGetFollowDataResult(result: Hex) {

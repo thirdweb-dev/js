@@ -35,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetEthBalanceSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetEthBalanceSupported(["0x..."]);
  * ```
  */
@@ -53,7 +52,7 @@ export function isGetEthBalanceSupported(availableSelectors: string[]) {
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeGetEthBalanceParams } "thirdweb/extensions/multicall3";
+ * import { encodeGetEthBalanceParams } from "thirdweb/extensions/multicall3";
  * const result = encodeGetEthBalanceParams({
  *  addr: ...,
  * });
@@ -70,7 +69,7 @@ export function encodeGetEthBalanceParams(options: GetEthBalanceParams) {
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeGetEthBalance } "thirdweb/extensions/multicall3";
+ * import { encodeGetEthBalance } from "thirdweb/extensions/multicall3";
  * const result = encodeGetEthBalance({
  *  addr: ...,
  * });
@@ -93,7 +92,7 @@ export function encodeGetEthBalance(options: GetEthBalanceParams) {
  * @example
  * ```ts
  * import { decodeGetEthBalanceResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetEthBalanceResult("...");
+ * const result = decodeGetEthBalanceResultResult("...");
  * ```
  */
 export function decodeGetEthBalanceResult(result: Hex) {

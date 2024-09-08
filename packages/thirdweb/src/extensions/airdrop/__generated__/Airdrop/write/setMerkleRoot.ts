@@ -66,7 +66,7 @@ export function isSetMerkleRootSupported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeSetMerkleRootParams } "thirdweb/extensions/airdrop";
+ * import { encodeSetMerkleRootParams } from "thirdweb/extensions/airdrop";
  * const result = encodeSetMerkleRootParams({
  *  token: ...,
  *  tokenMerkleRoot: ...,
@@ -89,7 +89,7 @@ export function encodeSetMerkleRootParams(options: SetMerkleRootParams) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeSetMerkleRoot } "thirdweb/extensions/airdrop";
+ * import { encodeSetMerkleRoot } from "thirdweb/extensions/airdrop";
  * const result = encodeSetMerkleRoot({
  *  token: ...,
  *  tokenMerkleRoot: ...,
@@ -113,6 +113,7 @@ export function encodeSetMerkleRoot(options: SetMerkleRootParams) {
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setMerkleRoot } from "thirdweb/extensions/airdrop";
  *
  * const transaction = setMerkleRoot({
@@ -126,8 +127,7 @@ export function encodeSetMerkleRoot(options: SetMerkleRootParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setMerkleRoot(

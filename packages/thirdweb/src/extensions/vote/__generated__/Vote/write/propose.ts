@@ -76,7 +76,7 @@ export function isProposeSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeProposeParams } "thirdweb/extensions/vote";
+ * import { encodeProposeParams } from "thirdweb/extensions/vote";
  * const result = encodeProposeParams({
  *  targets: ...,
  *  values: ...,
@@ -101,7 +101,7 @@ export function encodeProposeParams(options: ProposeParams) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodePropose } "thirdweb/extensions/vote";
+ * import { encodePropose } from "thirdweb/extensions/vote";
  * const result = encodePropose({
  *  targets: ...,
  *  values: ...,
@@ -124,6 +124,7 @@ export function encodePropose(options: ProposeParams) {
  * @extension VOTE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { propose } from "thirdweb/extensions/vote";
  *
  * const transaction = propose({
@@ -138,8 +139,7 @@ export function encodePropose(options: ProposeParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function propose(

@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isBalanceOfSupported } from "thirdweb/extensions/erc20";
- *
  * const supported = isBalanceOfSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isBalanceOfSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeBalanceOfParams } "thirdweb/extensions/erc20";
+ * import { encodeBalanceOfParams } from "thirdweb/extensions/erc20";
  * const result = encodeBalanceOfParams({
  *  address: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeBalanceOfParams(options: BalanceOfParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeBalanceOf } "thirdweb/extensions/erc20";
+ * import { encodeBalanceOf } from "thirdweb/extensions/erc20";
  * const result = encodeBalanceOf({
  *  address: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeBalanceOf(options: BalanceOfParams) {
  * @example
  * ```ts
  * import { decodeBalanceOfResult } from "thirdweb/extensions/erc20";
- * const result = decodeBalanceOfResult("...");
+ * const result = decodeBalanceOfResultResult("...");
  * ```
  */
 export function decodeBalanceOfResult(result: Hex) {

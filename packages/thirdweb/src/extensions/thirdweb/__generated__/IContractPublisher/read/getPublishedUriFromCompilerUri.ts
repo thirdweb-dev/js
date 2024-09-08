@@ -38,7 +38,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetPublishedUriFromCompilerUriSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isGetPublishedUriFromCompilerUriSupported(["0x..."]);
  * ```
  */
@@ -58,7 +57,7 @@ export function isGetPublishedUriFromCompilerUriSupported(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetPublishedUriFromCompilerUriParams } "thirdweb/extensions/thirdweb";
+ * import { encodeGetPublishedUriFromCompilerUriParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetPublishedUriFromCompilerUriParams({
  *  compilerMetadataUri: ...,
  * });
@@ -77,7 +76,7 @@ export function encodeGetPublishedUriFromCompilerUriParams(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetPublishedUriFromCompilerUri } "thirdweb/extensions/thirdweb";
+ * import { encodeGetPublishedUriFromCompilerUri } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetPublishedUriFromCompilerUri({
  *  compilerMetadataUri: ...,
  * });
@@ -102,7 +101,7 @@ export function encodeGetPublishedUriFromCompilerUri(
  * @example
  * ```ts
  * import { decodeGetPublishedUriFromCompilerUriResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeGetPublishedUriFromCompilerUriResult("...");
+ * const result = decodeGetPublishedUriFromCompilerUriResultResult("...");
  * ```
  */
 export function decodeGetPublishedUriFromCompilerUriResult(result: Hex) {

@@ -35,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isMaxDepositSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isMaxDepositSupported(["0x..."]);
  * ```
  */
@@ -53,7 +52,7 @@ export function isMaxDepositSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMaxDepositParams } "thirdweb/extensions/erc4626";
+ * import { encodeMaxDepositParams } from "thirdweb/extensions/erc4626";
  * const result = encodeMaxDepositParams({
  *  receiver: ...,
  * });
@@ -70,7 +69,7 @@ export function encodeMaxDepositParams(options: MaxDepositParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMaxDeposit } "thirdweb/extensions/erc4626";
+ * import { encodeMaxDeposit } from "thirdweb/extensions/erc4626";
  * const result = encodeMaxDeposit({
  *  receiver: ...,
  * });
@@ -93,7 +92,7 @@ export function encodeMaxDeposit(options: MaxDepositParams) {
  * @example
  * ```ts
  * import { decodeMaxDepositResult } from "thirdweb/extensions/erc4626";
- * const result = decodeMaxDepositResult("...");
+ * const result = decodeMaxDepositResultResult("...");
  * ```
  */
 export function decodeMaxDepositResult(result: Hex) {

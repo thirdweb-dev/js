@@ -38,7 +38,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetScoreSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isGetScoreSupported(["0x..."]);
  * ```
  */
@@ -56,7 +55,7 @@ export function isGetScoreSupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetScoreParams } "thirdweb/extensions/thirdweb";
+ * import { encodeGetScoreParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetScoreParams({
  *  tokenOwner: ...,
  * });
@@ -73,7 +72,7 @@ export function encodeGetScoreParams(options: GetScoreParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetScore } "thirdweb/extensions/thirdweb";
+ * import { encodeGetScore } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetScore({
  *  tokenOwner: ...,
  * });
@@ -94,7 +93,7 @@ export function encodeGetScore(options: GetScoreParams) {
  * @example
  * ```ts
  * import { decodeGetScoreResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeGetScoreResult("...");
+ * const result = decodeGetScoreResultResult("...");
  * ```
  */
 export function decodeGetScoreResult(result: Hex) {

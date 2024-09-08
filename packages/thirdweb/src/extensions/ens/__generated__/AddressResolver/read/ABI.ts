@@ -45,7 +45,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isABISupported } from "thirdweb/extensions/ens";
- *
  * const supported = isABISupported(["0x..."]);
  * ```
  */
@@ -63,7 +62,7 @@ export function isABISupported(availableSelectors: string[]) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeABIParams } "thirdweb/extensions/ens";
+ * import { encodeABIParams } from "thirdweb/extensions/ens";
  * const result = encodeABIParams({
  *  name: ...,
  *  contentTypes: ...,
@@ -81,7 +80,7 @@ export function encodeABIParams(options: ABIParams) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeABI } "thirdweb/extensions/ens";
+ * import { encodeABI } from "thirdweb/extensions/ens";
  * const result = encodeABI({
  *  name: ...,
  *  contentTypes: ...,
@@ -103,7 +102,7 @@ export function encodeABI(options: ABIParams) {
  * @example
  * ```ts
  * import { decodeABIResult } from "thirdweb/extensions/ens";
- * const result = decodeABIResult("...");
+ * const result = decodeABIResultResult("...");
  * ```
  */
 export function decodeABIResult(result: Hex) {

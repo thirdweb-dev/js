@@ -60,7 +60,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAllPublishedContractsSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isGetAllPublishedContractsSupported(["0x..."]);
  * ```
  */
@@ -80,7 +79,7 @@ export function isGetAllPublishedContractsSupported(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetAllPublishedContractsParams } "thirdweb/extensions/thirdweb";
+ * import { encodeGetAllPublishedContractsParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetAllPublishedContractsParams({
  *  publisher: ...,
  * });
@@ -99,7 +98,7 @@ export function encodeGetAllPublishedContractsParams(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetAllPublishedContracts } "thirdweb/extensions/thirdweb";
+ * import { encodeGetAllPublishedContracts } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetAllPublishedContracts({
  *  publisher: ...,
  * });
@@ -124,7 +123,7 @@ export function encodeGetAllPublishedContracts(
  * @example
  * ```ts
  * import { decodeGetAllPublishedContractsResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeGetAllPublishedContractsResult("...");
+ * const result = decodeGetAllPublishedContractsResultResult("...");
  * ```
  */
 export function decodeGetAllPublishedContractsResult(result: Hex) {

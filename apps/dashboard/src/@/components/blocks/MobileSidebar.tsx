@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 import { NavLink } from "../ui/NavLink";
+import type { SidebarLink } from "./Sidebar";
 
 export function MobileSidebar(props: {
-  links?: { href: string; label: React.ReactNode }[];
+  links?: SidebarLink[];
   footer?: React.ReactNode;
   trigger: React.ReactNode;
 }) {
@@ -31,6 +32,8 @@ export function MobileSidebar(props: {
                   href={link.href}
                   className="!text-left justify-start flex gap-2 h-auto py-3"
                   activeClassName="bg-accent"
+                  exactMatch={link.exactMatch}
+                  tracking={link.tracking}
                 >
                   {link.label}
                 </NavLink>

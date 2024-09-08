@@ -50,7 +50,7 @@ export function isDeleteSharedMetadataSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeDeleteSharedMetadataParams } "thirdweb/extensions/erc721";
+ * import { encodeDeleteSharedMetadataParams } from "thirdweb/extensions/erc721";
  * const result = encodeDeleteSharedMetadataParams({
  *  id: ...,
  * });
@@ -69,7 +69,7 @@ export function encodeDeleteSharedMetadataParams(
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeDeleteSharedMetadata } "thirdweb/extensions/erc721";
+ * import { encodeDeleteSharedMetadata } from "thirdweb/extensions/erc721";
  * const result = encodeDeleteSharedMetadata({
  *  id: ...,
  * });
@@ -93,6 +93,7 @@ export function encodeDeleteSharedMetadata(
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { deleteSharedMetadata } from "thirdweb/extensions/erc721";
  *
  * const transaction = deleteSharedMetadata({
@@ -104,8 +105,7 @@ export function encodeDeleteSharedMetadata(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function deleteSharedMetadata(

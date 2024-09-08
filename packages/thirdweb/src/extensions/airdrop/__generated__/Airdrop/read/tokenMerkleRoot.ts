@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTokenMerkleRootSupported } from "thirdweb/extensions/airdrop";
- *
  * const supported = isTokenMerkleRootSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isTokenMerkleRootSupported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeTokenMerkleRootParams } "thirdweb/extensions/airdrop";
+ * import { encodeTokenMerkleRootParams } from "thirdweb/extensions/airdrop";
  * const result = encodeTokenMerkleRootParams({
  *  tokenAddress: ...,
  * });
@@ -72,7 +71,7 @@ export function encodeTokenMerkleRootParams(options: TokenMerkleRootParams) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeTokenMerkleRoot } "thirdweb/extensions/airdrop";
+ * import { encodeTokenMerkleRoot } from "thirdweb/extensions/airdrop";
  * const result = encodeTokenMerkleRoot({
  *  tokenAddress: ...,
  * });
@@ -95,7 +94,7 @@ export function encodeTokenMerkleRoot(options: TokenMerkleRootParams) {
  * @example
  * ```ts
  * import { decodeTokenMerkleRootResult } from "thirdweb/extensions/airdrop";
- * const result = decodeTokenMerkleRootResult("...");
+ * const result = decodeTokenMerkleRootResultResult("...");
  * ```
  */
 export function decodeTokenMerkleRootResult(result: Hex) {

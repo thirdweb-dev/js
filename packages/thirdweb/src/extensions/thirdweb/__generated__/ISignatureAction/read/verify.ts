@@ -71,7 +71,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isVerifySupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isVerifySupported(["0x..."]);
  * ```
  */
@@ -89,7 +88,7 @@ export function isVerifySupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeVerifyParams } "thirdweb/extensions/thirdweb";
+ * import { encodeVerifyParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeVerifyParams({
  *  req: ...,
  *  signature: ...,
@@ -107,7 +106,7 @@ export function encodeVerifyParams(options: VerifyParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeVerify } "thirdweb/extensions/thirdweb";
+ * import { encodeVerify } from "thirdweb/extensions/thirdweb";
  * const result = encodeVerify({
  *  req: ...,
  *  signature: ...,
@@ -129,7 +128,7 @@ export function encodeVerify(options: VerifyParams) {
  * @example
  * ```ts
  * import { decodeVerifyResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeVerifyResult("...");
+ * const result = decodeVerifyResultResult("...");
  * ```
  */
 export function decodeVerifyResult(result: Hex) {

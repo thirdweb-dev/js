@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isDeprecationTimestampSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isDeprecationTimestampSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isDeprecationTimestampSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeDeprecationTimestampResult } from "thirdweb/extensions/farcaster";
- * const result = decodeDeprecationTimestampResult("...");
+ * const result = decodeDeprecationTimestampResultResult("...");
  * ```
  */
 export function decodeDeprecationTimestampResult(result: Hex) {

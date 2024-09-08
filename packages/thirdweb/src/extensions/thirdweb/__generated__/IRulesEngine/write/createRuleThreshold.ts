@@ -87,7 +87,7 @@ export function isCreateRuleThresholdSupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeCreateRuleThresholdParams } "thirdweb/extensions/thirdweb";
+ * import { encodeCreateRuleThresholdParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeCreateRuleThresholdParams({
  *  rule: ...,
  * });
@@ -106,7 +106,7 @@ export function encodeCreateRuleThresholdParams(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeCreateRuleThreshold } "thirdweb/extensions/thirdweb";
+ * import { encodeCreateRuleThreshold } from "thirdweb/extensions/thirdweb";
  * const result = encodeCreateRuleThreshold({
  *  rule: ...,
  * });
@@ -128,6 +128,7 @@ export function encodeCreateRuleThreshold(options: CreateRuleThresholdParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { createRuleThreshold } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = createRuleThreshold({
@@ -139,8 +140,7 @@ export function encodeCreateRuleThreshold(options: CreateRuleThresholdParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function createRuleThreshold(

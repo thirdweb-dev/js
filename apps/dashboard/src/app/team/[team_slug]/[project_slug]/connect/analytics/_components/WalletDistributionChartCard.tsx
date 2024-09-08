@@ -20,7 +20,7 @@ import { useMemo, useState } from "react";
 import { Pie, PieChart } from "recharts";
 import { EmptyChartState, LoadingChartState } from "./EmptyChartState";
 
-type ChartToShow = "uniqueWallets" | "totalWallets";
+type ChartToShow = "uniqueWalletsConnected" | "totalConnections";
 
 type ChartData = {
   walletType: string;
@@ -29,36 +29,41 @@ type ChartData = {
 };
 
 const chartLabelToShow: Record<ChartToShow, string> = {
-  uniqueWallets: "Unique Wallets",
-  totalWallets: "Total Wallets",
+  uniqueWalletsConnected: "Unique Wallets",
+  totalConnections: "Total Wallets",
 };
 
 export function WalletDistributionChartCard(props: {
-  walletStats: WalletStats;
+  walletStats: WalletStats[];
   isLoading: boolean;
 }) {
   const { walletStats } = props;
-  const [chartToShow, setChartToShow] = useState<ChartToShow>("uniqueWallets");
-  const chartToShowOptions: ChartToShow[] = ["uniqueWallets", "totalWallets"];
+  const [chartToShow, setChartToShow] = useState<ChartToShow>(
+    "uniqueWalletsConnected",
+  );
+  const chartToShowOptions: ChartToShow[] = [
+    "uniqueWalletsConnected",
+    "totalConnections",
+  ];
 
   const { chartConfig, chartData } = useMemo(() => {
     const _chartConfig: ChartConfig = {};
     const _chartDataMap: Map<string, number> = new Map();
 
-    for (const data of walletStats.timeSeries) {
+    for (const data of walletStats) {
       const chartData = _chartDataMap.get(data.walletType);
 
       // if no data for current day - create new entry
       if (!chartData) {
         _chartDataMap.set(data.walletType, data[chartToShow]);
       } else {
-        _chartDataMap.set(data.walletType, data[chartToShow]);
+        _chartDataMap.set(data.walletType, chartData + data[chartToShow]);
       }
     }
 
     // create chart config for each wallet type and assign a unique color, start from 0hue to 360hue
     const uniqueWalletTypes = Array.from(
-      new Set(walletStats.timeSeries.map((data) => data.walletType)),
+      new Set(walletStats.map((data) => data.walletType)),
     );
 
     const hueIncrement = 360 / uniqueWalletTypes.length;
@@ -72,11 +77,13 @@ export function WalletDistributionChartCard(props: {
     }
 
     const _chartData: ChartData[] = Array.from(_chartDataMap).map(
-      ([walletType, totalWallets]) => ({
-        walletType,
-        totalWallets,
-        fill: _chartConfig[walletType].color || "transparent",
-      }),
+      ([walletType, totalWallets]) => {
+        return {
+          walletType,
+          totalWallets,
+          fill: _chartConfig[walletType].color || "transparent",
+        };
+      },
     );
 
     //  sort the data

@@ -45,7 +45,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetPoolSupported } from "thirdweb/extensions/uniswap";
- *
  * const supported = isGetPoolSupported(["0x..."]);
  * ```
  */
@@ -63,7 +62,7 @@ export function isGetPoolSupported(availableSelectors: string[]) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeGetPoolParams } "thirdweb/extensions/uniswap";
+ * import { encodeGetPoolParams } from "thirdweb/extensions/uniswap";
  * const result = encodeGetPoolParams({
  *  tokenA: ...,
  *  tokenB: ...,
@@ -86,7 +85,7 @@ export function encodeGetPoolParams(options: GetPoolParams) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeGetPool } "thirdweb/extensions/uniswap";
+ * import { encodeGetPool } from "thirdweb/extensions/uniswap";
  * const result = encodeGetPool({
  *  tokenA: ...,
  *  tokenB: ...,
@@ -109,7 +108,7 @@ export function encodeGetPool(options: GetPoolParams) {
  * @example
  * ```ts
  * import { decodeGetPoolResult } from "thirdweb/extensions/uniswap";
- * const result = decodeGetPoolResult("...");
+ * const result = decodeGetPoolResultResult("...");
  * ```
  */
 export function decodeGetPoolResult(result: Hex) {

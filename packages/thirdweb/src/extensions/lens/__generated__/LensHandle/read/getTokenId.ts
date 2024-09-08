@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetTokenIdSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetTokenIdSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isGetTokenIdSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetTokenIdParams } "thirdweb/extensions/lens";
+ * import { encodeGetTokenIdParams } from "thirdweb/extensions/lens";
  * const result = encodeGetTokenIdParams({
  *  localName: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeGetTokenIdParams(options: GetTokenIdParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetTokenId } "thirdweb/extensions/lens";
+ * import { encodeGetTokenId } from "thirdweb/extensions/lens";
  * const result = encodeGetTokenId({
  *  localName: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeGetTokenId(options: GetTokenIdParams) {
  * @example
  * ```ts
  * import { decodeGetTokenIdResult } from "thirdweb/extensions/lens";
- * const result = decodeGetTokenIdResult("...");
+ * const result = decodeGetTokenIdResultResult("...");
  * ```
  */
 export function decodeGetTokenIdResult(result: Hex) {

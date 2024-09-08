@@ -60,7 +60,7 @@ export function isTransferSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeTransferParams } "thirdweb/extensions/farcaster";
+ * import { encodeTransferParams } from "thirdweb/extensions/farcaster";
  * const result = encodeTransferParams({
  *  to: ...,
  *  deadline: ...,
@@ -83,7 +83,7 @@ export function encodeTransferParams(options: TransferParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeTransfer } "thirdweb/extensions/farcaster";
+ * import { encodeTransfer } from "thirdweb/extensions/farcaster";
  * const result = encodeTransfer({
  *  to: ...,
  *  deadline: ...,
@@ -105,6 +105,7 @@ export function encodeTransfer(options: TransferParams) {
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { transfer } from "thirdweb/extensions/farcaster";
  *
  * const transaction = transfer({
@@ -118,8 +119,7 @@ export function encodeTransfer(options: TransferParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function transfer(

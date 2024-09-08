@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isKeyRegistrySupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isKeyRegistrySupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isKeyRegistrySupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeKeyRegistryResult } from "thirdweb/extensions/farcaster";
- * const result = decodeKeyRegistryResult("...");
+ * const result = decodeKeyRegistryResultResult("...");
  * ```
  */
 export function decodeKeyRegistryResult(result: Hex) {

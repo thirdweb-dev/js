@@ -46,7 +46,6 @@ const columns = [
       return (
         <CopyAddressButton
           address={address}
-          className="my-2"
           copyIconPosition="left"
           variant="ghost"
         />

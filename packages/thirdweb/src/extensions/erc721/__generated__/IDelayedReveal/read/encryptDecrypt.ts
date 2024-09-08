@@ -40,7 +40,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isEncryptDecryptSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isEncryptDecryptSupported(["0x..."]);
  * ```
  */
@@ -58,7 +57,7 @@ export function isEncryptDecryptSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeEncryptDecryptParams } "thirdweb/extensions/erc721";
+ * import { encodeEncryptDecryptParams } from "thirdweb/extensions/erc721";
  * const result = encodeEncryptDecryptParams({
  *  data: ...,
  *  key: ...,
@@ -76,7 +75,7 @@ export function encodeEncryptDecryptParams(options: EncryptDecryptParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeEncryptDecrypt } "thirdweb/extensions/erc721";
+ * import { encodeEncryptDecrypt } from "thirdweb/extensions/erc721";
  * const result = encodeEncryptDecrypt({
  *  data: ...,
  *  key: ...,
@@ -100,7 +99,7 @@ export function encodeEncryptDecrypt(options: EncryptDecryptParams) {
  * @example
  * ```ts
  * import { decodeEncryptDecryptResult } from "thirdweb/extensions/erc721";
- * const result = decodeEncryptDecryptResult("...");
+ * const result = decodeEncryptDecryptResultResult("...");
  * ```
  */
 export function decodeEncryptDecryptResult(result: Hex) {

@@ -35,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isNoncesSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isNoncesSupported(["0x..."]);
  * ```
  */
@@ -53,7 +52,7 @@ export function isNoncesSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeNoncesParams } "thirdweb/extensions/lens";
+ * import { encodeNoncesParams } from "thirdweb/extensions/lens";
  * const result = encodeNoncesParams({
  *  signer: ...,
  * });
@@ -70,7 +69,7 @@ export function encodeNoncesParams(options: NoncesParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeNonces } "thirdweb/extensions/lens";
+ * import { encodeNonces } from "thirdweb/extensions/lens";
  * const result = encodeNonces({
  *  signer: ...,
  * });
@@ -91,7 +90,7 @@ export function encodeNonces(options: NoncesParams) {
  * @example
  * ```ts
  * import { decodeNoncesResult } from "thirdweb/extensions/lens";
- * const result = decodeNoncesResult("...");
+ * const result = decodeNoncesResultResult("...");
  * ```
  */
 export function decodeNoncesResult(result: Hex) {

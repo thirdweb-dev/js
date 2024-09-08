@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isContenthashSupported } from "thirdweb/extensions/ens";
- *
  * const supported = isContenthashSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isContenthashSupported(availableSelectors: string[]) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeContenthashParams } "thirdweb/extensions/ens";
+ * import { encodeContenthashParams } from "thirdweb/extensions/ens";
  * const result = encodeContenthashParams({
  *  name: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeContenthashParams(options: ContenthashParams) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeContenthash } "thirdweb/extensions/ens";
+ * import { encodeContenthash } from "thirdweb/extensions/ens";
  * const result = encodeContenthash({
  *  name: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeContenthash(options: ContenthashParams) {
  * @example
  * ```ts
  * import { decodeContenthashResult } from "thirdweb/extensions/ens";
- * const result = decodeContenthashResult("...");
+ * const result = decodeContenthashResultResult("...");
  * ```
  */
 export function decodeContenthashResult(result: Hex) {

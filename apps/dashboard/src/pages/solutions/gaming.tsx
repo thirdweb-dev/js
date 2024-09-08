@@ -306,7 +306,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
               title="Play Speed Racer"
               image={require("/public/assets/solutions-pages/gaming/gaming-speed-racer.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
-              href="https://portal.thirdweb.com/solutions/gaming/unreal-engine/quickstart"
+              href="https://engine-express.thirdweb-preview.com/"
               category="Unreal Engine"
               linkTitle="Play Speed Racer"
               label="speed-racer"

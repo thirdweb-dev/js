@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPayeeCountSupported } from "thirdweb/extensions/split";
- *
  * const supported = isPayeeCountSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isPayeeCountSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodePayeeCountResult } from "thirdweb/extensions/split";
- * const result = decodePayeeCountResult("...");
+ * const result = decodePayeeCountResultResult("...");
  * ```
  */
 export function decodePayeeCountResult(result: Hex) {

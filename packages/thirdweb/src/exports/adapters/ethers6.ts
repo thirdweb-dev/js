@@ -1,1 +1,8 @@
-export { ethers6Adapter } from "../../adapters/ethers6.js";
+export {
+  ethers6Adapter,
+  toEthersSigner,
+  fromEthersContract,
+  fromEthersSigner,
+  toEthersContract,
+  toEthersProvider,
+} from "../../adapters/ethers6.js";

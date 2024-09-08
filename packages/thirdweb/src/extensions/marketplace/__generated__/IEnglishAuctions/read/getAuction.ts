@@ -96,7 +96,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAuctionSupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isGetAuctionSupported(["0x..."]);
  * ```
  */
@@ -114,7 +113,7 @@ export function isGetAuctionSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeGetAuctionParams } "thirdweb/extensions/marketplace";
+ * import { encodeGetAuctionParams } from "thirdweb/extensions/marketplace";
  * const result = encodeGetAuctionParams({
  *  auctionId: ...,
  * });
@@ -131,7 +130,7 @@ export function encodeGetAuctionParams(options: GetAuctionParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeGetAuction } "thirdweb/extensions/marketplace";
+ * import { encodeGetAuction } from "thirdweb/extensions/marketplace";
  * const result = encodeGetAuction({
  *  auctionId: ...,
  * });
@@ -154,7 +153,7 @@ export function encodeGetAuction(options: GetAuctionParams) {
  * @example
  * ```ts
  * import { decodeGetAuctionResult } from "thirdweb/extensions/marketplace";
- * const result = decodeGetAuctionResult("...");
+ * const result = decodeGetAuctionResultResult("...");
  * ```
  */
 export function decodeGetAuctionResult(result: Hex) {

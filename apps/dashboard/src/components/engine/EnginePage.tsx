@@ -1,16 +1,15 @@
+import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useRouter } from "next/router";
-import type { EngineInstance } from "../../@3rdweb-sdk/react/hooks/useEngine";
 import { PageId } from "../../page-id";
 import type { ThirdwebNextPage } from "../../utils/types";
 import { AppLayout } from "../app-layouts/app";
 import {
-  type ActivePage,
-  EnginePageLayout,
+  EngineSidebarLayout,
   PageLoading,
+  WithEngineInstance,
 } from "./EnginePageLayout";
 
 export function createEnginePage(
-  activePage: ActivePage,
   PageContent: React.FC<{ instance: EngineInstance }>,
 ): ThirdwebNextPage {
   const Page: ThirdwebNextPage = () => {
@@ -22,18 +21,26 @@ export function createEnginePage(
     }
 
     return (
-      <EnginePageLayout
-        activePage={activePage}
-        engineId={engineId}
-        content={PageContent}
-      />
+      <div className="container px-4">
+        <EngineSidebarLayout rootPath="/dashboard/engine" engineId={engineId}>
+          <WithEngineInstance
+            engineId={engineId}
+            content={PageContent}
+            rootPath="/dashboard/engine"
+          />
+        </EngineSidebarLayout>
+      </div>
     );
   };
 
   Page.pageId = PageId.EngineManage;
 
   Page.getLayout = (page, props) => (
-    <AppLayout {...props} hasSidebar={true}>
+    <AppLayout
+      {...props}
+      pageContainerClassName="!max-w-full !px-0"
+      mainClassName="!pt-0"
+    >
       {page}
     </AppLayout>
   );

@@ -53,7 +53,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isVerifyFidSignatureSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isVerifyFidSignatureSupported(["0x..."]);
  * ```
  */
@@ -71,7 +70,7 @@ export function isVerifyFidSignatureSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeVerifyFidSignatureParams } "thirdweb/extensions/farcaster";
+ * import { encodeVerifyFidSignatureParams } from "thirdweb/extensions/farcaster";
  * const result = encodeVerifyFidSignatureParams({
  *  custodyAddress: ...,
  *  fid: ...,
@@ -98,7 +97,7 @@ export function encodeVerifyFidSignatureParams(
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeVerifyFidSignature } "thirdweb/extensions/farcaster";
+ * import { encodeVerifyFidSignature } from "thirdweb/extensions/farcaster";
  * const result = encodeVerifyFidSignature({
  *  custodyAddress: ...,
  *  fid: ...,
@@ -124,7 +123,7 @@ export function encodeVerifyFidSignature(options: VerifyFidSignatureParams) {
  * @example
  * ```ts
  * import { decodeVerifyFidSignatureResult } from "thirdweb/extensions/farcaster";
- * const result = decodeVerifyFidSignatureResult("...");
+ * const result = decodeVerifyFidSignatureResultResult("...");
  * ```
  */
 export function decodeVerifyFidSignatureResult(result: Hex) {

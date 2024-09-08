@@ -21,36 +21,41 @@ import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { EmptyChartState, LoadingChartState } from "./EmptyChartState";
 
-type ChartToShow = "uniqueWallets" | "totalWallets";
+type ChartToShow = "uniqueWalletsConnected" | "totalConnections";
 
 type ChartData = Record<string, number> & {
   time: string; // human readable date
 };
 
 const chartLabelToShow: Record<ChartToShow, string> = {
-  uniqueWallets: "Unique Wallets",
-  totalWallets: "Total Wallets",
+  uniqueWalletsConnected: "Unique Wallets",
+  totalConnections: "Total Wallets",
 };
 export function WalletConnectorsChartCard(props: {
-  walletStats: WalletStats;
+  walletStats: WalletStats[];
   isLoading: boolean;
 }) {
   const { walletStats } = props;
-  const [chartToShow, setChartToShow] = useState<ChartToShow>("uniqueWallets");
-  const chartToShowOptions: ChartToShow[] = ["uniqueWallets", "totalWallets"];
+  const [chartToShow, setChartToShow] = useState<ChartToShow>(
+    "uniqueWalletsConnected",
+  );
+  const chartToShowOptions: ChartToShow[] = [
+    "uniqueWalletsConnected",
+    "totalConnections",
+  ];
 
   const { chartConfig, chartData } = useMemo(() => {
     const _chartConfig: ChartConfig = {};
     const _chartDataMap: Map<string, ChartData> = new Map();
 
-    for (const data of walletStats.timeSeries) {
-      const chartData = _chartDataMap.get(data.dayTime);
+    for (const data of walletStats) {
+      const chartData = _chartDataMap.get(data.date);
       const dataKey = data.walletType;
 
       // if no data for current day - create new entry
       if (!chartData) {
-        _chartDataMap.set(data.dayTime, {
-          time: format(new Date(data.dayTime), "MMM dd"),
+        _chartDataMap.set(data.date, {
+          time: format(new Date(data.date), "MMM dd"),
           [data.walletType]: data[chartToShow],
         } as ChartData);
       } else {
@@ -64,7 +69,7 @@ export function WalletConnectorsChartCard(props: {
 
     // create chart config for each wallet type and assign a unique color, start from 0hue to 360hue
     const uniqueWalletTypes = Array.from(
-      new Set(walletStats.timeSeries.map((data) => data.walletType)),
+      new Set(walletStats.map((data) => data.walletType)),
     );
     const hueIncrement = 360 / uniqueWalletTypes.length;
 

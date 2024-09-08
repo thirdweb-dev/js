@@ -39,7 +39,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTotalKeysSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isTotalKeysSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isTotalKeysSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeTotalKeysParams } "thirdweb/extensions/farcaster";
+ * import { encodeTotalKeysParams } from "thirdweb/extensions/farcaster";
  * const result = encodeTotalKeysParams({
  *  fid: ...,
  *  state: ...,
@@ -75,7 +74,7 @@ export function encodeTotalKeysParams(options: TotalKeysParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeTotalKeys } "thirdweb/extensions/farcaster";
+ * import { encodeTotalKeys } from "thirdweb/extensions/farcaster";
  * const result = encodeTotalKeys({
  *  fid: ...,
  *  state: ...,
@@ -99,7 +98,7 @@ export function encodeTotalKeys(options: TotalKeysParams) {
  * @example
  * ```ts
  * import { decodeTotalKeysResult } from "thirdweb/extensions/farcaster";
- * const result = decodeTotalKeysResult("...");
+ * const result = decodeTotalKeysResultResult("...");
  * ```
  */
 export function decodeTotalKeysResult(result: Hex) {

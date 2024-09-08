@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isProposalDeadlineSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isProposalDeadlineSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isProposalDeadlineSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeProposalDeadlineParams } "thirdweb/extensions/vote";
+ * import { encodeProposalDeadlineParams } from "thirdweb/extensions/vote";
  * const result = encodeProposalDeadlineParams({
  *  proposalId: ...,
  * });
@@ -72,7 +71,7 @@ export function encodeProposalDeadlineParams(options: ProposalDeadlineParams) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeProposalDeadline } "thirdweb/extensions/vote";
+ * import { encodeProposalDeadline } from "thirdweb/extensions/vote";
  * const result = encodeProposalDeadline({
  *  proposalId: ...,
  * });
@@ -95,7 +94,7 @@ export function encodeProposalDeadline(options: ProposalDeadlineParams) {
  * @example
  * ```ts
  * import { decodeProposalDeadlineResult } from "thirdweb/extensions/vote";
- * const result = decodeProposalDeadlineResult("...");
+ * const result = decodeProposalDeadlineResultResult("...");
  * ```
  */
 export function decodeProposalDeadlineResult(result: Hex) {

@@ -1,10 +1,11 @@
 "use client";
 
 import type { Team } from "@/api/team";
-import { Input } from "@/components/ui/input";
-import { EllipsisIcon, SearchIcon } from "lucide-react";
-
 import type { TeamAccountRole, TeamMember } from "@/api/team-members";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -12,10 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { EllipsisIcon, SearchIcon } from "lucide-react";
 import { useState } from "react";
-import { Button } from "../../../../../../../@/components/ui/button";
-import { Checkbox } from "../../../../../../../@/components/ui/checkbox";
-import { Label } from "../../../../../../../@/components/ui/label";
 
 export function ManageMembersSection(props: {
   team: Team;
@@ -26,7 +25,7 @@ export function ManageMembersSection(props: {
 
   if (!props.userHasEditPermission) {
     topSection = (
-      <div className="border-b p-4">
+      <div className="border-b border-border p-4">
         <p className="text-muted-foreground text-sm">
           You don't have permission to manage members
         </p>
@@ -34,7 +33,7 @@ export function ManageMembersSection(props: {
     );
   } else {
     topSection = (
-      <div className="border-b p-4 flex items-center justify-between">
+      <div className="border-b border-border p-4 flex items-center justify-between">
         <div className="flex items-center gap-3 lg:gap-4">
           <Checkbox
             id="select-all"
@@ -74,7 +73,7 @@ export function ManageMembersSection(props: {
       <div className="h-4" />
 
       {/* Card */}
-      <div className="border rounded-lg bg-muted/50">
+      <div className="border border-border rounded-lg bg-muted/50">
         {/* Top section */}
         {topSection}
 
@@ -109,7 +108,7 @@ function MemberRow(props: {
   userHasEditPermission: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between py-4 px-4 border-b">
+    <div className="flex items-center justify-between py-4 px-4 border-b border-border">
       <div className="flex items-center gap-3 lg:gap-4">
         {/* Checkbox */}
         <Checkbox
@@ -119,7 +118,7 @@ function MemberRow(props: {
         />
 
         {/* PFP */}
-        <div className="size-8 lg:size-9 bg-muted border rounded-full" />
+        <div className="size-8 lg:size-9 bg-muted border border-border rounded-full" />
 
         <div>
           <p className="text-sm font-semibold mb-0.5">

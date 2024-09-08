@@ -61,7 +61,7 @@ export function isSetPlatformFeeInfoSupported(availableSelectors: string[]) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetPlatformFeeInfoParams } "thirdweb/extensions/common";
+ * import { encodeSetPlatformFeeInfoParams } from "thirdweb/extensions/common";
  * const result = encodeSetPlatformFeeInfoParams({
  *  platformFeeRecipient: ...,
  *  platformFeeBps: ...,
@@ -84,7 +84,7 @@ export function encodeSetPlatformFeeInfoParams(
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetPlatformFeeInfo } "thirdweb/extensions/common";
+ * import { encodeSetPlatformFeeInfo } from "thirdweb/extensions/common";
  * const result = encodeSetPlatformFeeInfo({
  *  platformFeeRecipient: ...,
  *  platformFeeBps: ...,
@@ -107,6 +107,7 @@ export function encodeSetPlatformFeeInfo(options: SetPlatformFeeInfoParams) {
  * @extension COMMON
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setPlatformFeeInfo } from "thirdweb/extensions/common";
  *
  * const transaction = setPlatformFeeInfo({
@@ -119,8 +120,7 @@ export function encodeSetPlatformFeeInfo(options: SetPlatformFeeInfoParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setPlatformFeeInfo(

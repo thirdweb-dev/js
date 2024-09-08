@@ -65,7 +65,7 @@ export function isRecoverSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRecoverParams } "thirdweb/extensions/farcaster";
+ * import { encodeRecoverParams } from "thirdweb/extensions/farcaster";
  * const result = encodeRecoverParams({
  *  from: ...,
  *  to: ...,
@@ -90,7 +90,7 @@ export function encodeRecoverParams(options: RecoverParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeRecover } "thirdweb/extensions/farcaster";
+ * import { encodeRecover } from "thirdweb/extensions/farcaster";
  * const result = encodeRecover({
  *  from: ...,
  *  to: ...,
@@ -113,6 +113,7 @@ export function encodeRecover(options: RecoverParams) {
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { recover } from "thirdweb/extensions/farcaster";
  *
  * const transaction = recover({
@@ -127,8 +128,7 @@ export function encodeRecover(options: RecoverParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function recover(

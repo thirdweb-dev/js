@@ -50,7 +50,7 @@ export function isReleaseSupported(availableSelectors: string[]) {
  * @extension SPLIT
  * @example
  * ```ts
- * import { encodeReleaseParams } "thirdweb/extensions/split";
+ * import { encodeReleaseParams } from "thirdweb/extensions/split";
  * const result = encodeReleaseParams({
  *  account: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeReleaseParams(options: ReleaseParams) {
  * @extension SPLIT
  * @example
  * ```ts
- * import { encodeRelease } "thirdweb/extensions/split";
+ * import { encodeRelease } from "thirdweb/extensions/split";
  * const result = encodeRelease({
  *  account: ...,
  * });
@@ -87,6 +87,7 @@ export function encodeRelease(options: ReleaseParams) {
  * @extension SPLIT
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { release } from "thirdweb/extensions/split";
  *
  * const transaction = release({
@@ -98,8 +99,7 @@ export function encodeRelease(options: ReleaseParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function release(

@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIdCounterSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isIdCounterSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isIdCounterSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeIdCounterResult } from "thirdweb/extensions/farcaster";
- * const result = decodeIdCounterResult("...");
+ * const result = decodeIdCounterResultResult("...");
  * ```
  */
 export function decodeIdCounterResult(result: Hex) {

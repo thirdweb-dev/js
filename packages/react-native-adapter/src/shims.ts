@@ -1,3 +1,4 @@
 import "@walletconnect/react-native-compat";
-
-// additional polyfills go here
+// crypto polyfill
+import { install } from "react-native-quick-crypto";
+install();

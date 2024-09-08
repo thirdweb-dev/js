@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsAdminSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isIsAdminSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isIsAdminSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeIsAdminParams } "thirdweb/extensions/erc4337";
+ * import { encodeIsAdminParams } from "thirdweb/extensions/erc4337";
  * const result = encodeIsAdminParams({
  *  signer: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeIsAdminParams(options: IsAdminParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeIsAdmin } "thirdweb/extensions/erc4337";
+ * import { encodeIsAdmin } from "thirdweb/extensions/erc4337";
  * const result = encodeIsAdmin({
  *  signer: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeIsAdmin(options: IsAdminParams) {
  * @example
  * ```ts
  * import { decodeIsAdminResult } from "thirdweb/extensions/erc4337";
- * const result = decodeIsAdminResult("...");
+ * const result = decodeIsAdminResultResult("...");
  * ```
  */
 export function decodeIsAdminResult(result: Hex) {

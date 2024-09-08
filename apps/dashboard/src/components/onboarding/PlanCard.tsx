@@ -16,10 +16,11 @@ export const PlanCard: React.FC<PlanCardProps> = ({ creditsRecord }) => {
             size="label.sm"
             px={3}
             bgColor={creditsRecord.color}
+            color="#fff"
+            textTransform="capitalize"
+            fontWeight="bold"
           >
-            <Text color="#fff" textTransform="capitalize" fontWeight="bold">
-              {creditsRecord.title}
-            </Text>
+            {creditsRecord.title}
           </Badge>
         </Box>
         <Flex flexDir="column" gap={1}>

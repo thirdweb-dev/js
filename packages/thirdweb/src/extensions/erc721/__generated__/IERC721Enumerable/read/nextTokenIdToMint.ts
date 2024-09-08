@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isNextTokenIdToMintSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isNextTokenIdToMintSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isNextTokenIdToMintSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeNextTokenIdToMintResult } from "thirdweb/extensions/erc721";
- * const result = decodeNextTokenIdToMintResult("...");
+ * const result = decodeNextTokenIdToMintResultResult("...");
  * ```
  */
 export function decodeNextTokenIdToMintResult(result: Hex) {

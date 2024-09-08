@@ -44,7 +44,7 @@ const chartLabelToShow: Record<ChartToShow, string> = {
 };
 
 export function DailyConnectionsChartCard(props: {
-  walletStats: WalletStats;
+  walletStats: WalletStats[];
   isLoading: boolean;
 }) {
   const { walletStats } = props;
@@ -55,17 +55,17 @@ export function DailyConnectionsChartCard(props: {
   const barChartData: ChartData[] = useMemo(() => {
     const chartDataMap: Map<string, ChartData> = new Map();
 
-    for (const data of walletStats.timeSeries) {
-      const chartData = chartDataMap.get(data.dayTime);
+    for (const data of walletStats) {
+      const chartData = chartDataMap.get(data.date);
       if (!chartData) {
-        chartDataMap.set(data.dayTime, {
-          time: format(new Date(data.dayTime), "MMM dd"),
-          totalWallets: data.totalWallets,
-          uniqueWallets: data.uniqueWallets,
+        chartDataMap.set(data.date, {
+          time: format(new Date(data.date), "MMM dd"),
+          totalWallets: data.totalConnections,
+          uniqueWallets: data.uniqueWalletsConnected,
         });
       } else {
-        chartData.totalWallets += data.totalWallets;
-        chartData.uniqueWallets += data.uniqueWallets;
+        chartData.totalWallets += data.totalConnections;
+        chartData.uniqueWallets += data.uniqueWalletsConnected;
       }
     }
 

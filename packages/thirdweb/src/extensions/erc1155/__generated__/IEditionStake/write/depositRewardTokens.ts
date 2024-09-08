@@ -50,7 +50,7 @@ export function isDepositRewardTokensSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeDepositRewardTokensParams } "thirdweb/extensions/erc1155";
+ * import { encodeDepositRewardTokensParams } from "thirdweb/extensions/erc1155";
  * const result = encodeDepositRewardTokensParams({
  *  amount: ...,
  * });
@@ -69,7 +69,7 @@ export function encodeDepositRewardTokensParams(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeDepositRewardTokens } "thirdweb/extensions/erc1155";
+ * import { encodeDepositRewardTokens } from "thirdweb/extensions/erc1155";
  * const result = encodeDepositRewardTokens({
  *  amount: ...,
  * });
@@ -91,6 +91,7 @@ export function encodeDepositRewardTokens(options: DepositRewardTokensParams) {
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { depositRewardTokens } from "thirdweb/extensions/erc1155";
  *
  * const transaction = depositRewardTokens({
@@ -102,8 +103,7 @@ export function encodeDepositRewardTokens(options: DepositRewardTokensParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function depositRewardTokens(

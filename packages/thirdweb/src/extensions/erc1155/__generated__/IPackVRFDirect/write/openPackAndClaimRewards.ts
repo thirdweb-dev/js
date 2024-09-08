@@ -72,7 +72,7 @@ export function isOpenPackAndClaimRewardsSupported(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeOpenPackAndClaimRewardsParams } "thirdweb/extensions/erc1155";
+ * import { encodeOpenPackAndClaimRewardsParams } from "thirdweb/extensions/erc1155";
  * const result = encodeOpenPackAndClaimRewardsParams({
  *  packId: ...,
  *  amountToOpen: ...,
@@ -97,7 +97,7 @@ export function encodeOpenPackAndClaimRewardsParams(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeOpenPackAndClaimRewards } "thirdweb/extensions/erc1155";
+ * import { encodeOpenPackAndClaimRewards } from "thirdweb/extensions/erc1155";
  * const result = encodeOpenPackAndClaimRewards({
  *  packId: ...,
  *  amountToOpen: ...,
@@ -123,6 +123,7 @@ export function encodeOpenPackAndClaimRewards(
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { openPackAndClaimRewards } from "thirdweb/extensions/erc1155";
  *
  * const transaction = openPackAndClaimRewards({
@@ -136,8 +137,7 @@ export function encodeOpenPackAndClaimRewards(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function openPackAndClaimRewards(

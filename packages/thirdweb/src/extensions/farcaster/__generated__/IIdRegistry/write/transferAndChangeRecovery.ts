@@ -67,7 +67,7 @@ export function isTransferAndChangeRecoverySupported(
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeTransferAndChangeRecoveryParams } "thirdweb/extensions/farcaster";
+ * import { encodeTransferAndChangeRecoveryParams } from "thirdweb/extensions/farcaster";
  * const result = encodeTransferAndChangeRecoveryParams({
  *  to: ...,
  *  recovery: ...,
@@ -94,7 +94,7 @@ export function encodeTransferAndChangeRecoveryParams(
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeTransferAndChangeRecovery } "thirdweb/extensions/farcaster";
+ * import { encodeTransferAndChangeRecovery } from "thirdweb/extensions/farcaster";
  * const result = encodeTransferAndChangeRecovery({
  *  to: ...,
  *  recovery: ...,
@@ -121,6 +121,7 @@ export function encodeTransferAndChangeRecovery(
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { transferAndChangeRecovery } from "thirdweb/extensions/farcaster";
  *
  * const transaction = transferAndChangeRecovery({
@@ -135,8 +136,7 @@ export function encodeTransferAndChangeRecovery(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function transferAndChangeRecovery(

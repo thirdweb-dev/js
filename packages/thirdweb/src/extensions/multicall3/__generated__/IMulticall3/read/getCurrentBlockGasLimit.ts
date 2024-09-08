@@ -22,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetCurrentBlockGasLimitSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetCurrentBlockGasLimitSupported(["0x..."]);
  * ```
  */
@@ -43,7 +42,7 @@ export function isGetCurrentBlockGasLimitSupported(
  * @example
  * ```ts
  * import { decodeGetCurrentBlockGasLimitResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetCurrentBlockGasLimitResult("...");
+ * const result = decodeGetCurrentBlockGasLimitResultResult("...");
  * ```
  */
 export function decodeGetCurrentBlockGasLimitResult(result: Hex) {

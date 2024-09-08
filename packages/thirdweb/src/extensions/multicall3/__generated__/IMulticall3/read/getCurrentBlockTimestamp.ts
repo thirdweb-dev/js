@@ -22,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetCurrentBlockTimestampSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetCurrentBlockTimestampSupported(["0x..."]);
  * ```
  */
@@ -43,7 +42,7 @@ export function isGetCurrentBlockTimestampSupported(
  * @example
  * ```ts
  * import { decodeGetCurrentBlockTimestampResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetCurrentBlockTimestampResult("...");
+ * const result = decodeGetCurrentBlockTimestampResultResult("...");
  * ```
  */
 export function decodeGetCurrentBlockTimestampResult(result: Hex) {

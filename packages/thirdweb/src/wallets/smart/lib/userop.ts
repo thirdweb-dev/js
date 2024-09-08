@@ -10,6 +10,7 @@ import { getUserOpHash as getUserOpHashV06 } from "../../../extensions/erc4337/_
 import { getUserOpHash as getUserOpHashV07 } from "../../../extensions/erc4337/__generated__/IEntryPoint_v07/read/getUserOpHash.js";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
 import { encode } from "../../../transaction/actions/encode.js";
+import { toSerializableTransaction } from "../../../transaction/actions/to-serializable-transaction.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
@@ -30,11 +31,17 @@ import {
   getUserOpGasFees,
   getUserOpReceipt,
 } from "./bundler.js";
-import { prepareCreateAccount } from "./calls.js";
+import {
+  predictAddress,
+  prepareBatchExecute,
+  prepareCreateAccount,
+  prepareExecute,
+} from "./calls.js";
 import {
   DUMMY_SIGNATURE,
   ENTRYPOINT_ADDRESS_v0_6,
   ENTRYPOINT_ADDRESS_v0_7,
+  getDefaultAccountFactory,
   getDefaultBundlerUrl,
   getEntryPointVersion,
 } from "./constants.js";
@@ -486,9 +493,10 @@ async function populateUserOp_v0_6(args: {
  * ```ts
  * import { signUserOp } from "thirdweb/wallets/smart";
  *
- * const userOp = createUnsignedUserOp(...);
+ * const userOp = await createUnsignedUserOp(...);
  *
  * const signedUserOp = await signUserOp({
+ *  client,
  *  userOp,
  *  chain,
  *  adminAccount,
@@ -591,4 +599,92 @@ async function getAccountNonce(options: {
     key: generateRandomUint192(),
     sender: accountContract.address,
   });
+}
+
+/**
+ * Create and sign a user operation.
+ * @param options - The options for creating and signing the user operation
+ * @returns - The signed user operation
+ * @example
+ * ```ts
+ * import { createAndSignUserOp } from "thirdweb/wallets/smart";
+ *
+ * const userOp = await createAndSignUserOp({
+ *  client,
+ *  adminAccount,
+ *  smartWalletOptions,
+ *  transactions,
+ * });
+ * ```
+ * @walletUtils
+ */
+export async function createAndSignUserOp(options: {
+  transactions: PreparedTransaction[];
+  adminAccount: Account;
+  client: ThirdwebClient;
+  smartWalletOptions: SmartWalletOptions;
+}) {
+  const config = options.smartWalletOptions;
+  const factoryContract = getContract({
+    address:
+      config.factoryAddress ||
+      getDefaultAccountFactory(config.overrides?.entrypointAddress),
+    chain: config.chain,
+    client: options.client,
+  });
+  const accountAddress = await predictAddress({
+    factoryContract,
+    adminAddress: options.adminAccount.address,
+    predictAddressOverride: config.overrides?.predictAddress,
+    accountSalt: config.overrides?.accountSalt,
+    accountAddress: config.overrides?.accountAddress,
+  });
+  const accountContract = getContract({
+    address: accountAddress,
+    chain: config.chain,
+    client: options.client,
+  });
+
+  let executeTx: PreparedTransaction;
+  if (options.transactions.length === 1) {
+    const tx = options.transactions[0] as PreparedTransaction;
+    const serializedTx = await toSerializableTransaction({
+      transaction: tx,
+    });
+    executeTx = prepareExecute({
+      accountContract,
+      transaction: serializedTx,
+      executeOverride: config.overrides?.execute,
+    });
+  } else {
+    const serializedTxs = await Promise.all(
+      options.transactions.map((tx) =>
+        toSerializableTransaction({
+          transaction: tx,
+        }),
+      ),
+    );
+    executeTx = prepareBatchExecute({
+      accountContract,
+      transactions: serializedTxs,
+      executeBatchOverride: config.overrides?.executeBatch,
+    });
+  }
+
+  const unsignedUserOp = await createUnsignedUserOp({
+    transaction: executeTx,
+    factoryContract,
+    accountContract,
+    adminAddress: options.adminAccount.address,
+    sponsorGas: "sponsorGas" in config ? config.sponsorGas : config.gasless,
+    overrides: config.overrides,
+  });
+  const signedUserOp = await signUserOp({
+    client: options.client,
+    chain: config.chain,
+    adminAccount: options.adminAccount,
+    entrypointAddress: config.overrides?.entrypointAddress,
+    userOp: unsignedUserOp,
+  });
+  return signedUserOp;
 }

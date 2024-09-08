@@ -4,7 +4,7 @@ import { skeletonTheme } from "./chakra-componens/skeleton";
 import { colors } from "./colors";
 import { fontWeights, letterSpacings, lineHeights } from "./typography";
 
-const chakraTheme: Theme = extendTheme({
+export const chakraTheme: Theme = extendTheme({
   config: {
     initialColorMode: "dark",
     useSystemColorMode: false,

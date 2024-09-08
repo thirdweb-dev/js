@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTotalAccountsSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isTotalAccountsSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isTotalAccountsSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeTotalAccountsResult } from "thirdweb/extensions/erc4337";
- * const result = decodeTotalAccountsResult("...");
+ * const result = decodeTotalAccountsResultResult("...");
  * ```
  */
 export function decodeTotalAccountsResult(result: Hex) {

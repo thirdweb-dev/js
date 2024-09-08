@@ -71,7 +71,7 @@ export function isAcceptOfferSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeAcceptOfferParams } "thirdweb/extensions/marketplace";
+ * import { encodeAcceptOfferParams } from "thirdweb/extensions/marketplace";
  * const result = encodeAcceptOfferParams({
  *  listingId: ...,
  *  offeror: ...,
@@ -96,7 +96,7 @@ export function encodeAcceptOfferParams(options: AcceptOfferParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeAcceptOffer } "thirdweb/extensions/marketplace";
+ * import { encodeAcceptOffer } from "thirdweb/extensions/marketplace";
  * const result = encodeAcceptOffer({
  *  listingId: ...,
  *  offeror: ...,
@@ -121,6 +121,7 @@ export function encodeAcceptOffer(options: AcceptOfferParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { acceptOffer } from "thirdweb/extensions/marketplace";
  *
  * const transaction = acceptOffer({
@@ -135,8 +136,7 @@ export function encodeAcceptOffer(options: AcceptOfferParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function acceptOffer(

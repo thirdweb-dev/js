@@ -63,7 +63,7 @@ export function isOnSignerRemovedSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeOnSignerRemovedParams } "thirdweb/extensions/erc4337";
+ * import { encodeOnSignerRemovedParams } from "thirdweb/extensions/erc4337";
  * const result = encodeOnSignerRemovedParams({
  *  signer: ...,
  *  creatorAdmin: ...,
@@ -86,7 +86,7 @@ export function encodeOnSignerRemovedParams(options: OnSignerRemovedParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeOnSignerRemoved } "thirdweb/extensions/erc4337";
+ * import { encodeOnSignerRemoved } from "thirdweb/extensions/erc4337";
  * const result = encodeOnSignerRemoved({
  *  signer: ...,
  *  creatorAdmin: ...,
@@ -110,6 +110,7 @@ export function encodeOnSignerRemoved(options: OnSignerRemovedParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { onSignerRemoved } from "thirdweb/extensions/erc4337";
  *
  * const transaction = onSignerRemoved({
@@ -123,8 +124,7 @@ export function encodeOnSignerRemoved(options: OnSignerRemovedParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function onSignerRemoved(

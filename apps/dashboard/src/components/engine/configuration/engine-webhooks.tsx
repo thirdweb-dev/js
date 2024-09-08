@@ -1,3 +1,5 @@
+"use client";
+
 import { useEngineWebhooks } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex } from "@chakra-ui/react";
 import { Heading, Link, Text } from "tw-components";

@@ -46,7 +46,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isProposalVotesSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isProposalVotesSupported(["0x..."]);
  * ```
  */
@@ -64,7 +63,7 @@ export function isProposalVotesSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeProposalVotesParams } "thirdweb/extensions/vote";
+ * import { encodeProposalVotesParams } from "thirdweb/extensions/vote";
  * const result = encodeProposalVotesParams({
  *  proposalId: ...,
  * });
@@ -81,7 +80,7 @@ export function encodeProposalVotesParams(options: ProposalVotesParams) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeProposalVotes } "thirdweb/extensions/vote";
+ * import { encodeProposalVotes } from "thirdweb/extensions/vote";
  * const result = encodeProposalVotes({
  *  proposalId: ...,
  * });
@@ -104,7 +103,7 @@ export function encodeProposalVotes(options: ProposalVotesParams) {
  * @example
  * ```ts
  * import { decodeProposalVotesResult } from "thirdweb/extensions/vote";
- * const result = decodeProposalVotesResult("...");
+ * const result = decodeProposalVotesResultResult("...");
  * ```
  */
 export function decodeProposalVotesResult(result: Hex) {

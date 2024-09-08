@@ -50,7 +50,7 @@ export function isWithdrawRewardTokensSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeWithdrawRewardTokensParams } "thirdweb/extensions/erc721";
+ * import { encodeWithdrawRewardTokensParams } from "thirdweb/extensions/erc721";
  * const result = encodeWithdrawRewardTokensParams({
  *  amount: ...,
  * });
@@ -69,7 +69,7 @@ export function encodeWithdrawRewardTokensParams(
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeWithdrawRewardTokens } "thirdweb/extensions/erc721";
+ * import { encodeWithdrawRewardTokens } from "thirdweb/extensions/erc721";
  * const result = encodeWithdrawRewardTokens({
  *  amount: ...,
  * });
@@ -93,6 +93,7 @@ export function encodeWithdrawRewardTokens(
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { withdrawRewardTokens } from "thirdweb/extensions/erc721";
  *
  * const transaction = withdrawRewardTokens({
@@ -104,8 +105,7 @@ export function encodeWithdrawRewardTokens(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function withdrawRewardTokens(

@@ -1,19 +1,5 @@
-import {
-  useAddContractMutation,
-  useAllContractList,
-} from "@3rdweb-sdk/react/hooks/useRegistry";
-import { Flex, FormControl } from "@chakra-ui/react";
-import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useChainSlug } from "hooks/chains/chainSlug";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { FiFilePlus } from "react-icons/fi";
-import { getAddress } from "thirdweb";
-import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
-import { Button, FormErrorMessage } from "tw-components";
-
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +7,31 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  useAddContractMutation,
+  useAllContractList,
+} from "@3rdweb-sdk/react/hooks/useRegistry";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
+import { useChainSlug } from "hooks/chains/chainSlug";
+import { PlusIcon } from "lucide-react";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { getAddress, isAddress } from "thirdweb";
+import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
+import { z } from "zod";
 
 type ImportModalProps = {
   isOpen: boolean;
@@ -37,9 +48,14 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
         }
       }}
     >
-      <DialogContent dialogOverlayClassName="z-[9000]" className="z-[9001]">
+      <DialogContent
+        dialogOverlayClassName="z-[9000] rounded-lg"
+        className="z-[9001]"
+      >
         <DialogHeader>
-          <DialogTitle>Import Contract</DialogTitle>
+          <DialogTitle className="text-2xl font-semibold tracking-tight">
+            Import Contract
+          </DialogTitle>
           <DialogDescription>
             Import an already deployed contract into thirdweb by entering a
             contract address below.
@@ -52,133 +68,157 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
   );
 };
 
+const importFormSchema = z.object({
+  contractAddress: z.string().refine(
+    (v) => {
+      try {
+        return isAddress(v);
+      } catch {
+        return false;
+      }
+    },
+    {
+      message: "Invalid contract address",
+    },
+  ),
+});
+
 function ImportForm() {
   const router = useRouter();
   const chainId = useActiveWalletChain()?.id;
   const chainSlug = useChainSlug(chainId || 1);
   const [isRedirecting, setIsRedirecting] = useState(false);
+
   const form = useForm({
-    defaultValues: {
-      contractAddress: "",
-    },
+    resolver: zodResolver(importFormSchema),
   });
   const addToDashboard = useAddContractMutation();
   const address = useActiveAccount()?.address;
   const registry = useAllContractList(address);
 
+  const isLoading =
+    form.formState.isSubmitting ||
+    addToDashboard.isLoading ||
+    addToDashboard.isSuccess ||
+    isRedirecting;
+
   return (
-    <form
-      onSubmit={form.handleSubmit(async (data) => {
-        if (!chainId) {
-          throw new Error("No chain ID");
-        }
-        let contractAddress: string;
-
-        try {
-          contractAddress = getAddress(data.contractAddress);
-        } catch {
-          form.setError("contractAddress", {
-            message: "Invalid contract address",
-          });
-          return;
-        }
-
-        try {
-          const res = await fetch(
-            `https://contract.thirdweb.com/metadata/${chainId}/${contractAddress}`,
-          );
-          const json = await res.json();
-
-          if (json.error) {
-            throw new Error(json.message);
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(async (data) => {
+          if (!chainId) {
+            throw new Error("No chain ID");
           }
+          let contractAddress: string;
 
-          const hasUnknownContractName =
-            !!json.settings?.compilationTarget?.UnknownContract;
-
-          const hasPartialAbi = json.metadata?.isPartialAbi;
-
-          if (hasUnknownContractName || hasPartialAbi) {
+          try {
+            contractAddress = getAddress(data.contractAddress);
+          } catch {
             form.setError("contractAddress", {
-              message:
-                "This contract cannot be imported since it's not verified on any block explorers.",
+              message: "Invalid contract address",
             });
             return;
           }
 
-          const isInRegistry =
-            registry.isFetched &&
-            registry.data?.find(
-              (c) =>
-                contractAddress &&
-                // compare address...
-                c.address.toLowerCase() === contractAddress.toLowerCase() &&
-                // ... and chainId
-                c.chainId === chainId,
-            ) &&
-            registry.isSuccess;
+          try {
+            const res = await fetch(
+              `https://contract.thirdweb.com/metadata/${chainId}/${contractAddress}`,
+            );
+            const json = await res.json();
 
-          if (isInRegistry) {
-            router.push(`/${chainSlug}/${contractAddress}`);
-            setIsRedirecting(true);
-            return;
+            if (json.error) {
+              throw new Error(json.message);
+            }
+
+            const hasUnknownContractName =
+              !!json.settings?.compilationTarget?.UnknownContract;
+
+            const hasPartialAbi = json.metadata?.isPartialAbi;
+
+            if (hasUnknownContractName || hasPartialAbi) {
+              form.setError("contractAddress", {
+                message:
+                  "This contract cannot be imported since it's not verified on any block explorers.",
+              });
+              return;
+            }
+
+            const isInRegistry =
+              registry.isFetched &&
+              registry.data?.find(
+                (c) =>
+                  contractAddress &&
+                  // compare address...
+                  c.address.toLowerCase() === contractAddress.toLowerCase() &&
+                  // ... and chainId
+                  c.chainId === chainId,
+              ) &&
+              registry.isSuccess;
+
+            if (isInRegistry) {
+              router.push(`/${chainSlug}/${contractAddress}`);
+              setIsRedirecting(true);
+              return;
+            }
+
+            addToDashboard.mutate(
+              {
+                contractAddress,
+                chainId,
+              },
+              {
+                onSuccess: () => {
+                  router.push(`/${chainSlug}/${contractAddress}`);
+                },
+                onError: (err) => {
+                  console.error(err);
+                },
+              },
+            );
+          } catch (err) {
+            toast.error("Failed to import contract");
+            console.error(err);
           }
+        })}
+      >
+        <FormField
+          control={form.control}
+          name="contractAddress"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Contract Address</FormLabel>
+              <FormControl>
+                <Input placeholder="0x..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          addToDashboard.mutate(
-            {
-              contractAddress,
-              chainId,
-            },
-            {
-              onSuccess: () => {
-                router.push(`/${chainSlug}/${contractAddress}`);
-              },
-              onError: (err) => {
-                console.error(err);
-              },
-            },
-          );
-        } catch (err) {
-          console.error(err);
-        }
-      })}
-    >
-      <Flex gap={6} direction="column">
-        <Flex gap={3} direction="column">
-          <FormControl isInvalid={!!form.formState.errors.contractAddress}>
-            <SolidityInput
-              solidityType="address"
-              formContext={form}
-              placeholder="Contract address"
-              {...form.register("contractAddress")}
-            />
-            <FormErrorMessage>
-              {form.formState.errors.contractAddress?.message}
-            </FormErrorMessage>
-          </FormControl>
-
+        <div className="h-3" />
+        <div>
+          <Label className="mb-3 inline-block">Network</Label>
           <NetworkSelectorButton />
-        </Flex>
-        <Button
-          ml="auto"
-          leftIcon={<FiFilePlus />}
-          type="submit"
-          variant="inverted"
-          isLoading={
-            form.formState.isSubmitting ||
-            addToDashboard.isLoading ||
-            addToDashboard.isSuccess ||
-            isRedirecting
-          }
-          loadingText={
-            addToDashboard.isSuccess || isRedirecting
-              ? "Redirecting"
-              : "Importing contract"
-          }
-        >
-          Import
-        </Button>
-      </Flex>
-    </form>
+        </div>
+
+        <div className="h-8" />
+
+        <div className="flex justify-end">
+          <Button type="submit" className="gap-2">
+            {isLoading ? (
+              <Spinner className="size-4" />
+            ) : (
+              <PlusIcon className="size-4" />
+            )}
+
+            {isLoading
+              ? addToDashboard.isSuccess || isRedirecting
+                ? "Redirecting"
+                : "Importing contract"
+              : "Import Contract"}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }

@@ -77,7 +77,7 @@ export function isCastVoteBySigSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeCastVoteBySigParams } "thirdweb/extensions/vote";
+ * import { encodeCastVoteBySigParams } from "thirdweb/extensions/vote";
  * const result = encodeCastVoteBySigParams({
  *  proposalId: ...,
  *  support: ...,
@@ -104,7 +104,7 @@ export function encodeCastVoteBySigParams(options: CastVoteBySigParams) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeCastVoteBySig } "thirdweb/extensions/vote";
+ * import { encodeCastVoteBySig } from "thirdweb/extensions/vote";
  * const result = encodeCastVoteBySig({
  *  proposalId: ...,
  *  support: ...,
@@ -130,6 +130,7 @@ export function encodeCastVoteBySig(options: CastVoteBySigParams) {
  * @extension VOTE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { castVoteBySig } from "thirdweb/extensions/vote";
  *
  * const transaction = castVoteBySig({
@@ -145,8 +146,7 @@ export function encodeCastVoteBySig(options: CastVoteBySigParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function castVoteBySig(

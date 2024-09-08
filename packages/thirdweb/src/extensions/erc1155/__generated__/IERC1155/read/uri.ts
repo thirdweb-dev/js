@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isUriSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isUriSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isUriSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeUriParams } "thirdweb/extensions/erc1155";
+ * import { encodeUriParams } from "thirdweb/extensions/erc1155";
  * const result = encodeUriParams({
  *  tokenId: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeUriParams(options: UriParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeUri } "thirdweb/extensions/erc1155";
+ * import { encodeUri } from "thirdweb/extensions/erc1155";
  * const result = encodeUri({
  *  tokenId: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeUri(options: UriParams) {
  * @example
  * ```ts
  * import { decodeUriResult } from "thirdweb/extensions/erc1155";
- * const result = decodeUriResult("...");
+ * const result = decodeUriResultResult("...");
  * ```
  */
 export function decodeUriResult(result: Hex) {

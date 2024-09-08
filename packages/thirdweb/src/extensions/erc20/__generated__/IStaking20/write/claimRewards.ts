@@ -33,13 +33,13 @@ export function isClaimRewardsSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { claimRewards } from "thirdweb/extensions/erc20";
  *
  * const transaction = claimRewards();
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function claimRewards(options: BaseTransactionOptions) {

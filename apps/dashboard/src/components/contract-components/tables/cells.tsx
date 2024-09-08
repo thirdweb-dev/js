@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { thirdwebClient } from "@/constants/client";
 import { useDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
@@ -85,10 +86,21 @@ export const AsyncContractTypeCell = memo(
         skeletonData={"Custom Contract"}
         render={(v) => {
           if (v === contractType) {
-            return <p className="line-clamp-1 max-w-[200px] truncate">{v}</p>;
+            return (
+              <Badge
+                className="line-clamp-1 max-w-[200px] truncate inline-block py-1"
+                variant="outline"
+              >
+                {v}
+              </Badge>
+            );
           }
 
-          return <p className="text-muted-foreground">{v || "Custom"}</p>;
+          return (
+            <Badge variant="outline" className="inline-block py-1">
+              {v || "Custom"}
+            </Badge>
+          );
         }}
       />
     );

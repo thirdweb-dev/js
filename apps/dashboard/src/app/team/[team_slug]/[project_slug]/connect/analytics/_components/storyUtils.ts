@@ -21,17 +21,16 @@ const pickRandomWallet = () => {
   ];
 };
 
-export function createWalletStatsStub(days: number): WalletStats {
-  const timeSeries: WalletStats["timeSeries"] = [];
+export function createWalletStatsStub(days: number): WalletStats[] {
+  const stubbedData: WalletStats[] = [];
 
   let d = days;
   while (d !== 0) {
     const uniqueWallets = Math.floor(Math.random() * 100);
-    timeSeries.push({
-      clientId: "",
-      dayTime: new Date(2024, 1, d).toISOString(),
-      totalWallets: uniqueWallets + Math.floor(Math.random() * 100),
-      uniqueWallets: uniqueWallets,
+    stubbedData.push({
+      date: new Date(2024, 1, d).toLocaleString(),
+      totalConnections: uniqueWallets + Math.floor(Math.random() * 100),
+      uniqueWalletsConnected: uniqueWallets,
       walletType: pickRandomWallet(),
     });
 
@@ -40,7 +39,5 @@ export function createWalletStatsStub(days: number): WalletStats {
     }
   }
 
-  return {
-    timeSeries,
-  };
+  return stubbedData;
 }

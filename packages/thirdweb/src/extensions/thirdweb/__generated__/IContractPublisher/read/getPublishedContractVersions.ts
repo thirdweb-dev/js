@@ -68,7 +68,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetPublishedContractVersionsSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isGetPublishedContractVersionsSupported(["0x..."]);
  * ```
  */
@@ -88,7 +87,7 @@ export function isGetPublishedContractVersionsSupported(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetPublishedContractVersionsParams } "thirdweb/extensions/thirdweb";
+ * import { encodeGetPublishedContractVersionsParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetPublishedContractVersionsParams({
  *  publisher: ...,
  *  contractId: ...,
@@ -111,7 +110,7 @@ export function encodeGetPublishedContractVersionsParams(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetPublishedContractVersions } "thirdweb/extensions/thirdweb";
+ * import { encodeGetPublishedContractVersions } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetPublishedContractVersions({
  *  publisher: ...,
  *  contractId: ...,
@@ -137,7 +136,7 @@ export function encodeGetPublishedContractVersions(
  * @example
  * ```ts
  * import { decodeGetPublishedContractVersionsResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeGetPublishedContractVersionsResult("...");
+ * const result = decodeGetPublishedContractVersionsResultResult("...");
  * ```
  */
 export function decodeGetPublishedContractVersionsResult(result: Hex) {

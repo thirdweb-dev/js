@@ -82,7 +82,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAllOffersSupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isGetAllOffersSupported(["0x..."]);
  * ```
  */
@@ -100,7 +99,7 @@ export function isGetAllOffersSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeGetAllOffersParams } "thirdweb/extensions/marketplace";
+ * import { encodeGetAllOffersParams } from "thirdweb/extensions/marketplace";
  * const result = encodeGetAllOffersParams({
  *  startId: ...,
  *  endId: ...,
@@ -118,7 +117,7 @@ export function encodeGetAllOffersParams(options: GetAllOffersParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeGetAllOffers } "thirdweb/extensions/marketplace";
+ * import { encodeGetAllOffers } from "thirdweb/extensions/marketplace";
  * const result = encodeGetAllOffers({
  *  startId: ...,
  *  endId: ...,
@@ -142,7 +141,7 @@ export function encodeGetAllOffers(options: GetAllOffersParams) {
  * @example
  * ```ts
  * import { decodeGetAllOffersResult } from "thirdweb/extensions/marketplace";
- * const result = decodeGetAllOffersResult("...");
+ * const result = decodeGetAllOffersResultResult("...");
  * ```
  */
 export function decodeGetAllOffersResult(result: Hex) {

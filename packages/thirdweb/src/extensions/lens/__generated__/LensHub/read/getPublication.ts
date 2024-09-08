@@ -80,7 +80,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetPublicationSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetPublicationSupported(["0x..."]);
  * ```
  */
@@ -98,7 +97,7 @@ export function isGetPublicationSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetPublicationParams } "thirdweb/extensions/lens";
+ * import { encodeGetPublicationParams } from "thirdweb/extensions/lens";
  * const result = encodeGetPublicationParams({
  *  profileId: ...,
  *  pubId: ...,
@@ -116,7 +115,7 @@ export function encodeGetPublicationParams(options: GetPublicationParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetPublication } "thirdweb/extensions/lens";
+ * import { encodeGetPublication } from "thirdweb/extensions/lens";
  * const result = encodeGetPublication({
  *  profileId: ...,
  *  pubId: ...,
@@ -140,7 +139,7 @@ export function encodeGetPublication(options: GetPublicationParams) {
  * @example
  * ```ts
  * import { decodeGetPublicationResult } from "thirdweb/extensions/lens";
- * const result = decodeGetPublicationResult("...");
+ * const result = decodeGetPublicationResultResult("...");
  * ```
  */
 export function decodeGetPublicationResult(result: Hex) {

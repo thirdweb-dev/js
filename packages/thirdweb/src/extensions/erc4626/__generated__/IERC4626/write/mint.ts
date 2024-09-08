@@ -60,7 +60,7 @@ export function isMintSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMintParams } "thirdweb/extensions/erc4626";
+ * import { encodeMintParams } from "thirdweb/extensions/erc4626";
  * const result = encodeMintParams({
  *  shares: ...,
  *  receiver: ...,
@@ -78,7 +78,7 @@ export function encodeMintParams(options: MintParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMint } "thirdweb/extensions/erc4626";
+ * import { encodeMint } from "thirdweb/extensions/erc4626";
  * const result = encodeMint({
  *  shares: ...,
  *  receiver: ...,
@@ -99,6 +99,7 @@ export function encodeMint(options: MintParams) {
  * @extension ERC4626
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { mint } from "thirdweb/extensions/erc4626";
  *
  * const transaction = mint({
@@ -111,8 +112,7 @@ export function encodeMint(options: MintParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function mint(

@@ -142,31 +142,25 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
   return (
     <>
       <DrawerHeader>
-        <Heading>"Mint NFT"</Heading>
+        <Heading>Mint NFT</Heading>
       </DrawerHeader>
       <DrawerBody>
         <Stack
           spacing={6}
           as="form"
           id={LAZY_MINT_FORM_ID}
-          onSubmit={handleSubmit((data) => {
+          onSubmit={handleSubmit(async (data) => {
             if (!address) {
               onError("Please connect your wallet to mint.");
               return;
             }
-
-            const dataWithCustom = {
-              ...data,
-              image: data.image || data.customImage,
-              animation_url: data.animation_url || data.customAnimationUrl,
-            };
 
             trackEvent({
               category: "nft",
               action: "lazy-mint",
               label: "attempt",
             });
-            const nfts = [parseAttributes(dataWithCustom)];
+            const nfts = [parseAttributes(data)];
             const transaction = isErc721
               ? lazyMint721({ contract, nfts })
               : lazyMint1155({ contract, nfts });

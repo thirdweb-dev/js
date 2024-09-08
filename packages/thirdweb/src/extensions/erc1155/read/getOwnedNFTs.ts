@@ -1,31 +1,16 @@
-import type { Address } from "abitype";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
-import { balanceOfBatch } from "../__generated__/IERC1155/read/balanceOfBatch.js";
-import { nextTokenIdToMint } from "../__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
-import { nextTokenId } from "../__generated__/Zora1155/read/nextTokenId.js";
 import { getNFT } from "./getNFT.js";
-
-const DEFAULT_QUERY_ALL_COUNT = 100;
+import {
+  type GetOwnedTokenIdsParams,
+  getOwnedTokenIds,
+} from "./getOwnedTokenIds.js";
 
 /**
  * Parameters for retrieving NFTs.
  * @extension ERC1155
  */
-export type GetOwnedNFTsParams = {
-  /**
-   * Which tokenId to start at.
-   */
-  start?: number;
-  /**
-   * The number of NFTs to retrieve.
-   */
-  count?: number;
-  /**
-   * The address of the wallet to get the NFTs of.
-   */
-  address: string;
-};
+export type GetOwnedNFTsParams = GetOwnedTokenIdsParams;
 
 /**
  * Retrieves the owned ERC1155 NFTs for a given wallet address.
@@ -46,52 +31,10 @@ export type GetOwnedNFTsParams = {
 export async function getOwnedNFTs(
   options: BaseTransactionOptions<GetOwnedNFTsParams>,
 ): Promise<(NFT & { quantityOwned: bigint })[]> {
-  const maxId = await Promise.allSettled([
-    nextTokenIdToMint(options),
-    nextTokenId(options),
-  ]).then(([_nextToMint, _next]) => {
-    if (_nextToMint.status === "fulfilled") {
-      return _nextToMint.value;
-    }
-    if (_next.status === "fulfilled") {
-      return _next.value;
-    }
-    throw Error("Contract doesn't have required extension");
-  });
-
-  // approach is naieve, likely can be improved
-  const owners: Address[] = [];
-  const tokenIds: bigint[] = [];
-  for (let i = 0n; i < maxId; i++) {
-    owners.push(options.address);
-    tokenIds.push(i);
-  }
-
-  const balances = await balanceOfBatch({
-    ...options,
-    owners,
-    tokenIds,
-  });
-
-  let ownedBalances = balances
-    .map((b, i) => {
-      return {
-        tokenId: i,
-        balance: b,
-      };
-    })
-    .filter((b) => b.balance > 0);
-
-  if (options.start || options.count) {
-    const start = options?.start || 0;
-    const count = options?.count || DEFAULT_QUERY_ALL_COUNT;
-    ownedBalances = ownedBalances.slice(start, start + count);
-  }
+  const ownedBalances = await getOwnedTokenIds(options);
 
   const nfts = await Promise.all(
-    ownedBalances.map((ob) =>
-      getNFT({ ...options, tokenId: BigInt(ob.tokenId) }),
-    ),
+    ownedBalances.map((ob) => getNFT({ ...options, tokenId: ob.tokenId })),
   );
 
   return nfts.map((nft, index) => ({

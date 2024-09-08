@@ -131,13 +131,12 @@ export const ConnectedWalletDetails: React.FC<{
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
 
-  const { ensAvatarQuery, addressOrENS, balanceQuery } =
-    useConnectedWalletDetails(
-      client,
-      walletChain,
-      activeAccount,
-      props.detailsButton?.displayBalanceToken,
-    );
+  const { pfp, name, balanceQuery } = useConnectedWalletDetails(
+    client,
+    walletChain,
+    activeAccount,
+    props.detailsButton?.displayBalanceToken,
+  );
 
   function closeModal() {
     setRootEl(null);
@@ -185,8 +184,7 @@ export const ConnectedWalletDetails: React.FC<{
     );
   }
 
-  const avatarSrc =
-    props.detailsButton?.connectedAccountAvatarUrl ?? ensAvatarQuery.data;
+  const avatarSrc = props.detailsButton?.connectedAccountAvatarUrl || pfp;
 
   return (
     <WalletInfoButton
@@ -235,7 +233,7 @@ export const ConnectedWalletDetails: React.FC<{
           weight={500}
           className={`${TW_CONNECTED_WALLET}__address`}
         >
-          {props.detailsButton?.connectedAccountName ?? addressOrENS}
+          {props.detailsButton?.connectedAccountName ?? name}
         </Text>
 
         {/* Balance */}
@@ -280,13 +278,12 @@ function DetailsModal(props: {
   const { client, locale } = props;
   const walletChain = useActiveWalletChain();
   const activeAccount = useActiveAccount();
-  const { ensAvatarQuery, addressOrENS, balanceQuery } =
-    useConnectedWalletDetails(
-      client,
-      walletChain,
-      activeAccount,
-      props.displayBalanceToken,
-    );
+  const { pfp, name, balanceQuery } = useConnectedWalletDetails(
+    client,
+    walletChain,
+    activeAccount,
+    props.displayBalanceToken,
+  );
   const theme = parseTheme(props.theme);
 
   const activeWallet = useActiveWallet();
@@ -370,8 +367,7 @@ function DetailsModal(props: {
     </MenuButton>
   );
 
-  const avatarSrc =
-    props.detailsModal?.connectedAccountAvatarUrl ?? ensAvatarQuery.data;
+  const avatarSrc = props.detailsModal?.connectedAccountAvatarUrl ?? pfp;
 
   const { hideSendFunds, hideReceiveFunds, hideBuyFunds } =
     props.detailsModal || {};
@@ -483,7 +479,7 @@ function DetailsModal(props: {
             }}
           >
             <Text color="primaryText" weight={500} size="md">
-              {props.detailsModal?.connectedAccountName ?? addressOrENS}
+              {props.detailsModal?.connectedAccountName ?? name}
             </Text>
             <IconButton>
               <CopyIcon
@@ -1154,9 +1150,6 @@ export type DetailsModalConnectOptions = {
   chains?: Chain[];
   recommendedWallets?: Wallet[];
   showAllWallets?: boolean;
-  hideSendFunds?: boolean;
-  hideReceiveFunds?: boolean;
-  hideBuyFunds?: boolean;
 };
 
 export type UseWalletDetailsModalOptions = {
@@ -1380,6 +1373,27 @@ export type UseWalletDetailsModalOptions = {
    * Use custom avatar URL for the connected wallet image in the `ConnectButton` Details Modal, overriding ENS avatar or Blobbie icon.
    */
   connectedAccountAvatarUrl?: string;
+
+  /**
+   * Hide the "Send Funds" button in the Details Modal.
+   *
+   * By default the "Send Funds" button is shown.
+   */
+  hideSendFunds?: boolean;
+
+  /**
+   * Hide the "Receive Funds" button in the Details Modal.
+   *
+   * By default the "Receive Funds" button is shown.
+   */
+  hideReceiveFunds?: boolean;
+
+  /**
+   * Hide the "Buy Funds" button in the Details Modal.
+   *
+   * By default the "Buy Funds" button is shown.
+   */
+  hideBuyFunds?: boolean;
 };
 
 /**
@@ -1434,6 +1448,9 @@ export function useWalletDetailsModal() {
               showTestnetFaucet: props.showTestnetFaucet,
               connectedAccountName: props.connectedAccountName,
               connectedAccountAvatarUrl: props.connectedAccountAvatarUrl,
+              hideBuyFunds: props.hideBuyFunds,
+              hideReceiveFunds: props.hideReceiveFunds,
+              hideSendFunds: props.hideSendFunds,
             }}
             displayBalanceToken={props.displayBalanceToken}
             theme={props.theme || "dark"}

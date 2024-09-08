@@ -31,6 +31,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableHeader,
   TableRow,
@@ -94,7 +95,7 @@ export function WebhooksPage(props: WebhooksPageProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <TableContainer>
       <Table>
         <TableHeader>
           <TableRow>
@@ -144,7 +145,7 @@ export function WebhooksPage(props: WebhooksPageProps) {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </TableContainer>
   );
 }
 

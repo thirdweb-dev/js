@@ -105,7 +105,7 @@ export function isSetClaimConditionsSupported(availableSelectors: string[]) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetClaimConditionsParams } "thirdweb/extensions/common";
+ * import { encodeSetClaimConditionsParams } from "thirdweb/extensions/common";
  * const result = encodeSetClaimConditionsParams({
  *  phase: ...,
  *  resetClaimEligibility: ...,
@@ -128,7 +128,7 @@ export function encodeSetClaimConditionsParams(
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeSetClaimConditions } "thirdweb/extensions/common";
+ * import { encodeSetClaimConditions } from "thirdweb/extensions/common";
  * const result = encodeSetClaimConditions({
  *  phase: ...,
  *  resetClaimEligibility: ...,
@@ -151,6 +151,7 @@ export function encodeSetClaimConditions(options: SetClaimConditionsParams) {
  * @extension COMMON
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setClaimConditions } from "thirdweb/extensions/common";
  *
  * const transaction = setClaimConditions({
@@ -163,8 +164,7 @@ export function encodeSetClaimConditions(options: SetClaimConditionsParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setClaimConditions(

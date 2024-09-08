@@ -10,14 +10,18 @@ export async function getCoinbaseMobileProvider(
   options?: CoinbaseWalletCreationOptions,
 ): Promise<ProviderInterface> {
   if (!_provider) {
-    const { isCoinbaseWalletInstalled } = await import(
-      "@coinbase/wallet-mobile-sdk"
-    );
-    // this actually needs to be awaited despite what TS says
-    const isAppInstalled = await isCoinbaseWalletInstalled();
-    console.log("isAppInstalled", isAppInstalled);
+    const useSmartWallet = options?.walletConfig?.options === "smartWalletOnly";
     let mobileProvider: ProviderInterface;
-    if (isAppInstalled) {
+    if (useSmartWallet) {
+      mobileProvider = (await initSmartWalletProvider(
+        options,
+      )) as unknown as ProviderInterface;
+      const ExpoLinking = await import("expo-linking");
+      const { handleResponse } = await import("@mobile-wallet-protocol/client");
+      ExpoLinking.addEventListener("url", ({ url }) => {
+        handleResponse(url);
+      });
+    } else {
       // TODO: remove this path once the new @mobile-wallet-protocol/client supports it
       mobileProvider = (await initCoinbaseAppProvider(
         options,
@@ -26,15 +30,6 @@ export async function getCoinbaseMobileProvider(
       const { handleResponse } = await import("@coinbase/wallet-mobile-sdk");
       ExpoLinking.addEventListener("url", ({ url }) => {
         // @ts-expect-error - Passing a URL object to handleResponse crashes the function
-        handleResponse(url);
-      });
-    } else {
-      mobileProvider = (await initSmartWalletProvider(
-        options,
-      )) as unknown as ProviderInterface;
-      const ExpoLinking = await import("expo-linking");
-      const { handleResponse } = await import("@mobile-wallet-protocol/client");
-      ExpoLinking.addEventListener("url", ({ url }) => {
         handleResponse(url);
       });
     }

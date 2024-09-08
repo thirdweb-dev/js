@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsActiveSignerSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isIsActiveSignerSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isIsActiveSignerSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeIsActiveSignerParams } "thirdweb/extensions/erc4337";
+ * import { encodeIsActiveSignerParams } from "thirdweb/extensions/erc4337";
  * const result = encodeIsActiveSignerParams({
  *  signer: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeIsActiveSignerParams(options: IsActiveSignerParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeIsActiveSigner } "thirdweb/extensions/erc4337";
+ * import { encodeIsActiveSigner } from "thirdweb/extensions/erc4337";
  * const result = encodeIsActiveSigner({
  *  signer: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeIsActiveSigner(options: IsActiveSignerParams) {
  * @example
  * ```ts
  * import { decodeIsActiveSignerResult } from "thirdweb/extensions/erc4337";
- * const result = decodeIsActiveSignerResult("...");
+ * const result = decodeIsActiveSignerResultResult("...");
  * ```
  */
 export function decodeIsActiveSignerResult(result: Hex) {

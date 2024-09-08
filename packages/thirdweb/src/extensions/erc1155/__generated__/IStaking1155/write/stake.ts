@@ -55,7 +55,7 @@ export function isStakeSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeStakeParams } "thirdweb/extensions/erc1155";
+ * import { encodeStakeParams } from "thirdweb/extensions/erc1155";
  * const result = encodeStakeParams({
  *  tokenId: ...,
  *  amount: ...,
@@ -73,7 +73,7 @@ export function encodeStakeParams(options: StakeParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeStake } "thirdweb/extensions/erc1155";
+ * import { encodeStake } from "thirdweb/extensions/erc1155";
  * const result = encodeStake({
  *  tokenId: ...,
  *  amount: ...,
@@ -94,6 +94,7 @@ export function encodeStake(options: StakeParams) {
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { stake } from "thirdweb/extensions/erc1155";
  *
  * const transaction = stake({
@@ -106,8 +107,7 @@ export function encodeStake(options: StakeParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function stake(

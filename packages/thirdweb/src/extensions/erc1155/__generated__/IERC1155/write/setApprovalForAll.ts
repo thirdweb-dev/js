@@ -55,7 +55,7 @@ export function isSetApprovalForAllSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSetApprovalForAllParams } "thirdweb/extensions/erc1155";
+ * import { encodeSetApprovalForAllParams } from "thirdweb/extensions/erc1155";
  * const result = encodeSetApprovalForAllParams({
  *  operator: ...,
  *  approved: ...,
@@ -75,7 +75,7 @@ export function encodeSetApprovalForAllParams(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSetApprovalForAll } "thirdweb/extensions/erc1155";
+ * import { encodeSetApprovalForAll } from "thirdweb/extensions/erc1155";
  * const result = encodeSetApprovalForAll({
  *  operator: ...,
  *  approved: ...,
@@ -98,6 +98,7 @@ export function encodeSetApprovalForAll(options: SetApprovalForAllParams) {
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setApprovalForAll } from "thirdweb/extensions/erc1155";
  *
  * const transaction = setApprovalForAll({
@@ -110,8 +111,7 @@ export function encodeSetApprovalForAll(options: SetApprovalForAllParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setApprovalForAll(

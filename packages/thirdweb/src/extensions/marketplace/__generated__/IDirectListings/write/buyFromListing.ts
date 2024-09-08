@@ -76,7 +76,7 @@ export function isBuyFromListingSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeBuyFromListingParams } "thirdweb/extensions/marketplace";
+ * import { encodeBuyFromListingParams } from "thirdweb/extensions/marketplace";
  * const result = encodeBuyFromListingParams({
  *  listingId: ...,
  *  buyFor: ...,
@@ -103,7 +103,7 @@ export function encodeBuyFromListingParams(options: BuyFromListingParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeBuyFromListing } "thirdweb/extensions/marketplace";
+ * import { encodeBuyFromListing } from "thirdweb/extensions/marketplace";
  * const result = encodeBuyFromListing({
  *  listingId: ...,
  *  buyFor: ...,
@@ -129,6 +129,7 @@ export function encodeBuyFromListing(options: BuyFromListingParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { buyFromListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = buyFromListing({
@@ -144,8 +145,7 @@ export function encodeBuyFromListing(options: BuyFromListingParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function buyFromListing(

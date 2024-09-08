@@ -354,7 +354,9 @@ export async function fromEthersContract<abi extends Abi>(
  * @returns - A Promise that resolves to an Account object.
  * @internal
  */
-async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
+export async function fromEthersSigner(
+  signer: ethers5.Signer,
+): Promise<Account> {
   const address = await signer.getAddress();
   const account: Account = {
     address,

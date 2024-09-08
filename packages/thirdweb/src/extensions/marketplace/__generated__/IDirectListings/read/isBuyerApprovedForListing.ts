@@ -42,7 +42,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsBuyerApprovedForListingSupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isIsBuyerApprovedForListingSupported(["0x..."]);
  * ```
  */
@@ -62,7 +61,7 @@ export function isIsBuyerApprovedForListingSupported(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeIsBuyerApprovedForListingParams } "thirdweb/extensions/marketplace";
+ * import { encodeIsBuyerApprovedForListingParams } from "thirdweb/extensions/marketplace";
  * const result = encodeIsBuyerApprovedForListingParams({
  *  listingId: ...,
  *  buyer: ...,
@@ -82,7 +81,7 @@ export function encodeIsBuyerApprovedForListingParams(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeIsBuyerApprovedForListing } "thirdweb/extensions/marketplace";
+ * import { encodeIsBuyerApprovedForListing } from "thirdweb/extensions/marketplace";
  * const result = encodeIsBuyerApprovedForListing({
  *  listingId: ...,
  *  buyer: ...,
@@ -108,7 +107,7 @@ export function encodeIsBuyerApprovedForListing(
  * @example
  * ```ts
  * import { decodeIsBuyerApprovedForListingResult } from "thirdweb/extensions/marketplace";
- * const result = decodeIsBuyerApprovedForListingResult("...");
+ * const result = decodeIsBuyerApprovedForListingResultResult("...");
  * ```
  */
 export function decodeIsBuyerApprovedForListingResult(result: Hex) {

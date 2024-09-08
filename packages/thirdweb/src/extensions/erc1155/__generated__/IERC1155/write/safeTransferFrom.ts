@@ -70,7 +70,7 @@ export function isSafeTransferFromSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSafeTransferFromParams } "thirdweb/extensions/erc1155";
+ * import { encodeSafeTransferFromParams } from "thirdweb/extensions/erc1155";
  * const result = encodeSafeTransferFromParams({
  *  from: ...,
  *  to: ...,
@@ -97,7 +97,7 @@ export function encodeSafeTransferFromParams(options: SafeTransferFromParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSafeTransferFrom } "thirdweb/extensions/erc1155";
+ * import { encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
  * const result = encodeSafeTransferFrom({
  *  from: ...,
  *  to: ...,
@@ -123,6 +123,7 @@ export function encodeSafeTransferFrom(options: SafeTransferFromParams) {
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { safeTransferFrom } from "thirdweb/extensions/erc1155";
  *
  * const transaction = safeTransferFrom({
@@ -138,8 +139,7 @@ export function encodeSafeTransferFrom(options: SafeTransferFromParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function safeTransferFrom(

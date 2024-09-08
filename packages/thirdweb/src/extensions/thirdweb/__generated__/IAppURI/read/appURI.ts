@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isAppURISupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isAppURISupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isAppURISupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeAppURIResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeAppURIResult("...");
+ * const result = decodeAppURIResultResult("...");
  * ```
  */
 export function decodeAppURIResult(result: Hex) {

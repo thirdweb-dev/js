@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetProfileIdByHandleHashSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetProfileIdByHandleHashSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isGetProfileIdByHandleHashSupported(
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetProfileIdByHandleHashParams } "thirdweb/extensions/lens";
+ * import { encodeGetProfileIdByHandleHashParams } from "thirdweb/extensions/lens";
  * const result = encodeGetProfileIdByHandleHashParams({
  *  handleHash: ...,
  * });
@@ -76,7 +75,7 @@ export function encodeGetProfileIdByHandleHashParams(
  * @extension LENS
  * @example
  * ```ts
- * import { encodeGetProfileIdByHandleHash } "thirdweb/extensions/lens";
+ * import { encodeGetProfileIdByHandleHash } from "thirdweb/extensions/lens";
  * const result = encodeGetProfileIdByHandleHash({
  *  handleHash: ...,
  * });
@@ -101,7 +100,7 @@ export function encodeGetProfileIdByHandleHash(
  * @example
  * ```ts
  * import { decodeGetProfileIdByHandleHashResult } from "thirdweb/extensions/lens";
- * const result = decodeGetProfileIdByHandleHashResult("...");
+ * const result = decodeGetProfileIdByHandleHashResultResult("...");
  * ```
  */
 export function decodeGetProfileIdByHandleHashResult(result: Hex) {

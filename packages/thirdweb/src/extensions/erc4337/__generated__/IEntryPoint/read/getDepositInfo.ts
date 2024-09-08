@@ -57,7 +57,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetDepositInfoSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isGetDepositInfoSupported(["0x..."]);
  * ```
  */
@@ -75,7 +74,7 @@ export function isGetDepositInfoSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetDepositInfoParams } "thirdweb/extensions/erc4337";
+ * import { encodeGetDepositInfoParams } from "thirdweb/extensions/erc4337";
  * const result = encodeGetDepositInfoParams({
  *  account: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeGetDepositInfoParams(options: GetDepositInfoParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetDepositInfo } "thirdweb/extensions/erc4337";
+ * import { encodeGetDepositInfo } from "thirdweb/extensions/erc4337";
  * const result = encodeGetDepositInfo({
  *  account: ...,
  * });
@@ -115,7 +114,7 @@ export function encodeGetDepositInfo(options: GetDepositInfoParams) {
  * @example
  * ```ts
  * import { decodeGetDepositInfoResult } from "thirdweb/extensions/erc4337";
- * const result = decodeGetDepositInfoResult("...");
+ * const result = decodeGetDepositInfoResultResult("...");
  * ```
  */
 export function decodeGetDepositInfoResult(result: Hex) {

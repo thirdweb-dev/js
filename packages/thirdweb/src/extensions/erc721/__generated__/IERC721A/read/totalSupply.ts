@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTotalSupplySupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isTotalSupplySupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isTotalSupplySupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeTotalSupplyResult } from "thirdweb/extensions/erc721";
- * const result = decodeTotalSupplyResult("...");
+ * const result = decodeTotalSupplyResultResult("...");
  * ```
  */
 export function decodeTotalSupplyResult(result: Hex) {

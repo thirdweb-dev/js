@@ -50,7 +50,7 @@ export function isChangeRecoveryAddressSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeChangeRecoveryAddressParams } "thirdweb/extensions/farcaster";
+ * import { encodeChangeRecoveryAddressParams } from "thirdweb/extensions/farcaster";
  * const result = encodeChangeRecoveryAddressParams({
  *  recovery: ...,
  * });
@@ -69,7 +69,7 @@ export function encodeChangeRecoveryAddressParams(
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeChangeRecoveryAddress } "thirdweb/extensions/farcaster";
+ * import { encodeChangeRecoveryAddress } from "thirdweb/extensions/farcaster";
  * const result = encodeChangeRecoveryAddress({
  *  recovery: ...,
  * });
@@ -93,6 +93,7 @@ export function encodeChangeRecoveryAddress(
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { changeRecoveryAddress } from "thirdweb/extensions/farcaster";
  *
  * const transaction = changeRecoveryAddress({
@@ -104,8 +105,7 @@ export function encodeChangeRecoveryAddress(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function changeRecoveryAddress(

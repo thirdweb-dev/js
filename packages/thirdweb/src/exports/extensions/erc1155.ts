@@ -22,6 +22,10 @@ export {
   isNextTokenIdToMintSupported,
 } from "../../extensions/erc1155/__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
 export {
+  getOwnedTokenIds,
+  type GetOwnedTokenIdsParams,
+} from "../../extensions/erc1155/read/getOwnedTokenIds.js";
+export {
   uri,
   /**
    * @alias for `uri`

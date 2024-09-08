@@ -53,7 +53,7 @@ export function isSetProposalThresholdSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeSetProposalThresholdParams } "thirdweb/extensions/vote";
+ * import { encodeSetProposalThresholdParams } from "thirdweb/extensions/vote";
  * const result = encodeSetProposalThresholdParams({
  *  newProposalThreshold: ...,
  * });
@@ -72,7 +72,7 @@ export function encodeSetProposalThresholdParams(
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeSetProposalThreshold } "thirdweb/extensions/vote";
+ * import { encodeSetProposalThreshold } from "thirdweb/extensions/vote";
  * const result = encodeSetProposalThreshold({
  *  newProposalThreshold: ...,
  * });
@@ -96,6 +96,7 @@ export function encodeSetProposalThreshold(
  * @extension VOTE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setProposalThreshold } from "thirdweb/extensions/vote";
  *
  * const transaction = setProposalThreshold({
@@ -107,8 +108,7 @@ export function encodeSetProposalThreshold(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setProposalThreshold(

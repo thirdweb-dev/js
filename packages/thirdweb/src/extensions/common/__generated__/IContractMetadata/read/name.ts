@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isNameSupported } from "thirdweb/extensions/common";
- *
  * const supported = isNameSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isNameSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeNameResult } from "thirdweb/extensions/common";
- * const result = decodeNameResult("...");
+ * const result = decodeNameResultResult("...");
  * ```
  */
 export function decodeNameResult(result: Hex) {
