@@ -14,7 +14,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { replaceIpfsUrl } from "lib/sdk";
-import { useEffect, useId, useMemo } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { FaCircleInfo } from "react-icons/fa6";
 import { FiPlay } from "react-icons/fi";
@@ -46,6 +46,10 @@ function formatResponseData(data: unknown): string {
   // Early exit if data is already a string,
   // otherwise JSON.stringify(data) will wrap it in extra quotes - which will affect the value for [Copy button]
   if (typeof data === "string") {
+    // "" is a valid response. For example, some token has `symbol` === ""
+    if (data === "") {
+      return `""`;
+    }
     return data;
   }
   if (typeof data === "bigint") {
@@ -177,8 +181,8 @@ ${Object.keys(populatedTransaction)
   })
   .join("")}`;
       } catch (err) {
-        return `--- ❌ Simulation failed ---
-${(err as Error).message || ""}`;
+        throw new Error(`--- ❌ Simulation failed ---
+${(err as Error).message || ""}`);
       }
     },
   );
@@ -213,9 +217,19 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
       abiFunction.stateMutability === "pure"
     );
   }, [abiFunction]);
+
+  const [executionMode, setExecutionMode] = useState<
+    "read" | "write" | "simulate"
+  >(
+    abiFunction.stateMutability === "view" ||
+      abiFunction.stateMutability === "pure"
+      ? "read"
+      : "write",
+  );
+
   const {
     mutate,
-    data,
+    data: mutationData,
     error: mutationError,
     isPending: mutationLoading,
   } = useSendAndConfirmTransaction();
@@ -229,12 +243,28 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
 
   const txSimulation = useSimulateTransaction();
 
-  const formattedReadData: string = useMemo(
-    () => (readData ? formatResponseData(readData) : ""),
-    [readData],
-  );
+  const error =
+    executionMode === "read"
+      ? readError
+      : executionMode === "write"
+        ? mutationError
+        : executionMode === "simulate"
+          ? txSimulation.error
+          : undefined;
 
-  const error = isView ? readError : mutationError;
+  const data =
+    executionMode === "read"
+      ? readData
+      : executionMode === "write"
+        ? mutationData
+        : executionMode === "simulate"
+          ? txSimulation.data
+          : undefined;
+
+  const formattedResponseData = useMemo(
+    () => (data !== undefined ? formatResponseData(data) : ""),
+    [data],
+  );
 
   // legitimate(?) use-case
   // eslint-disable-next-line no-restricted-syntax
@@ -252,12 +282,14 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   }, [abiFunction, form, readFn]);
 
   const handleContractRead = form.handleSubmit((d) => {
+    setExecutionMode("read");
     const types = abiFunction.inputs.map((o) => o.type);
     const formatted = formatContractCall(d.params);
     readFn({ args: formatted, types });
   });
 
   const handleContractWrite = form.handleSubmit((d) => {
+    setExecutionMode("write");
     if (!abiFunction.name) {
       return toast.error("Cannot detect function name");
     }
@@ -274,6 +306,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   });
 
   const handleContractSimulation = form.handleSubmit((d) => {
+    setExecutionMode("simulate");
     if (!abiFunction.name) {
       return toast.error("Cannot detect function name");
     }
@@ -385,9 +418,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 {formatError(error as any)}
               </Text>
             </>
-          ) : data !== undefined ||
-            readData !== undefined ||
-            txSimulation.data ? (
+          ) : formattedResponseData ? (
             <>
               <Divider />
               <Heading size="label.sm">Output</Heading>
@@ -395,20 +426,21 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 w="full"
                 position="relative"
                 language="json"
-                code={formatResponseData(data || readData || txSimulation.data)}
+                code={formattedResponseData}
               />
-              {formattedReadData.startsWith("ipfs://") && (
-                <Text size="label.sm">
-                  <TrackedLink
-                    href={replaceIpfsUrl(formattedReadData)}
-                    isExternal
-                    category="contract-explorer"
-                    label="open-in-gateway"
-                  >
-                    Open in gateway
-                  </TrackedLink>
-                </Text>
-              )}
+              {typeof formattedResponseData === "string" &&
+                formattedResponseData.startsWith("ipfs://") && (
+                  <Text size="label.sm">
+                    <TrackedLink
+                      href={replaceIpfsUrl(formattedResponseData)}
+                      isExternal
+                      category="contract-explorer"
+                      label="open-in-gateway"
+                    >
+                      Open in gateway
+                    </TrackedLink>
+                  </Text>
+                )}
             </>
           ) : null}
         </Flex>
@@ -430,7 +462,9 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
             <>
               <Button
                 onClick={handleContractSimulation}
-                isDisabled={!abiFunction}
+                isDisabled={
+                  !abiFunction || txSimulation.isLoading || mutationLoading
+                }
                 isLoading={txSimulation.isLoading}
               >
                 <ToolTipLabel label="Simulate the transaction to see its potential outcome without actually sending it to the network. This action doesn't cost gas.">
@@ -441,7 +475,9 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 Simulate
               </Button>
               <TransactionButton
-                isDisabled={!abiFunction}
+                isDisabled={
+                  !abiFunction || txSimulation.isLoading || mutationLoading
+                }
                 colorScheme="primary"
                 transactionCount={1}
                 isLoading={mutationLoading}
