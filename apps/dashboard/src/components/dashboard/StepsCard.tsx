@@ -1,8 +1,7 @@
-import { Box, Flex, Progress, useColorModeValue } from "@chakra-ui/react";
-import { DelayedDisplay } from "components/delayed-display/delayed-display";
-import { useMemo, useState } from "react";
-import { FiCheck, FiChevronUp } from "react-icons/fi";
-import { Card, Heading, Text } from "tw-components";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
+import { CheckIcon } from "lucide-react";
+import { useMemo } from "react";
 
 type Step = {
   title: string | JSX.Element;
@@ -23,161 +22,100 @@ export const StepsCard: React.FC<StepsCardProps> = ({
   title,
   description,
   steps,
-  delay = 500,
 }) => {
   const firstIncomplete = steps.findIndex((step) => !step.completed);
   const lastStepCompleted =
     firstIncomplete === -1 ? steps.length - 1 : firstIncomplete - 1;
   const percentage = ((lastStepCompleted + 1) / steps.length) * 100;
   const isComplete = useMemo(() => firstIncomplete === -1, [firstIncomplete]);
-  const [isOpen, setIsOpen] = useState(true);
-  const bg = useColorModeValue(
-    "white",
-    "linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)",
-  );
 
   if (steps.length === 0 || isComplete) {
     return null;
   }
 
   return (
-    <DelayedDisplay delay={delay}>
-      <Card
-        flexDir="column"
-        p={8}
-        gap={4}
-        position="relative"
-        cursor={isComplete ? (isOpen ? "default" : "pointer") : undefined}
-        onClick={isComplete ? () => !isOpen && setIsOpen(true) : undefined}
-        bg={bg}
-      >
-        <Flex
-          w="full"
-          as={isComplete ? "button" : undefined}
-          type={isComplete ? "button" : undefined}
-          alignItems="center"
-          justifyContent="space-between"
-          gap={4}
-          onClick={isComplete ? () => setIsOpen((prev) => !prev) : undefined}
-        >
-          {title && (
-            <Heading size="label.lg" textAlign="left" mb={4}>
-              {title}
-            </Heading>
-          )}
-          {isComplete && (
-            <Flex alignItems="center">
-              <Heading size="subtitle.xs" mr="2">
-                <Box position="relative">
-                  <Box visibility="hidden" as="span" opacity="0" aria-hidden>
-                    Collapse
-                  </Box>
-                  <Box
-                    position="absolute"
-                    right={0}
-                    as="span"
-                    display="inline-block"
-                    transform={isOpen ? "translateY(0px)" : "translateY(-10px)"}
-                    opacity={isOpen ? 1 : 0}
-                    transition="all 0.33s"
-                    transitionDelay={!isOpen ? "0s" : "0.05s"}
-                    aria-hidden={isOpen}
-                  >
-                    Collapse
-                  </Box>
-                  <Box
-                    position="absolute"
-                    right={0}
-                    display="inline-block"
-                    as="span"
-                    transform={isOpen ? "translateY(10px)" : "translateY(0px)"}
-                    opacity={isOpen ? 0 : 1}
-                    transition="all 0.33s"
-                    transitionDelay={isOpen ? "0s" : "0.05s"}
-                    aria-hidden={!isOpen}
-                  >
-                    Expand
-                  </Box>
-                </Box>
-              </Heading>
-              <Box
-                transition="transform 0.33s"
-                transform={`rotateX(${isOpen ? "0" : "180"}deg)`}
-              >
-                <FiChevronUp />
-              </Box>
-            </Flex>
-          )}
-        </Flex>
-        <Flex
-          maxH={isOpen ? "1000px" : "0px"}
-          transform={isOpen ? "translateY(0px)" : "translateY(-10px)"}
-          opacity={isOpen ? 1 : 0}
-          transition="all 0.2s"
-          willChange="max-height, opacity, transform"
-          gap={0}
-          direction="column"
-        >
-          {description && <Text mt={4}>{description}</Text>}
-          <Progress value={percentage} mt={2} mb={2} rounded="full" size="sm" />
-          <Text size="body.md" className="text-muted-foreground">
-            {lastStepCompleted + 1}/{steps.length} tasks completed
-          </Text>
+    <div
+      className={cn("border border-border rounded-lg p-4 lg:p-6 bg-muted/30")}
+    >
+      {/* Title + Desc */}
+      <h2 className="text-xl lg:text-2xl font-semibold tracking-tight text-left mb-3">
+        {title}
+      </h2>
 
-          {steps.map(({ children, ...step }, index) => {
-            const stepCompleted = index === lastStepCompleted + 1;
+      {/* Progress */}
+      <div className="mb-8 flex flex-col gap-2">
+        {description && (
+          <p className="text-muted-foreground text-sm lg:text-base">
+            {description}
+          </p>
+        )}
 
-            return (
-              <Flex
-                flexDir={{ base: "column", md: "row" }}
-                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                key={index}
-                mt={8}
-                gap={4}
-                w="full"
-              >
-                <Flex
-                  w={6}
-                  h={6}
-                  shrink={0}
-                  rounded="full"
-                  alignItems="center"
-                  justifyContent="center"
-                  className="border border-border"
-                  mt={-1}
-                >
-                  {step.completed ? (
-                    <FiCheck />
-                  ) : (
-                    <Text size="label.sm">{index + 1}</Text>
-                  )}
-                </Flex>
-                <Flex flexDir="column" w="full">
+        <Progress value={Math.max(percentage, 10)} className="h-2" />
+
+        <p className="text-link-foreground text-xs lg:text-sm">
+          {lastStepCompleted + 1}/{steps.length} tasks completed
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-3 w-full">
+        {steps.map(({ children, ...step }, index) => {
+          const showChildren =
+            !step.completed || (step.completed && step.showCompletedChildren);
+          return (
+            <div
+              className="flex flex-col md:flex-row gap-2 lg:gap-3 md:items-start"
+              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+              key={index}
+            >
+              <StepNumberBadge
+                number={index + 1}
+                isCompleted={step.completed}
+              />
+
+              <div className="grow">
+                {/* Heading + Desc */}
+                <div className="flex flex-col mb-3">
                   {typeof step.title === "string" ? (
-                    <Heading size="label.md" opacity={stepCompleted ? 1 : 0.6}>
+                    <h3
+                      className={cn(
+                        "text-base font-medium",
+                        step.completed && "text-muted-foreground",
+                      )}
+                    >
                       {step.title}
-                    </Heading>
+                    </h3>
                   ) : (
                     step.title
                   )}
-                  {(step.showCompletedChildren || stepCompleted) && (
-                    <>
-                      {step.description && (
-                        <Text my={2} className="text-muted-foreground">
-                          {step.description}
-                        </Text>
-                      )}
-                      <Box mt={4} w="full">
-                        {children}
-                      </Box>
-                    </>
+
+                  {step.description && (
+                    <p className="text-muted-foreground/70 text-sm">
+                      {step.description}
+                    </p>
                   )}
-                </Flex>
-              </Flex>
-            );
-          })}
-        </Flex>
-      </Card>
-    </DelayedDisplay>
+                </div>
+
+                {showChildren && <div className="w-full">{children}</div>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
+
+function StepNumberBadge(props: {
+  number: number;
+  isCompleted: boolean;
+}) {
+  return (
+    <div className="border border-border shrink-0 rounded-full flex items-center justify-center self-start size-7 bg-muted/50">
+      {props.isCompleted ? (
+        <CheckIcon className="size-4 text-green-500" />
+      ) : (
+        <span className="text-sm">{props.number}</span>
+      )}
+    </div>
+  );
+}

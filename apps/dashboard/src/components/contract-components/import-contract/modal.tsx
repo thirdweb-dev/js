@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   useAddContractMutation,
   useAllContractList,
@@ -25,7 +26,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { PlusIcon } from "lucide-react";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -84,7 +84,7 @@ const importFormSchema = z.object({
 });
 
 function ImportForm() {
-  const router = useRouter();
+  const router = useDashboardRouter();
   const chainId = useActiveWalletChain()?.id;
   const chainSlug = useChainSlug(chainId || 1);
   const [isRedirecting, setIsRedirecting] = useState(false);

@@ -1,3 +1,5 @@
+"use client";
+
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   type useAllContractList,
   useRemoveContractMutation,
@@ -33,7 +36,6 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { memo, useEffect, useMemo, useState } from "react";
 import {
   type Column,
@@ -70,7 +72,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
   }, [contractListQuery.data]);
 
   return (
-    <>
+    <div className="flex flex-col gap-8">
       {!noHeader && (
         <>
           <ImportModal
@@ -121,7 +123,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
           No contracts found
         </div>
       )}
-    </>
+    </div>
   );
 };
 
@@ -399,13 +401,14 @@ const ContractTable: React.FC<ContractTableProps> = ({
 
 const ContractTableRow = memo(({ row }: { row: Row<BasicContract> }) => {
   const chainSlug = useChainSlug(row.original.chainId);
-  const router = useRouter();
+  const router = useDashboardRouter();
 
   return (
     <TableRow
       {...row.getRowProps()}
       role="group"
       className="cursor-pointer hover:bg-muted/50"
+      // TODO - replace this with before:absolute thing
       onClick={() => {
         router.push(`/${chainSlug}/${row.original.address}`);
       }}
