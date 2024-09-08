@@ -414,7 +414,6 @@ export async function connectCoinbaseWalletSDK(
   emitter: WalletEmitter<typeof COINBASE>,
   provider: ProviderInterface,
 ): Promise<ReturnType<typeof onConnect>> {
-  console.log("provider", provider);
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
   })) as string[];

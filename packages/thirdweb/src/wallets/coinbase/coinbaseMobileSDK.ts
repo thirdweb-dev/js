@@ -10,6 +10,7 @@ export async function getCoinbaseMobileProvider(
   options?: CoinbaseWalletCreationOptions,
 ): Promise<ProviderInterface> {
   if (!_provider) {
+    // if explicitly set to smart wallet only, use the smart wallet provider
     const useSmartWallet = options?.walletConfig?.options === "smartWalletOnly";
     let mobileProvider: ProviderInterface;
     if (useSmartWallet) {
@@ -22,6 +23,7 @@ export async function getCoinbaseMobileProvider(
         handleResponse(url);
       });
     } else {
+      // otherwise, use the coinbase app provider
       // TODO: remove this path once the new @mobile-wallet-protocol/client supports it
       mobileProvider = (await initCoinbaseAppProvider(
         options,
