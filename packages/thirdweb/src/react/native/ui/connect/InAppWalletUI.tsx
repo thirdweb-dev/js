@@ -21,9 +21,9 @@ import {
 } from "../../../../wallets/types.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
-import { getWalletIcon } from "../../../core/utils/walletIcon.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { RNImage } from "../components/RNImage.js";
+import { getAuthProviderImage } from "../components/WalletImage.js";
 import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { ThemedInput, ThemedInputWithSubmit } from "../components/input.js";
 import { Spacer } from "../components/spacer.js";
@@ -93,7 +93,7 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           <ThemedButtonWithIcon
             theme={theme}
             title="Email address"
-            icon={getWalletIcon("email")}
+            icon={getAuthProviderImage("email")}
             onPress={() => setInputMode("email")}
           />
         )
@@ -105,7 +105,7 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           <ThemedButtonWithIcon
             theme={theme}
             title="Phone number"
-            icon={getWalletIcon("phone")}
+            icon={getAuthProviderImage("phone")}
             onPress={() => setInputMode("phone")}
           />
         )
@@ -114,7 +114,7 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
         <ThemedButtonWithIcon
           theme={theme}
           title="Passkey"
-          icon={getWalletIcon("passkey")}
+          icon={getAuthProviderImage("passkey")}
           onPress={() => {
             props.setScreen({ screen: "passkey", wallet });
           }}
@@ -363,7 +363,12 @@ export function PasskeyView(props: InAppWalletFormUIProps) {
           padding: spacing.xl,
         }}
       >
-        <RNImage theme={theme} size={90} data={getWalletIcon("passkey")} />
+        <RNImage
+          theme={theme}
+          size={90}
+          data={getAuthProviderImage("passkey")}
+          color={theme.colors.accentButtonBg}
+        />
         <Spacer size="xxl" />
         <ThemedButton
           theme={theme}
