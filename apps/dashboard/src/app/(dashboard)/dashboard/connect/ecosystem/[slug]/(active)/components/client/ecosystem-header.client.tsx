@@ -60,7 +60,10 @@ function EcosystemAlertBanner({ ecosystem }: { ecosystem: Ecosystem }) {
   }
 }
 
-function EcosystemSelect(props: { ecosystem: Ecosystem }) {
+function EcosystemSelect(props: {
+  ecosystem: Ecosystem;
+  ecosystemLayoutPath: string;
+}) {
   const { data: ecosystems, isLoading } = useEcosystemList();
 
   return isLoading ? (
@@ -81,7 +84,7 @@ function EcosystemSelect(props: { ecosystem: Ecosystem }) {
           {ecosystems?.map((ecosystem) => (
             <DropdownMenuItem key={ecosystem.id} asChild>
               <Link
-                href={`/dashboard/connect/ecosystem/${ecosystem.slug}`}
+                href={`${props.ecosystemLayoutPath}/${ecosystem.slug}`}
                 className="relative flex items-center pl-8 pr-3 cursor-pointer"
               >
                 {ecosystem.slug === props.ecosystem.slug && (
@@ -93,7 +96,7 @@ function EcosystemSelect(props: { ecosystem: Ecosystem }) {
           ))}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <Link href="/dashboard/connect/ecosystem/create" className="">
+        <Link href={`${props.ecosystemLayoutPath}/create`} className="">
           <DropdownMenuItem className="relative flex items-center pl-8 pr-3 cursor-pointer">
             <PlusCircleIcon className="absolute w-4 h-4 left-2" />
             <div className="truncate">New Ecosystem</div>
@@ -104,7 +107,10 @@ function EcosystemSelect(props: { ecosystem: Ecosystem }) {
   );
 }
 
-export function EcosystemHeader(props: { ecosystem: Ecosystem }) {
+export function EcosystemHeader(props: {
+  ecosystem: Ecosystem;
+  ecosystemLayoutPath: string;
+}) {
   const pathname = usePathname();
   const { data: fetchedEcosystem } = useEcosystem({
     slug: props.ecosystem.slug,
@@ -166,15 +172,19 @@ export function EcosystemHeader(props: { ecosystem: Ecosystem }) {
             </div>
           </div>
           <div className="flex flex-col justify-between gap-4 md:items-end">
-            <EcosystemSelect ecosystem={ecosystem} />
+            <EcosystemSelect
+              ecosystem={ecosystem}
+              ecosystemLayoutPath={props.ecosystemLayoutPath}
+            />
           </div>
         </div>
         <TabLinks
           links={[
             {
               name: "Permissions",
-              href: `/dashboard/connect/ecosystem/${ecosystem.slug}/permissions`,
-              isActive: pathname?.endsWith("/permissions") || false, // pathname will almost never be null: https://nextjs.org/docs/app/api-reference/functions/use-pathname
+              href: `${props.ecosystemLayoutPath}/${ecosystem.slug}`,
+              isActive:
+                pathname === `${props.ecosystemLayoutPath}/${ecosystem.slug}`,
             },
             {
               name: "Analytics (Coming Soon)",
