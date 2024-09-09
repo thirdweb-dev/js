@@ -53,7 +53,6 @@ async function initSmartWalletProvider(
       "callbackURL is required. Set it when creating the coinbase wallet. Ex: createWallet('com.coinbase.wallet', { mobileConfig: { callbackUrl: 'https://example.com' }}",
     );
   }
-  console.log("initSmartWalletProvider", appDeeplinkUrl);
   const sdk = new EIP1193Provider({
     metadata: {
       appName: options?.appMetadata?.name || "thirdweb powered app",

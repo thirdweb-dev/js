@@ -129,4 +129,17 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
     });
     expect(events.length).toBe(38);
   });
+
+  it("should get individual events with filters", async () => {
+    const events = await getContractEvents({
+      contract: DOODLES_CONTRACT,
+      fromBlock: FORK_BLOCK_NUMBER - 1000n,
+      events: [
+        transferEvent({
+          from: "0xB81965DdFdDA3923f292a47A1be83ba3A36B5133",
+        }),
+      ],
+    });
+    expect(events.length).toBe(2);
+  });
 });
