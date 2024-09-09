@@ -70,13 +70,13 @@ function redirects() {
     },
     //Deprecated sign in route 
     {
-      source: "/connect/sign-in",
-      destination: "/connect/sign-in/overview",
+      source: "https://portal.thirdweb.com/connect/sign-in",
+      destination: "https://portal.thirdweb.com/connect/sign-in/overview",
     },
     //Deprecated Pay route 
     {
-      source: "/connect/pay/buy-with-crypto",
-      destination: "/connect/pay/overview",
+      source: "https://portal.thirdweb.com/connect/pay/buy-with-crypto",
+      destination: "https://portal.thirdweb.com/connect/pay/overview",
     },
     // prebuilt contract deploys
     {
