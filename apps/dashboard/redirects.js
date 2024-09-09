@@ -68,16 +68,6 @@ function redirects() {
       destination: "/:network/:address",
       permanent: false,
     },
-    //Deprecated sign in route 
-    {
-      source: "https://portal.thirdweb.com/connect/sign-in",
-      destination: "https://portal.thirdweb.com/connect/sign-in/overview",
-    },
-    //Deprecated Pay route 
-    {
-      source: "https://portal.thirdweb.com/connect/pay/buy-with-crypto",
-      destination: "https://portal.thirdweb.com/connect/pay/overview",
-    },
     // prebuilt contract deploys
     {
       source: "/contracts/new/:slug*",
