@@ -117,7 +117,7 @@
     "@chakra-ui/cli": "^2.4.1",
     "@chromatic-com/storybook": "^1.5.0",
     "@next/bundle-analyzer": "^14.2.4",
-    "@next/eslint-plugin-next": "^14.2.4",
+    "@next/eslint-plugin-next": "^14.2.9",
     "@playwright/test": "1.46.1",
     "@storybook/addon-essentials": "^8.2.9",
     "@storybook/addon-interactions": "^8.2.9",
