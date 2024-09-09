@@ -34,10 +34,10 @@ export type EnsProfile = {
   telegram?: string;
 };
 
-export type SocialProfiles = {
+export type SocialProfile = {
   type: "farcaster" | "lens" | "ens";
   name?: string;
   avatar?: string;
   bio?: string;
   metadata?: FarcasterProfile | LensProfile | EnsProfile;
-}[];
+};
