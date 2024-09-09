@@ -1,12 +1,12 @@
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   type Account,
   useUpdateNotifications,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { Divider, Flex, HStack, Switch, VStack } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
-import { Heading, Text } from "tw-components";
 
 interface NotificationsProps {
   account: Account;
@@ -58,42 +58,46 @@ export const Notifications: React.FC<NotificationsProps> = ({ account }) => {
   };
 
   return (
-    <VStack alignItems="flex-start" maxW="xl" gap={6}>
-      <Divider />
+    <div>
+      <SettingSwitch
+        checked={preferences?.billing === "email"}
+        onCheckedChange={(v) => handleChange("billing", v)}
+        label="Reminders"
+        description="Approaching and exceeding usage credits"
+        id="reminders"
+      />
 
-      <HStack
-        gap={8}
-        alignItems="flex-start"
-        justifyContent="space-between"
-        w="full"
-      >
-        <Flex flexDir="column" gap={1}>
-          <Heading size="label.lg">Reminders</Heading>
-          <Text>Approaching and exceeding usage credits.</Text>
-        </Flex>
-        <Switch
-          isChecked={preferences?.billing === "email"}
-          onChange={(e) => handleChange("billing", e.target.checked)}
-        />
-      </HStack>
-
-      <Divider />
-
-      <HStack
-        gap={8}
-        alignItems="flex-start"
-        justifyContent="space-between"
-        w="full"
-      >
-        <Flex flexDir="column" gap={1}>
-          <Heading size="label.lg">Product Updates</Heading>
-          <Text>New features and key product updates.</Text>
-        </Flex>
-        <Switch
-          isChecked={preferences?.updates === "email"}
-          onChange={(e) => handleChange("updates", e.target.checked)}
-        />
-      </HStack>
-    </VStack>
+      <SettingSwitch
+        checked={preferences?.updates === "email"}
+        onCheckedChange={(v) => handleChange("updates", v)}
+        label="Product Updates"
+        description="New features and key product updates"
+        id="product-updates"
+      />
+    </div>
   );
 };
+
+function SettingSwitch(props: {
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  label: string;
+  description: string;
+  id: string;
+}) {
+  return (
+    <div className="flex gap-6 justify-between border-b border-border py-6 items-center">
+      <div>
+        <Label className="text-foreground text-lg" htmlFor={props.id}>
+          {props.label}
+        </Label>
+        <p className="text-muted-foreground text-sm"> {props.description}</p>
+      </div>
+      <Switch
+        checked={props.checked}
+        onCheckedChange={props.onCheckedChange}
+        id={props.id}
+      />
+    </div>
+  );
+}
