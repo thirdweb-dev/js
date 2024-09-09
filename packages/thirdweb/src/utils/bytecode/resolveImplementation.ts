@@ -120,24 +120,32 @@ async function getImplementationFromStorageSlot(
   });
 
   try {
-    let proxyStorage = "";
-
-    proxyStorage = await eth_getStorageAt(rpcRequest, {
-      address: contract.address,
-      position:
-        "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
-    });
-
-    if (proxyStorage === ZERO_BYTES32 && contract.chain.id === 137) {
-      proxyStorage = await eth_getStorageAt(rpcRequest, {
+    const proxyStoragePromises = [
+      eth_getStorageAt(rpcRequest, {
+        address: contract.address,
+        position:
+          "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+      }),
+      eth_getStorageAt(rpcRequest, {
         address: contract.address,
         position:
           // keccak256("matic.network.proxy.implementation") - used in polygon USDT proxy: https://polygonscan.com/address/0xc2132d05d31c914a87c6611c10748aeb04b58e8f#code
           "0xbaab7dbf64751104133af04abc7d9979f0fda3b059a322a8333f533d3f32bf7f",
-      });
-    }
+      }),
+      eth_getStorageAt(rpcRequest, {
+        address: contract.address,
+        position:
+          // keccak256("org.zeppelinos.proxy.implementation") - e.g. base USDC proxy: https://basescan.org/address/0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913#code
+          "0x7050c9e0f4ca769c69bd3a8ef740bc37934f8e2c036e5a723fd8ee048ed3f8c3",
+      }),
+    ];
 
-    return `0x${proxyStorage.slice(-40)}`;
+    const proxyStorages = await Promise.all(proxyStoragePromises);
+    const proxyStorage = proxyStorages.find(
+      (storage) => storage !== ZERO_BYTES32,
+    );
+
+    return proxyStorage ? `0x${proxyStorage.slice(-40)}` : AddressZero;
   } catch {
     return undefined;
   }

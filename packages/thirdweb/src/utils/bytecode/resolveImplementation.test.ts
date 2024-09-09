@@ -8,6 +8,8 @@ import {
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import {
+  BASE_USDC_IMPLEMENTATION,
+  BASE_USDC_PROXY_CONTRACT,
   NFT_DROP_CONTRACT,
   NFT_DROP_IMPLEMENTATION,
   POLYGON_USDT_IMPLEMENTATION,
@@ -28,6 +30,13 @@ describe("Resolve implementation", async () => {
     const resolved = resolveImplementation(POLYGON_USDT_PROXY_CONTRACT);
     expect((await resolved).address).to.equal(
       POLYGON_USDT_IMPLEMENTATION.toLowerCase(),
+    );
+  });
+
+  it("should extract implementation address for base USDC proxy contract", async () => {
+    const resolved = resolveImplementation(BASE_USDC_PROXY_CONTRACT);
+    expect((await resolved).address).to.equal(
+      BASE_USDC_IMPLEMENTATION.toLowerCase(),
     );
   });
 
