@@ -118,6 +118,11 @@
       "import": "./dist/esm/exports/modules.js",
       "default": "./dist/cjs/exports/modules.js"
     },
+    "./social": {
+      "types": "./dist/types/exports/social.d.ts",
+      "import": "./dist/esm/exports/social.js",
+      "default": "./dist/cjs/exports/social.js"
+    },
     "./package.json": "./package.json"
   },
   "typesVersions": {
@@ -138,7 +143,8 @@
       "utils": ["./dist/types/exports/utils.d.ts"],
       "wallets": ["./dist/types/exports/wallets.d.ts"],
       "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
-      "modules": ["./dist/types/exports/modules.d.ts"]
+      "modules": ["./dist/types/exports/modules.d.ts"],
+      "social": ["./dist/types/exports/social.d.ts"]
     }
   },
   "browser": {
