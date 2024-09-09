@@ -81,7 +81,7 @@
     "typescript": "5.5.4"
   },
   "dependencies": {
-    "@tanstack/react-query": "^4.36.1",
+    "@tanstack/react-query": "^5.55.4",
     "@thirdweb-dev/auth": "workspace:*",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/generated-abis": "workspace:^",
