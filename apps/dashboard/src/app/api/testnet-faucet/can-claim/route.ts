@@ -50,7 +50,7 @@ export const GET = async (req: NextRequest) => {
   if (!ipAddress) {
     return NextResponse.json(
       {
-        error: "Could not validate elligibility.",
+        error: "Could not validate eligibility.",
       },
       { status: 400 },
     );

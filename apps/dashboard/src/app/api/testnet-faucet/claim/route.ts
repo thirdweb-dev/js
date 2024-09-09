@@ -1,3 +1,4 @@
+import { startOfToday } from "date-fns";
 import { cacheGet, cacheSet } from "lib/redis";
 import { type NextRequest, NextResponse } from "next/server";
 import { ZERO_ADDRESS } from "thirdweb";
@@ -55,6 +56,14 @@ export const POST = async (req: NextRequest) => {
     );
   }
 
+  // Set an idempotencyKey to prevent duplicate claims for this chain/ip/time period.
+  const todayLocal = startOfToday();
+  const todayUTC = new Date(
+    todayLocal.getTime() - todayLocal.getTimezoneOffset() * 60000,
+  );
+  const todayUTCSeconds = Math.floor(todayUTC.getTime() / 1000);
+  const idempotencyKey = `${cacheKey}:${todayUTCSeconds}`;
+
   try {
     // Store the claim request for 24 hours.
     await cacheSet(cacheKey, "claimed", 24 * 60 * 60);
@@ -64,6 +73,7 @@ export const POST = async (req: NextRequest) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-idempotency-key": idempotencyKey,
         "x-backend-wallet-address": NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
         Authorization: `Bearer ${THIRDWEB_ACCESS_TOKEN}`,
       },
