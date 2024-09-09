@@ -1,5 +1,45 @@
 # thirdweb
 
+## 5.53.0
+
+### Minor Changes
+
+- [#4094](https://github.com/thirdweb-dev/js/pull/4094) [`f1d087e`](https://github.com/thirdweb-dev/js/commit/f1d087e24e8ad74948c0cdfa85d3705319753850) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support for Coinbase Smart Wallet in React Native
+
+  You can now use the Coinbase Smart Wallet in your React Native apps.
+
+  ```ts
+  const wallet = createWallet("com.coinbase.wallet", {
+    appMetadata: {
+      name: "My app name",
+    },
+    mobileConfig: {
+      callbackURL: "https://example.com",
+    },
+    walletConfig: {
+      options: "smartWalletOnly",
+    },
+  });
+
+  await wallet.connect({
+    client,
+  });
+  ```
+
+- [#4454](https://github.com/thirdweb-dev/js/pull/4454) [`c546b65`](https://github.com/thirdweb-dev/js/commit/c546b65e172623c0079efafbfce167c79e29a2ce) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose `createAndSignUserOp` utility function
+
+### Patch Changes
+
+- [#4466](https://github.com/thirdweb-dev/js/pull/4466) [`763e439`](https://github.com/thirdweb-dev/js/commit/763e4390f73b1a507398890396364cc52f12fa8e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export thirdweb/social functions and types
+
+- [#4477](https://github.com/thirdweb-dev/js/pull/4477) [`42feff3`](https://github.com/thirdweb-dev/js/commit/42feff3a3a0ef1d384e2f0ab776c3e8ff3152085) Thanks [@kumaryash90](https://github.com/kumaryash90)! - More storage slots for proxy resolution
+
+- [#4462](https://github.com/thirdweb-dev/js/pull/4462) [`f3a6179`](https://github.com/thirdweb-dev/js/commit/f3a6179e373c8e06fade56b1eff48c2261247c0e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix common icons theme in React Native
+
+- [#4473](https://github.com/thirdweb-dev/js/pull/4473) [`baf1a21`](https://github.com/thirdweb-dev/js/commit/baf1a21d697b51496c21def4d43be68a7d7c626e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updated SocialProfiles type to be SocialProfile[]
+
+- [#4478](https://github.com/thirdweb-dev/js/pull/4478) [`80e0bfe`](https://github.com/thirdweb-dev/js/commit/80e0bfe4c5f14d1629b3c24bb921b66eeb99bd38) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix ERC20 balance read when showing pay modal
+
 ## 5.52.0
 
 ### Minor Changes
