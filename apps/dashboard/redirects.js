@@ -68,6 +68,16 @@ function redirects() {
       destination: "/:network/:address",
       permanent: false,
     },
+    //Deprecated sign in route 
+    {
+      source: "/connect/sign-in",
+      destination: "/connect/sign-in/overview",
+    },
+    //Deprecated Pay route 
+    {
+      source: "/connect/pay/buy-with-crypto",
+      destination: "/connect/pay/overview",
+    },
     // prebuilt contract deploys
     {
       source: "/contracts/new/:slug*",
