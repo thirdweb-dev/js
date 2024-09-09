@@ -13,7 +13,7 @@ import { uninstallPublishedModule } from "../modules/common/uninstallPublishedMo
 import { deployModularContract } from "./deploy-modular.js";
 import { deployPublishedContract } from "./deploy-published.js";
 
-describe(
+describe.runIf(process.env.TW_SECRET_KEY)(
   "deployModularCore",
   {
     timeout: 120000,

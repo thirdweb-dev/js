@@ -19,7 +19,7 @@ import * as ClaimableERC721 from "../ClaimableERC721/index.js";
 import { getInstalledModules } from "../__generated__/IModularCore/read/getInstalledModules.js";
 import * as OpenEditionMetadataERC721 from "./index.js";
 
-describe("ModularOpenEditionERC721", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("ModularOpenEditionERC721", () => {
   let contract: ThirdwebContract;
   beforeAll(async () => {
     const address = await deployModularContract({
