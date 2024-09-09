@@ -101,3 +101,12 @@ export { ConnectEmbed } from "../react/native/ui/connect/ConnectModal.js";
 export { useWalletInfo, useWalletImage } from "../react/core/utils/wallet.js";
 
 export { useConnectionManager } from "../react/core/providers/connection-manager.js";
+
+// Social
+export { useSocialProfiles } from "../react/core/social/useSocialProfiles.js";
+export type {
+  SocialProfiles,
+  EnsProfile,
+  FarcasterProfile,
+  LensProfile,
+} from "../social/types.js";

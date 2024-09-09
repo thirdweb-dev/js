@@ -1,9 +1,5 @@
-import { configure, handleResponse } from "@coinbase/wallet-mobile-sdk";
 import type { ProviderInterface } from "@coinbase/wallet-sdk";
-import { Linking } from "react-native";
-import type { Chain } from "../../chains/types.js";
-import type { COINBASE } from "../constants.js";
-import type { CreateWalletArgs } from "../wallet-types.js";
+import type { CoinbaseWalletCreationOptions } from "./coinbaseWebSDK.js";
 
 let _provider: ProviderInterface | undefined;
 
@@ -11,44 +7,79 @@ let _provider: ProviderInterface | undefined;
  * @internal
  */
 export async function getCoinbaseMobileProvider(
-  options?: CreateWalletArgs<typeof COINBASE>[1],
+  options?: CoinbaseWalletCreationOptions,
 ): Promise<ProviderInterface> {
   if (!_provider) {
-    const callbackURL = new URL(
-      options?.mobileConfig?.callbackURL || "https://thirdweb.com/wsegue",
-    );
-    const mobileProvider: ProviderInterface = (await initMobileProvider({
-      chain: options?.chains ? options.chains[0] : undefined,
-      ...options?.mobileConfig,
-    })) as unknown as ProviderInterface;
-    _provider = mobileProvider;
-    Linking.addEventListener("url", ({ url }) => {
-      const incomingUrl = new URL(url);
-      if (
-        callbackURL &&
-        incomingUrl.host === callbackURL.host &&
-        incomingUrl.protocol === callbackURL.protocol &&
-        incomingUrl.hostname === callbackURL.hostname
-      ) {
+    // if explicitly set to smart wallet only, use the smart wallet provider
+    const useSmartWallet = options?.walletConfig?.options === "smartWalletOnly";
+    let mobileProvider: ProviderInterface;
+    if (useSmartWallet) {
+      mobileProvider = (await initSmartWalletProvider(
+        options,
+      )) as unknown as ProviderInterface;
+      const ExpoLinking = await import("expo-linking");
+      const { handleResponse } = await import("@mobile-wallet-protocol/client");
+      ExpoLinking.addEventListener("url", ({ url }) => {
+        handleResponse(url);
+      });
+    } else {
+      // otherwise, use the coinbase app provider
+      // TODO: remove this path once the new @mobile-wallet-protocol/client supports it
+      mobileProvider = (await initCoinbaseAppProvider(
+        options,
+      )) as unknown as ProviderInterface;
+      const ExpoLinking = await import("expo-linking");
+      const { handleResponse } = await import("@coinbase/wallet-mobile-sdk");
+      ExpoLinking.addEventListener("url", ({ url }) => {
         // @ts-expect-error - Passing a URL object to handleResponse crashes the function
         handleResponse(url);
-      }
-    });
+      });
+    }
+    _provider = mobileProvider;
     return mobileProvider;
   }
   return _provider;
 }
 
-async function initMobileProvider(args: {
-  chain?: Chain;
-  callbackURL?: string;
-  hostURL?: string;
-  hostPackageName?: string;
-}) {
+async function initSmartWalletProvider(
+  options?: CoinbaseWalletCreationOptions,
+) {
+  const { EIP1193Provider, Wallets } = await import(
+    "@mobile-wallet-protocol/client"
+  );
+  const appDeeplinkUrl = options?.mobileConfig?.callbackURL;
+  if (!appDeeplinkUrl) {
+    throw new Error(
+      "callbackURL is required. Set it when creating the coinbase wallet. Ex: createWallet('com.coinbase.wallet', { mobileConfig: { callbackUrl: 'https://example.com' }}",
+    );
+  }
+  console.log("initSmartWalletProvider", appDeeplinkUrl);
+  const sdk = new EIP1193Provider({
+    metadata: {
+      appName: options?.appMetadata?.name || "thirdweb powered app",
+      appChainIds: options?.chains?.map((c) => c.id),
+      appDeeplinkUrl,
+      appLogoUrl: options?.appMetadata?.logoUrl,
+    },
+    wallet: Wallets.CoinbaseSmartWallet, // TODO support both smart and EOA once the SDK supports it
+  });
+  return sdk;
+}
+
+async function initCoinbaseAppProvider(
+  options?: CoinbaseWalletCreationOptions,
+) {
+  const appDeeplinkUrl = options?.mobileConfig?.callbackURL;
+  if (!appDeeplinkUrl) {
+    throw new Error(
+      "callbackURL is required. Set it when creating the coinbase wallet. Ex: createWallet('com.coinbase.wallet', { mobileConfig: { callbackUrl: 'https://example.com' }}",
+    );
+  }
+  const { configure } = await import("@coinbase/wallet-mobile-sdk");
   configure({
-    callbackURL: new URL(args.callbackURL || "https://thirdweb.com/wsegue"),
-    hostURL: new URL(args.hostURL || "https://wallet.coinbase.com/wsegue"),
-    hostPackageName: args.hostPackageName || "org.toshi",
+    callbackURL: new URL(appDeeplinkUrl),
+    hostURL: new URL("https://wallet.coinbase.com/wsegue"),
+    hostPackageName: "org.toshi",
   });
   let CoinbaseWalletMobileSDK = (
     await import(
@@ -67,8 +98,9 @@ async function initMobileProvider(args: {
       }
     ).default;
   }
+  const chain = options.chains?.[0];
   return new CoinbaseWalletMobileSDK({
-    jsonRpcUrl: args.chain?.rpc,
-    chainId: args.chain?.id,
+    jsonRpcUrl: chain?.rpc,
+    chainId: chain?.id,
   });
 }

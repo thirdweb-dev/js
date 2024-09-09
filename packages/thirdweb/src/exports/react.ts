@@ -187,3 +187,9 @@ export { useSiweAuth } from "../react/core/hooks/auth/useSiweAuth.js";
 
 // Social
 export { useSocialProfiles } from "../react/core/social/useSocialProfiles.js";
+export type {
+  SocialProfiles,
+  EnsProfile,
+  FarcasterProfile,
+  LensProfile,
+} from "../social/types.js";
