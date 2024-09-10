@@ -1,16 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
+import { Sidebar } from "@/components/blocks/Sidebar";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Divider, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
-import { useAllVersions, useEns } from "components/contract-components/hooks";
-import { PublishedContract } from "components/contract-components/published-contract";
-import { useTrack } from "hooks/analytics/useTrack";
-import { replaceIpfsUrl } from "lib/sdk";
-import { ChevronsRightIcon } from "lucide-react";
-import Link from "next/link";
-import { useMemo } from "react";
-import { ContractDeployForm } from "../contract-components/contract-deploy-form";
-
 import {
   Select,
   SelectContent,
@@ -18,11 +9,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { shareLink } from "@/lib/shareLink";
+import { Divider, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
+import { useAllVersions, useEns } from "components/contract-components/hooks";
+import { PublishedContract } from "components/contract-components/published-contract";
+import { useTrack } from "hooks/analytics/useTrack";
+import { replaceIpfsUrl } from "lib/sdk";
+import { ChevronsRightIcon } from "lucide-react";
+import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Sidebar } from "../../@/components/blocks/Sidebar";
-import { Badge } from "../../@/components/ui/badge";
-import { useDashboardRouter } from "../../@/lib/DashboardRouter";
-import { shareLink } from "../../@/lib/shareLink";
+import { useMemo } from "react";
+import { ContractDeployForm } from "../contract-components/contract-deploy-form";
 
 export interface PublishWithVersionPageProps {
   author: string;
@@ -126,6 +124,7 @@ export const PublishWithVersionPage: React.FC<PublishWithVersionPageProps> = ({
       <div className="flex gap-4 items-center flex-1">
         {publishedContract?.logo && (
           <div className="rounded-xl p-2 border border-border shrink-0 items-center justify-center hidden md:flex">
+            {/*eslint-disable-next-line @next/next/no-img-element*/}
             <img
               className="size-12"
               alt={publishedContract.name}
