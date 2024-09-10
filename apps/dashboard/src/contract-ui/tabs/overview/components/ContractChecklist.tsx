@@ -134,7 +134,9 @@ function Inner({
 
   const batchesToReveal = useReadContract(ERC721Ext.getBatchesToReveal, {
     contract,
-    queryOptions: { enabled: isErc721 },
+    queryOptions: {
+      enabled: ERC721Ext.isGetBatchesToRevealSupported(functionSelectors),
+    },
   });
 
   const isMinter = useIsMinter(contract);
