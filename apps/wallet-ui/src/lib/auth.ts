@@ -28,19 +28,13 @@ const thirdwebAuth = createAuth({
 export const generatePayload = async (params: GenerateLoginPayloadParams) =>
   thirdwebAuth.generatePayload(params);
 
-export async function login(
-  payload: VerifyLoginPayloadParams,
-  redirectUrl?: string,
-) {
+export async function login(payload: VerifyLoginPayloadParams) {
   const verifiedPayload = await thirdwebAuth.verifyPayload(payload);
   if (verifiedPayload.valid) {
     const jwt = await thirdwebAuth.generateJWT({
       payload: verifiedPayload.payload,
     });
     cookies().set("jwt", jwt);
-    if (redirectUrl) {
-      redirect(redirectUrl);
-    }
     return true;
   }
   return false;
