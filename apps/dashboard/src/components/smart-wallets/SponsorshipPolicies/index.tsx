@@ -1,5 +1,5 @@
 import {
-  type ApiKey,
+  type ApiKeyService,
   type ApiKeyServicePolicy,
   type ApiKeyServicePolicyLimits,
   useAccount,
@@ -43,7 +43,7 @@ import { z } from "zod";
 import { Spinner } from "../../../@/components/ui/Spinner/Spinner";
 
 interface SponsorshipPoliciesProps {
-  apiKey: ApiKey;
+  apiKeyServices: ApiKeyService[];
   trackingCategory: string;
 }
 
@@ -97,10 +97,10 @@ const sponsorshipPoliciesValidationSchema = z.object({
 });
 
 export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
-  apiKey,
+  apiKeyServices,
   trackingCategory,
 }) => {
-  const bundlerServiceId = apiKey.services?.find(
+  const bundlerServiceId = apiKeyServices?.find(
     (s) => s.name === "bundler",
   )?.id;
   const { data: policy } = usePolicies(bundlerServiceId);

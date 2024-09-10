@@ -24,6 +24,7 @@ import { useActiveWalletChain } from "thirdweb/react";
 import {} from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 import { AAFooterSection } from "../../../app/team/[team_slug]/[project_slug]/connect/account-abstraction/AAFooterSection";
+import { isOpChainId } from "../../../app/team/[team_slug]/[project_slug]/connect/account-abstraction/isOpChain";
 
 const TRACKING_CATEGORY = "smart-wallet";
 
@@ -34,7 +35,6 @@ export type SmartWalletFormData = {
 
 const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
   const router = useRouter();
-  const defaultTabIndex = Number.parseInt(router.query.tab?.toString() || "0");
   const defaultClientId = router.query.clientId?.toString();
   const looggedInUserQuery = useLoggedInUser();
   const keysQuery = useApiKeys();
@@ -78,9 +78,7 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
     );
   }, [apiKeys, account]);
 
-  const isOpChain = useMemo(() => {
-    return [10, 8453, 7777777, 252, 34443].includes(chain?.id || 0);
-  }, [chain]);
+  const isOpChain = chain?.id ? isOpChainId(chain.id) : false;
 
   const seo = {
     title: "The Complete Account Abstraction Toolkit | thirdweb",
@@ -170,9 +168,8 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
 
           {hasApiKeys && selectedKey && (
             <SmartWallets
-              apiKey={selectedKey}
+              apiKeyServices={selectedKey.services || []}
               trackingCategory={TRACKING_CATEGORY}
-              defaultTabIndex={defaultTabIndex}
             />
           )}
         </>
