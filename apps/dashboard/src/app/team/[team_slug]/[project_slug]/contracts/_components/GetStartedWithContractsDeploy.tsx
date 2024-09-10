@@ -1,5 +1,6 @@
 "use client";
 import { TabButtons } from "@/components/ui/tabs";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import Image from "next/image";
 import { useMemo, useState } from "react";
@@ -49,6 +50,7 @@ type ContentItem = {
 
 const DeployOptions = () => {
   const [showImportModal, setShowImportModal] = useState(false);
+  const router = useDashboardRouter();
   const trackEvent = useTrack();
 
   const content: Record<string, ContentItem> = useMemo(
@@ -111,6 +113,10 @@ const DeployOptions = () => {
         role="button"
         onClick={() => {
           activeTabContent.onClick?.();
+          if (activeTabContent.href) {
+            router.push(activeTabContent.href);
+          }
+
           trackEvent({
             category: "your_contracts",
             action: "click",
