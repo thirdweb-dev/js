@@ -216,7 +216,7 @@ export function ConfirmationScreen(props: {
           if (step === "swap") {
             setStatus("pending");
             try {
-              let tx =  props.buyWithCryptoQuote.transactionRequest
+              let tx = props.buyWithCryptoQuote.transactionRequest
 
               if (wallet?.walletId === walletIds.embeddedWallet) {
                 tx = {

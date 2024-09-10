@@ -10,6 +10,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
+import { trackPayEvent } from "../../../../analytics/track.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
@@ -568,6 +569,12 @@ function DetailsModal(props: {
                     flex: 1,
                   }}
                   onClick={() => {
+                    trackPayEvent({
+                      event: "details_modal_buy_click",
+                      client: client,
+                      walletAddress: activeAccount?.address,
+                      walletType: activeWallet?.id,
+                    });
                     setScreen("buy");
                   }}
                 >

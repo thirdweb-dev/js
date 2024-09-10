@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { trackPayEvent } from "../../../../../../../analytics/track.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import {
@@ -88,6 +89,12 @@ export function FiatFlow(props: {
         step={1}
         onContinue={() => {
           const popup = openOnrampPopup(props.quote.onRampLink, props.theme);
+          trackPayEvent({
+            event: "open_onramp_popup",
+            client: props.client,
+            walletAddress: props.payer.account.address,
+            walletType: props.payer.wallet.id,
+          });
           addPendingTx({
             type: "fiat",
             intentId: props.quote.intentId,
