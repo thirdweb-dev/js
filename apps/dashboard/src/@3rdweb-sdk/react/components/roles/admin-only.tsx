@@ -7,15 +7,17 @@ import type { ComponentWithChildren } from "types/component-with-children";
 
 interface AdminOnlyProps {
   contract: ThirdwebContract;
+  failOpen?: boolean;
   fallback?: JSX.Element;
 }
 
 export const AdminOnly: ComponentWithChildren<AdminOnlyProps> = ({
   children,
   contract,
+  failOpen = true,
   fallback,
 }) => {
-  const isAdmin = useIsAdmin(contract);
+  const isAdmin = useIsAdmin(contract, failOpen);
   if (!isAdmin) {
     return fallback ?? null;
   }
