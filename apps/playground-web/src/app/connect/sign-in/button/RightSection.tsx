@@ -9,7 +9,6 @@ import {
   lightTheme,
   useActiveAccount,
   useActiveWallet,
-  useDisconnect,
 } from "thirdweb/react";
 import { useSiweAuth } from "thirdweb/react";
 import { createWallet } from "thirdweb/wallets";
@@ -55,28 +54,6 @@ export function RightSection(props: {
   };
 
   const { isLoggedIn, doLogout } = useSiweAuth(wallet, account, playgroundAuth);
-
-  const { disconnect } = useDisconnect();
-  useEffect(() => {
-    if (wallet && previewTab === "modal") {
-      if (connectOptions.enableAuth) {
-        if (isLoggedIn) {
-          disconnect(wallet);
-          doLogout();
-        }
-      } else {
-        disconnect(wallet);
-        doLogout();
-      }
-    }
-  }, [
-    wallet,
-    disconnect,
-    previewTab,
-    isLoggedIn,
-    connectOptions.enableAuth,
-    doLogout,
-  ]);
 
   const wallets = getWallets(props.connectOptions);
 
@@ -126,43 +103,46 @@ export function RightSection(props: {
       >
         <BackgroundPattern />
 
-        {previewTab === "modal" && (
-          <div className="relative">
-            <ConnectEmbed
-              client={THIRDWEB_CLIENT}
-              autoConnect={false}
-              modalSize={connectOptions.modalSize}
-              theme={themeObj}
-              className="shadow-xl"
-              wallets={wallets}
-              header={{
-                title: connectOptions.modalTitle,
-                titleIcon: connectOptions.modalTitleIcon,
-              }}
-              locale={connectOptions.localeId}
-              auth={connectOptions.enableAuth ? playgroundAuth : undefined}
-              accountAbstraction={
-                connectOptions.enableAccountAbstraction
-                  ? {
-                      chain: ethereum,
-                      sponsorGas: true,
-                    }
-                  : undefined
-              }
-              termsOfServiceUrl={connectOptions.termsOfServiceLink}
-              privacyPolicyUrl={connectOptions.privacyPolicyLink}
-              showThirdwebBranding={connectOptions.ShowThirdwebBranding}
-              requireApproval={connectOptions.requireApproval}
-            />
-            {/* Fake X icon to make it looks exactly like a modal  */}
-            <XIcon
-              className="absolute top-6 right-6 cursor-not-allowed size-6"
-              style={{
-                color: themeObj.colors.secondaryIconColor,
-              }}
-            />
-          </div>
-        )}
+        {previewTab === "modal" &&
+          (account && (!connectOptions.enableAuth || isLoggedIn) ? (
+            <ConnectButton client={THIRDWEB_CLIENT} />
+          ) : (
+            <div className="relative">
+              <ConnectEmbed
+                client={THIRDWEB_CLIENT}
+                autoConnect={false}
+                modalSize={connectOptions.modalSize}
+                theme={themeObj}
+                className="shadow-xl"
+                wallets={wallets}
+                header={{
+                  title: connectOptions.modalTitle,
+                  titleIcon: connectOptions.modalTitleIcon,
+                }}
+                locale={connectOptions.localeId}
+                auth={connectOptions.enableAuth ? playgroundAuth : undefined}
+                accountAbstraction={
+                  connectOptions.enableAccountAbstraction
+                    ? {
+                        chain: ethereum,
+                        sponsorGas: true,
+                      }
+                    : undefined
+                }
+                termsOfServiceUrl={connectOptions.termsOfServiceLink}
+                privacyPolicyUrl={connectOptions.privacyPolicyLink}
+                showThirdwebBranding={connectOptions.ShowThirdwebBranding}
+                requireApproval={connectOptions.requireApproval}
+              />
+              {/* Fake X icon to make it looks exactly like a modal  */}
+              <XIcon
+                className="absolute top-6 right-6 cursor-not-allowed size-6"
+                style={{
+                  color: themeObj.colors.secondaryIconColor,
+                }}
+              />
+            </div>
+          ))}
 
         {previewTab === "button" && (
           <ConnectButton
