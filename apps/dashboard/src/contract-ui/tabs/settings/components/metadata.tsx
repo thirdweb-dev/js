@@ -25,6 +25,7 @@ import {
   setContractMetadata,
 } from "thirdweb/extensions/common";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
+import { resolveScheme } from "thirdweb/storage";
 import {
   Button,
   Card,
@@ -85,16 +86,27 @@ export const SettingsMetadata = ({
         console.error(err);
       }
     }
+    let image: string | undefined = metadata.data?.image;
+    try {
+      image = image
+        ? resolveScheme({
+            client: contract.client,
+            uri: image,
+          })
+        : undefined;
+    } catch {
+      // do nothing
+    }
     return {
       ...metadata.data,
       name: metadata.data?.name || "",
-      image: metadata.data?.image || "",
+      image: image || "",
       dashboard_social_urls: Object.entries(socialUrls).map(([key, value]) => ({
         key,
         value,
       })),
     };
-  }, [metadata.data]);
+  }, [metadata.data, contract.client]);
 
   const {
     control,
