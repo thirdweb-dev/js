@@ -1,72 +1,33 @@
 import { FormControl } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { getModuleInstalledParams } from "contract-ui/tabs/manage/components/getModuleInstalledParams";
-import invariant from "tiny-invariant";
+import { useMemo } from "react";
+import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import { FormErrorMessage, FormLabel } from "tw-components";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 import { PrimarySaleFieldset } from "./primary-sale-fieldset";
 import { RoyaltyFieldset } from "./royalty-fieldset";
 
-type ModuleMeta = {
-  moduleName: string;
-  moduleVersion: string;
-  publisherAddress: string;
-};
-
-/**
- * Get the install params for all given modules
- */
-export function useModularContractsDefaultModulesInstallParams(props: {
-  defaultModules?: ModuleMeta[];
-  isQueryEnabled: boolean;
-}) {
-  const { defaultModules, isQueryEnabled } = props;
-  return useQuery({
-    queryKey: [
-      "useModularContractsDefaultModulesInstallParams",
-      defaultModules,
-    ],
-    queryFn: async () => {
-      invariant(defaultModules, "defaultModules must be defined");
-      return Promise.all(defaultModules.map(getModuleInstalledParams));
-    },
-    enabled: !!(isQueryEnabled && defaultModules),
-    refetchOnWindowFocus: false,
-  });
+export function getModuleInstallParams(mod: FetchDeployMetadataResult) {
+  return (
+    mod.abi
+      .filter((a) => a.type === "function")
+      .find((f) => f.name === "encodeBytesOnInstall")?.inputs || []
+  );
 }
 
-export type UseModularContractsDefaultModulesInstallParams = ReturnType<
-  typeof useModularContractsDefaultModulesInstallParams
->;
-
-type Modules = NonNullable<
-  UseModularContractsDefaultModulesInstallParams["data"]
->;
-
-type ModuleWithIndex = Modules[number] & { moduleIndex: number };
-
 export function ModularContractDefaultModulesFieldset(props: {
-  modules: Modules;
+  modules: FetchDeployMetadataResult[];
   form: CustomContractDeploymentForm;
   isTWPublisher: boolean;
 }) {
-  // save the index of the module before filtering out
-  const modulesWithIndex: ModuleWithIndex[] = props.modules
-    .map((v, i) => ({
-      ...v,
-      moduleIndex: i,
-    }))
-    .filter((v) => v.params.length > 0);
-
   return (
     <div className="py-4">
       <div className="flex flex-col gap-4">
-        {modulesWithIndex.map((ext) => {
+        {props.modules.map((mod) => {
           return (
             <RenderModule
-              key={ext.moduleName}
-              module={ext}
+              key={mod.name}
+              module={mod}
               isTWPublisher={props.isTWPublisher}
               form={props.form}
             />
@@ -78,15 +39,22 @@ export function ModularContractDefaultModulesFieldset(props: {
 }
 
 function RenderModule(props: {
-  module: ModuleWithIndex;
+  module: FetchDeployMetadataResult;
   form: CustomContractDeploymentForm;
   isTWPublisher: boolean;
 }) {
   const { module, form } = props;
 
+  const params = useMemo(() => getModuleInstallParams(module), [module]);
+
+  if (params.length === 0) {
+    // if a module has no params, don't render anything
+    return null;
+  }
+
   // only consider mapping if published by thirdweb, else show the generic form
   if (props.isTWPublisher) {
-    const paramNames = module.params.map((param) => param.name);
+    const paramNames = params.map((p) => p.name).filter((n) => n !== undefined);
 
     if (showRoyaltyFieldset(paramNames)) {
       return (
@@ -104,12 +72,12 @@ function RenderModule(props: {
   return (
     <div>
       <h3 className="text-lg mb-2 text-muted-foreground font-medium">
-        {module.moduleName}
+        {module.name}
       </h3>
       <div className="flex flex-col gap-3">
-        {module.params.map((param) => {
+        {params.map((param) => {
           const formFieldKey =
-            `modularContractDefaultModulesInstallParams.${module.moduleIndex}.${param.name}` as const;
+            `moduleData.${module.name}.${param.name}` as const;
 
           return (
             <FormControl
@@ -122,6 +90,7 @@ function RenderModule(props: {
               <FormLabel> {param.name}</FormLabel>
               <SolidityInput
                 solidityType={param.type}
+                // @ts-expect-error - old types, need to update
                 solidityComponents={param.components}
                 variant="filled"
                 {...form.register(formFieldKey)}
@@ -141,14 +110,14 @@ function RenderModule(props: {
 }
 
 function RenderPrimarySaleFieldset(prosp: {
-  module: ModuleWithIndex;
+  module: FetchDeployMetadataResult;
   form: CustomContractDeploymentForm;
   isTWPublisher: boolean;
 }) {
   const { module, form } = prosp;
 
   const primarySaleRecipientPath =
-    `modularContractDefaultModulesInstallParams.${module.moduleIndex}.primarySaleRecipient` as const;
+    `moduleData.${module.name}.primarySaleRecipient` as const;
 
   return (
     <PrimarySaleFieldset
@@ -165,20 +134,19 @@ function RenderPrimarySaleFieldset(prosp: {
 }
 
 function RenderRoyaltyFieldset(props: {
-  module: ModuleWithIndex;
+  module: FetchDeployMetadataResult;
   form: CustomContractDeploymentForm;
   isTWPublisher: boolean;
 }) {
-  const { module: ext, form } = props;
+  const { module, form } = props;
 
   const royaltyRecipientPath =
-    `modularContractDefaultModulesInstallParams.${ext.moduleIndex}.royaltyRecipient` as const;
+    `moduleData.${module.name}.royaltyRecipient` as const;
 
-  const royaltyBpsPath =
-    `modularContractDefaultModulesInstallParams.${ext.moduleIndex}.royaltyBps` as const;
+  const royaltyBpsPath = `moduleData.${module.name}.royaltyBps` as const;
 
   const transferValidatorPath =
-    `modularContractDefaultModulesInstallParams.${ext.moduleIndex}.transferValidator` as const;
+    `moduleData.${module.name}.transferValidator` as const;
 
   return (
     <RoyaltyFieldset

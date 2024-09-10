@@ -15,6 +15,7 @@ import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { polygon } from "thirdweb/chains";
 import invariant from "tiny-invariant";
+import { moduleToBase64 } from "../../../app/(dashboard)/published-contract/utils/module-base-64";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
 interface ContractCardProps {
@@ -71,7 +72,7 @@ function getContractUrl(
   const moudleUrl = new URLSearchParams();
 
   for (const m of modules) {
-    moudleUrl.append("module", btoa(JSON.stringify(m)));
+    moudleUrl.append("module", moduleToBase64(m));
   }
 
   if (titleOverride) {

@@ -46,7 +46,7 @@ export function getAbsoluteUrl(): string {
   return "https://thirdweb.com";
 }
 
-function setOverrides() {
+export function setOverrides() {
   if (getVercelEnv() === "production") {
     // no overrides
     return;

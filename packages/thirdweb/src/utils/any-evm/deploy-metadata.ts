@@ -48,6 +48,7 @@ export async function fetchDeployMetadata(
   return {
     ...rawMeta,
     ...parsedMeta,
+    version: rawMeta.version,
     bytecode: deployBytecode,
   };
 }
@@ -69,7 +70,7 @@ async function fetchAndParseCompilerMetadata(
       `Could not resolve metadata for contract at ${options.uri}`,
     );
   }
-  return formatCompilerMetadata(metadata);
+  return { ...metadata, ...formatCompilerMetadata(metadata) };
 }
 
 // types
@@ -87,7 +88,37 @@ type RawCompilerMetadata = {
 type ParsedCompilerMetadata = {
   name: string;
   abi: Abi;
-  metadata: Record<string, unknown>;
+  metadata: {
+    compiler: {
+      version: string;
+    };
+    language: string;
+    output: {
+      abi: Abi;
+      devdoc: Record<string, unknown>;
+      userdoc: Record<string, unknown>;
+    };
+    settings: {
+      compilationTarget: Record<string, unknown>;
+      evmVersion: string;
+      libraries: Record<string, string>;
+      optimizer: Record<string, unknown>;
+      remappings: string[];
+    };
+    sources: Record<
+      string,
+      { keccak256: string } & (
+        | {
+            content: string;
+          }
+        | {
+            urls: string[];
+            license?: string;
+          }
+      )
+    >;
+    [key: string]: unknown;
+  };
   info: {
     title?: string;
     author?: string;
