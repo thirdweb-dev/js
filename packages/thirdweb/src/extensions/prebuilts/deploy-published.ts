@@ -9,6 +9,7 @@ import { simulateTransaction } from "../../transaction/actions/simulate.js";
 import { prepareContractCall } from "../../transaction/prepare-contract-call.js";
 import { resolveMethod } from "../../transaction/resolve-method.js";
 import type { CompilerMetadata } from "../../utils/any-evm/deploy-metadata.js";
+import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 
@@ -58,21 +59,56 @@ export async function deployPublishedContract(
     version,
     implementationConstructorParams,
   } = options;
-  const { compilerMetadata, extendedMetadata } =
-    await fetchPublishedContractMetadata({
-      client,
-      contractId: isZkSyncChain(chain) ? `${contractId}_ZkSync` : contractId,
-      publisher,
-      version,
-    });
+  const deployMetadata = await fetchPublishedContractMetadata({
+    client,
+    contractId: isZkSyncChain(chain) ? `${contractId}_ZkSync` : contractId,
+    publisher,
+    version,
+  });
 
-  switch (extendedMetadata?.deployType) {
+  return deployContractfromDeployMetadata({
+    account,
+    chain,
+    deployMetadata,
+    client,
+    contractParams,
+    implementationConstructorParams,
+  });
+}
+
+/**
+ * @internal
+ */
+export type DeployContractfromDeployMetadataOptions = {
+  client: ThirdwebClient;
+  chain: Chain;
+  account: Account;
+  deployMetadata: FetchDeployMetadataResult;
+  contractParams: unknown[];
+  implementationConstructorParams?: unknown[];
+};
+
+/**
+ * @internal
+ */
+export async function deployContractfromDeployMetadata(
+  options: DeployContractfromDeployMetadataOptions,
+) {
+  const {
+    client,
+    account,
+    chain,
+    contractParams,
+    deployMetadata,
+    implementationConstructorParams,
+  } = options;
+  switch (deployMetadata?.deployType) {
     case "standard": {
       return directDeploy({
         account,
         client,
         chain,
-        compilerMetadata,
+        compilerMetadata: deployMetadata,
         contractParams,
       });
     }
@@ -89,19 +125,21 @@ export async function deployPublishedContract(
           chain,
           client,
           account,
-          contractId,
+          contractId: deployMetadata.name,
           constructorParams: implementationConstructorParams || [],
-          publisher,
+          publisher: deployMetadata.publisher,
         });
-      const initializeFunction = compilerMetadata.abi.find(
+      const initializeFunction = deployMetadata.abi.find(
         (i) =>
           i.type === "function" &&
           i.name ===
-            (extendedMetadata.factoryDeploymentData
+            (deployMetadata.factoryDeploymentData
               ?.implementationInitializerFunction || "initialize"),
       ) as AbiFunction;
       if (!initializeFunction) {
-        throw new Error(`Could not find initialize function for ${contractId}`);
+        throw new Error(
+          `Could not find initialize function for ${deployMetadata.name}`,
+        );
       }
       const initializeTransaction = prepareContractCall({
         contract: getContract({
@@ -109,7 +147,10 @@ export async function deployPublishedContract(
           chain,
           address: implementationContract.address,
         }),
-        method: initializeFunction,
+        method: resolveMethod(
+          deployMetadata.factoryDeploymentData
+            ?.implementationInitializerFunction || "initialize",
+        ),
         params: contractParams,
       });
 
@@ -122,14 +163,14 @@ export async function deployPublishedContract(
       });
     }
     case "customFactory": {
-      if (!extendedMetadata?.factoryDeploymentData?.customFactoryInput) {
+      if (!deployMetadata?.factoryDeploymentData?.customFactoryInput) {
         throw new Error("No custom factory info found");
       }
       const factoryAddress =
-        extendedMetadata?.factoryDeploymentData?.customFactoryInput
+        deployMetadata?.factoryDeploymentData?.customFactoryInput
           ?.customFactoryAddresses?.[chain.id];
       const factoryFunction =
-        extendedMetadata.factoryDeploymentData?.customFactoryInput
+        deployMetadata.factoryDeploymentData?.customFactoryInput
           ?.factoryFunction;
       if (!factoryAddress || !factoryFunction) {
         throw new Error(`No factory address found on chain ${chain.id}`);
@@ -161,15 +202,13 @@ export async function deployPublishedContract(
         account,
         client,
         chain,
-        compilerMetadata,
+        compilerMetadata: deployMetadata,
         contractParams,
       });
     }
     default:
       // If a deployType was specified but we don't support it, throw an error
-      throw new Error(
-        `Unsupported deploy type: ${extendedMetadata?.deployType}`,
-      );
+      throw new Error(`Unsupported deploy type: ${deployMetadata?.deployType}`);
   }
 }
 
