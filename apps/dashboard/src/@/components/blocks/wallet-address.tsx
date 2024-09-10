@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/hover-card";
 import { Check, Copy, ExternalLinkIcon } from "lucide-react";
 import { useMemo, useState } from "react";
+import { ZERO_ADDRESS } from "thirdweb";
 import {
   Blobbie,
   MediaRenderer,
@@ -21,21 +22,23 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
 export function WalletAddress(props: {
-  address: string;
+  address: string | undefined;
   shortenAddress?: boolean;
   className?: string;
 }) {
+  // default back to zero address if no address provided
+  const address = useMemo(() => props.address || ZERO_ADDRESS, [props.address]);
   const [shortenedAddress, lessShortenedAddress] = useMemo(() => {
     return [
       props.shortenAddress !== false
-        ? `${props.address.slice(0, 6)}...${props.address.slice(-4)}`
-        : props.address,
-      `${props.address.slice(0, 14)}...${props.address.slice(-12)}`,
+        ? `${address.slice(0, 6)}...${address.slice(-4)}`
+        : address,
+      `${address.slice(0, 14)}...${address.slice(-12)}`,
     ];
-  }, [props.address, props.shortenAddress]);
+  }, [address, props.shortenAddress]);
 
   const profiles = useSocialProfiles({
-    address: props.address,
+    address: address,
     client: thirdwebClient,
   });
 
@@ -43,7 +46,7 @@ export function WalletAddress(props: {
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(props.address);
+      await navigator.clipboard.writeText(address);
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
     } catch (err) {
@@ -62,10 +65,9 @@ export function WalletAddress(props: {
             props.className,
           )}
         >
-          <WalletAvatar
-            address={props.address}
-            profiles={profiles.data || []}
-          />
+          {address && (
+            <WalletAvatar address={address} profiles={profiles.data || []} />
+          )}
           <span className="font-mono cursor-pointer">
             {profiles.data?.[0]?.name || shortenedAddress}
           </span>
