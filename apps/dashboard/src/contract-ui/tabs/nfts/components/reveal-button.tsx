@@ -18,6 +18,7 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
   const batchesQuery = useReadContract(getBatchesToReveal, {
     contract,
   });
+  console.log("*** batches", batchesQuery);
   return batchesQuery.data?.length ? (
     <MinterOnly contract={contract}>
       <Drawer

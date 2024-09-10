@@ -68,9 +68,9 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     return ERC1155Ext.isGetNFTsSupported(functionSelectorQuery.data);
   })();
 
-  const isRevealable = ERC721Ext.isGetBaseURICountSupported(
-    functionSelectorQuery.data,
-  );
+  const isRevealable = ERC721Ext.isRevealSupported(functionSelectorQuery.data);
+  const canCreateDelayedRevealBatch =
+    ERC721Ext.isCreateDelayedRevealBatchSupported(functionSelectorQuery.data);
 
   return (
     <div className="flex flex-col gap-6">
@@ -96,7 +96,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           )}
           {isLazyMintable && (
             <BatchLazyMintButton
-              isRevealable={isRevealable}
+              canCreateDelayedRevealBatch={canCreateDelayedRevealBatch}
               isErc721={isErc721}
               contract={contract}
             />

@@ -107,7 +107,9 @@ export async function uploadOrExtractURIs<
  * @throws If the batch contains URIs with different base URIs or if no base URI is found.
  * @internal
  */
-export function getBaseUriFromBatch(uris: string[]): string {
+export function getBaseUriFromBatch(uris: string | string[]): string {
+  // biome-ignore lint/style/noParameterAssign: lemme do my stuff
+  uris = Array.isArray(uris) ? uris : [uris];
   const [base, ...rest] = uris.map((uri) => {
     // remove query parameters
     // biome-ignore lint/style/noParameterAssign: lemme do my stuff

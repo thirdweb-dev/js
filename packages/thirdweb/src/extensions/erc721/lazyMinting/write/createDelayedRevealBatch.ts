@@ -6,9 +6,18 @@ import { toHex } from "../../../../utils/encoding/hex.js";
 import { keccak256 } from "../../../../utils/hashing/keccak256.js";
 import { getBaseUriFromBatch } from "../../../../utils/ipfs.js";
 import type { NFTInput } from "../../../../utils/nft/parseNft.js";
-import { getBaseURICount } from "../../__generated__/IBatchMintMetadata/read/getBaseURICount.js";
-import { encryptDecrypt } from "../../__generated__/IDelayedReveal/read/encryptDecrypt.js";
-import { lazyMint as generatedLazyMint } from "../../__generated__/ILazyMint/write/lazyMint.js";
+import {
+  getBaseURICount,
+  isGetBaseURICountSupported,
+} from "../../__generated__/IBatchMintMetadata/read/getBaseURICount.js";
+import {
+  encryptDecrypt,
+  isEncryptDecryptSupported,
+} from "../../__generated__/IDelayedReveal/read/encryptDecrypt.js";
+import {
+  lazyMint as generatedLazyMint,
+  isLazyMintSupported,
+} from "../../__generated__/ILazyMint/write/lazyMint.js";
 import { hashDelayedRevealPassword } from "../helpers/hashDelayedRevealBatch.js";
 
 /**
@@ -122,4 +131,25 @@ export function createDelayedRevealBatch(
       } as const;
     },
   });
+}
+
+/**
+ * Checks if the `createDelayedRevealBatch` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `createDelayedRevealBatch` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isCreateDelayedRevealBatchSupported } from "thirdweb/extensions/erc721";
+ * const supported = isCreateDelayedRevealBatchSupported(["0x..."]);
+ * ```
+ */
+export function isCreateDelayedRevealBatchSupported(
+  availableSelectors: string[],
+) {
+  return [
+    isGetBaseURICountSupported(availableSelectors),
+    isEncryptDecryptSupported(availableSelectors),
+    isLazyMintSupported(availableSelectors),
+  ].every(Boolean);
 }

@@ -160,8 +160,7 @@ function Inner({
       return false;
     })();
 
-    const isRevealable =
-      ERC721Ext.isGetBaseURICountSupported(functionSelectors);
+    const isRevealable = ERC721Ext.isRevealSupported(functionSelectors);
     const needsReveal = batchesToReveal.data?.length;
 
     const steps: Step[] = [

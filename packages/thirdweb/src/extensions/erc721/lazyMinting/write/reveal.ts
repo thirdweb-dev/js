@@ -2,6 +2,8 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { reveal as generatedReveal } from "../../__generated__/IDelayedReveal/write/reveal.js";
 import { hashDelayedRevealPassword } from "../helpers/hashDelayedRevealBatch.js";
 
+export { isRevealSupported } from "../../__generated__/IDelayedReveal/write/reveal.js";
+
 /**
  * @extension ERC721
  */
