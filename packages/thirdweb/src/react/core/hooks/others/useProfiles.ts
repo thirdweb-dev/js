@@ -13,7 +13,7 @@ import { useActiveWallet } from "../wallets/useActiveWallet.js";
  *
  * @example
  * ```jsx
- * import { use } from "thirdweb/react";
+ * import { useProfiles } from "thirdweb/react";
  *
  * const { data: profiles } = useProfiles();
  *
