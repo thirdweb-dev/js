@@ -57,7 +57,7 @@ export const StepsCard: React.FC<StepsCardProps> = ({
         </p>
       </div>
 
-      <div className="flex flex-col gap-3 w-full">
+      <div className="flex flex-col gap-5 w-full">
         {steps.map(({ children, ...step }, index) => {
           const showChildren =
             !step.completed || (step.completed && step.showCompletedChildren);
