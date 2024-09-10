@@ -14,6 +14,8 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * - Apple
  * - Facebook
  * - Discord
+ * - Telegram
+ * - LINE
  * - Farcaster
  *
  * Can also be configured to use Account Abstraction to directly connect to a ERC4337 smart account based on those authentication methods.

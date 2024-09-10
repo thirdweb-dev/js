@@ -14,7 +14,7 @@ const defaultInAppLoginMethods: ConnectPlaygroundOptions["inAppWallet"]["methods
     "telegram",
     "farcaster",
     "email",
-    "facebook",
+    "line",
     "passkey",
     "phone",
   ];

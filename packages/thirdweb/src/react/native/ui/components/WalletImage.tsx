@@ -12,6 +12,7 @@ import {
   FACEBOOK_ICON,
   FARCASTER_ICON,
   GOOGLE_ICON,
+  LINE_ICON,
   PASSKEY_ICON,
   PHONE_ICON,
   TELEGRAM_ICON,
@@ -81,6 +82,8 @@ export function getAuthProviderImage(authProvider: string | null): string {
       return FACEBOOK_ICON;
     case "discord":
       return DISCORD_ICON;
+    case "line":
+      return LINE_ICON;
     case "farcaster":
       return FARCASTER_ICON;
     case "telegram":

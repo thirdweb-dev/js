@@ -109,6 +109,7 @@ export class InAppNativeConnector implements InAppConnector {
       case "google":
       case "facebook":
       case "discord":
+      case "line":
       case "apple": {
         const ExpoLinking = require("expo-linking");
         const redirectUrl =
@@ -144,6 +145,7 @@ export class InAppNativeConnector implements InAppConnector {
       case "google":
       case "facebook":
       case "discord":
+      case "line":
       case "farcaster":
       case "telegram":
       case "apple": {
