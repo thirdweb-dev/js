@@ -362,7 +362,7 @@
     "expo-web-browser": "13.0.3",
     "happy-dom": "^14.12.0",
     "msw": "^2.3.4",
-    "react-native": "0.74.5",
+    "react-native": "0.75.2",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-passkey": "3.0.0-beta2",
     "react-native-quick-crypto": "0.7.0-rc.6",
