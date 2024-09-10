@@ -105,7 +105,7 @@ export { useConnectionManager } from "../react/core/providers/connection-manager
 // Social
 export { useSocialProfiles } from "../react/core/social/useSocialProfiles.js";
 export type {
-  SocialProfiles,
+  SocialProfile,
   EnsProfile,
   FarcasterProfile,
   LensProfile,

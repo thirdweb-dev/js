@@ -128,7 +128,12 @@ const ContactUs: ThirdwebNextPage = () => {
             </List>
             <TrustedBy display={{ base: "none", lg: "flex" }} />
           </Flex>
-          <Card bgColor="white" p={{ base: 6, lg: 12 }} overflow="hidden">
+          <Card
+            bgColor="white"
+            p={{ base: 6, lg: 12 }}
+            overflow="hidden"
+            data-theme="light"
+          >
             <Flex
               flexDir="column"
               gap={4}

@@ -1,7 +1,7 @@
 import type { ThirdwebClient } from "../client/client.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
-import type { SocialProfiles } from "./types.js";
+import type { SocialProfile } from "./types.js";
 
 /**
  * Fetches the wallet's available social profiles.
@@ -23,7 +23,7 @@ import type { SocialProfiles } from "./types.js";
 export async function getSocialProfiles(args: {
   address: string;
   client: ThirdwebClient;
-}): Promise<SocialProfiles> {
+}): Promise<SocialProfile[]> {
   const { address, client } = args;
 
   const clientFetch = getClientFetch(client);
@@ -42,5 +42,5 @@ export async function getSocialProfiles(args: {
     }
   }
 
-  return (await response.json()).data as SocialProfiles;
+  return (await response.json()).data as SocialProfile[];
 }

@@ -46,14 +46,13 @@ export async function computeDeploymentInfoFromMetadata(args: {
   salt?: string;
 }) {
   const { client, chain, contractMetadata, constructorParams, salt } = args;
-  const { compilerMetadata } = contractMetadata;
   const create2FactoryAddress = await computeCreate2FactoryAddress({
     client,
     chain,
   });
-  const bytecode = compilerMetadata.bytecode;
+  const bytecode = contractMetadata.bytecode;
   const constructorAbi =
-    (compilerMetadata.abi.find(
+    (contractMetadata.abi.find(
       (abi) => abi.type === "constructor",
     ) as AbiConstructor) || [];
   const encodedArgs = encodeAbiParameters(

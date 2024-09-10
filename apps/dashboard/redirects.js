@@ -270,11 +270,6 @@ function redirects() {
       destination: "/in-app-wallets",
       permanent: false,
     },
-    {
-      source: "/dashboard/connect/ecosystem/:slug((?!create$)[^/]+)",
-      destination: "/dashboard/connect/ecosystem/:slug/permissions",
-      permanent: false,
-    },
     // temporarily redirect cli login to support page
     {
       source: "/cli/login",

@@ -10,6 +10,7 @@ import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { getTokenBalance } from "../../../../wallets/utils/getTokenBalance.js";
 import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
@@ -175,10 +176,11 @@ export function useSendTransactionCore(args: {
                 chain: tx.chain,
               }),
               _erc20Value?.tokenAddress
-                ? getWalletBalance({
+                ? getTokenBalance({
                     client: tx.client,
-                    address: account.address,
+                    account,
                     chain: tx.chain,
+                    tokenAddress: _erc20Value.tokenAddress,
                   })
                 : undefined,
               getTotalTxCostForBuy(tx, account.address),

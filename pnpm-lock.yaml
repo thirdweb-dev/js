@@ -99,8 +99,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0
       knip:
-        specifier: ^5.29.2
-        version: 5.29.2(@types/node@20.14.9)(typescript@5.5.4)
+        specifier: ^5.30.1
+        version: 5.30.1(@types/node@20.14.9)(typescript@5.5.4)
       mitata:
         specifier: 0.1.14
         version: 0.1.14
@@ -127,7 +127,7 @@ importers:
         version: 5.5.4
       vitest:
         specifier: 2.0.5
-        version: 2.0.5(@types/node@20.14.9)(@vitest/ui@2.0.5)(happy-dom@15.7.3)(terser@5.31.6)
+        version: 2.0.5(@types/node@20.14.9)(@vitest/ui@2.0.5(vitest@2.0.5))(happy-dom@15.7.3)(terser@5.31.6)
       yalc:
         specifier: 1.0.0-pre.53
         version: 1.0.0-pre.53
@@ -415,8 +415,8 @@ importers:
         specifier: ^14.2.4
         version: 14.2.8(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@next/eslint-plugin-next':
-        specifier: ^14.2.4
-        version: 14.2.8
+        specifier: ^14.2.9
+        version: 14.2.9
       '@playwright/test':
         specifier: 1.46.1
         version: 1.46.1
@@ -6288,8 +6288,8 @@ packages:
   '@next/eslint-plugin-next@14.2.4':
     resolution: {integrity: sha512-svSFxW9f3xDaZA3idQmlFw7SusOuWTpDTAeBlO3AEPDltrraV+lqs7mAc6A27YdnpQVVIA3sODqUAAHdWhVWsA==}
 
-  '@next/eslint-plugin-next@14.2.8':
-    resolution: {integrity: sha512-ue5vcq9Fjk3asACRDrzYjcGMEN7pMMDQ5zUD+FenkqvlPCVUD1x7PxBNOLfPYDZOrk/Vnl4GHmjj2mZDqPW8TQ==}
+  '@next/eslint-plugin-next@14.2.9':
+    resolution: {integrity: sha512-tmLXuDNfPTqoFuSfsd9Q4R96SS/UCKTPtBnnR+cKDcbh8xZU+126vZnRWH1WEpOmS4Vl2Hy/X6SPmgOGZzn+hA==}
 
   '@next/mdx@13.5.6':
     resolution: {integrity: sha512-2AMyCrz1SxSWNUpADyLz3RbPbq0GHrchbO7Msvg7IsH8MrTw3VYaZSI1KNa6JzZIoykwtNVSEL+uBmPZi106Jw==}
@@ -13170,6 +13170,7 @@ packages:
   follow-redirects@1.15.8:
     resolution: {integrity: sha512-xgrmBhBToVKay1q2Tao5LI26B83UhrB/vM1avwVSDzt8rx3rO6AizBAaF46EgksTVr+rFTQaqZZ9MVBfUe4nig==}
     engines: {node: '>=4.0'}
+    deprecated: Browser detection issues fixed in v1.15.9
     peerDependencies:
       debug: '*'
     peerDependenciesMeta:
@@ -14721,8 +14722,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@5.29.2:
-    resolution: {integrity: sha512-NfJ3VDyV7gHvI4lVmr9PQCvC4lvrnTdaRMmtHIVBWB2GWWKj86uTw8Yfnp07M+fQeqOnX3AGPG8hjXHPlE1MEw==}
+  knip@5.30.1:
+    resolution: {integrity: sha512-20XqtThAIuNNbEJjAdDTIUjSTx89bez5MukykKvaZEvLYLXOmtaXsSVPU6WQuFZ51/MolXctQllqHNzHxS210w==}
     engines: {node: '>=18.6.0'}
     hasBin: true
     peerDependencies:
@@ -15722,10 +15723,6 @@ packages:
 
   minipass@6.0.2:
     resolution: {integrity: sha512-MzWSV5nYVT7mVyWCwn2o7JH13w2TBRmmSqSRCKzTw+lmft9X4z+3wjvs06Tzijo5z4W/kahUCDpRXTF+ZrmF/w==}
-    engines: {node: '>=16 || 14 >=14.17'}
-
-  minipass@7.1.1:
-    resolution: {integrity: sha512-UZ7eQ+h8ywIRAW1hIEl2AqdwzJucU/Kp59+8kkZeSvafXhZjul247BvIJjEVFVeON6d7lM46XX1HXCduKAS8VA==}
     engines: {node: '>=16 || 14 >=14.17'}
 
   minipass@7.1.2:
@@ -28494,7 +28491,7 @@ snapshots:
     dependencies:
       glob: 10.3.10
 
-  '@next/eslint-plugin-next@14.2.8':
+  '@next/eslint-plugin-next@14.2.9':
     dependencies:
       glob: 10.3.10
 
@@ -33198,7 +33195,7 @@ snapshots:
       redent: 3.0.0
     optionalDependencies:
       '@types/bun': 1.1.8
-      vitest: 2.0.5(@types/node@20.14.9)(@vitest/ui@2.0.5)(happy-dom@15.7.3)(terser@5.31.6)
+      vitest: 2.0.5(@types/node@20.14.9)(@vitest/ui@2.0.5(vitest@2.0.5))(happy-dom@15.7.3)(terser@5.31.6)
 
   '@testing-library/jest-dom@6.4.5(@types/bun@1.1.8)(vitest@2.0.5(@types/node@22.5.4)(@vitest/ui@2.0.5)(happy-dom@14.12.3)(terser@5.31.6))':
     dependencies:
@@ -34089,7 +34086,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.0.5(@types/node@20.14.9)(@vitest/ui@2.0.5)(happy-dom@15.7.3)(terser@5.31.6)
+      vitest: 2.0.5(@types/node@20.14.9)(@vitest/ui@2.0.5(vitest@2.0.5))(happy-dom@15.7.3)(terser@5.31.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -34138,7 +34135,7 @@ snapshots:
       pathe: 1.1.2
       sirv: 2.0.4
       tinyrainbow: 1.2.0
-      vitest: 2.0.5(@types/node@20.14.9)(@vitest/ui@2.0.5)(happy-dom@15.7.3)(terser@5.31.6)
+      vitest: 2.0.5(@types/node@22.5.4)(@vitest/ui@2.0.5)(happy-dom@14.12.3)(terser@5.31.6)
 
   '@vitest/utils@1.6.0':
     dependencies:
@@ -38518,7 +38515,7 @@ snapshots:
       '@nodelib/fs.walk': 1.2.8
       glob-parent: 5.1.2
       merge2: 1.4.1
-      micromatch: 4.0.5
+      micromatch: 4.0.8
 
   fast-json-parse@1.0.3: {}
 
@@ -39139,7 +39136,7 @@ snapshots:
       foreground-child: 3.1.1
       jackspeak: 2.3.6
       minimatch: 9.0.5
-      minipass: 7.1.1
+      minipass: 7.1.2
       path-scurry: 1.11.1
 
   glob@10.4.5:
@@ -40740,7 +40737,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@5.29.2(@types/node@20.14.9)(typescript@5.5.4):
+  knip@5.30.1(@types/node@20.14.9)(typescript@5.5.4):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@snyk/github-codeowners': 1.1.0
@@ -40751,7 +40748,7 @@ snapshots:
       jiti: 1.21.6
       js-yaml: 4.1.0
       minimist: 1.2.8
-      picocolors: 1.0.1
+      picocolors: 1.1.0
       picomatch: 4.0.2
       pretty-ms: 9.0.0
       smol-toml: 1.1.4
@@ -41838,7 +41835,7 @@ snapshots:
       metro-babel-transformer: 0.80.11
       metro-cache: 0.80.11
       metro-cache-key: 0.80.11
-      metro-config: 0.80.11(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      metro-config: 0.80.11(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       metro-core: 0.80.11
       metro-file-map: 0.80.11
       metro-resolver: 0.80.11
@@ -42444,8 +42441,6 @@ snapshots:
 
   minipass@6.0.2: {}
 
-  minipass@7.1.1: {}
-
   minipass@7.1.2: {}
 
   minizlib@2.1.2:
@@ -42655,7 +42650,7 @@ snapshots:
 
   nanospinner@1.1.0:
     dependencies:
-      picocolors: 1.0.1
+      picocolors: 1.1.0
 
   napi-build-utils@1.0.2:
     optional: true
@@ -43769,7 +43764,7 @@ snapshots:
   postcss-loader@8.1.1(postcss@8.4.45)(typescript@5.5.4)(webpack@5.92.1(@swc/core@1.7.23)(esbuild@0.21.5)):
     dependencies:
       cosmiconfig: 9.0.0(typescript@5.5.4)
-      jiti: 1.21.0
+      jiti: 1.21.6
       postcss: 8.4.45
       semver: 7.6.3
     optionalDependencies:
@@ -47414,7 +47409,7 @@ snapshots:
     dependencies:
       browserslist: 4.23.3
       escalade: 3.2.0
-      picocolors: 1.0.1
+      picocolors: 1.1.0
 
   update-notifier@6.0.2:
     dependencies:
@@ -47777,7 +47772,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.31.6
 
-  vitest@2.0.5(@types/node@20.14.9)(@vitest/ui@2.0.5)(happy-dom@15.7.3)(terser@5.31.6):
+  vitest@2.0.5(@types/node@20.14.9)(@vitest/ui@2.0.5(vitest@2.0.5))(happy-dom@15.7.3)(terser@5.31.6):
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@vitest/expect': 2.0.5

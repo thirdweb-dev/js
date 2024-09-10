@@ -840,6 +840,7 @@ export function useCustomContractDeployMutation(options: {
               Object.values(data.deployParams),
               {
                 forceDirectDeploy,
+                defaultModules: data.defaultModules,
               },
             );
           }

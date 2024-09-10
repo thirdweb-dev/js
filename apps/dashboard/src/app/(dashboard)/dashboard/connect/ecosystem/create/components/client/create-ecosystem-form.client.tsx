@@ -42,7 +42,9 @@ const formSchema = z.object({
   permission: z.union([z.literal("PARTNER_WHITELIST"), z.literal("ANYONE")]),
 });
 
-export function CreateEcosystemForm() {
+export function CreateEcosystemForm(props: {
+  ecosystemLayoutPath: string;
+}) {
   // When set, the confirmation modal is open the this contains the form data to be submitted
   const [formDataToBeConfirmed, setFormDataToBeConfirmed] = useState<
     z.infer<typeof formSchema> | undefined
@@ -65,7 +67,7 @@ export function CreateEcosystemForm() {
     },
     onSuccess: (slug: string) => {
       form.reset();
-      router.push(`/dashboard/connect/ecosystem/${slug}`);
+      router.push(`${props.ecosystemLayoutPath}/${slug}`);
     },
   });
 

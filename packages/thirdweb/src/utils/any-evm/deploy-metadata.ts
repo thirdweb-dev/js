@@ -10,10 +10,8 @@ export type FetchDeployMetadataOptions = {
   client: ThirdwebClient;
 };
 
-export type FetchDeployMetadataResult = {
-  compilerMetadata: CompilerMetadata;
-  extendedMetadata: ExtendedMetadata | undefined;
-};
+export type FetchDeployMetadataResult = Partial<ExtendedMetadata> &
+  CompilerMetadata;
 
 /**
  * Fetches the deployment metadata.
@@ -24,31 +22,6 @@ export type FetchDeployMetadataResult = {
 export async function fetchDeployMetadata(
   options: FetchDeployMetadataOptions,
 ): Promise<FetchDeployMetadataResult> {
-  const [compilerMetadata, extendedMetadata] = await Promise.all([
-    fetchCompilerMetadata(options),
-    fetchExtendedMetadata(options).catch(() => undefined),
-  ]);
-  return { compilerMetadata, extendedMetadata };
-}
-
-// helpers
-/**
- * Fetches the published metadata.
- * @param options - The options for fetching the published metadata.
- * @internal
- */
-async function fetchExtendedMetadata(
-  options: FetchDeployMetadataOptions,
-): Promise<ExtendedMetadata> {
-  return download({
-    uri: options.uri,
-    client: options.client,
-  }).then((r) => r.json());
-}
-
-async function fetchCompilerMetadata(
-  options: FetchDeployMetadataOptions,
-): Promise<CompilerMetadata> {
   const rawMeta: RawCompilerMetadata = await download({
     uri: options.uri,
     client: options.client,
@@ -144,11 +117,13 @@ export type ExtendedMetadata = {
         publisherAddress: string;
       }[]
     | undefined;
-  defaultModules?: {
-    moduleName: string;
-    moduleVersion: string;
-    publisherAddress: string;
-  }[];
+  defaultModules?:
+    | Array<{
+        moduleName: string;
+        moduleVersion: string;
+        publisherAddress: string;
+      }>
+    | undefined;
   publisher?: string | undefined;
   audit?: string | undefined;
   logo?: string | undefined;

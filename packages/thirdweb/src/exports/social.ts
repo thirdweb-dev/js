@@ -1,6 +1,6 @@
 export { getSocialProfiles } from "../social/profiles.js";
 export type {
-  SocialProfiles,
+  SocialProfile,
   EnsProfile,
   FarcasterProfile,
   LensProfile,

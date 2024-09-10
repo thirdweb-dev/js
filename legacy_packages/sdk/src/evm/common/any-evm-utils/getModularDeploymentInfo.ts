@@ -27,17 +27,17 @@ export async function getModularDeploymentInfo(
   provider: providers.Provider,
   create2Factory?: string,
   clientId?: string,
-  secretKey?: string
+  secretKey?: string,
+  defaultModules?: {moduleName: string, moduleVersion: string, publisherAddress: string}[],
 ): Promise<DeploymentPreset[]> {
   caches.deploymentPresets = {};
-  const [create2FactoryAddress, { compilerMetadata, extendedMetadata }] =
+  const [create2FactoryAddress, { compilerMetadata }] =
     await Promise.all([
       create2Factory ? create2Factory : getCreate2FactoryAddress(provider),
       fetchAndCacheDeployMetadata(metadataUri, storage),
     ]);
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
-  const defaultModules = extendedMetadata?.defaultModules;
 
   // get clone factory
   const factoryInfo = await computeDeploymentInfo(

@@ -177,6 +177,9 @@ function RenderRoyaltyFieldset(props: {
   const royaltyBpsPath =
     `modularContractDefaultModulesInstallParams.${ext.moduleIndex}.royaltyBps` as const;
 
+  const transferValidatorPath =
+    `modularContractDefaultModulesInstallParams.${ext.moduleIndex}.transferValidator` as const;
+
   return (
     <RoyaltyFieldset
       royaltyRecipient={{
@@ -198,15 +201,25 @@ function RenderRoyaltyFieldset(props: {
         errorMessage: form.getFieldState(royaltyBpsPath, form.formState).error
           ?.message,
       }}
+      transferValidator={{
+        isInvalid: !!form.getFieldState(transferValidatorPath, form.formState)
+          .error,
+        register: form.register(transferValidatorPath, {
+          required: "Required",
+        }),
+        errorMessage: form.getFieldState(transferValidatorPath, form.formState)
+          .error?.message,
+      }}
     />
   );
 }
 
 export function showRoyaltyFieldset(paramNames: string[]) {
   return (
-    paramNames.length === 2 &&
+    paramNames.length === 3 &&
     paramNames.includes("royaltyRecipient") &&
-    paramNames.includes("royaltyBps")
+    paramNames.includes("royaltyBps") &&
+    paramNames.includes("transferValidator")
   );
 }
 
