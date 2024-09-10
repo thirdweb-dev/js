@@ -1,3 +1,4 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type ApiKeyService,
   type ApiKeyServicePolicy,
@@ -40,7 +41,6 @@ import {
 import { fromArrayToList, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
-import { Spinner } from "../../../@/components/ui/Spinner/Spinner";
 
 interface SponsorshipPoliciesProps {
   apiKeyServices: ApiKeyService[];

@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   Flex,
   Icon,
@@ -30,7 +31,6 @@ import {
   Text,
   TrackedIconButton,
 } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import type { ComponentWithChildren } from "types/component-with-children";
 import type { PublishedContractDetails } from "../hooks";
 
@@ -111,7 +111,7 @@ export const PublishedContractTable: ComponentWithChildren<
         Header: "Published By",
         accessor: (row) => row.publisher,
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        Cell: (cell: any) => <AddressCopyButton address={cell.value} />,
+        Cell: (cell: any) => <WalletAddress address={cell.value} />,
       },
       {
         id: "audit-badge",

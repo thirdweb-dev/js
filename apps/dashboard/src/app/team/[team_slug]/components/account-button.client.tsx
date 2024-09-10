@@ -1,17 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { cn } from "@/lib/utils";
 import { LogOutIcon, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { cn } from "../../../../@/lib/utils";
 
 export function AccountButton(props: {
   email: string | undefined;

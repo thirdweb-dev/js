@@ -1,3 +1,5 @@
+import { Checkbox } from "@/components/ui/checkbox";
+import { thirdwebClient } from "@/constants/client";
 /* eslint-disable @next/next/no-img-element */
 import {
   Box,
@@ -30,8 +32,6 @@ import {
   inAppWallet,
 } from "thirdweb/wallets";
 import { TrackedLink } from "tw-components";
-import { Checkbox } from "../../../@/components/ui/checkbox";
-import { thirdwebClient } from "../../../@/constants/client";
 import { FormItem } from "../ConnectWalletPlayground/FormItem";
 import { ModalSizeButton } from "../ConnectWalletPlayground/ModalSizeButton";
 import { ThemeButton } from "../ConnectWalletPlayground/ThemeButton";

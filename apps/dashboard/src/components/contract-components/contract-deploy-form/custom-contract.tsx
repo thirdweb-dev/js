@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { thirdwebClient } from "@/constants/client";
 import {
   Accordion,
   AccordionButton,
@@ -35,7 +36,6 @@ import { useActiveAccount } from "thirdweb/react";
 import { encodeAbiParameters } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
-import { thirdwebClient } from "../../../@/constants/client";
 import { useV5DashboardChain } from "../../../lib/v5-adapter";
 import {
   useContractEnabledExtensions,

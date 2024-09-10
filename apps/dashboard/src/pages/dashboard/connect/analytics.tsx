@@ -1,4 +1,5 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import { type ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { AppLayout } from "components/app-layouts/app";
@@ -9,7 +10,6 @@ import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useMemo, useState } from "react";
 import type { ThirdwebNextPage } from "utils/types";
-import { Button } from "../../../@/components/ui/button";
 import { ConnectAnalyticsDashboard } from "../../../app/team/[team_slug]/[project_slug]/connect/analytics/ConnectAnalyticsDashboard";
 import { ConnectSDKCard } from "../../../app/team/[team_slug]/[project_slug]/connect/analytics/_components/ConnectSDKCard";
 

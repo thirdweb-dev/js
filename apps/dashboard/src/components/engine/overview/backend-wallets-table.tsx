@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import {
   type BackendWallet,
@@ -45,8 +46,6 @@ import {
   LinkButton,
   Text,
 } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { CopyAddressButton } from "../../../@/components/ui/CopyAddressButton";
 import { prettyPrintCurrency } from "../utils";
 
 interface BackendWalletsTableProps {
@@ -67,13 +66,7 @@ const setColumns = (instanceUrl: string) => [
     header: "Address",
     cell: (cell) => {
       const address = cell.getValue();
-      return (
-        <CopyAddressButton
-          address={getAddress(address)}
-          copyIconPosition="left"
-          variant="ghost"
-        />
-      );
+      return <WalletAddress address={getAddress(address)} />;
     },
   }),
   columnHelper.accessor("label", {
@@ -352,10 +345,9 @@ const ReceiveFundsModal = ({
             <Text w="full" textAlign="left">
               Fund this address or QR code:
             </Text>
-            <AddressCopyButton
+            <WalletAddress
               address={backendWallet.address}
               shortenAddress={false}
-              size="sm"
             />
             <Image
               src={qrCodeBase64Query.data}

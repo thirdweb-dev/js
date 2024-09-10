@@ -1,6 +1,6 @@
+import { Sidebar } from "@/components/blocks/Sidebar";
 import { type SortBy, type TimeRange, fetchTopContracts } from "lib/search";
 import type { Metadata } from "next";
-import { Sidebar } from "../../../@/components/blocks/Sidebar";
 import { TrendingContractSection } from "./components/trending-table";
 
 export const metadata: Metadata = {

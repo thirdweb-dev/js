@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import {
   LogOutIcon,
@@ -14,7 +15,6 @@ import {
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useLayoutEffect, useState } from "react";
-import { SkeletonContainer } from "../../../../@/components/ui/skeleton";
 import { CmdKSearchModal } from "../../../../components/cmd-k-search";
 
 export function MobileBurgerMenuButton(props: {

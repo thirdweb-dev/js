@@ -1,6 +1,13 @@
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useState } from "react";
 import {
@@ -14,14 +21,6 @@ import {
   TableHeading,
   TableHeadingRow,
 } from "./common";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 type UIData = {
   customers: Array<{
@@ -211,16 +210,7 @@ function CustomerTableRow(props: {
           style={delayAnim}
           loadedData={props.customer?.walletAddress}
           skeletonData="0x0000000000000000000000000000000000000000"
-          render={(v) => {
-            return (
-              <CopyAddressButton
-                address={v}
-                variant="ghost"
-                className="text-muted-foreground"
-                copyIconPosition="left"
-              />
-            );
-          }}
+          render={(v) => <WalletAddress address={v} />}
         />
       </TableData>
       <TableData>

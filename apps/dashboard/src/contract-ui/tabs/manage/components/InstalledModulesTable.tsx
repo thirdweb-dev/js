@@ -1,5 +1,6 @@
 "use client";
 
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -196,12 +197,7 @@ function ModuleRow(props: {
         <p>{contractInfo.description || "..."}</p>
       </TableData>
       <TableData>
-        <CopyAddressButton
-          className="text-xs"
-          address={contractInfo.publisher || ""}
-          copyIconPosition="left"
-          variant="outline"
-        />
+        <WalletAddress address={contractInfo.publisher || ""} />
       </TableData>
       <TableData>
         <CopyAddressButton

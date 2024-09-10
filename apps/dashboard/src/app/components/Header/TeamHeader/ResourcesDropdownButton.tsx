@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +9,6 @@ import {
 import { ChevronDownIcon, CommandIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "../../../../@/components/ui/button";
 import { CmdKSearchModal } from "../../../../components/cmd-k-search";
 
 export function ResourcesDropdownButton() {

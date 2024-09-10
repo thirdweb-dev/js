@@ -1,4 +1,4 @@
-import { AppFooter } from "../../../@/components/blocks/app-footer";
+import { AppFooter } from "@/components/blocks/app-footer";
 import { TWAutoConnect } from "./components/autoconnect";
 
 export default async function RootTeamLayout(props: {

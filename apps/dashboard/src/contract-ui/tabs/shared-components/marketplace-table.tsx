@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   ButtonGroup,
   Center,
@@ -41,7 +42,6 @@ import type {
 } from "thirdweb/extensions/marketplace";
 import { min } from "thirdweb/utils";
 import { Button, Text } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { LISTING_STATUS } from "./types";
 
 const tableColumns: Column<DirectListing | EnglishAuction>[] = [
@@ -64,7 +64,7 @@ const tableColumns: Column<DirectListing | EnglishAuction>[] = [
     accessor: (row) => row.creatorAddress,
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     Cell: ({ cell }: { cell: Cell<any, string> }) => (
-      <AddressCopyButton variant="outline" address={cell.value} />
+      <WalletAddress address={cell.value} />
     ),
   },
   {

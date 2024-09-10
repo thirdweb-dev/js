@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
@@ -234,9 +235,8 @@ const CancelTransactionButton = ({
               </FormControl>
               <FormControl>
                 <FormLabel>From</FormLabel>
-                <AddressCopyButton
+                <WalletAddress
                   address={transaction.fromAddress ?? ""}
-                  size="xs"
                   shortenAddress={false}
                 />
               </FormControl>

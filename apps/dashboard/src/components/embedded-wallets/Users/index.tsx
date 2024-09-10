@@ -1,7 +1,7 @@
 "use client";
 
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { PaginationButtons } from "@/components/pagination-buttons";
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -31,14 +31,7 @@ const columns = [
     header: "Address",
     cell: (cell) => {
       const address = cell.getValue()?.[0]?.address;
-      return address ? (
-        <CopyAddressButton
-          address={address}
-          copyIconPosition="left"
-          variant="ghost"
-          className="-translate-x-2"
-        />
-      ) : null;
+      return address ? <WalletAddress address={address} /> : null;
     },
   }),
   columnHelper.accessor("created_at", {

@@ -2,8 +2,8 @@
 
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useCallback } from "react";
-import { useDashboardRouter } from "../../../../@/lib/DashboardRouter";
 import { CustomConnectWallet } from "../../../../@3rdweb-sdk/react/components/connect-wallet";
 import { useAccount } from "../../../../@3rdweb-sdk/react/hooks/useApi";
 import {

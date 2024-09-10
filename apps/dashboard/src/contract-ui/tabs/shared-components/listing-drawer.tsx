@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   Flex,
   GridItem,
@@ -82,10 +83,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                   <Heading size="label.md">Seller</Heading>
                 </GridItem>
                 <GridItem colSpan={9}>
-                  <AddressCopyButton
-                    size="xs"
-                    address={renderData.creatorAddress}
-                  />
+                  <WalletAddress address={renderData.creatorAddress} />
                 </GridItem>
                 <GridItem colSpan={3}>
                   <Heading size="label.md">Listing ID</Heading>

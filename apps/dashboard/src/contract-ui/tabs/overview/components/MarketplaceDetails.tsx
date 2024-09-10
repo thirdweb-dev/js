@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   AspectRatio,
   Flex,
@@ -22,7 +23,6 @@ import {
 import { useReadContract } from "thirdweb/react";
 import { min } from "thirdweb/utils";
 import { Badge, Card, Heading, Text, TrackedLink } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 type ListingData =
@@ -301,7 +301,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
                 Seller
               </Text>
               <SkeletonText isLoaded={!isLoading}>
-                <AddressCopyButton address={listing.creatorAddress} size="xs" />
+                <WalletAddress address={listing.creatorAddress} />
               </SkeletonText>
               <SkeletonText
                 as={Badge}

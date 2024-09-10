@@ -1,6 +1,6 @@
+import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { redirect } from "next/navigation";
-import { getProjects } from "../../../../@/api/projects";
 import { TeamHeader } from "../../../components/Header/TeamHeader/TeamHeader";
 import TeamTabs from "../components/tab-switcher.client";
 

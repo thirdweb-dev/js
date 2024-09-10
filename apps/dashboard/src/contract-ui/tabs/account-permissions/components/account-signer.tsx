@@ -1,10 +1,10 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { formatDistance } from "date-fns/formatDistance";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useActiveAccount } from "thirdweb/react";
 import { Badge, Card, Heading, Text } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 export type AccountSignerType = {
   signer: string;
@@ -40,7 +40,7 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
             flexDir={{ base: "column", lg: "row" }}
           >
             <Heading size="label.lg">
-              <AddressCopyButton shortenAddress={isMobile} address={signer} />
+              <WalletAddress shortenAddress={isMobile} address={signer} />
             </Heading>
             <Flex gap={2}>
               {isAdmin ? (

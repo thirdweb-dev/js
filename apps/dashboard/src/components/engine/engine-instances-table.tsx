@@ -1,5 +1,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,6 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   type EditEngineInstanceInput,
@@ -35,14 +39,6 @@ import { BiPencil } from "react-icons/bi";
 import { FiTrash } from "react-icons/fi";
 import { toast } from "sonner";
 import { FormLabel } from "tw-components";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "../../@/components/ui/alert";
-import { Button } from "../../@/components/ui/button";
-import { Input } from "../../@/components/ui/input";
-import { Textarea } from "../../@/components/ui/textarea";
 
 interface EngineInstancesTableProps {
   instances: EngineInstance[];

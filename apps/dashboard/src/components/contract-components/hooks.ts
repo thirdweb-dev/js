@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   contractKeys,
   networkKeys,
@@ -56,7 +57,6 @@ import {
 import { isAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import { Web3Provider } from "zksync-ethers";
-import { thirdwebClient } from "../../@/constants/client";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
 import type { CustomContractDeploymentFormData } from "./contract-deploy-form/custom-contract";
 import type {

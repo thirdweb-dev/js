@@ -1,5 +1,5 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import dynamic from "next/dynamic";
-import { Spinner } from "../../@/components/ui/Spinner/Spinner";
 
 export const LazyOnboardingBilling = dynamic(() => import("./Billing"), {
   loading: () => (

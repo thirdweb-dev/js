@@ -1,10 +1,10 @@
 "use client";
 
+import { MobileSidebar } from "@/components/blocks/MobileSidebar";
+import { Sidebar } from "@/components/blocks/Sidebar";
+import { Button } from "@/components/ui/button";
 import { ChevronDownIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { MobileSidebar } from "../../@/components/blocks/MobileSidebar";
-import { Sidebar } from "../../@/components/blocks/Sidebar";
-import { Button } from "../../@/components/ui/button";
 
 const links = [
   {

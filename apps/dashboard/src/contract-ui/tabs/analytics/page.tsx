@@ -1,4 +1,6 @@
 "use client";
+import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import {
   Alert,
   AlertDescription,
@@ -28,8 +30,6 @@ import {
 import { Suspense, useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading } from "tw-components";
-import { ThirdwebBarChart } from "../../../@/components/blocks/charts/bar-chart";
-import { useIsomorphicLayoutEffect } from "../../../@/lib/useIsomorphicLayoutEffect";
 
 interface ContractAnalyticsPageProps {
   contract: ThirdwebContract;

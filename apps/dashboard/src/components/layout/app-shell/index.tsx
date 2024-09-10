@@ -1,4 +1,5 @@
 import { AppFooter } from "@/components/blocks/app-footer";
+import { TabLinks } from "@/components/ui/tabs";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Container, Flex, Grid, GridItem, Icon } from "@chakra-ui/react";
 import { CmdKSearch } from "components/cmd-k-search";
@@ -18,7 +19,6 @@ import {
   TrackedLink,
 } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
-import { TabLinks } from "../../../@/components/ui/tabs";
 
 export interface AppShellProps {
   layout?: "custom-contract";

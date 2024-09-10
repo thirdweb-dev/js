@@ -1,3 +1,4 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type Account,
   AccountStatus,
@@ -6,7 +7,6 @@ import {
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Suspense, lazy, useEffect, useState } from "react";
 import { useActiveWallet } from "thirdweb/react";
-import { Spinner } from "../../@/components/ui/Spinner/Spinner";
 import { useTrack } from "../../hooks/analytics/useTrack";
 import { LazyOnboardingBilling } from "./LazyOnboardingBilling";
 import { OnboardingModal } from "./Modal";

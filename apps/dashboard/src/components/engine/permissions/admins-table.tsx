@@ -1,4 +1,4 @@
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import {
   type EngineAdmin,
@@ -43,13 +43,7 @@ const columns = [
     header: "Address",
     cell: (cell) => {
       const address = cell.getValue();
-      return (
-        <CopyAddressButton
-          address={address}
-          copyIconPosition="left"
-          variant="ghost"
-        />
-      );
+      return <WalletAddress address={address} />;
     },
   }),
   columnHelper.accessor("label", {

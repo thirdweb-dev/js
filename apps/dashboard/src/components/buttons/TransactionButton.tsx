@@ -1,3 +1,4 @@
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   Center,
   Flex,
@@ -27,7 +28,6 @@ import {
   LinkButton,
   Text,
 } from "tw-components";
-import { ToolTipLabel } from "../../@/components/ui/tooltip";
 import { MismatchButton } from "./MismatchButton";
 
 interface TransactionButtonProps extends Omit<ButtonProps, "leftIcon"> {

@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   Center,
   Flex,
@@ -35,7 +36,6 @@ import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { Heading, Text } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface ContractOverviewNFTGetAllProps {
   contract: ThirdwebContract;
@@ -96,7 +96,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
         Header: "Owner",
         accessor: (row) => row.owner,
         Cell: (cell: CellProps<NFT, string>) => (
-          <AddressCopyButton size="xs" address={cell.value} />
+          <WalletAddress address={cell.value} />
         ),
       });
     }
