@@ -63,10 +63,10 @@ export async function fetchInAppWalletMetadataFromThirdweb(
     linkedAccounts: {
       type: string;
       details:
-        | { phone: string }
-        | { email: string }
-        | { address: string };
-        | { id: string };
+        | { phone: string, [key: string]: string; }
+        | { email: string, [key: string]: string; }
+        | { address: string, [key: string]: string; };
+        | { id: string, [key: string]: string; };
     }[];
   }[];
   return data;
