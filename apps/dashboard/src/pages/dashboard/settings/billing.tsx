@@ -1,5 +1,5 @@
 import { AppLayout } from "components/app-layouts/app";
-import { SettingsSidebar } from "core-ui/sidebar/settings";
+import { SettingsSidebarLayout } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import type { ThirdwebNextPage } from "utils/types";
 import { SettingsBillingPage } from "../../../app/team/[team_slug]/(team)/~/settings/billing/BillingSettingsPage";
@@ -11,10 +11,12 @@ const Page: ThirdwebNextPage = () => {
 Page.pageId = PageId.SettingsUsage;
 
 Page.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <SettingsSidebar activePage="billing" />
-
-    {page}
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <SettingsSidebarLayout>{page}</SettingsSidebarLayout>
   </AppLayout>
 );
 

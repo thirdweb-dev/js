@@ -1,15 +1,27 @@
-import { EngineMobileSidebar, EngineSidebar } from "./EngineSidebar";
+import { SidebarLayout } from "../../@/components/blocks/SidebarLayout";
 
 export function EngineGeneralPageLayout(props: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex gap-6 container px-4 w-full">
-      <EngineSidebar />
-      <div className="grow max-sm:w-full pt-6 lg:pt-8">
-        <EngineMobileSidebar />
-        {props.children}
-      </div>
-    </div>
+    <SidebarLayout
+      sidebarLinks={[
+        {
+          label: "Overview",
+          exactMatch: true,
+          href: "/dashboard/engine",
+        },
+        {
+          label: "Create",
+          href: "/dashboard/engine/create",
+        },
+        {
+          label: "Import",
+          href: "/dashboard/engine/import",
+        },
+      ]}
+    >
+      {props.children}
+    </SidebarLayout>
   );
 }

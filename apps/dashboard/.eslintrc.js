@@ -89,7 +89,7 @@ module.exports = {
           },
           {
             name: "lucide-react",
-            importNames: ["Link", "Table"],
+            importNames: ["Link", "Table", "Sidebar"],
             message:
               'This is likely a mistake. If you really want to import this - postfix the imported name with Icon. Example - "LinkIcon"',
           },

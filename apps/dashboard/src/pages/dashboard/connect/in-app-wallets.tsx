@@ -6,11 +6,12 @@ import { AppLayout } from "components/app-layouts/app";
 import { EmbeddedWallets } from "components/embedded-wallets";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
-import { ConnectSidebar } from "core-ui/sidebar/connect";
+// import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useMemo, useState } from "react";
 import type { ThirdwebNextPage } from "utils/types";
+import { ConnectSidebarLayout } from "../../../app/(dashboard)/dashboard/connect/DashboardConnectLayout";
 import { AnalyticsCallout } from "../../../app/team/[team_slug]/[project_slug]/connect/in-app-wallets/_components/AnalyticsCallout";
 import { InAppWaletFooterSection } from "../../../app/team/[team_slug]/[project_slug]/connect/in-app-wallets/_components/footer";
 
@@ -122,9 +123,12 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
 };
 
 DashboardConnectEmbeddedWallets.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <ConnectSidebar activePage="embedded-wallets" />
-    {page}
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <ConnectSidebarLayout>{page}</ConnectSidebarLayout>
   </AppLayout>
 );
 

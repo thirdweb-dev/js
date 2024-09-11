@@ -5,12 +5,12 @@ import type { CodeEnvironment } from "components/contract-tabs/code/types";
 import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
 import { IpfsUploadDropzone } from "components/ipfs-upload/dropzone";
 import { YourFilesSection } from "components/storage/your-files";
-import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { useState } from "react";
 import { Card, Heading, Link, Text, TrackedCopyButton } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
+import { SettingsSidebarLayout } from "../../../core-ui/sidebar/settings";
 
 const TRACKING_CATEGORY = "storage";
 
@@ -247,7 +247,7 @@ function App() {
   );
 }`,
   javascript: `// Check out the latest docs here: https://portal.thirdweb.com/typescript/v5/storage
-  
+
 import { upload } from "thirdweb/storage";
 
 // Here we get the IPFS URI of where our metadata has been uploaded
@@ -289,9 +289,12 @@ var response = await ThirdwebManager.Instance.SDK.storage.UploadText(metaJson);`
 };
 
 DashboardSettingsStorage.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <SettingsSidebar activePage="storage" />
-    {page}
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <SettingsSidebarLayout>{page}</SettingsSidebarLayout>
   </AppLayout>
 );
 DashboardSettingsStorage.pageId = PageId.DashboardSettingsStorage;

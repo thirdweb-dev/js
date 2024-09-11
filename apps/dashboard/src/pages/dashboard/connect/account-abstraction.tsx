@@ -13,7 +13,6 @@ import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
 import { SmartWallets } from "components/smart-wallets";
-import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { CircleAlertIcon } from "lucide-react";
 import { NextSeo } from "next-seo";
@@ -23,6 +22,7 @@ import { useMemo, useState } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
 import {} from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
+import { ConnectSidebarLayout } from "../../../app/(dashboard)/dashboard/connect/DashboardConnectLayout";
 import { AAFooterSection } from "../../../app/team/[team_slug]/[project_slug]/connect/account-abstraction/AAFooterSection";
 import { isOpChainId } from "../../../app/team/[team_slug]/[project_slug]/connect/account-abstraction/isOpChain";
 
@@ -181,9 +181,12 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
 };
 
 DashboardConnectAccountAbstraction.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <ConnectSidebar activePage="account-abstraction" />
-    {page}
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <ConnectSidebarLayout>{page}</ConnectSidebarLayout>
   </AppLayout>
 );
 

@@ -2,7 +2,7 @@ import { useAuthorizedWallets } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { AuthorizedWalletsTable } from "components/settings/AuthorizedWallets/AuthorizedWalletsTable";
-import { SettingsSidebar } from "core-ui/sidebar/settings";
+import { SettingsSidebarLayout } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { Heading, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
@@ -38,10 +38,12 @@ const SettingsDevicesPage: ThirdwebNextPage = () => {
 };
 
 SettingsDevicesPage.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <SettingsSidebar activePage="devices" />
-
-    {page}
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <SettingsSidebarLayout>{page}</SettingsSidebarLayout>
   </AppLayout>
 );
 

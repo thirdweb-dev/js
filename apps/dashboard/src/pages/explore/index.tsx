@@ -4,7 +4,6 @@ import { ContractRow } from "components/explore/contract-row";
 import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
 import { PublishUpsellCard } from "components/explore/upsells/publish-submit";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { ContractsSidebar } from "core-ui/sidebar/contracts";
 import {
   EXPLORE_PAGE_DATA,
   type ExploreCategory,
@@ -15,6 +14,7 @@ import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Fragment } from "react";
 import type { ThirdwebNextPage } from "utils/types";
+import { ContractsSidebarLayout } from "../../core-ui/sidebar/contracts";
 
 const ExplorePage: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
@@ -40,8 +40,10 @@ const ExplorePage: ThirdwebNextPage = (
       />
 
       <div>
-        <h1 className="mb-3 text-5xl font-bold tracking-tighter">Explore</h1>
-        <p className="text-lg text-muted-foreground max-w-screen-md">
+        <h1 className="mb-3 text-3xl lg:text-5xl font-bold tracking-tighter">
+          Explore
+        </h1>
+        <p className="text-base lg:text-lg text-muted-foreground max-w-screen-md">
           The best place for web3 developers to explore smart contracts from
           world-class web3 protocols & engineers — all deployable with one
           click.
@@ -72,9 +74,15 @@ const ExplorePage: ThirdwebNextPage = (
 // );
 
 ExplorePage.getLayout = (page, props) => (
-  <AppLayout {...props} noSEOOverride hasSidebar>
-    <ContractsSidebar activePage="explore" />
-    <PublisherSDKContext>{page}</PublisherSDKContext>
+  <AppLayout
+    {...props}
+    noSEOOverride
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <ContractsSidebarLayout>
+      <PublisherSDKContext>{page}</PublisherSDKContext>
+    </ContractsSidebarLayout>
   </AppLayout>
 );
 

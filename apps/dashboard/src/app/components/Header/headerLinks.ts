@@ -2,7 +2,7 @@ export const headerLinks = {
   left: [
     {
       name: "Connect",
-      href: "/dashboard/connect",
+      href: "/dashboard/connect/analytics",
     },
     {
       name: "Contracts",

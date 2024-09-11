@@ -1,6 +1,6 @@
-import { Sidebar } from "@/components/blocks/Sidebar";
 import { type SortBy, type TimeRange, fetchTopContracts } from "lib/search";
 import type { Metadata } from "next";
+import { ContractsSidebarLayout } from "../../../core-ui/sidebar/contracts";
 import { TrendingContractSection } from "./components/trending-table";
 
 export const metadata: Metadata = {
@@ -25,42 +25,16 @@ export default async function DashboardContractTrendingPage(props: {
   });
 
   return (
-    <div className="container px-4 flex gap-2">
-      <Sidebar
-        links={[
-          {
-            href: "/dashboard/contracts/deploy",
-            label: "Deploy",
-          },
-          {
-            href: "/dashboard/contracts/publish",
-            label: "Publish",
-          },
-          {
-            href: "/explore",
-            label: "Explore",
-          },
-          {
-            href: "/trending",
-            label: "Trending",
-          },
-          {
-            href: "/dashboard/contracts/build",
-            label: "Build",
-          },
-        ]}
-      />
-      <div className="py-8">
-        <h1 className="text-3xl md:text-4xl tracking-tight font-semibold mb-5">
-          Trending Contracts
-        </h1>
+    <ContractsSidebarLayout>
+      <h1 className="text-2xl md:text-3xl tracking-tight font-semibold mb-5">
+        Trending Contracts
+      </h1>
 
-        <TrendingContractSection
-          topContracts={topContracts}
-          searchParams={props.searchParams}
-          showPagination={true}
-        />
-      </div>
-    </div>
+      <TrendingContractSection
+        topContracts={topContracts}
+        searchParams={props.searchParams}
+        showPagination={true}
+      />
+    </ContractsSidebarLayout>
   );
 }
