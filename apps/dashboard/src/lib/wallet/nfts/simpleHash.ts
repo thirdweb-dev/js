@@ -30,7 +30,7 @@ export async function transformSimpleHashResponseToNFT(
       simpleHashResponse.nfts.map(async (simpleHashNft) => {
         try {
           return {
-            id: BigInt(simpleHashNft.token_id),
+            id: simpleHashNft.token_id,
             contractAddress: simpleHashNft.contract_address,
             tokenId: simpleHashNft.token_id,
             metadata: {

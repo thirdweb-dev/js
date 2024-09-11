@@ -153,16 +153,25 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
     return ownedNFTs?.map((nft) => {
       if (nft.type === "ERC721") {
         return {
-          ...nft,
+          id: String(nft.id),
+          metadata: nft.metadata,
           supply: "1",
           contractAddress: form.watch("selected.contractAddress"),
           tokenId: nft.id.toString(),
+          owner: nft.owner,
+          type: "ERC721",
+          tokenURI: nft.tokenURI,
         };
       }
       return {
-        ...nft,
+        id: String(nft.id),
+        metadata: nft.metadata,
+        supply: String(nft.supply),
         contractAddress: form.watch("selected.contractAddress"),
         tokenId: nft.id.toString(),
+        owner: nft.owner,
+        type: "ERC1155",
+        tokenURI: nft.tokenURI,
       };
     }) as WalletNFT[];
   }, [ownedNFTs, form]);

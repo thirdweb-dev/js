@@ -37,7 +37,7 @@ export async function transformAlchemyResponseToNFT(
 
         try {
           return {
-            id: BigInt(alchemyNFT.id.tokenId),
+            id: alchemyNFT.id.tokenId,
             contractAddress: alchemyNFT.contract.address,
             metadata: shouldDownloadURI(rawUri)
               ? await download({
