@@ -1,4 +1,4 @@
-import type { AbiConstructor, AbiFunction } from "abitype";
+import type { AbiFunction } from "abitype";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
@@ -31,6 +31,7 @@ export type DeployPublishedContractOptions = {
   publisher?: string;
   version?: string;
   implementationConstructorParams?: Record<string, unknown>;
+  salt?: string;
 };
 
 /**
@@ -64,6 +65,7 @@ export async function deployPublishedContract(
     publisher,
     version,
     implementationConstructorParams,
+    salt,
   } = options;
   const deployMetadata = await fetchPublishedContractMetadata({
     client,
@@ -79,6 +81,7 @@ export async function deployPublishedContract(
     client,
     initializeParams: contractParams,
     implementationConstructorParams,
+    salt,
   });
 }
 
@@ -96,6 +99,7 @@ export type DeployContractfromDeployMetadataOptions = {
     deployMetadata: FetchDeployMetadataResult;
     initializeParams?: Record<string, unknown>;
   }[];
+  salt?: string;
 };
 
 /**
@@ -103,7 +107,7 @@ export type DeployContractfromDeployMetadataOptions = {
  */
 export async function deployContractfromDeployMetadata(
   options: DeployContractfromDeployMetadataOptions,
-) {
+): Promise<string> {
   const {
     client,
     account,
@@ -112,6 +116,7 @@ export async function deployContractfromDeployMetadata(
     deployMetadata,
     implementationConstructorParams,
     modules,
+    salt,
   } = options;
   switch (deployMetadata?.deployType) {
     case "standard": {
@@ -121,6 +126,7 @@ export async function deployContractfromDeployMetadata(
         chain,
         compilerMetadata: deployMetadata,
         contractParams: initializeParams,
+        salt,
       });
     }
     case "autoFactory": {
@@ -157,6 +163,7 @@ export async function deployContractfromDeployMetadata(
         account,
         cloneFactoryContract,
         initializeTransaction,
+        salt,
       });
     }
     case "customFactory": {
@@ -185,14 +192,14 @@ export async function deployContractfromDeployMetadata(
         params: normalizeFunctionParams(method, initializeParams),
       });
       // asumption here is that the factory address returns the deployed proxy address
-      const address = simulateTransaction({
+      const address = await simulateTransaction({
         transaction: deployTx,
       });
       await sendAndConfirmTransaction({
         transaction: deployTx,
         account,
       });
-      return address;
+      return address as string;
     }
     case undefined: {
       // Default to standard deployment if none was specified
@@ -202,6 +209,7 @@ export async function deployContractfromDeployMetadata(
         chain,
         compilerMetadata: deployMetadata,
         contractParams: initializeParams,
+        salt,
       });
     }
     default:
@@ -216,8 +224,10 @@ async function directDeploy(options: {
   chain: Chain;
   compilerMetadata: CompilerMetadata;
   contractParams?: Record<string, unknown>;
-}) {
-  const { account, client, chain, compilerMetadata, contractParams } = options;
+  salt?: string;
+}): Promise<string> {
+  const { account, client, chain, compilerMetadata, contractParams, salt } =
+    options;
 
   if (isZkSyncChain(chain)) {
     return zkDeployContract({
@@ -227,22 +237,21 @@ async function directDeploy(options: {
       bytecode: compilerMetadata.bytecode,
       abi: compilerMetadata.abi,
       params: contractParams,
+      salt,
     });
   }
 
   const { deployContract } = await import(
     "../../contract/deployment/deploy-with-abi.js"
   );
-  const constructorAbi = compilerMetadata.abi.find(
-    (i) => i.type === "constructor",
-  ) as AbiConstructor | undefined;
   return deployContract({
     account,
     client,
     chain,
     bytecode: compilerMetadata.bytecode,
-    constructorAbi,
-    constructorParams: normalizeFunctionParams(constructorAbi, contractParams),
+    abi: compilerMetadata.abi,
+    constructorParams: contractParams,
+    salt,
   });
 }
 
@@ -322,10 +331,7 @@ async function getInitializeTransaction(options: {
       chain,
       address: implementationContract.address,
     }),
-    method: resolveMethod(
-      metadata.factoryDeploymentData?.implementationInitializerFunction ||
-        "initialize",
-    ),
+    method: initializeFunction,
     params: normalizeFunctionParams(initializeFunction, initializeParams),
   });
   return initializeTransaction;

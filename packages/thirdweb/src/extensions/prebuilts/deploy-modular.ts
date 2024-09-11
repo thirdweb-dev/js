@@ -52,6 +52,7 @@ export type DeployModularContractOptions = Prettify<
     params: ModularContractParams;
     modules?: ModuleInstaller[];
     publisher?: string;
+    salt?: string;
   }
 >;
 
@@ -97,6 +98,7 @@ export async function deployModularContract(
     core,
     params: coreParams,
     modules = [],
+    salt,
   } = options;
   const contractId = getContractId(core);
   const { cloneFactoryContract, implementationContract } =
@@ -147,6 +149,7 @@ export async function deployModularContract(
     account,
     cloneFactoryContract,
     initializeTransaction,
+    salt,
   });
 }
 

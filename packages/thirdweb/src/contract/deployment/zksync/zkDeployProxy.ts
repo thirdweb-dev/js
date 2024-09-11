@@ -48,6 +48,7 @@ export async function zkDeployProxy(
       _logic: implementationAddress,
       _data: await encode(options.initializeTransaction),
     },
+    salt: options.salt,
   });
 
   // return address of proxy

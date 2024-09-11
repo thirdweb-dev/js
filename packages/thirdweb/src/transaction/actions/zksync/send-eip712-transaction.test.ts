@@ -35,7 +35,7 @@ describe("sendEip712Transaction", () => {
       client: TEST_CLIENT,
       chain: zkSyncSepolia, // TODO make zksync fork chain work
       account: TEST_ACCOUNT_A,
-      contractId: "DropERC1155",
+      contractId: "DropERC721",
       contractParams: {
         defaultAdmin: TEST_ACCOUNT_A.address, // defaultAdmin
         name: "test", // name

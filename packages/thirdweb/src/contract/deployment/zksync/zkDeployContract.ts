@@ -8,6 +8,7 @@ import { normalizeFunctionParams } from "../../../utils/abi/normalizeFunctionPar
 import { CONTRACT_DEPLOYER_ADDRESS } from "../../../utils/any-evm/zksync/constants.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
+import { zkDeployContractDeterministic } from "./zkDeployDeterministic.js";
 
 /**
  * @internal
@@ -17,8 +18,14 @@ export async function zkDeployContract(
     abi: Abi;
     bytecode: Hex;
     params?: Record<string, unknown>;
+    salt?: string;
   },
 ) {
+  if (options.salt !== undefined) {
+    // if a salt is provided, use the deterministic deployer
+    return zkDeployContractDeterministic(options);
+  }
+
   const data = encodeDeployData({
     abi: options.abi,
     bytecode: options.bytecode,
