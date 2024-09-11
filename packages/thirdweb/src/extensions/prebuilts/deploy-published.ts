@@ -39,6 +39,9 @@ export type DeployPublishedContractOptions = {
  * @param options - the deploy options
  * @returns a promise that resolves to the deployed contract address
  * @example
+ *
+ * ## Deploying a published contract
+ *
  * ```ts
  * import { deployPublishedContract } from "thirdweb/deploys";
  *
@@ -47,8 +50,30 @@ export type DeployPublishedContractOptions = {
  *   chain,
  *   account,
  *   contractId: "MyPublishedContract",
- *   contractParams: [...],
+ *   contractParams: {
+ *     param1: "value1",
+ *     param2: 123,
+ *   },
+ *   publisher: "0x...", // optional, defaults to the thirdweb deployer
+ * });
+ * ```
+ *
+ *  ## Deploying a published contract deterministically
+ *
+ * ```ts
+ * import { deployPublishedContract } from "thirdweb/deploys";
+ *
+ * const address = await deployedPublishedContract({
+ *   client,
+ *   chain,
+ *   account,
+ *   contractId: "MyPublishedContract",
+ *   contractParams: {
+ *     param1: "value1",
+ *     param2: 123,
+ *   },
  *   publisher: "0x...",
+ *   salt: "your-salt", // this will deterministically deploy the contract at the same address on all chains
  * });
  * ```
  * @extension DEPLOY
