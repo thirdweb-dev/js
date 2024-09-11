@@ -4,14 +4,17 @@ import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { resolveAvatar } from "../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../extensions/ens/resolve-name.js";
+import { getSocialProfiles } from "../../../social/profiles.js";
 import { shortenAddress } from "../../../utils/address.js";
 import { parseAvatarRecord } from "../../../utils/ens/avatar.js";
 import { getWalletInfo } from "../../../wallets/__generated__/getWalletInfo.js";
+import type { Profile } from "../../../wallets/in-app/core/authentication/types.js";
 import type { Account, Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../wallets/wallet-info.js";
 import type { WalletId } from "../../../wallets/wallet-types.js";
+import { useProfiles } from "../hooks/others/useProfiles.js";
 import { useWalletBalance } from "../hooks/others/useWalletBalance.js";
-import { useSocialProfiles } from "../social/useSocialProfiles.js";
+import { useConnectedWallets } from "../hooks/wallets/useConnectedWallets.js";
 
 /**
  * Get the ENS name and avatar for an address
@@ -100,9 +103,67 @@ export function useConnectedWalletDetails(
     ensName: ensNameQuery.data,
   });
 
-  const socialProfileQuery = useSocialProfiles({
-    client,
-    address: activeAccount?.address,
+  const connectedWallets = useConnectedWallets();
+
+  const { data: linkedAccounts } = useProfiles();
+
+  const socialProfileQuery = useQuery({
+    queryKey: [
+      "social-profiles",
+      activeAccount?.address,
+      linkedAccounts,
+      connectedWallets,
+    ],
+    queryFn: async () => {
+      if (!activeAccount?.address) {
+        return [];
+      }
+
+      const primaryAccountProfiles = await getSocialProfiles({
+        client,
+        address: activeAccount?.address,
+      });
+
+      const connectedWalletProfiles = await Promise.all(
+        connectedWallets
+          .map((w: Wallet) => w.getAccount())
+          .filter(
+            (a: Account | undefined) =>
+              a !== undefined && a.address !== activeAccount.address,
+          )
+          .flatMap(async (account) => {
+            return await getSocialProfiles({
+              client,
+              address: (account as Account).address,
+            });
+          }),
+      );
+
+      if (!linkedAccounts) {
+        return [...primaryAccountProfiles, ...connectedWalletProfiles.flat()];
+      }
+
+      const linkedAccountProfiles = await Promise.all(
+        linkedAccounts
+          .map((a: Profile) => a.details.address)
+          .filter((a: string | undefined) => a !== undefined)
+          .flatMap(async (linkedAddress) => {
+            return await getSocialProfiles({
+              client,
+              address: linkedAddress as string,
+            });
+          }),
+      );
+
+      return [
+        ...primaryAccountProfiles,
+        ...connectedWalletProfiles.flat(),
+        ...linkedAccountProfiles.flat(),
+      ];
+    },
+    enabled: !!activeAccount?.address,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
   });
 
   const shortAddress = activeAccount?.address
