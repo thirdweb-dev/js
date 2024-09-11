@@ -223,6 +223,16 @@ export const sidebar: SideBar = {
 		},
 		{ separator: true },
 		{
+			name: "Social API",
+			isCollapsible: false,
+			links: ["getSocialProfiles"].map((name) => ({
+				name,
+				href: `${slug}/${name}`,
+				icon: <CodeIcon />,
+			})),
+		},
+		{ separator: true },
+		{
 			name: "Blockchain API",
 			isCollapsible: false,
 			links: [
@@ -375,13 +385,13 @@ export const sidebar: SideBar = {
 								},
 								{
 									name: "Transfering tokens",
-									href: `${slug}/extensions/examples/transfering-tokens`
+									href: `${slug}/extensions/examples/transfering-tokens`,
 								},
 								{
 									name: "Ethereum Name Service",
-									href: `${slug}/extensions/examples/ethereum-name-service`
-								}
-							]
+									href: `${slug}/extensions/examples/ethereum-name-service`,
+								},
+							],
 						},
 						{
 							name: "Available Extensions",

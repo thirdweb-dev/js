@@ -8,7 +8,7 @@ import { AppLayout } from "components/app-layouts/app";
 import { ApiKeys } from "components/settings/ApiKeys";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { CreateApiKeyButton } from "components/settings/ApiKeys/Create";
-import { SettingsSidebar } from "core-ui/sidebar/settings";
+import { SettingsSidebarLayout } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { useMemo } from "react";
 import { Link } from "tw-components";
@@ -74,9 +74,12 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
 };
 
 SettingsApiKeysPage.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <SettingsSidebar activePage="apiKeys" />
-    {page}
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <SettingsSidebarLayout>{page}</SettingsSidebarLayout>
   </AppLayout>
 );
 

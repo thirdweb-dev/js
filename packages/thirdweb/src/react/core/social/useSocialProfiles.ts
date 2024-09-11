@@ -17,6 +17,8 @@ import { getSocialProfiles } from "../../../social/profiles.js";
  *   address: "0x...",
  * });
  * ```
+ *
+ * @social
  * @beta
  */
 export function useSocialProfiles(options: {

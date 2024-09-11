@@ -75,6 +75,9 @@ export function prepareDirectDeployTransaction(
  * @param options - the deploy options
  * @returns - a promise that resolves to the deployed contract address
  * @example
+ *
+ * ## Deploying a regular contract from ABI and bytecode
+ *
  * ```ts
  * import { deployContract } from "thirdweb/deployContract";
  *
@@ -87,7 +90,25 @@ export function prepareDirectDeployTransaction(
  *    param1: "value1",
  *    param2: 123,
  *  },
- *  salt, // passing salt enables deterministic deploys
+ *  salt, // optional: salt enables deterministic deploys
+ * });
+ * ```
+ *
+ * ## Deploying a contract deterministically
+ *
+ * ```ts
+ * import { deployContract } from "thirdweb/deployContract";
+ *
+ * const address = await deployContract({
+ *  client,
+ *  chain,
+ *  bytecode: "0x...",
+ *  abi: contractAbi,
+ *  constructorParams: {
+ *    param1: "value1",
+ *    param2: 123,
+ *  },
+ *  salt, // passing a salt will enable deterministic deploys
  * });
  * ```
  * @extension DEPLOY

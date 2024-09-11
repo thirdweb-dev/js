@@ -6,15 +6,26 @@ import { getDeployedInfraContractFromMetadata } from "../../contract/deployment/
 import { computePublishedContractAddress } from "../../utils/any-evm/compute-published-contract-address.js";
 import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
 
+/**
+ * @internal
+ */
 export type DeployTransactionType =
   | "infra"
   | "implementation"
   | "module"
   | "proxy";
+
+/**
+ * @internal
+ */
 export type DeployTransactionResult = {
   type: DeployTransactionType;
   contractId: string;
 };
+
+/**
+ * @internal
+ */
 export async function getRequiredTransactionCount(options: {
   chain: Chain;
   client: ThirdwebClient;

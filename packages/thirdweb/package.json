@@ -191,8 +191,7 @@
     "@aws-sdk/credential-providers": "^3",
     "@coinbase/wallet-mobile-sdk": "^1",
     "@mobile-wallet-protocol/client": "^0.0.2",
-    "@react-native-async-storage/async-storage": "^1",
-    "@react-native-clipboard/clipboard": "*",
+    "@react-native-async-storage/async-storage": "^1 || ^2",
     "amazon-cognito-identity-js": "^6",
     "aws-amplify": "^5",
     "ethers": "^5 || ^6",
@@ -251,9 +250,6 @@
     "@react-native-async-storage/async-storage": {
       "optional": true
     },
-    "@react-native-clipboard/clipboard": {
-      "optional": true
-    },
     "@coinbase/wallet-mobile-sdk": {
       "optional": true
     },
@@ -294,14 +290,13 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@aws-sdk/client-lambda": "3.577.0",
-    "@aws-sdk/credential-providers": "3.577.0",
+    "@aws-sdk/client-lambda": "3.592.0",
+    "@aws-sdk/credential-providers": "3.592.0",
     "@chromatic-com/storybook": "^1.5.0",
     "@codspeed/vitest-plugin": "3.1.1",
     "@coinbase/wallet-mobile-sdk": "1.0.13",
     "@mobile-wallet-protocol/client": "0.0.2",
-    "@react-native-async-storage/async-storage": "^1.23.1",
-    "@react-native-clipboard/clipboard": "1.14.1",
+    "@react-native-async-storage/async-storage": "1.24.0",
     "@storybook/addon-essentials": "^8.2.9",
     "@storybook/addon-interactions": "^8.2.9",
     "@storybook/addon-links": "^8.2.9",
@@ -318,7 +313,7 @@
     "@vitejs/plugin-react": "^4.3.1",
     "@vitest/ui": "2.0.5",
     "amazon-cognito-identity-js": "6.3.12",
-    "aws-amplify": "5.3.18",
+    "aws-amplify": "5.3.19",
     "cross-spawn": "7.0.3",
     "ethers5": "npm:ethers@5.7.2",
     "ethers6": "npm:ethers@6.13.2",
@@ -326,7 +321,7 @@
     "expo-web-browser": "13.0.3",
     "happy-dom": "^14.12.0",
     "msw": "2.4.4",
-    "react-native": "0.74.5",
+    "react-native": "0.75.2",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-passkey": "3.0.0-beta2",
     "react-native-quick-crypto": "0.7.0-rc.6",

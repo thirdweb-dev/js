@@ -3,7 +3,7 @@ import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeyDetails } from "components/settings/ApiKeys/Details";
 import { EditApiKey } from "components/settings/ApiKeys/Edit";
-import { SettingsSidebar } from "core-ui/sidebar/settings";
+import { SettingsSidebarLayout } from "core-ui/sidebar/settings";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useEffect, useMemo, useState } from "react";
@@ -43,9 +43,12 @@ const SettingsApiKeyPage: ThirdwebNextPage = () => {
 };
 
 SettingsApiKeyPage.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <SettingsSidebar activePage="apiKey" />
-    {page}
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <SettingsSidebarLayout>{page}</SettingsSidebarLayout>
   </AppLayout>
 );
 

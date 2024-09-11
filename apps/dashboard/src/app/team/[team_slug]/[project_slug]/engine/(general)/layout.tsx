@@ -1,6 +1,6 @@
+import { MobileSidebar } from "@/components/blocks/MobileSidebar";
 import { Sidebar } from "@/components/blocks/Sidebar";
 import { getEngineGeneralSidebarLinks } from "./getEngineGeneralSidebarLinks";
-import { EngineGeneralPageMobileSidebar } from "./sidebars";
 
 export default function Layout(props: {
   params: {
@@ -17,7 +17,7 @@ export default function Layout(props: {
     <div className="container flex gap-6">
       <Sidebar links={sidebarLinks} />
       <div className="pt-6 grow max-sm:w-full">
-        <EngineGeneralPageMobileSidebar links={sidebarLinks} />
+        <MobileSidebar links={sidebarLinks} triggerClassName="max-sm:mb-6" />
         {props.children}
       </div>
     </div>

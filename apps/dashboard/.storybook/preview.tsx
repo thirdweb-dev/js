@@ -51,28 +51,28 @@ function StoryLayout(props: {
   }, [theme]);
 
   return (
-    <div>
-      <div className="flex justify-end p-4 border-b gap-2">
-        <Button
-          onClick={() => setTheme("dark")}
-          size="sm"
-          variant={theme === "dark" ? "default" : "ghost"}
-        >
-          <MoonIcon className="size-5" />
-        </Button>
+    <QueryClientProvider client={queryClient}>
+      <div className="min-h-screen flex flex-col bg-background text-foreground min-w-0">
+        <div className="flex justify-end p-4 border-b gap-2">
+          <Button
+            onClick={() => setTheme("dark")}
+            size="sm"
+            variant={theme === "dark" ? "default" : "ghost"}
+          >
+            <MoonIcon className="size-5" />
+          </Button>
 
-        <Button
-          onClick={() => setTheme("light")}
-          size="sm"
-          variant={theme === "light" ? "default" : "ghost"}
-        >
-          <SunIcon className="size-5" />
-        </Button>
+          <Button
+            onClick={() => setTheme("light")}
+            size="sm"
+            variant={theme === "light" ? "default" : "ghost"}
+          >
+            <SunIcon className="size-5" />
+          </Button>
+        </div>
+
+        <div className="grow flex flex-col min-w-0">{props.children}</div>
       </div>
-
-      <QueryClientProvider client={queryClient}>
-        {props.children}
-      </QueryClientProvider>
-    </div>
+    </QueryClientProvider>
   );
 }

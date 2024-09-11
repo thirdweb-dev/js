@@ -1,7 +1,7 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
+import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import { AppFooter } from "@/components/blocks/app-footer";
-import { TabPathLinks } from "@/components/ui/tabs";
 import type React from "react";
 import { TWAutoConnect } from "../components/autoconnect";
 import { AccountHeader } from "./components/AccountHeader";
@@ -13,7 +13,25 @@ export default async function AccountLayout(props: {
     <div className="min-h-full flex flex-col bg-background">
       <div className="grow flex flex-col">
         <HeaderAndNav />
-        <main className="grow flex flex-col">{props.children}</main>
+        <SidebarLayout
+          sidebarLinks={[
+            {
+              href: "/account",
+              label: "Overview",
+              exactMatch: true,
+            },
+            {
+              href: "/account/wallets",
+              label: "Wallets",
+            },
+            {
+              href: "/account/settings",
+              label: "Settings",
+            },
+          ]}
+        >
+          {props.children}
+        </SidebarLayout>
       </div>
       <TWAutoConnect />
       <AppFooter />
@@ -32,27 +50,8 @@ async function HeaderAndNav() {
   );
 
   return (
-    <div className="bg-muted/50">
+    <div className="bg-muted/50 border-b">
       <AccountHeader teamsAndProjects={teamsAndProjects} />
-
-      <TabPathLinks
-        tabContainerClassName="px-4 lg:px-6"
-        links={[
-          {
-            path: "/account",
-            name: "Overview",
-            exactMatch: true,
-          },
-          {
-            path: "/account/wallets",
-            name: "Wallets",
-          },
-          {
-            path: "/account/settings",
-            name: "Settings",
-          },
-        ]}
-      />
     </div>
   );
 }

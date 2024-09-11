@@ -20,6 +20,17 @@ export {
 } from "../extensions/prebuilts/deploy-erc1155.js";
 
 export {
+  deploySplitContract,
+  type SplitContractParams,
+  type DeploySplitContractOptions,
+} from "../extensions/prebuilts/deploy-split.js";
+
+export {
+  deployMarketplaceContract,
+  type MarketplaceContractParams,
+} from "../extensions/prebuilts/deploy-marketplace.js";
+
+export {
   deployPublishedContract,
   type DeployPublishedContractOptions,
   deployContractfromDeployMetadata,
@@ -35,8 +46,4 @@ export {
   type PrepareDirectDeployTransactionOptions,
 } from "../contract/deployment/deploy-with-abi.js";
 export { computePublishedContractAddress } from "../utils/any-evm/compute-published-contract-address.js";
-export {
-  deploySplitContract,
-  type SplitContractParams,
-  type DeploySplitContractOptions,
-} from "../extensions/prebuilts/deploy-split.js";
+export { getRequiredTransactionCount } from "../extensions/prebuilts/get-required-transactions.js";

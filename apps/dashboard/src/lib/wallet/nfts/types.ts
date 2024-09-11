@@ -51,8 +51,12 @@ import {
   zoraSepolia,
 } from "thirdweb/chains";
 
-export type WalletNFT = NFT & {
+// Cannot use BigInt for the values here because it will result in error: "fail to serialize bigint"
+// when the data is being sent from server to client (when we fetch the owned NFTs from simplehash/alchemy/moralis)
+export type WalletNFT = Omit<NFT, "id" | "supply"> & {
+  id: string;
   contractAddress: string;
+  supply: string;
 };
 
 // List: https://docs.alchemy.com/reference/nft-api-faq

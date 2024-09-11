@@ -24,7 +24,6 @@ export interface AppShellProps {
   layout?: "custom-contract";
   noSEOOverride?: boolean;
   hasSidebar?: boolean;
-  noOverflowX?: boolean;
   pageContainerClassName?: string;
   mainClassName?: string;
 }
@@ -33,7 +32,6 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
   children,
   layout,
   hasSidebar,
-  noOverflowX,
   pageContainerClassName,
   mainClassName,
 }) => {
@@ -66,7 +64,6 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
           as="main"
           colSpan={{ base: 2, md: 1 }}
           rowSpan={1}
-          overflowX={noOverflowX ? undefined : "auto"}
           className={mainClassName}
         >
           <Container maxW="container.page">
@@ -188,7 +185,7 @@ const AppHeader: React.FC = () => {
             isActive: pathname === "/dashboard",
           },
           {
-            href: "/dashboard/connect",
+            href: "/dashboard/connect/analytics",
             name: "Connect",
             isActive: pathname.startsWith("/dashboard/connect"),
           },

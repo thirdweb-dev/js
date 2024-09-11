@@ -24,7 +24,7 @@ import { PageId } from "page-id";
 import { polygon } from "thirdweb/chains";
 import { getAddress, isAddress } from "thirdweb/utils";
 import type { ThirdwebNextPage } from "utils/types";
-import { ContractsSidebar } from "../../core-ui/sidebar/contracts";
+import { ContractsSidebarLayout } from "../../core-ui/sidebar/contracts";
 
 type PublishPageProps = {
   dehydratedState: DehydratedState;
@@ -49,13 +49,12 @@ PublishPage.getLayout = (page, props: PublishPageProps) => {
   return (
     <AppLayout
       dehydratedState={props.dehydratedState}
-      noOverflowX
-      pageContainerClassName={props.isDeploy ? "!container" : ""}
-      mainClassName={props.isDeploy ? "!pt-0" : ""}
-      hasSidebar={!props.isDeploy}
+      pageContainerClassName="!max-w-full !px-0"
+      mainClassName="!pt-0"
     >
-      {!props.isDeploy && <ContractsSidebar />}
-      {page}
+      <ContractsSidebarLayout mobileSidebarClassName="hidden">
+        {page}
+      </ContractsSidebarLayout>
     </AppLayout>
   );
 };

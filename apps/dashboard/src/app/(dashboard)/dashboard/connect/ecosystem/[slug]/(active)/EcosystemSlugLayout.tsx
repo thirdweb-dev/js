@@ -31,7 +31,7 @@ export async function EcosystemLayoutSlug({
   }
 
   return (
-    <div className="flex flex-col w-full gap-10 px-2 py-10 sm:px-4">
+    <div className="flex flex-col w-full gap-10">
       <EcosystemHeader
         ecosystem={ecosystem}
         ecosystemLayoutPath={ecosystemLayoutPath}

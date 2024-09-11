@@ -1,4 +1,3 @@
-import { Sidebar } from "@/components/blocks/Sidebar";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -163,75 +162,51 @@ export const PublishWithVersionPage: React.FC<PublishWithVersionPageProps> = ({
   if (isDeploy) {
     const showLoading = !deployContractId || !publishedContract;
     return (
-      <div className="flex gap-2">
-        {/* Left */}
-        <Sidebar
-          header={<div className="font-semibold text-lg mb-4">Contracts</div>}
-          links={[
-            { href: "/dashboard/contracts/deploy", label: "Deploy" },
-            {
-              href: "/dashboard/contracts/publish",
-              label: "Publish",
-            },
-            {
-              href: "/explore",
-              label: "Explore",
-            },
-            {
-              href: "/trending",
-              label: "Trending",
-            },
-            { href: "/dashboard/contracts/build", label: "Build" },
-          ]}
-        />
-
-        {/* Right */}
-        <div className="flex-1">
-          {/* header */}
-          <div className="py-6 flex flex-col gap-4 border-b border-border md:py-12">
-            <div className="flex flex-col md:flex-row justify-between gap-6 md:items-center">
-              {contractInfo}
-              <div className="flex flex-col-reverse  md:flex-row gap-3">
-                {versionSelector}
-                <div className="flex gap-3">
-                  <Button asChild variant="outline">
-                    <Link
-                      href={`${pathname?.replace("/deploy", "") + (stringifiedSearchParams ? `?${stringifiedSearchParams}` : "")}`}
-                      target="_blank"
-                    >
-                      Contract
-                    </Link>
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      shareLink({
-                        title: `Deploy ${contractNameDisplay}`,
-                      });
-                    }}
+      <div className="flex-1">
+        {/* header */}
+        <div className="pb-6 flex flex-col gap-4 border-b border-border md:pb-8">
+          <div className="flex flex-col md:flex-row justify-between gap-6 md:items-center">
+            {contractInfo}
+            <div className="flex flex-col-reverse  md:flex-row gap-3">
+              {versionSelector}
+              <div className="flex gap-3">
+                <Button asChild variant="outline">
+                  <Link
+                    href={`${pathname?.replace("/deploy", "") + (stringifiedSearchParams ? `?${stringifiedSearchParams}` : "")}`}
+                    target="_blank"
                   >
-                    Share
-                  </Button>
-                </div>
+                    Contract
+                  </Link>
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    shareLink({
+                      title: `Deploy ${contractNameDisplay}`,
+                    });
+                  }}
+                >
+                  Share
+                </Button>
               </div>
             </div>
-            {modulesList}
           </div>
+          {modulesList}
+        </div>
 
-          {/* Content */}
-          <div className="pt-6 md:pt-10">
-            {showLoading ? (
-              <div className="h-[300px] flex items-center justify-center">
-                <Spinner className="size-10" />
-              </div>
-            ) : (
-              <ContractDeployForm
-                contractId={deployContractId}
-                version={publishedContract.version || "latest"}
-              />
-            )}
-          </div>
+        {/* Content */}
+        <div className="pt-6 md:pt-10">
+          {showLoading ? (
+            <div className="h-[300px] flex items-center justify-center">
+              <Spinner className="size-10" />
+            </div>
+          ) : (
+            <ContractDeployForm
+              contractId={deployContractId}
+              version={publishedContract.version || "latest"}
+            />
+          )}
         </div>
       </div>
     );
@@ -240,7 +215,7 @@ export const PublishWithVersionPage: React.FC<PublishWithVersionPageProps> = ({
   return (
     <Flex direction="column" gap={{ base: 6, md: 10 }}>
       {/* Header */}
-      <div className="py-2 flex flex-col gap-4 md:pt-8 md:pb-0">
+      <div className="flex flex-col gap-4">
         <div className="flex flex-col md:flex-row justify-between gap-6">
           {contractInfo}
           <div className="flex gap-3">

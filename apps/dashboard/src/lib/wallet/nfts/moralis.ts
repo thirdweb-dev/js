@@ -32,7 +32,7 @@ export async function transformMoralisResponseToNFT(
       moralisResponse.result.map(async (moralisNft) => {
         try {
           return {
-            id: BigInt(moralisNft.token_id),
+            id: moralisNft.token_id,
             contractAddress: moralisNft.token_address,
             tokenId: moralisNft.token_id,
             metadata: shouldDownloadURI(moralisNft.token_uri)

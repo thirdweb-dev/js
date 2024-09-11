@@ -5,7 +5,7 @@ import { usePublishedContractsQuery } from "components/contract-components/hooks
 import { PublishedContracts } from "components/contract-components/tables/published-contracts";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { ContractsSidebar } from "core-ui/sidebar/contracts";
+import { ContractsSidebarLayout } from "core-ui/sidebar/contracts";
 import { PageId } from "page-id";
 import { useMemo } from "react";
 import { useActiveAccount } from "thirdweb/react";
@@ -79,9 +79,12 @@ const Published: ThirdwebNextPage = () => {
 };
 
 Published.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <ContractsSidebar activePage="publish" />
-    {page}
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <ContractsSidebarLayout> {page} </ContractsSidebarLayout>
   </AppLayout>
 );
 Published.pageId = PageId.Contracts;

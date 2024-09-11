@@ -26,6 +26,7 @@ import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { useRouter } from "next/router";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
+import { toFunctionSelector } from "thirdweb/utils";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 import {
   COMMANDS,
@@ -326,8 +327,16 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
 
   // Load state from the URL
   const router = useRouter();
-  const _itemName = router.query.name;
-  const _item = fnsOrEvents.find((o) => o.name === _itemName);
+  const _selector = router.query.selector;
+  const _item = _selector
+    ? fnsOrEvents.find((o) => {
+        if (o.type === "function") {
+          const selector = toFunctionSelector(o as AbiFunction);
+          return selector === _selector;
+        }
+        return null;
+      })
+    : undefined;
   const [selectedFunction, setSelectedFunction] = useState<
     AbiFunction | AbiEvent
   >(_item ?? fnsOrEvents[0]);
@@ -464,7 +473,6 @@ interface FunctionsOrEventsListItemProps {
 
 const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
   fn,
-
   selectedFunction,
   setSelectedFunction,
 }) => {
@@ -480,11 +488,11 @@ const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
         opacity={isActive ? 1 : 0.65}
         onClick={() => {
           setSelectedFunction(fn);
-          const { name } = fn;
           const path = router.asPath.split("?")[0];
           // Only apply to the Explorer page
-          if (path.endsWith("/explorer")) {
-            router.push({ pathname: path, query: { name } }, undefined, {
+          if (path.endsWith("/explorer") && fn.type === "function") {
+            const selector = toFunctionSelector(fn);
+            router.push({ pathname: path, query: { selector } }, undefined, {
               shallow: true,
             });
           }

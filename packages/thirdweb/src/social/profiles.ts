@@ -8,7 +8,7 @@ import type { SocialProfile } from "./types.js";
  * @param args - The arguments to use when fetching the social profiles.
  * @param args.address - The wallet address to fetch the social profiles for.
  * @param args.client - The Thirdweb client.
- * @returns A promise resolving to the retrieved social profiles for different protocols. If a profile is not available for a protocol, the value will be `null`.
+ * @returns A promise resolving to the array of social profiles for the given address.
  *
  * @example
  * ```ts
@@ -18,6 +18,7 @@ import type { SocialProfile } from "./types.js";
  *   client,
  * });
  * ```
+ * @social
  * @beta
  */
 export async function getSocialProfiles(args: {

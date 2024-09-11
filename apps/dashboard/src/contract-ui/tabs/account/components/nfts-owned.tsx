@@ -19,7 +19,12 @@ export const NftsOwned: React.FC<NftsOwnedProps> = ({ contract }) => {
   return nfts.length !== 0 ? (
     <NFTCards
       nfts={nfts.map((nft) => ({
-        ...nft,
+        id: BigInt(nft.id),
+        supply: BigInt(nft.supply),
+        owner: nft.owner,
+        tokenURI: nft.tokenURI,
+        metadata: nft.metadata,
+        type: nft.type,
         contractAddress: nft.contractAddress,
         chainId: contract.chain.id,
       }))}

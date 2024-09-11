@@ -4,12 +4,12 @@ import { type ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
-import { ConnectSidebar } from "core-ui/sidebar/connect";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useMemo, useState } from "react";
 import type { ThirdwebNextPage } from "utils/types";
+import { ConnectSidebarLayout } from "../../../app/(dashboard)/dashboard/connect/DashboardConnectLayout";
 import { ConnectAnalyticsDashboard } from "../../../app/team/[team_slug]/[project_slug]/connect/analytics/ConnectAnalyticsDashboard";
 import { ConnectSDKCard } from "../../../app/team/[team_slug]/[project_slug]/connect/analytics/_components/ConnectSDKCard";
 
@@ -101,9 +101,12 @@ function NoAPIFoundCard() {
 }
 
 DashboardConnectAnalytics.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <ConnectSidebar activePage="analytics" />
-    {page}
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <ConnectSidebarLayout>{page}</ConnectSidebarLayout>
   </AppLayout>
 );
 
