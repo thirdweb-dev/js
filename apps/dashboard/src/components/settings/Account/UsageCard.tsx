@@ -70,7 +70,7 @@ function Progress(props: {
               : "bg-blue-600",
         )}
         style={{
-          width: `${props.value}%`,
+          width: `${Math.min(props.value, 100)}%`,
         }}
       />
     </div>
