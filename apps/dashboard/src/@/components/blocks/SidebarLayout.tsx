@@ -15,7 +15,7 @@ export function SidebarLayout(props: {
         links={sidebarLinks}
         triggerClassName={props.mobileSidebarClassName}
       />
-      <main className="grow max-sm:w-full flex flex-col lg:pt-8 pb-10">
+      <main className="grow max-sm:w-full flex flex-col lg:pt-8 pb-10 overflow-hidden min-w-0">
         {children}
       </main>
     </div>
