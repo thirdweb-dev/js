@@ -3,11 +3,10 @@ import type { Team } from "@/api/team";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { AccountButton } from "../../../team/[team_slug]/components/account-button.client";
-import { ThirdwebMiniLogo } from "../../ThirdwebMiniLogo";
-import { MobileBurgerMenuButton } from "./MobileBurgerMenuButton";
+import { SecondaryNav } from "../../../components/Header/SecondaryNav/SecondaryNav";
+import { MobileBurgerMenuButton } from "../../../components/MobileBurgerMenuButton";
+import { ThirdwebMiniLogo } from "../../../components/ThirdwebMiniLogo";
 import { ProjectSelectorMobileMenuButton } from "./ProjectSelectorMobileMenuButton";
-import { ResourcesDropdownButton } from "./ResourcesDropdownButton";
 import { TeamAndProjectSelectorPopoverButton } from "./TeamAndProjectSelectorPopoverButton";
 import { TeamSelectorMobileMenuButton } from "./TeamSelectorMobileMenuButton";
 import { getValidTeamPlan } from "./getValidTeamPlan";
@@ -93,29 +92,11 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
         )}
       </div>
 
-      <div className="flex items-center gap-6">
-        <ResourcesDropdownButton />
-
-        <Link
-          href="/support"
-          className="text-muted-foreground text-sm hover:text-foreground"
-        >
-          Support
-        </Link>
-
-        <Link
-          href="https://portal.thirdweb.com/"
-          className="text-muted-foreground text-sm hover:text-foreground"
-        >
-          Docs
-        </Link>
-
-        <AccountButton
-          email={props.email}
-          logout={props.logout}
-          connectButton={props.connectButton}
-        />
-      </div>
+      <SecondaryNav
+        email={props.email}
+        logout={props.logout}
+        connectButton={props.connectButton}
+      />
     </header>
   );
 }

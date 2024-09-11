@@ -10,17 +10,14 @@ export const getOrDeployModule = async (options: {
   account: Account;
   contractId: string;
   publisher?: string;
-  constructorParams?: unknown[];
 }) => {
-  const { client, chain, account, contractId, publisher, constructorParams } =
-    options;
+  const { client, chain, account, contractId, publisher } = options;
   const contract = await getOrDeployInfraContract({
     client,
     chain,
     account,
     contractId,
     publisher,
-    constructorParams: constructorParams ?? [],
   });
   return contract;
 };
@@ -30,14 +27,12 @@ export const getDeployedModule = (options: {
   chain: Chain;
   contractId: string;
   publisher?: string;
-  constructorParams?: unknown[];
 }) => {
-  const { client, chain, contractId, publisher, constructorParams } = options;
+  const { client, chain, contractId, publisher } = options;
   return getDeployedInfraContract({
     client,
     chain,
     contractId,
     publisher,
-    constructorParams: constructorParams ?? [],
   });
 };

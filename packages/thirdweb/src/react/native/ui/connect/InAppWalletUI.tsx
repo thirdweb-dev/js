@@ -34,6 +34,7 @@ import {
   FACEBOOK_ICON,
   FARCASTER_ICON,
   GOOGLE_ICON,
+  LINE_ICON,
   TELEGRAM_ICON,
 } from "../icons/svgs.js";
 import type { ModalState } from "./ConnectModal.js";
@@ -53,6 +54,7 @@ const socialIcons = {
   facebook: FACEBOOK_ICON,
   apple: APPLE_ICON,
   discord: DISCORD_ICON,
+  line: LINE_ICON,
   farcaster: FARCASTER_ICON,
   telegram: TELEGRAM_ICON,
 };

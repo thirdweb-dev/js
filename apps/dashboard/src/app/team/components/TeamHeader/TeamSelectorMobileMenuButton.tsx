@@ -9,7 +9,7 @@ import { ChevronsUpDownIcon } from "lucide-react";
 import { TeamSelectionUI } from "./TeamSelectionUI";
 
 type TeamSwitcherProps = {
-  currentTeam: Team;
+  currentTeam: Team | undefined;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
 };
 

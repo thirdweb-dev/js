@@ -465,8 +465,6 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   chain,
                   client: thirdwebClient,
                   contractId: d.moduleName,
-                  // modules never have consturctor params so this is fine!
-                  constructorParams: [],
                 }),
               ),
             );

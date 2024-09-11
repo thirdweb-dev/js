@@ -81,7 +81,7 @@ export function AccountButton(props: {
           </div>
 
           <Link
-            href="/team"
+            href="/"
             className="text-muted-foreground text-sm hover:text-foreground"
           >
             Home Page

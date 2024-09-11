@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { ExternalLinkIcon, LinkIcon, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { getValidTeamPlan } from "../../../../../../components/Header/TeamHeader/getValidTeamPlan";
+import { getValidTeamPlan } from "../../../../../components/TeamHeader/getValidTeamPlan";
 
 export function InviteSection(props: {
   team: Team;

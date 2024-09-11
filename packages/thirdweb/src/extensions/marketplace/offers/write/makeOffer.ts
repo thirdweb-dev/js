@@ -103,7 +103,6 @@ export function makeOffer(options: BaseTransactionOptions<MakeOfferParams>) {
           const WETH9 = await getDeployedInfraContract({
             chain: options.contract.chain,
             client: options.contract.client,
-            constructorParams: [],
             contractId: "WETH9",
           });
 

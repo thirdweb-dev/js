@@ -83,7 +83,6 @@ export async function deploySplitContract(options: DeploySplitContractOptions) {
       client,
       account,
       contractId: "Split",
-      constructorParams: [],
     });
   const initializeTransaction = await getInitializeTransaction({
     client,

@@ -1,4 +1,5 @@
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
+import type { FetchDeployMetadataResult } from "../../../utils/any-evm/deploy-metadata.js";
 import { isZkSyncChain } from "../../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
 import { type ThirdwebContract, getContract } from "../../contract.js";
@@ -13,7 +14,8 @@ import {
 import {
   type InfraContractId,
   getDeployedInfraContract,
-  prepareInfraContractDeployTransaction,
+  getDeployedInfraContractFromMetadata,
+  prepareInfraContractDeployTransactionFromMetadata,
 } from "./infra.js";
 
 /**
@@ -22,7 +24,7 @@ import {
 export async function getOrDeployInfraForPublishedContract(
   args: ClientAndChainAndAccount & {
     contractId: string;
-    constructorParams: unknown[];
+    constructorParams?: Record<string, unknown>;
     publisher?: string;
     version?: string;
   },
@@ -124,14 +126,13 @@ export async function deployCloneFactory(options: ClientAndChainAndAccount) {
   const forwarder = await getOrDeployInfraContract({
     ...options,
     contractId: "Forwarder",
-    constructorParams: [],
   });
 
   // clone factory
   return getOrDeployInfraContract({
     ...options,
     contractId: "TWCloneFactory",
-    constructorParams: [forwarder.address],
+    constructorParams: { _trustedForwarder: forwarder.address },
   });
 }
 
@@ -142,7 +143,7 @@ export async function deployCloneFactory(options: ClientAndChainAndAccount) {
 export async function deployImplementation(
   options: ClientAndChainAndAccount & {
     contractId: string;
-    constructorParams?: unknown[];
+    constructorParams?: Record<string, unknown>;
     publisher?: string;
     version?: string;
   },
@@ -150,7 +151,7 @@ export async function deployImplementation(
   return getOrDeployInfraContract({
     ...options,
     contractId: options.contractId,
-    constructorParams: options.constructorParams || [],
+    constructorParams: options.constructorParams,
     publisher: options.publisher,
     version: options.version,
   });
@@ -163,23 +164,46 @@ export async function deployImplementation(
 export async function getOrDeployInfraContract(
   options: ClientAndChainAndAccount & {
     contractId: InfraContractId;
-    constructorParams: unknown[];
+    constructorParams?: Record<string, unknown>;
     publisher?: string;
     version?: string;
   },
 ) {
-  const infraContract = await getDeployedInfraContract(options);
+  const contractMetadata = await fetchPublishedContractMetadata({
+    client: options.client,
+    contractId: options.contractId,
+    publisher: options.publisher,
+    version: options.version,
+  });
+  return getOrDeployInfraContractFromMetadata({
+    account: options.account,
+    chain: options.chain,
+    client: options.client,
+    constructorParams: options.constructorParams,
+    contractMetadata,
+  });
+}
+
+export async function getOrDeployInfraContractFromMetadata(
+  options: ClientAndChainAndAccount & {
+    contractMetadata: FetchDeployMetadataResult;
+    constructorParams?: Record<string, unknown>;
+  },
+) {
+  const infraContract = await getDeployedInfraContractFromMetadata(options);
   if (infraContract) {
     return infraContract;
   }
-  const transaction = prepareInfraContractDeployTransaction(options);
+  const transaction =
+    prepareInfraContractDeployTransactionFromMetadata(options);
   await sendAndConfirmTransaction({
     transaction,
     account: options.account,
   });
-  const deployedInfraContract = await getDeployedInfraContract(options);
+  const deployedInfraContract =
+    await getDeployedInfraContractFromMetadata(options);
   if (!deployedInfraContract) {
-    throw new Error(`Failed to deploy ${options.contractId}`);
+    throw new Error(`Failed to deploy ${options.contractMetadata.name}`);
   }
   return deployedInfraContract;
 }

@@ -215,6 +215,7 @@ export class InAppWebConnector implements InAppConnector {
       case "google":
       case "telegram":
       case "farcaster":
+      case "line":
       case "discord": {
         return loginWithOauth({
           authOption: strategy,
@@ -275,6 +276,7 @@ export class InAppWebConnector implements InAppConnector {
       case "google":
       case "farcaster":
       case "telegram":
+      case "line":
       case "discord": {
         const authToken = await this.authenticate(args);
         return this.auth.loginWithAuthToken(authToken);

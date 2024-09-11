@@ -12,7 +12,7 @@ export type InstallPublishedModuleOptions = {
   moduleName: string;
   publisher?: string;
   version?: string;
-  constructorParams?: unknown[];
+  constructorParams?: Record<string, unknown>;
   moduleData?: `0x${string}`;
 };
 
@@ -53,7 +53,7 @@ export function installPublishedModule(options: InstallPublishedModuleOptions) {
         client: contract.client,
         account,
         contractId: moduleName,
-        constructorParams: constructorParams || [],
+        constructorParams,
         publisher,
       });
       return {

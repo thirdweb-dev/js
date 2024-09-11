@@ -15,7 +15,7 @@ import {
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useLayoutEffect, useState } from "react";
-import { CmdKSearchModal } from "../../../../components/cmd-k-search";
+import { CmdKSearchModal } from "../../components/cmd-k-search";
 
 export function MobileBurgerMenuButton(props: {
   email: string | undefined;

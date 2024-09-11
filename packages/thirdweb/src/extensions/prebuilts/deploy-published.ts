@@ -1,16 +1,22 @@
 import type { AbiConstructor, AbiFunction } from "abitype";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { getContract } from "../../contract/contract.js";
+import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
+import { getOrDeployInfraContractFromMetadata } from "../../contract/deployment/utils/bootstrap.js";
+import {} from "../../contract/deployment/utils/infra.js";
 import { zkDeployContract } from "../../contract/deployment/zksync/zkDeployContract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { simulateTransaction } from "../../transaction/actions/simulate.js";
 import { prepareContractCall } from "../../transaction/prepare-contract-call.js";
 import { resolveMethod } from "../../transaction/resolve-method.js";
+import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
+import { normalizeFunctionParams } from "../../utils/abi/normalizeFunctionParams.js";
+import { getAddress } from "../../utils/address.js";
 import type { CompilerMetadata } from "../../utils/any-evm/deploy-metadata.js";
 import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 
 /**
@@ -21,10 +27,10 @@ export type DeployPublishedContractOptions = {
   chain: Chain;
   account: Account;
   contractId: string;
-  contractParams: unknown[];
+  contractParams?: Record<string, unknown>;
   publisher?: string;
   version?: string;
-  implementationConstructorParams?: unknown[];
+  implementationConstructorParams?: Record<string, unknown>;
 };
 
 /**
@@ -71,7 +77,7 @@ export async function deployPublishedContract(
     chain,
     deployMetadata,
     client,
-    contractParams,
+    initializeParams: contractParams,
     implementationConstructorParams,
   });
 }
@@ -84,8 +90,12 @@ export type DeployContractfromDeployMetadataOptions = {
   chain: Chain;
   account: Account;
   deployMetadata: FetchDeployMetadataResult;
-  contractParams: unknown[];
-  implementationConstructorParams?: unknown[];
+  initializeParams?: Record<string, unknown>;
+  implementationConstructorParams?: Record<string, unknown>;
+  modules?: {
+    deployMetadata: FetchDeployMetadataResult;
+    initializeParams?: Record<string, unknown>;
+  }[];
 };
 
 /**
@@ -98,9 +108,10 @@ export async function deployContractfromDeployMetadata(
     client,
     account,
     chain,
-    contractParams,
+    initializeParams,
     deployMetadata,
     implementationConstructorParams,
+    modules,
   } = options;
   switch (deployMetadata?.deployType) {
     case "standard": {
@@ -109,7 +120,7 @@ export async function deployContractfromDeployMetadata(
         client,
         chain,
         compilerMetadata: deployMetadata,
-        contractParams,
+        contractParams: initializeParams,
       });
     }
     case "autoFactory": {
@@ -126,32 +137,18 @@ export async function deployContractfromDeployMetadata(
           client,
           account,
           contractId: deployMetadata.name,
-          constructorParams: implementationConstructorParams || [],
+          constructorParams: implementationConstructorParams,
           publisher: deployMetadata.publisher,
         });
-      const initializeFunction = deployMetadata.abi.find(
-        (i) =>
-          i.type === "function" &&
-          i.name ===
-            (deployMetadata.factoryDeploymentData
-              ?.implementationInitializerFunction || "initialize"),
-      ) as AbiFunction;
-      if (!initializeFunction) {
-        throw new Error(
-          `Could not find initialize function for ${deployMetadata.name}`,
-        );
-      }
-      const initializeTransaction = prepareContractCall({
-        contract: getContract({
-          client,
-          chain,
-          address: implementationContract.address,
-        }),
-        method: resolveMethod(
-          deployMetadata.factoryDeploymentData
-            ?.implementationInitializerFunction || "initialize",
-        ),
-        params: contractParams,
+
+      const initializeTransaction = await getInitializeTransaction({
+        client,
+        chain,
+        deployMetadata: deployMetadata,
+        implementationContract,
+        initializeParams,
+        account,
+        modules,
       });
 
       return deployViaAutoFactory({
@@ -181,10 +178,11 @@ export async function deployContractfromDeployMetadata(
         chain,
         address: factoryAddress,
       });
+      const method = await resolveMethod(factoryFunction)(factory);
       const deployTx = prepareContractCall({
         contract: factory,
-        method: resolveMethod(factoryFunction),
-        params: contractParams,
+        method,
+        params: normalizeFunctionParams(method, initializeParams),
       });
       // asumption here is that the factory address returns the deployed proxy address
       const address = simulateTransaction({
@@ -203,7 +201,7 @@ export async function deployContractfromDeployMetadata(
         client,
         chain,
         compilerMetadata: deployMetadata,
-        contractParams,
+        contractParams: initializeParams,
       });
     }
     default:
@@ -217,7 +215,7 @@ async function directDeploy(options: {
   client: ThirdwebClient;
   chain: Chain;
   compilerMetadata: CompilerMetadata;
-  contractParams: unknown[];
+  contractParams?: Record<string, unknown>;
 }) {
   const { account, client, chain, compilerMetadata, contractParams } = options;
 
@@ -235,15 +233,100 @@ async function directDeploy(options: {
   const { deployContract } = await import(
     "../../contract/deployment/deploy-with-abi.js"
   );
+  const constructorAbi = compilerMetadata.abi.find(
+    (i) => i.type === "constructor",
+  ) as AbiConstructor | undefined;
   return deployContract({
     account,
     client,
     chain,
     bytecode: compilerMetadata.bytecode,
-    constructorAbi:
-      (compilerMetadata.abi.find(
-        (i) => i.type === "constructor",
-      ) as AbiConstructor) || [],
-    constructorParams: contractParams,
+    constructorAbi,
+    constructorParams: normalizeFunctionParams(constructorAbi, contractParams),
   });
+}
+
+async function getInitializeTransaction(options: {
+  client: ThirdwebClient;
+  chain: Chain;
+  account: Account;
+  implementationContract: ThirdwebContract;
+  deployMetadata: FetchDeployMetadataResult;
+  initializeParams?: Record<string, unknown>;
+  modules?: {
+    deployMetadata: FetchDeployMetadataResult;
+    initializeParams?: Record<string, unknown>;
+  }[];
+}) {
+  const {
+    account,
+    client,
+    chain,
+    deployMetadata: metadata,
+    initializeParams = {},
+    implementationContract,
+    modules = [],
+  } = options;
+
+  const initializeFunction = metadata.abi.find(
+    (i) =>
+      i.type === "function" &&
+      i.name ===
+        (metadata.factoryDeploymentData?.implementationInitializerFunction ||
+          "initialize"),
+  ) as AbiFunction;
+  if (!initializeFunction) {
+    throw new Error(`Could not find initialize function for ${metadata.name}`);
+  }
+
+  const hasModules =
+    initializeFunction.inputs.find(
+      (i) => i.name === "modules" || i.name === "_modules",
+    ) &&
+    initializeFunction.inputs.find(
+      (i) => i.name === "moduleInstallData" || i.name === "_moduleInstallData",
+    );
+  if (hasModules) {
+    const moduleAddresses: Hex[] = [];
+    const moduleInstallData: Hex[] = [];
+    for (const module of modules) {
+      // deploy the module if not already deployed
+      const contract = await getOrDeployInfraContractFromMetadata({
+        client,
+        chain,
+        account,
+        contractMetadata: module.deployMetadata,
+      });
+
+      const installFunction = module.deployMetadata.abi.find(
+        (i) => i.type === "function" && i.name === "encodeBytesOnInstall",
+      ) as AbiFunction | undefined;
+
+      moduleAddresses.push(getAddress(contract.address));
+      moduleInstallData.push(
+        installFunction
+          ? encodeAbiParameters(
+              installFunction.inputs,
+              normalizeFunctionParams(installFunction, module.initializeParams),
+            )
+          : "0x",
+      );
+    }
+    initializeParams.modules = moduleAddresses;
+    initializeParams.moduleInstallData = moduleInstallData;
+  }
+
+  const initializeTransaction = prepareContractCall({
+    contract: getContract({
+      client,
+      chain,
+      address: implementationContract.address,
+    }),
+    method: resolveMethod(
+      metadata.factoryDeploymentData?.implementationInitializerFunction ||
+        "initialize",
+    ),
+    params: normalizeFunctionParams(initializeFunction, initializeParams),
+  });
+  return initializeTransaction;
 }

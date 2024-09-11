@@ -13,11 +13,11 @@ import { getValidTeamPlan } from "./getValidTeamPlan";
 
 export function TeamSelectionUI(props: {
   setHoveredTeam: (team: Team | undefined) => void;
-  currentTeam: Team;
+  currentTeam: Team | undefined;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
 }) {
   const { setHoveredTeam, currentTeam, teamsAndProjects } = props;
-  const teamPlan = getValidTeamPlan(currentTeam);
+  const teamPlan = currentTeam ? getValidTeamPlan(currentTeam) : undefined;
   const teams = teamsAndProjects.map((x) => x.team);
   const [searchTeamTerm, setSearchTeamTerm] = useState("");
   const filteredTeams = searchTeamTerm
@@ -39,15 +39,17 @@ export function TeamSelectionUI(props: {
         className="grow"
       >
         <div className="p-2 flex flex-col">
-          {/* TODO - onclick */}
           <Button
             className={cn("w-full justify-start px-2 gap-2")}
             variant="ghost"
             onMouseEnter={() => setHoveredTeam(undefined)}
+            asChild
           >
-            {/* TODO - placeholder for now */}
-            <div className="size-4 bg-muted border rounded-full" />
-            My Account
+            <Link href="/account">
+              {/* TODO account image - placeholder for now */}
+              <div className="size-4 bg-muted border rounded-full" />
+              My Account
+            </Link>
           </Button>
 
           <h2 className="text-muted-foreground text-xs mx-2 mb-2 mt-4 font-medium">
@@ -56,7 +58,7 @@ export function TeamSelectionUI(props: {
 
           <ul>
             {filteredTeams.map((team) => {
-              const isSelected = team.slug === currentTeam.slug;
+              const isSelected = team.slug === currentTeam?.slug;
               return (
                 // biome-ignore lint/a11y/useKeyWithMouseEvents: <explanation>
                 <li
@@ -109,7 +111,7 @@ export function TeamSelectionUI(props: {
 
       {/* TODO - what do we do on this button click? */}
       {/* Bottom */}
-      {teamPlan !== "pro" && (
+      {teamPlan && teamPlan !== "pro" && (
         <div className="p-2 border-t">
           <Button
             variant="primary"

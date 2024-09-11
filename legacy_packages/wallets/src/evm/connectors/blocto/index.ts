@@ -144,7 +144,7 @@ export class BloctoConnector extends WagmiConnector<
   }
 
   async isAuthorized(): Promise<boolean> {
-    return !!this._provider?._blocto?.sessionKeyEnv ?? false;
+    return !!this._provider?._blocto?.sessionKeyEnv || false;
   }
 
   async switchChain(chainId: number): Promise<Chain> {

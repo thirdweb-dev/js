@@ -21,7 +21,7 @@ export type PrepareDirectDeployTransactionOptions<
   TParams = AbiParametersToPrimitiveTypes<TConstructor["inputs"]>,
 > = Prettify<
   ClientAndChain & {
-    constructorAbi: TConstructor;
+    constructorAbi: TConstructor | undefined;
     bytecode: Hex;
     constructorParams: TParams extends readonly AbiParameter[]
       ? TParams
@@ -66,7 +66,7 @@ export function prepareDirectDeployTransaction<
     data: concatHex([
       bytecode,
       encodeAbiParameters(
-        options.constructorAbi.inputs ?? [], // Leave an empty array if there's no constructor
+        options.constructorAbi?.inputs || [], // Leave an empty array if there's no constructor
         options.constructorParams,
       ),
     ]),

@@ -17,7 +17,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "AccountFactory",
-        contractParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
+        contractParams: {
+          defaultAdmin: TEST_ACCOUNT_A.address,
+          entrypoint: ENTRYPOINT_ADDRESS_v0_6,
+        },
       });
       expect(address).toBeDefined();
       expect(address.length).toBe(42);
@@ -29,7 +32,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "Airdrop",
-        contractParams: [TEST_ACCOUNT_A.address, ""],
+        contractParams: {
+          defaultAdmin: TEST_ACCOUNT_A.address,
+          contractURI: "",
+        },
       });
       expect(address).toBeDefined();
       expect(address.length).toBe(42);
@@ -43,7 +49,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_A,
         contractId: "Counter",
         publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
-        contractParams: [],
       });
       expect(address).toBeDefined();
       expect(address.length).toBe(42);
@@ -56,7 +61,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_A,
         contractId: "MyToken",
         publisher: "0xc77e556cd96235A7B72d46EAAf13405d698CB2C0",
-        contractParams: [],
       });
       expect(address).toBeDefined();
       expect(address.length).toBe(42);

@@ -18,13 +18,19 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
       contractId: "AccountFactory",
-      constructorParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
+      constructorParams: {
+        defaultAdmin: TEST_ACCOUNT_A.address,
+        entrypoint: ENTRYPOINT_ADDRESS_v0_6,
+      },
     });
     const tx2 = prepareDeterministicDeployTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
       contractId: "AccountFactory",
-      constructorParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
+      constructorParams: {
+        defaultAdmin: TEST_ACCOUNT_A.address,
+        entrypoint: ENTRYPOINT_ADDRESS_v0_6,
+      },
     });
     const [tx1Result, tx2Result] = await Promise.all([
       simulateTransaction({ transaction: tx1 }),
@@ -38,14 +44,20 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
       contractId: "AccountFactory",
-      constructorParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
+      constructorParams: {
+        defaultAdmin: TEST_ACCOUNT_A.address,
+        entrypoint: ENTRYPOINT_ADDRESS_v0_6,
+      },
       salt: "some-salt",
     });
     const tx2 = prepareDeterministicDeployTransaction({
       chain: FORKED_OPTIMISM_CHAIN,
       client: TEST_CLIENT,
       contractId: "AccountFactory",
-      constructorParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
+      constructorParams: {
+        defaultAdmin: TEST_ACCOUNT_A.address,
+        entrypoint: ENTRYPOINT_ADDRESS_v0_6,
+      },
     });
     const [tx1Result, tx2Result] = await Promise.all([
       simulateTransaction({ transaction: tx1 }),
@@ -60,7 +72,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
       chain: ANVIL_CHAIN,
       contractId: "Counter",
       publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
-      constructorParams: [],
     });
 
     const txResult = await simulateTransaction({ transaction: tx });

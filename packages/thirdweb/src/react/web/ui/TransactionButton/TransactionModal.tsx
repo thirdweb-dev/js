@@ -1,10 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { trackPayEvent } from "../../../../analytics/track.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { CustomThemeProvider } from "../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
+import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
@@ -27,6 +31,23 @@ export type ModalProps = {
 };
 
 export function TransactionModal(props: ModalProps) {
+  const account = useActiveAccount();
+  const wallet = useActiveWallet();
+
+  useQuery({
+    queryKey: ["transaction-modal-event"],
+    queryFn: () => {
+      if (!account || !wallet) return;
+      trackPayEvent({
+        client: props.client,
+        walletAddress: account.address,
+        walletType: wallet.id,
+        event: "open_pay_transaction_modal",
+      });
+    },
+    enabled: !!wallet,
+  });
+
   return (
     <CustomThemeProvider theme={props.theme}>
       <Modal

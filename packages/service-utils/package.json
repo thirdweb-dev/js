@@ -24,17 +24,9 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": [
-    "dist/",
-    "node/",
-    "cf-worker/"
-  ],
+  "files": ["dist/", "node/", "cf-worker/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "cf-worker/index.ts",
-      "node/index.ts"
-    ],
+    "entrypoints": ["index.ts", "cf-worker/index.ts", "node/index.ts"],
     "exports": true
   },
   "sideEffects": false,
@@ -47,7 +39,7 @@
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/node": "20.14.9",
-    "typescript": "5.5.4"
+    "typescript": "5.6.2"
   },
   "scripts": {
     "format": "biome format ./src --write",

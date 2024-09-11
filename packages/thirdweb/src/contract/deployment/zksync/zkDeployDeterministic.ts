@@ -1,9 +1,10 @@
-import { type Abi, parseAbi } from "abitype";
+import { type Abi, type AbiConstructor, parseAbi } from "abitype";
 import { hashBytecode } from "viem/zksync";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import { readContract } from "../../../transaction/read-contract.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
+import { normalizeFunctionParams } from "../../../utils/abi/normalizeFunctionParams.js";
 import { keccakId } from "../../../utils/any-evm/keccak-id.js";
 import { computeDeploymentAddress } from "../../../utils/any-evm/zksync/computeDeploymentAddress.js";
 import {
@@ -25,7 +26,7 @@ export async function zkDeployContractDeterministic(
   options: ClientAndChainAndAccount & {
     abi: Abi;
     bytecode: Hex;
-    params: unknown[];
+    params?: Record<string, unknown>;
     salt?: string;
   },
 ) {
@@ -34,7 +35,7 @@ export async function zkDeployContractDeterministic(
   ) || { inputs: [] };
   const encodedArgs = encodeAbiParameters(
     constructorAbi.inputs,
-    options.params || [],
+    normalizeFunctionParams(constructorAbi as AbiConstructor, options.params),
   );
   const create2FactoryAddress = await zkDeployCreate2Factory({
     client: options.client,

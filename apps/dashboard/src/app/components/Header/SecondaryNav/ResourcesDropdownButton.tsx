@@ -6,10 +6,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { CmdKSearchModal } from "components/cmd-k-search";
 import { ChevronDownIcon, CommandIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { CmdKSearchModal } from "../../../../components/cmd-k-search";
 
 export function ResourcesDropdownButton() {
   const [isCMDSearchModalOpen, setIsCMDSearchModalOpen] = useState(false);

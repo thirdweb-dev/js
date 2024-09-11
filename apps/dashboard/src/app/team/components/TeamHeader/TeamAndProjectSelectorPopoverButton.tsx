@@ -15,7 +15,7 @@ import { ProjectSelectorUI } from "./ProjectSelectorUI";
 import { TeamSelectionUI } from "./TeamSelectionUI";
 
 type TeamSwitcherProps = {
-  currentTeam: Team;
+  currentTeam: Team | undefined;
   currentProject: Project | undefined;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   focus: "project-selection" | "team-selection";
@@ -25,7 +25,8 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
   const [open, setOpen] = useState(false);
   const { currentTeam, teamsAndProjects } = props;
   const [hoveredTeam, setHoveredTeam] = useState<Team>();
-  const projectsToShowOfTeam = hoveredTeam || currentTeam;
+  const projectsToShowOfTeam =
+    hoveredTeam || currentTeam || teamsAndProjects[0].team;
 
   const projectsToShow = teamsAndProjects.find(
     (x) => x.team.slug === projectsToShowOfTeam.slug,

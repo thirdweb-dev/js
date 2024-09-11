@@ -34,7 +34,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       contractId: "AccountFactory",
-      constructorParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
+      constructorParams: {
+        defaultAdmin: TEST_ACCOUNT_A.address,
+        entrypoint: ENTRYPOINT_ADDRESS_v0_6,
+      },
     });
     const transaction = createAccount({
       contract: accountFactoryContract,
