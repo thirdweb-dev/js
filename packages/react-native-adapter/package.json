@@ -23,21 +23,17 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/*",
-    "src/*"
-  ],
+  "files": ["dist/*", "src/*"],
   "dependencies": {
-    "@aws-sdk/client-lambda": "3.577.0",
-    "@aws-sdk/credential-providers": "3.577.0",
+    "@aws-sdk/client-lambda": "3.592.0",
+    "@aws-sdk/credential-providers": "3.592.0",
     "@mobile-wallet-protocol/client": "0.0.2",
     "@walletconnect/react-native-compat": "2.13.2",
-    "aws-amplify": "5.3.18"
+    "aws-amplify": "5.3.19"
   },
   "peerDependencies": {
     "@coinbase/wallet-mobile-sdk": "^1",
-    "@react-native-async-storage/async-storage": "^1",
-    "@react-native-clipboard/clipboard": "^1",
+    "@react-native-async-storage/async-storage": "^1 || ^2",
     "@react-native-community/netinfo": "^11",
     "amazon-cognito-identity-js": "^6",
     "expo-application": "^5",
@@ -48,7 +44,6 @@
     "react-native-get-random-values": "^1",
     "react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
     "react-native-svg": "^15",
-    "shamir-secret-sharing": "^0.0.3",
     "typescript": ">=5.0.4"
   },
   "peerDependenciesMeta": {

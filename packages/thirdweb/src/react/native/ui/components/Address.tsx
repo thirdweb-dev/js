@@ -1,6 +1,5 @@
-import Clipboard from "@react-native-clipboard/clipboard";
 import { useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Clipboard, StyleSheet, TouchableOpacity } from "react-native";
 import type { Account } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { spacing } from "../../design-system/index.js";
@@ -20,7 +19,6 @@ export const Address = ({ account, theme, addressOrENS }: AddressProps) => {
     <TouchableOpacity
       style={styles.addressContainer}
       onPress={() => {
-        // @ts-ignore - missing native types
         Clipboard.setString(account.address);
         setCopySuccess(true);
         setTimeout(() => {
