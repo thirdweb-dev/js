@@ -56,7 +56,7 @@ const StartupCard = () => {
         {/* pink gradient */}
         <Box
           position="absolute"
-          top="-20%"
+          top="0"
           left="-30%"
           zIndex="-1"
           display={{ base: "none", lg: "block" }}

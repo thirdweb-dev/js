@@ -206,7 +206,7 @@ const StartupProgram: ThirdwebNextPage = () => {
               category={TRACKING_CATEGORY}
               label="apply"
               fontWeight="bold"
-              mt={26}
+              mt={46}
               zIndex="1000"
             >
               Apply Now
