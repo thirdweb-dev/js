@@ -53,4 +53,33 @@ describe.runIf(process.env.TW_SECRET_KEY)("updateMetadata ERC721", () => {
     expect(nfts[1]?.metadata.name).toBe("token 1 - updated");
     expect(nfts[2]?.metadata.name).toBe("token 2");
   });
+
+  it("should throw if no nft uploaded", async () => {
+    const address = await deployERC721Contract({
+      client,
+      chain,
+      account,
+      type: "DropERC721",
+      params: {
+        name: "NFT Drop",
+        contractURI: TEST_CONTRACT_URI,
+      },
+    });
+    const contract = getContract({
+      address,
+      client,
+      chain,
+    });
+    const updateTx = updateMetadata({
+      contract,
+      targetTokenId: 0n,
+      newMetadata: { name: "token 1 - updated" },
+      client,
+    });
+    await expect(
+      sendAndConfirmTransaction({ transaction: updateTx, account }),
+    ).rejects.toThrowError(
+      "No base URI set. Please set a base URI before updating metadata",
+    );
+  });
 });
