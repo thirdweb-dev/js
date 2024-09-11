@@ -2442,8 +2442,8 @@ importers:
         specifier: 6.3.12
         version: 6.3.12
       aws-amplify:
-        specifier: 5.3.18
-        version: 5.3.18(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
+        specifier: 5.3.19
+        version: 5.3.19(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
       cross-spawn:
         specifier: 7.0.3
         version: 7.0.3
@@ -2553,9 +2553,6 @@ packages:
 
   '@aws-amplify/interactions@5.2.18':
     resolution: {integrity: sha512-K1oo6GFS7kgq86QMjmF+dabuFEeJLAu1FK1tfTyFIhvrgZ4xfVnzdTXlJhS+ZJ5ZKc6WyzVmE8di/KllI+pTAA==}
-
-  '@aws-amplify/notifications@1.6.12':
-    resolution: {integrity: sha512-zytF0N1Wvbuvz76tjr38vlEv0oC1n6eblgzDO9LsOb6mAJt1A0PN7O6xbF68sFgo47fxQbelaIJJyt2OQ6ex/g==}
 
   '@aws-amplify/notifications@1.6.13':
     resolution: {integrity: sha512-fH1k8P1Nts/1OIy8IKQjWpJgdsql0562CPpwGBVvPnRYqnkPxvzImjZdhwTgpu+vxjDBKEky/Buu9ws+ST7Myg==}
@@ -10440,9 +10437,6 @@ packages:
 
   avvio@8.3.0:
     resolution: {integrity: sha512-VBVH0jubFr9LdFASy/vNtm5giTrnbVquWBhT0fyizuNK2rQ7e7ONU2plZQWUNqtE1EmxFEb+kbSkFRkstiaS9Q==}
-
-  aws-amplify@5.3.18:
-    resolution: {integrity: sha512-PL1LcA749R+4z29GeK+BmBgQdFHjJ1kQ7Yu6+NPN4uY+Dsfysrau2n4m2q4EQVLUvB0tK4QQ0yGgAfO2zllzpg==}
 
   aws-amplify@5.3.19:
     resolution: {integrity: sha512-/Sbgow1Zfe5RDnKyVlNZblaDuphz2g7IPBF6w6NKnM1JfuVCREHb5FwKUPr5RzfH8JAdCh/OFiCqhLDk2wo7dw==}
@@ -20427,7 +20421,7 @@ snapshots:
       - encoding
       - react-native
 
-  '@aws-amplify/notifications@1.6.12(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))':
+  '@aws-amplify/notifications@1.6.13(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))':
     dependencies:
       '@aws-amplify/cache': 5.1.18(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
       '@aws-amplify/core': 5.8.12(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
@@ -34524,7 +34518,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  aws-amplify@5.3.18(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10)):
+  aws-amplify@5.3.19(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10)):
     dependencies:
       '@aws-amplify/analytics': 6.5.12(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
       '@aws-amplify/api': 5.4.12(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
@@ -34534,7 +34528,7 @@ snapshots:
       '@aws-amplify/datastore': 4.7.12(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
       '@aws-amplify/geo': 2.3.12(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
       '@aws-amplify/interactions': 5.2.18(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
-      '@aws-amplify/notifications': 1.6.12(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
+      '@aws-amplify/notifications': 1.6.13(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
       '@aws-amplify/predictions': 5.5.12(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
       '@aws-amplify/pubsub': 5.5.12(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
       '@aws-amplify/storage': 5.9.12(react-native@0.75.2(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))
