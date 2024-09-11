@@ -75,7 +75,6 @@ export async function deployERC1155Contract(
       client,
       account,
       contractId: type,
-      constructorParams: [],
     });
   const initializeTransaction = await getInitializeTransaction({
     client,

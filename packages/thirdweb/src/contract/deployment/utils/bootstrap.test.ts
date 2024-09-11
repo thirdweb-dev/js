@@ -27,7 +27,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("bootstrap", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       contractId: "Forwarder",
-      constructorParams: [],
     });
     expect(forwarder).not.toBeNull();
     if (!forwarder) {
@@ -37,7 +36,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("bootstrap", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       contractId: "TWCloneFactory",
-      constructorParams: [forwarder.address],
+      constructorParams: {
+        _trustedForwarder: forwarder.address,
+      },
     });
     expect(cloneFactory).not.toBeNull();
   });

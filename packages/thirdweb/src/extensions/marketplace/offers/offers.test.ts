@@ -92,7 +92,6 @@ describe.skip("Marketplace: Offers", () => {
     WETH9 = (await getDeployedInfraContract({
       chain: ANVIL_CHAIN,
       contractId: "WETH9",
-      constructorParams: [],
       client: TEST_CLIENT,
     }))!;
 

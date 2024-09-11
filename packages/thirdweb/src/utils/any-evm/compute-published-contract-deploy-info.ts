@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
 import { computeCreate2FactoryAddress } from "../../contract/deployment/utils/create-2-factory.js";
 import { encodeAbiParameters } from "../abi/encodeAbiParameters.js";
+import { normalizeFunctionParams } from "../abi/normalizeFunctionParams.js";
 import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
 import { getInitBytecodeWithSalt } from "./get-init-bytecode-with-salt.js";
 
@@ -14,7 +15,7 @@ export async function computeDeploymentInfoFromContractId(args: {
   client: ThirdwebClient;
   chain: Chain;
   contractId: string;
-  constructorParams: unknown[];
+  constructorParams?: Record<string, unknown>;
   publisher?: string;
   version?: string;
   salt?: string;
@@ -42,7 +43,7 @@ export async function computeDeploymentInfoFromMetadata(args: {
   client: ThirdwebClient;
   chain: Chain;
   contractMetadata: FetchDeployMetadataResult;
-  constructorParams: unknown[];
+  constructorParams?: Record<string, unknown>;
   salt?: string;
 }) {
   const { client, chain, contractMetadata, constructorParams, salt } = args;
@@ -51,13 +52,12 @@ export async function computeDeploymentInfoFromMetadata(args: {
     chain,
   });
   const bytecode = contractMetadata.bytecode;
-  const constructorAbi =
-    (contractMetadata.abi.find(
-      (abi) => abi.type === "constructor",
-    ) as AbiConstructor) || [];
+  const constructorAbi = contractMetadata.abi.find(
+    (abi) => abi.type === "constructor",
+  ) as AbiConstructor | undefined;
   const encodedArgs = encodeAbiParameters(
-    constructorAbi.inputs ?? [],
-    constructorParams,
+    constructorAbi?.inputs ?? [],
+    normalizeFunctionParams(constructorAbi, constructorParams),
   );
   const initBytecodeWithsalt = getInitBytecodeWithSalt({
     bytecode,

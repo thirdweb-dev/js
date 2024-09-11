@@ -10,7 +10,7 @@ import { computeCreate2FactoryAddress } from "./utils/create-2-factory.js";
 export type DeployDetemisiticParams = Prettify<
   ClientAndChain & {
     contractId: string;
-    constructorParams: unknown[];
+    constructorParams?: Record<string, unknown>;
     publisher?: string;
     version?: string;
     salt?: string;

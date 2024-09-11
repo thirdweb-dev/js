@@ -9,7 +9,6 @@ export async function getDeployedCloneFactoryContract(args: ClientAndChain) {
   const forwarder = await getDeployedInfraContract({
     ...args,
     contractId: "Forwarder",
-    constructorParams: [],
   });
   if (!forwarder) {
     return null;
@@ -19,7 +18,7 @@ export async function getDeployedCloneFactoryContract(args: ClientAndChain) {
   const cloneFactory = await getDeployedInfraContract({
     ...args,
     contractId: "TWCloneFactory",
-    constructorParams: [forwarder.address],
+    constructorParams: { _trustedForwarder: forwarder.address },
   });
   if (!cloneFactory) {
     return null;

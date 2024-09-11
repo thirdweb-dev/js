@@ -97,7 +97,6 @@ export async function deployVoteContract(options: DeployVoteContractOptions) {
       client,
       account,
       contractId: "VoteERC20",
-      constructorParams: [],
     });
   const initializeTransaction = await getInitializeTransaction({
     client,

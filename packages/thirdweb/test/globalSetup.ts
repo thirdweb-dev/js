@@ -1,6 +1,11 @@
 import { sha256 } from "@noble/hashes/sha256";
 import { startProxy } from "@viem/anvil";
-import { FORK_BLOCK_NUMBER, OPTIMISM_FORK_BLOCK_NUMBER, POLYGON_FORK_BLOCK_NUMBER, BASE_FORK_BLOCK_NUMBER } from "./src/chains.js";
+import {
+  BASE_FORK_BLOCK_NUMBER,
+  FORK_BLOCK_NUMBER,
+  OPTIMISM_FORK_BLOCK_NUMBER,
+  POLYGON_FORK_BLOCK_NUMBER,
+} from "./src/chains.js";
 
 require("dotenv-mono").load();
 
@@ -91,6 +96,10 @@ export default async function globalSetup() {
     },
   });
 
+  const shutdownCleanAnvil = await startProxy({
+    port: 8651,
+  });
+
   return async () => {
     await shutdownMainnet();
     await shutdownMainnetWithMining();
@@ -98,5 +107,6 @@ export default async function globalSetup() {
     await shutdownAnvil();
     await shutdownPolygon();
     await shutdownBase();
+    await shutdownCleanAnvil();
   };
 }

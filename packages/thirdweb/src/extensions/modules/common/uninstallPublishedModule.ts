@@ -10,7 +10,6 @@ export type UninstallPublishedModuleOptions = {
   moduleName: string;
   publisherAddress?: string;
   version?: string;
-  constructorParams?: unknown[];
   moduleData?: `0x${string}`;
 };
 
@@ -35,13 +34,7 @@ export type UninstallPublishedModuleOptions = {
 export function uninstallPublishedModule(
   options: UninstallPublishedModuleOptions,
 ) {
-  const {
-    contract,
-    moduleName,
-    publisherAddress,
-    constructorParams,
-    moduleData,
-  } = options;
+  const { contract, moduleName, publisherAddress, moduleData } = options;
 
   return uninstallModule({
     contract,
@@ -50,7 +43,6 @@ export function uninstallPublishedModule(
         chain: contract.chain,
         client: contract.client,
         contractId: moduleName,
-        constructorParams: constructorParams || [],
         publisher: publisherAddress,
       });
       return {

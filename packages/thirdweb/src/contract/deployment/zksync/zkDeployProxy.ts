@@ -44,10 +44,10 @@ export async function zkDeployProxy(
     account: options.account,
     abi: twProxyAbi,
     bytecode: twProxyBytecode,
-    params: [
-      implementationAddress,
-      await encode(options.initializeTransaction),
-    ],
+    params: {
+      _logic: implementationAddress,
+      _data: await encode(options.initializeTransaction),
+    },
   });
 
   // return address of proxy

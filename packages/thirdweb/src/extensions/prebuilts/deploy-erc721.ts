@@ -80,7 +80,6 @@ export async function deployERC721Contract(
       client,
       account,
       contractId: type,
-      constructorParams: [],
     });
 
   const initializeTransaction = await getInitializeTransaction({

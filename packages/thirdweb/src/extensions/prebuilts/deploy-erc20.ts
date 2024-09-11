@@ -69,7 +69,6 @@ export async function deployERC20Contract(options: DeployERC20ContractOptions) {
       client,
       account,
       contractId: type,
-      constructorParams: [],
       publisher,
     });
   const initializeTransaction = await getInitializeTransaction({

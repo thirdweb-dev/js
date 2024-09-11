@@ -6,11 +6,15 @@ import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/
 import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import { type Address, getAddress } from "../../utils/address.js";
+import type {} from "../../utils/any-evm/deploy-metadata.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
-import { initialize } from "../modules/__generated__/ERC20Core/write/initialize.js";
+import {
+  type InitializeParams,
+  initialize,
+} from "../modules/__generated__/ERC20Core/write/initialize.js";
 
 export type CoreType = "ERC20" | "ERC721" | "ERC1155";
 
@@ -101,48 +105,8 @@ export async function deployModularContract(
       client,
       account,
       contractId,
-      constructorParams: [],
       publisher,
     });
-  const initializeTransaction = await getInitializeTransaction({
-    client,
-    chain,
-    account,
-    implementationContract,
-    contractId,
-    coreParams,
-    accountAddress: getAddress(account.address),
-    modules,
-  });
-  return deployViaAutoFactory({
-    client,
-    chain,
-    account,
-    cloneFactoryContract,
-    initializeTransaction,
-  });
-}
-
-async function getInitializeTransaction(options: {
-  client: ThirdwebClient;
-  chain: Chain;
-  account: Account;
-  implementationContract: ThirdwebContract;
-  contractId: string;
-  coreParams: ModularContractParams;
-  accountAddress: Address;
-  modules: ModuleInstaller[];
-}) {
-  const {
-    client,
-    implementationContract,
-    contractId,
-    coreParams,
-    modules,
-    accountAddress,
-    chain,
-    account,
-  } = options;
   const contractURI =
     coreParams.contractURI ||
     (await upload({
@@ -159,6 +123,53 @@ async function getInitializeTransaction(options: {
       ],
     })) ||
     "";
+  const initializeTransaction =
+    await getInitializeTransactionForModularContract({
+      client,
+      chain,
+      account,
+      implementationContract,
+      contractId,
+      initializeParams: {
+        name: coreParams.name || "",
+        symbol: coreParams.symbol || "",
+        contractURI,
+        owner: coreParams.defaultAdmin
+          ? getAddress(coreParams.defaultAdmin)
+          : account.address,
+      },
+      accountAddress: getAddress(account.address),
+      modules,
+    });
+  return deployViaAutoFactory({
+    client,
+    chain,
+    account,
+    cloneFactoryContract,
+    initializeTransaction,
+  });
+}
+
+async function getInitializeTransactionForModularContract(options: {
+  client: ThirdwebClient;
+  chain: Chain;
+  account: Account;
+  implementationContract: ThirdwebContract;
+  contractId: string;
+  initializeParams: Omit<InitializeParams, "modules" | "moduleInstallData">;
+  accountAddress: Address;
+  modules: ModuleInstaller[];
+}) {
+  const {
+    client,
+    implementationContract,
+    contractId,
+    initializeParams,
+    modules,
+    chain,
+    account,
+  } = options;
+
   switch (contractId) {
     case "ERC20CoreInitializable":
     case "ERC721CoreInitializable":
@@ -179,12 +190,10 @@ async function getInitializeTransaction(options: {
       // all 3 cores have the same initializer
       return initialize({
         contract: implementationContract,
-        owner: coreParams.defaultAdmin
-          ? getAddress(coreParams.defaultAdmin)
-          : accountAddress,
-        name: coreParams.name || "",
-        symbol: coreParams.symbol || "",
-        contractURI,
+        owner: initializeParams.owner,
+        name: initializeParams.name,
+        symbol: initializeParams.symbol,
+        contractURI: initializeParams.contractURI,
         modules: moduleAddresses,
         moduleInstallData,
       });
