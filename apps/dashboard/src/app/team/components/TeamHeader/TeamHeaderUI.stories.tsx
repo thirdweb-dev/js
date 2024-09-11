@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ThirdwebProvider } from "thirdweb/react";
-import type { Project } from "../../../../@/api/projects";
-import type { Team } from "../../../../@/api/team";
 import { Button } from "../../../../@/components/ui/button";
+import { teamsAndProjectsStub } from "../../../../stories/stubs";
 import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
 import { TeamHeaderDesktopUI, TeamHeaderMobileUI } from "./TeamHeaderUI";
 
@@ -47,8 +46,8 @@ function Variants(props: {
       >
         <BadgeContainer label="Team, Free">
           <Comp
-            teamsAndProjects={teamsAndProjects}
-            currentTeam={teamsAndProjects[0].team}
+            teamsAndProjects={teamsAndProjectsStub}
+            currentTeam={teamsAndProjectsStub[0].team}
             currentProject={undefined}
             email="eng@thirdweb.com"
             logout={() => {}}
@@ -58,8 +57,8 @@ function Variants(props: {
 
         <BadgeContainer label="Team, Growth">
           <Comp
-            teamsAndProjects={teamsAndProjects}
-            currentTeam={teamsAndProjects[1].team}
+            teamsAndProjects={teamsAndProjectsStub}
+            currentTeam={teamsAndProjectsStub[1].team}
             currentProject={undefined}
             email={undefined}
             logout={() => {}}
@@ -69,8 +68,8 @@ function Variants(props: {
 
         <BadgeContainer label="Team, Pro">
           <Comp
-            teamsAndProjects={teamsAndProjects}
-            currentTeam={teamsAndProjects[2].team}
+            teamsAndProjects={teamsAndProjectsStub}
+            currentTeam={teamsAndProjectsStub[2].team}
             currentProject={undefined}
             email="eng@thirdweb.com"
             logout={() => {}}
@@ -80,9 +79,9 @@ function Variants(props: {
 
         <BadgeContainer label="Team + Project, Pro">
           <Comp
-            teamsAndProjects={teamsAndProjects}
-            currentTeam={teamsAndProjects[2].team}
-            currentProject={teamsAndProjects[2].projects[0]}
+            teamsAndProjects={teamsAndProjectsStub}
+            currentTeam={teamsAndProjectsStub[2].team}
+            currentProject={teamsAndProjectsStub[2].projects[0]}
             email="eng@thirdweb.com"
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
@@ -96,59 +95,3 @@ function Variants(props: {
 function ConnectButtonStub() {
   return <Button>Connect</Button>;
 }
-
-function projectStub(id: string, teamId: string) {
-  const project: Project = {
-    bundleIds: [] as string[],
-    createdAt: new Date(),
-    domains: [] as string[],
-    id: id,
-    updatedAt: new Date(),
-    teamId: teamId,
-    redirectUrls: [] as string[],
-    slug: `project-${id}`,
-    name: `Project ${id}`,
-    publishableKey: "pb-key",
-    lastAccessedAt: null,
-    deletedAt: null,
-    bannedAt: null,
-  };
-
-  return project;
-}
-
-function teamStub(id: string, billingPlan: "free" | "pro" | "growth"): Team {
-  const team: Team = {
-    id: `team-${id}-id`,
-    billingPlan: billingPlan,
-    billingStatus: "validPayment",
-    name: `Team ${id}`,
-    slug: `team-${id}`,
-    bannedAt: null,
-    createdAt: new Date().toISOString(),
-    deletedAt: null,
-    updatedAt: new Date().toISOString(),
-  };
-
-  return team;
-}
-
-const teamsAndProjects: Array<{ team: Team; projects: Project[] }> = [
-  {
-    team: teamStub("1", "free"),
-    projects: [
-      projectStub("t1p1", "team-1"),
-      projectStub("t1p2", "team-1"),
-      projectStub("t1p3", "team-1"),
-      projectStub("t1p4", "team-1"),
-    ],
-  },
-  {
-    team: teamStub("2", "growth"),
-    projects: [projectStub("t2p1", "team-2"), projectStub("t2p2", "team-2")],
-  },
-  {
-    team: teamStub("3", "pro"),
-    projects: [projectStub("t3p1", "team-3")],
-  },
-];

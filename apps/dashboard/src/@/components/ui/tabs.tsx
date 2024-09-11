@@ -3,6 +3,7 @@
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
 import { Button } from "./button";
@@ -176,4 +177,31 @@ function useUnderline<El extends HTMLElement>() {
   }, [activeTabEl]);
 
   return { containerRef, lineRef, activeTabRef };
+}
+
+export function TabPathLinks(props: {
+  links: {
+    name: string;
+    path: string;
+    exactMatch?: boolean;
+    isDisabled?: boolean;
+  }[];
+  className?: string;
+  tabContainerClassName?: string;
+  shadowColor?: string;
+}) {
+  const pathname = usePathname() || "";
+  const { links, ...restProps } = props;
+  return (
+    <TabLinks
+      {...restProps}
+      links={links.map((l) => ({
+        name: l.name,
+        href: l.path,
+        isActive: l.exactMatch
+          ? pathname === l.path
+          : pathname.startsWith(l.path),
+      }))}
+    />
+  );
 }
