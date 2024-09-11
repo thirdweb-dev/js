@@ -528,6 +528,7 @@ const paymentRedirects = {
 	"/connect/pay/build-a-custom-experience": "/connect/pay/guides/build-a-custom-experience",
 	"/connect/pay/enable-test-mode": "/connect/pay/guides/enable-test-mode",
 	"/connect/pay/guides/enable-test-mode": "/connect/pay/testing-pay",
+	"/connect/in-app-wallet/how-it-works": "/connect/in-app-wallet/security",
 };
 
 const contractRedirects = {

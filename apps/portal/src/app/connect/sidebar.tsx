@@ -172,8 +172,8 @@ export const sidebar: SideBar = {
 							href: `${inAppSlug}/overview`,
 						},
 						{
-							name: "How it works",
-							href: `${inAppSlug}/how-it-works`,
+							name: "Security",
+							href: `${inAppSlug}/security`,
 						},
 						{
 							name: "Get Started",
@@ -203,6 +203,23 @@ export const sidebar: SideBar = {
 									name: "Unity",
 									href: "/unity/wallets/providers/in-app-wallet",
 									icon: <UnityIcon />,
+								},
+							],
+						},
+						{
+							name: "Guides",
+							links: [
+								{
+									name: "Export Private Keys",
+									href: `${inAppSlug}/guides/export-private-key`,
+								},
+								{
+									name: "Link Multiple Profiles",
+									href: `${inAppSlug}/guides/link-multiple-profiles`,
+								},
+								{
+									name: "Retrieving Linked Profiles",
+									href: `${inAppSlug}/guides/retrieve-linked-profiles`,
 								},
 							],
 						},
