@@ -1,9 +1,12 @@
-export default function Page() {
+import { LinkWalletUI } from "./LinkWalletUI";
+
+export default async function Page() {
   return (
-    <div className="flex items-center justify-center grow">
-      <h1 className="text-3xl font-medium text-muted-foreground tracking-tight">
-        Account Wallets
-      </h1>
+    <div className="grow">
+      <LinkWalletUI
+        // TODO -  fetch the wallets of current user
+        wallets={[]}
+      />
     </div>
   );
 }

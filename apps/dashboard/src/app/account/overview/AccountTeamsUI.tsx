@@ -9,12 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { EllipsisIcon, SearchIcon } from "lucide-react";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { EllipsisIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { TeamPlanBadge } from "../../components/TeamPlanBadge";
 import { getValidTeamPlan } from "../../team/components/TeamHeader/getValidTeamPlan";
+import { SearchInput } from "../components/SearchInput";
 
 export function AccountTeamsUI(props: {
   teamsWithRole: {
@@ -33,10 +34,21 @@ export function AccountTeamsUI(props: {
 
   return (
     <div>
-      <h2 className="font-semibold text-xl tracking-tight mb-0.5">Teams</h2>
-      <p className="text-muted-foreground text-sm">
-        The teams that are associated with your thirdweb account
-      </p>
+      <div className="flex items-start gap-4 flex-col lg:flex-row lg:justify-between">
+        <div>
+          <h2 className="font-semibold text-xl tracking-tight mb-0.5">Teams</h2>
+          <p className="text-muted-foreground text-sm">
+            The teams that are associated with your thirdweb account
+          </p>
+        </div>
+
+        <ToolTipLabel label="Coming Soon">
+          <Button variant="primary" disabled className="max-sm:w-full gap-2">
+            <PlusIcon className="size-4" />
+            Create a Team
+          </Button>
+        </ToolTipLabel>
+      </div>
 
       <div className="h-4" />
 
@@ -66,31 +78,16 @@ export function AccountTeamsUI(props: {
           <div className="p-4 h-[200px] justify-center flex items-center">
             <div className="text-center">
               <p className="mb-3 text-sm">No teams found</p>
-              <p className="text-sm text-muted-foreground">
-                Your search for {`"${teamSearchValue}"`} did not match any teams
-              </p>
+              {teamSearchValue && (
+                <p className="text-sm text-muted-foreground">
+                  Your search for {`"${teamSearchValue}"`} did not match any
+                  teams
+                </p>
+              )}
             </div>
           </div>
         )}
       </ul>
-    </div>
-  );
-}
-
-function SearchInput(props: {
-  placeholder: string;
-  value: string;
-  onValueChange: (value: string) => void;
-}) {
-  return (
-    <div className="relative">
-      <Input
-        placeholder={props.placeholder}
-        value={props.value}
-        onChange={(e) => props.onValueChange(e.target.value)}
-        className="pl-9 bg-muted/50"
-      />
-      <SearchIcon className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
     </div>
   );
 }

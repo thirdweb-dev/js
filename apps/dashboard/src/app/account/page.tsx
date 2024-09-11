@@ -1,5 +1,5 @@
-import { getTeams } from "../../@/api/team";
-import { AccountTeamsUI } from "./components/AccountTeamsUI";
+import { getTeams } from "@/api/team";
+import { AccountTeamsUI } from "./overview/AccountTeamsUI";
 
 export default async function Page() {
   const teams = await getTeams();
