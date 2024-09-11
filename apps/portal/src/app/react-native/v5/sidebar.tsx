@@ -22,6 +22,7 @@ export const sidebar: SideBar = {
 			href: `${slug}/getting-started`,
 			icon: <ZapIcon />,
 		},
+		{ separator: true },
 		{
 			name: "Core",
 			isCollapsible: false,
@@ -66,6 +67,7 @@ export const sidebar: SideBar = {
 				},
 			],
 		},
+		{ separator: true },
 		{
 			name: "Wallets",
 			isCollapsible: false,
@@ -136,6 +138,17 @@ export const sidebar: SideBar = {
 				},
 			],
 		},
+		{ separator: true },
+		{
+			name: "Social API",
+			isCollapsible: false,
+			links: ["useSocialProfiles"].map((name) => ({
+				name,
+				href: `${slug}/${name}`,
+				icon: <CodeIcon />,
+			})),
+		},
+		{ separator: true },
 		{
 			name: "Pay",
 			isCollapsible: false,
@@ -170,6 +183,7 @@ export const sidebar: SideBar = {
 				},
 			],
 		},
+		{ separator: true },
 		{
 			name: "Blockchain API",
 			isCollapsible: false,
