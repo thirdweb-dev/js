@@ -63,24 +63,10 @@ function UserProfiles() {
           return (
     <div className="flex flex-col gap-4">
       {profiles?.map((profile) => (
-    <div className="flex gap-4 w-[300px] bg-background border rounded-lg p-4 shadow-md">
-      {profile.avatar ? (
-        <img
-          src={resolveScheme({ client: THIRDWEB_CLIENT, uri: profile.avatar })}
-          alt={profile.name}
-          className="size-10 rounded-full"
-        />
-      ) : (
-        <div className="size-10 rounded-full bg-muted-foreground" />
-      )}
-      <div className="flex gap-2 items-center justify-between flex-1">
-        <div className="text-base font-semibold">{profile.name}</div>
-        <Badge variant="secondary">{profile.type.toUpperCase()}</Badge>
-      </div>
-    </div >
+        <ProfileCard avatar={resolveScheme(profile.avatar)} name={profile.name} type={profile.type} bio={profile.bio} />
       ))
 }
-    </div >);
+    </div>);
 }; `}
         lang="tsx"
       />
