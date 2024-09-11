@@ -283,7 +283,7 @@ export const BillingAlerts = () => {
   if (alerts.length === 0) {
     return null;
   }
-  return <Stack mb={12}>{alerts}</Stack>;
+  return <Stack className="py-6">{alerts}</Stack>;
 };
 
 type BillingAlertNotificationProps = {
