@@ -1,9 +1,18 @@
-export default function Page() {
+import { getTeams } from "../../@/api/team";
+import { AccountTeamsUI } from "./components/AccountTeamsUI";
+
+export default async function Page() {
+  const teams = await getTeams();
+
+  const teamsWithRole = teams.map((team) => ({
+    team,
+    // TODO fetch the role of current user in this team
+    role: "MEMBER" as const, // THIS IS A PLACEHOLDER !!!
+  }));
+
   return (
-    <div className="flex items-center justify-center grow">
-      <h1 className="text-3xl font-medium text-muted-foreground tracking-tight">
-        Account Overview
-      </h1>
+    <div className="grow">
+      <AccountTeamsUI teamsWithRole={teamsWithRole} />
     </div>
   );
 }

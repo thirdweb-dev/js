@@ -1,10 +1,10 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { SecondaryNav } from "../../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../../components/MobileBurgerMenuButton";
+import { TeamPlanBadge } from "../../../components/TeamPlanBadge";
 import { ThirdwebMiniLogo } from "../../../components/ThirdwebMiniLogo";
 import { ProjectSelectorMobileMenuButton } from "./ProjectSelectorMobileMenuButton";
 import { TeamAndProjectSelectorPopoverButton } from "./TeamAndProjectSelectorPopoverButton";
@@ -48,18 +48,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             <div className="bg-muted border border-border size-6 rounded-full" />
 
             <span> {currentTeam.name} </span>
-            <Badge
-              variant={
-                teamPlan === "free"
-                  ? "secondary"
-                  : teamPlan === "growth"
-                    ? "success"
-                    : "default"
-              }
-              className="capitalize"
-            >
-              {teamPlan}
-            </Badge>
+            <TeamPlanBadge plan={teamPlan} />
           </Link>
 
           <TeamAndProjectSelectorPopoverButton
