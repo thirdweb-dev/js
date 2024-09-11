@@ -83,6 +83,26 @@ const superchains = [
     src: require("../../../public/assets/grant/superchain/icon-donatuz.png"),
   },
   {
+    id: "mantle",
+    name: "Mantle",
+    link: "/mantle?switch",
+    src: require("../../../public/assets/grant/superchain/mantle-icon.png"),
+  },
+  {
+    id: "soneium",
+    name: "Soneium",
+    link: "/soneium-minato?switch",
+    src: require("../../../public/assets/grant/superchain/soneium-icon.png"),
+    isComingSoon: true,
+  },
+  {
+    id: "campNetworkv2",
+    name: "CampNetworkV2",
+    link: "/camp-network-testnet-v2?switch",
+    src: require("../../../public/assets/grant/superchain/campNetwork-icon.jpg"),
+    isComingSoon: true,
+  },
+  {
     id: "lisk",
     name: "Lisk",
     link: "/lisk-sepolia-testnet",

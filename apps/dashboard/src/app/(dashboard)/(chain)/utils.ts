@@ -187,6 +187,7 @@ const chainMetaRecord = {
       buttonText: "Learn More",
       buttonLink: "https://x.com/0xMantleDevs",
     },
+    gasSponsored: true,
   },
   // rootstock
   30: {

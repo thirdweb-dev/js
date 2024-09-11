@@ -39,6 +39,8 @@ export const OPSponsoredChains = [
   888888888,
   //Donatuz
   42026,
+  //Mantle
+  5000,
 ];
 
 export const defaultChains: Chain[] = [
