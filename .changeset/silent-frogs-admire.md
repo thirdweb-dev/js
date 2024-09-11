@@ -1,0 +1,5 @@
+---
+"thirdweb": patch
+---
+
+Expose toFunctionSelector
