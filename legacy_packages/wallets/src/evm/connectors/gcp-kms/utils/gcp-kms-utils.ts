@@ -10,7 +10,7 @@ const keyEncoder = new KeyEncoder("secp256k1");
 /* this asn1.js library has some funky things going on */
 /* eslint-disable func-names */
 const EcdsaSigAsnParse: {
-  decode: (asnStringBuffer: Buffer, format: "der") => { r: BN; s: BN };
+  decode: (asnStringBuffer: Uint8Array, format: "der") => { r: BN; s: BN };
   // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
 } = asn1.define("EcdsaSig", function (this: any) {
   // parsing this according to https://tools.ietf.org/html/rfc3279#section-2.2.3
@@ -59,7 +59,7 @@ function getClientCredentials(kmsCredentials: GcpKmsSignerCredentials) {
 }
 
 export async function sign(
-  digest: Buffer,
+  digest: Uint8Array,
   kmsCredentials: GcpKmsSignerCredentials,
 ) {
   const kms = new KeyManagementServiceClient(
@@ -125,7 +125,7 @@ export function getEthereumAddress(publicKey: Buffer): string {
   return EthAddr;
 }
 
-export function findEthereumSig(signature: Buffer) {
+export function findEthereumSig(signature: Uint8Array) {
   const decoded = EcdsaSigAsnParse.decode(signature, "der");
   const { r, s } = decoded;
 
@@ -142,14 +142,14 @@ export function findEthereumSig(signature: Buffer) {
 }
 
 export async function requestKmsSignature(
-  plaintext: Buffer,
+  plaintext: Uint8Array,
   kmsCredentials: GcpKmsSignerCredentials,
 ) {
   const response = await sign(plaintext, kmsCredentials);
   if (!response || !response.signature) {
     throw new Error(`GCP KMS call failed`);
   }
-  return findEthereumSig(response.signature as Buffer);
+  return findEthereumSig(response.signature as Uint8Array);
 }
 
 function recoverPubKeyFromSig(msg: Buffer, r: BN, s: BN, v: number) {

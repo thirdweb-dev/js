@@ -3,6 +3,7 @@ import { eth_getTransactionReceipt } from "../../../../rpc/actions/eth_getTransa
 import { getRpcClient } from "../../../../rpc/rpc.js";
 import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../../../transaction/actions/send-batch-transaction.js";
+import { LruMap } from "../../../../utils/caching/lru.js";
 import type { Hex } from "../../../../utils/encoding/hex.js";
 import { randomBytesHex } from "../../../../utils/random.js";
 import type { PreparedSendCall } from "../../../eip5792/send-calls.js";
@@ -13,19 +14,7 @@ import type {
 } from "../../../eip5792/types.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 
-const bundlesToTransactions = new Map<string, Hex[]>();
-const MAX_BUNDLE_ENTRIES = 1000;
-
-/**
- * @internal
- */
-function setBundleId(bundleId: Hex, hashes: Hex[]) {
-  if (bundlesToTransactions.size >= MAX_BUNDLE_ENTRIES) {
-    const lru = bundlesToTransactions.keys().next().value;
-    bundlesToTransactions.delete(lru);
-  }
-  bundlesToTransactions.set(bundleId, hashes);
-}
+const bundlesToTransactions = new LruMap<Hex[]>(1000);
 
 /**
  * @internal
@@ -45,7 +34,7 @@ export async function inAppWalletSendCalls(args: {
       transactions: calls,
     });
     hashes.push(receipt.transactionHash);
-    setBundleId(bundleId, hashes);
+    bundlesToTransactions.set(bundleId, hashes);
   } else {
     for (const tx of calls) {
       const receipt = await sendAndConfirmTransaction({

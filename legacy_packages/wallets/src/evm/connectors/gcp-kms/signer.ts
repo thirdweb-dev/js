@@ -82,6 +82,7 @@ export class GcpKmsSigner extends ethers.Signer {
 
   async _signDigest(digestString: string): Promise<string> {
     const digestBuffer = Buffer.from(ethers.utils.arrayify(digestString));
+    // @ts-expect-error - old package, this will be removed
     const sig = await requestKmsSignature(digestBuffer, this.kmsCredentials);
     const ethAddr = await this.getAddress();
     const { v } = determineCorrectV(digestBuffer, sig.r, sig.s, ethAddr);

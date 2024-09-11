@@ -321,6 +321,8 @@ const AnalyticsData: React.FC<AnalyticsStatProps> = ({
   contractAddress,
   useTotal,
 }) => {
+  // FIXME: re-work this to not pass the hook down
+  // eslint-disable-next-line react-compiler/react-compiler
   const totalQuery = useTotal({
     contractAddress,
     chainId,
