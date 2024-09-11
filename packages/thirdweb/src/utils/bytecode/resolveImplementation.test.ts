@@ -1,4 +1,4 @@
-import type { AbiConstructor } from "abitype";
+import type { Abi } from "abitype";
 import { describe, expect, it } from "vitest";
 import {
   DUMMY_BYTECODE,
@@ -46,8 +46,7 @@ describe("Resolve implementation", async () => {
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
       bytecode: DUMMY_BYTECODE,
-      constructorAbi: {} as AbiConstructor,
-      constructorParams: [],
+      abi: [],
     });
 
     const proxyAddress = await deployContract({
@@ -55,8 +54,11 @@ describe("Resolve implementation", async () => {
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
       bytecode: ERC1967_PROXY_BYTECODE,
-      constructorAbi: ERC1967_PROXY_CONSTRUCTOR_ABI as AbiConstructor,
-      constructorParams: [implementationAddress, ""],
+      abi: ERC1967_PROXY_CONSTRUCTOR_ABI as Abi,
+      constructorParams: {
+        logic: implementationAddress,
+        data: "",
+      },
     });
 
     const proxy = getContract({

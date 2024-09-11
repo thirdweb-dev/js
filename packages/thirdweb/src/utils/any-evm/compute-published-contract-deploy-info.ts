@@ -1,10 +1,12 @@
-import type { AbiConstructor } from "abitype";
+import type { Abi, AbiConstructor } from "abitype";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
 import { computeCreate2FactoryAddress } from "../../contract/deployment/utils/create-2-factory.js";
 import { encodeAbiParameters } from "../abi/encodeAbiParameters.js";
 import { normalizeFunctionParams } from "../abi/normalizeFunctionParams.js";
+import { ensureBytecodePrefix } from "../bytecode/prefix.js";
+import type { Hex } from "../encoding/hex.js";
 import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
 import { getInitBytecodeWithSalt } from "./get-init-bytecode-with-salt.js";
 
@@ -46,15 +48,33 @@ export async function computeDeploymentInfoFromMetadata(args: {
   constructorParams?: Record<string, unknown>;
   salt?: string;
 }) {
-  const { client, chain, contractMetadata, constructorParams, salt } = args;
+  return computeDeploymentInfoFromBytecode({
+    client: args.client,
+    chain: args.chain,
+    abi: args.contractMetadata.abi,
+    bytecode: args.contractMetadata.bytecode,
+    constructorParams: args.constructorParams,
+    salt: args.salt,
+  });
+}
+
+export async function computeDeploymentInfoFromBytecode(args: {
+  client: ThirdwebClient;
+  chain: Chain;
+  abi: Abi;
+  bytecode: Hex;
+  constructorParams?: Record<string, unknown>;
+  salt?: string;
+}) {
+  const { client, chain, constructorParams, salt } = args;
   const create2FactoryAddress = await computeCreate2FactoryAddress({
     client,
     chain,
   });
-  const bytecode = contractMetadata.bytecode;
-  const constructorAbi = contractMetadata.abi.find(
-    (abi) => abi.type === "constructor",
-  ) as AbiConstructor | undefined;
+  const bytecode = ensureBytecodePrefix(args.bytecode);
+  const constructorAbi = args.abi.find((abi) => abi.type === "constructor") as
+    | AbiConstructor
+    | undefined;
   const encodedArgs = encodeAbiParameters(
     constructorAbi?.inputs ?? [],
     normalizeFunctionParams(constructorAbi, constructorParams),

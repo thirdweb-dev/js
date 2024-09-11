@@ -1,11 +1,10 @@
-import type {
-  AbiConstructor,
-  AbiParameter,
-  AbiParametersToPrimitiveTypes,
-} from "abitype";
+import type { Abi, AbiConstructor } from "abitype";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
+import { normalizeFunctionParams } from "../../utils/abi/normalizeFunctionParams.js";
+import { computeDeploymentAddress } from "../../utils/any-evm/compute-deployment-address.js";
+import { computeDeploymentInfoFromBytecode } from "../../utils/any-evm/compute-published-contract-deploy-info.js";
 import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
 import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
 import { type Hex, isHex } from "../../utils/encoding/hex.js";
@@ -16,16 +15,11 @@ import type { Account } from "../../wallets/interfaces/wallet.js";
 /**
  * @extension DEPLOY
  */
-export type PrepareDirectDeployTransactionOptions<
-  TConstructor extends AbiConstructor,
-  TParams = AbiParametersToPrimitiveTypes<TConstructor["inputs"]>,
-> = Prettify<
+export type PrepareDirectDeployTransactionOptions = Prettify<
   ClientAndChain & {
-    constructorAbi: TConstructor | undefined;
+    abi: Abi;
     bytecode: Hex;
-    constructorParams: TParams extends readonly AbiParameter[]
-      ? TParams
-      : readonly unknown[];
+    constructorParams?: Record<string, unknown>;
   }
 >;
 
@@ -51,13 +45,16 @@ export type PrepareDirectDeployTransactionOptions<
  * ```
  * @extension DEPLOY
  */
-export function prepareDirectDeployTransaction<
-  const TConstructor extends AbiConstructor,
->(options: PrepareDirectDeployTransactionOptions<TConstructor>) {
+export function prepareDirectDeployTransaction(
+  options: PrepareDirectDeployTransactionOptions,
+) {
   const bytecode = ensureBytecodePrefix(options.bytecode);
   if (!isHex(bytecode)) {
     throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
   }
+  const constructorAbi = options.abi.find(
+    (abi) => abi.type === "constructor",
+  ) as AbiConstructor | undefined;
   // prepare the tx
   return prepareTransaction({
     chain: options.chain,
@@ -66,8 +63,8 @@ export function prepareDirectDeployTransaction<
     data: concatHex([
       bytecode,
       encodeAbiParameters(
-        options.constructorAbi?.inputs || [], // Leave an empty array if there's no constructor
-        options.constructorParams,
+        constructorAbi?.inputs || [], // Leave an empty array if there's no constructor
+        normalizeFunctionParams(constructorAbi, options.constructorParams),
       ),
     ]),
   });
@@ -85,20 +82,41 @@ export function prepareDirectDeployTransaction<
  *  client,
  *  chain,
  *  bytecode: "0x...",
- *  constructorAbi: {
- *    inputs: [{ type: "uint256", name: "value" }],
- *    type: "constructor",
+ *  abi: contractAbi,
+ *  constructorParams: {
+ *    param1: "value1",
+ *    param2: 123,
  *  },
- *  constructorParams: [123],
+ *  salt, // passing salt enables deterministic deploys
  * });
  * ```
  * @extension DEPLOY
  */
-export async function deployContract<const TConstructor extends AbiConstructor>(
-  options: PrepareDirectDeployTransactionOptions<TConstructor> & {
+export async function deployContract(
+  options: PrepareDirectDeployTransactionOptions & {
     account: Account;
+    salt?: string;
   },
 ) {
+  if (options.salt !== undefined) {
+    // Deploy with CREATE2 if salt is provided
+    const info = await computeDeploymentInfoFromBytecode(options);
+    sendAndConfirmTransaction({
+      account: options.account,
+      transaction: prepareTransaction({
+        chain: options.chain,
+        client: options.client,
+        to: info.create2FactoryAddress,
+        data: info.initBytecodeWithsalt,
+      }),
+    });
+    return computeDeploymentAddress({
+      bytecode: options.bytecode,
+      encodedArgs: info.encodedArgs,
+      create2FactoryAddress: info.create2FactoryAddress,
+    });
+  }
+
   const deployTx = prepareDirectDeployTransaction(options);
   const receipt = await sendAndConfirmTransaction({
     account: options.account,

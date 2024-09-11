@@ -26,6 +26,21 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(address.length).toBe(42);
     });
 
+    it("should deploy a published direct deploy contract deterministically", async () => {
+      const address = await deployPublishedContract({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        account: TEST_ACCOUNT_A,
+        contractId: "AccountFactory",
+        contractParams: {
+          defaultAdmin: TEST_ACCOUNT_A.address,
+          entrypoint: ENTRYPOINT_ADDRESS_v0_6,
+        },
+        salt: "test",
+      });
+      expect(address).toBe("0x75fc461544723c0dac7b46256027878e82ddc2cb");
+    });
+
     it("should deploy a published autofactory contract", async () => {
       const address = await deployPublishedContract({
         client: TEST_CLIENT,
@@ -39,6 +54,21 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
       expect(address).toBeDefined();
       expect(address.length).toBe(42);
+    });
+
+    it("should deploy a published autofactory contract deterministically", async () => {
+      const address = await deployPublishedContract({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        account: TEST_ACCOUNT_A,
+        contractId: "Airdrop",
+        contractParams: {
+          defaultAdmin: TEST_ACCOUNT_A.address,
+          contractURI: "",
+        },
+        salt: "test",
+      });
+      expect(address).toBe("0x777151741260F8d4098dD492e45FdB536F442672");
     });
 
     // TODO: Replace these tests' live contracts with mocks
@@ -61,6 +91,29 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_A,
         contractId: "MyToken",
         publisher: "0xc77e556cd96235A7B72d46EAAf13405d698CB2C0",
+      });
+      expect(address).toBeDefined();
+      expect(address.length).toBe(42);
+    });
+
+    it("should deploy a published contract with no fuzzy params", async () => {
+      const address = await deployPublishedContract({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        account: TEST_ACCOUNT_A,
+        contractId: "DropERC1155",
+        contractParams: {
+          defaultAdmin: TEST_ACCOUNT_A.address, // defaultAdmin
+          name: "test", // name
+          symbol: "test", // symbol
+          contractURI: "", // contractURI
+          trustedForwarders: [], // trustedForwarders
+          saleRecipient: TEST_ACCOUNT_A.address, // saleRecipient
+          royaltyRecipient: TEST_ACCOUNT_A.address, // royaltyRecipient
+          royaltyBps: 0n, // royaltyBps
+          platformFeeBps: 0n, // platformFeeBps
+          platformFeeRecipient: TEST_ACCOUNT_A.address, // platformFeeRecipient
+        },
       });
       expect(address).toBeDefined();
       expect(address.length).toBe(42);
