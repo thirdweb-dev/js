@@ -45,6 +45,7 @@ import {
 } from "./lib/calls.js";
 import { getDefaultAccountFactory } from "./lib/constants.js";
 import {
+  clearAccountDeploying,
   createUnsignedUserOp,
   signUserOp,
   waitForUserOpReceipt,
@@ -596,6 +597,9 @@ async function _sendUserOp(args: {
     ...options,
     userOpHash,
   });
+
+  // reset the isDeploying flag after every transaction
+  clearAccountDeploying(options.accountContract);
 
   return {
     client: options.client,

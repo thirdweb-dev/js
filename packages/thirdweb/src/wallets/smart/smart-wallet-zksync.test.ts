@@ -74,7 +74,7 @@ describe.runIf(process.env.TW_SECRET_KEY).skip(
         personalAccount,
       });
       const zkCandySmartWalletAddress = zkCandySmartAccount.address;
-      const preparedTx = await prepareTransaction({
+      const preparedTx = prepareTransaction({
         chain: defineChain(302),
         client: client,
         to: zkCandySmartWalletAddress,

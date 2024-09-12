@@ -49,6 +49,24 @@ import { getPackedUserOperation } from "./packUserOp.js";
 import { getPaymasterAndData } from "./paymaster.js";
 import { generateRandomUint192 } from "./utils.js";
 
+const isDeployingSet: Set<string> = new Set();
+
+const getKey = (accountContract: ThirdwebContract) => {
+  return `${accountContract.chain.id}:${accountContract.address}`;
+};
+
+export const markAccountDeploying = (accountContract: ThirdwebContract) => {
+  isDeployingSet.add(getKey(accountContract));
+};
+
+export const clearAccountDeploying = (accountContract: ThirdwebContract) => {
+  isDeployingSet.delete(getKey(accountContract));
+};
+
+export const isAccountDeploying = (accountContract: ThirdwebContract) => {
+  return isDeployingSet.has(getKey(accountContract));
+};
+
 /**
  * Wait for the user operation to be mined.
  * @param args - The options and user operation hash
@@ -266,17 +284,25 @@ async function populateUserOp_v0_7(args: {
     maxPriorityFeePerGas,
   } = args;
   const { chain, client } = bundlerOptions;
-  const factory = isDeployed ? undefined : factoryContract.address;
-  const factoryData = isDeployed
-    ? "0x"
-    : await encode(
-        prepareCreateAccount({
-          factoryContract: factoryContract,
-          adminAddress,
-          accountSalt: overrides?.accountSalt,
-          createAccountOverride: overrides?.createAccount,
-        }),
-      );
+
+  let factory: string | undefined;
+  let factoryData: Hex;
+  // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
+  if (isDeployed || isAccountDeploying(accountContract)) {
+    factoryData = "0x";
+    await waitForAccountDeployed(accountContract);
+  } else {
+    factory = factoryContract.address;
+    factoryData = await encode(
+      prepareCreateAccount({
+        factoryContract: factoryContract,
+        adminAddress,
+        accountSalt: overrides?.accountSalt,
+        createAccountOverride: overrides?.createAccount,
+      }),
+    );
+    markAccountDeploying(accountContract);
+  }
 
   const partialOp: UserOperationV07 = {
     sender: accountContract.address,
@@ -395,14 +421,21 @@ async function populateUserOp_v0_6(args: {
     maxPriorityFeePerGas,
   } = args;
   const { chain, client } = bundlerOptions;
-  const initCode = isDeployed
-    ? "0x"
-    : await getAccountInitCode({
-        factoryContract: factoryContract,
-        adminAddress,
-        accountSalt: overrides?.accountSalt,
-        createAccountOverride: overrides?.createAccount,
-      });
+  let initCode: Hex;
+
+  // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
+  if (isDeployed || isAccountDeploying(accountContract)) {
+    initCode = "0x";
+    await waitForAccountDeployed(accountContract);
+  } else {
+    initCode = await getAccountInitCode({
+      factoryContract: factoryContract,
+      adminAddress,
+      accountSalt: overrides?.accountSalt,
+      createAccountOverride: overrides?.createAccount,
+    });
+    markAccountDeploying(accountContract);
+  }
 
   const partialOp: UserOperationV06 = {
     sender: accountContract.address,
@@ -687,4 +720,16 @@ export async function createAndSignUserOp(options: {
     userOp: unsignedUserOp,
   });
   return signedUserOp;
+}
+
+async function waitForAccountDeployed(accountContract: ThirdwebContract) {
+  const startTime = Date.now();
+  while (isAccountDeploying(accountContract)) {
+    if (Date.now() - startTime > 60000) {
+      throw new Error(
+        "Account deployment is taking too long (over 1 minute). Please try again.",
+      );
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
 }
