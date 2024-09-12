@@ -1,5 +1,102 @@
 # thirdweb
 
+## 5.54.0
+
+### Minor Changes
+
+- [#4527](https://github.com/thirdweb-dev/js/pull/4527) [`b76a82c`](https://github.com/thirdweb-dev/js/commit/b76a82c30345e06d7b2c203c1e20bf7ec7e0dd9d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update React Native dependencies and add support for React Native 0.75
+
+- [#4499](https://github.com/thirdweb-dev/js/pull/4499) [`fe1ff63`](https://github.com/thirdweb-dev/js/commit/fe1ff63bf98d0a1e92a8bafc9f0f8c0d0da3524a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Breaking Change in `deployPublishedContract`
+
+  Contract constructor/ initializer params are now passed as a single object instead of an array. The object should have the same shape as the params defined in the contract's ABI.
+
+  Example of old way (using `constructorParams` or `initializeParams`):
+
+  ```ts
+  const address = await deployPublishedContract({
+    account,
+    chain,
+    client,
+    contractId: "Airdrop",
+    contractParams: [TEST_ACCOUNT_A.address, ""],
+  });
+  ```
+
+  New way (using `contractParams`):
+
+  ```ts
+  const address = await deployPublishedContract({
+    account,
+    chain,
+    client,
+    contractId: "Airdrop",
+    contractParams: {
+      defaultAdmin: TEST_ACCOUNT_A.address,
+      contractURI: "",
+    },
+  });
+  ```
+
+- [#4528](https://github.com/thirdweb-dev/js/pull/4528) [`c96e2d9`](https://github.com/thirdweb-dev/js/commit/c96e2d977731836db1a1618d67c5f808e7634d05) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle salt parameter for deterministic deploys of published contracts
+
+  You can now pass a salt parameter to the `deployPublishedContract` function to deploy a contract deterministically.
+
+  ```ts
+  const address = await deployPublishedContract({
+    client,
+    chain,
+    account,
+    contractId: "Airdrop",
+    contractParams: {
+      defaultAdmin: "0x...",
+      contractURI: "ipfs://...",
+    },
+    salt: "test", // <--- deterministic deploy
+  });
+  ```
+
+  This also works for unpublished contracts, via the `deployContract` function.
+
+  ```ts
+  const address = await deployContract({
+    client,
+    chain,
+    account,
+    bytecode: "0x...",
+    abi: contractAbi,
+    constructorParams: {
+      param1: "value1",
+      param2: 123,
+    },
+    salt: "test", // <--- deterministic deploy
+  });
+  ```
+
+- [#4541](https://github.com/thirdweb-dev/js/pull/4541) [`0596fa2`](https://github.com/thirdweb-dev/js/commit/0596fa24c2c0d53d8d87740a56ce56b4e3bd363a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds getUsers function to query users on the server
+
+  ```ts
+  import { getUser } from "thirdweb/wallets";
+
+  const user = await getUser({
+    client,
+    walletAddress: "0x123...",
+  });
+  ```
+
+### Patch Changes
+
+- [#4503](https://github.com/thirdweb-dev/js/pull/4503) [`8636c28`](https://github.com/thirdweb-dev/js/commit/8636c28d0fb68e42ff1d71cb2a9f136c98822c21) Thanks [@jnsdls](https://github.com/jnsdls)! - fix erc721 delayed reveal detection
+
+- [#4544](https://github.com/thirdweb-dev/js/pull/4544) [`40f01e5`](https://github.com/thirdweb-dev/js/commit/40f01e5e89697759099e385490047786d5f0637e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow smart wallet transactions to be sent in parallel
+
+- [#4324](https://github.com/thirdweb-dev/js/pull/4324) [`d6e9def`](https://github.com/thirdweb-dev/js/commit/d6e9def57738458d0a228bb33e436e11cbc8847c) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose toFunctionSelector
+
+- [#4543](https://github.com/thirdweb-dev/js/pull/4543) [`b4e1491`](https://github.com/thirdweb-dev/js/commit/b4e149101d70da4d65c3206dc83e3a7227028425) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Display social profiles for linked accounts
+
+- [#4507](https://github.com/thirdweb-dev/js/pull/4507) [`6353cb7`](https://github.com/thirdweb-dev/js/commit/6353cb73318df3eaed558a6b4fbd1884b9bd6e23) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix erc721 delayed reveal simulation error
+
+- [#4524](https://github.com/thirdweb-dev/js/pull/4524) [`beb894a`](https://github.com/thirdweb-dev/js/commit/beb894a355bf1db7945882bbaea4e318e584ec28) Thanks [@jnsdls](https://github.com/jnsdls)! - Polygon Matic is now POL
+
 ## 5.53.0
 
 ### Minor Changes
