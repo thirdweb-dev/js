@@ -45,8 +45,11 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json(res);
   }
 
-  // vercel provides this for us in the request object || fall back to the header
-  const ipAddress = req.ip || req.headers.get("X-Forwarded-For");
+  // CF header, fallback to req.ip, then X-Forwarded-For
+  const ipAddress =
+    req.headers.get("CF-Connecting-IP") ||
+    req.ip ||
+    req.headers.get("X-Forwarded-For");
   if (!ipAddress) {
     return NextResponse.json(
       {
