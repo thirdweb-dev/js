@@ -241,17 +241,18 @@ export default async function handler(req: NextRequest) {
             )}
           </div>
           <div tw="flex flex-col shrink-0 items-center">
-            <img
-              alt=""
-              tw="w-32 h-32 rounded-full"
-              src={
-                publishedContractData.publisherAvatar
-                  ? replaceAnyIpfsUrlWithGateway(
-                      publishedContractData.publisherAvatar,
-                    )
-                  : `https://source.boringavatars.com/marble/120/${publishedContractData.publisher}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
-              }
-            />
+            {publishedContractData.publisherAvatar && (
+              <img
+                alt=""
+                width={100}
+                height={100}
+                tw="w-32 h-32 rounded-full"
+                src={replaceAnyIpfsUrlWithGateway(
+                  publishedContractData.publisherAvatar,
+                )}
+              />
+            )}
+
             <h2 tw="text-2xl text-white font-medium max-w-full">
               {publishedContractData.publisher}
             </h2>

@@ -1,23 +1,13 @@
 import { Separator } from "@/components/ui/separator";
-import { thirdwebClient } from "@/constants/client";
 import { SimpleGrid } from "@chakra-ui/react";
-import { isAddress } from "thirdweb";
-import { resolveAddress } from "thirdweb/extensions/ens";
 import { ChakraProviderSetup } from "../../../../../@/components/ChakraProviderSetup";
-import { fetchPublishedContractVersions } from "../../../../../components/contract-components/fetch-contracts-with-versions";
 import { PublishedContract } from "../../../../../components/contract-components/published-contract";
 import { setOverrides } from "../../../../../lib/vercel-utils";
 import { PublishedActions } from "../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../components/contract-header";
+import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 
 setOverrides();
-
-function mapThirdwebPublisher(publisher: string) {
-  if (publisher === "thirdweb.eth") {
-    return "deployer.thirdweb.eth";
-  }
-  return publisher;
-}
 
 type PublishedContractDeployPageProps = {
   params: {
@@ -29,21 +19,12 @@ type PublishedContractDeployPageProps = {
 export default async function PublishedContractPage(
   props: PublishedContractDeployPageProps,
 ) {
-  // resolve ENS if required
-  const publisherAddress = isAddress(props.params.publisher)
-    ? props.params.publisher
-    : await resolveAddress({
-        client: thirdwebClient,
-        name: mapThirdwebPublisher(props.params.publisher),
-      });
+  const publishedContractVersions =
+    await getPublishedContractsWithPublisherMapping({
+      publisher: props.params.publisher,
+      contract_id: props.params.contract_id,
+    });
 
-  // get all the published versions of the contract
-  const publishedContractVersions = await fetchPublishedContractVersions(
-    publisherAddress,
-    props.params.contract_id,
-  );
-
-  // determine the "active" version of the contract based on the version that is passed
   const publishedContract = publishedContractVersions[0];
 
   return (
