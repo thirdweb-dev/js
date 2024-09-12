@@ -1,5 +1,6 @@
-import { extractFunctionParamsFromAbi } from "@thirdweb-dev/sdk";
+import type { Abi } from "abitype";
 import { polygon } from "thirdweb/chains";
+import { extractFunctionParamsFromAbi } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import {
   fetchAllVersions,
@@ -42,7 +43,7 @@ export async function getModuleInstalledParams(ext: ModuleMeta) {
 
   // get encodeBytesOnInstall function's install params
   const installParamsForModule = extractFunctionParamsFromAbi(
-    contractMetadata.abi,
+    contractMetadata.abi as Abi,
     "encodeBytesOnInstall",
   );
 

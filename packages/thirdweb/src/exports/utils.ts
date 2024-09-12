@@ -137,6 +137,7 @@ export { isBytes } from "viem";
 // abi
 // ------------------------------------------------
 export { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
+export { extractFunctionParamsFromAbi } from "../utils/abi/extract-function-params-from-abi.js";
 
 /**
  * @utils
