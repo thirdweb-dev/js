@@ -1,0 +1,122 @@
+import { DocImage, createMetadata, FeatureCard, Steps, Step } from "@doc";
+
+import createApiKey from "./assets/create-api-key.png";
+import apiKeyName from "./assets/api-key-name.png";
+import proceed from "./assets/proceed.png";
+import copyApiKey from "./assets/copy-api-key.png";
+import selectCounterModule from "./assets/select-counter-module.png";
+import scrollAndNext from "./assets/scroll-and-next.png";
+import publishContract from "./assets/publish-contract.png";
+import selectCounterCore from "./assets/select-counter-core.png";
+import inputOwner from "./assets/input-owner.png";
+import sepoliaDeployNow from "./assets/sepolia-deploy-now.png";
+import deploying from "./assets/deploying.png";
+import installModule from "./assets/install-module.png";
+import moduleInstalled from "./assets/module-installed.png";
+import contractDashboardModules from "./assets/contract-dashboard-modules.png";
+
+export const metadata = createMetadata({
+	title: "thirdweb Modular Contracts",
+	description:
+		"Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+	image: {
+		title: "thirdweb Modular Contracts",
+		icon: "solidity",
+	},
+});
+
+### How to Deploy a Modular Contract
+
+This guide will show you how to publish a Modular Contract that increments a counter. If you're interested in learning how modular contracts work, refer to [How it works](https://portal.thirdweb.com/contracts/modular-contracts/how-it-works).
+If you haven't read through [Create a Core Contract](https://portal.thirdweb.com/contracts/modular-contracts/get-started/create-core-contact) and [Create a Module Contract](https://portal.thirdweb.com/contracts/modular-contracts/get-started/create-module-contract), please do so before proceeding
+as this guide will build on top of those previous guides.
+
+<Steps>
+
+<Step title="Grab an API Key from the thirdweb Dashboard">
+Go to the [thirdweb Dashboard Settings](https://thirdweb.com/dashboard/settings/api-keys) and click on "Create API Key".
+
+<DocImage src={ createApiKey } />
+
+A dialog should pop up asking for the name of the key. Use `modular-contract-test-key`.
+
+<DocImage src={ apiKeyName } />
+
+Click "Proceed".
+
+<DocImage src={ proceed } />
+
+Then, click on the copy icon and store the API key in a secure place.
+
+<DocImage src={ copyApiKey } />
+</Step>
+
+<Step title="Publish the Module Contract">
+In your terminal, run the following command:
+
+```bash
+npx thirdweb publish -k "THIRDWEB_API_KEY"
+```
+Replace `THIRDWEB_API_KEY` with your API key. Then, select `CounterModule`.
+
+<DocImage src={ selectCounterModule } />
+
+It should open up your browser. Scroll to the bottom and click "Next".
+
+<DocImage src={ scrollAndNext } />
+
+Then, choose the Sepolia network and click "Publish Contract".
+
+<DocImage src={ publishContract } />
+
+Now, we can move on to deploying the core contract.
+</Step>
+
+<Step title="Deploy the Core Contract">
+In your terminal, run the following command:
+
+```bash
+npx thirdweb deploy -k "THIRDWEB_API_KEY"
+```
+Replace `THIRDWEB_API_KEY` with your API key. Choose `CounterCore`.
+
+<DocImage src={ selectCounterCore } />
+
+It should open up your browser. Input the `owner` of the contract and click "Deploy Now".
+
+<DocImage src={ inputOwner } />
+
+Then, choose the Sepolia chain and click "Deploy Now".
+
+<DocImage src={ sepoliaDeployNow } />
+
+It should now be deploying.
+
+<DocImage src={ deploying } />
+
+Once the core contract has been deployed, click "View Contract".
+</Step>
+
+<Step title="Install the Module">
+On the contract dashboard, click on "Modules" in the left-hand sidebar.
+
+<DocImage src={ contractDashboardModules } />
+
+You will be redirected to the "Edit Modules" page, where you can install the `CoreModule`. Under the "Publisher" input, paste in the address of the publisher you used.
+
+Then, the "Module Name" input will unlock. Click on that and select `counterModule`. Once it finishes checking eligibility, select "Module Version" as 1.0.0 and choose whichever step you wish to use.
+
+Finally, click "Install".
+
+<DocImage src={ installModule } />
+
+Now the module has been successfully installed.
+
+<DocImage src={ moduleInstalled } />
+</Step>
+
+</Steps>
+
+---
+
+And there you have it! You have now deployed your very own Modular Contract!

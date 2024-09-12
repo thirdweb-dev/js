@@ -1,5 +1,4 @@
-
-import { createMetadata } from "@doc";
+import { createMetadata, GithubButtonLink } from "@doc";
 
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
@@ -11,27 +10,27 @@ export const metadata = createMetadata({
     },
 });
 
-# Mintable ERC-721
+# MintableERC721
 
 ## Description
 
-The `MintableERC721` contract is an module that provides minting functionality for ERC-721 tokens. It includes features for requesting mints via signatures, setting and getting sales configurations, and managing metadata URIs. This contract ensures secure and controlled minting processes with the possibility of integrating primary sales.
+The `MintableERC721` contract is a module that provides minting functionalities for ERC-721 tokens. This module includes features such as minting with and without signatures, and configuration for primary sales recipients.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/minting/MintableERC721.sol" />
 
 ## Callback Functions
 
-| Function             | Description                                                                |
-|----------------------|----------------------------------------------------------------------------|
-| `beforeMintERC721`   | Callback function for the `ERC721Core.mint` function. Executes actions before minting tokens, including verification. |
-| `onTokenURI`         | Callback function for the `ERC721Core.tokenURI` function. Returns the metadata URI for a given tokenId. |
+| Function                          | Description                                                                                                    |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------------|
+| `beforeMintERC721`                | Callback function that checks the mint authorization before minting ERC-721 tokens.                           |
+| `beforeMintWithSignatureERC721`   | Callback function that verifies a minting request with a signature and processes the mint accordingly.         |
 
 ## Fallback Functions
 
-| Function                | Description                                                                             |
-|-------------------------|-----------------------------------------------------------------------------------------|
-| `getSaleConfig`         | Returns the sale configuration for a token, including the primary sale recipient.       |
-| `setSaleConfig`         | Sets the sale configuration for a token, including the primary sale recipient. Requires manager role. |
-| `getAllMetadataBatches` | Returns all metadata batches for a token, including the start and end token IDs and their associated base URI. |
-| `eip712Domain`          | Returns the EIP-712 domain details.                                                     |
+| Function                 | Description                                                              |
+|--------------------------|--------------------------------------------------------------------------|
+| `getSaleConfig`          | Returns the sale configuration for a token, including the primary sale recipient. |
+| `setSaleConfig`          | Sets the sale configuration for a token, including the primary sale recipient. Requires manager role.       |
 
 ## Required Interfaces
 
@@ -39,9 +38,6 @@ The `MintableERC721` contract is an module that provides minting functionality f
 |------------|-------------|
 | `ERC-721`  | `0x80ac58cd`|
 
-## Supported Interfaces
+## Installation Callback
 
-| Interface  | ID          |
-|------------|-------------|
-| `ERC-4906` | `0x49064906`|
-
+This module uses an installation callback to set up the initial parameters such as the primary sale recipient.

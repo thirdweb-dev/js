@@ -1,5 +1,4 @@
-
-import { createMetadata } from "@doc";
+import { createMetadata, GithubButtonLink } from "@doc";
 
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
@@ -11,27 +10,27 @@ export const metadata = createMetadata({
     },
 });
 
-# Mintable ERC-1155
+# MintableERC1155
 
 ## Description
 
-The `MintableERC1155` contract is an module that provides minting functionality for ERC-1155 tokens. It includes features for requesting mints via signatures, setting and getting sales configurations, and managing metadata URIs. This contract ensures secure and controlled minting processes with the possibility of integrating primary sales.
+The `MintableERC1155` contract is a module that provides minting functionalities for ERC-1155 tokens. This module includes features such as minting with and without signatures, and configuration for primary sales recipients.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/minting/MintableERC1155.sol" />
 
 ## Callback Functions
 
-| Function             | Description                                                                |
-|----------------------|----------------------------------------------------------------------------|
-| `beforeMintERC1155`  | Callback function for the ERC1155Core.mint function. Executes actions before minting tokens, including verification. |
-| `onTokenURI`         | Callback function for the ERC1155Core.tokenURI function. Returns the metadata URI for a given tokenId. |
+| Function                          | Description                                                                                                    |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------------|
+| `beforeMintERC1155`               | Callback function that checks the mint authorization before minting ERC-1155 tokens.                           |
+| `beforeMintWithSignatureERC1155`  | Callback function that verifies a minting request with a signature and processes the mint accordingly.         |
 
 ## Fallback Functions
 
-| Function                | Description                                                                             |
-|-------------------------|-----------------------------------------------------------------------------------------|
-| `getSaleConfig`         | Returns the sale configuration for a token, including the primary sale recipient.       |
-| `setSaleConfig`         | Sets the sale configuration for a token, including the primary sale recipient. Requires manager role. |
-| `setTokenURI`           | Sets the token URI for a given token. Emits MintableTokenURIUpdated and MetadataUpdate events. Requires minter role. |
-| `eip712Domain`          | Returns the EIP-712 domain details.                                                     |
+| Function                 | Description                                                              |
+|--------------------------|--------------------------------------------------------------------------|
+| `getSaleConfig`          | Returns the sale configuration for a token, including the primary sale recipient. |
+| `setSaleConfig`          | Sets the sale configuration for a token, including the primary sale recipient. Requires manager role.       |
 
 ## Required Interfaces
 
@@ -39,9 +38,6 @@ The `MintableERC1155` contract is an module that provides minting functionality 
 |------------|-------------|
 | `ERC-1155` | `0xd9b67a26`|
 
-## Supported Interfaces
+## Installation Callback
 
-| Interface  | ID          |
-|------------|-------------|
-| `ERC-4906` | `0x49064906`|
-
+This module uses an installation callback to set up the initial parameters such as the primary sale recipient.

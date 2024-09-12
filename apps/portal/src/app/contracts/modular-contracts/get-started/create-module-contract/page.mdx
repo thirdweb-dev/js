@@ -1,0 +1,425 @@
+import { createMetadata, Steps, Step } from "@doc";
+
+export const metadata = createMetadata({
+	title: "thirdweb Modular Contracts",
+	description:
+		"Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+	image: {
+		title: "thirdweb Modular Contracts",
+		icon: "solidity",
+	},
+});
+
+## Create Module Contract
+
+**Prerequisite:** Read “Create Core Contract” before creating a Module.
+
+### Installation
+
+<Steps>
+
+<Step title="Install Forge from Foundry">
+   For assistance, refer to the [Foundry installation guide](https://book.getfoundry.sh/getting-started/installation).
+
+   ```bash
+   forge init
+   forge install https://github.com/thirdweb-dev/modular-contracts.git
+   forge remappings > remappings.txt
+   ```
+</Step>
+
+### Create Module
+
+<Step title="Create a New Module File">
+   Create a new file called `CounterModule.sol` in the `src` folder and start with the following code:
+
+   ```solidity
+   // SPDX-License-Identifier: UNLICENSED
+   pragma solidity ^0.8.20;
+
+   import {Module} from "modular-contracts/src/Module.sol";
+
+   contract counterModule is Module {}
+   ```
+
+   > **Note**  
+   > The `Module` contract is the base contract that needs to be inherited for this contract to be recognized as a Module Contract.
+</Step>
+
+<Step title="Create a Storage Library">
+   Create a library called `CounterStorage` responsible for holding the state of the Module Contract:
+
+   ```solidity
+   // SPDX-License-Identifier: UNLICENSED
+   pragma solidity ^0.8.20;
+
+   import {Module} from "modular-contracts/src/Module.sol";
+
+   library CounterStorage {
+       /// @custom:storage-location erc7201:token.minting.counter
+       bytes32 public constant COUNTER_STORAGE_POSITION =
+           keccak256(abi.encode(uint256(keccak256("counter")) - 1)) &
+               ~bytes32(uint256(0xff));
+
+       struct Data {
+           uint256 step;
+       }
+
+       function data() internal pure returns (Data storage data_) {
+           bytes32 position = COUNTER_STORAGE_POSITION;
+           assembly {
+               data_.slot := position;
+           }
+       }
+   }
+
+   contract counterModule is Module {}
+   ```
+
+   > **Note**  
+   > The library `CounterStorage` uses the ERC-7201: Namespace storage layout to store the data. Learn more about [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201).
+</Step>
+
+<Step title="Set Up Storage Access Function">
+   Set up the function `_counterStorage` to access the storage from the `CounterStorage` library:
+
+   ```solidity
+   // SPDX-License-Identifier: UNLICENSED
+   pragma solidity ^0.8.20;
+
+   import {Module} from "modular-contracts/src/Module.sol";
+
+   library CounterStorage {
+       /// @custom:storage-location erc7201:token.minting.counter
+       bytes32 public constant COUNTER_STORAGE_POSITION =
+           keccak256(abi.encode(uint256(keccak256("counter")) - 1)) &
+               ~bytes32(uint256(0xff));
+
+       struct Data {
+           uint256 step;
+       }
+
+       function data() internal pure returns (Data storage data_) {
+           bytes32 position = COUNTER_STORAGE_POSITION;
+           assembly {
+               data_.slot := position;
+           }
+       }
+   }
+
+   contract counterModule is Module {
+       /*//////////////////////////////////////////////////////////////
+                              Internal Functions
+       //////////////////////////////////////////////////////////////*/
+
+       function _counterStorage()
+           internal
+           pure
+           returns (CounterStorage.Data storage)
+       {
+           return CounterStorage.data();
+       }
+   }
+   ```
+</Step>
+
+<Step title="Set Up Fallback Functions">
+   Set up fallback functions that act as the setters and getters for `step`:
+
+   ```solidity
+   // SPDX-License-Identifier: UNLICENSED
+   pragma solidity ^0.8.20;
+
+   import {Module} from "modular-contracts/src/Module.sol";
+
+   library CounterStorage {
+       /// @custom:storage-location erc7201:token.minting.counter
+       bytes32 public constant COUNTER_STORAGE_POSITION =
+           keccak256(abi.encode(uint256(keccak256("counter")) - 1)) &
+               ~bytes32(uint256(0xff));
+
+       struct Data {
+           uint256 step;
+       }
+
+       function data() internal pure returns (Data storage data_) {
+           bytes32 position = COUNTER_STORAGE_POSITION;
+           assembly {
+               data_.slot := position;
+           }
+       }
+   }
+
+   contract counterModule is Module {
+       /*//////////////////////////////////////////////////////////////
+                        Callback & Fallback Functions
+       //////////////////////////////////////////////////////////////*/
+
+       function getStep() external view returns (uint256) {
+           return _counterStorage().step;
+       }
+
+       function setStep(uint256 step) external {
+           _counterStorage().step = step;
+       }
+
+       /*//////////////////////////////////////////////////////////////
+                              Internal Functions
+       //////////////////////////////////////////////////////////////*/
+
+       function _counterStorage()
+           internal
+           pure
+           returns (CounterStorage.Data storage)
+       {
+           return CounterStorage.data();
+       }
+   }
+   ```
+
+   > **Note**  
+   > Fallback functions are extra functionalities that a core contract can use via the Solidity `fallback` function.
+</Step>
+
+<Step title="Set Up Callback Function">
+   Set up a callback function `beforeIncrement` that increases the given count by `step`:
+
+   ```solidity
+   // SPDX-License-Identifier: UNLICENSED
+   pragma solidity ^0.8.20;
+
+   import {Module} from "modular-contracts/src/Module.sol";
+
+   library CounterStorage {
+       /// @custom:storage-location erc7201:token.minting.counter
+       bytes32 public constant COUNTER_STORAGE_POSITION =
+           keccak256(abi.encode(uint256(keccak256("counter")) - 1)) &
+               ~bytes32(uint256(0xff));
+
+       struct Data {
+           uint256 step;
+       }
+
+       function data() internal pure returns (Data storage data_) {
+           bytes32 position = COUNTER_STORAGE_POSITION;
+           assembly {
+               data_.slot := position;
+           }
+       }
+   }
+
+   contract counterModule is Module {
+       /*//////////////////////////////////////////////////////////////
+                        Callback & Fallback Functions
+       //////////////////////////////////////////////////////////////*/
+
+       function beforeIncrement(uint256 count) external view returns (uint256) {
+           return count + _counterStorage().step;
+       }
+
+       function getStep() external view returns (uint256) {
+           return _counterStorage().step;
+       }
+
+       function setStep(uint256 step) external {
+           _counterStorage().step = step;
+       }
+
+       /*//////////////////////////////////////////////////////////////
+                              Internal Functions
+       //////////////////////////////////////////////////////////////*/
+
+       function _counterStorage()
+           internal
+           pure
+           returns (CounterStorage.Data storage)
+       {
+           return CounterStorage.data();
+       }
+   }
+   ```
+
+   > **Note**  
+   > Callback functions are hook-like functionalities that can be used before or after the main functionality of a core contract. In this snippet, the `beforeIncrement` callback is used before the main increment functionality.
+</Step>
+
+<Step title="Set Up Install and Uninstall Functions">
+   Add the `onInstall` and `onUninstall` functions along with helper functions `encodeBytesOnInstall` and `encodeBytesOnUninstall`:
+
+   ```solidity
+   // SPDX-License-Identifier: UNLICENSED
+   pragma solidity ^0.8.20;
+
+   import {Module} from "modular-contracts/src/Module.sol";
+
+   library CounterStorage {
+       /// @custom:storage-location erc7201:token.minting.counter
+       bytes32 public constant COUNTER_STORAGE_POSITION =
+           keccak256(abi.encode(uint256(keccak256("counter")) - 1)) &
+               ~bytes32(uint256(0xff));
+
+       struct Data {
+           uint256 step;
+       }
+
+       function data() internal pure returns (Data storage data_) {
+           bytes32 position = COUNTER_STORAGE_POSITION;
+           assembly {
+               data_.slot := position;
+           }
+       }
+   }
+
+   contract counterModule is Module {
+       /*//////////////////////////////////////////////////////////////
+                              Install / Uninstall
+       //////////////////////////////////////////////////////////////*/
+
+       function onInstall(bytes calldata data) external {
+           uint256 step = abi.decode(data, (uint256));
+           _counterStorage().step = step;
+       }
+
+       function onUninstall(bytes calldata data) external {}
+
+       function encodeBytesOnInstall(
+           uint256 step
+       ) external pure returns (bytes memory) {
+           return abi.encode(step);
+       }
+
+       function encodeBytesOnUninstall() external pure returns (bytes memory) {
+           return "";
+       }
+
+       /*//////////////////////////////////////////////////////////////
+                        Callback & Fallback Functions
+       //////////////////////////////////////////////////////////////*/
+
+       function beforeIncrement(uint256 count) external view returns (uint256) {
+           return count + _counterStorage().step;
+       }
+
+       function getStep() external view returns (uint256) {
+           return _counterStorage().step;
+       }
+
+       function setStep(uint256 step) external {
+           _counterStorage().step = step;
+       }
+
+       /*//////////////////////////////////////////////////////////////
+                              Internal Functions
+       //////////////////////////////////////////////////////////////*/
+
+       function _counterStorage()
+           internal
+           pure
+           returns (CounterStorage.Data storage)
+       {
+           return CounterStorage.data();
+       }
+   }
+   ```
+</Step>
+
+<Step title="Set Up Module Config">
+   Lastly, set up the `getModuleConfig` function which is responsible for communicating to the core contract:
+
+   ```solidity
+   // SPDX-License-Identifier: UNLICENSED
+   pragma solidity ^0.8.20;
+
+   import {Module} from "modular-contracts/src/Module.sol";
+
+   library CounterStorage {
+       /// @custom:storage-location erc7201:token.minting.counter
+       bytes32 public constant COUNTER_STORAGE_POSITION =
+           keccak256(abi.encode(uint256(keccak256("counter")) - 1)) &
+               ~bytes32(uint256(
+
+0xff));
+
+       struct Data {
+           uint256 step;
+       }
+
+       function data() internal pure returns (Data storage data_) {
+           bytes32 position = COUNTER_STORAGE_POSITION;
+           assembly {
+               data_.slot := position;
+           }
+       }
+   }
+
+   contract counterModule is Module {
+       /*//////////////////////////////////////////////////////////////
+                                Module Config
+       //////////////////////////////////////////////////////////////*/
+
+       function getModuleConfig()
+           public
+           pure
+           override
+           returns (ModuleConfig memory config)
+       {
+           config.callbackFunctions = new CallbackFunction ;
+           config.fallbackFunctions = new FallbackFunction ;
+
+           config.callbackFunctions[0] = CallbackFunction(
+               this.beforeIncrement.selector
+           );
+
+           config.fallbackFunctions[0] = FallbackFunction({
+               selector: this.getStep.selector,
+               permissionBits: 0
+           });
+
+           config.fallbackFunctions[1] = FallbackFunction({
+               selector: this.setStep.selector,
+               permissionBits: Role._MANAGER_ROLE
+           });
+
+           config.requiredInterfaces = new bytes4 ;
+           config.requiredInterfaces[0] = 0x00000001;
+
+           config.registerInstallationCallback = true;
+       }
+
+       /*//////////////////////////////////////////////////////////////
+                        Callback & Fallback Functions
+       //////////////////////////////////////////////////////////////*/
+
+       function beforeIncrement(uint256 count) external view returns (uint256) {
+           return count + _counterStorage().step;
+       }
+
+       function getStep() external view returns (uint256) {
+           return _counterStorage().step;
+       }
+
+       function setStep(uint256 step) external {
+           _counterStorage().step = step;
+       }
+
+       /*//////////////////////////////////////////////////////////////
+                              Internal Functions
+       //////////////////////////////////////////////////////////////*/
+
+       function _counterStorage()
+           internal
+           pure
+           returns (CounterStorage.Data storage)
+       {
+           return CounterStorage.data();
+       }
+   }
+   ```
+
+</Step>
+
+</Steps>
+
+---
+
+In the next tutorial, learn how to deploy this modular contract and attach it to the Core contract.

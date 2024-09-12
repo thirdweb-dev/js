@@ -1,5 +1,4 @@
-
-import { createMetadata } from "@doc";
+import { createMetadata, GithubButtonLink } from "@doc";
 
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
@@ -11,27 +10,29 @@ export const metadata = createMetadata({
     },
 });
 
-# Claimable ERC-20
+# ClaimableERC20
 
 ## Description
 
-The `ClaimableERC20` contract is an module that provides claim-based minting functionality for ERC-20 tokens. It includes features for setting claim conditions, validating claims via Merkle proofs, and handling signature-based claim requests. This contract ensures secure and controlled minting processes with the possibility of integrating primary sales.
+The `ClaimableERC20` contract is a module that provides claim-based minting functionality for ERC-20 tokens. It includes features for setting claim conditions, validating claims via Merkle proofs, and handling signature-based claim requests. This contract ensures secure and controlled minting processes with the possibility of integrating primary sales.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/minting/ClaimableERC20.sol" />
 
 ## Callback Functions
 
-| Function             | Description                                                                |
-|----------------------|----------------------------------------------------------------------------|
-| `beforeMintERC20`    | Callback function for the `ERC20Core.mint` function. Executes actions before minting tokens, including validation of claim conditions and signature-based requests. |
+| Function                         | Description                                                                                                    |
+|----------------------------------|----------------------------------------------------------------------------------------------------------------|
+| `beforeMintERC20`                | Callback function that checks the claim conditions before minting ERC-20 tokens.                                |
+| `beforeMintWithSignatureERC20`   | Callback function that verifies a claim request with a signature and processes the mint accordingly.            |
 
 ## Fallback Functions
 
-| Function                         | Description                                                                             |
-|----------------------------------|-----------------------------------------------------------------------------------------|
-| `getSaleConfig`                  | Returns the sale configuration for a token, including the primary sale recipient.       |
-| `setSaleConfig`                  | Sets the sale configuration for a token, including the primary sale recipient. Requires manager role. |
-| `getClaimCondition`              | Returns the claim condition for a token.                                                |
-| `setClaimCondition`              | Sets the claim condition for a token. Requires minter role.                             |
-| `eip712Domain`                   | Returns the EIP-712 domain details.                                                     |
+| Function                              | Description                                                                                  |
+|---------------------------------------|----------------------------------------------------------------------------------------------|
+| `getSaleConfig`                       | Returns the sale configuration for a token, including the primary sale recipient.            |
+| `setSaleConfig`                       | Sets the sale configuration for a token, including the primary sale recipient. Requires manager role. |
+| `getClaimCondition`                   | Returns the claim condition for a specific token ID.                                         |
+| `setClaimCondition`                   | Sets the claim condition for a specific token ID. Requires minter role.                      |
 
 ## Required Interfaces
 
@@ -39,7 +40,6 @@ The `ClaimableERC20` contract is an module that provides claim-based minting fun
 |------------|-------------|
 | `ERC-20`   | `0x36372b07`|
 
-## Supported Interfaces
+## Installation Callback
 
-(No supported interfaces for this contract)
-
+This module uses an installation callback to set up the initial parameters such as the primary sale recipient.

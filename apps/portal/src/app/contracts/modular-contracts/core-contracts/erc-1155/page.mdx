@@ -14,15 +14,17 @@ export const metadata = createMetadata({
 
 ## Supported Callback Functions
 
-| Function             |      Mode      |
-|----------------------|-------------|
-| `beforeMintERC1155`  |  REQUIRED  |
-| `beforeTransferERC1155` | OPTIONAL  |
-| `beforeBatchTransferERC1155` |  OPTIONAL  |
-| `beforeBurnERC1155`  | OPTIONAL  |
-| `beforeApproveForAll`| OPTIONAL  |
-| `onTokenURI`         | REQUIRED  |
-| `beforeBatchMintERC1155` | REQUIRED  |
+| Function                          | Mode      |
+|-----------------------------------|-----------|
+| `beforeMintERC1155`               | REQUIRED  |
+| `beforeMintWithSignatureERC1155`  | REQUIRED  |
+| `beforeTransferERC1155`           | OPTIONAL  |
+| `beforeBatchTransferERC1155`      | OPTIONAL  |
+| `beforeBurnERC1155`               | OPTIONAL  |
+| `beforeApproveForAll`             | OPTIONAL  |
+| `onTokenURI`                      | REQUIRED  |
+| `updateMetadataERC1155`           | REQUIRED  |
+| `updateTokenIdERC1155`            | OPTIONAL  |
 
 ## Supported Interfaces
 
@@ -38,19 +40,16 @@ export const metadata = createMetadata({
 
 | Function                | Description                                                                 |
 |-------------------------|-----------------------------------------------------------------------------|
-| `constructor`           | Initializes the contract with parameters for name, symbol, metadata URI, owner, modules, and module data. |
-| `name`                  | Returns the name of the NFT Collection.                                      |
-| `symbol`                | Returns the symbol of the NFT Collection.                                    |
+| `_initialize`           | Initializes the contract with parameters for name, symbol, metadata URI, owner, modules, and their data. |
 | `contractURI`           | Returns the contract metadata URI.                                          |
-| `totalSupply`           | Returns the total supply of a tokenId of the NFT collection.                 |
-| `uri`                   | Returns the token metadata of an NFT.                                        |
+| `totalSupply`           | Returns the total supply of a specified tokenId.                            |
+| `uri`                   | Returns the token metadata of an NFT.                                       |
 | `supportsInterface`     | Checks if the contract implements an interface with the given interface ID. |
 | `getSupportedCallbackFunctions` | Returns the supported callback functions.                      |
 | `setContractURI`        | Sets the contract metadata URI. Callable only by the contract admin.        |
-| `mint`                  | Mints tokens with a given tokenId to a specified address, calling the beforeMint hook. |
-| `batchMint`             | Batch mints tokens to a specified address, calling the beforeBatchMint hook. |
-| `burn`                  | Burns a specified amount of tokens, calling the beforeBurn hook if it exists.|
+| `mint`                  | Mints tokens to a specified address, calling the beforeMint hook.           |
+| `mintWithSignature`     | Mints tokens with a signature, calling the beforeMintWithSignature hook.    |
+| `burn`                  | Burns a specified token, calling the beforeBurn hook if it exists.          |
 | `safeTransferFrom`      | Transfers ownership of an NFT, calling the beforeTransfer hook if it exists.|
-| `safeBatchTransferFrom` | Batch transfers ownership of NFTs, calling the beforeBatchTransfer hook if it exists. |
-| `setApprovalForAll`     | Approves or revokes approval from an operator to transfer all NFTs. Calls the beforeApproveForAll hook if it exists. |
-
+| `safeBatchTransferFrom` | Batch transfers ownership of NFTs, calling the beforeBatchTransfer hook if it exists.|
+| `setApprovalForAll`     | Approves or revokes approval from an operator to transfer or approve for all of the caller's NFTs, calling the beforeApproveForAll hook if it exists. |

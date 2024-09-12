@@ -1,9 +1,8 @@
-
-import { createMetadata } from "@doc";
+import { createMetadata, GithubButtonLink } from "@doc";
 
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
-    description:
+    description: 
         "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
     image: {
         title: "thirdweb Modular Contracts",
@@ -11,24 +10,31 @@ export const metadata = createMetadata({
     },
 });
 
-# Batch Metadata ERC-1155
+# BatchMetadataERC1155
 
 ## Description
 
-The `BatchMetadataERC1155` contract is an module that provides batch metadata functionality for ERC-1155 tokens. It inherits from `BatchMetadataERC721` to leverage the batch metadata capabilities and adapt them for ERC-1155 tokens, allowing for efficient management of metadata across ranges of token IDs.
+The `BatchMetadataERC1155` contract is a module that provides batch metadata management for ERC-1155 tokens. This module builds upon the functionalities of the `BatchMetadataERC721` contract, adapting them for the ERC-1155 standard. It includes functionalities for updating and managing metadata in batches efficiently.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/metadata/BatchMetadataERC1155.sol" />
 
 ## Callback Functions
 
-| Function   | Description                                                                |
-|------------|----------------------------------------------------------------------------|
-| `onTokenURI` | Callback function to retrieve the metadata URI for a given tokenId.       |
+| Function                   | Description                                                                                |
+|----------------------------|--------------------------------------------------------------------------------------------|
+| `onTokenURI`               | Callback function that returns the token URI for ERC-1155 tokens.                           |
+| `updateMetadataERC1155`    | Callback function that updates metadata for a batch of ERC-1155 tokens.                     |
 
 ## Fallback Functions
 
-| Function                | Description                                                                             |
-|-------------------------|-----------------------------------------------------------------------------------------|
-| `getAllMetadataBatches` | Returns all metadata batches for a token. Each batch contains a range of token IDs and their associated base URI. |
-| `uploadMetadata`        | Uploads metadata for a range of token IDs. Emits a `NewMetadataBatch` event and a `BatchMetadataUpdate` event. |
+| Function                     | Description                                                                               |
+|------------------------------|-------------------------------------------------------------------------------------------|
+| `uploadMetadata`             | Allows uploading of metadata. Requires minter role.                                       |
+| `setBaseURI`                 | Sets the base URI for the token metadata. Requires manager role.                          |
+| `getAllMetadataBatches`      | Retrieves all metadata batches uploaded so far.                                           |
+| `nextTokenIdToMint`          | Returns the next token ID to be minted.                                                   |
+| `getBatchId`                 | Returns the batch ID for a specific token ID.                                              |
+| `getBatchRange`              | Returns the range of token IDs for a specific metadata batch.                             |
 
 ## Required Interfaces
 
@@ -40,5 +46,5 @@ The `BatchMetadataERC1155` contract is an module that provides batch metadata fu
 
 | Interface  | ID          |
 |------------|-------------|
-| `ERC-4906` | `0x49064906`|
+| `ERC4906`  | `0x49064906`|
 
