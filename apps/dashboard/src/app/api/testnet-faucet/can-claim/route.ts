@@ -8,6 +8,9 @@ const NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET =
   process.env.NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET;
 const THIRDWEB_ACCESS_TOKEN = process.env.THIRDWEB_ACCESS_TOKEN;
 
+// Comma-separated list of chain IDs to disable faucet for.
+const DISABLE_FAUCET_CHAIN_IDS = process.env.DISABLE_FAUCET_CHAIN_IDS;
+
 // Note: This handler cannot use "edge" runtime because of Redis usage.
 export const GET = async (req: NextRequest) => {
   const searchParams = req.nextUrl.searchParams;
@@ -33,10 +36,22 @@ export const GET = async (req: NextRequest) => {
     );
   }
 
+  // Check if faucet is disabled for this chain.
+  let isFaucetDisabled = false;
+  if (DISABLE_FAUCET_CHAIN_IDS) {
+    try {
+      const disableFaucetChainIds = DISABLE_FAUCET_CHAIN_IDS.split(",").map(
+        (chainId) => Number.parseInt(chainId.trim()),
+      );
+      isFaucetDisabled = disableFaucetChainIds.includes(chainId);
+    } catch {}
+  }
+
   if (
     !THIRDWEB_ENGINE_URL ||
     !NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET ||
-    !THIRDWEB_ACCESS_TOKEN
+    !THIRDWEB_ACCESS_TOKEN ||
+    isFaucetDisabled
   ) {
     const res: CanClaimResponseType = {
       canClaim: false,
