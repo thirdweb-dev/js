@@ -9,6 +9,11 @@ export {
 } from "../../extensions/ens/resolve-avatar.js";
 
 export {
+  parseAvatarRecord,
+  type ParseAvatarOptions,
+} from "../../utils/ens/avatar.js";
+
+export {
   type ResolveTextOptions,
   resolveText,
 } from "../../extensions/ens/resolve-text.js";
