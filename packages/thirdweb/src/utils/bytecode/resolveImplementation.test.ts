@@ -57,7 +57,7 @@ describe("Resolve implementation", async () => {
       abi: ERC1967_PROXY_CONSTRUCTOR_ABI as Abi,
       constructorParams: {
         logic: implementationAddress,
-        data: "",
+        data: "0x",
       },
     });
 
