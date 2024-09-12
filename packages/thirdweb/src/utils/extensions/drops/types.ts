@@ -55,7 +55,9 @@ export type ClaimCondition = {
 
 /**
  * Represents the input data for creating a claim condition for a Modular Drop contract.
- * @extension MODULAR
+ * @modules ClaimableERC20
+ * @modules ClaimableERC721
+ * @modules ClaimableERC1155
  */
 export type ClaimConditionInput = {
   /**

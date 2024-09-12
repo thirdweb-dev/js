@@ -3,7 +3,7 @@ import { prepareEvent } from "../../../../../event/prepare-event.js";
 /**
  * Creates an event object for the BatchMetadataUpdate event.
  * @returns The prepared event object.
- * @module BatchMetadataERC1155
+ * @modules BatchMetadataERC1155
  * @example
  * ```ts
  * import { getContractEvents } from "thirdweb";

@@ -1,0 +1,38 @@
+import {
+  ArticleIconCard,
+} from "@doc";
+import {
+    ContractModularContractIcon
+} from "@/icons";
+
+# Deploying a Modular Contract
+
+To deploy a modular contract, you can use the `deployModularContract` function. You can deploy just the core contract, or decide to deploy a core with specific modules preinstalled.
+
+Here's an example of deploying a modular ERC721 contract with the `ClaimableERC721` and `BatchMetadataERC721` modules, which recreate a NFT Drop behavior.
+
+```ts
+import {
+  ClaimableERC721,
+  BatchMetadataERC721,
+  deployModularContract,
+} from "thirdweb/modules";
+
+const deployed = deployModularContract({
+   client,
+   chain,
+   account,
+   core: "ERC721", // or "ERC20" or "ERC1155"
+   params: {
+     name: "My Modular NFT Contract",
+   },
+   modules: [
+     ClaimableERC721.module({
+        primarySaleRecipient: "0x...",
+     }),
+     BatchMetadataERC721.module(),
+   ],
+});
+```
+
+Check out the [`deployModularContract`](/typescript/v5/common/deployModularContract) reference for more information.

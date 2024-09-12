@@ -31,7 +31,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `setTransferable` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `setTransferable` method is supported.
- * @module TransferableERC20
+ * @modules TransferableERC20
  * @example
  * ```ts
  * import { TransferableERC20 } from "thirdweb/modules";
@@ -50,7 +50,7 @@ export function isSetTransferableSupported(availableSelectors: string[]) {
  * Encodes the parameters for the "setTransferable" function.
  * @param options - The options for the setTransferable function.
  * @returns The encoded ABI parameters.
- * @module TransferableERC20
+ * @modules TransferableERC20
  * @example
  * ```ts
  * import { TransferableERC20 } from "thirdweb/modules";
@@ -67,7 +67,7 @@ export function encodeSetTransferableParams(options: SetTransferableParams) {
  * Encodes the "setTransferable" function into a Hex string with its parameters.
  * @param options - The options for the setTransferable function.
  * @returns The encoded hexadecimal string.
- * @module TransferableERC20
+ * @modules TransferableERC20
  * @example
  * ```ts
  * import { TransferableERC20 } from "thirdweb/modules";
@@ -89,7 +89,7 @@ export function encodeSetTransferable(options: SetTransferableParams) {
  * Prepares a transaction to call the "setTransferable" function on the contract.
  * @param options - The options for the "setTransferable" function.
  * @returns A prepared transaction object.
- * @module TransferableERC20
+ * @modules TransferableERC20
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";

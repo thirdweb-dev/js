@@ -70,7 +70,11 @@
       "syntaxKind": "block"
     },
     {
-      "tagName": "@module",
+      "tagName": "@modules",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@social",
       "syntaxKind": "block"
     }
   ],
@@ -92,6 +96,7 @@
     "@auth": true,
     "@utils": true,
     "@chain": true,
-    "@module": true
+    "@modules": true,
+    "@social": true
   }
 }

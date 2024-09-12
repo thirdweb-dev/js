@@ -55,7 +55,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `setSharedMetadata` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `setSharedMetadata` method is supported.
- * @module OpenEditionMetadataERC721
+ * @modules OpenEditionMetadataERC721
  * @example
  * ```ts
  * import { OpenEditionMetadataERC721 } from "thirdweb/modules";
@@ -74,7 +74,7 @@ export function isSetSharedMetadataSupported(availableSelectors: string[]) {
  * Encodes the parameters for the "setSharedMetadata" function.
  * @param options - The options for the setSharedMetadata function.
  * @returns The encoded ABI parameters.
- * @module OpenEditionMetadataERC721
+ * @modules OpenEditionMetadataERC721
  * @example
  * ```ts
  * import { OpenEditionMetadataERC721 } from "thirdweb/modules";
@@ -93,7 +93,7 @@ export function encodeSetSharedMetadataParams(
  * Encodes the "setSharedMetadata" function into a Hex string with its parameters.
  * @param options - The options for the setSharedMetadata function.
  * @returns The encoded hexadecimal string.
- * @module OpenEditionMetadataERC721
+ * @modules OpenEditionMetadataERC721
  * @example
  * ```ts
  * import { OpenEditionMetadataERC721 } from "thirdweb/modules";
@@ -115,7 +115,7 @@ export function encodeSetSharedMetadata(options: SetSharedMetadataParams) {
  * Prepares a transaction to call the "setSharedMetadata" function on the contract.
  * @param options - The options for the "setSharedMetadata" function.
  * @returns A prepared transaction object.
- * @module OpenEditionMetadataERC721
+ * @modules OpenEditionMetadataERC721
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";

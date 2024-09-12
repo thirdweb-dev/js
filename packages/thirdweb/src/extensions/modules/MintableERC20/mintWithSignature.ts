@@ -42,7 +42,7 @@ import {
  * // Send the transaction
  * await sendTransaction({ transaction, account });
  * ```
- * @module MintableERC20
+ * @modules MintableERC20
  */
 export function mintWithSignature(
   options: BaseTransactionOptions<
@@ -99,7 +99,7 @@ export type GenerateMintSignatureOptions = {
  * // Send the transaction
  * await sendTransaction({ transaction, account });
  * ```
- * @module MintableERC20
+ * @modules MintableERC20
  */
 export async function generateMintSignature(
   options: GenerateMintSignatureOptions,

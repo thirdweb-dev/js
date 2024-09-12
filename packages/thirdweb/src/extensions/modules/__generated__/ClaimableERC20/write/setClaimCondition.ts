@@ -75,7 +75,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `setClaimCondition` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `setClaimCondition` method is supported.
- * @module ClaimableERC20
+ * @modules ClaimableERC20
  * @example
  * ```ts
  * import { ClaimableERC20 } from "thirdweb/modules";
@@ -94,7 +94,7 @@ export function isSetClaimConditionSupported(availableSelectors: string[]) {
  * Encodes the parameters for the "setClaimCondition" function.
  * @param options - The options for the setClaimCondition function.
  * @returns The encoded ABI parameters.
- * @module ClaimableERC20
+ * @modules ClaimableERC20
  * @example
  * ```ts
  * import { ClaimableERC20 } from "thirdweb/modules";
@@ -113,7 +113,7 @@ export function encodeSetClaimConditionParams(
  * Encodes the "setClaimCondition" function into a Hex string with its parameters.
  * @param options - The options for the setClaimCondition function.
  * @returns The encoded hexadecimal string.
- * @module ClaimableERC20
+ * @modules ClaimableERC20
  * @example
  * ```ts
  * import { ClaimableERC20 } from "thirdweb/modules";
@@ -135,7 +135,7 @@ export function encodeSetClaimCondition(options: SetClaimConditionParams) {
  * Prepares a transaction to call the "setClaimCondition" function on the contract.
  * @param options - The options for the "setClaimCondition" function.
  * @returns A prepared transaction object.
- * @module ClaimableERC20
+ * @modules ClaimableERC20
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";

@@ -17,7 +17,7 @@ const FN_OUTPUTS = [
  * Checks if the `getNextTokenId` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `getNextTokenId` method is supported.
- * @module SequentialTokenIdERC1155
+ * @modules SequentialTokenIdERC1155
  * @example
  * ```ts
  * import { SequentialTokenIdERC1155 } from "thirdweb/modules";
@@ -35,7 +35,7 @@ export function isGetNextTokenIdSupported(availableSelectors: string[]) {
  * Decodes the result of the getNextTokenId function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
- * @module SequentialTokenIdERC1155
+ * @modules SequentialTokenIdERC1155
  * @example
  * ```ts
  * import { SequentialTokenIdERC1155 } from "thirdweb/modules";
@@ -50,7 +50,7 @@ export function decodeGetNextTokenIdResult(result: Hex) {
  * Calls the "getNextTokenId" function on the contract.
  * @param options - The options for the getNextTokenId function.
  * @returns The parsed result of the function call.
- * @module SequentialTokenIdERC1155
+ * @modules SequentialTokenIdERC1155
  * @example
  * ```ts
  * import { SequentialTokenIdERC1155 } from "thirdweb/modules";

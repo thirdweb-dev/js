@@ -36,7 +36,7 @@ const contractId = "ClaimableERC721";
  *   ],
  * });
  * ```
- * @module ClaimableERC721
+ * @modules ClaimableERC721
  */
 export function module(
   params: EncodeBytesOnInstallParams & { publisher?: string },
@@ -82,7 +82,7 @@ export function module(
  *  account,
  * });
  * ```
- * @module ClaimableERC721
+ * @modules ClaimableERC721
  */
 export function install(options: {
   contract: ThirdwebContract;
@@ -102,6 +102,8 @@ export function install(options: {
  * Encodes the install data for the ClaimableERC721 module.
  * @param params - The parameters for the module.
  * @returns - The encoded data.
- * @module ClaimableERC721
+ * @modules ClaimableERC721
  */
-export const encodeInstall = encodeBytesOnInstallParams;
+export function encodeInstall(params: EncodeBytesOnInstallParams) {
+  return encodeBytesOnInstallParams(params);
+}

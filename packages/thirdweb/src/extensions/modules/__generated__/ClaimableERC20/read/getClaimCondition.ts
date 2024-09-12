@@ -52,7 +52,7 @@ const FN_OUTPUTS = [
  * Checks if the `getClaimCondition` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `getClaimCondition` method is supported.
- * @module ClaimableERC20
+ * @modules ClaimableERC20
  * @example
  * ```ts
  * import { ClaimableERC20 } from "thirdweb/modules";
@@ -70,7 +70,7 @@ export function isGetClaimConditionSupported(availableSelectors: string[]) {
  * Decodes the result of the getClaimCondition function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
- * @module ClaimableERC20
+ * @modules ClaimableERC20
  * @example
  * ```ts
  * import { ClaimableERC20 } from "thirdweb/modules";
@@ -85,7 +85,7 @@ export function decodeGetClaimConditionResult(result: Hex) {
  * Calls the "getClaimCondition" function on the contract.
  * @param options - The options for the getClaimCondition function.
  * @returns The parsed result of the function call.
- * @module ClaimableERC20
+ * @modules ClaimableERC20
  * @example
  * ```ts
  * import { ClaimableERC20 } from "thirdweb/modules";

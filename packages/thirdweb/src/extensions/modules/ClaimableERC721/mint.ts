@@ -29,7 +29,7 @@ export type MintParams = {
  * // Send the transaction
  * await sendTransaction({ transaction, account });
  * ```
- * @module ClaimableERC721
+ * @modules ClaimableERC721
  */
 export function mint(options: BaseTransactionOptions<MintParams>) {
   return generatedMint({

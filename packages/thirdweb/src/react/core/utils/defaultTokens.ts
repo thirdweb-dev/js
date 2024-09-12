@@ -342,6 +342,20 @@ export const defaultTokens = DEFAULT_TOKENS as unknown as SupportedTokens;
 type SupportedSymbol =
   (typeof DEFAULT_TOKENS)[keyof typeof DEFAULT_TOKENS][number]["symbol"];
 
+/**
+ * Get the default token for a given chain and symbol
+ * @param chain - The chain to get the token for
+ * @param symbol - The symbol of the token to get
+ * @returns The default token for the given chain and symbol
+ * @example
+ * ```ts
+ * import { getDefaultToken } from "thirdweb/react";
+ * import { ethereum } from "thirdweb/chains";
+ *
+ * const token = getDefaultToken(ethereum, "USDC");
+ * ```
+ * @utils
+ */
 export function getDefaultToken(chain: Chain, symbol: SupportedSymbol) {
   const tokens = defaultTokens[chain.id];
   return tokens?.find((t) => t.symbol === symbol);

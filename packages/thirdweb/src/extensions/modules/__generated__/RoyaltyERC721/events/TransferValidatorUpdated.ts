@@ -3,7 +3,7 @@ import { prepareEvent } from "../../../../../event/prepare-event.js";
 /**
  * Creates an event object for the TransferValidatorUpdated event.
  * @returns The prepared event object.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { getContractEvents } from "thirdweb";

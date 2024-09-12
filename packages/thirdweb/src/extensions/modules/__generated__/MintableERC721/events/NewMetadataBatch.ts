@@ -21,7 +21,7 @@ export type NewMetadataBatchEventFilters = Partial<{
  * Creates an event object for the NewMetadataBatch event.
  * @param filters - Optional filters to apply to the event.
  * @returns The prepared event object.
- * @module MintableERC721
+ * @modules MintableERC721
  * @example
  * ```ts
  * import { getContractEvents } from "thirdweb";

@@ -53,7 +53,7 @@ export type GetApprovalForTransactionParams = {
  * }
  * ```
  *
- * @transactions
+ * @transaction
  */
 export async function getApprovalForTransaction(
   options: GetApprovalForTransactionParams,

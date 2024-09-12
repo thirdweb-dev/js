@@ -36,7 +36,7 @@ const contractId = "MintableERC1155";
  *   ],
  * });
  * ```
- * @module MintableERC1155
+ * @modules MintableERC1155
  */
 export function module(
   params: EncodeBytesOnInstallParams & { publisher?: string },
@@ -82,7 +82,7 @@ export function module(
  *  account,
  * });
  * ```
- * @module MintableERC1155
+ * @modules MintableERC1155
  */
 export function install(options: {
   contract: ThirdwebContract;
@@ -102,6 +102,8 @@ export function install(options: {
  * Encodes the install data for the MintableERC1155 module.
  * @param params - The parameters for the module.
  * @returns - The encoded data.
- * @module MintableERC1155
+ * @modules MintableERC1155
  */
-export const encodeInstall = encodeBytesOnInstallParams;
+export function encodeInstall(params: EncodeBytesOnInstallParams) {
+  return encodeBytesOnInstallParams(params);
+}

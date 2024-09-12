@@ -61,10 +61,10 @@ export type DeployModularContractOptions = Prettify<
  * On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
  * @param options - The deployment options.
  * @returns The deployed contract address.
- * @extension DEPLOY
+ * @modules
  * @example
  * ```ts
- * import { deployModularContract } from "thirdweb/deploys";
+ * import { deployModularContract } from "thirdweb/modules";
  * const contractAddress = await deployModularContract({
  *  chain,
  *  client,
