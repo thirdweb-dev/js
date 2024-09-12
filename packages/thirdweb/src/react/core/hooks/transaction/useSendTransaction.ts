@@ -3,6 +3,7 @@ import type { Chain } from "../../../../chains/types.js";
 import { getGasPrice } from "../../../../gas/get-gas-price.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
+import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
 import { estimateGasCost } from "../../../../transaction/actions/estimate-gas-cost.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
@@ -58,6 +59,7 @@ export type SendTransactionPayModalConfig =
               currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
             };
             testMode?: boolean;
+            preferredProvider?: FiatProvider;
           };
       purchaseData?: object;
       /**

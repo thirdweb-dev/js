@@ -1,5 +1,6 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import type { FiatProvider } from "../utils/commonTypes.js";
 import { getPayBuyWithFiatQuoteEndpoint } from "../utils/definitions.js";
 
 /**
@@ -82,6 +83,13 @@ export type GetBuyWithFiatQuoteParams = {
    * If erc20, will onramp native token + erc20
    */
   toGasAmountWei?: string;
+
+  /**
+   * Optional parameter to specify the preferred onramp provider.
+   *
+   * By default, we choose a recommended provider based on the location of the user, KYC status, and currency.
+   */
+  preferredProvider?: FiatProvider;
 };
 
 /**
@@ -303,6 +311,7 @@ export async function getBuyWithFiatQuote(
         purchaseData: params.purchaseData,
         fromAddress: params.fromAddress,
         toGasAmountWei: params.toGasAmountWei,
+        providerOverride: params.preferredProvider,
       }),
     });
 

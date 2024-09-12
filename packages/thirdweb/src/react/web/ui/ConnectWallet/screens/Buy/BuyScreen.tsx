@@ -1352,6 +1352,7 @@ function FiatScreenContent(props: {
           isTestMode: buyWithFiatOptions?.testMode,
           purchaseData: props.payOptions.purchaseData,
           fromAddress: payer.account.address,
+          preferredProvider: buyWithFiatOptions?.preferredProvider,
         }
       : undefined,
   );

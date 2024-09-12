@@ -2,6 +2,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
+import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -86,6 +87,7 @@ export type PayUIOptions = Prettify<
           prefillSource?: {
             currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
           };
+          preferredProvider?: FiatProvider;
         }
       | false;
 
