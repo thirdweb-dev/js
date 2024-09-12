@@ -1,0 +1,42 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    title: "SmartWallet.GetAllActiveSigners | Thirdweb .NET SDK",
+    description: "Method to get all active signers for a smart wallet.",
+});
+
+# SmartWallet.GetAllActiveSigners
+
+This method retrieves a list of all active signers with their permissions for a smart wallet.
+
+## Usage
+
+```csharp
+// Get all active signers
+List<SignerPermissions> signers = await smartWallet.GetAllActiveSigners();
+```
+
+<Details summary="Parameters">
+
+### None
+
+This method does not require any parameters.
+
+</Details>
+
+<Details summary="Return Value">
+
+### List of `SignerPermissions`
+
+The method returns a list of `SignerPermissions` objects, each representing a signer and their permissions.
+
+Each `SignerPermissions` object contains the following properties:
+
+- `Signer`: The address of the signer.
+- `ApprovedTargets`: A list of addresses that the signer is approved to interact with.
+- `NativeTokenLimitPerTransaction`: The maximum amount of native tokens the signer can transfer per transaction.
+- `StartTimestamp`: The start time for the signer's permissions.
+- `EndTimestamp`: The end time for the signer's permissions.
+
+
+</Details>

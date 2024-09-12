@@ -1,0 +1,34 @@
+
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    title: "SmartWallet.GetAllAdmins | Thirdweb .NET SDK",
+    description: "Method to get all admin addresses for a smart wallet.",
+});
+
+# SmartWallet.GetAllAdmins
+
+This method retrieves a list of all admin addresses for a smart wallet.
+
+## Usage
+
+```csharp
+// Get all admin addresses
+List<string> admins = await smartWallet.GetAllAdmins();
+```
+
+<Details summary="Parameters">
+
+### None
+
+This method does not require any parameters.
+
+</Details>
+
+<Details summary="Return Value">
+
+### List of `string`
+
+The method returns a list of `string` objects, each representing an admin address.
+
+</Details>
