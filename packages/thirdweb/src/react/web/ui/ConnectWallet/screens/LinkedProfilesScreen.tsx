@@ -157,7 +157,7 @@ function LinkedProfile({
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          width: "100%",
+          flexGrow: 1,
         }}
       >
         <Text color="primaryText">
