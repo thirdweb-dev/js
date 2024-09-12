@@ -4,6 +4,7 @@ import { shortenAddress } from "../../../../../utils/address.js";
 import type { Profile } from "../../../../../wallets/in-app/core/authentication/types.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
 import { useProfiles } from "../../../../core/hooks/others/useProfiles.js";
+import { useSocialProfiles } from "../../../../core/social/useSocialProfiles.js";
 import { getWalletIcon } from "../../../../core/utils/walletIcon.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { Img } from "../../components/Img.js";
@@ -88,46 +89,88 @@ export function LinkedProfilesScreen(props: {
             </MenuButton>
             <Spacer y="xs" />
             {connectedProfiles?.map((profile) => (
-              <MenuButton
+              <LinkedProfile
                 key={`${profile.type}-${getProfileDisplayName(profile)}`}
-                onClick={() => {
-                  props.setScreen("linked-profiles");
-                }}
-                style={{
-                  fontSize: fontSize.sm,
-                  cursor: "default",
-                }}
-                disabled // disabled until we have more data to show on a dedicated profile screen
-              >
-                {profile.type === "wallet" && profile.details.address ? (
-                  <Container
-                    style={{
-                      width: "24px",
-                      height: "24px",
-                      borderRadius: "100%",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <Blobbie address={profile.details.address} size={24} />
-                  </Container>
-                ) : (
-                  <Img
-                    src={getWalletIcon(profile.type)}
-                    width={iconSize.md}
-                    height={iconSize.md}
-                    loading="eager"
-                    client={props.client}
-                  />
-                )}
-                <Text color="primaryText">
-                  {getProfileDisplayName(profile)}
-                </Text>
-              </MenuButton>
+                profile={profile}
+                client={props.client}
+              />
             ))}
           </Container>
           <Spacer y="md" />
         </Container>
       )}
     </Container>
+  );
+}
+
+function LinkedProfile({
+  profile,
+  client,
+}: { profile: Profile; client: ThirdwebClient }) {
+  const { data: socialProfiles } = useSocialProfiles({
+    client,
+    address: profile.details.address,
+  });
+
+  return (
+    <MenuButton
+      style={{
+        fontSize: fontSize.sm,
+        cursor: "default",
+      }}
+      disabled // disabled until we have more data to show on a dedicated profile screen
+    >
+      {socialProfiles?.some((p) => p.avatar) ? (
+        <Img
+          src={socialProfiles?.find((p) => p.avatar)?.avatar}
+          width={iconSize.lg}
+          height={iconSize.lg}
+          loading="eager"
+          client={client}
+          style={{
+            borderRadius: "100%",
+          }}
+        />
+      ) : profile.details.address !== undefined ? (
+        <Container
+          style={{
+            width: "32px",
+            height: "32px",
+            borderRadius: "100%",
+            overflow: "hidden",
+          }}
+        >
+          <Blobbie address={profile.details.address} size={32} />
+        </Container>
+      ) : (
+        <Img
+          src={getWalletIcon(profile.type)}
+          width={iconSize.lg}
+          height={iconSize.lg}
+          loading="eager"
+          client={client}
+        />
+      )}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <Text color="primaryText">
+          {socialProfiles?.find((p) => p.avatar)?.name ||
+            getProfileDisplayName(profile)}
+        </Text>
+        {socialProfiles?.find((p) => p.avatar)?.name &&
+          profile.details.address && (
+            <Text color="secondaryText" size="sm">
+              {shortenAddress(profile.details.address, 4)}
+            </Text>
+          )}
+      </div>
+    </MenuButton>
   );
 }
