@@ -311,7 +311,7 @@ export async function getBuyWithFiatQuote(
         purchaseData: params.purchaseData,
         fromAddress: params.fromAddress,
         toGasAmountWei: params.toGasAmountWei,
-        providerOverride: params.preferredProvider,
+        preferredProvider: params.preferredProvider,
       }),
     });
 
