@@ -16,7 +16,6 @@ import {
   Tooltip,
   useModalContext,
 } from "@chakra-ui/react";
-import type { NewAuctionListing, NewDirectListing } from "@thirdweb-dev/sdk";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -47,6 +46,10 @@ import {
   setApprovalForAll as setApprovalForAll1155,
 } from "thirdweb/extensions/erc1155";
 import { createAuction, createListing } from "thirdweb/extensions/marketplace";
+import type {
+  CreateAuctionParams,
+  CreateListingParams,
+} from "thirdweb/extensions/marketplace";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import {
   FormErrorMessage,
@@ -59,14 +62,24 @@ import {
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { ListLabel } from "./list-label";
 
-interface ListForm
-  extends Omit<NewDirectListing, "type">,
-    Omit<NewAuctionListing, "type"> {
-  selected?: WalletNFT;
-  listingType: "direct" | "auction";
-  listingDurationInSeconds: string;
-  quantity: string;
-}
+type ListForm =
+  | (Omit<CreateListingParams, "quantity" | "currencyContractAddress"> & {
+      currencyContractAddress: string;
+      selected?: WalletNFT;
+      listingType: "direct";
+      listingDurationInSeconds: string;
+      quantity: string;
+      pricePerToken: string;
+    })
+  | (Omit<CreateAuctionParams, "quantity" | "currencyContractAddress"> & {
+      currencyContractAddress: string;
+      selected?: WalletNFT;
+      listingType: "auction";
+      listingDurationInSeconds: string;
+      quantity: string;
+      buyoutPricePerToken: string;
+      reservePricePerToken: string;
+    });
 
 type CreateListingsFormProps = {
   contract: ThirdwebContract;
@@ -109,17 +122,29 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   const sendAndConfirmTx = useSendAndConfirmTransaction();
 
   const form = useForm<ListForm>({
-    defaultValues: {
-      selected: undefined,
-      currencyContractAddress: NATIVE_TOKEN_ADDRESS,
-      quantity: "1",
-      buyoutPricePerToken: "0",
-      listingType: type === "english-auctions" ? "auction" : "direct",
-      reservePricePerToken: "0",
-      startTimestamp: new Date(),
-      // Default to one month duration
-      listingDurationInSeconds: (60 * 60 * 24 * 30).toString(),
-    },
+    defaultValues:
+      type === "direct-listings"
+        ? {
+            selected: undefined,
+            currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+            quantity: "1",
+            pricePerToken: "0",
+            listingType: "direct",
+            startTimestamp: new Date(),
+            // Default to one month duration
+            listingDurationInSeconds: (60 * 60 * 24 * 30).toString(),
+          }
+        : {
+            selected: undefined,
+            currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+            quantity: "1",
+            buyoutPricePerToken: "0",
+            listingType: "auction",
+            reservePricePerToken: "0",
+            startTimestamp: new Date(),
+            // Default to one month duration
+            listingDurationInSeconds: (60 * 60 * 24 * 30).toString(),
+          },
   });
 
   const selectedContract = form.watch("selected.contractAddress")
@@ -245,7 +270,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
               currencyContractAddress: formData.currencyContractAddress,
               quantity: BigInt(formData.quantity),
               startTimestamp: formData.startTimestamp,
-              pricePerToken: String(formData.buyoutPricePerToken),
+              pricePerToken: String(formData.pricePerToken),
               endTimestamp,
             });
             await sendAndConfirmTx.mutateAsync(transaction, {
@@ -482,7 +507,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
             ? "Buyout Price Per Token"
             : "Listing Price"}
         </Heading>
-        <Input {...form.register("buyoutPricePerToken")} />
+        <Input {...form.register("pricePerToken")} />
         <FormHelperText>
           {form.watch("listingType") === "auction"
             ? "The price per token a buyer can pay to instantly buyout the auction."
