@@ -131,12 +131,8 @@ await wallet.SendOTP();
 **Submit OTP:** Once the user receives the OTP, they submit it back to the application, which then calls LoginWithOtp on the EcosystemWallet instance to verify the OTP and complete the login process.
 
 ```csharp
-var (address, canRetry) = await wallet.LoginWithOtp("userEnteredOTP");
-if (address != null) {
-    // Login successful
-} else if (canRetry) {
-    // Ask user to retry entering OTP
-}
+var address = await wallet.LoginWithOtp("userEnteredOTP");
+// If this fails, feel free to catch and take in another OTP and retry the login process
 ```
 
 ## Example
