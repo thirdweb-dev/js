@@ -102,6 +102,11 @@ export {
   linkProfile,
 } from "../wallets/in-app/core/wallet/profiles.js";
 
+export {
+  getUser,
+  type GetUserResult,
+} from "../wallets/in-app/core/users/getUser.js";
+
 export type {
   CoinbaseWalletCreationOptions,
   CoinbaseSDKWalletConnectionOptions,

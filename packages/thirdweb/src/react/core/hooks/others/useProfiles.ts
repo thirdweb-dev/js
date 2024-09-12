@@ -18,7 +18,7 @@ import { useActiveWallet } from "../wallets/useActiveWallet.js";
  * const { data: profiles } = useProfiles();
  *
  * console.log("Type:", profiles[0].type); // "discord"
- * console.log("Email:", profiles[0].email); // "john.doe@example.com"
+ * console.log("Email:", profiles[0].details.email); // "john.doe@example.com"
  * ```
  *
  * @wallet

@@ -69,6 +69,14 @@ export {
 } from "../contract/contract.js";
 
 /**
+ * WALLETS
+ */
+export {
+  getUser,
+  type GetUserResult,
+} from "../wallets/in-app/core/users/getUser.js";
+
+/**
  * TRANSACTIONS
  */
 
