@@ -1,9 +1,13 @@
-export default function Page() {
-  return (
-    <div className="flex items-center justify-center grow">
-      <h1 className="text-3xl font-medium text-muted-foreground tracking-tight">
-        Account Settings
-      </h1>
-    </div>
-  );
+import { redirect } from "next/navigation";
+import { AccountSettingsPageUI } from "./AccountSettingsPageUI";
+import { getAccount } from "./getAccount";
+
+export default async function Page() {
+  const account = await getAccount();
+
+  if (!account) {
+    redirect(`/login?next=${encodeURIComponent("/account")}`);
+  }
+
+  return <AccountSettingsPageUI account={account} />;
 }

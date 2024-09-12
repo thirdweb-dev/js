@@ -4,7 +4,7 @@ import { BadgeContainer, mobileViewport } from "../../../stories/utils";
 import { LinkWalletUI } from "./LinkWalletUI";
 
 const meta = {
-  title: "Account/LinkWallets",
+  title: "Account/Pages/Link Wallets",
   component: Variants,
   parameters: {
     nextjs: {

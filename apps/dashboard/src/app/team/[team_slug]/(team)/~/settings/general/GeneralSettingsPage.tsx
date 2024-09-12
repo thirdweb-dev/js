@@ -3,6 +3,7 @@
 import type { Team } from "@/api/team";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useMutation } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
 import { useState } from "react";
@@ -20,8 +21,11 @@ export function GeneralSettingsPage(props: {
       <TeamSlugFormControl team={props.team} />
       <TeamAvatarFormControl />
       <TeamIdCard team={props.team} />
-      <LeaveTeamCard enabled={false} />
-      <DeleteTeamCard enabled={hasPermissionToDelete} />
+      <LeaveTeamCard enabled={false} teamName={props.team.name} />
+      <DeleteTeamCard
+        enabled={hasPermissionToDelete}
+        teamName={props.team.name}
+      />
     </div>
   );
 }
@@ -181,7 +185,7 @@ function TeamAvatarFormControl() {
           accept={{ "image/*": [] }}
           value={teamAvatar}
           setValue={setTeamAvatar}
-          className="w-[120px] rounded-full"
+          className="w-20 lg:w-28 rounded-full"
           disableHelperText
         />
       </div>
@@ -216,6 +220,7 @@ function TeamIdCard(props: {
 
 export function LeaveTeamCard(props: {
   enabled: boolean;
+  teamName: string;
 }) {
   const title = "Leave Team";
   const description =
@@ -246,6 +251,11 @@ export function LeaveTeamCard(props: {
         buttonLabel={title}
         buttonOnClick={handleLeave}
         isLoading={leaveTeam.isLoading}
+        confirmationDialog={{
+          title: `Are you sure you want to leave team "${props.teamName}" ?`,
+          description:
+            "This will revoke your access to this Team. Any resources you've added to the Team will remain.",
+        }}
       />
     );
   }
@@ -267,7 +277,9 @@ export function LeaveTeamCard(props: {
 
 export function DeleteTeamCard(props: {
   enabled: boolean;
+  teamName: string;
 }) {
+  const router = useDashboardRouter();
   const title = "Delete Team";
   const description =
     "Permanently remove your team and all of its contents from the thirdweb platform. This action is not reversible - please continue with caution.";
@@ -278,6 +290,9 @@ export function DeleteTeamCard(props: {
       await new Promise((resolve) => setTimeout(resolve, 3000));
       console.log("Deleting team");
       throw new Error("Not implemented");
+    },
+    onSuccess: () => {
+      router.push("/team");
     },
   });
 
@@ -297,6 +312,10 @@ export function DeleteTeamCard(props: {
         buttonLabel={title}
         buttonOnClick={handleDelete}
         isLoading={deleteTeam.isLoading}
+        confirmationDialog={{
+          title: `Are you sure you want to delete team "${props.teamName}" ?`,
+          description: description,
+        }}
       />
     );
   }

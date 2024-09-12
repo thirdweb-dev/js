@@ -6,6 +6,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useCallback } from "react";
+import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import {
   type TeamHeaderCompProps,
   TeamHeaderDesktopUI,
@@ -18,9 +19,14 @@ export function TeamHeader(props: {
   currentProject: Project | undefined;
 }) {
   const myAccountQuery = useAccount();
+  const activeWallet = useActiveWallet();
+  const { disconnect } = useDisconnect();
   const router = useDashboardRouter();
 
   const logout = useCallback(async () => {
+    if (activeWallet) {
+      disconnect(activeWallet);
+    }
     // log out the user
     try {
       await fetch("/api/auth/logout", {
@@ -30,7 +36,7 @@ export function TeamHeader(props: {
     } catch (e) {
       console.error("Failed to log out", e);
     }
-  }, [router]);
+  }, [router, activeWallet, disconnect]);
 
   const headerProps: TeamHeaderCompProps = {
     currentProject: props.currentProject,

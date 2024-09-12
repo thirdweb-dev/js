@@ -69,10 +69,10 @@ function ComponentVariantions() {
       <div className="max-w-[1100px] mx-auto">
         <h2 className="mb-5 text-3xl"> Component variations </h2>
         <div className="flex flex-col gap-6">
-          <LeaveTeamCard enabled={true} />
-          <LeaveTeamCard enabled={false} />
-          <DeleteTeamCard enabled={true} />
-          <DeleteTeamCard enabled={false} />
+          <LeaveTeamCard enabled={true} teamName="foo" />
+          <LeaveTeamCard enabled={false} teamName="foo" />
+          <DeleteTeamCard enabled={true} teamName="foo" />
+          <DeleteTeamCard enabled={false} teamName="foo" />
         </div>
       </div>
     </div>

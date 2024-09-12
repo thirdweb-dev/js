@@ -4,7 +4,7 @@ import { BadgeContainer, mobileViewport } from "../../../stories/utils";
 import { AccountTeamsUI } from "./AccountTeamsUI";
 
 const meta = {
-  title: "Account/Teams",
+  title: "Account/Pages/Teams",
   component: Variants,
   parameters: {
     nextjs: {
