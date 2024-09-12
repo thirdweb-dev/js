@@ -374,16 +374,19 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         _contractURI,
       };
 
+      const salt = params.deployDeterministic
+        ? params.signerAsSalt
+          ? activeAccount.address.concat(params.saltForCreate2)
+          : params.saltForCreate2
+        : undefined;
+
       return await deployContractfromDeployMetadata({
         account: activeAccount,
         chain: walletChain,
         client: thirdwebClient,
         deployMetadata: metadata,
         initializeParams,
-        salt: params.deployDeterministic
-          ? params.saltForCreate2 +
-            (params.signerAsSalt ? activeAccount.address : "")
-          : undefined,
+        salt,
         modules: modules?.map((m) => ({
           deployMetadata: m,
           initializeParams: params.moduleData[m.name],

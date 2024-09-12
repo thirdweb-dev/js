@@ -79,7 +79,7 @@ function getContractUrl(
     moudleUrl.append("displayName", titleOverride);
   }
 
-  pathName += `?${moudleUrl.toString()}`;
+  pathName += moudleUrl.toString() ? `?${moudleUrl.toString()}` : "";
   return replaceDeployerAddress(pathName);
 }
 
