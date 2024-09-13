@@ -21,6 +21,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+import { isAddress } from "thirdweb";
 import { Button, FormLabel } from "tw-components";
 
 interface AddAdminButtonProps {
@@ -62,6 +63,9 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
           className="!bg-background border border-border rounded-lg"
           as="form"
           onSubmit={form.handleSubmit((data) => {
+            if (!isAddress(data.walletAddress)) {
+              onError(new Error("Invalid wallet address"));
+            }
             grantPermissions(data, {
               onSuccess: () => {
                 onSuccess();
