@@ -16,3 +16,5 @@ export type PayOnChainTransactionDetails = {
   completedAt?: string; // ISO DATE
   explorerLink?: string;
 };
+
+export type FiatProvider = "STRIPE" | "TRANSAK" | "KADO";
