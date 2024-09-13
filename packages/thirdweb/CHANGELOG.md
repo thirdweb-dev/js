@@ -1,5 +1,48 @@
 # thirdweb
 
+## 5.55.0
+
+### Minor Changes
+
+- [#4571](https://github.com/thirdweb-dev/js/pull/4571) [`5058fdb`](https://github.com/thirdweb-dev/js/commit/5058fdb4707c18a3b22895f90b3682a3c91db52f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds X authentication
+
+- [#4565](https://github.com/thirdweb-dev/js/pull/4565) [`c0778cb`](https://github.com/thirdweb-dev/js/commit/c0778cb9305476025b07bb39b8159f749d15359a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds parseAvatarRecord and parseNftUri utilities
+
+  ```ts
+  import { parseAvatarRecord } from "thirdweb/extensions/ens";
+  import { parseNftUri } from "thirdweb/extensions/common";
+
+  const avatarUrl = await parseAvatarRecord({
+    client,
+    uri: "...",
+  });
+
+  const nftUri = await parseNftUri({
+    client,
+    uri: "...",
+  });
+  ```
+
+### Patch Changes
+
+- [#4582](https://github.com/thirdweb-dev/js/pull/4582) [`5d3b395`](https://github.com/thirdweb-dev/js/commit/5d3b39587b56a7b1ad49accf26a4c9a311b12795) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to hide certain wallets in the wallet switcher
+
+  ```tsx
+  <ConnectButton
+    client={client}
+    detailsModal={{
+      // We hide the in-app wallet so they can't switch to it
+      hiddenWallets: ["inApp"],
+    }}
+    accountAbstraction={{
+      chain: baseSepolia,
+      sponsorGas: true,
+    }}
+  />
+  ```
+
+- [#4546](https://github.com/thirdweb-dev/js/pull/4546) [`3901805`](https://github.com/thirdweb-dev/js/commit/390180592a6d71591c43bcbe3c94da2eeaa5b0d6) Thanks [@edwardysun](https://github.com/edwardysun)! - Add preferredProvider to buyWithFiat
+
 ## 5.54.0
 
 ### Minor Changes
