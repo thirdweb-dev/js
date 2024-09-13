@@ -1,5 +1,8 @@
 import type { ParsedUrlQuery } from "node:querystring";
 
+/**
+ * @deprecated use `SearchParams` instead
+ */
 export function getSingleQueryValue(
   query: ParsedUrlQuery,
   key: string,

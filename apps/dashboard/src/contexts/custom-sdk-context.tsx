@@ -30,7 +30,7 @@ const PLACEHOLDER_CHAIN: StoredChain = {
   testnet: false,
 };
 
-export const CustomSDKContext: ComponentWithChildren<{
+const CustomSDKContext: ComponentWithChildren<{
   desiredChainId?: number;
   options?: SDKOptions;
 }> = ({ desiredChainId, options, children }) => {

@@ -2222,7 +2222,7 @@ importers:
         version: 3.592.0
       '@aws-sdk/credential-providers':
         specifier: 3.592.0
-        version: 3.592.0(@aws-sdk/client-sso-oidc@3.645.0(@aws-sdk/client-sts@3.645.0))
+        version: 3.592.0(@aws-sdk/client-sso-oidc@3.645.0(@aws-sdk/client-sts@3.592.0))
       '@coinbase/wallet-mobile-sdk':
         specifier: ^1
         version: 1.0.13(expo@51.0.32(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))(react@18.3.1)
@@ -2377,7 +2377,7 @@ importers:
         version: 3.592.0
       '@aws-sdk/credential-providers':
         specifier: 3.592.0
-        version: 3.592.0(@aws-sdk/client-sso-oidc@3.645.0(@aws-sdk/client-sts@3.592.0))
+        version: 3.592.0(@aws-sdk/client-sso-oidc@3.645.0(@aws-sdk/client-sts@3.645.0))
       '@chromatic-com/storybook':
         specifier: ^1.5.0
         version: 1.8.0(react@18.3.1)

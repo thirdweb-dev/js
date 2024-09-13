@@ -174,18 +174,11 @@ export enum PageId {
   // example: thirdweb.com/jns.eth
   Profile = "profile",
 
-  // thirdweb.com/:wallet/:contractId
-  // example: thirdweb.com/jns.eth/PermissionedERC721A
-  PublishedContract = "published-contract",
-
   // ---------------------------------------------------------------------------
   //  "deploy" product pages
   // ---------------------------------------------------------------------------
   // thirdweb.com/contracts/deploy
   DeployMultiple = "deploy-multiple-contracts",
-
-  // thirdweb.com/contracts/deploy/:id
-  DeploySingle = "deploy-single-contract",
 
   // thirdweb.com/:network/:contractAddress (evm)
   // example: thirdweb.com/goerli/0x2eaDAa60dBB74Ead3E20b23E4C5A0Dd789932846

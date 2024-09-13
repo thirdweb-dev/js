@@ -1,6 +1,6 @@
-import { type Hex, encodePacked } from "viem";
+import { encodePacked } from "viem/utils";
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
-import { uint8ArrayToHex } from "../encoding/hex.js";
+import { type Hex, uint8ArrayToHex } from "../encoding/hex.js";
 import { getSaltHash } from "./get-salt-hash.js";
 import { keccakId } from "./keccak-id.js";
 

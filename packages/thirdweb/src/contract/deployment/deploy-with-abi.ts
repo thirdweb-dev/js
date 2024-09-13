@@ -5,12 +5,14 @@ import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
 import { normalizeFunctionParams } from "../../utils/abi/normalizeFunctionParams.js";
 import { computeDeploymentAddress } from "../../utils/any-evm/compute-deployment-address.js";
 import { computeDeploymentInfoFromBytecode } from "../../utils/any-evm/compute-published-contract-deploy-info.js";
+import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
 import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
 import { type Hex, isHex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChain } from "../../utils/types.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
+import { getContract } from "../contract.js";
 
 /**
  * @extension DEPLOY
@@ -122,6 +124,22 @@ export async function deployContract(
   if (options.salt !== undefined) {
     // Deploy with CREATE2 if salt is provided
     const info = await computeDeploymentInfoFromBytecode(options);
+    const address = computeDeploymentAddress({
+      bytecode: options.bytecode,
+      encodedArgs: info.encodedArgs,
+      create2FactoryAddress: info.create2FactoryAddress,
+      salt: options.salt,
+    });
+    const isDeployed = await isContractDeployed(
+      getContract({
+        client: options.client,
+        chain: options.chain,
+        address,
+      }),
+    );
+    if (isDeployed) {
+      throw new Error(`Contract already deployed at address: ${address}`);
+    }
     await sendAndConfirmTransaction({
       account: options.account,
       transaction: prepareTransaction({
@@ -131,12 +149,7 @@ export async function deployContract(
         data: info.initBytecodeWithsalt,
       }),
     });
-    return computeDeploymentAddress({
-      bytecode: options.bytecode,
-      encodedArgs: info.encodedArgs,
-      create2FactoryAddress: info.create2FactoryAddress,
-      salt: options.salt,
-    });
+    return address;
   }
 
   const deployTx = prepareDirectDeployTransaction(options);

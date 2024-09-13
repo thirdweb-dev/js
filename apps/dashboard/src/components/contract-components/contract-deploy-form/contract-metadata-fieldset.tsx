@@ -3,24 +3,21 @@ import { FormControl, Input } from "@chakra-ui/react";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { FormErrorMessage, FormLabel } from "tw-components";
-import type { useContractPublishMetadataFromURI } from "../hooks";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
 interface ContractMetadataFieldsetProps {
   form: CustomContractDeploymentForm;
-  metadata: ReturnType<typeof useContractPublishMetadataFromURI>;
 }
 
 export const ContractMetadataFieldset: React.FC<
   ContractMetadataFieldsetProps
-> = ({ form, metadata }) => {
+> = ({ form }) => {
   return (
     <Fieldset legend="Contract Metadata">
       <div className="flex flex-col md:grid gap-6 md:grid-cols-[270px_1fr]">
         <div>
           <FormControl
-            isDisabled={!metadata.isSuccess}
             display="flex"
             flexDirection="column"
             isInvalid={
@@ -51,7 +48,6 @@ export const ContractMetadataFieldset: React.FC<
         <div className="flex flex-col gap-6">
           <FormControl
             isRequired
-            isDisabled={!metadata.isSuccess}
             isInvalid={
               !!form.getFieldState("contractMetadata.name", form.formState)
                 .error
@@ -91,7 +87,6 @@ export const ContractMetadataFieldset: React.FC<
           </FormControl>
 
           <FormControl
-            isDisabled={!metadata.isSuccess}
             className="grow flex flex-col"
             isInvalid={
               !!form.getFieldState(

@@ -366,7 +366,8 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                     <SolidityInput
                       solidityName={item.key}
                       solidityType={item.type}
-                      // solidityComponents={item.components}
+                      // @ts-expect-error - old types, need to update
+                      solidityComponents={item.components}
                       {...form.register(`params.${index}.value`)}
                       functionName={abiFunction.name}
                     />

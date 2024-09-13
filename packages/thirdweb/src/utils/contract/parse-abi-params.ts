@@ -79,6 +79,9 @@ export function parseAbiParams(
       return value;
     }
     if (type.startsWith("uint") || type.startsWith("int")) {
+      if (typeof value === "bigint") {
+        return value;
+      }
       if (typeof value !== "string" && typeof value !== "number") {
         throw new Error(`Cannot convert type ${typeof value} to BigInt`);
       }
