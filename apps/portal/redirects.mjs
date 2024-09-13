@@ -705,6 +705,7 @@ const otherRedirects = {
 	"/unity/wallets/providers/embedded-wallet": "/unity/wallets/providers/in-app-wallet",
 	// connect
 	"/connect/connect": "/connect/sign-in",
+	"/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server": "/connect/in-app-wallet/guides/get-in-app-wallet-details-on-server",
 };
 
 const v5RestructuredRedirects = {
