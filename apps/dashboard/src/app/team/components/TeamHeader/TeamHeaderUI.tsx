@@ -19,6 +19,7 @@ export type TeamHeaderCompProps = {
   email: string | undefined;
   logout: () => void;
   connectButton: React.ReactNode;
+  createProject: () => void;
 };
 
 export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
@@ -56,6 +57,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             currentTeam={props.currentTeam}
             teamsAndProjects={props.teamsAndProjects}
             focus="team-selection"
+            createProject={props.createProject}
           />
         </div>
 
@@ -75,6 +77,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
                 currentTeam={props.currentTeam}
                 teamsAndProjects={props.teamsAndProjects}
                 focus="project-selection"
+                createProject={props.createProject}
               />
             </div>
           </>
@@ -144,6 +147,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
                 currentProject={props.currentProject}
                 projects={projects}
                 team={props.currentTeam}
+                createProject={props.createProject}
               />
             </div>
           </>

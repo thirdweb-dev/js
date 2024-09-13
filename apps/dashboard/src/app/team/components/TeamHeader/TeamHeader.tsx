@@ -5,8 +5,9 @@ import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
+import { LazyCreateAPIKeyDialog } from "../../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import {
   type TeamHeaderCompProps,
   TeamHeaderDesktopUI,
@@ -18,6 +19,8 @@ export function TeamHeader(props: {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   currentProject: Project | undefined;
 }) {
+  const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] =
+    useState(false);
   const myAccountQuery = useAccount();
   const activeWallet = useActiveWallet();
   const { disconnect } = useDisconnect();
@@ -45,12 +48,23 @@ export function TeamHeader(props: {
     email: myAccountQuery.data?.email,
     logout: logout,
     connectButton: <CustomConnectWallet />,
+    createProject: () => setIsCreateProjectDialogOpen(true),
   };
 
   return (
     <div>
       <TeamHeaderDesktopUI {...headerProps} className="max-lg:hidden" />
       <TeamHeaderMobileUI {...headerProps} className="lg:hidden" />
+
+      <LazyCreateAPIKeyDialog
+        open={isCreateProjectDialogOpen}
+        onOpenChange={setIsCreateProjectDialogOpen}
+        wording="project"
+        onCreateAndComplete={() => {
+          // refresh projects
+          router.refresh();
+        }}
+      />
     </div>
   );
 }

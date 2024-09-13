@@ -14,6 +14,7 @@ export type AccountHeaderCompProps = {
   logout: () => void;
   connectButton: React.ReactNode;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
+  createProject: () => void;
 };
 
 export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
@@ -46,6 +47,7 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
             currentTeam={undefined}
             teamsAndProjects={props.teamsAndProjects}
             focus="team-selection"
+            createProject={props.createProject}
           />
         </div>
       </div>

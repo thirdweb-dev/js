@@ -5,7 +5,8 @@ import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { LazyCreateAPIKeyDialog } from "../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import {
   type AccountHeaderCompProps,
   AccountHeaderDesktopUI,
@@ -17,6 +18,8 @@ export function AccountHeader(props: {
 }) {
   const myAccountQuery = useAccount();
   const router = useDashboardRouter();
+  const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] =
+    useState(false);
 
   const logout = useCallback(async () => {
     // log out the user
@@ -35,12 +38,23 @@ export function AccountHeader(props: {
     email: myAccountQuery.data?.email,
     logout: logout,
     connectButton: <CustomConnectWallet />,
+    createProject: () => setIsCreateProjectDialogOpen(true),
   };
 
   return (
     <div>
       <AccountHeaderDesktopUI {...headerProps} className="max-lg:hidden" />
       <AccountHeaderMobileUI {...headerProps} className="lg:hidden" />
+
+      <LazyCreateAPIKeyDialog
+        open={isCreateProjectDialogOpen}
+        onOpenChange={setIsCreateProjectDialogOpen}
+        wording="project"
+        onCreateAndComplete={() => {
+          // refresh projects
+          router.refresh();
+        }}
+      />
     </div>
   );
 }

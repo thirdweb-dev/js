@@ -172,7 +172,7 @@ interface UpdateKeyServiceInput {
   actions?: string[];
 }
 
-interface CreateKeyInput {
+export interface CreateKeyInput {
   name?: string;
   domains?: string[];
   bundleIds?: string[];

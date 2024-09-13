@@ -6,19 +6,22 @@ import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ChevronsUpDownIcon } from "lucide-react";
+import { useState } from "react";
 import { ProjectSelectorUI } from "./ProjectSelectorUI";
 
 type ProjectSelectorMobileMenuButtonProps = {
   currentProject: Project;
   projects: Project[];
   team: Team;
+  createProject: () => void;
 };
 
 export function ProjectSelectorMobileMenuButton(
   props: ProjectSelectorMobileMenuButtonProps,
 ) {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       {/* Trigger */}
       <DialogTrigger asChild>
         <Button
@@ -37,6 +40,10 @@ export function ProjectSelectorMobileMenuButton(
             currentProject={props.currentProject}
             projects={props.projects}
             team={props.team}
+            createProject={() => {
+              props.createProject();
+              setOpen(false);
+            }}
           />
         </DynamicHeight>
       </DialogContent>
