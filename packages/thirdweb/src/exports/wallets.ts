@@ -143,3 +143,4 @@ export type {
 export { injectedProvider } from "../wallets/injected/mipdStore.js";
 
 export type { ConnectionManager } from "../wallets/manager/index.js";
+export { createConnectionManager } from "../wallets/manager/index.js";

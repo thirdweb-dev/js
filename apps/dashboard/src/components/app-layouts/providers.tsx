@@ -5,9 +5,14 @@ import { useSupportedChainsSlugRecord } from "hooks/chains/configureChains";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import { ThirdwebProvider } from "thirdweb/react";
+import { ThirdwebProvider, webLocalStorage } from "thirdweb/react";
+import { createConnectionManager } from "thirdweb/wallets";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { DashboardThirdwebProviderSetup } from "./provider-setup";
+
+const connectionManager = createConnectionManager(webLocalStorage, {
+  initialIsAutoConnecting: true,
+});
 
 export const DashboardThirdwebProvider: ComponentWithChildren = ({
   children,
@@ -28,7 +33,7 @@ export const DashboardThirdwebProvider: ComponentWithChildren = ({
   }, [contractInfo, chainByChainSlug, isChainSlugPage]);
 
   return (
-    <ThirdwebProvider>
+    <ThirdwebProvider connectionManager={connectionManager}>
       <DashboardThirdwebProviderSetup
         contractInfo={contractInfo}
         activeChain={activeChain}

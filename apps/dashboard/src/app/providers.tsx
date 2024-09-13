@@ -5,16 +5,21 @@ import { DashboardThirdwebProviderSetup } from "components/app-layouts/provider-
 import { AllChainsProvider } from "contexts/all-chains";
 import { ChainsProvider } from "contexts/configured-chains";
 import { ThemeProvider } from "next-themes";
-import { ThirdwebProvider } from "thirdweb/react";
+import { ThirdwebProvider, webLocalStorage } from "thirdweb/react";
+import { createConnectionManager } from "thirdweb/wallets";
 
 const queryClient = new QueryClient();
+
+const connectionManager = createConnectionManager(webLocalStorage, {
+  initialIsAutoConnecting: true,
+});
 
 export function AppRouterProviders(props: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <AllChainsProvider>
         <ChainsProvider>
-          <ThirdwebProvider>
+          <ThirdwebProvider connectionManager={connectionManager}>
             <DashboardThirdwebProviderSetup>
               <ThemeProvider attribute="class" defaultTheme="dark">
                 {props.children}

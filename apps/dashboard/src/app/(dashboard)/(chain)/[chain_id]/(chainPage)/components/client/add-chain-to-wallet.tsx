@@ -47,9 +47,12 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
         className="gap-2 w-full"
         variant="outline"
         onClick={() => {
-          // Connct directly to this chain
           if (!account) {
-            return customConnectModal({ chain: props.chain });
+            // Connct directly to this chain
+            return customConnectModal({
+              chain: props.chain,
+              dismissible: true,
+            });
           }
 
           // switch to this chain

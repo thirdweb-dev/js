@@ -1,13 +1,42 @@
 import { isLoginRequired } from "@/constants/auth";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useQuery } from "@tanstack/react-query";
-import type { EnsureLoginResponse } from "app/api/auth/ensure-login/route";
 import { usePathname } from "next/navigation";
-import { useRef } from "react";
+import { useEffect } from "react";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
+  useConnectionManager,
+  useIsAutoConnecting,
 } from "thirdweb/react";
+import type { isLoggedInResponseType } from "../../../app/api/auth/isloggedin/route";
+import { useCustomConnectModal } from "../components/connect-wallet";
+
+function useIsConnectionStatusSettled() {
+  const manager = useConnectionManager();
+  const isAutoConnecting = useIsAutoConnecting();
+  const connectionStatus = useActiveWalletConnectionStatus();
+
+  // handle autoConnect stuck in `true` state
+  // this should already be handled by AutoConnect component - but if the page does not have AutoConnect component for some reason
+  // timeout auto-connecting after 15 seconds
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (manager.isAutoConnecting.getValue()) {
+        manager.isAutoConnecting.setValue(false);
+      }
+    }, 15000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [manager]);
+
+  const connectionStatusIsSettled =
+    !isAutoConnecting && connectionStatus !== "connecting";
+
+  return connectionStatusIsSettled;
+}
 
 // define "TW_AUTH_TOKEN" to exist on the window object
 declare global {
@@ -21,58 +50,57 @@ export function useLoggedInUser(): {
   isLoggedIn: boolean;
   user: { address: string; jwt?: string } | null;
 } {
-  const router = useDashboardRouter();
+  const openConnectModal = useCustomConnectModal();
+
   const pathname = usePathname();
   const connectedAddress = useActiveAccount()?.address;
+  const connectionSettled = useIsConnectionStatusSettled();
   const connectionStatus = useActiveWalletConnectionStatus();
-  // this is to work around the fact that `connectionStatus` ends up as "disconnected"
-  // which we *do* care about, but only after we have been "connecting" at least once
-  const statusWasEverConnecting = useRef(false);
-  if (connectionStatus === "connecting" || connectionStatus === "connected") {
-    statusWasEverConnecting.current = true;
-  }
+
+  const enabled = !!pathname && connectionSettled && isLoginRequired(pathname);
 
   const query = useQuery({
     // enabled if:
     // - there is a pathname
     // - we are not already currently connecting
     // - the pathname requires login
-    enabled:
-      !!pathname &&
-      connectionStatus !== "connecting" &&
-      statusWasEverConnecting.current &&
-      isLoginRequired(pathname),
+    enabled: enabled,
     // the last "persist", part of the queryKey, is to make sure that we do not cache this query in indexDB
     // convention in v4 of the SDK that we are (ab)using here
     queryKey: ["logged_in_user", connectedAddress, { persist: false }],
     retry: false,
     queryFn: async () => {
       const searchParams = new URLSearchParams();
-      if (pathname) {
-        searchParams.set("pathname", pathname);
-      }
+
       if (connectedAddress) {
         searchParams.set("address", connectedAddress);
       }
       const res = await fetch(
-        `/api/auth/ensure-login?${searchParams.toString()}`,
+        `/api/auth/isloggedin?address=${connectedAddress}`,
         {
           method: "GET",
         },
       );
 
-      return (await res.json()) as EnsureLoginResponse;
+      return (await res.json()) as isLoggedInResponseType;
     },
-    onSuccess: (data) => {
-      if (data.redirectTo) {
-        router.replace(data.redirectTo);
-      }
-      if (data.jwt) {
+    onSuccess: async (data) => {
+      if (data.isLoggedIn) {
         // necessary for legacy things for now (SDK picks it up from there)
         // eslint-disable-next-line react-compiler/react-compiler
         window.TW_AUTH_TOKEN = data.jwt;
       } else {
         window.TW_AUTH_TOKEN = undefined;
+        try {
+          await openConnectModal({
+            dismissible: false,
+          });
+          // invalidate loggedin-user query
+          query.refetch();
+        } catch (e) {
+          // if a modal is already open, it throws an error
+          console.warn("Did not open connect modal", e);
+        }
       }
     },
   });

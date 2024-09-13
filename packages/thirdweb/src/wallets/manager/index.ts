@@ -36,7 +36,12 @@ export type ConnectManagerOptions = {
  * @returns A connection manager object
  * @walletUtils
  */
-export function createConnectionManager(storage: AsyncStorage) {
+export function createConnectionManager(
+  storage: AsyncStorage,
+  options?: {
+    initialIsAutoConnecting: boolean;
+  },
+) {
   // stores
 
   // active wallet/account
@@ -74,7 +79,9 @@ export function createConnectionManager(storage: AsyncStorage) {
   const walletIdToConnectedWalletMap =
     createStore<WalletIdToConnectedWalletMap>(new Map());
 
-  const isAutoConnecting = createStore(false);
+  const isAutoConnecting = createStore(
+    options?.initialIsAutoConnecting || false,
+  );
 
   const connectedWallets = computedStore(() => {
     return Array.from(walletIdToConnectedWalletMap.getValue().values());

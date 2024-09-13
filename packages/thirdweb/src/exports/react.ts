@@ -193,3 +193,5 @@ export type {
   FarcasterProfile,
   LensProfile,
 } from "../social/types.js";
+
+export { webLocalStorage } from "../utils/storage/webStorage.js";

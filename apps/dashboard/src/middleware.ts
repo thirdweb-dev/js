@@ -1,7 +1,4 @@
-import { isLoginRequired } from "@/constants/auth";
-import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { type NextRequest, NextResponse } from "next/server";
-import { getAddress } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
 import { defineDashboardChain } from "./lib/defineDashboardChain";
 
@@ -22,25 +19,6 @@ export const config = {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const activeAccount = request.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;
-  const authCookie = activeAccount
-    ? request.cookies.get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))
-    : null;
-
-  // logged in paths
-  if (isLoginRequired(pathname)) {
-    // check if the user is logged in (has a valid auth cookie)
-
-    if (!authCookie) {
-      // if not logged in, rewrite to login page
-      return redirect(
-        request,
-        "/login",
-        `next=${encodeURIComponent(pathname)}`,
-        false,
-      );
-    }
-  }
 
   // remove '/' in front and then split by '/'
   const paths = pathname.slice(1).split("/");

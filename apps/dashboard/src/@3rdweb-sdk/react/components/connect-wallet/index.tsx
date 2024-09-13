@@ -1,7 +1,4 @@
 "use client";
-
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
 import { thirdwebClient } from "@/constants/client";
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
@@ -19,13 +16,50 @@ import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import type { Chain } from "thirdweb";
-import { AutoConnect, ConnectButton, useConnectModal } from "thirdweb/react";
+import type { LoginPayload } from "thirdweb/auth";
+import {
+  ConnectButton,
+  type SiweAuthOptions,
+  useConnectModal,
+} from "thirdweb/react";
+import type { isLoggedInResponseType } from "../../../../app/api/auth/isloggedin/route";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
-import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
+
+const dashboardAuth: SiweAuthOptions = {
+  async doLogin(params) {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to log in");
+    }
+  },
+  async doLogout() {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+    });
+  },
+  async getLoginPayload(params) {
+    const res = await fetch(
+      `/api/auth/get-login-payload?address=${params.address}&chainId=${params.chainId}`,
+    );
+    const json = (await res.json()) as LoginPayload;
+    return json;
+  },
+  async isLoggedIn(address) {
+    const res = await fetch(`/api/auth/isloggedin?address=${address}`);
+    const json = (await res.json()) as isLoggedInResponseType;
+    return json.isLoggedIn;
+  },
+};
 
 export const CustomConnectWallet = (props: {
   loginRequired?: boolean;
@@ -67,38 +101,6 @@ export const CustomConnectWallet = (props: {
       },
     ];
   }, [recentChainsv4, favChainsQuery.data, popularChainsWithMeta]);
-
-  // ensures login status on pages that need it
-  const { isLoading, isLoggedIn } = useLoggedInUser();
-  const pathname = usePathname();
-
-  if (isLoading) {
-    return (
-      <>
-        <div className="w-[144px] h-[48px] bg-muted border border-border rounded-lg flex items-center justify-center">
-          <Spinner className="size-4" />
-        </div>
-        {/* need autoconnect here so that we actually connect */}
-        <AutoConnect client={thirdwebClient} />
-      </>
-    );
-  }
-
-  if (!isLoggedIn && loginRequired) {
-    return (
-      <>
-        <Button asChild variant="default" className="gap-2" size="lg">
-          <Link
-            href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
-          >
-            Sign In
-          </Link>
-        </Button>
-        {/* need autoconnect here so that we actually connect */}
-        <AutoConnect client={thirdwebClient} />
-      </>
-    );
-  }
 
   return (
     <ConnectButton
@@ -144,6 +146,7 @@ export const CustomConnectWallet = (props: {
           },
         },
       }}
+      auth={loginRequired ? dashboardAuth : undefined}
     />
   );
 };
@@ -224,7 +227,7 @@ export function useCustomConnectModal() {
   const { theme } = useTheme();
 
   return useCallback(
-    (options?: { chain?: Chain }) => {
+    (options: { chain?: Chain; dismissible: boolean }) => {
       return connect({
         client: thirdwebClient,
         appMetadata: {
@@ -232,10 +235,12 @@ export function useCustomConnectModal() {
           logoUrl: "https://thirdweb.com/favicon.ico",
           url: "https://thirdweb.com",
         },
-        chain: options?.chain,
+        chain: options.chain,
         privacyPolicyUrl: "/privacy",
         termsOfServiceUrl: "/tos",
         showThirdwebBranding: false,
+        dismissible: options.dismissible,
+        auth: dashboardAuth,
         welcomeScreen: () => (
           <ConnectWalletWelcomeScreen
             theme={theme === "light" ? "light" : "dark"}

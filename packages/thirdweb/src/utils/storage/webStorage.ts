@@ -1,5 +1,8 @@
 import type { AsyncStorage } from "./AsyncStorage.js";
 
+/**
+ * @internal
+ */
 export const webLocalStorage: AsyncStorage = {
   async getItem(key: string) {
     if (typeof window !== "undefined" && window.localStorage) {

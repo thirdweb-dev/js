@@ -12,7 +12,7 @@ import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provide
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 import type { LocaleId } from "../types.js";
-import ConnectModal from "./Modal/ConnectModal.js";
+import ConnectModal, { isConnectModalOpenStore } from "./Modal/ConnectModal.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import type { WelcomeScreen } from "./screens/types.js";
@@ -53,6 +53,11 @@ export function useConnectModal() {
   const connect = useCallback(
     (props: UseConnectModalOptions) => {
       let connectedWallet: Wallet | undefined;
+
+      if (isConnectModalOpenStore.getValue()) {
+        throw new Error("A Connect Modal is already open");
+      }
+
       let isLoggedIn = false;
       function cleanup() {
         setIsConnecting(false);

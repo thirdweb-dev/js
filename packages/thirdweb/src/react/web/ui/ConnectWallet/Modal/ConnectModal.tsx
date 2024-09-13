@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { createStore } from "../../../../../reactive/store.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { SiweAuthOptions } from "../../../../core/hooks/auth/useSiweAuth.js";
@@ -52,6 +53,8 @@ type ConnectModalOptions = {
   dismissible: boolean;
 };
 
+export const isConnectModalOpenStore = createStore(false);
+
 /**
  * @internal
  */
@@ -66,6 +69,13 @@ const ConnectModal = (props: ConnectModalOptions) => {
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const [hideModal, setHideModal] = useState(false);
+
+  useEffect(() => {
+    isConnectModalOpenStore.setValue(isWalletModalOpen);
+    return () => {
+      isConnectModalOpenStore.setValue(false);
+    };
+  }, [isWalletModalOpen]);
 
   const closeModal = useCallback(() => {
     props.onClose?.();
