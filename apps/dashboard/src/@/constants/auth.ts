@@ -6,8 +6,6 @@ const LOGGED_IN_ONLY_PATHS = [
   // anything that _starts_ with /cli is logged in only
   "/cli",
   "/support",
-  "/thirdweb.eth",
-
   // TODO: add any other logged in only paths here
 ];
 
