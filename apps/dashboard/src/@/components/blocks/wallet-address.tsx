@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/hover-card";
 import { Check, Copy, ExternalLinkIcon } from "lucide-react";
 import { useMemo, useState } from "react";
+import { isAddress } from "thirdweb";
 import { ZERO_ADDRESS } from "thirdweb";
 import {
   Blobbie,
@@ -28,6 +29,7 @@ export function WalletAddress(props: {
 }) {
   // default back to zero address if no address provided
   const address = useMemo(() => props.address || ZERO_ADDRESS, [props.address]);
+
   const [shortenedAddress, lessShortenedAddress] = useMemo(() => {
     return [
       props.shortenAddress !== false
@@ -43,6 +45,10 @@ export function WalletAddress(props: {
   });
 
   const [isCopied, setIsCopied] = useState(false);
+
+  if (!isAddress(address)) {
+    return <span>Invalid Address ({address})</span>;
+  }
 
   const copyToClipboard = async () => {
     try {
