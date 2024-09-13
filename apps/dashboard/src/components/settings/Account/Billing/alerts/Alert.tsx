@@ -173,7 +173,7 @@ export const BillingAlerts = () => {
         key: "usage_100_alert",
         title: "You have exceeded your usage limit",
         // if free or growth plan, included the upgrade plan message
-        description: `Overages are now being charged.${isFreePlan || (isGrowthPlan && " Consider upgrading your plan to increase your included limits.")}`,
+        description: `Overages are now being charged.${isFreePlan || isGrowthPlan ? " Consider upgrading your plan to increase your included limits." : ""}`,
         status: "warning",
         componentType: "usage",
       },
