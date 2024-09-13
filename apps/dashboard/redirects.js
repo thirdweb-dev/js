@@ -2,6 +2,11 @@
 function redirects() {
   return [
     {
+      source: "/:chain/connect-sdk",
+      destination: "https://portal.thirdweb.com/connect",
+      permanent: true,
+    },
+    {
       source: "/portal/:match*",
       destination: "https://portal.thirdweb.com/:match*",
       permanent: true,
