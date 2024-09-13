@@ -62,7 +62,8 @@ export function usePlaygroundWallets() {
   const [socialOptions, setSocialOptions] = useState<
     Record<InAppWalletAuth, boolean>
   >({
-    line: true,
+    line: false,
+    x: true,
     google: true,
     discord: true,
     telegram: true,

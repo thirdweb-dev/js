@@ -15,6 +15,7 @@ const allInAppWalletLoginMethods: InAppWalletAuth[] = [
   "passkey",
   "phone",
   "line",
+  "x",
   "facebook",
   "apple",
 ];

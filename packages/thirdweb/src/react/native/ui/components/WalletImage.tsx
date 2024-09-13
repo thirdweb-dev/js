@@ -17,6 +17,7 @@ import {
   PHONE_ICON,
   TELEGRAM_ICON,
   WALLET_ICON,
+  X_ICON,
 } from "../icons/svgs.js";
 import { RNImage } from "./RNImage.js";
 
@@ -84,6 +85,8 @@ export function getAuthProviderImage(authProvider: string | null): string {
       return DISCORD_ICON;
     case "line":
       return LINE_ICON;
+    case "x":
+      return X_ICON;
     case "farcaster":
       return FARCASTER_ICON;
     case "telegram":

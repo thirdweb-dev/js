@@ -25,6 +25,7 @@ export const socialAuthOptions = [
   "facebook",
   "discord",
   "line",
+  "x",
   "farcaster",
   "telegram",
 ] as const;
