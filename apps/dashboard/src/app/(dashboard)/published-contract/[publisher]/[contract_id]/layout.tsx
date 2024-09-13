@@ -1,5 +1,5 @@
 import { PublishedContractBreadcrumbs } from "./components/breadcrumbs.client";
-import { getPublishedContractPageMetadata } from "./utils/getPublishedContractPageMetadata";
+import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 
 type Params = { publisher: string; contract_id: string };
 
@@ -16,9 +16,20 @@ export default function PublishedContractLayout(props: {
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-  return getPublishedContractPageMetadata({
-    publisher: params.publisher,
-    contract_id: params.contract_id,
-    pageType: "view",
+  const { publisher, contract_id } = params;
+
+  const publishedContracts = await getPublishedContractsWithPublisherMapping({
+    publisher: publisher,
+    contract_id: contract_id,
   });
+
+  const publishedContract = publishedContracts[0];
+
+  const publishedContractName =
+    publishedContract?.displayName || publishedContract?.name;
+
+  return {
+    title: `${publishedContractName} | Published Smart Contract`,
+    description: `${publishedContract.description}${publishedContract.description ? ". " : ""}Deploy ${publishedContractName} in one click with thirdweb.`,
+  };
 }

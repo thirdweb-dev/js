@@ -101,13 +101,6 @@ function fromUrl(type: keyof OgProps, url: URL): OgProps[typeof type] {
   }
 }
 
-export const PublishedContractOG = {
-  toUrl: (props: OgProps["publishedContract"]) =>
-    toUrl("publishedContract", props),
-  fromUrl: (url: URL) =>
-    fromUrl("publishedContract", url) as OgProps["publishedContract"],
-};
-
 export const ProfileOG = {
   toUrl: (props: OgProps["profile"]) => toUrl("profile", props),
   fromUrl: (url: URL) => fromUrl("profile", url) as OgProps["profile"],

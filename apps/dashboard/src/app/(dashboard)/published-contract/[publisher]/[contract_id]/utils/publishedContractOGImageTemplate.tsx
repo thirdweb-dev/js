@@ -1,37 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import { isProd } from "@/constants/env";
-import { ImageResponse } from "@vercel/og";
-import type { NextRequest } from "next/server";
-import { PublishedContractOG } from "og-lib/url-utils";
-
-// Make sure the font exists in the specified path:
-export const config = {
-  runtime: "edge",
-};
-
-const image = fetch(
-  new URL("og-lib/assets/publish/background.png", import.meta.url),
-).then((res) => res.arrayBuffer());
-
-const inter400_ = fetch(
-  new URL("og-lib/fonts/inter/400.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
-const inter500_ = fetch(
-  new URL("og-lib/fonts/inter/500.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
-const inter700_ = fetch(
-  new URL("og-lib/fonts/inter/700.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
-
-const ibmPlexMono400_ = fetch(
-  new URL("og-lib/fonts/ibm-plex-mono/400.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
-const ibmPlexMono500_ = fetch(
-  new URL("og-lib/fonts/ibm-plex-mono/500.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
-const ibmPlexMono700_ = fetch(
-  new URL("og-lib/fonts/ibm-plex-mono/700.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
+import { thirdwebClient } from "@/constants/client";
+import { ImageResponse } from "next/og";
+import { download } from "thirdweb/storage";
 
 const OgBrandIcon: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
@@ -160,27 +130,49 @@ function descriptionShortener(description: string) {
   return `${words.join(" ")} ...`;
 }
 
-const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
-  ? `https://${process.env.API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/" : "thirdwebstorage-dev.com/ipfs/"}`
-  : "https://ipfs.io/ipfs/";
+export async function publishedContractOGImageTemplate(params: {
+  title: string;
+  description?: string;
+  version: string;
+  publisher: string;
+  license: string[];
+  publishDate: string;
+  logo?: string;
+  publisherAvatar?: string;
+  extension?: string[];
+}) {
+  const image = fetch(
+    new URL("og-lib/assets/publish/background.png", import.meta.url),
+  ).then((res) => res.arrayBuffer());
 
-function replaceAnyIpfsUrlWithGateway(url: string) {
-  if (url.startsWith("ipfs://")) {
-    return `${IPFS_GATEWAY}${url.slice(7)}`;
-  }
-  if (url.includes("/ipfs/")) {
-    const [, after] = url.split("/ipfs/");
-    return `${IPFS_GATEWAY}${after}`;
-  }
-  return url;
-}
+  const inter400_ = fetch(
+    new URL("../../../../../../og-lib/fonts/inter/400.ttf", import.meta.url),
+  ).then((res) => res.arrayBuffer());
+  const inter500_ = fetch(
+    new URL("../../../../../../og-lib/fonts/inter/500.ttf", import.meta.url),
+  ).then((res) => res.arrayBuffer());
+  const inter700_ = fetch(
+    new URL("../../../../../../og-lib/fonts/inter/700.ttf", import.meta.url),
+  ).then((res) => res.arrayBuffer());
 
-export default async function handler(req: NextRequest) {
-  if (req.method !== "GET") {
-    return new Response("Method not allowed", { status: 405 });
-  }
-
-  const publishedContractData = PublishedContractOG.fromUrl(new URL(req.url));
+  const ibmPlexMono400_ = fetch(
+    new URL(
+      "../../../../../../og-lib/fonts/ibm-plex-mono/400.ttf",
+      import.meta.url,
+    ),
+  ).then((res) => res.arrayBuffer());
+  const ibmPlexMono500_ = fetch(
+    new URL(
+      "../../../../../../og-lib/fonts/ibm-plex-mono/500.ttf",
+      import.meta.url,
+    ),
+  ).then((res) => res.arrayBuffer());
+  const ibmPlexMono700_ = fetch(
+    new URL(
+      "../../../../../../og-lib/fonts/ibm-plex-mono/700.ttf",
+      import.meta.url,
+    ),
+  ).then((res) => res.arrayBuffer());
 
   const [
     inter400,
@@ -190,6 +182,8 @@ export default async function handler(req: NextRequest) {
     ibmPlexMono500,
     ibmPlexMono700,
     imageData,
+    logo,
+    avatar,
   ] = await Promise.all([
     inter400_,
     inter500_,
@@ -198,6 +192,18 @@ export default async function handler(req: NextRequest) {
     ibmPlexMono500_,
     ibmPlexMono700_,
     image,
+    params.logo
+      ? download({
+          uri: params.logo,
+          client: thirdwebClient,
+        }).then((res) => res.arrayBuffer())
+      : undefined,
+    params.publisherAvatar
+      ? download({
+          uri: params.publisherAvatar,
+          client: thirdwebClient,
+        }).then((res) => res.arrayBuffer())
+      : undefined,
   ]);
 
   return new ImageResponse(
@@ -223,38 +229,30 @@ export default async function handler(req: NextRequest) {
         <div tw="flex justify-between items-start w-full">
           <div tw="flex flex-col flex-shrink">
             <div tw="flex items-center">
-              {publishedContractData.logo && (
-                <img
-                  src={replaceAnyIpfsUrlWithGateway(publishedContractData.logo)}
-                  tw="w-16 h-16 rounded-xl mr-4"
-                  alt=""
-                />
-              )}
-              <h1 tw="text-6xl font-bold text-white">
-                {publishedContractData.name}
-              </h1>
+              {/* @ts-expect-error - this works fine */}
+              {logo && <img src={logo} tw="w-16 h-16 rounded-xl mr-4" alt="" />}
+              <h1 tw="text-6xl font-bold text-white">{params.title}</h1>
             </div>
-            {publishedContractData?.description && (
+            {params?.description && (
               <p tw="text-3xl font-medium text-gray-400 max-w-4xl">
-                {descriptionShortener(publishedContractData.description)}
+                {descriptionShortener(params.description)}
               </p>
             )}
           </div>
           <div tw="flex flex-col shrink-0 items-center">
-            {publishedContractData.publisherAvatar && (
+            {avatar && (
               <img
                 alt=""
                 width={100}
                 height={100}
                 tw="w-32 h-32 rounded-full"
-                src={replaceAnyIpfsUrlWithGateway(
-                  publishedContractData.publisherAvatar,
-                )}
+                // @ts-expect-error - this works fine
+                src={avatar}
               />
             )}
 
             <h2 tw="text-2xl text-white font-medium max-w-full">
-              {publishedContractData.publisher}
+              {params.publisher}
             </h2>
           </div>
         </div>
@@ -265,15 +263,15 @@ export default async function handler(req: NextRequest) {
               fontFamily: "IBM Plex Mono",
             }}
           >
-            {publishedContractData.extension?.length ? (
+            {params.extension?.length ? (
               <li
                 tw="flex flex-row items-center overflow-hidden w-full"
                 style={{ whiteSpace: "nowrap" }}
               >
                 <PackageIcon />
                 <span tw="ml-2">
-                  {Array.isArray(publishedContractData.extension)
-                    ? categorizeExtensions(publishedContractData.extension).map(
+                  {Array.isArray(params.extension)
+                    ? categorizeExtensions(params.extension).map(
                         ([ext, count]) => (
                           <span key={ext} tw="flex flex-row items-center mr-3">
                             {ext}
@@ -283,27 +281,27 @@ export default async function handler(req: NextRequest) {
                           </span>
                         ),
                       )
-                    : publishedContractData.extension}
+                    : params.extension}
                 </span>
               </li>
             ) : null}
-            {publishedContractData.license?.length ? (
+            {params.license?.length ? (
               <li tw="flex flex-row items-center">
                 <FileTextIcon />
                 <span tw="ml-2">
-                  {Array.isArray(publishedContractData.license)
-                    ? publishedContractData.license.join(", ")
-                    : publishedContractData.license}
+                  {Array.isArray(params.license)
+                    ? params.license.join(", ")
+                    : params.license}
                 </span>
               </li>
             ) : null}
             <li tw="flex flex-row items-center">
               <VersionIcon />
-              <span tw="ml-2">{publishedContractData.version}</span>
+              <span tw="ml-2">{params.version}</span>
             </li>
             <li tw="flex flex-row items-center">
               <CalendarIcon />
-              <span tw="ml-2">{publishedContractData.publishDate}</span>
+              <span tw="ml-2">{params.publishDate}</span>
             </li>
           </ul>
           <div tw="flex flex-shrink-0">
