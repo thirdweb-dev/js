@@ -1,4 +1,5 @@
 import type { Preview } from "@storybook/react";
+// biome-ignore lint/correctness/noUnusedImports: <explanation>
 import React from "react";
 import { ThirdwebProvider } from "../src/exports/react";
 import "./global.css";

@@ -356,6 +356,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         showAllWallets={props.showAllWallets}
         walletConnect={props.walletConnect}
         wallets={wallets}
+        dismissible={true}
       />
       {autoConnectComp}
     </WalletUIStatesProvider>

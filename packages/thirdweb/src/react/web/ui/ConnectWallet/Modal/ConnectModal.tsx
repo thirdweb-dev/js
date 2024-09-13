@@ -48,6 +48,8 @@ type ConnectModalOptions = {
         projectId?: string;
       }
     | undefined;
+
+  dismissible: boolean;
 };
 
 /**
@@ -103,28 +105,21 @@ const ConnectModal = (props: ConnectModalOptions) => {
       !activeAccount
     ) {
       setScreen(initialScreen);
-      setIsWalletModalOpen(false);
     }
-  }, [
-    initialScreen,
-    isWalletModalOpen,
-    screen,
-    setIsWalletModalOpen,
-    setScreen,
-    activeAccount,
-  ]);
+  }, [initialScreen, isWalletModalOpen, screen, setScreen, activeAccount]);
 
   return (
     <Modal
       hide={hideModal}
       size={props.size}
       open={isWalletModalOpen}
+      hideCloseIcon={!props.dismissible}
       setOpen={(value) => {
         if (hideModal) {
           return;
         }
 
-        if (!value) {
+        if (!value && props.dismissible) {
           closeModal();
         }
       }}

@@ -5,6 +5,8 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import type { Theme } from "../../../core/design-system/index.js";
+import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
+import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
@@ -45,16 +47,20 @@ import type { WelcomeScreen } from "./screens/types.js";
  */
 export function useConnectModal() {
   const setRootEl = useContext(SetRootElementContext);
+  const { disconnect } = useDisconnect();
   const [isConnecting, setIsConnecting] = useState(false);
 
   const connect = useCallback(
     (props: UseConnectModalOptions) => {
+      let connectedWallet: Wallet | undefined;
+      let isLoggedIn = false;
       function cleanup() {
         setIsConnecting(false);
         setRootEl(undefined);
       }
 
       return new Promise<Wallet>((resolve, reject) => {
+        const auth = props.auth;
         setIsConnecting(true);
         getConnectLocale(props.locale || "en_US")
           .then((locale) => {
@@ -62,14 +68,36 @@ export function useConnectModal() {
               <Modal
                 {...props}
                 onConnect={(w) => {
-                  resolve(w);
-                  cleanup();
+                  connectedWallet = w;
+                  if (!props.auth) {
+                    resolve(w);
+                    cleanup();
+                  }
                 }}
                 onClose={() => {
                   reject();
                   cleanup();
+                  if (props.auth && connectedWallet && !isLoggedIn) {
+                    disconnect(connectedWallet);
+                  }
                 }}
                 connectLocale={locale}
+                auth={
+                  auth
+                    ? {
+                        ...auth,
+                        doLogin: async (...args) => {
+                          const res = await auth.doLogin(...args);
+                          isLoggedIn = true;
+                          if (connectedWallet) {
+                            resolve(connectedWallet);
+                          }
+                          cleanup();
+                          return res;
+                        },
+                      }
+                    : undefined
+                }
               />,
             );
           })
@@ -79,7 +107,7 @@ export function useConnectModal() {
           });
       });
     },
-    [setRootEl],
+    [setRootEl, disconnect],
   );
 
   return { connect, isConnecting };
@@ -129,8 +157,7 @@ function Modal(
         onClose={props.onClose}
         shouldSetActive={props.setActive === undefined ? true : props.setActive}
         accountAbstraction={props.accountAbstraction}
-        // TODO: not set up in `useConnectModal` for some reason?
-        auth={undefined}
+        auth={props.auth}
         chain={props.chain}
         client={props.client}
         connectLocale={props.connectLocale}
@@ -144,6 +171,7 @@ function Modal(
         wallets={wallets}
         chains={props.chains}
         walletConnect={props.walletConnect}
+        dismissible={props.dismissible === undefined ? true : props.dismissible}
       />
     </WalletUIStatesProvider>
   );
@@ -432,4 +460,20 @@ export type UseConnectModalOptions = {
    * If you want to hide the branding, set this prop to `false`
    */
   showThirdwebBranding?: boolean;
+
+  /**
+   * Enable SIWE (Sign in with Ethererum) by passing an object of type `SiweAuthOptions` to
+   * enforce the users to sign a message after connecting their wallet to authenticate themselves.
+   *
+   * Refer to the [`SiweAuthOptions`](https://portal.thirdweb.com/references/typescript/v5/SiweAuthOptions) for more details
+   */
+  auth?: SiweAuthOptions;
+
+  /**
+   * By default the Connect Modal can be closed by clicking outside the modal or clicking on the close button.
+   *
+   * If you want the user to prevent closing the modal - set this prop to `false`
+   * This acts as a gatekeeper to prevent users from closing the modal unless they complete the connection process.
+   */
+  dismissible?: boolean;
 };

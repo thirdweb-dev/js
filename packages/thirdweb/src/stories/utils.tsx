@@ -2,6 +2,7 @@ import { generatePrivateKey } from "viem/accounts";
 import { createWalletAdapter } from "../adapters/wallet-adapter.js";
 import { ethereum } from "../chains/chain-definitions/ethereum.js";
 import { createThirdwebClient } from "../client/client.js";
+import type { SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
 
@@ -27,3 +28,28 @@ export const storyWallet = createWalletAdapter({
   onDisconnect: () => {},
   switchChain: () => {},
 });
+
+export const storyAuthStub: SiweAuthOptions = {
+  async doLogin() {
+    localStorage.setItem("story.isLoggedIn", "true");
+  },
+  async doLogout() {
+    localStorage.setItem("story.isLoggedIn", "false");
+  },
+  async getLoginPayload(params) {
+    return {
+      nonce: "",
+      signature: "",
+      address: params.address,
+      domain: "",
+      expiration_time: "",
+      invalid_before: "",
+      issued_at: "",
+      version: "",
+      statement: "",
+    };
+  },
+  async isLoggedIn() {
+    return localStorage.getItem("story.sLoggedIn") === "true";
+  },
+};
