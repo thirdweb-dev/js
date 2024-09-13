@@ -8,5 +8,6 @@ export default async function Page({
   params: { address: string };
   searchParams: { chainId: string };
 }) {
+  console.log("wallet page");
   return <NftGallery owner={getAddress(address)} chainId={Number(chainId)} />;
 }

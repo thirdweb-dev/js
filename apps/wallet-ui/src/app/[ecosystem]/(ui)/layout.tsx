@@ -9,7 +9,9 @@ export default async function Layout({
   children: React.ReactNode;
   params: { ecosystem: string };
 }) {
+  console.log("ui layout - not authed");
   await authedOnly();
+  console.log("ui layout - authed");
   const ecosystem = await getEcosystemInfo(params.ecosystem);
   return (
     <div className="flex flex-col items-stretch w-full">

@@ -8,6 +8,7 @@ import { ConnectEmbed } from "thirdweb/react";
 import { ecosystemWallet } from "thirdweb/wallets";
 
 export default function Page({ params }: { params: { ecosystem: string } }) {
+  console.log("login page");
   const { theme } = useTheme();
   const router = useRouter();
 

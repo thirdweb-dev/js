@@ -34,6 +34,7 @@ export default async function Layout({
   children: React.ReactNode;
   params: { ecosystem: string; address: string };
 }) {
+  console.log("wallet layout");
   const userAddressPromise = getCurrentUser();
   const ensPromise = resolveName({
     client,
