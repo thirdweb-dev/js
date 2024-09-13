@@ -40,6 +40,10 @@ function Story() {
             buttonLabel="Some Action"
             buttonOnClick={() => {}}
             isLoading={false}
+            confirmationDialog={{
+              title: "This is confirmation title",
+              description: "This is confirmation description",
+            }}
           />
         </BadgeContainer>
 
@@ -50,6 +54,10 @@ function Story() {
             buttonLabel="Some Action"
             buttonOnClick={() => {}}
             isLoading={true}
+            confirmationDialog={{
+              title: "This is confirmation title",
+              description: "This is confirmation description",
+            }}
           />
         </BadgeContainer>
       </div>

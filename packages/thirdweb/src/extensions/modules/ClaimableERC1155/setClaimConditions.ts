@@ -10,6 +10,26 @@ import type { ClaimConditionInput } from "../../../utils/extensions/drops/types.
 import { keccak256 } from "../../../utils/hashing/keccak256.js";
 import { setClaimConditionByTokenId as generatedSetClaimCondition } from "../__generated__/ClaimableERC1155/write/setClaimConditionByTokenId.js";
 
+/**
+ * Sets the claim conditions for a given token ID.
+ * @param options - The options for setting the claim conditions.
+ * @returns A transaction to set the claim conditions.
+ * @modules ClaimableERC1155
+ * @example
+ * ```ts
+ * import { ClaimableERC1155 } from "thirdweb/modules";
+ *
+ * const transaction = ClaimableERC1155.setClaimCondition({
+ *   contract: contract,
+ *   tokenId: 0n,
+ *   pricePerToken: "1", // in ETH
+ *   maxClaimableSupply: "1000000",
+ *   maxClaimablePerWallet: "1",
+ * });
+ *
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
 export function setClaimCondition(
   options: BaseTransactionOptions<ClaimConditionInput & { tokenId: bigint }>,
 ) {

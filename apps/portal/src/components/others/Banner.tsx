@@ -1,8 +1,8 @@
 "use client";
-import Link from "next/link";
 import { XIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
 
 export function Banner(props: { text: string; href: string; id: string }) {
 	const [showBanner, setShowBanner] = useState(false);
@@ -21,13 +21,14 @@ export function Banner(props: { text: string; href: string; id: string }) {
 
 	return (
 		<div
-			className="flex items-center justify-center gap-2 p-3 pr-20 transition-opacity duration-700 animate-in fade-in-0"
+			className="animate-in fade-in-0 flex items-center justify-center gap-2 p-3 pr-20 transition-opacity duration-700"
 			style={{
 				background: `linear-gradient(145.96deg, rgb(65, 10, 182) 5.07%, rgb(60 132 246) 100%)`,
 			}}
 		>
 			<Link
 				href={props.href}
+				target={props.href.startsWith("http") ? "_blank" : undefined}
 				className="font-bold hover:underline"
 				style={{
 					color: "white",

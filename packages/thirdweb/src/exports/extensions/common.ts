@@ -13,6 +13,7 @@ export {
   symbol,
   isSymbolSupported,
 } from "../../extensions/common/read/symbol.js";
+export { parseNftUri } from "../../utils/nft/parseNft.js";
 
 // write
 export {

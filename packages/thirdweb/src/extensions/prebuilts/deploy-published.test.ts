@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
+import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { ENTRYPOINT_ADDRESS_v0_6 } from "../../wallets/smart/lib/constants.js";
 import { deployPublishedContract } from "./deploy-published.js";
 
@@ -38,7 +39,13 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         },
         salt: "test",
       });
-      expect(address).toBe("0x75fc461544723c0dac7b46256027878e82ddc2cb");
+      expect(address).toBe("0x8a9e25cbf6daa2b56cc0df4669195b8c8c20cda8");
+      const isDeployed = await isContractDeployed({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        address,
+      });
+      expect(isDeployed).toBe(true);
     });
 
     it("should deploy a published autofactory contract", async () => {
@@ -69,6 +76,12 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         salt: "test",
       });
       expect(address).toBe("0x777151741260F8d4098dD492e45FdB536F442672");
+      const isDeployed = await isContractDeployed({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        address,
+      });
+      expect(isDeployed).toBe(true);
     });
 
     // TODO: Replace these tests' live contracts with mocks

@@ -9,7 +9,7 @@ import { tokenMerkleRoot } from "../__generated__/Airdrop/read/tokenMerkleRoot.j
 import { claimERC20 as generatedClaimERC20 } from "../__generated__/Airdrop/write/claimERC20.js";
 
 /**
- * @extension Airdrop
+ * @extension AIRDROP
  */
 export type ClaimERC20Params = {
   tokenAddress: string;
@@ -36,7 +36,7 @@ export type ClaimERC20Params = {
  * await sendTransaction({ claimTransaction, account });
  *
  * ```
- * @extension Airdrop
+ * @extension AIRDROP
  * @returns A promise that resolves to the transaction result.
  */
 export function claimERC20(options: BaseTransactionOptions<ClaimERC20Params>) {

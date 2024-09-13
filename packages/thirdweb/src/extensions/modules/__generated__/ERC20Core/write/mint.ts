@@ -38,7 +38,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `mint` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `mint` method is supported.
- * @module ERC20Core
+ * @modules ERC20Core
  * @example
  * ```ts
  * import { ERC20Core } from "thirdweb/modules";
@@ -57,7 +57,7 @@ export function isMintSupported(availableSelectors: string[]) {
  * Encodes the parameters for the "mint" function.
  * @param options - The options for the mint function.
  * @returns The encoded ABI parameters.
- * @module ERC20Core
+ * @modules ERC20Core
  * @example
  * ```ts
  * import { ERC20Core } from "thirdweb/modules";
@@ -80,7 +80,7 @@ export function encodeMintParams(options: MintParams) {
  * Encodes the "mint" function into a Hex string with its parameters.
  * @param options - The options for the mint function.
  * @returns The encoded hexadecimal string.
- * @module ERC20Core
+ * @modules ERC20Core
  * @example
  * ```ts
  * import { ERC20Core } from "thirdweb/modules";
@@ -102,7 +102,7 @@ export function encodeMint(options: MintParams) {
  * Prepares a transaction to call the "mint" function on the contract.
  * @param options - The options for the "mint" function.
  * @returns A prepared transaction object.
- * @module ERC20Core
+ * @modules ERC20Core
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";

@@ -57,8 +57,8 @@ export function LinkWalletUI(props: {
         {/* No Result Found */}
         {walletsToShow.length === 0 && (
           <div className="p-4 h-[200px] justify-center flex items-center">
-            <div className="text-center">
-              <p className="mb-3 text-sm">No Wallets Found</p>
+            <div className="text-center flex flex-col gap-3">
+              <p className="text-sm">No Wallets Found</p>
               {searchValue && (
                 <p className="text-sm text-muted-foreground">
                   Your search for {`"${searchValue}"`} did not match any wallets

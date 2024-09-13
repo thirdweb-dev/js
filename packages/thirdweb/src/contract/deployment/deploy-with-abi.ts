@@ -122,7 +122,7 @@ export async function deployContract(
   if (options.salt !== undefined) {
     // Deploy with CREATE2 if salt is provided
     const info = await computeDeploymentInfoFromBytecode(options);
-    sendAndConfirmTransaction({
+    await sendAndConfirmTransaction({
       account: options.account,
       transaction: prepareTransaction({
         chain: options.chain,
@@ -135,6 +135,7 @@ export async function deployContract(
       bytecode: options.bytecode,
       encodedArgs: info.encodedArgs,
       create2FactoryAddress: info.create2FactoryAddress,
+      salt: options.salt,
     });
   }
 

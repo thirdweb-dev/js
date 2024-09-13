@@ -85,18 +85,19 @@ To send native tokens to a payable method (e.g. ETH on Ethereum), set `txOverrid
 
 ### Override gas settings
 
-_Coming soon._
-
-To override the estimated gas settings for your transaction, set `txOverrides.gasLimit` and `txOverrides.gasPrice` in the request body to `POST /contract/<chain>/<contract_address>/write`.
+To override the gas settings for your transaction, set `txOverrides` in the request body to any write transaction. Each of these fields are optional and will be estimated by Engine if omitted.
 
 ```json
 {
   functionName: "...",
   args: [ ... ],
   txOverrides: {
-    gasLimit: 150000,
-    gasPrice: 22000000000, // 22 gwei in wei
-  }
+    // The limit of gas units to use for this transaction.
+    gas: "530000",
+    // The max fee (e.g. gas price) to use in wei.
+    maxFeePerGas: "1000000000",
+    // The max priority fee to use in wei.
+    maxPriorityFeePerGas: "1000000000",
 }
 ```
 

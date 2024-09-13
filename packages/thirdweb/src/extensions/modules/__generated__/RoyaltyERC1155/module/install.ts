@@ -38,7 +38,7 @@ const contractId = "RoyaltyERC1155";
  *   ],
  * });
  * ```
- * @module RoyaltyERC1155
+ * @modules RoyaltyERC1155
  */
 export function module(
   params: EncodeBytesOnInstallParams & { publisher?: string },
@@ -86,7 +86,7 @@ export function module(
  *  account,
  * });
  * ```
- * @module RoyaltyERC1155
+ * @modules RoyaltyERC1155
  */
 export function install(options: {
   contract: ThirdwebContract;
@@ -106,6 +106,8 @@ export function install(options: {
  * Encodes the install data for the RoyaltyERC1155 module.
  * @param params - The parameters for the module.
  * @returns - The encoded data.
- * @module RoyaltyERC1155
+ * @modules RoyaltyERC1155
  */
-export const encodeInstall = encodeBytesOnInstallParams;
+export function encodeInstall(params: EncodeBytesOnInstallParams) {
+  return encodeBytesOnInstallParams(params);
+}

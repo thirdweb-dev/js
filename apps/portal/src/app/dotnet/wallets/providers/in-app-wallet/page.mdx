@@ -10,6 +10,17 @@ export const metadata = createMetadata({
 
 Create an instance of `InAppWallet` using a user's email, phone number or OAuth. This wallet type facilitates secure user authentication through OTP verification, making it suitable for client-facing applications where handling private keys directly is not ideal.
 
+## Login Methods
+
+In-App Wallets support a variety of login methods:
+- Email (OTP Login)
+- Phone (OTP Login)
+- Socials (Google, Apple, Facebook, Telegram, Farcaster, Line etc.)
+- SIWE (Sign-In with Ethereum)
+- Custom Auth (OIDC Compatible)
+- Custom Auth (Generic Auth Endpoint)
+- Guest (Onboard easily, link other accounts later)
+
 ## Usage
 
 ```csharp
@@ -25,6 +36,8 @@ var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.JWT);
 // Custom Auth - AuthEndpoint
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.AuthEndpoint);
+// Guest Login
+var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Guest);
 
 // Session resuming supported for all methods
 var isConnected = await wallet.IsConnected();
@@ -55,6 +68,9 @@ var address = await wallet.LoginWithCustomAuth(jwt: "myjwt", encryptionkey: "mye
 
 // Custom Auth (AuthEndpoint)
 var address = await wallet.LoginWithAuthEndpoint(payload: "mypayload", encryptionkey: "myencryptionkey");
+
+// Guest Login (Easy onboarding)
+var address = await wallet.LoginWithGuest();
 ```
 
 <Callout variant="info" title="Client-Side Use">

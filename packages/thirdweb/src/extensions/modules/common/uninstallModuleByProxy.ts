@@ -8,7 +8,7 @@ import { resolveImplementation } from "../../../utils/bytecode/resolveImplementa
 import { uninstallModule } from "../__generated__/IModularCore/write/uninstallModule.js";
 
 /**
- * @extension MODULAR
+ * @modules
  */
 export type UninstallModuleByProxyOptions = {
   client: ThirdwebClient;
@@ -22,7 +22,7 @@ export type UninstallModuleByProxyOptions = {
  * Uninstall an module by proxy
  * @param options - The options for uninstalling an module by proxy
  * @returns A prepared transaction to send
- * @extension MODULAR
+ * @modules
  * @example
  * ```ts
  * import { uninstallModuleByProxy } from "thirdweb/modules";

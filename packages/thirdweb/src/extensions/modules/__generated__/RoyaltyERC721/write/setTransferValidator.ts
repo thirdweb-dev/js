@@ -31,7 +31,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `setTransferValidator` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `setTransferValidator` method is supported.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -50,7 +50,7 @@ export function isSetTransferValidatorSupported(availableSelectors: string[]) {
  * Encodes the parameters for the "setTransferValidator" function.
  * @param options - The options for the setTransferValidator function.
  * @returns The encoded ABI parameters.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -69,7 +69,7 @@ export function encodeSetTransferValidatorParams(
  * Encodes the "setTransferValidator" function into a Hex string with its parameters.
  * @param options - The options for the setTransferValidator function.
  * @returns The encoded hexadecimal string.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -93,7 +93,7 @@ export function encodeSetTransferValidator(
  * Prepares a transaction to call the "setTransferValidator" function on the contract.
  * @param options - The options for the "setTransferValidator" function.
  * @returns A prepared transaction object.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";

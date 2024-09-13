@@ -33,7 +33,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `setTokenURI` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `setTokenURI` method is supported.
- * @module MintableERC1155
+ * @modules MintableERC1155
  * @example
  * ```ts
  * import { MintableERC1155 } from "thirdweb/modules";
@@ -52,7 +52,7 @@ export function isSetTokenURISupported(availableSelectors: string[]) {
  * Encodes the parameters for the "setTokenURI" function.
  * @param options - The options for the setTokenURI function.
  * @returns The encoded ABI parameters.
- * @module MintableERC1155
+ * @modules MintableERC1155
  * @example
  * ```ts
  * import { MintableERC1155 } from "thirdweb/modules";
@@ -70,7 +70,7 @@ export function encodeSetTokenURIParams(options: SetTokenURIParams) {
  * Encodes the "setTokenURI" function into a Hex string with its parameters.
  * @param options - The options for the setTokenURI function.
  * @returns The encoded hexadecimal string.
- * @module MintableERC1155
+ * @modules MintableERC1155
  * @example
  * ```ts
  * import { MintableERC1155 } from "thirdweb/modules";
@@ -93,7 +93,7 @@ export function encodeSetTokenURI(options: SetTokenURIParams) {
  * Prepares a transaction to call the "setTokenURI" function on the contract.
  * @param options - The options for the "setTokenURI" function.
  * @returns A prepared transaction object.
- * @module MintableERC1155
+ * @modules MintableERC1155
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";

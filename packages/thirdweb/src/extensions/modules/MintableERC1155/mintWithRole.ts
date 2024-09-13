@@ -37,7 +37,7 @@ export type EditionMintParams = {
  * // Send the transaction
  * await sendTransaction({ transaction, account });
  * ```
- * @module MintableERC1155
+ * @modules MintableERC1155
  */
 export function mintWithRole(
   options: BaseTransactionOptions<EditionMintParams>,

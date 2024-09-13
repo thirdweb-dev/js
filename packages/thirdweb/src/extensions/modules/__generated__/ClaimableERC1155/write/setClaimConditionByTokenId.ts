@@ -80,7 +80,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `setClaimConditionByTokenId` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `setClaimConditionByTokenId` method is supported.
- * @module ClaimableERC1155
+ * @modules ClaimableERC1155
  * @example
  * ```ts
  * import { ClaimableERC1155 } from "thirdweb/modules";
@@ -101,7 +101,7 @@ export function isSetClaimConditionByTokenIdSupported(
  * Encodes the parameters for the "setClaimConditionByTokenId" function.
  * @param options - The options for the setClaimConditionByTokenId function.
  * @returns The encoded ABI parameters.
- * @module ClaimableERC1155
+ * @modules ClaimableERC1155
  * @example
  * ```ts
  * import { ClaimableERC1155 } from "thirdweb/modules";
@@ -124,7 +124,7 @@ export function encodeSetClaimConditionByTokenIdParams(
  * Encodes the "setClaimConditionByTokenId" function into a Hex string with its parameters.
  * @param options - The options for the setClaimConditionByTokenId function.
  * @returns The encoded hexadecimal string.
- * @module ClaimableERC1155
+ * @modules ClaimableERC1155
  * @example
  * ```ts
  * import { ClaimableERC1155 } from "thirdweb/modules";
@@ -149,7 +149,7 @@ export function encodeSetClaimConditionByTokenId(
  * Prepares a transaction to call the "setClaimConditionByTokenId" function on the contract.
  * @param options - The options for the "setClaimConditionByTokenId" function.
  * @returns A prepared transaction object.
- * @module ClaimableERC1155
+ * @modules ClaimableERC1155
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";

@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-adapter
 
+## 1.4.0
+
+### Minor Changes
+
+- [#4527](https://github.com/thirdweb-dev/js/pull/4527) [`b76a82c`](https://github.com/thirdweb-dev/js/commit/b76a82c30345e06d7b2c203c1e20bf7ec7e0dd9d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update React Native dependencies and add support for React Native 0.75
+
 ## 1.3.0
 
 ### Minor Changes

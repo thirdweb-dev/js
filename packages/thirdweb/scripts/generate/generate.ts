@@ -405,7 +405,7 @@ function getFunctionOrModuleInfo(
   }
   function getTsDocTag() {
     return isModule
-      ? `@module ${moduleName}`
+      ? `@modules ${moduleName}`
       : `@extension ${extensionName.toUpperCase()}`;
   }
   return {
@@ -644,7 +644,7 @@ const contractId = "${moduleName}";
  *   ],
  * });
  * \`\`\`
- * @module ${moduleName}
+ * @modules ${moduleName}
  */
 export function module(${needsParams ? "params: EncodeBytesOnInstallParams & { publisher?: string }" : "params?: { publisher?: string }"}) {
   return async (args: {
@@ -692,7 +692,7 @@ export function module(${needsParams ? "params: EncodeBytesOnInstallParams & { p
  *  account,
  * });
  * \`\`\`
- * @module ${moduleName}
+ * @modules ${moduleName}
  */
 export function install(options: {
   contract: ThirdwebContract;
@@ -712,9 +712,11 @@ export function install(options: {
  * Encodes the install data for the ${moduleName} module.
  * @param params - The parameters for the module.
  * @returns - The encoded data.
- * @module ${moduleName}
+ * @modules ${moduleName}
  */
-export const encodeInstall = ${needsParams ? "encodeBytesOnInstallParams" : "() => '0x'"}
+export function encodeInstall(${needsParams ? "params: EncodeBytesOnInstallParams" : ""}) {
+  return ${needsParams ? "encodeBytesOnInstallParams(params)" : `"0x"`};
+}
 `;
 }
 

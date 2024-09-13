@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * Checks if the `getSaleConfig` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `getSaleConfig` method is supported.
- * @module MintableERC721
+ * @modules MintableERC721
  * @example
  * ```ts
  * import { MintableERC721 } from "thirdweb/modules";
@@ -36,7 +36,7 @@ export function isGetSaleConfigSupported(availableSelectors: string[]) {
  * Decodes the result of the getSaleConfig function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
- * @module MintableERC721
+ * @modules MintableERC721
  * @example
  * ```ts
  * import { MintableERC721 } from "thirdweb/modules";
@@ -51,7 +51,7 @@ export function decodeGetSaleConfigResult(result: Hex) {
  * Calls the "getSaleConfig" function on the contract.
  * @param options - The options for the getSaleConfig function.
  * @returns The parsed result of the function call.
- * @module MintableERC721
+ * @modules MintableERC721
  * @example
  * ```ts
  * import { MintableERC721 } from "thirdweb/modules";

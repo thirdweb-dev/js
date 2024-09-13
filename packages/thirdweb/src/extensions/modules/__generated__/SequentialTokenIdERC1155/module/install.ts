@@ -31,7 +31,7 @@ const contractId = "SequentialTokenIdERC1155";
  *   ],
  * });
  * ```
- * @module SequentialTokenIdERC1155
+ * @modules SequentialTokenIdERC1155
  */
 export function module(params?: { publisher?: string }) {
   return async (args: {
@@ -73,7 +73,7 @@ export function module(params?: { publisher?: string }) {
  *  account,
  * });
  * ```
- * @module SequentialTokenIdERC1155
+ * @modules SequentialTokenIdERC1155
  */
 export function install(options: {
   contract: ThirdwebContract;
@@ -93,6 +93,8 @@ export function install(options: {
  * Encodes the install data for the SequentialTokenIdERC1155 module.
  * @param params - The parameters for the module.
  * @returns - The encoded data.
- * @module SequentialTokenIdERC1155
+ * @modules SequentialTokenIdERC1155
  */
-export const encodeInstall = () => "0x";
+export function encodeInstall() {
+  return "0x";
+}
