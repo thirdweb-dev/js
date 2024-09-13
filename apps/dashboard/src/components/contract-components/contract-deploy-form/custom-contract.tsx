@@ -27,7 +27,8 @@ import { ZERO_ADDRESS } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import {
   deployContractfromDeployMetadata,
-  getRequiredTransactionCount,
+  deployMarketplaceContract,
+  getRequiredTransactions,
 } from "thirdweb/deploys";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
@@ -368,6 +369,25 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         });
       }
 
+      if (metadata.name === "MarketplaceV3") {
+        // special case for marketplace
+        return await deployMarketplaceContract({
+          account: activeAccount,
+          chain: walletChain,
+          client: thirdwebClient,
+          params: {
+            name: params.contractMetadata?.name || "",
+            contractURI: _contractURI,
+            defaultAdmin: params.deployParams._defaultAdmin,
+            platformFeeBps: Number(params.deployParams._platformFeeBps),
+            platformFeeRecipient: params.deployParams._platformFeeRecipient,
+            trustedForwarders: JSON.parse(
+              params.deployParams._trustedForwarders,
+            ),
+          },
+        });
+      }
+
       const initializeParams = {
         ...params.contractMetadata,
         ...params.deployParams,
@@ -411,7 +431,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         throw new Error("no wallet chain");
       }
 
-      return await getRequiredTransactionCount({
+      return await getRequiredTransactions({
         chain: walletChain,
         client: thirdwebClient,
         deployMetadata: metadata,
@@ -437,15 +457,12 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             if (!walletChain?.id || !activeAccount) {
               return;
             }
-            if (!deployTransactions.data) {
-              return;
-            }
 
             // open the status modal
             let steps: DeployModalStep[] = [
               {
                 type: "deploy",
-                signatureCount: deployTransactions.data.length,
+                signatureCount: deployTransactions.data?.length || 1,
               },
             ];
             // if the add to dashboard is checked add that step

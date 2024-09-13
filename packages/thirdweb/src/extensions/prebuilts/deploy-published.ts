@@ -18,6 +18,7 @@ import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metad
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
+import { getAllDefaultConstructorParamsForImplementation } from "./get-required-transactions.js";
 
 /**
  * @extension DEPLOY
@@ -168,7 +169,12 @@ export async function deployContractfromDeployMetadata(
           client,
           account,
           contractId: deployMetadata.name,
-          constructorParams: implementationConstructorParams,
+          constructorParams:
+            implementationConstructorParams ||
+            (await getAllDefaultConstructorParamsForImplementation({
+              chain,
+              client,
+            })),
           publisher: deployMetadata.publisher,
         });
 

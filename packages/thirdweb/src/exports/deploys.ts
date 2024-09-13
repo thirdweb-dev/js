@@ -46,4 +46,4 @@ export {
   type PrepareDirectDeployTransactionOptions,
 } from "../contract/deployment/deploy-with-abi.js";
 export { computePublishedContractAddress } from "../utils/any-evm/compute-published-contract-address.js";
-export { getRequiredTransactionCount } from "../extensions/prebuilts/get-required-transactions.js";
+export { getRequiredTransactions } from "../extensions/prebuilts/get-required-transactions.js";
