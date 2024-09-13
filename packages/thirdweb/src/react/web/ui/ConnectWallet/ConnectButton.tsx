@@ -544,6 +544,7 @@ function ConnectButtonInner(
         showAllWallets: props.showAllWallets,
         walletConnect: props.walletConnect,
         wallets: props.wallets,
+        hiddenWallets: props.detailsModal?.hiddenWallets,
       }}
     />
   );

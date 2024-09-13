@@ -19,6 +19,7 @@ import { formatNumber } from "../../../../utils/formatNumber.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 import {
   CustomThemeProvider,
   parseTheme,
@@ -744,6 +745,7 @@ function DetailsModal(props: {
         chain={props.connectOptions?.chain}
         chains={props.connectOptions?.chains}
         client={client}
+        hiddenWallets={props.connectOptions?.hiddenWallets}
         connectLocale={locale}
         recommendedWallets={props.connectOptions?.recommendedWallets}
         showAllWallets={!!props.connectOptions?.showAllWallets}
@@ -924,6 +926,7 @@ function DetailsModal(props: {
             mode: "fund_wallet",
           }
         }
+        hiddenWallets={props.detailsModal?.hiddenWallets}
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
         onDone={closeModal}
         connectOptions={undefined}
@@ -1156,6 +1159,7 @@ export type DetailsModalConnectOptions = {
   chain?: Chain;
   chains?: Chain[];
   recommendedWallets?: Wallet[];
+  hiddenWallets?: WalletId[];
   showAllWallets?: boolean;
 };
 

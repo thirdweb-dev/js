@@ -6,6 +6,7 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../wallets/types.js";
+import type { WalletId } from "../../../wallets/wallet-types.js";
 import { CustomThemeProvider } from "../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../core/hooks/auth/useSiweAuth.js";
@@ -119,11 +120,16 @@ export type PayEmbedProps = {
   theme?: "light" | "dark" | Theme;
 
   /**
-   * Customize the options for "Connect" Button showin in the PayEmbed UI when the user is not connected to a wallet.
+   * Customize the options for "Connect" Button showing in the PayEmbed UI when the user is not connected to a wallet.
    *
    * Refer to the [`PayEmbedConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/PayEmbedConnectOptions) type for more details.
    */
   connectOptions?: PayEmbedConnectOptions;
+
+  /**
+   * All wallet IDs included in this array will be hidden from wallet selection when connected.
+   */
+  hiddenWallets?: WalletId[];
 
   style?: React.CSSProperties;
 
@@ -201,6 +207,7 @@ export function PayEmbed(props: PayEmbedProps) {
             theme={theme}
             client={props.client}
             connectLocale={localeQuery.data}
+            hiddenWallets={props.hiddenWallets}
             payOptions={
               props.payOptions || {
                 mode: "fund_wallet",

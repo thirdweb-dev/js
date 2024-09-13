@@ -10,6 +10,7 @@ import type { BuyWithFiatStatus } from "../../../../../../pay/buyWithFiat/getSta
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
+import type { WalletId } from "../../../../../../wallets/wallet-types.js";
 import {
   type Theme,
   iconSize,
@@ -91,6 +92,7 @@ export type BuyScreenProps = {
   theme: "light" | "dark" | Theme;
   onDone: () => void;
   connectOptions: PayEmbedConnectOptions | undefined;
+  hiddenWallets?: WalletId[];
   isEmbed: boolean;
 };
 
@@ -128,6 +130,7 @@ type BuyScreenContentProps = {
   theme: "light" | "dark" | Theme;
   payOptions: PayUIOptions;
   onDone: () => void;
+  hiddenWallets?: WalletId[];
   connectOptions: PayEmbedConnectOptions | undefined;
   isEmbed: boolean;
 };
@@ -265,6 +268,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
             });
           }
         }}
+        hiddenWallets={props.hiddenWallets}
         recommendedWallets={props.connectOptions?.recommendedWallets}
         showAllWallets={
           props.connectOptions?.showAllWallets === undefined
@@ -541,6 +545,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               {screen.id === "select-wallet" && (
                 <WalletSwitcherDrawerContent
                   client={client}
+                  hiddenWallets={props.hiddenWallets}
                   onSelect={(w) => {
                     const chain = w.getChain();
                     const account = w.getAccount();
