@@ -19,7 +19,6 @@ export const getLoginUrl = ({
   authOption,
   client,
   ecosystem,
-  mode = "popup",
   redirectUrl,
 }: {
   authOption: AuthOption | "wallet";
@@ -28,14 +27,6 @@ export const getLoginUrl = ({
   mode?: "popup" | "redirect" | "window";
   redirectUrl?: string;
 }) => {
-  if (mode === "popup" && redirectUrl) {
-    throw new Error("Redirect URL is not supported for popup mode");
-  }
-
-  if (mode === "window" && !redirectUrl) {
-    throw new Error("Redirect URL is required for window mode");
-  }
-
   const route = getLoginOptionRoute(authOption);
   let baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${route}?clientId=${client.clientId}`;
   if (ecosystem?.partnerId) {
@@ -44,13 +35,11 @@ export const getLoginUrl = ({
     baseUrl = `${baseUrl}&ecosystemId=${ecosystem.id}`;
   }
 
-  // Always append redirectUrl to the baseUrl if mode is not popup
-  if (mode !== "popup") {
-    const formattedRedirectUrl = new URL(redirectUrl || window.location.href);
-    formattedRedirectUrl.searchParams.set("walletId", ecosystem?.id || "inApp");
-    formattedRedirectUrl.searchParams.set("authProvider", authOption);
-    baseUrl = `${baseUrl}&redirectUrl=${encodeURIComponent(formattedRedirectUrl.toString())}`;
-  }
+  // Always append redirectUrl to the baseUrl
+  const formattedRedirectUrl = new URL(redirectUrl || window.location.href);
+  formattedRedirectUrl.searchParams.set("walletId", ecosystem?.id || "inApp");
+  formattedRedirectUrl.searchParams.set("authProvider", authOption);
+  baseUrl = `${baseUrl}&redirectUrl=${encodeURIComponent(formattedRedirectUrl.toString())}`;
 
   return baseUrl;
 };

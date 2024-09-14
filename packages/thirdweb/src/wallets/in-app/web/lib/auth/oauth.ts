@@ -33,10 +33,7 @@ export const loginWithOauthRedirect = (options: {
   redirectUrl?: string;
   mode?: "redirect" | "popup" | "window";
 }): void => {
-  const loginUrl = getLoginUrl({
-    ...options,
-    mode: options.mode || "redirect",
-  });
+  const loginUrl = getLoginUrl(options);
   if (options.mode === "redirect") {
     window.location.href = loginUrl;
   } else {

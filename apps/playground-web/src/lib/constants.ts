@@ -25,7 +25,7 @@ export const WALLETS = [
         "passkey",
         "phone",
         "farcaster",
-        "line",
+        "x",
       ],
       mode: "redirect",
       passkeyDomain: getDomain(),
