@@ -1,5 +1,5 @@
 import { Box, Flex, Image, Skeleton, useDisclosure } from "@chakra-ui/react";
-import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
 import type { EnhancedRoute } from "contract-ui/types/types";
 import { useRouter } from "next/router";
 import { useMemo } from "react";

@@ -1,4 +1,4 @@
-import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
 import type { ComponentType } from "react";
 
 // biome-ignore lint/suspicious/noExplicitAny: FIXME

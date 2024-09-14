@@ -1,6 +1,3 @@
-import { useContract } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import { useEns } from "components/contract-components/hooks";
 import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
 import type { EnhancedRoute } from "contract-ui/types/types";
 import dynamic from "next/dynamic";
@@ -11,6 +8,7 @@ import * as ERC20Ext from "thirdweb/extensions/erc20";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
+import * as MarketplaceExt from "thirdweb/extensions/marketplace";
 import * as PermissionExt from "thirdweb/extensions/permissions";
 import * as ThirdwebExt from "thirdweb/extensions/thirdweb";
 import * as ModularExt from "thirdweb/modules";
@@ -229,35 +227,25 @@ export function useContractRouteConfig(
     ].every(Boolean);
   }, [functionSelectorQuery.data]);
 
-  // old
-  const ensQuery = useEns(contract.address);
+  const isDirectListing = useMemo(() => {
+    return [
+      MarketplaceExt.isCreateListingSupported(functionSelectorQuery.data),
+      MarketplaceExt.isCancelListingSupported(functionSelectorQuery.data),
+      MarketplaceExt.isBuyFromListingSupported(functionSelectorQuery.data),
+    ].every(Boolean);
+  }, [functionSelectorQuery.data]);
 
-  // TODO: remove
-  const contractQuery = useContract(ensQuery.data?.address);
-  // TODO: remove all below
-  const contractData = useMemo(() => {
-    const detectedEnglishAuctions = extensionDetectedState({
-      contractQuery,
-      feature: "EnglishAuctions",
-    });
-
-    const detectedDirectListings = extensionDetectedState({
-      contractQuery,
-      feature: "DirectListings",
-    });
-
-    return {
-      detectedEnglishAuctions,
-      detectedDirectListings,
-    };
-  }, [contractQuery]);
+  const isEnglishAuction = useMemo(() => {
+    return [
+      MarketplaceExt.isCreateAuctionSupported(functionSelectorQuery.data),
+      MarketplaceExt.isCancelAuctionSupported(functionSelectorQuery.data),
+      MarketplaceExt.isBidInAuctionSupported(functionSelectorQuery.data),
+    ].every(Boolean);
+  }, [functionSelectorQuery.data]);
 
   const embedType: "marketplace-v3" | "erc20" | "erc1155" | "erc721" | null =
     useMemo(() => {
-      if (
-        contractData.detectedEnglishAuctions === "enabled" &&
-        contractData.detectedDirectListings === "enabled"
-      ) {
+      if (isEnglishAuction && isDirectListing) {
         // this means its marketplace v3
         return "marketplace-v3";
       }
@@ -277,10 +265,11 @@ export function useContractRouteConfig(
       // otherwise null
       return null;
     }, [
-      contractData,
       hasClaimConditions,
       isERC721Query.data,
       isERC1155Query.data,
+      isDirectListing,
+      isEnglishAuction,
     ]);
 
   return [
@@ -291,10 +280,8 @@ export function useContractRouteConfig(
       component: () => (
         <ContractOverviewPage
           contract={contract}
-          hasDirectListings={contractData.detectedDirectListings === "enabled"}
-          hasEnglishAuctions={
-            contractData.detectedEnglishAuctions === "enabled"
-          }
+          hasDirectListings={isDirectListing}
+          hasEnglishAuctions={isEnglishAuction}
           isErc1155={isERC1155Query.data || false}
           isErc20={isERC20}
           isErc721={isERC721Query.data || false}
@@ -402,13 +389,21 @@ export function useContractRouteConfig(
     {
       title: "Direct Listings",
       path: "direct-listings",
-      isEnabled: contractData.detectedDirectListings,
+      isEnabled: functionSelectorQuery.isLoading
+        ? "loading"
+        : isDirectListing
+          ? "enabled"
+          : "disabled",
       component: () => <LazyContractDirectListingsPage contract={contract} />,
     },
     {
       title: "English Auctions",
       path: "english-auctions",
-      isEnabled: contractData.detectedEnglishAuctions,
+      isEnabled: functionSelectorQuery.isLoading
+        ? "loading"
+        : isEnglishAuction
+          ? "enabled"
+          : "disabled",
       component: () => <LazyContractEnglishAuctionsPage contract={contract} />,
     },
     {

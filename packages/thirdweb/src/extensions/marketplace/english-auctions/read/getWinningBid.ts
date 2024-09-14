@@ -1,15 +1,12 @@
-import { ADDRESS_ZERO } from "../../../../constants/addresses.js";
+import { ZERO_ADDRESS } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { resolveCurrencyValue } from "../../../../utils/extensions/resolve-currency-value.js";
-import {
-  type GetWinningBidParams as GeneratedWinningBidParams,
-  getWinningBid as getWinningBidGenerated,
-} from "../../__generated__/IEnglishAuctions/read/getWinningBid.js";
+import * as GetWinningBid from "../../__generated__/IEnglishAuctions/read/getWinningBid.js";
 
 /**
  * @extension MARKETPLACE
  */
-export type GetWinningBidParams = GeneratedWinningBidParams;
+export type GetWinningBidParams = GetWinningBid.GetWinningBidParams;
 
 /**
  * Retrieves the winning bid information for a given auction.
@@ -31,9 +28,9 @@ export async function getWinningBid(
   options: BaseTransactionOptions<GetWinningBidParams>,
 ) {
   const [bidderAddress, currencyAddress, bidAmountWei] =
-    await getWinningBidGenerated(options);
+    await GetWinningBid.getWinningBid(options);
 
-  if (bidderAddress === ADDRESS_ZERO) {
+  if (bidderAddress === ZERO_ADDRESS) {
     return undefined;
   }
 
@@ -48,4 +45,20 @@ export async function getWinningBid(
       wei: bidAmountWei,
     }),
   };
+}
+
+/**
+ * Checks if the `getWinningBid` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `getWinningBid` method is supported.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { isGetWinningBidSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = isGetWinningBidSupported(["0x..."]);
+ * ```
+ */
+export function isGetWinningBidSupported(availableSelectors: string[]) {
+  return GetWinningBid.isGetWinningBidSupported(availableSelectors);
 }
