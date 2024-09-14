@@ -5,11 +5,18 @@ import { DashboardThirdwebProviderSetup } from "components/app-layouts/provider-
 import { AllChainsProvider } from "contexts/all-chains";
 import { ChainsProvider } from "contexts/configured-chains";
 import { ThemeProvider } from "next-themes";
+import { useEffect } from "react";
 import { ThirdwebProvider } from "thirdweb/react";
+import { setOverrides } from "../lib/vercel-utils";
 
 const queryClient = new QueryClient();
 
 export function AppRouterProviders(props: { children: React.ReactNode }) {
+  // run this ONCE on app load
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    setOverrides();
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <AllChainsProvider>

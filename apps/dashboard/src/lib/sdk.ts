@@ -5,77 +5,21 @@ import {
   isProd,
 } from "@/constants/env";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
-import {
-  // type GatewayUrls,
-  type IStorageDownloader,
-  type SingleDownloadOptions,
-  StorageDownloader,
-  ThirdwebStorage,
-} from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
 import { polygon } from "thirdweb/chains";
-import { getAbsoluteUrl } from "./vercel-utils";
+import { resolveScheme } from "thirdweb/storage";
+import { thirdwebClient } from "../@/constants/client";
 
-export function replaceIpfsUrl(url: string) {
+export function replaceIpfsUrl(uri: string) {
   try {
-    return StorageSingleton.resolveScheme(url);
+    return resolveScheme({
+      uri,
+      client: thirdwebClient,
+    });
   } catch (err) {
-    console.error("error resolving ipfs url", url, err);
-    return url;
-  }
-}
-
-const ProxyHostNames = new Set<string>();
-
-const defaultDownloader = new StorageDownloader({
-  clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
-  secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
-});
-
-class SpecialDownloader implements IStorageDownloader {
-  async download(
-    url: string,
-    // gatewayUrls?: GatewayUrls,
-    options?: SingleDownloadOptions,
-  ): Promise<Response> {
-    if (url.startsWith("ipfs://")) {
-      return defaultDownloader.download(
-        url,
-        { "ipfs://": [IPFS_GATEWAY_URL] },
-        options,
-      );
-    }
-
-    // data urls we always want to just fetch directly
-    if (url.startsWith("data")) {
-      return fetch(url);
-    }
-
-    if (url.startsWith("http")) {
-      const u = new URL(url);
-
-      // if we already know the hostname is bad, don't even try
-      if (ProxyHostNames.has(u.hostname)) {
-        return fetch(`${getAbsoluteUrl()}/api/proxy?url=${u.toString()}`);
-      }
-
-      try {
-        // try to just fetch it directly
-        const res = await fetch(u);
-        if (await res.clone().json()) {
-          return res;
-        }
-        // if we hit this we know something failed and we'll try to proxy it
-        ProxyHostNames.add(u.hostname);
-
-        throw new Error("not ok");
-      } catch {
-        // this is a bit scary but hey, it works
-        return fetch(`${getAbsoluteUrl()}/api/proxy?url=${u.toString()}`);
-      }
-    }
-
-    throw new Error("not a valid url");
+    console.error("error resolving ipfs url", uri, err);
+    return uri;
   }
 }
 
@@ -88,7 +32,6 @@ export const StorageSingleton = new ThirdwebStorage({
   clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
   secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
   uploadServerUrl: DASHBOARD_STORAGE_URL,
-  downloader: new SpecialDownloader(),
 }) as ThirdwebStorage;
 
 // EVM SDK

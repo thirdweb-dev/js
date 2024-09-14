@@ -67,5 +67,3 @@ export function setOverrides() {
     social: THIRDWEB_SOCIAL_API_DOMAIN,
   });
 }
-
-setOverrides();
