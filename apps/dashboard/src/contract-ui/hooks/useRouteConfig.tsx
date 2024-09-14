@@ -421,7 +421,7 @@ export function useContractRouteConfig(
       path: "proposals",
       isEnabled: contractTypeQuery.isLoading
         ? "loading"
-        : contractTypeQuery.data === "Vote"
+        : contractTypeQuery.data === "VoteERC20"
           ? "enabled"
           : "disabled",
       component: () => <LazyContractProposalsPage contract={contract} />,
