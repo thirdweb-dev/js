@@ -12,6 +12,8 @@ import {
   StorageDownloader,
   ThirdwebStorage,
 } from "@thirdweb-dev/storage";
+import type { Signer } from "ethers";
+import { polygon } from "thirdweb/chains";
 import { getAbsoluteUrl } from "./vercel-utils";
 
 export function replaceIpfsUrl(url: string) {
@@ -137,4 +139,29 @@ export function getThirdwebSDK(chainId: number, rpcUrl: string): ThirdwebSDK {
   }
 
   return sdk;
+}
+
+export function getPolygonGaslessSDK(signer: Signer) {
+  let polygonRpcUrl = isProd
+    ? "https://137.rpc.thirdweb.com"
+    : "https://137.rpc.thirdweb-dev.com";
+  if (DASHBOARD_THIRDWEB_CLIENT_ID) {
+    polygonRpcUrl += `/${DASHBOARD_THIRDWEB_CLIENT_ID}`;
+  }
+  return ThirdwebSDK.fromSigner(signer, polygonRpcUrl, {
+    readonlySettings: {
+      chainId: polygon.id,
+      rpcUrl: polygonRpcUrl,
+    },
+    clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
+    secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+    gasless: {
+      engine: {
+        relayerUrl:
+          "https://checkout.engine.thirdweb.com/relayer/0c2bdd3a-307f-4243-b6e5-5ba495222d2b",
+        relayerForwarderAddress: "0x409d530a6961297ece29121dbee2c917c3398659",
+      },
+      experimentalChainlessSupport: true,
+    },
+  });
 }

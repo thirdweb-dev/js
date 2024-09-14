@@ -1,7 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractPublishForm } from "components/contract-components/contract-publish-form";
-import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 // import dynamic from "next/dynamic";
 import { PageId } from "page-id";
@@ -20,9 +19,7 @@ const ContractsPublishPage: ThirdwebNextPage = () => {
 };
 
 ContractsPublishPage.getLayout = (page, props) => (
-  <AppLayout {...props}>
-    <PublisherSDKContext>{page}</PublisherSDKContext>
-  </AppLayout>
+  <AppLayout {...props}>{page}</AppLayout>
 );
 
 ContractsPublishPage.pageId = PageId.PublishSingle;

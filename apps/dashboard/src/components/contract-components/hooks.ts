@@ -6,7 +6,6 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useSDK } from "@thirdweb-dev/react";
 import {
   type ExtraPublishMetadata,
   type FeatureName,
@@ -19,11 +18,15 @@ import {
   isExtensionEnabled,
 } from "@thirdweb-dev/sdk";
 import type { Abi } from "abitype";
-import type { ProfileMetadata, ProfileMetadataInput } from "constants/schemas";
+import type { ProfileMetadataInput } from "constants/schemas";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName, resolveEns } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
-import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
+import {
+  StorageSingleton,
+  getPolygonGaslessSDK,
+  getThirdwebSDK,
+} from "lib/sdk";
 import { useMemo } from "react";
 import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
@@ -32,10 +35,11 @@ import { useActiveAccount } from "thirdweb/react";
 import { isAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
-import type {} from "./contract-deploy-form/deploy-context-modal";
+import { useEthersSigner } from "../app-layouts/provider-setup";
 import {
   type PublishedContractWithVersion,
   fetchPublishedContractVersions,
+  fetchPublisherProfile,
 } from "./fetch-contracts-with-versions";
 import type { ContractId } from "./types";
 
@@ -142,16 +146,16 @@ async function fetchFullPublishMetadata(
 // Metadata POST publish, contains all the extra information filled in by the user
 export function useContractFullPublishMetadata(uri: string) {
   const contractIdIpfsHash = toContractIdIpfsHash(uri);
-  const sdk = getThirdwebSDK(
-    polygon.id,
-    getDashboardChainRpc(polygon.id, undefined),
-  );
+
   const queryClient = useQueryClient();
 
   return useQuery({
     queryKey: ["full-publish-metadata", uri],
     queryFn: async () => {
-      invariant(sdk, "sdk is not defined");
+      const sdk = getThirdwebSDK(
+        polygon.id,
+        getDashboardChainRpc(polygon.id, undefined),
+      );
       // TODO: Make this nicer.
       invariant(uri !== "ipfs://undefined", "uri can't be undefined");
       return await fetchFullPublishMetadata(
@@ -161,32 +165,24 @@ export function useContractFullPublishMetadata(uri: string) {
       );
     },
 
-    enabled: !!uri && !!sdk,
+    enabled: !!uri,
   });
-}
-
-async function fetchPublisherProfile(publisherAddress?: string | null) {
-  const sdk = getThirdwebSDK(
-    polygon.id,
-    getDashboardChainRpc(polygon.id, undefined),
-  );
-  invariant(publisherAddress, "address is not defined");
-  return (await sdk
-    .getPublisher()
-    // todo: remove type-casting once we have replaced this method
-    .getPublisherProfile(publisherAddress)) as ProfileMetadata;
 }
 
 export function publisherProfileQuery(publisherAddress?: string) {
   return {
     queryKey: ["releaser-profile", publisherAddress],
-    queryFn: () => fetchPublisherProfile(publisherAddress),
+    queryFn: () => {
+      if (!publisherAddress) {
+        throw new Error("publisherAddress is not defined");
+      }
+      return fetchPublisherProfile(publisherAddress);
+    },
     enabled: !!publisherAddress,
     // 24h
     cacheTime: 60 * 60 * 24 * 1000,
     // 1h
     staleTime: 60 * 60 * 1000,
-    // default to the one we know already
   };
 }
 
@@ -361,13 +357,16 @@ interface PublishMutationData {
 }
 
 export function usePublishMutation() {
-  // this has to actually have the signer!
-  const sdk = useSDK();
-
   const address = useActiveAccount()?.address;
+  // TODO: remove this obviously
+  const signer = useEthersSigner();
 
   return useMutationWithInvalidate(
     async ({ predeployUri, extraMetadata }: PublishMutationData) => {
+      if (!signer) {
+        throw new Error("Signer not found");
+      }
+      const sdk = getPolygonGaslessSDK(signer);
       invariant(
         sdk && "getPublisher" in sdk,
         "sdk is not ready or does not support publishing",
@@ -389,12 +388,16 @@ export function usePublishMutation() {
 }
 
 export function useEditProfileMutation() {
-  const sdk = useSDK();
   const address = useActiveAccount()?.address;
+  // TODO: remove this obviously
+  const signer = useEthersSigner();
 
   return useMutationWithInvalidate(
     async (data: ProfileMetadataInput) => {
-      invariant(sdk, "sdk not provided");
+      if (!signer) {
+        throw new Error("Signer not found");
+      }
+      const sdk = getPolygonGaslessSDK(signer);
       await sdk.getPublisher().updatePublisherProfile(data);
     },
     {
@@ -472,20 +475,19 @@ export function usePublishedContractsQuery(
   address?: string,
   feature?: FeatureName,
 ) {
-  const sdk = getThirdwebSDK(
-    polygon.id,
-    getDashboardChainRpc(polygon.id, undefined),
-  );
   const queryClient = useQueryClient();
   return useQuery<PublishedContractDetails[]>({
     queryKey: ["published-contracts", address, feature],
     queryFn: () => {
-      invariant(sdk, "sdk not provided");
+      const sdk = getThirdwebSDK(
+        polygon.id,
+        getDashboardChainRpc(polygon.id, undefined),
+      );
       return feature && feature.length > 0
         ? fetchPublishedContractsWithFeature(sdk, queryClient, feature, address)
         : fetchPublishedContracts(sdk, queryClient, address);
     },
-    enabled: !!address && !!sdk,
+    enabled: !!address,
   });
 }
 

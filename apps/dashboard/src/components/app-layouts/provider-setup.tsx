@@ -115,7 +115,7 @@ export const DashboardThirdwebProviderSetup: ComponentWithChildren<
   );
 };
 
-function useEthersSigner() {
+export function useEthersSigner() {
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const activeChain = useActiveWalletChain();
