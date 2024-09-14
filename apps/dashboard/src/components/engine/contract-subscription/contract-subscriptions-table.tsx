@@ -31,9 +31,21 @@ import { useV5DashboardChain } from "lib/v5-adapter";
 import { useState } from "react";
 import { FiInfo, FiTrash } from "react-icons/fi";
 import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
-import { shortenAddress } from "thirdweb/utils";
+import { shortenAddress as shortenAddresThrows } from "thirdweb/utils";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "../../../tw-components/AddressCopyButton";
+
+function shortenAddress(address: string) {
+  if (!address) {
+    return "";
+  }
+
+  try {
+    return shortenAddresThrows(address);
+  } catch {
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  }
+}
 
 interface ContractSubscriptionTableProps {
   instanceUrl: string;
