@@ -1,12 +1,11 @@
 import { thirdwebClient } from "@/constants/client";
-import type { SUPPORTED_CHAIN_ID } from "constants/chains";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ZERO_ADDRESS, isAddress, toTokens } from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
 
 export type BalanceQueryRequest = {
-  chainId: SUPPORTED_CHAIN_ID;
+  chainId: number;
   address: string;
 };
 

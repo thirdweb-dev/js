@@ -1,5 +1,4 @@
 import { useSearchParams } from "next/navigation";
-import {} from "next/router";
 
 /**
  * @deprecated use `useSearchParams` from `next/navigation` instead

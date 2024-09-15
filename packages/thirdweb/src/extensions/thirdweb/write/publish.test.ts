@@ -4468,22 +4468,23 @@ describe.runIf(process.env.TW_SECRET_KEY)("publishContract", () => {
       }
     `);
 
-    try {
-      publishContract({
-        contract: publisherContract,
+    await expect(
+      sendAndConfirmTransaction({
+        transaction: publishContract({
+          contract: publisherContract,
+          account: TEST_ACCOUNT_A,
+          previousMetadata: publishedData,
+          metadata: {
+            ...publishedData,
+            version: "0.0.1",
+            changelog: "Initial release 2",
+          },
+        }),
         account: TEST_ACCOUNT_A,
-        previousMetadata: publishedData,
-        metadata: {
-          ...publishedData,
-          version: "0.0.1",
-          changelog: "Initial release 2",
-        },
-      });
-    } catch (e) {
-      expect(e).toMatchInlineSnapshot(
-        "[Error: Version 0.0.1 is not greater than 0.0.1]",
-      );
-    }
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      "[Error: Version 0.0.1 is not greater than 0.0.1]",
+    );
 
     const tx2 = publishContract({
       contract: publisherContract,

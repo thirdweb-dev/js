@@ -41,21 +41,19 @@ export type PublishContractParams = {
 export function publishContract(
   options: BaseTransactionOptions<PublishContractParams>,
 ) {
-  const currentVersion = options.previousMetadata?.version;
-
-  // check if the version is greater than the current version
-  if (
-    currentVersion &&
-    !isIncrementalVersion(currentVersion, options.metadata.version)
-  ) {
-    throw Error(
-      `Version ${options.metadata.version} is not greater than ${currentVersion}`,
-    );
-  }
-
   return generatedPublishContract({
     contract: options.contract,
     async asyncParams() {
+      const currentVersion = options.previousMetadata?.version;
+      // check if the version is greater than the current version
+      if (
+        currentVersion &&
+        !isIncrementalVersion(currentVersion, options.metadata.version)
+      ) {
+        throw Error(
+          `Version ${options.metadata.version} is not greater than ${currentVersion}`,
+        );
+      }
       // hash the bytecode
       const bytecode = await download({
         client: options.contract.client,

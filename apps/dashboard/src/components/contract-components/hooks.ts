@@ -8,13 +8,11 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import {
-  type ExtraPublishMetadata,
   type FeatureName,
   type FeatureWithEnabled,
   type ThirdwebSDK,
   detectFeatures,
   fetchContractMetadata,
-  fetchPreDeployMetadata,
   isExtensionEnabled,
 } from "@thirdweb-dev/sdk";
 import type { Abi } from "abitype";
@@ -30,7 +28,10 @@ import {
 import { useMemo } from "react";
 import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
-import { resolveContractAbi } from "thirdweb/contract";
+import {
+  resolveContractAbi,
+  fetchDeployMetadata as sdkFetchDeployMetadata,
+} from "thirdweb/contract";
 import { useActiveAccount } from "thirdweb/react";
 import { isAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
@@ -43,58 +44,40 @@ import {
 } from "./fetch-contracts-with-versions";
 import type { ContractId } from "./types";
 
-// biome-ignore lint/suspicious/noExplicitAny: FIXME
-function removeUndefinedFromObject(obj: Record<string, any>) {
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  const newObj: Record<string, any> = {};
+function isAnyObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function removeUndefinedFromObjectDeep<T extends Record<string, unknown>>(
+  obj: T,
+): T {
+  const newObj = {} as T;
   for (const key in obj) {
     if (obj[key] !== undefined) {
       newObj[key] = obj[key];
+    } else if (isAnyObject(obj[key])) {
+      newObj[key] = removeUndefinedFromObjectDeep(obj[key]);
     }
   }
   return newObj;
 }
 
 // metadata PRE publish, only has the compiler output info (from CLI)
-async function fetchContractPublishMetadataFromURI(contractId: ContractId) {
+async function fetchDeployMetadata(contractId: string) {
   const contractIdIpfsHash = toContractIdIpfsHash(contractId);
 
-  invariant(contractId !== "ipfs://undefined", "uri can't be undefined");
-  let resolved: Awaited<ReturnType<typeof fetchPreDeployMetadata>> | undefined =
-    undefined;
-  try {
-    resolved = await fetchPreDeployMetadata(
-      contractIdIpfsHash,
-      StorageSingleton,
-    );
-  } catch (err) {
-    console.error("failed to resolvePreDeployMetadata", err);
-  }
-
-  if (!resolved) {
-    return {
-      name: "",
-      image: "custom",
-    };
-  }
-
-  return {
-    // biome-ignore lint/suspicious/noExplicitAny: FIXME
-    image: (resolved as any)?.image || "custom",
-    name: resolved.name,
-    description: resolved.info?.title || "",
-    abi: resolved.abi,
-    info: removeUndefinedFromObject(resolved.info),
-    licenses: resolved.licenses,
-    compilerMetadata: resolved.metadata,
-    analytics: removeUndefinedFromObject(resolved.analytics),
-  };
+  return removeUndefinedFromObjectDeep(
+    await sdkFetchDeployMetadata({
+      client: thirdwebClient,
+      uri: contractIdIpfsHash,
+    }),
+  );
 }
 
-export function useContractPublishMetadataFromURI(contractId: ContractId) {
+export function useFetchDeployMetadata(contractId: ContractId) {
   return useQuery({
     queryKey: ["publish-metadata", contractId],
-    queryFn: () => fetchContractPublishMetadataFromURI(contractId),
+    queryFn: () => fetchDeployMetadata(contractId),
     enabled: !!contractId,
   });
 }
@@ -303,43 +286,6 @@ function toContractIdIpfsHash(contractId: ContractId) {
     return contractId;
   }
   return `ipfs://${contractId}`;
-}
-
-interface PublishMutationData {
-  predeployUri: string;
-  extraMetadata: ExtraPublishMetadata;
-  contractName?: string;
-}
-
-export function usePublishMutation() {
-  const address = useActiveAccount()?.address;
-  // TODO: remove this obviously
-  const signer = useEthersSigner();
-
-  return useMutationWithInvalidate(
-    async ({ predeployUri, extraMetadata }: PublishMutationData) => {
-      if (!signer) {
-        throw new Error("Signer not found");
-      }
-      const sdk = getPolygonGaslessSDK(signer);
-      invariant(
-        sdk && "getPublisher" in sdk,
-        "sdk is not ready or does not support publishing",
-      );
-      const contractIdIpfsHash = toContractIdIpfsHash(predeployUri);
-      await sdk.getPublisher().publish(contractIdIpfsHash, extraMetadata);
-    },
-    {
-      onSuccess: (_data, variables, _options, invalidate) => {
-        return Promise.all([
-          invalidate([["pre-publish-metadata", variables.predeployUri]]),
-          fetch(
-            `/api/revalidate/publish?address=${address}&contractName=${variables.contractName}`,
-          ).catch((err) => console.error("failed to revalidate", err)),
-        ]);
-      },
-    },
-  );
 }
 
 export function useEditProfileMutation() {
