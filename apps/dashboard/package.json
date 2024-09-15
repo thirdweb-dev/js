@@ -55,7 +55,6 @@
     "@stripe/stripe-js": "^3.5.0",
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-table": "^8.17.3",
-    "@thirdweb-dev/react": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/service-utils": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
@@ -169,16 +168,8 @@
       "tw-components",
       "contract-ui"
     ],
-    "exclude": [
-      "node_modules",
-      "types",
-      "tw-components"
-    ],
+    "exclude": ["node_modules", "types", "tw-components"],
     "entrypoints": []
   },
-  "browserslist": [
-    "defaults",
-    "unreleased versions",
-    "not UCAndroid > 0"
-  ]
+  "browserslist": ["defaults", "unreleased versions", "not UCAndroid > 0"]
 }

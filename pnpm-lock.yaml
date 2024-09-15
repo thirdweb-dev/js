@@ -233,9 +233,6 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.17.3
         version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@thirdweb-dev/react':
-        specifier: workspace:*
-        version: link:../../legacy_packages/react
       '@thirdweb-dev/sdk':
         specifier: workspace:*
         version: link:../../legacy_packages/sdk
