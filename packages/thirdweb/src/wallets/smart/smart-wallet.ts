@@ -102,6 +102,7 @@ export function smartWallet(
 ): Wallet<"smart"> {
   const emitter = createWalletEmitter<"smart">();
   let account: Account | undefined = undefined;
+  let adminAccount: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
   let lastConnectOptions: WalletConnectionOption<"smart"> | undefined;
 
@@ -118,6 +119,7 @@ export function smartWallet(
     },
     getConfig: () => createOptions,
     getAccount: () => account,
+    getAdminAccount: () => adminAccount,
     autoConnect: async (options) => {
       const { connectSmartWallet } = await import("./index.js");
       const [connectedAccount, connectedChain] = await connectSmartWallet(
@@ -145,6 +147,7 @@ export function smartWallet(
         createOptions,
       );
       // set the states
+      adminAccount = options.personalAccount;
       lastConnectOptions = options;
       account = connectedAccount;
       chain = connectedChain;
