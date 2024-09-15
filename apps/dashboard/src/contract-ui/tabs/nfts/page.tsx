@@ -72,12 +72,6 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   const canCreateDelayedRevealBatch =
     ERC721Ext.isCreateDelayedRevealBatchSupported(functionSelectorQuery.data);
 
-  console.log("***DEBUG*** canRenderNFTTable: ", {
-    isErc721,
-    canRenderNFTTable,
-    functionSelectorQuery,
-  });
-
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row justify-between items-center">

@@ -48,7 +48,6 @@ export function publishContract(
     contract: options.contract,
     async asyncParams() {
       const currentVersion = options.previousMetadata?.version;
-
       // check if the version is greater than the current version
       if (
         currentVersion &&

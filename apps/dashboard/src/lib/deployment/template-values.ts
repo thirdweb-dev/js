@@ -1,9 +1,8 @@
-import type { SUPPORTED_CHAIN_ID } from "constants/chains";
 import type { SolidityType } from "lib/solidity-types";
 
 interface ReplacementProps {
   connectedWallet?: string;
-  chainId?: SUPPORTED_CHAIN_ID;
+  chainId?: number;
 }
 
 interface TemplateValue {

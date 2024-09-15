@@ -293,7 +293,6 @@ async function publishedContractQueryFn(
   return {
     ...latestPublishedVersion,
     ...contractInfo.publishedMetadata,
-
     publishedContractId: `${publisher}/${contractId}/${version}`,
   };
 }

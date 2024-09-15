@@ -5,7 +5,7 @@ import type { StaticImageData } from "next/image";
 import { useActiveAccount } from "thirdweb/react";
 import {
   useContractPrePublishMetadata,
-  useContractPublishMetadataFromURI,
+  useFetchDeployMetadata,
 } from "../hooks";
 import type { ContractId } from "../types";
 
@@ -26,7 +26,7 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
     contractId,
     address,
   );
-  const publishMetadata = useContractPublishMetadataFromURI(contractId);
+  const publishMetadata = useFetchDeployMetadata(contractId);
 
   const logo =
     fullPublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata
