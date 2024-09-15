@@ -108,7 +108,6 @@ export function isInitializeSupported(availableSelectors: string[]) {
  * ```
  */
 export function encodeInitializeParams(options: InitializeParams) {
-  console.log({options})
   return encodeAbiParameters(FN_INPUTS, [
     options.defaultAdmin,
     options.name,
