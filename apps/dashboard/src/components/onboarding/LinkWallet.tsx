@@ -96,8 +96,8 @@ const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
               colorScheme="blue"
               type="button"
               onClick={handleSubmit}
-              isLoading={updateMutation.isLoading}
-              isDisabled={updateMutation.isLoading}
+              isLoading={updateMutation.isPending}
+              isDisabled={updateMutation.isPending}
             >
               Yes, link them
             </Button>
@@ -107,7 +107,7 @@ const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
               fontSize="md"
               variant="outline"
               onClick={onBack}
-              isDisabled={updateMutation.isLoading}
+              isDisabled={updateMutation.isPending}
             >
               Use another email
             </Button>

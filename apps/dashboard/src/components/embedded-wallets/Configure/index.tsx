@@ -106,7 +106,7 @@ export const Configure: React.FC<ConfigureProps> = (props) => {
       {...props}
       canEditAdvancedFeatures={dashboardAccount.advancedEnabled}
       updateApiKey={handleAPIKeyUpdate}
-      isUpdating={mutation.isLoading}
+      isUpdating={mutation.isPending}
     />
   );
 };

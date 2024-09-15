@@ -21,11 +21,7 @@ export function useUpdateEcosystem(
   const { isLoggedIn, user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  const {
-    mutateAsync: updateEcosystem,
-    isLoading,
-    variables,
-  } = useMutation({
+  return useMutation({
     // Returns true if the update was successful
     mutationFn: async (params: UpdateEcosystemParams): Promise<boolean> => {
       if (!isLoggedIn || !user?.jwt) {
@@ -65,7 +61,9 @@ export function useUpdateEcosystem(
       return true;
     },
     onSuccess: async (partner, variables, context) => {
-      await queryClient.invalidateQueries(["ecosystems"]);
+      await queryClient.invalidateQueries({
+        queryKey: ["ecosystems"],
+      });
       if (onSuccess) {
         return onSuccess(partner, variables, context);
       }
@@ -73,6 +71,4 @@ export function useUpdateEcosystem(
     },
     ...queryOptions,
   });
-
-  return { updateEcosystem, isLoading, variables };
 }

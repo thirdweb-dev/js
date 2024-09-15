@@ -59,7 +59,7 @@ export function CreateEcosystemForm(props: {
     },
   });
 
-  const { createEcosystem, isLoading } = useCreateEcosystem({
+  const { mutateAsync: createEcosystem, isPending } = useCreateEcosystem({
     onError: (error) => {
       const message =
         error instanceof Error ? error.message : "Failed to create ecosystem";
@@ -181,9 +181,9 @@ export function CreateEcosystemForm(props: {
               type="submit"
               variant="primary"
               className="w-full"
-              disabled={isLoading}
+              disabled={isPending}
             >
-              {isLoading && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
+              {isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
               Create
             </Button>
           )}

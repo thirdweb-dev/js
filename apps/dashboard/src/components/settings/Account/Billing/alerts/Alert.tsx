@@ -48,7 +48,7 @@ export const BillingAlerts = () => {
         AccountStatus.InvalidPayment,
         AccountStatus.InvalidPaymentMethod,
         AccountStatus.PaymentVerification,
-      ].includes(account?.status as AccountStatus)
+      ].includes(account.state.data?.status as AccountStatus)
         ? 1000
         : false,
   });

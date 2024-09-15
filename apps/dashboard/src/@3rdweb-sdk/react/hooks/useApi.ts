@@ -254,15 +254,16 @@ export interface BillingCredit {
 interface UseAccountInput {
   refetchInterval?:
     | number
+    | false
     | ((
-        data: Account | undefined,
         query: Query<
           Account,
-          unknown,
+          Error,
           Account,
           readonly ["account", string, "me"]
         >,
-      ) => number | false);
+      ) => number | false | undefined)
+    | undefined;
 }
 
 export function useAccount({ refetchInterval }: UseAccountInput = {}) {
@@ -286,7 +287,7 @@ export function useAccount({ refetchInterval }: UseAccountInput = {}) {
       return json.data as Account;
     },
     enabled: !!user?.address && isLoggedIn,
-    refetchInterval: refetchInterval ?? false,
+    refetchInterval,
   });
 }
 
@@ -444,8 +445,8 @@ export function useUpdateAccount() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: UpdateAccountInput) => {
+  return useMutation({
+    mutationFn: async (input: UpdateAccountInput) => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account`, {
@@ -465,14 +466,13 @@ export function useUpdateAccount() {
 
       return json.data;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(
-          accountKeys.me(user?.address as string),
-        );
-      },
+
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: accountKeys.me(user?.address as string),
+      });
     },
-  );
+  });
 }
 
 export function useUpdateAccountPlan(waitForWebhook?: boolean) {
@@ -507,13 +507,15 @@ export function useUpdateAccountPlan(waitForWebhook?: boolean) {
       return json.data;
     },
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         // invalidate usage data as limits are different
-        queryClient.invalidateQueries(accountKeys.me(user?.address as string));
+        await queryClient.invalidateQueries({
+          queryKey: accountKeys.me(user?.address as string),
+        });
 
-        return queryClient.invalidateQueries(
-          accountKeys.usage(user?.address as string),
-        );
+        return queryClient.invalidateQueries({
+          queryKey: accountKeys.usage(user?.address as string),
+        });
       },
     },
   );
@@ -545,9 +547,9 @@ export function useUpdateNotifications() {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(
-          accountKeys.me(user?.address as string),
-        );
+        return queryClient.invalidateQueries({
+          queryKey: accountKeys.me(user?.address as string),
+        });
       },
     },
   );
@@ -608,16 +610,19 @@ export function useConfirmEmail() {
       return json.data;
     },
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         // invalidate related cache, since could be relinking account
-        queryClient.invalidateQueries(apiKeys.keys(user?.address as string));
-        queryClient.invalidateQueries(
-          accountKeys.usage(user?.address as string),
-        );
-
-        return queryClient.invalidateQueries(
-          accountKeys.me(user?.address as string),
-        );
+        return Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: apiKeys.keys(user?.address as string),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: accountKeys.usage(user?.address as string),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: accountKeys.me(user?.address as string),
+          }),
+        ]);
       },
     },
   );
@@ -652,9 +657,9 @@ export function useResendEmailConfirmation() {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(
-          accountKeys.me(user?.address as string),
-        );
+        return queryClient.invalidateQueries({
+          queryKey: accountKeys.me(user?.address as string),
+        });
       },
     },
   );
@@ -688,9 +693,9 @@ export function useCreatePaymentMethod() {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(
-          accountKeys.me(user?.address as string),
-        );
+        return queryClient.invalidateQueries({
+          queryKey: accountKeys.me(user?.address as string),
+        });
       },
     },
   );
@@ -723,8 +728,8 @@ export function useCreateApiKey() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutation(
-    async (input: CreateKeyInput) => {
+  return useMutation({
+    mutationFn: async (input: CreateKeyInput) => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys`, {
@@ -743,14 +748,13 @@ export function useCreateApiKey() {
 
       return json.data as ApiKey;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(
-          apiKeys.keys(user?.address as string),
-        );
-      },
+
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: apiKeys.keys(user?.address as string),
+      });
     },
-  );
+  });
 }
 
 export function useUpdateApiKey() {
@@ -780,9 +784,9 @@ export function useUpdateApiKey() {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(
-          apiKeys.keys(user?.address as string),
-        );
+        return queryClient.invalidateQueries({
+          queryKey: apiKeys.keys(user?.address as string),
+        });
       },
     },
   );
@@ -814,9 +818,9 @@ export function useRevokeApiKey() {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(
-          apiKeys.keys(user?.address as string),
-        );
+        return queryClient.invalidateQueries({
+          queryKey: apiKeys.keys(user?.address as string),
+        });
       },
     },
   );
@@ -869,7 +873,9 @@ export const useUpdatePolicies = () => {
     },
     {
       onSuccess: (_, variables) => {
-        return queryClient.invalidateQueries(["policies", variables.serviceId]);
+        return queryClient.invalidateQueries({
+          queryKey: ["policies", variables.serviceId],
+        });
       },
     },
   );
@@ -906,9 +912,11 @@ export function useRevokeAuthorizedWallet() {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(
-          authorizedWallets.authorizedWallets(user?.address as string),
-        );
+        return queryClient.invalidateQueries({
+          queryKey: authorizedWallets.authorizedWallets(
+            user?.address as string,
+          ),
+        });
       },
     },
   );
@@ -936,7 +944,7 @@ export function useAuthorizedWallets() {
       return json.data as AuthorizedWallet[];
     },
     enabled: !!user?.address && isLoggedIn,
-    cacheTime: 0,
+    gcTime: 0,
   });
 }
 

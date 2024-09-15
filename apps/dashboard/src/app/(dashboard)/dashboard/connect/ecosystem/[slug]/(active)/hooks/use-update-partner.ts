@@ -25,7 +25,7 @@ export function useUpdatePartner(
   const { isLoggedIn, user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  const { mutateAsync: updatePartner, isLoading } = useMutation({
+  return useMutation({
     // Returns the created partner object
     mutationFn: async (params: UpdatePartnerParams): Promise<Partner> => {
       if (!isLoggedIn || !user?.jwt) {
@@ -73,11 +73,9 @@ export function useUpdatePartner(
       return data;
     },
     onSuccess: async (partner, variables, context) => {
-      await queryClient.invalidateQueries([
-        "ecosystem",
-        variables.ecosystem.id,
-        "partners",
-      ]);
+      await queryClient.invalidateQueries({
+        queryKey: ["ecosystem", variables.ecosystem.id, "partners"],
+      });
       if (onSuccess) {
         return onSuccess(partner, variables, context);
       }
@@ -85,6 +83,4 @@ export function useUpdatePartner(
     },
     ...queryOptions,
   });
-
-  return { updatePartner, isLoading };
 }

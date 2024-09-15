@@ -71,7 +71,6 @@ const ReasonWeb3Section = () => {
         Web3 will unlock the true potential of the internet by enabling digital
         ownership for users and generating more revenue for builders.
       </Text>
-
       <SimpleGrid
         columns={{ base: 1, lg: 5 }}
         mt={14}
@@ -94,11 +93,9 @@ const ReasonWeb3Section = () => {
                 maxH="205px"
                 alt="web-generation"
               />
-
               <Heading size="title.sm" mt={14}>
                 {reason.title}
               </Heading>
-
               <List marginTop={6} listStyleType="initial">
                 {reason.list.map((list, _idx) => {
                   // biome-ignore lint/suspicious/noArrayIndexKey: FIXME

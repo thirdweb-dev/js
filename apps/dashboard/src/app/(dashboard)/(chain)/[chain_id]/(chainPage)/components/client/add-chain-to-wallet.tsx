@@ -30,7 +30,7 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
     },
   });
 
-  const [debouncedLoading] = useDebounce(switchChainMutation.isLoading, 50);
+  const [debouncedLoading] = useDebounce(switchChainMutation.isPending, 50);
 
   const disabled = debouncedLoading || activeWalletChainId === props.chain?.id;
 

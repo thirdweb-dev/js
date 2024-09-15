@@ -21,7 +21,7 @@ export function useDeletePartner(
   const { isLoggedIn, user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  const { mutateAsync: deletePartner, isLoading } = useMutation({
+  return useMutation({
     // Returns true on success
     mutationFn: async (params: DeletePartnerParams): Promise<boolean> => {
       if (!isLoggedIn || !user?.jwt) {
@@ -58,11 +58,9 @@ export function useDeletePartner(
       return true;
     },
     onSuccess: async (partner, variables, context) => {
-      await queryClient.invalidateQueries([
-        "ecosystem",
-        variables.ecosystem.id,
-        "partners",
-      ]);
+      await queryClient.invalidateQueries({
+        queryKey: ["ecosystem", variables.ecosystem.id, "partners"],
+      });
       if (onSuccess) {
         return onSuccess(partner, variables, context);
       }
@@ -70,6 +68,4 @@ export function useDeletePartner(
     },
     ...queryOptions,
   });
-
-  return { deletePartner, isLoading };
 }

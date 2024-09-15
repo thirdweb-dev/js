@@ -562,7 +562,6 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
           </Tbody>
         </Table>
       </TableContainer>
-
       <Portal containerRef={portalRef}>
         <Center w="100%">
           <HStack>

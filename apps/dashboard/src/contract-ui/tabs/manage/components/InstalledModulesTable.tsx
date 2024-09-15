@@ -223,7 +223,7 @@ function ModuleRow(props: {
                 variant="outline"
                 className="text-red-500 rounded-xl p-3"
               >
-                {uninstallMutation.isLoading ? (
+                {uninstallMutation.isPending ? (
                   <Spinner className="size-4" />
                 ) : (
                   <FaRegTrashAlt className="size-4" />
@@ -267,7 +267,7 @@ function ModuleRow(props: {
 
               <TransactionButton
                 transactionCount={1}
-                isLoading={uninstallMutation.isLoading}
+                isLoading={uninstallMutation.isPending}
                 type="submit"
                 colorScheme="red"
                 className="flex"

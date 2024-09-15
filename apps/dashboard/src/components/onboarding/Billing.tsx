@@ -88,9 +88,9 @@ const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
           >
             <OnboardingPaymentForm
               onSave={() => {
-                queryClient.invalidateQueries(
-                  accountKeys.me(user?.address as string),
-                );
+                queryClient.invalidateQueries({
+                  queryKey: accountKeys.me(user?.address as string),
+                });
                 onSave();
               }}
               onCancel={handleCancel}

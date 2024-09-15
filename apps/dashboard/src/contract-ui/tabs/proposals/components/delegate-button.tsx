@@ -15,7 +15,7 @@ interface VoteButtonProps {
 export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {
   const trackEvent = useTrack();
   const { data: delegated, isLoading } = useTokensDelegated(contract);
-  const { mutate: delegate, isLoading: isDelegating } =
+  const { mutate: delegate, isPending: isDelegating } =
     useDelegateMutation(contract);
 
   const { onSuccess, onError } = useTxNotifications(

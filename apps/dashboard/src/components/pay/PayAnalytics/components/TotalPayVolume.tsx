@@ -40,6 +40,9 @@ function processQuery(
   if (volumeQuery.isError) {
     return { isError: true };
   }
+  if (!volumeQuery.data) {
+    return { isEmpty: true };
+  }
 
   if (volumeQuery.data.intervalResults.length === 0) {
     return { isEmpty: true };

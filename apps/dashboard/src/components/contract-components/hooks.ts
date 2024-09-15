@@ -3,6 +3,7 @@ import { networkKeys, useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import {
   type QueryClient,
+  queryOptions,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -169,7 +170,7 @@ export function useContractFullPublishMetadata(uri: string) {
 }
 
 export function publisherProfileQuery(publisherAddress?: string) {
-  return {
+  return queryOptions({
     queryKey: ["releaser-profile", publisherAddress],
     queryFn: () => {
       if (!publisherAddress) {
@@ -179,10 +180,10 @@ export function publisherProfileQuery(publisherAddress?: string) {
     },
     enabled: !!publisherAddress,
     // 24h
-    cacheTime: 60 * 60 * 24 * 1000,
+    gcTime: 60 * 60 * 24 * 1000,
     // 1h
     staleTime: 60 * 60 * 1000,
-  };
+  });
 }
 
 export function usePublisherProfile(publisherAddress?: string) {
@@ -515,7 +516,7 @@ export function ensQuery(addressOrEnsName?: string) {
       : null,
     ensName: null,
   };
-  return {
+  return queryOptions({
     queryKey: ["ens", addressOrEnsName],
     queryFn: async () => {
       if (!addressOrEnsName) {
@@ -548,13 +549,13 @@ export function ensQuery(addressOrEnsName?: string) {
       !!addressOrEnsName &&
       (isAddress(addressOrEnsName) || isEnsName(addressOrEnsName)),
     // 24h
-    cacheTime: 60 * 60 * 24 * 1000,
+    gcTime: 60 * 60 * 24 * 1000,
     // 1h
     staleTime: 60 * 60 * 1000,
     // default to the one we know already
     placeholderData,
     retry: false,
-  } as const;
+  });
 }
 
 export function useEns(addressOrEnsName?: string) {

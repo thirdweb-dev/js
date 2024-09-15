@@ -28,7 +28,7 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({ contract }) => {
           children: (
             <>
               <Button
-                isDisabled={propose.isLoading}
+                isDisabled={propose.isPending}
                 variant="outline"
                 mr={3}
                 onClick={onClose}
@@ -37,7 +37,7 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({ contract }) => {
               </Button>
               <TransactionButton
                 transactionCount={1}
-                isLoading={propose.isLoading}
+                isLoading={propose.isPending}
                 form={PROPOSAL_FORM_ID}
                 type="submit"
                 colorScheme="primary"

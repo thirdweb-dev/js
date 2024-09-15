@@ -152,11 +152,11 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
           <Button
             type="submit"
             variant="primary"
-            disabled={!apiKey.services || mutation.isLoading}
+            disabled={!apiKey.services || mutation.isPending}
             className="flex flex-row gap-2"
           >
-            {mutation.isLoading && <Spinner className="size-4" />}
-            <span>{mutation.isLoading ? "Saving ..." : "Save changes"}</span>
+            {mutation.isPending && <Spinner className="size-4" />}
+            <span>{mutation.isPending ? "Saving ..." : "Save changes"}</span>
           </Button>
         </form>
       </Form>

@@ -214,7 +214,7 @@ function CreateAPIKeyForm(props: {
     return (
       <DomainsAlert
         type={showAlert}
-        isCreating={props.createKeyMutation.isLoading}
+        isCreating={props.createKeyMutation.isPending}
         onProceed={() => {
           handleAPICreation({
             name: form.getValues("name"),
@@ -338,10 +338,10 @@ function CreateAPIKeyForm(props: {
           </DialogClose>
           <Button
             type="submit"
-            disabled={props.createKeyMutation.isLoading}
+            disabled={props.createKeyMutation.isPending}
             className="gap-2 min-w-28"
           >
-            {props.createKeyMutation.isLoading && (
+            {props.createKeyMutation.isPending && (
               <Spinner className="size-4" />
             )}
             Create

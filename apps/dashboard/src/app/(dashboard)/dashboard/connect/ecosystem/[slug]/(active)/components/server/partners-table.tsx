@@ -69,13 +69,14 @@ function EcosystemRow(props: {
   partner: Partner;
   ecosystem: Ecosystem;
 }) {
-  const { deletePartner, isLoading: isDeleting } = useDeletePartner({
-    onError: (error) => {
-      const message =
-        error instanceof Error ? error.message : "Failed to delete partner";
-      toast.error(message);
-    },
-  });
+  const { mutateAsync: deletePartner, isPending: isDeleting } =
+    useDeletePartner({
+      onError: (error) => {
+        const message =
+          error instanceof Error ? error.message : "Failed to delete partner";
+        toast.error(message);
+      },
+    });
 
   return (
     <TableRow

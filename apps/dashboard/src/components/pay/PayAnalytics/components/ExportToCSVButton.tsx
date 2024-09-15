@@ -31,7 +31,7 @@ export function ExportToCSVButton(props: {
         exportMutation.mutate();
       }}
     >
-      {exportMutation.isLoading ? (
+      {exportMutation.isPending ? (
         <>
           Downloading
           <Spinner className="size-3" />

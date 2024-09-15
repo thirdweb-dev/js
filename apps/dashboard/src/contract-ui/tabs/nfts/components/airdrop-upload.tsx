@@ -447,7 +447,6 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
           </Tbody>
         </Table>
       </TableContainer>
-
       <Portal containerRef={portalRef}>
         <Center w="100%">
           <HStack>

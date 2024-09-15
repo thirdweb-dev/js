@@ -40,6 +40,10 @@ function processQuery(
     return { isError: true };
   }
 
+  if (!newCustomersQuery.data) {
+    return { isEmpty: true };
+  }
+
   if (newCustomersQuery.data.intervalResults.length === 0) {
     return { isEmpty: true };
   }

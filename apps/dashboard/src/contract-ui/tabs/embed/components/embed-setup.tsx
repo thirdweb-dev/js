@@ -429,7 +429,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
                     },
                   );
                 }}
-                disabled={createKeyMutation.isLoading}
+                disabled={createKeyMutation.isPending}
               >
                 Create Client ID
               </Button>

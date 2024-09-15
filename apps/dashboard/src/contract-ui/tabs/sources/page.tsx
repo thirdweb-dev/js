@@ -286,7 +286,7 @@ function RefreshContractMetadataButton(props: {
 
   return (
     <Button
-      isLoading={contractCacheMutation.isLoading}
+      isLoading={contractCacheMutation.isPending}
       variant="outline"
       onClick={() => {
         toast.promise(contractCacheMutation.mutateAsync(), {

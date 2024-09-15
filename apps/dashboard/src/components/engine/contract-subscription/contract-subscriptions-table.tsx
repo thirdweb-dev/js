@@ -19,7 +19,7 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
@@ -254,7 +254,7 @@ const ChainLastBlockTimestamp = ({
   const ethBlockQuery = useQuery({
     queryKey: ["block_timestamp", chainId, Number(blockNumber)],
     // keep the previous data while fetching new data
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const rpcRequest = getRpcClient({
         client: thirdwebClient,

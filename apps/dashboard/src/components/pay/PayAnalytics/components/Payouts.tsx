@@ -37,6 +37,9 @@ function processQuery(query: ReturnType<typeof usePayVolume>): ProcessedQuery {
   if (query.isError) {
     return { isError: true };
   }
+  if (!query.data) {
+    return { isEmpty: true };
+  }
 
   if (query.data.intervalResults.length === 0) {
     return { isEmpty: true };

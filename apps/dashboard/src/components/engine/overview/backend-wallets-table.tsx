@@ -316,7 +316,7 @@ const ReceiveFundsModal = ({
     // only run this if we have a backendWallet address
     enabled: !!backendWallet.address,
     // start out with empty string
-    initialData: "",
+    placeholderData: "",
     queryFn: async () => {
       return new Promise<string>((resolve, reject) => {
         QRCode.toDataURL(

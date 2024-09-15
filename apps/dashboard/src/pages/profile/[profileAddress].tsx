@@ -278,9 +278,10 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   await Promise.all([
     ...ensQueries,
     queryClient.prefetchQuery(publisherProfileQuery(address)),
-    queryClient.prefetchQuery(["published-contracts", address], () =>
-      fetchPublishedContracts(polygonSdk, queryClient, address),
-    ),
+    queryClient.prefetchQuery({
+      queryKey: ["published-contracts", address],
+      queryFn: () => fetchPublishedContracts(polygonSdk, queryClient, address),
+    }),
   ]);
 
   return {

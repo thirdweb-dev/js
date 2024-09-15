@@ -31,7 +31,7 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = (props) => {
   return (
     // if no permissions, simply return null (do not fail open)
     <AdminOnly contract={props.contract} failOpen={false}>
-      {functionSelectorQuery.data.length > 0 && (
+      {functionSelectorQuery.data?.length && (
         <Inner functionSelectors={functionSelectorQuery.data} {...props} />
       )}
     </AdminOnly>

@@ -237,7 +237,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
           <FormControl isInvalid={!!errors.publisherAddress}>
             <FormLabel>Publisher</FormLabel>
             <Input
-              disabled={installMutation.isLoading}
+              disabled={installMutation.isPending}
               bg="backgroundHighlight"
               placeholder="Publisher address"
               {...register("publisherAddress", {
@@ -265,7 +265,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
             >
               <Select
                 disabled={
-                  installMutation.isLoading ||
+                  installMutation.isPending ||
                   publishedContractsQuery?.data?.length === 0 ||
                   publishedContractsQuery.isLoading
                 }
@@ -320,7 +320,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
                   !allVersions.data ||
                   allVersions.isLoading ||
                   isModuleCompatibleQuery.data === false ||
-                  installMutation.isLoading ||
+                  installMutation.isPending ||
                   isModuleCompatibleQuery.isFetching
                 }
                 bg="backgroundHighlight"
@@ -350,7 +350,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
             <ModuleInstallParams
               installParams={moduleInstallParams.data}
               form={form}
-              disableInputs={installMutation.isLoading}
+              disableInputs={installMutation.isPending}
             />
           )
         )}
@@ -361,7 +361,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         <div className="flex justify-end">
           <TransactionButton
             transactionCount={1}
-            isLoading={installMutation.isLoading}
+            isLoading={installMutation.isPending}
             type="submit"
             colorScheme="primary"
             alignSelf="flex-end"
