@@ -10,7 +10,6 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
   const {
     formDisabled,
     isErc20,
-    isClaimPhaseV1,
     form,
     tokenDecimals,
     field,
@@ -26,9 +25,7 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
   return (
     <CustomFormControl
       disabled={formDisabled}
-      label={`How many ${isErc20 ? "tokens" : "NFTs"} can be claimed per ${
-        isClaimPhaseV1 ? "transaction" : "wallet"
-      }?`}
+      label={`How many ${isErc20 ? "tokens" : "NFTs"} can be claimed per wallet?`}
       error={
         form.getFieldState(
           `phases.${phaseIndex}.maxClaimablePerWallet`,
@@ -37,14 +34,10 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
       }
       helperText={
         <>
-          {!isClaimPhaseV1 ? (
-            <>
-              This value applies for <strong>all</strong> wallets
-              {claimConditionType !== "public"
-                ? ", and can be overridden for specific wallets in the snapshot. "
-                : ". "}
-            </>
-          ) : null}
+          This value applies for <strong>all</strong> wallets
+          {claimConditionType !== "public"
+            ? ", and can be overridden for specific wallets in the snapshot. "
+            : ". "}
           Limits are set per wallets and not per user, sophisticated actors
           could get around wallet restrictions.{" "}
           <Link
@@ -61,9 +54,7 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
       <QuantityInputWithUnlimited
         isRequired
         decimals={tokenDecimals}
-        isDisabled={
-          (!isClaimPhaseV1 && dropType === "specific") || formDisabled
-        }
+        isDisabled={dropType === "specific" || formDisabled}
         value={field?.maxClaimablePerWallet?.toString() || "0"}
         onChange={(value) =>
           form.setValue(

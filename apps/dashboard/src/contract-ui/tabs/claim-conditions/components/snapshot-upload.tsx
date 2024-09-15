@@ -27,7 +27,7 @@ import {
 } from "@chakra-ui/react";
 import { Logo } from "components/logo";
 import Papa from "papaparse";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { type DropzoneOptions, useDropzone } from "react-dropzone";
 import { BsFillCloudUploadFill } from "react-icons/bs";
 import { FiDownload } from "react-icons/fi";
@@ -64,7 +64,6 @@ interface SnapshotUploadProps {
       }[]
     | null;
   dropType: "specific" | "any" | "overrides";
-  isV1ClaimCondition: boolean;
   isDisabled: boolean;
 }
 
@@ -74,7 +73,6 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
   onClose,
   value,
   dropType,
-  isV1ClaimCondition,
   isDisabled,
 }) => {
   const [validSnapshot, setValidSnapshot] = useState<SnapshotAddressInput[]>(
@@ -224,11 +222,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
         </Flex>
 
         {validSnapshot.length > 0 ? (
-          <SnapshotTable
-            portalRef={paginationPortalRef}
-            data={snapshotData}
-            isV1ClaimCondition={isV1ClaimCondition}
-          />
+          <SnapshotTable portalRef={paginationPortalRef} data={snapshotData} />
         ) : (
           <Flex flexGrow={1} align="center" overflow="auto">
             <Container maxW="container.page">
@@ -275,33 +269,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                 <Flex gap={2} flexDir="column">
                   <Heading size="label.md">Requirements</Heading>
                   <UnorderedList spacing={1}>
-                    {isV1ClaimCondition ? (
-                      <>
-                        <Text as={ListItem}>
-                          Files <em>must</em> contain one .csv file with a list
-                          of addresses.
-                          <br />
-                          <Link download color="blue.500" href="/snapshot.csv">
-                            <Icon as={FiDownload} /> Example snapshot
-                          </Link>
-                        </Text>
-                        <Text as={ListItem}>
-                          You may optionally add a <Code>maxClaimable</Code>{" "}
-                          column to specify how many NFTs can be claimed by that
-                          specific address per transaction, if not specified,
-                          the default value is the one you have set on your
-                          claim phase.
-                          <br />
-                          <Link
-                            download
-                            color="blue.500"
-                            href="/snapshot-with-maxclaimable.csv"
-                          >
-                            <Icon as={FiDownload} /> Example snapshot
-                          </Link>
-                        </Text>
-                      </>
-                    ) : dropType === "specific" ? (
+                    {dropType === "specific" ? (
                       <>
                         <Text as={ListItem}>
                           Files <em>must</em> contain one .csv file with a list
@@ -384,13 +352,10 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                       Repeated addresses will be removed and only the first
                       found will be kept.
                     </Text>
-                    {!isV1ClaimCondition && (
-                      <Text as={ListItem}>
-                        The limit you set is for the maximum amount of NFTs a
-                        wallet can claim, not how many they can receive in
-                        total.
-                      </Text>
-                    )}
+                    <Text as={ListItem}>
+                      The limit you set is for the maximum amount of NFTs a
+                      wallet can claim, not how many they can receive in total.
+                    </Text>
                   </UnorderedList>
                 </Flex>
               </Flex>
@@ -459,81 +424,67 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
 interface SnapshotTableProps {
   data: SnapshotAddressInput[];
   portalRef: React.RefObject<HTMLDivElement>;
-  isV1ClaimCondition: boolean;
 }
 
-const SnapshotTable: React.FC<SnapshotTableProps> = ({
-  data,
-  portalRef,
-  isV1ClaimCondition,
-}) => {
-  const columns = useMemo(() => {
-    let cols = [
-      {
-        Header: "Address",
-        accessor: ({ address, isValid }) => {
-          if (isValid) {
-            return address;
-          }
-          return (
-            <Flex>
-              <Tooltip
-                label={
-                  address.startsWith("0x")
-                    ? "Address is not valid"
-                    : "Address couldn't be resolved"
-                }
-              >
-                <Stack direction="row" align="center">
-                  <Icon as={IoAlertCircleOutline} color="red.500" boxSize={5} />
-                  <Text fontWeight="bold" color="red.500" cursor="default">
-                    {address}
-                  </Text>
-                </Stack>
-              </Tooltip>
-            </Flex>
-          );
-        },
-      },
-      {
-        Header: "Max claimable",
-        accessor: ({ maxClaimable }) => {
-          return maxClaimable === "0" || !maxClaimable
-            ? "Default"
-            : maxClaimable === "unlimited"
-              ? "Unlimited"
-              : maxClaimable;
-        },
-      },
-    ] as Column<SnapshotAddressInput>[];
+const SnapshotTableColumns = [
+  {
+    Header: "Address",
+    accessor: ({ address, isValid }) => {
+      if (isValid) {
+        return address;
+      }
+      return (
+        <Flex>
+          <Tooltip
+            label={
+              address.startsWith("0x")
+                ? "Address is not valid"
+                : "Address couldn't be resolved"
+            }
+          >
+            <Stack direction="row" align="center">
+              <Icon as={IoAlertCircleOutline} color="red.500" boxSize={5} />
+              <Text fontWeight="bold" color="red.500" cursor="default">
+                {address}
+              </Text>
+            </Stack>
+          </Tooltip>
+        </Flex>
+      );
+    },
+  },
+  {
+    Header: "Max claimable",
+    accessor: ({ maxClaimable }) => {
+      return maxClaimable === "0" || !maxClaimable
+        ? "Default"
+        : maxClaimable === "unlimited"
+          ? "Unlimited"
+          : maxClaimable;
+    },
+  },
+  {
+    Header: "Price",
+    accessor: ({ price }) => {
+      return price === "0"
+        ? "Free"
+        : !price || price === "unlimited"
+          ? "Default"
+          : price;
+    },
+  },
+  {
+    Header: "Currency Address",
+    accessor: ({ currencyAddress }) => {
+      return currencyAddress === "0x0000000000000000000000000000000000000000" ||
+        !currencyAddress
+        ? "Default"
+        : currencyAddress;
+    },
+  },
+] as Column<SnapshotAddressInput>[];
 
-    if (!isV1ClaimCondition) {
-      cols = cols.concat([
-        {
-          Header: "Price",
-          accessor: ({ price }) => {
-            return price === "0"
-              ? "Free"
-              : !price || price === "unlimited"
-                ? "Default"
-                : price;
-          },
-        },
-        {
-          Header: "Currency Address",
-          accessor: ({ currencyAddress }) => {
-            return currencyAddress ===
-              "0x0000000000000000000000000000000000000000" || !currencyAddress
-              ? "Default"
-              : currencyAddress;
-          },
-        },
-      ]);
-    }
-
-    return cols;
-  }, [isV1ClaimCondition]);
-
+const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -555,7 +506,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({
     state: { pageIndex, pageSize },
   } = useTable(
     {
-      columns,
+      columns: SnapshotTableColumns,
       data,
       initialState: {
         pageSize: 50,
