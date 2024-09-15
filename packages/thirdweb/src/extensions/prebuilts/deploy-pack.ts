@@ -2,7 +2,10 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
+import {
+  getOrDeployInfraContract,
+  getOrDeployInfraForPublishedContract,
+} from "../../contract/deployment/utils/bootstrap.js";
 import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import type { Prettify } from "../../utils/type-utils.js";
@@ -50,12 +53,30 @@ export type DeployPackContractOptions = Prettify<
 
 export async function deployPackContract(options: DeployPackContractOptions) {
   const { chain, client, account, params } = options;
+  const [WETH, forwarder] = await Promise.all([
+    getOrDeployInfraContract({
+      chain,
+      client,
+      account,
+      contractId: "WETH9",
+    }),
+    getOrDeployInfraContract({
+      chain,
+      client,
+      account,
+      contractId: "Forwarder",
+    }),
+  ]);
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
       chain,
       client,
       account,
       contractId: "Pack",
+      constructorParams: {
+        nativeTokenWrapper: WETH.address,
+        trustedForwarder: forwarder.address,
+      },
     });
   const initializeTransaction = await getInitializeTransaction({
     client,
