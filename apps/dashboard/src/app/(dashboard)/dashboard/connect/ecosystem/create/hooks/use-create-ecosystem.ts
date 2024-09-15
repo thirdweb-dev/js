@@ -8,7 +8,7 @@ import {
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { upload } from "thirdweb/storage";
 
-export type CreateEcosystemParams = {
+type CreateEcosystemParams = {
   name: string;
   logo: File;
   permission: "PARTNER_WHITELIST" | "ANYONE";

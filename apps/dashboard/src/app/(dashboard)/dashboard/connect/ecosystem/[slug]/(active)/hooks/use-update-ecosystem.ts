@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import type { Ecosystem } from "../../../types";
 
-export type UpdateEcosystemParams = {
+type UpdateEcosystemParams = {
   ecosystem: Ecosystem;
   permission: "PARTNER_WHITELIST" | "ANYONE";
 };

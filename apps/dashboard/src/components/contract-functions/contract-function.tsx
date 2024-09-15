@@ -43,7 +43,7 @@ import type { CodeEnvironment } from "../contract-tabs/code/types";
 import { InteractiveAbiFunction } from "./interactive-abi-function";
 
 // internal helpers
-export function unique<T>(a: T[], fn: (a: T, b: T) => boolean): T[] {
+function unique<T>(a: T[], fn: (a: T, b: T) => boolean): T[] {
   if (a.length === 0 || a.length === 1) {
     return a;
   }

@@ -875,35 +875,6 @@ export const useUpdatePolicies = () => {
   );
 };
 
-export function useAuthorizeWalletWithAccount() {
-  const { user } = useLoggedInUser();
-
-  return useMutationWithInvalidate(
-    async (variables: { token: string; deviceName?: string }) => {
-      invariant(user?.address, "walletAddress is required");
-
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/jwt/authorize-wallet`, {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${variables.token}`,
-        },
-        body: JSON.stringify({
-          deviceName: variables.deviceName,
-        }),
-      });
-      const json = await res.json();
-
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data;
-    },
-  );
-}
-
 export function useRevokeAuthorizedWallet() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
@@ -972,7 +943,7 @@ export function useAuthorizedWallets() {
 /**
  *
  */
-export async function fetchChainsFromApi() {
+async function fetchChainsFromApi() {
   // always fetch from prod for chains for now
   // TODO: re-visit this
   const res = await fetch("https://api.thirdweb.com/v1/chains");

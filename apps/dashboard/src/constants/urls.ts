@@ -8,10 +8,6 @@ export const THIRDWEB_ANALYTICS_API_HOST = "/api/server-proxy/analytics";
 export const THIRDWEB_EWS_API_HOST =
   process.env.NEXT_PUBLIC_THIRDWEB_EWS_API_HOST || "https://ews.thirdweb.com";
 
-export const THIRDWEB_PAYMENTS_API_HOST =
-  process.env.NEXT_PUBLIC_THIRDWEB_PAYMENTS_API_HOST ||
-  "https://payments.thirdweb.com";
-
 export const THIRDWEB_PAY_DOMAIN =
   process.env.NEXT_PUBLIC_PAY_URL || "pay.thirdweb-dev.com";
 

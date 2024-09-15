@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import type { Ecosystem, Partner } from "../../../types";
 
-export type AddPartnerParams = {
+type AddPartnerParams = {
   ecosystem: Ecosystem;
   name: string;
   allowlistedDomains: string[];

@@ -8,12 +8,6 @@ import { engineKeys } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useLoggedInUser } from "./useLoggedInUser";
 
-export function useEngineConnectedInstance() {
-  const [instance, setInstance] = useState<EngineInstance | null>(null);
-
-  return { instance, setInstance };
-}
-
 export type EngineTier = "STARTER" | "PREMIUM" | "ENTERPRISE";
 
 // Engine instances
@@ -116,7 +110,7 @@ export function useEngineBackendWallets(instance: string) {
   });
 }
 
-export interface EngineSystemHealth {
+interface EngineSystemHealth {
   status: string;
   engineVersion?: string;
   features?: string[];
@@ -143,7 +137,7 @@ export function useEngineSystemHealth(
   });
 }
 
-export interface EngineSystemQueueMetrics {
+interface EngineSystemQueueMetrics {
   result: {
     queued: number;
     pending: number;
@@ -1419,7 +1413,7 @@ export function useEngineAddContractSubscription(instance: string) {
   );
 }
 
-export interface RemoveContractSubscriptionInput {
+interface RemoveContractSubscriptionInput {
   contractSubscriptionId: string;
 }
 
@@ -1481,7 +1475,7 @@ export function useEngineSubscriptionsLastBlock(
   });
 }
 
-export interface EngineResourceMetrics {
+interface EngineResourceMetrics {
   error: string;
   data: {
     cpu: number;

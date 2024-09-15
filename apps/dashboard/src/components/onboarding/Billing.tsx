@@ -20,7 +20,7 @@ interface OnboardingBillingProps {
   onCancel: () => void;
 }
 
-export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
+const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
   onSave,
   onCancel,
 }) => {

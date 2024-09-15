@@ -148,7 +148,7 @@ export const CustomConnectWallet = (props: {
   );
 };
 
-export function ConnectWalletWelcomeScreen(props: {
+function ConnectWalletWelcomeScreen(props: {
   theme: "light" | "dark";
   subtitle?: string;
 }) {

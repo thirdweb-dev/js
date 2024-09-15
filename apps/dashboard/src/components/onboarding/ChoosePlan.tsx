@@ -11,7 +11,7 @@ interface OnboardingChoosePlanProps {
   onSave: () => void;
 }
 
-export const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
+const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
   onSave,
 }) => {
   const trackEvent = useTrack();

@@ -2,7 +2,7 @@ import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import type { ApiKey, ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
 
-export function projectStub(id: string, teamId: string) {
+function projectStub(id: string, teamId: string) {
   const project: Project = {
     bundleIds: [] as string[],
     createdAt: new Date(),

@@ -40,10 +40,7 @@ interface VerificationResult {
   error?: string;
 }
 
-export async function verifyContract({
-  contractAddress,
-  chainId,
-}: ContractParams) {
+async function verifyContract({ contractAddress, chainId }: ContractParams) {
   try {
     const response = await fetch(
       "https://contract.thirdweb.com/verify/contract",

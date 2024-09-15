@@ -55,7 +55,7 @@ type Webhook = {
   secret: string;
 };
 
-export type WebhooksPageProps = {
+type WebhooksPageProps = {
   clientId: string;
 };
 

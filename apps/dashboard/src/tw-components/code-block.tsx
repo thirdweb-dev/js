@@ -22,7 +22,7 @@ type PrismTheme = typeof darkThemeDefault;
 require("prismjs/components/prism-solidity");
 // end add solidity support
 
-export interface CodeBlockProps extends Omit<CodeProps, "size"> {
+interface CodeBlockProps extends Omit<CodeProps, "size"> {
   code: string;
   codeValue?: string;
   language?: string;

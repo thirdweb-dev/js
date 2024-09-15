@@ -50,7 +50,7 @@ export type CreateAPIKeyDialogProps = {
   onCreateAndComplete?: () => void;
 };
 
-export const CreateAPIKeyDialog = (props: CreateAPIKeyDialogProps) => {
+const CreateAPIKeyDialog = (props: CreateAPIKeyDialogProps) => {
   const createKeyMutation = useCreateApiKey();
 
   return (

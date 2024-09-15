@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 
-export function StoryBadge(props: {
+function StoryBadge(props: {
   label: string;
 }) {
   return (

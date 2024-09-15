@@ -1,7 +1,14 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "next": true,
-  "ignore": ["src/graphql/**", "src/theme/*"],
+  "ignore": ["src/@/components/ui/**"],
   "project": ["src/**"],
-  "ignoreBinaries": ["only-allow"]
+  "ignoreBinaries": ["only-allow", "knip", "biome"],
+  "ignoreDependencies": [
+    "@storybook/blocks",
+    "@storybook/test",
+    "@thirdweb-dev/sdk",
+    "@thirdweb-dev/storage",
+    "@thirdweb-dev/service-utils"
+  ]
 }

@@ -33,7 +33,7 @@ type FormData = {
   moduleInstallFormParams?: Record<string, string>;
 };
 
-export type InstallModuleFormProps = {
+type InstallModuleFormProps = {
   contract: ContractOptions;
   refetchModules: () => void;
   account: Account;

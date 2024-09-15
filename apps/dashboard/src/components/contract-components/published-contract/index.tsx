@@ -31,8 +31,7 @@ import { PublisherHeader } from "../publisher/publisher-header";
 import { AddressesModal } from "./addresses-modal";
 import { MarkdownRenderer } from "./markdown-renderer";
 
-export interface ExtendedPublishedContract
-  extends PublishedContractWithVersion {
+interface ExtendedPublishedContract extends PublishedContractWithVersion {
   name: string;
   displayName?: string;
   description?: string;
@@ -371,7 +370,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
 };
 
 // TODO: find a place to put this
-export type ContractSource = {
+type ContractSource = {
   filename: string;
   source: string;
 };

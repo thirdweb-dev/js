@@ -58,7 +58,7 @@ type WalletIdSubset =
   | "io.zerion.wallet";
 type WalletRecord = Record<WalletIdSubset, boolean>;
 
-export function usePlaygroundWallets() {
+function usePlaygroundWallets() {
   const [socialOptions, setSocialOptions] = useState<
     Record<InAppWalletAuth, boolean>
   >({

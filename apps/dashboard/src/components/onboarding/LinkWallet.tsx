@@ -12,7 +12,7 @@ interface OnboardingLinkWalletProps {
   onBack: () => void;
 }
 
-export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
+const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
   email,
   onSave,
   onBack,

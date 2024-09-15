@@ -10,7 +10,6 @@ import {
   type ExtraPublishMetadata,
   type FeatureName,
   type FeatureWithEnabled,
-  type PublishedContract,
   type ThirdwebSDK,
   detectFeatures,
   fetchContractMetadata,
@@ -251,45 +250,6 @@ export function usePublishedContractsFromDeploy(
   });
 }
 
-function publishedContractWithVersionToLegacy(
-  input: PublishedContractWithVersion,
-) {
-  return {
-    ...input,
-    timestamp: input.publishTimestamp.toString(),
-    id: input.contractId,
-    metadataUri: input.publishMetadataUri,
-  } satisfies PublishedContract;
-}
-
-export async function fetchPublishedContractInfo(
-  sdk?: ThirdwebSDK,
-  contract?: PublishedContractWithVersion,
-) {
-  invariant(contract, "contract is not defined");
-  invariant(sdk, "sdk not provided");
-  return await sdk
-    .getPublisher()
-    .fetchPublishedContractInfo(publishedContractWithVersionToLegacy(contract));
-}
-
-export function usePublishedContractInfo(
-  contract: PublishedContractWithVersion,
-) {
-  const sdk = getThirdwebSDK(
-    polygon.id,
-    getDashboardChainRpc(polygon.id, undefined),
-  );
-  return useQuery({
-    queryKey: ["released-contract", contract],
-    queryFn: () =>
-      fetchPublishedContractInfo(
-        sdk,
-        publishedContractWithVersionToLegacy(contract),
-      ),
-    enabled: !!contract,
-  });
-}
 export function usePublishedContractFunctions(
   publishedContract: PublishedContractWithVersion,
 ) {
@@ -325,12 +285,6 @@ export function usePublishedContractEvents(
   }
 
   return publishedContract?.abi?.filter((f) => f.type === "event") || [];
-}
-
-export function usePublishedContractCompilerMetadata(
-  contract: PublishedContractWithVersion,
-) {
-  return useContractPublishMetadataFromURI(contract.publishMetadataUri);
 }
 
 export function useFunctionParamsFromABI(abi?: Abi, functionName?: string) {
@@ -431,7 +385,7 @@ export async function fetchPublishedContracts(
   );
 }
 
-export async function fetchPublishedContractsWithFeature(
+async function fetchPublishedContractsWithFeature(
   sdk: ThirdwebSDK,
   queryClient: QueryClient,
   feature: FeatureName,

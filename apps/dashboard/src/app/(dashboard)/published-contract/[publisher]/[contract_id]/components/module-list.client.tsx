@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { moduleFromBase64 } from "../../../utils/module-base-64";
 
-export function useModules() {
+function useModules() {
   const modules = useSearchParams()?.getAll("module") || [];
   return useMemo(
     () => modules.map(moduleFromBase64).filter((m) => m !== null),

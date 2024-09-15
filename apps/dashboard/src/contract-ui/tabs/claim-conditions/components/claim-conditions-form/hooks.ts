@@ -24,7 +24,7 @@ type SnapshotEntry = {
   currencyAddress?: string | undefined;
 };
 
-export type CombinedClaimCondition = Prettify<
+type CombinedClaimCondition = Prettify<
   Omit<
     LegacyClaimCondition,
     "price" | "waitInSeconds" | "availableSupply" | "currencyMetadata"

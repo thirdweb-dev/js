@@ -63,7 +63,7 @@ interface CustomContractFormProps {
   modules?: FetchDeployMetadataResult[];
 }
 
-export type CustomContractDeploymentFormData = {
+type CustomContractDeploymentFormData = {
   addToDashboard: boolean;
   deployDeterministic: boolean;
   saltForCreate2: string;

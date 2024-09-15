@@ -5,7 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type { SortBy, TimeRange } from "../../../../lib/search";
 
-export type SortingHeaderProps = {
+type SortingHeaderProps = {
   sortBy: string;
   title: string;
   searchParams:

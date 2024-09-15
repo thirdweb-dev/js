@@ -297,9 +297,7 @@ type BillingAlertNotificationProps = {
   label?: string;
 };
 
-export const BillingAlertNotification: React.FC<
-  BillingAlertNotificationProps
-> = ({
+const BillingAlertNotification: React.FC<BillingAlertNotificationProps> = ({
   status,
   onDismiss,
   title,

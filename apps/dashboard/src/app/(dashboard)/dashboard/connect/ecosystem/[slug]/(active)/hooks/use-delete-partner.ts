@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import type { Ecosystem } from "../../../types";
 
-export type DeletePartnerParams = {
+type DeletePartnerParams = {
   ecosystem: Ecosystem;
   partnerId: string;
 };
