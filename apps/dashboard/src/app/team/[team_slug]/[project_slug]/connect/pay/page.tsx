@@ -15,7 +15,7 @@ export default async function Page(props: {
   );
 
   if (!project) {
-    return notFound();
+    notFound();
   }
 
   return (

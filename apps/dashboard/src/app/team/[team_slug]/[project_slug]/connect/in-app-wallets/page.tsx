@@ -17,7 +17,7 @@ export default async function Page(props: {
   );
 
   if (!project) {
-    return notFound();
+    notFound();
   }
 
   const TRACKING_CATEGORY = "team/in-app-wallets";
