@@ -1,7 +1,7 @@
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Wallet } from "../../interfaces/wallet.js";
-import type { CreateWalletArgs } from "../../wallet-types.js";
 import { createInAppWallet } from "../core/wallet/in-app-core.js";
+import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
 
 /**
  * Creates an in-app wallet.
@@ -56,16 +56,27 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * @wallet
  */
 export function inAppWallet(
-  createOptions?: CreateWalletArgs<"inApp">[1],
+  createOptions?: InAppWalletCreationOptions,
 ): Wallet<"inApp"> {
   return createInAppWallet({
     createOptions,
     connectorFactory: async (client: ThirdwebClient) => {
-      const { InAppNativeConnector } = await import("./native-connector.js");
-      return new InAppNativeConnector({
-        client,
-        passkeyDomain: createOptions?.auth?.passkeyDomain,
-      });
+      return createInAppWalletConnector({ client, createOptions });
     },
+  });
+}
+
+/**
+ * @internal
+ */
+async function createInAppWalletConnector(args: {
+  client: ThirdwebClient;
+  createOptions?: InAppWalletCreationOptions;
+}) {
+  const { InAppNativeConnector } = await import("./native-connector.js");
+  return new InAppNativeConnector({
+    client: args.client,
+    passkeyDomain: args.createOptions?.auth?.passkeyDomain,
+    redirectUrl: args.createOptions?.auth?.redirectUrl,
   });
 }

@@ -41,6 +41,7 @@ export type NativeConnectorOptions = {
   client: ThirdwebClient;
   partnerId?: string | undefined;
   passkeyDomain?: string;
+  redirectUrl?: string;
 };
 
 export class InAppNativeConnector implements InAppConnector {
@@ -114,7 +115,9 @@ export class InAppNativeConnector implements InAppConnector {
       case "apple": {
         const ExpoLinking = require("expo-linking");
         const redirectUrl =
-          params.redirectUrl || (ExpoLinking.createURL("") as string);
+          params.redirectUrl ||
+          this.options.redirectUrl ||
+          (ExpoLinking.createURL("") as string);
         return authenticate({ strategy, redirectUrl }, this.options.client);
       }
       case "passkey":
@@ -153,7 +156,9 @@ export class InAppNativeConnector implements InAppConnector {
       case "apple": {
         const ExpoLinking = require("expo-linking");
         const redirectUrl =
-          params.redirectUrl || (ExpoLinking.createURL("") as string); // Will default to the app scheme
+          params.redirectUrl ||
+          this.options.redirectUrl ||
+          (ExpoLinking.createURL("") as string);
         return this.socialLogin({
           strategy,
           redirectUrl,
