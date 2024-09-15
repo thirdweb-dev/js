@@ -23,8 +23,6 @@ export function usePayerSetup() {
       const account = wallet.getAccount();
       const chain = wallet.getChain();
       if (account && chain) {
-        console.log("updated to", account, chain);
-
         setPayer({
           account,
           chain,
