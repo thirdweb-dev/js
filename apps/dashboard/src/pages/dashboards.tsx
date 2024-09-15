@@ -64,7 +64,7 @@ const Dashboard: ThirdwebNextPage = () => {
         >
           <ProductCard
             title="Monitor contract activity"
-            icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
+            icon={require("../../public/assets/product-pages/dashboard/hero-icon-1.png")}
           >
             Get fast insights into your contract activity. Unlock features in
             Dashboard for each extension implemented in your contract. (e.g.
@@ -72,14 +72,14 @@ const Dashboard: ThirdwebNextPage = () => {
           </ProductCard>
           <ProductCard
             title="Interact with contracts"
-            icon={require("/public/assets/product-pages/dashboard/hero-icon-2.png")}
+            icon={require("../../public/assets/product-pages/dashboard/hero-icon-2.png")}
           >
             Fine-tune contract behavior with quick access to contract
             configurations (e.g. royalty, primary sale fee, etc.)
           </ProductCard>
           <ProductCard
             title="Collaborate with team"
-            icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
+            icon={require("../../public/assets/product-pages/dashboard/hero-icon-3.png")}
           >
             Share contract management access with your team members. Control
             team access to contracts with permissions. Safe is supported.

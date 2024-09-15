@@ -93,8 +93,8 @@ const SolutionsMinting: ThirdwebNextPage = () => {
           />
         </LandingGridSection>
         <LandingDesktopMobileImage
-          image={require("/public/assets/solutions-pages/minting/what-can-you-build.png")}
-          mobileImage={require("/public/assets/solutions-pages/minting/what-can-you-build-mobile.png")}
+          image={require("../../../public/assets/solutions-pages/minting/what-can-you-build.png")}
+          mobileImage={require("../../../public/assets/solutions-pages/minting/what-can-you-build-mobile.png")}
         />
 
         <LandingGridSection>

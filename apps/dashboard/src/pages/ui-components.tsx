@@ -65,7 +65,7 @@ const UIComponents: ThirdwebNextPage = () => {
         >
           <ProductCard
             title="Accelerate time-to-market"
-            icon={require("/public/assets/product-pages/ui-components/hero-icon-1.png")}
+            icon={require("../../public/assets/product-pages/ui-components/hero-icon-1.png")}
           >
             Utilities for common web3 frontend use cases, e.g. enable connect
             wallet, render NFTs metadata, and more. Faster development cycles
@@ -73,7 +73,7 @@ const UIComponents: ThirdwebNextPage = () => {
           </ProductCard>
           <ProductCard
             title="Simplifying web3 complexity"
-            icon={require("/public/assets/product-pages/ui-components/hero-icon-2.png")}
+            icon={require("../../public/assets/product-pages/ui-components/hero-icon-2.png")}
           >
             We have thorough developer documentation on following best
             practices. No need to worry about configuring for each partner
@@ -81,7 +81,7 @@ const UIComponents: ThirdwebNextPage = () => {
           </ProductCard>
           <ProductCard
             title="Customizable UI components"
-            icon={require("/public/assets/product-pages/ui-components/hero-icon-3.png")}
+            icon={require("../../public/assets/product-pages/ui-components/hero-icon-3.png")}
           >
             All of our UI components are fully customizable which you can
             fine-tune for your specific use case.
@@ -112,7 +112,7 @@ const UIComponents: ThirdwebNextPage = () => {
         <ProductSection py={{ base: 12, lg: 24 }}>
           <SimpleGrid columns={{ base: 1, md: 4 }} gap={14}>
             <ProductLearnMoreCard
-              icon={require("/public/assets/product-pages/authentication/sign-in.png")}
+              icon={require("../../public/assets/product-pages/authentication/sign-in.png")}
               category={TRACKING_CATEGORY}
               title="Connect Wallet"
               description="Easily allow users to sign in using their crypto wallets with multiple wallet options (e.g. Coinbase, Metamask, WalletConnect, and more)."

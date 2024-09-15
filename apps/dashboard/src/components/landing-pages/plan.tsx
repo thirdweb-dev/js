@@ -59,7 +59,7 @@ export const LandingPlan = ({
             return (
               <Flex key={listItem.id} alignItems="center" gap="12px">
                 <ChakraNextImage
-                  src={require("/public/assets/landingpage/check.svg")}
+                  src={require("../../../public/assets/landingpage/check.svg")}
                   height="16px"
                   width="16px"
                   alt=""
