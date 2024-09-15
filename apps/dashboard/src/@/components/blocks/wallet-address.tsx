@@ -50,6 +50,11 @@ export function WalletAddress(props: {
     return <span>Invalid Address ({address})</span>;
   }
 
+  // special case for zero address
+  if (address === ZERO_ADDRESS) {
+    return <span className="font-mono cursor-pointer">{shortenedAddress}</span>;
+  }
+
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(address);
