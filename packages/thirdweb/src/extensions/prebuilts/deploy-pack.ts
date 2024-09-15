@@ -56,7 +56,6 @@ export async function deployPackContract(options: DeployPackContractOptions) {
       client,
       account,
       contractId: "Pack",
-      constructorParams: [],
     });
   const initializeTransaction = await getInitializeTransaction({
     client,
