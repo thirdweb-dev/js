@@ -1,4 +1,3 @@
-import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { useQuery } from "@tanstack/react-query";
 import {
   useEns,
@@ -21,13 +20,8 @@ interface PublishedByProps {
 }
 
 export const PublishedBy: React.FC<PublishedByProps> = ({ contract }) => {
-  const contractEnsQuery = useEns(contract.address);
-  const activeNetworkInfo = useEVMContractInfo();
-
-  const publishedContractsFromDeploy = usePublishedContractsFromDeploy(
-    contractEnsQuery.data?.address || undefined,
-    activeNetworkInfo?.chain?.chainId,
-  );
+  const publishedContractsFromDeploy =
+    usePublishedContractsFromDeploy(contract);
 
   const address = useActiveAccount()?.address;
 

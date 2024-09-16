@@ -159,7 +159,10 @@ export {
   isUninstallModuleSupported,
   type UninstallModuleParams,
 } from "../extensions/modules/__generated__/IModularCore/write/uninstallModule.js";
-export { getModuleConfig } from "../extensions/modules/__generated__/IModule/read/getModuleConfig.js";
+export {
+  getModuleConfig,
+  isGetModuleConfigSupported,
+} from "../extensions/modules/__generated__/IModule/read/getModuleConfig.js";
 export {
   installPublishedModule,
   type InstallPublishedModuleOptions,

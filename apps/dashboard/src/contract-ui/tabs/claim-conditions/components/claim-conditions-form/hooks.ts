@@ -1,7 +1,3 @@
-import type {
-  ClaimCondition as LegacyClaimCondition,
-  ClaimConditionInputSchema as LegacyClaimConditionInputSchema,
-} from "@thirdweb-dev/sdk";
 import {
   type BaseTransactionOptions,
   type ThirdwebClient,
@@ -16,6 +12,10 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { download } from "thirdweb/storage";
 import { maxUint256 } from "thirdweb/utils";
 import type { z } from "zod";
+import type {
+  ClaimCondition as LegacyClaimCondition,
+  ClaimConditionInputSchema as LegacyClaimConditionInputSchema,
+} from "../../legacy-zod-schema";
 
 type SnapshotEntry = {
   address: string;

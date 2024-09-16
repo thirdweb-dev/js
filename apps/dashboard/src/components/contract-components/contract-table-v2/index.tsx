@@ -47,7 +47,7 @@ function convertContractDataToRowData(
   input: ContractDataInput,
 ): ContractDataRow {
   return {
-    id: input.id,
+    id: input.contractId,
     ...input.metadata,
   };
 }

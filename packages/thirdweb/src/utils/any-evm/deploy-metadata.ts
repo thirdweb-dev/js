@@ -196,5 +196,9 @@ export type ExtendedMetadata = {
     }
   >;
   compositeAbi?: Abi;
+  externalLinks?: Array<{
+    name: string;
+    url: string;
+  }>;
   [key: string]: unknown;
 };

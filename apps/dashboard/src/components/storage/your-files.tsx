@@ -1,3 +1,4 @@
+import { DASHBOARD_STORAGE_URL } from "@/constants/env";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Center, Flex, Tooltip } from "@chakra-ui/react";
 import {
@@ -9,7 +10,6 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWQueryTable } from "components/shared/TWQueryTable";
 import { formatDistance } from "date-fns/formatDistance";
-import { DASHBOARD_STORAGE_URL } from "lib/sdk";
 import { useCallback, useState } from "react";
 import { Button, Card, Heading, Text, TrackedCopyButton } from "tw-components";
 import { toSize } from "utils/number";

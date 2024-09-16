@@ -2,11 +2,7 @@ import { Image, Skeleton } from "@chakra-ui/react";
 import { ChakraNextImage, type ChakraNextImageProps } from "components/Image";
 import { replaceIpfsUrl } from "lib/sdk";
 import type { StaticImageData } from "next/image";
-import { useActiveAccount } from "thirdweb/react";
-import {
-  useContractPrePublishMetadata,
-  useFetchDeployMetadata,
-} from "../hooks";
+import { useFetchDeployMetadata } from "../hooks";
 import type { ContractId } from "../types";
 
 interface ContractIdImageProps
@@ -20,28 +16,22 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
   boxSize = 8,
   ...imgProps
 }) => {
-  const address = useActiveAccount()?.address;
-
-  const fullPublishMetadata = useContractPrePublishMetadata(
-    contractId,
-    address,
-  );
-  const publishMetadata = useFetchDeployMetadata(contractId);
+  const deployMetadataResultQuery = useFetchDeployMetadata(contractId);
 
   const logo =
-    fullPublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata
-      .logo;
+    deployMetadataResultQuery.data?.latestPublishedContractMetadata
+      ?.publishedMetadata.logo;
 
   const img =
-    publishMetadata.data?.image !== "custom"
-      ? publishMetadata.data?.image ||
+    deployMetadataResultQuery.data?.image !== "custom"
+      ? deployMetadataResultQuery.data?.image ||
         require("../../../../public/assets/tw-icons/general.png")
       : require("../../../../public/assets/tw-icons/general.png");
 
   const isStaticImage = img && typeof img !== "string";
 
   return (
-    <Skeleton isLoaded={publishMetadata.isSuccess}>
+    <Skeleton isLoaded={deployMetadataResultQuery.isSuccess}>
       {logo ? (
         <Image
           alt=""
@@ -54,14 +44,14 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
           {...imgProps}
           boxSize={boxSize}
           src={img as StaticImageData}
-          alt={publishMetadata.data?.name || "Contract Image"}
+          alt={deployMetadataResultQuery.data?.name || "Contract Image"}
         />
       ) : (
         <Image
           {...imgProps}
           boxSize={boxSize}
           src={img as string}
-          alt={publishMetadata.data?.name || "Contract Image"}
+          alt={deployMetadataResultQuery.data?.name || "Contract Image"}
         />
       )}
     </Skeleton>

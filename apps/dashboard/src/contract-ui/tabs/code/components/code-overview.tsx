@@ -23,7 +23,6 @@ import {
   formatAbiItem,
 } from "abitype";
 import {
-  useContractEnabledExtensions,
   useContractEvents,
   useContractFunctions,
 } from "components/contract-components/hooks";
@@ -32,7 +31,12 @@ import type { CodeEnvironment } from "components/contract-tabs/code/types";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useMemo, useState } from "react";
+import * as ERC20Ext from "thirdweb/extensions/erc20";
+import * as ERC721Ext from "thirdweb/extensions/erc721";
+import * as ERC1155Ext from "thirdweb/extensions/erc1155";
+import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { useActiveAccount } from "thirdweb/react";
+import { toFunctionSelector } from "thirdweb/utils";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
 interface CodeOverviewProps {
@@ -540,26 +544,50 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
 
   const [tab, setTab] = useState("write");
 
-  const enabledExtensions = useContractEnabledExtensions(abi);
   const address = useActiveAccount()?.address;
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const isAccountFactory = enabledExtensions.some(
-    (extension) => extension.name === "AccountFactory",
+  const functionSelectors = useMemo(() => {
+    return (abi || [])
+      .filter((a) => a.type === "function")
+      .map((fn) => toFunctionSelector(fn));
+  }, [abi]);
+
+  const isAccountFactory = useMemo(() => {
+    return [
+      ERC4337Ext.isGetAllAccountsSupported(functionSelectors),
+      ERC4337Ext.isGetAccountsSupported(functionSelectors),
+      ERC4337Ext.isTotalAccountsSupported(functionSelectors),
+      ERC4337Ext.isGetAccountsOfSignerSupported(functionSelectors),
+      ERC4337Ext.isPredictAccountAddressSupported(functionSelectors),
+    ].every(Boolean);
+  }, [functionSelectors]);
+  const isERC20 = useMemo(
+    () => ERC20Ext.isERC20(functionSelectors),
+    [functionSelectors],
   );
+  const isERC721 = useMemo(() => {
+    // this will have to do for now
+    return [ERC721Ext.isGetNFTsSupported(functionSelectors)].every(Boolean);
+  }, [functionSelectors]);
+
+  const isERC1155 = useMemo(() => {
+    // this will have to do for now
+    return [ERC1155Ext.isGetNFTsSupported(functionSelectors)].every(Boolean);
+  }, [functionSelectors]);
 
   const extensionNamespace = useMemo(() => {
-    if (enabledExtensions.some((e) => e.name === "ERC20")) {
+    if (isERC20) {
       return "erc20";
     }
-    if (enabledExtensions.some((e) => e.name === "ERC721")) {
+    if (isERC721) {
       return "erc721";
     }
-    if (enabledExtensions.some((e) => e.name === "ERC1155")) {
+    if (isERC1155) {
       return "erc1155";
     }
     return undefined;
-  }, [enabledExtensions]);
+  }, [isERC20, isERC721, isERC1155]);
 
   const chainId = useDashboardEVMChainId() || chainIdProp || 1;
   const chainInfo = useSupportedChain(chainId || -1);
