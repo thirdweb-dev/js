@@ -2,8 +2,30 @@
 function redirects() {
   return [
     {
-      source: "/:chain/connect-sdk",
+      source: "/:network/connect-sdk",
       destination: "https://portal.thirdweb.com/connect",
+      permanent: true,
+    },
+    {
+      source: "/:network/rpc-edge",
+      destination:
+        "https://portal.thirdweb.com/infrastructure/rpc-edge/overview",
+      permanent: true,
+    },
+    {
+      source: "/:network/engine",
+      destination: "https://portal.thirdweb.com/engine",
+      permanent: true,
+    },
+    {
+      source: "/:network/account-abstraction",
+      destination:
+        "https://portal.thirdweb.com/connect/account-abstraction/overview",
+      permanent: true,
+    },
+    {
+      source: "/:network/pay",
+      destination: "https://portal.thirdweb.com/connect/pay/overview",
       permanent: true,
     },
     {
