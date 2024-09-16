@@ -69,6 +69,11 @@ export function FiatFlow(props: {
     props.openedWindow,
   );
 
+  // Not sure how to do this better
+  const [onRampLinkOverride, setOnRampLinkOverride] = useState<string | null>(
+    null,
+  );
+
   const onPostOnrampSuccess = useCallback(() => {
     // report the status of fiat status instead of post onramp swap status when post onramp swap is successful
     getBuyWithFiatStatus({
@@ -87,14 +92,19 @@ export function FiatFlow(props: {
         onBack={props.onBack}
         partialQuote={fiatQuoteToPartialQuote(props.quote)}
         step={1}
+        setOnRampLinkOverride={setOnRampLinkOverride}
         onContinue={() => {
-          const popup = openOnrampPopup(props.quote.onRampLink, props.theme);
+          const popup = openOnrampPopup(
+            onRampLinkOverride || props.quote.onRampLink,
+            props.theme,
+          );
           trackPayEvent({
             event: "open_onramp_popup",
             client: props.client,
             walletAddress: props.payer.account.address,
             walletType: props.payer.wallet.id,
           });
+
           addPendingTx({
             type: "fiat",
             intentId: props.quote.intentId,

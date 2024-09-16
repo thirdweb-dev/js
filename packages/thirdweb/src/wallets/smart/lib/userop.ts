@@ -33,21 +33,20 @@ import {
 } from "./bundler.js";
 import {
   predictAddress,
-  prepareBatchExecute,
   prepareCreateAccount,
   prepareExecute,
 } from "./calls.js";
 import {
+  DEFAULT_ACCOUNT_FACTORY_V0_6,
   DUMMY_SIGNATURE,
   ENTRYPOINT_ADDRESS_v0_6,
   ENTRYPOINT_ADDRESS_v0_7,
-  getDefaultAccountFactory,
   getDefaultBundlerUrl,
   getEntryPointVersion,
 } from "./constants.js";
 import { getPackedUserOperation } from "./packUserOp.js";
 import { getPaymasterAndData } from "./paymaster.js";
-import { generateRandomUint192 } from "./utils.js";
+import { generateRandomUint192, hexlifyUserOp } from "./utils.js";
 
 /**
  * Wait for the user operation to be mined.
@@ -601,34 +600,15 @@ async function getAccountNonce(options: {
   });
 }
 
-/**
- * Create and sign a user operation.
- * @param options - The options for creating and signing the user operation
- * @returns - The signed user operation
- * @example
- * ```ts
- * import { createAndSignUserOp } from "thirdweb/wallets/smart";
- *
- * const userOp = await createAndSignUserOp({
- *  client,
- *  adminAccount,
- *  smartWalletOptions,
- *  transactions,
- * });
- * ```
- * @walletUtils
- */
 export async function createAndSignUserOp(options: {
-  transactions: PreparedTransaction[];
+  transaction: PreparedTransaction;
   adminAccount: Account;
   client: ThirdwebClient;
   smartWalletOptions: SmartWalletOptions;
 }) {
   const config = options.smartWalletOptions;
   const factoryContract = getContract({
-    address:
-      config.factoryAddress ||
-      getDefaultAccountFactory(config.overrides?.entrypointAddress),
+    address: config.factoryAddress || DEFAULT_ACCOUNT_FACTORY_V0_6,
     chain: config.chain,
     client: options.client,
   });
@@ -644,39 +624,20 @@ export async function createAndSignUserOp(options: {
     chain: config.chain,
     client: options.client,
   });
-
-  let executeTx: PreparedTransaction;
-  if (options.transactions.length === 1) {
-    const tx = options.transactions[0] as PreparedTransaction;
-    const serializedTx = await toSerializableTransaction({
-      transaction: tx,
-    });
-    executeTx = prepareExecute({
-      accountContract,
-      transaction: serializedTx,
-      executeOverride: config.overrides?.execute,
-    });
-  } else {
-    const serializedTxs = await Promise.all(
-      options.transactions.map((tx) =>
-        toSerializableTransaction({
-          transaction: tx,
-        }),
-      ),
-    );
-    executeTx = prepareBatchExecute({
-      accountContract,
-      transactions: serializedTxs,
-      executeBatchOverride: config.overrides?.executeBatch,
-    });
-  }
-
+  const serializedTx = await toSerializableTransaction({
+    transaction: options.transaction,
+  });
+  const executeTx = prepareExecute({
+    accountContract,
+    transaction: serializedTx,
+    executeOverride: config.overrides?.execute,
+  });
   const unsignedUserOp = await createUnsignedUserOp({
     transaction: executeTx,
     factoryContract,
     accountContract,
     adminAddress: options.adminAccount.address,
-    sponsorGas: "sponsorGas" in config ? config.sponsorGas : config.gasless,
+    sponsorGas: "sponsorGas" in config ? config.sponsorGas : false,
     overrides: config.overrides,
   });
   const signedUserOp = await signUserOp({
@@ -686,5 +647,6 @@ export async function createAndSignUserOp(options: {
     entrypointAddress: config.overrides?.entrypointAddress,
     userOp: unsignedUserOp,
   });
-  return signedUserOp;
+  const hexlifiedUserOp = hexlifyUserOp(signedUserOp);
+  return { signedUserOp, hexlifiedUserOp };
 }

@@ -45,7 +45,11 @@ export function useBuyWithFiatStatus(
       return getBuyWithFiatStatus(params);
     },
     enabled: !!params,
-    refetchInterval: 5000,
+    refetchInterval: (query) =>
+      (query.state.data as BuyWithFiatStatus)?.status ===
+      "ON_RAMP_TRANSFER_COMPLETED"
+        ? false
+        : 5000,
     refetchIntervalInBackground: true,
     retry: true,
   });
