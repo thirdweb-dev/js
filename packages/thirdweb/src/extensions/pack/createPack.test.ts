@@ -5,7 +5,9 @@ import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { approve } from "../erc20/write/approve.js";
 import { mintTo as mintToERC20 } from "../erc20/write/mintTo.js";
+import { setApprovalForAll } from "../erc721/__generated__/IERC721A/write/setApprovalForAll.js";
 import { mintTo as mintToERC721 } from "../erc721/write/mintTo.js";
 import { getPackContents } from "../erc1155/__generated__/IPack/read/getPackContents.js";
 import { getTokenCountOfBundle } from "../erc1155/__generated__/IPack/read/getTokenCountOfBundle.js";
@@ -40,12 +42,24 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
       },
     });
 
+    const erc20Contract = getContract({ address: erc20Address, chain, client });
+
     // Mint some ERC20 tokens
     await sendAndConfirmTransaction({
       transaction: mintToERC20({
-        contract: getContract({ address: erc20Address, chain, client }),
+        contract: erc20Contract,
         to: account.address,
         amount: "100",
+      }),
+      account,
+    });
+
+    // Set allowance for Pack contract
+    await sendAndConfirmTransaction({
+      transaction: approve({
+        contract: erc20Contract,
+        amount: "100000",
+        spender: packAddress,
       }),
       account,
     });
@@ -61,12 +75,28 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
       },
     });
 
+    const erc721Contract = getContract({
+      address: erc721Address,
+      chain,
+      client,
+    });
+
     // Mint some ERC721 tokens
     await sendAndConfirmTransaction({
       transaction: mintToERC721({
-        contract: getContract({ address: erc721Address, chain, client }),
+        contract: erc721Contract,
         to: account.address,
         nft: { name: "token #0" },
+      }),
+      account,
+    });
+
+    // set erc721 approval
+    await sendAndConfirmTransaction({
+      transaction: setApprovalForAll({
+        contract: erc721Contract,
+        approved: true,
+        operator: packAddress,
       }),
       account,
     });
