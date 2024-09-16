@@ -1,4 +1,5 @@
-import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { type ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeyDetails } from "components/settings/ApiKeys/Details";
@@ -10,7 +11,6 @@ import { useEffect, useMemo, useState } from "react";
 import type { ThirdwebNextPage } from "utils/types";
 
 const SettingsApiKeyPage: ThirdwebNextPage = () => {
-  const [editing, setEditing] = useState(false);
   const keysQuery = useApiKeys();
   const router = useRouter();
   const { user } = useLoggedInUser();
@@ -27,20 +27,29 @@ const SettingsApiKeyPage: ThirdwebNextPage = () => {
     }
   }, [apiKey, keysQuery.isSuccess, router]);
 
-  if (!user) {
-    return null;
+  if (!user || !apiKey) {
+    return (
+      <div className="flex items-center justify-center">
+        <Spinner className="size-10" />
+      </div>
+    );
   }
 
-  if (!apiKey) {
-    return null;
-  }
+  return <APIKeyDetailsPage apiKey={apiKey} />;
+};
+
+function APIKeyDetailsPage(props: {
+  apiKey: ApiKey;
+}) {
+  const { apiKey } = props;
+  const [editing, setEditing] = useState(false);
 
   return editing ? (
     <EditApiKey apiKey={apiKey} onCancel={() => setEditing(false)} />
   ) : (
     <ApiKeyDetails apiKey={apiKey} onEdit={() => setEditing(true)} />
   );
-};
+}
 
 SettingsApiKeyPage.getLayout = (page, props) => (
   <AppLayout

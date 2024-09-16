@@ -139,3 +139,8 @@
     scrollbar-width: none; /* Firefox */
   }
 }
+
+body,
+html {
+  height: 100%;
+}

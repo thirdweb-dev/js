@@ -34,7 +34,7 @@ export default async function TeamLayout(props: {
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex flex-col grow">
       <div className="bg-muted/50">
         <TeamHeader
           currentProject={project}
@@ -63,7 +63,7 @@ export default async function TeamLayout(props: {
           ]}
         />
       </div>
-      <main className="grow">{props.children}</main>
+      <div className="grow flex flex-col">{props.children}</div>
     </div>
   );
 }

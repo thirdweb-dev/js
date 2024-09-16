@@ -56,7 +56,9 @@ export function ProjectSelectorUI(props: {
                     asChild
                   >
                     {/* TODO - when we have overview page, remove /connect */}
-                    <Link href={`/team/${team.slug}/${project.slug}/connect`}>
+                    <Link
+                      href={`/team/${team.slug}/${project.slug}/connect/analytics`}
+                    >
                       <div className="flex items-center gap-2">
                         {/* TODO - placeholder for now */}
                         <div className="size-4 bg-muted border rounded-full" />
