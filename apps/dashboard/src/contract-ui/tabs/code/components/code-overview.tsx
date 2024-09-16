@@ -30,7 +30,7 @@ import {
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import type { CodeEnvironment } from "components/contract-tabs/code/types";
 import { useSupportedChain } from "hooks/chains/configureChains";
-import { useSingleQueryParam } from "hooks/useQueryParam";
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
@@ -57,14 +57,14 @@ export const COMMANDS = {
 import { defineChain } from "thirdweb/chains";
 
 // create the client with your clientId, or secretKey if in a server environment
-const client = createThirdwebClient({ 
+const client = createThirdwebClient({
   clientId: "YOUR_CLIENT_ID"
  });
 
 // connect to your contract
-const contract = getContract({ 
-  client, 
-  chain: defineChain({{chainId}}), 
+const contract = getContract({
+  client,
+  chain: defineChain({{chainId}}),
   address: "{{contract_address}}"
 });`,
     react: `import { createThirdwebClient, getContract, resolveMethod } from "thirdweb";
@@ -72,14 +72,14 @@ import { defineChain } from "thirdweb/chains";
 import { ThirdwebProvider } from "thirdweb/react";
 
 // create the client with your clientId, or secretKey if in a server environment
-export const client = createThirdwebClient({ 
-  clientId: "YOUR_CLIENT_ID" 
+export const client = createThirdwebClient({
+  clientId: "YOUR_CLIENT_ID"
 });
 
 // connect to your contract
-export const contract = getContract({ 
-  client, 
-  chain: defineChain({{chainId}}), 
+export const contract = getContract({
+  client,
+  chain: defineChain({{chainId}}),
   address: "{{contract_address}}"
 });
 
@@ -95,14 +95,14 @@ import { defineChain } from "thirdweb/chains";
 import { ThirdwebProvider } from "thirdweb/react";
 
 // create the client with your clientId, or secretKey if in a server environment
-export const client = createThirdwebClient({ 
-  clientId: "YOUR_CLIENT_ID" 
+export const client = createThirdwebClient({
+  clientId: "YOUR_CLIENT_ID"
 });
 
 // connect to your contract
-export const contract = getContract({ 
-  client, 
-  chain: defineChain({{chainId}}), 
+export const contract = getContract({
+  client,
+  chain: defineChain({{chainId}}),
   address: "{{contract_address}}",
 });
 
@@ -125,41 +125,41 @@ var contract = sdk.GetContract("{{contract_address}}");`,
   read: {
     javascript: `import { readContract } from "thirdweb";
 
-const data = await readContract({ 
-  contract, 
-  method: "{{function}}", 
-  params: [{{args}}] 
+const data = await readContract({
+  contract,
+  method: "{{function}}",
+  params: [{{args}}]
 })`,
     react: `import { useReadContract } from "thirdweb/react";
 
 export default function Component() {
-  const { data, isLoading } = useReadContract({ 
-    contract, 
-    method: "{{function}}", 
-    params: [{{args}}] 
+  const { data, isLoading } = useReadContract({
+    contract,
+    method: "{{function}}",
+    params: [{{args}}]
   });
 }`,
     "react-native": `import { useReadContract } from "thirdweb/react";
 
 export default function Component() {
-  const { data, isLoading } = useReadContract({ 
-    contract, 
-    method: "{{function}}", 
-    params: [{{args}}] 
+  const { data, isLoading } = useReadContract({
+    contract,
+    method: "{{function}}",
+    params: [{{args}}]
   });
 }`,
   },
   write: {
     javascript: `import { prepareContractCall, sendTransaction } from "thirdweb";
 
-const transaction = await prepareContractCall({ 
-  contract, 
-  method: "{{function}}", 
-  params: [{{args}}] 
+const transaction = await prepareContractCall({
+  contract,
+  method: "{{function}}",
+  params: [{{args}}]
 });
-const { transactionHash } = await sendTransaction({ 
-  transaction, 
-  account 
+const { transactionHash } = await sendTransaction({
+  transaction,
+  account
 });`,
     react: `import { prepareContractCall } from "thirdweb"
 import { useSendTransaction } from "thirdweb/react";
@@ -168,25 +168,25 @@ export default function Component() {
   const { mutate: sendTransaction } = useSendTransaction();
 
   const onClick = () => {
-    const transaction = prepareContractCall({ 
-      contract, 
-      method: "{{function}}", 
-      params: [{{args}}] 
+    const transaction = prepareContractCall({
+      contract,
+      method: "{{function}}",
+      params: [{{args}}]
     });
     sendTransaction(transaction);
   }
 }`,
     "react-native": `import { prepareContractCall } from "thirdweb"
 import { useSendTransaction } from "thirdweb/react";
-    
+
 export default function Component() {
   const { mutate: sendTransaction } = useSendTransaction();
-    
+
   const onClick = () => {
-    const transaction = prepareContractCall({ 
-      contract, 
-      method: "{{function}}", 
-      params: [{{args}}] 
+    const transaction = prepareContractCall({
+      contract,
+      method: "{{function}}",
+      params: [{{args}}]
     });
     sendTransaction(transaction);
   }
@@ -195,40 +195,40 @@ export default function Component() {
   events: {
     javascript: `import { prepareEvent, getContractEvents } from "thirdweb";
 
-const preparedEvent = prepareEvent({ 
-  contract, 
-  signature: "{{function}}" 
+const preparedEvent = prepareEvent({
+  contract,
+  signature: "{{function}}"
 });
-const events = await getContractEvents({ 
-  contract, 
-  events: [preparedEvent] 
+const events = await getContractEvents({
+  contract,
+  events: [preparedEvent]
 });`,
     react: `import { prepareEvent } from "thirdweb";
 import { useContractEvents } from "thirdweb/react";
 
-const preparedEvent = prepareEvent({ 
-  contract, 
-  signature: "{{function}}" 
+const preparedEvent = prepareEvent({
+  contract,
+  signature: "{{function}}"
 });
 
 export default function Component() {
-  const { data: event } = useContractEvents({ 
-    contract, 
-    events: [preparedEvent] 
+  const { data: event } = useContractEvents({
+    contract,
+    events: [preparedEvent]
   });
 }`,
     "react-native": `import { prepareEvent } from "thirdweb";
 import { useContractEvents } from "thirdweb/react";
-    
-const preparedEvent = prepareEvent({ 
-  contract, 
-  signature: "{{function}}" 
+
+const preparedEvent = prepareEvent({
+  contract,
+  signature: "{{function}}"
 });
-    
+
 export default function Component() {
-  const { data: event } = useContractEvents({ 
-    contract, 
-    events: [preparedEvent] 
+  const { data: event } = useContractEvents({
+    contract,
+    events: [preparedEvent]
   });
 }`,
   },
@@ -272,7 +272,7 @@ import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
 export default function App() {
 return (
     <ThirdwebProvider>
-      <ConnectButton 
+      <ConnectButton
         client={client}
         accountAbstraction={{
           chain: defineChain({{chainId}}),
@@ -531,9 +531,11 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   noSidebar = false,
   chainId: chainIdProp,
 }) => {
-  const defaultEnvironment = useSingleQueryParam(
-    "environment",
-  ) as CodeEnvironment;
+  const searchParams = useSearchParams();
+  const defaultEnvironment = searchParams?.get("environment") as
+    | CodeEnvironment
+    | undefined;
+
   const [environment, setEnvironment] = useState<CodeEnvironment>(
     defaultEnvironment || "javascript",
   );

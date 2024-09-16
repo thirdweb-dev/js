@@ -1,20 +1,18 @@
 import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractPublishForm } from "components/contract-components/contract-publish-form";
-import { useSingleQueryParam } from "hooks/useQueryParam";
-// import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import type { ThirdwebNextPage } from "utils/types";
 
 const ContractsPublishPage: ThirdwebNextPage = () => {
-  const contractId = useSingleQueryParam("contractId");
+  const { query } = useRouter();
+  const contractId = query.contractId as string | undefined;
 
   return (
-    <>
-      <Flex gap={8} direction="column">
-        {contractId && <ContractPublishForm contractId={contractId} />}
-      </Flex>
-    </>
+    <Flex gap={8} direction="column">
+      {contractId && <ContractPublishForm contractId={contractId} />}
+    </Flex>
   );
 };
 
