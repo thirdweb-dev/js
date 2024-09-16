@@ -1,15 +1,7 @@
 import { useAllContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { Box, Flex, Spinner } from "@chakra-ui/react";
-import {
-  type DehydratedState,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
 import { AppLayout } from "components/app-layouts/app";
 import {
-  ensQuery,
-  fetchPublishedContracts,
-  publisherProfileQuery,
   useEns,
   usePublishedContractsQuery,
   usePublisherProfile,
@@ -20,14 +12,14 @@ import { PublisherAvatar } from "components/contract-components/publisher/masked
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { PublishedContracts } from "components/contract-components/tables/published-contracts";
 import { THIRDWEB_DOMAIN } from "constants/urls";
-import type { GetStaticPaths, GetStaticProps } from "next";
+import type { GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ProfileOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useEffect, useMemo } from "react";
 import { useActiveAccount } from "thirdweb/react";
-import { getAddress, isAddress, stringify } from "thirdweb/utils";
+import { getAddress, isAddress } from "thirdweb/utils";
 import { Heading, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 import type { ThirdwebNextPage } from "utils/types";
@@ -35,7 +27,6 @@ import { shortenIfAddress } from "utils/usedapp-external";
 
 type UserPageProps = {
   profileAddress: string;
-  dehydratedState: DehydratedState;
 };
 
 const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
@@ -215,9 +206,8 @@ UserPage.fallback = (
 UserPage.pageId = PageId.Profile;
 
 export default UserPage;
-export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
-  const queryClient = new QueryClient();
 
+export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   const profileAddress = getSingleQueryValue(
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     ctx.params as any,
@@ -238,55 +228,14 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
     ? getAddress(lowercaseAddress)
     : lowercaseAddress;
 
-  let address: string | null;
-  let ensName: string | null;
-  try {
-    const info = await queryClient.fetchQuery(ensQuery(checksummedAddress));
-    address = info.address;
-    ensName = info.ensName;
-  } catch {
-    // if profileAddress is not a valid address, ensQuery throws
-    // in that case - redirect to 404
-    return {
-      notFound: true,
-    };
-  }
-
-  if (!address) {
-    return {
-      redirect: {
-        destination: "/explore",
-        permanent: false,
-      },
-      props: {},
-    };
-  }
-
-  const ensQueries = [queryClient.prefetchQuery(ensQuery(checksummedAddress))];
-  if (ensName) {
-    ensQueries.push(queryClient.prefetchQuery(ensQuery(ensName)));
-  }
-
-  await Promise.all([
-    ...ensQueries,
-    queryClient.prefetchQuery(publisherProfileQuery(address)),
-    queryClient.prefetchQuery({
-      queryKey: ["published-contracts", address],
-      queryFn: () => fetchPublishedContracts(address),
-    }),
-  ]);
-
   return {
     props: {
-      dehydratedState: dehydrate(queryClient, {
-        serializeData: (d) => stringify(d),
-      }),
       profileAddress: checksummedAddress,
     },
   };
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths = async () => {
   return {
     fallback: true,
     paths: [],

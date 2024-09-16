@@ -62,7 +62,7 @@ export function useFetchDeployMetadata(contractId: ContractId) {
   });
 }
 
-export function publisherProfileQuery(publisherAddress?: string) {
+function publisherProfileQuery(publisherAddress?: string) {
   return queryOptions({
     queryKey: ["releaser-profile", publisherAddress],
     queryFn: () => {
@@ -184,7 +184,7 @@ function toContractIdIpfsHash(contractId: ContractId) {
   return `ipfs://${contractId}`;
 }
 
-export async function fetchPublishedContracts(address?: string | null) {
+async function fetchPublishedContracts(address?: string | null) {
   invariant(address, "address is not defined");
   const tempResult = (
     (await getAllPublishedContracts({

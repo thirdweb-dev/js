@@ -4,9 +4,5 @@
   "ignore": ["src/@/components/ui/**"],
   "project": ["src/**"],
   "ignoreBinaries": ["only-allow", "knip", "biome"],
-  "ignoreDependencies": [
-    "@storybook/blocks",
-    "@storybook/test",
-    "@thirdweb-dev/service-utils"
-  ]
+  "ignoreDependencies": ["@storybook/blocks", "@thirdweb-dev/service-utils"]
 }

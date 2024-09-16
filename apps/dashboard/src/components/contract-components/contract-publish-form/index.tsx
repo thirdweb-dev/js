@@ -1,8 +1,10 @@
 "use client";
 
 import { thirdwebClient } from "@/constants/client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
 import type { Abi } from "abitype";
 import {
@@ -11,7 +13,6 @@ import {
 } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoChevronBack } from "react-icons/io5";
@@ -22,25 +23,15 @@ import {
 } from "thirdweb/extensions/thirdweb";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Text } from "tw-components";
-import { useLoggedInUser } from "../../../@3rdweb-sdk/react/hooks/useLoggedInUser";
-import {
-  useEns,
-  useFetchDeployMetadata,
-  useFunctionParamsFromABI,
-} from "../hooks";
-import type { ContractId } from "../types";
+import { useEns, useFunctionParamsFromABI } from "../hooks";
 import { ContractParamsFieldset } from "./contract-params-fieldset";
 import { FactoryFieldset } from "./factory-fieldset";
 import { LandingFieldset } from "./landing-fieldset";
 import { NetworksFieldset } from "./networks-fieldset";
 
-interface ContractPublishFormProps {
-  contractId: ContractId;
-}
-
-export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
-  contractId,
-}) => {
+export function ContractPublishForm(props: {
+  publishMetadata: FetchDeployMetadataResult;
+}) {
   useLoggedInUser();
   const [customFactoryAbi, setCustomFactoryAbi] = useState<Abi>([]);
   const [fieldsetToShow, setFieldsetToShow] = useState<
@@ -48,7 +39,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   >("landing");
   const trackEvent = useTrack();
 
-  const router = useRouter();
+  const router = useDashboardRouter();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully published contract",
     "Failed to publish contract",
@@ -63,9 +54,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
     },
   });
 
-  const deployMetadataResultQuery = useFetchDeployMetadata(contractId);
-
-  const latestVersion = deployMetadataResultQuery.data?.version;
+  const latestVersion = props.publishMetadata.version;
 
   const placeholderVersion = useMemo(() => {
     if (latestVersion) {
@@ -77,61 +66,54 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
 
   const transformedQueryData = useMemo(() => {
     return {
-      ...deployMetadataResultQuery.data,
-      name: deployMetadataResultQuery.data?.name || "",
+      ...props.publishMetadata,
+      name: props.publishMetadata.name || "",
       changelog: "",
       version: placeholderVersion,
       displayName:
-        deployMetadataResultQuery.data?.displayName ||
-        deployMetadataResultQuery.data?.info?.title ||
-        deployMetadataResultQuery.data?.name ||
+        props.publishMetadata.displayName ||
+        props.publishMetadata.info?.title ||
+        props.publishMetadata.name ||
         "",
       description:
-        deployMetadataResultQuery.data?.description ||
-        deployMetadataResultQuery.data?.info?.notice ||
+        props.publishMetadata.description ||
+        props.publishMetadata.info?.notice ||
         "",
-      factoryDeploymentData: deployMetadataResultQuery.data
-        ?.factoryDeploymentData || {
+      factoryDeploymentData: props.publishMetadata?.factoryDeploymentData || {
         factoryAddresses: {},
         implementationAddresses: {},
         implementationInitializerFunction: "initialize",
         customFactoryInput: {
           factoryFunction:
-            deployMetadataResultQuery.data?.factoryDeploymentData
-              ?.customFactoryInput?.factoryFunction ||
-            "deployProxyByImplementation",
+            props.publishMetadata.factoryDeploymentData?.customFactoryInput
+              ?.factoryFunction || "deployProxyByImplementation",
           customFactoryAddresses:
-            deployMetadataResultQuery.data?.factoryDeploymentData
-              ?.customFactoryInput?.customFactoryAddresses || {},
-          params:
-            deployMetadataResultQuery.data?.customFactoryInput?.params || [],
+            props.publishMetadata.factoryDeploymentData?.customFactoryInput
+              ?.customFactoryAddresses || {},
+          params: props.publishMetadata.customFactoryInput?.params || [],
         },
       },
-      constructorParams:
-        deployMetadataResultQuery.data?.constructorParams || {},
-      networksForDeployment: deployMetadataResultQuery.data
-        ?.networksForDeployment || {
+      constructorParams: props.publishMetadata.constructorParams || {},
+      networksForDeployment: props.publishMetadata?.networksForDeployment || {
         allNetworks: true,
       },
-      deployType: deployMetadataResultQuery.data?.deployType || "standard",
+      deployType: props.publishMetadata.deployType || "standard",
       customFactoryAddresses: Object.entries(
-        deployMetadataResultQuery.data?.factoryDeploymentData
-          ?.customFactoryInput?.customFactoryAddresses || {},
+        props.publishMetadata.factoryDeploymentData?.customFactoryInput
+          ?.customFactoryAddresses || {},
       ).map(([key, value]) => ({ key: Number(key), value })),
-      defaultExtensions:
-        deployMetadataResultQuery.data?.defaultExtensions || [],
-      defaultModules: deployMetadataResultQuery.data?.defaultModules || [],
+      defaultExtensions: props.publishMetadata.defaultExtensions || [],
+      defaultModules: props.publishMetadata.defaultModules || [],
       extensionsParamName:
-        deployMetadataResultQuery.data?.factoryDeploymentData
-          ?.modularFactoryInput?.hooksParamName || "",
+        props.publishMetadata.factoryDeploymentData?.modularFactoryInput
+          ?.hooksParamName || "",
     };
-  }, [placeholderVersion, deployMetadataResultQuery.data]);
+  }, [placeholderVersion, props.publishMetadata]);
 
   const form = useForm<
     FetchDeployMetadataResult & { name: string; version: string }
   >({
     defaultValues: transformedQueryData,
-    // @ts-expect-error - we may have partial values to begin with and that is fine, we can overwrite them later, but the type is unhappy about it
     values: transformedQueryData,
     resetOptions: {
       keepDirty: true,
@@ -151,11 +133,11 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   }, [ensQuery.data]);
 
   const successRedirectUrl = useMemo(() => {
-    if (!ensNameOrAddress || !deployMetadataResultQuery.data?.name) {
+    if (!ensNameOrAddress || !props.publishMetadata.name) {
       return undefined;
     }
-    return `/${ensNameOrAddress}/${deployMetadataResultQuery.data.name}`;
-  }, [ensNameOrAddress, deployMetadataResultQuery.data?.name]);
+    return `/${ensNameOrAddress}/${props.publishMetadata.name}`;
+  }, [ensNameOrAddress, props.publishMetadata.name]);
 
   const isDisabled = useMemo(
     () => !successRedirectUrl || !account,
@@ -163,22 +145,22 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   );
 
   const constructorParams =
-    deployMetadataResultQuery.data?.abi.find((c) => c.type === "constructor")
-      ?.inputs || [];
+    props.publishMetadata.abi.find((c) => c.type === "constructor")?.inputs ||
+    [];
 
   const initializerParams = useFunctionParamsFromABI(
     form.watch("deployType") === "customFactory"
       ? customFactoryAbi
-      : deployMetadataResultQuery.data?.abi,
+      : props.publishMetadata.abi,
     form.watch("deployType") === "customFactory"
       ? form.watch(
           "factoryDeploymentData.customFactoryInput.factoryFunction",
         ) ||
-          deployMetadataResultQuery.data?.factoryDeploymentData
-            ?.customFactoryInput?.factoryFunction ||
+          props.publishMetadata.factoryDeploymentData?.customFactoryInput
+            ?.factoryFunction ||
           "deployProxyByImplementation"
       : form.watch("factoryDeploymentData.implementationInitializerFunction") ||
-          deployMetadataResultQuery.data?.factoryDeploymentData
+          props.publishMetadata.factoryDeploymentData
             ?.implementationInitializerFunction ||
           "initialize",
   );
@@ -229,8 +211,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
               category: "publish",
               action: "click",
               label: "attempt",
-              uris: contractId,
-              release_id: `${ensNameOrAddress}/${deployMetadataResultQuery.data?.name}`,
+              release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
             });
 
             const metadata = {
@@ -274,7 +255,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
               account,
               contract: getContractPublisher(thirdwebClient),
               metadata,
-              previousMetadata: deployMetadataResultQuery.data,
+              previousMetadata: props.publishMetadata,
             });
 
             sendTx.mutate(tx, {
@@ -284,28 +265,22 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                   category: "publish",
                   action: "click",
                   label: "success",
-                  uris: contractId,
-                  release_id: `${ensNameOrAddress}/${deployMetadataResultQuery.data?.name}`,
+                  release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
                   version: data.version,
                   type: data.deployType,
                 });
                 if (successRedirectUrl) {
-                  router.push(
-                    successRedirectUrl,
-                    undefined,
-                    // reset scroll after redirect
-                    { scroll: true },
-                  );
+                  router.push(successRedirectUrl, { scroll: true });
                 }
               },
               onError: (err) => {
+                console.error("Failed to publish contract", err);
                 onError(err);
                 trackEvent({
                   category: "publish",
                   action: "click",
                   label: "error",
-                  uris: contractId,
-                  release_id: `${ensNameOrAddress}/${deployMetadataResultQuery.data?.name}`,
+                  release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
                   is_factory: data.isDeployableViaFactory,
                 });
               },
@@ -348,7 +323,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
           {fieldsetToShow === "factory" && (
             <Flex flexDir="column" gap={24}>
               <FactoryFieldset
-                abi={deployMetadataResultQuery.data?.abi || []}
+                abi={props.publishMetadata.abi || []}
                 setCustomFactoryAbi={setCustomFactoryAbi}
               />
             </Flex>
@@ -440,4 +415,4 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       </Box>
     </FormProvider>
   );
-};
+}
