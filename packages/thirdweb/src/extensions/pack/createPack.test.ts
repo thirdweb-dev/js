@@ -1,4 +1,3 @@
-import { openPack } from "src/exports/extensions/erc1155.js";
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
@@ -14,6 +13,7 @@ import { mintTo as mintToERC721 } from "../erc721/write/mintTo.js";
 import { getPackContents } from "../erc1155/__generated__/IPack/read/getPackContents.js";
 import { getTokenCountOfBundle } from "../erc1155/__generated__/IPack/read/getTokenCountOfBundle.js";
 import { getUriOfBundle } from "../erc1155/__generated__/IPack/read/getUriOfBundle.js";
+import { openPack } from "../erc1155/__generated__/IPack/write/openPack.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
 import { deployPackContract } from "../prebuilts/deploy-pack.js";
