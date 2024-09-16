@@ -29,7 +29,7 @@ function RenderLinkGroup(props: {
     <>
       <div className="flex items-center gap-1.5 px-4">
         {/* TODO - using placeholder for now */}
-        <div className="size-4 bg-muted rounded-full border" />
+        <div className="size-4 bg-muted rounded-full border border-border" />
         <p className="text-muted-foreground text-xs">{props.title}</p>
       </div>
 

@@ -10,6 +10,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
+import { trackPayEvent } from "../../../../analytics/track.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
@@ -18,6 +19,7 @@ import { formatNumber } from "../../../../utils/formatNumber.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 import {
   CustomThemeProvider,
   parseTheme,
@@ -131,13 +133,12 @@ export const ConnectedWalletDetails: React.FC<{
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
 
-  const { ensAvatarQuery, addressOrENS, balanceQuery } =
-    useConnectedWalletDetails(
-      client,
-      walletChain,
-      activeAccount,
-      props.detailsButton?.displayBalanceToken,
-    );
+  const { pfp, name, balanceQuery } = useConnectedWalletDetails(
+    client,
+    walletChain,
+    activeAccount,
+    props.detailsButton?.displayBalanceToken,
+  );
 
   function closeModal() {
     setRootEl(null);
@@ -185,8 +186,7 @@ export const ConnectedWalletDetails: React.FC<{
     );
   }
 
-  const avatarSrc =
-    props.detailsButton?.connectedAccountAvatarUrl ?? ensAvatarQuery.data;
+  const avatarSrc = props.detailsButton?.connectedAccountAvatarUrl || pfp;
 
   return (
     <WalletInfoButton
@@ -235,7 +235,7 @@ export const ConnectedWalletDetails: React.FC<{
           weight={500}
           className={`${TW_CONNECTED_WALLET}__address`}
         >
-          {props.detailsButton?.connectedAccountName ?? addressOrENS}
+          {props.detailsButton?.connectedAccountName ?? name}
         </Text>
 
         {/* Balance */}
@@ -280,13 +280,12 @@ function DetailsModal(props: {
   const { client, locale } = props;
   const walletChain = useActiveWalletChain();
   const activeAccount = useActiveAccount();
-  const { ensAvatarQuery, addressOrENS, balanceQuery } =
-    useConnectedWalletDetails(
-      client,
-      walletChain,
-      activeAccount,
-      props.displayBalanceToken,
-    );
+  const { pfp, name, balanceQuery } = useConnectedWalletDetails(
+    client,
+    walletChain,
+    activeAccount,
+    props.displayBalanceToken,
+  );
   const theme = parseTheme(props.theme);
 
   const activeWallet = useActiveWallet();
@@ -370,8 +369,7 @@ function DetailsModal(props: {
     </MenuButton>
   );
 
-  const avatarSrc =
-    props.detailsModal?.connectedAccountAvatarUrl ?? ensAvatarQuery.data;
+  const avatarSrc = props.detailsModal?.connectedAccountAvatarUrl ?? pfp;
 
   const { hideSendFunds, hideReceiveFunds, hideBuyFunds } =
     props.detailsModal || {};
@@ -483,7 +481,7 @@ function DetailsModal(props: {
             }}
           >
             <Text color="primaryText" weight={500} size="md">
-              {props.detailsModal?.connectedAccountName ?? addressOrENS}
+              {props.detailsModal?.connectedAccountName ?? name}
             </Text>
             <IconButton>
               <CopyIcon
@@ -572,6 +570,12 @@ function DetailsModal(props: {
                     flex: 1,
                   }}
                   onClick={() => {
+                    trackPayEvent({
+                      event: "details_modal_buy_click",
+                      client: client,
+                      walletAddress: activeAccount?.address,
+                      walletType: activeWallet?.id,
+                    });
                     setScreen("buy");
                   }}
                 >
@@ -741,6 +745,7 @@ function DetailsModal(props: {
         chain={props.connectOptions?.chain}
         chains={props.connectOptions?.chains}
         client={client}
+        hiddenWallets={props.connectOptions?.hiddenWallets}
         connectLocale={locale}
         recommendedWallets={props.connectOptions?.recommendedWallets}
         showAllWallets={!!props.connectOptions?.showAllWallets}
@@ -921,6 +926,7 @@ function DetailsModal(props: {
             mode: "fund_wallet",
           }
         }
+        hiddenWallets={props.detailsModal?.hiddenWallets}
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
         onDone={closeModal}
         connectOptions={undefined}
@@ -1153,10 +1159,8 @@ export type DetailsModalConnectOptions = {
   chain?: Chain;
   chains?: Chain[];
   recommendedWallets?: Wallet[];
+  hiddenWallets?: WalletId[];
   showAllWallets?: boolean;
-  hideSendFunds?: boolean;
-  hideReceiveFunds?: boolean;
-  hideBuyFunds?: boolean;
 };
 
 export type UseWalletDetailsModalOptions = {
@@ -1380,6 +1384,27 @@ export type UseWalletDetailsModalOptions = {
    * Use custom avatar URL for the connected wallet image in the `ConnectButton` Details Modal, overriding ENS avatar or Blobbie icon.
    */
   connectedAccountAvatarUrl?: string;
+
+  /**
+   * Hide the "Send Funds" button in the Details Modal.
+   *
+   * By default the "Send Funds" button is shown.
+   */
+  hideSendFunds?: boolean;
+
+  /**
+   * Hide the "Receive Funds" button in the Details Modal.
+   *
+   * By default the "Receive Funds" button is shown.
+   */
+  hideReceiveFunds?: boolean;
+
+  /**
+   * Hide the "Buy Funds" button in the Details Modal.
+   *
+   * By default the "Buy Funds" button is shown.
+   */
+  hideBuyFunds?: boolean;
 };
 
 /**
@@ -1434,6 +1459,9 @@ export function useWalletDetailsModal() {
               showTestnetFaucet: props.showTestnetFaucet,
               connectedAccountName: props.connectedAccountName,
               connectedAccountAvatarUrl: props.connectedAccountAvatarUrl,
+              hideBuyFunds: props.hideBuyFunds,
+              hideReceiveFunds: props.hideReceiveFunds,
+              hideSendFunds: props.hideSendFunds,
             }}
             displayBalanceToken={props.displayBalanceToken}
             theme={props.theme || "dark"}

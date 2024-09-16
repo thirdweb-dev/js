@@ -70,6 +70,7 @@ export async function deployViaAutoFactory(
     account,
     cloneFactoryContract,
     initializeTransaction,
+    salt,
   } = options;
 
   if (isZkSyncChain(chain)) {
@@ -79,6 +80,7 @@ export async function deployViaAutoFactory(
       account,
       cloneFactoryContract,
       initializeTransaction,
+      salt,
     });
   }
 
@@ -87,6 +89,7 @@ export async function deployViaAutoFactory(
     client,
     cloneFactoryContract,
     initializeTransaction,
+    salt,
   });
   const receipt = await sendAndConfirmTransaction({
     transaction: tx,

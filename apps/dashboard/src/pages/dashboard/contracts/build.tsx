@@ -1,6 +1,6 @@
 import { Flex, ListItem, UnorderedList } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
-import { ContractsSidebar } from "core-ui/sidebar/contracts";
+import { ContractsSidebarLayout } from "core-ui/sidebar/contracts";
 import { PageId } from "page-id";
 import {
   CodeBlock,
@@ -83,9 +83,12 @@ const DashboardContractsBuild: ThirdwebNextPage = () => {
 };
 
 DashboardContractsBuild.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <ContractsSidebar activePage="build" />
-    {page}
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <ContractsSidebarLayout> {page} </ContractsSidebarLayout>
   </AppLayout>
 );
 DashboardContractsBuild.pageId = PageId.DashboardContractsBuild;

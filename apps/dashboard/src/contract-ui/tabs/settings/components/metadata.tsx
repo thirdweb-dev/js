@@ -9,7 +9,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { CommonContractSchema } from "constants/schemas";
@@ -25,6 +25,7 @@ import {
   setContractMetadata,
 } from "thirdweb/extensions/common";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
+import { resolveScheme } from "thirdweb/storage";
 import {
   Button,
   Card,
@@ -85,16 +86,27 @@ export const SettingsMetadata = ({
         console.error(err);
       }
     }
+    let image: string | undefined = metadata.data?.image;
+    try {
+      image = image
+        ? resolveScheme({
+            client: contract.client,
+            uri: image,
+          })
+        : undefined;
+    } catch {
+      // do nothing
+    }
     return {
       ...metadata.data,
       name: metadata.data?.name || "",
-      image: metadata.data?.image || "",
+      image: image || "",
       dashboard_social_urls: Object.entries(socialUrls).map(([key, value]) => ({
         key,
         value,
       })),
     };
-  }, [metadata.data]);
+  }, [metadata.data, contract.client]);
 
   const {
     control,

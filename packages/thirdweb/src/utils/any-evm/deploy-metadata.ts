@@ -10,10 +10,8 @@ export type FetchDeployMetadataOptions = {
   client: ThirdwebClient;
 };
 
-export type FetchDeployMetadataResult = {
-  compilerMetadata: CompilerMetadata;
-  extendedMetadata: ExtendedMetadata | undefined;
-};
+export type FetchDeployMetadataResult = Partial<ExtendedMetadata> &
+  CompilerMetadata;
 
 /**
  * Fetches the deployment metadata.
@@ -24,31 +22,6 @@ export type FetchDeployMetadataResult = {
 export async function fetchDeployMetadata(
   options: FetchDeployMetadataOptions,
 ): Promise<FetchDeployMetadataResult> {
-  const [compilerMetadata, extendedMetadata] = await Promise.all([
-    fetchCompilerMetadata(options),
-    fetchExtendedMetadata(options).catch(() => undefined),
-  ]);
-  return { compilerMetadata, extendedMetadata };
-}
-
-// helpers
-/**
- * Fetches the published metadata.
- * @param options - The options for fetching the published metadata.
- * @internal
- */
-async function fetchExtendedMetadata(
-  options: FetchDeployMetadataOptions,
-): Promise<ExtendedMetadata> {
-  return download({
-    uri: options.uri,
-    client: options.client,
-  }).then((r) => r.json());
-}
-
-async function fetchCompilerMetadata(
-  options: FetchDeployMetadataOptions,
-): Promise<CompilerMetadata> {
   const rawMeta: RawCompilerMetadata = await download({
     uri: options.uri,
     client: options.client,
@@ -75,6 +48,7 @@ async function fetchCompilerMetadata(
   return {
     ...rawMeta,
     ...parsedMeta,
+    version: rawMeta.version,
     bytecode: deployBytecode,
   };
 }
@@ -96,7 +70,7 @@ async function fetchAndParseCompilerMetadata(
       `Could not resolve metadata for contract at ${options.uri}`,
     );
   }
-  return formatCompilerMetadata(metadata);
+  return { ...metadata, ...formatCompilerMetadata(metadata) };
 }
 
 // types
@@ -114,7 +88,37 @@ type RawCompilerMetadata = {
 type ParsedCompilerMetadata = {
   name: string;
   abi: Abi;
-  metadata: Record<string, unknown>;
+  metadata: {
+    compiler: {
+      version: string;
+    };
+    language: string;
+    output: {
+      abi: Abi;
+      devdoc: Record<string, unknown>;
+      userdoc: Record<string, unknown>;
+    };
+    settings: {
+      compilationTarget: Record<string, unknown>;
+      evmVersion: string;
+      libraries: Record<string, string>;
+      optimizer: Record<string, unknown>;
+      remappings: string[];
+    };
+    sources: Record<
+      string,
+      { keccak256: string } & (
+        | {
+            content: string;
+          }
+        | {
+            urls: string[];
+            license?: string;
+          }
+      )
+    >;
+    [key: string]: unknown;
+  };
   info: {
     title?: string;
     author?: string;
@@ -126,9 +130,10 @@ type ParsedCompilerMetadata = {
 };
 
 export type CompilerMetadata = Prettify<
-  ParsedCompilerMetadata & {
-    bytecode: Hex;
-  }
+  RawCompilerMetadata &
+    ParsedCompilerMetadata & {
+      bytecode: Hex;
+    }
 >;
 
 export type ExtendedMetadata = {
@@ -144,11 +149,13 @@ export type ExtendedMetadata = {
         publisherAddress: string;
       }[]
     | undefined;
-  defaultModules?: {
-    moduleName: string;
-    moduleVersion: string;
-    publisherAddress: string;
-  }[];
+  defaultModules?:
+    | Array<{
+        moduleName: string;
+        moduleVersion: string;
+        publisherAddress: string;
+      }>
+    | undefined;
   publisher?: string | undefined;
   audit?: string | undefined;
   logo?: string | undefined;

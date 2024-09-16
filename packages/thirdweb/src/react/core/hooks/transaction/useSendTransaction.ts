@@ -3,6 +3,7 @@ import type { Chain } from "../../../../chains/types.js";
 import { getGasPrice } from "../../../../gas/get-gas-price.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
+import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
 import { estimateGasCost } from "../../../../transaction/actions/estimate-gas-cost.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
@@ -10,6 +11,7 @@ import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { getTokenBalance } from "../../../../wallets/utils/getTokenBalance.js";
 import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
@@ -45,7 +47,11 @@ export type SendTransactionPayModalConfig =
       locale?: LocaleId;
       supportedTokens?: SupportedTokens;
       theme?: Theme | "light" | "dark";
-      buyWithCrypto?: false;
+      buyWithCrypto?:
+        | false
+        | {
+            testMode?: boolean;
+          };
       buyWithFiat?:
         | false
         | {
@@ -53,6 +59,7 @@ export type SendTransactionPayModalConfig =
               currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
             };
             testMode?: boolean;
+            preferredProvider?: FiatProvider;
           };
       purchaseData?: object;
       /**
@@ -171,10 +178,11 @@ export function useSendTransactionCore(args: {
                 chain: tx.chain,
               }),
               _erc20Value?.tokenAddress
-                ? getWalletBalance({
+                ? getTokenBalance({
                     client: tx.client,
-                    address: account.address,
+                    account,
                     chain: tx.chain,
+                    tokenAddress: _erc20Value.tokenAddress,
                   })
                 : undefined,
               getTotalTxCostForBuy(tx, account.address),

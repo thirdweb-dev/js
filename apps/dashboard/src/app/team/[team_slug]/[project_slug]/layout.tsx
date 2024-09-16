@@ -1,8 +1,8 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
-import { redirect } from "next/navigation";
-import { TeamHeader } from "../../../components/Header/TeamHeader/TeamHeader";
-import TeamTabs from "../components/tab-switcher.client";
+import { TabPathLinks } from "@/components/ui/tabs";
+import { notFound, redirect } from "next/navigation";
+import { TeamHeader } from "../../components/TeamHeader/TeamHeader";
 
 export default async function TeamLayout(props: {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ export default async function TeamLayout(props: {
 
   if (!team) {
     // not a valid team, redirect back to 404
-    redirect("/404");
+    notFound();
   }
 
   const teamsAndProjects = await Promise.all(
@@ -41,22 +41,23 @@ export default async function TeamLayout(props: {
           currentTeam={team}
           teamsAndProjects={teamsAndProjects}
         />
-        <TeamTabs
+        <TabPathLinks
+          tabContainerClassName="px-4 lg:px-6"
           links={[
             {
-              href: `/team/${props.params.team_slug}/${props.params.project_slug}/connect/analytics`,
+              path: `/team/${props.params.team_slug}/${props.params.project_slug}/connect/analytics`,
               name: "Connect",
             },
             {
-              href: `/team/${props.params.team_slug}/${props.params.project_slug}/contracts`,
+              path: `/team/${props.params.team_slug}/${props.params.project_slug}/contracts`,
               name: "Contracts",
             },
             {
-              href: `/team/${props.params.team_slug}/${props.params.project_slug}/engine`,
+              path: `/team/${props.params.team_slug}/${props.params.project_slug}/engine`,
               name: "Engine",
             },
             {
-              href: `/team/${props.params.team_slug}/${props.params.project_slug}/settings`,
+              path: `/team/${props.params.team_slug}/${props.params.project_slug}/settings`,
               name: "Settings",
             },
           ]}

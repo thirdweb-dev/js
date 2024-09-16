@@ -22,24 +22,30 @@ export async function convertErc20Amount(
     } & AmountOrAmountInWei
   >,
 ): Promise<bigint> {
-  if ("amount" in options) {
-    // for native token, we know decimals are 18
-    if (!options.erc20Address || isNativeTokenAddress(options.erc20Address)) {
-      return toUnits(options.amount.toString(), 18);
+  try {
+    if ("amount" in options) {
+      // for native token, we know decimals are 18
+      if (!options.erc20Address || isNativeTokenAddress(options.erc20Address)) {
+        return toUnits(options.amount.toString(), 18);
+      }
+      // otherwise get the decimals of the currency
+      const currencyContract = getContract({
+        client: options.client,
+        chain: options.chain,
+        address: options.erc20Address,
+      });
+      const { decimals } = await import(
+        "../../extensions/erc20/read/decimals.js"
+      );
+      const currencyDecimals = await decimals({
+        contract: currencyContract,
+      });
+      return toUnits(options.amount.toString(), currencyDecimals);
     }
-    // otherwise get the decimals of the currency
-    const currencyContract = getContract({
-      client: options.client,
-      chain: options.chain,
-      address: options.erc20Address,
-    });
-    const { decimals } = await import(
-      "../../extensions/erc20/read/decimals.js"
+    return options.amountInWei;
+  } catch (e) {
+    throw new Error(
+      `Failed to convert ERC20 amount for token: ${options.erc20Address}: ${e}`,
     );
-    const currencyDecimals = await decimals({
-      contract: currencyContract,
-    });
-    return toUnits(options.amount.toString(), currencyDecimals);
   }
-  return options.amountInWei;
 }

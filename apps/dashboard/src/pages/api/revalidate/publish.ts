@@ -16,13 +16,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   const ensNameOrAddress = getSingleQueryValue(req.query, "address");
   const contractName = getSingleQueryValue(req.query, "contractName");
-  if (!ensNameOrAddress) {
+  if (ensNameOrAddress === undefined) {
     return res.status(400).json({ message: "address must be provided" });
   }
+  const queryClient = new QueryClient();
 
   let ensResult: ENSResolveResult;
   try {
-    ensResult = await ensQuery(ensNameOrAddress).queryFn();
+    ensResult = await queryClient.fetchQuery(ensQuery(ensNameOrAddress));
   } catch (err) {
     return res.status(500).json({ message: (err as Error).message });
   }
@@ -49,7 +50,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
     const publishedContracts = await fetchPublishedContracts(
       polygonSdk,
-      new QueryClient(),
+      queryClient,
       ensResult.address,
     );
 

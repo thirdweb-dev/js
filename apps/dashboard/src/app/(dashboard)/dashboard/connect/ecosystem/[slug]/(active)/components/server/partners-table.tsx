@@ -3,6 +3,7 @@ import { CopyButton } from "@/components/ui/CopyButton";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -12,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Pencil, Table, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import type { Ecosystem, Partner } from "../../../../types";
@@ -68,13 +69,14 @@ function EcosystemRow(props: {
   partner: Partner;
   ecosystem: Ecosystem;
 }) {
-  const { deletePartner, isLoading: isDeleting } = useDeletePartner({
-    onError: (error) => {
-      const message =
-        error instanceof Error ? error.message : "Failed to delete partner";
-      toast.error(message);
-    },
-  });
+  const { mutateAsync: deletePartner, isPending: isDeleting } =
+    useDeletePartner({
+      onError: (error) => {
+        const message =
+          error instanceof Error ? error.message : "Failed to delete partner";
+        toast.error(message);
+      },
+    });
 
   return (
     <TableRow

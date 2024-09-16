@@ -167,6 +167,7 @@ export const sidebar: SideBar = {
 				},
 			],
 		},
+
 		{ separator: true },
 		// modular contracts
 
@@ -180,12 +181,26 @@ export const sidebar: SideBar = {
 					href: `${modularContractsSlug}/overview`,
 				},
 				{
-					name: "Get Started",
-					href: `${modularContractsSlug}/get-started`,
-				},
-				{
 					name: "How it works",
 					href: `${modularContractsSlug}/how-it-works`,
+				},
+				{
+					name: "Get Started",
+					href: `${modularContractsSlug}/get-started`,
+					links: [
+						{
+							name: "Create a Core Contract",
+							href: `${modularContractsSlug}/get-started/create-core-contract`,
+						},
+						{
+							name: "Create a Module Contract",
+							href: `${modularContractsSlug}/get-started/create-module-contract`,
+						},
+						{
+							name: "Deploy a Modular Contract",
+							href: `${modularContractsSlug}/get-started/deploy-modular-contract`,
+						},
+					]
 				},
 				// core contracts
 				{
@@ -231,6 +246,10 @@ export const sidebar: SideBar = {
 										{
 											name: "TransferableERC20",
 											href: `${modulesContractsSlug}/erc-20/misc/transferableERC20`,
+										},
+										{
+											name: "CreatorTokenERC20",
+											href: `${modulesContractsSlug}/erc-20/misc/creatorTokenERC20`,
 										}
 									]
 								}
@@ -247,17 +266,10 @@ export const sidebar: SideBar = {
 											href: `${modulesContractsSlug}/erc-721/metadata/batchMetadataERC721`,
 										},
 										{
-											name: "DelayedRevealBatchMetadataERC721",
-											href: `${modulesContractsSlug}/erc-721/metadata/delayedRevealBatchMetadataERC721`,
-										},
-										{
 											name: "OpenEditionMetadataERC721",
 											href: `${modulesContractsSlug}/erc-721/metadata/openEditionMetadataERC721`,
 										},
-										{
-											name: "SimpleMetadtaERC721",
-											href: `${modulesContractsSlug}/erc-721/metadata/simpleMetadataERC721`,
-										}
+
 									],
 								},
 								{
@@ -302,10 +314,6 @@ export const sidebar: SideBar = {
 											name: "OpenEditionMetadataERC1155",
 											href: `${modulesContractsSlug}/erc-1155/metadata/openEditionMetadataERC1155`,
 										},
-										{
-											name: "SimpleMetadataERC1155",
-											href: `${modulesContractsSlug}/erc-1155/metadata/simpleMetadataERC1155`,
-										}
 									],
 								},
 								{
@@ -331,6 +339,10 @@ export const sidebar: SideBar = {
 										{
 											name: "TransferableERC1155",
 											href: `${modulesContractsSlug}/erc-1155/misc/transferableERC1155`,
+										},
+										{
+											name: "SequentialTokenIdERC1155",
+											href: `${modulesContractsSlug}/erc-1155/misc/sequentialTokenIdERC1155`,
 										}
 									],
 								}

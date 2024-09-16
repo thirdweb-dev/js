@@ -1,7 +1,7 @@
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useQuery } from "@tanstack/react-query";
 
-export type PayNewCustomersData = {
+type PayNewCustomersData = {
   intervalType: "day" | "week";
   intervalResults: Array<{
     /**

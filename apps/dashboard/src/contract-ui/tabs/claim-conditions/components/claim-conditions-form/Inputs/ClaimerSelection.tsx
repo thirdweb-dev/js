@@ -18,7 +18,6 @@ export const ClaimerSelection = () => {
     field,
     dropType,
     isErc20,
-    isClaimPhaseV1,
     setOpenSnapshotIndex: setOpenIndex,
     isAdmin,
     isColumn,
@@ -31,14 +30,10 @@ export const ClaimerSelection = () => {
     if (val === "any") {
       form.setValue(`phases.${phaseIndex}.snapshot`, undefined);
     } else {
-      if (val === "specific" && !isClaimPhaseV1) {
+      if (val === "specific") {
         form.setValue(`phases.${phaseIndex}.maxClaimablePerWallet`, 0);
       }
-      if (
-        val === "overrides" &&
-        !isClaimPhaseV1 &&
-        field.maxClaimablePerWallet !== 1
-      ) {
+      if (val === "overrides" && field.maxClaimablePerWallet !== 1) {
         form.setValue(`phases.${phaseIndex}.maxClaimablePerWallet`, 1);
       }
       form.setValue(`phases.${phaseIndex}.snapshot`, []);
@@ -50,39 +45,31 @@ export const ClaimerSelection = () => {
 
   const disabledSnapshotButton = isAdmin && formDisabled;
 
-  if (isClaimPhaseV1) {
-    helperText =
-      "Snapshot spots are one-time-use! Once a wallet has claimed the drop, it cannot claim again, even if it did not claim the entire amount assigned to it in the snapshot.";
+  if (dropType === "specific") {
+    helperText = (
+      <>
+        <b>Only</b> wallets on the <b>allowlist</b> can claim.
+      </>
+    );
+  } else if (dropType === "any") {
+    helperText = (
+      <>
+        <b>Anyone</b> can claim based on the rules defined in this phase.
+        (&quot;Public Mint&quot;)
+      </>
+    );
   } else {
-    if (dropType === "specific") {
-      helperText = (
-        <>
-          <b>Only</b> wallets on the <b>allowlist</b> can claim.
-        </>
-      );
-    } else if (dropType === "any") {
-      helperText = (
-        <>
-          <b>Anyone</b> can claim based on the rules defined in this phase.
-          (&quot;Public Mint&quot;)
-        </>
-      );
-    } else {
-      helperText = (
-        <>
-          <b>Anyone</b> can claim based on the rules defined in this phase.
-          <br />
-          <b>Wallets in the snapshot</b> can claim with special rules defined in
-          the snapshot.
-        </>
-      );
-    }
+    helperText = (
+      <>
+        <b>Anyone</b> can claim based on the rules defined in this phase.
+        <br />
+        <b>Wallets in the snapshot</b> can claim with special rules defined in
+        the snapshot.
+      </>
+    );
   }
 
-  if (
-    !isClaimPhaseV1 &&
-    (claimConditionType === "public" || claimConditionType === "creator")
-  ) {
+  if (claimConditionType === "public" || claimConditionType === "creator") {
     return null;
   }
 
@@ -113,9 +100,7 @@ export const ClaimerSelection = () => {
             onChange={handleClaimerChange}
           >
             <option value="any">Any wallet</option>
-            {!isClaimPhaseV1 ? (
-              <option value="overrides">Any wallet (with overrides)</option>
-            ) : null}
+            <option value="overrides">Any wallet (with overrides)</option>
             <option value="specific">Only specific wallets</option>
           </Select>
         )}

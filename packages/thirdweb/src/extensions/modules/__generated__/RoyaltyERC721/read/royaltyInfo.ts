@@ -43,7 +43,7 @@ const FN_OUTPUTS = [
  * Checks if the `royaltyInfo` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `royaltyInfo` method is supported.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -61,7 +61,7 @@ export function isRoyaltyInfoSupported(availableSelectors: string[]) {
  * Encodes the parameters for the "royaltyInfo" function.
  * @param options - The options for the royaltyInfo function.
  * @returns The encoded ABI parameters.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -79,7 +79,7 @@ export function encodeRoyaltyInfoParams(options: RoyaltyInfoParams) {
  * Encodes the "royaltyInfo" function into a Hex string with its parameters.
  * @param options - The options for the royaltyInfo function.
  * @returns The encoded hexadecimal string.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -102,7 +102,7 @@ export function encodeRoyaltyInfo(options: RoyaltyInfoParams) {
  * Decodes the result of the royaltyInfo function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -117,7 +117,7 @@ export function decodeRoyaltyInfoResult(result: Hex) {
  * Calls the "royaltyInfo" function on the contract.
  * @param options - The options for the royaltyInfo function.
  * @returns The parsed result of the function call.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";

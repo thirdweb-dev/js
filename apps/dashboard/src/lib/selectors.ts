@@ -1,6 +1,7 @@
-import { selectorsFromBytecode } from "@shazow/whatsabi";
+import type { Abi } from "abitype";
 import type { ThirdwebContract } from "thirdweb";
-import { resolveImplementation } from "thirdweb/utils";
+import { resolveContractAbi } from "thirdweb/contract";
+import { resolveImplementation, toFunctionSelector } from "thirdweb/utils";
 
 const SelectorCache = new WeakMap<ThirdwebContract, string[]>();
 
@@ -19,11 +20,24 @@ export async function resolveFunctionSelectors(
   }
   // immediately return a promise so subsequent calls can await it
   return (async () => {
-    // Fetch bytecode for the implementation
-    const { bytecode } = await resolveImplementation(contract);
+    const abi = await resolveContractAbi<Abi>(contract).catch(() => null);
 
     // Parse selectors
-    const selectors = selectorsFromBytecode(bytecode);
+    let selectors: string[] = [];
+    // prefer ABI if available
+    if (abi) {
+      selectors = abi
+        .filter((f) => f.type === "function")
+        .map((f) => toFunctionSelector(f));
+    } else {
+      // fallback to bytecode via whatsabi
+      const [{ selectorsFromBytecode }, { bytecode }] = await Promise.all([
+        import("@shazow/whatsabi"),
+        resolveImplementation(contract),
+      ]);
+      selectors = selectorsFromBytecode(bytecode);
+    }
+
     // Cache and return
     SelectorCache.set(contract, selectors);
     return selectors;

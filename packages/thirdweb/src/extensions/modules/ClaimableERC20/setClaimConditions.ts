@@ -10,6 +10,25 @@ import type { ClaimConditionInput } from "../../../utils/extensions/drops/types.
 import { keccak256 } from "../../../utils/hashing/keccak256.js";
 import { setClaimCondition as generatedSetClaimCondition } from "../__generated__/ClaimableERC20/write/setClaimCondition.js";
 
+/**
+ * Sets the claim conditions for a given token ID.
+ * @param options - The options for setting the claim conditions.
+ * @returns A transaction to set the claim conditions.
+ * @modules ClaimableERC20
+ * @example
+ * ```ts
+ * import { ClaimableERC20 } from "thirdweb/modules";
+ *
+ * const transaction = ClaimableERC20.setClaimCondition({
+ *   contract: contract,
+ *   pricePerToken: "1", // in ETH
+ *   maxClaimableSupply: "1000000",
+ *   maxClaimablePerWallet: "1",
+ * });
+ *
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
 export function setClaimCondition(
   options: BaseTransactionOptions<ClaimConditionInput>,
 ) {

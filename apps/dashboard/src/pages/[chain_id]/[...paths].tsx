@@ -1,3 +1,5 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Alert } from "@/components/ui/alert";
 import { thirdwebClient } from "@/constants/client";
 import {
   type EVMContractInfo,
@@ -43,8 +45,6 @@ import { isERC1155 } from "thirdweb/extensions/erc1155";
 import { fetchChain } from "utils/fetchChain";
 import type { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { Spinner } from "../../@/components/ui/Spinner/Spinner";
-import { Alert } from "../../@/components/ui/alert";
 import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
 import { DeprecatedAlert } from "../../components/shared/DeprecatedAlert";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";

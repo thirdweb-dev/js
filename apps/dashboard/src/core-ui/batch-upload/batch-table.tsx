@@ -209,7 +209,6 @@ export const BatchTable: React.FC<BatchTableProps> = ({
           </Tbody>
         </Table>
       </TableContainer>
-
       <Portal containerRef={portalRef}>
         <Center w="100%">
           <HStack>

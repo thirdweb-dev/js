@@ -4,7 +4,7 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { installModule } from "../__generated__/IModularCore/write/installModule.js";
 
 /**
- * @extension MODULAR
+ * @modules
  */
 export type InstallPublishedModuleOptions = {
   account: Account;
@@ -12,7 +12,7 @@ export type InstallPublishedModuleOptions = {
   moduleName: string;
   publisher?: string;
   version?: string;
-  constructorParams?: unknown[];
+  constructorParams?: Record<string, unknown>;
   moduleData?: `0x${string}`;
 };
 
@@ -20,7 +20,7 @@ export type InstallPublishedModuleOptions = {
  * Install a published module on a modular contract
  * @param options - The options for installing a published module
  * @returns A prepared transaction to send
- * @extension MODULAR
+ * @modules
  * @example
  * ```ts
  * import { installPublishedModule } from "thirdweb/modules";
@@ -53,7 +53,7 @@ export function installPublishedModule(options: InstallPublishedModuleOptions) {
         client: contract.client,
         account,
         contractId: moduleName,
-        constructorParams: constructorParams || [],
+        constructorParams,
         publisher,
       });
       return {

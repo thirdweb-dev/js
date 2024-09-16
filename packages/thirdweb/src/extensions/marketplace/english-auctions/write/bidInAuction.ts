@@ -1,9 +1,9 @@
 import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { isNewWinningBid } from "../../__generated__/IEnglishAuctions/read/isNewWinningBid.js";
-import { bidInAuction as generatedBidInAuction } from "../../__generated__/IEnglishAuctions/write/bidInAuction.js";
-import { getAuction } from "../read/getAuction.js";
-import { getWinningBid } from "../read/getWinningBid.js";
+import * as IsNewWinningBid from "../../__generated__/IEnglishAuctions/read/isNewWinningBid.js";
+import * as BidInAuction from "../../__generated__/IEnglishAuctions/write/bidInAuction.js";
+import * as GetAuction from "../read/getAuction.js";
+import * as GetWinningBid from "../read/getWinningBid.js";
 
 /**
  * @extension MARKETPLACE
@@ -39,10 +39,10 @@ export type BidInAuctionParams = {
 export function bidInAuction(
   options: BaseTransactionOptions<BidInAuctionParams>,
 ) {
-  return generatedBidInAuction({
+  return BidInAuction.bidInAuction({
     contract: options.contract,
     asyncParams: async () => {
-      const auction = await getAuction({
+      const auction = await GetAuction.getAuction({
         contract: options.contract,
         auctionId: options.auctionId,
       });
@@ -70,13 +70,13 @@ export function bidInAuction(
       if (resolvedBidAmountWei > auction.buyoutCurrencyValue.value) {
         throw new Error("Bid amount is above the buyout amount");
       }
-      const existingWinningBid = await getWinningBid({
+      const existingWinningBid = await GetWinningBid.getWinningBid({
         auctionId: options.auctionId,
         contract: options.contract,
       });
       if (existingWinningBid) {
         // check if the bid amount is sufficient to outbid the existing winning bid
-        const isNewWinner = await isNewWinningBid({
+        const isNewWinner = await IsNewWinningBid.isNewWinningBid({
           contract: options.contract,
           auctionId: options.auctionId,
           bidAmount: resolvedBidAmountWei,
@@ -105,4 +105,25 @@ export function bidInAuction(
       };
     },
   });
+}
+
+/**
+ * Checks if the `bidInAuction` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `bidInAuction` method is supported.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { isBidInAuctionSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = isBidInAuctionSupported(["0x..."]);
+ * ```
+ */
+export function isBidInAuctionSupported(availableSelectors: string[]) {
+  return (
+    BidInAuction.isBidInAuctionSupported(availableSelectors) &&
+    GetWinningBid.isGetWinningBidSupported(availableSelectors) &&
+    GetAuction.isGetAuctionSupported(availableSelectors) &&
+    IsNewWinningBid.isIsNewWinningBidSupported(availableSelectors)
+  );
 }

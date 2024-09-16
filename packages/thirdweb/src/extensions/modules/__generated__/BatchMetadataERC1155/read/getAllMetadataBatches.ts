@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * Checks if the `getAllMetadataBatches` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `getAllMetadataBatches` method is supported.
- * @module BatchMetadataERC1155
+ * @modules BatchMetadataERC1155
  * @example
  * ```ts
  * import { BatchMetadataERC1155 } from "thirdweb/modules";
@@ -49,7 +49,7 @@ export function isGetAllMetadataBatchesSupported(availableSelectors: string[]) {
  * Decodes the result of the getAllMetadataBatches function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
- * @module BatchMetadataERC1155
+ * @modules BatchMetadataERC1155
  * @example
  * ```ts
  * import { BatchMetadataERC1155 } from "thirdweb/modules";
@@ -64,7 +64,7 @@ export function decodeGetAllMetadataBatchesResult(result: Hex) {
  * Calls the "getAllMetadataBatches" function on the contract.
  * @param options - The options for the getAllMetadataBatches function.
  * @returns The parsed result of the function call.
- * @module BatchMetadataERC1155
+ * @modules BatchMetadataERC1155
  * @example
  * ```ts
  * import { BatchMetadataERC1155 } from "thirdweb/modules";

@@ -1,5 +1,4 @@
-
-import { createMetadata } from "@doc";
+import { createMetadata, GithubButtonLink } from "@doc";
 
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
@@ -11,28 +10,34 @@ export const metadata = createMetadata({
     },
 });
 
-# Royalty ERC-1155
+# RoyaltyERC1155
 
 ## Description
 
-The `RoyaltyERC1155` contract is an module that provides royalty functionality for ERC-1155 tokens. It allows setting default royalty information as well as specific royalty details for individual tokens, similar to the functionality provided by `RoyaltyERC721`. This enables creators to receive a percentage of secondary sales as a royalty.
+The `RoyaltyERC1155` contract is a module that integrates royalty management and validation functionalities for ERC-1155 token transfers. This module ensures that royalties are appropriately handled during token transfers, and allows for the validation of these transfers through a customizable transfer validator.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/transferable/TransferableERC1155.sol" />
 
 ## Callback Functions
 
-| Function   | Description                                                                |
-|------------|----------------------------------------------------------------------------|
-| `onInstall`   | Called by the Core during the installation of the Module. Sets default royalty information. |
-| `onUninstall` | Called by the Core during the uninstallation of the Module.           |
+| Function                    | Description                                                                       |
+|-----------------------------|-----------------------------------------------------------------------------------|
+| `beforeTransferERC1155`     | Callback function for the `ERC1155.transferFrom` and `ERC1155.safeTransferFrom` functions. Validates the transfer via the `transferValidator`. |
+| `beforeBatchTransferERC1155`| Callback function for batch transfers of ERC-1155 tokens. Validates each transfer in the batch via the `transferValidator`. |
 
 ## Fallback Functions
 
-| Function                | Description                                                                             |
-|-------------------------|-----------------------------------------------------------------------------------------|
-| `royaltyInfo`           | Returns the royalty recipient and amount for a given sale based on the token ID and sale price. |
-| `getDefaultRoyaltyInfo` | Returns the default royalty information for the tokens, including the recipient and basis points (bps). |
-| `getRoyaltyInfoForToken`| Returns the overridden royalty information for a specific token ID, including the recipient and basis points (bps). |
-| `setDefaultRoyaltyInfo` | Sets the default royalty information for the tokens. Requires manager role.              |
-| `setRoyaltyInfoForToken`| Sets specific royalty information for a given token ID. Requires manager role.           |
+| Function                         | Description                                                                                               |
+|----------------------------------|-----------------------------------------------------------------------------------------------------------|
+| `royaltyInfo`                    | Returns the royalty recipient and amount for a given sale.                                                 |
+| `getDefaultRoyaltyInfo`          | Returns the default royalty info (recipient and BPS) for the token contract.                               |
+| `getRoyaltyInfoForToken`         | Returns the royalty info (recipient and BPS) for a specific token.                                         |
+| `getTransferValidator`           | Returns the transfer validator contract address for this token contract.                                   |
+| `getTransferValidationFunction`  | Returns the function selector and view status for the transfer validator's validation function.            |
+| `hasRole`                        | Checks if the given account has the specified role.                                                        |
+| `setDefaultRoyaltyInfo`          | Sets the default royalty info (recipient and BPS). Requires manager role.                                  |
+| `setRoyaltyInfoForToken`         | Sets the royalty info (recipient and BPS) for a specific token. Requires manager role.                     |
+| `setTransferValidator`           | Sets the transfer validator contract address. Requires manager role.                                       |
 
 ## Required Interfaces
 
@@ -42,7 +47,12 @@ The `RoyaltyERC1155` contract is an module that provides royalty functionality f
 
 ## Supported Interfaces
 
-| Interface  | ID          |
-|------------|-------------|
-| `IERC2981` | `0x2a55205a`|
+| Interface              | ID          |
+|------------------------|-------------|
+| `IERC2981`             | `0x2a55205a`|
+| `ICreatorToken`        | `0xad0d7f6c`|
+| `ICreatorTokenLegacy`  | `0xa07d229a`|
 
+## Installation Callback
+
+This module uses an installation callback to set up initial parameters such as the default royalty information and the transfer validator contract.

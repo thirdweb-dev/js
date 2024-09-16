@@ -57,19 +57,18 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
     return false;
   }, [chainId, customCurrency, initialValue]);
 
-  const currencyOptions: CurrencyMetadata[] =
-    [
-      ...(isPaymentsSelector
-        ? []
-        : [
-            {
-              address: NATIVE_TOKEN_ADDRESS.toLowerCase(),
-              name: chain?.nativeCurrency.name || "Native Token",
-              symbol: chain?.nativeCurrency.symbol || "",
-            },
-          ]),
-      ...(hideDefaultCurrencies ? [] : helperCurrencies),
-    ] || [];
+  const currencyOptions: CurrencyMetadata[] = [
+    ...(isPaymentsSelector
+      ? []
+      : [
+          {
+            address: NATIVE_TOKEN_ADDRESS.toLowerCase(),
+            name: chain?.nativeCurrency.name || "Native Token",
+            symbol: chain?.nativeCurrency.symbol || "",
+          },
+        ]),
+    ...(hideDefaultCurrencies ? [] : helperCurrencies),
+  ];
 
   const addCustomCurrency = () => {
     if (!isAddress(editCustomCurrency)) {

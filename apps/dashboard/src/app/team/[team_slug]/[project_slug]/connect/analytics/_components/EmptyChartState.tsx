@@ -26,7 +26,7 @@ export function EmptyChartState() {
   const barChartData = useMemo(() => generateRandomData(), []);
 
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full h-full relative z-0">
       <span className="text-base text-muted-foreground font-semibold absolute inset-0 flex items-center justify-center z-[1]">
         No data available
       </span>

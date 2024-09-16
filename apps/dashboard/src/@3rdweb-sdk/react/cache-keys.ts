@@ -1,4 +1,3 @@
-import type { ContractType } from "constants/contracts";
 import { ZERO_ADDRESS } from "thirdweb";
 
 export const networkKeys = {
@@ -107,23 +106,6 @@ export const engineKeys = {
     [...engineKeys.all, engineId, "systemMetrics"] as const,
   queueMetrics: (engineId: string) =>
     [...engineKeys.all, engineId, "queueMetrics"] as const,
-};
-
-export const contractKeys = {
-  all: ["contract"] as const,
-  lists: () => [...contractKeys.all, "list"] as const,
-  list: (address = ZERO_ADDRESS) => [...contractKeys.lists(), address] as const,
-  listWithFilters: (address = ZERO_ADDRESS, filters?: ContractType[]) =>
-    [...contractKeys.list(address), { filters }] as const,
-  details: () => [...contractKeys.all, "detail"] as const,
-  detail: (address: string = ZERO_ADDRESS) =>
-    [...contractKeys.details(), address] as const,
-};
-
-export const walletKeys = {
-  all: ["balance"] as const,
-  balances: (walletAddress: string) =>
-    [...splitsKeys.all, walletAddress] as const,
 };
 
 export const splitsKeys = {

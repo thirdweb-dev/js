@@ -17,17 +17,17 @@ const TRACKING_CATEGORY = "embedded-wallets-landing";
 const GUIDES = [
   {
     title: "Docs: In-App Wallets Overview",
-    image: require("/public/assets/product-pages/embedded-wallets/embedded-wallet.png"),
+    image: require("../../public/assets/product-pages/embedded-wallets/embedded-wallet.png"),
     link: "https://portal.thirdweb.com/connect/in-app-wallet/overview",
   },
   {
     title: "Live Demo: In-App Wallets",
-    image: require("/public/assets/product-pages/embedded-wallets/paper.png"),
+    image: require("../../public/assets/product-pages/embedded-wallets/paper.png"),
     link: "https://catattack.thirdweb.com",
   },
   {
     title: "Quick-Start Template: In-App Wallet + Account Abstraction",
-    image: require("/public/assets/product-pages/smart-wallet/get-started.png"),
+    image: require("../../public/assets/product-pages/smart-wallet/get-started.png"),
     link: "https://github.com/thirdweb-example/embedded-smart-wallet",
   },
 ];
@@ -87,7 +87,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
                 "Let users access your app instantly an email address, Google account, or social logins.",
               Component: (
                 <ChakraNextImage
-                  src={require("/public/assets/product-pages/embedded-wallets/seamless.png")}
+                  src={require("../../public/assets/product-pages/embedded-wallets/seamless.png")}
                   alt=""
                   borderRadius="lg"
                 />
@@ -99,7 +99,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
                 "Spin up in-app wallets for your users with your app or game's existing auth system.",
               Component: (
                 <ChakraNextImage
-                  src={require("/public/assets/product-pages/embedded-wallets/auth.png")}
+                  src={require("../../public/assets/product-pages/embedded-wallets/auth.png")}
                   alt=""
                   borderRadius="lg"
                 />
@@ -111,7 +111,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
                 "Enable users to log into their accounts (and access their wallets) from any device, in one click. Support for web, mobile, & Unity.",
               Component: (
                 <ChakraNextImage
-                  src={require("/public/assets/product-pages/embedded-wallets/cross-platform.png")}
+                  src={require("../../public/assets/product-pages/embedded-wallets/cross-platform.png")}
                   alt=""
                   borderRadius="lg"
                 />

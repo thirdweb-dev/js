@@ -1,3 +1,5 @@
+"use client";
+
 import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex } from "@chakra-ui/react";
 import { EngineCorsConfig } from "./cors";

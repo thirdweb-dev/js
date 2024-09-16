@@ -1,0 +1,41 @@
+import { createMetadata, GithubButtonLink } from "@doc";
+
+export const metadata = createMetadata({
+    title: "thirdweb Modular Contracts",
+    description:
+        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+    image: {
+        title: "thirdweb Modular Contracts",
+        icon: "solidity",
+    },
+});
+
+# SequentialTokenIdERC1155
+
+## Description
+
+The `SequentialTokenIdERC1155` contract is a module that provides sequential token ID generation for ERC-1155 tokens. This module ensures that each new token minted receives a unique, incrementing ID, preventing ID collisions and simplifying the token minting process.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/tokenId/SequentialTokenIdERC1155.sol" />
+
+## Callback Functions
+
+| Function                | Description                                                                       |
+|-------------------------|-----------------------------------------------------------------------------------|
+| `updateTokenIdERC1155`  | Callback function to update the token ID for ERC-1155 tokens. Generates a sequential token ID if the provided ID is max value and returns the next token ID. |
+
+## Fallback Functions
+
+| Function                | Description                                                                |
+|-------------------------|----------------------------------------------------------------------------|
+| `getNextTokenId`        | Returns the next token ID to be used for minting.                           |
+
+## Required Interfaces
+
+| Interface  | ID          |
+|------------|-------------|
+| `ERC-1155` | `0xd9b67a26`|
+
+## Supported Interfaces
+
+(No supported interfaces for this contract)

@@ -26,7 +26,7 @@ export function usePayCustomers(options: {
 
   return useInfiniteQuery({
     queryKey: ["usePayCustomers", user?.address, options],
-    queryFn: async ({ pageParam = 0 }) => {
+    queryFn: async ({ pageParam }) => {
       const endpoint =
         options.type === "new-customers"
           ? "/stats/new-customers/v1"
@@ -73,6 +73,7 @@ export function usePayCustomers(options: {
       };
     },
     enabled: !!user?.jwt,
+    initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       return lastPage.nextPageIndex;
     },

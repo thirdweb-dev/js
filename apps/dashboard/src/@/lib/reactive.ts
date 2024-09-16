@@ -1,4 +1,4 @@
-export type Store<T> = {
+type Store<T> = {
   getValue(): T;
   setValue(newValue: T): void;
   subscribe(listener: () => void): () => void;

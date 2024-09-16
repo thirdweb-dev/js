@@ -1,6 +1,13 @@
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useState } from "react";
 import {
@@ -14,14 +21,6 @@ import {
   TableHeading,
   TableHeadingRow,
 } from "./common";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 type UIData = {
   customers: Array<{
@@ -49,11 +48,15 @@ function processQuery(
     return { isError: true };
   }
 
+  if (!topCustomersQuery.data) {
+    return { isEmpty: true };
+  }
+
   let customers = topCustomersQuery.data.pages.flatMap(
     (x) => x.pageData.customers,
   );
 
-  customers = customers.filter((x) => x.totalSpendUSDCents > 0);
+  customers = customers?.filter((x) => x.totalSpendUSDCents > 0);
 
   if (customers.length === 0) {
     return { isEmpty: true };
@@ -170,13 +173,11 @@ function RenderData(props: { query: ProcessedQuery; loadMore: () => void }) {
           )}
         </tbody>
       </table>
-
       {props.query.isEmpty && (
         <div className="min-h-[240px] flex items-center justify-center w-full text-muted-foreground text-sm">
           No data available
         </div>
       )}
-
       {props.query.data?.showLoadMore && (
         <div className="flex justify-center py-3">
           <Button
@@ -211,16 +212,7 @@ function CustomerTableRow(props: {
           style={delayAnim}
           loadedData={props.customer?.walletAddress}
           skeletonData="0x0000000000000000000000000000000000000000"
-          render={(v) => {
-            return (
-              <CopyAddressButton
-                address={v}
-                variant="ghost"
-                className="text-muted-foreground"
-                copyIconPosition="left"
-              />
-            );
-          }}
+          render={(v) => <WalletAddress address={v} />}
         />
       </TableData>
       <TableData>

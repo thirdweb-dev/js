@@ -1946,7 +1946,8 @@ export class ContractDeployer extends RPCConnectionHandler {
         this.getProvider(),
         create2Factory,
         this.options.clientId,
-        this.options.secretKey
+        this.options.secretKey,
+        options?.defaultModules
       );      
 
       const implementationAddress = deploymentInfo.find(

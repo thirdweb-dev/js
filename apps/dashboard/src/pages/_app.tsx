@@ -3,7 +3,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { ChakraProvider, useColorMode } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import type { DehydratedState } from "@tanstack/react-query";
-// import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { ProgressBar } from "components/shared/ProgressBar";
 import { useBuildId } from "hooks/useBuildId";
 import PlausibleProvider from "next-plausible";
@@ -24,6 +23,8 @@ import type { ThirdwebNextPage } from "utils/types";
 import chakraTheme from "../theme";
 import "@/styles/globals.css";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
+import { AnnouncementBanner } from "../components/notices/AnnouncementBanner";
+import { setOverrides } from "../lib/vercel-utils";
 
 const inter = interConstructor({
   subsets: ["latin"],
@@ -51,6 +52,9 @@ const chakraThemeWithFonts = {
 
 const fontSizeCssVars = generateBreakpointTypographyCssVars();
 
+// run this on app load
+setOverrides();
+
 type AppPropsWithLayout = AppProps<{ dehydratedState?: DehydratedState }> & {
   Component: ThirdwebNextPage;
 };
@@ -59,6 +63,11 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
   Component,
   pageProps,
 }) => {
+  // run this ONCE on app load
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    setOverrides();
+  }, []);
   const router = useRouter();
   const { shouldReload } = useBuildId();
 
@@ -274,7 +283,7 @@ const ConsoleApp = memo(function ConsoleApp({
 
       <TailwindTheme>
         <ChakraProvider theme={chakraThemeWithFonts}>
-          {/* <AnnouncementBanner /> */}
+          <AnnouncementBanner />
           {isFallback && Component.fallback
             ? Component.fallback
             : getLayout(<Component {...pageProps} />, pageProps)}

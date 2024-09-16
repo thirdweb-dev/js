@@ -5,7 +5,7 @@ import { tokenMerkleRoot } from "../__generated__/Airdrop/read/tokenMerkleRoot.j
 import { claimERC721 as generatedClaimERC721 } from "../__generated__/Airdrop/write/claimERC721.js";
 
 /**
- * @extension Airdrop
+ * @extension AIRDROP
  */
 export type ClaimERC721Params = {
   tokenAddress: string;
@@ -32,7 +32,7 @@ export type ClaimERC721Params = {
  * await sendTransaction({ claimTransaction, account });
  *
  * ```
- * @extension Airdrop
+ * @extension AIRDROP
  * @returns A promise that resolves to the transaction result.
  */
 export function claimERC721(

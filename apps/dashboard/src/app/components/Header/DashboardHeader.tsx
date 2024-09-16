@@ -35,7 +35,6 @@ export function DashboardHeader() {
           ))}
         </div>
       </div>
-
       {/* Right */}
       <div className="flex items-center gap-4">
         <div className="items-center gap-2 lg:flex">

@@ -1,4 +1,5 @@
-import { StorageSingleton } from "lib/sdk";
+import { thirdwebClient } from "@/constants/client";
+import { download } from "thirdweb/storage";
 import type { NFTMetadata } from "thirdweb/utils";
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
 import {
@@ -36,12 +37,15 @@ export async function transformAlchemyResponseToNFT(
 
         try {
           return {
-            id: BigInt(alchemyNFT.id.tokenId),
+            id: alchemyNFT.id.tokenId,
             contractAddress: alchemyNFT.contract.address,
             metadata: shouldDownloadURI(rawUri)
-              ? await StorageSingleton.downloadJSON(
-                  handleArbitraryTokenURI(rawUri),
-                )
+              ? await download({
+                  uri: handleArbitraryTokenURI(rawUri),
+                  client: thirdwebClient,
+                })
+                  .then((res) => res.json())
+                  .catch(() => ({}))
               : rawUri,
             owner,
             supply: alchemyNFT.balance || "1",

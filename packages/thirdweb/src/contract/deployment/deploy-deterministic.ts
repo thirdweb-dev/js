@@ -1,5 +1,10 @@
+import type { Abi } from "abitype";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
-import { computeDeploymentInfoFromContractId } from "../../utils/any-evm/compute-published-contract-deploy-info.js";
+import {
+  computeDeploymentInfoFromBytecode,
+  computeDeploymentInfoFromContractId,
+} from "../../utils/any-evm/compute-published-contract-deploy-info.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChain } from "../../utils/types.js";
 import { computeCreate2FactoryAddress } from "./utils/create-2-factory.js";
@@ -10,7 +15,7 @@ import { computeCreate2FactoryAddress } from "./utils/create-2-factory.js";
 export type DeployDetemisiticParams = Prettify<
   ClientAndChain & {
     contractId: string;
-    constructorParams: unknown[];
+    constructorParams?: Record<string, unknown>;
     publisher?: string;
     version?: string;
     salt?: string;
@@ -52,6 +57,34 @@ export function prepareDeterministicDeployTransaction(
     data: async () => {
       const infraContractInfo =
         await computeDeploymentInfoFromContractId(options);
+      return infraContractInfo.initBytecodeWithsalt;
+    },
+  });
+}
+
+/**
+ * @internal
+ */
+export function prepareDeterministicDeployTransactionFromBytecode(
+  options: ClientAndChain & {
+    abi: Abi;
+    bytecode: Hex;
+    constructorParams?: Record<string, unknown>;
+    salt?: string;
+  },
+) {
+  const { client, chain } = options;
+  return prepareTransaction({
+    client,
+    chain,
+    to: () =>
+      computeCreate2FactoryAddress({
+        client,
+        chain,
+      }),
+    data: async () => {
+      const infraContractInfo =
+        await computeDeploymentInfoFromBytecode(options);
       return infraContractInfo.initBytecodeWithsalt;
     },
   });

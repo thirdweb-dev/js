@@ -1,6 +1,6 @@
+import { getProject } from "@/api/projects";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProject } from "../../../../../../@/api/projects";
 import { PayPageUI } from "./PayPageUI";
 
 export default async function Page(props: {
@@ -15,7 +15,7 @@ export default async function Page(props: {
   );
 
   if (!project) {
-    return notFound();
+    notFound();
   }
 
   return (

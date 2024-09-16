@@ -24,14 +24,6 @@ function isValidPlan(plan: string): plan is keyof typeof planToCustomerId {
   return plan in planToCustomerId;
 }
 
-// const SUPPORT_EMAIL = "support@thirdweb.com";
-
-export type CreateTicketInput = {
-  markdown: string;
-  product: string;
-  files?: File[];
-} & Record<string, string>;
-
 function prepareEmailTitle(
   product: string,
   problemArea: string,

@@ -1,3 +1,5 @@
+"use client";
+
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   type useAllContractList,
   useRemoveContractMutation,
@@ -33,7 +36,6 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { memo, useEffect, useMemo, useState } from "react";
 import {
   type Column,
@@ -70,7 +72,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
   }, [contractListQuery.data]);
 
   return (
-    <>
+    <div className="flex flex-col gap-8">
       {!noHeader && (
         <>
           <ImportModal
@@ -79,7 +81,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
               setImportModalOpen(false);
             }}
           />
-          <div className="flex flex-col lg:flex-row lg:justify-between gap-4 md:py-4">
+          <div className="flex flex-col lg:flex-row lg:justify-between gap-4 md:pb-4">
             <div>
               <h1 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-1.5">
                 Your contracts
@@ -121,7 +123,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
           No contracts found
         </div>
       )}
-    </>
+    </div>
   );
 };
 
@@ -143,10 +145,10 @@ const RemoveFromDashboardButton: React.FC<RemoveFromDashboardButtonProps> = ({
         e.stopPropagation();
         mutation.mutate({ chainId, contractAddress });
       }}
-      disabled={mutation.isLoading}
+      disabled={mutation.isPending}
       className="!bg-background hover:!bg-accent gap-2"
     >
-      {mutation.isLoading ? (
+      {mutation.isPending ? (
         <Spinner className="size-4" />
       ) : (
         <XIcon className="size-4 text-destructive-text" />
@@ -339,7 +341,6 @@ const ContractTable: React.FC<ContractTableProps> = ({
   return (
     <TableContainer>
       {isFetching && <Spinner className="size-3 absolute top-2 right-4" />}
-
       <Table {...getTableProps()}>
         <TableHeader>
           {headerGroups.map((headerGroup, index) => (
@@ -376,7 +377,6 @@ const ContractTable: React.FC<ContractTableProps> = ({
           })}
         </TableBody>
       </Table>
-
       {canNextPage && (
         <ShowMoreButton
           limit={limit}
@@ -384,7 +384,6 @@ const ContractTable: React.FC<ContractTableProps> = ({
           setShowMoreLimit={setNumRowsOnPage}
         />
       )}
-
       {loading && (
         <div className="flex items-center justify-center py-4">
           <div className="flex gap-2 items-center text-muted-foreground">
@@ -399,13 +398,14 @@ const ContractTable: React.FC<ContractTableProps> = ({
 
 const ContractTableRow = memo(({ row }: { row: Row<BasicContract> }) => {
   const chainSlug = useChainSlug(row.original.chainId);
-  const router = useRouter();
+  const router = useDashboardRouter();
 
   return (
     <TableRow
       {...row.getRowProps()}
       role="group"
       className="cursor-pointer hover:bg-muted/50"
+      // TODO - replace this with before:absolute thing
       onClick={() => {
         router.push(`/${chainSlug}/${row.original.address}`);
       }}

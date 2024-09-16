@@ -3,6 +3,7 @@
 import type { Team } from "@/api/team";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useMutation } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
 import { useState } from "react";
@@ -20,8 +21,11 @@ export function GeneralSettingsPage(props: {
       <TeamSlugFormControl team={props.team} />
       <TeamAvatarFormControl />
       <TeamIdCard team={props.team} />
-      <LeaveTeamCard enabled={false} />
-      <DeleteTeamCard enabled={hasPermissionToDelete} />
+      <LeaveTeamCard enabled={false} teamName={props.team.name} />
+      <DeleteTeamCard
+        enabled={hasPermissionToDelete}
+        teamName={props.team.name}
+      />
     </div>
   );
 }
@@ -59,7 +63,7 @@ function TeamNameFormControl(props: {
       saveButton={{
         onClick: handleSave,
         disabled: teamName.length === 0,
-        isLoading: updateTeamMutation.isLoading,
+        isLoading: updateTeamMutation.isPending,
       }}
       errorText={undefined}
       noPermissionText={undefined} // TODO
@@ -117,12 +121,12 @@ function TeamSlugFormControl(props: {
       saveButton={{
         onClick: handleSave,
         disabled: teamSlug.length === 0,
-        isLoading: updateTeamMutation.isLoading,
+        isLoading: updateTeamMutation.isPending,
       }}
       noPermissionText={undefined} // TODO
     >
-      <div className="relative border rounded-lg flex md:w-[450px]">
-        <div className="bg-muted/50 text-muted-foreground/80 self-stretch flex items-center px-3 text-sm border-r rounded-l-lg font-mono">
+      <div className="relative border border-border rounded-lg flex md:w-[450px]">
+        <div className="bg-muted/50 text-muted-foreground/80 self-stretch flex items-center px-3 text-sm border-r border-border rounded-l-lg font-mono">
           thirdweb.com/team/
         </div>
         <Input
@@ -164,7 +168,7 @@ function TeamAvatarFormControl() {
       saveButton={{
         onClick: handleSave,
         disabled: false,
-        isLoading: updateTeamAvatarMutation.isLoading,
+        isLoading: updateTeamAvatarMutation.isPending,
       }}
       noPermissionText={undefined} // TODO
       errorText={undefined}
@@ -181,7 +185,7 @@ function TeamAvatarFormControl() {
           accept={{ "image/*": [] }}
           value={teamAvatar}
           setValue={setTeamAvatar}
-          className="w-[120px] rounded-full"
+          className="w-20 lg:w-28 rounded-full"
           disableHelperText
         />
       </div>
@@ -216,6 +220,7 @@ function TeamIdCard(props: {
 
 export function LeaveTeamCard(props: {
   enabled: boolean;
+  teamName: string;
 }) {
   const title = "Leave Team";
   const description =
@@ -245,7 +250,12 @@ export function LeaveTeamCard(props: {
         description={description}
         buttonLabel={title}
         buttonOnClick={handleLeave}
-        isLoading={leaveTeam.isLoading}
+        isLoading={leaveTeam.isPending}
+        confirmationDialog={{
+          title: `Are you sure you want to leave team "${props.teamName}" ?`,
+          description:
+            "This will revoke your access to this Team. Any resources you've added to the Team will remain.",
+        }}
       />
     );
   }
@@ -267,7 +277,9 @@ export function LeaveTeamCard(props: {
 
 export function DeleteTeamCard(props: {
   enabled: boolean;
+  teamName: string;
 }) {
+  const router = useDashboardRouter();
   const title = "Delete Team";
   const description =
     "Permanently remove your team and all of its contents from the thirdweb platform. This action is not reversible - please continue with caution.";
@@ -278,6 +290,9 @@ export function DeleteTeamCard(props: {
       await new Promise((resolve) => setTimeout(resolve, 3000));
       console.log("Deleting team");
       throw new Error("Not implemented");
+    },
+    onSuccess: () => {
+      router.push("/team");
     },
   });
 
@@ -296,7 +311,11 @@ export function DeleteTeamCard(props: {
         description={description}
         buttonLabel={title}
         buttonOnClick={handleDelete}
-        isLoading={deleteTeam.isLoading}
+        isLoading={deleteTeam.isPending}
+        confirmationDialog={{
+          title: `Are you sure you want to delete team "${props.teamName}" ?`,
+          description: description,
+        }}
       />
     );
   }

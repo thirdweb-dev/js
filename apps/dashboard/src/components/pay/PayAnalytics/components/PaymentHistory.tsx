@@ -1,5 +1,5 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { PaginationButtons } from "@/components/pagination-buttons";
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -42,6 +42,9 @@ function processQuery(
   }
   if (purchasesQuery.isError) {
     return { isError: true };
+  }
+  if (!purchasesQuery.data) {
+    return { isEmpty: true };
   }
 
   const purchases = purchasesQuery.data.purchases;
@@ -161,9 +164,7 @@ function RenderData(props: {
           </tbody>
         </table>
       </ScrollShadow>
-
       <div className="h-8" />
-
       {props.query.isEmpty ? (
         <div className="min-h-[150px] flex items-center justify-center w-full text-muted-foreground text-sm">
           No data available
@@ -230,12 +231,7 @@ function TableRow(props: { purchase: PayPurchasesData["purchases"][0] }) {
 
       {/* Address */}
       <TableData>
-        <CopyAddressButton
-          address={purchase.fromAddress}
-          variant="ghost"
-          className="text-muted-foreground"
-          copyIconPosition="left"
-        />
+        <WalletAddress address={purchase.fromAddress} />
       </TableData>
 
       {/* Date */}

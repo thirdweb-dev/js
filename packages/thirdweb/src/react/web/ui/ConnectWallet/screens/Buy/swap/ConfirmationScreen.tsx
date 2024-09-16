@@ -1,5 +1,6 @@
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
+import { trackPayEvent } from "../../../../../../../analytics/track.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
@@ -125,7 +126,7 @@ export function SwapConfirmationScreen(props: {
 
       {/* Send to  */}
       {isDifferentRecipient && (
-        <ConfirmItem label="Seller">
+        <ConfirmItem label="Receiver">
           <Text color="primaryText" size="sm">
             {ensName.data || shortenAddress(receiver)}
           </Text>
@@ -190,6 +191,19 @@ export function SwapConfirmationScreen(props: {
               try {
                 setStatus("pending");
 
+                trackPayEvent({
+                  event: "prompt_swap_approval",
+                  client: props.client,
+                  walletAddress: props.payer.account.address,
+                  walletType: props.payer.wallet.id,
+                  fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                  fromAmount: props.quote.swapDetails.fromAmountWei,
+                  toToken: props.quote.swapDetails.toToken.tokenAddress,
+                  toAmount: props.quote.swapDetails.toAmountWei,
+                  chainId: props.quote.swapDetails.fromToken.chainId,
+                  dstChainId: props.quote.swapDetails.toToken.chainId,
+                });
+
                 const tx = await sendTransaction({
                   account: props.payer.account,
                   transaction: props.quote.approval,
@@ -197,6 +211,19 @@ export function SwapConfirmationScreen(props: {
 
                 await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
                 // props.onQuoteFinalized(props.quote);
+
+                trackPayEvent({
+                  event: "swap_approval_success",
+                  client: props.client,
+                  walletAddress: props.payer.account.address,
+                  walletType: props.payer.wallet.id,
+                  fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                  fromAmount: props.quote.swapDetails.fromAmountWei,
+                  toToken: props.quote.swapDetails.toToken.tokenAddress,
+                  toAmount: props.quote.swapDetails.toAmountWei,
+                  chainId: props.quote.swapDetails.fromToken.chainId,
+                  dstChainId: props.quote.swapDetails.toToken.chainId,
+                });
 
                 setStep("swap");
                 setStatus("idle");
@@ -223,12 +250,38 @@ export function SwapConfirmationScreen(props: {
                   };
                 }
 
+                trackPayEvent({
+                  event: "prompt_swap_execution",
+                  client: props.client,
+                  walletAddress: props.payer.account.address,
+                  walletType: props.payer.wallet.id,
+                  fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                  fromAmount: props.quote.swapDetails.fromAmountWei,
+                  toToken: props.quote.swapDetails.toToken.tokenAddress,
+                  toAmount: props.quote.swapDetails.toAmountWei,
+                  chainId: props.quote.swapDetails.fromToken.chainId,
+                  dstChainId: props.quote.swapDetails.toToken.chainId,
+                });
+
                 const _swapTx = await sendTransaction({
                   account: props.payer.account,
                   transaction: tx,
                 });
 
                 await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
+
+                trackPayEvent({
+                  event: "swap_execution_success",
+                  client: props.client,
+                  walletAddress: props.payer.account.address,
+                  walletType: props.payer.wallet.id,
+                  fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                  fromAmount: props.quote.swapDetails.fromAmountWei,
+                  toToken: props.quote.swapDetails.toToken.tokenAddress,
+                  toAmount: props.quote.swapDetails.toAmountWei,
+                  chainId: props.quote.swapDetails.toToken.chainId,
+                  dstChainId: props.quote.swapDetails.toToken.chainId,
+                });
 
                 // do not add pending tx if the swap is part of fiat flow
                 if (!props.isFiatFlow) {

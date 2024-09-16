@@ -36,7 +36,7 @@ const contractId = "MintableERC20";
  *   ],
  * });
  * ```
- * @module MintableERC20
+ * @modules MintableERC20
  */
 export function module(
   params: EncodeBytesOnInstallParams & { publisher?: string },
@@ -82,7 +82,7 @@ export function module(
  *  account,
  * });
  * ```
- * @module MintableERC20
+ * @modules MintableERC20
  */
 export function install(options: {
   contract: ThirdwebContract;
@@ -102,6 +102,8 @@ export function install(options: {
  * Encodes the install data for the MintableERC20 module.
  * @param params - The parameters for the module.
  * @returns - The encoded data.
- * @module MintableERC20
+ * @modules MintableERC20
  */
-export const encodeInstall = encodeBytesOnInstallParams;
+export function encodeInstall(params: EncodeBytesOnInstallParams) {
+  return encodeBytesOnInstallParams(params);
+}

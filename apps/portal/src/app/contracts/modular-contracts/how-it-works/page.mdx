@@ -1,6 +1,4 @@
-import { DocImage } from "@doc";
-import { createMetadata, FeatureCard } from "@doc";
-import transformer from "./assets/transformer.png";
+import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	title: "thirdweb Modular Contracts",
@@ -12,17 +10,116 @@ export const metadata = createMetadata({
 	},
 });
 
-# How it works
+### How Do Modular Contracts Work
 
-A modular contract is composed of two types of contracts:
+Modular contracts are composed of two core components:
 
-- Core Contract: the foundational API to be customized by installing modules
-- Module Contract: implement a set of functionality to be enabled on a Core Contract upon installation
+1. **Core Contracts**
+2. **Module Contracts**
 
-As an analogy, think of a robot in which the torso is the Core with available sockets for attaching modules.
+Core contracts serve as the foundation upon which module contracts are installed. Module contracts are smart contracts that provide additional functionality and can be installed or uninstalled from a core contract. You can think of core and module contracts as building blocks, like Lego pieces.
 
-<DocImage src={transformer} />
+#### How Do Module Contracts Supply Additional Functionality?
 
-The torso has a particular shape and exposes sockets at fixed places, determining how modules will be attached. Similarly, a Core smart contract has a fixed API determining which modules are compatible with installation.
+Once installed, module contracts provide additional functionality by creating `fallback` and `callback` functions that the core contract can interact with through delegate calls.
 
-The *Modules*, e.g., a leg, arm, head, etc., give the robot (i.e., the modular contract) various capabilities.
+- **Fallback functions** are independent functions that can be called through the core contract.
+- **Callback functions** are dependent functions that must be called within the context of a core contract function. These functions enhance the core contract's functionality by executing additional logic either before or after the main core contract logic.
+
+#### How Are Module Contracts Installed onto Core Contracts?
+
+Like Lego pieces, modular contracts must "fit" together properly. If the pieces don't align—meaning the contracts aren't compatible—they cannot be installed together.
+
+This raises the question:
+
+#### What Makes a Module Contract Compatible with a Core Contract?
+
+Two factors determine compatibility: **interfaces** and **callback functions**.
+
+- If a module contract has a callback function that the core contract doesn’t support (or is already in use), it can’t be installed.
+- Similarly, if a module contract requires a certain interface to be supported by the core contract and it doesn’t have it, then it can’t be installed.
+
+#### How Core and Module Contracts Communicate
+
+Core contracts expose their supported callback functions and interfaces through two methods:
+
+- `getSupportedCallbackFunctions` - to expose the core contract’s supported callback functions.
+- `supportsInterface` - to expose the core contract’s supported interfaces.
+
+Module contracts also expose their supplied callback and fallback functions, along with the required interfaces, via the `getModuleConfig` function.
+
+#### Example: Core and Module Contract Interaction
+
+Let’s walk through an example with three contracts:
+- `ERC721Core`
+- `MintableModule`
+- `TransferableModule`
+
+##### `ERC721Core` Example
+
+The `ERC721Core` contract supports the `beforeMint` callback and the ERC-721 interface (`0x80ac58cd`).
+
+```solidity
+function getSupportedCallbackFunctions()
+	public
+	pure
+	override
+	returns (SupportedCallbackFunction[] memory supportedCallbackFunctions)
+{
+	supportedCallbackFunctions = new SupportedCallbackFunction ;
+	supportedCallbackFunctions[0] = SupportedCallbackFunction({
+		selector: BeforeMintCallback.beforeMint.selector,
+		mode: CallbackMode.REQUIRED
+	});
+}
+
+function supportsInterface(bytes4 interfaceId)
+	public
+	view
+	override(ERC721AUpgradeable, IERC721AUpgradeable, Core)
+	returns (bool)
+{
+	return interfaceId == 0x80ac58cd // ERC165 Interface ID for ERC721 
+		|| super.supportsInterface(interfaceId);
+}
+```
+
+##### `MintableModule` Example
+
+The `MintableModule` provides the `beforeMint` callback and requires the ERC-721 interface.
+
+```solidity
+function getModuleConfig() external pure override returns (ModuleConfig memory config) {
+	config.callbackFunctions = new CallbackFunction ;
+	config.callbackFunctions[0] = CallbackFunction(this.beforeMint.selector);
+	
+	config.requiredInterfaces = new bytes4 ;
+	config.requiredInterfaces[0] = 0x80ac58cd; // ERC721.
+}
+```
+
+##### `TransferableModule` Example
+
+The `TransferableModule` provides the `beforeTransfer` callback and also requires the ERC-721 interface.
+
+```solidity
+function getModuleConfig() external pure override returns (ModuleConfig memory config) {
+	config.callbackFunctions = new CallbackFunction ;
+	config.callbackFunctions[0] = CallbackFunction(this.beforeTransfer.selector);
+	
+	config.requiredInterfaces = new bytes4 ;
+	config.requiredInterfaces[0] = 0x80ac58cd; // ERC721.
+}
+```
+
+##### Compatibility in Action
+
+The `ERC721Core` contract supports the ERC-721 interface (`0x80ac58cd`), which is required by both the `MintableModule` and the `TransferableModule`.
+
+However, since `ERC721Core` only supports the `beforeMint` callback, only the `MintableModule` can be installed. The `TransferableModule`, which provides the `beforeTransfer` callback, cannot be installed because `ERC721Core` does not support it.
+
+---
+
+#### Conclusion
+
+Modular contracts work by allowing core contracts to interact with module contracts through delegate calls to `fallback` and `callback` functions. Compatibility between core and module contracts is determined by their supported interfaces and callback functions. This modular architecture provides flexibility, allowing functionality to be added or removed as needed, like assembling or disassembling Lego pieces.

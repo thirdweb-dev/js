@@ -50,6 +50,9 @@ export function updateTokenURI(
   });
 }
 
+/**
+ * @internal
+ */
 export async function getUpdateTokenParams(
   options: BaseTransactionOptions<UpdateTokenURIParams>,
 ): Promise<SetTokenURIParams> {

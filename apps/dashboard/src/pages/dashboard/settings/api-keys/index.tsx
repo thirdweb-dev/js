@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   AccountStatus,
   useAccount,
@@ -7,16 +8,18 @@ import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeys } from "components/settings/ApiKeys";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
-import { CreateApiKeyButton } from "components/settings/ApiKeys/Create";
-import { SettingsSidebar } from "core-ui/sidebar/settings";
+import { SettingsSidebarLayout } from "core-ui/sidebar/settings";
+import { PlusIcon } from "lucide-react";
 import { PageId } from "page-id";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
+import { LazyCreateAPIKeyDialog } from "../../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
   const keysQuery = useApiKeys();
   const meQuery = useAccount();
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const account = meQuery?.data;
   const apiKeys = keysQuery?.data;
@@ -36,6 +39,12 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
 
   return (
     <Flex flexDir="column" gap={8}>
+      <LazyCreateAPIKeyDialog
+        open={isCreateModalOpen}
+        onOpenChange={setIsCreateModalOpen}
+        wording="api-key"
+      />
+
       <Flex direction="column" gap={2}>
         <Flex
           justifyContent="space-between"
@@ -43,7 +52,10 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
           gap={4}
         >
           <h1 className="text-3xl font-semibold tracking-tight">API Keys</h1>
-          <CreateApiKeyButton />
+          <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
+            <PlusIcon className="size-4" />
+            Create API Key
+          </Button>
         </Flex>
 
         <p className="text-muted-foreground text-sm">
@@ -74,9 +86,12 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
 };
 
 SettingsApiKeysPage.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <SettingsSidebar activePage="apiKeys" />
-    {page}
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <SettingsSidebarLayout>{page}</SettingsSidebarLayout>
   </AppLayout>
 );
 

@@ -35,19 +35,19 @@ describe("sendEip712Transaction", () => {
       client: TEST_CLIENT,
       chain: zkSyncSepolia, // TODO make zksync fork chain work
       account: TEST_ACCOUNT_A,
-      contractId: "DropERC1155",
-      contractParams: [
-        TEST_ACCOUNT_A.address, // defaultAdmin
-        "test", // name
-        "", // symbol
-        "", // contractURI
-        [], // trustedForwarders
-        TEST_ACCOUNT_A.address, // saleRecipient
-        TEST_ACCOUNT_A.address, // royaltyRecipient
-        0n, // royaltyBps
-        0n, // platformFeeBps
-        TEST_ACCOUNT_A.address, // platformFeeRecipient
-      ],
+      contractId: "DropERC721",
+      contractParams: {
+        defaultAdmin: TEST_ACCOUNT_A.address, // defaultAdmin
+        name: "test", // name
+        symbol: "test", // symbol
+        contractURI: "", // contractURI
+        trustedForwarders: [], // trustedForwarders
+        saleRecipient: TEST_ACCOUNT_A.address, // saleRecipient
+        royaltyRecipient: TEST_ACCOUNT_A.address, // royaltyRecipient
+        royaltyBps: 0n, // royaltyBps
+        platformFeeBps: 0n, // platformFeeBps
+        platformFeeRecipient: TEST_ACCOUNT_A.address, // platformFeeRecipient
+      },
     });
     console.log("deployed address", address);
     expect(address).toBeDefined();

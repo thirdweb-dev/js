@@ -1,6 +1,6 @@
 import "server-only";
 
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import type { ChainCTAProps } from "./[chain_id]/(chainPage)/components/server/cta-card";
 import zeroGCTA from "./temp-assets/0gCTA.png";
 import zeroGBanner from "./temp-assets/0gLabsBanner.png";
@@ -89,7 +89,7 @@ export async function getChain(
   ]);
 
   if (!chain.data) {
-    redirect("/404");
+    notFound();
   }
   return {
     ...chain.data,
@@ -174,6 +174,8 @@ const chainMetaRecord = {
       "Ancient8 is building an ETH gaming Layer 2 built with OP Stack, offering a suite of Web3 gaming infrastructure tools that serve as the distribution and marketing channel for games globally. With Space3 Game Publishing Platform, Ancient8 Gaming Guild, Reneverse Web3 Ads engine, A8ID, and Gosu Network, Ancient8 is dedicated to onboard millions of gamers to Web3 gaming, while providing unparalleled support to game developers looking to reach more players. Ancient8’s products have helped 100+ Web3 games and 200K+ users better navigate Web3.\n\nAncient8 has raised $10M in total financing from leading investors including Pantera, Dragonfly, Hashed, Makers Fund, Mechanism, Coinbase, IOSG, Jump and Animoca.",
     // TODO: add CTA
     headerImgUrl: ancient8Banner.src,
+    cta: OP_CTA,
+    gasSponsored: true,
   },
   // mantle
   5000: {
@@ -185,6 +187,7 @@ const chainMetaRecord = {
       buttonText: "Learn More",
       buttonLink: "https://x.com/0xMantleDevs",
     },
+    gasSponsored: true,
   },
   // rootstock
   30: {
@@ -275,12 +278,8 @@ const chainMetaRecord = {
     headerImgUrl: thirdwebBanner.src,
     about:
       "Monetize your passion, your way. Discover the freedom to grow with our creator-focused platform.",
-    cta: {
-      backgroundImageUrl: thirdwebCTA.src,
-      title: "",
-      buttonLink: "https://www.donatuz.org/",
-      buttonText: "Learn more",
-    },
+    cta: OP_CTA,
+    gasSponsored: true,
   },
   //Fuse
   122: {

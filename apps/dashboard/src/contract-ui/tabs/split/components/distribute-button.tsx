@@ -75,7 +75,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
     // we still want to show the button, so we'll just show the mismatch button
     return (
       <MismatchButton
-        isLoading={mutation.isLoading}
+        isLoading={mutation.isPending}
         colorScheme="primary"
         onClick={distributeFunds}
         {...restButtonProps}
@@ -96,7 +96,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
   return (
     <TransactionButton
       transactionCount={numTransactions}
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
       colorScheme="primary"
       onClick={distributeFunds}
       {...restButtonProps}

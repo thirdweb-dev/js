@@ -1,5 +1,5 @@
 import { getTeams } from "@/api/team";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export default async function TeamRootPage() {
   // get all teams, then go to the first team
@@ -7,7 +7,7 @@ export default async function TeamRootPage() {
 
   const firstTeam = teams[0];
   if (!firstTeam) {
-    return redirect("/404");
+    notFound();
   }
   redirect(`/team/${firstTeam.slug}`);
 }

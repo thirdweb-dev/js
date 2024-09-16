@@ -1,5 +1,4 @@
-
-import { createMetadata } from "@doc";
+import { createMetadata, GithubButtonLink } from "@doc";
 
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
@@ -11,33 +10,34 @@ export const metadata = createMetadata({
     },
 });
 
-# Mintable ERC-20
+# MintableERC20
 
 ## Description
 
-The `MintableERC20` contract is an module that provides minting functionality for ERC-20 tokens. It includes features for requesting mints via signatures, setting and getting sales configurations. This contract ensures secure and controlled minting processes with the possibility of integrating primary sales.
+The `MintableERC20` contract is a module that provides minting functionalities for ERC-20 tokens. This module includes features such as minting with and without signatures, and configuration for primary sales recipients.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/minting/MintableERC20.sol" />
 
 ## Callback Functions
 
-| Function             | Description                                                                |
-|----------------------|----------------------------------------------------------------------------|
-| `beforeMintERC20`    | Callback function for the `ERC20Core.mint` function. Executes actions before minting tokens, including verification. |
+| Function                          | Description                                                                                                     |
+|-----------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| `beforeMintERC20`                 | Callback function that checks the mint authorization before minting ERC-20 tokens.                              |
+| `beforeMintWithSignatureERC20`    | Callback function that verifies a minting request with a signature and processes the mint accordingly.          |
 
 ## Fallback Functions
 
-| Function                | Description                                                                             |
-|-------------------------|-----------------------------------------------------------------------------------------|
-| `getSaleConfig`         | Returns the sale configuration for a token, including the primary sale recipient.       |
-| `setSaleConfig`         | Sets the sale configuration for a token, including the primary sale recipient. Requires manager role. |
-| `eip712Domain`          | Returns the EIP-712 domain details.                                                     |
+| Function                 | Description                                                              |
+|--------------------------|--------------------------------------------------------------------------|
+| `getSaleConfig`          | Returns the sale configuration for a token, including the primary sale recipient. |
+| `setSaleConfig`          | Sets the sale configuration for a token, including the primary sale recipient. Requires manager role.       |
 
 ## Required Interfaces
 
 | Interface  | ID          |
 |------------|-------------|
-| `ERC-20`  | `0x36372b07`|
+| `ERC-20`   | `0x36372b07`|
 
-## Supported Interfaces
+## Installation Callback
 
-(No supported interfaces for this contract)
-
+This module uses an installation callback to set up the initial parameters such as the primary sale recipient.

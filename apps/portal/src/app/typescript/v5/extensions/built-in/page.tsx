@@ -1,19 +1,25 @@
 import { TBody, Table, Td, Th, Tr } from "@/components/Document/Table";
 import Link from "next/link";
 import { Heading, Paragraph } from "../../../../../components/Document";
+import { fetchTypeScriptDoc } from "../../../../references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
+import { getCustomTag } from "../../../../references/components/TDoc/utils/getSidebarLinkgroups";
 
 export default async function ExtensionPage() {
-  const doc = await import(
-    "../../../../../../../../packages/thirdweb/typedoc/documentation.json"
-  );
-  const toExclude = [""];
+  const docs = await fetchTypeScriptDoc("v5");
   const extensions = [
     ...new Set(
-      doc.children
-        .filter((item: { name: string }) => item.name.startsWith("extensions/"))
-        .map((item: { name: string }) => item.name.split("/")[1]),
+      docs.functions
+        ?.filter((f) => {
+          const [extension] = getCustomTag(f) || [];
+          return extension === "@extension";
+        })
+        ?.map((f) => {
+          const [, extensionName] = getCustomTag(f) || [];
+          return extensionName;
+        })
+        .filter((item) => item !== undefined) || [],
     ),
-  ].filter((name) => !toExclude.includes(name as string)) as string[];
+  ];
 
   const overrides: Record<string, { name?: string; description?: string }> = {
     common: {
@@ -50,19 +56,16 @@ export default async function ExtensionPage() {
           {extensions.map((item) => {
             return (
               <Tr key={item}>
-                <Td>{overrides[item]?.name ?? item.toUpperCase()}</Td>
+                <Td>{overrides[item]?.name ?? item}</Td>
                 <Td>
                   <Link
-                    href={`/references/typescript/v5/functions#${item}`}
+                    href={`/references/typescript/v5/functions#${item.toLowerCase()}`}
                     className="text-accent-500 hover:text-f-100 flex flex-nowrap items-center gap-4 whitespace-nowrap font-medium transition-colors"
                   >
-                    thirdweb/extensions/{item}
+                    thirdweb/extensions/{item.toLowerCase()}
                   </Link>
                 </Td>
-                <Td>
-                  {overrides[item]?.description ??
-                    `${item.toUpperCase()} extensions`}
-                </Td>
+                <Td>{overrides[item]?.description ?? `${item} extensions`}</Td>
               </Tr>
             );
           })}

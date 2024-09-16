@@ -4,6 +4,7 @@ export {
   waitForUserOpReceipt,
   createUnsignedUserOp,
   signUserOp,
+  createAndSignUserOp,
 } from "../../wallets/smart/lib/userop.js";
 
 export {

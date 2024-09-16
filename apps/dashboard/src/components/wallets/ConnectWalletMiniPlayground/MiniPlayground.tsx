@@ -1,3 +1,5 @@
+import { Checkbox } from "@/components/ui/checkbox";
+import { thirdwebClient } from "@/constants/client";
 /* eslint-disable @next/next/no-img-element */
 import {
   Box,
@@ -30,8 +32,6 @@ import {
   inAppWallet,
 } from "thirdweb/wallets";
 import { TrackedLink } from "tw-components";
-import { Checkbox } from "../../../@/components/ui/checkbox";
-import { thirdwebClient } from "../../../@/constants/client";
 import { FormItem } from "../ConnectWalletPlayground/FormItem";
 import { ModalSizeButton } from "../ConnectWalletPlayground/ModalSizeButton";
 import { ThemeButton } from "../ConnectWalletPlayground/ThemeButton";
@@ -58,15 +58,17 @@ type WalletIdSubset =
   | "io.zerion.wallet";
 type WalletRecord = Record<WalletIdSubset, boolean>;
 
-export function usePlaygroundWallets() {
+function usePlaygroundWallets() {
   const [socialOptions, setSocialOptions] = useState<
     Record<InAppWalletAuth, boolean>
   >({
+    line: false,
+    x: true,
     google: true,
     discord: true,
     telegram: true,
     farcaster: true,
-    facebook: true,
+    facebook: false,
     apple: false,
     email: true,
     passkey: true,

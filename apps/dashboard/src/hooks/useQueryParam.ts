@@ -1,10 +1,13 @@
-import { useRouter } from "next/router";
-import { getSingleQueryValue } from "utils/router";
+import { useSearchParams } from "next/navigation";
+import {} from "next/router";
 
+/**
+ * @deprecated use `useSearchParams` from `next/navigation` instead
+ */
 export function useSingleQueryParam<T extends string>(
   key: string,
 ): T | undefined {
-  const { query } = useRouter();
+  const searchParams = useSearchParams();
 
-  return getSingleQueryValue(query, key) as T;
+  return searchParams?.get(key) as T | undefined;
 }

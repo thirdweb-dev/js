@@ -35,6 +35,8 @@ function getOauthLoginPath(
     case "google":
     case "farcaster":
     case "telegram":
+    case "line":
+    case "x":
     case "discord":
       return getLoginUrl({ authOption, client, ecosystem });
     default:

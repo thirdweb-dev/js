@@ -3,7 +3,7 @@ import type { Abi } from "abitype";
 /**
  * @contract
  */
-export type PublishedMetadata = {
+export type CompilerMetadata = {
   name: string;
   abi: Abi;
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later by updating this type to match the specs here: https://docs.soliditylang.org/en/latest/metadata.html
@@ -27,7 +27,7 @@ export type PublishedMetadata = {
  * @internal
  */
 // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-export function formatCompilerMetadata(metadata: any): PublishedMetadata {
+export function formatCompilerMetadata(metadata: any): CompilerMetadata {
   const compilationTarget = metadata.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
   const name = compilationTarget[targets[0] as keyof typeof compilationTarget];

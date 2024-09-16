@@ -1,10 +1,8 @@
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
 import { computeDeploymentAddress } from "./compute-deployment-address.js";
-import {
-  computeDeploymentInfoFromContractId,
-  computeDeploymentInfoFromMetadata,
-} from "./compute-published-contract-deploy-info.js";
+import { computeDeploymentInfoFromMetadata } from "./compute-published-contract-deploy-info.js";
 import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
 
 /**
@@ -20,10 +18,6 @@ import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
  * ```ts
  * import { computePublishedContractAddress } from "thirdweb/deploys";
  *
- * const contractMetadata = await fetchPublishedContractMetadata({
- *  client,
- *  chain,
- * });
  * const address = await computePublishedContractAddress({
  *   client,
  *   chain,
@@ -38,13 +32,24 @@ export async function computePublishedContractAddress(args: {
   client: ThirdwebClient;
   chain: Chain;
   contractId: string;
-  constructorParams: unknown[];
+  constructorParams?: Record<string, unknown>;
   publisher?: string;
   version?: string;
   salt?: string;
 }): Promise<string> {
-  const info = await computeDeploymentInfoFromContractId(args);
-  return computeDeploymentAddress(info);
+  const contractMetadata = await fetchPublishedContractMetadata({
+    client: args.client,
+    contractId: args.contractId,
+    publisher: args.publisher,
+    version: args.version,
+  });
+  return computeContractAddress({
+    client: args.client,
+    chain: args.chain,
+    contractMetadata,
+    constructorParams: args.constructorParams,
+    salt: args.salt,
+  });
 }
 
 /**
@@ -54,7 +59,7 @@ export async function computeContractAddress(args: {
   client: ThirdwebClient;
   chain: Chain;
   contractMetadata: FetchDeployMetadataResult;
-  constructorParams: unknown[];
+  constructorParams?: Record<string, unknown>;
   salt?: string;
 }): Promise<string> {
   const info = await computeDeploymentInfoFromMetadata(args);

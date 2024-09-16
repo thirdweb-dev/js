@@ -1,31 +1,27 @@
-import type {
-  AbiConstructor,
-  AbiParameter,
-  AbiParametersToPrimitiveTypes,
-} from "abitype";
+import type { Abi, AbiConstructor } from "abitype";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
+import { normalizeFunctionParams } from "../../utils/abi/normalizeFunctionParams.js";
+import { computeDeploymentAddress } from "../../utils/any-evm/compute-deployment-address.js";
+import { computeDeploymentInfoFromBytecode } from "../../utils/any-evm/compute-published-contract-deploy-info.js";
+import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
 import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
 import { type Hex, isHex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChain } from "../../utils/types.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
+import { getContract } from "../contract.js";
 
 /**
  * @extension DEPLOY
  */
-export type PrepareDirectDeployTransactionOptions<
-  TConstructor extends AbiConstructor,
-  TParams = AbiParametersToPrimitiveTypes<TConstructor["inputs"]>,
-> = Prettify<
+export type PrepareDirectDeployTransactionOptions = Prettify<
   ClientAndChain & {
-    constructorAbi: TConstructor;
+    abi: Abi;
     bytecode: Hex;
-    constructorParams: TParams extends readonly AbiParameter[]
-      ? TParams
-      : readonly unknown[];
+    constructorParams?: Record<string, unknown>;
   }
 >;
 
@@ -51,13 +47,16 @@ export type PrepareDirectDeployTransactionOptions<
  * ```
  * @extension DEPLOY
  */
-export function prepareDirectDeployTransaction<
-  const TConstructor extends AbiConstructor,
->(options: PrepareDirectDeployTransactionOptions<TConstructor>) {
+export function prepareDirectDeployTransaction(
+  options: PrepareDirectDeployTransactionOptions,
+) {
   const bytecode = ensureBytecodePrefix(options.bytecode);
   if (!isHex(bytecode)) {
     throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
   }
+  const constructorAbi = options.abi.find(
+    (abi) => abi.type === "constructor",
+  ) as AbiConstructor | undefined;
   // prepare the tx
   return prepareTransaction({
     chain: options.chain,
@@ -66,8 +65,8 @@ export function prepareDirectDeployTransaction<
     data: concatHex([
       bytecode,
       encodeAbiParameters(
-        options.constructorAbi.inputs ?? [], // Leave an empty array if there's no constructor
-        options.constructorParams,
+        constructorAbi?.inputs || [], // Leave an empty array if there's no constructor
+        normalizeFunctionParams(constructorAbi, options.constructorParams),
       ),
     ]),
   });
@@ -78,6 +77,9 @@ export function prepareDirectDeployTransaction<
  * @param options - the deploy options
  * @returns - a promise that resolves to the deployed contract address
  * @example
+ *
+ * ## Deploying a regular contract from ABI and bytecode
+ *
  * ```ts
  * import { deployContract } from "thirdweb/deployContract";
  *
@@ -85,20 +87,71 @@ export function prepareDirectDeployTransaction<
  *  client,
  *  chain,
  *  bytecode: "0x...",
- *  constructorAbi: {
- *    inputs: [{ type: "uint256", name: "value" }],
- *    type: "constructor",
+ *  abi: contractAbi,
+ *  constructorParams: {
+ *    param1: "value1",
+ *    param2: 123,
  *  },
- *  constructorParams: [123],
+ *  salt, // optional: salt enables deterministic deploys
+ * });
+ * ```
+ *
+ * ## Deploying a contract deterministically
+ *
+ * ```ts
+ * import { deployContract } from "thirdweb/deployContract";
+ *
+ * const address = await deployContract({
+ *  client,
+ *  chain,
+ *  bytecode: "0x...",
+ *  abi: contractAbi,
+ *  constructorParams: {
+ *    param1: "value1",
+ *    param2: 123,
+ *  },
+ *  salt, // passing a salt will enable deterministic deploys
  * });
  * ```
  * @extension DEPLOY
  */
-export async function deployContract<const TConstructor extends AbiConstructor>(
-  options: PrepareDirectDeployTransactionOptions<TConstructor> & {
+export async function deployContract(
+  options: PrepareDirectDeployTransactionOptions & {
     account: Account;
+    salt?: string;
   },
 ) {
+  if (options.salt !== undefined) {
+    // Deploy with CREATE2 if salt is provided
+    const info = await computeDeploymentInfoFromBytecode(options);
+    const address = computeDeploymentAddress({
+      bytecode: options.bytecode,
+      encodedArgs: info.encodedArgs,
+      create2FactoryAddress: info.create2FactoryAddress,
+      salt: options.salt,
+    });
+    const isDeployed = await isContractDeployed(
+      getContract({
+        client: options.client,
+        chain: options.chain,
+        address,
+      }),
+    );
+    if (isDeployed) {
+      throw new Error(`Contract already deployed at address: ${address}`);
+    }
+    await sendAndConfirmTransaction({
+      account: options.account,
+      transaction: prepareTransaction({
+        chain: options.chain,
+        client: options.client,
+        to: info.create2FactoryAddress,
+        data: info.initBytecodeWithsalt,
+      }),
+    });
+    return address;
+  }
+
   const deployTx = prepareDirectDeployTransaction(options);
   const receipt = await sendAndConfirmTransaction({
     account: options.account,

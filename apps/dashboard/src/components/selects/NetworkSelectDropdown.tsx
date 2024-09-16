@@ -63,7 +63,7 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
         <SelectValue />
       </SelectTrigger>
 
-      <SelectContent>
+      <SelectContent align="center" className="rounded-lg shadow-lg">
         <SelectItem value="all-chains">
           <div className="flex items-center gap-2 py-1" data-all-chains>
             <ChainIcon ipfsSrc={undefined} size={24} />

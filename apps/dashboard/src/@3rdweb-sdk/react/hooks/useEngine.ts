@@ -8,12 +8,6 @@ import { engineKeys } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useLoggedInUser } from "./useLoggedInUser";
 
-export function useEngineConnectedInstance() {
-  const [instance, setInstance] = useState<EngineInstance | null>(null);
-
-  return { instance, setInstance };
-}
-
 export type EngineTier = "STARTER" | "PREMIUM" | "ENTERPRISE";
 
 // Engine instances
@@ -116,7 +110,7 @@ export function useEngineBackendWallets(instance: string) {
   });
 }
 
-export interface EngineSystemHealth {
+interface EngineSystemHealth {
   status: string;
   engineVersion?: string;
   features?: string[];
@@ -143,7 +137,7 @@ export function useEngineSystemHealth(
   });
 }
 
-export interface EngineSystemQueueMetrics {
+interface EngineSystemQueueMetrics {
   result: {
     queued: number;
     pending: number;
@@ -197,24 +191,26 @@ interface UpdateVersionInput {
 }
 
 export function useEngineUpdateVersion() {
-  return useMutation(async (input: UpdateVersionInput) => {
-    invariant(input.engineId, "engineId is required");
+  return useMutation({
+    mutationFn: async (input: UpdateVersionInput) => {
+      invariant(input.engineId, "engineId is required");
 
-    const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/update-version`, {
-      method: "POST",
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/update-version`, {
+        method: "POST",
 
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        engineId: input.engineId,
-      }),
-    });
-    // we never use the response body
-    res.body?.cancel();
-    if (!res.ok) {
-      throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
-    }
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          engineId: input.engineId,
+        }),
+      });
+      // we never use the response body
+      res.body?.cancel();
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+    },
   });
 }
 
@@ -222,8 +218,8 @@ export function useEngineRemoveFromDashboard() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutation(
-    async (instanceId: string) => {
+  return useMutation({
+    mutationFn: async (instanceId: string) => {
       invariant(instanceId, "instance is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/${instanceId}`, {
@@ -235,14 +231,13 @@ export function useEngineRemoveFromDashboard() {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(
-          engineKeys.instances(user?.address as string),
-        );
-      },
+
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.instances(user?.address as string),
+      });
     },
-  );
+  });
 }
 
 export interface RemoveCloudHostedInput {
@@ -255,8 +250,12 @@ export function useEngineRemoveCloudHosted() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutation(
-    async ({ instanceId, reason, feedback }: RemoveCloudHostedInput) => {
+  return useMutation({
+    mutationFn: async ({
+      instanceId,
+      reason,
+      feedback,
+    }: RemoveCloudHostedInput) => {
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/engine/${instanceId}/remove-cloud-hosted`,
         {
@@ -274,14 +273,13 @@ export function useEngineRemoveCloudHosted() {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(
-          engineKeys.instances(user?.address as string),
-        );
-      },
+
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.instances(user?.address as string),
+      });
     },
-  );
+  });
 }
 
 export interface EditEngineInstanceInput {
@@ -294,8 +292,8 @@ export function useEngineEditInstance() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutation(
-    async ({ instanceId, name, url }: EditEngineInstanceInput) => {
+  return useMutation({
+    mutationFn: async ({ instanceId, name, url }: EditEngineInstanceInput) => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/${instanceId}`, {
         method: "PUT",
 
@@ -310,14 +308,13 @@ export function useEngineEditInstance() {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(
-          engineKeys.instances(user?.address as string),
-        );
-      },
+
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.instances(user?.address as string),
+      });
     },
-  );
+  });
 }
 
 export type Transaction = {
@@ -592,7 +589,9 @@ export function useEngineAddKeypair(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.keypairs(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.keypairs(instance),
+        });
       },
     },
   );
@@ -625,7 +624,9 @@ export function useEngineRemoveKeypair(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.keypairs(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.keypairs(instance),
+        });
       },
     },
   );
@@ -690,7 +691,9 @@ export function useEngineCreateRelayer(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.relayers(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.relayers(instance),
+        });
       },
     },
   );
@@ -723,7 +726,9 @@ export function useEngineRevokeRelayer(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.relayers(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.relayers(instance),
+        });
       },
     },
   );
@@ -761,7 +766,9 @@ export function useEngineUpdateRelayer(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.relayers(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.relayers(instance),
+        });
       },
     },
   );
@@ -839,7 +846,9 @@ export function useEngineSetWalletConfig(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.walletConfig(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.walletConfig(instance),
+        });
       },
     },
   );
@@ -872,9 +881,9 @@ export function useEngineCreateBackendWallet(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(
-          engineKeys.backendWallets(instance),
-        );
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.backendWallets(instance),
+        });
       },
     },
   );
@@ -908,9 +917,9 @@ export function useEngineUpdateBackendWallet(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(
-          engineKeys.backendWallets(instance),
-        );
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.backendWallets(instance),
+        });
       },
     },
   );
@@ -959,9 +968,9 @@ export function useEngineImportBackendWallet(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(
-          engineKeys.backendWallets(instance),
-        );
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.backendWallets(instance),
+        });
       },
     },
   );
@@ -990,7 +999,9 @@ export function useEngineGrantPermissions(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.permissions(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.permissions(instance),
+        });
       },
     },
   );
@@ -1023,7 +1034,9 @@ export function useEngineRevokePermissions(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.permissions(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.permissions(instance),
+        });
       },
     },
   );
@@ -1056,7 +1069,9 @@ export function useEngineCreateAccessToken(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.accessTokens(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.accessTokens(instance),
+        });
       },
     },
   );
@@ -1089,7 +1104,9 @@ export function useEngineRevokeAccessToken(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.accessTokens(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.accessTokens(instance),
+        });
       },
     },
   );
@@ -1123,7 +1140,9 @@ export function useEngineUpdateAccessToken(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.accessTokens(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.accessTokens(instance),
+        });
       },
     },
   );
@@ -1158,7 +1177,9 @@ export function useEngineCreateWebhook(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.webhooks(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.webhooks(instance),
+        });
       },
     },
   );
@@ -1191,7 +1212,9 @@ export function useEngineRevokeWebhook(instance: string) {
     },
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.webhooks(instance));
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.webhooks(instance),
+        });
       },
     },
   );
@@ -1208,31 +1231,33 @@ type SendTokensInput = {
 export function useEngineSendTokens(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useMutation(async (input: SendTokensInput) => {
-    invariant(instance, "instance is required");
+  return useMutation({
+    mutationFn: async (input: SendTokensInput) => {
+      invariant(instance, "instance is required");
 
-    const res = await fetch(
-      `${instance}backend-wallet/${input.chainId}/transfer`,
-      {
-        method: "POST",
-        headers: {
-          ...getEngineRequestHeaders(token),
-          "x-backend-wallet-address": input.fromAddress,
+      const res = await fetch(
+        `${instance}backend-wallet/${input.chainId}/transfer`,
+        {
+          method: "POST",
+          headers: {
+            ...getEngineRequestHeaders(token),
+            "x-backend-wallet-address": input.fromAddress,
+          },
+          body: JSON.stringify({
+            to: input.toAddress,
+            amount: input.amount.toString(),
+            currencyAddress: input.currencyAddress,
+          }),
         },
-        body: JSON.stringify({
-          to: input.toAddress,
-          amount: input.amount.toString(),
-          currencyAddress: input.currencyAddress,
-        }),
-      },
-    );
-    const json = await res.json();
+      );
+      const json = await res.json();
 
-    if (json.error) {
-      throw new Error(json.error.message);
-    }
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
 
-    return json.result;
+      return json.result;
+    },
   });
 }
 
@@ -1263,8 +1288,8 @@ export function useEngineSetCorsConfiguration(instance: string) {
   const queryClient = useQueryClient();
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useMutation(
-    async (input: SetCorsUrlInput) => {
+  return useMutation({
+    mutationFn: async (input: SetCorsUrlInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}configuration/cors`, {
@@ -1280,12 +1305,13 @@ export function useEngineSetCorsConfiguration(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.corsUrls(instance));
-      },
+
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.corsUrls(instance),
+      });
     },
-  );
+  });
 }
 
 export function useEngineIpAllowlistConfiguration(instance: string) {
@@ -1320,8 +1346,8 @@ export function useEngineSetIpAllowlistConfiguration(instance: string) {
   const queryClient = useQueryClient();
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useMutation(
-    async (input: SetIpAllowlistInput) => {
+  return useMutation({
+    mutationFn: async (input: SetIpAllowlistInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}configuration/ip-allowlist`, {
@@ -1337,12 +1363,13 @@ export function useEngineSetIpAllowlistConfiguration(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(engineKeys.ipAllowlist(instance));
-      },
+
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.ipAllowlist(instance),
+      });
     },
-  );
+  });
 }
 
 export interface EngineContractSubscription {
@@ -1392,8 +1419,8 @@ export function useEngineAddContractSubscription(instance: string) {
   const queryClient = useQueryClient();
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useMutation(
-    async (input: AddContractSubscriptionInput) => {
+  return useMutation({
+    mutationFn: async (input: AddContractSubscriptionInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}contract-subscriptions/add`, {
@@ -1409,17 +1436,16 @@ export function useEngineAddContractSubscription(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(
-          engineKeys.contractSubscriptions(instance),
-        );
-      },
+
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.contractSubscriptions(instance),
+      });
     },
-  );
+  });
 }
 
-export interface RemoveContractSubscriptionInput {
+interface RemoveContractSubscriptionInput {
   contractSubscriptionId: string;
 }
 
@@ -1427,8 +1453,8 @@ export function useEngineRemoveContractSubscription(instance: string) {
   const queryClient = useQueryClient();
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useMutation(
-    async (input: RemoveContractSubscriptionInput) => {
+  return useMutation({
+    mutationFn: async (input: RemoveContractSubscriptionInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}contract-subscriptions/remove`, {
@@ -1444,14 +1470,13 @@ export function useEngineRemoveContractSubscription(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(
-          engineKeys.contractSubscriptions(instance),
-        );
-      },
+
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.contractSubscriptions(instance),
+      });
     },
-  );
+  });
 }
 
 export function useEngineSubscriptionsLastBlock(
@@ -1481,7 +1506,7 @@ export function useEngineSubscriptionsLastBlock(
   });
 }
 
-export interface EngineResourceMetrics {
+interface EngineResourceMetrics {
   error: string;
   data: {
     cpu: number;

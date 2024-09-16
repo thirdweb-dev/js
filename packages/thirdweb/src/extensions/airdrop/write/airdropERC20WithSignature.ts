@@ -23,13 +23,13 @@ import { airdropERC20WithSignature as generatedAirdropERC20WithSignature } from 
  * });
  * await sendTransaction({ transaction, account });
  * ```
- * @extension Airdrop
+ * @extension AIRDROP
  * @returns A promise that resolves to the transaction result.
  */
 export const airdropERC20WithSignature = generatedAirdropERC20WithSignature;
 
 /**
- * @extension Airdrop
+ * @extension AIRDROP
  */
 export type GenerateAirdropERC20SignatureOptions = {
   account: Account;
@@ -67,7 +67,7 @@ export type GenerateAirdropERC20SignatureOptions = {
  * });
  * await sendTransaction({ transaction, account });
  * ```
- * @extension Airdrop
+ * @extension AIRDROP
  * @returns A promise that resolves to the req and signature.
  */
 export async function generateAirdropSignatureERC20(

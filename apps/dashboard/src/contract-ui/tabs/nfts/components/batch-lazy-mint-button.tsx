@@ -11,14 +11,14 @@ import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 
 interface BatchLazyMintButtonProps {
-  isRevealable: boolean;
+  canCreateDelayedRevealBatch: boolean;
   contract: ThirdwebContract;
   isErc721: boolean;
 }
 
 export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   contract,
-  isRevealable,
+  canCreateDelayedRevealBatch,
   isErc721,
 }) => {
   const trackEvent = useTrack();
@@ -112,7 +112,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
             }
           }}
           nextTokenIdToMint={nextTokenIdToMintQuery.data || 0n}
-          isRevealable={isRevealable}
+          canCreateDelayedRevealBatch={canCreateDelayedRevealBatch}
         />
       </Drawer>
       <Button

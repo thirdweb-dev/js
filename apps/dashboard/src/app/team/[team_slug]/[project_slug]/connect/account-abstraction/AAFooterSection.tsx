@@ -1,4 +1,4 @@
-import { TrackedLinkTW } from "../../../../../../@/components/ui/tracked-link";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 
 type LinkInfo = { label: string; href: string; trackingLabel: string };
 

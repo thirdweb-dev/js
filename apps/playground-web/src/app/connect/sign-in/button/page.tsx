@@ -14,7 +14,7 @@ const defaultInAppLoginMethods: ConnectPlaygroundOptions["inAppWallet"]["methods
     "telegram",
     "farcaster",
     "email",
-    "facebook",
+    "x",
     "passkey",
     "phone",
   ];
@@ -50,7 +50,9 @@ const defaultConnectOptions: ConnectPlaygroundOptions = {
   requireApproval: false,
 };
 
-export default function Page() {
+export default function Page({
+  searchParams,
+}: { searchParams: { tab: string } }) {
   const [connectOptions, setConnectOptions] =
     useState<ConnectPlaygroundOptions>(defaultConnectOptions);
 
@@ -80,7 +82,10 @@ export default function Page() {
             />
           </div>
 
-          <RightSection connectOptions={connectOptions} />
+          <RightSection
+            tab={searchParams.tab}
+            connectOptions={connectOptions}
+          />
         </div>
       </div>
     </ThirdwebProvider>

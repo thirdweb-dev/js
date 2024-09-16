@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
@@ -135,7 +136,6 @@ export const TransactionTimeline = ({
             <StepIndicator>
               <StepStatus complete={<FiCheck />} active={<FiCheck />} />
             </StepIndicator>
-
             <Flex justify="space-between" w="full" mt={-1}>
               <Stack>
                 {isFilled ? (
@@ -151,7 +151,6 @@ export const TransactionTimeline = ({
                 </Text>
               )}
             </Flex>
-
             <StepSeparator />
           </Step>
         );
@@ -234,9 +233,8 @@ const CancelTransactionButton = ({
               </FormControl>
               <FormControl>
                 <FormLabel>From</FormLabel>
-                <AddressCopyButton
+                <WalletAddress
                   address={transaction.fromAddress ?? ""}
-                  size="xs"
                   shortenAddress={false}
                 />
               </FormControl>

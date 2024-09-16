@@ -27,7 +27,7 @@ interface OpCreditsGrantedModalProps {
   creditValue: number;
 }
 
-export const OpCreditsGrantedModal: React.FC<OpCreditsGrantedModalProps> = ({
+const OpCreditsGrantedModal: React.FC<OpCreditsGrantedModalProps> = ({
   setSawYouGotCredits,
   creditValue,
 }) => {

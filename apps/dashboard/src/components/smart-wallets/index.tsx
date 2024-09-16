@@ -1,22 +1,23 @@
 "use state";
 
-import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import { TabButtons } from "@/components/ui/tabs";
+import type { ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { TabButtons } from "../../@/components/ui/tabs";
 import { AccountFactories } from "./AccountFactories";
 import { SponsorshipPolicies } from "./SponsorshipPolicies";
 
 interface SmartWalletsProps {
-  apiKey: ApiKey;
+  apiKeyServices: ApiKeyService[];
   trackingCategory: string;
-  defaultTabIndex?: number;
 }
 
 export const SmartWallets: React.FC<SmartWalletsProps> = ({
-  apiKey,
+  apiKeyServices,
   trackingCategory,
-  defaultTabIndex,
 }) => {
+  const searchParams = useSearchParams();
+  const defaultTabIndex = Number.parseInt(searchParams?.get("tab") || "0");
   const [selectedTab, setSelectedTab] = useState<"factories" | "config">(
     defaultTabIndex === 1 ? "config" : "factories",
   );
@@ -48,7 +49,7 @@ export const SmartWallets: React.FC<SmartWalletsProps> = ({
 
       {selectedTab === "config" && (
         <SponsorshipPolicies
-          apiKey={apiKey}
+          apiKeyServices={apiKeyServices}
           trackingCategory={trackingCategory}
         />
       )}

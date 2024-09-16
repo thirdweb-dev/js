@@ -56,7 +56,7 @@ type SubmitType = DelayedSubmit | InstantSubmit;
 
 interface BatchLazyMintEVMProps {
   nextTokenIdToMint: bigint;
-  isRevealable: boolean;
+  canCreateDelayedRevealBatch: boolean;
   onSubmit: (formData: SubmitType) => Promise<unknown>;
 }
 
@@ -281,7 +281,10 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
                   </Heading>
                 </HStack>
               </Flex>
-              <SelectReveal form={form} isRevealable={props.isRevealable} />
+              <SelectReveal
+                form={form}
+                canCreateDelayedRevealBatch={props.canCreateDelayedRevealBatch}
+              />
               {form.watch("revealType") && (
                 <>
                   <Checkbox {...form.register("shuffle")} mt={3}>
@@ -331,10 +334,13 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
 
 interface SelectRevealProps {
   form: ReturnType<typeof useBatchLazyMintForm>;
-  isRevealable: boolean;
+  canCreateDelayedRevealBatch: boolean;
 }
 
-const SelectReveal: React.FC<SelectRevealProps> = ({ form, isRevealable }) => {
+const SelectReveal: React.FC<SelectRevealProps> = ({
+  form,
+  canCreateDelayedRevealBatch,
+}) => {
   const [show, setShow] = useState(false);
 
   const imageUrl = useImageFileOrUrl(form.watch("placeHolder.image"));
@@ -356,7 +362,7 @@ const SelectReveal: React.FC<SelectRevealProps> = ({ form, isRevealable }) => {
           description="Collectors will mint your placeholder image, then you reveal at a later time"
           isActive={form.watch("revealType") === "delayed"}
           onClick={() => form.setValue("revealType", "delayed")}
-          disabled={!isRevealable}
+          disabled={!canCreateDelayedRevealBatch}
           disabledText="This contract doesn't implement Delayed Reveal"
         />
       </Flex>

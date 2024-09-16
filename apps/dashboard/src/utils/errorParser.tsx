@@ -54,6 +54,16 @@ function parseError(error: unknown): string | JSX.Element {
     return error.message;
   }
 
+  // handle rpc errors
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof error.message === "string"
+  ) {
+    return error.message;
+  }
+
   // everything that falls through here should be logged and sent to posthog
   console.error("unknown error", error);
   posthog.capture("unknown_error", { error });

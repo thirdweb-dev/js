@@ -9,7 +9,7 @@ import {
   Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { EngineTierCard } from "components/engine/tier-card";
+import { EngineTierCard } from "components/engine/create/tier-card";
 import { PricingSection } from "components/homepage/sections/PricingSection";
 import { LandingFAQ } from "components/landing-pages/faq";
 import { LandingLayout } from "components/landing-pages/layout";

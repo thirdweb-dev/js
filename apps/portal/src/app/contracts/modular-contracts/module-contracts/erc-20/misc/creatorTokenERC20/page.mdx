@@ -1,0 +1,37 @@
+import { createMetadata, GithubButtonLink } from "@doc";
+
+export const metadata = createMetadata({
+    title: "thirdweb Modular Contracts",
+    description:
+        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+    image: {
+        title: "thirdweb Modular Contracts",
+        icon: "solidity",
+    },
+});
+
+# CreatorTokenERC20
+
+## Description
+
+The `CreatorTokenERC20` contract is a module that builds upon the ERC-20 standard to offer additional functionality tailored for token creators. This module includes features such as transfer validation to ensure only approved transfers are processed, adding a layer of control and security for token transfers.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/transferable/CreatorTokenERC20.sol" />
+
+## Callback Functions
+
+| Function                | Description                                                                       |
+|-------------------------|-----------------------------------------------------------------------------------|
+| `beforeTransferERC20`   | Callback function for the `ERC20.transferFrom` and `ERC20.safeTransferFrom` functions. Executes actions before token transfers, including validation of the transfer by `transferValidator`. |
+
+## Fallback Functions
+
+| Function                         | Description                                                                                  |
+|----------------------------------|----------------------------------------------------------------------------------------------|
+| `getTransferValidator`           | Returns the transfer validator contract address for this token contract.                     |
+| `getTransferValidationFunction`  | Returns the function selector and view status for the transfer validator's validation function.|
+| `setTransferValidator`           | Sets the address of the `transferValidator`. Requires admin role.                            |
+
+## Required Interfaces
+
+(No required interfaces for this contract)

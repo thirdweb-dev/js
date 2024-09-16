@@ -1,5 +1,4 @@
-
-import { createMetadata } from "@doc";
+import { createMetadata, GithubButtonLink } from "@doc";
 
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
@@ -11,27 +10,29 @@ export const metadata = createMetadata({
     },
 });
 
-# Claimable ERC-1155
+# ClaimableERC1155
 
 ## Description
 
-The `ClaimableERC1155` contract is an module that provides claim-based minting functionality for ERC-1155 tokens. It includes features for setting claim conditions, validating claims via Merkle proofs, and handling signature-based claim requests. This contract ensures secure and controlled minting processes with the possibility of integrating primary sales.
+The `ClaimableERC1155` contract is a module that provides claim-based minting functionality for ERC-1155 tokens. It includes features for setting claim conditions, validating claims via Merkle proofs, and handling signature-based claim requests. This contract ensures secure and controlled minting processes with the possibility of integrating primary sales.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/minting/ClaimableERC1155.sol" />
 
 ## Callback Functions
 
-| Function             | Description                                                                |
-|----------------------|----------------------------------------------------------------------------|
-| `beforeMintERC1155`  | Callback function for the `ERC1155Core.mint` function. Executes actions before minting tokens, including validation of claim conditions and signature-based requests. |
+| Function                          | Description                                                                                                    |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------------|
+| `beforeMintERC1155`               | Callback function that checks the claim conditions before minting ERC-1155 tokens.                              |
+| `beforeMintWithSignatureERC1155`  | Callback function that verifies a claim request with a signature and processes the mint accordingly.            |
 
 ## Fallback Functions
 
-| Function                              | Description                                                                             |
-|---------------------------------------|-----------------------------------------------------------------------------------------|
-| `getSaleConfig`                       | Returns the sale configuration for a token, including the primary sale recipient.       |
-| `setSaleConfig`                       | Sets the sale configuration for a token, including the primary sale recipient. Requires manager role. |
-| `getClaimConditionByTokenId`          | Returns the claim condition for a specific token ID.                                     |
-| `setClaimConditionByTokenId`          | Sets the claim condition for a specific token ID. Requires minter role.                 |
-| `eip712Domain`                        | Returns the EIP-712 domain details.                                                     |
+| Function                              | Description                                                              |
+|---------------------------------------|--------------------------------------------------------------------------|
+| `getSaleConfig`                       | Returns the sale configuration for a token, including the primary sale recipient. |
+| `setSaleConfig`                       | Sets the sale configuration for a token, including the primary sale recipient. Requires manager role.       |
+| `getClaimConditionByTokenId`          | Returns the claim condition for a specific token ID.                     |
+| `setClaimConditionByTokenId`          | Sets the claim condition for a specific token ID. Requires minter role.  |
 
 ## Required Interfaces
 
@@ -39,7 +40,6 @@ The `ClaimableERC1155` contract is an module that provides claim-based minting f
 |------------|-------------|
 | `ERC-1155` | `0xd9b67a26`|
 
-## Supported Interfaces
+## Installation Callback
 
-(No supported interfaces for this contract)
-
+This module uses an installation callback to set up the initial parameters such as the primary sale recipient.

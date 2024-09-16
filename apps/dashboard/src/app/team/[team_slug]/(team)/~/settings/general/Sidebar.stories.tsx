@@ -38,9 +38,7 @@ function Story(props: {
   type: "mobile" | "desktop";
 }) {
   return (
-    <div
-      className={"min-h-screen text-foreground lg:max-w-[1100px] py-6 mx-auto"}
-    >
+    <div className={"min-h-screen text-foreground container py-6"}>
       {props.type === "desktop" && <TeamSettingsSidebar teamSlug="foo" />}
 
       {props.type === "mobile" && (

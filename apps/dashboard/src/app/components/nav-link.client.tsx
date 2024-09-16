@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import Link, { type LinkProps } from "next/link";
 import { usePathname } from "next/navigation";
 
-export type NavLinkProps = Omit<
+type NavLinkProps = Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
   keyof LinkProps
 > &

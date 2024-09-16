@@ -163,24 +163,18 @@ export function ConnectedModal(props: ConnectedModalProps) {
 const AccountHeader = (props: ConnectedModalProps) => {
   const { account, wallet, theme } = props;
   const walletChain = useActiveWalletChain();
-  const { ensAvatarQuery, addressOrENS, balanceQuery } =
-    useConnectedWalletDetails(
-      props.client,
-      walletChain,
-      account,
-      props.detailsButton?.displayBalanceToken,
-    );
+  const { pfp, name, balanceQuery } = useConnectedWalletDetails(
+    props.client,
+    walletChain,
+    account,
+    props.detailsButton?.displayBalanceToken,
+  );
   return (
     <View style={styles.accountHeaderContainer}>
-      <WalletImage
-        theme={theme}
-        size={70}
-        wallet={wallet}
-        ensAvatar={ensAvatarQuery.data}
-      />
+      <WalletImage theme={theme} size={70} wallet={wallet} avatar={pfp} />
       <SmartAccountBadge client={props.client} theme={theme} />
       <Spacer size="smd" />
-      <Address account={account} theme={theme} addressOrENS={addressOrENS} />
+      <Address account={account} theme={theme} addressOrENS={name} />
       <Spacer size="xxs" />
       {balanceQuery.data ? (
         <ThemedText

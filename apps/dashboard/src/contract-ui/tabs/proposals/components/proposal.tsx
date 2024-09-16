@@ -45,11 +45,11 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
     proposal.proposalId,
   );
   const { data: delegated } = useTokensDelegated(contract);
-  const { mutate: execute, isLoading: isExecuting } =
+  const { mutate: execute, isPending: isExecuting } =
     useExecuteProposalMutation(contract, proposal.proposalId);
   const {
     mutate: vote,
-    isLoading: isVoting,
+    isPending: isVoting,
     variables,
   } = useCastVoteMutation(contract, proposal.proposalId);
 
@@ -116,19 +116,19 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
         <>
           <Text mt="16px">
             <strong>For:</strong>{" "}
-            {decimalQuery.isLoading
+            {decimalQuery.isPending
               ? "Loading..."
               : toTokens(proposal.votes.for, decimalQuery.data || 18)}
           </Text>
           <Text>
             <strong>Against:</strong>{" "}
-            {decimalQuery.isLoading
+            {decimalQuery.isPending
               ? "Loading..."
               : toTokens(proposal.votes.against, decimalQuery.data || 18)}
           </Text>
           <Text>
             <strong>Abstained:</strong>{" "}
-            {decimalQuery.isLoading
+            {decimalQuery.isPending
               ? "Loading..."
               : toTokens(proposal.votes.abstain, decimalQuery.data || 18)}
           </Text>

@@ -91,7 +91,7 @@ export function StarButton(props: {
       }}
       disabled={
         !loggedInUser.user?.address ||
-        mutation.isLoading ||
+        mutation.isPending ||
         favChainsQuery.isLoading
       }
     >

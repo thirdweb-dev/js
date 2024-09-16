@@ -14,37 +14,38 @@ export const metadata = createMetadata({
 
 ## Supported Callback Functions
 
-| Function             |    Mode    |
-|----------------------|------------|
-| `beforeMintERC20`    |  REQUIRED  |
-| `beforeTransferERC20`|  OPTIONAL  |
-| `beforeBurnERC20`    | OPTIONAL  |
-| `beforeApproveERC20` | OPTIONAL  |
+| Function                          | Mode      |
+|-----------------------------------|-----------|
+| `beforeMintERC20`                 | REQUIRED  |
+| `beforeMintWithSignatureERC20`    | REQUIRED  |
+| `beforeTransferERC20`             | OPTIONAL  |
+| `beforeBurnERC20`                 | OPTIONAL  |
+| `beforeApproveERC20`              | OPTIONAL  |
 
 ## Supported Interfaces
 
-| Interface       | ID          |
-|-----------------|-------------|
-| `ERC165`        | `0x01ffc9a7`|
-| `ERC-7572`      | `0xe8a3d485`|
-| `ERC-173`       | `0x7f5828d0`|
-| `ERC20`         | `0x36372b07`|
+| Interface        | ID          |
+|------------------|-------------|
+| `ERC165`         | `0x01ffc9a7`|
+| `ERC-7572`       | `0xe8a3d485`|
+| `ERC-173`        | `0x7f5828d0`|
+| `IERC20`         | `0x36372b07`|
 
 ## Functions Supported
 
 | Function                | Description                                                                 |
 |-------------------------|-----------------------------------------------------------------------------|
-| `constructor`           | Initializes the contract with parameters for name, symbol, metadata URI, owner, modules, and module data. |
+| `_initialize`           | Initializes the contract with parameters for name, symbol, metadata URI, owner, modules, and their data. |
+| `contractURI`           | Returns the contract metadata URI.                                          |
 | `name`                  | Returns the name of the token.                                              |
 | `symbol`                | Returns the symbol of the token.                                            |
-| `contractURI`           | Returns the contract metadata URI.                                          |
-| `getSupportedCallbackFunctions` | Returns the supported callback functions.                      |
 | `supportsInterface`     | Checks if the contract implements an interface with the given interface ID. |
+| `getSupportedCallbackFunctions` | Returns the supported callback functions.                      |
 | `setContractURI`        | Sets the contract metadata URI. Callable only by the contract admin.        |
 | `mint`                  | Mints tokens to a specified address, calling the beforeMint hook.           |
-| `burn`                  | Burns a specified amount of tokens, calling the beforeBurn hook if it exists.|
-| `transfer`              | Transfers tokens to a specified address, calling the beforeTransfer hook if it exists. |
-| `transferFrom`          | Transfers tokens from one address to another, calling the beforeTransfer hook if it exists. |
-| `approve`               | Approves a spender to spend tokens on behalf of an owner, calling the beforeApprove hook if it exists. |
-| `permit`                | Sets allowance based on token owner's signed approval, calling the beforeApprove hook if it exists. |
-
+| `mintWithSignature`     | Mints tokens with a signature, calling the beforeMintWithSignature hook.    |
+| `burn`                  | Burns tokens from a specified address, calling the beforeBurn hook if it exists.|
+| `transfer`              | Transfers tokens to a recipient, calling the beforeTransfer hook if it exists.|
+| `transferFrom`          | Transfers tokens from a sender to a recipient, calling the beforeTransfer hook if it exists.|
+| `approve`               | Approves a spender to spend tokens on behalf of an owner, calling the beforeApprove hook if it exists.|
+| `permit`                | Sets allowance based on token owner's signed approval, calling the beforeApprove hook. |

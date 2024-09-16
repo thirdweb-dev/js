@@ -1,9 +1,29 @@
-export default function Page() {
+import { getProject } from "@/api/projects";
+import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
+import { notFound } from "next/navigation";
+import { getAPIKey } from "../../../../../api/lib/getAPIKeys";
+import { AccountAbstractionPage } from "./AccountAbstractionPage";
+
+export default async function Page(props: {
+  params: { team_slug: string; project_slug: string };
+}) {
+  const { team_slug, project_slug } = props.params;
+  const project = await getProject(team_slug, project_slug);
+
+  if (!project) {
+    notFound();
+  }
+
+  // THIS IS A WORKAROUND - project does not have `services` info - so we fetch APIKey object.
+  const apiKey = await getAPIKey(project.id);
+
+  if (!apiKey) {
+    notFound();
+  }
+
   return (
-    <div className="h-full py-6 container flex items-center justify-center">
-      <h1 className="text-4xl tracking-tighter text-muted-foreground">
-        Account Abstraction
-      </h1>
-    </div>
+    <ChakraProviderSetup>
+      <AccountAbstractionPage apiKeyServices={apiKey.services || []} />
+    </ChakraProviderSetup>
   );
 }

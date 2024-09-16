@@ -39,7 +39,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         contractId: "DropERC721",
-        constructorParams: [],
       });
       if (!implementationContract) {
         throw new Error("Clone factory not found");
@@ -87,7 +86,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         contractId: "DropERC721",
-        constructorParams: [],
       });
       if (!implementationContract) {
         throw new Error("Clone factory not found");

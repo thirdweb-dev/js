@@ -222,6 +222,18 @@ export const sidebar: SideBar = {
       separator: true,
     },
     {
+      name: "Social API",
+      isCollapsible: false,
+      links: ["useSocialProfiles"].map((name) => ({
+        name,
+        href: `${slug}/${name}`,
+        icon: <CodeIcon />,
+      })),
+    },
+    {
+      separator: true,
+    },
+    {
       name: "Pay",
       isCollapsible: false,
       links: [

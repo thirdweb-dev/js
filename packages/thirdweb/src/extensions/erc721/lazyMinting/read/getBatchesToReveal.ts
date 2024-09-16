@@ -49,23 +49,23 @@ export async function getBatchesToReveal(
   const countRangeArray = Array.from(Array(Number(count)).keys());
   const uriIndices = await Promise.all(
     countRangeArray.map(async (batchId) => {
-      try {
-        return await GetBatchIdAtIndex.getBatchIdAtIndex({
+      const promiseAll = await Promise.allSettled([
+        GetBatchIdAtIndex.getBatchIdAtIndex({
           contract: options.contract,
           index: BigInt(batchId),
-        });
-      } catch {
-        try {
-          return await BaseURIIndicies.baseURIIndices({
-            contract: options.contract,
-            index: BigInt(batchId),
-          });
-        } catch {
-          throw new Error(
-            "Contract does not have `getBatchIdAtIndex` or `baseURIIndices`, which are required for `getBatchesToReveal`",
-          );
-        }
+        }),
+        BaseURIIndicies.baseURIIndices({
+          contract: options.contract,
+          index: BigInt(batchId),
+        }),
+      ]);
+      const result = promiseAll.find((result) => result.status === "fulfilled");
+      if (!result) {
+        throw new Error(
+          "Contract does not have `getBatchIdAtIndex` or `baseURIIndices`, which are required for `getBatchesToReveal`",
+        );
       }
+      return result.value;
     }),
   );
 
@@ -131,7 +131,7 @@ export async function getBatchesToReveal(
  * const supported = isGetBatchesToRevealSupported(["0x..."]);
  * ```
  */
-export function isGetBaseURICountSupported(availableSelectors: string[]) {
+export function isGetBatchesToRevealSupported(availableSelectors: string[]) {
   return [
     GetBaseURICount.isGetBaseURICountSupported(availableSelectors),
     GetBatchIdAtIndex.isGetBatchIdAtIndexSupported(availableSelectors),

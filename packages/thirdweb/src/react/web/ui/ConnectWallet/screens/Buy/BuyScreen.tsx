@@ -1,5 +1,6 @@
 import { IdCardIcon } from "@radix-ui/react-icons";
 import { useCallback, useMemo, useState } from "react";
+import { trackPayEvent } from "../../../../../../analytics/track.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
@@ -9,6 +10,7 @@ import type { BuyWithFiatStatus } from "../../../../../../pay/buyWithFiat/getSta
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
+import type { WalletId } from "../../../../../../wallets/wallet-types.js";
 import {
   type Theme,
   iconSize,
@@ -90,6 +92,7 @@ export type BuyScreenProps = {
   theme: "light" | "dark" | Theme;
   onDone: () => void;
   connectOptions: PayEmbedConnectOptions | undefined;
+  hiddenWallets?: WalletId[];
   isEmbed: boolean;
 };
 
@@ -127,6 +130,7 @@ type BuyScreenContentProps = {
   theme: "light" | "dark" | Theme;
   payOptions: PayUIOptions;
   onDone: () => void;
+  hiddenWallets?: WalletId[];
   connectOptions: PayEmbedConnectOptions | undefined;
   isEmbed: boolean;
 };
@@ -264,6 +268,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
             });
           }
         }}
+        hiddenWallets={props.hiddenWallets}
         recommendedWallets={props.connectOptions?.recommendedWallets}
         showAllWallets={
           props.connectOptions?.showAllWallets === undefined
@@ -528,12 +533,19 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               }}
             >
               {screen.id === "select-payment-method" && (
-                <PaymentMethodSelection setScreen={(id) => setScreen({ id })} />
+                <PaymentMethodSelection
+                  mode={payOptions.mode}
+                  client={client}
+                  walletAddress={payer.account.address}
+                  walletType={payer.wallet.id}
+                  setScreen={(id) => setScreen({ id })}
+                />
               )}
 
               {screen.id === "select-wallet" && (
                 <WalletSwitcherDrawerContent
                   client={client}
+                  hiddenWallets={props.hiddenWallets}
                   onSelect={(w) => {
                     const chain = w.getChain();
                     const account = w.getAccount();
@@ -891,7 +903,11 @@ function TokenSelectedLayout(props: {
 }
 
 function PaymentMethodSelection(props: {
+  client: ThirdwebClient;
+  walletAddress: string;
+  walletType: string;
   setScreen: (screenId: "select-wallet" | "buy-with-fiat") => void;
+  mode?: "transaction" | "direct_payment" | "fund_wallet";
 }) {
   return (
     <Container animate="fadein">
@@ -900,7 +916,15 @@ function PaymentMethodSelection(props: {
         <Button
           variant="outline"
           bg="tertiaryBg"
-          onClick={() => props.setScreen("buy-with-fiat")}
+          onClick={() => {
+            trackPayEvent({
+              event: `pay_with_credit_card_${props.mode || "unknown"}_mode`,
+              client: props.client,
+              walletAddress: props.walletAddress,
+              walletType: props.walletType,
+            });
+            props.setScreen("buy-with-fiat");
+          }}
           gap="sm"
           style={{
             justifyContent: "flex-start",
@@ -928,7 +952,16 @@ function PaymentMethodSelection(props: {
         <Button
           variant="outline"
           bg="tertiaryBg"
-          onClick={() => props.setScreen("select-wallet")}
+          onClick={() => {
+            trackPayEvent({
+              event: `pay_with_crypto_${props.mode || "unknown"}_mode`,
+              client: props.client,
+              walletAddress: props.walletAddress,
+              walletType: props.walletType,
+            });
+
+            props.setScreen("select-wallet");
+          }}
           style={{
             justifyContent: "flex-start",
           }}
@@ -1087,7 +1120,8 @@ function SwapScreenContent(props: {
 
   function showSwapFlow() {
     if (
-      props.payOptions.mode === "direct_payment" &&
+      (props.payOptions.mode === "direct_payment" ||
+        props.payOptions.mode === "fund_wallet") &&
       !isNotEnoughBalance &&
       !swapRequired
     ) {
@@ -1324,6 +1358,7 @@ function FiatScreenContent(props: {
           isTestMode: buyWithFiatOptions?.testMode,
           purchaseData: props.payOptions.purchaseData,
           fromAddress: payer.account.address,
+          preferredProvider: buyWithFiatOptions?.preferredProvider,
         }
       : undefined,
   );

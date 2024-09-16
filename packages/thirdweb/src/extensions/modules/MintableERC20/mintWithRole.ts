@@ -26,7 +26,7 @@ export type TokenMintParams = {
  * // Send the transaction
  * await sendTransaction({ transaction, account });
  * ```
- * @module MintableERC20
+ * @modules MintableERC20
  */
 export function mintWithRole(options: BaseTransactionOptions<TokenMintParams>) {
   return generatedMint({

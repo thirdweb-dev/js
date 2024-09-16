@@ -191,15 +191,17 @@ export {
 export {
   type CreateDelayedRevealBatchParams,
   createDelayedRevealBatch,
+  isCreateDelayedRevealBatchSupported,
 } from "../../extensions/erc721/lazyMinting/write/createDelayedRevealBatch.js";
 export {
   type RevealParams,
   reveal,
+  isRevealSupported,
 } from "../../extensions/erc721/lazyMinting/write/reveal.js";
 export {
   type BatchToReveal,
   getBatchesToReveal,
-  isGetBaseURICountSupported,
+  isGetBatchesToRevealSupported,
 } from "../../extensions/erc721/lazyMinting/read/getBatchesToReveal.js";
 export {
   updateMetadata,

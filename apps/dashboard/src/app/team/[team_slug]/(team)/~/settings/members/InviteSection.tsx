@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { ExternalLinkIcon, LinkIcon, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { getValidTeamPlan } from "../../../../../../components/Header/TeamHeader/getValidTeamPlan";
+import { getValidTeamPlan } from "../../../../../components/TeamHeader/getValidTeamPlan";
 
 export function InviteSection(props: {
   team: Team;
@@ -29,7 +29,7 @@ export function InviteSection(props: {
 
   if (teamPlan !== "pro") {
     bottomSection = (
-      <div className="px-4 lg:px6 py-4 flex items-center justify-between border-t gap-4">
+      <div className="px-4 lg:px6 py-4 flex items-center justify-between border-t border-border gap-4">
         <p className="text-muted-foreground text-sm">
           This feature is only available on the{" "}
           <Link
@@ -49,7 +49,7 @@ export function InviteSection(props: {
     );
   } else if (!props.userHasEditPermission) {
     bottomSection = (
-      <div className="px-4 lg:px-6 py-4 flex items-center justify-between border-t min-h-[60px]">
+      <div className="px-4 lg:px-6 py-4 flex items-center justify-between border-t border-border min-h-[60px]">
         <p className="text-muted-foreground text-sm">
           You don't have permission to invite members
         </p>
@@ -57,7 +57,7 @@ export function InviteSection(props: {
     );
   } else {
     bottomSection = (
-      <div className="py-4 px-4 lg:px-6 flex items-center lg:justify-end border-t ">
+      <div className="py-4 px-4 lg:px-6 flex items-center lg:justify-end border-t border-border">
         <Button variant="outline" size="sm" className="gap-2 max-sm:w-full">
           <UserPlus className="size-3" />
           Invite
@@ -71,7 +71,7 @@ export function InviteSection(props: {
       <h2 className="text-2xl font-semibold tracking-tight mb-3">Invite</h2>
 
       {/* Card */}
-      <div className="border rounded-lg bg-muted/50">
+      <div className="border border-border rounded-lg bg-muted/50">
         {/* Invite via Link */}
         <div
           className={cn(

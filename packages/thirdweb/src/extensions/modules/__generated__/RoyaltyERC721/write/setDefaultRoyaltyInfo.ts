@@ -39,7 +39,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `setDefaultRoyaltyInfo` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `setDefaultRoyaltyInfo` method is supported.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -58,7 +58,7 @@ export function isSetDefaultRoyaltyInfoSupported(availableSelectors: string[]) {
  * Encodes the parameters for the "setDefaultRoyaltyInfo" function.
  * @param options - The options for the setDefaultRoyaltyInfo function.
  * @returns The encoded ABI parameters.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -81,7 +81,7 @@ export function encodeSetDefaultRoyaltyInfoParams(
  * Encodes the "setDefaultRoyaltyInfo" function into a Hex string with its parameters.
  * @param options - The options for the setDefaultRoyaltyInfo function.
  * @returns The encoded hexadecimal string.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -106,7 +106,7 @@ export function encodeSetDefaultRoyaltyInfo(
  * Prepares a transaction to call the "setDefaultRoyaltyInfo" function on the contract.
  * @param options - The options for the "setDefaultRoyaltyInfo" function.
  * @returns A prepared transaction object.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";

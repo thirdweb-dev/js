@@ -18,6 +18,10 @@ export function ConnectSmartAccountPreview() {
   return (
     <div className="flex flex-col">
       <StyledConnectButton
+        detailsModal={{
+          // We hide the in-app wallet so they can't switch to it
+          hiddenWallets: ["inApp"],
+        }}
         accountAbstraction={{
           chain: baseSepolia,
           sponsorGas: true,

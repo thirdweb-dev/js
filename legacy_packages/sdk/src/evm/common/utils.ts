@@ -64,7 +64,10 @@ export function createLruCache<T>(
   function put(key: string, value: T) {
     if (store.size >= maxEntries) {
       const keyToDelete = store.keys().next().value;
-      store.delete(keyToDelete);
+      if(keyToDelete){
+        store.delete(keyToDelete);
+      }
+      
     }
     store.set(key, value);
   }

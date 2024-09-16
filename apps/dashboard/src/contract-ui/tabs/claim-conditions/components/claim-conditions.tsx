@@ -1,5 +1,4 @@
 import { Flex, Stack } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Heading, Text } from "tw-components";
 import { ClaimConditionsForm } from "./claim-conditions-form/index";
@@ -16,8 +15,6 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   isColumn,
   isERC20,
 }) => {
-  const contractQuery = useContract(contract.address);
-
   return (
     <Stack spacing={8}>
       <Flex p={0} position="relative">
@@ -39,17 +36,14 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
           </Flex>
 
           {/* Set Claim Conditions */}
-          {contractQuery.contract && (
-            <ClaimConditionsForm
-              isErc20={isERC20}
-              contract={contractQuery.contract}
-              tokenId={tokenId}
-              isColumn={isColumn}
-              contractV5={contract}
-              // always multi phase!
-              isMultiPhase={true}
-            />
-          )}
+          <ClaimConditionsForm
+            isErc20={isERC20}
+            contract={contract}
+            tokenId={tokenId}
+            isColumn={isColumn}
+            // always multi phase!
+            isMultiPhase={true}
+          />
         </Flex>
       </Flex>
     </Stack>

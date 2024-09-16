@@ -4,40 +4,72 @@ import { getOrDeployInfraContract } from "../../../contract/deployment/utils/boo
 import { getDeployedInfraContract } from "../../../contract/deployment/utils/infra.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 
-export const getOrDeployModule = async (options: {
+/**
+ * Gets or deploys a module implementation contract.
+ * @param options - The options to use.
+ * @returns The module.
+ * @modules
+ *
+ * @example
+ * ```ts
+ * import { getOrDeployModule } from "thirdweb/modules";
+ *
+ * const module = await getOrDeployModule({
+ *   client,
+ *   chain,
+ *   account,
+ *   contractId,
+ *   publisher,
+ * });
+ * ```
+ */
+export async function getOrDeployModule(options: {
   client: ThirdwebClient;
   chain: Chain;
   account: Account;
   contractId: string;
   publisher?: string;
-  constructorParams?: unknown[];
-}) => {
-  const { client, chain, account, contractId, publisher, constructorParams } =
-    options;
+}) {
+  const { client, chain, account, contractId, publisher } = options;
   const contract = await getOrDeployInfraContract({
     client,
     chain,
     account,
     contractId,
     publisher,
-    constructorParams: constructorParams ?? [],
   });
   return contract;
-};
+}
 
-export const getDeployedModule = (options: {
+/**
+ * Gets a deployed module implementation contract.
+ * @param options - The options to use.
+ * @returns The module.
+ * @modules
+ *
+ * @example
+ * ```ts
+ * import { getDeployedModule } from "thirdweb/modules";
+ *
+ * const module = await getDeployedModule({
+ *   client,
+ *   chain,
+ *   contractId,
+ *   publisher,
+ * });
+ * ```
+ */
+export async function getDeployedModule(options: {
   client: ThirdwebClient;
   chain: Chain;
   contractId: string;
   publisher?: string;
-  constructorParams?: unknown[];
-}) => {
-  const { client, chain, contractId, publisher, constructorParams } = options;
+}) {
+  const { client, chain, contractId, publisher } = options;
   return getDeployedInfraContract({
     client,
     chain,
     contractId,
     publisher,
-    constructorParams: constructorParams ?? [],
   });
-};
+}

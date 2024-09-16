@@ -20,6 +20,19 @@ export interface SplitRecipient {
   splitPercentage: number;
 }
 
+/**
+ * Get the split percentage of a recipient
+ * @param options - The options for the transaction
+ * @param options.recipientAddress - The address of the recipient
+ * @returns The split percentage of the recipient
+ * @extension SPLIT
+ * @example
+ * ```ts
+ * import { getRecipientSplitPercentage } from "thirdweb/extensions/split";
+ *
+ * const percentage = await getRecipientSplitPercentage({ recipientAddress: "0x..." });
+ * ```
+ */
 export async function getRecipientSplitPercentage(
   options: BaseTransactionOptions<{ recipientAddress: string }>,
 ): Promise<SplitRecipient> {

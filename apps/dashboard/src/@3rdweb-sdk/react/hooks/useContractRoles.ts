@@ -3,7 +3,7 @@ import { hasRole } from "thirdweb/extensions/permissions";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import type { RequiredParam } from "utils/types";
 
-export function useIsAdmin(contract: ThirdwebContract) {
+export function useIsAdmin(contract: ThirdwebContract, failOpen = true) {
   const address = useActiveAccount()?.address;
   const { data: userIsAdmin, isError } = useReadContract(hasRole, {
     contract,
@@ -14,7 +14,7 @@ export function useIsAdmin(contract: ThirdwebContract) {
 
   // If the request results in an error, it's likely that the contract is a non-thirdweb contract
   // in that case we return `true` anyway
-  return userIsAdmin || isError;
+  return userIsAdmin || (failOpen && isError);
 }
 
 export function useIsAdminOrSelf(

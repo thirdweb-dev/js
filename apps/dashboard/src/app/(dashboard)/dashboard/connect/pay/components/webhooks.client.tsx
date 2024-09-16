@@ -55,7 +55,7 @@ type Webhook = {
   secret: string;
 };
 
-export type WebhooksPageProps = {
+type WebhooksPageProps = {
   clientId: string;
 };
 
@@ -177,7 +177,9 @@ function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
       return json.result as string;
     },
     onSuccess: () => {
-      return queryClient.invalidateQueries(["webhooks", props.clientId]);
+      return queryClient.invalidateQueries({
+        queryKey: ["webhooks", props.clientId],
+      });
     },
   });
   return (
@@ -264,7 +266,7 @@ function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
             </FormItem>
 
             <DialogFooter>
-              <Button type="submit" disabled={createMutation.isLoading}>
+              <Button type="submit" disabled={createMutation.isPending}>
                 Create
               </Button>
             </DialogFooter>
@@ -293,7 +295,9 @@ function DeleteWebhookButton(
       return json.result as string;
     },
     onSuccess: () => {
-      return queryClient.invalidateQueries(["webhooks", props.clientId]);
+      return queryClient.invalidateQueries({
+        queryKey: ["webhooks", props.clientId],
+      });
     },
   });
   return (
@@ -325,7 +329,7 @@ function DeleteWebhookButton(
                 },
               );
             }}
-            disabled={deleteMutation.isLoading}
+            disabled={deleteMutation.isPending}
           >
             Yes, Delete Webhook
           </Button>

@@ -2,6 +2,7 @@ import {
   THIRDWEB_INAPP_WALLET_DOMAIN,
   THIRDWEB_PAY_DOMAIN,
   THIRDWEB_RPC_DOMAIN,
+  THIRDWEB_SOCIAL_API_DOMAIN,
   THIRDWEB_STORAGE_DOMAIN,
 } from "constants/urls";
 import { setThirdwebDomains } from "thirdweb/utils";
@@ -45,7 +46,7 @@ export function getAbsoluteUrl(): string {
   return "https://thirdweb.com";
 }
 
-function setOverrides() {
+export function setOverrides() {
   if (getVercelEnv() === "production") {
     // no overrides
     return;
@@ -63,7 +64,6 @@ function setOverrides() {
     inAppWallet: THIRDWEB_INAPP_WALLET_DOMAIN,
     pay: THIRDWEB_PAY_DOMAIN,
     storage: THIRDWEB_STORAGE_DOMAIN,
+    social: THIRDWEB_SOCIAL_API_DOMAIN,
   });
 }
-
-setOverrides();

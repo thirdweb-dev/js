@@ -1,3 +1,4 @@
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { FormControl } from "@chakra-ui/react";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
@@ -6,7 +7,6 @@ import { InfoIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFieldArray } from "react-hook-form";
 import { ZERO_ADDRESS } from "thirdweb";
 import { FormErrorMessage, FormLabel } from "tw-components";
-import { Alert, AlertTitle } from "../../../@/components/ui/alert";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 

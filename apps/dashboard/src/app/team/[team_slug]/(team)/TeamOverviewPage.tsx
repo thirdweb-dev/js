@@ -2,18 +2,16 @@
 
 import type { Project } from "@/api/projects";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { format } from "date-fns";
-import { ChevronDownIcon, SearchIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { format } from "date-fns";
+import { ChevronDownIcon, SearchIcon } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 import { CopyButton } from "@/components/ui/CopyButton";
 import {
@@ -22,6 +20,8 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { LazyCreateAPIKeyDialog } from "../../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 
 type SortyById = "name" | "createdAt";
 
@@ -32,6 +32,9 @@ export function TeamOverviewPage(props: {
   const { projects } = props;
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<SortyById>("createdAt");
+  const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] =
+    useState(false);
+  const router = useDashboardRouter();
 
   let projectsToShow = !searchTerm
     ? projects
@@ -63,7 +66,10 @@ export function TeamOverviewPage(props: {
         <SearchInput value={searchTerm} onValueChange={setSearchTerm} />
         <div className="flex gap-4">
           <SelectBy value={sortBy} onChange={setSortBy} />
-          <AddNewButton />
+          <AddNewButton
+            createProject={() => setIsCreateProjectDialogOpen(true)}
+            teamMembersSettingsPath={`/team/${props.team_slug}/~/settings/members`}
+          />
         </div>
       </div>
 
@@ -71,7 +77,7 @@ export function TeamOverviewPage(props: {
 
       {/* Projects */}
       {projectsToShow.length === 0 ? (
-        <div className="border rounded-lg h-[450px] flex items-center justify-center ">
+        <div className="border border-border rounded-lg h-[450px] flex items-center justify-center ">
           No projects found
         </div>
       ) : (
@@ -89,6 +95,16 @@ export function TeamOverviewPage(props: {
       )}
 
       <div className="h-10" />
+
+      <LazyCreateAPIKeyDialog
+        open={isCreateProjectDialogOpen}
+        onOpenChange={setIsCreateProjectDialogOpen}
+        wording="project"
+        onCreateAndComplete={() => {
+          // refresh projects
+          router.refresh();
+        }}
+      />
     </div>
   );
 }
@@ -101,7 +117,7 @@ function ProjectCard(props: {
   return (
     <div
       key={project.id}
-      className="border rounded-lg p-4 relative hover:bg-muted/70 flex items-center gap-4 bg-muted/50 transition-colors"
+      className="border border-border rounded-lg p-4 relative hover:bg-muted/70 flex items-center gap-4 bg-muted/50 transition-colors"
     >
       {/* TODO - replace with project image */}
       <div className="size-10 rounded-full bg-border shrink-0" />
@@ -153,7 +169,10 @@ function SearchInput(props: {
   );
 }
 
-function AddNewButton() {
+function AddNewButton(props: {
+  createProject: () => void;
+  teamMembersSettingsPath: string;
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -164,15 +183,15 @@ function AddNewButton() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="p-2 min-w-[220px]" sideOffset={12}>
         <div className="flex flex-col gap-1">
-          {/* TODO - remove soon when we have it */}
-          <Button variant="ghost" className="justify-between px-2" disabled>
+          <Button
+            variant="ghost"
+            className="justify-between px-2"
+            onClick={props.createProject}
+          >
             Project
-            <Badge variant="outline"> Soon</Badge>
           </Button>
-          {/* TODO - remove soon when we have it */}
-          <Button variant="ghost" className="justify-between px-2" disabled>
-            Team Member
-            <Badge variant="outline"> Soon</Badge>
+          <Button variant="ghost" className="justify-between px-2" asChild>
+            <Link href={props.teamMembersSettingsPath}>Team Member</Link>
           </Button>
         </div>
       </DropdownMenuContent>

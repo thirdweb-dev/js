@@ -39,7 +39,7 @@ export const baseFontSizes = {
   },
 } as const;
 
-export type FontSizeRecord = typeof baseFontSizes;
+type FontSizeRecord = typeof baseFontSizes;
 
 export const mdFontSizes: FontSizeRecord = {
   display: {

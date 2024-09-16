@@ -244,12 +244,12 @@ const WALLETS_SNIPPETS = [
     link: "https://portal.thirdweb.com/references/wallets/latest/SmartWallet",
     supportedLanguages: {
       javascript: `import { defineChain } from "thirdweb";
-import { embeddedWallet, smartWallet } from "thirdweb/wallets";
+import { inAppWallet, smartWallet } from "thirdweb/wallets";
 
 const chain = defineChain({{chainId}});
 
-// First, connect the personal wallet, which can be any wallet (metamask, embedded, etc.)
-const personalWallet = embeddedWallet();
+// First, connect the personal wallet, which can be any wallet (metamask, in-app, etc.)
+const personalWallet = inAppWallet();
 const peronalAccount = await personalWallet.connect({
   client,
   chain,
@@ -618,12 +618,12 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                   the{" "}
                   <TrackedLink
                     isExternal
-                    href="https://portal.thirdweb.com/references/wallets/latest/SmartWallet"
+                    href="https://portal.thirdweb.com/connect/account-abstraction/overview"
                     category="accounts-page"
                     label="wallet-sdk"
                     color="primary.500"
                   >
-                    Wallet SDK
+                    Connect SDK
                   </TrackedLink>{" "}
                   in your applications. This will ensure account contracts are
                   deployed for your users only when they need it.

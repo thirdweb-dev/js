@@ -383,6 +383,7 @@ const unityRedirects = {
 const walletRedirects = {
 	//connect
 	"/connect/architecture": "/connect",
+	"/connect/sign-in": "/connect/sign-in/overview",
 	"/connect/usage-with-react-sdk": "/connect/sign-in",
 	"/connect/usage-with-react-native-sdk": "/connect/sign-in",
 	"/connect/usage-with-typescript-sdk": "/connect/sign-in",
@@ -521,11 +522,13 @@ const paymentRedirects = {
 	"/checkouts/faq": "/payments/nft-checkout/faq",
 	"/payments/:match*": "/connect/pay/overview",
 	"/connect/pay/buy-with-fiat": "/connect/pay/overview",
+	"/connect/pay/buy-with-crypto": "/connect/pay/overview",
 	"/connect/pay/buy-with-crypto/overview": "/connect/pay/overview",
 	"/connect/pay/buy-with-crypto/fee-sharing": "/connect/pay/fee-sharing",
 	"/connect/pay/build-a-custom-experience": "/connect/pay/guides/build-a-custom-experience",
 	"/connect/pay/enable-test-mode": "/connect/pay/guides/enable-test-mode",
 	"/connect/pay/guides/enable-test-mode": "/connect/pay/testing-pay",
+	"/connect/in-app-wallet/how-it-works": "/connect/in-app-wallet/security",
 };
 
 const contractRedirects = {
@@ -702,6 +705,7 @@ const otherRedirects = {
 	"/unity/wallets/providers/embedded-wallet": "/unity/wallets/providers/in-app-wallet",
 	// connect
 	"/connect/connect": "/connect/sign-in",
+	"/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server": "/connect/in-app-wallet/guides/get-in-app-wallet-details-on-server",
 };
 
 const v5RestructuredRedirects = {

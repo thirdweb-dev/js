@@ -106,6 +106,8 @@ export const ConnectWalletSocialOptions = (
     facebook: locale.signInWithFacebook,
     apple: locale.signInWithApple,
     discord: locale.signInWithDiscord,
+    line: "LINE",
+    x: "X",
     farcaster: "Farcaster",
     telegram: "Telegram",
   };

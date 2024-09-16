@@ -40,6 +40,7 @@ export type { MediaRendererProps } from "../react/web/ui/MediaRenderer/types.js"
 
 // wallet hooks
 export { useActiveWallet } from "../react/core/hooks/wallets/useActiveWallet.js";
+export { useAdminWallet } from "../react/core/hooks/wallets/useAdminAccount.js";
 export { useActiveWalletChain } from "../react/core/hooks/wallets/useActiveWalletChain.js";
 export { useActiveWalletConnectionStatus } from "../react/core/hooks/wallets/useActiveWalletConnectionStatus.js";
 export { useActiveAccount } from "../react/core/hooks/wallets/useActiveAccount.js";
@@ -184,3 +185,12 @@ export { useConnectionManager } from "../react/core/providers/connection-manager
 export { Blobbie } from "../react/web/ui/ConnectWallet/Blobbie.js";
 
 export { useSiweAuth } from "../react/core/hooks/auth/useSiweAuth.js";
+
+// Social
+export { useSocialProfiles } from "../react/core/social/useSocialProfiles.js";
+export type {
+  SocialProfile,
+  EnsProfile,
+  FarcasterProfile,
+  LensProfile,
+} from "../social/types.js";

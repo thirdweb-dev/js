@@ -1,15 +1,11 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { CircleAlertIcon } from "lucide-react";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "../../../@/components/ui/alert";
-import { Badge } from "../../../@/components/ui/badge";
-import { Button } from "../../../@/components/ui/button";
-import { Checkbox } from "../../../@/components/ui/checkbox";
-import { Input } from "../../../@/components/ui/input";
-import { Label } from "../../../@/components/ui/label";
 
 export const metadata = {
   robots: "noindex, nofollow",

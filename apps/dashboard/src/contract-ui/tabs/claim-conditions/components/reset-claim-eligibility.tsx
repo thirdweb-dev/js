@@ -87,9 +87,6 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   return (
     <AdminOnly contract={contract} fallback={<div className="pb-5" />}>
       <TransactionButton
-        colorScheme="secondary"
-        bg="bgBlack"
-        color="bgWhite"
         transactionCount={1}
         type="button"
         isLoading={sendTxMutation.isPending}
@@ -97,7 +94,7 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
         loadingText="Resetting..."
         size="sm"
       >
-        Reset Eligibility{" "}
+        Reset Eligibility
         <ToolTipLabel
           label={
             <>

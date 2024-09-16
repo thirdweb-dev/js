@@ -16,7 +16,8 @@ import { formatCompilerMetadata } from "./compiler-metadata.js";
  * });
  * const metadata = await getCompilerMetadata(contract);
  * ```
- * @returns
+ * @returns The compiler metadata for the contract
+ * @contract
  */
 export async function getCompilerMetadata(contract: ThirdwebContract) {
   const { address, chain } = contract;

@@ -1,0 +1,25 @@
+# Upgrading a Modular Contract
+
+### Installing a new module
+
+These modules can be swapped at any time, and new ones can also be added post deployment. Here's how to install a new module.
+
+```ts
+import {
+  RoyaltyERC721,
+} from "thirdweb/modules";
+
+const transaction = RoyaltyERC721.install({
+  contract: coreContract,
+  account,
+  params: {
+     royaltyRecipient: account.address,
+     royaltyBps: 100n,
+     transferValidator: ZERO_ADDRESS,
+  },
+});
+```
+
+The `install` function is available on all modules, organized by module name space.
+
+You can also use the standalone [`installPublishedModule`](/typescript/v5/common/installPublishedModule) function to install custom modules.

@@ -295,7 +295,6 @@ function createAccount(provider: ProviderInterface, _address: string) {
           },
         ],
       })) as Hex;
-
       return {
         transactionHash,
       };

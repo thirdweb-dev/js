@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   ButtonGroup,
   Center,
@@ -16,6 +17,7 @@ import {
   Tr,
   usePrevious,
 } from "@chakra-ui/react";
+import type { UseQueryResult } from "@tanstack/react-query";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { ListingDrawer } from "contract-ui/tabs/shared-components/listing-drawer";
 import {
@@ -32,7 +34,6 @@ import {
   MdNavigateBefore,
   MdNavigateNext,
 } from "react-icons/md";
-import type { UseQueryResult } from "react-query-v5";
 import { type Cell, type Column, usePagination, useTable } from "react-table";
 import type { ThirdwebContract } from "thirdweb";
 import type {
@@ -41,7 +42,6 @@ import type {
 } from "thirdweb/extensions/marketplace";
 import { min } from "thirdweb/utils";
 import { Button, Text } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { LISTING_STATUS } from "./types";
 
 const tableColumns: Column<DirectListing | EnglishAuction>[] = [
@@ -64,7 +64,7 @@ const tableColumns: Column<DirectListing | EnglishAuction>[] = [
     accessor: (row) => row.creatorAddress,
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     Cell: ({ cell }: { cell: Cell<any, string> }) => (
-      <AddressCopyButton variant="outline" address={cell.value} />
+      <WalletAddress address={cell.value} />
     ),
   },
   {
@@ -201,7 +201,6 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
           Valid
         </Button>
       </ButtonGroup>
-
       <TableContainer maxW="100%" className="relative">
         {((listingsToShow === "all" && getAllQueryResult.isFetching) ||
           (listingsToShow === "valid" && getValidQueryResult.isFetching)) && (

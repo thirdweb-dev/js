@@ -9,6 +9,7 @@ export { totalListings } from "../../extensions/marketplace/__generated__/IDirec
 export {
   getListing,
   type GetListingParams,
+  isGetListingSupported,
 } from "../../extensions/marketplace/direct-listings/read/getListing.js";
 export {
   getAllListings,
@@ -31,10 +32,13 @@ export {
   type CurrencyPriceForListingParams,
 } from "../../extensions/marketplace/direct-listings/read/currencyPriceForListing.js";
 
+export { isCancelListingSupported } from "../../extensions/marketplace/__generated__/IDirectListings/write/cancelListing.js";
+
 // WRITE
 export {
   createListing,
   type CreateListingParams,
+  isCreateListingSupported,
 } from "../../extensions/marketplace/direct-listings/write/createListing.js";
 export {
   updateListing,
@@ -47,6 +51,7 @@ export {
 export {
   buyFromListing,
   type BuyFromListingParams,
+  isBuyFromListingSupported,
 } from "../../extensions/marketplace/direct-listings/write/buyFromListing.js";
 export {
   approveBuyerForListing,
@@ -94,6 +99,7 @@ export { totalAuctions } from "../../extensions/marketplace/__generated__/IEngli
 export {
   getAuction,
   type GetAuctionParams,
+  isGetAuctionSupported,
 } from "../../extensions/marketplace/english-auctions/read/getAuction.js";
 export {
   getAllAuctions,
@@ -106,6 +112,7 @@ export {
 export {
   getWinningBid,
   type GetWinningBidParams,
+  isGetWinningBidSupported,
 } from "../../extensions/marketplace/english-auctions/read/getWinningBid.js";
 export {
   isNewWinningBid,
@@ -116,14 +123,17 @@ export {
 export {
   createAuction,
   type CreateAuctionParams,
+  isCreateAuctionSupported,
 } from "../../extensions/marketplace/english-auctions/write/createAuction.js";
 export {
   bidInAuction,
   type BidInAuctionParams,
+  isBidInAuctionSupported,
 } from "../../extensions/marketplace/english-auctions/write/bidInAuction.js";
 export {
   cancelAuction,
   type CancelAuctionParams,
+  isCancelAuctionSupported,
 } from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/cancelAuction.js";
 export {
   buyoutAuction,

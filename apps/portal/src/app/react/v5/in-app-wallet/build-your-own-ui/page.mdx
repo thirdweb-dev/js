@@ -6,6 +6,7 @@ import {
 	GithubTemplateCard,
 	Stack,
 	createMetadata,
+	Callout,
 } from "@doc";
 
 export const metadata = createMetadata({
@@ -35,6 +36,38 @@ import { ThirdwebProvider } from "thirdweb/react";
 	<YourApp />
 </ThirdwebProvider>;
 ```
+
+## Create an in-app wallet
+
+The simplest way to create an in-app wallet is to use the `inAppWallet()` function. By default, this will create a wallet that supports email/password login, Google, Apple, Facebook login, and passkey.
+
+```tsx
+import { inAppWallet } from "thirdweb/wallets";
+
+const wallet = inAppWallet();
+```
+
+You can also customize the wallet by passing in options.
+
+```tsx
+import { inAppWallet } from "thirdweb/wallets";
+
+const wallet = inAppWallet({
+	auth: {
+        mode, // options are "popup" | "redirect" | "window";
+        options, // ex: ["discord", "farcaster", "apple", "facebook", "google", "passkey"],
+        passkeyDomain, // for passkey, the domain that the passkey is created on
+        redirectUrl, // the URL to redirect to after authentication
+	},
+	metadata, // metadata for the wallet
+	partnerId, // partner ID for the wallet
+	smartAccount, // smart account options for the wallet
+});
+```
+
+[View all in-app wallet options](/references/typescript/v5/InAppWalletCreationOptions).
+
+Once created, you can connect to the wallet using the `connect()` function with the desired `strategy`.
 
 ## Authenticate via Google
 
@@ -126,6 +159,12 @@ const handleLogin = async (phonNumber: string, verificationCode: string) => {
 
 ## Authenticate via Passkey
 
+<Callout variant="info" title="React Native support">
+
+For React Native, `passkeyDomain` is required and must be set to a valid app universal link. To setup universal links for your application, follow the [iOS documentation](https://developer.apple.com/documentation/xcode/supporting-associated-domains) and [Android documentation](https://developer.android.com/identity/sign-in/credential-manager#add-support-dal).
+
+</Callout>
+
 ```typescript
 import { inAppWallet, hasStoredPasskey } from "thirdweb/wallets/in-app";
 
@@ -133,7 +172,11 @@ const { connect } = useConnect();
 
 const handleLogin = async () => {
 	await connect(() => {
-		const wallet = inAppWallet();
+		const wallet = inAppWallet({
+			auth: {
+				passkeyDomain: "example.com", // defaults to current url
+			},
+		});
 		const hasPasskey = await hasStoredPasskey(client);
 		await wallet.connect({
 			client,

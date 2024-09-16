@@ -1,7 +1,8 @@
-import { simulateTransaction } from "../../../../transaction/actions/simulate.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { reveal as generatedReveal } from "../../__generated__/IDelayedReveal/write/reveal.js";
 import { hashDelayedRevealPassword } from "../helpers/hashDelayedRevealBatch.js";
+
+export { isRevealSupported } from "../../__generated__/IDelayedReveal/write/reveal.js";
 
 /**
  * @extension ERC721
@@ -44,28 +45,6 @@ export function reveal(options: BaseTransactionOptions<RevealParams>) {
         options.password,
         options.contract,
       );
-
-      const transaction = generatedReveal({
-        contract: options.contract,
-        asyncParams: async () => ({
-          identifier: options.batchId,
-          key,
-        }),
-      });
-
-      let decryptedUri: string;
-      try {
-        decryptedUri = await simulateTransaction({
-          transaction,
-        });
-      } catch (error) {
-        throw new Error("Reveal failed", { cause: error });
-      }
-
-      if (!decryptedUri.includes("://") || decryptedUri.slice(-1) !== "/") {
-        throw new Error("Invalid reveal password");
-      }
-
       return {
         identifier: options.batchId,
         key,

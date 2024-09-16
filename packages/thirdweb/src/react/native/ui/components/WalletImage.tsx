@@ -5,15 +5,19 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { getLastAuthProvider } from "../../../core/utils/storage.js";
-import { getWalletIcon } from "../../../core/utils/walletIcon.js";
 import {
   APPLE_ICON,
   DISCORD_ICON,
+  EMAIL_ICON,
   FACEBOOK_ICON,
   FARCASTER_ICON,
   GOOGLE_ICON,
+  LINE_ICON,
+  PASSKEY_ICON,
+  PHONE_ICON,
   TELEGRAM_ICON,
   WALLET_ICON,
+  X_ICON,
 } from "../icons/svgs.js";
 import { RNImage } from "./RNImage.js";
 
@@ -21,9 +25,9 @@ export const WalletImage = (props: {
   theme: Theme;
   wallet: Wallet;
   size: number;
-  ensAvatar?: string | null;
+  avatar?: string | null;
 }) => {
-  const { wallet, ensAvatar, size } = props;
+  const { wallet, avatar, size } = props;
 
   const { data: imageData } = useQuery({
     queryKey: ["wallet-image", wallet.id, wallet.getAccount()?.address],
@@ -56,19 +60,21 @@ export const WalletImage = (props: {
 
       return WALLET_ICON;
     },
-    enabled: !ensAvatar,
+    enabled: !avatar,
   });
 
-  const data = ensAvatar || imageData || WALLET_ICON;
+  const data = avatar || imageData || WALLET_ICON;
   return <RNImage theme={props.theme} data={data} size={size} />;
 };
 
-export function getAuthProviderImage(lastAuthProvider: string | null): string {
-  switch (lastAuthProvider) {
+export function getAuthProviderImage(authProvider: string | null): string {
+  switch (authProvider) {
     case "phone":
+      return PHONE_ICON;
     case "email":
+      return EMAIL_ICON;
     case "passkey":
-      return getWalletIcon(lastAuthProvider);
+      return PASSKEY_ICON;
     case "google":
       return GOOGLE_ICON;
     case "apple":
@@ -77,11 +83,15 @@ export function getAuthProviderImage(lastAuthProvider: string | null): string {
       return FACEBOOK_ICON;
     case "discord":
       return DISCORD_ICON;
+    case "line":
+      return LINE_ICON;
+    case "x":
+      return X_ICON;
     case "farcaster":
       return FARCASTER_ICON;
     case "telegram":
       return TELEGRAM_ICON;
     default:
-      return getWalletIcon("");
+      return WALLET_ICON;
   }
 }

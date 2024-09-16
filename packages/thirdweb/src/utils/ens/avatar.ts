@@ -1,20 +1,40 @@
-import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { getContract } from "../../contract/contract.js";
-import { isAddress } from "../address.js";
 import { getClientFetch } from "../fetch.js";
 import { resolveScheme } from "../ipfs.js";
+import { parseNftUri } from "../nft/parseNft.js";
 
-type AvatarOptions = {
+export type ParseAvatarOptions = {
   client: ThirdwebClient;
   uri: string;
 };
 
 /**
- * @internal
+ * Parses an ENS or similar avatar record. Supports NFT URIs, IPFS scheme, and HTTPS URIs.
+ * @param options - The options for parsing an ENS avatar record.
+ * @param options.client - The Thirdweb client.
+ * @param options.uri - The URI to parse.
+ * @returns A promise that resolves to the avatar URL, or null if the URI could not be parsed.
+ * @example
+ * ```ts
+ * import { parseAvatarRecord } from "thirdweb/utils/ens";
+ * const avatarUrl = await parseAvatarRecord({
+ *    client,
+ *    uri: "ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/",
+ * });
+ *
+ * console.log(avatarUrl); // "https://ipfs.io/ipfs/bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/"
+ *
+ * const avatarUrl2 = await parseAvatarRecord({
+ *    client,
+ *    uri: "eip155:1/erc1155:0xb32979486938aa9694bfc898f35dbed459f44424/10063",
+ * });
+ *
+ * console.log(avatarUrl2); // "https://opensea.io/assets/0xb32979486938aa9694bfc898f35dbed459f44424/10063"
+ * ```
+ * @extension ENS
  */
 export async function parseAvatarRecord(
-  options: AvatarOptions,
+  options: ParseAvatarOptions,
 ): Promise<string | null> {
   let uri: string | null = options.uri;
   if (/eip155:/i.test(options.uri)) {
@@ -36,71 +56,7 @@ export async function parseAvatarRecord(
   return null;
 }
 
-/**
- * @internal
- */
-async function parseNftUri(options: AvatarOptions): Promise<string | null> {
-  let uri = options.uri;
-  // parse valid nft spec (CAIP-22/CAIP-29)
-  // @see: https://github.com/ChainAgnostic/CAIPs/tree/master/CAIPs
-  if (uri.startsWith("did:nft:")) {
-    // convert DID to CAIP
-    uri = uri.replace("did:nft:", "").replace(/_/g, "/");
-  }
-
-  const [reference = "", asset_namespace = "", tokenID = ""] = uri.split("/");
-  const [eip_namespace, chainID] = reference.split(":");
-  const [erc_namespace, contractAddress] = asset_namespace.split(":");
-
-  if (!eip_namespace || eip_namespace.toLowerCase() !== "eip155") {
-    throw new Error(
-      `Invalid EIP namespace, expected EIP155, got: "${eip_namespace}"`,
-    );
-  }
-  if (!chainID) {
-    throw new Error("Chain ID not found");
-  }
-  if (!contractAddress || !isAddress(contractAddress)) {
-    throw new Error("Contract address not found");
-  }
-  if (!tokenID) {
-    throw new Error("Token ID not found");
-  }
-  const chain = getCachedChain(Number(chainID));
-  const contract = getContract({
-    client: options.client,
-    chain,
-    address: contractAddress,
-  });
-  switch (erc_namespace) {
-    case "erc721": {
-      const { getNFT } = await import("../../extensions/erc721/read/getNFT.js");
-      const nft = await getNFT({
-        contract,
-        tokenId: BigInt(tokenID),
-      });
-      return nft.metadata.image ?? null;
-    }
-    case "erc1155": {
-      const { getNFT } = await import(
-        "../../extensions/erc1155/read/getNFT.js"
-      );
-      const nft = await getNFT({
-        contract,
-        tokenId: BigInt(tokenID),
-      });
-      return nft.metadata.image ?? null;
-    }
-
-    default: {
-      throw new Error(
-        `Invalid ERC namespace, expected ERC721 or ERC1155, got: "${erc_namespace}"`,
-      );
-    }
-  }
-}
-
-async function isImageUri(options: AvatarOptions): Promise<boolean> {
+async function isImageUri(options: ParseAvatarOptions): Promise<boolean> {
   try {
     const res = await getClientFetch(options.client)(options.uri, {
       method: "HEAD",

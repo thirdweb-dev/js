@@ -92,10 +92,9 @@ export function FaucetButton({
       });
     },
     onSettled: () => {
-      return queryClient.invalidateQueries([
-        "testnet-faucet-can-claim",
-        chainId,
-      ]);
+      return queryClient.invalidateQueries({
+        queryKey: ["testnet-faucet-can-claim", chainId],
+      });
     },
   });
 
@@ -175,7 +174,7 @@ export function FaucetButton({
           });
         }}
       >
-        {claimMutation.isLoading ? (
+        {claimMutation.isPending ? (
           <>
             Claiming <Spinner className="size-3" />
           </>

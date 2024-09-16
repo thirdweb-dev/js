@@ -20,7 +20,6 @@ export function ChainHeader(props: ChainHeaderProps) {
     // force the banner image to be 4:1 aspect ratio and full-width on mobile devices
     <div className="flex flex-col">
       {!props.headerImageUrl && <div className="h-8 md:hidden" />}
-
       <AspectRatio
         ratio={props.headerImageUrl ? 4 : 8}
         className="border-b border-border max-sm:-mx-4"
@@ -34,7 +33,6 @@ export function ChainHeader(props: ChainHeaderProps) {
           />
         )}
       </AspectRatio>
-
       {/* below header */}
       <div className="relative flex flex-row justify-end items-end">
         {/* chain logo */}

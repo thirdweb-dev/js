@@ -1,3 +1,4 @@
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useQueryWithNetwork } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
@@ -22,7 +23,6 @@ import { FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { Badge, Button, Card, Heading } from "tw-components";
-import { useDashboardRouter } from "../../../@/lib/DashboardRouter";
 
 interface ContractSourcesPageProps {
   contract: ThirdwebContract;
@@ -40,10 +40,7 @@ interface VerificationResult {
   error?: string;
 }
 
-export async function verifyContract({
-  contractAddress,
-  chainId,
-}: ContractParams) {
+async function verifyContract({ contractAddress, chainId }: ContractParams) {
   try {
     const response = await fetch(
       "https://contract.thirdweb.com/verify/contract",
@@ -289,7 +286,7 @@ function RefreshContractMetadataButton(props: {
 
   return (
     <Button
-      isLoading={contractCacheMutation.isLoading}
+      isLoading={contractCacheMutation.isPending}
       variant="outline"
       onClick={() => {
         toast.promise(contractCacheMutation.mutateAsync(), {

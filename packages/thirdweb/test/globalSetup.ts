@@ -1,6 +1,11 @@
 import { sha256 } from "@noble/hashes/sha256";
 import { startProxy } from "@viem/anvil";
-import { FORK_BLOCK_NUMBER, OPTIMISM_FORK_BLOCK_NUMBER, POLYGON_FORK_BLOCK_NUMBER } from "./src/chains.js";
+import {
+  BASE_FORK_BLOCK_NUMBER,
+  FORK_BLOCK_NUMBER,
+  OPTIMISM_FORK_BLOCK_NUMBER,
+  POLYGON_FORK_BLOCK_NUMBER,
+} from "./src/chains.js";
 
 require("dotenv-mono").load();
 
@@ -71,9 +76,28 @@ export default async function globalSetup() {
       forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
       forkChainId: 137,
       forkBlockNumber: POLYGON_FORK_BLOCK_NUMBER,
+      noMining: false,
+      startTimeout: 20000,
+    },
+  });
+
+  const shutdownBase = await startProxy({
+    port: 8650,
+    options: {
+      chainId: 8453,
+      forkUrl: SECRET_KEY
+        ? `https://8453.rpc.thirdweb.com/${clientId}`
+        : "https://mainnet.base.org",
+      forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
+      forkChainId: 8453,
+      forkBlockNumber: BASE_FORK_BLOCK_NUMBER,
       noMining: true,
       startTimeout: 20000,
     },
+  });
+
+  const shutdownCleanAnvil = await startProxy({
+    port: 8651,
   });
 
   return async () => {
@@ -82,5 +106,7 @@ export default async function globalSetup() {
     await shutdownOptimism();
     await shutdownAnvil();
     await shutdownPolygon();
+    await shutdownBase();
+    await shutdownCleanAnvil();
   };
 }

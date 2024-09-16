@@ -10,11 +10,11 @@ import {
 } from "recharts";
 import { CustomToolTip } from "./custom-tooltip";
 
-export type GenericDataType = Record<string, string | number>;
+type GenericDataType = Record<string, string | number>;
 
 type IndexType = "date";
 
-export interface AreaChartProps<
+interface AreaChartProps<
   TData extends GenericDataType,
   TIndexKey extends keyof TData,
 > {

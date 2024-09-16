@@ -1,3 +1,6 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
 import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
@@ -29,8 +32,6 @@ import {
   LinkButton,
   Text,
 } from "tw-components";
-import { CopyAddressButton } from "../../../@/components/ui/CopyAddressButton";
-import { CopyTextButton } from "../../../@/components/ui/CopyTextButton";
 import { TWTable } from "../../shared/TWTable";
 import { TransactionTimeline } from "./transaction-timeline";
 
@@ -188,14 +189,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
     columnHelper.accessor("fromAddress", {
       header: "From",
       cell: (cell) => {
-        return (
-          <CopyAddressButton
-            address={cell.getValue() ?? ""}
-            copyIconPosition="left"
-            variant="ghost"
-            className="text-muted-foreground"
-          />
-        );
+        return <WalletAddress address={cell.getValue() ?? ""} />;
       },
     }),
     columnHelper.accessor("transactionHash", {

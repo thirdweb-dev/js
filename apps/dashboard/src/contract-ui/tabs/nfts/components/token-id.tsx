@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import {
   Box,
@@ -208,7 +209,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                       <Heading size="label.md">Owner</Heading>
                     </GridItem>
                     <GridItem colSpan={8}>
-                      <AddressCopyButton size="xs" address={nft.owner} />
+                      <WalletAddress address={nft.owner} />
                     </GridItem>
                   </>
                 )}

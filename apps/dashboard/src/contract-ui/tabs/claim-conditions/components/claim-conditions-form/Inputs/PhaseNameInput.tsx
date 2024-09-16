@@ -6,14 +6,10 @@ import { useClaimConditionsFormContext } from "../index";
  * Allows users to edit the name for the claim phase.
  */
 export const PhaseNameInput: React.FC = () => {
-  const { phaseIndex, formDisabled, isClaimPhaseV1, form, field } =
+  const { phaseIndex, formDisabled, form, field } =
     useClaimConditionsFormContext();
   const inputPlaceholder = `Phase ${phaseIndex + 1}`;
   const inputValue = field.metadata?.name;
-
-  if (isClaimPhaseV1) {
-    return null;
-  }
 
   return (
     <CustomFormControl

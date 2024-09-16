@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   Flex,
   Icon,
@@ -14,8 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { replaceDeployerAddress } from "components/explore/publisher";
-import type { ContractType } from "constants/contracts";
-import type { BuiltinContractDetails } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
@@ -30,7 +29,6 @@ import {
   Text,
   TrackedIconButton,
 } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import type { ComponentWithChildren } from "types/component-with-children";
 import type { PublishedContractDetails } from "../hooks";
 
@@ -40,10 +38,9 @@ interface PublishedContractTableProps {
   hidePublisher?: true;
 }
 
-type ContractDataInput = BuiltinContractDetails | PublishedContractDetails;
+type ContractDataInput = PublishedContractDetails;
 type ContractDataRow = ContractDataInput["metadata"] & {
   id: string;
-  contractType: ContractType;
 };
 
 function convertContractDataToRowData(
@@ -52,7 +49,6 @@ function convertContractDataToRowData(
   return {
     id: input.id,
     ...input.metadata,
-    contractType: (input as BuiltinContractDetails)?.contractType || "custom",
   };
 }
 
@@ -111,7 +107,7 @@ export const PublishedContractTable: ComponentWithChildren<
         Header: "Published By",
         accessor: (row) => row.publisher,
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        Cell: (cell: any) => <AddressCopyButton address={cell.value} />,
+        Cell: (cell: any) => <WalletAddress address={cell.value} />,
       },
       {
         id: "audit-badge",

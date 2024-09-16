@@ -38,8 +38,12 @@ export const navLinks: SidebarLink[] = [
     ],
   },
   {
-    name: "in-App wallet",
+    name: "In-App Wallet",
     href: "/connect/in-app-wallet",
+  },
+  {
+    name: "Social",
+    href: "/connect/social",
   },
   {
     name: "Pay",

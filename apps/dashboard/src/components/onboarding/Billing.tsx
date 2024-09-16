@@ -20,7 +20,7 @@ interface OnboardingBillingProps {
   onCancel: () => void;
 }
 
-export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
+const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
   onSave,
   onCancel,
 }) => {
@@ -88,9 +88,9 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
           >
             <OnboardingPaymentForm
               onSave={() => {
-                queryClient.invalidateQueries(
-                  accountKeys.me(user?.address as string),
-                );
+                queryClient.invalidateQueries({
+                  queryKey: accountKeys.me(user?.address as string),
+                });
                 onSave();
               }}
               onCancel={handleCancel}

@@ -1,12 +1,11 @@
+import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
-import { redirect } from "next/navigation";
-import { getProjects } from "../../../../@/api/projects";
-import { TeamHeader } from "../../../components/Header/TeamHeader/TeamHeader";
-import TeamTabs from "../components/tab-switcher.client";
+import { TabPathLinks } from "@/components/ui/tabs";
+import { notFound } from "next/navigation";
+import { TeamHeader } from "../../components/TeamHeader/TeamHeader";
 
 export default async function TeamLayout(props: {
   children: React.ReactNode;
-  breadcrumbNav: React.ReactNode;
   params: { team_slug: string };
 }) {
   const teams = await getTeams();
@@ -19,8 +18,7 @@ export default async function TeamLayout(props: {
   );
 
   if (!team) {
-    // not a valid team, redirect back to 404
-    redirect("/404");
+    notFound();
   }
 
   return (
@@ -32,19 +30,20 @@ export default async function TeamLayout(props: {
           currentProject={undefined}
         />
 
-        <TeamTabs
+        <TabPathLinks
+          tabContainerClassName="px-4 lg:px-6"
           links={[
             {
-              href: `/team/${props.params.team_slug}`,
+              path: `/team/${props.params.team_slug}`,
               name: "Projects",
-              strictMatch: true,
+              exactMatch: true,
             },
             {
-              href: `/team/${props.params.team_slug}/~/usage`,
+              path: `/team/${props.params.team_slug}/~/usage`,
               name: "Usage",
             },
             {
-              href: `/team/${props.params.team_slug}/~/settings`,
+              path: `/team/${props.params.team_slug}/~/settings`,
               name: "Settings",
             },
           ]}

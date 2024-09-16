@@ -43,7 +43,7 @@
     "eslint-plugin-tsdoc": "^0.3.0",
     "esm": "^3.2.25",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.5.4"
+    "typescript": "5.6.2"
   },
   "dependencies": {
     "@thirdweb-dev/crypto": "workspace:*",

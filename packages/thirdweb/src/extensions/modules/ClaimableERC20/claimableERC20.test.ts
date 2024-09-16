@@ -16,7 +16,7 @@ import { deployModularContract } from "../../prebuilts/deploy-modular.js";
 import { getInstalledModules } from "../__generated__/IModularCore/read/getInstalledModules.js";
 import * as ClaimableERC20 from "./index.js";
 
-describe("ModularDropERC20", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("ModularDropERC20", () => {
   let contract: ThirdwebContract;
   beforeAll(async () => {
     const address = await deployModularContract({

@@ -10,7 +10,6 @@ import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractCard } from "components/explore/contract-card";
 import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
-import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import {
   ALL_CATEGORIES,
   type ExploreCategory,
@@ -23,7 +22,6 @@ import type {
   InferGetStaticPropsType,
 } from "next";
 import { NextSeo } from "next-seo";
-// import dynamic from "next/dynamic";
 import { PageId } from "page-id";
 import { FiChevronLeft } from "react-icons/fi";
 import { Heading, Link, Text } from "tw-components";
@@ -93,17 +91,38 @@ const ExploreCategoryPage: ThirdwebNextPage = (
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
           {props.category.contracts.map((publishedContractId, idx) => {
-            const [publisher, contractId] = publishedContractId.split("/");
+            const publisher: string = Array.isArray(publishedContractId)
+              ? publishedContractId[0].split("/")[0]
+              : publishedContractId.split("/")[0];
+            const contractId: string = Array.isArray(publishedContractId)
+              ? publishedContractId[0].split("/")[1]
+              : publishedContractId.split("/")[1];
+            const modules = Array.isArray(publishedContractId)
+              ? publishedContractId[1]
+              : undefined;
+            const overrides = Array.isArray(publishedContractId)
+              ? publishedContractId[2]
+              : undefined;
             return (
               <ContractCard
-                key={publishedContractId}
+                key={publisher + contractId + overrides?.title}
                 publisher={publisher}
                 contractId={contractId}
+                titleOverride={overrides?.title}
+                descriptionOverride={overrides?.description}
                 tracking={{
                   source: props.category.id,
                   itemIndex: `${idx}`,
                 }}
                 isBeta={props.category.isBeta}
+                modules={
+                  modules?.length
+                    ? modules.map((m) => ({
+                        publisher: m.split("/")[0],
+                        moduleId: m.split("/")[1],
+                      }))
+                    : undefined
+                }
               />
             );
           })}
@@ -114,13 +133,9 @@ const ExploreCategoryPage: ThirdwebNextPage = (
   );
 };
 
-// const AppLayout = dynamic(
-//   async () => (await import("components/app-layouts/app")).AppLayout,
-// );
-
 ExploreCategoryPage.getLayout = (page, props) => (
   <AppLayout {...props} noSEOOverride>
-    <PublisherSDKContext>{page}</PublisherSDKContext>
+    {page}
   </AppLayout>
 );
 

@@ -97,7 +97,7 @@ export const RevokeApiKeyButton: React.FC<RevokeApiKeyButtonProps> = ({
                 colorScheme="red"
                 onClick={handleRevoke}
                 ml={3}
-                isLoading={mutation.isLoading}
+                isLoading={mutation.isPending}
               >
                 Delete
               </Button>

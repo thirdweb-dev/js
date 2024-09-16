@@ -63,6 +63,7 @@ export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
   } else if (isBufferInstance(input1) && isBufferInstance(input2)) {
     // buffer gives us an easy way to compare the contents!
 
+    // @ts-expect-error - old typescript version, this will be deleted
     return input1.equals(input2);
   } else if (
     isBufferOrStringWithName(input1) &&
@@ -78,6 +79,7 @@ export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
         isBufferInstance(input2.data)
       ) {
         // otherwise we know it's buffers, so compare the buffers
+        // @ts-expect-error - old typescript version, this will be deleted
         return input1.data.equals(input2.data);
       }
     }

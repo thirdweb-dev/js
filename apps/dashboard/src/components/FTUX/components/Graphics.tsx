@@ -65,7 +65,7 @@ export const ConnectWalletImage: React.FC = () => (
       <ChakraNextImage
         alt=""
         boxSize="75px"
-        src={require("/public/logos/wallet.png")}
+        src={require("../../../../public/logos/wallet.png")}
       />
     </Center>
   </motion.div>

@@ -2,11 +2,13 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
+import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 import type { NetworkSelectorProps } from "../../../web/ui/ConnectWallet/NetworkSelector.js";
 import type { WelcomeScreen } from "../../../web/ui/ConnectWallet/screens/types.js";
 import type { LocaleId } from "../../../web/ui/types.js";
@@ -86,6 +88,7 @@ export type PayUIOptions = Prettify<
           prefillSource?: {
             currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
           };
+          preferredProvider?: FiatProvider;
         }
       | false;
 
@@ -310,6 +313,11 @@ export type ConnectButton_detailsModalOptions = {
    * By default the "Buy Funds" button is shown.
    */
   hideBuyFunds?: boolean;
+
+  /**
+   * All wallet IDs included in this array will be hidden from wallet selection when connected.
+   */
+  hiddenWallets?: WalletId[];
 };
 
 /**

@@ -1,7 +1,6 @@
-import { DocImage } from "@doc";
-import moduleModelImage from "./assets/NFT-drop-overview.png";
-import { createMetadata, FeatureCard } from "@doc";
+import { DocImage, createMetadata, FeatureCard } from "@doc";
 import { PencilRulerIcon, HandCoinsIcon, BlocksIcon, WorkflowIcon, ShieldCheckIcon, CirclePlusIcon } from "lucide-react";
+import OverviewImage from "./assets/overview-image.png";
 
 export const metadata = createMetadata({
 	title: "thirdweb Modular Contracts",
@@ -13,10 +12,22 @@ export const metadata = createMetadata({
 	},
 });
 
-# Modular Contracts
-Modular contracts is a framework that enables the creation of highly customizable and upgradeable smart contracts. Modular contracts is designed to encompass a broad number of use cases without compromising on the ease and security of creating smart contracts with thirdweb.
+# What are Modular Contracts?
 
-<DocImage src={moduleModelImage} />
+Modular contracts is a framework that enables the creation of highly customizable and 
+upgradeable smart contracts. Modular contracts is designed to encompass a broad number 
+of use cases without compromising on the ease and security of creating smart contracts 
+with thirdweb.
+
+<DocImage src={OverviewImage} />
+
+Modular contracts are composed of two components:
+
+- **Core Contract**: smart contracts that serve as the foundation of the modular contract
+- **Module Contract**: smart contracts that are installed on top of the core contract
+
+You can think of Modular Contracts like building bricks. Pick a core, install modules, 
+and swap them out to enable different functionality.
 
 #### Features
 
@@ -61,4 +72,4 @@ Modular contracts is a framework that enables the creation of highly customizabl
 </div>
 
 ### Templates
-[Extenion Starter Template](https://github.com/thirdweb-example/modular-contract-module-starter)
+[Extenion Starter Template](https://github.com/thirdweb-example/modular-contract-starter)

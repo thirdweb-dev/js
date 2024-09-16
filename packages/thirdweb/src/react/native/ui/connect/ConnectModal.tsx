@@ -15,7 +15,6 @@ import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js"
 import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
 import { useConnectionManager } from "../../../core/providers/connection-manager.js";
 import { useWalletInfo } from "../../../core/utils/wallet.js";
-import { getWalletIcon } from "../../../core/utils/walletIcon.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 import { type ContainerType, Header } from "../components/Header.js";
@@ -28,7 +27,7 @@ import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
-import { TW_ICON } from "../icons/svgs.js";
+import { TW_ICON, WALLET_ICON } from "../icons/svgs.js";
 import { ErrorView } from "./ErrorView.js";
 import { ExternalWalletsList } from "./ExternalWalletsList.js";
 import { InAppWalletUI, OtpLogin, PasskeyView } from "./InAppWalletUI.js";
@@ -374,7 +373,7 @@ export function ConnectModal(
                     <OrDivider theme={theme} />
                     <ThemedButtonWithIcon
                       theme={theme}
-                      icon={getWalletIcon("")}
+                      icon={WALLET_ICON}
                       title="Connect a wallet"
                       onPress={() =>
                         setModalState({ screen: "external_wallets" })

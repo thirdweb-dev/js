@@ -5,7 +5,7 @@ module.exports = {
     "plugin:import/typescript",
     "plugin:@next/next/recommended",
     "plugin:promise/recommended",
-    "plugin:storybook/recommended"
+    "plugin:storybook/recommended",
   ],
   rules: {
     "react-compiler/react-compiler": "error",
@@ -86,6 +86,12 @@ module.exports = {
             importNames: ["useRouter"],
             message:
               'Use `import { useDashboardRouter } from "@/lib/DashboardRouter";` instead',
+          },
+          {
+            name: "lucide-react",
+            importNames: ["Link", "Table", "Sidebar"],
+            message:
+              'This is likely a mistake. If you really want to import this - postfix the imported name with Icon. Example - "LinkIcon"',
           },
         ],
       },

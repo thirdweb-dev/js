@@ -1,45 +1,23 @@
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
-import { Notifications } from "components/settings/Account/Notifications";
-import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
-import { Heading, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
+import { SettingsNotificationsPage } from "../../../app/team/[team_slug]/(team)/~/settings/notifications/NotificationsPage";
+import { SettingsSidebarLayout } from "../../../core-ui/sidebar/settings";
 
-const SettingsNotificationsPage: ThirdwebNextPage = () => {
-  const meQuery = useAccount();
-
-  if (meQuery.isLoading || !meQuery.data) {
-    return null;
-  }
-
-  const account = meQuery.data;
-
-  return (
-    <Flex flexDir="column" gap={8}>
-      <Flex direction="column" gap={2}>
-        <Heading size="title.lg" as="h1" h={10}>
-          Notification Settings
-        </Heading>
-        <Text size="body.md">
-          Configure your email notification preferences.
-        </Text>
-      </Flex>
-
-      <Notifications account={account} />
-    </Flex>
-  );
+const Page: ThirdwebNextPage = () => {
+  return <SettingsNotificationsPage />;
 };
 
-SettingsNotificationsPage.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <SettingsSidebar activePage="notifications" />
-
-    {page}
+Page.getLayout = (page, props) => (
+  <AppLayout
+    {...props}
+    pageContainerClassName="!max-w-full !px-0"
+    mainClassName="!pt-0"
+  >
+    <SettingsSidebarLayout>{page}</SettingsSidebarLayout>
   </AppLayout>
 );
 
-SettingsNotificationsPage.pageId = PageId.SettingsNotifications;
+Page.pageId = PageId.SettingsNotifications;
 
-export default SettingsNotificationsPage;
+export default Page;

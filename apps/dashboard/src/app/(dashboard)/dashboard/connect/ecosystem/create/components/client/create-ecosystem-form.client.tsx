@@ -42,7 +42,9 @@ const formSchema = z.object({
   permission: z.union([z.literal("PARTNER_WHITELIST"), z.literal("ANYONE")]),
 });
 
-export function CreateEcosystemForm() {
+export function CreateEcosystemForm(props: {
+  ecosystemLayoutPath: string;
+}) {
   // When set, the confirmation modal is open the this contains the form data to be submitted
   const [formDataToBeConfirmed, setFormDataToBeConfirmed] = useState<
     z.infer<typeof formSchema> | undefined
@@ -57,7 +59,7 @@ export function CreateEcosystemForm() {
     },
   });
 
-  const { createEcosystem, isLoading } = useCreateEcosystem({
+  const { mutateAsync: createEcosystem, isPending } = useCreateEcosystem({
     onError: (error) => {
       const message =
         error instanceof Error ? error.message : "Failed to create ecosystem";
@@ -65,7 +67,7 @@ export function CreateEcosystemForm() {
     },
     onSuccess: (slug: string) => {
       form.reset();
-      router.push(`/dashboard/connect/ecosystem/${slug}`);
+      router.push(`${props.ecosystemLayoutPath}/${slug}`);
     },
   });
 
@@ -179,9 +181,9 @@ export function CreateEcosystemForm() {
               type="submit"
               variant="primary"
               className="w-full"
-              disabled={isLoading}
+              disabled={isPending}
             >
-              {isLoading && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
+              {isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
               Create
             </Button>
           )}

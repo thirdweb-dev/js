@@ -1,5 +1,6 @@
 import { XIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo } from "react";
 import { ethereum } from "thirdweb/chains";
 import {
   ConnectButton,
@@ -9,7 +10,6 @@ import {
   lightTheme,
   useActiveAccount,
   useActiveWallet,
-  useDisconnect,
 } from "thirdweb/react";
 import { useSiweAuth } from "thirdweb/react";
 import { createWallet } from "thirdweb/wallets";
@@ -21,10 +21,19 @@ import type { ConnectPlaygroundOptions } from "../components/types";
 
 export function RightSection(props: {
   connectOptions: ConnectPlaygroundOptions;
+  tab?: string;
 }) {
-  const [previewTab, setPreviewTab] = useState<"modal" | "button" | "code">(
-    "modal",
+  const router = useRouter();
+  const previewTab = useMemo(
+    () =>
+      ["modal", "button", "code"].includes(props.tab || "")
+        ? (props.tab as "modal" | "button" | "code")
+        : "modal",
+    [props.tab],
   );
+  const setPreviewTab = (tab: "modal" | "button" | "code") => {
+    router.push(`/connect/sign-in?tab=${tab}`);
+  };
   const { connectOptions } = props;
   const wallet = useActiveWallet();
   const account = useActiveAccount();
@@ -55,28 +64,6 @@ export function RightSection(props: {
   };
 
   const { isLoggedIn, doLogout } = useSiweAuth(wallet, account, playgroundAuth);
-
-  const { disconnect } = useDisconnect();
-  useEffect(() => {
-    if (wallet && previewTab === "modal") {
-      if (connectOptions.enableAuth) {
-        if (isLoggedIn) {
-          disconnect(wallet);
-          doLogout();
-        }
-      } else {
-        disconnect(wallet);
-        doLogout();
-      }
-    }
-  }, [
-    wallet,
-    disconnect,
-    previewTab,
-    isLoggedIn,
-    connectOptions.enableAuth,
-    doLogout,
-  ]);
 
   const wallets = getWallets(props.connectOptions);
 
@@ -126,43 +113,46 @@ export function RightSection(props: {
       >
         <BackgroundPattern />
 
-        {previewTab === "modal" && (
-          <div className="relative">
-            <ConnectEmbed
-              client={THIRDWEB_CLIENT}
-              autoConnect={false}
-              modalSize={connectOptions.modalSize}
-              theme={themeObj}
-              className="shadow-xl"
-              wallets={wallets}
-              header={{
-                title: connectOptions.modalTitle,
-                titleIcon: connectOptions.modalTitleIcon,
-              }}
-              locale={connectOptions.localeId}
-              auth={connectOptions.enableAuth ? playgroundAuth : undefined}
-              accountAbstraction={
-                connectOptions.enableAccountAbstraction
-                  ? {
-                      chain: ethereum,
-                      sponsorGas: true,
-                    }
-                  : undefined
-              }
-              termsOfServiceUrl={connectOptions.termsOfServiceLink}
-              privacyPolicyUrl={connectOptions.privacyPolicyLink}
-              showThirdwebBranding={connectOptions.ShowThirdwebBranding}
-              requireApproval={connectOptions.requireApproval}
-            />
-            {/* Fake X icon to make it looks exactly like a modal  */}
-            <XIcon
-              className="absolute top-6 right-6 cursor-not-allowed size-6"
-              style={{
-                color: themeObj.colors.secondaryIconColor,
-              }}
-            />
-          </div>
-        )}
+        {previewTab === "modal" &&
+          (account && (!connectOptions.enableAuth || isLoggedIn) ? (
+            <ConnectButton client={THIRDWEB_CLIENT} />
+          ) : (
+            <div className="relative">
+              <ConnectEmbed
+                client={THIRDWEB_CLIENT}
+                autoConnect={false}
+                modalSize={connectOptions.modalSize}
+                theme={themeObj}
+                className="shadow-xl"
+                wallets={wallets}
+                header={{
+                  title: connectOptions.modalTitle,
+                  titleIcon: connectOptions.modalTitleIcon,
+                }}
+                locale={connectOptions.localeId}
+                auth={connectOptions.enableAuth ? playgroundAuth : undefined}
+                accountAbstraction={
+                  connectOptions.enableAccountAbstraction
+                    ? {
+                        chain: ethereum,
+                        sponsorGas: true,
+                      }
+                    : undefined
+                }
+                termsOfServiceUrl={connectOptions.termsOfServiceLink}
+                privacyPolicyUrl={connectOptions.privacyPolicyLink}
+                showThirdwebBranding={connectOptions.ShowThirdwebBranding}
+                requireApproval={connectOptions.requireApproval}
+              />
+              {/* Fake X icon to make it looks exactly like a modal  */}
+              <XIcon
+                className="absolute top-6 right-6 cursor-not-allowed size-6"
+                style={{
+                  color: themeObj.colors.secondaryIconColor,
+                }}
+              />
+            </div>
+          ))}
 
         {previewTab === "button" && (
           <ConnectButton

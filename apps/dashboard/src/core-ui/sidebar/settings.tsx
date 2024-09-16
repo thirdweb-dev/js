@@ -1,51 +1,36 @@
-import { SidebarNav } from "./nav";
-import type { Route } from "./types";
+import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 
-type SettingsSidebarProps = {
-  activePage:
-    | "apiKeys"
-    | "apiKey"
-    | "devices"
-    | "usage"
-    | "storage"
-    | "billing"
-    | "notifications"
-    | "gas-credits";
-};
-
-const links: Route[] = [
-  {
-    path: "/dashboard/settings/api-keys",
-    subActivePath: true,
-    title: "API Keys",
-    name: "apiKeys",
-  },
-  { path: "/dashboard/settings/devices", title: "Devices", name: "devices" },
-  {
-    path: "/dashboard/settings/billing",
-    title: "Billing",
-    name: "billing",
-  },
-  {
-    path: "/dashboard/settings/gas-credits",
-    title: "Gas Credits",
-    name: "gas-credits",
-  },
-  { path: "/dashboard/settings/usage", title: "Usage", name: "usage" },
-  {
-    path: "/dashboard/settings/storage",
-    title: "Storage",
-    name: "storage",
-  },
-  {
-    path: "/dashboard/settings/notifications",
-    title: "Notifications",
-    name: "notifications",
-  },
-];
-
-export const SettingsSidebar: React.FC<SettingsSidebarProps> = ({
-  activePage,
+export const SettingsSidebarLayout = (props: {
+  children: React.ReactNode;
 }) => {
-  return <SidebarNav links={links} activePage={activePage} title="Settings" />;
+  return (
+    <SidebarLayout
+      sidebarLinks={[
+        {
+          href: "/dashboard/settings/api-keys",
+          label: "API Keys",
+        },
+        { href: "/dashboard/settings/devices", label: "Devices" },
+        {
+          href: "/dashboard/settings/billing",
+          label: "Billing",
+        },
+        {
+          href: "/dashboard/settings/gas-credits",
+          label: "Gas Credits",
+        },
+        { href: "/dashboard/settings/usage", label: "Usage" },
+        {
+          href: "/dashboard/settings/storage",
+          label: "Storage",
+        },
+        {
+          href: "/dashboard/settings/notifications",
+          label: "Notifications",
+        },
+      ]}
+    >
+      {props.children}
+    </SidebarLayout>
+  );
 };

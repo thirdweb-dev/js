@@ -1,5 +1,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,6 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   type EditEngineInstanceInput,
@@ -35,20 +39,13 @@ import { BiPencil } from "react-icons/bi";
 import { FiTrash } from "react-icons/fi";
 import { toast } from "sonner";
 import { FormLabel } from "tw-components";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "../../@/components/ui/alert";
-import { Button } from "../../@/components/ui/button";
-import { Input } from "../../@/components/ui/input";
-import { Textarea } from "../../@/components/ui/textarea";
 
 interface EngineInstancesTableProps {
   instances: EngineInstance[];
   isLoading: boolean;
   isFetched: boolean;
   refetch: ReturnType<typeof useEngineInstances>["refetch"];
+  engineLinkPrefix: string;
 }
 
 export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
@@ -56,6 +53,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
   isLoading,
   isFetched,
   refetch,
+  engineLinkPrefix,
 }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
@@ -122,7 +120,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
             ) : (
               <div className="flex flex-col gap-0.5">
                 <Link
-                  href={`/dashboard/engine/${id}`}
+                  href={`${engineLinkPrefix}/${id}`}
                   className="text-foreground flex text-lg font-semibold items-center before:absolute before:inset-0 before:bg-transparent"
                 >
                   {name}
@@ -272,7 +270,7 @@ const EditModal = (props: {
               className="gap-2"
               disabled={!form.formState.isDirty}
             >
-              {editInstance.isLoading ? (
+              {editInstance.isPending ? (
                 <Spinner className="size-4" />
               ) : (
                 <SendIcon className="size-4" />
@@ -365,7 +363,7 @@ function RemoveFromDashboardModalContent(props: {
           variant="destructive"
           className="gap-2"
         >
-          {removeFromDashboard.isLoading ? (
+          {removeFromDashboard.isPending ? (
             <Spinner className="size-4" />
           ) : (
             <Trash2Icon className="size-4" />
@@ -495,7 +493,7 @@ function CancelSubscriptionModalContent(props: {
             disabled={!form.formState.isValid}
             className="gap-2"
           >
-            {removeCloudHosted.isLoading ? (
+            {removeCloudHosted.isPending ? (
               <Spinner className="size-4" />
             ) : (
               <SendIcon className="size-4" />

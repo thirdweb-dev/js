@@ -9,6 +9,7 @@ export type DeployOptions = {
   forceDirectDeploy?: boolean;
   saltForProxyDeploy?: string;
   compilerOptions?: CompilerOptions;
+  defaultModules?: {moduleName: string, moduleVersion: string, publisherAddress: string}[],
   notifier?: (
     status: "deploying" | "deployed",
     contractType: DeployedContractType | string,

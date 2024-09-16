@@ -24,7 +24,7 @@ function cleanUrl(url: string) {
   return url;
 }
 
-export function AllFilters() {
+export function AllFilters(props: { hideChainType?: boolean }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -44,7 +44,7 @@ export function AllFilters() {
         <h3 className="font-bold">Filters</h3>
 
         {/* Chain Type */}
-        <ChainTypeFilter sectionOnly />
+        {!props.hideChainType && <ChainTypeFilter sectionOnly />}
 
         <Separator />
 
@@ -126,7 +126,6 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
   sectionOnly,
 }) => {
   const router = useDashboardRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const value = useMemo(
@@ -134,25 +133,19 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
     [searchParams],
   );
 
-  const makeUrl = useCallback(
-    (newValue: string) => {
-      const params = new URLSearchParams(searchParams || undefined);
-      switch (newValue) {
-        case "mainnet":
-        case "testnet": {
-          params.set("type", newValue);
-          break;
-        }
-        default: {
-          params.delete("type");
-        }
+  const makeUrl = useCallback((newValue: string) => {
+    switch (newValue) {
+      case "mainnets": {
+        return "/chainlist/mainnets";
       }
-      // reset page alway
-      params.delete("page");
-      return cleanUrl(`${pathname}?${params.toString()}`);
-    },
-    [pathname, searchParams],
-  );
+      case "testnets": {
+        return "/chainlist/testnets";
+      }
+      default: {
+        return "";
+      }
+    }
+  }, []);
 
   const section = (
     <FilterSection title="Chain Type">
@@ -168,12 +161,12 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
           <Label htmlFor="all">All Chains</Label>
         </div>
         <div className="flex items-center gap-2">
-          <RadioGroupItem value="mainnet" id="mainnet" />
-          <Label htmlFor="mainnet">Mainnets Only</Label>
+          <RadioGroupItem value="mainnets" id="mainnets" />
+          <Label htmlFor="mainnest">Mainnets Only</Label>
         </div>
         <div className="flex items-center gap-2">
-          <RadioGroupItem value="testnet" id="testnet" />
-          <Label htmlFor="testnet">Testnets Only</Label>
+          <RadioGroupItem value="testnets" id="testnets" />
+          <Label htmlFor="testnets">Testnets Only</Label>
         </div>
       </RadioGroup>
     </FilterSection>
@@ -191,9 +184,9 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
             variant="outline"
             className={value === "all" ? undefined : "pr-11 border-primary"}
           >
-            {value === "mainnet"
+            {value === "mainnets"
               ? "Mainnets Only"
-              : value === "testnet"
+              : value === "testnets"
                 ? "Testnets Only"
                 : "Chain Type"}
             {value === "all" && <ChevronDownIcon className="ml-2 size-4" />}

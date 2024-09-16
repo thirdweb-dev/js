@@ -6,6 +6,7 @@ import { isBaseTransactionOptions } from "../../../transaction/types.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import { isObjectWithKeys } from "../../../utils/type-guards.js";
 import type { ConnectionManager } from "../../../wallets/manager/index.js";
+import { structuralSharing } from "../utils/structuralSharing.js";
 import { SetRootElementContext } from "./RootElementContext.js";
 import { ConnectionManagerCtx } from "./connection-manager.js";
 import { invalidateWalletBalance } from "./invalidateWalletBalance.js";
@@ -63,6 +64,7 @@ export function ThirdwebProviderCore(props: {
             // With SSR, we usually want to set some default staleTime
             // above 0 to avoid refetching immediately on the client
             staleTime: 60 * 1000,
+            structuralSharing,
           },
         },
       }),

@@ -57,7 +57,6 @@ export const NetworkIDInput: React.FC<{
           },
         })}
       />
-
       <FormErrorMessage>
         Can not use Network ID {`"${slug}"`}.
         {slug && slug in slugToChainRecord && (

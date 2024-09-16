@@ -7,7 +7,7 @@ import { processSnapshotERC20 } from "../../../utils/extensions/airdrop/process-
 import type { SnapshotEntryERC20 } from "../../../utils/extensions/airdrop/types.js";
 
 /**
- * @extension Airdrop
+ * @extension AIRDROP
  */
 export type GenerateMerkleTreeInfoERC20Params = {
   snapshot: SnapshotEntryERC20[];
@@ -41,7 +41,7 @@ export type GenerateMerkleTreeInfoERC20Params = {
  * // - Set merkle root on the contract to enable claiming
  *
  * ```
- * @extension Airdrop
+ * @extension AIRDROP
  * @returns A promise that resolves to the merkle-root and snapshot-uri.
  */
 export async function generateMerkleTreeInfoERC20(

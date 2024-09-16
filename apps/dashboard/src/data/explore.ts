@@ -9,7 +9,15 @@ export interface ExploreCategory {
   displayName?: string;
   description: string;
   learnMore?: string;
-  contracts: Readonly<PublishedContractID[]>;
+  contracts:
+    | Array<PublishedContractID>
+    | Array<
+        [
+          PublishedContractID,
+          Array<PublishedContractID>,
+          { title: string; description: string },
+        ]
+      >;
   showInExplore?: boolean;
   isBeta?: boolean;
 }
@@ -27,7 +35,8 @@ const POPULAR = {
     "thirdweb.eth/NFTStake",
     "unlock-protocol.eth/PublicLock",
   ],
-} as const;
+} satisfies ExploreCategory;
+
 const NFTS = {
   id: "nft",
   name: "NFT",
@@ -47,7 +56,7 @@ const NFTS = {
     "thirdweb.eth/Multiwrap",
     "kronickatz.eth/ERC721NESDrop",
   ],
-} as const;
+} satisfies ExploreCategory;
 
 const GOVERNANCE = {
   id: "daos-governance",
@@ -58,7 +67,7 @@ const GOVERNANCE = {
     "thirdweb.eth/TokenERC20",
     "thirdweb.eth/Split",
   ],
-} as const;
+} satisfies ExploreCategory;
 
 const DROPS = {
   id: "drops",
@@ -70,7 +79,7 @@ const DROPS = {
     "thirdweb.eth/DropERC1155",
     "thirdweb.eth/DropERC20",
   ],
-} as const;
+} satisfies ExploreCategory;
 
 const MARKETS = {
   id: "marketplace",
@@ -82,7 +91,109 @@ const MARKETS = {
     "thirdweb.eth/TokenERC20",
     "thirdweb.eth/Split",
   ],
-} as const;
+} satisfies ExploreCategory;
+
+const MODULAR_CONTRACTS = {
+  id: "modular-contracts",
+  name: "modular",
+  displayName: "Modular Contracts (Beta)",
+  description:
+    "Collection of highly customizable and upgradeable smart contracts built with the modular contracts framework.",
+  isBeta: true,
+  contracts: [
+    // erc721 drop
+    [
+      "thirdweb.eth/ERC721CoreInitializable",
+      [
+        "deployer.thirdweb.eth/ClaimableERC721",
+        "deployer.thirdweb.eth/BatchMetadataERC721",
+        "deployer.thirdweb.eth/RoyaltyERC721",
+      ],
+      {
+        title: "Modular NFT Drop",
+        description: "ERC721 NFTs that anyone can mint.",
+      },
+    ],
+    // erc721 token
+    [
+      "thirdweb.eth/ERC721CoreInitializable",
+      [
+        "deployer.thirdweb.eth/MintableERC721",
+        "deployer.thirdweb.eth/BatchMetadataERC721",
+        "deployer.thirdweb.eth/TransferableERC721",
+      ],
+      {
+        title: "Modular NFT Collection",
+        description: "ERC721 NFTs that only owners can mint.",
+      },
+    ],
+    // open edition 721
+    [
+      "thirdweb.eth/ERC721CoreInitializable",
+      [
+        "deployer.thirdweb.eth/ClaimableERC721",
+        "deployer.thirdweb.eth/OpenEditionMetadataERC721",
+        "deployer.thirdweb.eth/RoyaltyERC721",
+      ],
+      {
+        title: "Modular Open Edition",
+        description: "ERC721 NFTs with identical metadata.",
+      },
+    ],
+    // erc1155 drop
+    [
+      "thirdweb.eth/ERC1155CoreInitializable",
+      [
+        "deployer.thirdweb.eth/ClaimableERC1155",
+        "deployer.thirdweb.eth/BatchMetadataERC1155",
+        "deployer.thirdweb.eth/RoyaltyERC1155",
+        "deployer.thirdweb.eth/SequentialTokenIdERC1155",
+      ],
+      {
+        title: "Modular Edition Drop",
+        description: "ERC1155 NFTs that others can mint.",
+      },
+    ],
+    // erc1155 token
+    [
+      "thirdweb.eth/ERC1155CoreInitializable",
+      [
+        "deployer.thirdweb.eth/MintableERC1155",
+        "deployer.thirdweb.eth/BatchMetadataERC1155",
+        "deployer.thirdweb.eth/TransferableERC1155",
+        "deployer.thirdweb.eth/SequentialTokenIdERC1155",
+      ],
+      {
+        title: "Modular Edition",
+        description: "ERC1155 NFTs that only owners can mint.",
+      },
+    ],
+    // erc20 drop
+    [
+      "thirdweb.eth/ERC20CoreInitializable",
+      [
+        "deployer.thirdweb.eth/ClaimableERC20",
+        "deployer.thirdweb.eth/TransferableERC20",
+      ],
+      {
+        title: "Modular Token Drop",
+        description: "ERC20 Tokens that others can mint.",
+      },
+    ],
+    // erc20 token
+    [
+      "thirdweb.eth/ERC20CoreInitializable",
+      [
+        "deployer.thirdweb.eth/MintableERC20",
+        "deployer.thirdweb.eth/TransferableERC20",
+      ],
+      {
+        title: "Modular Token",
+        description: "ERC20 Tokens that only owners can mint.",
+      },
+    ],
+  ],
+} satisfies ExploreCategory;
 
 const AIRDROP = {
   id: "airdrop",
@@ -91,7 +202,7 @@ const AIRDROP = {
   description:
     "Efficiently transfer large numbers of on-chain assets to a large number of recipients.",
   contracts: ["thirdweb.eth/Airdrop"],
-} as const;
+} satisfies ExploreCategory;
 
 const GAMING = {
   id: "gaming",
@@ -109,7 +220,7 @@ const GAMING = {
     "thirdweb.eth/NFTStake",
   ],
   showInExplore: false,
-} as const;
+} satisfies ExploreCategory;
 
 const LOYALTY = {
   id: "loyalty",
@@ -123,7 +234,7 @@ const LOYALTY = {
     "thirdweb.eth/TokenERC20",
   ],
   showInExplore: false,
-} as const;
+} satisfies ExploreCategory;
 
 const COMMERCE = {
   id: "commerce",
@@ -138,7 +249,7 @@ const COMMERCE = {
     "thirdweb.eth/Split",
   ],
   showInExplore: false,
-} as const;
+} satisfies ExploreCategory;
 
 const STAKING = {
   id: "staking",
@@ -151,7 +262,7 @@ const STAKING = {
     "thirdweb.eth/TokenStake",
   ],
   showInExplore: true,
-} as const;
+} satisfies ExploreCategory;
 
 const SMART_WALLET = {
   id: "smart-wallet",
@@ -166,10 +277,11 @@ const SMART_WALLET = {
     "thirdweb.eth/ManagedAccountFactory",
   ],
   showInExplore: true,
-} as const;
+} satisfies ExploreCategory;
 
-const CATEGORIES = {
+const CATEGORIES: Record<string, ExploreCategory> = {
   [POPULAR.id]: POPULAR,
+  [MODULAR_CONTRACTS.id]: MODULAR_CONTRACTS,
   [NFTS.id]: NFTS,
   [MARKETS.id]: MARKETS,
   [DROPS.id]: DROPS,
@@ -180,9 +292,9 @@ const CATEGORIES = {
   [COMMERCE.id]: COMMERCE,
   [STAKING.id]: STAKING,
   [GOVERNANCE.id]: GOVERNANCE,
-} as const;
+};
 
-export function getCategory(id: string): ExploreCategory | null {
+export function getCategory(id: string) {
   if (isExploreCategory(id)) {
     return CATEGORIES[id];
   }
@@ -195,8 +307,8 @@ function isExploreCategory(category: string): category is ExploreCategoryName {
   return category in CATEGORIES;
 }
 
-export const EXPLORE_PAGE_DATA = Object.values(CATEGORIES).filter(
-  (v) => (v as ExploreCategory).showInExplore !== false,
+export const EXPLORE_PAGE_DATA = Object.values(CATEGORIES).filter((v) =>
+  "showInExplore" in v ? v.showInExplore !== false : true,
 );
 
 export const ALL_CATEGORIES = Object.values(CATEGORIES).map((v) => v.id);
@@ -208,23 +320,13 @@ export function prefetchCategory(
   return Promise.allSettled(
     category.contracts.map((contract) =>
       queryClient.fetchQuery(
-        publishedContractQuery(`${contract}/latest`, queryClient),
+        publishedContractQuery(
+          Array.isArray(contract)
+            ? `${contract[0]}/latest`
+            : `${contract}/latest`,
+          queryClient,
+        ),
       ),
     ),
   );
-}
-
-export function getAllExplorePublishedContracts() {
-  const all = EXPLORE_PAGE_DATA.flatMap((category) => category.contracts);
-  return [...new Set(all)];
-}
-
-export function getAllExplorePublishers() {
-  return [
-    ...new Set(
-      getAllExplorePublishedContracts().map(
-        (contract) => contract.split("/")[0],
-      ),
-    ),
-  ];
 }

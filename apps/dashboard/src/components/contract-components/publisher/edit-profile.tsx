@@ -120,7 +120,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                 role="group"
                 colorScheme="primary"
                 type="submit"
-                isLoading={editProfile.isLoading}
+                isLoading={editProfile.isPending}
                 form={FORM_ID}
               >
                 Save

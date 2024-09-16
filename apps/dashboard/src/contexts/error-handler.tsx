@@ -1,3 +1,5 @@
+"use client";
+
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
 import {

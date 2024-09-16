@@ -1,3 +1,5 @@
+"use client";
+
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type EngineInstance,

@@ -1,3 +1,4 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   type AccessToken,
   useEngineRevokeAccessToken,
@@ -27,7 +28,6 @@ import { BiPencil } from "react-icons/bi";
 import { FiTrash } from "react-icons/fi";
 import { Button, FormLabel, Text } from "tw-components";
 import { toDateTimeLocal } from "utils/date-utils";
-import { CopyAddressButton } from "../../../@/components/ui/CopyAddressButton";
 
 interface AccessTokensTableProps {
   instanceUrl: string;
@@ -61,13 +61,7 @@ const columns = [
     header: "Created By",
     cell: (cell) => {
       const address = cell.getValue();
-      return (
-        <CopyAddressButton
-          address={address}
-          copyIconPosition="left"
-          variant="ghost"
-        />
-      );
+      return <WalletAddress address={address} />;
     },
   }),
   columnHelper.accessor("createdAt", {

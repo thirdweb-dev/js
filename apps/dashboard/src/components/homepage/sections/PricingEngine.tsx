@@ -1,6 +1,5 @@
 import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
-
-import { EngineTierCard } from "components/engine/tier-card";
+import { EngineTierCard } from "components/engine/create/tier-card";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
 import { Heading } from "tw-components";
