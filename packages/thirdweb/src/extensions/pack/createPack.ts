@@ -41,13 +41,13 @@ export type CreatePackParams = {
   client: ThirdwebClient;
   contract: ThirdwebContract;
   recipient: string;
+  tokenOwner: string;
   packMetadata: NFTInput | string;
   amountDistributedPerOpen: bigint;
   openStartTimestamp: Date;
   erc20Rewards?: ERC20Reward[];
   erc721Rewards?: ERC721Reward[];
   erc1155Rewards?: ERC1155Reward[];
-  tokenOwner: string;
 };
 
 /**
@@ -114,9 +114,8 @@ export async function getCreatePackParams(
     recipient,
     contents,
     numOfRewardUnits,
-
-    // @joaquim - I'm not sure if this is correct
-    openStartTimestamp: BigInt(openStartTimestamp.getTime()),
+    // openStartTimestamp should be in seconds and not millisecond
+    openStartTimestamp: BigInt(Math.ceil(openStartTimestamp.getTime() / 1000)),
     amountDistributedPerOpen,
   };
 }
