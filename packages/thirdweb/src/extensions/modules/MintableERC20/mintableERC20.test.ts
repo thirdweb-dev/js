@@ -16,7 +16,7 @@ import { getInstalledModules } from "../__generated__/IModularCore/read/getInsta
 import { grantMinterRole } from "../common/grantMinterRole.js";
 import * as MintableERC20 from "./index.js";
 
-describe("ModularTokenERC20", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("ModularTokenERC20", () => {
   let contract: ThirdwebContract;
   beforeAll(async () => {
     const address = await deployModularContract({
