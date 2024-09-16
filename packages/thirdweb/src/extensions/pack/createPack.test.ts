@@ -1,18 +1,18 @@
 import { describe, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
-import { deployPackContract } from "../prebuilts/deploy-pack.js";
 import { getContract } from "../../contract/contract.js";
-import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
-import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { mintTo as mintToERC20 } from "../erc20/write/mintTo.js";
-import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
 import { mintTo as mintToERC721 } from "../erc721/write/mintTo.js";
-import { createPack } from "./createPack.js";
 import { getPackContents } from "../erc1155/__generated__/IPack/read/getPackContents.js";
 import { getTokenCountOfBundle } from "../erc1155/__generated__/IPack/read/getTokenCountOfBundle.js";
+import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
+import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
+import { deployPackContract } from "../prebuilts/deploy-pack.js";
+import { createPack } from "./createPack.js";
 
 const account = TEST_ACCOUNT_A;
 const client = TEST_CLIENT;
