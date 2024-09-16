@@ -18,7 +18,7 @@ const account = TEST_ACCOUNT_A;
 const client = TEST_CLIENT;
 const chain = ANVIL_CHAIN;
 
-describe("createPack", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
   it("should work", async () => {
     const packAddress = await deployPackContract({
       account,
