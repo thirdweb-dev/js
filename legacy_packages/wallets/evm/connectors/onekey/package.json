@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-connectors-onekey.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-connectors-onekey.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-connectors-onekey.esm.js": "./dist/thirdweb-dev-wallets-evm-connectors-onekey.browser.esm.js"
-  }
-}

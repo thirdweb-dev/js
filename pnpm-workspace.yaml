@@ -1,7 +1,5 @@
 packages:
 - packages/*
-- legacy_packages/*
 - apps/*
-- legacy_e2e/bundlers/*
-- legacy_e2e/runtimes/*
+
 

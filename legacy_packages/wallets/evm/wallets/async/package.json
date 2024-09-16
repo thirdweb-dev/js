@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-wallets-async.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-wallets-async.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-wallets-async.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-async.browser.esm.js"
-  }
-}

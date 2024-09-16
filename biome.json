@@ -22,7 +22,6 @@
   },
   "files": {
     "ignore": [
-      "legacy_packages/**",
       "packages/thirdweb/src/crypto/aes/lib/md5.ts",
       "packages/thirdweb/src/utils/promise/p-limit.ts",
       "packages/thirdweb/src/utils/bytecode/cbor-decode.ts",

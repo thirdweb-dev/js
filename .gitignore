@@ -10,16 +10,12 @@ dist-ssr
 .cache
 server/dist
 public/dist
-./legacy_packages/contracts-js/abis
 .idea/
 .yalc/
 yalc.lock
 ./build/
 playwright-report/
 .env/
-
-# Artifacts
-legacy_packages/cli/artifacts/
 
 # codecov binary
 codecov
@@ -28,7 +24,6 @@ codecov
 sitemap*.xml
 
 # typedoc
-legacy_packages/*/typedoc/*
 packages/*/typedoc/*
 
 *storybook.log

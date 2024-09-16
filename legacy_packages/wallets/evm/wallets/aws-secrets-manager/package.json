@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.browser.esm.js"
-  }
-}

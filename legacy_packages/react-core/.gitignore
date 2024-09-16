@@ -1,9 +1,0 @@
-node_modules/
-/test-results/
-/playwright-report/
-/playwright/.cache/
-etc/
-temp/
-temp-evm/
-temp-solana/
-docs/

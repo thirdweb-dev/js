@@ -1,4 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-pay-integrations-coinbase.cjs.js",
-  "module": "dist/thirdweb-dev-pay-integrations-coinbase.esm.js"
-}

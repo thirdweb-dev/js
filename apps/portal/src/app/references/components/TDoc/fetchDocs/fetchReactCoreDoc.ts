@@ -6,9 +6,7 @@ export async function fetchReactCoreDoc() {
     return prom;
   }
   prom = (async () => {
-    const doc = await import(
-      "../../../../../../../../legacy_packages/react-core/typedoc/documentation.json"
-    );
+    const doc = await import("./v4-legacy-docs/react-core.json");
 
     return transform(doc as any);
   })();

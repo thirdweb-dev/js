@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-react-evm-connectors-magic-useMagic.cjs.js",
-  "module": "dist/thirdweb-dev-react-evm-connectors-magic-useMagic.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-react-evm-connectors-magic-useMagic.esm.js": "./dist/thirdweb-dev-react-evm-connectors-magic-useMagic.browser.esm.js"
-  }
-}

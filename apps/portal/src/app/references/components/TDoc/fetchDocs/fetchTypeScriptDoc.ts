@@ -9,9 +9,7 @@ export async function fetchTypeScriptDoc(version: string) {
       return v4Prom;
     }
     v4Prom = (async () => {
-      const doc = await import(
-        "../../../../../../../../legacy_packages/sdk/typedoc/documentation.json"
-      );
+      const doc = await import("./v4-legacy-docs/sdk.json");
 
       return transform(doc as any);
     })();
