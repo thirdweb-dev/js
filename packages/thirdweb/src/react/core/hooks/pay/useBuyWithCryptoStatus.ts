@@ -64,7 +64,10 @@ export function useBuyWithCryptoStatus(params?: BuyWithCryptoTransaction) {
       return getBuyWithCryptoStatus(params);
     },
     enabled: !!params,
-    refetchInterval: 5000,
+    refetchInterval: (query) =>
+      (query.state.data as BuyWithCryptoStatus)?.status === "COMPLETED"
+        ? false
+        : 5000,
     refetchIntervalInBackground: true,
     retry: true,
   });
