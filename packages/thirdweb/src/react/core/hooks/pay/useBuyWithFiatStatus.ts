@@ -45,11 +45,17 @@ export function useBuyWithFiatStatus(
       return getBuyWithFiatStatus(params);
     },
     enabled: !!params,
-    refetchInterval: (query) =>
-      (query.state.data as BuyWithFiatStatus)?.status ===
-      "ON_RAMP_TRANSFER_COMPLETED"
-        ? false
-        : 5000,
+    refetchInterval: (query) => {
+      const status = (query.state.data as BuyWithFiatStatus)?.status;
+      if (
+        status === "ON_RAMP_TRANSFER_FAILED" ||
+        status === "PAYMENT_FAILED" ||
+        status === "CRYPTO_SWAP_COMPLETED"
+      ) {
+        return false;
+      }
+      return 5000;
+    },
     refetchIntervalInBackground: true,
     retry: true,
   });
