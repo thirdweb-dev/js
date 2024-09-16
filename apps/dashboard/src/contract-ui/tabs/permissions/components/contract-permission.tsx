@@ -10,7 +10,6 @@ interface ContractPermissionProps {
   role: string;
   description: string;
   isLoading: boolean;
-  isPrebuilt: boolean;
   contract: ThirdwebContract;
 }
 
@@ -18,7 +17,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
   role,
   description,
   isLoading,
-  isPrebuilt,
+
   contract,
 }) => {
   const {
@@ -80,7 +79,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               </Flex>
             )}
 
-            {role === "lister" && isPrebuilt && (
+            {role === "lister" && (
               <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
                 {isLoading || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
@@ -115,7 +114,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               </Flex>
             )}
 
-            {role === "asset" && isPrebuilt && (
+            {role === "asset" && (
               <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
                 {isLoading || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
@@ -191,7 +190,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             </Flex>
           )}
 
-          {role === "lister" && isPrebuilt && (
+          {role === "lister" && (
             <Flex
               direction="row"
               borderRadius="md"
@@ -225,7 +224,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             </Flex>
           )}
 
-          {role === "asset" && isPrebuilt && (
+          {role === "asset" && (
             <Flex
               direction="row"
               borderRadius="md"

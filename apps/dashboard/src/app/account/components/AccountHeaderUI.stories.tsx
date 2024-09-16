@@ -53,6 +53,7 @@ function Variants(props: {
             email="eng@thirdweb.com"
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
+            createProject={() => {}}
           />
         </BadgeContainer>
       </div>

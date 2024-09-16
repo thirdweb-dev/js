@@ -11,14 +11,14 @@ export default async function Page(props: {
   const project = await getProject(team_slug, project_slug);
 
   if (!project) {
-    return notFound();
+    notFound();
   }
 
   // THIS IS A WORKAROUND - project does not have `services` info - so we fetch APIKey object.
   const apiKey = await getAPIKey(project.id);
 
   if (!apiKey) {
-    return notFound();
+    notFound();
   }
 
   return (

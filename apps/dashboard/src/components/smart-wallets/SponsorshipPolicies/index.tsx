@@ -194,7 +194,6 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
           </Text>
         </Flex>
       </Flex>
-
       <Flex
         flexDir="column"
         gap={6}

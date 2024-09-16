@@ -15,7 +15,7 @@ import { createStore } from "./reactive";
 // Using useDashboardRouter instead of useRouter gives us a nice progress bar on top of the page when navigating using router.push or router.replace
 
 // using a store instead of context to avoid triggering re-renders on root component
-export const LoadingRouteHref = createStore<string | undefined>(undefined);
+const LoadingRouteHref = createStore<string | undefined>(undefined);
 
 export function useDashboardRouter() {
   const router = useRouter();

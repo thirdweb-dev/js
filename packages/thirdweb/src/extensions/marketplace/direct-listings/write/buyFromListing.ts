@@ -1,8 +1,8 @@
 import type { Address } from "abitype";
 import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { buyFromListing as generatedBuyFromListing } from "../../__generated__/IDirectListings/write/buyFromListing.js";
-import { getListing } from "../read/getListing.js";
+import * as BuyFromListing from "../../__generated__/IDirectListings/write/buyFromListing.js";
+import * as GetListing from "../read/getListing.js";
 import { isListingValid } from "../utils.js";
 
 /**
@@ -38,10 +38,10 @@ export type BuyFromListingParams = {
 export function buyFromListing(
   options: BaseTransactionOptions<BuyFromListingParams>,
 ) {
-  return generatedBuyFromListing({
+  return BuyFromListing.buyFromListing({
     contract: options.contract,
     asyncParams: async () => {
-      const listing = await getListing({
+      const listing = await GetListing.getListing({
         contract: options.contract,
         listingId: options.listingId,
       });
@@ -70,4 +70,23 @@ export function buyFromListing(
       };
     },
   });
+}
+
+/**
+ * Checks if the `buyFromListing` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `buyFromListing` method is supported.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { isBuyFromListingSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = isBuyFromListingSupported(["0x..."]);
+ * ```
+ */
+export function isBuyFromListingSupported(availableSelectors: string[]) {
+  return (
+    BuyFromListing.isBuyFromListingSupported(availableSelectors) &&
+    GetListing.isGetListingSupported(availableSelectors)
+  );
 }

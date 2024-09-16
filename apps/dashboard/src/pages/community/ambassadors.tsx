@@ -261,22 +261,22 @@ const Ambassadors: ThirdwebNextPage = () => {
                 placeItems="center"
               >
                 <AmbassadorCard
-                  icon={require("/public/assets/ambassadors/card-1-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/card-1-icon.svg")}
                 >
                   You are insatiably curious about new web3 tools.
                 </AmbassadorCard>
                 <AmbassadorCard
-                  icon={require("/public/assets/ambassadors/card-2-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/card-2-icon.svg")}
                 >
                   You revel in creating and sharing web3 content.
                 </AmbassadorCard>
                 <AmbassadorCard
-                  icon={require("/public/assets/ambassadors/connections.svg")}
+                  icon={require("../../../public/assets/ambassadors/connections.svg")}
                 >
                   You forge lasting connections with others.
                 </AmbassadorCard>
                 <AmbassadorCard
-                  icon={require("/public/assets/ambassadors/card-3-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/card-3-icon.svg")}
                 >
                   {/* You are approachable and adept at forging connections across contexts. */}
                   {/* Update image for this one ToDO  */}
@@ -319,27 +319,27 @@ const Ambassadors: ThirdwebNextPage = () => {
               >
                 <ProductCard
                   title="Be a thirdweb brand ambassador"
-                  icon={require("/public/assets/ambassadors/recognition-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/recognition-icon.svg")}
                 >
                   Advocate for thirdweb&apos;s toolset and its role in web3.
                 </ProductCard>
                 <ProductCard
                   title="Build your projcts. Share the results."
-                  icon={require("/public/assets/ambassadors/mentorship-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/mentorship-icon.svg")}
                 >
                   Showcase your projects built using thirdweb through your
                   favorite social media
                 </ProductCard>
                 <ProductCard
                   title="Support the newcomers"
-                  icon={require("/public/assets/ambassadors/merch-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/merch-icon.svg")}
                 >
                   Assist community members by answering questions,
                   troubleshooting issues, and providing guidance.
                 </ProductCard>
                 <ProductCard
                   title="Network"
-                  icon={require("/public/assets/ambassadors/network-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/network-icon.svg")}
                 >
                   {/* TODO, rethink the reaching out to potential individuals */}
                   Grow the community by welcoming new members, initiating
@@ -347,7 +347,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                 </ProductCard>
                 {/* <ProductCard
                     title="Access"
-                    icon={require("/public/assets/ambassadors/access-icon.svg")}
+                    icon={require("../../../public/assets/ambassadors/access-icon.svg")}
                   >
                     Insider access to the team, roadmap, events.
                   </ProductCard> */}
@@ -394,19 +394,19 @@ const Ambassadors: ThirdwebNextPage = () => {
                 placeItems="center"
               >
                 <AmbassadorCard
-                  icon={require("/public/assets/ambassadors/learn.svg")}
+                  icon={require("../../../public/assets/ambassadors/learn.svg")}
                 >
                   Enhance your skills with exclusive workshops and the latest in
                   web3.
                 </AmbassadorCard>
                 <AmbassadorCard
-                  icon={require("/public/assets/ambassadors/oss.svg")}
+                  icon={require("../../../public/assets/ambassadors/oss.svg")}
                 >
                   Fuel your web3 passion with a platform to explore, create and
                   innovate.
                 </AmbassadorCard>
                 <AmbassadorCard
-                  icon={require("/public/assets/ambassadors/card-3-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/card-3-icon.svg")}
                 >
                   Get rewarded with exclusive benefits such as free thirdweb
                   credits.
@@ -465,33 +465,33 @@ const Ambassadors: ThirdwebNextPage = () => {
               >
                 <ProductCard
                   title="Recognition"
-                  icon={require("/public/assets/ambassadors/recognition-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/recognition-icon.svg")}
                 >
                   Grow your personal brand from recognition on our pages.
                 </ProductCard>
                 <ProductCard
                   title="Mentorship"
-                  icon={require("/public/assets/ambassadors/mentorship-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/mentorship-icon.svg")}
                 >
                   Learn directly from experts on web3 development and related
                   topics.
                 </ProductCard>
                 <ProductCard
                   title="Feedback Sessions"
-                  icon={require("/public/assets/ambassadors/merch-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/merch-icon.svg")}
                 >
                   Participate in feedback sessions that have a direct impact on
                   the thirdweb toolset
                 </ProductCard>
                 <ProductCard
                   title="Network"
-                  icon={require("/public/assets/ambassadors/network-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/network-icon.svg")}
                 >
                   Meet like-minded individuals and grow your network in web3.
                 </ProductCard>
                 <ProductCard
                   title="Become A Thought Leader"
-                  icon={require("/public/assets/ambassadors/access-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/access-icon.svg")}
                 >
                   Establish yourself as a thought leader in the web3 industry.
                 </ProductCard>
@@ -541,23 +541,23 @@ const Ambassadors: ThirdwebNextPage = () => {
                 placeItems="center"
               >
                 <AmbassadorCard
-                  icon={require("/public/assets/ambassadors/hackathon.svg")}
+                  icon={require("../../../public/assets/ambassadors/hackathon.svg")}
                 >
                   Gain early access to the latest tools and experiment with
                   cutting edge technology.
                 </AmbassadorCard>
                 <AmbassadorCard
-                  icon={require("/public/assets/ambassadors/card-2-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/card-2-icon.svg")}
                 >
                   Build brand new experienes with the thirdweb toolset.
                 </AmbassadorCard>
                 <AmbassadorCard
-                  icon={require("/public/assets/ambassadors/office-hours.svg")}
+                  icon={require("../../../public/assets/ambassadors/office-hours.svg")}
                 >
                   Be involved in stages of product design and direction.
                 </AmbassadorCard>
                 <AmbassadorCard
-                  icon={require("/public/assets/ambassadors/card-3-icon.svg")}
+                  icon={require("../../../public/assets/ambassadors/card-3-icon.svg")}
                 >
                   Push the boundary of what&apos;s possible in web3 with
                   thirdweb.

@@ -17,10 +17,9 @@ export const ClaimPriceInput = () => {
     field,
     isColumn,
     claimConditionType,
-    isClaimPhaseV1,
   } = useClaimConditionsFormContext();
 
-  if (!isClaimPhaseV1 && claimConditionType === "creator") {
+  if (claimConditionType === "creator") {
     return null;
   }
 

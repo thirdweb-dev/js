@@ -31,7 +31,7 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
     resolver: zodResolver(partnerFormSchema),
   });
 
-  const { addPartner, isLoading } = useAddPartner({
+  const { mutateAsync: addPartner, isPending } = useAddPartner({
     onSuccess: () => {
       form.reset();
     },
@@ -182,7 +182,7 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
           />
         </div>
         <Button
-          disabled={isLoading}
+          disabled={isPending}
           type="submit"
           variant="outline"
           className="w-full lg:w-auto"

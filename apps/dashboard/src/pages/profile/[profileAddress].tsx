@@ -20,7 +20,6 @@ import { PublisherAvatar } from "components/contract-components/publisher/masked
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { PublishedContracts } from "components/contract-components/tables/published-contracts";
 import { THIRDWEB_DOMAIN } from "constants/urls";
-import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
 import type { GetStaticPaths, GetStaticProps } from "next";
@@ -202,7 +201,7 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
 UserPage.getLayout = function getLayout(page, props) {
   return (
     <AppLayout {...props} noSEOOverride>
-      <PublisherSDKContext>{page}</PublisherSDKContext>
+      {page}
     </AppLayout>
   );
 };
@@ -279,9 +278,10 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   await Promise.all([
     ...ensQueries,
     queryClient.prefetchQuery(publisherProfileQuery(address)),
-    queryClient.prefetchQuery(["published-contracts", address], () =>
-      fetchPublishedContracts(polygonSdk, queryClient, address),
-    ),
+    queryClient.prefetchQuery({
+      queryKey: ["published-contracts", address],
+      queryFn: () => fetchPublishedContracts(polygonSdk, queryClient, address),
+    }),
   ]);
 
   return {

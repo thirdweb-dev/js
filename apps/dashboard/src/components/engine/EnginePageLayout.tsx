@@ -307,7 +307,7 @@ function EngineErrorPage(props: {
   );
 }
 
-export function MessageContainer(props: {
+function MessageContainer(props: {
   children: React.ReactNode;
 }) {
   return (

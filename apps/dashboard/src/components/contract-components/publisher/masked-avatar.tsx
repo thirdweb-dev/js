@@ -1,3 +1,5 @@
+import { thirdwebClient } from "@/constants/client";
+import { resolveScheme } from "thirdweb/storage";
 import {
   MaskedAvatar,
   type MaskedAvatarProps,
@@ -21,10 +23,12 @@ export const PublisherAvatar: React.FC<PublisherAvatarProps> = ({
     <MaskedAvatar
       isLoading={isLoading || ensQuery.isLoading || publisherProfile.isLoading}
       src={
-        publisherProfile.data?.avatar ||
-        `https://source.boringavatars.com/marble/120/${
-          ensQuery.data?.ensName || ensQuery.data?.address
-        }?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
+        publisherProfile.data?.avatar
+          ? resolveScheme({
+              uri: publisherProfile.data.avatar,
+              client: thirdwebClient,
+            })
+          : ""
       }
       {...restProps}
     />

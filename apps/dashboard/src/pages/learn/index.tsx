@@ -87,7 +87,7 @@ const Learn: ThirdwebNextPage = () => {
             >
               <ProductCard
                 title="Domain Expertise"
-                icon={require("/public/assets/product-pages/sdk/hero-icon-3.png")}
+                icon={require("../../../public/assets/product-pages/sdk/hero-icon-3.png")}
               >
                 Our program will help you enhance your technical skills and
                 knowledge, enabling you to excel in web3 development and become
@@ -95,7 +95,7 @@ const Learn: ThirdwebNextPage = () => {
               </ProductCard>
               <ProductCard
                 title="Community Building"
-                icon={require("/public/assets/product-pages/dashboard/hero-icon-2.png")}
+                icon={require("../../../public/assets/product-pages/dashboard/hero-icon-2.png")}
               >
                 Connect with a network of web3 developers and content matter
                 experts through our program. Build lasting relationships and
@@ -103,14 +103,14 @@ const Learn: ThirdwebNextPage = () => {
               </ProductCard>
               <ProductCard
                 title="Career Launch"
-                icon={require("/public/assets/product-pages/sdk/hero-icon-2.png")}
+                icon={require("../../../public/assets/product-pages/sdk/hero-icon-2.png")}
               >
                 Get access to valuable resources to help you find your next job
                 or start your own web3 company.
               </ProductCard>
               <ProductCard
                 title="Comprehensive curriculum"
-                icon={require("/public/assets/product-pages/deploy/hero-icon-1.png")}
+                icon={require("../../../public/assets/product-pages/deploy/hero-icon-1.png")}
               >
                 Learn essential web3 concepts and gain in-depth knowledge of the
                 thirdweb SDK that empowers you to build secure decentralized
@@ -118,14 +118,14 @@ const Learn: ThirdwebNextPage = () => {
               </ProductCard>
               <ProductCard
                 title="Expert-Led Training"
-                icon={require("/public/assets/product-pages/authentication/verify.png")}
+                icon={require("../../../public/assets/product-pages/authentication/verify.png")}
               >
                 Learn from industry-leading web3 developers who bring real-world
                 experience and insights into the classroom.
               </ProductCard>
               <ProductCard
                 title="Flexible Program Formats"
-                icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
+                icon={require("../../../public/assets/product-pages/dashboard/hero-icon-3.png")}
               >
                 Choose from a range of program formats, including self-paced
                 courses, virtual workshops, or live bootcamps, to suit your
@@ -145,7 +145,7 @@ const Learn: ThirdwebNextPage = () => {
             >
               <ProductCard
                 title="Product Manager"
-                icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
+                icon={require("../../../public/assets/product-pages/dashboard/hero-icon-1.png")}
               >
                 Learn how to create, manage, and integrate NFTs and other
                 digital assets into dApps and platforms using thirdweb
@@ -153,7 +153,7 @@ const Learn: ThirdwebNextPage = () => {
               </ProductCard>
               <ProductCard
                 title="Web3 Developer"
-                icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
+                icon={require("../../../public/assets/product-pages/dashboard/hero-icon-1.png")}
               >
                 For both front and back-end engineers to learn how to build
                 secure and scalable dApps using the thirdweb SDK and relevant
@@ -161,7 +161,7 @@ const Learn: ThirdwebNextPage = () => {
               </ProductCard>
               <ProductCard
                 title="Back-end Engineer"
-                icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
+                icon={require("../../../public/assets/product-pages/dashboard/hero-icon-1.png")}
               >
                 Gain expertise in developing web3 services by reviewing common
                 server-side workflows as well as creating and integrating smart

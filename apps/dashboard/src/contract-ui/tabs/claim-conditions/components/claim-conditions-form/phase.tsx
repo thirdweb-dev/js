@@ -30,7 +30,6 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
     form,
     field,
     isErc20,
-    isClaimPhaseV1,
     isAdmin,
     claimConditionType,
     isActive,
@@ -82,26 +81,15 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
 
         <Flex flexDir="column" gap={2} mt={{ base: 4, md: 0 }}>
           <Flex gap={3} alignItems="center">
-            <Heading>
-              {isClaimPhaseV1
-                ? isMultiPhase
-                  ? `Claim Phase ${phaseIndex + 1}`
-                  : "Claim Conditions"
-                : ClaimConditionTypeData[claimConditionType].name}
-            </Heading>
+            <Heading>{ClaimConditionTypeData[claimConditionType].name}</Heading>
             {isActive && (
               <Badge colorScheme="green" borderRadius="lg" p={1.5}>
                 Currently active
               </Badge>
             )}
           </Flex>
-          {isClaimPhaseV1 ? (
-            ""
-          ) : (
-            <Text>
-              {ClaimConditionTypeData[claimConditionType].description}
-            </Text>
-          )}
+
+          <Text>{ClaimConditionTypeData[claimConditionType].description}</Text>
         </Flex>
 
         {!field.isEditing ? (

@@ -2,18 +2,21 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { thirdwebClient } from "@/constants/client";
 import { cn } from "@/lib/utils";
 import {
   type QueryClient,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-base-64";
 import { ensQuery } from "components/contract-components/hooks";
 import { getDashboardChainRpc } from "lib/rpc";
-import { getThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
+import { getThirdwebSDK } from "lib/sdk";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { polygon } from "thirdweb/chains";
+import { resolveScheme } from "thirdweb/storage";
 import invariant from "tiny-invariant";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
@@ -71,14 +74,14 @@ function getContractUrl(
   const moudleUrl = new URLSearchParams();
 
   for (const m of modules) {
-    moudleUrl.append("module", btoa(JSON.stringify(m)));
+    moudleUrl.append("module", moduleToBase64(m));
   }
 
   if (titleOverride) {
     moudleUrl.append("displayName", titleOverride);
   }
 
-  pathName += `?${moudleUrl.toString()}`;
+  pathName += moudleUrl.toString() ? `?${moudleUrl.toString()}` : "";
   return replaceDeployerAddress(pathName);
 }
 
@@ -133,7 +136,10 @@ export const ContractCard: React.FC<ContractCardProps> = ({
               <Link
                 target="_blank"
                 className="text-success-text flex items-center gap-1 text-sm z-1 hover:underline font-medium relative"
-                href={replaceIpfsUrl(publishedContractResult.data?.audit || "")}
+                href={resolveScheme({
+                  uri: publishedContractResult.data.audit,
+                  client: thirdwebClient,
+                })}
               >
                 <ShieldCheckIcon className="size-4" />
                 Audited

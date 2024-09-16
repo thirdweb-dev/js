@@ -14,7 +14,7 @@ export type SidebarLink = {
   };
 };
 
-export type SidebarContentProps = {
+type SidebarContentProps = {
   header?: React.ReactNode;
   links: SidebarLink[];
   className?: string;

@@ -26,7 +26,7 @@ interface OnboardingConfirmEmailProps {
   onBack: () => void;
 }
 
-export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
+const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
   email,
   linking,
   onSave,

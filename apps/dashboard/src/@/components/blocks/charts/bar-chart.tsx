@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/chart";
 import { useMemo } from "react";
 
-export type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
+type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   // metadata
   title: string;
   description?: string;

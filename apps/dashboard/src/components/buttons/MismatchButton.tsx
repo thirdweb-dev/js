@@ -337,7 +337,6 @@ function NoFundsDialogContent(props: {
           </div>
         )}
       </div>
-
       {/* Footer */}
       <div className="border-t border-border p-6 flex justify-between gap-4">
         <ButtonShadcn variant="outline" onClick={props.onCloseModal}>

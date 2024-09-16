@@ -1120,7 +1120,8 @@ function SwapScreenContent(props: {
 
   function showSwapFlow() {
     if (
-      props.payOptions.mode === "direct_payment" &&
+      (props.payOptions.mode === "direct_payment" ||
+        props.payOptions.mode === "fund_wallet") &&
       !isNotEnoughBalance &&
       !swapRequired
     ) {

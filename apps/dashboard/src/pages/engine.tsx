@@ -94,17 +94,17 @@ export const metrics = [
 const GUIDES = [
   {
     title: "The Quick-Start Guide to thirdweb Engine",
-    image: require("/public/assets/product-pages/engine/guide-get-started.png"),
+    image: require("../../public/assets/product-pages/engine/guide-get-started.png"),
     link: "https://portal.thirdweb.com/engine/get-started",
   },
   {
     title: "Airdrop Tokens and NFTs to Users",
-    image: require("/public/assets/product-pages/engine/guide-airdrop.png"),
+    image: require("../../public/assets/product-pages/engine/guide-airdrop.png"),
     link: "https://portal.thirdweb.com/engine/guides/airdrop-nfts",
   },
   {
     title: "Create a Gasless NFT Mint Farcaster Frame",
-    image: require("/public/assets/product-pages/engine/guide-farcaster-frame.png"),
+    image: require("../../public/assets/product-pages/engine/guide-farcaster-frame.png"),
     link: "https://blog.thirdweb.com/guides/create-an-nft-mint-farcaster-frame/",
   },
 ];

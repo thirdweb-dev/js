@@ -1,9 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { Flex, FormControl, InputGroup } from "@chakra-ui/react";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
-import { useDefaultForwarders } from "../hooks";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
@@ -14,8 +11,6 @@ interface TrustedForwardersFieldsetProps {
 export const TrustedForwardersFieldset: React.FC<
   TrustedForwardersFieldsetProps
 > = ({ form }) => {
-  const defaultForwarders = useDefaultForwarders();
-
   return (
     <Fieldset legend="Gasless">
       <FormControl
@@ -57,22 +52,6 @@ export const TrustedForwardersFieldset: React.FC<
               />
             </Flex>
           </InputGroup>
-
-          <ToolTipLabel label="Click to apply default trusted forwarders">
-            <Button
-              type="button"
-              variant="outline"
-              className="mt-2"
-              onClick={() =>
-                form.setValue(
-                  "deployParams._trustedForwarders",
-                  JSON.stringify(defaultForwarders.data),
-                )
-              }
-            >
-              Get Default
-            </Button>
-          </ToolTipLabel>
 
           <FormErrorMessage>
             {

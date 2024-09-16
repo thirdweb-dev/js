@@ -19,6 +19,7 @@ type TeamSwitcherProps = {
   currentProject: Project | undefined;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   focus: "project-selection" | "team-selection";
+  createProject: () => void;
 };
 
 export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
@@ -80,6 +81,10 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
                 currentProject={props.currentProject}
                 projects={projectsToShow}
                 team={projectsToShowOfTeam}
+                createProject={() => {
+                  setOpen(false);
+                  props.createProject();
+                }}
               />
             )}
           </div>

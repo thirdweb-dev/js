@@ -85,7 +85,7 @@ function AccountAvatarFormControl() {
       saveButton={{
         onClick: handleSave,
         disabled: false,
-        isLoading: updateAvatarMutation.isLoading,
+        isLoading: updateAvatarMutation.isPending,
       }}
       noPermissionText={undefined}
       errorText={undefined}
@@ -143,7 +143,7 @@ function AccountNameFormControl(props: {
       saveButton={{
         onClick: handleSave,
         disabled: accountName.length === 0,
-        isLoading: updateAccountNameMutation.isLoading,
+        isLoading: updateAccountNameMutation.isPending,
       }}
       errorText={undefined}
       noPermissionText={undefined} // TODO
@@ -191,7 +191,7 @@ function DeleteAccountCard() {
       description={description}
       buttonLabel={title}
       buttonOnClick={handleDelete}
-      isLoading={deleteAccount.isLoading}
+      isLoading={deleteAccount.isPending}
       confirmationDialog={{
         title: "Are you sure you want to delete your account?",
         description:
@@ -321,10 +321,10 @@ function EmailUpdateDialog(props: {
                 <Button variant="outline"> Cancel </Button>
               </DialogClose>
               <Button className="min-w-24 gap-2" type="submit">
-                {updateEmailMutation.isLoading && (
+                {updateEmailMutation.isPending && (
                   <Spinner className="size-4" />
                 )}
-                {updateEmailMutation.isLoading ? "Saving" : "Save"}
+                {updateEmailMutation.isPending ? "Saving" : "Save"}
               </Button>
             </DialogFooter>
           </form>

@@ -37,7 +37,7 @@ const GithubIcon = () => {
   );
 };
 
-export type OpenSourceProps = {
+type OpenSourceProps = {
   TRACKING_CATEGORY: string;
 };
 

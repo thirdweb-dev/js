@@ -10,7 +10,6 @@ import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractCard } from "components/explore/contract-card";
 import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
-import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import {
   ALL_CATEGORIES,
   type ExploreCategory,
@@ -134,13 +133,9 @@ const ExploreCategoryPage: ThirdwebNextPage = (
   );
 };
 
-// const AppLayout = dynamic(
-//   async () => (await import("components/app-layouts/app")).AppLayout,
-// );
-
 ExploreCategoryPage.getLayout = (page, props) => (
   <AppLayout {...props} noSEOOverride>
-    <PublisherSDKContext>{page}</PublisherSDKContext>
+    {page}
   </AppLayout>
 );
 

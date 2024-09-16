@@ -6,11 +6,11 @@ import { Billing } from "components/settings/Account/Billing";
 
 export const SettingsBillingPage = () => {
   const meQuery = useAccount({
-    refetchInterval: (account) =>
+    refetchInterval: (query) =>
       [
         AccountStatus.InvalidPayment,
         AccountStatus.InvalidPaymentMethod,
-      ].includes(account?.status as AccountStatus)
+      ].includes(query.state?.status as AccountStatus)
         ? 1000
         : false,
   });

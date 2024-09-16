@@ -20,14 +20,20 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import type { Abi, AbiEvent, AbiFunction } from "abitype";
+import {
+  type Abi,
+  type AbiEvent,
+  type AbiFunction,
+  formatAbiItem,
+} from "abitype";
 import { useContractEnabledExtensions } from "components/contract-components/hooks";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
-import { useRouter } from "next/router";
+import { usePathname, useSearchParams } from "next/navigation";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { toFunctionSelector } from "thirdweb/utils";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
+import { useDashboardRouter } from "../../@/lib/DashboardRouter";
 import {
   COMMANDS,
   formatSnippet,
@@ -37,7 +43,7 @@ import type { CodeEnvironment } from "../contract-tabs/code/types";
 import { InteractiveAbiFunction } from "./interactive-abi-function";
 
 // internal helpers
-export function unique<T>(a: T[], fn: (a: T, b: T) => boolean): T[] {
+function unique<T>(a: T[], fn: (a: T, b: T) => boolean): T[] {
   if (a.length === 0 || a.length === 1) {
     return a;
   }
@@ -66,13 +72,12 @@ function joinABIs(abis: Abi[], abiWithConstructor?: Abi): Abi {
   const flattenedAbis = filteredABIs.flat();
 
   const finalABIs = unique(flattenedAbis, (a, b): boolean => {
-    return (
-      "name" in a &&
-      "name" in b &&
-      a.name === b.name &&
-      a.type === b.type &&
-      a.inputs.length === b.inputs.length
-    );
+    if (a.type !== b.type) {
+      // cannot be the same if the types are different
+      return false;
+    }
+    // just compare the formatted abi items (since they would be the same if the abi items are the same)
+    return formatAbiItem(a) === formatAbiItem(b);
   });
 
   return finalABIs;
@@ -326,8 +331,8 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   }, [fnsOrEvents]);
 
   // Load state from the URL
-  const router = useRouter();
-  const _selector = router.query.selector;
+  const searchParams = useSearchParams();
+  const _selector = searchParams?.get("selector");
   const _item = _selector
     ? fnsOrEvents.find((o) => {
         if (o.type === "function") {
@@ -337,10 +342,10 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
         return null;
       })
     : undefined;
+
   const [selectedFunction, setSelectedFunction] = useState<
     AbiFunction | AbiEvent
   >(_item ?? fnsOrEvents[0]);
-
   // Set the active tab to Write or Read depends on the `_item`
   const _defaultTabIndex =
     _item &&
@@ -479,7 +484,8 @@ const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
   const isActive =
     selectedFunction?.name === fn.name &&
     selectedFunction.inputs?.length === fn.inputs?.length;
-  const router = useRouter();
+  const pathname = usePathname();
+  const router = useDashboardRouter();
   return (
     <ListItem my={0.5}>
       <Button
@@ -488,13 +494,11 @@ const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
         opacity={isActive ? 1 : 0.65}
         onClick={() => {
           setSelectedFunction(fn);
-          const path = router.asPath.split("?")[0];
+
           // Only apply to the Explorer page
-          if (path.endsWith("/explorer") && fn.type === "function") {
+          if (pathname?.endsWith("/explorer") && fn.type === "function") {
             const selector = toFunctionSelector(fn);
-            router.push({ pathname: path, query: { selector } }, undefined, {
-              shallow: true,
-            });
+            router.push(`${pathname}?selector=${selector}`);
           }
         }}
         color="heading"

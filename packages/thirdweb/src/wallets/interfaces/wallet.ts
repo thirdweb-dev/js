@@ -141,6 +141,12 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
    * Can be used to execute any pre-connection actions like showing a modal, etc.
    */
   onConnectRequested?: () => Promise<void>;
+
+  /**
+   * Get the admin account of this wallet
+   * This is useful for smart wallets to get the underlying personal account
+   */
+  getAdminAccount?: () => Account | undefined;
 };
 
 /**

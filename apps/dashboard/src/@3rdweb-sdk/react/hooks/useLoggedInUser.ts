@@ -3,7 +3,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useQuery } from "@tanstack/react-query";
 import type { EnsureLoginResponse } from "app/api/auth/ensure-login/route";
 import { usePathname } from "next/navigation";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
@@ -63,19 +63,22 @@ export function useLoggedInUser(): {
 
       return (await res.json()) as EnsureLoginResponse;
     },
-    onSuccess: (data) => {
-      if (data.redirectTo) {
-        router.replace(data.redirectTo);
-      }
-      if (data.jwt) {
-        // necessary for legacy things for now (SDK picks it up from there)
-        // eslint-disable-next-line react-compiler/react-compiler
-        window.TW_AUTH_TOKEN = data.jwt;
-      } else {
-        window.TW_AUTH_TOKEN = undefined;
-      }
-    },
   });
+
+  // legit use-case for now
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (query.data?.redirectTo) {
+      router.replace(query.data.redirectTo);
+    }
+    if (query.data?.jwt) {
+      // necessary for legacy things for now (SDK picks it up from there)
+      // eslint-disable-next-line react-compiler/react-compiler
+      window.TW_AUTH_TOKEN = query.data.jwt;
+    } else {
+      window.TW_AUTH_TOKEN = undefined;
+    }
+  }, [query.data?.redirectTo, query.data?.jwt, router]);
 
   // if we are "disconnected" we are not logged in
   if (connectionStatus === "disconnected") {

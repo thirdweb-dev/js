@@ -3,7 +3,6 @@ import { AppLayout } from "components/app-layouts/app";
 import { ContractRow } from "components/explore/contract-row";
 import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
 import { PublishUpsellCard } from "components/explore/upsells/publish-submit";
-import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import {
   EXPLORE_PAGE_DATA,
   type ExploreCategory,
@@ -80,9 +79,7 @@ ExplorePage.getLayout = (page, props) => (
     pageContainerClassName="!max-w-full !px-0"
     mainClassName="!pt-0"
   >
-    <ContractsSidebarLayout>
-      <PublisherSDKContext>{page}</PublisherSDKContext>
-    </ContractsSidebarLayout>
+    <ContractsSidebarLayout>{page}</ContractsSidebarLayout>
   </AppLayout>
 );
 

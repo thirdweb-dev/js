@@ -39,7 +39,11 @@ export function useQueryWithNetwork<
     networkKeys.chain(activeChainId) as readonly unknown[]
   ).concat(queryKey) as unknown as TQueryKey;
 
-  return useQuery(combinedQueryKey, queryFn, mergedOptions);
+  return useQuery({
+    ...mergedOptions,
+    queryKey: combinedQueryKey,
+    queryFn,
+  });
 }
 export function useMutationWithInvalidate<
   TData = unknown,
@@ -71,19 +75,20 @@ export function useMutationWithInvalidate<
     (cacheKeysToInvalidate: TQueryKey[]) => {
       return Promise.all(
         cacheKeysToInvalidate.map((cacheKey) => {
-          return queryClient.invalidateQueries(
-            (networkKeys.chain(activeChainId) as readonly unknown[]).concat(
-              cacheKey,
-            ) as unknown[],
-          );
+          return queryClient.invalidateQueries({
+            queryKey: (
+              networkKeys.chain(activeChainId) as readonly unknown[]
+            ).concat(cacheKey) as unknown[],
+          });
         }),
       );
     },
     [queryClient, activeChainId],
   );
 
-  return useMutation(mutationFn, {
+  return useMutation({
     ...options,
+    mutationFn,
     onSuccess: (...args) => {
       if (options?.onSuccess) {
         options.onSuccess(...args, invalidate);

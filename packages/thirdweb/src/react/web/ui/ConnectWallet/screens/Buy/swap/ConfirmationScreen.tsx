@@ -126,7 +126,7 @@ export function SwapConfirmationScreen(props: {
 
       {/* Send to  */}
       {isDifferentRecipient && (
-        <ConfirmItem label="Seller">
+        <ConfirmItem label="Receiver">
           <Text color="primaryText" size="sm">
             {ensName.data || shortenAddress(receiver)}
           </Text>

@@ -17,17 +17,3 @@ export async function fetchChain(
   }
   return null;
 }
-
-export async function fetchAllChains() {
-  // always fetch from prod for chains for now
-  // TODO: re-visit this
-  const res = await fetch("https://api.thirdweb.com/v1/chains");
-  if (res.ok) {
-    try {
-      return (await res.json()).data as ChainMetadata[];
-    } catch {
-      return [];
-    }
-  }
-  return [];
-}

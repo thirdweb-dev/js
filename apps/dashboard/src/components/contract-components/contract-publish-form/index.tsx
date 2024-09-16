@@ -296,7 +296,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   );
 
   // during loading and after success we should stay in loading state
-  const isLoading = publishMutation.isLoading || publishMutation.isSuccess;
+  const isLoading = publishMutation.isPending || publishMutation.isSuccess;
 
   useIsomorphicLayoutEffect(() => {
     window?.scrollTo({

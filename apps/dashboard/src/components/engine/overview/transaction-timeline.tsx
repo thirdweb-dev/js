@@ -136,7 +136,6 @@ export const TransactionTimeline = ({
             <StepIndicator>
               <StepStatus complete={<FiCheck />} active={<FiCheck />} />
             </StepIndicator>
-
             <Flex justify="space-between" w="full" mt={-1}>
               <Stack>
                 {isFilled ? (
@@ -152,7 +151,6 @@ export const TransactionTimeline = ({
                 </Text>
               )}
             </Flex>
-
             <StepSeparator />
           </Step>
         );

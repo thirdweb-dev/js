@@ -19,7 +19,7 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
@@ -31,9 +31,21 @@ import { useV5DashboardChain } from "lib/v5-adapter";
 import { useState } from "react";
 import { FiInfo, FiTrash } from "react-icons/fi";
 import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
-import { shortenAddress } from "thirdweb/utils";
+import { shortenAddress as shortenAddresThrows } from "thirdweb/utils";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "../../../tw-components/AddressCopyButton";
+
+function shortenAddress(address: string) {
+  if (!address) {
+    return "";
+  }
+
+  try {
+    return shortenAddresThrows(address);
+  } catch {
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  }
+}
 
 interface ContractSubscriptionTableProps {
   instanceUrl: string;
@@ -242,7 +254,7 @@ const ChainLastBlockTimestamp = ({
   const ethBlockQuery = useQuery({
     queryKey: ["block_timestamp", chainId, Number(blockNumber)],
     // keep the previous data while fetching new data
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const rpcRequest = getRpcClient({
         client: thirdwebClient,

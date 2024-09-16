@@ -14,7 +14,7 @@ const validSteps = z.union([
   z.literal("7"),
 ]);
 
-export type Step = z.infer<typeof validSteps>;
+type Step = z.infer<typeof validSteps>;
 
 const nftContractAddress = "0x9D96603334B1e97554b846CA916a6b72161a5323";
 

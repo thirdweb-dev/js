@@ -16,6 +16,8 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import {
   type QueryClient,
+  keepPreviousData,
+  queryOptions,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -38,7 +40,7 @@ function contractTypesenseSearchQuery(
   queryClient: QueryClient,
   trackEvent: ReturnType<typeof useTrack>,
 ) {
-  return {
+  return queryOptions({
     queryKey: ["typesense-contract-search", { search: searchQuery }],
     queryFn: async () => {
       trackEvent({
@@ -55,26 +57,8 @@ function contractTypesenseSearchQuery(
       });
     },
     enabled: !!searchQuery && !!queryClient && !!typesenseApiKey,
-    onSuccess: (d: unknown) => {
-      trackEvent({
-        category: TRACKING_CATEGORY,
-        action: "query",
-        label: "success",
-        searchQuery,
-        response: d,
-      });
-    },
-    onError: (err: unknown) => {
-      trackEvent({
-        category: TRACKING_CATEGORY,
-        action: "query",
-        label: "failure",
-        searchQuery,
-        error: err,
-      });
-    },
-    keepPreviousData: true,
-  };
+    placeholderData: keepPreviousData,
+  });
 }
 
 export const CmdKSearchModal = (props: {
@@ -103,7 +87,7 @@ export const CmdKSearchModal = (props: {
   // debounce 500ms
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
-  const typesenseSearchQuery = useQuery<TrendingContract[]>(
+  const typesenseSearchQuery = useQuery(
     contractTypesenseSearchQuery(debouncedSearchValue, queryClient, trackEvent),
   );
 

@@ -31,6 +31,9 @@ function processQuery(
   if (volumeQuery.isError) {
     return { isError: true };
   }
+  if (!volumeQuery.data) {
+    return { isEmpty: true };
+  }
 
   if (volumeQuery.data.aggregate.sum.succeeded.amountUSDCents === 0) {
     return { isEmpty: true };
@@ -162,7 +165,6 @@ function RenderData(props: { query: ProcessedQuery }) {
           </div>
         </div>
       </div>
-
       {/* Right */}
       <div className="lg:flex items-center border-t border-border pt-5 lg:pt-0 lg:border-none lg:pr-10">
         <div className="flex lg:flex-col gap-10 lg:gap-4 justify-center">

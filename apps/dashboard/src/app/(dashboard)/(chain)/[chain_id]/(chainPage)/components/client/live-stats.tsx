@@ -7,13 +7,10 @@ import { thirdwebClient } from "@/constants/client";
 import { isProd } from "@/constants/env";
 import { useQuery } from "@tanstack/react-query";
 import { CircleCheck, XIcon } from "lucide-react";
-import { useState } from "react";
 import { hostnameEndsWith } from "utils/url";
 import { PrimaryInfoItem } from "../server/primary-info-item";
 
 function useChainStatswithRPC(_rpcUrl: string) {
-  const [shouldRefetch, setShouldRefetch] = useState(true);
-
   let rpcUrl = _rpcUrl.replace(
     // eslint-disable-next-line no-template-curly-in-string
     "${THIRDWEB_API_KEY}",
@@ -49,12 +46,14 @@ function useChainStatswithRPC(_rpcUrl: string) {
         blockNumber: Number.parseInt(json.result, 16),
       };
     },
-    refetchInterval: shouldRefetch ? 5 * 1000 : undefined,
+    refetchInterval: (query) => {
+      if (query.state.error) {
+        return false;
+      }
+      return 5 * 1000;
+    },
     enabled: !!rpcUrl,
     refetchOnWindowFocus: false,
-    onError: () => {
-      setShouldRefetch(false);
-    },
   });
 }
 

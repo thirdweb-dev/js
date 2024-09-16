@@ -17,6 +17,7 @@ import {
   Tr,
   usePrevious,
 } from "@chakra-ui/react";
+import type { UseQueryResult } from "@tanstack/react-query";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { ListingDrawer } from "contract-ui/tabs/shared-components/listing-drawer";
 import {
@@ -33,7 +34,6 @@ import {
   MdNavigateBefore,
   MdNavigateNext,
 } from "react-icons/md";
-import type { UseQueryResult } from "react-query-v5";
 import { type Cell, type Column, usePagination, useTable } from "react-table";
 import type { ThirdwebContract } from "thirdweb";
 import type {
@@ -201,7 +201,6 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
           Valid
         </Button>
       </ButtonGroup>
-
       <TableContainer maxW="100%" className="relative">
         {((listingsToShow === "all" && getAllQueryResult.isFetching) ||
           (listingsToShow === "valid" && getValidQueryResult.isFetching)) && (

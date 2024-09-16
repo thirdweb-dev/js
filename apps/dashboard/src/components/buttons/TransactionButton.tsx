@@ -35,7 +35,6 @@ interface TransactionButtonProps extends Omit<ButtonProps, "leftIcon"> {
   isLoading: boolean;
   isGasless?: boolean;
   upsellTestnet?: boolean;
-  onChainSelect?: (chainId: number) => void;
 }
 
 function useWalletRequiresExternalConfirmation() {
@@ -55,7 +54,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   colorScheme,
   variant,
   isGasless,
-  onChainSelect,
+
   ...restButtonProps
 }) => {
   const activeWallet = useActiveWallet();
@@ -93,7 +92,6 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     >
       <PopoverTrigger>
         <ButtonComponent
-          onChainSelect={onChainSelect}
           borderRadius="md"
           position="relative"
           role="group"

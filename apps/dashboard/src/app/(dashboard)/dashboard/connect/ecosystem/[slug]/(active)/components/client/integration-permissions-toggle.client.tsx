@@ -20,7 +20,11 @@ export function IntegrationPermissionsToggle({
       }
     | undefined
   >();
-  const { updateEcosystem, variables, isLoading } = useUpdateEcosystem({
+  const {
+    mutateAsync: updateEcosystem,
+    variables,
+    isPending,
+  } = useUpdateEcosystem({
     onError: (error) => {
       const message =
         error instanceof Error ? error.message : "Failed to create ecosystem";
@@ -31,14 +35,14 @@ export function IntegrationPermissionsToggle({
   return (
     <RadioGroup
       defaultValue={ecosystem.permission}
-      value={isLoading ? variables?.permission : ecosystem.permission}
+      value={isPending ? variables?.permission : ecosystem.permission}
       className="flex flex-col gap-2 py-2 md:flex-row md:gap-4"
     >
       <RadioGroupItemButton
         value="PARTNER_WHITELIST"
         id="PARTNER_WHITELIST"
         className={cn(
-          isLoading &&
+          isPending &&
             variables?.permission === "PARTNER_WHITELIST" &&
             "animate-pulse",
         )}
@@ -59,7 +63,7 @@ export function IntegrationPermissionsToggle({
         value="ANYONE"
         id="ANYONE"
         className={cn(
-          isLoading && variables?.permission === "ANYONE" && "animate-pulse",
+          isPending && variables?.permission === "ANYONE" && "animate-pulse",
         )}
         onClick={() => {
           if (ecosystem.permission === "ANYONE") return;

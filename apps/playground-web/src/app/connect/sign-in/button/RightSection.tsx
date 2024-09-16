@@ -1,5 +1,6 @@
 import { XIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo } from "react";
 import { ethereum } from "thirdweb/chains";
 import {
   ConnectButton,
@@ -20,10 +21,19 @@ import type { ConnectPlaygroundOptions } from "../components/types";
 
 export function RightSection(props: {
   connectOptions: ConnectPlaygroundOptions;
+  tab?: string;
 }) {
-  const [previewTab, setPreviewTab] = useState<"modal" | "button" | "code">(
-    "modal",
+  const router = useRouter();
+  const previewTab = useMemo(
+    () =>
+      ["modal", "button", "code"].includes(props.tab || "")
+        ? (props.tab as "modal" | "button" | "code")
+        : "modal",
+    [props.tab],
   );
+  const setPreviewTab = (tab: "modal" | "button" | "code") => {
+    router.push(`/connect/sign-in?tab=${tab}`);
+  };
   const { connectOptions } = props;
   const wallet = useActiveWallet();
   const account = useActiveAccount();

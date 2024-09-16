@@ -63,7 +63,7 @@ function TeamNameFormControl(props: {
       saveButton={{
         onClick: handleSave,
         disabled: teamName.length === 0,
-        isLoading: updateTeamMutation.isLoading,
+        isLoading: updateTeamMutation.isPending,
       }}
       errorText={undefined}
       noPermissionText={undefined} // TODO
@@ -121,7 +121,7 @@ function TeamSlugFormControl(props: {
       saveButton={{
         onClick: handleSave,
         disabled: teamSlug.length === 0,
-        isLoading: updateTeamMutation.isLoading,
+        isLoading: updateTeamMutation.isPending,
       }}
       noPermissionText={undefined} // TODO
     >
@@ -168,7 +168,7 @@ function TeamAvatarFormControl() {
       saveButton={{
         onClick: handleSave,
         disabled: false,
-        isLoading: updateTeamAvatarMutation.isLoading,
+        isLoading: updateTeamAvatarMutation.isPending,
       }}
       noPermissionText={undefined} // TODO
       errorText={undefined}
@@ -250,7 +250,7 @@ export function LeaveTeamCard(props: {
         description={description}
         buttonLabel={title}
         buttonOnClick={handleLeave}
-        isLoading={leaveTeam.isLoading}
+        isLoading={leaveTeam.isPending}
         confirmationDialog={{
           title: `Are you sure you want to leave team "${props.teamName}" ?`,
           description:
@@ -311,7 +311,7 @@ export function DeleteTeamCard(props: {
         description={description}
         buttonLabel={title}
         buttonOnClick={handleDelete}
-        isLoading={deleteTeam.isLoading}
+        isLoading={deleteTeam.isPending}
         confirmationDialog={{
           title: `Are you sure you want to delete team "${props.teamName}" ?`,
           description: description,

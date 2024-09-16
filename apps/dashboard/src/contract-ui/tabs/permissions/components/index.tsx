@@ -1,42 +1,44 @@
 import { ButtonGroup, Flex } from "@chakra-ui/react";
-import {
-  type ContractWithRoles,
-  type RolesForContract,
-  useAllRoleMembers,
-  useContract,
-  useContractType,
-  useSetAllRoleMembers,
-} from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { BuiltinContractMap, ROLE_DESCRIPTION_MAP } from "constants/mappings";
+import { ROLE_DESCRIPTION_MAP } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
-import type { roleMap } from "thirdweb/extensions/permissions";
+import {
+  useActiveAccount,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
 import { Button } from "tw-components";
+import {
+  createSetAllRoleMembersTx,
+  getAllRoleMembers,
+} from "../../../hooks/permissions";
 import { ContractPermission } from "./contract-permission";
 
-type PermissionFormContext<TContract extends ContractWithRoles> = {
-  [role in RolesForContract<TContract>]: string[];
+type PermissionFormContext = {
+  [role: string]: string[];
 };
 
-export const Permissions = <TContract extends ContractWithRoles>({
+export function Permissions({
   contract,
 }: {
   contract: ThirdwebContract;
-}) => {
+}) {
   const trackEvent = useTrack();
-  const { contract: contractV4 } = useContract(contract.address);
-  const allRoleMembers = useAllRoleMembers(contractV4);
-  const setAllRoleMembers = useSetAllRoleMembers(contractV4 as TContract);
+  const account = useActiveAccount();
+  const allRoleMembers = useReadContract(getAllRoleMembers, {
+    contract,
+  });
+  const sendTx = useSendAndConfirmTransaction();
 
   const transformedQueryData = useMemo(() => {
     if (!allRoleMembers.data) {
       return {};
     }
-    return allRoleMembers.data as PermissionFormContext<TContract>;
+    return allRoleMembers.data satisfies PermissionFormContext;
   }, [allRoleMembers.data]);
 
   const form = useForm({
@@ -44,27 +46,14 @@ export const Permissions = <TContract extends ContractWithRoles>({
     values: transformedQueryData,
   });
 
-  const { data: contractType } = useContractType(contract.address);
-  const contractData =
-    BuiltinContractMap[contractType as keyof typeof BuiltinContractMap];
-
   const { onSuccess, onError } = useTxNotifications(
     "Permissions updated",
     "Failed to update permissions",
   );
 
   const roles = useMemo(() => {
-    return Object.keys(allRoleMembers.data || ROLE_DESCRIPTION_MAP).filter(
-      (role) =>
-        contractData && contractData.contractType !== "custom"
-          ? contractData.roles?.includes(role as keyof typeof roleMap)
-          : true,
-    );
-  }, [allRoleMembers.data, contractData]);
-
-  const isPrebuilt =
-    BuiltinContractMap[contractType as keyof typeof BuiltinContractMap]
-      .contractType !== "custom";
+    return Object.keys(allRoleMembers.data || ROLE_DESCRIPTION_MAP);
+  }, [allRoleMembers.data]);
 
   return (
     <FormProvider {...form}>
@@ -73,20 +62,28 @@ export const Permissions = <TContract extends ContractWithRoles>({
         direction="column"
         as="form"
         onSubmit={form.handleSubmit((d) => {
+          if (!account) {
+            onError(new Error("Wallet not connected!"));
+            return;
+          }
           trackEvent({
             category: "permissions",
             action: "set-permissions",
             label: "attempt",
           });
-          // if we switch back to mutateAsync then *need* to catch errors
-          setAllRoleMembers.mutate(d as PermissionFormContext<TContract>, {
-            onSuccess: (_data, variables) => {
+          const tx = createSetAllRoleMembersTx({
+            account,
+            contract,
+            roleMemberMap: d,
+          });
+          sendTx.mutate(tx, {
+            onSuccess: () => {
               trackEvent({
                 category: "permissions",
                 action: "set-permissions",
                 label: "success",
               });
-              form.reset(variables);
+              form.reset(d);
               onSuccess();
             },
             onError: (error) => {
@@ -108,7 +105,6 @@ export const Permissions = <TContract extends ContractWithRoles>({
               key={role}
               role={role}
               description={ROLE_DESCRIPTION_MAP[role] || ""}
-              isPrebuilt={isPrebuilt}
               contract={contract}
             />
           );
@@ -118,7 +114,7 @@ export const Permissions = <TContract extends ContractWithRoles>({
             borderRadius="md"
             isDisabled={
               !allRoleMembers.data ||
-              setAllRoleMembers.isLoading ||
+              sendTx.isPending ||
               !form.formState.isDirty
             }
             onClick={() => form.reset(allRoleMembers.data)}
@@ -130,7 +126,7 @@ export const Permissions = <TContract extends ContractWithRoles>({
             transactionCount={1}
             isDisabled={!form.formState.isDirty}
             type="submit"
-            isLoading={setAllRoleMembers.isLoading}
+            isLoading={sendTx.isPending}
             loadingText="Saving permissions ..."
           >
             Update permissions
@@ -139,4 +135,4 @@ export const Permissions = <TContract extends ContractWithRoles>({
       </Flex>
     </FormProvider>
   );
-};
+}

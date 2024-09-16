@@ -121,6 +121,7 @@ export {
   rolesOf,
   type RolesOfParams,
 } from "../extensions/modules/__generated__/OwnableRoles/read/rolesOf.js";
+export { checkModulesCompatibility } from "../extensions/modules/common/checkModulesCompatibility.js";
 
 /**
  * Write

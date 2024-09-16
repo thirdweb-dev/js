@@ -1,7 +1,8 @@
+"use client";
+
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -14,6 +15,7 @@ export function ProjectSelectorUI(props: {
   projects: Project[];
   currentProject: Project | undefined;
   team: Team;
+  createProject: () => void;
 }) {
   const { projects, currentProject, team } = props;
   const [searchProjectTerm, setSearchProjectTerm] = useState("");
@@ -76,13 +78,10 @@ export function ProjectSelectorUI(props: {
         <Button
           className="px-2 w-full gap-2 justify-start disabled:opacity-100 disabled:pointer-events-auto disabled:cursor-not-allowed"
           variant="ghost"
-          disabled
+          onClick={props.createProject}
         >
           <CirclePlusIcon className="size-4 text-link-foreground" />
           Create Project
-          <Badge className="ml-auto" variant="secondary">
-            Soon{"™️"}
-          </Badge>
         </Button>
       </div>
     </div>

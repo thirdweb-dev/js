@@ -1,6 +1,6 @@
 import "server-only";
 
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import type { ChainCTAProps } from "./[chain_id]/(chainPage)/components/server/cta-card";
 import zeroGCTA from "./temp-assets/0gCTA.png";
 import zeroGBanner from "./temp-assets/0gLabsBanner.png";
@@ -89,7 +89,7 @@ export async function getChain(
   ]);
 
   if (!chain.data) {
-    redirect("/404");
+    notFound();
   }
   return {
     ...chain.data,

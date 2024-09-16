@@ -36,7 +36,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     );
   }
 
-  if (functionSelectorQuery.isLoading) {
+  if (functionSelectorQuery.isLoading || !functionSelectorQuery.data) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
@@ -71,6 +71,12 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   const isRevealable = ERC721Ext.isRevealSupported(functionSelectorQuery.data);
   const canCreateDelayedRevealBatch =
     ERC721Ext.isCreateDelayedRevealBatchSupported(functionSelectorQuery.data);
+
+  console.log("***DEBUG*** canRenderNFTTable: ", {
+    isErc721,
+    canRenderNFTTable,
+    functionSelectorQuery,
+  });
 
   return (
     <div className="flex flex-col gap-6">

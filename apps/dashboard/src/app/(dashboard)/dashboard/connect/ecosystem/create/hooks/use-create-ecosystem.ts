@@ -8,7 +8,7 @@ import {
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { upload } from "thirdweb/storage";
 
-export type CreateEcosystemParams = {
+type CreateEcosystemParams = {
   name: string;
   logo: File;
   permission: "PARTNER_WHITELIST" | "ANYONE";
@@ -24,7 +24,7 @@ export function useCreateEcosystem(
   const { isLoggedIn } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  const { mutateAsync: createEcosystem, isLoading } = useMutation({
+  return useMutation({
     // Returns the created ecosystem slug
     mutationFn: async (params: CreateEcosystemParams): Promise<string> => {
       if (!isLoggedIn) {
@@ -75,10 +75,10 @@ export function useCreateEcosystem(
       if (onSuccess) {
         await onSuccess(id, variables, context);
       }
-      return queryClient.invalidateQueries(["ecosystems"]);
+      return queryClient.invalidateQueries({
+        queryKey: ["ecosystems"],
+      });
     },
     ...queryOptions,
   });
-
-  return { createEcosystem, isLoading };
 }

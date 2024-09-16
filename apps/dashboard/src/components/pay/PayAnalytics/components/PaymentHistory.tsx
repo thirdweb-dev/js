@@ -43,6 +43,9 @@ function processQuery(
   if (purchasesQuery.isError) {
     return { isError: true };
   }
+  if (!purchasesQuery.data) {
+    return { isEmpty: true };
+  }
 
   const purchases = purchasesQuery.data.purchases;
   const totalCount = purchasesQuery.data.count;
@@ -161,9 +164,7 @@ function RenderData(props: {
           </tbody>
         </table>
       </ScrollShadow>
-
       <div className="h-8" />
-
       {props.query.isEmpty ? (
         <div className="min-h-[150px] flex items-center justify-center w-full text-muted-foreground text-sm">
           No data available

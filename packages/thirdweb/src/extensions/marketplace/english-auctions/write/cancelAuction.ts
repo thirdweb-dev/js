@@ -1,6 +1,9 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { cancelAuction as generatedCancelAuction } from "../../__generated__/IEnglishAuctions/write/cancelAuction.js";
-import { getWinningBid } from "../read/getWinningBid.js";
+import * as CancelAuction from "../../__generated__/IEnglishAuctions/write/cancelAuction.js";
+import {
+  getWinningBid,
+  isGetWinningBidSupported,
+} from "../read/getWinningBid.js";
 
 /**
  * @extension MARKETPLACE
@@ -32,7 +35,7 @@ export type CancelAuctionParams = {
 export function cancelAuction(
   options: BaseTransactionOptions<CancelAuctionParams>,
 ) {
-  return generatedCancelAuction({
+  return CancelAuction.cancelAuction({
     contract: options.contract,
     asyncParams: async () => {
       const winningBid = await getWinningBid({
@@ -50,4 +53,23 @@ export function cancelAuction(
       };
     },
   });
+}
+
+/**
+ * Checks if the `cancelAuction` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `cancelAuction` method is supported.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { isCancelAuctionSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = isCancelAuctionSupported(["0x..."]);
+ * ```
+ */
+export function isCancelAuctionSupported(availableSelectors: string[]) {
+  return (
+    CancelAuction.isCancelAuctionSupported(availableSelectors) &&
+    isGetWinningBidSupported(availableSelectors)
+  );
 }

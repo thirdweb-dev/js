@@ -7,7 +7,7 @@ import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import {
   type DehydratedState,
-  Hydrate,
+  HydrationBoundary,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
@@ -38,7 +38,7 @@ interface AppLayoutProps extends AppShellProps {
 
 export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
   // has to be constructed in here because it may otherwise share state between SSR'd pages
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(() => new QueryClient({}));
 
   // will be deleted as part of: https://github.com/thirdweb-dev/dashboard/pull/2648
   // eslint-disable-next-line no-restricted-syntax
@@ -54,7 +54,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Hydrate state={props.dehydratedState}>
+      <HydrationBoundary state={props.dehydratedState}>
         <ErrorProvider>
           <AllChainsProvider>
             <ChainsProvider>
@@ -74,7 +74,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
             </ChainsProvider>
           </AllChainsProvider>
         </ErrorProvider>
-      </Hydrate>
+      </HydrationBoundary>
     </QueryClientProvider>
   );
 };
