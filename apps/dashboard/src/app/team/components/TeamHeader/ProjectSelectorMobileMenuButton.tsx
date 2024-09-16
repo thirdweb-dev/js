@@ -34,7 +34,15 @@ export function ProjectSelectorMobileMenuButton(
         </Button>
       </DialogTrigger>
 
-      <DialogContent dialogCloseClassName="hidden" className="p-0">
+      <DialogContent
+        dialogCloseClassName="hidden"
+        className="p-0"
+        onClick={(e) => {
+          if (e.target instanceof HTMLAnchorElement) {
+            setOpen(false);
+          }
+        }}
+      >
         <DynamicHeight>
           <ProjectSelectorUI
             currentProject={props.currentProject}

@@ -109,7 +109,7 @@ export function TeamSelectionUI(props: {
       {/* TODO - what do we do on this button click? */}
       {/* Bottom */}
       {teamPlan && teamPlan !== "pro" && (
-        <div className="p-2 border-t">
+        <div className="p-2 border-t border-border">
           <Button
             variant="primary"
             className="w-full"

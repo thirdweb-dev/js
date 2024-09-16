@@ -1,5 +1,4 @@
-import { MobileSidebar } from "@/components/blocks/MobileSidebar";
-import { Sidebar } from "@/components/blocks/Sidebar";
+import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 
 export default function Layout(props: {
   params: {
@@ -37,13 +36,5 @@ export default function Layout(props: {
     },
   ];
 
-  return (
-    <div className="h-full container flex gap-4">
-      <Sidebar links={links} />
-      <div className="grow py-6 max-sm:w-full">
-        <MobileSidebar links={links} triggerClassName="max-sm:mb-6" />
-        {props.children}
-      </div>
-    </div>
-  );
+  return <SidebarLayout sidebarLinks={links}>{props.children}</SidebarLayout>;
 }

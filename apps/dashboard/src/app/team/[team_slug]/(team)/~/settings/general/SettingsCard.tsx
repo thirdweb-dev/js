@@ -18,7 +18,7 @@ export function SettingsCard(props: {
   };
 }) {
   return (
-    <div className="border rounded-lg bg-muted/50 relative">
+    <div className="border border-border rounded-lg bg-muted/50 relative">
       <div
         className={cn(
           "border-b border-border px-4 lg:px-6 py-6 relative",

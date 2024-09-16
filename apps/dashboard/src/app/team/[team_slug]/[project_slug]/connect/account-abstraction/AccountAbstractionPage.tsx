@@ -42,7 +42,7 @@ export function AccountAbstractionPage(props: {
   const isOpChain = chain?.id ? isOpChainId(chain.id) : false;
 
   return (
-    <div className="max-sm:pt-6 pb-10">
+    <div>
       <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight mb-1">
         Account Abstraction
       </h1>

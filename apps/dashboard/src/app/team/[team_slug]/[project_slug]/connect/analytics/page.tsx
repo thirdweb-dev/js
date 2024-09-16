@@ -19,7 +19,7 @@ export default async function Page(props: {
   }
 
   return (
-    <div className="pb-10 max-sm:pt-6">
+    <div>
       <div>
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight mb-1">
           Connect Analytics

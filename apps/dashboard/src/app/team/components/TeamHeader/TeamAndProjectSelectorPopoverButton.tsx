@@ -65,6 +65,11 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
         sideOffset={5}
         className="p-0 w-auto rounded-xl shadow-xl"
         align={props.focus === "project-selection" ? "center" : "start"}
+        onClick={(e) => {
+          if (e.target instanceof HTMLAnchorElement) {
+            setOpen(false);
+          }
+        }}
       >
         <DynamicHeight>
           <div className="flex [&>div]:min-w-[280px] no-scrollbar">
