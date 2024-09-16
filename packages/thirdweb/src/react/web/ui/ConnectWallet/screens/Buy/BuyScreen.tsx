@@ -1,4 +1,5 @@
 import { IdCardIcon } from "@radix-ui/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import { trackPayEvent } from "../../../../../../analytics/track.js";
 import type { Chain } from "../../../../../../chains/types.js";
@@ -24,6 +25,7 @@ import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBala
 import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
+import { invalidateWalletBalance } from "../../../../../core/providers/invalidateWalletBalance.js";
 import type { SupportedTokens } from "../../../../../core/utils/defaultTokens.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
@@ -226,14 +228,17 @@ function BuyScreenContent(props: BuyScreenContentProps) {
 
   // screens ----------------------------
 
+  const queryClient = useQueryClient();
+
   const onSwapSuccess = useCallback(
     (_status: BuyWithCryptoStatus) => {
       props.payOptions.onPurchaseSuccess?.({
         type: "crypto",
         status: _status,
       });
+      invalidateWalletBalance(queryClient);
     },
-    [props.payOptions.onPurchaseSuccess],
+    [props.payOptions.onPurchaseSuccess, queryClient],
   );
 
   const onFiatSuccess = useCallback(
@@ -242,8 +247,9 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         type: "fiat",
         status: _status,
       });
+      invalidateWalletBalance(queryClient);
     },
-    [props.payOptions.onPurchaseSuccess],
+    [props.payOptions.onPurchaseSuccess, queryClient],
   );
 
   if (screen.id === "connect-payer-wallet") {
