@@ -58,7 +58,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
     await sendAndConfirmTransaction({
       transaction: approve({
         contract: erc20Contract,
-        amount: "100000",
+        amount: "1000000000000000",
         spender: packAddress,
       }),
       account,
@@ -114,7 +114,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
         erc20Rewards: [
           {
             contractAddress: erc20Address,
-            totalRewards: 10,
+            totalRewards: 1,
             quantityPerReward: 1,
           },
         ],
