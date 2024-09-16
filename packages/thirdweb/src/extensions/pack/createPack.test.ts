@@ -1,9 +1,11 @@
+import { openPack } from "src/exports/extensions/erc1155.js";
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { getContract } from "../../contract/contract.js";
+import { download } from "../../storage/download.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { approve } from "../erc20/write/approve.js";
 import { mintTo as mintToERC20 } from "../erc20/write/mintTo.js";
@@ -11,6 +13,7 @@ import { setApprovalForAll } from "../erc721/__generated__/IERC721A/write/setApp
 import { mintTo as mintToERC721 } from "../erc721/write/mintTo.js";
 import { getPackContents } from "../erc1155/__generated__/IPack/read/getPackContents.js";
 import { getTokenCountOfBundle } from "../erc1155/__generated__/IPack/read/getTokenCountOfBundle.js";
+import { getUriOfBundle } from "../erc1155/__generated__/IPack/read/getUriOfBundle.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
 import { deployPackContract } from "../prebuilts/deploy-pack.js";
@@ -132,13 +135,53 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
     });
 
     // Read the info of the new Pack
-    const [packContent, tokenCountOfBundle] = await Promise.all([
+    const [packContent, tokenCountOfBundle, bundleUri] = await Promise.all([
       getPackContents({ contract: packContract, packId: 0n }),
       getTokenCountOfBundle({ contract: packContract, bundleId: 0n }),
+      getUriOfBundle({ contract: packContract, bundleId: 0n }),
     ]);
 
-    console.log(packContent);
-
+    // Make sure the content is correct
+    expect(packContent).toStrictEqual([
+      [
+        {
+          assetContract: erc20Address,
+          tokenType: 0,
+          tokenId: 0n,
+          totalAmount: 1000000000000000000n,
+        },
+        {
+          assetContract: erc721Address,
+          tokenType: 1,
+          tokenId: 0n,
+          totalAmount: 1n,
+        },
+      ],
+      [1000000000000000000n, 1n],
+    ]);
     expect(tokenCountOfBundle).toBe(2n);
+
+    // Make sure the Pack metadata is correct
+    expect(bundleUri).toBeDefined();
+    const metadata = await (await download({ client, uri: bundleUri })).json();
+    expect(metadata?.name).toBe("Pack #0");
+
+    // Make sure you can open the Pack, since the open-date was set to "now"
+    await sendAndConfirmTransaction({
+      account,
+      transaction: openPack({
+        contract: packContract,
+        packId: 0n,
+        amountToOpen: 1n,
+      }),
+    });
+
+    // Make sure the remaining content reflects the correct amount
+    const remainingPackContent = await getPackContents({
+      contract: packContract,
+      packId: 0n,
+    });
+
+    console.log(remainingPackContent);
   });
 });
