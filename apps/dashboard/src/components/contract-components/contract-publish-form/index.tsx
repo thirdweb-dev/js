@@ -1,76 +1,61 @@
 "use client";
 
+import { thirdwebClient } from "@/constants/client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
-import {
-  CONTRACT_ADDRESSES,
-  ExtraPublishMetadataSchemaInput,
-  detectFeatures,
-  isExtensionEnabled,
-} from "@thirdweb-dev/sdk";
 import type { Abi } from "abitype";
-import { defaultChains } from "constants/chains";
+import {
+  DASHBOARD_ENGINE_RELAYER_URL,
+  DASHBOARD_FORWARDER_ADDRESS,
+} from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoChevronBack } from "react-icons/io5";
-import { useActiveAccount } from "thirdweb/react";
-import { Button, Text } from "tw-components";
-import { z } from "zod";
+import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import {
-  useContractFullPublishMetadata,
-  useContractPrePublishMetadata,
-  useContractPublishMetadataFromURI,
-  useEns,
-  useFunctionParamsFromABI,
-  usePublishMutation,
-} from "../hooks";
-import type { ContractId } from "../types";
+  getContractPublisher,
+  publishContract,
+} from "thirdweb/extensions/thirdweb";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { Button, Text } from "tw-components";
+import { useEns, useFunctionParamsFromABI } from "../hooks";
 import { ContractParamsFieldset } from "./contract-params-fieldset";
 import { FactoryFieldset } from "./factory-fieldset";
 import { LandingFieldset } from "./landing-fieldset";
 import { NetworksFieldset } from "./networks-fieldset";
 
-const ExtraPublishMetadataSchema = ExtraPublishMetadataSchemaInput.extend({
-  customFactoryAddresses: z.array(
-    z.object({
-      key: z.number(),
-      value: z.string(),
-    }),
-  ),
-});
-
-interface ContractPublishFormProps {
-  contractId: ContractId;
-}
-
-export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
-  contractId,
-}) => {
+export function ContractPublishForm(props: {
+  publishMetadata: FetchDeployMetadataResult;
+  onPublishSuccess: () => Promise<void>;
+}) {
+  useLoggedInUser();
   const [customFactoryAbi, setCustomFactoryAbi] = useState<Abi>([]);
-  const configuredChainsIds = defaultChains.map((c) => c.id);
   const [fieldsetToShow, setFieldsetToShow] = useState<
     "landing" | "factory" | "contractParams" | "networks"
   >("landing");
   const trackEvent = useTrack();
 
-  const router = useRouter();
+  const router = useDashboardRouter();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully published contract",
     "Failed to publish contract",
   );
-  const address = useActiveAccount()?.address;
-  const publishMutation = usePublishMutation();
+  const account = useActiveAccount();
+  const sendTx = useSendAndConfirmTransaction({
+    gasless: {
+      experimentalChainlessSupport: true,
+      provider: "engine",
+      relayerUrl: DASHBOARD_ENGINE_RELAYER_URL,
+      relayerForwarderAddress: DASHBOARD_FORWARDER_ADDRESS,
+    },
+  });
 
-  const publishMetadata = useContractPublishMetadataFromURI(contractId);
-  const prePublishMetadata = useContractPrePublishMetadata(contractId, address);
-
-  const latestVersion =
-    prePublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata
-      .version;
+  const latestVersion = props.publishMetadata.version;
 
   const placeholderVersion = useMemo(() => {
     if (latestVersion) {
@@ -82,89 +67,53 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
 
   const transformedQueryData = useMemo(() => {
     return {
-      ...prePublishMetadata.data?.latestPublishedContractMetadata
-        ?.publishedMetadata,
+      ...props.publishMetadata,
+      name: props.publishMetadata.name || "",
       changelog: "",
       version: placeholderVersion,
       displayName:
-        prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata.displayName ||
-        prePublishMetadata.data?.preDeployMetadata.info.title ||
-        publishMetadata.data?.name ||
+        props.publishMetadata.displayName ||
+        props.publishMetadata.info?.title ||
+        props.publishMetadata.name ||
         "",
       description:
-        prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata.description ||
-        prePublishMetadata.data?.preDeployMetadata.info.notice ||
+        props.publishMetadata.description ||
+        props.publishMetadata.info?.notice ||
         "",
-      factoryDeploymentData: prePublishMetadata.data
-        ?.latestPublishedContractMetadata?.publishedMetadata
-        ?.factoryDeploymentData || {
-        factoryAddresses: Object.fromEntries(
-          configuredChainsIds
-            .map((id) =>
-              id in CONTRACT_ADDRESSES
-                ? [
-                    id,
-                    CONTRACT_ADDRESSES[id as keyof typeof CONTRACT_ADDRESSES]
-                      .twFactory,
-                  ]
-                : null,
-            )
-            .filter(Boolean) as [number, string][],
-        ),
-        implementationAddresses: Object.fromEntries(
-          configuredChainsIds.map((id) => [id, ""]),
-        ),
+      factoryDeploymentData: props.publishMetadata?.factoryDeploymentData || {
+        factoryAddresses: {},
+        implementationAddresses: {},
         implementationInitializerFunction: "initialize",
         customFactoryInput: {
           factoryFunction:
-            prePublishMetadata.data?.latestPublishedContractMetadata
-              ?.publishedMetadata.factoryDeploymentData?.customFactoryInput
+            props.publishMetadata.factoryDeploymentData?.customFactoryInput
               ?.factoryFunction || "deployProxyByImplementation",
           customFactoryAddresses:
-            prePublishMetadata.data?.latestPublishedContractMetadata
-              ?.publishedMetadata?.factoryDeploymentData?.customFactoryInput
+            props.publishMetadata.factoryDeploymentData?.customFactoryInput
               ?.customFactoryAddresses || {},
+          params: props.publishMetadata.customFactoryInput?.params || [],
         },
       },
-      constructorParams:
-        prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata?.constructorParams || {},
-      networksForDeployment: prePublishMetadata.data
-        ?.latestPublishedContractMetadata?.publishedMetadata
-        .networksForDeployment || {
+      constructorParams: props.publishMetadata.constructorParams || {},
+      networksForDeployment: props.publishMetadata?.networksForDeployment || {
         allNetworks: true,
       },
-      deployType:
-        prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata?.deployType || "standard",
+      deployType: props.publishMetadata.deployType || "standard",
       customFactoryAddresses: Object.entries(
-        prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata?.factoryDeploymentData?.customFactoryInput
+        props.publishMetadata.factoryDeploymentData?.customFactoryInput
           ?.customFactoryAddresses || {},
       ).map(([key, value]) => ({ key: Number(key), value })),
-      defaultExtensions:
-        prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata?.defaultExtensions || [],
-      defaultModules:
-        prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata?.defaultModules || [],
+      defaultExtensions: props.publishMetadata.defaultExtensions || [],
+      defaultModules: props.publishMetadata.defaultModules || [],
       extensionsParamName:
-        prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata.factoryDeploymentData?.modularFactoryInput
-          ?.extensionsParamName || "",
+        props.publishMetadata.factoryDeploymentData?.modularFactoryInput
+          ?.hooksParamName || "",
     };
-  }, [
-    configuredChainsIds,
-    placeholderVersion,
-    prePublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata,
-    prePublishMetadata.data?.preDeployMetadata.info.notice,
-    prePublishMetadata.data?.preDeployMetadata.info.title,
-    publishMetadata.data?.name,
-  ]);
+  }, [placeholderVersion, props.publishMetadata]);
 
-  const form = useForm<z.input<typeof ExtraPublishMetadataSchema>>({
+  const form = useForm<
+    FetchDeployMetadataResult & { name: string; version: string }
+  >({
     defaultValues: transformedQueryData,
     values: transformedQueryData,
     resetOptions: {
@@ -173,61 +122,46 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
     },
   });
 
-  const hasTrackedImpression = useRef<boolean>(false);
-  // TODO: figure out a better way to track impressions
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    if (publishMetadata.data && !hasTrackedImpression.current) {
-      hasTrackedImpression.current = true;
-      trackEvent({
-        action: "impression",
-        category: "publish",
-        analytics: publishMetadata.data.analytics,
-      });
-    }
-  }, [publishMetadata.data, trackEvent]);
-
   const disableNext =
     !form.watch("version") ||
     !form.watch("displayName") ||
     !!form.getFieldState("version", form.formState).error;
 
-  const ensQuery = useEns(address);
+  const ensQuery = useEns(account?.address);
 
   const ensNameOrAddress = useMemo(() => {
     return ensQuery?.data?.ensName || ensQuery.data?.address;
   }, [ensQuery.data]);
 
   const successRedirectUrl = useMemo(() => {
-    if (!ensNameOrAddress || !publishMetadata.data?.name) {
+    if (!ensNameOrAddress || !props.publishMetadata.name) {
       return undefined;
     }
-    return `/${ensNameOrAddress}/${publishMetadata.data.name}`;
-  }, [ensNameOrAddress, publishMetadata.data?.name]);
+    return `/${ensNameOrAddress}/${props.publishMetadata.name}`;
+  }, [ensNameOrAddress, props.publishMetadata.name]);
 
   const isDisabled = useMemo(
-    () => !successRedirectUrl || !address,
-    [successRedirectUrl, address],
+    () => !successRedirectUrl || !account,
+    [successRedirectUrl, account],
   );
 
-  const fullPublishMetadata = useContractFullPublishMetadata(contractId);
   const constructorParams =
-    publishMetadata.data?.abi?.find((c) => c.type === "constructor")?.inputs ||
+    props.publishMetadata.abi.find((c) => c.type === "constructor")?.inputs ||
     [];
 
   const initializerParams = useFunctionParamsFromABI(
-    (form.watch("deployType") === "customFactory"
+    form.watch("deployType") === "customFactory"
       ? customFactoryAbi
-      : publishMetadata.data?.abi) as Abi,
+      : props.publishMetadata.abi,
     form.watch("deployType") === "customFactory"
       ? form.watch(
           "factoryDeploymentData.customFactoryInput.factoryFunction",
         ) ||
-          fullPublishMetadata.data?.factoryDeploymentData?.customFactoryInput
+          props.publishMetadata.factoryDeploymentData?.customFactoryInput
             ?.factoryFunction ||
           "deployProxyByImplementation"
       : form.watch("factoryDeploymentData.implementationInitializerFunction") ||
-          fullPublishMetadata.data?.factoryDeploymentData
+          props.publishMetadata.factoryDeploymentData
             ?.implementationInitializerFunction ||
           "initialize",
   );
@@ -237,66 +171,8 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       ? constructorParams
       : initializerParams;
 
-  const extensions = detectFeatures(publishMetadata.data?.abi || []);
-
-  const isPluginRouter = useMemo(
-    () =>
-      isExtensionEnabled(
-        publishMetadata.data?.abi || [],
-        "PluginRouter",
-        extensions,
-      ),
-    [publishMetadata.data?.abi, extensions],
-  );
-
-  const isDynamicContract = useMemo(
-    () =>
-      isExtensionEnabled(
-        publishMetadata.data?.abi || [],
-        "DynamicContract",
-        extensions,
-      ),
-    [publishMetadata.data?.abi, extensions],
-  );
-
-  const isModularContract = useMemo(
-    () =>
-      isExtensionEnabled(
-        publishMetadata.data?.abi || [],
-        "ModularCore",
-        extensions,
-      ),
-    [publishMetadata.data?.abi, extensions],
-  );
-
-  const hasExtensionsParam = useMemo(
-    () =>
-      constructorParams.some(
-        (param) => param.name === "_extensions" || "_marketplaceV3Params",
-      ),
-    [constructorParams],
-  );
-
-  const shouldShowDynamicFactoryInput = useMemo(
-    () =>
-      isPluginRouter ||
-      (isDynamicContract && hasExtensionsParam) ||
-      isModularContract,
-    [isPluginRouter, isDynamicContract, isModularContract, hasExtensionsParam],
-  );
-
-  const shouldShowModularFactoryInput = useMemo(
-    () => isModularContract,
-    [isModularContract],
-  );
-
-  const shouldShowModulesParamInput = useMemo(
-    () => isModularContract,
-    [isModularContract],
-  );
-
   // during loading and after success we should stay in loading state
-  const isLoading = publishMutation.isPending || publishMutation.isSuccess;
+  const isLoading = sendTx.isPending || sendTx.isSuccess;
 
   useIsomorphicLayoutEffect(() => {
     window?.scrollTo({
@@ -312,6 +188,10 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
           as="form"
           id="contract-release-form"
           onSubmit={form.handleSubmit((data) => {
+            if (!account) {
+              // no account, do nothing
+              return;
+            }
             const addressArray =
               Object.keys(data?.customFactoryAddresses || {}).length > 0
                 ? (data?.customFactoryAddresses as unknown as {
@@ -332,80 +212,83 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
               category: "publish",
               action: "click",
               label: "attempt",
-              uris: contractId,
-              release_id: `${ensNameOrAddress}/${publishMetadata.data?.name}`,
+              release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
             });
-            publishMutation.mutate(
-              {
-                predeployUri: contractId,
-                extraMetadata: {
-                  ...data,
-                  networksForDeployment: {
-                    allNetworks:
-                      data.deployType === "customFactory"
-                        ? false
-                        : data.networksForDeployment?.allNetworks,
-                    networksEnabled:
-                      addressArray.length > 0
-                        ? Object.keys(addressObj).map((val) => Number(val))
-                        : data.networksForDeployment?.networksEnabled,
-                  },
-                  factoryDeploymentData: {
-                    ...data.factoryDeploymentData,
-                    implementationAddresses:
-                      data.factoryDeploymentData?.implementationAddresses || {},
-                    customFactoryInput: {
-                      factoryFunction:
-                        data.factoryDeploymentData?.customFactoryInput
-                          ?.factoryFunction || "deployProxyByImplementation",
-                      customFactoryAddresses:
-                        addressObj ||
-                        data.factoryDeploymentData?.customFactoryInput
-                          ?.customFactoryAddresses,
-                    },
-                    modularFactoryInput: {
-                      modulesParamName:
-                        data.factoryDeploymentData?.modularFactoryInput
-                          ?.modulesParamName || "",
-                    },
-                  },
-                },
-                contractName: publishMetadata.data?.name,
+
+            const metadata = {
+              ...data,
+              networksForDeployment: {
+                allNetworks:
+                  data.deployType === "customFactory"
+                    ? false
+                    : data.networksForDeployment?.allNetworks,
+                networksEnabled:
+                  addressArray.length > 0
+                    ? Object.keys(addressObj).map((val) => Number(val))
+                    : data.networksForDeployment?.networksEnabled,
               },
-              {
-                onSuccess: () => {
-                  onSuccess();
-                  trackEvent({
-                    category: "publish",
-                    action: "click",
-                    label: "success",
-                    uris: contractId,
-                    release_id: `${ensNameOrAddress}/${publishMetadata.data?.name}`,
-                    version: data.version,
-                    type: data.deployType,
-                  });
-                  if (successRedirectUrl) {
-                    router.push(
-                      successRedirectUrl,
-                      undefined,
-                      // reset scroll after redirect
-                      { scroll: true },
-                    );
-                  }
-                },
-                onError: (err) => {
-                  onError(err);
-                  trackEvent({
-                    category: "publish",
-                    action: "click",
-                    label: "error",
-                    uris: contractId,
-                    release_id: `${ensNameOrAddress}/${publishMetadata.data?.name}`,
-                    is_factory: data.isDeployableViaFactory,
-                  });
+              factoryDeploymentData: {
+                ...data.factoryDeploymentData,
+                implementationAddresses:
+                  data.factoryDeploymentData?.implementationAddresses || {},
+                implementationInitializerFunction:
+                  data.factoryDeploymentData
+                    ?.implementationInitializerFunction || "initialize",
+                customFactoryInput: {
+                  factoryFunction:
+                    data.factoryDeploymentData?.customFactoryInput
+                      ?.factoryFunction || "deployProxyByImplementation",
+                  params:
+                    data.factoryDeploymentData?.customFactoryInput?.params ||
+                    [],
+                  customFactoryAddresses:
+                    addressObj ||
+                    data.factoryDeploymentData?.customFactoryInput
+                      ?.customFactoryAddresses,
                 },
               },
-            );
+            } satisfies FetchDeployMetadataResult & {
+              name: string;
+              version: string;
+            };
+
+            const tx = publishContract({
+              account,
+              contract: getContractPublisher(thirdwebClient),
+              metadata,
+              previousMetadata: props.publishMetadata,
+            });
+
+            sendTx.mutate(tx, {
+              onSuccess: async () => {
+                onSuccess();
+                trackEvent({
+                  category: "publish",
+                  action: "click",
+                  label: "success",
+                  release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
+                  version: data.version,
+                  type: data.deployType,
+                });
+                await props.onPublishSuccess().catch((err) => {
+                  console.error("Failed to run onPublishSuccess", err);
+                });
+                if (successRedirectUrl) {
+                  router.push(successRedirectUrl, { scroll: true });
+                }
+              },
+              onError: (err) => {
+                console.error("Failed to publish contract", err);
+                onError(err);
+                trackEvent({
+                  category: "publish",
+                  action: "click",
+                  label: "error",
+                  release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
+                  is_factory: data.isDeployableViaFactory,
+                });
+              },
+            });
           })}
           direction="column"
           gap={6}
@@ -444,12 +327,8 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
           {fieldsetToShow === "factory" && (
             <Flex flexDir="column" gap={24}>
               <FactoryFieldset
-                abi={(publishMetadata.data?.abi || []) as Abi}
+                abi={props.publishMetadata.abi || []}
                 setCustomFactoryAbi={setCustomFactoryAbi}
-                shouldShowDynamicFactoryInput={shouldShowDynamicFactoryInput}
-                shouldShowModularFactoryInput={shouldShowModularFactoryInput}
-                shouldShowModulesParamInput={shouldShowModulesParamInput}
-                deployParams={deployParams}
               />
             </Flex>
           )}
@@ -466,7 +345,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
               flexDir={{ base: "column", md: "row" }}
               gap={4}
             >
-              {!address ? (
+              {!account ? (
                 <>
                   <Box />
                   <CustomConnectWallet />
@@ -524,7 +403,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                     form="contract-release-form"
                     isDisabled={isDisabled}
                     loadingText={
-                      publishMutation.isSuccess
+                      sendTx.isSuccess
                         ? "Preparing page"
                         : "Publishing contract"
                     }
@@ -540,4 +419,4 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       </Box>
     </FormProvider>
   );
-};
+}

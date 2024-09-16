@@ -24,6 +24,7 @@ import type {
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { FiChevronLeft } from "react-icons/fi";
+import { stringify } from "thirdweb/utils";
 import { Heading, Link, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 import type { ThirdwebNextPage } from "utils/types";
@@ -165,7 +166,12 @@ export const getStaticProps: GetStaticProps<ExplorePageProps> = async (ctx) => {
   await prefetchCategory(category, queryClient);
 
   return {
-    props: { category, dehydratedState: dehydrate(queryClient) },
+    props: {
+      category,
+      dehydratedState: dehydrate(queryClient, {
+        serializeData: (d) => stringify(d),
+      }),
+    },
   };
 };
 

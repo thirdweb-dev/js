@@ -227,15 +227,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.17.3
         version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@thirdweb-dev/sdk':
-        specifier: workspace:*
-        version: link:../../legacy_packages/sdk
       '@thirdweb-dev/service-utils':
         specifier: workspace:*
         version: link:../../packages/service-utils
-      '@thirdweb-dev/storage':
-        specifier: workspace:*
-        version: link:../../legacy_packages/storage
       '@vercel/og':
         specifier: ^0.6.2
         version: 0.6.2
@@ -260,9 +254,6 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
-      ethers:
-        specifier: 5.7.2
-        version: 5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       flat:
         specifier: ^6.0.1
         version: 6.0.1

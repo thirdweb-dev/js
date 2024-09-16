@@ -1,5 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import { SimpleGrid } from "@chakra-ui/react";
 import { ChakraProviderSetup } from "../../../../../@/components/ChakraProviderSetup";
 import { PublishedContract } from "../../../../../components/contract-components/published-contract";
 import { setOverrides } from "../../../../../lib/vercel-utils";
@@ -42,12 +41,12 @@ export default async function PublishedContractPage(
       <Separator />
       {/* TODO: remove the chakra things :) */}
       <ChakraProviderSetup>
-        <SimpleGrid columns={12} gap={{ base: 6, md: 10 }} w="full">
+        <div className="grid grid-cols-12 gap-6 md:gap-10 w-full">
           <PublishedContract
             publishedContract={publishedContract}
             walletOrEns={props.params.publisher}
           />
-        </SimpleGrid>
+        </div>
       </ChakraProviderSetup>
     </>
   );

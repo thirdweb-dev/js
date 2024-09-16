@@ -11,13 +11,11 @@ import {
 } from "@tanstack/react-query";
 import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-base-64";
 import { ensQuery } from "components/contract-components/hooks";
-import { getDashboardChainRpc } from "lib/rpc";
-import { getThirdwebSDK } from "lib/sdk";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
-import { polygon } from "thirdweb/chains";
 import { resolveScheme } from "thirdweb/storage";
 import invariant from "tiny-invariant";
+import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
 interface ContractCardProps {
@@ -262,11 +260,6 @@ async function publishedContractQueryFn(
   version: string,
   queryClient: QueryClient,
 ) {
-  const polygonSdk = getThirdwebSDK(
-    polygon.id,
-    getDashboardChainRpc(polygon.id, undefined),
-  );
-
   const publisherEns = await queryClient.fetchQuery(ensQuery(publisher));
   // START prefill both publisher ens variations
   if (publisherEns.address) {
@@ -283,17 +276,15 @@ async function publishedContractQueryFn(
   }
   // END prefill both publisher ens variations
   invariant(publisherEns.address, "publisher address not found");
-  const latestPublishedVersion = await polygonSdk
-    .getPublisher()
-    .getVersion(publisherEns.address, contractId, version);
+  const latestPublishedVersion = await fetchPublishedContractVersion(
+    publisherEns.address,
+    contractId,
+    version,
+  );
   invariant(latestPublishedVersion, "no published version found");
-  const contractInfo = await polygonSdk
-    .getPublisher()
-    .fetchPublishedContractInfo(latestPublishedVersion);
+
   return {
     ...latestPublishedVersion,
-    ...contractInfo.publishedMetadata,
-
     publishedContractId: `${publisher}/${contractId}/${version}`,
   };
 }

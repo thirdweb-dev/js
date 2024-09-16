@@ -61,18 +61,15 @@ interface AsyncContractTypeCellProps {
 
 export const AsyncContractTypeCell = memo(
   ({ cell }: AsyncContractTypeCellProps) => {
-    const publishedContractsFromDeployQuery = usePublishedContractsFromDeploy(
-      cell.address,
-      cell.chainId,
-    );
-
     const chain = useV5DashboardChain(cell.chainId);
-
     const contract = getContract({
       client: thirdwebClient,
       address: cell.address,
       chain,
     });
+
+    const publishedContractsFromDeployQuery =
+      usePublishedContractsFromDeploy(contract);
 
     const contractMetadata = useDashboardContractMetadata(contract);
 

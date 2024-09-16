@@ -146,7 +146,7 @@ function ModuleRow(props: {
   const { contract, moduleAddress, ownerAccount } = props;
   const [isUninstallModalOpen, setIsUninstallModalOpen] = useState(false);
 
-  const contractInfo = useModuleContractInfo(props.moduleAddress);
+  const contractInfo = useModuleContractInfo(contract);
 
   const uninstallMutation = useMutation({
     mutationFn: async (account: Account) => {

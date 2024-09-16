@@ -167,9 +167,6 @@ export enum PageId {
   // thirdweb.com/contracts/publish
   PublishMultiple = "publish-multiple-contracts",
 
-  // thirdweb.com/contracts/publish/:id
-  PublishSingle = "publish-single-contract",
-
   // thirdweb.com/:wallet
   // example: thirdweb.com/jns.eth
   Profile = "profile",

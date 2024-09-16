@@ -3,7 +3,7 @@ import { isAddress } from "thirdweb";
 import { resolveAddress, resolveName } from "thirdweb/extensions/ens";
 import invariant from "tiny-invariant";
 
-export interface ENSResolveResult {
+interface ENSResolveResult {
   ensName: string | null;
   address: string | null;
 }

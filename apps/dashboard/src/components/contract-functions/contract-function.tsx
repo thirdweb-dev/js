@@ -1,4 +1,3 @@
-import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
 import {
   Box,
   Divider,
@@ -20,20 +19,19 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import {
-  type Abi,
-  type AbiEvent,
-  type AbiFunction,
-  formatAbiItem,
-} from "abitype";
-import { useContractEnabledExtensions } from "components/contract-components/hooks";
+import type { AbiEvent, AbiFunction } from "abitype";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { usePathname, useSearchParams } from "next/navigation";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
+import * as ERC20Ext from "thirdweb/extensions/erc20";
+import * as ERC721Ext from "thirdweb/extensions/erc721";
+import * as ERC1155Ext from "thirdweb/extensions/erc1155";
+import { useReadContract } from "thirdweb/react";
 import { toFunctionSelector } from "thirdweb/utils";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 import { useDashboardRouter } from "../../@/lib/DashboardRouter";
+import { useContractFunctionSelectors } from "../../contract-ui/hooks/useContractFunctionSelectors";
 import {
   COMMANDS,
   formatSnippet,
@@ -42,72 +40,45 @@ import { CodeSegment } from "../contract-tabs/code/CodeSegment";
 import type { CodeEnvironment } from "../contract-tabs/code/types";
 import { InteractiveAbiFunction } from "./interactive-abi-function";
 
-// internal helpers
-function unique<T>(a: T[], fn: (a: T, b: T) => boolean): T[] {
-  if (a.length === 0 || a.length === 1) {
-    return a;
-  }
-  if (!fn) {
-    return a;
-  }
-
-  for (let i = 0; i < a.length; i++) {
-    for (let j = i + 1; j < a.length; j++) {
-      if (fn(a[i], a[j])) {
-        a.splice(j, 1);
-        j--;
-      }
-    }
-  }
-  return a;
-}
-function joinABIs(abis: Abi[], abiWithConstructor?: Abi): Abi {
-  const filteredABIs: Abi[] = abis.map((abi) =>
-    abi.filter((item) => item.type !== "constructor"),
-  );
-
-  if (abiWithConstructor) {
-    filteredABIs.push(abiWithConstructor);
-  }
-  const flattenedAbis = filteredABIs.flat();
-
-  const finalABIs = unique(flattenedAbis, (a, b): boolean => {
-    if (a.type !== b.type) {
-      // cannot be the same if the types are different
-      return false;
-    }
-    // just compare the formatted abi items (since they would be the same if the abi items are the same)
-    return formatAbiItem(a) === formatAbiItem(b);
-  });
-
-  return finalABIs;
-}
-
 interface ContractFunctionProps {
-  fn?: AbiFunction | AbiEvent;
-  contract?: ThirdwebContract;
+  fn: AbiFunction | AbiEvent;
+  contract: ThirdwebContract;
 }
 
-const ContractFunction: React.FC<ContractFunctionProps> = ({
+const ContractFunction: React.FC<Partial<ContractFunctionProps>> = ({
   fn,
   contract,
 }) => {
+  if (!fn || !contract) {
+    return null;
+  }
+
+  return <ContractFunctionInner contract={contract} fn={fn} />;
+};
+
+function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
   const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
-  const abiQuery = useResolveContractAbi(contract);
-  const enabledExtensions = useContractEnabledExtensions(abiQuery.data);
+  const functionSelectorQuery = useContractFunctionSelectors(contract);
+  const functionSelectors = functionSelectorQuery.data || [];
+  const isERC721Query = useReadContract(ERC721Ext.isERC721, { contract });
+  const isERC1155Query = useReadContract(ERC1155Ext.isERC1155, { contract });
+  const isERC20 = useMemo(
+    () => ERC20Ext.isERC20(functionSelectors),
+    [functionSelectors],
+  );
 
   const extensionNamespace = useMemo(() => {
-    if (enabledExtensions.some((e) => e.name === "ERC20")) {
+    if (isERC20) {
       return "erc20";
     }
-    if (enabledExtensions.some((e) => e.name === "ERC721")) {
+    if (isERC721Query.data) {
       return "erc721";
     }
-    if (enabledExtensions.some((e) => e.name === "ERC1155")) {
+    if (isERC1155Query.data) {
       return "erc1155";
     }
     return undefined;
-  }, [enabledExtensions]);
+  }, [isERC20, isERC721Query.data, isERC1155Query.data]);
 
   if (!fn) {
     return null;
@@ -138,16 +109,6 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
           </Badge>
         )}
       </Flex>
-      {/* TODO: bring this back eventually */}
-      {/* {fn.comment && (
-        <MarkdownRenderer
-          markdownText={fn.comment
-            ?.replaceAll(/See \{(.+)\}(\.)?/gm, "")
-            .replaceAll("{", '"')
-            .replaceAll("}", '"')
-            .replaceAll("'", '"')}
-        />
-      )} */}
       {fn.inputs?.length && !contract ? (
         <>
           <Divider my={2} />
@@ -246,7 +207,7 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
       )}
     </Flex>
   );
-};
+}
 
 interface ContractFunctionsPanelProps {
   fnsOrEvents: (AbiFunction | AbiEvent)[];
@@ -262,34 +223,16 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   fnsOrEvents,
   contract,
 }) => {
-  const abiQuery = useResolveContractAbi(contract);
-  const extensions = useContractEnabledExtensions(abiQuery.data);
+  // TODO: clean this up
   const functionsWithExtension = useMemo(() => {
-    let allFunctions = fnsOrEvents.filter((f) => f.type === "function");
+    const allFunctions = fnsOrEvents.filter((f) => f.type === "function");
     const results: ExtensionFunctions[] = [];
-    const processedFunctions: string[] = [];
-    // biome-ignore lint/complexity/noForEach: FIXME
-    extensions.forEach((ext) => {
-      // @ts-expect-error - this is the "wrong" abi type
-      let functions = joinABIs(ext.abis).filter((f) => f.type === "function");
-      allFunctions = allFunctions.filter(
-        (fn) => !functions.map((f) => f.name).includes(fn.name),
-      );
-      functions = functions.filter(
-        (fn) => !processedFunctions.includes(fn.name),
-      );
-      processedFunctions.push(...functions.map((fn) => fn.name));
-      results.push({
-        extension: ext.name as string,
-        functions,
-      });
-    });
     results.push({
       extension: "",
       functions: allFunctions,
     });
     return results;
-  }, [fnsOrEvents, extensions]);
+  }, [fnsOrEvents]);
   const writeFunctions: ExtensionFunctions[] = useMemo(() => {
     return functionsWithExtension
       .map((e) => {

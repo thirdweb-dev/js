@@ -6,6 +6,8 @@ const LOGGED_IN_ONLY_PATHS = [
   // anything that _starts_ with /cli is logged in only
   "/cli",
   "/support",
+  // publish page
+  "/contracts/publish",
 ];
 
 export function isLoginRequired(pathname: string) {

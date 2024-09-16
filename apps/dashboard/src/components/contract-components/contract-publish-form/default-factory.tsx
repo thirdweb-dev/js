@@ -1,28 +1,15 @@
 import { Flex, FormControl, ListItem, UnorderedList } from "@chakra-ui/react";
-import type { Abi, AbiParameter } from "abitype";
+import type { Abi } from "abitype";
 import { useFormContext } from "react-hook-form";
 import { Heading, Link, Text } from "tw-components";
 import { AbiSelector } from "./abi-selector";
-import { DynamicContractsFieldset } from "./dynamic-contract-fieldset";
-import { ModularContractsFieldset } from "./modular-contract-fieldset";
-import { ModulesParamSelector } from "./modules-param-selector";
 import { NetworksFieldset } from "./networks-fieldset";
 
 interface DefaultFactoryProps {
   abi: Abi;
-  shouldShowDynamicFactoryInput: boolean;
-  shouldShowModularFactoryInput: boolean;
-  shouldShowModulesParamInput: boolean;
-  deployParams: readonly AbiParameter[];
 }
 
-export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
-  abi,
-  shouldShowDynamicFactoryInput,
-  shouldShowModularFactoryInput,
-  shouldShowModulesParamInput,
-  deployParams,
-}) => {
+export const DefaultFactory: React.FC<DefaultFactoryProps> = ({ abi }) => {
   const form = useFormContext();
 
   return (
@@ -74,36 +61,8 @@ export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
             }
           />
         </FormControl>
-
-        {shouldShowModulesParamInput && (
-          <>
-            <Flex flexDir="column" gap={2} mt={4}>
-              <Heading size="title.md">Modules Param</Heading>
-              <Text>
-                The contract uses modules. Choose the modules param name from
-                the initializer params below.
-              </Text>
-            </Flex>
-            <FormControl isRequired>
-              <ModulesParamSelector
-                deployParams={deployParams}
-                value={form.watch(
-                  "factoryDeploymentData.modularFactoryInput.modulesParamName",
-                )}
-                onChange={(selectedParam) =>
-                  form.setValue(
-                    "factoryDeploymentData.modularFactoryInput.modulesParamName",
-                    selectedParam,
-                  )
-                }
-              />
-            </FormControl>
-          </>
-        )}
       </Flex>
       <NetworksFieldset />
-      {shouldShowDynamicFactoryInput && <DynamicContractsFieldset />}
-      {shouldShowModularFactoryInput && <ModularContractsFieldset />}
     </Flex>
   );
 };

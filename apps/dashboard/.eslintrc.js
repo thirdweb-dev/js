@@ -115,31 +115,6 @@ module.exports = {
     },
   },
   overrides: [
-    {
-      files: "src/core-ui/**/*",
-      rules: {
-        // no restricted imports
-        "@typescript-eslint/no-restricted-imports": [
-          "error",
-          {
-            paths: [
-              {
-                name: "@thirdweb-dev/sdk",
-                message:
-                  "core-ui should not import from @thirdweb-dev/sdk. (except for types)",
-                allowTypeImports: true,
-              },
-              {
-                name: "@thirdweb-dev/react",
-                message:
-                  "core-ui should not import from @thirdweb-dev/react. (except for types)",
-                allowTypeImports: true,
-              },
-            ],
-          },
-        ],
-      },
-    },
     // disable restricted imports in tw-components
     {
       files: "src/tw-components/**/*",

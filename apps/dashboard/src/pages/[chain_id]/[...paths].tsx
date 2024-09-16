@@ -42,6 +42,7 @@ import { getContractMetadata } from "thirdweb/extensions/common";
 import { isERC20 } from "thirdweb/extensions/erc20";
 import { isERC721 } from "thirdweb/extensions/erc721";
 import { isERC1155 } from "thirdweb/extensions/erc1155";
+import { stringify } from "thirdweb/utils";
 import { fetchChain } from "utils/fetchChain";
 import type { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -454,7 +455,9 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
 
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      dehydratedState: dehydrate(queryClient, {
+        serializeData: (d) => stringify(d),
+      }),
       contractInfo: {
         chainSlug,
         contractAddress: checksummedAddress,
