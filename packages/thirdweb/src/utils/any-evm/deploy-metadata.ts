@@ -75,7 +75,7 @@ async function fetchAndParseCompilerMetadata(
 
 // types
 
-type RawCompilerMetadata = {
+export type RawCompilerMetadata = {
   name: string;
   metadataUri: string;
   bytecodeUri: string;
@@ -196,5 +196,14 @@ export type ExtendedMetadata = {
     }
   >;
   compositeAbi?: Abi;
+  compilers?: Record<
+    "solc" | "zksolc",
+    {
+      evmVersion: string;
+      compilerVersion: string;
+      metadataUri: string;
+      bytecodeUri: string;
+    }[]
+  >;
   [key: string]: unknown;
 };

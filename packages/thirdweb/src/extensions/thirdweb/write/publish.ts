@@ -8,7 +8,10 @@ import { CONTRACT_PUBLISHER_ADDRESS } from "../../../contract/deployment/publish
 import { download } from "../../../storage/download.js";
 import { upload } from "../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import type { FetchDeployMetadataResult } from "../../../utils/any-evm/deploy-metadata.js";
+import type {
+  ExtendedMetadata,
+  FetchDeployMetadataResult,
+} from "../../../utils/any-evm/deploy-metadata.js";
 import { ensureBytecodePrefix } from "../../../utils/bytecode/prefix.js";
 import { isIncrementalVersion } from "../../../utils/semver.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
@@ -41,21 +44,20 @@ export type PublishContractParams = {
 export function publishContract(
   options: BaseTransactionOptions<PublishContractParams>,
 ) {
-  const currentVersion = options.previousMetadata?.version;
-
-  // check if the version is greater than the current version
-  if (
-    currentVersion &&
-    !isIncrementalVersion(currentVersion, options.metadata.version)
-  ) {
-    throw Error(
-      `Version ${options.metadata.version} is not greater than ${currentVersion}`,
-    );
-  }
-
   return generatedPublishContract({
     contract: options.contract,
     async asyncParams() {
+      const currentVersion = options.previousMetadata?.version;
+
+      // check if the version is greater than the current version
+      if (
+        currentVersion &&
+        !isIncrementalVersion(currentVersion, options.metadata.version)
+      ) {
+        throw Error(
+          `Version ${options.metadata.version} is not greater than ${currentVersion}`,
+        );
+      }
       // hash the bytecode
       const bytecode = await download({
         client: options.contract.client,
@@ -67,8 +69,29 @@ export function publishContract(
 
       const abi = options.metadata.abi;
       const routerType = getRouterType(abi);
-      const newMetadata = {
-        ...options.metadata,
+      // not spreading here, we don't want to re-upload the fetched data like bytecode
+      const newMetadata: ExtendedMetadata = {
+        bytecodeUri: options.metadata.bytecodeUri,
+        metadataUri: options.metadata.metadataUri,
+        name: options.metadata.name,
+        version: options.metadata.version,
+        audit: options.metadata.audit,
+        changelog: options.metadata.changelog,
+        compositeAbi: options.metadata.compositeAbi,
+        constructorParams: options.metadata.constructorParams,
+        defaultExtensions: options.metadata.defaultExtensions,
+        defaultModules: options.metadata.defaultModules,
+        deployType: options.metadata.deployType,
+        description: options.metadata.description,
+        displayName: options.metadata.displayName,
+        factoryDeploymentData: options.metadata.factoryDeploymentData,
+        isDeployableViaFactory: options.metadata.isDeployableViaFactory,
+        isDeployableViaProxy: options.metadata.isDeployableViaProxy,
+        logo: options.metadata.logo,
+        networksForDeployment: options.metadata.networksForDeployment,
+        readme: options.metadata.readme,
+        tags: options.metadata.tags,
+        compilers: options.metadata.compilers,
         publisher: options.account.address,
         routerType,
       };
