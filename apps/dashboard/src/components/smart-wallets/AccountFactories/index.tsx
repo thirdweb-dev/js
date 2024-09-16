@@ -3,7 +3,6 @@ import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useMultiChainRegContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { useQuery } from "@tanstack/react-query";
-import type { BasicContract } from "contract-ui/types/types";
 import { PlusIcon } from "lucide-react";
 import { defineChain, getContract } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
@@ -23,7 +22,7 @@ const useFactories = () => {
       "factories",
     ],
     queryFn: async () => {
-      return await Promise.all(
+      const factories = await Promise.all(
         (contractListQuery.data || []).map(async (c) => {
           const contract = getContract({
             // eslint-disable-next-line no-restricted-syntax
@@ -35,6 +34,8 @@ const useFactories = () => {
           return m.name.indexOf("AccountFactory") > -1 ? c : null;
         }),
       );
+
+      return factories.filter((f) => f !== null);
     },
     enabled: !!user?.address && isLoggedIn && !!contractListQuery.data?.length,
   });
@@ -70,7 +71,7 @@ export const AccountFactories: React.FC<AccountFactoriesProps> = ({
       </div>
 
       <FactoryContracts
-        contracts={(factories.data || []) as BasicContract[]}
+        contracts={factories.data || []}
         isLoading={factories.isLoading}
         isFetched={factories.isFetched}
       />
