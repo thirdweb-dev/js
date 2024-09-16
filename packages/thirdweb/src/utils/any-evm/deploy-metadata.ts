@@ -130,9 +130,10 @@ type ParsedCompilerMetadata = {
 };
 
 export type CompilerMetadata = Prettify<
-  ParsedCompilerMetadata & {
-    bytecode: Hex;
-  }
+  RawCompilerMetadata &
+    ParsedCompilerMetadata & {
+      bytecode: Hex;
+    }
 >;
 
 export type ExtendedMetadata = {

@@ -76,7 +76,7 @@ export default async function globalSetup() {
       forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
       forkChainId: 137,
       forkBlockNumber: POLYGON_FORK_BLOCK_NUMBER,
-      noMining: true,
+      noMining: false,
       startTimeout: 20000,
     },
   });

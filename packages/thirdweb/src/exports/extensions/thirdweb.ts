@@ -36,10 +36,6 @@ export {
 
 // Write
 export {
-  publishContract,
-  type PublishContractParams,
-} from "../../extensions/thirdweb/__generated__/IContractPublisher/write/publishContract.js";
-export {
   setPublisherProfileUri,
   type SetPublisherProfileUriParams,
 } from "../../extensions/thirdweb/__generated__/IContractPublisher/write/setPublisherProfileUri.js";
@@ -47,6 +43,12 @@ export {
   unpublishContract,
   type UnpublishContractParams,
 } from "../../extensions/thirdweb/__generated__/IContractPublisher/write/unpublishContract.js";
+
+export {
+  publishContract,
+  type PublishContractParams,
+  getContractPublisher,
+} from "../../extensions/thirdweb/write/publish.js";
 
 // --------------------------------------------------------
 // Multichain Registry
