@@ -2,22 +2,32 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { thirdwebClient } from "@/constants/client";
 import { FormControl, Input, Select, Skeleton, Spacer } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { compatibleModules } from "@thirdweb-dev/sdk";
+
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   useAllVersions,
   usePublishedContractsQuery,
 } from "components/contract-components/hooks";
+import { useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
+  type Chain,
   type ContractOptions,
   sendTransaction,
   waitForReceipt,
 } from "thirdweb";
-import { installPublishedModule } from "thirdweb/modules";
+import {
+  checkModulesCompatibility,
+  installPublishedModule,
+  isGetModuleConfigSupported,
+} from "thirdweb/modules";
 import { download } from "thirdweb/storage";
-import { encodeAbiParameters, resolveImplementation } from "thirdweb/utils";
+import {
+  encodeAbiParameters,
+  resolveImplementation,
+  toFunctionSelector,
+} from "thirdweb/utils";
 import type { Account } from "thirdweb/wallets";
 import { FormErrorMessage, FormLabel } from "tw-components";
 import {
@@ -55,10 +65,22 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
   const { contract, account } = props;
   const { errors } = formState;
 
-  const publishedContractsQuery = usePublishedContractsQuery(
+  const { data, isLoading, isFetching } = usePublishedContractsQuery(
     watch("publisherAddress"),
-    "ModularModule",
   );
+
+  // filter out all the contracts that AREN'T modules
+  const modulesOnly = useMemo(() => {
+    return (
+      data?.filter((contract) => {
+        const fnSelectors = contract.metadata.abi
+          .filter((fn) => fn.type === "function")
+          .map((fn) => toFunctionSelector(fn));
+        return isGetModuleConfigSupported(fnSelectors);
+      }) || []
+    );
+  }, [data]);
+
   const allVersions = useAllVersions(
     watch("publisherAddress"),
     watch("moduleContract"),
@@ -120,8 +142,8 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
     required: "Module name is required",
   });
 
-  const selectedModule = publishedContractsQuery.data?.find(
-    (x) => x.id === watch("moduleContract"),
+  const selectedModule = modulesOnly?.find(
+    (x) => x.contractId === watch("moduleContract"),
   );
 
   // Get core contract bytecode
@@ -195,7 +217,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         contractInfo: {
           bytecode: coreContractByteCodeQuery.data,
           installedModuleBytecodes: installedModuleBytecodesQuery.data,
-          chainId: contract.chain.id,
+          chain: contract.chain,
         },
         moduleInfo: {
           bytecodeUri: selectedModule.metadata.bytecodeUri,
@@ -257,17 +279,14 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
           >
             <FormLabel>Module Name</FormLabel>
             <Skeleton
-              isLoaded={
-                !!publishedContractsQuery.data ||
-                !publishedContractsQuery.isFetching
-              }
+              isLoaded={!!modulesOnly.length || !isFetching}
               borderRadius="lg"
             >
               <Select
                 disabled={
                   installMutation.isPending ||
-                  publishedContractsQuery?.data?.length === 0 ||
-                  publishedContractsQuery.isLoading
+                  modulesOnly?.length === 0 ||
+                  isLoading
                 }
                 bg="backgroundHighlight"
                 {...moduleContractInputProps}
@@ -277,14 +296,12 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
                   moduleContractInputProps.onChange(e);
                 }}
                 placeholder={
-                  publishedContractsQuery.data?.length === 0
-                    ? "No modules"
-                    : "Select module"
+                  modulesOnly.length === 0 ? "No modules" : "Select module"
                 }
               >
-                {publishedContractsQuery?.data?.map(({ id }) => (
-                  <option key={id} value={id}>
-                    {id}
+                {modulesOnly.map(({ contractId }) => (
+                  <option key={contractId} value={contractId}>
+                    {contractId}
                   </option>
                 ))}
               </Select>
@@ -383,7 +400,7 @@ async function isModuleCompatible(options: {
   contractInfo: {
     bytecode: string;
     installedModuleBytecodes: string[];
-    chainId: number;
+    chain: Chain;
   };
   moduleInfo: {
     bytecodeUri: string;
@@ -399,11 +416,15 @@ async function isModuleCompatible(options: {
 
   // 2. check compatibility with core and installed modules
   try {
-    const isCompatible = await compatibleModules(
-      options.contractInfo.bytecode,
-      [...options.contractInfo.installedModuleBytecodes, moduleBytecode],
-      options.contractInfo.chainId,
-    );
+    const isCompatible = await checkModulesCompatibility({
+      chain: options.contractInfo.chain,
+      coreBytecode: options.contractInfo.bytecode,
+      client: thirdwebClient,
+      moduleBytecodes: [
+        moduleBytecode,
+        ...options.contractInfo.installedModuleBytecodes,
+      ],
+    });
 
     return isCompatible;
   } catch (e) {

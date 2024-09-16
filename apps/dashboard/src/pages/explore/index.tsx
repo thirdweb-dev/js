@@ -12,6 +12,7 @@ import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Fragment } from "react";
+import { stringify } from "thirdweb/utils";
 import type { ThirdwebNextPage } from "utils/types";
 import { ContractsSidebarLayout } from "../../core-ui/sidebar/contracts";
 
@@ -99,6 +100,11 @@ export const getStaticProps: GetStaticProps<ExplorePageProps> = async () => {
   await Promise.all(categories.map((c) => prefetchCategory(c, queryClient)));
 
   return {
-    props: { categories, dehydratedState: dehydrate(queryClient) },
+    props: {
+      categories,
+      dehydratedState: dehydrate(queryClient, {
+        serializeData: (d) => stringify(d),
+      }),
+    },
   };
 };

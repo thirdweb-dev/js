@@ -13,11 +13,6 @@ import {
   MenuList,
   Spinner,
 } from "@chakra-ui/react";
-import {
-  type ClaimConditionInput,
-  ClaimConditionInputSchema,
-  type SnapshotEntry,
-} from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
 import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
@@ -46,6 +41,11 @@ import invariant from "tiny-invariant";
 import { Button, Heading, MenuItem, Text } from "tw-components";
 import * as z from "zod";
 import { ZodError } from "zod";
+import {
+  type ClaimConditionInput,
+  ClaimConditionInputSchema,
+  type SnapshotEntry,
+} from "../../legacy-zod-schema";
 import { ResetClaimEligibility } from "../reset-claim-eligibility";
 import { getClaimPhasesInLegacyFormat, setClaimPhasesTx } from "./hooks";
 import { ClaimConditionsPhase } from "./phase";
@@ -226,6 +226,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
     return (claimConditionsQuery.data || [])
       .map((phase, idx) => ({
         ...phase,
+        merkleRootHash: (phase.merkleRootHash || "") as string,
         price: phase.currencyMetadata.displayValue,
         maxClaimableSupply: phase.maxClaimableSupply?.toString() || "0",
         currencyMetadata: {

@@ -24,7 +24,6 @@ import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Text } from "tw-components";
 import { useLoggedInUser } from "../../../@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
-  useContractFullPublishMetadata,
   useEns,
   useFetchDeployMetadata,
   useFunctionParamsFromABI,
@@ -163,9 +162,8 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
     [successRedirectUrl, account],
   );
 
-  const fullPublishMetadata = useContractFullPublishMetadata(contractId);
   const constructorParams =
-    deployMetadataResultQuery.data?.abi?.find((c) => c.type === "constructor")
+    deployMetadataResultQuery.data?.abi.find((c) => c.type === "constructor")
       ?.inputs || [];
 
   const initializerParams = useFunctionParamsFromABI(
@@ -176,11 +174,11 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       ? form.watch(
           "factoryDeploymentData.customFactoryInput.factoryFunction",
         ) ||
-          fullPublishMetadata.data?.factoryDeploymentData?.customFactoryInput
-            ?.factoryFunction ||
+          deployMetadataResultQuery.data?.factoryDeploymentData
+            ?.customFactoryInput?.factoryFunction ||
           "deployProxyByImplementation"
       : form.watch("factoryDeploymentData.implementationInitializerFunction") ||
-          fullPublishMetadata.data?.factoryDeploymentData
+          deployMetadataResultQuery.data?.factoryDeploymentData
             ?.implementationInitializerFunction ||
           "initialize",
   );
@@ -301,7 +299,6 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                 }
               },
               onError: (err) => {
-                console.error("*** err", err);
                 onError(err);
                 trackEvent({
                   category: "publish",

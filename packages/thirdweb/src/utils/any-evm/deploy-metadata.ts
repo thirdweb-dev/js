@@ -205,5 +205,9 @@ export type ExtendedMetadata = {
       bytecodeUri: string;
     }[]
   >;
+  externalLinks?: Array<{
+    name: string;
+    url: string;
+  }>;
   [key: string]: unknown;
 };

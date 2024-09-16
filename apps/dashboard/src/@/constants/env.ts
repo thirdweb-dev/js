@@ -16,3 +16,7 @@ export const isProd =
   "production";
 
 export const PROD_OR_DEV_URL = isProd ? "thirdweb.com" : "thirdweb-dev.com";
+
+export const DASHBOARD_STORAGE_URL =
+  process.env.NEXT_PUBLIC_DASHBOARD_UPLOAD_SERVER ||
+  "https://storage.thirdweb.com";

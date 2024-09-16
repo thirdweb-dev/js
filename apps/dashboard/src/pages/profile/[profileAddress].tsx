@@ -20,17 +20,14 @@ import { PublisherAvatar } from "components/contract-components/publisher/masked
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { PublishedContracts } from "components/contract-components/tables/published-contracts";
 import { THIRDWEB_DOMAIN } from "constants/urls";
-import { getDashboardChainRpc } from "lib/rpc";
-import { getThirdwebSDK } from "lib/sdk";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ProfileOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useEffect, useMemo } from "react";
-import { polygon } from "thirdweb/chains";
 import { useActiveAccount } from "thirdweb/react";
-import { getAddress, isAddress } from "thirdweb/utils";
+import { getAddress, isAddress, stringify } from "thirdweb/utils";
 import { Heading, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 import type { ThirdwebNextPage } from "utils/types";
@@ -221,11 +218,6 @@ export default UserPage;
 export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   const queryClient = new QueryClient();
 
-  const polygonSdk = getThirdwebSDK(
-    polygon.id,
-    getDashboardChainRpc(polygon.id, undefined),
-  );
-
   const profileAddress = getSingleQueryValue(
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     ctx.params as any,
@@ -280,13 +272,15 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
     queryClient.prefetchQuery(publisherProfileQuery(address)),
     queryClient.prefetchQuery({
       queryKey: ["published-contracts", address],
-      queryFn: () => fetchPublishedContracts(polygonSdk, queryClient, address),
+      queryFn: () => fetchPublishedContracts(address),
     }),
   ]);
 
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      dehydratedState: dehydrate(queryClient, {
+        serializeData: (d) => stringify(d),
+      }),
       profileAddress: checksummedAddress,
     },
   };

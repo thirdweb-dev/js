@@ -16,10 +16,8 @@ export const ContractMetadata: React.FC<ContractMetadataProps> = ({
 }) => {
   const [wasError, setWasError] = useState(false);
   const contractMetadataQuery = useDashboardContractMetadata(contract);
-  const publishedContractsFromDeploy = usePublishedContractsFromDeploy(
-    contract.address,
-    contract.chain.id,
-  );
+  const publishedContractsFromDeploy =
+    usePublishedContractsFromDeploy(contract);
   const latestPublished = publishedContractsFromDeploy.data?.slice(-1)[0];
 
   // legitimate, we use this to keep the state around and *only* flip it if the status changes explicitly from error to success etc
