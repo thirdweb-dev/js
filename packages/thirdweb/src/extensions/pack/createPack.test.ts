@@ -1,4 +1,4 @@
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
@@ -137,6 +137,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
       getTokenCountOfBundle({ contract: packContract, bundleId: 0n }),
     ]);
 
-    console.log({ packContent, tokenCountOfBundle });
+    console.log(packContent);
+
+    expect(tokenCountOfBundle).toBe(2n);
   });
 });
