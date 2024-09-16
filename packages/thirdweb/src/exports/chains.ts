@@ -14,6 +14,7 @@ export { anvil } from "../chains/chain-definitions/anvil.js";
 export { hardhat } from "../chains/chain-definitions/hardhat.js";
 export { arbitrumNova } from "../chains/chain-definitions/arbitrum-nova.js";
 export { arbitrumSepolia } from "../chains/chain-definitions/arbitrum-sepolia.js";
+export { assetChainTestnet } from "../chains/chain-definitions/assetchain-testnet.js";
 export { arbitrum } from "../chains/chain-definitions/arbitrum.js";
 export { avalancheFuji } from "../chains/chain-definitions/avalanche-fuji.js";
 export { avalanche } from "../chains/chain-definitions/avalanche.js";
