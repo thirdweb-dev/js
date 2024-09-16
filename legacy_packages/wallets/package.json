@@ -541,7 +541,7 @@
     "@walletconnect/jsonrpc-utils": "^1.0.8",
     "@walletconnect/modal": "^2.6.2",
     "@walletconnect/types": "^2.13.2",
-    "@walletconnect/utils": "^2.13.2",
+    "@walletconnect/utils": "^2.16.1",
     "@walletconnect/web3wallet": "^1.12.2",
     "asn1.js": "5.4.1",
     "bn.js": "5.2.1",
