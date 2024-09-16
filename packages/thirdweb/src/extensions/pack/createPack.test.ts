@@ -141,6 +141,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
       getUriOfBundle({ contract: packContract, bundleId: 0n }),
     ]);
 
+    console.log("=== packContent ===");
+    console.log(packContent);
+
     // Make sure the content is correct
     expect(packContent).toStrictEqual([
       [
@@ -182,6 +185,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
       packId: 0n,
     });
 
+    console.log("=== remainingPackContent ==");
     console.log(remainingPackContent);
   });
 });
