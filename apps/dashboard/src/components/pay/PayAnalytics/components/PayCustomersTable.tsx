@@ -1,3 +1,4 @@
+import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,6 @@ import {
   type PayTopCustomersData,
   usePayCustomers,
 } from "../hooks/usePayCustomers";
-import { ExportToCSVButton } from "./ExportToCSVButton";
 import {
   FailedToLoad,
   TableData,

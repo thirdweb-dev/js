@@ -3,10 +3,13 @@ import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { DownloadIcon } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "../../lib/utils";
 
 export function ExportToCSVButton(props: {
   getData: () => Promise<{ header: string[]; rows: string[][] }>;
   fileName: string;
+  disabled?: boolean;
+  className?: string;
 }) {
   const exportMutation = useMutation({
     mutationFn: async () => {
@@ -26,7 +29,8 @@ export function ExportToCSVButton(props: {
   return (
     <Button
       variant="outline"
-      className="border flex gap-2 items-center text-xs"
+      disabled={props.disabled}
+      className={cn("border flex gap-2 items-center text-xs", props.className)}
       onClick={async () => {
         exportMutation.mutate();
       }}

@@ -1,5 +1,6 @@
 "use client";
 
+import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
   ChartContainer,
@@ -89,6 +90,7 @@ export function WalletConnectorsChartCard(props: {
   }, [walletStats, chartToShow]);
 
   const uniqueWalletTypes = Object.keys(chartConfig);
+  const disableActions = props.isLoading || chartData.length === 0;
 
   return (
     <div className="bg-muted/50 border border-border rounded-lg p-4 md:p-6 relative w-full">
@@ -99,25 +101,44 @@ export function WalletConnectorsChartCard(props: {
         The different types of wallets used to connect to your app each day.
       </p>
 
-      {/* Selector */}
-      <Select
-        onValueChange={(v) => {
-          setChartToShow(v as ChartToShow);
-        }}
-        value={chartToShow}
-        disabled={props.isLoading || chartData.length === 0}
-      >
-        <SelectTrigger className="md:w-[180px] md:absolute top-6 right-6 mb-4 md:mb-0">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {chartToShowOptions.map((option) => (
-            <SelectItem key={option} value={option}>
-              {chartLabelToShow[option]}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <div className="md:absolute top-6 right-6 mb-4 md:mb-0 md:flex items-center gap-2 grid grid-cols-2">
+        <Select
+          onValueChange={(v) => {
+            setChartToShow(v as ChartToShow);
+          }}
+          value={chartToShow}
+          disabled={disableActions}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {chartToShowOptions.map((option) => (
+              <SelectItem key={option} value={option}>
+                {chartLabelToShow[option]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <ExportToCSVButton
+          className="bg-background"
+          fileName="Connect Wallets"
+          disabled={disableActions}
+          getData={async () => {
+            // Shows the number of each type of wallet connected on all dates
+            const header = ["Date", ...uniqueWalletTypes];
+            const rows = chartData.map((data) => {
+              const { time, ...rest } = data;
+              return [
+                time,
+                ...uniqueWalletTypes.map((w) => (rest[w] || 0).toString()),
+              ];
+            });
+            return { header, rows };
+          }}
+        />
+      </div>
 
       {/* Chart */}
       <ChartContainer config={chartConfig} className="w-full h-[400px]">

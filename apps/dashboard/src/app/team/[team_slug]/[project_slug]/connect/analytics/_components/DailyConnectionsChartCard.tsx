@@ -1,5 +1,6 @@
 "use client";
 
+import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
   ChartContainer,
@@ -72,6 +73,8 @@ export function DailyConnectionsChartCard(props: {
     return Array.from(chartDataMap.values());
   }, [walletStats]);
 
+  const disableActions = props.isLoading || barChartData.length === 0;
+
   return (
     <div className="bg-muted/50 border border-border rounded-lg p-4 md:p-6 relative w-full">
       <h3 className="text-xl md:text-2xl font-semibold tracking-tight mb-1">
@@ -81,25 +84,42 @@ export function DailyConnectionsChartCard(props: {
         Total and unique wallets addresses that connected to your app each day.
       </p>
 
-      {/* Selector */}
-      <Select
-        onValueChange={(v) => {
-          setChartToShow(v as ChartToShow);
-        }}
-        value={chartToShow}
-        disabled={props.isLoading || barChartData.length === 0}
-      >
-        <SelectTrigger className="md:w-[180px] md:absolute top-6 right-6 mb-4 md:mb-0">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {chartToShowOptions.map((option) => (
-            <SelectItem key={option} value={option}>
-              {chartLabelToShow[option]}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <div className="md:absolute top-6 right-6 mb-4 md:mb-0 md:flex items-center gap-2 grid grid-cols-2">
+        {/* Selector */}
+        <Select
+          onValueChange={(v) => {
+            setChartToShow(v as ChartToShow);
+          }}
+          value={chartToShow}
+          disabled={disableActions}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {chartToShowOptions.map((option) => (
+              <SelectItem key={option} value={option}>
+                {chartLabelToShow[option]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <ExportToCSVButton
+          disabled={disableActions}
+          className="bg-background"
+          getData={async () => {
+            const header = ["Date", "Total Wallets", "Unique Wallets"];
+            const rows = barChartData.map((row) => [
+              row.time,
+              row.totalWallets.toString(),
+              row.uniqueWallets.toString(),
+            ]);
+            return { header, rows };
+          }}
+          fileName="DialyConnections"
+        />
+      </div>
 
       {/* Chart */}
       <ChartContainer

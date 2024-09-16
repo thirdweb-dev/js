@@ -1,3 +1,4 @@
+import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { PaginationButtons } from "@/components/pagination-buttons";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
@@ -11,7 +12,6 @@ import {
   getPayPurchases,
   usePayPurchases,
 } from "../hooks/usePayPurchases";
-import { ExportToCSVButton } from "./ExportToCSVButton";
 import {
   CardHeading,
   FailedToLoad,
