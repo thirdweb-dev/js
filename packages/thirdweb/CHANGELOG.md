@@ -1,5 +1,42 @@
 # thirdweb
 
+## 5.56.0
+
+### Minor Changes
+
+- [#4607](https://github.com/thirdweb-dev/js/pull/4607) [`7b94bf5`](https://github.com/thirdweb-dev/js/commit/7b94bf55fd236cbebf365ab11821b5117b59942b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose `checkModulesCompatibility` function
+
+- [#4601](https://github.com/thirdweb-dev/js/pull/4601) [`a4a4136`](https://github.com/thirdweb-dev/js/commit/a4a41364cd2f1b7b52717f619d70e005edc74edc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - `useAdminWallet()` Hook + automatically auth when using inapp + smart accounts
+
+  ### Add `useAdminWallet()` hook to get the admin wallet for a smart wallet
+
+  ```ts
+  const activeWallet = useActiveWallet(); // smart wallet
+  const adminWallet = useAdminWallet(); // the personal wallet that controls the smart wallet
+  ```
+
+  ### Automatically auth when using inapp + smart accounts
+
+  When using auth with an inapp + smart wallet, ConnectButton and ConnectEmebed will automatically auth without having to click sign in.
+
+- [#4604](https://github.com/thirdweb-dev/js/pull/4604) [`3009a0f`](https://github.com/thirdweb-dev/js/commit/3009a0f6e5924f08b7b320baa303fbae948ef9b7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose publishContract extension
+
+### Patch Changes
+
+- [#4628](https://github.com/thirdweb-dev/js/pull/4628) [`3961ef4`](https://github.com/thirdweb-dev/js/commit/3961ef477eb819ef6b51c0817ea37dfce45b4f3f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle function sigantures and contract ABIs in resolveMethod
+
+- [#4602](https://github.com/thirdweb-dev/js/pull/4602) [`07b949d`](https://github.com/thirdweb-dev/js/commit/07b949dd8c07ffdeda40a5549c31ad4b09abbbf1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow topping up from a different wallet with the same currency
+
+- [#4603](https://github.com/thirdweb-dev/js/pull/4603) [`b837b69`](https://github.com/thirdweb-dev/js/commit/b837b690ae27fb8bf45f6cd51820f7591e94dab0) Thanks [@jnsdls](https://github.com/jnsdls)! - bump various dependencies
+
+- [#4639](https://github.com/thirdweb-dev/js/pull/4639) [`c320b18`](https://github.com/thirdweb-dev/js/commit/c320b189f664cdf4b77c8ebef377abdf230f303a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export Abi types
+
+- [#4557](https://github.com/thirdweb-dev/js/pull/4557) [`fb0daab`](https://github.com/thirdweb-dev/js/commit/fb0daabbf612be5c844de5f66d3cd49f383b7fe5) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose some Marketplace extensions for detecting supported features
+
+- [#4630](https://github.com/thirdweb-dev/js/pull/4630) [`2b6a2fd`](https://github.com/thirdweb-dev/js/commit/2b6a2fda3d07b708f503f36205e68bd8b9fe1f20) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Invalidate balances on Pay success
+
+- [#4621](https://github.com/thirdweb-dev/js/pull/4621) [`5bde075`](https://github.com/thirdweb-dev/js/commit/5bde07508ae0c0438d7da076a7b3233a224e0c2f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow customizing PayEmbed metadata for top-up flow
+
 ## 5.55.0
 
 ### Minor Changes
