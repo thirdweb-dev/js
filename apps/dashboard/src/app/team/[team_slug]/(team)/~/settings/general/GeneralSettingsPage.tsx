@@ -1,6 +1,8 @@
 "use client";
 
 import type { Team } from "@/api/team";
+import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
+import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
@@ -8,8 +10,6 @@ import { useMutation } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
 import { useState } from "react";
 import { toast } from "sonner";
-import { DangerSettingCard } from "./DangerSettingCard";
-import { SettingsCard } from "./SettingsCard";
 
 export function GeneralSettingsPage(props: {
   team: Team;

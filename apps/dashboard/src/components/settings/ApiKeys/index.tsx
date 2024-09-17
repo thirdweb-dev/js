@@ -46,7 +46,7 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
           textToShow={`${cell.getValue().slice(0, 5)}...${cell.getValue().slice(-5)}`}
           tooltip="Copy Client ID"
           variant="ghost"
-          className="font-mono text-muted-foreground"
+          className="font-mono text-muted-foreground -translate-x-2"
           onClick={() => {
             trackEvent({
               category: "api_key_button",
@@ -122,6 +122,7 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
       isLoading={isLoading}
       isFetched={isFetched}
       onRowClick={({ id }) => router.push(`/dashboard/settings/api-keys/${id}`)}
+      bodyRowClassName="hover:bg-muted/50"
     />
   );
 };

@@ -1,5 +1,7 @@
 "use client";
 
+import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
+import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,8 +34,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { FileInput } from "../../../components/shared/FileInput";
-import { DangerSettingCard } from "../../team/[team_slug]/(team)/~/settings/general/DangerSettingCard";
-import { SettingsCard } from "../../team/[team_slug]/(team)/~/settings/general/SettingsCard";
 
 type MinimalAccount = Pick<
   Account,

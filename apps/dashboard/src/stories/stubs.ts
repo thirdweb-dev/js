@@ -83,23 +83,25 @@ export function createApiKeyStub() {
     actions: [],
   };
 
+  const secretKey = generateRandomString(86);
+
   const apiKeyStub: ApiKey = {
     id: "api-key-id-foo",
-    name: "api key name foo",
+    name: "xyz",
     key: generateRandomString(31),
     accountId: "account-id-foo",
     bundleIds: ["bundle-id-foo", "bundle-id-bar"],
     createdAt: new Date().toISOString(),
     creatorWalletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
     domains: ["example1.com", "example2.com"],
-    secretMasked: "",
+    secretMasked: `${secretKey.slice(0, 3)}...${secretKey.slice(-4)}`,
     walletAddresses: ["0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37"],
     redirectUrls: [],
     revokedAt: "",
     lastAccessedAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     services: [embeddedWalletService],
-    secret: generateRandomString(86),
+    secret: secretKey,
   };
 
   return apiKeyStub;

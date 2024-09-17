@@ -1,12 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  BadgeContainer,
-  mobileViewport,
-} from "../../../../../../../stories/utils";
+import { BadgeContainer, mobileViewport } from "../../../stories/utils";
 import { DangerSettingCard } from "./DangerSettingCard";
 
 const meta = {
-  title: "Team/Settings/components/DangerCard",
+  title: "blocks/DangerSettingCard",
   component: Story,
   parameters: {
     nextjs: {

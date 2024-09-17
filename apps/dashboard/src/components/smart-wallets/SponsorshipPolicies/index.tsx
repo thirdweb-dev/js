@@ -38,7 +38,7 @@ import {
   Text,
   TrackedLink,
 } from "tw-components";
-import { fromArrayToList, toArrFromList } from "utils/string";
+import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
 
@@ -117,19 +117,19 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
       allowedContractAddresses:
         policy?.allowedContractAddresses &&
         policy?.allowedContractAddresses?.length > 0
-          ? fromArrayToList(policy?.allowedContractAddresses)
+          ? joinWithComma(policy?.allowedContractAddresses)
           : null,
       allowedWallets:
         policy?.allowedWallets && policy?.allowedWallets?.length > 0
-          ? fromArrayToList(policy?.allowedWallets)
+          ? joinWithComma(policy?.allowedWallets)
           : null,
       blockedWallets:
         policy?.blockedWallets && policy?.blockedWallets?.length > 0
-          ? fromArrayToList(policy?.blockedWallets)
+          ? joinWithComma(policy?.blockedWallets)
           : null,
       bypassWallets:
         policy?.bypassWallets && policy?.bypassWallets?.length > 0
-          ? fromArrayToList(policy?.bypassWallets)
+          ? joinWithComma(policy?.bypassWallets)
           : null,
       serverVerifier: policy?.serverVerifier?.url
         ? { ...policy.serverVerifier, enabled: true }

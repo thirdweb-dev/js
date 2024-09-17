@@ -3,7 +3,7 @@ import { mobileViewport } from "../../../stories/utils";
 import { SidebarLayout } from "./SidebarLayout";
 
 const meta = {
-  title: "layouts/SidebarLayout",
+  title: "blocks/SidebarLayout",
   component: Story,
   parameters: {
     nextjs: {

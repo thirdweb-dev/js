@@ -1,12 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  BadgeContainer,
-  mobileViewport,
-} from "../../../../../../../stories/utils";
+import { BadgeContainer, mobileViewport } from "../../../stories/utils";
 import { SettingsCard } from "./SettingsCard";
 
 const meta = {
-  title: "Team/Settings/components/SettingsCard",
+  title: "blocks/SettingsCard",
   component: Story,
   parameters: {
     nextjs: {

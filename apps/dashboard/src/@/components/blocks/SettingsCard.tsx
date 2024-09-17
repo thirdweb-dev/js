@@ -1,9 +1,10 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type React from "react";
 
 export function SettingsCard(props: {
-  bottomText: string;
+  bottomText: React.ReactNode;
   header?: {
     description: string | undefined;
     title: string;

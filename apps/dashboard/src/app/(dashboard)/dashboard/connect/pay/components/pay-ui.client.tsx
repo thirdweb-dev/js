@@ -11,31 +11,42 @@ import { TabButtons } from "@/components/ui/tabs";
 import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { PayAnalytics } from "components/pay/PayAnalytics/PayAnalytics";
 import { PayConfig } from "components/pay/PayConfig";
-import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { WebhooksPage } from "./webhooks.client";
 
 export function PayUI(props: {
   apiKeys: ApiKey[];
 }) {
-  const [selectedKeyId, setSelectedKeyId] = useState<string>(
-    props.apiKeys[0].key,
-  );
+  const searchParams = useSearchParams();
+  const selectedKeyFromUrl = searchParams?.get("clientId");
+  const defaultSelectedKey =
+    props.apiKeys.find((key) => key.key === selectedKeyFromUrl) ||
+    props.apiKeys[0];
+
+  const [selectedKey, setSelectedKey] = useState<ApiKey>(defaultSelectedKey);
+
   const [activeTab, setActiveTab] = useState<
     "settings" | "analytics" | "webhooks"
   >("analytics");
-
-  const selectedKey = useMemo(() => {
-    // biome-ignore lint/style/noNonNullAssertion: This is a valid use case for non-null assertion
-    return props.apiKeys.find((key) => key.key === selectedKeyId)!;
-  }, [props.apiKeys, selectedKeyId]);
 
   return (
     <>
       <div className="flex-col gap-4 flex lg:flex-row w-full relative">
         <div className="max-sm:w-full lg:min-w-[200px] lg:absolute right-0 bottom-3 z-10">
-          <Select defaultValue={selectedKeyId} onValueChange={setSelectedKeyId}>
+          <Select
+            value={selectedKey.key}
+            onValueChange={(keyId) => {
+              const newKey = props.apiKeys.find((x) => x.key === keyId);
+              if (newKey) {
+                setSelectedKey(newKey);
+                // append the key search param without reloading the page
+                window.history.pushState({}, "", `?clientId=${keyId}`);
+              }
+            }}
+          >
             <SelectTrigger>
-              <SelectValue>{selectedKey?.name || selectedKeyId}</SelectValue>
+              <SelectValue>{selectedKey?.name}</SelectValue>
             </SelectTrigger>
             <SelectContent>
               {props.apiKeys.map((key) => (
