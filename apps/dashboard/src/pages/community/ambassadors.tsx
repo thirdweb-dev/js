@@ -598,7 +598,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                 >
                   <MaskedAvatar
                     src={ambassador.profileImage}
-                    alt=""
+                    alt={ambassador.name}
                     boxSize={20}
                   />
                   <Heading size="title.sm">{ambassador.name}</Heading>

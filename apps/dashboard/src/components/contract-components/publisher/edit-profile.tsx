@@ -187,7 +187,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                 setValue={(file) => setValue("avatar", file)}
                 className="border border-border rounded transition-all"
                 renderPreview={(fileUrl) => (
-                  <MaskedAvatar w="100%" h="100%" src={fileUrl} />
+                  <MaskedAvatar className="w-full h-full" src={fileUrl} />
                 )}
               />
             </Box>

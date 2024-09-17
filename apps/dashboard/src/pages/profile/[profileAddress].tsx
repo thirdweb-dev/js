@@ -116,7 +116,7 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
             <Flex gap={{ base: 4, md: 8 }} align="center" w="full">
               <PublisherAvatar
                 address={ens.data?.ensName || props.profileAddress}
-                boxSize={28}
+                boxSize={30}
               />
               <Flex direction="column" gap={0}>
                 <Heading

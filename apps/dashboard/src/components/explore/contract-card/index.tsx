@@ -1,22 +1,20 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { thirdwebClient } from "@/constants/client";
 import { cn } from "@/lib/utils";
-import {
-  type QueryClient,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-base-64";
-import { ensQuery } from "components/contract-components/hooks";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { resolveScheme } from "thirdweb/storage";
-import invariant from "tiny-invariant";
 import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
+
+type InitialData = Awaited<ReturnType<typeof fetchPublishedContractVersion>>;
 
 interface ContractCardProps {
   publisher: string;
@@ -38,6 +36,7 @@ interface ContractCardProps {
     moduleId: string;
     version?: string;
   }[];
+  initialData?: InitialData;
 }
 
 function getContractUrl(
@@ -92,9 +91,11 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   tracking,
   modules = [],
   isBeta,
+  initialData,
 }) => {
   const publishedContractResult = usePublishedContract(
     `${publisher}/${contractId}/${version}`,
+    initialData,
   );
 
   const showSkeleton = publishedContractResult.isLoading;
@@ -254,55 +255,16 @@ type PublishedContractId =
   | `${string}/${string}`
   | `${string}/${string}/${string}`;
 
-async function publishedContractQueryFn(
-  publisher: string,
-  contractId: string,
-  version: string,
-  queryClient: QueryClient,
-) {
-  const publisherEns = await queryClient.fetchQuery(ensQuery(publisher));
-  // START prefill both publisher ens variations
-  if (publisherEns.address) {
-    queryClient.setQueryData(
-      ensQuery(publisherEns.address).queryKey,
-      publisherEns,
-    );
-  }
-  if (publisherEns.ensName) {
-    queryClient.setQueryData(
-      ensQuery(publisherEns.ensName).queryKey,
-      publisherEns,
-    );
-  }
-  // END prefill both publisher ens variations
-  invariant(publisherEns.address, "publisher address not found");
-  const latestPublishedVersion = await fetchPublishedContractVersion(
-    publisherEns.address,
-    contractId,
-    version,
-  );
-  invariant(latestPublishedVersion, "no published version found");
-
-  return {
-    ...latestPublishedVersion,
-    publishedContractId: `${publisher}/${contractId}/${version}`,
-  };
-}
-
-export function publishedContractQuery(
+function usePublishedContract(
   publishedContractId: PublishedContractId,
-  queryClient: QueryClient,
+  initialData?: InitialData,
 ) {
   const [publisher, contractId, version] = publishedContractId.split("/");
-  return {
-    queryKey: ["published-contract", { publisher, contractId, version }],
+  return useQuery({
+    queryKey: ["published-contract", { publishedContractId }],
     queryFn: () =>
-      publishedContractQueryFn(publisher, contractId, version, queryClient),
+      fetchPublishedContractVersion(publisher, contractId, version),
     enabled: !!publisher || !!contractId,
-  };
-}
-
-function usePublishedContract(publishedContractId: PublishedContractId) {
-  const queryClient = useQueryClient();
-  return useQuery(publishedContractQuery(publishedContractId, queryClient));
+    initialData: initialData === null ? undefined : initialData,
+  });
 }

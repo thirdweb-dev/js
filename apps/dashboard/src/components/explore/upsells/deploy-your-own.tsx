@@ -1,3 +1,5 @@
+"use client";
+
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ExternalLinkIcon } from "lucide-react";
 import { CodeBlock } from "tw-components";
@@ -6,7 +8,7 @@ export const DeployUpsellCard: React.FC = () => {
   return (
     <section className="px-4 py-6 md:px-8 md:py-14 border-border border rounded-xl shadow-lg">
       <h3 className="font-bold tracking-tight text-2xl">
-        {`Didn't find what you're looking for? Build your own!`}
+        Didn't find what you're looking for? Build your own!
       </h3>
 
       <div className="h-8" />
