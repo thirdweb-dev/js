@@ -1,4 +1,5 @@
 import type { Abi, AbiFunction } from "abitype";
+import { parseAbiItem } from "abitype";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../contract/contract.js";
 
@@ -22,9 +23,19 @@ import type { ThirdwebContract } from "../contract/contract.js";
  * ```
  * @contract
  */
-export function resolveMethod<abiFn extends AbiFunction>(method: string) {
-  return async (contract: ThirdwebContract) => {
-    const resolvedAbi = await resolveContractAbi<Abi>(contract);
+export function resolveMethod<
+  abiFn extends AbiFunction,
+  TAbi extends Abi = Abi,
+>(method: string) {
+  return async (contract: ThirdwebContract<TAbi>) => {
+    if (typeof method === "string" && method.startsWith("function ")) {
+      // we know it will be an abi function so we can cast it
+      return parseAbiItem(method) as AbiFunction;
+    }
+
+    const resolvedAbi = contract.abi?.length
+      ? contract.abi
+      : await resolveContractAbi<Abi>(contract);
     // we try to find the abiFunction in the abi
     const abiFunction = resolvedAbi.find((item) => {
       // if the item is not a function we can ignore it

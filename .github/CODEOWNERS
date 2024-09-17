@@ -7,10 +7,10 @@
 packages/thirdweb/ @joaquim-verges @gregfromstl @jnsdls
 
 ## specific thirdweb pieces
-packages/thirdweb/src/react/ @joaquim-verges @gregfromstl @MananTank @jnsdls
+packages/thirdweb/src/react/ @joaquim-verges @gregfromstl @MananTank @jnsdls @edwardysun
 packages/thirdweb/src/reactive/ @joaquim-verges @gregfromstl @MananTank @jnsdls
 packages/thirdweb/src/gas/ @joaquim-verges @jnsdls
-packages/thirdweb/src/pay/ @joaquim-verges @gregfromstl @MananTank @jnsdls
+packages/thirdweb/src/pay/ @joaquim-verges @gregfromstl @MananTank @jnsdls @edwardysun
 packages/typedoc-gen/ @MananTank @jnsdls @joaquim-verges
 packages/service-utils/ @arcoraven @jnsdls @joaquim-verges
 packages/eslint-config-thirdweb/ @jnsdls @joaquim-verges
