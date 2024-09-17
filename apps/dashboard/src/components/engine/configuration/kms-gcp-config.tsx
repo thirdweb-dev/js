@@ -26,19 +26,19 @@ export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instanceUrl }) => {
     type: "gcp-kms" as const,
     gcpApplicationProjectId:
       gcpConfig?.type === "gcp-kms"
-        ? gcpConfig?.gcpApplicationProjectId ?? ""
+        ? (gcpConfig?.gcpApplicationProjectId ?? "")
         : "",
     gcpKmsLocationId:
-      gcpConfig?.type === "gcp-kms" ? gcpConfig?.gcpKmsLocationId ?? "" : "",
+      gcpConfig?.type === "gcp-kms" ? (gcpConfig?.gcpKmsLocationId ?? "") : "",
     gcpKmsKeyRingId:
-      gcpConfig?.type === "gcp-kms" ? gcpConfig?.gcpKmsKeyRingId ?? "" : "",
+      gcpConfig?.type === "gcp-kms" ? (gcpConfig?.gcpKmsKeyRingId ?? "") : "",
     gcpApplicationCredentialEmail:
       gcpConfig?.type === "gcp-kms"
-        ? gcpConfig?.gcpApplicationCredentialEmail ?? ""
+        ? (gcpConfig?.gcpApplicationCredentialEmail ?? "")
         : "",
     gcpApplicationCredentialPrivateKey:
       gcpConfig?.type === "gcp-kms"
-        ? gcpConfig?.gcpApplicationCredentialPrivateKey ?? ""
+        ? (gcpConfig?.gcpApplicationCredentialPrivateKey ?? "")
         : "",
   };
 

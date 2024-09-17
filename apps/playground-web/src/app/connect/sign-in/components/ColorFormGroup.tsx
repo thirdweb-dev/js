@@ -67,9 +67,11 @@ export function ColorFormGroup(props: {
                       <label
                         className="cursor-pointer p-2 gap-3 flex items-center hover:bg-secondary rounded-lg transition-colors"
                         key={color.colorId}
+                        htmlFor="color-input"
                       >
                         <div className="border rounded-full">
                           <ColorInput
+                            id="color-input"
                             className="size-10"
                             value={themeObj.colors[color.colorId]}
                             onChange={(value) => {

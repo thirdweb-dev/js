@@ -6,6 +6,7 @@ export function ColorInput(props: {
   onChange: (value: string) => void;
   onClick?: () => void;
   className?: string;
+  id?: string;
 }) {
   const debouncedOnChange = useDebouncedCallback((value) => {
     props.onChange(value);
@@ -13,6 +14,7 @@ export function ColorInput(props: {
 
   return (
     <input
+      id={props.id}
       onChange={(e) => {
         debouncedOnChange(e.target.value);
       }}

@@ -138,29 +138,21 @@ function RenderData(props: {
             </TableHeadingRow>
           </thead>
           <tbody>
-            {!props.query.isEmpty && (
-              <>
-                {props.query.data && !props.isLoadingMore ? (
-                  <>
-                    {props.query.data.purchases.map((purchase) => {
-                      return (
-                        <TableRow
-                          key={purchase.purchaseId}
-                          purchase={purchase}
-                        />
-                      );
-                    })}
-                  </>
-                ) : (
-                  <>
-                    {new Array(pageSize).fill(0).map((_, i) => (
-                      // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                      <SkeletonTableRow key={i} />
-                    ))}
-                  </>
-                )}
-              </>
-            )}
+            {!props.query.isEmpty &&
+              (props.query.data && !props.isLoadingMore ? (
+                <>
+                  {props.query.data.purchases.map((purchase) => {
+                    return (
+                      <TableRow key={purchase.purchaseId} purchase={purchase} />
+                    );
+                  })}
+                </>
+              ) : (
+                new Array(pageSize).fill(0).map((_, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: ok
+                  <SkeletonTableRow key={i} />
+                ))
+              ))}
           </tbody>
         </table>
       </ScrollShadow>

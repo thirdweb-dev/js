@@ -324,7 +324,7 @@ const TransactionDetailsDrawer = ({
   const functionCalled =
     transaction.extension && transaction.extension !== "none"
       ? `${transaction.extension} ${transaction.functionName}`
-      : transaction.functionName ?? null;
+      : (transaction.functionName ?? null);
 
   let txFeeDisplay = "N/A";
   if (transaction.gasLimit) {

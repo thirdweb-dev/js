@@ -62,10 +62,10 @@ export function signMessage(
     const { message, privateKey } = options;
     const signature = sign({ hash: hashMessage(message), privateKey });
     return signatureToHex(signature);
-  } else if ("account" in options) {
+  }
+  if ("account" in options) {
     const { message, account } = options;
     return account.signMessage({ message });
-  } else {
-    throw new Error("Either privateKey or account is required");
   }
+  throw new Error("Either privateKey or account is required");
 }

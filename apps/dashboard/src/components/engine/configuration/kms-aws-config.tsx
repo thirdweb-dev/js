@@ -25,9 +25,10 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({ instanceUrl }) => {
   const transformedQueryData: SetWalletConfigInput = {
     type: "aws-kms" as const,
     awsAccessKeyId:
-      awsConfig?.type === "aws-kms" ? awsConfig?.awsAccessKeyId ?? "" : "",
+      awsConfig?.type === "aws-kms" ? (awsConfig?.awsAccessKeyId ?? "") : "",
     awsSecretAccessKey: "",
-    awsRegion: awsConfig?.type === "aws-kms" ? awsConfig?.awsRegion ?? "" : "",
+    awsRegion:
+      awsConfig?.type === "aws-kms" ? (awsConfig?.awsRegion ?? "") : "",
   };
 
   const form = useForm<SetWalletConfigInput>({

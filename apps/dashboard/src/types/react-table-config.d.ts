@@ -70,7 +70,7 @@ declare module "react-table" {
   export interface Cell<
     D extends Record<string, unknown> = Record<string, unknown>,
     // biome-ignore lint/suspicious/noExplicitAny: FIXME: remove any
-    V = any,
+    _V = any,
   > extends UseGroupByCellProps<D>,
       UseRowStateCellProps<D> {}
 

@@ -112,69 +112,66 @@ export const FileInput: React.FC<IFileInputProps> = ({
   return (
     <div className="flex gap-4 items-center" {...getRootProps()}>
       <input {...getInputProps()} />
-      {showPreview && (
-        <>
-          {isDisabled ? (
-            <div
-              style={{
-                aspectRatio: 1,
-                maxWidth: previewMaxWidth,
-              }}
-              className={cn(
-                "opacity-50 cursor-not-allowed bg-muted/50",
-                "w-full flex items-center justify-center hover:bg-accent border border-border hover:ring-2 hover:ring-ring",
-                className,
-              )}
-            >
+      {showPreview &&
+        (isDisabled ? (
+          <div
+            style={{
+              aspectRatio: 1,
+              maxWidth: previewMaxWidth,
+            }}
+            className={cn(
+              "opacity-50 cursor-not-allowed bg-muted/50",
+              "w-full flex items-center justify-center hover:bg-accent border border-border hover:ring-2 hover:ring-ring",
+              className,
+            )}
+          >
+            <div className="flex flex-col items-center text-muted-foreground gap-2">
+              <FiUpload className="size-6" />
+              <p className="text-sm text-center">{isDisabledText}</p>
+            </div>
+          </div>
+        ) : (
+          <div
+            style={{
+              aspectRatio: 1,
+              maxWidth: previewMaxWidth,
+            }}
+            className={cn(
+              "cursor-pointer relative overflow-hidden",
+              "w-full flex items-center justify-center hover:bg-accent border border-border hover:ring-2 hover:ring-ring",
+              fileUrl ? "bg-transparent" : "bg-muted/50",
+              className,
+            )}
+          >
+            {noDisplay ? (
               <div className="flex flex-col items-center text-muted-foreground gap-2">
-                <FiUpload className="size-6" />
-                <p className="text-sm text-center">{isDisabledText}</p>
+                <FiImage className="size-6" />
+                <p className="text-sm">{fileType} uploaded</p>
               </div>
-            </div>
-          ) : (
-            <div
-              style={{
-                aspectRatio: 1,
-                maxWidth: previewMaxWidth,
-              }}
-              className={cn(
-                "cursor-pointer relative overflow-hidden",
-                "w-full flex items-center justify-center hover:bg-accent border border-border hover:ring-2 hover:ring-ring",
-                fileUrl ? "bg-transparent" : "bg-muted/50",
-                className,
-              )}
-            >
-              {noDisplay ? (
-                <div className="flex flex-col items-center text-muted-foreground gap-2">
-                  <FiImage className="size-6" />
-                  <p className="text-sm">{fileType} uploaded</p>
-                </div>
-              ) : fileUrl ? (
-                renderPreview ? (
-                  renderPreview(fileUrl)
-                ) : (
-                  <img
-                    alt=""
-                    className="top-0 left-0 absolute w-full h-full object-contain"
-                    src={fileUrl}
-                  />
-                )
+            ) : fileUrl ? (
+              renderPreview ? (
+                renderPreview(fileUrl)
               ) : (
-                <div className="flex flex-col items-center text-muted-foreground gap-2.5">
-                  <div className="p-3 bg-background rounded-full flex items-center justify-center border border-border">
-                    <FiUpload className="size-5" />
-                  </div>
-                  {!disableHelperText && (
-                    <p className="text-sm text-center">
-                      Upload {helperTextOrFile}
-                    </p>
-                  )}
+                <img
+                  alt=""
+                  className="top-0 left-0 absolute w-full h-full object-contain"
+                  src={fileUrl}
+                />
+              )
+            ) : (
+              <div className="flex flex-col items-center text-muted-foreground gap-2.5">
+                <div className="p-3 bg-background rounded-full flex items-center justify-center border border-border">
+                  <FiUpload className="size-5" />
                 </div>
-              )}
-            </div>
-          )}
-        </>
-      )}
+                {!disableHelperText && (
+                  <p className="text-sm text-center">
+                    Upload {helperTextOrFile}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
 
       {showUploadButton || noDisplay ? (
         <div className="flex flex-col">

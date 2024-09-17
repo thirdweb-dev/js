@@ -91,9 +91,8 @@ export const authFetchEmbeddedWalletUser = async (
         params,
         retries - 1,
       );
-    } else {
-      throw e;
     }
+    throw e;
   }
 };
 

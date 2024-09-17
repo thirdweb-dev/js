@@ -206,12 +206,7 @@ function getRNG(type) {
     size = 32;
     elems = Math.ceil(bits / 32);
     while (str === null) {
-      str = construct(
-        bits,
-        randomBytesBuffer(elems),
-        radix,
-        size,
-      );
+      str = construct(bits, randomBytesBuffer(elems), radix, size);
     }
 
     return str;
