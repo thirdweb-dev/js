@@ -13,7 +13,6 @@ import { ALL_CATEGORIES, getCategory } from "data/explore";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { fetchPublishedContractVersion } from "../../../../components/contract-components/fetch-contracts-with-versions";
 
 type ExploreCategoryPageProps = {
   params: {
@@ -80,49 +79,42 @@ export default async function ExploreCategoryPage(
         </p>
         <div className="h-10" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {
-            await Promise.all(
-              category.contracts.map(async (publishedContractId, idx) => {
-                const publisher: string = Array.isArray(publishedContractId)
-                  ? publishedContractId[0].split("/")[0]
-                  : publishedContractId.split("/")[0];
-                const contractId: string = Array.isArray(publishedContractId)
-                  ? publishedContractId[0].split("/")[1]
-                  : publishedContractId.split("/")[1];
-                const modules = Array.isArray(publishedContractId)
-                  ? publishedContractId[1]
-                  : undefined;
-                const overrides = Array.isArray(publishedContractId)
-                  ? publishedContractId[2]
-                  : undefined;
-                return (
-                  <ContractCard
-                    key={publisher + contractId + overrides?.title}
-                    publisher={publisher}
-                    contractId={contractId}
-                    titleOverride={overrides?.title}
-                    descriptionOverride={overrides?.description}
-                    tracking={{
-                      source: category.id,
-                      itemIndex: `${idx}`,
-                    }}
-                    isBeta={category.isBeta}
-                    modules={
-                      modules?.length
-                        ? modules.map((m) => ({
-                            publisher: m.split("/")[0],
-                            moduleId: m.split("/")[1],
-                          }))
-                        : undefined
-                    }
-                    initialData={
-                      await fetchPublishedContractVersion(publisher, contractId)
-                    }
-                  />
-                );
-              }),
-            )
-          }
+          {category.contracts.map((publishedContractId, idx) => {
+            const publisher: string = Array.isArray(publishedContractId)
+              ? publishedContractId[0].split("/")[0]
+              : publishedContractId.split("/")[0];
+            const contractId: string = Array.isArray(publishedContractId)
+              ? publishedContractId[0].split("/")[1]
+              : publishedContractId.split("/")[1];
+            const modules = Array.isArray(publishedContractId)
+              ? publishedContractId[1]
+              : undefined;
+            const overrides = Array.isArray(publishedContractId)
+              ? publishedContractId[2]
+              : undefined;
+            return (
+              <ContractCard
+                key={publisher + contractId + overrides?.title}
+                publisher={publisher}
+                contractId={contractId}
+                titleOverride={overrides?.title}
+                descriptionOverride={overrides?.description}
+                tracking={{
+                  source: category.id,
+                  itemIndex: `${idx}`,
+                }}
+                isBeta={category.isBeta}
+                modules={
+                  modules?.length
+                    ? modules.map((m) => ({
+                        publisher: m.split("/")[0],
+                        moduleId: m.split("/")[1],
+                      }))
+                    : undefined
+                }
+              />
+            );
+          })}
         </div>
 
         <div className="h-16" />

@@ -14,8 +14,6 @@ import { resolveScheme } from "thirdweb/storage";
 import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
-type InitialData = Awaited<ReturnType<typeof fetchPublishedContractVersion>>;
-
 interface ContractCardProps {
   publisher: string;
   contractId: string;
@@ -36,7 +34,6 @@ interface ContractCardProps {
     moduleId: string;
     version?: string;
   }[];
-  initialData?: InitialData;
 }
 
 function getContractUrl(
@@ -91,11 +88,9 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   tracking,
   modules = [],
   isBeta,
-  initialData,
 }) => {
   const publishedContractResult = usePublishedContract(
     `${publisher}/${contractId}/${version}`,
-    initialData,
   );
 
   const showSkeleton = publishedContractResult.isLoading;
@@ -255,16 +250,12 @@ type PublishedContractId =
   | `${string}/${string}`
   | `${string}/${string}/${string}`;
 
-function usePublishedContract(
-  publishedContractId: PublishedContractId,
-  initialData?: InitialData,
-) {
+function usePublishedContract(publishedContractId: PublishedContractId) {
   const [publisher, contractId, version] = publishedContractId.split("/");
   return useQuery({
     queryKey: ["published-contract", { publishedContractId }],
     queryFn: () =>
       fetchPublishedContractVersion(publisher, contractId, version),
     enabled: !!publisher || !!contractId,
-    initialData: initialData === null ? undefined : initialData,
   });
 }
