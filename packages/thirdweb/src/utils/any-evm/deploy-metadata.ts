@@ -50,6 +50,7 @@ export async function fetchDeployMetadata(
     ...parsedMeta,
     version: rawMeta.version,
     bytecode: deployBytecode,
+    name: rawMeta.name,
   };
 }
 
