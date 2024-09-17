@@ -108,6 +108,7 @@ export const TokenClaimForm: React.FC<TokenClaimFormProps> = ({ contract }) => {
                   contract,
                   to: d.to,
                   quantity: d.amount,
+                  from: account.address,
                 });
 
                 const approveTx = await getApprovalForTransaction({
