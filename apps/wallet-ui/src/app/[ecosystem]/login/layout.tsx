@@ -8,7 +8,7 @@ export default async function Layout({
   if (userAddress) {
     redirect(`/wallet/${userAddress}`);
   }
-  
+
   return (
     <main className="flex flex-col items-center justify-center w-full">
       {children}

@@ -14,12 +14,16 @@ export async function getEcosystemInfo(
   );
 
   if (!response.ok) {
-    const errorResult = await response.json(); 
+    const errorResult = await response.json();
     if (response.status === 404) {
-      console.error(`Failed to fetch ecosystem info for ${ecosystemId}: ${errorResult.message}`);
+      console.error(
+        `Failed to fetch ecosystem info for ${ecosystemId}: ${errorResult.message}`,
+      );
       notFound();
     }
-    throw new Error(`Failed to fetch ecosystem info for ${ecosystemId}: ${errorResult.message}`);
+    throw new Error(
+      `Failed to fetch ecosystem info for ${ecosystemId}: ${errorResult.message}`,
+    );
   }
 
   const data = await response.json();
