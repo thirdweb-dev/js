@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-adapter
 
+## 1.4.1
+
+### Patch Changes
+
+- [#4603](https://github.com/thirdweb-dev/js/pull/4603) [`b837b69`](https://github.com/thirdweb-dev/js/commit/b837b690ae27fb8bf45f6cd51820f7591e94dab0) Thanks [@jnsdls](https://github.com/jnsdls)! - bump various dependencies
+
 ## 1.4.0
 
 ### Minor Changes
