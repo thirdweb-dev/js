@@ -40,18 +40,78 @@ export type ERC1155Reward = {
 export type CreatePackParams = {
   client: ThirdwebClient;
   contract: ThirdwebContract;
+  /**
+   * The address of the reward recipient
+   */
   recipient: string;
+  /**
+   * The address of the entity who owns the tokens that are used as rewards.
+   * This is only used for checking token approval
+   */
   tokenOwner: string;
+  /**
+   * The metadata (image, description, etc.) of the Pack.
+   * This is similar to an NFT's metadata
+   */
   packMetadata: NFTInput | string;
   amountDistributedPerOpen: bigint;
+  /**
+   * JavaScript Date object
+   */
   openStartTimestamp: Date;
+  /**
+   * An array of ERC20 rewards, see type `ERC20Reward` for more info
+   */
   erc20Rewards?: ERC20Reward[];
+  /**
+   * An array of ERC721 rewards, see type `ERC721Reward` for more info
+   */
   erc721Rewards?: ERC721Reward[];
+  /**
+   * An array of ERC1155 rewards, see type `ERC1155Reward` for more info
+   */
   erc1155Rewards?: ERC1155Reward[];
 };
 
 /**
  * @extension PACK
+ * @example
+ * ```ts
+ * import { createPack } from "thirdweb/extensions/pack";
+ *
+ * const transaction = createPack({
+ *   contract: packContract,
+ *   client,
+ *   recipient: "0x...",
+ *   tokenOwner: "0x...",
+ *   packMetadata: {
+ *     name: "Pack #1",
+ *     image: "image-of-pack-1",
+ *   },
+ *   openStartTimestamp: new Date(),
+ *   erc20Rewards: [
+ *     {
+ *       contractAddress: "0x...",
+ *       quantityPerReward: 1,
+ *       totalRewards: 1,
+ *     },
+ *   ],
+ *   erc721Rewards: [
+ *     {
+ *       contractAddress: "0x...",
+ *       tokenId: 0n,
+ *     },
+ *   ],
+ *   erc1155Rewards: [
+ *     {
+ *       contractAddress: "0x...",
+ *       tokenId: 0n,
+ *       quantityPerReward: 1,
+ *       totalRewards: 1,
+ *     },
+ *   ],
+ * });
+ * ```
  */
 export function createPack(options: BaseTransactionOptions<CreatePackParams>) {
   return createPack1155({

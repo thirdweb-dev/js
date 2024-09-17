@@ -33,6 +33,9 @@ export type PackContractParams = {
   image?: FileOrBufferOrString;
   external_link?: string;
   social_urls?: Record<string, string>;
+  /**
+   * Defaults to an empty string ("")
+   */
   symbol?: string;
   contractURI?: string;
   /**
@@ -51,6 +54,26 @@ export type DeployPackContractOptions = Prettify<
   }
 >;
 
+/**
+ * Deploy a thirdweb Pack contract
+ * @param options params for deploying [`Pack contract`](https://thirdweb.com/thirdweb.eth/Pack)
+ * @returns
+ *
+ * @example
+ * ```ts
+ * import { deployPackContract } from "thirdweb/extensions/deploy";
+ *
+ * const packAddress = await deployPackContract({
+ *   account,
+ *   client,
+ *   chain,
+ *   params: {
+ *     name: "Pack contract name",
+ *     symbol: "PACK1155",
+ *   },
+ * });
+ * ```
+ */
 export async function deployPackContract(options: DeployPackContractOptions) {
   const { chain, client, account, params } = options;
   const [WETH, forwarder] = await Promise.all([
