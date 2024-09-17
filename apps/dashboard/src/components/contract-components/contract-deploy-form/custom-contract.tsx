@@ -184,6 +184,18 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               chainId: walletChain?.id,
             },
           );
+
+          // if _defaultAdmin is not prefilled with activeAccount address with the replaceTemplateValues, do it here
+          // because _defaultAdmin is hidden in the form
+          if (
+            param.name === "_defaultAdmin" &&
+            param.type === "address" &&
+            !acc[param.name] &&
+            activeAccount
+          ) {
+            acc[param.name] = activeAccount.address;
+          }
+
           return acc;
         },
         {} as Record<string, string>,
