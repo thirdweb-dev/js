@@ -1,4 +1,5 @@
 import type { Ecosystem } from "@/types/Ecosystem";
+import { notFound } from "next/navigation";
 
 export async function getEcosystemInfo(
   ecosystemId: string,
@@ -13,8 +14,11 @@ export async function getEcosystemInfo(
   );
 
   if (!response.ok) {
-    response.body?.cancel();
-    throw new Error("Failed to fetch ecosystem info");
+    const errorResult = await response.json(); 
+    if (response.status === 404) {
+      notFound();
+    }
+    throw new Error(`Failed to fetch ecosystem info: ${errorResult.message}`);
   }
 
   const data = await response.json();
