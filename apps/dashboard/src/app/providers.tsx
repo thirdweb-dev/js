@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import { useEffect } from "react";
 import { ThirdwebProvider } from "thirdweb/react";
 import { setOverrides } from "../lib/vercel-utils";
+import { SetAuthHeaderForSDK } from "./components/SetAuthHeaderForSDK";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ export function AppRouterProviders(props: { children: React.ReactNode }) {
       <AllChainsProvider>
         <ChainsProvider>
           <ThirdwebProvider>
+            <SetAuthHeaderForSDK />
             <ThemeProvider attribute="class" defaultTheme="dark">
               {props.children}
             </ThemeProvider>
