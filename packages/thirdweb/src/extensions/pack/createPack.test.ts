@@ -6,8 +6,10 @@ import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { getContract } from "../../contract/contract.js";
 import { download } from "../../storage/download.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { balanceOf } from "../erc20/__generated__/IERC20/read/balanceOf.js";
 import { approve } from "../erc20/write/approve.js";
 import { mintTo as mintToERC20 } from "../erc20/write/mintTo.js";
+import { ownerOf } from "../erc721/__generated__/IERC721A/read/ownerOf.js";
 import { setApprovalForAll } from "../erc721/__generated__/IERC721A/write/setApprovalForAll.js";
 import { mintTo as mintToERC721 } from "../erc721/write/mintTo.js";
 import { getPackContents } from "../erc1155/__generated__/IPack/read/getPackContents.js";
@@ -24,7 +26,7 @@ const client = TEST_CLIENT;
 const chain = ANVIL_CHAIN;
 
 describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
-  it("should work", async () => {
+  it("should create a Pack and open it to receive rewards", async () => {
     const packAddress = await deployPackContract({
       account,
       client,
@@ -32,6 +34,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
       params: {
         name: "pack-contract",
       },
+    });
+
+    const packContract = getContract({
+      address: packAddress,
+      chain,
+      client,
     });
 
     const erc20Address = await deployERC20Contract({
@@ -46,26 +54,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
     });
 
     const erc20Contract = getContract({ address: erc20Address, chain, client });
-
-    // Mint some ERC20 tokens
-    await sendAndConfirmTransaction({
-      transaction: mintToERC20({
-        contract: erc20Contract,
-        to: account.address,
-        amount: "100",
-      }),
-      account,
-    });
-
-    // Set allowance for Pack contract
-    await sendAndConfirmTransaction({
-      transaction: approve({
-        contract: erc20Contract,
-        amount: "1000000000000000",
-        spender: packAddress,
-      }),
-      account,
-    });
 
     const erc721Address = await deployERC721Contract({
       client: TEST_CLIENT,
@@ -83,6 +71,25 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
       chain,
       client,
     });
+    // Mint some ERC20 tokens
+    await sendAndConfirmTransaction({
+      transaction: mintToERC20({
+        contract: erc20Contract,
+        to: account.address,
+        amount: "100",
+      }),
+      account,
+    });
+
+    // Set allowance for Pack contract
+    await sendAndConfirmTransaction({
+      transaction: approve({
+        contract: erc20Contract,
+        amount: "1000000000000000",
+        spender: packContract.address,
+      }),
+      account,
+    });
 
     // Mint some ERC721 tokens
     await sendAndConfirmTransaction({
@@ -99,15 +106,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
       transaction: setApprovalForAll({
         contract: erc721Contract,
         approved: true,
-        operator: packAddress,
+        operator: packContract.address,
       }),
       account,
-    });
-
-    const packContract = getContract({
-      address: packAddress,
-      chain,
-      client,
     });
 
     // Create pack
@@ -116,12 +117,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
         contract: packContract,
         erc20Rewards: [
           {
-            contractAddress: erc20Address,
+            contractAddress: erc20Contract.address,
             totalRewards: 1,
             quantityPerReward: 1,
           },
         ],
-        erc721Rewards: [{ contractAddress: erc721Address, tokenId: 0n }],
+        erc721Rewards: [
+          { contractAddress: erc721Contract.address, tokenId: 0n },
+        ],
         client,
         packMetadata: {
           name: "Pack #0",
@@ -145,13 +148,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
     expect(packContent).toStrictEqual([
       [
         {
-          assetContract: erc20Address,
+          assetContract: erc20Contract.address,
           tokenType: 0,
           tokenId: 0n,
           totalAmount: 1000000000000000000n,
         },
         {
-          assetContract: erc721Address,
+          assetContract: erc721Contract.address,
           tokenType: 1,
           tokenId: 0n,
           totalAmount: 1n,
@@ -181,7 +184,17 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
       contract: packContract,
       packId: 0n,
     });
-
     expect(packContent).not.toStrictEqual(remainingPackContent);
+
+    // And the token should be sent to the address of the recipient
+    // Since the rewards are "opened" randomly, the recipient should either have one ERC721 token or one ERC20 token
+    const [erc20Balance, erc721Owner] = await Promise.all([
+      balanceOf({ contract: erc20Contract, address: account.address }),
+      ownerOf({ contract: erc721Contract, tokenId: 0n }),
+    ]);
+    expect(
+      erc20Balance === 1n * 10n ** 18n ||
+        erc721Owner.toLowerCase() === account.address.toLowerCase(),
+    ).toBe(true);
   });
 });
