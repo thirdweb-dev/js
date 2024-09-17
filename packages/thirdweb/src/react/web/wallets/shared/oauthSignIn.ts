@@ -1,6 +1,9 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getLoginUrl } from "../../../../wallets/in-app/core/authentication/getLoginPath.js";
-import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
+import type {
+  InAppWalletOAuth,
+  InAppWalletSocialAuth,
+} from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Ecosystem } from "../../../../wallets/in-app/web/types.js";
 import type { Theme } from "../../../core/design-system/index.js";
 
@@ -25,7 +28,7 @@ function getWidthAndHeight(authOption: InAppWalletSocialAuth) {
 }
 
 function getOauthLoginPath(
-  authOption: InAppWalletSocialAuth,
+  authOption: InAppWalletOAuth,
   client: ThirdwebClient,
   ecosystem?: Ecosystem,
 ) {
@@ -37,6 +40,7 @@ function getOauthLoginPath(
     case "telegram":
     case "line":
     case "x":
+    case "guest":
     case "discord":
       return getLoginUrl({ authOption, client, ecosystem });
     default:

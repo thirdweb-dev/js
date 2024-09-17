@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { stringify } from "../../../utils/json.js";
 import { nativeLocalStorage } from "../../../utils/storage/nativeStorage.js";
 import type { Account, Wallet } from "../../interfaces/wallet.js";
+import { guestAuthenticate } from "../core/authentication/guest.js";
 import {
   loginWithPasskey,
   registerPasskey,
@@ -16,7 +17,7 @@ import {
   type LogoutReturnType,
   type MultiStepAuthArgsType,
   type MultiStepAuthProviderType,
-  type OauthOption,
+  type OAuthRedirectObject,
   UserWalletStatus,
 } from "../core/authentication/types.js";
 import type { InAppConnector } from "../core/interfaces/connector.js";
@@ -27,6 +28,7 @@ import {
   authenticate,
   customJwt,
   deleteActiveAccount,
+  guestLogin,
   otpLogin,
   siweLogin,
   socialLogin,
@@ -99,6 +101,12 @@ export class InAppNativeConnector implements InAppConnector {
       case "phone": {
         return verifyOtp(params);
       }
+      case "guest": {
+        return guestAuthenticate({
+          client: this.options.client,
+          ecosystem: params.ecosystem,
+        });
+      }
       case "wallet": {
         return siweAuthenticate({
           client: this.options.client,
@@ -157,6 +165,11 @@ export class InAppNativeConnector implements InAppConnector {
         return this.socialLogin({
           strategy,
           redirectUrl,
+        });
+      }
+      case "guest": {
+        return this.guestLogin({
+          ecosystem: params.ecosystem,
         });
       }
       case "wallet": {
@@ -300,7 +313,9 @@ export class InAppNativeConnector implements InAppConnector {
     return deleteActiveAccount({ client: this.options.client });
   }
 
-  private async socialLogin(auth: OauthOption): Promise<AuthLoginReturnType> {
+  private async socialLogin(
+    auth: OAuthRedirectObject,
+  ): Promise<AuthLoginReturnType> {
     try {
       const { storedToken } = await socialLogin(auth, this.options.client);
       const account = await this.getAccount();
@@ -352,6 +367,31 @@ export class InAppNativeConnector implements InAppConnector {
       throw new Error(
         `An unknown error occurred signing in with ${options.wallet.id}`,
       );
+    }
+  }
+
+  private async guestLogin(options: {
+    ecosystem?: Ecosystem;
+  }): Promise<AuthLoginReturnType> {
+    try {
+      const { storedToken } = await guestLogin(
+        this.options.client,
+        options.ecosystem,
+      );
+      const account = await this.getAccount();
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          account,
+          authDetails: storedToken.authDetails,
+          walletAddress: account.address,
+        },
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Error generating guest account: ${error.message}`);
+      }
+      throw new Error("An unknown error occurred generating guest account");
     }
   }
 

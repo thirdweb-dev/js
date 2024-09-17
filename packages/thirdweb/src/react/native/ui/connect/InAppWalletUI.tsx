@@ -124,7 +124,37 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           }}
         />
       ) : null}
+      {authOptions.includes("guest") ? <GuestLogin {...props} /> : null}
     </View>
+  );
+}
+
+function GuestLogin(props: InAppWalletFormUIProps) {
+  const { theme, wallet, client, connector } = props;
+  const connectInAppWallet = useCallback(() => {
+    connector({
+      wallet,
+      connectFn: async () => {
+        await wallet.connect({
+          client,
+          strategy: "guest",
+        });
+        await setLastAuthProvider("guest", nativeLocalStorage);
+        return wallet;
+      },
+      authMethod: "guest",
+    });
+  }, [connector, wallet, client]);
+
+  return (
+    <ThemedButtonWithIcon
+      theme={theme}
+      title="Continue as guest"
+      icon={getAuthProviderImage("guest")}
+      onPress={() => {
+        connectInAppWallet();
+      }}
+    />
   );
 }
 

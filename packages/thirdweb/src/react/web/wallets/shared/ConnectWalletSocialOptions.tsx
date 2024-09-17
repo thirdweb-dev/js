@@ -53,6 +53,9 @@ export type ConnectWalletSelectUIState =
         type: SocialAuthOption;
         connectionPromise: Promise<Account | Profile[]>;
       };
+      guestLogin?: {
+        connectionPromise: Promise<Account | Profile[]>;
+      };
       passkeyLogin?: boolean;
       walletLogin?: boolean;
     };
@@ -157,6 +160,7 @@ export const ConnectWalletSocialOptions = (
   }
 
   const passKeyEnabled = authOptions.includes("passkey");
+  const guestEnabled = authOptions.includes("guest");
 
   const placeholder =
     inputMode === "email" ? locale.emailPlaceholder : locale.phonePlaceholder;
@@ -181,6 +185,27 @@ export const ConnectWalletSocialOptions = (
         partnerId: wallet.getConfig()?.partnerId,
       }
     : undefined;
+
+  const handleGuestLogin = async () => {
+    const connectOptions = {
+      client: props.client,
+      ecosystem: ecosystemInfo,
+      strategy: "guest" as const,
+    };
+    const connectPromise = (async () => {
+      const result = await wallet.connect(connectOptions);
+      setLastAuthProvider("guest", webLocalStorage);
+      return result;
+    })();
+
+    setData({
+      guestLogin: {
+        connectionPromise: connectPromise,
+      },
+    });
+
+    props.select(); // show Connect UI
+  };
 
   // Need to trigger login on button click to avoid popup from being blocked
   const handleSocialLogin = async (strategy: SocialAuthOption) => {
@@ -419,6 +444,19 @@ export const ConnectWalletSocialOptions = (
             handlePassKeyLogin();
           }}
           title={locale.passkey}
+          disabled={props.disabled}
+        />
+      )}
+
+      {/* Guest login */}
+      {guestEnabled && (
+        <WalletTypeRowButton
+          client={props.client}
+          icon={getWalletIcon("guest")}
+          onClick={() => {
+            handleGuestLogin();
+          }}
+          title={locale.loginAsGuest}
           disabled={props.disabled}
         />
       )}

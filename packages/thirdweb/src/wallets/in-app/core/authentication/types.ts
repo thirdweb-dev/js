@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Address } from "../../../../utils/address.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import type { Wallet } from "../../../interfaces/wallet.js";
-import type { AuthOption, SocialAuthOption } from "../../../types.js";
+import type { AuthOption, OAuthOption } from "../../../types.js";
 import type { Ecosystem } from "../../web/types.js";
 
 export type MultiStepAuthProviderType =
@@ -26,7 +26,7 @@ export type MultiStepAuthArgsType = MultiStepAuthProviderType & {
 
 export type SingleStepAuthArgsType =
   | {
-      strategy: SocialAuthOption;
+      strategy: OAuthOption;
       openedWindow?: Window;
       closeOpenedWindow?: (window: Window) => void;
       redirectUrl?: string;
@@ -52,6 +52,10 @@ export type SingleStepAuthArgsType =
       strategy: "wallet";
       wallet: Wallet;
       chain: Chain;
+    }
+  | {
+      strategy: "guest";
+      client: ThirdwebClient;
     };
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
@@ -68,6 +72,7 @@ export enum RecoveryShareManagement {
 // TODO: remove usage of enums, instead use object with as const
 export enum AuthProvider {
   COGNITO = "Cognito",
+  GUEST = "Guest",
   GOOGLE = "Google",
   EMAIL_OTP = "EmailOtp",
   CUSTOM_JWT = "CustomJWT",
@@ -82,8 +87,8 @@ export enum AuthProvider {
   TELEGRAM = "Telegram",
 }
 
-export type OauthOption = {
-  strategy: SocialAuthOption;
+export type OAuthRedirectObject = {
+  strategy: OAuthOption;
   redirectUrl: string;
 };
 

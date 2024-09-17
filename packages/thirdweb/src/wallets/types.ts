@@ -30,9 +30,11 @@ export const socialAuthOptions = [
   "telegram",
 ] as const;
 export type SocialAuthOption = (typeof socialAuthOptions)[number];
+export type OAuthOption = SocialAuthOption | "guest";
 
 export const authOptions = [
   ...socialAuthOptions,
+  "guest",
   "email",
   "phone",
   "passkey",

@@ -3,6 +3,7 @@ import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { SocialAuthOption } from "../../../../wallets/types.js";
 import type { Account } from "../../../interfaces/wallet.js";
+import { guestAuthenticate } from "../../core/authentication/guest.js";
 import {
   loginWithPasskey,
   registerPasskey,
@@ -226,6 +227,12 @@ export class InAppWebConnector implements InAppConnector {
           openedWindow: args.openedWindow,
         });
       }
+      case "guest": {
+        return guestAuthenticate({
+          client: this.wallet.client,
+          ecosystem: this.wallet.ecosystem,
+        });
+      }
       case "wallet": {
         return siweAuthenticate({
           ecosystem: this.wallet.ecosystem,
@@ -279,6 +286,7 @@ export class InAppWebConnector implements InAppConnector {
       case "telegram":
       case "line":
       case "x":
+      case "guest":
       case "discord": {
         const authToken = await this.authenticate(args);
         return this.auth.loginWithAuthToken(authToken);
