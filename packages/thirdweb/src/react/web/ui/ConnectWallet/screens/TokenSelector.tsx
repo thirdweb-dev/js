@@ -154,43 +154,41 @@ export function TokenSelector(props: {
         <Spacer y="md" />
 
         {props.chainSelection && (
-          <>
-            <Container px="lg">
-              <Text size="sm">Select Network</Text>
-              <Spacer y="xxs" />
-              <SelectTokenBtn
-                fullWidth
-                variant="secondary"
-                onClick={() => {
-                  setScreen("select-chain");
+          <Container px="lg">
+            <Text size="sm">Select Network</Text>
+            <Spacer y="xxs" />
+            <SelectTokenBtn
+              fullWidth
+              variant="secondary"
+              onClick={() => {
+                setScreen("select-chain");
+              }}
+            >
+              <ChainIcon
+                chainIconUrl={chainIconQuery.url}
+                size={iconSize.lg}
+                client={props.client}
+              />
+
+              {chainNameQuery.name ? (
+                <Text color="primaryText" size="sm">
+                  {chainNameQuery.name}
+                </Text>
+              ) : (
+                <Skeleton height={fontSize.md} />
+              )}
+
+              <ChevronDownIcon
+                width={iconSize.sm}
+                height={iconSize.sm}
+                style={{
+                  marginLeft: "auto",
                 }}
-              >
-                <ChainIcon
-                  chainIconUrl={chainIconQuery.url}
-                  size={iconSize.lg}
-                  client={props.client}
-                />
-
-                {chainNameQuery.name ? (
-                  <Text color="primaryText" size="sm">
-                    {chainNameQuery.name}
-                  </Text>
-                ) : (
-                  <Skeleton height={fontSize.md} />
-                )}
-
-                <ChevronDownIcon
-                  width={iconSize.sm}
-                  height={iconSize.sm}
-                  style={{
-                    marginLeft: "auto",
-                  }}
-                />
-              </SelectTokenBtn>
-              <Spacer y="xl" />
-              <Text size="sm">Select Token</Text>
-            </Container>
-          </>
+              />
+            </SelectTokenBtn>
+            <Spacer y="xl" />
+            <Text size="sm">Select Token</Text>
+          </Container>
         )}
 
         <Container px="lg">

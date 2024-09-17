@@ -50,7 +50,7 @@ export function SocialLogin(props: {
     const walletConfig = wallet.getConfig();
     const authMode =
       walletConfig && "auth" in walletConfig
-        ? walletConfig?.auth?.mode ?? "popup"
+        ? (walletConfig?.auth?.mode ?? "popup")
         : "popup";
 
     if (

@@ -21,47 +21,44 @@ export const AffectedAreaInput = () => {
         value={selectedAffectedArea}
         onValueChange={setSelectedAffectedArea}
       />
-      {selectedAffectedArea && (
-        <>
-          {selectedAffectedArea === "Application" ? (
-            <>
-              <SupportForm_SelectInput
-                formLabel="SDK"
-                name="extraInfo_SDK"
-                required={true}
-                promptText="Select SDK"
-                options={["TypeScript", "React", "React Native", "Unity"]}
-                value={selectedSDK}
-                onValueChange={setSelectedSDK}
-              />
-              {selectedSDK && (
-                <>
-                  {selectedSDK === "Unity" && <UnitySupportForm />}
-                  <SupportForm_TextInput
-                    formLabel="SDK Version"
-                    formValue="extraInfo_SDK_Version"
-                    required={true}
-                    inputType="text"
-                  />
-                  <SupportForm_TextInput
-                    formLabel="Application URL"
-                    formValue="extraInfo_Application_URL"
-                    required={false}
-                    inputType="url"
-                  />
-                  <DescriptionInput />
-                  <AttachmentForm />
-                </>
-              )}
-            </>
-          ) : (
-            <>
-              <DescriptionInput />
-              <AttachmentForm />
-            </>
-          )}
-        </>
-      )}
+      {selectedAffectedArea &&
+        (selectedAffectedArea === "Application" ? (
+          <>
+            <SupportForm_SelectInput
+              formLabel="SDK"
+              name="extraInfo_SDK"
+              required={true}
+              promptText="Select SDK"
+              options={["TypeScript", "React", "React Native", "Unity"]}
+              value={selectedSDK}
+              onValueChange={setSelectedSDK}
+            />
+            {selectedSDK && (
+              <>
+                {selectedSDK === "Unity" && <UnitySupportForm />}
+                <SupportForm_TextInput
+                  formLabel="SDK Version"
+                  formValue="extraInfo_SDK_Version"
+                  required={true}
+                  inputType="text"
+                />
+                <SupportForm_TextInput
+                  formLabel="Application URL"
+                  formValue="extraInfo_Application_URL"
+                  required={false}
+                  inputType="url"
+                />
+                <DescriptionInput />
+                <AttachmentForm />
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <DescriptionInput />
+            <AttachmentForm />
+          </>
+        ))}
     </>
   );
 };

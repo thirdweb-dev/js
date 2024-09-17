@@ -24,14 +24,22 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": ["dist/", "node/", "cf-worker/"],
+  "files": [
+    "dist/",
+    "node/",
+    "cf-worker/"
+  ],
   "preconstruct": {
-    "entrypoints": ["index.ts", "cf-worker/index.ts", "node/index.ts"],
+    "entrypoints": [
+      "index.ts",
+      "cf-worker/index.ts",
+      "node/index.ts"
+    ],
     "exports": true
   },
   "sideEffects": false,
   "dependencies": {
-    "aws4fetch": "1.0.18",
+    "aws4fetch": "1.0.20",
     "zod": "3.23.8"
   },
   "devDependencies": {

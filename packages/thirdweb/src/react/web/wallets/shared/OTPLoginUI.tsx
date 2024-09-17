@@ -280,11 +280,9 @@ export function OTPLoginUI(props: {
 
             <Container p={isWideModal ? undefined : "lg"}>
               {accountStatus === "error" && (
-                <>
-                  <Text size="sm" center color="danger">
-                    {locale.emailLoginScreen.failedToSendCode}
-                  </Text>
-                </>
+                <Text size="sm" center color="danger">
+                  {locale.emailLoginScreen.failedToSendCode}
+                </Text>
               )}
 
               {accountStatus === "sending" && (

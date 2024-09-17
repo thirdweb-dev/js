@@ -1,17 +1,6 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
   "extends": ["../../biome.json"],
-  "linter": {
-    "rules": {
-      "style": {
-        "noRestrictedGlobals": {
-          "options": { "deniedGlobals": ["Buffer"] },
-          "level": "error"
-        },
-        "noUselessElse": "off"
-      }
-    }
-  },
   "files": {
     "ignore": [
       "src/crypto/aes/lib/md5.ts",

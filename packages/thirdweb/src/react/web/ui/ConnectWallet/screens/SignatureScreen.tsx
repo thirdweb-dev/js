@@ -259,45 +259,43 @@ function HeadlessSignIn({
         {status === "signing" && <Spinner size="xl" color="accentText" />}
 
         {status === "failed" && (
-          <>
-            <Container>
-              <Spacer y="lg" />
-              <Text size="lg" center color="danger">
-                {locale.signingScreen.failedToSignIn}
-              </Text>
+          <Container>
+            <Spacer y="lg" />
+            <Text size="lg" center color="danger">
+              {locale.signingScreen.failedToSignIn}
+            </Text>
 
-              <Spacer y="lg" />
-              <Button
-                fullWidth
-                variant="accent"
-                onClick={() => {
-                  signIn();
-                }}
-                style={{
-                  gap: spacing.xs,
-                  alignItems: "center",
-                  padding: spacing.md,
-                }}
-              >
-                <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
-                {locale.signingScreen.tryAgain}
-              </Button>
-              <Spacer y="sm" />
-              <Button
-                fullWidth
-                variant="secondary"
-                onClick={() => {
-                  disconnect(wallet);
-                }}
-                style={{
-                  alignItems: "center",
-                  padding: spacing.md,
-                }}
-              >
-                {locale.instructionScreen.disconnectWallet}
-              </Button>
-            </Container>
-          </>
+            <Spacer y="lg" />
+            <Button
+              fullWidth
+              variant="accent"
+              onClick={() => {
+                signIn();
+              }}
+              style={{
+                gap: spacing.xs,
+                alignItems: "center",
+                padding: spacing.md,
+              }}
+            >
+              <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
+              {locale.signingScreen.tryAgain}
+            </Button>
+            <Spacer y="sm" />
+            <Button
+              fullWidth
+              variant="secondary"
+              onClick={() => {
+                disconnect(wallet);
+              }}
+              style={{
+                alignItems: "center",
+                padding: spacing.md,
+              }}
+            >
+              {locale.instructionScreen.disconnectWallet}
+            </Button>
+          </Container>
         )}
       </Container>
     </Container>

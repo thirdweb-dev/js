@@ -549,7 +549,7 @@ const IframePlayer = /* @__PURE__ */ (() =>
       <div style={{ position: "relative", ...style }} {...restProps}>
         <iframe
           title={alt || "thirdweb iframe player"}
-          src={playing ? src ?? undefined : undefined}
+          src={playing ? (src ?? undefined) : undefined}
           ref={ref}
           style={{
             objectFit: "contain",

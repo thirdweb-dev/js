@@ -141,41 +141,38 @@ const Pricing: ThirdwebNextPage = () => {
                                 Learn More
                               </TrackedIconButton>
                             )}
-                            {item?.hint && (
-                              <>
-                                {isMobile ? (
-                                  <Text className="text-muted-foreground">
-                                    {item.hint}
-                                  </Text>
-                                ) : (
-                                  <Tooltip
-                                    label={
-                                      <Card
-                                        py={2}
-                                        px={4}
-                                        bgColor="backgroundHighlight"
-                                        borderRadius="lg"
-                                      >
-                                        <Text size="label.sm" lineHeight={1.5}>
-                                          {item.hint}
-                                        </Text>
-                                      </Card>
-                                    }
-                                    p={0}
-                                    bg="transparent"
-                                    boxShadow="none"
-                                  >
-                                    <Box pt={0.5}>
-                                      <Icon
-                                        as={IoIosInformationCircleOutline}
-                                        boxSize={4}
-                                        color="blue.500"
-                                      />
-                                    </Box>
-                                  </Tooltip>
-                                )}
-                              </>
-                            )}
+                            {item?.hint &&
+                              (isMobile ? (
+                                <Text className="text-muted-foreground">
+                                  {item.hint}
+                                </Text>
+                              ) : (
+                                <Tooltip
+                                  label={
+                                    <Card
+                                      py={2}
+                                      px={4}
+                                      bgColor="backgroundHighlight"
+                                      borderRadius="lg"
+                                    >
+                                      <Text size="label.sm" lineHeight={1.5}>
+                                        {item.hint}
+                                      </Text>
+                                    </Card>
+                                  }
+                                  p={0}
+                                  bg="transparent"
+                                  boxShadow="none"
+                                >
+                                  <Box pt={0.5}>
+                                    <Icon
+                                      as={IoIosInformationCircleOutline}
+                                      boxSize={4}
+                                      color="blue.500"
+                                    />
+                                  </Box>
+                                </Tooltip>
+                              ))}
                           </Flex>
                         </Card>
                       </Flex>

@@ -88,18 +88,15 @@ export const TokenRow = (props: {
         <ThemedText theme={theme} type="defaultSemiBold">
           {tokenName}
         </ThemedText>
-        {address && (
-          <>
-            {balanceQuery.data ? (
-              <ThemedText theme={theme} type="subtext">
-                {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
-                {balanceQuery.data?.symbol}
-              </ThemedText>
-            ) : (
-              <Skeleton theme={theme} style={{ width: 80, height: 14 }} />
-            )}
-          </>
-        )}
+        {address &&
+          (balanceQuery.data ? (
+            <ThemedText theme={theme} type="subtext">
+              {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
+              {balanceQuery.data?.symbol}
+            </ThemedText>
+          ) : (
+            <Skeleton theme={theme} style={{ width: 80, height: 14 }} />
+          ))}
       </View>
       {props.onTokenSelected && (
         <>

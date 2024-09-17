@@ -55,25 +55,23 @@ const TemplateContents: React.FC<TemplateContentsProps> = (props) => {
       {props.overview}
 
       {props.featurePoints.length > 0 && (
-        <>
-          <Box as="ul" listStyleType="inherit" pl={4} mt={4}>
-            {props.featurePoints.map((feature, idx) => (
-              <Box
-                as="li"
-                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                key={idx}
-                fontWeight={400}
-                fontSize={16}
-                lineHeight={1.5}
-                opacity={0.7}
-                color="whiteAlpha.900"
-                mb={2}
-              >
-                {feature}
-              </Box>
-            ))}
-          </Box>
-        </>
+        <Box as="ul" listStyleType="inherit" pl={4} mt={4}>
+          {props.featurePoints.map((feature, idx) => (
+            <Box
+              as="li"
+              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+              key={idx}
+              fontWeight={400}
+              fontSize={16}
+              lineHeight={1.5}
+              opacity={0.7}
+              color="whiteAlpha.900"
+              mb={2}
+            >
+              {feature}
+            </Box>
+          ))}
+        </Box>
       )}
 
       <Heading as="h3" fontSize="24px" fontWeight={700} mt={12} mb={4}>
@@ -99,32 +97,28 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
   {
     erc721: (
       <TemplateContents
-        overview={
-          <>
-            <Text
-              fontWeight={400}
-              fontSize={16}
-              lineHeight={1.5}
-              opacity={0.7}
-              color="whiteAlpha.900"
-            >
-              A web and mobile friendly page for users to claim NFTs from a
-              smart contract implementing{" "}
-              <Link
-                href="https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Claimable"
-                isExternal
-                color="blue.300"
-              >
-                ERC721Claimable
-              </Link>
-              , such as the{" "}
-              <Link href="/thirdweb.eth/DropERC721" isExternal color="blue.300">
-                NFT Drop
-              </Link>
-              .
-            </Text>
-          </>
-        }
+        overview=<Text
+          fontWeight={400}
+          fontSize={16}
+          lineHeight={1.5}
+          opacity={0.7}
+          color="whiteAlpha.900"
+        >
+          A web and mobile friendly page for users to claim NFTs from a smart
+          contract implementing{" "}
+          <Link
+            href="https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Claimable"
+            isExternal
+            color="blue.300"
+          >
+            ERC721Claimable
+          </Link>
+          , such as the{" "}
+          <Link href="/thirdweb.eth/DropERC721" isExternal color="blue.300">
+            NFT Drop
+          </Link>
+          .
+        </Text>
         featurePoints={[
           <Fragment key="react">
             Built with our{" "}
@@ -242,21 +236,17 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
     ),
     "marketplace-v3": (
       <TemplateContents
-        overview={
-          <>
-            <Text
-              fontWeight={400}
-              fontSize={16}
-              lineHeight={1.5}
-              opacity={0.7}
-              color="whiteAlpha.900"
-            >
-              Create your own NFT marketplace where users can buy and sell NFTs
-              from your NFT collection. This template provides the foundation
-              for building an NFT marketplace application.
-            </Text>
-          </>
-        }
+        overview=<Text
+          fontWeight={400}
+          fontSize={16}
+          lineHeight={1.5}
+          opacity={0.7}
+          color="whiteAlpha.900"
+        >
+          Create your own NFT marketplace where users can buy and sell NFTs from
+          your NFT collection. This template provides the foundation for
+          building an NFT marketplace application.
+        </Text>
         featurePoints={[
           <Fragment key="react-sdk">
             Built with our{" "}
@@ -342,18 +332,16 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
     "nft-gallery": (
       <TemplateContents
         overview={
-          <>
-            <Text
-              fontWeight={400}
-              fontSize={16}
-              lineHeight={1.5}
-              opacity={0.7}
-              color="whiteAlpha.900"
-            >
-              Showcase your NFT collection with a gallery application that
-              allows users to view the metadata of all NFTs in your collection.
-            </Text>
-          </>
+          <Text
+            fontWeight={400}
+            fontSize={16}
+            lineHeight={1.5}
+            opacity={0.7}
+            color="whiteAlpha.900"
+          >
+            Showcase your NFT collection with a gallery application that allows
+            users to view the metadata of all NFTs in your collection.
+          </Text>
         }
         featurePoints={[
           <Fragment key="react-sdk">

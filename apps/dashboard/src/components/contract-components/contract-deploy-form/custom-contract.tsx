@@ -672,21 +672,18 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   );
                 })}
 
-              {isModular && (
-                <>
-                  {modules?.length ? (
-                    <ModularContractDefaultModulesFieldset
-                      form={form}
-                      modules={modules}
-                      isTWPublisher={isTWPublisher}
-                    />
-                  ) : (
-                    <div className="min-h-[250px] flex justify-center items-center">
-                      <Spinner className="size-8" />
-                    </div>
-                  )}
-                </>
-              )}
+              {isModular &&
+                (modules?.length ? (
+                  <ModularContractDefaultModulesFieldset
+                    form={form}
+                    modules={modules}
+                    isTWPublisher={isTWPublisher}
+                  />
+                ) : (
+                  <div className="min-h-[250px] flex justify-center items-center">
+                    <Spinner className="size-8" />
+                  </div>
+                ))}
 
               {advancedParams.length > 0 && (
                 <Accordion allowToggle>

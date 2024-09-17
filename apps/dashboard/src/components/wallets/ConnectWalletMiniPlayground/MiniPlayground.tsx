@@ -296,8 +296,13 @@ export const MiniPlayground: React.FC<{
                 {Object.keys(socialOptions).map((_key) => {
                   const key = _key as InAppWalletAuth;
                   return (
-                    <label key={key} className="flex items-center gap-2">
+                    <label
+                      key={key}
+                      htmlFor={key}
+                      className="flex items-center gap-2"
+                    >
                       <Checkbox
+                        id={key}
                         checked={socialOptions[key]}
                         onCheckedChange={(checked) => {
                           setSocialOptions((v) => ({
