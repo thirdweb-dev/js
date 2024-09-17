@@ -1,9 +1,16 @@
-import { Icon, useDisclosure } from "@chakra-ui/react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Icon } from "@chakra-ui/react";
+import { useState } from "react";
 import { FiDroplet } from "react-icons/fi";
 import type { ThirdwebContract } from "thirdweb";
 import { balanceOf } from "thirdweb/extensions/erc20";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { Button, Drawer } from "tw-components";
+import { Button } from "tw-components";
 import { TokenAirdropForm } from "./airdrop-form";
 
 interface TokenAirdropButtonProps {
@@ -14,7 +21,6 @@ export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
   contract,
   ...restButtonProps
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const address = useActiveAccount()?.address;
 
   const tokenBalanceQuery = useReadContract(balanceOf, {
@@ -24,23 +30,23 @@ export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
   });
 
   const hasBalance = tokenBalanceQuery.data && tokenBalanceQuery.data > 0n;
+  const [open, setOpen] = useState(false);
 
   return (
     <>
-      <Drawer
-        allowPinchZoom
-        preserveScrollBarGap
-        size="lg"
-        onClose={onClose}
-        isOpen={isOpen}
-      >
-        <TokenAirdropForm contract={contract} />
-      </Drawer>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent className="z-[10000] lg:w-[700px] sm:w-[540px] sm:max-w-[90%]">
+          <SheetHeader>
+            <SheetTitle>Aidrop tokens</SheetTitle>
+          </SheetHeader>
+          <TokenAirdropForm contract={contract} />
+        </SheetContent>
+      </Sheet>
       <Button
         colorScheme="primary"
         leftIcon={<Icon as={FiDroplet} />}
         {...restButtonProps}
-        onClick={onOpen}
+        onClick={() => setOpen(true)}
         isDisabled={!hasBalance}
       >
         Airdrop
