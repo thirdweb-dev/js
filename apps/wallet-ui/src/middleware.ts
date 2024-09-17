@@ -26,6 +26,10 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  if (hostname.includes("thirdweb-preview.com")) {
+    return NextResponse.next();
+  }
+
   // rewrite everything else to `/[ecosystem]/... dynamic route
   const ecosystem = hostname.split(".")[0];
 
