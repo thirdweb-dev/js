@@ -113,6 +113,13 @@ export type PayUIOptions = Prettify<
             status: BuyWithFiatStatus;
           },
     ) => void;
+    /**
+     * Customize the display of the PayEmbed UI.
+     */
+    metadata?: {
+      name?: string;
+      image?: string;
+    };
   } & (FundWalletOptions | DirectPaymentOptions | TranasctionOptions)
 >;
 
@@ -145,13 +152,6 @@ export type DirectPaymentOptions = {
    * The payment information
    */
   paymentInfo: PaymentInfo;
-  /**
-   * Customize the display of the PayEmbed UI.
-   */
-  metadata?: {
-    name?: string;
-    image?: string;
-  };
 };
 
 export type TranasctionOptions = {
@@ -160,13 +160,6 @@ export type TranasctionOptions = {
    * The transaction to be executed.
    */
   transaction: PreparedTransaction;
-  /**
-   * Customize the display of the PayEmbed UI.
-   */
-  metadata?: {
-    name?: string;
-    image?: string;
-  };
 };
 
 /**
