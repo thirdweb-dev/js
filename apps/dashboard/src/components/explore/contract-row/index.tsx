@@ -1,4 +1,3 @@
-import { fetchPublishedContractVersion } from "components/contract-components/fetch-contracts-with-versions";
 import type { ExploreCategory } from "data/explore";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
@@ -8,7 +7,7 @@ interface ContractRowProps {
   category: ExploreCategory;
 }
 
-export async function ContractRow({ category }: ContractRowProps) {
+export function ContractRow({ category }: ContractRowProps) {
   return (
     <section>
       {/* Title, Description + View all link */}
@@ -48,51 +47,42 @@ export async function ContractRow({ category }: ContractRowProps) {
       <div className="h-5" />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 z-0 relative">
-        {
-          await Promise.all(
-            category.contracts
-              .slice(0, 6)
-              .map(async (publishedContractId, idx) => {
-                const publisher: string = Array.isArray(publishedContractId)
-                  ? publishedContractId[0].split("/")[0]
-                  : publishedContractId.split("/")[0];
-                const contractId: string = Array.isArray(publishedContractId)
-                  ? publishedContractId[0].split("/")[1]
-                  : publishedContractId.split("/")[1];
-                const modules = Array.isArray(publishedContractId)
-                  ? publishedContractId[1]
-                  : undefined;
-                const overrides = Array.isArray(publishedContractId)
-                  ? publishedContractId[2]
-                  : undefined;
-                return (
-                  <ContractCard
-                    key={publisher + contractId + overrides?.title}
-                    publisher={publisher}
-                    contractId={contractId}
-                    titleOverride={overrides?.title}
-                    descriptionOverride={overrides?.description}
-                    tracking={{
-                      source: category.id,
-                      itemIndex: `${idx}`,
-                    }}
-                    isBeta={category.isBeta}
-                    modules={
-                      modules?.length
-                        ? modules.map((m) => ({
-                            publisher: m.split("/")[0],
-                            moduleId: m.split("/")[1],
-                          }))
-                        : undefined
-                    }
-                    initialData={
-                      await fetchPublishedContractVersion(publisher, contractId)
-                    }
-                  />
-                );
-              }),
-          )
-        }
+        {category.contracts.slice(0, 6).map((publishedContractId, idx) => {
+          const publisher: string = Array.isArray(publishedContractId)
+            ? publishedContractId[0].split("/")[0]
+            : publishedContractId.split("/")[0];
+          const contractId: string = Array.isArray(publishedContractId)
+            ? publishedContractId[0].split("/")[1]
+            : publishedContractId.split("/")[1];
+          const modules = Array.isArray(publishedContractId)
+            ? publishedContractId[1]
+            : undefined;
+          const overrides = Array.isArray(publishedContractId)
+            ? publishedContractId[2]
+            : undefined;
+          return (
+            <ContractCard
+              key={publisher + contractId + overrides?.title}
+              publisher={publisher}
+              contractId={contractId}
+              titleOverride={overrides?.title}
+              descriptionOverride={overrides?.description}
+              tracking={{
+                source: category.id,
+                itemIndex: `${idx}`,
+              }}
+              isBeta={category.isBeta}
+              modules={
+                modules?.length
+                  ? modules.map((m) => ({
+                      publisher: m.split("/")[0],
+                      moduleId: m.split("/")[1],
+                    }))
+                  : undefined
+              }
+            />
+          );
+        })}
       </div>
     </section>
   );
