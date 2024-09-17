@@ -27,9 +27,7 @@ export default async function middleware(req: NextRequest) {
 
   // keep root application at `/`
   if (hostname === ROOT_DOMAIN || hostname === null) {
-    return NextResponse.rewrite(
-      new URL(`/${path === "/" ? "" : path}`, req.url),
-    );
+    return NextResponse.next();
   }
 
   // rewrite everything else to `/[ecosystem]/... dynamic route
@@ -44,6 +42,10 @@ export default async function middleware(req: NextRequest) {
     }
   })();
   const user = jwt?.payload.sub;
+
+  console.log("user", user)
+
+  console.log(`/${ecosystem}/wallet/${user}?${searchParams}`);
 
   if (user) {
     return NextResponse.rewrite(

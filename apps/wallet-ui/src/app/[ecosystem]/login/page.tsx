@@ -19,10 +19,10 @@ export default function Page({ params }: { params: { ecosystem: string } }) {
       client={client}
       auth={{
         getLoginPayload: generatePayload,
-        doLogin: async (params: VerifyLoginPayloadParams) => {
-          const success = await login(params);
+        doLogin: async (loginParams: VerifyLoginPayloadParams) => {
+          const success = await login(loginParams);
           if (success) {
-            router.push(`/wallet/${params.payload.address}`);
+            router.push(`/wallet/${loginParams.payload.address}`);
           }
         },
         isLoggedIn: async () => !!(await getCurrentUser()),
