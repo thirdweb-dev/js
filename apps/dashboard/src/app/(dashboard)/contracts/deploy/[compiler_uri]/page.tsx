@@ -27,7 +27,11 @@ export default async function DirectDeployPage(props: DirectDeployPageProps) {
         description={metadata.description}
         logo={metadata.logo}
       />
-      <DeployFormForUri contractMetadata={metadata} modules={null} />
+      <DeployFormForUri
+        contractMetadata={metadata}
+        modules={null}
+        pathname={`/contracts/deploy/${props.params.compiler_uri}`}
+      />
     </div>
   );
 }

@@ -83,6 +83,7 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
       <DeployFormForUri
         contractMetadata={contractMetadata}
         modules={fetchedModules.filter((m) => m !== null)}
+        pathname={`/${props.publisher}/${props.contract_id}${props.version ? `/${props.version}` : ""}/deploy`}
       />
     </>
   );
