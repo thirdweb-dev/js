@@ -15,7 +15,6 @@ import {
 } from "next/font/google";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import posthogCloud from "posthog-js";
 import posthogOpenSource from "posthog-js-opensource";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
@@ -107,19 +106,6 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
   // legit use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    // Init PostHog Cloud (Used for surveys)
-    posthogCloud.init(
-      process.env.NEXT_PUBLIC_POSTHOG_CLOUD_API_KEY ||
-        "phc_oXH0qpLTaotkIQP5MdaWhtoOXvh1Iba7yNSQrLgWbLN",
-      {
-        api_host: "https://pg.paper.xyz",
-        autocapture: false,
-        debug: false,
-        capture_pageview: false,
-        disable_session_recording: true,
-      },
-    );
-
     // Init PostHog
     posthogOpenSource.init(
       process.env.NEXT_PUBLIC_POSTHOG_API_KEY ||

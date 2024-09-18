@@ -75,7 +75,6 @@
     "nextjs-toploader": "^1.6.12",
     "papaparse": "^5.4.1",
     "pluralize": "^8.0.0",
-    "posthog-js": "1.161.6",
     "posthog-js-opensource": "npm:posthog-js@1.67.1",
     "prism-react-renderer": "^2.3.1",
     "prismjs": "^1.29.0",

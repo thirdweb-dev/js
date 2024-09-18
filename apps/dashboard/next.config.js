@@ -8,7 +8,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline' https://vercel.live;
   font-src 'self' https://vercel.live https://assets.vercel.com;
   frame-src * data:;
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com pg.paper.xyz portal.usecontext.io;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com portal.usecontext.io;
   connect-src * data: blob:;
   worker-src 'self' blob:;
   block-all-mixed-content;
@@ -213,7 +213,7 @@ module.exports = withBundleAnalyzer(
          * See: https://github.com/getsentry/sentry-javascript/issues/10468#issuecomment-2004710692
          */
         disableServerWebpackPlugin: true,
-      },
-    ),
-  ),
+      }
+    )
+  )
 );
