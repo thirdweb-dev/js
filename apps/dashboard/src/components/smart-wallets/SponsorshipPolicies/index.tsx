@@ -1,3 +1,5 @@
+"use client";
+
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type ApiKeyService,
@@ -42,12 +44,12 @@ import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
 
-interface SponsorshipPoliciesProps {
+type AccountAbstractionSettingsPageProps = {
   apiKeyServices: ApiKeyService[];
   trackingCategory: string;
-}
+};
 
-const sponsorshipPoliciesValidationSchema = z.object({
+const aaSettingsFormSchema = z.object({
   allowedChainIds: z.array(z.number()).nullable(),
   allowedContractAddresses: z
     .string()
@@ -96,15 +98,16 @@ const sponsorshipPoliciesValidationSchema = z.object({
   allowedOrBlockedWallets: z.string().nullable(),
 });
 
-export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
-  apiKeyServices,
-  trackingCategory,
-}) => {
+export function AccountAbstractionSettingsPage(
+  props: AccountAbstractionSettingsPageProps,
+) {
+  const { apiKeyServices, trackingCategory } = props;
   const bundlerServiceId = apiKeyServices?.find(
     (s) => s.name === "bundler",
   )?.id;
   const { data: policy } = usePolicies(bundlerServiceId);
-  const { mutate: updatePolicy } = useUpdatePolicies();
+  const { mutate: updatePolicy, isPending: updatingPolicy } =
+    useUpdatePolicies();
   const trackEvent = useTrack();
   const dashboardAccountQuery = useAccount();
 
@@ -145,8 +148,8 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
     [policy],
   );
 
-  const form = useForm<z.infer<typeof sponsorshipPoliciesValidationSchema>>({
-    resolver: zodResolver(sponsorshipPoliciesValidationSchema),
+  const form = useForm<z.infer<typeof aaSettingsFormSchema>>({
+    resolver: zodResolver(aaSettingsFormSchema),
     defaultValues: transformedQueryData,
     values: transformedQueryData,
   });
@@ -680,11 +683,15 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
         <Divider />
 
         <Box alignSelf="flex-end">
-          <Button type="submit" colorScheme="primary">
+          <Button
+            type="submit"
+            colorScheme="primary"
+            isLoading={updatingPolicy}
+          >
             Save changes
           </Button>
         </Box>
       </Flex>
     </Flex>
   );
-};
+}

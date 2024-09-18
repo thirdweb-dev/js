@@ -5,7 +5,7 @@ import type { ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AccountFactories } from "./AccountFactories";
-import { SponsorshipPolicies } from "./SponsorshipPolicies";
+import { AccountAbstractionSettingsPage } from "./SponsorshipPolicies";
 
 interface SmartWalletsProps {
   apiKeyServices: ApiKeyService[];
@@ -48,7 +48,7 @@ export const SmartWallets: React.FC<SmartWalletsProps> = ({
       )}
 
       {selectedTab === "config" && (
-        <SponsorshipPolicies
+        <AccountAbstractionSettingsPage
           apiKeyServices={apiKeyServices}
           trackingCategory={trackingCategory}
         />
