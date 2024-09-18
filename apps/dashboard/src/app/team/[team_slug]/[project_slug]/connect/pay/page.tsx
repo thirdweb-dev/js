@@ -40,12 +40,7 @@ export default async function Page(props: {
         </div>
       </div>
 
-      <PayPageUI
-        apiKey={{
-          ...project,
-          key: project.publishableKey, // clientId
-        }}
-      />
+      <PayPageUI clientId={project.publishableKey} />
     </div>
   );
 }
