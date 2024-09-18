@@ -1,20 +1,57 @@
 type PublishedContractID = `${string}/${string}`;
 
+type ModularContractInfo = [
+  PublishedContractID,
+  Array<PublishedContractID>,
+  { title: string; description: string },
+];
+
+const modularOpenEdition: ModularContractInfo = [
+  "thirdweb.eth/ERC721CoreInitializable",
+  [
+    "deployer.thirdweb.eth/ClaimableERC721",
+    "deployer.thirdweb.eth/OpenEditionMetadataERC721",
+    "deployer.thirdweb.eth/RoyaltyERC721",
+  ],
+  {
+    title: "Modular Open Edition",
+    description: "ERC721 NFTs with identical metadata.",
+  },
+];
+
+const modularNFTDrop: ModularContractInfo = [
+  "thirdweb.eth/ERC721CoreInitializable",
+  [
+    "deployer.thirdweb.eth/ClaimableERC721",
+    "deployer.thirdweb.eth/BatchMetadataERC721",
+    "deployer.thirdweb.eth/RoyaltyERC721",
+  ],
+  {
+    title: "Modular NFT Drop",
+    description: "ERC721 NFTs that anyone can mint.",
+  },
+];
+
+const modularNFTCollection: ModularContractInfo = [
+  "thirdweb.eth/ERC721CoreInitializable",
+  [
+    "deployer.thirdweb.eth/MintableERC721",
+    "deployer.thirdweb.eth/BatchMetadataERC721",
+    "deployer.thirdweb.eth/TransferableERC721",
+  ],
+  {
+    title: "Modular NFT Collection",
+    description: "ERC721 NFTs that only owners can mint.",
+  },
+];
+
 export interface ExploreCategory {
   id: string;
   name: string;
   displayName?: string;
   description: string;
   learnMore?: string;
-  contracts:
-    | Array<PublishedContractID>
-    | Array<
-        [
-          PublishedContractID,
-          Array<PublishedContractID>,
-          { title: string; description: string },
-        ]
-      >;
+  contracts: Array<ModularContractInfo | PublishedContractID>;
   showInExplore?: boolean;
   isBeta?: boolean;
 }
@@ -29,8 +66,9 @@ const POPULAR = {
     "thirdweb.eth/AccountFactory",
     "thirdweb.eth/DropERC1155",
     "thirdweb.eth/TokenERC20",
-    "thirdweb.eth/NFTStake",
-    "unlock-protocol.eth/PublicLock",
+    modularOpenEdition,
+    modularNFTDrop,
+    modularNFTCollection,
   ],
 } satisfies ExploreCategory;
 
@@ -98,45 +136,9 @@ const MODULAR_CONTRACTS = {
     "Collection of highly customizable and upgradeable smart contracts built with the modular contracts framework.",
   isBeta: true,
   contracts: [
-    // erc721 drop
-    [
-      "thirdweb.eth/ERC721CoreInitializable",
-      [
-        "deployer.thirdweb.eth/ClaimableERC721",
-        "deployer.thirdweb.eth/BatchMetadataERC721",
-        "deployer.thirdweb.eth/RoyaltyERC721",
-      ],
-      {
-        title: "Modular NFT Drop",
-        description: "ERC721 NFTs that anyone can mint.",
-      },
-    ],
-    // erc721 token
-    [
-      "thirdweb.eth/ERC721CoreInitializable",
-      [
-        "deployer.thirdweb.eth/MintableERC721",
-        "deployer.thirdweb.eth/BatchMetadataERC721",
-        "deployer.thirdweb.eth/TransferableERC721",
-      ],
-      {
-        title: "Modular NFT Collection",
-        description: "ERC721 NFTs that only owners can mint.",
-      },
-    ],
-    // open edition 721
-    [
-      "thirdweb.eth/ERC721CoreInitializable",
-      [
-        "deployer.thirdweb.eth/ClaimableERC721",
-        "deployer.thirdweb.eth/OpenEditionMetadataERC721",
-        "deployer.thirdweb.eth/RoyaltyERC721",
-      ],
-      {
-        title: "Modular Open Edition",
-        description: "ERC721 NFTs with identical metadata.",
-      },
-    ],
+    modularNFTDrop,
+    modularNFTCollection,
+    modularOpenEdition,
     // erc1155 drop
     [
       "thirdweb.eth/ERC1155CoreInitializable",
