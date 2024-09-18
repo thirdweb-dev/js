@@ -23,14 +23,11 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/*",
-    "src/*"
-  ],
+  "files": ["dist/*", "src/*"],
   "dependencies": {
     "@aws-sdk/client-lambda": "3.651.1",
     "@aws-sdk/credential-providers": "3.651.1",
-    "@mobile-wallet-protocol/client": "0.0.2",
+    "@mobile-wallet-protocol/client": "0.0.3",
     "@walletconnect/react-native-compat": "2.13.2",
     "aws-amplify": "5.3.19"
   },
