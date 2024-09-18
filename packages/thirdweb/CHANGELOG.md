@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.57.1
+
+### Patch Changes
+
+- [#4665](https://github.com/thirdweb-dev/js/pull/4665) [`6ce7c83`](https://github.com/thirdweb-dev/js/commit/6ce7c83a3b9eb2374ad2f8163d9c6a68bba4bc42) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update @mobile-wallet-protocol/client to 0.0.3
+
+- [#4659](https://github.com/thirdweb-dev/js/pull/4659) [`406de39`](https://github.com/thirdweb-dev/js/commit/406de39ecdd4e901cc1fe163cc833fe9fd656d3e) Thanks [@jnsdls](https://github.com/jnsdls)! - - Allow using valid JWTs for authorization
+  - update dependencies
+  - simplify updateMetadata extension params for ERC721 and ERC1155
+
 ## 5.57.0
 
 ### Minor Changes
