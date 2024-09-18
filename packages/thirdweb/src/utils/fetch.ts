@@ -10,20 +10,10 @@ import {
 
 const DEFAULT_REQUEST_TIMEOUT = 60000;
 
-const FETCH_CACHE = new WeakMap<
-  { client: ThirdwebClient; ecosystem?: Ecosystem },
-  (url: string, init?: RequestInit) => Promise<Response>
->();
-
 /**
  * @internal
  */
 export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
-  if (FETCH_CACHE.has({ client, ecosystem })) {
-    // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
-    return FETCH_CACHE.get({ client, ecosystem })!;
-  }
-
   /**
    * @internal
    */
@@ -83,7 +73,6 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       }
     });
   }
-  FETCH_CACHE.set({ client, ecosystem }, fetchWithHeaders);
   return fetchWithHeaders;
 }
 
@@ -96,7 +85,7 @@ const THIRDWEB_DOMAINS = [
   ".thirdweb-dev.com",
 ] as const;
 
-const IS_THIRDWEB_URL_CACHE = new LruMap<boolean>(4096);
+export const IS_THIRDWEB_URL_CACHE = new LruMap<boolean>(4096);
 
 /**
  * @internal
