@@ -2,9 +2,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:import/typescript",
     "plugin:@next/next/recommended",
-    "plugin:promise/recommended",
     "plugin:storybook/recommended",
   ],
   rules: {
@@ -98,7 +96,7 @@ module.exports = {
     ],
   },
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint", "import", "react-compiler"],
+  plugins: ["@typescript-eslint", "react-compiler"],
   parserOptions: {
     ecmaVersion: 2019,
     ecmaFeatures: {

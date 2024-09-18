@@ -3,7 +3,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useQuery } from "@tanstack/react-query";
 import type { EnsureLoginResponse } from "app/api/auth/ensure-login/route";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
@@ -27,10 +27,16 @@ export function useLoggedInUser(): {
   const connectionStatus = useActiveWalletConnectionStatus();
   // this is to work around the fact that `connectionStatus` ends up as "disconnected"
   // which we *do* care about, but only after we have been "connecting" at least once
-  const statusWasEverConnecting = useRef(false);
-  if (connectionStatus === "connecting" || connectionStatus === "connected") {
-    statusWasEverConnecting.current = true;
-  }
+  const [statusWasEverConnecting, setStatusWasEverConnecting] = useState(
+    connectionStatus === "connecting" || connectionStatus === "connected",
+  );
+  // needs to be a useEffect for now
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (connectionStatus === "connecting" || connectionStatus === "connected") {
+      setStatusWasEverConnecting(true);
+    }
+  }, [connectionStatus]);
 
   const query = useQuery({
     // enabled if:
@@ -40,7 +46,7 @@ export function useLoggedInUser(): {
     enabled:
       !!pathname &&
       connectionStatus !== "connecting" &&
-      statusWasEverConnecting.current &&
+      statusWasEverConnecting &&
       isLoginRequired(pathname),
     // the last "persist", part of the queryKey, is to make sure that we do not cache this query in indexDB
     // convention in v4 of the SDK that we are (ab)using here

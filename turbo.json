@@ -33,10 +33,6 @@
       "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]
     },
-    "@thirdweb-dev/service-utils#build": {
-      "outputs": ["dist/**", "cf-worker/**", "node/**"],
-      "dependsOn": ["^build"]
-    },
     "thirdweb#update-version": {
       "inputs": ["package.json"],
       "outputs": ["src/version.ts"]

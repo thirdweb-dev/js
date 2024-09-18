@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { SearchIcon, XCircleIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 function cleanUrl(url: string) {
@@ -22,10 +22,13 @@ export const SearchInput: React.FC = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // hah, no need for useEffect here this just works!
-  if (inputRef.current?.value && !searchParams?.get("query")) {
-    inputRef.current.value = "";
-  }
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    // reset the input if the query param is removed
+    if (inputRef.current?.value && !searchParams?.get("query")) {
+      inputRef.current.value = "";
+    }
+  }, [searchParams]);
 
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams ?? undefined);
