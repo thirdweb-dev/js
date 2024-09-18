@@ -4,14 +4,14 @@ import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { getContract } from "../../contract/contract.js";
-import { parseEventLogs } from "../../event/actions/parse-logs.js";
 import { download } from "../../storage/download.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { balanceOf } from "../erc20/__generated__/IERC20/read/balanceOf.js";
 import { approve } from "../erc20/write/approve.js";
 import { mintTo as mintToERC20 } from "../erc20/write/mintTo.js";
+import { ownerOf } from "../erc721/__generated__/IERC721A/read/ownerOf.js";
 import { setApprovalForAll } from "../erc721/__generated__/IERC721A/write/setApprovalForAll.js";
 import { mintTo as mintToERC721 } from "../erc721/write/mintTo.js";
-import { packOpenedEvent } from "../erc1155/__generated__/IPack/events/PackOpened.js";
 import { getPackContents } from "../erc1155/__generated__/IPack/read/getPackContents.js";
 import { getTokenCountOfBundle } from "../erc1155/__generated__/IPack/read/getTokenCountOfBundle.js";
 import { getUriOfBundle } from "../erc1155/__generated__/IPack/read/getUriOfBundle.js";
@@ -19,7 +19,7 @@ import { openPack } from "../erc1155/__generated__/IPack/write/openPack.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
 import { deployPackContract } from "../prebuilts/deploy-pack.js";
-import { PACK_TOKEN_TYPE, createPack } from "./createPack.js";
+import { createPack } from "./createPack.js";
 
 const account = TEST_ACCOUNT_A;
 const client = TEST_CLIENT;
@@ -170,7 +170,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
     expect(metadata?.name).toBe("Pack #0");
 
     // Make sure you can open the Pack, since the open-date was set to "now"
-    const receipt = await sendAndConfirmTransaction({
+    await sendAndConfirmTransaction({
       account,
       transaction: openPack({
         contract: packContract,
@@ -178,34 +178,25 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
         amountToOpen: 1n,
       }),
     });
-    const packEvents = parseEventLogs({
-      events: [packOpenedEvent()],
-      logs: receipt.logs,
-    });
-
-    expect(packEvents[0]).toBeDefined();
 
     // Make sure the remaining content reflects the different content
-    const remainingPackContent = await getPackContents({
-      contract: packContract,
-      packId: 0n,
-    });
+    const [remainingPackContent, erc20Balance, erc721Owner] = await Promise.all(
+      [
+        getPackContents({
+          contract: packContract,
+          packId: 0n,
+        }),
+        balanceOf({ contract: erc20Contract, address: account.address }),
+        ownerOf({ contract: erc721Contract, tokenId: 0n }),
+      ],
+    );
     expect(packContent).not.toStrictEqual(remainingPackContent);
 
-    // And the token should be sent to the address of the recipient
-    const args = packEvents[0]?.args;
-    if (args?.rewardUnitsDistributed[0]?.tokenType === PACK_TOKEN_TYPE.ERC20) {
-      expect(args.rewardUnitsDistributed[0].assetContract.toLowerCase()).toBe(
-        erc20Address.toLowerCase(),
-      );
-    } else if (
-      args?.rewardUnitsDistributed[0]?.tokenType === PACK_TOKEN_TYPE.ERC721
-    ) {
-      expect(args.rewardUnitsDistributed[0].assetContract.toLowerCase()).toBe(
-        erc721Address.toLowerCase(),
-      );
-    } else {
-      throw new Error("Invalid Pack reward type");
-    }
+    // Since opening a Pack gives "random" rewards, in this case we can check if
+    // the recipient received either ERC20 token, or one ERC721 token
+    expect(
+      erc20Balance === 100n * 10n ** 18n ||
+        erc721Owner.toLowerCase() === account.address.toLowerCase(),
+    ).toBe(true);
   });
 });
