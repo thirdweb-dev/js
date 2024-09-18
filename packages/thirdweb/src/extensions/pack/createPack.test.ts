@@ -6,9 +6,10 @@ import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { getContract } from "../../contract/contract.js";
 import { download } from "../../storage/download.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
-import { balanceOf } from "../erc20/__generated__/IERC20/read/balanceOf.js";
+import { balanceOf as balanceOfERC20 } from "../erc20/__generated__/IERC20/read/balanceOf.js";
 import { approve } from "../erc20/write/approve.js";
 import { mintTo as mintToERC20 } from "../erc20/write/mintTo.js";
+import { balanceOf as balanceOfERC721 } from "../erc721/__generated__/IERC721A/read/balanceOf.js";
 import { ownerOf } from "../erc721/__generated__/IERC721A/read/ownerOf.js";
 import { setApprovalForAll } from "../erc721/__generated__/IERC721A/write/setApprovalForAll.js";
 import { mintTo as mintToERC721 } from "../erc721/write/mintTo.js";
@@ -138,11 +139,23 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
     });
 
     // Read the info of the new Pack
-    const [packContent, tokenCountOfBundle, bundleUri] = await Promise.all([
+    const [
+      packContent,
+      tokenCountOfBundle,
+      bundleUri,
+      erc20BalanceAfterCreatePack,
+      erc721BalanceAfterCreatePack,
+    ] = await Promise.all([
       getPackContents({ contract: packContract, packId: 0n }),
       getTokenCountOfBundle({ contract: packContract, bundleId: 0n }),
       getUriOfBundle({ contract: packContract, bundleId: 0n }),
+      balanceOfERC20({ contract: erc20Contract, address: account.address }),
+      balanceOfERC721({ contract: erc721Contract, owner: account.address }),
     ]);
+
+    // After this, the account should have 99 ERC20 tokens, and 0 (zero) ERC721 token
+    expect(erc20BalanceAfterCreatePack).toBe(99n * 10n ** 18n);
+    expect(erc721BalanceAfterCreatePack).toBe(0n);
 
     // Make sure the content is correct
     expect(packContent).toStrictEqual([
@@ -186,7 +199,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
           contract: packContract,
           packId: 0n,
         }),
-        balanceOf({ contract: erc20Contract, address: account.address }),
+        balanceOfERC20({ contract: erc20Contract, address: account.address }),
         ownerOf({ contract: erc721Contract, tokenId: 0n }),
       ],
     );
