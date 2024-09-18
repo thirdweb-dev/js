@@ -19,6 +19,7 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceTemplateValues } from "lib/deployment/template-values";
 import { ExternalLinkIcon } from "lucide-react";
@@ -110,6 +111,13 @@ function checkTwPublisher(publisher: string | undefined) {
   }
 }
 
+function rewriteTwPublisher(publisher: string | undefined) {
+  if (checkTwPublisher(publisher)) {
+    return "deployer.thirdweb.eth";
+  }
+  return publisher;
+}
+
 export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   metadata,
   modules,
@@ -124,6 +132,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
     "Successfully deployed contract",
     "Failed to deploy contract",
   );
+  const trackEvent = useTrack();
 
   const constructorParams =
     metadata.abi.find((a) => a.type === "constructor")?.inputs || [];
@@ -491,11 +500,37 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 },
               ];
             }
+
+            const publisherAnalyticsData = metadata.publisher
+              ? {
+                  publisherAndContractName: `${rewriteTwPublisher(metadata.publisher)}/${metadata.name}`,
+                }
+              : {};
+
+            trackEvent({
+              category: "custom-contract",
+              action: "deploy",
+              label: "attempt",
+              ...publisherAnalyticsData,
+              chainId: walletChain.id,
+              metadataUri: metadata.metadataUri,
+            });
+
             deployStatusModal.setViewContractLink("");
             deployStatusModal.open(steps);
             try {
               // do the actual deployment
               const contractAddr = await deployMutation.mutateAsync(formData);
+
+              trackEvent({
+                category: "custom-contract",
+                action: "deploy",
+                label: "success",
+                ...publisherAnalyticsData,
+                contractAddress: contractAddr,
+                chainId: walletChain.id,
+                metadataUri: metadata.metadataUri,
+              });
               deployStatusModal.nextStep();
               // if add to dashboard is checked, add the contract to the dashboard
               if (formData.addToDashboard) {
@@ -508,14 +543,33 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   activeAccount,
                   300000n,
                 );
+                trackEvent({
+                  category: "custom-contract",
+                  action: "add-to-dashboard",
+                  label: "success",
+                  ...publisherAnalyticsData,
+                  contractAddress: contractAddr,
+                  chainId: walletChain.id,
+                  metadataUri: metadata.metadataUri,
+                });
                 deployStatusModal.nextStep();
               }
+
               deployStatusModal.setViewContractLink(
                 `/${walletChain.id}/${contractAddr}`,
               );
             } catch (e) {
               onError(e);
               console.error("failed to deploy contract", e);
+              trackEvent({
+                category: "custom-contract",
+                action: "error",
+                label: "success",
+                ...publisherAnalyticsData,
+                chainId: walletChain.id,
+                metadataUri: metadata.metadataUri,
+                error: e,
+              });
               deployStatusModal.close();
             }
           })}
