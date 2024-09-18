@@ -4,7 +4,7 @@ import { TabButtons } from "@/components/ui/tabs";
 import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { Configure } from "./Configure";
+import { InAppWalletSettingsPage } from "./Configure";
 import { Users } from "./Users";
 
 interface EmbeddedWalletsProps {
@@ -69,7 +69,10 @@ export const EmbeddedWallets: React.FC<EmbeddedWalletsProps> = ({
       )}
 
       {selectedTab === "config" && (
-        <Configure apiKey={apiKey} trackingCategory={trackingCategory} />
+        <InAppWalletSettingsPage
+          apiKey={apiKey}
+          trackingCategory={trackingCategory}
+        />
       )}
     </div>
   );

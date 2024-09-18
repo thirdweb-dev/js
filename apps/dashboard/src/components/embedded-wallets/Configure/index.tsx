@@ -38,13 +38,13 @@ import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { toArrFromList } from "utils/string";
 
-interface ConfigureProps {
+type InAppWalletSettingsPageProps = {
   apiKey: Pick<
     ApiKey,
     "id" | "name" | "domains" | "bundleIds" | "services" | "redirectUrls"
   >;
   trackingCategory: string;
-}
+};
 
 const TRACKING_CATEGORY = "embedded-wallet";
 
@@ -54,7 +54,7 @@ type UpdateAPIKeyTrackingData = {
   hasCustomAuthEndpoint: boolean;
 };
 
-export const Configure: React.FC<ConfigureProps> = (props) => {
+export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
   const { data: dashboardAccount } = useAccount();
   const mutation = useUpdateApiKey();
   const { trackingCategory } = props;
@@ -109,10 +109,10 @@ export const Configure: React.FC<ConfigureProps> = (props) => {
       isUpdating={mutation.isPending}
     />
   );
-};
+}
 
 export const InAppWalletSettingsUI: React.FC<
-  ConfigureProps & {
+  InAppWalletSettingsPageProps & {
     canEditAdvancedFeatures: boolean;
     updateApiKey: (
       apiKey: UpdateKeyInput,
