@@ -1,50 +1,157 @@
-import { Icon, useDisclosure } from "@chakra-ui/react";
-import { FaBurn } from "react-icons/fa";
-import type { ThirdwebContract } from "thirdweb";
-import { balanceOf } from "thirdweb/extensions/erc20";
-import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { Button, Drawer } from "tw-components";
-import { TokenBurnForm } from "./burn-form";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { FormControl, Input, Stack } from "@chakra-ui/react";
+import { TransactionButton } from "components/buttons/TransactionButton";
+import { useTrack } from "hooks/analytics/useTrack";
+import { Flame } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { type ThirdwebContract, toUnits } from "thirdweb";
+import * as ERC20Ext from "thirdweb/extensions/erc20";
+import {
+  useActiveAccount,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
+import {
+  Button,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Text,
+} from "tw-components";
 
 interface TokenBurnButtonProps {
   contract: ThirdwebContract;
 }
 
+const BURN_FORM_ID = "token-burn-form";
+
 export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
   contract,
   ...restButtonProps
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const address = useActiveAccount()?.address;
 
-  const tokenBalanceQuery = useReadContract(balanceOf, {
+  const tokenBalanceQuery = useReadContract(ERC20Ext.balanceOf, {
     contract,
     address: address || "",
     queryOptions: { enabled: !!address },
   });
 
   const hasBalance = tokenBalanceQuery.data && tokenBalanceQuery.data > 0n;
+  const [open, setOpen] = useState(false);
+  const sendConfirmation = useSendAndConfirmTransaction();
+  const trackEvent = useTrack();
+  const form = useForm({ defaultValues: { amount: "0" } });
+  const decimalsQuery = useReadContract(ERC20Ext.decimals, { contract });
 
   return (
-    <>
-      <Drawer
-        allowPinchZoom
-        preserveScrollBarGap
-        size="lg"
-        onClose={onClose}
-        isOpen={isOpen}
-      >
-        <TokenBurnForm contract={contract} />
-      </Drawer>
-      <Button
-        colorScheme="primary"
-        leftIcon={<Icon as={FaBurn} />}
-        {...restButtonProps}
-        onClick={onOpen}
-        isDisabled={!hasBalance}
-      >
-        Burn
-      </Button>
-    </>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button
+          colorScheme="primary"
+          leftIcon={<Flame size={16} />}
+          {...restButtonProps}
+          isDisabled={!hasBalance}
+        >
+          Burn
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="z-[10000]">
+        <SheetHeader>
+          <SheetTitle>Burn tokens</SheetTitle>
+        </SheetHeader>
+        <Stack gap={3} as="form" mt={10}>
+          <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
+            <FormControl isRequired isInvalid={!!form.formState.errors.amount}>
+              <FormLabel>Amount</FormLabel>
+              <Input
+                type="text"
+                pattern={`^\\d+(\\.\\d{1,${decimalsQuery.data || 18}})?$`}
+                {...form.register("amount")}
+              />
+              <FormHelperText>How many would you like to burn?</FormHelperText>
+              <FormErrorMessage>
+                {form.formState.errors.amount?.message}
+              </FormErrorMessage>
+            </FormControl>
+          </Stack>
+          <Text>
+            Burning these{" "}
+            {`${Number.parseInt(form.watch("amount")) > 1 ? form.watch("amount") : ""} `}
+            tokens will remove them from the total circulating supply. This
+            action is irreversible.
+          </Text>
+        </Stack>
+        <SheetFooter className="mt-10">
+          <TransactionButton
+            transactionCount={1}
+            form={BURN_FORM_ID}
+            isLoading={sendConfirmation.isPending}
+            type="submit"
+            colorScheme="primary"
+            isDisabled={!form.formState.isDirty}
+            onClick={form.handleSubmit((data) => {
+              if (address) {
+                trackEvent({
+                  category: "token",
+                  action: "burn",
+                  label: "attempt",
+                });
+
+                // TODO: burn should be updated to take amount / amountWei (v6?)
+                const tx = ERC20Ext.burn({
+                  contract,
+                  asyncParams: async () => {
+                    return {
+                      amount: toUnits(
+                        data.amount,
+                        await ERC20Ext.decimals({ contract }),
+                      ),
+                    };
+                  },
+                });
+
+                const promise = sendConfirmation.mutateAsync(tx, {
+                  onSuccess: () => {
+                    trackEvent({
+                      category: "token",
+                      action: "burn",
+                      label: "success",
+                    });
+                    form.reset({ amount: "0" });
+                    setOpen(false);
+                  },
+                  onError: (error) => {
+                    trackEvent({
+                      category: "token",
+                      action: "burn",
+                      label: "error",
+                      error,
+                    });
+                    console.error(error);
+                  },
+                });
+                toast.promise(promise, {
+                  loading: `Burning ${data.amount} token(s)`,
+                  success: "Tokens burned successfully",
+                  error: "Failed to burn tokens",
+                });
+              }
+            })}
+          >
+            Burn Tokens
+          </TransactionButton>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 };

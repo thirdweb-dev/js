@@ -6,14 +6,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { FormControl, Icon, Input } from "@chakra-ui/react";
+import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Send } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FiSend } from "react-icons/fi";
+import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
 import {
@@ -47,12 +47,6 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
   const trackEvent = useTrack();
   const form = useForm({ defaultValues: { amount: "0", to: "" } });
   const hasBalance = tokenBalanceQuery.data && tokenBalanceQuery.data > 0n;
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully transferred tokens",
-    "Failed to transfer tokens",
-    contract,
-  );
-
   const decimalsQuery = useReadContract(ERC20Ext.decimals, { contract });
   const sendConfirmation = useSendAndConfirmTransaction();
   const [open, setOpen] = useState(false);
@@ -62,7 +56,7 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
       <SheetTrigger asChild>
         <Button
           colorScheme="primary"
-          leftIcon={<Icon as={FiSend} />}
+          leftIcon={<Send size={16} />}
           {...restButtonProps}
           isDisabled={!hasBalance}
         >
@@ -123,7 +117,7 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
                 amount: d.amount,
                 to: d.to,
               });
-              sendConfirmation.mutate(transaction, {
+              const promise = sendConfirmation.mutateAsync(transaction, {
                 onSuccess: () => {
                   trackEvent({
                     category: "token",
@@ -131,7 +125,6 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
                     label: "success",
                   });
                   form.reset({ amount: "0", to: "" });
-                  onSuccess();
                   setOpen(false);
                 },
                 onError: (error) => {
@@ -141,8 +134,13 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
                     label: "error",
                     error,
                   });
-                  onError(error);
+                  console.error(error);
                 },
+              });
+              toast.promise(promise, {
+                loading: "Transfering tokens",
+                success: "Successfully transfered tokens",
+                error: "Failed to transfer tokens",
               });
             })}
           >
