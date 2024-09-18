@@ -15,7 +15,7 @@ import {
 } from "next/font/google";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import posthogOpenSource from "posthog-js-opensource";
+import posthog from "posthog-js";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import type { ThirdwebNextPage } from "utils/types";
@@ -107,7 +107,7 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // Init PostHog
-    posthogOpenSource.init(
+    posthog.init(
       process.env.NEXT_PUBLIC_POSTHOG_API_KEY ||
         "phc_hKK4bo8cHZrKuAVXfXGpfNSLSJuucUnguAgt2j6dgSV",
       {
@@ -119,12 +119,12 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
       },
     );
     // register the git commit sha on all subsequent events
-    posthogOpenSource.register({
+    posthog.register({
       tw_dashboard_version: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
     });
     // defer session recording start by 2 seconds because it synchronously loads JS
     const t = setTimeout(() => {
-      posthogOpenSource.startSessionRecording();
+      posthog.startSessionRecording();
     }, 2_000);
     return () => {
       clearTimeout(t);
@@ -145,11 +145,11 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
     if (pageId === prevPageId.current) {
       return;
     }
-    posthogOpenSource.register({
+    posthog.register({
       page_id: pageId,
       previous_page_id: prevPageId.current,
     });
-    posthogOpenSource.capture("$pageview");
+    posthog.capture("$pageview");
     return () => {
       prevPageId.current = pageId;
     };

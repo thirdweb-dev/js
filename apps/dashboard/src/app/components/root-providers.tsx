@@ -1,7 +1,7 @@
 // app/providers.tsx
 "use client";
-import posthog from "posthog-js-opensource";
-import { PostHogProvider as PHProvider } from "posthog-js-opensource/react";
+import posthog from "posthog-js";
+import { PostHogProvider as PHProvider } from "posthog-js/react";
 
 if (typeof window !== "undefined") {
   posthog.init(

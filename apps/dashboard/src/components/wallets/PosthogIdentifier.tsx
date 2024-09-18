@@ -1,7 +1,7 @@
 "use client";
 
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import posthog from "posthog-js-opensource";
+import posthog from "posthog-js";
 import { useEffect } from "react";
 import {
   useActiveAccount,
