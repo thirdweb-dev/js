@@ -8,12 +8,15 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { TeamSelectionUI } from "./TeamSelectionUI";
 
-type TeamSwitcherProps = {
+type TeamSelectorMobileMenuButtonProps = {
   currentTeam: Team | undefined;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
+  upgradeTeamLink: string | undefined;
 };
 
-export function TeamSelectorMobileMenuButton(props: TeamSwitcherProps) {
+export function TeamSelectorMobileMenuButton(
+  props: TeamSelectorMobileMenuButtonProps,
+) {
   const { currentTeam, teamsAndProjects } = props;
 
   return (
@@ -39,6 +42,7 @@ export function TeamSelectorMobileMenuButton(props: TeamSwitcherProps) {
             currentTeam={currentTeam}
             setHoveredTeam={() => {}} // don't care on mobile
             teamsAndProjects={teamsAndProjects}
+            upgradeTeamLink={props.upgradeTeamLink}
           />
         </DynamicHeight>
       </DialogContent>

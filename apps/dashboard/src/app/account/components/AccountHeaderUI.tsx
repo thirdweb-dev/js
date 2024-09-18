@@ -85,6 +85,7 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
           <TeamSelectorMobileMenuButton
             currentTeam={undefined}
             teamsAndProjects={props.teamsAndProjects}
+            upgradeTeamLink={undefined}
           />
         </div>
       </div>

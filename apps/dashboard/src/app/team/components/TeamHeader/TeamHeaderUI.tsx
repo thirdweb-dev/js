@@ -129,6 +129,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
           <TeamSelectorMobileMenuButton
             currentTeam={props.currentTeam}
             teamsAndProjects={props.teamsAndProjects}
+            upgradeTeamLink={`/team/${currentTeam.slug}/settings`}
           />
         </div>
 

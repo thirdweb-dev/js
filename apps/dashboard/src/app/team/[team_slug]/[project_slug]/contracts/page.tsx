@@ -20,7 +20,7 @@ export default function Page() {
   }
 
   return (
-    <div className="pb-10 pt-6">
+    <div className="pb-10 pt-10">
       {!hasContracts ? (
         <GetStartedWithContractsDeploy />
       ) : (

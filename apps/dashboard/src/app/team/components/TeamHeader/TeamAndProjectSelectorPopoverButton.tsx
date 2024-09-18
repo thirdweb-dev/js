@@ -78,6 +78,11 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
               currentTeam={currentTeam}
               setHoveredTeam={setHoveredTeam}
               teamsAndProjects={teamsAndProjects}
+              upgradeTeamLink={
+                currentTeam
+                  ? `/team/${currentTeam.slug}/~/settings/billing`
+                  : undefined
+              }
             />
 
             {/* Right */}

@@ -20,7 +20,9 @@ export function ProjectSelectorUI(props: {
   const { projects, currentProject, team } = props;
   const [searchProjectTerm, setSearchProjectTerm] = useState("");
   const filteredProjects = searchProjectTerm
-    ? projects.filter((project) => project.name.includes(searchProjectTerm))
+    ? projects.filter((project) =>
+        project.name.toLowerCase().includes(searchProjectTerm.toLowerCase()),
+      )
     : projects;
 
   return (

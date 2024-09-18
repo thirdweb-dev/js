@@ -15,13 +15,16 @@ export function TeamSelectionUI(props: {
   setHoveredTeam: (team: Team | undefined) => void;
   currentTeam: Team | undefined;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
+  upgradeTeamLink: string | undefined;
 }) {
   const { setHoveredTeam, currentTeam, teamsAndProjects } = props;
   const teamPlan = currentTeam ? getValidTeamPlan(currentTeam) : undefined;
   const teams = teamsAndProjects.map((x) => x.team);
   const [searchTeamTerm, setSearchTeamTerm] = useState("");
   const filteredTeams = searchTeamTerm
-    ? teams.filter((team) => team.name.includes(searchTeamTerm))
+    ? teams.filter((team) =>
+        team.name.toLowerCase().includes(searchTeamTerm.toLowerCase()),
+      )
     : teams;
 
   return (
@@ -106,16 +109,17 @@ export function TeamSelectionUI(props: {
           </ul>
         </div>
       </ScrollShadow>
-      {/* TODO - what do we do on this button click? */}
+
       {/* Bottom */}
-      {teamPlan && teamPlan !== "pro" && (
+      {teamPlan && teamPlan !== "pro" && props.upgradeTeamLink && (
         <div className="p-2 border-t border-border">
           <Button
+            asChild
             variant="primary"
             className="w-full"
             onMouseEnter={() => setHoveredTeam(undefined)}
           >
-            Upgrade Team
+            <Link href={props.upgradeTeamLink}>Upgrade Team</Link>
           </Button>
         </div>
       )}
