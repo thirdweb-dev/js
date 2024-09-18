@@ -192,6 +192,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
       }),
     });
 
+    // An attempt to debug the flaky test...
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+
     // Make sure the remaining content reflects the different content
     const [remainingPackContent, erc20Balance, erc721Owner] = await Promise.all(
       [
