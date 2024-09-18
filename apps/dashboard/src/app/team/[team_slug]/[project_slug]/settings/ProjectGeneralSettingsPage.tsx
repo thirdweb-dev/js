@@ -726,7 +726,7 @@ function DeleteProject(props: {
   };
 
   const description =
-    "The associated Client ID and Secret Key will no able to access thirdweb services after deletion. This action is irreversible";
+    "The associated Client ID and Secret Key will not able to access thirdweb services after deletion. This action is irreversible";
 
   return (
     <DangerSettingCard

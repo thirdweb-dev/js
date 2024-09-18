@@ -58,7 +58,7 @@ const SettingsApiKeyPage: ThirdwebNextPage = () => {
         paths={{
           inAppConfig: `/dashboard/wallets/embedded?tab=1&clientId=${apiKey.key}`,
           aaConfig: `/dashboard/wallets/smart-wallet?tab=1&clientId=${apiKey.key}`,
-          payConfig: `/dashboard/connect/pay?clientId=${apiKey.key}`,
+          payConfig: `/dashboard/connect/pay/${apiKey.id}/settings`,
           afterDeleteRedirectTo: "/dashboard/settings/api-keys",
         }}
         onKeyUpdated={undefined}

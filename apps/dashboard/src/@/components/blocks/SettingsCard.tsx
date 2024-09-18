@@ -13,9 +13,10 @@ export function SettingsCard(props: {
   errorText: string | undefined;
   noPermissionText: string | undefined;
   saveButton?: {
-    onClick: () => void;
+    onClick?: () => void;
     disabled: boolean;
     isLoading: boolean;
+    type?: "submit";
   };
 }) {
   return (
@@ -60,6 +61,7 @@ export function SettingsCard(props: {
             onClick={props.saveButton.onClick}
             disabled={props.saveButton.disabled || props.saveButton.isLoading}
             variant="outline"
+            type={props.saveButton.type}
           >
             {props.saveButton.isLoading && <Spinner className="size-3" />}
             {props.saveButton.isLoading ? "Saving" : "Save"}
