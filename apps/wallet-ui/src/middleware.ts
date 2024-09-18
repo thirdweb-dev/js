@@ -1,5 +1,4 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { decodeJWT } from "thirdweb/utils";
 
 export const config = {
   matcher: [
@@ -20,6 +19,10 @@ export default async function middleware(req: NextRequest) {
   const hostname = req.headers.get("host");
 
   const searchParams = req.nextUrl.searchParams.toString();
+  const url = req.nextUrl;
+  const path = `${url.pathname}${
+    searchParams.length > 0 ? `?${searchParams}` : ""
+  }`;
 
   // keep root application at `/`
   if (hostname === ROOT_DOMAIN || hostname === null) {
@@ -29,21 +32,5 @@ export default async function middleware(req: NextRequest) {
   // rewrite everything else to `/[ecosystem]/... dynamic route
   const ecosystem = hostname.split(".")[0];
 
-  // Send them to the wallet page for the current jwt
-  const jwt = (() => {
-    try {
-      return decodeJWT(req.cookies.get("jwt")?.value ?? "");
-    } catch {
-      return undefined;
-    }
-  })();
-  const user = jwt?.payload.sub;
-
-  if (user) {
-    return NextResponse.rewrite(
-      new URL(`/${ecosystem}/wallet/${user}?${searchParams}`, req.url),
-    );
-  }
-
-  return NextResponse.rewrite(new URL(`/${ecosystem}/login`, req.url));
+  return NextResponse.rewrite(new URL(`/${ecosystem}${path}`, req.url));
 }
