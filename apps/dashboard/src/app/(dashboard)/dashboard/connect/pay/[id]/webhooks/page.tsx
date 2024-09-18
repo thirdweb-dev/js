@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getAPIKey } from "../../../../../../api/lib/getAPIKeys";
-import { WebhooksPage } from "../../components/webhooks.client";
+import { PayWebhooksPage } from "../../components/webhooks.client";
 
 export default async function Page(props: {
   params: {
@@ -13,5 +13,5 @@ export default async function Page(props: {
     notFound();
   }
 
-  return <WebhooksPage clientId={apiKey.key} />;
+  return <PayWebhooksPage clientId={apiKey.key} />;
 }

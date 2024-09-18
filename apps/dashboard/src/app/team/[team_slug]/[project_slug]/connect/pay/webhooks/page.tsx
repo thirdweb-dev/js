@@ -1,6 +1,6 @@
 import { getProject } from "@/api/projects";
 import { notFound } from "next/navigation";
-import { PayAnalytics } from "../../../../../../components/pay/PayAnalytics/PayAnalytics";
+import { PayWebhooksPage } from "../../../../../../(dashboard)/dashboard/connect/pay/components/webhooks.client";
 
 export default async function Page(props: {
   params: {
@@ -17,5 +17,5 @@ export default async function Page(props: {
     notFound();
   }
 
-  return <PayAnalytics clientId={project.publishableKey} />;
+  return <PayWebhooksPage clientId={project.publishableKey} />;
 }

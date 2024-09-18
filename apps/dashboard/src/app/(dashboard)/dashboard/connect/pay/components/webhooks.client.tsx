@@ -57,11 +57,11 @@ type Webhook = {
   secret: string;
 };
 
-type WebhooksPageProps = {
+type PayWebhooksPageProps = {
   clientId: string;
 };
 
-export function WebhooksPage(props: WebhooksPageProps) {
+export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({
     queryKey: ["webhooks", props.clientId],
     queryFn: async () => {
@@ -156,7 +156,7 @@ const formSchema = z.object({
   label: z.string().min(1, "Please enter a label."),
 });
 
-function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
+function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
   const [open, setOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -280,7 +280,7 @@ function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
 }
 
 function DeleteWebhookButton(
-  props: PropsWithChildren<WebhooksPageProps & { webhookId: string }>,
+  props: PropsWithChildren<PayWebhooksPageProps & { webhookId: string }>,
 ) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
