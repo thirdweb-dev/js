@@ -1,7 +1,7 @@
 import { getProject } from "@/api/projects";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { notFound } from "next/navigation";
-import { EmbeddedWallets } from "../../../../../../components/embedded-wallets";
+import { InAppWalletUsersPageContent } from "../../../../../../components/embedded-wallets/Users";
 import { AnalyticsCallout } from "./_components/AnalyticsCallout";
 import { InAppWaletFooterSection } from "./_components/footer";
 
@@ -43,11 +43,8 @@ export default async function Page(props: {
         </TrackedLinkTW>
       </p>
 
-      <EmbeddedWallets
-        apiKey={{
-          ...project,
-          key: project.publishableKey, // clientId
-        }}
+      <InAppWalletUsersPageContent
+        clientId={project.publishableKey}
         trackingCategory={TRACKING_CATEGORY}
       />
 

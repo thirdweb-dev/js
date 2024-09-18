@@ -66,7 +66,7 @@ const columns = [
   }),
 ];
 
-export const Users = (props: {
+export const InAppWalletUsersPageContent = (props: {
   clientId: string;
   trackingCategory: string;
 }) => {

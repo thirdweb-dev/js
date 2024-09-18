@@ -5,7 +5,7 @@ import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { InAppWalletSettingsPage } from "./Configure";
-import { Users } from "./Users";
+import { InAppWalletUsersPageContent } from "./Users";
 
 interface EmbeddedWalletsProps {
   apiKey: Pick<
@@ -65,7 +65,10 @@ export const EmbeddedWallets: React.FC<EmbeddedWalletsProps> = ({
       <div className="h-6" />
 
       {selectedTab === "users" && (
-        <Users clientId={apiKey.key} trackingCategory={trackingCategory} />
+        <InAppWalletUsersPageContent
+          clientId={apiKey.key}
+          trackingCategory={trackingCategory}
+        />
       )}
 
       {selectedTab === "config" && (
