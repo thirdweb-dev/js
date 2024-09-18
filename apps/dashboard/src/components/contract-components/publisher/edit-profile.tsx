@@ -1,4 +1,6 @@
-import { thirdwebClient } from "@/constants/client";
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   Box,
   Flex,
@@ -50,6 +52,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 }) => {
   const FORM_ID = useId();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const client = useThirdwebClient();
 
   const {
     register,
@@ -105,13 +108,13 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             label: "attempt",
           });
           const tx = setPublisherProfileUri({
-            contract: getContractPublisher(thirdwebClient),
+            contract: getContractPublisher(client),
             asyncParams: async () => {
               return {
                 publisher: address,
                 uri: await upload({
                   files: [d],
-                  client: thirdwebClient,
+                  client,
                 }),
               };
             },

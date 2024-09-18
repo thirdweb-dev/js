@@ -1,7 +1,3 @@
-import type {
-  IProposalInput,
-  useProposalCreateMutation,
-} from "@3rdweb-sdk/react/hooks/useVote";
 import {
   FormControl,
   Stack,
@@ -9,32 +5,31 @@ import {
   useModalContext,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { ThirdwebContract } from "thirdweb";
+import * as VoteExt from "thirdweb/extensions/vote";
+import type { useSendAndConfirmTransaction } from "thirdweb/react";
 import { FormErrorMessage, FormLabel } from "tw-components";
 
 interface ProposalFormProps {
-  propose: ReturnType<typeof useProposalCreateMutation>;
+  sendTx: ReturnType<typeof useSendAndConfirmTransaction>;
+  contract: ThirdwebContract;
   formId: string;
 }
 
 export const CreateProposalForm: React.FC<ProposalFormProps> = ({
-  propose,
+  sendTx,
   formId,
+  contract,
 }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IProposalInput>();
+  } = useForm<{ description: string }>();
   const trackEvent = useTrack();
-
   const modalContext = useModalContext();
-
-  const { onSuccess, onError } = useTxNotifications(
-    "Proposal successfully created",
-    "Failed to create proposal",
-  );
 
   return (
     <Stack
@@ -42,26 +37,38 @@ export const CreateProposalForm: React.FC<ProposalFormProps> = ({
       as="form"
       id={formId}
       onSubmit={handleSubmit((data) => {
-        propose.mutate(data, {
-          onSuccess: () => {
-            onSuccess();
-            trackEvent({
-              category: "vote",
-              action: "create-proposal",
-              label: "success",
-            });
-            modalContext.onClose();
-          },
-          onError: (error) => {
-            trackEvent({
-              category: "vote",
-              action: "create-proposal",
-              label: "error",
-              error,
-            });
-            onError(error);
-          },
+        const tx = VoteExt.propose({
+          contract,
+          calldatas: ["0x"],
+          values: [0n],
+          targets: [contract.address],
+          description: data.description,
         });
+        toast.promise(
+          sendTx.mutateAsync(tx, {
+            onSuccess: () => {
+              trackEvent({
+                category: "vote",
+                action: "create-proposal",
+                label: "success",
+              });
+              modalContext.onClose();
+            },
+            onError: (error) => {
+              trackEvent({
+                category: "vote",
+                action: "create-proposal",
+                label: "error",
+                error,
+              });
+            },
+          }),
+          {
+            loading: "Creating proposal...",
+            success: "Proposal created successfully",
+            error: "Failed to create proposal",
+          },
+        );
       })}
     >
       <FormControl isRequired isInvalid={!!errors.description}>

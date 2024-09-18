@@ -1,5 +1,6 @@
 "use client";
 
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   Divider,
   Flex,
@@ -17,11 +18,11 @@ import { useMemo } from "react";
 import { BiPencil } from "react-icons/bi";
 import { BsShieldCheck } from "react-icons/bs";
 import { VscBook, VscCalendar, VscServer } from "react-icons/vsc";
+import type { ThirdwebClient } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { download } from "thirdweb/storage";
 import invariant from "tiny-invariant";
 import { Card, Heading, Link, LinkButton, Text } from "tw-components";
-import { thirdwebClient } from "../../../@/constants/client";
 import type { PublishedContractWithVersion } from "../fetch-contracts-with-versions";
 import {
   usePublishedContractEvents,
@@ -52,6 +53,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
   walletOrEns,
 }) => {
   const address = useActiveAccount()?.address;
+  const client = useThirdwebClient();
 
   const contractFunctions = usePublishedContractFunctions(publishedContract);
   const contractEvents = usePublishedContractEvents(publishedContract);
@@ -66,51 +68,6 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
 
   const licenses = correctAndUniqueLicenses(publishedContract?.licenses || []);
 
-  // const publishedContractName =
-  //   publishedContract?.displayName || publishedContract?.name;
-
-  // const extensionNames = useMemo(() => {
-  //   return enabledExtensions.map((ext) => ext.name);
-  // }, [enabledExtensions]);
-
-  // const ogImageUrl = useMemo(
-  //   () =>
-  //     PublishedContractOG.toUrl({
-  //       name: publishedContractName,
-  //       description: contract.description,
-  //       version: contract.version || "latest",
-  //       publisher: publisherEnsOrAddress,
-  //       extension: extensionNames,
-  //       license: licenses,
-  //       publishDate,
-  //       publisherAvatar: publisherProfile.data?.avatar || undefined,
-  //       logo: contract.logo,
-  //     }),
-  //   [
-  //     extensionNames,
-  //     licenses,
-  //     contract.description,
-  //     contract.logo,
-  //     publishedContractName,
-  //     contract.version,
-  //     publishDate,
-  //     publisherEnsOrAddress,
-  //     publisherProfile.data?.avatar,
-  //   ],
-  // );
-
-  //   const twitterIntentUrl = useMemo(() => {
-  //     const url = new URL("https://twitter.com/intent/tweet");
-  //     url.searchParams.append(
-  //       "text",
-  //       `Check out this ${publishedContractName} contract on @thirdweb
-
-  // Deploy it in one click`,
-  //     );
-  //     url.searchParams.append("url", currentRoute);
-  //     return url.href;
-  //   }, [publishedContractName, currentRoute]);
-
   const sources = useQuery({
     queryKey: ["sources", publishedContract.publishMetadataUri],
     queryFn: async () => {
@@ -118,7 +75,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
         publishedContract.metadata.sources,
         "no compilerMetadata sources available",
       );
-      return (await fetchSourceFilesFromMetadata(publishedContract))
+      return (await fetchSourceFilesFromMetadata(publishedContract, client))
         .map((source) => {
           return {
             ...source,
@@ -130,22 +87,6 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
     },
     enabled: !!publishedContract.metadata.sources,
   });
-
-  // const title = useMemo(() => {
-  //   let clearType = "";
-  //   if (extensionNames.includes("ERC721")) {
-  //     clearType = "ERC721";
-  //   } else if (extensionNames.includes("ERC20")) {
-  //     clearType = "ERC20";
-  //   } else if (extensionNames.includes("ERC1155")) {
-  //     clearType = "ERC1155";
-  //   }
-  //   if (clearType) {
-  //     return `${publishedContractName} - ${clearType} | Published Smart Contract`;
-  //   }
-
-  //   return `${publishedContractName} | Published Smart Contract`;
-  // }, [extensionNames, publishedContractName]);
 
   const implementationAddresses =
     publishedContract.factoryDeploymentData?.implementationAddresses;
@@ -165,37 +106,6 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
 
   return (
     <>
-      {/* <NextSeo
-        title={title}
-        description={`${contract.description}${
-          contract.description ? ". " : ""
-        }Deploy ${publishedContractName} in one click with thirdweb.`}
-        openGraph={{
-          title,
-          url: currentRoute,
-          images: [
-            {
-              url: ogImageUrl.toString(),
-              width: 1200,
-              height: 630,
-              alt: `${publishedContractName} contract on thirdweb`,
-            },
-          ],
-        }}
-      /> */}
-
-      {/* Farcaster frames headers */}
-      {/* <Head>
-        <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:image" content={ogImageUrl.toString()} />
-        <meta
-          property="fc:frame:post_url"
-          content={`${getAbsoluteUrl()}/api/frame/redirect`}
-        />
-        <meta property="fc:frame:button:1" content="Deploy now" />
-        <meta name="fc:frame:button:1:action" content="post_redirect" />
-      </Head> */}
-
       <GridItem colSpan={{ base: 12, md: 9 }}>
         <Flex flexDir="column" gap={6}>
           {address === publishedContract.publisher && (
@@ -376,6 +286,7 @@ type ContractSource = {
 };
 async function fetchSourceFilesFromMetadata(
   publishedMetadata: ExtendedPublishedContract,
+  client: ThirdwebClient,
 ): Promise<ContractSource[]> {
   return await Promise.all(
     Object.entries(publishedMetadata.metadata.sources).map(
@@ -394,7 +305,7 @@ async function fetchSourceFilesFromMetadata(
             (
               await download({
                 uri: `ipfs://${ipfsHash}`,
-                client: thirdwebClient,
+                client,
               })
             ).text(),
             timeout,

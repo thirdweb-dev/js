@@ -1,3 +1,5 @@
+"use client";
+
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button as ButtonShadcn } from "@/components/ui/button";
@@ -8,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
@@ -81,10 +83,11 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
     const activeWalletChain = useActiveWalletChain();
     const [dialog, setDialog] = useState<undefined | "no-funds" | "pay">();
     const { theme } = useTheme();
+    const client = useThirdwebClient();
     const evmBalance = useWalletBalance({
       address: account?.address,
       chain: activeWalletChain,
-      client: thirdwebClient,
+      client,
     });
 
     const initialFocusRef = useRef<HTMLButtonElement>(null);
@@ -216,7 +219,7 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
 
               {dialog === "pay" && (
                 <PayEmbed
-                  client={thirdwebClient}
+                  client={client}
                   theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
                   className="!w-auto"
                   payOptions={{
@@ -488,18 +491,19 @@ const MismatchNotice: React.FC<{
 
 const GetLocalHostTestnetFunds: React.FC = () => {
   const address = useActiveAccount()?.address;
+  const client = useThirdwebClient();
   const requestFunds = async () => {
     if (!address) {
       return toast.error("No active account detected");
     }
     const faucet = privateKeyToAccount({
       privateKey: LOCAL_NODE_PKEY,
-      client: thirdwebClient,
+      client,
     });
     const transaction = prepareTransaction({
       to: address,
       chain: localhost,
-      client: thirdwebClient,
+      client,
       value: toWei("10"),
     });
     const promise = sendTransaction({

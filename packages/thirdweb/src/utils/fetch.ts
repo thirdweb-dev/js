@@ -7,6 +7,7 @@ import {
   detectOS,
   detectPlatform,
 } from "./detect-platform.js";
+import { isJWT } from "./jwt/is-jwt.js";
 
 const DEFAULT_REQUEST_TIMEOUT = 60000;
 
@@ -31,7 +32,11 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       if (!headers) {
         headers = new Headers();
       }
-      const authToken = getTWAuthToken();
+      const authToken =
+        client.secretKey && isJWT(client.secretKey)
+          ? client.secretKey
+          : undefined;
+
       // if we have an auth token set, use that (thirdweb.com/dashboard sets this for the user)
       // pay urls should never send the auth token, because we always want the "developer" to be the one making the request, not the "end user"
       if (authToken && !isPayUrl(url)) {
@@ -184,17 +189,4 @@ function parseOs(os: OperatingSystem | NodeJS.Platform) {
       // if we somehow fall through here, just replace all spaces with underscores and send it
       return osLowerCased.replace(/\s/gi, "_");
   }
-}
-
-function getTWAuthToken(): string | null {
-  if (
-    typeof globalThis !== "undefined" &&
-    "TW_AUTH_TOKEN" in globalThis &&
-    // biome-ignore lint/suspicious/noExplicitAny: get around globalThis typing
-    typeof (globalThis as any).TW_AUTH_TOKEN === "string"
-  ) {
-    // biome-ignore lint/suspicious/noExplicitAny: get around globalThis typing
-    return (globalThis as any).TW_AUTH_TOKEN as string;
-  }
-  return null;
 }

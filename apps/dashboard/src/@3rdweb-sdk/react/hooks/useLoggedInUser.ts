@@ -77,14 +77,7 @@ export function useLoggedInUser(): {
     if (query.data?.redirectTo) {
       router.replace(query.data.redirectTo);
     }
-    if (query.data?.jwt) {
-      // necessary for legacy things for now (SDK picks it up from there)
-      // eslint-disable-next-line react-compiler/react-compiler
-      window.TW_AUTH_TOKEN = query.data.jwt;
-    } else {
-      window.TW_AUTH_TOKEN = undefined;
-    }
-  }, [query.data?.redirectTo, query.data?.jwt, router]);
+  }, [query.data?.redirectTo, router]);
 
   // if we are "disconnected" we are not logged in
   if (connectionStatus === "disconnected") {

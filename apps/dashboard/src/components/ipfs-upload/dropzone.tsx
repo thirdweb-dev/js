@@ -1,5 +1,7 @@
+"use client";
+
 import { Label } from "@/components/ui/label";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
 import {
   AspectRatio,
@@ -162,10 +164,8 @@ const filesPerPage = 20;
 const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
-  // const [progress, setProgress] = useState<UploadProgressEvent>({
-  //   progress: 0,
-  //   total: 100,
-  // });
+  const client = useThirdwebClient();
+
   const [uploadWithoutDirectory, setUploadWithoutDirectory] = useState(
     files.length === 1,
   );
@@ -247,7 +247,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                         src={URL.createObjectURL(file)}
                         mimeType={file.type}
                         requireInteraction
-                        client={thirdwebClient}
+                        client={client}
                       />
                     </Box>
                   </AspectRatio>

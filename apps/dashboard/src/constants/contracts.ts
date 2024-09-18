@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
 
@@ -23,6 +23,6 @@ export type ContractType =
 
 export const MULTICHAIN_REGISTRY_CONTRACT = getContract({
   chain: polygon,
-  client: thirdwebClient,
+  client: getThirdwebClient(),
   address: "0xcdAD8FA86e18538aC207872E8ff3536501431B73",
 });

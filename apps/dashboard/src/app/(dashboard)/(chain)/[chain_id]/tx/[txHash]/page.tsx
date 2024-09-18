@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { ZERO_ADDRESS, toTokens } from "thirdweb";
 import {
   eth_getBlockByHash,
@@ -9,16 +10,17 @@ import {
   getRpcClient,
 } from "thirdweb/rpc";
 import { hexToNumber, shortenAddress, toEther } from "thirdweb/utils";
-import { mapV4ChainToV5Chain } from "../../../../../../contexts/map-chains";
 import { getChain } from "../../../utils";
 
 export default async function Page(props: {
   params: { chain_id: string; txHash: `0x${string}` };
 }) {
+  // consider if we want to pass the JWT here, likely no need to do it but we could?
+  const client = getThirdwebClient();
   const chain = await getChain(props.params.chain_id);
 
   const rpcRequest = getRpcClient({
-    client: thirdwebClient,
+    client,
     // Do not include chain overrides for chain pages
     // eslint-disable-next-line no-restricted-syntax
     chain: mapV4ChainToV5Chain(chain),

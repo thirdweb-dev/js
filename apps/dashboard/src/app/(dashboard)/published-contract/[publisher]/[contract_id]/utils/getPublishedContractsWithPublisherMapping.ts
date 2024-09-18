@@ -1,7 +1,7 @@
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { fetchPublishedContractVersions } from "components/contract-components/fetch-contracts-with-versions";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
-import { fetchPublishedContractVersions } from "../../../../../../components/contract-components/fetch-contracts-with-versions";
 
 function mapThirdwebPublisher(publisher: string) {
   if (publisher === "thirdweb.eth") {
@@ -20,7 +20,7 @@ export async function getPublishedContractsWithPublisherMapping(options: {
   const publisherAddress = isAddress(publisher)
     ? publisher
     : await resolveAddress({
-        client: thirdwebClient,
+        client: getThirdwebClient(),
         name: mapThirdwebPublisher(publisher),
       });
 

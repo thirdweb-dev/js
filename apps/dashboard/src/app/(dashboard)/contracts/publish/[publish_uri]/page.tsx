@@ -1,8 +1,10 @@
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
-import { thirdwebClient } from "@/constants/client";
+import { getActiveAccountCookie, getJWTCookie } from "@/constants/cookie";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ContractPublishForm } from "components/contract-components/contract-publish-form";
 import { setOverrides } from "lib/vercel-utils";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
 
 setOverrides();
@@ -23,13 +25,26 @@ export default async function PublishContractPage(
 
   const publishMetadata = await fetchDeployMetadata({
     uri: publishUri,
-    client: thirdwebClient,
+    client: getThirdwebClient(),
   });
+
+  const pathname = `/contracts/publish/${props.params.publish_uri}`;
+
+  const address = getActiveAccountCookie();
+  if (!address) {
+    redirect(`/login?next=${encodeURIComponent(pathname)}`);
+  }
+
+  const token = getJWTCookie(address);
+  if (!token) {
+    redirect(`/login?next=${encodeURIComponent(pathname)}`);
+  }
 
   return (
     <div className="container py-8 flex flex-col gap-8">
       <ChakraProviderSetup>
         <ContractPublishForm
+          jwt={token}
           publishMetadata={publishMetadata}
           onPublishSuccess={async () => {
             "use server";

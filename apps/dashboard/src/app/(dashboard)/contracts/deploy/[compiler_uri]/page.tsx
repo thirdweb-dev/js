@@ -1,6 +1,6 @@
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { setOverrides } from "lib/vercel-utils";
 import { fetchDeployMetadata } from "thirdweb/contract";
-import { thirdwebClient } from "../../../../../@/constants/client";
 import { DeployContractInfo } from "../../../published-contract/components/contract-info";
 import { DeployFormForUri } from "../../../published-contract/components/uri-based-deploy";
 
@@ -15,7 +15,7 @@ type DirectDeployPageProps = {
 export default async function DirectDeployPage(props: DirectDeployPageProps) {
   const parsedUri = decodeURIComponent(props.params.compiler_uri);
   const metadata = await fetchDeployMetadata({
-    client: thirdwebClient,
+    client: getThirdwebClient(),
     // force `ipfs://` prefix
     uri: parsedUri.startsWith("ipfs://") ? parsedUri : `ipfs://${parsedUri}`,
   });

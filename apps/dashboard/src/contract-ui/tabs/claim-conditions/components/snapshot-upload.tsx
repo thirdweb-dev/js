@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   AspectRatio,
   Box,
@@ -75,6 +75,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
   dropType,
   isDisabled,
 }) => {
+  const client = useThirdwebClient();
   const [validSnapshot, setValidSnapshot] = useState<SnapshotAddressInput[]>(
     value || [],
   );
@@ -148,7 +149,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
           try {
             resolvedAddress = isAddress(address)
               ? address
-              : await resolveAddress({ client: thirdwebClient, name: address });
+              : await resolveAddress({ client, name: address });
             isValid = !!resolvedAddress;
           } catch {
             isValid = false;
@@ -180,7 +181,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
       setSnapshotData(ordered);
     };
     normalizeAddresses(validSnapshot);
-  }, [validSnapshot]);
+  }, [validSnapshot, client]);
 
   const removeInvalid = useCallback(() => {
     const filteredData = snapshotData.filter(({ isValid }) => isValid);

@@ -1,6 +1,5 @@
 "use client";
 
-import {} from "@/components/ui/select";
 import { TabButtons } from "@/components/ui/tabs";
 import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { PayAnalytics } from "components/pay/PayAnalytics/PayAnalytics";

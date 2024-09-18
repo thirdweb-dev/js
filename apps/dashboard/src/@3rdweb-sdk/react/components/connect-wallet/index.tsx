@@ -2,7 +2,7 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
@@ -32,6 +32,7 @@ export const CustomConnectWallet = (props: {
   connectButtonClassName?: string;
   detailsButtonClassName?: string;
 }) => {
+  const thirdwebClient = useThirdwebClient();
   const loginRequired =
     props.loginRequired === undefined ? true : props.loginRequired;
   const { theme } = useTheme();
@@ -222,6 +223,7 @@ function ConnectWalletWelcomeScreen(props: {
 export function useCustomConnectModal() {
   const { connect } = useConnectModal();
   const { theme } = useTheme();
+  const thirdwebClient = useThirdwebClient();
 
   return useCallback(
     (options?: { chain?: Chain }) => {
@@ -244,7 +246,7 @@ export function useCustomConnectModal() {
         theme: getSDKTheme(theme === "light" ? "light" : "dark"),
       });
     },
-    [connect, theme],
+    [connect, theme, thirdwebClient],
   );
 }
 

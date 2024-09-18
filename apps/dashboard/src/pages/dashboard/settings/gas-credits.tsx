@@ -1,7 +1,6 @@
 import { AppLayout } from "components/app-layouts/app";
 import { SettingsSidebarLayout } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
-import {} from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 import { SettingsGasCreditsPage } from "../../../app/team/[team_slug]/(team)/~/settings/credits/SettingsCreditsPage";
 

@@ -1,6 +1,9 @@
-import { Checkbox } from "@/components/ui/checkbox";
-import { thirdwebClient } from "@/constants/client";
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
+
+import { Checkbox } from "@/components/ui/checkbox";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import {
   Box,
   Flex,
@@ -408,7 +411,7 @@ export const MiniPlayground: React.FC<{
             <Box className={fontClassName}>
               <ConnectEmbed
                 wallets={wallets}
-                client={thirdwebClient}
+                client={getThirdwebClient()}
                 header={{
                   title: modalTitle,
                   titleIcon: modalTitleIconUrl,

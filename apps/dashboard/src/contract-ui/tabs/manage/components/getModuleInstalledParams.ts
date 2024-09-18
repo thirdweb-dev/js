@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { fetchPublishedContractVersions } from "components/contract-components/fetch-contracts-with-versions";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
@@ -11,7 +11,7 @@ export async function getModuleInstalledParams(ext: ModuleMeta) {
   const publisherAddress = isAddress(ext.publisherAddress)
     ? ext.publisherAddress
     : await resolveAddress({
-        client: thirdwebClient,
+        client: getThirdwebClient(),
         name: ext.publisherAddress,
       });
   const allPublishedModules = await fetchPublishedContractVersions(

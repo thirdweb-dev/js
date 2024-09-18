@@ -1,7 +1,7 @@
 "use client";
 
 import { ColorModeToggle } from "@/components/color-mode-toggle";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
@@ -42,6 +42,7 @@ function CustomConnectEmmbed() {
   const router = useDashboardRouter();
   const { theme } = useTheme();
   const nextSearchParam = searchParams?.get("next");
+  const client = useThirdwebClient();
 
   function onLoginSuccessful() {
     if (nextSearchParam && isValidRedirectPath(nextSearchParam)) {
@@ -73,7 +74,7 @@ function CustomConnectEmmbed() {
           return isLoggedInResult;
         },
       }}
-      client={thirdwebClient}
+      client={client}
       modalSize={isLG ? "wide" : "compact"}
       theme={getSDKTheme(theme === "light" ? "light" : "dark")}
     />

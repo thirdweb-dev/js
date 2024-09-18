@@ -1,6 +1,5 @@
 import { Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
-import {} from "tw-components";
 import { ClaimConditions } from "./components/claim-conditions";
 
 interface ContractClaimConditionsPageProps {

@@ -299,7 +299,7 @@ export function useContractRouteConfig(
           ? "loading"
           : "disabled",
       isDefault: true,
-      component: LazyContractEditModulesPage,
+      component: () => <LazyContractEditModulesPage contract={contract} />,
     },
     {
       title: "Code Snippets",

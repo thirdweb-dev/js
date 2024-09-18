@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Accordion,
   AccordionButton,
@@ -17,6 +19,7 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceTemplateValues } from "lib/deployment/template-values";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
@@ -33,9 +36,6 @@ import {
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
-import { thirdwebClient } from "../../../@/constants/client";
-import { useLoggedInUser } from "../../../@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { useTxNotifications } from "../../../hooks/useTxNotifications";
 import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
 import { addContractToMultiChainRegistry } from "../utils";
 import { Fieldset } from "./common";
@@ -115,6 +115,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   modules,
   jwt,
 }) => {
+  const thirdwebClient = useThirdwebClient(jwt);
+
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
   useLoggedInUser();
@@ -471,8 +473,6 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             if (!walletChain?.id || !activeAccount || !jwt) {
               return;
             }
-
-            window.TW_AUTH_TOKEN = jwt;
 
             // open the status modal
             let steps: DeployModalStep[] = [

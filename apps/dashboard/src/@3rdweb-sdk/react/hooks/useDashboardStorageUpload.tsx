@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useMutation } from "@tanstack/react-query";
 import { upload } from "thirdweb/storage";
 
@@ -8,6 +8,7 @@ type DashboardUploadOptions = {
 };
 
 export function useDashboardStorageUpload(options?: DashboardUploadOptions) {
+  const thirdwebClient = useThirdwebClient();
   return useMutation({
     mutationFn: async (files: Array<File | string>): Promise<string[]> => {
       const uris = await upload({

@@ -1,52 +1,20 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { thirdwebClient } from "@/constants/client";
-import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { UserXIcon } from "lucide-react";
-import { useMemo } from "react";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { getInstalledModules, owner } from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { useV5DashboardChain } from "../../../lib/v5-adapter";
 import { InstalledModulesTable } from "./components/InstalledModulesTable";
 import { InstallModuleForm } from "./components/ModuleForm";
 
 interface ContractEditModulesPageProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
 }
 
 export const ContractEditModulesPage: React.FC<
   ContractEditModulesPageProps
-> = ({ contractAddress }) => {
-  const contractInfo = useEVMContractInfo();
-
-  const chainId = contractInfo?.chain?.chainId;
-
-  if (!contractAddress || !chainId) {
-    return (
-      <div className="items-center justify-center flex h-[300px] md:h-[500px]">
-        <Spinner className="size-10" />
-      </div>
-    );
-  }
-
-  return <Content contractAddress={contractAddress} chainId={chainId} />;
-};
-
-function Content(props: { contractAddress: string; chainId: number }) {
-  const { contractAddress, chainId } = props;
+> = ({ contract }) => {
   const account = useActiveAccount();
-  const chain = useV5DashboardChain(chainId);
-
-  const contract = useMemo(
-    () =>
-      getContract({
-        client: thirdwebClient,
-        address: contractAddress,
-        chain: chain,
-      }),
-    [contractAddress, chain],
-  );
 
   const installedModulesQuery = useReadContract(getInstalledModules, {
     contract,
@@ -55,10 +23,6 @@ function Content(props: { contractAddress: string; chainId: number }) {
   const ownerQuery = useReadContract(owner, {
     contract,
   });
-
-  function refetchModules() {
-    installedModulesQuery.refetch();
-  }
 
   if (ownerQuery.isLoading) {
     return (
@@ -101,7 +65,7 @@ function Content(props: { contractAddress: string; chainId: number }) {
           <div className="h-10" />
           <InstallModuleForm
             contract={contract}
-            refetchModules={refetchModules}
+            refetchModules={() => installedModulesQuery.refetch()}
             account={account}
             installedModules={installedModules}
           />
@@ -128,10 +92,10 @@ function Content(props: { contractAddress: string; chainId: number }) {
 
       <InstalledModulesTable
         installedModules={installedModules}
-        refetchModules={refetchModules}
+        refetchModules={() => installedModulesQuery.refetch()}
         contract={contract}
         ownerAccount={isOwner ? account : undefined}
       />
     </div>
   );
-}
+};

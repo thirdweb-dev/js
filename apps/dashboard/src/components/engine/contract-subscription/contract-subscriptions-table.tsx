@@ -1,4 +1,6 @@
-import { thirdwebClient } from "@/constants/client";
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type EngineContractSubscription,
   useEngineRemoveContractSubscription,
@@ -249,6 +251,7 @@ const ChainLastBlockTimestamp = ({
   chainId: number;
   blockNumber: bigint;
 }) => {
+  const client = useThirdwebClient();
   const chain = useV5DashboardChain(chainId);
   // Get the block timestamp to display how delayed the last processed block is.
   const ethBlockQuery = useQuery({
@@ -257,8 +260,8 @@ const ChainLastBlockTimestamp = ({
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const rpcRequest = getRpcClient({
-        client: thirdwebClient,
-        chain: chain,
+        client,
+        chain,
       });
       const block = await eth_getBlockByNumber(rpcRequest, {
         blockNumber,

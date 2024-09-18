@@ -8,3 +8,5 @@ export type JWTPayload<Tctx = unknown> = {
   jti: string;
   ctx?: Tctx;
 };
+
+export type JWTString = `${string}.${string}.${string}`;

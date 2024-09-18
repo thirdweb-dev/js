@@ -20,7 +20,6 @@ import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useMemo, useState } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
-import {} from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 import { ConnectSidebarLayout } from "../../../app/(dashboard)/dashboard/connect/DashboardConnectLayout";
 import { AAFooterSection } from "../../../app/team/[team_slug]/[project_slug]/connect/account-abstraction/AAFooterSection";

@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveScheme } from "thirdweb/storage";
 
 export function DeployContractInfo(props: {
@@ -19,7 +19,7 @@ export function DeployContractInfo(props: {
               className="size-12"
               alt={props.name}
               src={resolveScheme({
-                client: thirdwebClient,
+                client: getThirdwebClient(),
                 uri: props.logo,
               })}
             />

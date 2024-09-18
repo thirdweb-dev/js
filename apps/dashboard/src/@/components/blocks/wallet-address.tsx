@@ -6,9 +6,10 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { Check, Copy, ExternalLinkIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { isAddress } from "thirdweb";
+import { type ThirdwebClient, isAddress } from "thirdweb";
 import { ZERO_ADDRESS } from "thirdweb";
 import {
   Blobbie,
@@ -17,7 +18,6 @@ import {
   useSocialProfiles,
 } from "thirdweb/react";
 import { resolveScheme } from "thirdweb/storage";
-import { thirdwebClient } from "../../constants/client";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -27,6 +27,7 @@ export function WalletAddress(props: {
   shortenAddress?: boolean;
   className?: string;
 }) {
+  const thirdwebClient = useThirdwebClient();
   // default back to zero address if no address provided
   const address = useMemo(() => props.address || ZERO_ADDRESS, [props.address]);
 
@@ -77,7 +78,11 @@ export function WalletAddress(props: {
           )}
         >
           {address && (
-            <WalletAvatar address={address} profiles={profiles.data || []} />
+            <WalletAvatar
+              address={address}
+              profiles={profiles.data || []}
+              thirdwebClient={thirdwebClient}
+            />
           )}
           <span className="font-mono cursor-pointer">
             {profiles.data?.[0]?.name || shortenedAddress}
@@ -178,6 +183,7 @@ export function WalletAddress(props: {
 function WalletAvatar(props: {
   address: string;
   profiles: SocialProfile[];
+  thirdwebClient: ThirdwebClient;
 }) {
   const avatar = useMemo(() => {
     return props.profiles.find(
@@ -191,7 +197,7 @@ function WalletAvatar(props: {
     <div className="size-6 overflow-hidden rounded-full">
       {avatar ? (
         <MediaRenderer
-          client={thirdwebClient}
+          client={props.thirdwebClient}
           src={avatar}
           className="size-6"
         />

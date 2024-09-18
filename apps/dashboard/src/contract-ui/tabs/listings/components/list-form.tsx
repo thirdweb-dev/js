@@ -1,5 +1,4 @@
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { thirdwebClient } from "@/constants/client";
 import { useDashboardEVMChainId, useEVMContractInfo } from "@3rdweb-sdk/react";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
@@ -151,7 +150,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
     ? getContract({
         address: form.watch("selected.contractAddress"),
         chain: contract.chain,
-        client: thirdwebClient,
+        client: contract.client,
       })
     : undefined;
 

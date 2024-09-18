@@ -2,8 +2,8 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { thirdwebClient } from "@/constants/client";
 import { THIRDWEB_ENGINE_FAUCET_WALLET } from "@/constants/env";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CanClaimResponseType } from "app/api/testnet-faucet/can-claim/CanClaimResponseType";
@@ -36,6 +36,7 @@ export function FaucetButton({
   chain: ChainMetadata;
   amount: string;
 }) {
+  const client = useThirdwebClient();
   const address = useActiveAccount()?.address;
   const chainId = chain.chainId;
   // do not include local overrides for chain pages
@@ -44,7 +45,7 @@ export function FaucetButton({
   const faucetWalletBalanceQuery = useWalletBalance({
     address: THIRDWEB_ENGINE_FAUCET_WALLET,
     chain: definedChain,
-    client: thirdwebClient,
+    client,
   });
   const trackEvent = useTrack();
 

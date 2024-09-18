@@ -1,8 +1,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { FormControl, Input, Select, Skeleton, Spacer } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   useAllVersions,
@@ -14,6 +13,7 @@ import { toast } from "sonner";
 import {
   type Chain,
   type ContractOptions,
+  type ThirdwebClient,
   sendTransaction,
   waitForReceipt,
 } from "thirdweb";
@@ -56,6 +56,7 @@ type InstallModuleFormProps = {
 export type InstallModuleForm = UseFormReturn<FormData>;
 
 export const InstallModuleForm = (props: InstallModuleFormProps) => {
+  const client = useThirdwebClient();
   const form = useForm<FormData>({
     defaultValues: {
       version: "latest",
@@ -175,7 +176,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
       return Promise.all(
         moduleAddress.map(async (address) => {
           const result = await resolveImplementation({
-            client: thirdwebClient,
+            client,
             address,
             chain: contract.chain,
           });
@@ -222,6 +223,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         moduleInfo: {
           bytecodeUri: selectedModule.metadata.bytecodeUri,
         },
+        client,
       });
     },
     retry: false,
@@ -405,10 +407,11 @@ async function isModuleCompatible(options: {
   moduleInfo: {
     bytecodeUri: string;
   };
+  client: ThirdwebClient;
 }) {
   // 1. get module's bytecode
   const res = await download({
-    client: thirdwebClient,
+    client: options.client,
     uri: options.moduleInfo.bytecodeUri,
   });
 
@@ -419,7 +422,7 @@ async function isModuleCompatible(options: {
     const isCompatible = await checkModulesCompatibility({
       chain: options.contractInfo.chain,
       coreBytecode: options.contractInfo.bytecode,
-      client: thirdwebClient,
+      client: options.client,
       moduleBytecodes: [
         moduleBytecode,
         ...options.contractInfo.installedModuleBytecodes,

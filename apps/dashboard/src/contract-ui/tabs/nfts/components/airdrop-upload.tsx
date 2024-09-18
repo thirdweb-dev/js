@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   AspectRatio,
   Box,
@@ -58,6 +58,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   isOpen,
   onClose,
 }) => {
+  const client = useThirdwebClient();
   const [validAirdrop, setValidAirdrop] = useState<AirdropAddressInput[]>([]);
   const [airdropData, setAirdropData] = useState<AirdropAddressInput[]>([]);
   const [noCsv, setNoCsv] = useState(false);
@@ -127,7 +128,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
           try {
             resolvedAddress = isAddress(address)
               ? address
-              : await resolveAddress({ name: address, client: thirdwebClient });
+              : await resolveAddress({ name: address, client });
             isValid = !!resolvedAddress;
           } catch {
             isValid = false;
@@ -159,7 +160,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
       setAirdropData(ordered);
     };
     normalizeAddresses(validAirdrop);
-  }, [validAirdrop]);
+  }, [validAirdrop, client]);
 
   const removeInvalid = useCallback(() => {
     const filteredData = airdropData.filter(({ isValid }) => isValid);

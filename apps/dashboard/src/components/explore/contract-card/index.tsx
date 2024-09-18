@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-base-64";
@@ -89,6 +89,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   modules = [],
   isBeta,
 }) => {
+  const client = useThirdwebClient();
   const publishedContractResult = usePublishedContract(
     `${publisher}/${contractId}/${version}`,
   );
@@ -132,7 +133,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                 className="text-success-text flex items-center gap-1 text-sm z-1 hover:underline font-medium relative"
                 href={resolveScheme({
                   uri: publishedContractResult.data.audit,
-                  client: thirdwebClient,
+                  client,
                 })}
               >
                 <ShieldCheckIcon className="size-4" />

@@ -3,8 +3,7 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { thirdwebClient } from "@/constants/client";
-import { isProd } from "@/constants/env";
+import { DASHBOARD_THIRDWEB_CLIENT_ID, isProd } from "@/constants/env";
 import { useQuery } from "@tanstack/react-query";
 import { CircleCheck, XIcon } from "lucide-react";
 import { hostnameEndsWith } from "utils/url";
@@ -14,7 +13,7 @@ function useChainStatswithRPC(_rpcUrl: string) {
   let rpcUrl = _rpcUrl.replace(
     // eslint-disable-next-line no-template-curly-in-string
     "${THIRDWEB_API_KEY}",
-    thirdwebClient.clientId,
+    DASHBOARD_THIRDWEB_CLIENT_ID,
   );
 
   // based on the environment hit dev or production
