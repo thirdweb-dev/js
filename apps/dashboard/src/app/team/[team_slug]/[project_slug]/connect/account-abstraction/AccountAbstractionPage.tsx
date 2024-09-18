@@ -13,11 +13,13 @@ import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { CircleAlertIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
-import { SmartWallets } from "../../../../../../components/smart-wallets";
+import { AccountFactories } from "../../../../../../components/smart-wallets/AccountFactories";
 import { AAFooterSection } from "./AAFooterSection";
 import { isOpChainId } from "./isOpChain";
 
 const TRACKING_CATEGORY = "smart-wallet";
+
+// TODO - the factories shown on this page is not project specific, need to revamp this page
 
 export function AccountAbstractionPage(props: {
   apiKeyServices: ApiKeyService[];
@@ -87,10 +89,7 @@ export function AccountAbstractionPage(props: {
             )
           )}
 
-          <SmartWallets
-            apiKeyServices={apiKeyServices}
-            trackingCategory={TRACKING_CATEGORY}
-          />
+          <AccountFactories trackingCategory={TRACKING_CATEGORY} />
         </div>
       )}
 
