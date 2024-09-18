@@ -1,5 +1,6 @@
-import { Icon, Tooltip, useClipboard, useToast } from "@chakra-ui/react";
+import { Icon, Tooltip, useToast } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useClipboard } from "hooks/useClipboard";
 import { FiCopy } from "react-icons/fi";
 import {
   Button,

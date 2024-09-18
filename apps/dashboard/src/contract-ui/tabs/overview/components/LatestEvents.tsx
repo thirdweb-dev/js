@@ -13,11 +13,11 @@ import {
   Spinner,
   Stack,
   Tooltip,
-  useClipboard,
   useToast,
 } from "@chakra-ui/react";
 import { useTabHref } from "contract-ui/utils";
 import { AnimatePresence, motion } from "framer-motion";
+import { useClipboard } from "hooks/useClipboard";
 import { useState } from "react";
 import { FiCopy } from "react-icons/fi";
 import type { ThirdwebContract } from "thirdweb";
