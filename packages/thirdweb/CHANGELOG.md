@@ -1,5 +1,28 @@
 # thirdweb
 
+## 5.57.0
+
+### Minor Changes
+
+- [#4631](https://github.com/thirdweb-dev/js/pull/4631) [`a468439`](https://github.com/thirdweb-dev/js/commit/a46843992ba6acff6023af63b66b91c9e7f9ec6d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds guest account option. These accounts will only persist for the duration of the user's session unless they link an additionaly auth method to recover the account with.
+
+  ```ts
+  import { inAppWallet } from "thirdweb/wallets";
+
+  const wallet = inAppWallet();
+
+  const account = await wallet.connect({
+    client,
+    strategy: "guest",
+  });
+  ```
+
+### Patch Changes
+
+- [#4644](https://github.com/thirdweb-dev/js/pull/4644) [`e89ffd4`](https://github.com/thirdweb-dev/js/commit/e89ffd4aa2c0710a565c72ec4dc1038fdbd74029) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Handle custom id for published contract
+
+- [#4653](https://github.com/thirdweb-dev/js/pull/4653) [`00ce74a`](https://github.com/thirdweb-dev/js/commit/00ce74a060b7ef214293b2562f4e761481e6d319) Thanks [@jnsdls](https://github.com/jnsdls)! - make getNFTs work for more ERC1155 contracts
+
 ## 5.56.0
 
 ### Minor Changes
