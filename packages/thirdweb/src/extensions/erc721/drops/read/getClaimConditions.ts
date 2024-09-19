@@ -24,7 +24,7 @@ export async function getClaimConditions(
     const conditionPromises: Array<
       ReturnType<typeof MultiById.getClaimConditionById>
     > = [];
-    for (let i = startId; i < count; i++) {
+    for (let i = startId; i < startId + count; i++) {
       conditionPromises.push(
         MultiById.getClaimConditionById({
           ...options,
