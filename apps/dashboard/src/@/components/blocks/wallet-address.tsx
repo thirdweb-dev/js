@@ -7,8 +7,9 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useClipboard } from "hooks/useClipboard";
 import { Check, Copy, ExternalLinkIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { type ThirdwebClient, isAddress } from "thirdweb";
 import { ZERO_ADDRESS } from "thirdweb";
 import {
@@ -45,7 +46,7 @@ export function WalletAddress(props: {
     client: thirdwebClient,
   });
 
-  const [isCopied, setIsCopied] = useState(false);
+  const { onCopy, hasCopied } = useClipboard(address, 2000);
 
   if (!isAddress(address)) {
     return <span>Invalid Address ({address})</span>;
@@ -55,16 +56,6 @@ export function WalletAddress(props: {
   if (address === ZERO_ADDRESS) {
     return <span className="font-mono cursor-pointer">{shortenedAddress}</span>;
   }
-
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(address);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
-    } catch (err) {
-      console.error("Failed to copy: ", err);
-    }
-  };
 
   return (
     <HoverCard>
@@ -102,15 +93,15 @@ export function WalletAddress(props: {
             <Button
               variant="outline"
               size="sm"
-              onClick={copyToClipboard}
+              onClick={onCopy}
               className="flex items-center gap-2"
             >
-              {isCopied ? (
+              {hasCopied ? (
                 <Check className="h-4 w-4" />
               ) : (
                 <Copy className="h-4 w-4" />
               )}
-              {isCopied ? "Copied!" : "Copy"}
+              {hasCopied ? "Copied!" : "Copy"}
             </Button>
           </div>
           <p className="text-sm font-mono bg-muted p-2 rounded text-center">
