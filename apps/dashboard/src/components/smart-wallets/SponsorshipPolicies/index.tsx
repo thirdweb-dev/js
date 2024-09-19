@@ -36,7 +36,6 @@ import {
   Button,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Text,
   TrackedLink,
 } from "tw-components";
@@ -181,9 +180,6 @@ export function AccountAbstractionSettingsPage(
         alignItems={"left"}
       >
         <Flex flexDir={"column"} gap={2}>
-          <Heading size="title.md" as="h1">
-            Sponsorship rules
-          </Heading>
           <Text>
             Configure the rules and rules for your sponsored transactions.{" "}
             <TrackedLink

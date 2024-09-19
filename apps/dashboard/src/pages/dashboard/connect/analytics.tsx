@@ -11,7 +11,7 @@ import { useMemo, useState } from "react";
 import type { ThirdwebNextPage } from "utils/types";
 import { ConnectSidebarLayout } from "../../../app/(dashboard)/dashboard/connect/DashboardConnectLayout";
 import { ConnectAnalyticsDashboard } from "../../../app/team/[team_slug]/[project_slug]/connect/analytics/ConnectAnalyticsDashboard";
-import { ConnectSDKCard } from "../../../app/team/[team_slug]/[project_slug]/connect/analytics/_components/ConnectSDKCard";
+import { ConnectSDKCard } from "../../../components/shared/ConnectSDKCard";
 
 const DashboardConnectAnalytics: ThirdwebNextPage = () => {
   const router = useRouter();
@@ -81,7 +81,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
       )}
 
       <div className="h-4 lg:h-8" />
-      <ConnectSDKCard />
+      <ConnectSDKCard description="Add the Connect SDK to your app to start collecting analytics." />
     </div>
   );
 };

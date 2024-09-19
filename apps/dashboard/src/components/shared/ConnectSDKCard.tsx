@@ -5,14 +5,17 @@ import Link from "next/link";
 import { SiUnrealengine } from "react-icons/si";
 import { SiDotnet } from "react-icons/si";
 
-export function ConnectSDKCard() {
+export function ConnectSDKCard({
+  title,
+  description,
+}: { title?: string; description?: string }) {
   return (
     <div className="border border-border bg-muted/50 rounded-lg p-6 relative">
       <h3 className="text-2xl font-semibold tracking-tight mb-1">
-        Connect SDK
+        {title || "Connect SDK"}
       </h3>
       <p className="mb-8 text-muted-foreground text-sm">
-        Add the Connect SDK to your app to start collecting analytics.
+        {description || "Add the Connect SDK to your app."}
       </p>
 
       <div className="grid gap-6 md:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-[500px]">
