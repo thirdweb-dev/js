@@ -394,6 +394,16 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         });
       }
 
+      // handle split things
+      const payees: string[] = [];
+      const shares: string[] = [];
+      if (isSplit && params.recipients?.length) {
+        for (const recipient of params.recipients) {
+          payees.push(recipient.address);
+          shares.push(recipient.sharesBps.toString());
+        }
+      }
+
       if (metadata.name === "MarketplaceV3") {
         // special case for marketplace
         return await deployMarketplaceContract({
@@ -416,6 +426,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
       const initializeParams = {
         ...params.contractMetadata,
         ...params.deployParams,
+        payees,
+        shares,
         _contractURI,
       };
 
