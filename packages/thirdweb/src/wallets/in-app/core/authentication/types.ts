@@ -67,6 +67,7 @@ export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
 export enum RecoveryShareManagement {
   USER_MANAGED = "USER_MANAGED",
   CLOUD_MANAGED = "AWS_MANAGED",
+  ENCLAVE = "ENCLAVE",
 }
 
 // TODO: remove usage of enums, instead use object with as const
@@ -133,7 +134,8 @@ export type AuthStoredTokenWithCookieReturnType = {
   };
 };
 export type AuthAndWalletRpcReturnType = AuthStoredTokenWithCookieReturnType & {
-  walletDetails: SetUpWalletRpcReturnType;
+  // Will just be WalletAddressObjectType for enclave wallets
+  walletDetails: SetUpWalletRpcReturnType | WalletAddressObjectType;
 };
 
 export type AuthLoginReturnType = { user: InitializedUser };
@@ -151,6 +153,7 @@ export type AuthDetails = (
   encryptionKey?: string;
   backupRecoveryCodes?: string[];
   recoveryShareManagement: RecoveryShareManagement;
+  walletType?: "sharded" | "enclave";
 };
 
 export type InitializedUser = {

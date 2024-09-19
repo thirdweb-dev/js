@@ -10,6 +10,8 @@ import type {
 } from "../../../core/authentication/types.js";
 import type { ClientIdWithQuerierType, Ecosystem } from "../../types.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
+import { generateWallet } from "../actions/generate-wallet.enclave.js";
+import { getEnclaveUserStatus } from "../actions/get-enclave-user-status.js";
 import { BaseLogin } from "./base-login.js";
 
 export type AuthQuerierTypes = {
@@ -20,7 +22,7 @@ export type AuthQuerierTypes = {
     clientId: string;
     authCookie: string;
     walletUserId: string;
-    deviceShareStored: string;
+    deviceShareStored: string | null;
   };
   loginWithStoredTokenDetails: {
     storedToken: AuthStoredTokenWithCookieReturnType["storedToken"];
@@ -33,6 +35,7 @@ export type AuthQuerierTypes = {
  */
 export class Auth {
   protected client: ThirdwebClient;
+  protected ecosystem?: Ecosystem;
   protected AuthQuerier: InAppWalletIframeCommunicator<AuthQuerierTypes>;
   protected localStorage: ClientScopedStorage;
   protected onAuthSuccess: (
@@ -58,6 +61,7 @@ export class Auth {
     ) => Promise<AuthLoginReturnType>;
   }) {
     this.client = client;
+    this.ecosystem = ecosystem;
 
     this.AuthQuerier = querier;
     this.localStorage = new ClientScopedStorage({
@@ -103,6 +107,42 @@ export class Auth {
     recoveryCode?: string,
   ): Promise<AuthLoginReturnType> {
     await this.preLogin();
+
+    const user = await getEnclaveUserStatus({
+      authToken: authToken.storedToken.cookieString,
+      client: this.client,
+      ecosystem: this.ecosystem,
+    });
+    if (!user) {
+      throw new Error("Cannot login, no user found for auth token");
+    }
+
+    // If they're already an enclave wallet, proceed to login
+    if (user.wallets.length > 0 && user.wallets[0]?.type === "enclave") {
+      return this.postLogin({
+        storedToken: authToken.storedToken,
+        walletDetails: {
+          walletAddress: user.wallets[0].address,
+        },
+      });
+    }
+
+    if (user.wallets.length === 0 && this.ecosystem) {
+      // If this is a new ecosystem wallet without an enclave yet, we'll generate an enclave
+      const result = await generateWallet({
+        authToken: authToken.storedToken.cookieString,
+        client: this.client,
+        ecosystem: this.ecosystem,
+      });
+      return this.postLogin({
+        storedToken: authToken.storedToken,
+        walletDetails: {
+          walletAddress: result.address,
+        },
+      });
+    }
+
+    // If this is an existing sharded wallet or in-app wallet, we'll login with the sharded wallet
     const result = await this.AuthQuerier.call<AuthAndWalletRpcReturnType>({
       procedureName: "loginWithStoredTokenDetails",
       params: {
@@ -280,15 +320,11 @@ export class Auth {
    * @internal
    */
   async logout(): Promise<LogoutReturnType> {
-    const { success } = await this.AuthQuerier.call<LogoutReturnType>({
-      procedureName: "logout",
-      params: undefined,
-    });
     const isRemoveAuthCookie = await this.localStorage.removeAuthCookie();
     const isRemoveUserId = await this.localStorage.removeWalletUserId();
 
     return {
-      success: success || isRemoveAuthCookie || isRemoveUserId,
+      success: isRemoveAuthCookie || isRemoveUserId,
     };
   }
 }

@@ -38,7 +38,7 @@ export function SponsoredInAppTxPreview() {
           ) : null}
           {smartAccount ? (
             <>
-              <p className="font-semibold text-center mb-2">
+              <p className="mb-2 font-semibold text-center">
                 You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
                 Kittens
               </p>
