@@ -63,10 +63,10 @@ export function InAppWalletFormGroup(props: {
                   !enabled && "opacity-50",
                 )}
                 key={method}
-                htmlFor="in-app-wallet"
+                htmlFor={`in-app-wallet-${method}`}
               >
                 <Checkbox
-                  id="in-app-wallet"
+                  id={`in-app-wallet-${method}`}
                   checked={enabled}
                   onCheckedChange={(checked) => {
                     setConnectOptions((v) => {
