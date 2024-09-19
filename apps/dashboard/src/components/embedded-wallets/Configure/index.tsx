@@ -603,7 +603,7 @@ function Fieldset(props: {
   return (
     <DynamicHeight>
       <fieldset className="border p-4 md:p-6 border-border rounded-lg bg-muted/50">
-        {/* put inside div to remove defualt styles on legend  */}
+        {/* put inside div to remove default styles on legend  */}
         <div className="text-xl font-semibold tracking-tight mb-4">
           <legend> {props.legend}</legend>
         </div>
