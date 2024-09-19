@@ -15,6 +15,11 @@ module.exports = {
           'Are you *sure* you need to use "useEffect" here? If you loading any async function prefer using "useQuery".',
       },
       {
+        selector: "CallExpression[callee.name='createContext']",
+        message:
+          'Are you *sure* you need to use a "Context"? In almost all cases you should prefer passing props directly.',
+      },
+      {
         selector: "CallExpression[callee.name='defineChain']",
         message:
           "Use useV5DashboardChain instead if you are using it inside a component",

@@ -9,6 +9,8 @@ type AllChainsData = {
   slugToChainRecord: Record<string, ChainMetadata>;
 };
 
+// Legacy: we need to find a way to remove this
+// eslint-disable-next-line no-restricted-syntax
 export const AllChainsContext = createContext<AllChainsData | undefined>(
   undefined,
 );

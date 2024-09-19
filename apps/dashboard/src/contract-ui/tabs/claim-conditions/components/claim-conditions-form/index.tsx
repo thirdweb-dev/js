@@ -162,6 +162,8 @@ interface ClaimsConditionFormContextData {
   claimConditionType: ClaimConditionType;
 }
 
+// legacy, but we SHOULD remove this and instead pass down props!
+// eslint-disable-next-line no-restricted-syntax
 const ClaimsConditionFormContext = createContext<
   ClaimsConditionFormContextData | undefined
 >(undefined);
