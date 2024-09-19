@@ -82,6 +82,7 @@ export enum AuthProvider {
   APPLE = "Apple",
   PASSKEY = "Passkey",
   DISCORD = "Discord",
+  COINBASE = "Coinbase",
   X = "X",
   LINE = "Line",
   FARCASTER = "Farcaster",

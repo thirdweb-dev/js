@@ -41,10 +41,11 @@ function getOauthLoginPath(
     case "line":
     case "x":
     case "guest":
+    case "coinbase":
     case "discord":
       return getLoginUrl({ authOption, client, ecosystem });
     default:
-      return "";
+      throw new Error(`Unsupported auth option: ${authOption}`);
   }
 }
 

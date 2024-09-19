@@ -111,6 +111,7 @@ export const ConnectWalletSocialOptions = (
     discord: locale.signInWithDiscord,
     line: "LINE",
     x: "X",
+    coinbase: "Coinbase",
     farcaster: "Farcaster",
     telegram: "Telegram",
   };

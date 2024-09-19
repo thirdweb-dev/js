@@ -30,6 +30,7 @@ import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import {
   APPLE_ICON,
+  COINBASE_ICON,
   DISCORD_ICON,
   FACEBOOK_ICON,
   FARCASTER_ICON,
@@ -53,6 +54,7 @@ const defaultAuthOptions: InAppWalletAuth[] = [
 const socialIcons = {
   google: GOOGLE_ICON,
   facebook: FACEBOOK_ICON,
+  coinbase: COINBASE_ICON,
   apple: APPLE_ICON,
   discord: DISCORD_ICON,
   line: LINE_ICON,

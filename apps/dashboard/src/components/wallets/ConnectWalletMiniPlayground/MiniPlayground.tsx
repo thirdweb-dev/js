@@ -76,6 +76,7 @@ function usePlaygroundWallets() {
     email: true,
     passkey: true,
     phone: true,
+    coinbase: false,
     guest: false,
   });
 

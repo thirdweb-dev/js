@@ -15,6 +15,7 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * - Apple
  * - Facebook
  * - Discord
+ * - Coinbase
  * - Telegram
  * - LINE
  * - X

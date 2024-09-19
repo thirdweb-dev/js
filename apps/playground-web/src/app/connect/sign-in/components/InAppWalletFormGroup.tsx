@@ -18,6 +18,7 @@ const allInAppWalletLoginMethods: InAppWalletAuth[] = [
   "x",
   "facebook",
   "apple",
+  "coinbase",
   "guest",
 ];
 
