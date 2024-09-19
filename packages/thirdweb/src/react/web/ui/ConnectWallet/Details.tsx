@@ -20,7 +20,11 @@ import { formatNumber } from "../../../../utils/formatNumber.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
-import type { AppMetadata } from "../../../../wallets/types.js";
+import {
+  type AppMetadata,
+  type SocialAuthOption,
+  socialAuthOptions,
+} from "../../../../wallets/types.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import {
   CustomThemeProvider,
@@ -1070,6 +1074,15 @@ function InAppWalletUserInfo(props: {
       const lastAuthProvider = await getLastAuthProvider(webLocalStorage);
       if (lastAuthProvider === "guest") {
         return "Guest";
+      }
+      if (
+        lastAuthProvider &&
+        (activeWallet?.id === "inApp" || activeWallet?.id === "smart") &&
+        socialAuthOptions.includes(lastAuthProvider as SocialAuthOption)
+      ) {
+        return (
+          lastAuthProvider.slice(0, 1).toUpperCase() + lastAuthProvider.slice(1)
+        );
       }
       return walletInfo?.name;
     },
