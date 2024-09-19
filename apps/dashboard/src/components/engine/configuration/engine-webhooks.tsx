@@ -1,7 +1,6 @@
 "use client";
 
 import { useEngineWebhooks } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex } from "@chakra-ui/react";
 import { Heading, Link, Text } from "tw-components";
 import { AddWebhookButton } from "./add-webhook-button";
 import { WebhooksTable } from "./webhooks-table";
@@ -16,8 +15,8 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({
   const webhooks = useEngineWebhooks(instanceUrl);
 
   return (
-    <Flex flexDir="column" gap={4}>
-      <Flex flexDir="column" gap={2}>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         <Heading size="title.md">Webhooks</Heading>
         <Text>
           Notify your app backend when transaction and backend wallet events
@@ -31,7 +30,7 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({
           </Link>
           .
         </Text>
-      </Flex>
+      </div>
       <WebhooksTable
         instanceUrl={instanceUrl}
         webhooks={webhooks.data || []}
@@ -39,6 +38,6 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({
         isFetched={webhooks.isFetched}
       />
       <AddWebhookButton instanceUrl={instanceUrl} />
-    </Flex>
+    </div>
   );
 };

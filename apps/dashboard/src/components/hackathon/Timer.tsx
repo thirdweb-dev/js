@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Text } from "tw-components";
 
@@ -58,9 +57,9 @@ const Timer = ({ dateStr }: TimerProps) => {
   ];
 
   return (
-    <Flex gap="2">
+    <div className="flex flex-row gap-2">
       {items.map(({ label, value }) => (
-        <Flex flexDir="column" key={label} align="center">
+        <div className="flex flex-col items-center" key={label}>
           <Text
             fontSize={{ base: "36px", md: "48px" }}
             bg="#FFFFFF14"
@@ -72,9 +71,9 @@ const Timer = ({ dateStr }: TimerProps) => {
             {value < 10 ? `0${value}` : value}
           </Text>
           <Text color="white">{value === 1 ? label : `${label}s`}</Text>
-        </Flex>
+        </div>
       ))}
-    </Flex>
+    </div>
   );
 };
 

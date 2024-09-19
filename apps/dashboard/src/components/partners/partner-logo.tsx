@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 
 const PARTNER_LOGO_MAP = {
@@ -103,7 +102,7 @@ interface PartnerLogoProps {
 }
 export const PartnerLogo: React.FC<PartnerLogoProps> = ({ partner }) => {
   return (
-    <Flex justifyContent="center">
+    <div className="flex flex-row justify-center">
       <ChakraNextImage
         opacity="0.8"
         pointerEvents="none"
@@ -117,6 +116,6 @@ export const PartnerLogo: React.FC<PartnerLogoProps> = ({ partner }) => {
         sizes="(max-width: 768px) 25vw,
                 10vw"
       />
-    </Flex>
+    </div>
   );
 };

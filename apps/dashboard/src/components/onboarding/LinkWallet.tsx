@@ -1,6 +1,5 @@
 import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Flex } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Button, TrackedLink } from "tw-components";
 import { shortenString } from "utils/usedapp-external";
@@ -87,8 +86,8 @@ const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
         }
       />
       <form>
-        <Flex gap={8} flexDir="column" w="full">
-          <Flex flexDir="column" gap={3}>
+        <div className="flex flex-col w-full gap-8">
+          <div className="flex flex-col gap-3">
             <Button
               w="full"
               size="lg"
@@ -111,8 +110,8 @@ const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
             >
               Use another email
             </Button>
-          </Flex>
-        </Flex>
+          </div>
+        </div>
       </form>
     </>
   );

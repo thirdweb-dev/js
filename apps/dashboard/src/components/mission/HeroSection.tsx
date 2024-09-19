@@ -1,10 +1,9 @@
-import { Flex } from "@chakra-ui/react";
 import { LandingDesktopMobileImage } from "components/landing-pages/desktop-mobile-image";
 import { Heading } from "tw-components";
 
 const HeroSection = ({ text }: { text: string }) => {
   return (
-    <Flex flexDir="column" alignItems="center" mt={{ base: 20, md: 140 }}>
+    <div className="flex flex-col items-center mt-5 md:mt-[140px]">
       <LandingDesktopMobileImage
         image={require("../../../public/assets/landingpage/desktop/xl-logo.png")}
         mobileImage={require("../../../public/assets/landingpage/mobile/xl-logo.png")}
@@ -20,7 +19,7 @@ const HeroSection = ({ text }: { text: string }) => {
       >
         {text}
       </Heading>
-    </Flex>
+    </div>
   );
 };
 
