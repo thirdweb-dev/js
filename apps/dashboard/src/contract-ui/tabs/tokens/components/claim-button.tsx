@@ -53,6 +53,7 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
         <Button
           colorScheme="primary"
           leftIcon={<Gem size={16} />}
+          isDisabled={!account}
           {...restButtonProps}
         >
           Claim

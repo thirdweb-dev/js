@@ -3,10 +3,10 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
-import { Icon } from "@chakra-ui/react";
+import { Droplet } from "lucide-react";
 import { useState } from "react";
-import { FiDroplet } from "react-icons/fi";
 import type { ThirdwebContract } from "thirdweb";
 import { balanceOf } from "thirdweb/extensions/erc20";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
@@ -33,24 +33,23 @@ export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
   const [open, setOpen] = useState(false);
 
   return (
-    <>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent className="z-[10000] lg:w-[700px] sm:w-[540px] sm:max-w-[90%]">
-          <SheetHeader>
-            <SheetTitle>Aidrop tokens</SheetTitle>
-          </SheetHeader>
-          <TokenAirdropForm contract={contract} />
-        </SheetContent>
-      </Sheet>
-      <Button
-        colorScheme="primary"
-        leftIcon={<Icon as={FiDroplet} />}
-        {...restButtonProps}
-        onClick={() => setOpen(true)}
-        isDisabled={!hasBalance}
-      >
-        Airdrop
-      </Button>
-    </>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger>
+        <Button
+          colorScheme="primary"
+          leftIcon={<Droplet size={16} />}
+          {...restButtonProps}
+          isDisabled={!hasBalance}
+        >
+          Airdrop
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="z-[10000] lg:w-[700px] sm:w-[540px] sm:max-w-[90%]">
+        <SheetHeader>
+          <SheetTitle>Aidrop tokens</SheetTitle>
+        </SheetHeader>
+        <TokenAirdropForm contract={contract} toggle={setOpen} />
+      </SheetContent>
+    </Sheet>
   );
 };

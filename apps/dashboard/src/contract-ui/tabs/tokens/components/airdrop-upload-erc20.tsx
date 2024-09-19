@@ -1,37 +1,37 @@
-import { thirdwebClient } from "@/constants/client";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   AspectRatio,
   Center,
   HStack,
-  Icon,
   IconButton,
   Link,
   ListItem,
   Portal,
   Select,
-  Stack,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
-  Tooltip,
   Tr,
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
-import Papa from "papaparse";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { type DropzoneOptions, useDropzone } from "react-dropzone";
-import { BsFillCloudUploadFill } from "react-icons/bs";
-import { IoAlertCircleOutline } from "react-icons/io5";
+import { useQueries } from "@tanstack/react-query";
 import {
-  MdFirstPage,
-  MdLastPage,
-  MdNavigateBefore,
-  MdNavigateNext,
-} from "react-icons/md";
+  ChevronFirst,
+  ChevronLast,
+  ChevronLeft,
+  ChevronRight,
+  CircleAlert,
+  Upload,
+} from "lucide-react";
+import Papa from "papaparse";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { type DropzoneOptions, useDropzone } from "react-dropzone";
 import { type Column, usePagination, useTable } from "react-table";
+import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import { isAddress } from "thirdweb/utils";
 import { Button, Heading, Text } from "tw-components";
@@ -47,18 +47,74 @@ interface AirdropUploadProps {
   onClose: () => void;
 }
 
+async function checkIsAddress(
+  item: ERC20AirdropAddressInput,
+  thirdwebClient: ThirdwebClient,
+) {
+  const { address, ...rest } = item;
+  // Sending tokens to the zero address will result in an error
+  // if user wants to burn, they should use the Burn tab
+  if (address === ZERO_ADDRESS) {
+    return {
+      address,
+      resolvedAddress: address,
+      isValid: false,
+      ...rest,
+    };
+  }
+
+  let isValid = true;
+  let resolvedAddress = address;
+
+  try {
+    resolvedAddress = isAddress(address)
+      ? address
+      : await resolveAddress({ name: address, client: thirdwebClient });
+    isValid = !!resolvedAddress;
+  } catch {
+    isValid = false;
+  }
+
+  return {
+    address,
+    resolvedAddress,
+    isValid,
+    ...rest,
+  };
+}
+
+function processAirdropData(
+  data: (
+    | (ERC20AirdropAddressInput & { resolvedAddress: string })
+    | undefined
+  )[],
+) {
+  const seen = new Set();
+  const filteredData = data
+    .filter((o) => o !== undefined)
+    .filter((el) => {
+      const duplicate = seen.has(el.resolvedAddress);
+      seen.add(el.resolvedAddress);
+      return !duplicate;
+    });
+
+  const valid = filteredData.filter(({ isValid }) => isValid);
+  const invalid = filteredData.filter(({ isValid }) => !isValid);
+
+  // Make sure the invalid records are at the top so that users can see
+  const ordered = [...invalid, ...valid];
+  return ordered;
+}
+
 export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
   setAirdrop,
   onClose,
 }) => {
+  const thirdwebClient = useThirdwebClient();
   const [validAirdrop, setValidAirdrop] = useState<ERC20AirdropAddressInput[]>(
     [],
   );
-  const [airdropData, setAirdropData] = useState<ERC20AirdropAddressInput[]>(
-    [],
-  );
   const [noCsv, setNoCsv] = useState(false);
-  const [invalidFound, setInvalidFound] = useState(false);
 
   const reset = useCallback(() => {
     setValidAirdrop([]);
@@ -104,61 +160,21 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
     [],
   );
 
-  // FIXME: this can be a mutation or query instead!
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    if (validAirdrop.length === 0) {
-      return setAirdropData([]);
-    }
-
-    const normalizeAddresses = async (snapshot: ERC20AirdropAddressInput[]) => {
-      const normalized = await Promise.all(
-        snapshot.map(async ({ address, ...rest }) => {
-          let isValid = true;
-          let resolvedAddress = address;
-
-          try {
-            resolvedAddress = isAddress(address)
-              ? address
-              : await resolveAddress({ name: address, client: thirdwebClient });
-            isValid = !!resolvedAddress;
-          } catch {
-            isValid = false;
-          }
-
-          return {
-            address,
-            resolvedAddress,
-            isValid,
-            ...rest,
-          };
-        }),
-      );
-
-      const seen = new Set();
-      const filteredData = normalized.filter((el) => {
-        const duplicate = seen.has(el.resolvedAddress);
-        seen.add(el.resolvedAddress);
-        return !duplicate;
-      });
-
-      const valid = filteredData.filter(({ isValid }) => isValid);
-      const invalid = filteredData.filter(({ isValid }) => !isValid);
-
-      if (invalid?.length > 0) {
-        setInvalidFound(true);
-      }
-      const ordered = [...invalid, ...valid];
-      setAirdropData(ordered);
-    };
-    normalizeAddresses(validAirdrop);
-  }, [validAirdrop]);
-
-  const removeInvalid = useCallback(() => {
-    const filteredData = airdropData.filter(({ isValid }) => isValid);
-    setValidAirdrop(filteredData);
-    setInvalidFound(false);
-  }, [airdropData]);
+  const normalizeQuery = useQueries({
+    queries: validAirdrop.map((o) => ({
+      queryKey: ["snapshot-check-isAddress", o.address],
+      queryFn: () => checkIsAddress(o, thirdwebClient),
+    })),
+    combine: (results) => {
+      return {
+        data: {
+          result: processAirdropData(results.map((result) => result.data)),
+          invalidFound: !!results.find((o) => !o.data?.isValid),
+        },
+        pending: results.some((result) => result.isPending),
+      };
+    },
+  });
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -167,18 +183,29 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
   const paginationPortalRef = useRef<HTMLDivElement>(null);
 
   const onSave = () => {
-    setAirdrop(airdropData);
+    setAirdrop(normalizeQuery.data.result);
     onClose();
   };
 
+  const removeInvalid = useCallback(() => {
+    const filteredData = normalizeQuery.data?.result.filter(
+      ({ isValid }) => isValid,
+    );
+    setValidAirdrop(filteredData);
+  }, [normalizeQuery.data.result]);
+
   return (
-    <div className="gap-6 flex flex-col">
-      {validAirdrop.length > 0 ? (
+    <div className="gap-6 flex flex-col w-full">
+      {normalizeQuery.pending && <div>Loading... </div>}
+      {normalizeQuery.data?.result.length && validAirdrop.length > 0 ? (
         <>
-          <AirdropTable portalRef={paginationPortalRef} data={airdropData} />
-          <div className="flex flex-col justify-between p-0 md:p-4 mt-4 md:mt-0">
+          <AirdropTable
+            portalRef={paginationPortalRef}
+            data={normalizeQuery.data.result}
+          />
+          <div className="flex flex-col justify-between mt-4 md:mt-0">
             <div ref={paginationPortalRef} />
-            <div className="gap-2 flex flex-row mt-5 w-full md:w-auto ml-auto">
+            <div className="gap-2 flex flex-row mt-3 w-full md:w-auto ml-auto">
               <Button
                 borderRadius="md"
                 disabled={validAirdrop.length === 0}
@@ -189,7 +216,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
               >
                 Reset
               </Button>
-              {invalidFound ? (
+              {normalizeQuery.data.invalidFound ? (
                 <Button
                   borderRadius="md"
                   colorScheme="primary"
@@ -232,11 +259,9 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
             >
               <input {...getInputProps()} />
               <VStack p={6}>
-                <Icon
-                  as={BsFillCloudUploadFill}
-                  boxSize={8}
-                  mb={2}
-                  color={noCsv ? "red.500" : "gray.600"}
+                <Upload
+                  size={16}
+                  className={`${noCsv ? "text-red-500" : "text-gray-500"}`}
                 />
                 {isDragActive ? (
                   <Heading as={Text} size="label.md">
@@ -249,7 +274,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
                     color={noCsv ? "red.500" : "gray.600"}
                   >
                     {noCsv
-                      ? `No valid CSV file found, make sure your CSV includes the "address" column.`
+                      ? `No valid CSV file found, make sure your CSV includes the "address" & "quantity" column.`
                       : "Drag & Drop a CSV file here"}
                   </Heading>
                 )}
@@ -294,20 +319,22 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
             return address;
           }
           return (
-            <Tooltip
+            <ToolTipLabel
               label={
-                address.startsWith("0x")
-                  ? "Address is not valid"
-                  : "Address couldn't be resolved"
+                address === ZERO_ADDRESS
+                  ? "Cannot send tokens to ZERO_ADDRESS"
+                  : address.startsWith("0x")
+                    ? "Address is not valid"
+                    : "Address couldn't be resolved"
               }
             >
-              <Stack direction="row" align="center">
-                <Icon as={IoAlertCircleOutline} color="red.500" boxSize={5} />
-                <Text fontWeight="bold" color="red.500" cursor="default">
+              <div className="flex flex-row items-center gap-2">
+                <CircleAlert size={16} className="text-red-500" />
+                <div className="font-bold text-red-500 cursor-default">
                   {address}
-                </Text>
-              </Stack>
-            </Tooltip>
+                </div>
+              </div>
+            </ToolTipLabel>
           );
         },
       },
@@ -397,53 +424,57 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
           })}
         </Tbody>
       </Table>
-      <Portal containerRef={portalRef}>
-        <Center w="100%">
-          <HStack>
-            <IconButton
-              isDisabled={!canPreviousPage}
-              aria-label="first page"
-              icon={<Icon as={MdFirstPage} />}
-              onClick={() => gotoPage(0)}
-            />
-            <IconButton
-              isDisabled={!canPreviousPage}
-              aria-label="previous page"
-              icon={<Icon as={MdNavigateBefore} />}
-              onClick={() => previousPage()}
-            />
-            <Text whiteSpace="nowrap">
-              Page <strong>{pageIndex + 1}</strong> of{" "}
-              <strong>{pageOptions.length}</strong>
-            </Text>
-            <IconButton
-              isDisabled={!canNextPage}
-              aria-label="next page"
-              icon={<Icon as={MdNavigateNext} />}
-              onClick={() => nextPage()}
-            />
-            <IconButton
-              isDisabled={!canNextPage}
-              aria-label="last page"
-              icon={<Icon as={MdLastPage} />}
-              onClick={() => gotoPage(pageCount - 1)}
-            />
 
-            <Select
-              onChange={(e) => {
-                setPageSize(Number.parseInt(e.target.value as string, 10));
-              }}
-              value={pageSize}
-            >
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-              <option value="250">250</option>
-              <option value="500">500</option>
-            </Select>
-          </HStack>
-        </Center>
-      </Portal>
+      {/* Only need to show the Pagination components if we have more than 25 records */}
+      {data.length > 25 && (
+        <Portal containerRef={portalRef}>
+          <Center w="100%">
+            <HStack>
+              <IconButton
+                isDisabled={!canPreviousPage}
+                aria-label="first page"
+                icon={<ChevronFirst size={16} />}
+                onClick={() => gotoPage(0)}
+              />
+              <IconButton
+                isDisabled={!canPreviousPage}
+                aria-label="previous page"
+                icon={<ChevronLeft size={16} />}
+                onClick={() => previousPage()}
+              />
+              <Text whiteSpace="nowrap">
+                Page <strong>{pageIndex + 1}</strong> of{" "}
+                <strong>{pageOptions.length}</strong>
+              </Text>
+              <IconButton
+                isDisabled={!canNextPage}
+                aria-label="next page"
+                icon={<ChevronRight size={16} />}
+                onClick={() => nextPage()}
+              />
+              <IconButton
+                isDisabled={!canNextPage}
+                aria-label="last page"
+                icon={<ChevronLast size={16} />}
+                onClick={() => gotoPage(pageCount - 1)}
+              />
+
+              <Select
+                onChange={(e) => {
+                  setPageSize(Number.parseInt(e.target.value as string, 10));
+                }}
+                value={pageSize}
+              >
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </Select>
+            </HStack>
+          </Center>
+        </Portal>
+      )}
     </>
   );
 };

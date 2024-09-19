@@ -32,19 +32,26 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       if (!headers) {
         headers = new Headers();
       }
+      // auth token if secret key === jwt
       const authToken =
         client.secretKey && isJWT(client.secretKey)
           ? client.secretKey
           : undefined;
+      // secret key if secret key !== jwt
+      const secretKey =
+        client.secretKey && !isJWT(client.secretKey)
+          ? client.secretKey
+          : undefined;
+      const clientId = client.clientId;
 
       // if we have an auth token set, use that (thirdweb.com/dashboard sets this for the user)
       // pay urls should never send the auth token, because we always want the "developer" to be the one making the request, not the "end user"
       if (authToken && !isPayUrl(url)) {
         headers.set("authorization", `Bearer ${authToken}`);
-      } else if (client.secretKey) {
-        headers.set("x-secret-key", client.secretKey);
-      } else if (client.clientId) {
-        headers.set("x-client-id", client.clientId);
+      } else if (secretKey) {
+        headers.set("x-secret-key", secretKey);
+      } else if (clientId) {
+        headers.set("x-client-id", clientId);
       }
 
       if (ecosystem) {
