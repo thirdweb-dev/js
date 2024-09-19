@@ -4,7 +4,6 @@ import {
   TriangleDownIcon,
 } from "@radix-ui/react-icons";
 import { useMemo } from "react";
-import { sepolia } from "../../../../../../../chains/chain-definitions/sepolia.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
@@ -15,6 +14,7 @@ import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQ
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { createAndSignUserOp } from "../../../../../../../wallets/smart/lib/userop.js";
+import { hexlifyUserOp } from "../../../../../../../wallets/smart/lib/utils.js";
 import { smartWallet } from "../../../../../../../wallets/smart/smart-wallet.js";
 import {
   type Theme,
@@ -28,6 +28,7 @@ import {
   useChainName,
 } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useActiveAccount } from "../../../../../../core/hooks/wallets/useActiveAccount.js";
+import { useSwitchActiveWalletChain } from "../../../../../../core/hooks/wallets/useSwitchActiveWalletChain.js";
 import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -116,11 +117,12 @@ export function FiatSteps(props: {
   } = props.partialQuote;
 
   const account = useActiveAccount();
-  const deploySmartWallet = async ({ chain }: { chain: Chain }) => {
-    // TODO: Temporarily used for testing.
-    chain = sepolia;
+  const switchChain = useSwitchActiveWalletChain();
 
+  const deploySmartWallet = async ({ chain }: { chain: Chain }) => {
     if (!account) return;
+
+    await switchChain(chain);
 
     const smartWalletHandle = smartWallet({
       chain,
@@ -154,8 +156,8 @@ export function FiatSteps(props: {
       },
     });
 
-    const { signedUserOp, hexlifiedUserOp } = await createAndSignUserOp({
-      transaction: sessionKeyTx,
+    const signedUserOp = await createAndSignUserOp({
+      transactions: [sessionKeyTx],
       adminAccount: account,
       client: props.client,
       smartWalletOptions: {
@@ -163,6 +165,8 @@ export function FiatSteps(props: {
         sponsorGas: true,
       },
     });
+
+    const hexlifiedUserOp = hexlifyUserOp(signedUserOp);
     console.log("signedUserOp", signedUserOp);
     console.log("hexlifiedUserOp", hexlifiedUserOp);
     console.log("sessionKeyTx", sessionKeyTx);
@@ -198,12 +202,6 @@ export function FiatSteps(props: {
       smartWalletAddress: smartAccount.address,
       userAddress: account.address,
     };
-
-    // const tx = await sendTransaction({
-    //   transaction: sessionKeyTx,
-    //   account: account,
-    // });
-    // console.log(tx);
   };
 
   const currency = getCurrencyMeta(fromCurrencySymbol);

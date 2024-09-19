@@ -33,20 +33,39 @@ import {
 } from "./bundler.js";
 import {
   predictAddress,
+  prepareBatchExecute,
   prepareCreateAccount,
   prepareExecute,
 } from "./calls.js";
 import {
-  DEFAULT_ACCOUNT_FACTORY_V0_6,
   DUMMY_SIGNATURE,
   ENTRYPOINT_ADDRESS_v0_6,
   ENTRYPOINT_ADDRESS_v0_7,
+  getDefaultAccountFactory,
   getDefaultBundlerUrl,
   getEntryPointVersion,
 } from "./constants.js";
 import { getPackedUserOperation } from "./packUserOp.js";
 import { getPaymasterAndData } from "./paymaster.js";
-import { generateRandomUint192, hexlifyUserOp } from "./utils.js";
+import { generateRandomUint192 } from "./utils.js";
+
+const isDeployingSet: Set<string> = new Set();
+
+const getKey = (accountContract: ThirdwebContract) => {
+  return `${accountContract.chain.id}:${accountContract.address}`;
+};
+
+export const markAccountDeploying = (accountContract: ThirdwebContract) => {
+  isDeployingSet.add(getKey(accountContract));
+};
+
+export const clearAccountDeploying = (accountContract: ThirdwebContract) => {
+  isDeployingSet.delete(getKey(accountContract));
+};
+
+export const isAccountDeploying = (accountContract: ThirdwebContract) => {
+  return isDeployingSet.has(getKey(accountContract));
+};
 
 /**
  * Wait for the user operation to be mined.
@@ -265,17 +284,25 @@ async function populateUserOp_v0_7(args: {
     maxPriorityFeePerGas,
   } = args;
   const { chain, client } = bundlerOptions;
-  const factory = isDeployed ? undefined : factoryContract.address;
-  const factoryData = isDeployed
-    ? "0x"
-    : await encode(
-        prepareCreateAccount({
-          factoryContract: factoryContract,
-          adminAddress,
-          accountSalt: overrides?.accountSalt,
-          createAccountOverride: overrides?.createAccount,
-        }),
-      );
+
+  let factory: string | undefined;
+  let factoryData: Hex;
+  // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
+  if (isDeployed || isAccountDeploying(accountContract)) {
+    factoryData = "0x";
+    await waitForAccountDeployed(accountContract);
+  } else {
+    factory = factoryContract.address;
+    factoryData = await encode(
+      prepareCreateAccount({
+        factoryContract: factoryContract,
+        adminAddress,
+        accountSalt: overrides?.accountSalt,
+        createAccountOverride: overrides?.createAccount,
+      }),
+    );
+    markAccountDeploying(accountContract);
+  }
 
   const partialOp: UserOperationV07 = {
     sender: accountContract.address,
@@ -394,14 +421,21 @@ async function populateUserOp_v0_6(args: {
     maxPriorityFeePerGas,
   } = args;
   const { chain, client } = bundlerOptions;
-  const initCode = isDeployed
-    ? "0x"
-    : await getAccountInitCode({
-        factoryContract: factoryContract,
-        adminAddress,
-        accountSalt: overrides?.accountSalt,
-        createAccountOverride: overrides?.createAccount,
-      });
+  let initCode: Hex;
+
+  // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
+  if (isDeployed || isAccountDeploying(accountContract)) {
+    initCode = "0x";
+    await waitForAccountDeployed(accountContract);
+  } else {
+    initCode = await getAccountInitCode({
+      factoryContract: factoryContract,
+      adminAddress,
+      accountSalt: overrides?.accountSalt,
+      createAccountOverride: overrides?.createAccount,
+    });
+    markAccountDeploying(accountContract);
+  }
 
   const partialOp: UserOperationV06 = {
     sender: accountContract.address,
@@ -600,15 +634,34 @@ async function getAccountNonce(options: {
   });
 }
 
+/**
+ * Create and sign a user operation.
+ * @param options - The options for creating and signing the user operation
+ * @returns - The signed user operation
+ * @example
+ * ```ts
+ * import { createAndSignUserOp } from "thirdweb/wallets/smart";
+ *
+ * const userOp = await createAndSignUserOp({
+ *  client,
+ *  adminAccount,
+ *  smartWalletOptions,
+ *  transactions,
+ * });
+ * ```
+ * @walletUtils
+ */
 export async function createAndSignUserOp(options: {
-  transaction: PreparedTransaction;
+  transactions: PreparedTransaction[];
   adminAccount: Account;
   client: ThirdwebClient;
   smartWalletOptions: SmartWalletOptions;
 }) {
   const config = options.smartWalletOptions;
   const factoryContract = getContract({
-    address: config.factoryAddress || DEFAULT_ACCOUNT_FACTORY_V0_6,
+    address:
+      config.factoryAddress ||
+      getDefaultAccountFactory(config.overrides?.entrypointAddress),
     chain: config.chain,
     client: options.client,
   });
@@ -624,20 +677,39 @@ export async function createAndSignUserOp(options: {
     chain: config.chain,
     client: options.client,
   });
-  const serializedTx = await toSerializableTransaction({
-    transaction: options.transaction,
-  });
-  const executeTx = prepareExecute({
-    accountContract,
-    transaction: serializedTx,
-    executeOverride: config.overrides?.execute,
-  });
+
+  let executeTx: PreparedTransaction;
+  if (options.transactions.length === 1) {
+    const tx = options.transactions[0] as PreparedTransaction;
+    const serializedTx = await toSerializableTransaction({
+      transaction: tx,
+    });
+    executeTx = prepareExecute({
+      accountContract,
+      transaction: serializedTx,
+      executeOverride: config.overrides?.execute,
+    });
+  } else {
+    const serializedTxs = await Promise.all(
+      options.transactions.map((tx) =>
+        toSerializableTransaction({
+          transaction: tx,
+        }),
+      ),
+    );
+    executeTx = prepareBatchExecute({
+      accountContract,
+      transactions: serializedTxs,
+      executeBatchOverride: config.overrides?.executeBatch,
+    });
+  }
+
   const unsignedUserOp = await createUnsignedUserOp({
     transaction: executeTx,
     factoryContract,
     accountContract,
     adminAddress: options.adminAccount.address,
-    sponsorGas: "sponsorGas" in config ? config.sponsorGas : false,
+    sponsorGas: "sponsorGas" in config ? config.sponsorGas : config.gasless,
     overrides: config.overrides,
   });
   const signedUserOp = await signUserOp({
@@ -647,6 +719,17 @@ export async function createAndSignUserOp(options: {
     entrypointAddress: config.overrides?.entrypointAddress,
     userOp: unsignedUserOp,
   });
-  const hexlifiedUserOp = hexlifyUserOp(signedUserOp);
-  return { signedUserOp, hexlifiedUserOp };
+  return signedUserOp;
+}
+
+async function waitForAccountDeployed(accountContract: ThirdwebContract) {
+  const startTime = Date.now();
+  while (isAccountDeploying(accountContract)) {
+    if (Date.now() - startTime > 60000) {
+      throw new Error(
+        "Account deployment is taking too long (over 1 minute). Please try again.",
+      );
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
 }
