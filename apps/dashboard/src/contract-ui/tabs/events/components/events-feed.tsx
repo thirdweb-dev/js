@@ -23,12 +23,12 @@ import {
   Stack,
   Switch,
   Tooltip,
-  useClipboard,
   useToast,
 } from "@chakra-ui/react";
 import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSingleQueryParam } from "hooks/useQueryParam";
+import { useClipboard } from "hooks/useClipboard";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { Fragment, useMemo, useState } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
@@ -50,7 +50,8 @@ interface EventsFeedProps {
 export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
   const [autoUpdate, setAutoUpdate] = useState(true);
   const allEvents = useActivity(contract, autoUpdate);
-  const event = useSingleQueryParam("event");
+  const searchParams = useSearchParams();
+  const event = searchParams?.get("event");
   const [selectedEvent, setSelectedEvent] = useState(event || "all");
 
   const chainSlug = useEVMContractInfo()?.chainSlug;

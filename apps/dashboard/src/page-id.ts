@@ -107,17 +107,11 @@ export enum PageId {
   // thirdweb.com/dashboard/contracts
   Contracts = "contracts",
 
-  // thirdweb.com/explore
-  Explore = "explore",
-
   // thirdweb.com/events
   Events = "events",
 
   // thirdweb..com/mission
   Mission = "mission",
-
-  // thirdweb.com/explore/[category]
-  ExploreCategory = "explore-category",
 
   // thirdweb.com/gas
   GasEstimator = "gas-estimator",
@@ -167,25 +161,15 @@ export enum PageId {
   // thirdweb.com/contracts/publish
   PublishMultiple = "publish-multiple-contracts",
 
-  // thirdweb.com/contracts/publish/:id
-  PublishSingle = "publish-single-contract",
-
   // thirdweb.com/:wallet
   // example: thirdweb.com/jns.eth
   Profile = "profile",
-
-  // thirdweb.com/:wallet/:contractId
-  // example: thirdweb.com/jns.eth/PermissionedERC721A
-  PublishedContract = "published-contract",
 
   // ---------------------------------------------------------------------------
   //  "deploy" product pages
   // ---------------------------------------------------------------------------
   // thirdweb.com/contracts/deploy
   DeployMultiple = "deploy-multiple-contracts",
-
-  // thirdweb.com/contracts/deploy/:id
-  DeploySingle = "deploy-single-contract",
 
   // thirdweb.com/:network/:contractAddress (evm)
   // example: thirdweb.com/goerli/0x2eaDAa60dBB74Ead3E20b23E4C5A0Dd789932846

@@ -21,15 +21,13 @@ export function createEnginePage(
     }
 
     return (
-      <div className="container px-4">
-        <EngineSidebarLayout rootPath="/dashboard/engine" engineId={engineId}>
-          <WithEngineInstance
-            engineId={engineId}
-            content={PageContent}
-            rootPath="/dashboard/engine"
-          />
-        </EngineSidebarLayout>
-      </div>
+      <EngineSidebarLayout rootPath="/dashboard/engine" engineId={engineId}>
+        <WithEngineInstance
+          engineId={engineId}
+          content={PageContent}
+          rootPath="/dashboard/engine"
+        />
+      </EngineSidebarLayout>
     );
   };
 

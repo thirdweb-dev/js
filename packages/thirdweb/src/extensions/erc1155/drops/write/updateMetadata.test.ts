@@ -41,7 +41,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("updateMetadata ERC1155", () => {
       contract,
       targetTokenId: 1n,
       newMetadata: { name: "token 1 - updated" },
-      client,
     });
     await sendAndConfirmTransaction({ transaction: updateTx, account });
 

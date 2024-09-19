@@ -1,11 +1,11 @@
-import { Flex, Link } from "@chakra-ui/react";
-import posthog from "posthog-js-opensource";
+import Link from "next/link";
+import posthog from "posthog-js";
 import { Text } from "tw-components";
 
 const PLEASE_REACH_OUT_MESSAGE = (
   <Text as="span" color="inherit">
     If you believe this is incorrect or the error persists, please visit our{" "}
-    <Link fontWeight="700" href="/support" isExternal textDecor="underline">
+    <Link className="underline font-bold" target="_blank" href="/support">
       support site
     </Link>
     .
@@ -18,14 +18,14 @@ export function parseErrorToMessage(error: unknown): string | JSX.Element {
   const message = parseError(error);
 
   return (
-    <Flex gap={4} flexDir="column">
+    <div className="flex flex-col gap-4">
       <Text as="span" color="inherit" noOfLines={3}>
         {message}
       </Text>
       <Text fontStyle="italic" as="span" color="inherit">
         {PLEASE_REACH_OUT_MESSAGE}
       </Text>
-    </Flex>
+    </div>
   );
 }
 
@@ -51,6 +51,16 @@ function parseError(error: unknown): string | JSX.Element {
 
   // handle generic error instances
   if (error instanceof Error) {
+    return error.message;
+  }
+
+  // handle rpc errors
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof error.message === "string"
+  ) {
     return error.message;
   }
 

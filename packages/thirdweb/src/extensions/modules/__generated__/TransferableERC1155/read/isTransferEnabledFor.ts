@@ -30,7 +30,7 @@ const FN_OUTPUTS = [
  * Checks if the `isTransferEnabledFor` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `isTransferEnabledFor` method is supported.
- * @module TransferableERC1155
+ * @modules TransferableERC1155
  * @example
  * ```ts
  * import { TransferableERC1155 } from "thirdweb/modules";
@@ -48,7 +48,7 @@ export function isIsTransferEnabledForSupported(availableSelectors: string[]) {
  * Encodes the parameters for the "isTransferEnabledFor" function.
  * @param options - The options for the isTransferEnabledFor function.
  * @returns The encoded ABI parameters.
- * @module TransferableERC1155
+ * @modules TransferableERC1155
  * @example
  * ```ts
  * import { TransferableERC1155 } from "thirdweb/modules";
@@ -67,7 +67,7 @@ export function encodeIsTransferEnabledForParams(
  * Encodes the "isTransferEnabledFor" function into a Hex string with its parameters.
  * @param options - The options for the isTransferEnabledFor function.
  * @returns The encoded hexadecimal string.
- * @module TransferableERC1155
+ * @modules TransferableERC1155
  * @example
  * ```ts
  * import { TransferableERC1155 } from "thirdweb/modules";
@@ -91,7 +91,7 @@ export function encodeIsTransferEnabledFor(
  * Decodes the result of the isTransferEnabledFor function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
- * @module TransferableERC1155
+ * @modules TransferableERC1155
  * @example
  * ```ts
  * import { TransferableERC1155 } from "thirdweb/modules";
@@ -106,7 +106,7 @@ export function decodeIsTransferEnabledForResult(result: Hex) {
  * Calls the "isTransferEnabledFor" function on the contract.
  * @param options - The options for the isTransferEnabledFor function.
  * @returns The parsed result of the function call.
- * @module TransferableERC1155
+ * @modules TransferableERC1155
  * @example
  * ```ts
  * import { TransferableERC1155 } from "thirdweb/modules";

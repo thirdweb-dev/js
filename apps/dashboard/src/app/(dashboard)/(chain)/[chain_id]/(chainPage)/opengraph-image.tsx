@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ImageResponse } from "next/og";
 import { download } from "thirdweb/storage";
 import { fetchChain } from "utils/fetchChain";
@@ -77,8 +77,8 @@ export default async function Image({
     ),
     // download the chain icon if there is one
     chain.icon?.url && hasWorkingChainIcon
-      ? download({ uri: chain.icon.url, client: thirdwebClient }).then((res) =>
-          res.arrayBuffer(),
+      ? download({ uri: chain.icon.url, client: getThirdwebClient() }).then(
+          (res) => res.arrayBuffer(),
         )
       : undefined,
     // download the background image (based on chain)

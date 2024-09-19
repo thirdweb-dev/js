@@ -333,8 +333,6 @@ export const USDT_ABI = [
       },
     ],
     outputs: [],
-    constant: false,
-    payable: false,
     stateMutability: "nonpayable",
   },
   {

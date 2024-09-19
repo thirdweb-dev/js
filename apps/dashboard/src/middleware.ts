@@ -88,7 +88,7 @@ export async function middleware(request: NextRequest) {
     }
     // if we have more than 1 path part, we're in the <address>/<slug> case -> publish page
     if (paths.length > 1) {
-      return rewrite(request, `/publish${pathname}`);
+      return rewrite(request, `/published-contract${pathname}`);
     }
   }
   // END /<address>/... case

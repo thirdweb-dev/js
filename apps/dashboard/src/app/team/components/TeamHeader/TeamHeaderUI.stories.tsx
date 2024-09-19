@@ -52,6 +52,7 @@ function Variants(props: {
             email="eng@thirdweb.com"
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
+            createProject={() => {}}
           />
         </BadgeContainer>
 
@@ -63,6 +64,7 @@ function Variants(props: {
             email={undefined}
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
+            createProject={() => {}}
           />
         </BadgeContainer>
 
@@ -74,6 +76,7 @@ function Variants(props: {
             email="eng@thirdweb.com"
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
+            createProject={() => {}}
           />
         </BadgeContainer>
 
@@ -85,6 +88,7 @@ function Variants(props: {
             email="eng@thirdweb.com"
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
+            createProject={() => {}}
           />
         </BadgeContainer>
       </div>

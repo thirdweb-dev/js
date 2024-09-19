@@ -1,6 +1,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert } from "@/components/ui/alert";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import {
   type EVMContractInfo,
   useEVMContractInfo,
@@ -12,12 +13,15 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
+import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { AppLayout } from "components/app-layouts/app";
 import { ConfigureNetworks } from "components/configure-networks/ConfigureNetworks";
 import { ensQuery } from "components/contract-components/hooks";
 import { ContractMetadata } from "components/custom-contract/contract-header/contract-metadata";
+import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import { THIRDWEB_DOMAIN } from "constants/urls";
 import { SupportedChainsReadyContext } from "contexts/configured-chains";
+import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { PrimaryDashboardButton } from "contract-ui/components/primary-dashboard-button";
 import { useContractRouteConfig } from "contract-ui/hooks/useRouteConfig";
 import { ContractSidebar } from "core-ui/sidebar/detail-page";
@@ -26,6 +30,8 @@ import {
   useSupportedChainsSlugRecord,
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
+import { resolveFunctionSelectors } from "lib/selectors";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
@@ -42,14 +48,10 @@ import { getContractMetadata } from "thirdweb/extensions/common";
 import { isERC20 } from "thirdweb/extensions/erc20";
 import { isERC721 } from "thirdweb/extensions/erc721";
 import { isERC1155 } from "thirdweb/extensions/erc1155";
+import { stringify } from "thirdweb/utils";
 import { fetchChain } from "utils/fetchChain";
 import type { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
-import { DeprecatedAlert } from "../../components/shared/DeprecatedAlert";
-import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
-import { resolveFunctionSelectors } from "../../lib/selectors";
-import { useV5DashboardChain } from "../../lib/v5-adapter";
 
 type EVMContractProps = {
   contractInfo?: EVMContractInfo;
@@ -160,22 +162,20 @@ const ContractPage: ThirdwebNextPage = () => {
   ]);
 
   const isSlugNumber = !Number.isNaN(Number(chainSlug));
-
   const router = useRouter();
-
   const activeTab = router.query?.paths?.[1] || "overview";
-
   const v5Chain = useV5DashboardChain(chain?.chainId);
+  const client = useThirdwebClient();
   const contract = useMemo(() => {
     if (!contractAddress || !v5Chain) {
       return undefined;
     }
     return getContract({
       address: contractAddress,
-      client: thirdwebClient,
+      client,
       chain: v5Chain,
     });
-  }, [contractAddress, v5Chain]);
+  }, [contractAddress, v5Chain, client]);
 
   if (!contractInfo) {
     return (
@@ -426,7 +426,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
         address,
         // eslint-disable-next-line no-restricted-syntax
         chain: mapV4ChainToV5Chain(chain),
-        client: thirdwebClient,
+        client: getThirdwebClient(),
       });
 
       const [isErc20, isErc721, isErc1155, _contractMetadata] =
@@ -454,7 +454,9 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
 
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      dehydratedState: dehydrate(queryClient, {
+        serializeData: (d) => stringify(d),
+      }),
       contractInfo: {
         chainSlug,
         contractAddress: checksummedAddress,

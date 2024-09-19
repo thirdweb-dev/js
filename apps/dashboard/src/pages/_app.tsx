@@ -15,14 +15,14 @@ import {
 } from "next/font/google";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import posthogCloud from "posthog-js";
-import posthogOpenSource from "posthog-js-opensource";
+import posthog from "posthog-js";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import type { ThirdwebNextPage } from "utils/types";
 import chakraTheme from "../theme";
 import "@/styles/globals.css";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
+import { AnnouncementBanner } from "../components/notices/AnnouncementBanner";
 
 const inter = interConstructor({
   subsets: ["latin"],
@@ -58,6 +58,9 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
   Component,
   pageProps,
 }) => {
+  // run this ONCE on app load
+  // eslint-disable-next-line no-restricted-syntax
+
   const router = useRouter();
   const { shouldReload } = useBuildId();
 
@@ -97,21 +100,8 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
   // legit use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    // Init PostHog Cloud (Used for surveys)
-    posthogCloud.init(
-      process.env.NEXT_PUBLIC_POSTHOG_CLOUD_API_KEY ||
-        "phc_oXH0qpLTaotkIQP5MdaWhtoOXvh1Iba7yNSQrLgWbLN",
-      {
-        api_host: "https://pg.paper.xyz",
-        autocapture: false,
-        debug: false,
-        capture_pageview: false,
-        disable_session_recording: true,
-      },
-    );
-
     // Init PostHog
-    posthogOpenSource.init(
+    posthog.init(
       process.env.NEXT_PUBLIC_POSTHOG_API_KEY ||
         "phc_hKK4bo8cHZrKuAVXfXGpfNSLSJuucUnguAgt2j6dgSV",
       {
@@ -123,12 +113,12 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
       },
     );
     // register the git commit sha on all subsequent events
-    posthogOpenSource.register({
+    posthog.register({
       tw_dashboard_version: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
     });
     // defer session recording start by 2 seconds because it synchronously loads JS
     const t = setTimeout(() => {
-      posthogOpenSource.startSessionRecording();
+      posthog.startSessionRecording();
     }, 2_000);
     return () => {
       clearTimeout(t);
@@ -149,11 +139,11 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
     if (pageId === prevPageId.current) {
       return;
     }
-    posthogOpenSource.register({
+    posthog.register({
       page_id: pageId,
       previous_page_id: prevPageId.current,
     });
-    posthogOpenSource.capture("$pageview");
+    posthog.capture("$pageview");
     return () => {
       prevPageId.current = pageId;
     };
@@ -273,7 +263,7 @@ const ConsoleApp = memo(function ConsoleApp({
 
       <TailwindTheme>
         <ChakraProvider theme={chakraThemeWithFonts}>
-          {/* <AnnouncementBanner /> */}
+          <AnnouncementBanner />
           {isFallback && Component.fallback
             ? Component.fallback
             : getLayout(<Component {...pageProps} />, pageProps)}

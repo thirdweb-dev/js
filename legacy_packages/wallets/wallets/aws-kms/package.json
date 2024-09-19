@@ -1,4 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-wallets-aws-kms.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-wallets-aws-kms.esm.js"
-}

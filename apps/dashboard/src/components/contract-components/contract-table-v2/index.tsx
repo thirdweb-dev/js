@@ -15,8 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { replaceDeployerAddress } from "components/explore/publisher";
-import type { ContractType } from "constants/contracts";
-import type { BuiltinContractDetails } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
@@ -40,19 +38,17 @@ interface PublishedContractTableProps {
   hidePublisher?: true;
 }
 
-type ContractDataInput = BuiltinContractDetails | PublishedContractDetails;
+type ContractDataInput = PublishedContractDetails;
 type ContractDataRow = ContractDataInput["metadata"] & {
   id: string;
-  contractType: ContractType;
 };
 
 function convertContractDataToRowData(
   input: ContractDataInput,
 ): ContractDataRow {
   return {
-    id: input.id,
+    id: input.contractId,
     ...input.metadata,
-    contractType: (input as BuiltinContractDetails)?.contractType || "custom",
   };
 }
 

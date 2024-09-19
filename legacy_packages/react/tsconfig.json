@@ -1,8 +1,0 @@
-{
-  "extends": "@thirdweb-dev/tsconfig/react-library.json",
-  "include": ["src"],
-  "compilerOptions": {
-    "resolveJsonModule": true,
-    "esModuleInterop": true
-  }
-}

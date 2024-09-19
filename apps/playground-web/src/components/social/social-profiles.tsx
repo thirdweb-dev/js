@@ -102,6 +102,7 @@ function SocialProfileCard({ profile }: { profile: SocialProfile }) {
   return (
     <div className="flex gap-4 bg-background border rounded-lg p-4 shadow-md">
       {avatar ? (
+        // eslint-disable-next-line @next/next/no-img-element
         <img src={avatar} alt={profile.name} className="size-10 rounded-full" />
       ) : (
         <div className="size-10 rounded-full bg-muted-foreground" />

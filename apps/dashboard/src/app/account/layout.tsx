@@ -13,7 +13,15 @@ export default async function AccountLayout(props: {
     <div className="min-h-full flex flex-col bg-background">
       <div className="grow flex flex-col">
         <HeaderAndNav />
+        <div className="py-10 border-b border-border">
+          <div className="max-w-[1100px] mx-auto px-6">
+            <h1 className="text-3xl tracking-tight font-semibold">
+              My Account
+            </h1>
+          </div>
+        </div>
         <SidebarLayout
+          className="max-w-[1100px]"
           sidebarLinks={[
             {
               href: "/account",

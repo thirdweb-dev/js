@@ -83,12 +83,12 @@ export const metrics = [
 const GUIDES = [
   {
     title: "The Quick-Start Guide to thirdweb Connect",
-    image: require("/public/assets/product-pages/connect/get-started.png"),
+    image: require("../../public/assets/product-pages/connect/get-started.png"),
     link: "https://portal.thirdweb.com/connect",
   },
   {
     title: "Add a Connect Wallet Button to Your App or Website",
-    image: require("/public/assets/product-pages/connect/connect-wallet.png"),
+    image: require("../../public/assets/product-pages/connect/connect-wallet.png"),
     link: "https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton",
   },
 ];

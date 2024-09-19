@@ -9,6 +9,7 @@ export type {
 
 // wallet hooks
 export { useActiveWallet } from "../react/core/hooks/wallets/useActiveWallet.js";
+export { useAdminWallet } from "../react/core/hooks/wallets/useAdminAccount.js";
 export { useActiveWalletChain } from "../react/core/hooks/wallets/useActiveWalletChain.js";
 export { useActiveWalletConnectionStatus } from "../react/core/hooks/wallets/useActiveWalletConnectionStatus.js";
 export { useActiveAccount } from "../react/core/hooks/wallets/useActiveAccount.js";

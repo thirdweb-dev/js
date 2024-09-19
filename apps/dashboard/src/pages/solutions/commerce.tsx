@@ -95,14 +95,14 @@ const Commerce: ThirdwebNextPage = () => {
         >
           <ProductCard
             title="Recognize loyal customers with NFTs "
-            icon={require("/public/assets/product-pages/extensions/hero-icon-1.png")}
+            icon={require("../../../public/assets/product-pages/extensions/hero-icon-1.png")}
           >
             Distribute NFTs to your most loyal customers and create new customer
             segments for future campaigns.
           </ProductCard>
           <ProductCard
             title="Reward customers with exclusive access"
-            icon={require("/public/assets/product-pages/extensions/hero-icon-3.png")}
+            icon={require("../../../public/assets/product-pages/extensions/hero-icon-3.png")}
           >
             Reward your customers and collab with other brands by tokengating
             your storefront. Give token holders exclusive access to products,
@@ -110,7 +110,7 @@ const Commerce: ThirdwebNextPage = () => {
           </ProductCard>
           <ProductCard
             title="Grow your revenue with NFT sales"
-            icon={require("/public/assets/product-pages/extensions/hero-icon-2.png")}
+            icon={require("../../../public/assets/product-pages/extensions/hero-icon-2.png")}
           >
             Create additional revenue streams with NFT sales. Sell NFTs directly
             through your storefront as a new product category or bundle with a
@@ -135,7 +135,7 @@ const Commerce: ThirdwebNextPage = () => {
             category={TRACKING_CATEGORY}
             description="Prebuilt contracts or build your own with the Solidity SDK to
                 distribute NFTs through your commerce app."
-            icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
+            icon={require("../../../public/assets/product-pages/dashboard/hero-icon-1.png")}
             href="/explore/commerce"
           />
           <ProductLearnMoreCard
@@ -144,7 +144,7 @@ const Commerce: ThirdwebNextPage = () => {
             description="Powerful SDKs enables you to build commerce apps that connects
             to users' wallets. Easily bootstrap projects with a single
             command."
-            icon={require("/public/assets/product-pages/dashboard/hero-icon-2.png")}
+            icon={require("../../../public/assets/product-pages/dashboard/hero-icon-2.png")}
             href="https://portal.thirdweb.com/contracts/interact/overview"
           />
           <ProductLearnMoreCard
@@ -153,7 +153,7 @@ const Commerce: ThirdwebNextPage = () => {
             description="View and interact with your Shopify store smart contracts
             directly from a user interface, e.g. view all the NFTs that have
             been minted to your most loyal customers."
-            icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
+            icon={require("../../../public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="/dashboard"
           />
         </SimpleGrid>
@@ -167,7 +167,7 @@ const Commerce: ThirdwebNextPage = () => {
           <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap={6}>
             <ProductCard
               title="Launch customer loyalty reward programs"
-              icon={require("/public/assets/solutions-pages/commerce/hero-icon-1.png")}
+              icon={require("../../../public/assets/solutions-pages/commerce/hero-icon-1.png")}
             >
               <Text size="body.lg">
                 Distribute membership passes with contracts from{" "}
@@ -197,7 +197,7 @@ const Commerce: ThirdwebNextPage = () => {
             </ProductCard>
             <ProductCard
               title="Sell digital collectibles"
-              icon={require("/public/assets/solutions-pages/commerce/hero-icon-2.png")}
+              icon={require("../../../public/assets/solutions-pages/commerce/hero-icon-2.png")}
             >
               <Text size="body.lg">
                 Merchants can sell digital collectibles direct from e-commerce
@@ -207,7 +207,7 @@ const Commerce: ThirdwebNextPage = () => {
             </ProductCard>
             <ProductCard
               title="Unlock both virtual and real world experiences"
-              icon={require("/public/assets/solutions-pages/commerce/hero-icon-3.png")}
+              icon={require("../../../public/assets/solutions-pages/commerce/hero-icon-3.png")}
             >
               <Text size="body.lg">
                 Sell digital tickets with exclusive access to online and offline
@@ -217,7 +217,7 @@ const Commerce: ThirdwebNextPage = () => {
             </ProductCard>
             <ProductCard
               title="Add web3 data to your customer funnel"
-              icon={require("/public/assets/solutions-pages/commerce/hero-icon-4.png")}
+              icon={require("../../../public/assets/solutions-pages/commerce/hero-icon-4.png")}
             >
               <Text size="body.lg">
                 Authenticate web3 users using{" "}

@@ -1,6 +1,7 @@
-import { Icon, IconButton, useClipboard } from "@chakra-ui/react";
+import { Icon, IconButton } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useClipboard } from "hooks/useClipboard";
 import { FiCopy } from "react-icons/fi";
 
 export const CopyButton: React.FC<{ text: string }> = ({ text }) => {

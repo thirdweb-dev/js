@@ -1,4 +1,6 @@
-import { thirdwebClient } from "@/constants/client";
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { Center, Flex, Skeleton, useBreakpointValue } from "@chakra-ui/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import Link from "next/link";
@@ -33,6 +35,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   chain,
   externalLinks,
 }) => {
+  const client = useThirdwebClient();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const cleanedChainName = chain?.name?.replace("Mainnet", "").trim();
   const validBlockExplorers = chain?.explorers
@@ -68,7 +71,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
           {data?.image ? (
             <MediaRenderer
               src={data.image}
-              client={thirdwebClient}
+              client={client}
               alt={data?.name?.toString() || ""}
               style={{
                 position: "absolute",

@@ -1,3 +1,5 @@
+"use client";
+
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type ApiKeyService,
@@ -34,20 +36,19 @@ import {
   Button,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Text,
   TrackedLink,
 } from "tw-components";
-import { fromArrayToList, toArrFromList } from "utils/string";
+import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
 
-interface SponsorshipPoliciesProps {
+type AccountAbstractionSettingsPageProps = {
   apiKeyServices: ApiKeyService[];
   trackingCategory: string;
-}
+};
 
-const sponsorshipPoliciesValidationSchema = z.object({
+const aaSettingsFormSchema = z.object({
   allowedChainIds: z.array(z.number()).nullable(),
   allowedContractAddresses: z
     .string()
@@ -96,15 +97,16 @@ const sponsorshipPoliciesValidationSchema = z.object({
   allowedOrBlockedWallets: z.string().nullable(),
 });
 
-export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
-  apiKeyServices,
-  trackingCategory,
-}) => {
+export function AccountAbstractionSettingsPage(
+  props: AccountAbstractionSettingsPageProps,
+) {
+  const { apiKeyServices, trackingCategory } = props;
   const bundlerServiceId = apiKeyServices?.find(
     (s) => s.name === "bundler",
   )?.id;
   const { data: policy } = usePolicies(bundlerServiceId);
-  const { mutate: updatePolicy } = useUpdatePolicies();
+  const { mutate: updatePolicy, isPending: updatingPolicy } =
+    useUpdatePolicies();
   const trackEvent = useTrack();
   const dashboardAccountQuery = useAccount();
 
@@ -117,19 +119,19 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
       allowedContractAddresses:
         policy?.allowedContractAddresses &&
         policy?.allowedContractAddresses?.length > 0
-          ? fromArrayToList(policy?.allowedContractAddresses)
+          ? joinWithComma(policy?.allowedContractAddresses)
           : null,
       allowedWallets:
         policy?.allowedWallets && policy?.allowedWallets?.length > 0
-          ? fromArrayToList(policy?.allowedWallets)
+          ? joinWithComma(policy?.allowedWallets)
           : null,
       blockedWallets:
         policy?.blockedWallets && policy?.blockedWallets?.length > 0
-          ? fromArrayToList(policy?.blockedWallets)
+          ? joinWithComma(policy?.blockedWallets)
           : null,
       bypassWallets:
         policy?.bypassWallets && policy?.bypassWallets?.length > 0
-          ? fromArrayToList(policy?.bypassWallets)
+          ? joinWithComma(policy?.bypassWallets)
           : null,
       serverVerifier: policy?.serverVerifier?.url
         ? { ...policy.serverVerifier, enabled: true }
@@ -145,8 +147,8 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
     [policy],
   );
 
-  const form = useForm<z.infer<typeof sponsorshipPoliciesValidationSchema>>({
-    resolver: zodResolver(sponsorshipPoliciesValidationSchema),
+  const form = useForm<z.infer<typeof aaSettingsFormSchema>>({
+    resolver: zodResolver(aaSettingsFormSchema),
     defaultValues: transformedQueryData,
     values: transformedQueryData,
   });
@@ -178,9 +180,6 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
         alignItems={"left"}
       >
         <Flex flexDir={"column"} gap={2}>
-          <Heading size="title.md" as="h1">
-            Sponsorship rules
-          </Heading>
           <Text>
             Configure the rules and rules for your sponsored transactions.{" "}
             <TrackedLink
@@ -194,7 +193,6 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
           </Text>
         </Flex>
       </Flex>
-
       <Flex
         flexDir="column"
         gap={6}
@@ -681,11 +679,15 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
         <Divider />
 
         <Box alignSelf="flex-end">
-          <Button type="submit" colorScheme="primary">
+          <Button
+            type="submit"
+            colorScheme="primary"
+            isLoading={updatingPolicy}
+          >
             Save changes
           </Button>
         </Box>
       </Flex>
     </Flex>
   );
-};
+}

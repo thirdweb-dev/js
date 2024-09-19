@@ -1,7 +1,6 @@
 // @ts-check
 /**
  *
- * @returns {Promise<import("@thirdweb-dev/chains").Chain[]>}
  */
 async function fetchChainsFromApi() {
   const res = await fetch(`https://api.thirdweb.com/v1/chains`, {
@@ -21,7 +20,6 @@ async function fetchChainsFromApi() {
 /**
  *
  * @param {number|string} chainIdOrSlug
- * @returns {Promise<import("@thirdweb-dev/chains").Chain>}
  */
 async function getSingleChain(chainIdOrSlug) {
   const res = await fetch(

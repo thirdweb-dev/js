@@ -39,7 +39,12 @@ function processQuery(
     return { isError: true };
   }
 
-  const aggregated = volumeQuery.data.aggregate;
+  const aggregated = volumeQuery.data?.aggregate;
+  if (!aggregated) {
+    return {
+      isEmpty: true,
+    };
+  }
 
   let succeeded = 0;
   let failed = 0;

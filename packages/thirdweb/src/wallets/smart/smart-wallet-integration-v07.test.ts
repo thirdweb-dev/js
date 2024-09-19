@@ -202,5 +202,60 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       expect(logs.some((l) => l.args.signer === newAdmin.address)).toBe(true);
       expect(logs.some((l) => l.args.isAdmin)).toBe(true);
     });
+
+    it("can execute a 2 tx in parallel", async () => {
+      const newSmartWallet = smartWallet({
+        chain,
+        gasless: true,
+        overrides: {
+          accountSalt: "test",
+        },
+      });
+      const newSmartAccount = await newSmartWallet.connect({
+        client: TEST_CLIENT,
+        personalAccount,
+      });
+      console.log("newSmartAccount", newSmartAccount.address);
+      const newSmartAccountContract = getContract({
+        address: newSmartAccount.address,
+        chain,
+        client,
+      });
+      let isDeployed = await isContractDeployed(newSmartAccountContract);
+      expect(isDeployed).toEqual(false);
+
+      // sending transactions in parallel should deploy the account and not cause errors
+      const txs = await Promise.all([
+        sendAndConfirmTransaction({
+          transaction: claimTo({
+            contract,
+            quantity: 1n,
+            to: newSmartAccount.address,
+            tokenId: 0n,
+          }),
+          account: newSmartAccount,
+        }),
+        sendAndConfirmTransaction({
+          transaction: claimTo({
+            contract,
+            quantity: 1n,
+            to: newSmartAccount.address,
+            tokenId: 0n,
+          }),
+          account: newSmartAccount,
+        }),
+      ]);
+      expect(txs.length).toEqual(2);
+      expect(txs.every((t) => t.transactionHash.length === 66)).toBe(true);
+
+      isDeployed = await isContractDeployed(newSmartAccountContract);
+      expect(isDeployed).toEqual(true);
+      const balance = await balanceOf({
+        contract,
+        owner: newSmartAccountContract.address,
+        tokenId: 0n,
+      });
+      expect(balance).toEqual(2n);
+    });
   },
 );

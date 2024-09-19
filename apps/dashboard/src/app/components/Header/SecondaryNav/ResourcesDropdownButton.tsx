@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CmdKSearchModal } from "components/cmd-k-search";
@@ -29,48 +30,47 @@ export function ResourcesDropdownButton() {
             <ChevronDownIcon className="size-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="p-4 min-w-[230px]" sideOffset={14}>
-          <div className="flex flex-col gap-4">
-            <Link
-              href="/chainlist"
-              className="text-muted-foreground hover:text-foreground text-sm flex items-center gap-2"
-            >
+        <DropdownMenuContent className="min-w-[230px]" sideOffset={14}>
+          <DropdownMenuItem>
+            <Link href="/chainlist" className="w-full p-1">
               Chainlist
             </Link>
+          </DropdownMenuItem>
 
+          <DropdownMenuItem>
             <Link
               href="https://playground.thirdweb.com/"
               target="_blank"
-              className="text-muted-foreground hover:text-foreground text-sm flex items-center gap-2"
+              className="w-full p-1"
             >
               Playground
             </Link>
+          </DropdownMenuItem>
 
-            <Link
-              href="/explore"
-              className="text-muted-foreground hover:text-foreground text-sm"
-            >
+          <DropdownMenuItem>
+            <Link href="/explore" className="w-full p-1">
               Explore Contracts
             </Link>
+          </DropdownMenuItem>
 
-            <Link
-              href="/trending"
-              className="text-muted-foreground hover:text-foreground text-sm"
-            >
+          <DropdownMenuItem>
+            <Link href="/trending" className="w-full p-1">
               Popular Contracts
             </Link>
+          </DropdownMenuItem>
 
+          <DropdownMenuItem>
             <Button
-              variant="link"
-              className="text-muted-foreground text-sm gap-2 !p-0 !h-auto hover:!no-underline hover:text-foreground text-left justify-between"
+              variant="ghost"
+              className="text-sm gap-2 !p-1 !h-auto text-left justify-between w-full"
               onClick={() => setIsCMDSearchModalOpen(true)}
             >
               Search Contracts
-              <span className="items-center flex gap-0.5 text-xs opacity-80">
+              <span className="items-center flex gap-0.5 text-xs text-muted-foreground">
                 <CommandIcon className="size-3" />K
               </span>
             </Button>
-          </div>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

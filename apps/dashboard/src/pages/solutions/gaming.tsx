@@ -110,8 +110,8 @@ export const metrics = [
     title: "Gala Games",
     description:
       "Partnering with DreamWorks to integrate their brand IP into the VOXverse — and bringing fans onchain with interoperable digital collectibles.",
-    image: require("/public/assets/solutions-pages/gaming/case-study-gala.png"),
-    mobileImage: require("/public/assets/solutions-pages/gaming/mobile-case-study-gala.png"),
+    image: require("../../../public/assets/solutions-pages/gaming/case-study-gala.png"),
+    mobileImage: require("../../../public/assets/solutions-pages/gaming/mobile-case-study-gala.png"),
     items: [],
     href: "https://blog.thirdweb.com/case-studies/dreamworks-launches-nft-avatars-for-web3-games-with-gala-and-the-sims-creators-voxverse/",
     hoverBackground: "#0053FF",
@@ -120,8 +120,8 @@ export const metrics = [
     title: "Paima Studios",
     description:
       "Bringing onchain games to all players — with instant onboarding, an `invisible` wallet experience, and the smoothest gameplay with signless & gasless UX.",
-    image: require("/public/assets/solutions-pages/gaming/case-study-ztx.png"),
-    mobileImage: require("/public/assets/solutions-pages/gaming/mobile-case-study-ztx.png"),
+    image: require("../../../public/assets/solutions-pages/gaming/case-study-ztx.png"),
+    mobileImage: require("../../../public/assets/solutions-pages/gaming/mobile-case-study-ztx.png"),
     items: [],
     href: "https://paimastudios.com",
     hoverBackground: "#00B477",
@@ -236,7 +236,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
           >
             <ImageCard
               title="Unity"
-              image={require("/public/assets/solutions-pages/gaming/gaming-unity.png")}
+              image={require("../../../public/assets/solutions-pages/gaming/gaming-unity.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
               href="https://portal.thirdweb.com/unity"
               linkTitle="Read the Unity SDK docs"
@@ -244,7 +244,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
             />
             <ImageCard
               title="Unreal Engine"
-              image={require("/public/assets/solutions-pages/gaming/gaming-unreal.png")}
+              image={require("../../../public/assets/solutions-pages/gaming/gaming-unreal.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
               href="https://portal.thirdweb.com/solutions/gaming/unreal-engine/quickstart"
               linkTitle="Read the Unreal Engine docs"
@@ -252,7 +252,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
             />
             <ImageCard
               title="Mobile"
-              image={require("/public/assets/solutions-pages/gaming/gaming-phone.png")}
+              image={require("../../../public/assets/solutions-pages/gaming/gaming-phone.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
               linkTitle="Read the React Native docs"
               href="https://portal.thirdweb.com/react-native/latest"
@@ -278,7 +278,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
           >
             <ImageCard
               title="Web3 Warriors"
-              image={require("/public/assets/solutions-pages/gaming/web3warriors.png")}
+              image={require("../../../public/assets/solutions-pages/gaming/web3warriors.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
               href="https://web3warriors.thirdweb.com"
               category="Unity"
@@ -291,7 +291,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
 
             <ImageCard
               title="Cat Attack"
-              image={require("/public/assets/solutions-pages/gaming/catattack-square.png")}
+              image={require("../../../public/assets/solutions-pages/gaming/catattack-square.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
               href="https://catattack.thirdweb.com"
               category="Mobile"
@@ -304,7 +304,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
 
             <ImageCard
               title="Play Speed Racer"
-              image={require("/public/assets/solutions-pages/gaming/gaming-speed-racer.png")}
+              image={require("../../../public/assets/solutions-pages/gaming/gaming-speed-racer.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
               href="https://engine-express.thirdweb-preview.com/"
               category="Unreal Engine"

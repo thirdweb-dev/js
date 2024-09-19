@@ -1,3 +1,6 @@
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   Box,
   Flex,
@@ -10,7 +13,12 @@ import {
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
+import { useQueryClient } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
+import {
+  DASHBOARD_ENGINE_RELAYER_URL,
+  DASHBOARD_FORWARDER_ADDRESS,
+} from "constants/misc";
 import type { ProfileMetadata, ProfileMetadataInput } from "constants/schemas";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -21,6 +29,12 @@ import { BiImage } from "react-icons/bi";
 import { FiEdit, FiGlobe } from "react-icons/fi";
 import { HiPencilAlt } from "react-icons/hi";
 import {
+  getContractPublisher,
+  setPublisherProfileUri,
+} from "thirdweb/extensions/thirdweb";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { upload } from "thirdweb/storage";
+import {
   Button,
   Drawer,
   FormErrorMessage,
@@ -28,7 +42,6 @@ import {
   Heading,
 } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
-import { useEditProfileMutation } from "../hooks";
 
 interface EditProfileProps {
   publisherProfile: ProfileMetadata;
@@ -39,6 +52,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 }) => {
   const FORM_ID = useId();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const client = useThirdwebClient();
 
   const {
     register,
@@ -53,7 +67,16 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
   const imageUrl = useImageFileOrUrl(watch("avatar"));
 
-  const editProfile = useEditProfileMutation();
+  const address = useActiveAccount()?.address;
+  const queryClient = useQueryClient();
+  const sendTx = useSendAndConfirmTransaction({
+    gasless: {
+      experimentalChainlessSupport: true,
+      provider: "engine",
+      relayerUrl: DASHBOARD_ENGINE_RELAYER_URL,
+      relayerForwarderAddress: DASHBOARD_FORWARDER_ADDRESS,
+    },
+  });
 
   const { onSuccess, onError } = useTxNotifications(
     "Profile update successfully",
@@ -76,13 +99,31 @@ export const EditProfile: React.FC<EditProfileProps> = ({
       <form
         id={FORM_ID}
         onSubmit={handleSubmit((d) => {
+          if (!address) {
+            return;
+          }
           trackEvent({
             category: "profile",
             action: "edit",
             label: "attempt",
           });
-          editProfile.mutate(d, {
-            onSuccess: () => {
+          const tx = setPublisherProfileUri({
+            contract: getContractPublisher(client),
+            asyncParams: async () => {
+              return {
+                publisher: address,
+                uri: await upload({
+                  files: [d],
+                  client,
+                }),
+              };
+            },
+          });
+          sendTx.mutate(tx, {
+            onSuccess: async () => {
+              await queryClient.invalidateQueries({
+                queryKey: ["releaser-profile", address],
+              });
               onSuccess();
               trackEvent({
                 category: "profile",
@@ -120,7 +161,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                 role="group"
                 colorScheme="primary"
                 type="submit"
-                isLoading={editProfile.isLoading}
+                isLoading={sendTx.isPending}
                 form={FORM_ID}
               >
                 Save
@@ -149,7 +190,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                 setValue={(file) => setValue("avatar", file)}
                 className="border border-border rounded transition-all"
                 renderPreview={(fileUrl) => (
-                  <MaskedAvatar w="100%" h="100%" src={fileUrl} />
+                  <MaskedAvatar className="w-full h-full" src={fileUrl} />
                 )}
               />
             </Box>

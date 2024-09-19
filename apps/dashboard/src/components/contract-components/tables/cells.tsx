@@ -1,6 +1,8 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { SkeletonContainer } from "@/components/ui/skeleton";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import type { BasicContract } from "contract-ui/types/types";
 import { useChainSlug } from "hooks/chains/chainSlug";
@@ -22,9 +24,10 @@ export const AsyncContractNameCell = memo(
   ({ cell }: AsyncContractNameCellProps) => {
     const chainSlug = useChainSlug(cell.chainId);
     const chain = useV5DashboardChain(cell.chainId);
+    const client = useThirdwebClient();
 
     const contract = getContract({
-      client: thirdwebClient,
+      client,
       address: cell.address,
       chain,
     });
@@ -61,18 +64,16 @@ interface AsyncContractTypeCellProps {
 
 export const AsyncContractTypeCell = memo(
   ({ cell }: AsyncContractTypeCellProps) => {
-    const publishedContractsFromDeployQuery = usePublishedContractsFromDeploy(
-      cell.address,
-      cell.chainId,
-    );
-
+    const client = useThirdwebClient();
     const chain = useV5DashboardChain(cell.chainId);
-
     const contract = getContract({
-      client: thirdwebClient,
+      client,
       address: cell.address,
       chain,
     });
+
+    const publishedContractsFromDeployQuery =
+      usePublishedContractsFromDeploy(contract);
 
     const contractMetadata = useDashboardContractMetadata(contract);
 

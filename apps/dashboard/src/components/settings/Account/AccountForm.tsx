@@ -243,10 +243,10 @@ export const AccountForm: React.FC<AccountFormProps> = ({
               onClick={handleSubmit}
               colorScheme={buttonProps?.variant ? undefined : "blue"}
               isDisabled={
-                updateMutation.isLoading ||
+                updateMutation.isPending ||
                 (disableUnchanged && !form.formState.isDirty)
               }
-              isLoading={updateMutation.isLoading}
+              isLoading={updateMutation.isPending}
             >
               {buttonText}
             </Button>

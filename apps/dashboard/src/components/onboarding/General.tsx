@@ -12,7 +12,7 @@ type OnboardingGeneralProps = {
   onDuplicate: (email: string) => void;
 };
 
-export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
+const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
   account,
   onSave,
   onDuplicate,

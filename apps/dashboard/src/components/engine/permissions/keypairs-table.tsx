@@ -1,3 +1,4 @@
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import {
   type Keypair,
   useEngineRemoveKeypair,
@@ -39,6 +40,14 @@ const columns = [
     header: "Label",
     cell: (cell) => {
       return <Text>{cell.getValue()}</Text>;
+    },
+  }),
+  columnHelper.accessor("hash", {
+    header: "Key ID",
+    cell: (cell) => {
+      return (
+        <CopyAddressButton address={cell.getValue()} copyIconPosition="right" />
+      );
     },
   }),
   columnHelper.accessor("publicKey", {

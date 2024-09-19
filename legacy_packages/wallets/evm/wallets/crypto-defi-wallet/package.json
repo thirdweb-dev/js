@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-wallets-crypto-defi-wallet.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-wallets-crypto-defi-wallet.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-wallets-crypto-defi-wallet.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-crypto-defi-wallet.browser.esm.js"
-  }
-}

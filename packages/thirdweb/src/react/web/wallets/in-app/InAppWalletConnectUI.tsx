@@ -9,6 +9,7 @@ import {
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
+import { GuestLogin } from "../shared/GuestLogin.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { OTPLoginUI } from "../shared/OTPLoginUI.js";
 import { PassKeyLogin } from "../shared/PassKeyLogin.js";
@@ -131,6 +132,21 @@ function InAppWalletConnectUI(props: {
         size={props.size}
         connectLocale={props.connectLocale}
         isLinking={props.isLinking}
+      />
+    );
+  }
+
+  if (state?.guestLogin) {
+    return (
+      <GuestLogin
+        locale={locale}
+        done={done}
+        goBack={goBackToMain}
+        wallet={props.wallet}
+        state={state}
+        client={props.client}
+        size={props.size}
+        connectLocale={props.connectLocale}
       />
     );
   }

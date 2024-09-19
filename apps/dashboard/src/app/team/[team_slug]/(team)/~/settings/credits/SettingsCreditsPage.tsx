@@ -2,7 +2,6 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Flex } from "@chakra-ui/react";
 import { ApplyForOpCreditsModal } from "components/onboarding/ApplyForOpCreditsModal";
 import { Heading, LinkButton } from "tw-components";
 
@@ -18,8 +17,8 @@ export const SettingsGasCreditsPage = () => {
   }
 
   return (
-    <Flex flexDir="column" gap={8}>
-      <Flex direction="row" gap={4} align="center">
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-row gap-4 items-center">
         <Heading size="title.lg" as="h1">
           Apply to the Optimism Superchain App Accelerator
         </Heading>
@@ -32,9 +31,9 @@ export const SettingsGasCreditsPage = () => {
         >
           Learn More
         </LinkButton>
-      </Flex>
+      </div>
 
       <ApplyForOpCreditsModal />
-    </Flex>
+    </div>
   );
 };

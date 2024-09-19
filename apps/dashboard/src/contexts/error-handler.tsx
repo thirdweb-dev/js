@@ -1,3 +1,5 @@
+"use client";
+
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +21,8 @@ interface ErrorContext {
   dismissError: () => void;
 }
 
+// TODO: figure out a way to remove this context
+// eslint-disable-next-line no-restricted-syntax
 const ErrorContext = createContext<ErrorContext>({
   onError: () => undefined,
   dismissError: () => undefined,

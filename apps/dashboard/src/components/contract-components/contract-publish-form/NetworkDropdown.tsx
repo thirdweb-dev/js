@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 import type { SizeProp } from "chakra-react-select";
 import { useSupportedChains } from "hooks/chains/configureChains";
@@ -54,7 +53,7 @@ export const NetworkDropdown: React.FC<NetworkDropdownProps> = ({
   }, [form, options]);
 
   return (
-    <Flex gap={2} alignItems="center" w="full">
+    <div className="flex flex-row gap-2 items-center w-full">
       <Select
         size={size}
         placeholder={`${
@@ -106,6 +105,6 @@ export const NetworkDropdown: React.FC<NetworkDropdownProps> = ({
             : options.find(({ value: val }) => val === value)
         }
       />
-    </Flex>
+    </div>
   );
 };

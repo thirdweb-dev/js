@@ -3,6 +3,7 @@ import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { SocialAuthOption } from "../../../../wallets/types.js";
 import type { Account } from "../../../interfaces/wallet.js";
+import { guestAuthenticate } from "../../core/authentication/guest.js";
 import {
   loginWithPasskey,
   registerPasskey,
@@ -19,21 +20,25 @@ import {
   UserWalletStatus,
 } from "../../core/authentication/types.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
-import type { InAppWalletConstructorType } from "../types.js";
+import { getEnclaveUserStatus } from "../lib/actions/get-enclave-user-status.js";
+import type { Ecosystem, InAppWalletConstructorType } from "../types.js";
 import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { Auth, type AuthQuerierTypes } from "./auth/iframe-auth.js";
 import { loginWithOauth, loginWithOauthRedirect } from "./auth/oauth.js";
 import { sendOtp, verifyOtp } from "./auth/otp.js";
-import { IFrameWallet } from "./in-app-account.js";
+import { EnclaveWallet } from "./enclave-wallet.js";
+import { getAuthToken } from "./get-auth-token.js";
+import { IFrameWallet } from "./iframe-wallet.js";
 
 /**
  * @internal
  */
 export class InAppWebConnector implements InAppConnector {
   protected client: ThirdwebClient;
+  protected ecosystem?: Ecosystem;
   protected querier: InAppWalletIframeCommunicator<AuthQuerierTypes>;
 
-  private wallet: IFrameWallet;
+  private wallet?: EnclaveWallet | IFrameWallet;
   /**
    * Used to manage the Auth state of the user.
    */
@@ -65,16 +70,12 @@ export class InAppWebConnector implements InAppConnector {
     }
     const baseUrl = getThirdwebBaseUrl("inAppWallet");
     this.client = client;
+    this.ecosystem = ecosystem;
     this.passkeyDomain = passkeyDomain;
     this.querier = new InAppWalletIframeCommunicator({
       clientId: client.clientId,
       ecosystem,
       baseUrl,
-    });
-    this.wallet = new IFrameWallet({
-      client,
-      ecosystem,
-      querier: this.querier,
     });
 
     this.auth = new Auth({
@@ -84,21 +85,36 @@ export class InAppWebConnector implements InAppConnector {
       ecosystem,
       onAuthSuccess: async (authResult) => {
         onAuthSuccess?.(authResult);
+        await this.initializeWallet(authResult.storedToken.cookieString);
+
+        if (!this.wallet) {
+          throw new Error("Failed to initialize wallet");
+        }
+
         await this.wallet.postWalletSetUp({
           ...authResult.walletDetails,
+          authToken: authResult.storedToken.cookieString,
           walletUserId: authResult.storedToken.authDetails.userWalletId,
         });
-        await this.querier.call({
-          procedureName: "initIframe",
-          params: {
-            partnerId: ecosystem?.partnerId,
-            ecosystemId: ecosystem?.id,
-            deviceShareStored: authResult.walletDetails.deviceShareStored,
-            clientId: this.client.clientId,
-            walletUserId: authResult.storedToken.authDetails.userWalletId,
-            authCookie: authResult.storedToken.cookieString,
-          },
-        });
+
+        if (authResult.storedToken.authDetails.walletType !== "enclave") {
+          await this.querier.call({
+            procedureName: "initIframe",
+            params: {
+              partnerId: ecosystem?.partnerId,
+              ecosystemId: ecosystem?.id,
+              clientId: this.client.clientId,
+              // For enclave wallets we won't have a device share
+              deviceShareStored:
+                "deviceShareStored" in authResult.walletDetails
+                  ? authResult.walletDetails.deviceShareStored
+                  : null,
+              walletUserId: authResult.storedToken.authDetails.userWalletId,
+              authCookie: authResult.storedToken.cookieString,
+            },
+          });
+        }
+
         return {
           user: {
             status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
@@ -108,6 +124,43 @@ export class InAppWebConnector implements InAppConnector {
           },
         };
       },
+    });
+  }
+
+  async initializeWallet(authToken?: string) {
+    const storedAuthToken = await getAuthToken(this.client, this.ecosystem);
+    if (!authToken && storedAuthToken === null) {
+      throw new Error(
+        "No auth token provided and no stored auth token found to initialize the wallet",
+      );
+    }
+
+    const user = await getEnclaveUserStatus({
+      authToken: authToken || (storedAuthToken as string),
+      client: this.client,
+      ecosystem: this.ecosystem,
+    });
+    if (!user) {
+      throw new Error("Cannot initialize wallet, no user logged in");
+    }
+    if (user.wallets.length === 0) {
+      throw new Error(
+        "Cannot initialize wallet, this user does not have a wallet generated yet",
+      );
+    }
+    if (user.wallets[0].type === "enclave") {
+      this.wallet = new EnclaveWallet({
+        client: this.client,
+        ecosystem: this.ecosystem,
+        address: user.wallets[0].address,
+      });
+      return;
+    }
+
+    this.wallet = new IFrameWallet({
+      client: this.client,
+      ecosystem: this.ecosystem,
+      querier: this.querier,
     });
   }
 
@@ -135,18 +188,32 @@ export class InAppWebConnector implements InAppConnector {
    * @returns GetUser - an object to containing various information on the user statuses
    */
   async getUser(): Promise<GetUser> {
-    return this.wallet.getUserWalletStatus();
+    // If we don't have a wallet yet we'll create one
+    if (!this.wallet) {
+      const maybeAuthToken = await getAuthToken(this.client, this.ecosystem);
+      if (!maybeAuthToken) {
+        return { status: UserWalletStatus.LOGGED_OUT };
+      }
+      await this.initializeWallet(maybeAuthToken);
+    }
+    if (!this.wallet) {
+      throw new Error("Wallet not initialized");
+    }
+    return await this.wallet.getUserWalletStatus();
   }
 
   getAccount(): Promise<Account> {
+    if (!this.wallet) {
+      throw new Error("Wallet not initialized");
+    }
     return this.wallet.getAccount();
   }
 
   async preAuthenticate(args: MultiStepAuthProviderType): Promise<void> {
     return sendOtp({
       ...args,
-      client: this.wallet.client,
-      ecosystem: this.wallet.ecosystem,
+      client: this.client,
+      ecosystem: this.ecosystem,
     });
   }
 
@@ -157,8 +224,8 @@ export class InAppWebConnector implements InAppConnector {
   ): void {
     loginWithOauthRedirect({
       authOption: strategy,
-      client: this.wallet.client,
-      ecosystem: this.wallet.ecosystem,
+      client: this.client,
+      ecosystem: this.ecosystem,
       redirectUrl,
       mode,
     });
@@ -179,14 +246,14 @@ export class InAppWebConnector implements InAppConnector {
       case "email":
         return verifyOtp({
           ...args,
-          client: this.wallet.client,
-          ecosystem: this.wallet.ecosystem,
+          client: this.client,
+          ecosystem: this.ecosystem,
         });
       case "phone":
         return verifyOtp({
           ...args,
-          client: this.wallet.client,
-          ecosystem: this.wallet.ecosystem,
+          client: this.client,
+          ecosystem: this.ecosystem,
         });
       case "jwt":
         return this.auth.authenticateWithCustomJwt({
@@ -216,19 +283,27 @@ export class InAppWebConnector implements InAppConnector {
       case "telegram":
       case "farcaster":
       case "line":
+      case "x":
+      case "coinbase":
       case "discord": {
         return loginWithOauth({
           authOption: strategy,
-          client: this.wallet.client,
-          ecosystem: this.wallet.ecosystem,
+          client: this.client,
+          ecosystem: this.ecosystem,
           closeOpenedWindow: args.closeOpenedWindow,
           openedWindow: args.openedWindow,
         });
       }
+      case "guest": {
+        return guestAuthenticate({
+          client: this.client,
+          ecosystem: this.ecosystem,
+        });
+      }
       case "wallet": {
         return siweAuthenticate({
-          ecosystem: this.wallet.ecosystem,
-          client: this.wallet.client,
+          ecosystem: this.ecosystem,
+          client: this.client,
           wallet: args.wallet,
           chain: args.chain,
         });
@@ -277,9 +352,12 @@ export class InAppWebConnector implements InAppConnector {
       case "farcaster":
       case "telegram":
       case "line":
+      case "x":
+      case "guest":
+      case "coinbase":
       case "discord": {
         const authToken = await this.authenticate(args);
-        return this.auth.loginWithAuthToken(authToken);
+        return await this.auth.loginWithAuthToken(authToken);
       }
 
       default:
@@ -299,8 +377,8 @@ export class InAppWebConnector implements InAppConnector {
     const storage = webLocalStorage;
     if (args.type === "sign-up") {
       return registerPasskey({
-        client: this.wallet.client,
-        ecosystem: this.wallet.ecosystem,
+        client: this.client,
+        ecosystem: this.ecosystem,
         username: args.passkeyName,
         passkeyClient,
         storage,
@@ -311,8 +389,8 @@ export class InAppWebConnector implements InAppConnector {
       });
     }
     return loginWithPasskey({
-      client: this.wallet.client,
-      ecosystem: this.wallet.ecosystem,
+      client: this.client,
+      ecosystem: this.ecosystem,
       passkeyClient,
       storage,
       rp: {

@@ -153,7 +153,7 @@ const UpdateVersionModal = (props: {
             variant="primary"
             className="gap-2"
           >
-            {updateEngine.isLoading ? (
+            {updateEngine.isPending ? (
               <Spinner className="size-4" />
             ) : (
               <CloudDownloadIcon className="size-4" />

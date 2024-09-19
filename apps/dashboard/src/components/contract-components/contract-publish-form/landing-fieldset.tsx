@@ -11,7 +11,6 @@ import {
   Tabs,
   Textarea,
 } from "@chakra-ui/react";
-import type { ExtraPublishMetadata } from "@thirdweb-dev/sdk";
 import { compare, validate } from "compare-versions";
 import { FileInput } from "components/shared/FileInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -19,6 +18,7 @@ import { SelectOption } from "core-ui/batch-upload/lazy-mint-form/select-option"
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useFormContext } from "react-hook-form";
+import type { ExtendedMetadata } from "thirdweb/utils";
 import {
   Card,
   FormErrorMessage,
@@ -40,7 +40,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
   latestVersion,
   placeholderVersion,
 }) => {
-  const form = useFormContext<ExtraPublishMetadata>();
+  const form = useFormContext<ExtendedMetadata>();
   const logoUrl = useImageFileOrUrl(form.watch("logo"));
 
   const handleVersionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,6 +95,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
             <FileInput
               accept={{ "image/*": [] }}
               value={logoUrl}
+              // @ts-expect-error - we upload the file later this is fine
               setValue={(file) => form.setValue("logo", file)}
               className="border border-border rounded transition-all duration-200"
               renderPreview={(fileUrl) => (

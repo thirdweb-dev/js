@@ -36,7 +36,7 @@ export type NFTMintParams = {
  * // Send the transaction
  * await sendTransaction({ transaction, account });
  * ```
- * @module MintableERC721
+ * @modules MintableERC721
  */
 export function mintWithRole(options: BaseTransactionOptions<NFTMintParams>) {
   return generatedMint({

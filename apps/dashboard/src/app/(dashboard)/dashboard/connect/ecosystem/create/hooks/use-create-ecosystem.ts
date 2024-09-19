@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   type UseMutationOptions,
@@ -8,7 +8,7 @@ import {
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { upload } from "thirdweb/storage";
 
-export type CreateEcosystemParams = {
+type CreateEcosystemParams = {
   name: string;
   logo: File;
   permission: "PARTNER_WHITELIST" | "ANYONE";
@@ -24,7 +24,9 @@ export function useCreateEcosystem(
   const { isLoggedIn } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  const { mutateAsync: createEcosystem, isLoading } = useMutation({
+  const client = useThirdwebClient();
+
+  return useMutation({
     // Returns the created ecosystem slug
     mutationFn: async (params: CreateEcosystemParams): Promise<string> => {
       if (!isLoggedIn) {
@@ -32,7 +34,7 @@ export function useCreateEcosystem(
       }
 
       const imageUri = await upload({
-        client: thirdwebClient,
+        client,
         files: [params.logo],
       });
 
@@ -75,10 +77,10 @@ export function useCreateEcosystem(
       if (onSuccess) {
         await onSuccess(id, variables, context);
       }
-      return queryClient.invalidateQueries(["ecosystems"]);
+      return queryClient.invalidateQueries({
+        queryKey: ["ecosystems"],
+      });
     },
     ...queryOptions,
   });
-
-  return { createEcosystem, isLoading };
 }

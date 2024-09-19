@@ -36,6 +36,7 @@ const FORCE_GAS_PRICE_CHAIN_IDS = [
   842, // Taraxa Testnet
   2016, // MainnetZ Mainnet
   9768, // MainnetZ Testnet
+  2442, // Polygon zkEVM Cardona Testnet
 ];
 
 /**
@@ -138,6 +139,7 @@ export async function getDefaultGasOverrides(
 async function getDynamicFeeData(
   client: ThirdwebClient,
   chain: Chain,
+  percentMultiplier = 10,
 ): Promise<FeeData> {
   let maxFeePerGas: null | bigint = null;
   let maxPriorityFeePerGas_: null | bigint = null;
@@ -173,7 +175,10 @@ async function getDynamicFeeData(
   }
 
   // add 10% tip to maxPriorityFeePerGas for faster processing
-  maxPriorityFeePerGas_ = getPreferredPriorityFee(maxPriorityFeePerGas_);
+  maxPriorityFeePerGas_ = getPreferredPriorityFee(
+    maxPriorityFeePerGas_,
+    percentMultiplier,
+  );
   // eip-1559 formula, doubling the base fee ensures that the tx can be included in the next 6 blocks no matter how busy the network is
   // good article on the subject: https://www.blocknative.com/blog/eip-1559-fees
   maxFeePerGas = baseBlockFee * 2n + maxPriorityFeePerGas_;

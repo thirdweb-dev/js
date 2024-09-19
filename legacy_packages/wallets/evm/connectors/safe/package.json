@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-connectors-safe.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-connectors-safe.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-connectors-safe.esm.js": "./dist/thirdweb-dev-wallets-evm-connectors-safe.browser.esm.js"
-  }
-}

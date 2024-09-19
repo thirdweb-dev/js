@@ -1,5 +1,4 @@
 import { useAuthorizedWallets } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { AuthorizedWalletsTable } from "components/settings/AuthorizedWallets/AuthorizedWalletsTable";
 import { SettingsSidebarLayout } from "core-ui/sidebar/settings";
@@ -11,14 +10,9 @@ const SettingsDevicesPage: ThirdwebNextPage = () => {
   const authorizedWalletsQuery = useAuthorizedWallets();
 
   return (
-    <Flex flexDir="column" gap={8}>
-      <Flex direction="column" gap={2}>
-        <Flex
-          justifyContent="space-between"
-          direction={{ base: "column", md: "row" }}
-          gap={4}
-          flexDirection="column"
-        >
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4 justify-between">
           <Heading size="title.lg" as="h1">
             Authorized Devices
           </Heading>
@@ -31,9 +25,9 @@ const SettingsDevicesPage: ThirdwebNextPage = () => {
             isLoading={authorizedWalletsQuery.isLoading}
             isFetched={authorizedWalletsQuery.isFetched}
           />
-        </Flex>
-      </Flex>
-    </Flex>
+        </div>
+      </div>
+    </div>
   );
 };
 

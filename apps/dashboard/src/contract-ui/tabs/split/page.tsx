@@ -1,4 +1,3 @@
-import { thirdwebClient } from "@/constants/client";
 import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import {
   Center,
@@ -41,14 +40,6 @@ interface SplitPageProps {
 }
 
 export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
-  return <ContractSplitContent contract={contract} />;
-};
-
-type SplitContentProps = {
-  contract: ThirdwebContract;
-};
-
-const ContractSplitContent: React.FC<SplitContentProps> = ({ contract }) => {
   const address = useActiveAccount()?.address;
   const configuredChainsRecord = useSupportedChainsRecord();
   const chainId = contract.chain.id;
@@ -56,7 +47,7 @@ const ContractSplitContent: React.FC<SplitContentProps> = ({ contract }) => {
   const contractAddress = contract.address;
   const nativeBalanceQuery = useWalletBalance({
     address: contractAddress,
-    client: thirdwebClient,
+    client: contract.client,
     chain: contract.chain,
   });
   const { data: allRecipientsPercentages } = useReadContract(

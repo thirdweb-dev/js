@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import "server-only";
-
-import { thirdwebClient } from "@/constants/client";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/env";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { cn } from "@/lib/utils";
 import { resolveScheme } from "thirdweb/storage";
 
@@ -15,7 +14,7 @@ export async function ChainIcon(props: {
 }) {
   if (props.iconUrl) {
     const resolved = resolveScheme({
-      client: thirdwebClient,
+      client: getThirdwebClient(),
       uri: props.iconUrl,
     });
     const res = await fetch(resolved, {

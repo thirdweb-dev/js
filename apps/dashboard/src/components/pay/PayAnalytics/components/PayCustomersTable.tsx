@@ -1,3 +1,4 @@
+import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,6 @@ import {
   type PayTopCustomersData,
   usePayCustomers,
 } from "../hooks/usePayCustomers";
-import { ExportToCSVButton } from "./ExportToCSVButton";
 import {
   FailedToLoad,
   TableData,
@@ -48,11 +48,15 @@ function processQuery(
     return { isError: true };
   }
 
+  if (!topCustomersQuery.data) {
+    return { isEmpty: true };
+  }
+
   let customers = topCustomersQuery.data.pages.flatMap(
     (x) => x.pageData.customers,
   );
 
-  customers = customers.filter((x) => x.totalSpendUSDCents > 0);
+  customers = customers?.filter((x) => x.totalSpendUSDCents > 0);
 
   if (customers.length === 0) {
     return { isEmpty: true };
@@ -169,13 +173,11 @@ function RenderData(props: { query: ProcessedQuery; loadMore: () => void }) {
           )}
         </tbody>
       </table>
-
       {props.query.isEmpty && (
         <div className="min-h-[240px] flex items-center justify-center w-full text-muted-foreground text-sm">
           No data available
         </div>
       )}
-
       {props.query.data?.showLoadMore && (
         <div className="flex justify-center py-3">
           <Button

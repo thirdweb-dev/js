@@ -98,7 +98,7 @@ function ImportForm() {
 
   const isLoading =
     form.formState.isSubmitting ||
-    addToDashboard.isLoading ||
+    addToDashboard.isPending ||
     addToDashboard.isSuccess ||
     isRedirecting;
 

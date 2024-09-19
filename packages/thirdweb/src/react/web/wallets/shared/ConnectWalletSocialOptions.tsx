@@ -53,6 +53,9 @@ export type ConnectWalletSelectUIState =
         type: SocialAuthOption;
         connectionPromise: Promise<Account | Profile[]>;
       };
+      guestLogin?: {
+        connectionPromise: Promise<Account | Profile[]>;
+      };
       passkeyLogin?: boolean;
       walletLogin?: boolean;
     };
@@ -107,6 +110,8 @@ export const ConnectWalletSocialOptions = (
     apple: locale.signInWithApple,
     discord: locale.signInWithDiscord,
     line: "LINE",
+    x: "X",
+    coinbase: "Coinbase",
     farcaster: "Farcaster",
     telegram: "Telegram",
   };
@@ -123,8 +128,8 @@ export const ConnectWalletSocialOptions = (
     retry: false,
   });
   const authOptions = isEcosystemWallet(wallet)
-    ? ecosystemAuthOptions ?? defaultAuthOptions
-    : wallet.getConfig()?.auth?.options ?? defaultAuthOptions;
+    ? (ecosystemAuthOptions ?? defaultAuthOptions)
+    : (wallet.getConfig()?.auth?.options ?? defaultAuthOptions);
 
   const emailIndex = authOptions.indexOf("email");
   const isEmailEnabled = emailIndex !== -1;
@@ -156,6 +161,7 @@ export const ConnectWalletSocialOptions = (
   }
 
   const passKeyEnabled = authOptions.includes("passkey");
+  const guestEnabled = authOptions.includes("guest");
 
   const placeholder =
     inputMode === "email" ? locale.emailPlaceholder : locale.phonePlaceholder;
@@ -180,6 +186,27 @@ export const ConnectWalletSocialOptions = (
         partnerId: wallet.getConfig()?.partnerId,
       }
     : undefined;
+
+  const handleGuestLogin = async () => {
+    const connectOptions = {
+      client: props.client,
+      ecosystem: ecosystemInfo,
+      strategy: "guest" as const,
+    };
+    const connectPromise = (async () => {
+      const result = await wallet.connect(connectOptions);
+      setLastAuthProvider("guest", webLocalStorage);
+      return result;
+    })();
+
+    setData({
+      guestLogin: {
+        connectionPromise: connectPromise,
+      },
+    });
+
+    props.select(); // show Connect UI
+  };
 
   // Need to trigger login on button click to avoid popup from being blocked
   const handleSocialLogin = async (strategy: SocialAuthOption) => {
@@ -226,11 +253,11 @@ export const ConnectWalletSocialOptions = (
             throw new Error("Only in-app wallets support multi-auth");
           }
           return linkProfile(wallet, connectOptions);
-        } else {
-          const connectPromise = wallet.connect(connectOptions);
-          setLastAuthProvider(strategy, webLocalStorage);
-          return connectPromise;
         }
+
+        const connectPromise = wallet.connect(connectOptions);
+        setLastAuthProvider(strategy, webLocalStorage);
+        return connectPromise;
       })();
 
       setData({
@@ -302,12 +329,11 @@ export const ConnectWalletSocialOptions = (
             const imgIconSize = (() => {
               if (!showOnlyIcons) {
                 return iconSize.md;
-              } else {
-                if (socialLogins.length > 4) {
-                  return iconSize.md;
-                }
-                return iconSize.lg;
               }
+              if (socialLogins.length > 4) {
+                return iconSize.md;
+              }
+              return iconSize.lg;
             })();
 
             return (
@@ -340,108 +366,111 @@ export const ConnectWalletSocialOptions = (
         (isEmailEnabled || isPhoneEnabled) && <TextDivider text={locale.or} />}
 
       {/* Email/Phone Login */}
-      {isEmailEnabled && (
-        <>
-          {inputMode === "email" ? (
-            <InputSelectionUI
-              type={type}
-              onSelect={(value) => {
-                setData({ emailLogin: value });
-                props.select();
-              }}
-              placeholder={placeholder}
-              name="email"
-              errorMessage={(input) => {
-                const isValidEmail = validateEmail(input.toLowerCase());
-                if (!isValidEmail) {
-                  return locale.invalidEmail;
-                }
-                return undefined;
-              }}
-              disabled={props.disabled}
-              emptyErrorMessage={emptyErrorMessage}
-              submitButtonText={locale.submitEmail}
-            />
-          ) : (
-            <WalletTypeRowButton
-              client={props.client}
-              icon={emailIcon}
-              onClick={() => {
-                setManualInputMode("email");
-              }}
-              title={locale.emailPlaceholder}
-              disabled={props.disabled}
-            />
-          )}
-        </>
-      )}
-      {isPhoneEnabled && (
-        <>
-          {inputMode === "phone" ? (
-            <InputSelectionUI
-              format="phone"
-              type={type}
-              onSelect={(value) => {
-                // removes white spaces and special characters
-                setData({ phoneLogin: value.replace(/[-\(\) ]/g, "") });
-                props.select();
-              }}
-              placeholder={placeholder}
-              name="phone"
-              errorMessage={(_input) => {
-                // removes white spaces and special characters
-                const input = _input.replace(/[-\(\) ]/g, "");
-                const isPhone = /^[0-9]+$/.test(input);
-
-                if (!isPhone && isPhoneEnabled) {
-                  return locale.invalidPhone;
-                }
-
-                return undefined;
-              }}
-              disabled={props.disabled}
-              emptyErrorMessage={emptyErrorMessage}
-              submitButtonText={locale.submitEmail}
-            />
-          ) : (
-            <WalletTypeRowButton
-              client={props.client}
-              icon={phoneIcon}
-              onClick={() => {
-                setManualInputMode("phone");
-              }}
-              title={locale.phonePlaceholder}
-              disabled={props.disabled}
-            />
-          )}
-        </>
-      )}
-
-      {passKeyEnabled && (
-        <>
+      {isEmailEnabled &&
+        (inputMode === "email" ? (
+          <InputSelectionUI
+            type={type}
+            onSelect={(value) => {
+              setData({ emailLogin: value });
+              props.select();
+            }}
+            placeholder={placeholder}
+            name="email"
+            errorMessage={(input) => {
+              const isValidEmail = validateEmail(input.toLowerCase());
+              if (!isValidEmail) {
+                return locale.invalidEmail;
+              }
+              return undefined;
+            }}
+            disabled={props.disabled}
+            emptyErrorMessage={emptyErrorMessage}
+            submitButtonText={locale.submitEmail}
+          />
+        ) : (
           <WalletTypeRowButton
             client={props.client}
-            icon={passkeyIcon}
+            icon={emailIcon}
             onClick={() => {
-              handlePassKeyLogin();
+              setManualInputMode("email");
             }}
-            title={locale.passkey}
+            title={locale.emailPlaceholder}
             disabled={props.disabled}
           />
-        </>
+        ))}
+      {isPhoneEnabled &&
+        (inputMode === "phone" ? (
+          <InputSelectionUI
+            format="phone"
+            type={type}
+            onSelect={(value) => {
+              // removes white spaces and special characters
+              setData({ phoneLogin: value.replace(/[-\(\) ]/g, "") });
+              props.select();
+            }}
+            placeholder={placeholder}
+            name="phone"
+            errorMessage={(_input) => {
+              // removes white spaces and special characters
+              const input = _input.replace(/[-\(\) ]/g, "");
+              const isPhone = /^[0-9]+$/.test(input);
+
+              if (!isPhone && isPhoneEnabled) {
+                return locale.invalidPhone;
+              }
+
+              return undefined;
+            }}
+            disabled={props.disabled}
+            emptyErrorMessage={emptyErrorMessage}
+            submitButtonText={locale.submitEmail}
+          />
+        ) : (
+          <WalletTypeRowButton
+            client={props.client}
+            icon={phoneIcon}
+            onClick={() => {
+              setManualInputMode("phone");
+            }}
+            title={locale.phonePlaceholder}
+            disabled={props.disabled}
+          />
+        ))}
+
+      {passKeyEnabled && (
+        <WalletTypeRowButton
+          client={props.client}
+          icon={passkeyIcon}
+          onClick={() => {
+            handlePassKeyLogin();
+          }}
+          title={locale.passkey}
+          disabled={props.disabled}
+        />
+      )}
+
+      {/* Guest login */}
+      {guestEnabled && (
+        <WalletTypeRowButton
+          client={props.client}
+          icon={getWalletIcon("guest")}
+          onClick={() => {
+            handleGuestLogin();
+          }}
+          title={locale.loginAsGuest}
+          disabled={props.disabled}
+        />
       )}
 
       {props.isLinking && (
-        <>
-          <WalletTypeRowButton
-            client={props.client}
-            icon={getWalletIcon("")}
-            onClick={() => {
-              handleWalletLogin();
-            }}
-            title={locale.linkWallet}
-          />
-        </>
+        <WalletTypeRowButton
+          client={props.client}
+          icon={getWalletIcon("")}
+          onClick={() => {
+            handleWalletLogin();
+          }}
+          title={locale.linkWallet}
+        />
       )}
     </Container>
   );

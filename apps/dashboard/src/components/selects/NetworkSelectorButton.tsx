@@ -1,5 +1,7 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
 import { useFavoriteChains } from "@3rdweb-sdk/react/hooks/useFavoriteChains";
 import { ChainIcon } from "components/icons/ChainIcon";
@@ -36,6 +38,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   isDisabled,
   onSwitchChain,
 }) => {
+  const client = useThirdwebClient();
   const recentlyUsedChains = useRecentlyUsedChains();
   const addRecentlyUsedChains = useAddRecentlyUsedChainId();
   const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
@@ -148,7 +151,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
                 }
               }
             },
-            client: thirdwebClient,
+            client,
           });
         }}
       >

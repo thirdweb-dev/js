@@ -14,7 +14,7 @@ import { CodeOptionButton, type CodeOptions } from "../common/CodeOptionButton";
 
 const darkTheme = themes.dracula;
 
-export const landingSnippets = {
+const landingSnippets = {
   javascript: `import { createThirdwebClient, getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 

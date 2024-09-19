@@ -1,20 +1,17 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
-import {
-  type QueryClient,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { ensQuery } from "components/contract-components/hooks";
-import { getDashboardChainRpc } from "lib/rpc";
-import { getThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
+import { useQuery } from "@tanstack/react-query";
+import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-base-64";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
-import { polygon } from "thirdweb/chains";
-import invariant from "tiny-invariant";
+import { resolveScheme } from "thirdweb/storage";
+import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
 interface ContractCardProps {
@@ -71,14 +68,14 @@ function getContractUrl(
   const moudleUrl = new URLSearchParams();
 
   for (const m of modules) {
-    moudleUrl.append("module", btoa(JSON.stringify(m)));
+    moudleUrl.append("module", moduleToBase64(m));
   }
 
   if (titleOverride) {
     moudleUrl.append("displayName", titleOverride);
   }
 
-  pathName += `?${moudleUrl.toString()}`;
+  pathName += moudleUrl.toString() ? `?${moudleUrl.toString()}` : "";
   return replaceDeployerAddress(pathName);
 }
 
@@ -92,6 +89,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   modules = [],
   isBeta,
 }) => {
+  const client = useThirdwebClient();
   const publishedContractResult = usePublishedContract(
     `${publisher}/${contractId}/${version}`,
   );
@@ -133,7 +131,10 @@ export const ContractCard: React.FC<ContractCardProps> = ({
               <Link
                 target="_blank"
                 className="text-success-text flex items-center gap-1 text-sm z-1 hover:underline font-medium relative"
-                href={replaceIpfsUrl(publishedContractResult.data?.audit || "")}
+                href={resolveScheme({
+                  uri: publishedContractResult.data.audit,
+                  client,
+                })}
               >
                 <ShieldCheckIcon className="size-4" />
                 Audited
@@ -250,62 +251,12 @@ type PublishedContractId =
   | `${string}/${string}`
   | `${string}/${string}/${string}`;
 
-async function publishedContractQueryFn(
-  publisher: string,
-  contractId: string,
-  version: string,
-  queryClient: QueryClient,
-) {
-  const polygonSdk = getThirdwebSDK(
-    polygon.id,
-    getDashboardChainRpc(polygon.id, undefined),
-  );
-
-  const publisherEns = await queryClient.fetchQuery(ensQuery(publisher));
-  // START prefill both publisher ens variations
-  if (publisherEns.address) {
-    queryClient.setQueryData(
-      ensQuery(publisherEns.address).queryKey,
-      publisherEns,
-    );
-  }
-  if (publisherEns.ensName) {
-    queryClient.setQueryData(
-      ensQuery(publisherEns.ensName).queryKey,
-      publisherEns,
-    );
-  }
-  // END prefill both publisher ens variations
-  invariant(publisherEns.address, "publisher address not found");
-  const latestPublishedVersion = await polygonSdk
-    .getPublisher()
-    .getVersion(publisherEns.address, contractId, version);
-  invariant(latestPublishedVersion, "no published version found");
-  const contractInfo = await polygonSdk
-    .getPublisher()
-    .fetchPublishedContractInfo(latestPublishedVersion);
-  return {
-    ...latestPublishedVersion,
-    ...contractInfo.publishedMetadata,
-
-    publishedContractId: `${publisher}/${contractId}/${version}`,
-  };
-}
-
-export function publishedContractQuery(
-  publishedContractId: PublishedContractId,
-  queryClient: QueryClient,
-) {
-  const [publisher, contractId, version] = publishedContractId.split("/");
-  return {
-    queryKey: ["published-contract", { publisher, contractId, version }],
-    queryFn: () =>
-      publishedContractQueryFn(publisher, contractId, version, queryClient),
-    enabled: !!publisher || !!contractId,
-  };
-}
-
 function usePublishedContract(publishedContractId: PublishedContractId) {
-  const queryClient = useQueryClient();
-  return useQuery(publishedContractQuery(publishedContractId, queryClient));
+  const [publisher, contractId, version] = publishedContractId.split("/");
+  return useQuery({
+    queryKey: ["published-contract", { publishedContractId }],
+    queryFn: () =>
+      fetchPublishedContractVersion(publisher, contractId, version),
+    enabled: !!publisher || !!contractId,
+  });
 }

@@ -1,8 +1,8 @@
-import { useProposalCreateMutation } from "@3rdweb-sdk/react/hooks/useVote";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FiPlus } from "react-icons/fi";
 import type { ThirdwebContract } from "thirdweb";
+import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 import { CreateProposalForm } from "./proposal-form";
 
@@ -15,7 +15,7 @@ const PROPOSAL_FORM_ID = "proposal-form-id";
 export const ProposalButton: React.FC<VoteButtonProps> = ({ contract }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const propose = useProposalCreateMutation(contract);
+  const sendTx = useSendAndConfirmTransaction();
 
   return (
     <>
@@ -28,7 +28,7 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({ contract }) => {
           children: (
             <>
               <Button
-                isDisabled={propose.isLoading}
+                isDisabled={sendTx.isPending}
                 variant="outline"
                 mr={3}
                 onClick={onClose}
@@ -37,7 +37,7 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({ contract }) => {
               </Button>
               <TransactionButton
                 transactionCount={1}
-                isLoading={propose.isLoading}
+                isLoading={sendTx.isPending}
                 form={PROPOSAL_FORM_ID}
                 type="submit"
                 colorScheme="primary"
@@ -48,7 +48,11 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({ contract }) => {
           ),
         }}
       >
-        <CreateProposalForm formId={PROPOSAL_FORM_ID} propose={propose} />
+        <CreateProposalForm
+          formId={PROPOSAL_FORM_ID}
+          contract={contract}
+          sendTx={sendTx}
+        />
       </Drawer>
       <Button
         colorScheme="primary"

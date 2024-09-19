@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { download } from "thirdweb/storage";
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
 import {
@@ -38,7 +38,7 @@ export async function transformMoralisResponseToNFT(
             metadata: shouldDownloadURI(moralisNft.token_uri)
               ? await download({
                   uri: handleArbitraryTokenURI(moralisNft.token_uri),
-                  client: thirdwebClient,
+                  client: getThirdwebClient(),
                 })
                   .then((res) => res.json())
                   .catch(() => ({}))

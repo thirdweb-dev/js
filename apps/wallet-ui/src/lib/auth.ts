@@ -34,7 +34,16 @@ export async function login(payload: VerifyLoginPayloadParams) {
     const jwt = await thirdwebAuth.generateJWT({
       payload: verifiedPayload.payload,
     });
-    cookies().set("jwt", jwt);
+    cookies().set({
+      name: "jwt",
+      value: jwt,
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "strict",
+      maxAge: 3600,
+      domain: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
+      path: "/",
+    });
     return true;
   }
   return false;

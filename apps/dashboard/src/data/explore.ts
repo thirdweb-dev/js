@@ -1,6 +1,3 @@
-import type { QueryClient } from "@tanstack/react-query";
-import { publishedContractQuery } from "components/explore/contract-card";
-
 type PublishedContractID = `${string}/${string}`;
 
 export interface ExploreCategory {
@@ -312,21 +309,3 @@ export const EXPLORE_PAGE_DATA = Object.values(CATEGORIES).filter((v) =>
 );
 
 export const ALL_CATEGORIES = Object.values(CATEGORIES).map((v) => v.id);
-
-export function prefetchCategory(
-  category: ExploreCategory,
-  queryClient: QueryClient,
-) {
-  return Promise.allSettled(
-    category.contracts.map((contract) =>
-      queryClient.fetchQuery(
-        publishedContractQuery(
-          Array.isArray(contract)
-            ? `${contract[0]}/latest`
-            : `${contract}/latest`,
-          queryClient,
-        ),
-      ),
-    ),
-  );
-}

@@ -54,5 +54,6 @@ export default {
   signInWithPhone: "電話番号でサインイン",
   phoneRequired: "電話番号は必須です",
   passkey: "パスキー",
-  linkWallet: "Link a Wallet",
+  linkWallet: "ウォレットをリンクする",
+  loginAsGuest: "ゲストとしてログイン",
 } satisfies InAppWalletLocale;

@@ -6,6 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { LogOutIcon, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -30,15 +31,16 @@ export function AccountButton(props: {
           <div className="size-9 rounded-full bg-muted border border-border" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="p-0 w-[300px] rounded-lg"
-        align="end"
-        sideOffset={16}
-      >
+      <DropdownMenuContent className="p-0 w-[300px] rounded-lg" align="end">
         <div className="p-4 pb-5 border-b border-border">
-          <p className="text-sm text-muted-foreground">{props.email}</p>
+          <SkeletonContainer
+            skeletonData="user@example.com"
+            loadedData={props.email}
+            render={(v) => <p className="text-sm text-muted-foreground">{v}</p>}
+          />
+
           <div className="h-3" />
-          <div className="[&>button]:!w-full">{props.connectButton}</div>
+          <div className="[&>*]:!w-full">{props.connectButton}</div>
         </div>
 
         <div className="flex flex-col gap-4 px-4 py-5">

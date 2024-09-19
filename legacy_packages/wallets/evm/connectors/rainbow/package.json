@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-connectors-rainbow.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-connectors-rainbow.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-connectors-rainbow.esm.js": "./dist/thirdweb-dev-wallets-evm-connectors-rainbow.browser.esm.js"
-  }
-}

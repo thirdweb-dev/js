@@ -1,3 +1,4 @@
+import { maxUint256 } from "viem";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { min } from "../../../utils/bigint.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
@@ -44,7 +45,9 @@ export async function getNFTs(
 ): Promise<NFT[]> {
   const start = BigInt(options.start || 0);
   const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);
-  const totalCount = await nextTokenIdToMint(options);
+  // try to get the totalCount (non-standard) - if this fails then just use maxUint256
+  const totalCount = await nextTokenIdToMint(options).catch(() => maxUint256);
+  // get the maxId to query up to (either the totalCount or the start + count, whichever is smaller)
   const maxId = min(totalCount, start + count);
 
   const promises: ReturnType<typeof getNFT>[] = [];

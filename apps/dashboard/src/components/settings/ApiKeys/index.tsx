@@ -1,7 +1,6 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
 import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import {
   type ServiceName,
@@ -46,7 +45,7 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
           textToShow={`${cell.getValue().slice(0, 5)}...${cell.getValue().slice(-5)}`}
           tooltip="Copy Client ID"
           variant="ghost"
-          className="font-mono text-muted-foreground"
+          className="font-mono text-muted-foreground -translate-x-2"
           onClick={() => {
             trackEvent({
               category: "api_key_button",
@@ -95,11 +94,7 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
         }
 
         return (
-          <Flex
-            flexDir={{ base: "column", xl: "row" }}
-            alignItems="flex-start"
-            gap={2}
-          >
+          <div className="flex flex-col xl:flex-row items-start gap-2">
             {value.map((srv) => {
               const service = getServiceByName(srv.name as ServiceName);
               return !HIDDEN_SERVICES.includes(service?.name) ? (
@@ -108,7 +103,7 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
                 </Badge>
               ) : null;
             })}
-          </Flex>
+          </div>
         );
       },
     }),
@@ -122,6 +117,7 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
       isLoading={isLoading}
       isFetched={isFetched}
       onRowClick={({ id }) => router.push(`/dashboard/settings/api-keys/${id}`)}
+      bodyRowClassName="hover:bg-muted/50"
     />
   );
 };

@@ -73,7 +73,7 @@ const Web3SDK: ThirdwebNextPage = () => {
         >
           <ProductCard
             title="Speaks your language"
-            icon={require("/public/assets/product-pages/sdk/hero-icon-1.png")}
+            icon={require("../../public/assets/product-pages/sdk/hero-icon-1.png")}
           >
             Use SDKs in programming languages that you are most comfortable
             with.
@@ -96,14 +96,14 @@ const Web3SDK: ThirdwebNextPage = () => {
           </ProductCard>
           <ProductCard
             title="Go-to-market faster"
-            icon={require("/public/assets/product-pages/sdk/hero-icon-2.png")}
+            icon={require("../../public/assets/product-pages/sdk/hero-icon-2.png")}
           >
             Utilities for common use cases so that you do not have to reinvent
             the wheel every time and have faster development cycles.
           </ProductCard>
           <ProductCard
             title="Simplifying web3 complexity"
-            icon={require("/public/assets/product-pages/sdk/hero-icon-3.png")}
+            icon={require("../../public/assets/product-pages/sdk/hero-icon-3.png")}
           >
             Build apps and games that interact with contracts easily. Thorough
             developer documentation on following best practices. No need to
@@ -161,28 +161,28 @@ const Web3SDK: ThirdwebNextPage = () => {
                 SDKs.
               </>
             }
-            icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
+            icon={require("../../public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="https://portal.thirdweb.com/"
           />
           <ProductLearnMoreCard
             title="UI Components SDK"
             category={TRACKING_CATEGORY}
             description="Plug-and-play UI Components for common web3 use cases, e.g. Connect Wallet button, Web3 button, NFT renderer, and IPFS renderer."
-            icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
+            icon={require("../../public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="/ui-components"
           />
           <ProductLearnMoreCard
             title="Game Engine SDK"
             category={TRACKING_CATEGORY}
             description="Unity SDK includes all supported platforms: Native (Windows, Mac, Linux), Mobile (iOS, Android), Console (PS, Xbox), Browser (WebGL). Unreal SDK coming soon."
-            icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
+            icon={require("../../public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="https://portal.thirdweb.com/unity"
           />
           <ProductLearnMoreCard
             title="Mobile SDK"
             category={TRACKING_CATEGORY}
             description="Integrate web3 into mobile apps with our React Native SDK. Comes with hooks and UI components that let you easily build native apps for iOS and Android."
-            icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
+            icon={require("../../public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="https://portal.thirdweb.com/react-native/latest"
           />
         </SimpleGrid>

@@ -70,7 +70,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
         opacity: 0.75,
       }}
       leftIcon={<Icon as={FiPlus} />}
-      isLoading={addContract.isLoading}
+      isLoading={addContract.isPending}
       isDisabled={!chain?.chainId}
       onClick={() => {
         if (!chain) {

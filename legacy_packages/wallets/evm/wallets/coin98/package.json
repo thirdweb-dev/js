@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-wallets-coin98.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-wallets-coin98.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-wallets-coin98.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-coin98.browser.esm.js"
-  }
-}

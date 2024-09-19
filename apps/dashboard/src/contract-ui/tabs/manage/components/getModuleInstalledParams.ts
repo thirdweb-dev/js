@@ -1,24 +1,21 @@
-import { extractFunctionParamsFromAbi } from "@thirdweb-dev/sdk";
-import { polygon } from "thirdweb/chains";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { fetchPublishedContractVersions } from "components/contract-components/fetch-contracts-with-versions";
+import { isAddress } from "thirdweb";
+import { resolveAddress } from "thirdweb/extensions/ens";
 import invariant from "tiny-invariant";
-import {
-  fetchAllVersions,
-  fetchContractPublishMetadataFromURI,
-} from "../../../../components/contract-components/hooks";
-import { getDashboardChainRpc } from "../../../../lib/rpc";
-import { getThirdwebSDK } from "../../../../lib/sdk";
 import type { ModuleMeta } from "./install-module-params";
 
 export async function getModuleInstalledParams(ext: ModuleMeta) {
-  const sdk = getThirdwebSDK(
-    polygon.id,
-    getDashboardChainRpc(polygon.id, undefined),
-  );
-
   // get all versions of the module
-  const allPublishedModules = await fetchAllVersions(
-    sdk,
-    ext.publisherAddress,
+  // if the publisher is an ens name, resolve it
+  const publisherAddress = isAddress(ext.publisherAddress)
+    ? ext.publisherAddress
+    : await resolveAddress({
+        client: getThirdwebClient(),
+        name: ext.publisherAddress,
+      });
+  const allPublishedModules = await fetchPublishedContractVersions(
+    publisherAddress,
     ext.moduleName,
   );
 
@@ -33,18 +30,14 @@ export async function getModuleInstalledParams(ext: ModuleMeta) {
     `Module ${ext.moduleName} version "${ext.moduleVersion}" not found`,
   );
 
-  // get the ABI
-  const contractMetadata = await fetchContractPublishMetadataFromURI(
-    publishedModule.metadataUri,
-  );
-
-  invariant(contractMetadata.abi, `ABI not found for module ${ext.moduleName}`);
+  invariant(publishedModule.abi, `ABI not found for module ${ext.moduleName}`);
 
   // get encodeBytesOnInstall function's install params
-  const installParamsForModule = extractFunctionParamsFromAbi(
-    contractMetadata.abi,
-    "encodeBytesOnInstall",
-  );
+
+  const installParamsForModule =
+    publishedModule.abi
+      .filter((f) => f.type === "function")
+      .find((f) => f.name === "encodeBytesOnInstall")?.inputs || [];
 
   return {
     moduleName: ext.moduleName,

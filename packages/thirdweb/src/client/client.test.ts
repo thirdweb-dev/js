@@ -14,7 +14,6 @@ describe("client", () => {
     expect(client.secretKey).toBe("bar");
   });
   it("should ignore clientId if secretKey is provided", () => {
-    // @ts-expect-error - testing invalid input
     const client = createThirdwebClient({ clientId: "foo", secretKey: "bar" });
     expect(client.clientId).toBe(computeClientIdFromSecretKey("bar"));
     expect(client.secretKey).toBe("bar");
@@ -22,7 +21,23 @@ describe("client", () => {
   it("should throw an error if neither clientId nor secretKey is provided", () => {
     // @ts-expect-error - testing invalid input
     expect(() => createThirdwebClient({})).toThrowError(
-      "clientId or secretKey must be provided",
+      /clientId or secretKey must be provided/,
     );
+  });
+
+  describe("jwt", () => {
+    it("should accept a jwt being passed", () => {
+      const client = createThirdwebClient({
+        clientId: "foo",
+        secretKey: "bar.baz.qux",
+      });
+      expect(client.clientId).toBe("foo");
+      expect(client.secretKey).toBe("bar.baz.qux");
+    });
+    it("should throw if clientId is missing with JWT input", () => {
+      expect(() =>
+        createThirdwebClient({ secretKey: "bar.baz.qux" }),
+      ).toThrowError(/clientId must be provided when using a JWT secretKey/);
+    });
   });
 });

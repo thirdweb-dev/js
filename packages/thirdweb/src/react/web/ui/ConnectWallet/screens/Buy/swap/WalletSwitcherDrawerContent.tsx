@@ -1,6 +1,7 @@
 import { PlusIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { Wallet } from "../../../../../../../wallets/interfaces/wallet.js";
+import type { WalletId } from "../../../../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
   iconSize,
@@ -22,6 +23,7 @@ export function WalletSwitcherDrawerContent(props: {
   onBack: () => void;
   onConnect: () => void;
   selectedAddress: string;
+  hiddenWallets?: WalletId[];
 }) {
   const theme = useCustomTheme();
   const connectedWallets = useConnectedWallets();
@@ -34,23 +36,25 @@ export function WalletSwitcherDrawerContent(props: {
   return (
     <Container>
       <Container flex="column" gap="xs">
-        {connectedWallets.map((w) => {
-          const address = w.getAccount()?.address;
-          return (
-            <WalletSelectorButton
-              key={w.id}
-              walletId={w.id}
-              client={props.client}
-              address={address || ""}
-              onClick={() => {
-                props.onSelect(w);
-                props.onBack();
-              }}
-              disableChevron
-              checked={false}
-            />
-          );
-        })}
+        {connectedWallets
+          .filter((w) => !props.hiddenWallets?.includes(w.id))
+          .map((w) => {
+            const address = w.getAccount()?.address;
+            return (
+              <WalletSelectorButton
+                key={w.id}
+                walletId={w.id}
+                client={props.client}
+                address={address || ""}
+                onClick={() => {
+                  props.onSelect(w);
+                  props.onBack();
+                }}
+                disableChevron
+                checked={false}
+              />
+            );
+          })}
         {!hideConnectButton && (
           <Button
             variant="secondary"

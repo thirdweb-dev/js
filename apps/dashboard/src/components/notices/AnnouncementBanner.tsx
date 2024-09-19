@@ -5,7 +5,7 @@ import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-blocktorch-announcement", false, true);
+    useLocalStorage("dismissed-modular-contracts-announcement", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -27,7 +27,7 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="https://onchainolympics.com"
+          href="https://thirdweb.com/explore/modular-contracts"
           category="announcement"
           label="onchain-olympics"
           isExternal
@@ -47,8 +47,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                The Onchain Olympics ⛓️🏅 — Mint an NFT on your preferred chain
-                to unlock builder perks on thirdweb
+                Modular Contracts Beta: Secure, Customizable, and Easy to
+                Integrate contracts
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>

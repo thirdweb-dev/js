@@ -8,6 +8,7 @@ import type { Prettify } from "../../../../utils/type-utils.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 import type { NetworkSelectorProps } from "../../../web/ui/ConnectWallet/NetworkSelector.js";
 import type { WelcomeScreen } from "../../../web/ui/ConnectWallet/screens/types.js";
 import type { LocaleId } from "../../../web/ui/types.js";
@@ -112,6 +113,13 @@ export type PayUIOptions = Prettify<
             status: BuyWithFiatStatus;
           },
     ) => void;
+    /**
+     * Customize the display of the PayEmbed UI.
+     */
+    metadata?: {
+      name?: string;
+      image?: string;
+    };
   } & (FundWalletOptions | DirectPaymentOptions | TranasctionOptions)
 >;
 
@@ -144,13 +152,6 @@ export type DirectPaymentOptions = {
    * The payment information
    */
   paymentInfo: PaymentInfo;
-  /**
-   * Customize the display of the PayEmbed UI.
-   */
-  metadata?: {
-    name?: string;
-    image?: string;
-  };
 };
 
 export type TranasctionOptions = {
@@ -159,13 +160,6 @@ export type TranasctionOptions = {
    * The transaction to be executed.
    */
   transaction: PreparedTransaction;
-  /**
-   * Customize the display of the PayEmbed UI.
-   */
-  metadata?: {
-    name?: string;
-    image?: string;
-  };
 };
 
 /**
@@ -312,6 +306,11 @@ export type ConnectButton_detailsModalOptions = {
    * By default the "Buy Funds" button is shown.
    */
   hideBuyFunds?: boolean;
+
+  /**
+   * All wallet IDs included in this array will be hidden from wallet selection when connected.
+   */
+  hiddenWallets?: WalletId[];
 };
 
 /**

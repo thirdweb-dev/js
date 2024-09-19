@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-connectors-magic.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-connectors-magic.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-connectors-magic.esm.js": "./dist/thirdweb-dev-wallets-evm-connectors-magic.browser.esm.js"
-  }
-}

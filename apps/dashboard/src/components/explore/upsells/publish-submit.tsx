@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import Image from "next/image";
@@ -18,7 +20,7 @@ export const PublishUpsellCard: React.FC = () => {
         <div className="flex gap-2">
           <Image
             className="size-6 hidden md:block"
-            src={require("/public/assets/product-pages/publish/hero-icon-1.png")}
+            src={require("../../../../public/assets/product-pages/publish/hero-icon-1.png")}
             alt=""
           />
 
@@ -34,7 +36,7 @@ export const PublishUpsellCard: React.FC = () => {
         <div className="flex gap-2">
           <Image
             className="size-6 hidden md:block"
-            src={require("/public/assets/product-pages/publish/hero-icon-2.png")}
+            src={require("../../../../public/assets/product-pages/publish/hero-icon-2.png")}
             alt=""
           />
           <p className="text-muted-foreground">

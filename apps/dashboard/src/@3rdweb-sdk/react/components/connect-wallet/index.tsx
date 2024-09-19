@@ -2,12 +2,15 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useSupportedChains } from "hooks/chains/configureChains";
+import {
+  useSupportedChains,
+  useSupportedChainsRecord,
+} from "hooks/chains/configureChains";
 import {
   useAddRecentlyUsedChainId,
   useRecentlyUsedChains,
@@ -29,6 +32,7 @@ export const CustomConnectWallet = (props: {
   connectButtonClassName?: string;
   detailsButtonClassName?: string;
 }) => {
+  const thirdwebClient = useThirdwebClient();
   const loginRequired =
     props.loginRequired === undefined ? true : props.loginRequired;
   const { theme } = useTheme();
@@ -37,11 +41,16 @@ export const CustomConnectWallet = (props: {
   // const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
   const t = theme === "light" ? "light" : "dark";
   const allv4Chains = useSupportedChains();
+  const chainsRecord = useSupportedChainsRecord();
   const favChainsQuery = useFavoriteChains();
   const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
   const allChains = useMemo(() => {
     return allv4Chains.map(mapV4ChainToV5Chain);
   }, [allv4Chains]);
+
+  const popularChainsWithMeta = useMemo(() => {
+    return popularChains.map((x) => chainsRecord[x.id] || x);
+  }, [chainsRecord]);
 
   const chainSections = useMemo(() => {
     return [
@@ -51,14 +60,14 @@ export const CustomConnectWallet = (props: {
       },
       {
         label: "Popular",
-        chains: popularChains,
+        chains: popularChainsWithMeta.map(mapV4ChainToV5Chain),
       },
       {
         label: "Recent",
         chains: recentChainsv4.map(mapV4ChainToV5Chain),
       },
     ];
-  }, [recentChainsv4, favChainsQuery.data]);
+  }, [recentChainsv4, favChainsQuery.data, popularChainsWithMeta]);
 
   // ensures login status on pages that need it
   const { isLoading, isLoggedIn } = useLoggedInUser();
@@ -140,7 +149,7 @@ export const CustomConnectWallet = (props: {
   );
 };
 
-export function ConnectWalletWelcomeScreen(props: {
+function ConnectWalletWelcomeScreen(props: {
   theme: "light" | "dark";
   subtitle?: string;
 }) {
@@ -214,6 +223,7 @@ export function ConnectWalletWelcomeScreen(props: {
 export function useCustomConnectModal() {
   const { connect } = useConnectModal();
   const { theme } = useTheme();
+  const thirdwebClient = useThirdwebClient();
 
   return useCallback(
     (options?: { chain?: Chain }) => {
@@ -236,7 +246,7 @@ export function useCustomConnectModal() {
         theme: getSDKTheme(theme === "light" ? "light" : "dark"),
       });
     },
-    [connect, theme],
+    [connect, theme, thirdwebClient],
   );
 }
 

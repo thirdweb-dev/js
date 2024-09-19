@@ -10,7 +10,7 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { toUnits } from "../../../../utils/units.js";
 import { isERC721 } from "../../../erc721/read/isERC721.js";
 import { isERC1155 } from "../../../erc1155/read/isERC1155.js";
-import { createListing as generatedCreateListing } from "../../__generated__/IDirectListings/write/createListing.js";
+import * as CreateListing from "../../__generated__/IDirectListings/write/createListing.js";
 
 /**
  * @extension MARKETPLACE
@@ -88,7 +88,7 @@ export type CreateListingParams = {
 export function createListing(
   options: BaseTransactionOptions<CreateListingParams>,
 ) {
-  return generatedCreateListing({
+  return CreateListing.createListing({
     contract: options.contract,
     asyncParams: async () => {
       const assetContract = getContract({
@@ -181,4 +181,20 @@ export function createListing(
       } as const;
     },
   });
+}
+
+/**
+ * Checks if the `createListing` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `createListing` method is supported.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { isCreateAuctionSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = isCreateAuctionSupported(["0x..."]);
+ * ```
+ */
+export function isCreateListingSupported(availableSelectors: string[]) {
+  return CreateListing.isCreateListingSupported(availableSelectors);
 }

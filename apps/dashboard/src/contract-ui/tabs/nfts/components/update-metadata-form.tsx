@@ -1,4 +1,3 @@
-import { thirdwebClient } from "@/constants/client";
 import {
   Accordion,
   AccordionButton,
@@ -214,13 +213,11 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
                     contract,
                     targetTokenId: BigInt(nft.id),
                     newMetadata,
-                    client: thirdwebClient,
                   })
                 : updateMetadata1155({
                     contract,
                     targetTokenId: BigInt(nft.id),
                     newMetadata,
-                    client: thirdwebClient,
                   })
               : // For Collection contracts, we need to call the `setTokenURI` method
                 nft.type === "ERC721"

@@ -6,8 +6,11 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useClipboard } from "hooks/useClipboard";
 import { Check, Copy, ExternalLinkIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { type ThirdwebClient, isAddress } from "thirdweb";
 import { ZERO_ADDRESS } from "thirdweb";
 import {
   Blobbie,
@@ -16,7 +19,6 @@ import {
   useSocialProfiles,
 } from "thirdweb/react";
 import { resolveScheme } from "thirdweb/storage";
-import { thirdwebClient } from "../../constants/client";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -26,8 +28,10 @@ export function WalletAddress(props: {
   shortenAddress?: boolean;
   className?: string;
 }) {
+  const thirdwebClient = useThirdwebClient();
   // default back to zero address if no address provided
   const address = useMemo(() => props.address || ZERO_ADDRESS, [props.address]);
+
   const [shortenedAddress, lessShortenedAddress] = useMemo(() => {
     return [
       props.shortenAddress !== false
@@ -42,17 +46,16 @@ export function WalletAddress(props: {
     client: thirdwebClient,
   });
 
-  const [isCopied, setIsCopied] = useState(false);
+  const { onCopy, hasCopied } = useClipboard(address, 2000);
 
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(address);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
-    } catch (err) {
-      console.error("Failed to copy: ", err);
-    }
-  };
+  if (!isAddress(address)) {
+    return <span>Invalid Address ({address})</span>;
+  }
+
+  // special case for zero address
+  if (address === ZERO_ADDRESS) {
+    return <span className="font-mono cursor-pointer">{shortenedAddress}</span>;
+  }
 
   return (
     <HoverCard>
@@ -66,7 +69,11 @@ export function WalletAddress(props: {
           )}
         >
           {address && (
-            <WalletAvatar address={address} profiles={profiles.data || []} />
+            <WalletAvatar
+              address={address}
+              profiles={profiles.data || []}
+              thirdwebClient={thirdwebClient}
+            />
           )}
           <span className="font-mono cursor-pointer">
             {profiles.data?.[0]?.name || shortenedAddress}
@@ -86,15 +93,15 @@ export function WalletAddress(props: {
             <Button
               variant="outline"
               size="sm"
-              onClick={copyToClipboard}
+              onClick={onCopy}
               className="flex items-center gap-2"
             >
-              {isCopied ? (
+              {hasCopied ? (
                 <Check className="h-4 w-4" />
               ) : (
                 <Copy className="h-4 w-4" />
               )}
-              {isCopied ? "Copied!" : "Copy"}
+              {hasCopied ? "Copied!" : "Copy"}
             </Button>
           </div>
           <p className="text-sm font-mono bg-muted p-2 rounded text-center">
@@ -167,6 +174,7 @@ export function WalletAddress(props: {
 function WalletAvatar(props: {
   address: string;
   profiles: SocialProfile[];
+  thirdwebClient: ThirdwebClient;
 }) {
   const avatar = useMemo(() => {
     return props.profiles.find(
@@ -180,7 +188,7 @@ function WalletAvatar(props: {
     <div className="size-6 overflow-hidden rounded-full">
       {avatar ? (
         <MediaRenderer
-          client={thirdwebClient}
+          client={props.thirdwebClient}
           src={avatar}
           className="size-6"
         />

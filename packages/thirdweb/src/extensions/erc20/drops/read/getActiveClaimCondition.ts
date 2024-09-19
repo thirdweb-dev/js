@@ -26,6 +26,18 @@ export async function getActiveClaimCondition(
   }
 }
 
+/**
+ * Checks if the `getActiveClaimCondition` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `getActiveClaimCondition` method is supported.
+ * @extension ERC20
+ * @example
+ * ```ts
+ * import { isGetActiveClaimConditionSupported } from "thirdweb/extensions/erc20";
+ *
+ * const supported = isGetActiveClaimConditionSupported(["0x..."]);
+ * ```
+ */
 export function isGetActiveClaimConditionSupported(
   availableSelectors: string[],
 ) {

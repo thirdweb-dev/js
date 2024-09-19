@@ -27,7 +27,7 @@
     --muted-foreground: 0 0% 40%;
     --accent-foreground: 0 0% 9%;
     --destructive-foreground: 0 0% 100%;
-    --inverted-foreground: var(--background);
+    --inverted-foreground: 0 0% 100%;
     --link-foreground: 221.21deg 83.19% 53.33%;
     --success-text: 142.09 70.56% 35.29%;
     --warning-text: 38 92% 40%;
@@ -72,6 +72,7 @@
     --warning-text: 38 92% 50%;
     --destructive-text: 360 72% 55%;
     --success-text: 142 75% 50%;
+    --inverted-foreground: 0 0% 0%;
 
     /* Borders */
     --border: 0 0% 15%;
@@ -137,4 +138,9 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+}
+
+body,
+html {
+  height: 100%;
 }

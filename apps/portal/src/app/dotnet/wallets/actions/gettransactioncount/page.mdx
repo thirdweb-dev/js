@@ -1,0 +1,44 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    title: "IThirdwebWallet.GetTransactionCount | Thirdweb .NET SDK",
+    description: "Extension method to get the transaction count (nonce) of a wallet on a specific chain.",
+});
+
+# IThirdwebWallet.GetTransactionCount
+
+This method retrieves the transaction count (i.e., nonce) for a specified wallet address on a given chain.
+
+## Usage
+
+```csharp
+BigInteger transactionCount = await wallet.GetTransactionCount(chainId, address);
+```
+
+<Details summary="Parameters">
+
+### wallet (required)
+
+An instance of `IThirdwebWallet`. This represents the wallet for which you want to retrieve the transaction count.
+
+### chainId (required)
+
+The chain ID from which you want to retrieve the transaction count.
+
+### address (required)
+
+The wallet address for which you want to retrieve the transaction count.
+
+### blocktag (optional)
+
+The block tag to retrieve the transaction count at. Defaults to `"pending"`. You can set this to `"latest"` or `"earliest"`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### BigInteger
+
+The method returns a `BigInteger` representing the transaction count (nonce) of the wallet.
+
+</Details>

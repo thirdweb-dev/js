@@ -1,14 +1,14 @@
 import "./globals.css";
-import { Inter, Fira_Code } from "next/font/google";
-import { Header } from "./Header";
-import NextTopLoader from "nextjs-toploader";
-import { PosthogHeadSetup, PosthogPageView } from "@/lib/posthog/Posthog";
-import Script from "next/script";
 import { createMetadata } from "@/components/Document";
-import { SetStoredTheme } from "../components/others/theme/theme";
-import { Banner } from "../components/others/Banner";
+import { PosthogHeadSetup, PosthogPageView } from "@/lib/posthog/Posthog";
+import { Fira_Code, Inter } from "next/font/google";
+import Script from "next/script";
+import NextTopLoader from "nextjs-toploader";
 import { StickyTopContainer } from "../components/Document/StickyTopContainer";
+import { Banner } from "../components/others/Banner";
 import { EnableSmoothScroll } from "../components/others/SmoothScroll";
+import { SetStoredTheme } from "../components/others/theme/theme";
+import { Header } from "./Header";
 
 const sansFont = Inter({
 	subsets: ["latin"],
@@ -65,9 +65,9 @@ export default function RootLayout({
 					<StickyTopContainer>
 						{/* Note: Please change id as well when changing text or href so that new banner is shown to user even if user dismissed the older one  */}
 						<Banner
-							id="v5-stable"
-							text="Connect SDK v5 has been released. See documentation."
-							href="https://portal.thirdweb.com/typescript/v5"
+							id="modular-contracts"
+							text="Modular Contracts Beta: Secure, Customizable, and Easy to Integrate contracts"
+							href="https://thirdweb.com/explore/modular-contracts"
 						/>
 						<Header />
 					</StickyTopContainer>

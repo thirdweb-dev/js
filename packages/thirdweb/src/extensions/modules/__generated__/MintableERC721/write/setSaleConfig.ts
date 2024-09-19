@@ -31,7 +31,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `setSaleConfig` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `setSaleConfig` method is supported.
- * @module MintableERC721
+ * @modules MintableERC721
  * @example
  * ```ts
  * import { MintableERC721 } from "thirdweb/modules";
@@ -50,7 +50,7 @@ export function isSetSaleConfigSupported(availableSelectors: string[]) {
  * Encodes the parameters for the "setSaleConfig" function.
  * @param options - The options for the setSaleConfig function.
  * @returns The encoded ABI parameters.
- * @module MintableERC721
+ * @modules MintableERC721
  * @example
  * ```ts
  * import { MintableERC721 } from "thirdweb/modules";
@@ -67,7 +67,7 @@ export function encodeSetSaleConfigParams(options: SetSaleConfigParams) {
  * Encodes the "setSaleConfig" function into a Hex string with its parameters.
  * @param options - The options for the setSaleConfig function.
  * @returns The encoded hexadecimal string.
- * @module MintableERC721
+ * @modules MintableERC721
  * @example
  * ```ts
  * import { MintableERC721 } from "thirdweb/modules";
@@ -89,7 +89,7 @@ export function encodeSetSaleConfig(options: SetSaleConfigParams) {
  * Prepares a transaction to call the "setSaleConfig" function on the contract.
  * @param options - The options for the "setSaleConfig" function.
  * @returns A prepared transaction object.
- * @module MintableERC721
+ * @modules MintableERC721
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";

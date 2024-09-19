@@ -1,0 +1,53 @@
+
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    title: "IThirdwebWallet.Transfer | Thirdweb .NET SDK",
+    description: "Method to transfer the specified amount of Wei to a given address.",
+});
+
+# IThirdwebWallet.Transfer
+
+This method transfers a specified amount of Wei (smallest denomination of Ether) to a specified wallet address on a given chain.
+
+## Usage
+
+```csharp
+// Transfer Wei
+ThirdwebTransactionReceipt receipt = await wallet.Transfer(chainId, toAddress, weiAmount);
+```
+
+<Details summary="Parameters">
+
+### wallet (required)
+
+An instance of `IThirdwebWallet`. This represents the wallet from which the Wei is being transferred.
+
+### chainId (required)
+
+The chain ID of the network on which the transfer is to occur.
+
+### toAddress (required)
+
+The address to which the Wei will be transferred.
+
+### weiAmount (required)
+
+The amount of Wei to transfer. It must be 0 or greater.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransactionReceipt
+
+The method returns a `ThirdwebTransactionReceipt` which contains details about the transaction.
+
+</Details>
+
+## Exceptions
+
+- `ArgumentNullException`: Thrown when the `wallet` is null.
+- `ArgumentOutOfRangeException`: Thrown when the `chainId` is less than or equal to 0.
+- `ArgumentException`: Thrown when the recipient `toAddress` is null or empty.
+- `ArgumentOutOfRangeException`: Thrown when the `weiAmount` is less than 0.

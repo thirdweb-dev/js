@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-wallets-gcp-kms.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-wallets-gcp-kms.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-wallets-gcp-kms.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-gcp-kms.browser.esm.js"
-  }
-}

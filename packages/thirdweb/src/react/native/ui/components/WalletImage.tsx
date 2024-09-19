@@ -12,11 +12,13 @@ import {
   FACEBOOK_ICON,
   FARCASTER_ICON,
   GOOGLE_ICON,
+  GUEST_ICON,
   LINE_ICON,
   PASSKEY_ICON,
   PHONE_ICON,
   TELEGRAM_ICON,
   WALLET_ICON,
+  X_ICON,
 } from "../icons/svgs.js";
 import { RNImage } from "./RNImage.js";
 
@@ -84,10 +86,14 @@ export function getAuthProviderImage(authProvider: string | null): string {
       return DISCORD_ICON;
     case "line":
       return LINE_ICON;
+    case "x":
+      return X_ICON;
     case "farcaster":
       return FARCASTER_ICON;
     case "telegram":
       return TELEGRAM_ICON;
+    case "guest":
+      return GUEST_ICON;
     default:
       return WALLET_ICON;
   }

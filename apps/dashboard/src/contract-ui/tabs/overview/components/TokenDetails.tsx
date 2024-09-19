@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { TokenSupply } from "contract-ui/tabs/tokens/components/supply";
 import type { ThirdwebContract } from "thirdweb";
 import { Heading } from "tw-components";
@@ -9,11 +8,11 @@ interface TokenDetailsProps {
 
 export const TokenDetails: React.FC<TokenDetailsProps> = ({ contract }) => {
   return (
-    <Flex direction="column" gap={6}>
-      <Flex align="center" justify="space-between" w="full">
+    <div className="flex flex-col gap-6">
+      <div className="items-center justify-between w-full flex flex-row">
         <Heading size="title.sm">Token Details</Heading>
-      </Flex>
+      </div>
       <TokenSupply contract={contract} />
-    </Flex>
+    </div>
   );
 };

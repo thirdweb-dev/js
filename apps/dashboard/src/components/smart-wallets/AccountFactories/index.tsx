@@ -1,19 +1,22 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { useMultiChainRegContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { useQuery } from "@tanstack/react-query";
-import type { BasicContract } from "contract-ui/types/types";
-import { useSupportedChains } from "hooks/chains/configureChains";
-import { getDashboardChainRpc } from "lib/rpc";
-import { getThirdwebSDK } from "lib/sdk";
 import { PlusIcon } from "lucide-react";
-import { polygon } from "thirdweb/chains";
-import invariant from "tiny-invariant";
+import { defineChain, getContract } from "thirdweb";
+import { getCompilerMetadata } from "thirdweb/contract";
 import { FactoryContracts } from "./factory-contracts";
 
-const useFactories = () => {
+function useFactories() {
   const { user, isLoggedIn } = useLoggedInUser();
-  const configuredChains = useSupportedChains();
+  const client = useThirdwebClient();
+
+  const contractListQuery = useMultiChainRegContractList(user?.address);
+
   return useQuery({
     queryKey: [
       "dashboard-registry",
@@ -22,30 +25,24 @@ const useFactories = () => {
       "factories",
     ],
     queryFn: async () => {
-      invariant(user?.address, "user should be logged in");
-      const polygonSDK = getThirdwebSDK(
-        polygon.id,
-        getDashboardChainRpc(polygon.id, undefined),
-      );
-      const contractList = await polygonSDK.getMultichainContractList(
-        user.address,
-        configuredChains,
-      );
-
-      const contractWithExtensions = await Promise.all(
-        contractList.map(async (c) => {
-          const extensions =
-            "extensions" in c ? await c.extensions().catch(() => []) : [];
-          return extensions.includes("AccountFactory") ? c : null;
+      const factories = await Promise.all(
+        (contractListQuery.data || []).map(async (c) => {
+          const contract = getContract({
+            // eslint-disable-next-line no-restricted-syntax
+            chain: defineChain(c.chainId),
+            address: c.address,
+            client,
+          });
+          const m = await getCompilerMetadata(contract);
+          return m.name.indexOf("AccountFactory") > -1 ? c : null;
         }),
       );
 
-      return contractWithExtensions.filter((f) => f !== null);
+      return factories.filter((f) => f !== null);
     },
-
-    enabled: !!user?.address && isLoggedIn,
+    enabled: !!user?.address && isLoggedIn && !!contractListQuery.data?.length,
   });
-};
+}
 
 interface AccountFactoriesProps {
   trackingCategory: string;
@@ -77,7 +74,7 @@ export const AccountFactories: React.FC<AccountFactoriesProps> = ({
       </div>
 
       <FactoryContracts
-        contracts={(factories.data || []) as BasicContract[]}
+        contracts={factories.data || []}
         isLoading={factories.isLoading}
         isFetched={factories.isFetched}
       />

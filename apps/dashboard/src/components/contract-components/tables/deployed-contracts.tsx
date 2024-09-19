@@ -145,10 +145,10 @@ const RemoveFromDashboardButton: React.FC<RemoveFromDashboardButtonProps> = ({
         e.stopPropagation();
         mutation.mutate({ chainId, contractAddress });
       }}
-      disabled={mutation.isLoading}
+      disabled={mutation.isPending}
       className="!bg-background hover:!bg-accent gap-2"
     >
-      {mutation.isLoading ? (
+      {mutation.isPending ? (
         <Spinner className="size-4" />
       ) : (
         <XIcon className="size-4 text-destructive-text" />
@@ -341,7 +341,6 @@ const ContractTable: React.FC<ContractTableProps> = ({
   return (
     <TableContainer>
       {isFetching && <Spinner className="size-3 absolute top-2 right-4" />}
-
       <Table {...getTableProps()}>
         <TableHeader>
           {headerGroups.map((headerGroup, index) => (
@@ -378,7 +377,6 @@ const ContractTable: React.FC<ContractTableProps> = ({
           })}
         </TableBody>
       </Table>
-
       {canNextPage && (
         <ShowMoreButton
           limit={limit}
@@ -386,7 +384,6 @@ const ContractTable: React.FC<ContractTableProps> = ({
           setShowMoreLimit={setNumRowsOnPage}
         />
       )}
-
       {loading && (
         <div className="flex items-center justify-center py-4">
           <div className="flex gap-2 items-center text-muted-foreground">

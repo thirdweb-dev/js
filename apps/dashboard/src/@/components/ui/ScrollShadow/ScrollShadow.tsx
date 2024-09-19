@@ -71,8 +71,15 @@ export function ScrollShadow(props: {
       });
     });
     content.addEventListener("scroll", handleScroll);
+
+    const resizeObserver = new ResizeObserver(() => {
+      handleScroll();
+    });
+
+    resizeObserver.observe(content);
     return () => {
       content.removeEventListener("scroll", handleScroll);
+      resizeObserver.disconnect();
     };
   }, []);
 

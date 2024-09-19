@@ -23,6 +23,7 @@ import { useForm } from "react-hook-form";
 import { BsFillLightningChargeFill } from "react-icons/bs";
 import { Button, Card, Heading, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
+import type { ContactFormPayload } from "../app/api/contact-us/types";
 
 interface FormSchema {
   firstname: string;
@@ -139,11 +140,12 @@ const ContactUs: ThirdwebNextPage = () => {
               gap={4}
               as="form"
               onSubmit={form.handleSubmit(async (data) => {
-                const fields = Object.keys(data).map((key) => ({
-                  name: key,
-                  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-                  value: (data as any)[key],
-                }));
+                const payload: ContactFormPayload = {
+                  fields: Object.keys(data).map((key) => ({
+                    name: key,
+                    value: data[key as keyof FormSchema],
+                  })),
+                };
 
                 setFormStatus("submitting");
 
@@ -154,9 +156,9 @@ const ContactUs: ThirdwebNextPage = () => {
                 });
 
                 try {
-                  const response = await fetch("/api/hubspot", {
+                  const response = await fetch("/api/contact-us", {
                     method: "POST",
-                    body: JSON.stringify({ fields }),
+                    body: JSON.stringify(payload),
                   });
 
                   if (!response.ok) {

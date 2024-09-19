@@ -43,7 +43,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `mintWithSignature` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `mintWithSignature` method is supported.
- * @module ERC20Core
+ * @modules ERC20Core
  * @example
  * ```ts
  * import { ERC20Core } from "thirdweb/modules";
@@ -62,7 +62,7 @@ export function isMintWithSignatureSupported(availableSelectors: string[]) {
  * Encodes the parameters for the "mintWithSignature" function.
  * @param options - The options for the mintWithSignature function.
  * @returns The encoded ABI parameters.
- * @module ERC20Core
+ * @modules ERC20Core
  * @example
  * ```ts
  * import { ERC20Core } from "thirdweb/modules";
@@ -89,7 +89,7 @@ export function encodeMintWithSignatureParams(
  * Encodes the "mintWithSignature" function into a Hex string with its parameters.
  * @param options - The options for the mintWithSignature function.
  * @returns The encoded hexadecimal string.
- * @module ERC20Core
+ * @modules ERC20Core
  * @example
  * ```ts
  * import { ERC20Core } from "thirdweb/modules";
@@ -114,7 +114,7 @@ export function encodeMintWithSignature(options: MintWithSignatureParams) {
  * Prepares a transaction to call the "mintWithSignature" function on the contract.
  * @param options - The options for the "mintWithSignature" function.
  * @returns A prepared transaction object.
- * @module ERC20Core
+ * @modules ERC20Core
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";

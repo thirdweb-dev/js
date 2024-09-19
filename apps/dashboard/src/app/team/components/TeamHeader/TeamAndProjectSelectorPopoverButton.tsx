@@ -19,6 +19,7 @@ type TeamSwitcherProps = {
   currentProject: Project | undefined;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   focus: "project-selection" | "team-selection";
+  createProject: () => void;
 };
 
 export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
@@ -64,6 +65,11 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
         sideOffset={5}
         className="p-0 w-auto rounded-xl shadow-xl"
         align={props.focus === "project-selection" ? "center" : "start"}
+        onClick={(e) => {
+          if (e.target instanceof HTMLAnchorElement) {
+            setOpen(false);
+          }
+        }}
       >
         <DynamicHeight>
           <div className="flex [&>div]:min-w-[280px] no-scrollbar">
@@ -72,6 +78,11 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
               currentTeam={currentTeam}
               setHoveredTeam={setHoveredTeam}
               teamsAndProjects={teamsAndProjects}
+              upgradeTeamLink={
+                currentTeam
+                  ? `/team/${currentTeam.slug}/~/settings/billing`
+                  : undefined
+              }
             />
 
             {/* Right */}
@@ -80,6 +91,10 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
                 currentProject={props.currentProject}
                 projects={projectsToShow}
                 team={projectsToShowOfTeam}
+                createProject={() => {
+                  setOpen(false);
+                  props.createProject();
+                }}
               />
             )}
           </div>

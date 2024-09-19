@@ -1,3 +1,5 @@
+"use client";
+
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import {
   Select,

@@ -14,11 +14,14 @@ import { trackPayEvent } from "../../../../analytics/track.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
+import { getLastAuthProvider } from "../../../../react/core/utils/storage.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import { formatNumber } from "../../../../utils/formatNumber.js";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 import {
   CustomThemeProvider,
   parseTheme,
@@ -744,6 +747,7 @@ function DetailsModal(props: {
         chain={props.connectOptions?.chain}
         chains={props.connectOptions?.chains}
         client={client}
+        hiddenWallets={props.connectOptions?.hiddenWallets}
         connectLocale={locale}
         recommendedWallets={props.connectOptions?.recommendedWallets}
         showAllWallets={!!props.connectOptions?.showAllWallets}
@@ -924,6 +928,7 @@ function DetailsModal(props: {
             mode: "fund_wallet",
           }
         }
+        hiddenWallets={props.detailsModal?.hiddenWallets}
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
         onDone={closeModal}
         connectOptions={undefined}
@@ -1059,6 +1064,17 @@ function InAppWalletUserInfo(props: {
   const activeWallet = useActiveWallet();
   const { data: walletInfo } = useWalletInfo(activeWallet?.id);
   const isSmartWallet = hasSmartAccount(activeWallet);
+  const { data: walletName } = useQuery({
+    queryKey: [activeWallet?.id, "wallet-name"],
+    queryFn: async () => {
+      const lastAuthProvider = await getLastAuthProvider(webLocalStorage);
+      if (lastAuthProvider === "guest") {
+        return "Guest";
+      }
+      return walletInfo?.name;
+    },
+    enabled: !!activeWallet?.id && !!walletInfo,
+  });
 
   const userInfoQuery = useQuery({
     queryKey: ["in-app-wallet-user", client, account?.address],
@@ -1085,10 +1101,10 @@ function InAppWalletUserInfo(props: {
     return <ConnectedToSmartWallet client={client} connectLocale={locale} />;
   }
 
-  if (userInfoQuery.data || walletInfo) {
+  if (userInfoQuery.data || walletName) {
     return (
       <Text size="xs" weight={400}>
-        {userInfoQuery.data || walletInfo?.name}
+        {userInfoQuery.data || walletName}
       </Text>
     );
   }
@@ -1156,6 +1172,7 @@ export type DetailsModalConnectOptions = {
   chain?: Chain;
   chains?: Chain[];
   recommendedWallets?: Wallet[];
+  hiddenWallets?: WalletId[];
   showAllWallets?: boolean;
 };
 

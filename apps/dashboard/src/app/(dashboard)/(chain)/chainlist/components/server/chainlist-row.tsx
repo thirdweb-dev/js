@@ -88,7 +88,7 @@ export async function ChainListRow({
                   key={p.name}
                   icon={p.icon}
                   label={p.name}
-                  href={`/${chainSlug}/${p.id === "contracts" ? "" : p.id}`}
+                  href={pidToHref(p.id)}
                   isEnabled={enabledServices.includes(p.id)}
                 />
               );
@@ -98,6 +98,29 @@ export async function ChainListRow({
       </TableCell>
     </TableRow>
   );
+}
+
+function pidToHref(pid: (typeof products)[number]["id"]) {
+  switch (pid) {
+    case "account-abstraction": {
+      return "https://portal.thirdweb.com/connect/account-abstraction/overview";
+    }
+    case "contracts": {
+      return "https://portal.thirdweb.com/contracts";
+    }
+    case "connect-sdk": {
+      return "https://portal.thirdweb.com/connect";
+    }
+    case "engine": {
+      return "https://portal.thirdweb.com/engine";
+    }
+    case "pay": {
+      return "https://portal.thirdweb.com/connect/pay/overview";
+    }
+    case "rpc-edge": {
+      return "https://portal.thirdweb.com/infrastructure/rpc-edge/overview";
+    }
+  }
 }
 
 function ProductIcon(props: {
@@ -117,7 +140,10 @@ function ProductIcon(props: {
         )
       }
     >
-      <Link href={props.href}>
+      <Link
+        href={props.href}
+        target={props.href.startsWith("http") ? "_blank" : undefined}
+      >
         <props.icon className={cn("size-8", !props.isEnabled && "grayscale")} />
       </Link>
     </ToolTipLabel>

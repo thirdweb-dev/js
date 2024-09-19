@@ -1,4 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-wallets.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-wallets.esm.js"
-}

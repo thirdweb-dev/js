@@ -1,6 +1,3 @@
-import { useContract } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import { useEns } from "components/contract-components/hooks";
 import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
 import type { EnhancedRoute } from "contract-ui/types/types";
 import dynamic from "next/dynamic";
@@ -11,6 +8,7 @@ import * as ERC20Ext from "thirdweb/extensions/erc20";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
+import * as MarketplaceExt from "thirdweb/extensions/marketplace";
 import * as PermissionExt from "thirdweb/extensions/permissions";
 import * as ThirdwebExt from "thirdweb/extensions/thirdweb";
 import * as ModularExt from "thirdweb/modules";
@@ -111,6 +109,7 @@ export function useContractRouteConfig(
 ): EnhancedRoute[] {
   // new
   const functionSelectorQuery = useContractFunctionSelectors(contract);
+  const functionSelectors = functionSelectorQuery.data || [];
   const contractTypeQuery = useReadContract(ThirdwebExt.contractType, {
     contract,
   });
@@ -118,19 +117,19 @@ export function useContractRouteConfig(
   const isERC721Query = useReadContract(ERC721Ext.isERC721, { contract });
   const isERC1155Query = useReadContract(ERC1155Ext.isERC1155, { contract });
   const isERC20 = useMemo(
-    () => ERC20Ext.isERC20(functionSelectorQuery.data),
-    [functionSelectorQuery.data],
+    () => ERC20Ext.isERC20(functionSelectors),
+    [functionSelectors],
   );
   const isPermissions = useMemo(() => {
     // all of these need to be supported for permissions to be enabled
     return [
-      PermissionExt.isGetRoleAdminSupported(functionSelectorQuery.data),
-      PermissionExt.isGrantRoleSupported(functionSelectorQuery.data),
-      PermissionExt.isHasRoleSupported(functionSelectorQuery.data),
-      PermissionExt.isRenounceRoleSupported(functionSelectorQuery.data),
-      PermissionExt.isRevokeRoleSupported(functionSelectorQuery.data),
+      PermissionExt.isGetRoleAdminSupported(functionSelectors),
+      PermissionExt.isGrantRoleSupported(functionSelectors),
+      PermissionExt.isHasRoleSupported(functionSelectors),
+      PermissionExt.isRenounceRoleSupported(functionSelectors),
+      PermissionExt.isRevokeRoleSupported(functionSelectors),
     ].every(Boolean);
-  }, [functionSelectorQuery.data]);
+  }, [functionSelectors]);
 
   const isPermissionsEnumerable = useMemo(() => {
     // if direct permissions isn't supported, then enumerable also isn't
@@ -139,76 +138,74 @@ export function useContractRouteConfig(
     }
     // all of these need to be supported for permissions to be enumerable
     return [
-      PermissionExt.isGetRoleMemberSupported(functionSelectorQuery.data),
-      PermissionExt.isGetRoleMemberCountSupported(functionSelectorQuery.data),
+      PermissionExt.isGetRoleMemberSupported(functionSelectors),
+      PermissionExt.isGetRoleMemberCountSupported(functionSelectors),
     ].every(Boolean);
-  }, [isPermissions, functionSelectorQuery.data]);
+  }, [isPermissions, functionSelectors]);
 
   const isAccount = useMemo(
-    () => ERC4337Ext.isValidateUserOpSupported(functionSelectorQuery.data),
-    [functionSelectorQuery.data],
+    () => ERC4337Ext.isValidateUserOpSupported(functionSelectors),
+    [functionSelectors],
   );
 
   const accountPermissions = useMemo(() => {
     return [
-      ERC4337Ext.isGetAllActiveSignersSupported(functionSelectorQuery.data),
-      ERC4337Ext.isGetAllAdminsSupported(functionSelectorQuery.data),
-      ERC4337Ext.isGetAllSignersSupported(functionSelectorQuery.data),
-      ERC4337Ext.isIsActiveSignerSupported(functionSelectorQuery.data),
-      ERC4337Ext.isIsAdminSupported(functionSelectorQuery.data),
-      ERC4337Ext.isAddAdminSupported(functionSelectorQuery.data),
+      ERC4337Ext.isGetAllActiveSignersSupported(functionSelectors),
+      ERC4337Ext.isGetAllAdminsSupported(functionSelectors),
+      ERC4337Ext.isGetAllSignersSupported(functionSelectors),
+      ERC4337Ext.isIsActiveSignerSupported(functionSelectors),
+      ERC4337Ext.isIsAdminSupported(functionSelectors),
+      ERC4337Ext.isAddAdminSupported(functionSelectors),
     ].every(Boolean);
-  }, [functionSelectorQuery.data]);
+  }, [functionSelectors]);
 
   const accountFactory = useMemo(() => {
     return [
-      ERC4337Ext.isGetAllAccountsSupported(functionSelectorQuery.data),
-      ERC4337Ext.isGetAccountsSupported(functionSelectorQuery.data),
-      ERC4337Ext.isTotalAccountsSupported(functionSelectorQuery.data),
-      ERC4337Ext.isGetAccountsOfSignerSupported(functionSelectorQuery.data),
-      ERC4337Ext.isPredictAccountAddressSupported(functionSelectorQuery.data),
+      ERC4337Ext.isGetAllAccountsSupported(functionSelectors),
+      ERC4337Ext.isGetAccountsSupported(functionSelectors),
+      ERC4337Ext.isTotalAccountsSupported(functionSelectors),
+      ERC4337Ext.isGetAccountsOfSignerSupported(functionSelectors),
+      ERC4337Ext.isPredictAccountAddressSupported(functionSelectors),
     ].every(Boolean);
-  }, [functionSelectorQuery.data]);
+  }, [functionSelectors]);
 
   const hasERC721ClaimConditions = useMemo(() => {
     return [
       // reads
-      ERC721Ext.isGetClaimConditionByIdSupported(functionSelectorQuery.data),
-      ERC721Ext.isGetActiveClaimConditionIdSupported(
-        functionSelectorQuery.data,
-      ),
-      ERC721Ext.isGetClaimConditionsSupported(functionSelectorQuery.data),
-      ERC721Ext.isGetActiveClaimConditionSupported(functionSelectorQuery.data),
+      ERC721Ext.isGetClaimConditionByIdSupported(functionSelectors),
+      ERC721Ext.isGetActiveClaimConditionIdSupported(functionSelectors),
+      ERC721Ext.isGetClaimConditionsSupported(functionSelectors),
+      ERC721Ext.isGetActiveClaimConditionSupported(functionSelectors),
       // writes
-      ERC721Ext.isSetClaimConditionsSupported(functionSelectorQuery.data),
-      ERC721Ext.isResetClaimEligibilitySupported(functionSelectorQuery.data),
+      ERC721Ext.isSetClaimConditionsSupported(functionSelectors),
+      ERC721Ext.isResetClaimEligibilitySupported(functionSelectors),
     ].every(Boolean);
-  }, [functionSelectorQuery.data]);
+  }, [functionSelectors]);
 
   const hasERC20ClaimConditions = useMemo(() => {
     return [
       // reads
-      ERC20Ext.isGetClaimConditionByIdSupported(functionSelectorQuery.data),
-      ERC20Ext.isGetActiveClaimConditionIdSupported(functionSelectorQuery.data),
-      ERC20Ext.isGetClaimConditionsSupported(functionSelectorQuery.data),
-      ERC20Ext.isGetActiveClaimConditionSupported(functionSelectorQuery.data),
+      ERC20Ext.isGetClaimConditionByIdSupported(functionSelectors),
+      ERC20Ext.isGetActiveClaimConditionIdSupported(functionSelectors),
+      ERC20Ext.isGetClaimConditionsSupported(functionSelectors),
+      ERC20Ext.isGetActiveClaimConditionSupported(functionSelectors),
       // writes
-      ERC20Ext.isSetClaimConditionsSupported(functionSelectorQuery.data),
-      ERC20Ext.isResetClaimEligibilitySupported(functionSelectorQuery.data),
+      ERC20Ext.isSetClaimConditionsSupported(functionSelectors),
+      ERC20Ext.isResetClaimEligibilitySupported(functionSelectors),
     ].every(Boolean);
-  }, [functionSelectorQuery.data]);
+  }, [functionSelectors]);
 
   const hasERC1155ClaimConditions = useMemo(() => {
     return [
       // reads
-      ERC1155Ext.isGetClaimConditionByIdSupported(functionSelectorQuery.data),
-      ERC1155Ext.isGetClaimConditionsSupported(functionSelectorQuery.data),
-      ERC1155Ext.isGetActiveClaimConditionSupported(functionSelectorQuery.data),
+      ERC1155Ext.isGetClaimConditionByIdSupported(functionSelectors),
+      ERC1155Ext.isGetClaimConditionsSupported(functionSelectors),
+      ERC1155Ext.isGetActiveClaimConditionSupported(functionSelectors),
       // writes
-      ERC1155Ext.isSetClaimConditionsSupported(functionSelectorQuery.data),
-      ERC1155Ext.isResetClaimEligibilitySupported(functionSelectorQuery.data),
+      ERC1155Ext.isSetClaimConditionsSupported(functionSelectors),
+      ERC1155Ext.isResetClaimEligibilitySupported(functionSelectors),
     ].every(Boolean);
-  }, [functionSelectorQuery.data]);
+  }, [functionSelectors]);
 
   const hasClaimConditions = useMemo(() => {
     return [
@@ -224,40 +221,30 @@ export function useContractRouteConfig(
 
   const isModularCore = useMemo(() => {
     return [
-      ModularExt.isGetInstalledModulesSupported(functionSelectorQuery.data),
-      ModularExt.isInstallModuleSupported(functionSelectorQuery.data),
+      ModularExt.isGetInstalledModulesSupported(functionSelectors),
+      ModularExt.isInstallModuleSupported(functionSelectors),
     ].every(Boolean);
-  }, [functionSelectorQuery.data]);
+  }, [functionSelectors]);
 
-  // old
-  const ensQuery = useEns(contract.address);
+  const isDirectListing = useMemo(() => {
+    return [
+      MarketplaceExt.isCreateListingSupported(functionSelectors),
+      MarketplaceExt.isCancelListingSupported(functionSelectors),
+      MarketplaceExt.isBuyFromListingSupported(functionSelectors),
+    ].every(Boolean);
+  }, [functionSelectors]);
 
-  // TODO: remove
-  const contractQuery = useContract(ensQuery.data?.address);
-  // TODO: remove all below
-  const contractData = useMemo(() => {
-    const detectedEnglishAuctions = extensionDetectedState({
-      contractQuery,
-      feature: "EnglishAuctions",
-    });
-
-    const detectedDirectListings = extensionDetectedState({
-      contractQuery,
-      feature: "DirectListings",
-    });
-
-    return {
-      detectedEnglishAuctions,
-      detectedDirectListings,
-    };
-  }, [contractQuery]);
+  const isEnglishAuction = useMemo(() => {
+    return [
+      MarketplaceExt.isCreateAuctionSupported(functionSelectors),
+      MarketplaceExt.isCancelAuctionSupported(functionSelectors),
+      MarketplaceExt.isBidInAuctionSupported(functionSelectors),
+    ].every(Boolean);
+  }, [functionSelectors]);
 
   const embedType: "marketplace-v3" | "erc20" | "erc1155" | "erc721" | null =
     useMemo(() => {
-      if (
-        contractData.detectedEnglishAuctions === "enabled" &&
-        contractData.detectedDirectListings === "enabled"
-      ) {
+      if (isEnglishAuction && isDirectListing) {
         // this means its marketplace v3
         return "marketplace-v3";
       }
@@ -277,10 +264,11 @@ export function useContractRouteConfig(
       // otherwise null
       return null;
     }, [
-      contractData,
       hasClaimConditions,
       isERC721Query.data,
       isERC1155Query.data,
+      isDirectListing,
+      isEnglishAuction,
     ]);
 
   return [
@@ -291,10 +279,8 @@ export function useContractRouteConfig(
       component: () => (
         <ContractOverviewPage
           contract={contract}
-          hasDirectListings={contractData.detectedDirectListings === "enabled"}
-          hasEnglishAuctions={
-            contractData.detectedEnglishAuctions === "enabled"
-          }
+          hasDirectListings={isDirectListing}
+          hasEnglishAuctions={isEnglishAuction}
           isErc1155={isERC1155Query.data || false}
           isErc20={isERC20}
           isErc721={isERC721Query.data || false}
@@ -313,7 +299,7 @@ export function useContractRouteConfig(
           ? "loading"
           : "disabled",
       isDefault: true,
-      component: LazyContractEditModulesPage,
+      component: () => <LazyContractEditModulesPage contract={contract} />,
     },
     {
       title: "Code Snippets",
@@ -390,25 +376,29 @@ export function useContractRouteConfig(
         <LazyContractTokensPage
           contract={contract}
           isERC20={isERC20}
-          isMintToSupported={ERC20Ext.isMintToSupported(
-            functionSelectorQuery.data,
-          )}
-          isClaimToSupported={ERC20Ext.isClaimToSupported(
-            functionSelectorQuery.data,
-          )}
+          isMintToSupported={ERC20Ext.isMintToSupported(functionSelectors)}
+          isClaimToSupported={ERC20Ext.isClaimToSupported(functionSelectors)}
         />
       ),
     },
     {
       title: "Direct Listings",
       path: "direct-listings",
-      isEnabled: contractData.detectedDirectListings,
+      isEnabled: functionSelectorQuery.isLoading
+        ? "loading"
+        : isDirectListing
+          ? "enabled"
+          : "disabled",
       component: () => <LazyContractDirectListingsPage contract={contract} />,
     },
     {
       title: "English Auctions",
       path: "english-auctions",
-      isEnabled: contractData.detectedEnglishAuctions,
+      isEnabled: functionSelectorQuery.isLoading
+        ? "loading"
+        : isEnglishAuction
+          ? "enabled"
+          : "disabled",
       component: () => <LazyContractEnglishAuctionsPage contract={contract} />,
     },
     {
@@ -426,7 +416,7 @@ export function useContractRouteConfig(
       path: "proposals",
       isEnabled: contractTypeQuery.isLoading
         ? "loading"
-        : contractTypeQuery.data === "Vote"
+        : contractTypeQuery.data === "VoteERC20"
           ? "enabled"
           : "disabled",
       component: () => <LazyContractProposalsPage contract={contract} />,
@@ -502,32 +492,20 @@ export function useContractRouteConfig(
           contract={contract}
           isLoading={functionSelectorQuery.isLoading}
           isContractMetadataSupported={[
-            CommonExt.isGetContractMetadataSupported(
-              functionSelectorQuery.data,
-            ),
-            CommonExt.isSetContractMetadataSupported(
-              functionSelectorQuery.data,
-            ),
+            CommonExt.isGetContractMetadataSupported(functionSelectors),
+            CommonExt.isSetContractMetadataSupported(functionSelectors),
           ].every(Boolean)}
           isPrimarySaleSupported={[
-            CommonExt.isPrimarySaleRecipientSupported(
-              functionSelectorQuery.data,
-            ),
-            CommonExt.isSetPrimarySaleRecipientSupported(
-              functionSelectorQuery.data,
-            ),
+            CommonExt.isPrimarySaleRecipientSupported(functionSelectors),
+            CommonExt.isSetPrimarySaleRecipientSupported(functionSelectors),
           ].every(Boolean)}
           isRoyaltiesSupported={[
-            CommonExt.isGetDefaultRoyaltyInfoSupported(
-              functionSelectorQuery.data,
-            ),
-            CommonExt.isSetDefaultRoyaltyInfoSupported(
-              functionSelectorQuery.data,
-            ),
+            CommonExt.isGetDefaultRoyaltyInfoSupported(functionSelectors),
+            CommonExt.isSetDefaultRoyaltyInfoSupported(functionSelectors),
           ].every(Boolean)}
           isPlatformFeesSupported={[
-            CommonExt.isGetPlatformFeeInfoSupported(functionSelectorQuery.data),
-            CommonExt.isSetPlatformFeeInfoSupported(functionSelectorQuery.data),
+            CommonExt.isGetPlatformFeeInfoSupported(functionSelectors),
+            CommonExt.isSetPlatformFeeInfoSupported(functionSelectors),
           ].every(Boolean)}
         />
       ),

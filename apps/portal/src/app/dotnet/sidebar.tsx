@@ -33,60 +33,102 @@ const walletActions: SidebarLink = (() => {
 		name: "Wallet Actions",
 		links: [
 			{
-				name: "GetAddress",
-				href: `${parentSlug}/getaddress`,
+				name: "IThirdwebWallet",
+				isCollapsible: false,
+				links: [
+					{
+						name: "GetAddress",
+						href: `${parentSlug}/getaddress`,
+					},
+					{
+						name: "IsConnected",
+						href: `${parentSlug}/isconnected`,
+					},
+					{
+						name: "Sign",
+						href: `${parentSlug}/sign`,
+					},
+					{
+						name: "SignTypedDataV4",
+						href: `${parentSlug}/signtypeddatav4`,
+					},
+					{
+						name: "Authenticate",
+						href: `${parentSlug}/authenticate`,
+					},
+					{
+						name: "Disconnect",
+						href: `${parentSlug}/disconnect`,
+					},
+					{
+						name: "SendTransaction",
+						href: `${parentSlug}/sendtransaction`,
+					},
+					{
+						name: "ExecuteTransaction",
+						href: `${parentSlug}/executetransaction`,
+					},
+				],
 			},
 			{
-				name: "IsConnected",
-				href: `${parentSlug}/isconnected`,
+				name: "InAppWallet & EcosystemWallet",
+				isCollapsible: false,
+				links: [
+					{
+						name: "GetEmail",
+						href: `${parentSlug}/getemail`,
+					},
+					{
+						name: "GetPhoneNumber",
+						href: `${parentSlug}/getphonenumber`,
+					},
+				],
 			},
 			{
-				name: "Sign",
-				href: `${parentSlug}/sign`,
-			},
-			{
-				name: "SignTypedDataV4",
-				href: `${parentSlug}/signtypeddatav4`,
-			},
-			{
-				name: "Authenticate",
-				href: `${parentSlug}/authenticate`,
-			},
-			{
-				name: "Disconnect",
-				href: `${parentSlug}/disconnect`,
-			},
-			{
-				name: "GetEmail",
-				href: `${parentSlug}/getemail`,
-			},
-			{
-				name: "GetPhoneNumber",
-				href: `${parentSlug}/getphonenumber`,
-			},
-			{
-				name: "IsDeployed",
-				href: `${parentSlug}/isdeployed`,
-			},
-			{
-				name: "SendTransaction",
-				href: `${parentSlug}/sendtransaction`,
-			},
-			{
-				name: "CreateSessionKey",
-				href: `${parentSlug}/createsessionkey`,
-			},
-			{
-				name: "AddAdmin",
-				href: `${parentSlug}/addadmin`,
-			},
-			{
-				name: "RemoveAdmin",
-				href: `${parentSlug}/removeadmin`,
-			},
-			{
-				name: "GetBalance",
-				href: `${parentSlug}/getbalance`,
+				name: "SmartWallet",
+				isCollapsible: false,
+				links: [
+					{
+						name: "IsDeployed",
+						href: `${parentSlug}/isdeployed`,
+					},
+					{
+						name: "CreateSessionKey",
+						href: `${parentSlug}/createsessionkey`,
+					},
+					{
+						name: "AddAdmin",
+						href: `${parentSlug}/addadmin`,
+					},
+					{
+						name: "RemoveAdmin",
+						href: `${parentSlug}/removeadmin`,
+					},
+					{
+						name: "GetAllActiveSigners",
+						href: `${parentSlug}/getallactivesigners`,
+					},
+					{
+						name: "GetAllAdmins",
+						href: `${parentSlug}/getalladmins`,
+					},
+					{
+						name: "GetPersonalWallet",
+						href: `${parentSlug}/getpersonalwallet`,
+					},
+					{
+						name: "GetBalance",
+						href: `${parentSlug}/getbalance`,
+					},
+					{
+						name: "GetTransactionCount",
+						href: `${parentSlug}/gettransactioncount`,
+					},
+					{
+						name: "Transfer",
+						href: `${parentSlug}/transfer`,
+					},
+				],
 			},
 		],
 	};
@@ -100,6 +142,10 @@ const contracts: SidebarLink = {
 			href: "/dotnet/contracts/create",
 		},
 		{
+			name: "Contract Extensions",
+			href: "/dotnet/contracts/extensions",
+		},
+		{
 			name: "Read Contract",
 			href: "/dotnet/contracts/read",
 		},
@@ -110,10 +156,6 @@ const contracts: SidebarLink = {
 		{
 			name: "Prepare Transaction",
 			href: "/dotnet/contracts/prepare",
-		},
-		{
-			name: "Contract Extensions",
-			href: "/dotnet/contracts/extensions",
 		},
 	],
 };
@@ -233,10 +275,14 @@ export const sidebar: SideBar = {
 		{
 			name: "Blockchain API",
 			isCollapsible: false,
-			links: [contracts, transactions, {
-				name: "Common Utils",
-				href: "/dotnet/utils",
-			}],
+			links: [
+				contracts,
+				transactions,
+				{
+					name: "Common Utils",
+					href: "/dotnet/utils",
+				},
+			],
 		},
 		{ separator: true },
 		{

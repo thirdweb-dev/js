@@ -293,8 +293,12 @@ export function ConnectButton(props: ConnectButtonProps) {
       : props.connectModal?.size || "compact";
   }, [wallets.length, props.connectModal?.size]);
 
+  const preferredChain =
+    props.accountAbstraction?.chain || props.chain || props.chains?.[0];
+
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
+      chain={preferredChain}
       appMetadata={props.appMetadata}
       client={props.client}
       wallets={wallets}
@@ -336,7 +340,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         shouldSetActive={true}
         accountAbstraction={props.accountAbstraction}
         auth={props.auth}
-        chain={props.chain || props.accountAbstraction?.chain}
+        chain={preferredChain}
         chains={props.chains}
         client={props.client}
         connectLocale={localeQuery.data}
@@ -544,6 +548,7 @@ function ConnectButtonInner(
         showAllWallets: props.showAllWallets,
         walletConnect: props.walletConnect,
         wallets: props.wallets,
+        hiddenWallets: props.detailsModal?.hiddenWallets,
       }}
     />
   );

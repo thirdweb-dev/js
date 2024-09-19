@@ -56,7 +56,10 @@ export function ModuleInstallParams(props: {
               <FormLabel> {param.name}</FormLabel>
               <SolidityInput
                 solidityType={param.type}
-                solidityComponents={param.components}
+                // @ts-expect-error - old types, need to update
+                solidityComponents={
+                  "components" in param ? param.components : undefined
+                }
                 variant="filled"
                 {...form.register(formFieldKey)}
                 isDisabled={props.disableInputs}

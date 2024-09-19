@@ -24,7 +24,3 @@ export function cacheGet(key: string) {
 export function cacheTtl(key: string) {
   return getRedis().ttl(key);
 }
-
-export function cacheDeleteKey(key: string) {
-  return getRedis().del(key);
-}

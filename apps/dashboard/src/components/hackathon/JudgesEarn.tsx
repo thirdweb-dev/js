@@ -39,10 +39,9 @@ export const JudgesEarn = () => {
           <Flex key={judge.name} flexDir="column" gap={2} alignItems="center">
             <MaskedAvatar
               boxSize={40}
-              objectFit="cover"
               src={judge.image}
               alt={judge.name}
-              borderRadius="full"
+              className="rounded-full"
             />
             <Heading size="title.sm" mt={4} textAlign="center">
               {judge.name}

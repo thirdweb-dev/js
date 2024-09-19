@@ -1,3 +1,4 @@
+import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { PaginationButtons } from "@/components/pagination-buttons";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
@@ -11,7 +12,6 @@ import {
   getPayPurchases,
   usePayPurchases,
 } from "../hooks/usePayPurchases";
-import { ExportToCSVButton } from "./ExportToCSVButton";
 import {
   CardHeading,
   FailedToLoad,
@@ -42,6 +42,9 @@ function processQuery(
   }
   if (purchasesQuery.isError) {
     return { isError: true };
+  }
+  if (!purchasesQuery.data) {
+    return { isEmpty: true };
   }
 
   const purchases = purchasesQuery.data.purchases;
@@ -135,35 +138,25 @@ function RenderData(props: {
             </TableHeadingRow>
           </thead>
           <tbody>
-            {!props.query.isEmpty && (
-              <>
-                {props.query.data && !props.isLoadingMore ? (
-                  <>
-                    {props.query.data.purchases.map((purchase) => {
-                      return (
-                        <TableRow
-                          key={purchase.purchaseId}
-                          purchase={purchase}
-                        />
-                      );
-                    })}
-                  </>
-                ) : (
-                  <>
-                    {new Array(pageSize).fill(0).map((_, i) => (
-                      // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                      <SkeletonTableRow key={i} />
-                    ))}
-                  </>
-                )}
-              </>
-            )}
+            {!props.query.isEmpty &&
+              (props.query.data && !props.isLoadingMore ? (
+                <>
+                  {props.query.data.purchases.map((purchase) => {
+                    return (
+                      <TableRow key={purchase.purchaseId} purchase={purchase} />
+                    );
+                  })}
+                </>
+              ) : (
+                new Array(pageSize).fill(0).map((_, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: ok
+                  <SkeletonTableRow key={i} />
+                ))
+              ))}
           </tbody>
         </table>
       </ScrollShadow>
-
       <div className="h-8" />
-
       {props.query.isEmpty ? (
         <div className="min-h-[150px] flex items-center justify-center w-full text-muted-foreground text-sm">
           No data available

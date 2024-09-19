@@ -33,7 +33,7 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
     <InputGroup display="flex">
       <Input
         placeholder="string"
-        isDisabled={storageUpload.isLoading}
+        isDisabled={storageUpload.isPending}
         pr={{ base: "90px", md: "160px" }}
         {...restOfInputProps}
         value={form.watch(inputName)}
@@ -57,7 +57,9 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
               }
               form.setValue(inputName, uri, { shouldDirty: true });
               // also refetch the files list
-              queryClient.invalidateQueries([PINNED_FILES_QUERY_KEY_ROOT]);
+              queryClient.invalidateQueries({
+                queryKey: [PINNED_FILES_QUERY_KEY_ROOT],
+              });
             }}
             storageUpload={storageUpload}
           >

@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-react-evm-connectors-gnosis.cjs.js",
-  "module": "dist/thirdweb-dev-react-evm-connectors-gnosis.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-react-evm-connectors-gnosis.esm.js": "./dist/thirdweb-dev-react-evm-connectors-gnosis.browser.esm.js"
-  }
-}

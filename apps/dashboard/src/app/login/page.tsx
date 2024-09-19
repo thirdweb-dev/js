@@ -1,7 +1,8 @@
 "use client";
 
 import { ColorModeToggle } from "@/components/color-mode-toggle";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -38,20 +39,59 @@ export default function LoginPage() {
 function CustomConnectEmmbed() {
   const isLG = useMediaQuery("(min-width: 1024px)");
   const searchParams = useSearchParams();
+  const router = useDashboardRouter();
   const { theme } = useTheme();
+  const nextSearchParam = searchParams?.get("next");
+  const client = useThirdwebClient();
+
+  function onLoginSuccessful() {
+    if (nextSearchParam && isValidRedirectPath(nextSearchParam)) {
+      router.replace(nextSearchParam);
+    } else {
+      router.replace("/dashboard");
+    }
+  }
+
   return (
     <ConnectEmbed
       auth={{
         getLoginPayload,
-        doLogin: (params) => doLogin(params, searchParams?.get("next")),
+        doLogin: async (params) => {
+          try {
+            await doLogin(params);
+            onLoginSuccessful();
+          } catch (e) {
+            console.error("Failed to login", e);
+            throw e;
+          }
+        },
         doLogout,
-        isLoggedIn,
+        isLoggedIn: async (x) => {
+          const isLoggedInResult = await isLoggedIn(x);
+          if (isLoggedInResult) {
+            onLoginSuccessful();
+          }
+          return isLoggedInResult;
+        },
       }}
-      client={thirdwebClient}
+      client={client}
       modalSize={isLG ? "wide" : "compact"}
       theme={getSDKTheme(theme === "light" ? "light" : "dark")}
     />
   );
+}
+
+function isValidRedirectPath(encodedPath: string): boolean {
+  try {
+    // Decode the URI component
+    const decodedPath = decodeURIComponent(encodedPath);
+    // ensure the path always starts with a _single_ slash
+    // dobule slash could be interpreted as `//example.com` which is not allowed
+    return decodedPath.startsWith("/") && !decodedPath.startsWith("//");
+  } catch {
+    // If decoding fails, return false
+    return false;
+  }
 }
 
 function useMediaQuery(query: string) {

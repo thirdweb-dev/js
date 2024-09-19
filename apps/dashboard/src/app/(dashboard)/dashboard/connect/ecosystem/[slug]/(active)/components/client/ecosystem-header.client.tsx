@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TabLinks } from "@/components/ui/tabs";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   AlertTriangleIcon,
   CheckIcon,
@@ -123,6 +123,7 @@ export function EcosystemHeader(props: {
     refetchOnWindowFocus: false,
     initialData: props.ecosystem,
   });
+  const client = useThirdwebClient();
 
   const ecosystem = fetchedEcosystem ?? props.ecosystem;
 
@@ -140,7 +141,7 @@ export function EcosystemHeader(props: {
                   <Image
                     src={resolveScheme({
                       uri: ecosystem.imageUrl,
-                      client: thirdwebClient,
+                      client,
                     })}
                     sizes="100px"
                     alt={ecosystem.name}

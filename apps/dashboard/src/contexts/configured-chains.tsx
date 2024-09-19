@@ -15,71 +15,100 @@ const MODIFIED_CHAINS_KEY = "tw-modified-chains";
 const RECENTLY_USED_CHAIN_IDS_KEY = "tw-recently-used-chains";
 
 /**
+ * LEGACY
+ *
  * holds the "supported chains" array
  * initially it is set to the defaultChains, then it is updated to the "allChains" with "modified chains" overrides
  */
+// eslint-disable-next-line no-restricted-syntax
 export const SupportedChainsContext = createContext<StoredChain[] | undefined>(
   undefined,
 );
 
 /**
+ * LEGACY
+ *
  * holds the "modified chains" array
  */
+// eslint-disable-next-line no-restricted-syntax
 const ModifiedChainsContext = createContext<StoredChain[] | undefined>(
   undefined,
 );
 
 /**
+ * LEGACY
+ *
  * holds the "modified chains" array
  */
+// eslint-disable-next-line no-restricted-syntax
 export const RemoveChainModification = createContext<
   ((chainId: number) => void) | undefined
 >(undefined);
 
 /**
+ * LEGACY
+ *
  * holds the "recently used chain ids" array
  */
+// eslint-disable-next-line no-restricted-syntax
 export const RecentlyUsedChainIdsContext = createContext<number[] | undefined>(
   undefined,
 );
 
 /**
+ * LEGACY
+ *
  * holds the function that takes a chainId and adds it to the "recently used chains" and handles its storage
  */
+// eslint-disable-next-line no-restricted-syntax
 export const AddRecentlyUsedChainIdsContext = createContext<
   ((chainId: number) => void) | undefined
 >(undefined);
 
 /**
+ * LEGACY
+ *
  * holds the function that takes the "modified chain" object
  * and handles the logic of updating the "supported chains" and "modified chains" and "recently used chains"
  */
+// eslint-disable-next-line no-restricted-syntax
 export const ModifyChainContext = createContext<
   ((chain: ChainMetadata, remove?: boolean) => void) | undefined
 >(undefined);
 
 /**
+ * LEGACY
+ *
  * flag indicating if the supported chains is having the final value or not
  * app starts with the defaultChains as supported chains
  * then allChains is dynamically imported or fetched from indexedDB, user modified chains are fetched from localStorage
  * and then the final supported chains is calculated by overriding the modifiedChains on allChains
  */
+// eslint-disable-next-line no-restricted-syntax
 export const SupportedChainsReadyContext = createContext(false);
 
 /**
+ * LEGACY
+ *
  * Flag indicating if the "Network Config" Modal is open or not
  */
+// eslint-disable-next-line no-restricted-syntax
 export const isNetworkConfigModalOpenCtx = createContext(false);
+// eslint-disable-next-line no-restricted-syntax
 export const SetIsNetworkConfigModalOpenCtx = createContext<
   ((value: boolean) => void) | undefined
 >(undefined);
 
 /**
+ * LEGACY
+ *
  * Chain object to be edited in the "Network Config" Modal
  */
+// eslint-disable-next-line no-restricted-syntax
 export const EditChainContext = createContext<ChainMetadata | undefined>(
   undefined,
 );
+// eslint-disable-next-line no-restricted-syntax
 export const SetEditChainContext = createContext<
   ((chain: ChainMetadata | undefined) => void) | undefined
 >(undefined);

@@ -15,8 +15,11 @@ const allInAppWalletLoginMethods: InAppWalletAuth[] = [
   "passkey",
   "phone",
   "line",
+  "x",
   "facebook",
   "apple",
+  "coinbase",
+  "guest",
 ];
 
 export function InAppWalletFormGroup(props: {
@@ -60,8 +63,10 @@ export function InAppWalletFormGroup(props: {
                   !enabled && "opacity-50",
                 )}
                 key={method}
+                htmlFor="in-app-wallet"
               >
                 <Checkbox
+                  id="in-app-wallet"
                   checked={enabled}
                   onCheckedChange={(checked) => {
                     setConnectOptions((v) => {

@@ -34,6 +34,7 @@ export function CheckboxWithLabel(props: {
   className?: string;
 }) {
   return (
+    // biome-ignore lint/a11y/noLabelWithoutControl: cannot do this here because the checkbox is a child of the label
     <label
       className={cn(
         "flex gap-2 items-start text-muted-foreground text-sm cursor-pointer select-none [&>button]:mt-0.5",

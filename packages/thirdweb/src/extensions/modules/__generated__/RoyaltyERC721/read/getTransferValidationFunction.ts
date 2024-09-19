@@ -22,7 +22,7 @@ const FN_OUTPUTS = [
  * Checks if the `getTransferValidationFunction` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `getTransferValidationFunction` method is supported.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -42,7 +42,7 @@ export function isGetTransferValidationFunctionSupported(
  * Decodes the result of the getTransferValidationFunction function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";
@@ -57,7 +57,7 @@ export function decodeGetTransferValidationFunctionResult(result: Hex) {
  * Calls the "getTransferValidationFunction" function on the contract.
  * @param options - The options for the getTransferValidationFunction function.
  * @returns The parsed result of the function call.
- * @module RoyaltyERC721
+ * @modules RoyaltyERC721
  * @example
  * ```ts
  * import { RoyaltyERC721 } from "thirdweb/modules";

@@ -1,5 +1,229 @@
 # thirdweb
 
+## 5.57.3
+
+### Patch Changes
+
+- [#4696](https://github.com/thirdweb-dev/js/pull/4696) [`0c97d79`](https://github.com/thirdweb-dev/js/commit/0c97d7965e3f681cd1fe2e1c79ecc6897ad52b9c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix default chain when using redirect mode + default to first passed chains if available
+
+- [#4693](https://github.com/thirdweb-dev/js/pull/4693) [`4a87109`](https://github.com/thirdweb-dev/js/commit/4a87109289e6ece5f6f08c55160e5d4e11e034e4) Thanks [@jnsdls](https://github.com/jnsdls)! - fix `getClaimConditions` extension for erc20, erc721 and erc1155
+
+## 5.57.2
+
+### Patch Changes
+
+- [#4686](https://github.com/thirdweb-dev/js/pull/4686) [`1b89464`](https://github.com/thirdweb-dev/js/commit/1b8946408cb903171acd9d5233dcddfa45e235fc) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Force legacy transactions on polygon zkevm cardona testnet
+
+## 5.57.1
+
+### Patch Changes
+
+- [#4665](https://github.com/thirdweb-dev/js/pull/4665) [`6ce7c83`](https://github.com/thirdweb-dev/js/commit/6ce7c83a3b9eb2374ad2f8163d9c6a68bba4bc42) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update @mobile-wallet-protocol/client to 0.0.3
+
+- [#4659](https://github.com/thirdweb-dev/js/pull/4659) [`406de39`](https://github.com/thirdweb-dev/js/commit/406de39ecdd4e901cc1fe163cc833fe9fd656d3e) Thanks [@jnsdls](https://github.com/jnsdls)! - - Allow using valid JWTs for authorization
+  - update dependencies
+  - simplify updateMetadata extension params for ERC721 and ERC1155
+
+## 5.57.0
+
+### Minor Changes
+
+- [#4631](https://github.com/thirdweb-dev/js/pull/4631) [`a468439`](https://github.com/thirdweb-dev/js/commit/a46843992ba6acff6023af63b66b91c9e7f9ec6d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds guest account option. These accounts will only persist for the duration of the user's session unless they link an additionaly auth method to recover the account with.
+
+  ```ts
+  import { inAppWallet } from "thirdweb/wallets";
+
+  const wallet = inAppWallet();
+
+  const account = await wallet.connect({
+    client,
+    strategy: "guest",
+  });
+  ```
+
+### Patch Changes
+
+- [#4644](https://github.com/thirdweb-dev/js/pull/4644) [`e89ffd4`](https://github.com/thirdweb-dev/js/commit/e89ffd4aa2c0710a565c72ec4dc1038fdbd74029) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Handle custom id for published contract
+
+- [#4653](https://github.com/thirdweb-dev/js/pull/4653) [`00ce74a`](https://github.com/thirdweb-dev/js/commit/00ce74a060b7ef214293b2562f4e761481e6d319) Thanks [@jnsdls](https://github.com/jnsdls)! - make getNFTs work for more ERC1155 contracts
+
+## 5.56.0
+
+### Minor Changes
+
+- [#4607](https://github.com/thirdweb-dev/js/pull/4607) [`7b94bf5`](https://github.com/thirdweb-dev/js/commit/7b94bf55fd236cbebf365ab11821b5117b59942b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose `checkModulesCompatibility` function
+
+- [#4601](https://github.com/thirdweb-dev/js/pull/4601) [`a4a4136`](https://github.com/thirdweb-dev/js/commit/a4a41364cd2f1b7b52717f619d70e005edc74edc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - `useAdminWallet()` Hook + automatically auth when using inapp + smart accounts
+
+  ### Add `useAdminWallet()` hook to get the admin wallet for a smart wallet
+
+  ```ts
+  const activeWallet = useActiveWallet(); // smart wallet
+  const adminWallet = useAdminWallet(); // the personal wallet that controls the smart wallet
+  ```
+
+  ### Automatically auth when using inapp + smart accounts
+
+  When using auth with an inapp + smart wallet, ConnectButton and ConnectEmebed will automatically auth without having to click sign in.
+
+- [#4604](https://github.com/thirdweb-dev/js/pull/4604) [`3009a0f`](https://github.com/thirdweb-dev/js/commit/3009a0f6e5924f08b7b320baa303fbae948ef9b7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose publishContract extension
+
+### Patch Changes
+
+- [#4628](https://github.com/thirdweb-dev/js/pull/4628) [`3961ef4`](https://github.com/thirdweb-dev/js/commit/3961ef477eb819ef6b51c0817ea37dfce45b4f3f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle function sigantures and contract ABIs in resolveMethod
+
+- [#4602](https://github.com/thirdweb-dev/js/pull/4602) [`07b949d`](https://github.com/thirdweb-dev/js/commit/07b949dd8c07ffdeda40a5549c31ad4b09abbbf1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow topping up from a different wallet with the same currency
+
+- [#4603](https://github.com/thirdweb-dev/js/pull/4603) [`b837b69`](https://github.com/thirdweb-dev/js/commit/b837b690ae27fb8bf45f6cd51820f7591e94dab0) Thanks [@jnsdls](https://github.com/jnsdls)! - bump various dependencies
+
+- [#4639](https://github.com/thirdweb-dev/js/pull/4639) [`c320b18`](https://github.com/thirdweb-dev/js/commit/c320b189f664cdf4b77c8ebef377abdf230f303a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export Abi types
+
+- [#4557](https://github.com/thirdweb-dev/js/pull/4557) [`fb0daab`](https://github.com/thirdweb-dev/js/commit/fb0daabbf612be5c844de5f66d3cd49f383b7fe5) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose some Marketplace extensions for detecting supported features
+
+- [#4630](https://github.com/thirdweb-dev/js/pull/4630) [`2b6a2fd`](https://github.com/thirdweb-dev/js/commit/2b6a2fda3d07b708f503f36205e68bd8b9fe1f20) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Invalidate balances on Pay success
+
+- [#4621](https://github.com/thirdweb-dev/js/pull/4621) [`5bde075`](https://github.com/thirdweb-dev/js/commit/5bde07508ae0c0438d7da076a7b3233a224e0c2f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow customizing PayEmbed metadata for top-up flow
+
+## 5.55.0
+
+### Minor Changes
+
+- [#4571](https://github.com/thirdweb-dev/js/pull/4571) [`5058fdb`](https://github.com/thirdweb-dev/js/commit/5058fdb4707c18a3b22895f90b3682a3c91db52f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds X authentication
+
+- [#4565](https://github.com/thirdweb-dev/js/pull/4565) [`c0778cb`](https://github.com/thirdweb-dev/js/commit/c0778cb9305476025b07bb39b8159f749d15359a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds parseAvatarRecord and parseNftUri utilities
+
+  ```ts
+  import { parseAvatarRecord } from "thirdweb/extensions/ens";
+  import { parseNftUri } from "thirdweb/extensions/common";
+
+  const avatarUrl = await parseAvatarRecord({
+    client,
+    uri: "...",
+  });
+
+  const nftUri = await parseNftUri({
+    client,
+    uri: "...",
+  });
+  ```
+
+### Patch Changes
+
+- [#4582](https://github.com/thirdweb-dev/js/pull/4582) [`5d3b395`](https://github.com/thirdweb-dev/js/commit/5d3b39587b56a7b1ad49accf26a4c9a311b12795) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to hide certain wallets in the wallet switcher
+
+  ```tsx
+  <ConnectButton
+    client={client}
+    detailsModal={{
+      // We hide the in-app wallet so they can't switch to it
+      hiddenWallets: ["inApp"],
+    }}
+    accountAbstraction={{
+      chain: baseSepolia,
+      sponsorGas: true,
+    }}
+  />
+  ```
+
+- [#4546](https://github.com/thirdweb-dev/js/pull/4546) [`3901805`](https://github.com/thirdweb-dev/js/commit/390180592a6d71591c43bcbe3c94da2eeaa5b0d6) Thanks [@edwardysun](https://github.com/edwardysun)! - Add preferredProvider to buyWithFiat
+
+## 5.54.0
+
+### Minor Changes
+
+- [#4527](https://github.com/thirdweb-dev/js/pull/4527) [`b76a82c`](https://github.com/thirdweb-dev/js/commit/b76a82c30345e06d7b2c203c1e20bf7ec7e0dd9d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update React Native dependencies and add support for React Native 0.75
+
+- [#4499](https://github.com/thirdweb-dev/js/pull/4499) [`fe1ff63`](https://github.com/thirdweb-dev/js/commit/fe1ff63bf98d0a1e92a8bafc9f0f8c0d0da3524a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Breaking Change in `deployPublishedContract`
+
+  Contract constructor/ initializer params are now passed as a single object instead of an array. The object should have the same shape as the params defined in the contract's ABI.
+
+  Example of old way (using `constructorParams` or `initializeParams`):
+
+  ```ts
+  const address = await deployPublishedContract({
+    account,
+    chain,
+    client,
+    contractId: "Airdrop",
+    contractParams: [TEST_ACCOUNT_A.address, ""],
+  });
+  ```
+
+  New way (using `contractParams`):
+
+  ```ts
+  const address = await deployPublishedContract({
+    account,
+    chain,
+    client,
+    contractId: "Airdrop",
+    contractParams: {
+      defaultAdmin: TEST_ACCOUNT_A.address,
+      contractURI: "",
+    },
+  });
+  ```
+
+- [#4528](https://github.com/thirdweb-dev/js/pull/4528) [`c96e2d9`](https://github.com/thirdweb-dev/js/commit/c96e2d977731836db1a1618d67c5f808e7634d05) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle salt parameter for deterministic deploys of published contracts
+
+  You can now pass a salt parameter to the `deployPublishedContract` function to deploy a contract deterministically.
+
+  ```ts
+  const address = await deployPublishedContract({
+    client,
+    chain,
+    account,
+    contractId: "Airdrop",
+    contractParams: {
+      defaultAdmin: "0x...",
+      contractURI: "ipfs://...",
+    },
+    salt: "test", // <--- deterministic deploy
+  });
+  ```
+
+  This also works for unpublished contracts, via the `deployContract` function.
+
+  ```ts
+  const address = await deployContract({
+    client,
+    chain,
+    account,
+    bytecode: "0x...",
+    abi: contractAbi,
+    constructorParams: {
+      param1: "value1",
+      param2: 123,
+    },
+    salt: "test", // <--- deterministic deploy
+  });
+  ```
+
+- [#4541](https://github.com/thirdweb-dev/js/pull/4541) [`0596fa2`](https://github.com/thirdweb-dev/js/commit/0596fa24c2c0d53d8d87740a56ce56b4e3bd363a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds getUsers function to query users on the server
+
+  ```ts
+  import { getUser } from "thirdweb/wallets";
+
+  const user = await getUser({
+    client,
+    walletAddress: "0x123...",
+  });
+  ```
+
+### Patch Changes
+
+- [#4503](https://github.com/thirdweb-dev/js/pull/4503) [`8636c28`](https://github.com/thirdweb-dev/js/commit/8636c28d0fb68e42ff1d71cb2a9f136c98822c21) Thanks [@jnsdls](https://github.com/jnsdls)! - fix erc721 delayed reveal detection
+
+- [#4544](https://github.com/thirdweb-dev/js/pull/4544) [`40f01e5`](https://github.com/thirdweb-dev/js/commit/40f01e5e89697759099e385490047786d5f0637e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow smart wallet transactions to be sent in parallel
+
+- [#4324](https://github.com/thirdweb-dev/js/pull/4324) [`d6e9def`](https://github.com/thirdweb-dev/js/commit/d6e9def57738458d0a228bb33e436e11cbc8847c) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose toFunctionSelector
+
+- [#4543](https://github.com/thirdweb-dev/js/pull/4543) [`b4e1491`](https://github.com/thirdweb-dev/js/commit/b4e149101d70da4d65c3206dc83e3a7227028425) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Display social profiles for linked accounts
+
+- [#4507](https://github.com/thirdweb-dev/js/pull/4507) [`6353cb7`](https://github.com/thirdweb-dev/js/commit/6353cb73318df3eaed558a6b4fbd1884b9bd6e23) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix erc721 delayed reveal simulation error
+
+- [#4524](https://github.com/thirdweb-dev/js/pull/4524) [`beb894a`](https://github.com/thirdweb-dev/js/commit/beb894a355bf1db7945882bbaea4e318e584ec28) Thanks [@jnsdls](https://github.com/jnsdls)! - Polygon Matic is now POL
+
 ## 5.53.0
 
 ### Minor Changes

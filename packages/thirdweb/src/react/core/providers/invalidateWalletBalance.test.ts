@@ -25,7 +25,7 @@ describe("invalidateWalletBalance", () => {
     invalidateWalletBalance(queryClient);
 
     expect(queryClient.invalidateQueries).toHaveBeenCalledWith({
-      queryKey: ["walletBalance", undefined] as const,
+      queryKey: ["walletBalance"] as const,
     });
   });
 });

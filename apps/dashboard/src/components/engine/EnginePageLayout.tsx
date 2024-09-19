@@ -1,7 +1,6 @@
 "use client";
 
-import { MobileSidebar } from "@/components/blocks/MobileSidebar";
-import { Sidebar, type SidebarLink } from "@/components/blocks/Sidebar";
+import type { SidebarLink } from "@/components/blocks/Sidebar";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
@@ -11,10 +10,10 @@ import {
   type EngineInstance,
   useEngineInstances,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { ArrowLeftIcon, ChevronDownIcon, CircleAlertIcon } from "lucide-react";
+import { ArrowLeftIcon, CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import invariant from "tiny-invariant";
+import { SidebarLayout } from "../../@/components/blocks/SidebarLayout";
 import { EngineVersionBadge } from "./badges/version";
 import { useHasEnginePermission } from "./useHasEnginePermission";
 
@@ -64,7 +63,6 @@ export function EngineSidebarLayout(props: {
   rootPath: string;
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
   const links: SidebarLink[] = sidebarLinkMeta.map((linkMeta) => {
     return {
       href: `${props.rootPath}/${props.engineId}${linkMeta.pathId === "" ? "" : `/${linkMeta.pathId}`}`,
@@ -78,29 +76,7 @@ export function EngineSidebarLayout(props: {
     };
   });
 
-  const activeLink = links.find((link) => pathname === link.href);
-
-  return (
-    <div className="flex gap-6">
-      <Sidebar links={links} />
-      <div className="grow max-sm:w-full pt-6 pb-10">
-        <MobileSidebar
-          links={links}
-          trigger={
-            <Button
-              className="w-full lg:hidden text-left justify-between gap-2 mb-6"
-              variant="outline"
-            >
-              {activeLink?.label || "Connect"}
-              <ChevronDownIcon className="size-5 text-muted-foreground" />
-            </Button>
-          }
-        />
-
-        {props.children}
-      </div>
-    </div>
-  );
+  return <SidebarLayout sidebarLinks={links}>{props.children}</SidebarLayout>;
 }
 
 export function WithEngineInstance(props: {
@@ -307,7 +283,7 @@ function EngineErrorPage(props: {
   );
 }
 
-export function MessageContainer(props: {
+function MessageContainer(props: {
   children: React.ReactNode;
 }) {
   return (

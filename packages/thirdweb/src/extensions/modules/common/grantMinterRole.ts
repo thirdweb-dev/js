@@ -12,6 +12,22 @@ export type GrantMinterRoleParams = {
   }>;
 };
 
+/**
+ * Grants the minter role to a user.
+ * @param options - The transaction options.
+ * @returns The transaction to send.
+ * @modules
+ *
+ * @example
+ * ```ts
+ * import { grantMinterRole } from "thirdweb/modules";
+ *
+ * const tx = await grantMinterRole({
+ *   contract,
+ *   user: userAddress,
+ * });
+ * ```
+ */
 export function grantMinterRole(
   options: BaseTransactionOptions<GrantMinterRoleParams>,
 ) {

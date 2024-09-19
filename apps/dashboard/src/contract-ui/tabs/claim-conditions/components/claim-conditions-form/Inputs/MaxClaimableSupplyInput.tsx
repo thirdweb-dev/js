@@ -14,10 +14,9 @@ export const MaxClaimableSupplyInput: React.FC = () => {
     tokenDecimals,
     field,
     claimConditionType,
-    isClaimPhaseV1,
   } = useClaimConditionsFormContext();
 
-  if (!isClaimPhaseV1 && claimConditionType === "creator") {
+  if (claimConditionType === "creator") {
     return null;
   }
 

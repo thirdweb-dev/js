@@ -1,13 +1,15 @@
+"use client";
+
 import {
   Box,
   Code,
   type CodeProps,
   Icon,
   IconButton,
-  useClipboard,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
+import { useClipboard } from "hooks/useClipboard";
 import { Highlight, Prism, themes } from "prism-react-renderer";
 import { FiCopy } from "react-icons/fi";
 import { Text } from "./text";
@@ -22,7 +24,7 @@ type PrismTheme = typeof darkThemeDefault;
 require("prismjs/components/prism-solidity");
 // end add solidity support
 
-export interface CodeBlockProps extends Omit<CodeProps, "size"> {
+interface CodeBlockProps extends Omit<CodeProps, "size"> {
   code: string;
   codeValue?: string;
   language?: string;

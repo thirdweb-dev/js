@@ -24,7 +24,9 @@ export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
       onSuccess([uri]) {
         onUpload(uri);
         // also refetch the files list
-        queryClient.invalidateQueries([PINNED_FILES_QUERY_KEY_ROOT]);
+        queryClient.invalidateQueries({
+          queryKey: [PINNED_FILES_QUERY_KEY_ROOT],
+        });
       },
       onError(error) {
         console.error(error);
@@ -36,7 +38,7 @@ export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
   return (
     <FileInput setValue={handleIconUpload} accept={{ "image/*": [] }}>
       <Button variant="ghost" className="gap-2 px-2" size="sm">
-        {storageUpload.isLoading ? (
+        {storageUpload.isPending ? (
           <Spinner className="size-4" />
         ) : (
           <FiUpload className="size-4" />

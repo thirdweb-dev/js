@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
-import type { SocialAuthOption } from "../../../../../wallets/types.js";
+import type { OAuthOption } from "../../../../../wallets/types.js";
 import { getLoginUrl } from "../../../core/authentication/getLoginPath.js";
 import type { AuthStoredTokenWithCookieReturnType } from "../../../core/authentication/types.js";
 import type { Ecosystem } from "../../types.js";
@@ -27,7 +27,7 @@ const closeWindow = ({
 };
 
 export const loginWithOauthRedirect = (options: {
-  authOption: SocialAuthOption;
+  authOption: OAuthOption;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
   redirectUrl?: string;
@@ -45,7 +45,7 @@ export const loginWithOauthRedirect = (options: {
 };
 
 export const loginWithOauth = async (options: {
-  authOption: SocialAuthOption;
+  authOption: OAuthOption;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
   openedWindow?: Window | null | undefined;

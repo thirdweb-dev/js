@@ -1,26 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
 import { claimTo, getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
 import {
   MediaRenderer,
   TransactionButton,
   useActiveAccount,
-  useActiveWallet,
-  useDisconnect,
   useReadContract,
 } from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { editionDropContract, editionDropTokenId } from "./constants";
 
 export function SponsoredInAppTxPreview() {
-  const wallet = useActiveWallet();
-  const { disconnect } = useDisconnect();
-  useEffect(() => {
-    if (wallet && wallet.id !== "inApp") {
-      disconnect(wallet);
-    }
-  }, [wallet, disconnect]);
   const smartAccount = useActiveAccount();
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
     contract: editionDropContract,
@@ -48,7 +38,7 @@ export function SponsoredInAppTxPreview() {
           ) : null}
           {smartAccount ? (
             <>
-              <p className="font-semibold text-center mb-2">
+              <p className="mb-2 font-semibold text-center">
                 You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
                 Kittens
               </p>

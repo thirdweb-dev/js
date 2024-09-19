@@ -1,3 +1,6 @@
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   Divider,
   Flex,
@@ -6,199 +9,73 @@ import {
   List,
   ListItem,
 } from "@chakra-ui/react";
-import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { useQuery } from "@tanstack/react-query";
-import {
-  type PublishedContract as PublishedContractType,
-  type PublishedMetadata,
-  fetchSourceFilesFromMetadata,
-} from "@thirdweb-dev/sdk";
-import type { Abi } from "abitype";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
-import { replaceDeployerAddress } from "components/explore/publisher";
-import { ShareButton } from "components/share-buttom";
-import { THIRDWEB_DOMAIN } from "constants/urls";
-import { Extensions } from "contract-ui/tabs/overview/components/Extensions";
 import { format } from "date-fns/format";
 import { correctAndUniqueLicenses } from "lib/licenses";
-import { StorageSingleton, replaceIpfsUrl } from "lib/sdk";
-import { getAbsoluteUrl } from "lib/vercel-utils";
-import { NextSeo } from "next-seo";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { PublishedContractOG } from "og-lib/url-utils";
+import { replaceIpfsUrl } from "lib/sdk";
 import { useMemo } from "react";
 import { BiPencil } from "react-icons/bi";
 import { BsShieldCheck } from "react-icons/bs";
 import { VscBook, VscCalendar, VscServer } from "react-icons/vsc";
+import type { ThirdwebClient } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
+import { download } from "thirdweb/storage";
 import invariant from "tiny-invariant";
+import { Card, Heading, Link, LinkButton, Text } from "tw-components";
+import type { PublishedContractWithVersion } from "../fetch-contracts-with-versions";
 import {
-  Card,
-  Heading,
-  Link,
-  LinkButton,
-  Text,
-  TrackedIconButton,
-} from "tw-components";
-import { shortenIfAddress } from "utils/usedapp-external";
-import {
-  useContractEnabledExtensions,
-  useContractPublishMetadataFromURI,
-  useEns,
-  usePublishedContractCompilerMetadata,
   usePublishedContractEvents,
   usePublishedContractFunctions,
-  usePublishedContractInfo,
-  usePublisherProfile,
 } from "../hooks";
 import { PublisherHeader } from "../publisher/publisher-header";
 import { AddressesModal } from "./addresses-modal";
 import { MarkdownRenderer } from "./markdown-renderer";
 
-export interface ExtendedPublishedContract extends PublishedContractType {
+interface ExtendedPublishedContract extends PublishedContractWithVersion {
   name: string;
   displayName?: string;
-  description: string;
-  version: string | undefined;
-  publisher: string;
+  description?: string;
+  version?: string;
+  publisher?: string;
   tags?: string[];
   logo?: string;
   audit?: string;
 }
 
 interface PublishedContractProps {
-  contract: ExtendedPublishedContract;
+  publishedContract: ExtendedPublishedContract;
   walletOrEns: string;
 }
 
 export const PublishedContract: React.FC<PublishedContractProps> = ({
-  contract,
+  publishedContract,
   walletOrEns,
 }) => {
   const address = useActiveAccount()?.address;
-  const publishedContractInfo = usePublishedContractInfo(contract);
-  const { data: compilerInfo } = usePublishedContractCompilerMetadata(contract);
+  const client = useThirdwebClient();
 
-  const router = useRouter();
-  const contractPublishMetadata = useContractPublishMetadataFromURI(
-    contract.metadataUri,
-  );
-
-  const dynamicContractType =
-    publishedContractInfo.data?.publishedMetadata.routerType;
-
-  const compositeAbi =
-    publishedContractInfo.data?.publishedMetadata.compositeAbi;
-
-  const abi =
-    compositeAbi &&
-    (dynamicContractType === "plugin" ||
-      dynamicContractType === "dynamic" ||
-      !publishedContractInfo.data?.publishedMetadata.deployType ||
-      publishedContractInfo.data?.publishedMetadata.name.includes(
-        "MarketplaceV3",
-      ))
-      ? compositeAbi
-      : contractPublishMetadata.data?.abi;
-
-  const enabledExtensions = useContractEnabledExtensions(
-    abi as Abi | undefined,
-  );
-
-  const publisherProfile = usePublisherProfile(contract.publisher);
-
-  const currentRoute = `${THIRDWEB_DOMAIN}${router.asPath.replace(
-    "/publish",
-    "",
-  )}`.replace("deployer.thirdweb.eth", "thirdweb.eth");
-
-  const contractFunctions = usePublishedContractFunctions(contract);
-  const contractEvents = usePublishedContractEvents(contract);
-
-  const ensQuery = useEns(contract.publisher);
-
-  const publisherEnsOrAddress = replaceDeployerAddress(
-    shortenIfAddress(ensQuery.data?.ensName || contract.publisher),
-  );
+  const contractFunctions = usePublishedContractFunctions(publishedContract);
+  const contractEvents = usePublishedContractEvents(publishedContract);
 
   const publishDate = format(
     new Date(
-      Number.parseInt(
-        publishedContractInfo?.data?.publishedTimestamp.toString() || "0",
-      ) * 1000,
+      Number.parseInt(publishedContract?.publishTimestamp.toString() || "0") *
+        1000,
     ),
     "MMM dd, yyyy",
   );
 
-  const licenses = correctAndUniqueLicenses(compilerInfo?.licenses || []);
-
-  const publishedContractName = useMemo(() => {
-    if (contract.displayName) {
-      return contract.displayName;
-    }
-    return contract.name;
-  }, [contract.displayName, contract.name]);
-
-  const extensionNames = useMemo(() => {
-    return enabledExtensions.map((ext) => ext.name);
-  }, [enabledExtensions]);
-
-  const ogImageUrl = useMemo(
-    () =>
-      PublishedContractOG.toUrl({
-        name: publishedContractName,
-        description: contract.description,
-        version: contract.version || "latest",
-        publisher: publisherEnsOrAddress,
-        extension: extensionNames,
-        license: licenses,
-        publishDate,
-        publisherAvatar: publisherProfile.data?.avatar || undefined,
-        logo: contract.logo,
-      }),
-    [
-      extensionNames,
-      licenses,
-      contract.description,
-      contract.logo,
-      publishedContractName,
-      contract.version,
-      publishDate,
-      publisherEnsOrAddress,
-      publisherProfile.data?.avatar,
-    ],
-  );
-
-  const twitterIntentUrl = useMemo(() => {
-    const url = new URL("https://twitter.com/intent/tweet");
-    url.searchParams.append(
-      "text",
-      `Check out this ${publishedContractName} contract on @thirdweb
-
-Deploy it in one click`,
-    );
-    url.searchParams.append("url", currentRoute);
-    return url.href;
-  }, [publishedContractName, currentRoute]);
+  const licenses = correctAndUniqueLicenses(publishedContract?.licenses || []);
 
   const sources = useQuery({
-    queryKey: ["sources", contract],
+    queryKey: ["sources", publishedContract.publishMetadataUri],
     queryFn: async () => {
       invariant(
-        contractPublishMetadata.data?.compilerMetadata?.sources,
+        publishedContract.metadata.sources,
         "no compilerMetadata sources available",
       );
-      return (
-        await fetchSourceFilesFromMetadata(
-          {
-            metadata: {
-              sources: contractPublishMetadata.data.compilerMetadata.sources,
-            },
-          } as unknown as PublishedMetadata,
-          StorageSingleton,
-        )
-      )
+      return (await fetchSourceFilesFromMetadata(publishedContract, client))
         .map((source) => {
           return {
             ...source,
@@ -208,44 +85,14 @@ Deploy it in one click`,
         .slice()
         .reverse();
     },
-    enabled: !!contractPublishMetadata.data?.compilerMetadata?.sources,
+    enabled: !!publishedContract.metadata.sources,
   });
 
-  const title = useMemo(() => {
-    let clearType = "";
-    if (extensionNames.includes("ERC721")) {
-      clearType = "ERC721";
-    } else if (extensionNames.includes("ERC20")) {
-      clearType = "ERC20";
-    } else if (extensionNames.includes("ERC1155")) {
-      clearType = "ERC1155";
-    }
-    if (clearType) {
-      return `${publishedContractName} - ${clearType} | Published Smart Contract`;
-    }
+  const implementationAddresses =
+    publishedContract.factoryDeploymentData?.implementationAddresses;
 
-    return `${publishedContractName} | Published Smart Contract`;
-  }, [extensionNames, publishedContractName]);
-
-  const implementationAddresses = useMemo(
-    () =>
-      publishedContractInfo.data?.publishedMetadata?.factoryDeploymentData
-        ?.implementationAddresses,
-    [
-      publishedContractInfo.data?.publishedMetadata?.factoryDeploymentData
-        ?.implementationAddresses,
-    ],
-  );
-
-  const factoryAddresses = useMemo(
-    () =>
-      publishedContractInfo.data?.publishedMetadata?.factoryDeploymentData
-        ?.factoryAddresses,
-    [
-      publishedContractInfo.data?.publishedMetadata?.factoryDeploymentData
-        ?.factoryAddresses,
-    ],
-  );
+  const factoryAddresses =
+    publishedContract.factoryDeploymentData?.factoryAddresses;
 
   const hasImplementationAddresses = useMemo(
     () => Object.values(implementationAddresses || {}).some((v) => v !== ""),
@@ -259,67 +106,31 @@ Deploy it in one click`,
 
   return (
     <>
-      <NextSeo
-        title={title}
-        description={`${contract.description}${
-          contract.description ? ". " : ""
-        }Deploy ${publishedContractName} in one click with thirdweb.`}
-        openGraph={{
-          title,
-          url: currentRoute,
-          images: [
-            {
-              url: ogImageUrl.toString(),
-              width: 1200,
-              height: 630,
-              alt: `${publishedContractName} contract on thirdweb`,
-            },
-          ],
-        }}
-      />
-
-      {/* Farcaster frames headers */}
-      <Head>
-        <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:image" content={ogImageUrl.toString()} />
-        <meta
-          property="fc:frame:post_url"
-          content={`${getAbsoluteUrl()}/api/frame/redirect`}
-        />
-        <meta property="fc:frame:button:1" content="Deploy now" />
-        <meta name="fc:frame:button:1:action" content="post_redirect" />
-      </Head>
-
       <GridItem colSpan={{ base: 12, md: 9 }}>
         <Flex flexDir="column" gap={6}>
-          {address === contract.publisher && (
+          {address === publishedContract.publisher && (
             <LinkButton
               ml="auto"
               size="sm"
               variant="outline"
               leftIcon={<Icon as={BiPencil} />}
               href={`/contracts/publish/${encodeURIComponent(
-                contract.metadataUri.replace("ipfs://", ""),
+                publishedContract.publishMetadataUri.replace("ipfs://", ""),
               )}`}
             >
               Edit
             </LinkButton>
           )}
-          {publishedContractInfo.data?.publishedMetadata?.readme && (
+          {publishedContract?.readme && (
             <Card as={Flex} flexDir="column" gap={2} p={6} position="relative">
-              <MarkdownRenderer
-                markdownText={
-                  publishedContractInfo.data?.publishedMetadata?.readme
-                }
-              />
+              <MarkdownRenderer markdownText={publishedContract?.readme} />
             </Card>
           )}
 
-          {publishedContractInfo.data?.publishedMetadata?.changelog && (
+          {publishedContract?.changelog && (
             <Card as={Flex} flexDir="column" gap={2} p={0}>
               <Heading px={6} pt={5} pb={2} size="title.sm">
-                {publishedContractInfo.data?.publishedMetadata?.version} Release
-                Notes
+                {publishedContract?.version} Release Notes
               </Heading>
               <Divider />
 
@@ -327,22 +138,17 @@ Deploy it in one click`,
                 px={6}
                 pt={2}
                 pb={5}
-                markdownText={
-                  publishedContractInfo.data?.publishedMetadata?.changelog
-                }
+                markdownText={publishedContract?.changelog}
               />
             </Card>
           )}
           {contractFunctions && (
             <Card p={0}>
               <ContractFunctionsOverview
-                // @ts-expect-error - wrong function type
                 functions={contractFunctions}
-                // @ts-expect-error - wrong event type
                 events={contractEvents}
                 sources={sources.data}
-                // @ts-expect-error - wrong contract type
-                abi={contractPublishMetadata.data?.abi}
+                abi={publishedContract?.abi}
               />
             </Card>
           )}
@@ -358,7 +164,7 @@ Deploy it in one click`,
             </Heading>
             <List as={Flex} flexDir="column" gap={3}>
               <>
-                {publishedContractInfo.data?.publishedTimestamp && (
+                {publishedContract.publishTimestamp && (
                   <ListItem>
                     <Flex gap={2} alignItems="flex-start">
                       <Icon color="paragraph" as={VscCalendar} boxSize={5} />
@@ -373,7 +179,7 @@ Deploy it in one click`,
                     </Flex>
                   </ListItem>
                 )}
-                {publishedContractInfo.data?.publishedMetadata?.audit && (
+                {publishedContract?.audit && (
                   <ListItem>
                     <Flex gap={2} alignItems="flex-start">
                       <Icon as={BsShieldCheck} boxSize={5} color="green" />
@@ -383,10 +189,7 @@ Deploy it in one click`,
                         </Heading>
                         <Text size="body.md" lineHeight={1.2}>
                           <Link
-                            href={replaceIpfsUrl(
-                              publishedContractInfo.data.publishedMetadata
-                                .audit,
-                            )}
+                            href={replaceIpfsUrl(publishedContract.audit)}
                             isExternal
                             _dark={{
                               color: "blue.400",
@@ -418,19 +221,16 @@ Deploy it in one click`,
                     </Flex>
                   </Flex>
                 </ListItem>
-                {(publishedContractInfo.data?.publishedMetadata
-                  ?.isDeployableViaProxy &&
+                {(publishedContract?.isDeployableViaProxy &&
                   hasImplementationAddresses) ||
-                (publishedContractInfo.data?.publishedMetadata
-                  ?.isDeployableViaFactory &&
+                (publishedContract?.isDeployableViaFactory &&
                   hasFactoryAddresses) ? (
                   <ListItem>
                     <Flex gap={2} alignItems="flex-start">
                       <Icon color="paragraph" as={VscServer} boxSize={5} />
                       <Flex direction="column" gap={1}>
                         <Heading as="h5" size="label.sm">
-                          {publishedContractInfo.data?.publishedMetadata
-                            ?.isDeployableViaFactory
+                          {publishedContract?.isDeployableViaFactory
                             ? "Factory"
                             : "Proxy"}{" "}
                           Enabled
@@ -445,8 +245,7 @@ Deploy it in one click`,
                         ) : null}
                         {factoryAddresses &&
                         hasFactoryAddresses &&
-                        publishedContractInfo.data?.publishedMetadata
-                          ?.isDeployableViaFactory ? (
+                        publishedContract?.isDeployableViaFactory ? (
                           <AddressesModal
                             chainAddressRecord={factoryAddresses}
                             buttonTitle="Factories"
@@ -461,51 +260,6 @@ Deploy it in one click`,
             </List>
           </Flex>
           <Divider />
-          {contractPublishMetadata.data?.abi && (
-            <Extensions
-              // @ts-expect-error - wrong abi type
-              abi={
-                compositeAbi &&
-                (dynamicContractType === "plugin" ||
-                  dynamicContractType === "dynamic" ||
-                  !publishedContractInfo.data?.publishedMetadata.deployType ||
-                  publishedContractInfo.data?.publishedMetadata.name.includes(
-                    "MarketplaceV3",
-                  ))
-                  ? compositeAbi
-                  : contractPublishMetadata.data?.abi
-              }
-            />
-          )}
-          <Divider />
-          <Flex flexDir="column" gap={4}>
-            <Heading as="h4" size="title.sm">
-              Share
-            </Heading>
-            <Flex gap={2} alignItems="center">
-              <ShareButton
-                url={currentRoute}
-                title={`${shortenIfAddress(
-                  publisherEnsOrAddress,
-                )}/${publishedContractName}`}
-                text={`Deploy ${shortenIfAddress(
-                  publisherEnsOrAddress,
-                )}/${publishedContractName} in one click with thirdweb.`}
-              />
-              <TrackedIconButton
-                as={LinkButton}
-                isExternal
-                noIcon
-                href={twitterIntentUrl}
-                bg="transparent"
-                aria-label="twitter"
-                icon={<Icon boxSize={5} as={SiTwitter} />}
-                category="released-contract"
-                label="share-twitter"
-              />
-            </Flex>
-          </Flex>
-          <Divider />
           <Flex flexDir="column" gap={4}>
             <Flex gap={2} alignItems="center">
               <LinkButton
@@ -515,7 +269,7 @@ Deploy it in one click`,
                 variant="ghost"
                 isExternal
               >
-                Learn about Publish
+                Learn more about Publish
               </LinkButton>
             </Flex>
           </Flex>
@@ -524,3 +278,54 @@ Deploy it in one click`,
     </>
   );
 };
+
+// TODO: find a place to put this
+type ContractSource = {
+  filename: string;
+  source: string;
+};
+async function fetchSourceFilesFromMetadata(
+  publishedMetadata: ExtendedPublishedContract,
+  client: ThirdwebClient,
+): Promise<ContractSource[]> {
+  return await Promise.all(
+    Object.entries(publishedMetadata.metadata.sources).map(
+      async ([path, info]) => {
+        const urls = "urls" in info ? info.urls : undefined;
+        const ipfsLink = urls
+          ? urls.find((url) => url.includes("ipfs"))
+          : undefined;
+        if (ipfsLink) {
+          const ipfsHash = ipfsLink.split("ipfs/")[1];
+          // 3 sec timeout for sources that haven't been uploaded to ipfs
+          const timeout = new Promise<string>((_resolve, reject) =>
+            setTimeout(() => reject("timeout"), 3000),
+          );
+          const source = await Promise.race([
+            (
+              await download({
+                uri: `ipfs://${ipfsHash}`,
+                client,
+              })
+            ).text(),
+            timeout,
+          ]);
+          return {
+            filename: path,
+            source,
+          };
+        }
+        if ("content" in info) {
+          return {
+            filename: path,
+            source: info.content || "Could not find source for this contract",
+          };
+        }
+        return {
+          filename: path,
+          source: "Could not find source for this contract",
+        };
+      },
+    ),
+  );
+}

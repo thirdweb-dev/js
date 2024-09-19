@@ -1,17 +1,14 @@
-import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { usePublishedContractsFromDeploy } from "components/contract-components/hooks";
 import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
 import { useMemo } from "react";
+import type { ThirdwebContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 
-export function useModuleContractInfo(contractAddress: string) {
+export function useModuleContractInfo(contract: ThirdwebContract) {
   const address = useActiveAccount()?.address;
-  const activeNetworkInfo = useEVMContractInfo();
 
-  const publishedContractsFromDeploy = usePublishedContractsFromDeploy(
-    contractAddress,
-    activeNetworkInfo?.chain?.chainId,
-  );
+  const publishedContractsFromDeploy =
+    usePublishedContractsFromDeploy(contract);
 
   const publishedContractToShow = useMemo(() => {
     const reversedPublishedContractsFromDeploy = [

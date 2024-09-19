@@ -1,4 +1,3 @@
-import { thirdwebClient } from "@/constants/client";
 import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import { SimpleGrid, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
@@ -14,7 +13,7 @@ export const AccountBalance: React.FC<AccountBalanceProps> = ({ contract }) => {
   const { data: balance } = useWalletBalance({
     address: contract.address,
     chain: activeChain,
-    client: thirdwebClient,
+    client: contract.client,
   });
   const balanceQuery = useSplitBalances(contract);
 

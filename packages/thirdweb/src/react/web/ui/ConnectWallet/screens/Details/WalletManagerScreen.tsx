@@ -80,21 +80,23 @@ export function WalletManagerScreen(
         }}
       >
         <Container flex="column" gap="xs">
-          {connectedWallets.map((w) => {
-            return (
-              <WalletManangerButton
-                key={w.id}
-                client={props.client}
-                // address={address || ""}
-                onClick={() => {
-                  setActive(w);
-                  props.onBack();
-                }}
-                chain={props.activeChain}
-                wallet={w}
-              />
-            );
-          })}
+          {connectedWallets
+            .filter((w) => !props.hiddenWallets?.includes(w.id))
+            .map((w) => {
+              return (
+                <WalletManangerButton
+                  key={w.id}
+                  client={props.client}
+                  // address={address || ""}
+                  onClick={() => {
+                    setActive(w);
+                    props.onBack();
+                  }}
+                  chain={props.activeChain}
+                  wallet={w}
+                />
+              );
+            })}
         </Container>
       </Container>
 

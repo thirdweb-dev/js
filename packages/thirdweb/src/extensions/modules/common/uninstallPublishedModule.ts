@@ -3,7 +3,7 @@ import { getDeployedInfraContract } from "../../../contract/deployment/utils/inf
 import { uninstallModule } from "../__generated__/IModularCore/write/uninstallModule.js";
 
 /**
- * @extension MODULAR
+ * @modules
  */
 export type UninstallPublishedModuleOptions = {
   contract: ThirdwebContract;
@@ -17,7 +17,7 @@ export type UninstallPublishedModuleOptions = {
  * Uninstall a published module
  * @param options - The options for uninstalling a published module
  * @returns A prepared transaction to send
- * @extension MODULAR
+ * @modules
  * @example
  * ```ts
  * import { uninstallPublishedModule } from "thirdweb/modules";

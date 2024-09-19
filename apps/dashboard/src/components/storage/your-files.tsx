@@ -1,10 +1,15 @@
+import { DASHBOARD_STORAGE_URL } from "@/constants/env";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Center, Flex, Tooltip } from "@chakra-ui/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWQueryTable } from "components/shared/TWQueryTable";
 import { formatDistance } from "date-fns/formatDistance";
-import { DASHBOARD_STORAGE_URL } from "lib/sdk";
 import { useCallback, useState } from "react";
 import { Button, Card, Heading, Text, TrackedCopyButton } from "tw-components";
 import { toSize } from "utils/number";
@@ -68,8 +73,8 @@ function usePinnedFilesQuery({
       return (await res.json()) as PinnedFilesResponse;
     },
     enabled: user.isLoggedIn && !!user.user?.address && !!user.user.jwt,
-    // keep the previous data when fetching new data
-    keepPreviousData: true,
+    // keep the previous data while fetching new data
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -91,7 +96,9 @@ function useUnpinFileMutation() {
     },
     onSuccess: () => {
       // invalidate all queries to do with pinned files
-      return queryClient.invalidateQueries([PINNED_FILES_QUERY_KEY_ROOT]);
+      return queryClient.invalidateQueries({
+        queryKey: [PINNED_FILES_QUERY_KEY_ROOT],
+      });
     },
   });
 }
@@ -154,10 +161,10 @@ const columns = [
 ];
 
 const UnpinButton: React.FC<{ cid: string }> = ({ cid }) => {
-  const { mutateAsync, isLoading } = useUnpinFileMutation();
+  const { mutateAsync, isPending } = useUnpinFileMutation();
   return (
     <Button
-      isLoading={isLoading}
+      isLoading={isPending}
       size="sm"
       variant="outline"
       onClick={() => mutateAsync({ cid })}

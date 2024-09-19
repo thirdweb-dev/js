@@ -5,7 +5,7 @@ import type { ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AccountFactories } from "./AccountFactories";
-import { SponsorshipPolicies } from "./SponsorshipPolicies";
+import { AccountAbstractionSettingsPage } from "./SponsorshipPolicies";
 
 interface SmartWalletsProps {
   apiKeyServices: ApiKeyService[];
@@ -17,7 +17,7 @@ export const SmartWallets: React.FC<SmartWalletsProps> = ({
   trackingCategory,
 }) => {
   const searchParams = useSearchParams();
-  const defaultTabIndex = Number.parseInt(searchParams?.get("tab") || "0");
+  const defaultTabIndex = Number.parseInt(searchParams?.get("tab") || "1");
   const [selectedTab, setSelectedTab] = useState<"factories" | "config">(
     defaultTabIndex === 1 ? "config" : "factories",
   );
@@ -27,15 +27,15 @@ export const SmartWallets: React.FC<SmartWalletsProps> = ({
       <TabButtons
         tabs={[
           {
-            name: "Account Factories",
-            onClick: () => setSelectedTab("factories"),
-            isActive: selectedTab === "factories",
+            name: "Sponsorship Policies",
+            onClick: () => setSelectedTab("config"),
+            isActive: selectedTab === "config",
             isEnabled: true,
           },
           {
-            name: "Configuration",
-            onClick: () => setSelectedTab("config"),
-            isActive: selectedTab === "config",
+            name: "Account Factories",
+            onClick: () => setSelectedTab("factories"),
+            isActive: selectedTab === "factories",
             isEnabled: true,
           },
         ]}
@@ -48,7 +48,7 @@ export const SmartWallets: React.FC<SmartWalletsProps> = ({
       )}
 
       {selectedTab === "config" && (
-        <SponsorshipPolicies
+        <AccountAbstractionSettingsPage
           apiKeyServices={apiKeyServices}
           trackingCategory={trackingCategory}
         />

@@ -122,8 +122,11 @@ interface InteractiveAbiFunctionProps {
 }
 
 function useAsyncRead(contract: ThirdwebContract, functionName: string) {
-  return useMutation(
-    async ({ args, types }: { args: unknown[]; types: string[] }) => {
+  return useMutation({
+    mutationFn: async ({
+      args,
+      types,
+    }: { args: unknown[]; types: string[] }) => {
       const params = parseAbiParams(types, args);
       return readContract({
         contract,
@@ -131,13 +134,13 @@ function useAsyncRead(contract: ThirdwebContract, functionName: string) {
         params,
       });
     },
-  );
+  });
 }
 
 function useSimulateTransaction() {
   const from = useActiveAccount()?.address;
-  return useMutation(
-    async ({
+  return useMutation({
+    mutationFn: async ({
       contract,
       functionName,
       params,
@@ -185,7 +188,7 @@ ${Object.keys(populatedTransaction)
 ${(err as Error).message || ""}`);
       }
     },
-  );
+  });
 }
 
 export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
@@ -237,7 +240,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   const {
     mutate: readFn,
     data: readData,
-    isLoading: readLoading,
+    isPending: readLoading,
     error: readError,
   } = useAsyncRead(contract, abiFunction.name);
 
@@ -366,7 +369,8 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                     <SolidityInput
                       solidityName={item.key}
                       solidityType={item.type}
-                      // solidityComponents={item.components}
+                      // @ts-expect-error - old types, need to update
+                      solidityComponents={item.components}
                       {...form.register(`params.${index}.value`)}
                       functionName={abiFunction.name}
                     />
@@ -463,9 +467,9 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               <Button
                 onClick={handleContractSimulation}
                 isDisabled={
-                  !abiFunction || txSimulation.isLoading || mutationLoading
+                  !abiFunction || txSimulation.isPending || mutationLoading
                 }
-                isLoading={txSimulation.isLoading}
+                isLoading={txSimulation.isPending}
               >
                 <ToolTipLabel label="Simulate the transaction to see its potential outcome without actually sending it to the network. This action doesn't cost gas.">
                   <span className="mr-3">
@@ -476,7 +480,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               </Button>
               <TransactionButton
                 isDisabled={
-                  !abiFunction || txSimulation.isLoading || mutationLoading
+                  !abiFunction || txSimulation.isPending || mutationLoading
                 }
                 colorScheme="primary"
                 transactionCount={1}

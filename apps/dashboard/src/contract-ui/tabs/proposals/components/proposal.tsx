@@ -1,25 +1,25 @@
 import {
-  useCanExecuteProposal,
-  useCastVoteMutation,
-  useExecuteProposalMutation,
-  useHasVotedOnProposal,
-  useTokensDelegated,
-  useVotingTokenDecimals,
+  tokensDelegated,
+  votingTokenDecimals,
 } from "@3rdweb-sdk/react/hooks/useVote";
 import { Flex, Icon } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useCallback } from "react";
+import { useState } from "react";
 import { FiCheck, FiMinus, FiX } from "react-icons/fi";
+import { toast } from "sonner";
 import { type ThirdwebContract, toTokens } from "thirdweb";
+import * as VoteExt from "thirdweb/extensions/vote";
 import {
-  type ProposalItem,
-  ProposalState,
-  type VoteType,
-} from "thirdweb/extensions/vote";
+  useActiveAccount,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
 import { Button, Card, Text } from "tw-components";
 
-const ProposalStateToMetadataMap: Record<keyof typeof ProposalState, string> = {
+const ProposalStateToMetadataMap: Record<
+  keyof typeof VoteExt.ProposalState,
+  string
+> = {
   pending: "gray.500",
   active: "primary.500",
   canceled: "red.500",
@@ -31,58 +31,51 @@ const ProposalStateToMetadataMap: Record<keyof typeof ProposalState, string> = {
 };
 
 interface IProposal {
-  proposal: ProposalItem;
+  proposal: VoteExt.ProposalItem;
   contract: ThirdwebContract;
 }
 
 export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
-  const { data: hasVoted, isLoading: hasVotedLoading } = useHasVotedOnProposal(
+  const account = useActiveAccount();
+  const hasVotedQuery = useReadContract(VoteExt.hasVoted, {
     contract,
-    proposal.proposalId,
-  );
-  const { data: canExecute } = useCanExecuteProposal(
-    contract,
-    proposal.proposalId,
-  );
-  const { data: delegated } = useTokensDelegated(contract);
-  const { mutate: execute, isLoading: isExecuting } =
-    useExecuteProposalMutation(contract, proposal.proposalId);
-  const {
-    mutate: vote,
-    isLoading: isVoting,
-    variables,
-  } = useCastVoteMutation(contract, proposal.proposalId);
-
-  const { onSuccess: castVoteSuccess, onError: castVoteError } =
-    useTxNotifications("Vote cast successfully", "Error casting vote");
-
-  const castVote = useCallback(
-    (voteType: VoteType) => {
-      vote(
-        { voteType },
-        {
-          onSuccess: castVoteSuccess,
-          onError: castVoteError,
-        },
-      );
+    account: account?.address || "",
+    proposalId: proposal.proposalId,
+    queryOptions: {
+      enabled: !!account,
     },
-    [castVoteError, castVoteSuccess, vote],
-  );
+  });
+  const canExecuteQuery = useReadContract(VoteExt.canExecute, {
+    contract,
+    proposalId: proposal.proposalId,
+  });
+  const decimalQuery = useReadContract(votingTokenDecimals, {
+    contract,
+  });
+  const tokensDelegatedQuery = useReadContract(tokensDelegated, {
+    contract,
+    account,
+    queryOptions: { enabled: !!account },
+  });
 
-  const { onSuccess: executeSuccess, onError: executeError } =
-    useTxNotifications(
-      "Proposal executed successfully",
-      "Error executing proposal",
-    );
+  const sendTx = useSendAndConfirmTransaction();
 
-  const executeProposal = useCallback(() => {
-    execute(undefined, {
-      onSuccess: executeSuccess,
-      onError: executeError,
+  const [voteType, setVoteType] = useState<VoteExt.VoteType | null>(null);
+
+  function castVote(vote: VoteExt.VoteType) {
+    setVoteType(vote);
+    const castVoteTx = VoteExt.castVote({
+      contract,
+      proposalId: proposal.proposalId,
+      support: vote,
     });
-  }, [execute, executeError, executeSuccess]);
-
-  const decimalQuery = useVotingTokenDecimals(contract);
+    toast.promise(sendTx.mutateAsync(castVoteTx), {
+      loading: "Casting vote...",
+      success: "Vote cast successfully",
+      error: "Error casting vote",
+      onAutoClose: () => setVoteType(null),
+    });
+  }
 
   return (
     <Card key={proposal.proposalId.toString()}>
@@ -93,7 +86,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
           borderRadius="25px"
           bg={
             ProposalStateToMetadataMap[
-              proposal.stateLabel as keyof typeof ProposalState
+              proposal.stateLabel as keyof typeof VoteExt.ProposalState
             ] || "gray.500"
           }
         >
@@ -116,29 +109,29 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
         <>
           <Text mt="16px">
             <strong>For:</strong>{" "}
-            {decimalQuery.isLoading
+            {decimalQuery.isPending
               ? "Loading..."
               : toTokens(proposal.votes.for, decimalQuery.data || 18)}
           </Text>
           <Text>
             <strong>Against:</strong>{" "}
-            {decimalQuery.isLoading
+            {decimalQuery.isPending
               ? "Loading..."
               : toTokens(proposal.votes.against, decimalQuery.data || 18)}
           </Text>
           <Text>
             <strong>Abstained:</strong>{" "}
-            {decimalQuery.isLoading
+            {decimalQuery.isPending
               ? "Loading..."
               : toTokens(proposal.votes.abstain, decimalQuery.data || 18)}
           </Text>
         </>
       )}
 
-      {proposal.state === ProposalState.active &&
-      !hasVoted &&
-      !hasVotedLoading &&
-      delegated ? (
+      {proposal.state === VoteExt.ProposalState.active &&
+      !hasVotedQuery.data &&
+      !hasVotedQuery.isLoading &&
+      tokensDelegatedQuery.data ? (
         <Flex mt="24px" gap={2}>
           <TransactionButton
             size="sm"
@@ -146,8 +139,8 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
             rightIcon={<Icon as={FiCheck} />}
             onClick={() => castVote(1)}
             colorScheme="green"
-            isDisabled={isVoting && variables?.voteType !== 1}
-            isLoading={isVoting && variables?.voteType === 1}
+            isDisabled={sendTx.isPending && voteType !== 1}
+            isLoading={sendTx.isPending && voteType === 1}
           >
             Approve
           </TransactionButton>
@@ -157,8 +150,8 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
             rightIcon={<Icon as={FiX} />}
             onClick={() => castVote(0)}
             colorScheme="red"
-            isDisabled={isVoting && variables?.voteType !== 0}
-            isLoading={isVoting && variables?.voteType === 0}
+            isDisabled={sendTx.isPending && voteType !== 0}
+            isLoading={sendTx.isPending && voteType === 0}
           >
             Against
           </TransactionButton>
@@ -168,20 +161,30 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
             transactionCount={1}
             rightIcon={<Icon as={FiMinus} />}
             onClick={() => castVote(2)}
-            isDisabled={isVoting && variables?.voteType !== 2}
-            isLoading={isVoting && variables?.voteType === 2}
+            isDisabled={sendTx.isPending && voteType !== 2}
+            isLoading={sendTx.isPending && voteType === 2}
           >
             Abstain
           </TransactionButton>
         </Flex>
       ) : (
-        canExecute && (
+        canExecuteQuery.data && (
           <Button
             colorScheme="primary"
             size="sm"
             leftIcon={<Icon as={FiCheck} />}
-            onClick={executeProposal}
-            isLoading={isExecuting}
+            onClick={() => {
+              const executeTx = VoteExt.executeProposal({
+                contract,
+                proposalId: proposal.proposalId,
+              });
+              toast.promise(sendTx.mutateAsync(executeTx), {
+                loading: "Executing proposal...",
+                success: "Proposal executed successfully",
+                error: "Error executing proposal",
+              });
+            }}
+            isLoading={sendTx.isPending}
             mt="24px"
           >
             Execute

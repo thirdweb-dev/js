@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import type { Abi, AbiFunction } from "abitype";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { ArrowDown } from "lucide-react";
@@ -62,6 +62,7 @@ export const TransactionSimulator = (props: {
   const chain = useV5DashboardChain(
     Number.isInteger(Number(chainId)) ? chainId : undefined,
   );
+  const client = useThirdwebClient();
 
   async function handleSimulation(data: SimulateTransactionForm) {
     try {
@@ -71,7 +72,7 @@ export const TransactionSimulator = (props: {
         throw new Error("Invalid chainId");
       }
       const contract = getContract({
-        client: thirdwebClient,
+        client,
         chain,
         address: to,
       });

@@ -1,7 +1,7 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { TabPathLinks } from "@/components/ui/tabs";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { TeamHeader } from "../../components/TeamHeader/TeamHeader";
 
 export default async function TeamLayout(props: {
@@ -14,7 +14,7 @@ export default async function TeamLayout(props: {
 
   if (!team) {
     // not a valid team, redirect back to 404
-    redirect("/404");
+    notFound();
   }
 
   const teamsAndProjects = await Promise.all(
@@ -34,7 +34,7 @@ export default async function TeamLayout(props: {
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex flex-col grow">
       <div className="bg-muted/50">
         <TeamHeader
           currentProject={project}
@@ -63,7 +63,7 @@ export default async function TeamLayout(props: {
           ]}
         />
       </div>
-      <main className="grow">{props.children}</main>
+      <div className="grow flex flex-col">{props.children}</div>
     </div>
   );
 }

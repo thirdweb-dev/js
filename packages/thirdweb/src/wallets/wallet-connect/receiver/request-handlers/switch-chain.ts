@@ -14,8 +14,7 @@ export async function handleSwitchChain(options: {
 
   if (wallet.getChain()?.id === hexToNumber(params[0].chainId)) {
     return "0x1";
-  } else {
-    await wallet.switchChain(defineChain(hexToNumber(params[0].chainId)));
-    return "0x1";
   }
+  await wallet.switchChain(defineChain(hexToNumber(params[0].chainId)));
+  return "0x1";
 }

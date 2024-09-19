@@ -10,12 +10,15 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * - Email
  * - Phone
  * - Passkey
+ * - Guest
  * - Google
  * - Apple
  * - Facebook
  * - Discord
+ * - Coinbase
  * - Telegram
  * - LINE
+ * - X
  * - Farcaster
  *
  * Can also be configured to use Account Abstraction to directly connect to a ERC4337 smart account based on those authentication methods.
@@ -135,8 +138,19 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * // account will be a smart account with sponsored gas enabled
  * const account = await wallet.connect({
  *   client,
- *   chain,
  *   strategy: "google",
+ * });
+ * ```
+ *
+ * ### Connect to a guest account
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ *
+ * const wallet = inAppWallet();
+ *
+ * const account = await wallet.connect({
+ *   client,
+ *   strategy: "guest",
  * });
  * ```
  *

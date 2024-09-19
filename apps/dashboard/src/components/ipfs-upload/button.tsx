@@ -33,7 +33,7 @@ export const IpfsUploadButton: ComponentWithChildren<IpfsUploadButtonProps> = ({
         variant="solid"
         aria-label="Upload to IPFS"
         rightIcon={<Icon as={FiUpload} />}
-        isLoading={storageUpload.isLoading}
+        isLoading={storageUpload.isPending}
         {...buttonProps}
       >
         {children}

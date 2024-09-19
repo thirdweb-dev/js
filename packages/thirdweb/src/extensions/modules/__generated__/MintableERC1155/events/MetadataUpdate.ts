@@ -3,7 +3,7 @@ import { prepareEvent } from "../../../../../event/prepare-event.js";
 /**
  * Creates an event object for the MetadataUpdate event.
  * @returns The prepared event object.
- * @module MintableERC1155
+ * @modules MintableERC1155
  * @example
  * ```ts
  * import { getContractEvents } from "thirdweb";

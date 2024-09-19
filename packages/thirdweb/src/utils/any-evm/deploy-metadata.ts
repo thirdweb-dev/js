@@ -48,7 +48,9 @@ export async function fetchDeployMetadata(
   return {
     ...rawMeta,
     ...parsedMeta,
+    version: rawMeta.version,
     bytecode: deployBytecode,
+    name: rawMeta.name,
   };
 }
 
@@ -69,12 +71,12 @@ async function fetchAndParseCompilerMetadata(
       `Could not resolve metadata for contract at ${options.uri}`,
     );
   }
-  return formatCompilerMetadata(metadata);
+  return { ...metadata, ...formatCompilerMetadata(metadata) };
 }
 
 // types
 
-type RawCompilerMetadata = {
+export type RawCompilerMetadata = {
   name: string;
   metadataUri: string;
   bytecodeUri: string;
@@ -87,7 +89,37 @@ type RawCompilerMetadata = {
 type ParsedCompilerMetadata = {
   name: string;
   abi: Abi;
-  metadata: Record<string, unknown>;
+  metadata: {
+    compiler: {
+      version: string;
+    };
+    language: string;
+    output: {
+      abi: Abi;
+      devdoc: Record<string, unknown>;
+      userdoc: Record<string, unknown>;
+    };
+    settings: {
+      compilationTarget: Record<string, unknown>;
+      evmVersion: string;
+      libraries: Record<string, string>;
+      optimizer: Record<string, unknown>;
+      remappings: string[];
+    };
+    sources: Record<
+      string,
+      { keccak256: string } & (
+        | {
+            content: string;
+          }
+        | {
+            urls: string[];
+            license?: string;
+          }
+      )
+    >;
+    [key: string]: unknown;
+  };
   info: {
     title?: string;
     author?: string;
@@ -99,9 +131,10 @@ type ParsedCompilerMetadata = {
 };
 
 export type CompilerMetadata = Prettify<
-  ParsedCompilerMetadata & {
-    bytecode: Hex;
-  }
+  RawCompilerMetadata &
+    ParsedCompilerMetadata & {
+      bytecode: Hex;
+    }
 >;
 
 export type ExtendedMetadata = {
@@ -164,5 +197,18 @@ export type ExtendedMetadata = {
     }
   >;
   compositeAbi?: Abi;
+  compilers?: Record<
+    "solc" | "zksolc",
+    {
+      evmVersion: string;
+      compilerVersion: string;
+      metadataUri: string;
+      bytecodeUri: string;
+    }[]
+  >;
+  externalLinks?: Array<{
+    name: string;
+    url: string;
+  }>;
   [key: string]: unknown;
 };

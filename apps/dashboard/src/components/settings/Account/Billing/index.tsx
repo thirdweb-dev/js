@@ -276,7 +276,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
         validPayment={validPayment}
         paymentVerification={paymentVerification}
         invalidPayment={invalidPayment}
-        loading={paymentMethodSaving || updatePlanMutation.isLoading}
+        loading={paymentMethodSaving || updatePlanMutation.isPending}
         onSelect={handlePlanSelect}
       />
 
@@ -301,7 +301,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
           oldPlanFeatures={PLANS[account.plan].features}
           onClose={handleDowngradeAlertClose}
           onConfirm={(feedback) => handleUpdatePlan(downgradePlan, feedback)}
-          loading={updatePlanMutation.isLoading}
+          loading={updatePlanMutation.isPending}
         />
       )}
     </Flex>

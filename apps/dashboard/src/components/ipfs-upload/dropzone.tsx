@@ -1,5 +1,7 @@
+"use client";
+
 import { Label } from "@/components/ui/label";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
 import {
   AspectRatio,
@@ -162,10 +164,8 @@ const filesPerPage = 20;
 const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
-  // const [progress, setProgress] = useState<UploadProgressEvent>({
-  //   progress: 0,
-  //   total: 100,
-  // });
+  const client = useThirdwebClient();
+
   const [uploadWithoutDirectory, setUploadWithoutDirectory] = useState(
     files.length === 1,
   );
@@ -247,7 +247,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                         src={URL.createObjectURL(file)}
                         mimeType={file.type}
                         requireInteraction
-                        client={thirdwebClient}
+                        client={client}
                       />
                     </Box>
                   </AspectRatio>
@@ -310,7 +310,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                           e.stopPropagation();
                           updateFiles((prev) => prev.filter((f) => f !== file));
                         }}
-                        isDisabled={storageUpload.isLoading}
+                        isDisabled={storageUpload.isPending}
                       />
                     </Tooltip>
                   )}
@@ -361,7 +361,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
           );
         })}
       </SimpleGrid>
-
       {showPagination && (
         <Flex
           gap={2}
@@ -391,7 +390,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
           </Button>
         </Flex>
       )}
-
       <Flex direction="column">
         <Divider flexShrink={0} />
         <Flex
@@ -407,7 +405,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
           {/* If user is uploading just one file,
           we allow them to choose if they want to upload without a folder */}
           {files.length === 1 &&
-            !storageUpload.isLoading &&
+            !storageUpload.isPending &&
             ipfsHashes.length === 0 && (
               <Flex direction={"row"} gap={"2"}>
                 <Checkbox
@@ -423,7 +421,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                 </Label>
               </Flex>
             )}
-          {storageUpload.isLoading && (
+          {storageUpload.isPending && (
             <Flex
               w="100%"
               direction="column"
@@ -437,7 +435,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                 size={{ base: "xs", md: "lg" }}
                 w="100%"
                 borderRadius="full"
-                isIndeterminate={storageUpload.isLoading}
+                isIndeterminate={storageUpload.isPending}
                 position="relative"
               />
               <Center
@@ -479,7 +477,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
           )}
           <ButtonGroup ml={{ base: "0", md: "auto" }}>
             <Button
-              isDisabled={storageUpload.isLoading}
+              isDisabled={storageUpload.isPending}
               onClick={() => {
                 updateFiles([]);
                 setIpfsHashes([]);
@@ -508,7 +506,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
               </Button>
             ) : (
               <Button
-                isLoading={storageUpload.isLoading}
+                isLoading={storageUpload.isPending}
                 loadingText="Uploading..."
                 colorScheme="green"
                 leftIcon={<Icon as={FiUploadCloud} />}
@@ -542,9 +540,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                       });
                       setIpfsHashes(uris);
                       // also refetch the files list
-                      queryClient.invalidateQueries([
-                        PINNED_FILES_QUERY_KEY_ROOT,
-                      ]);
+                      queryClient.invalidateQueries({
+                        queryKey: [PINNED_FILES_QUERY_KEY_ROOT],
+                      });
                     },
                   });
                 }}
@@ -559,7 +557,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
   );
 };
 
-export const TWMediaRenderer = chakra(MediaRenderer, {
+const TWMediaRenderer = chakra(MediaRenderer, {
   shouldForwardProp: (prop) =>
     ["width", "height", "mimeType", "src", "requireInteraction"].includes(prop),
 });

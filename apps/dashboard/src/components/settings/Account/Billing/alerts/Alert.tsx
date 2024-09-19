@@ -48,7 +48,7 @@ export const BillingAlerts = () => {
         AccountStatus.InvalidPayment,
         AccountStatus.InvalidPaymentMethod,
         AccountStatus.PaymentVerification,
-      ].includes(account?.status as AccountStatus)
+      ].includes(account.state.data?.status as AccountStatus)
         ? 1000
         : false,
   });
@@ -173,7 +173,7 @@ export const BillingAlerts = () => {
         key: "usage_100_alert",
         title: "You have exceeded your usage limit",
         // if free or growth plan, included the upgrade plan message
-        description: `Overages are now being charged.${isFreePlan || (isGrowthPlan && " Consider upgrading your plan to increase your included limits.")}`,
+        description: `Overages are now being charged.${isFreePlan || isGrowthPlan ? " Consider upgrading your plan to increase your included limits." : ""}`,
         status: "warning",
         componentType: "usage",
       },
@@ -297,9 +297,7 @@ type BillingAlertNotificationProps = {
   label?: string;
 };
 
-export const BillingAlertNotification: React.FC<
-  BillingAlertNotificationProps
-> = ({
+const BillingAlertNotification: React.FC<BillingAlertNotificationProps> = ({
   status,
   onDismiss,
   title,
@@ -338,17 +336,15 @@ export const BillingAlertNotification: React.FC<
       variant="left-accent"
       bg="backgroundCardHighlight"
     >
-      <>
-        <OnboardingModal
-          isOpen={isPaymentMethodOpen}
-          onClose={onPaymentMethodClose}
-        >
-          <LazyOnboardingBilling
-            onSave={handlePaymentAdded}
-            onCancel={onPaymentMethodClose}
-          />
-        </OnboardingModal>
-      </>
+      <OnboardingModal
+        isOpen={isPaymentMethodOpen}
+        onClose={onPaymentMethodClose}
+      >
+        <LazyOnboardingBilling
+          onSave={handlePaymentAdded}
+          onCancel={onPaymentMethodClose}
+        />
+      </OnboardingModal>
 
       <Flex>
         <AlertIcon boxSize={4} mt={1} ml={1} />

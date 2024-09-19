@@ -1,4 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-service-utils-node.cjs.js",
-  "module": "dist/thirdweb-dev-service-utils-node.esm.js"
-}

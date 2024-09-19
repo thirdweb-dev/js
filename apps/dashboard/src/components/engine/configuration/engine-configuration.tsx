@@ -1,7 +1,6 @@
 "use client";
 
 import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex } from "@chakra-ui/react";
 import { EngineCorsConfig } from "./cors";
 import { EngineWalletConfig } from "./engine-wallet-config";
 import { EngineIpAllowlistConfig } from "./ip-allowlist";
@@ -15,11 +14,11 @@ export const EngineConfiguration: React.FC<EngineConfigurationProps> = ({
   instance,
 }) => {
   return (
-    <Flex flexDir="column" gap={12}>
+    <div className="flex flex-col gap-12">
       <EngineWalletConfig instanceUrl={instance.url} />
       <EngineCorsConfig instanceUrl={instance.url} />
       <EngineIpAllowlistConfig instanceUrl={instance.url} />
       <EngineSystem instance={instance} />
-    </Flex>
+    </div>
   );
 };

@@ -105,6 +105,7 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({ contract }) => {
                 contract,
                 to: d.to,
                 quantity: BigInt(d.amount),
+                from: account.address,
               });
 
               const approveTx = await getApprovalForTransaction({

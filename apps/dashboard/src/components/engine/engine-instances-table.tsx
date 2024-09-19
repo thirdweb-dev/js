@@ -270,7 +270,7 @@ const EditModal = (props: {
               className="gap-2"
               disabled={!form.formState.isDirty}
             >
-              {editInstance.isLoading ? (
+              {editInstance.isPending ? (
                 <Spinner className="size-4" />
               ) : (
                 <SendIcon className="size-4" />
@@ -363,7 +363,7 @@ function RemoveFromDashboardModalContent(props: {
           variant="destructive"
           className="gap-2"
         >
-          {removeFromDashboard.isLoading ? (
+          {removeFromDashboard.isPending ? (
             <Spinner className="size-4" />
           ) : (
             <Trash2Icon className="size-4" />
@@ -493,7 +493,7 @@ function CancelSubscriptionModalContent(props: {
             disabled={!form.formState.isValid}
             className="gap-2"
           >
-            {removeCloudHosted.isLoading ? (
+            {removeCloudHosted.isPending ? (
               <Spinner className="size-4" />
             ) : (
               <SendIcon className="size-4" />

@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-auth-fastify.cjs.js",
-  "module": "dist/thirdweb-dev-auth-fastify.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-auth-fastify.esm.js": "./dist/thirdweb-dev-auth-fastify.browser.esm.js"
-  }
-}

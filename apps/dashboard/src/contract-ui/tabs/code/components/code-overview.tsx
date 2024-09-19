@@ -23,16 +23,20 @@ import {
   formatAbiItem,
 } from "abitype";
 import {
-  useContractEnabledExtensions,
   useContractEvents,
   useContractFunctions,
 } from "components/contract-components/hooks";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import type { CodeEnvironment } from "components/contract-tabs/code/types";
 import { useSupportedChain } from "hooks/chains/configureChains";
-import { useSingleQueryParam } from "hooks/useQueryParam";
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
+import * as ERC20Ext from "thirdweb/extensions/erc20";
+import * as ERC721Ext from "thirdweb/extensions/erc721";
+import * as ERC1155Ext from "thirdweb/extensions/erc1155";
+import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { useActiveAccount } from "thirdweb/react";
+import { toFunctionSelector } from "thirdweb/utils";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
 interface CodeOverviewProps {
@@ -57,14 +61,14 @@ export const COMMANDS = {
 import { defineChain } from "thirdweb/chains";
 
 // create the client with your clientId, or secretKey if in a server environment
-const client = createThirdwebClient({ 
+const client = createThirdwebClient({
   clientId: "YOUR_CLIENT_ID"
  });
 
 // connect to your contract
-const contract = getContract({ 
-  client, 
-  chain: defineChain({{chainId}}), 
+const contract = getContract({
+  client,
+  chain: defineChain({{chainId}}),
   address: "{{contract_address}}"
 });`,
     react: `import { createThirdwebClient, getContract, resolveMethod } from "thirdweb";
@@ -72,14 +76,14 @@ import { defineChain } from "thirdweb/chains";
 import { ThirdwebProvider } from "thirdweb/react";
 
 // create the client with your clientId, or secretKey if in a server environment
-export const client = createThirdwebClient({ 
-  clientId: "YOUR_CLIENT_ID" 
+export const client = createThirdwebClient({
+  clientId: "YOUR_CLIENT_ID"
 });
 
 // connect to your contract
-export const contract = getContract({ 
-  client, 
-  chain: defineChain({{chainId}}), 
+export const contract = getContract({
+  client,
+  chain: defineChain({{chainId}}),
   address: "{{contract_address}}"
 });
 
@@ -95,14 +99,14 @@ import { defineChain } from "thirdweb/chains";
 import { ThirdwebProvider } from "thirdweb/react";
 
 // create the client with your clientId, or secretKey if in a server environment
-export const client = createThirdwebClient({ 
-  clientId: "YOUR_CLIENT_ID" 
+export const client = createThirdwebClient({
+  clientId: "YOUR_CLIENT_ID"
 });
 
 // connect to your contract
-export const contract = getContract({ 
-  client, 
-  chain: defineChain({{chainId}}), 
+export const contract = getContract({
+  client,
+  chain: defineChain({{chainId}}),
   address: "{{contract_address}}",
 });
 
@@ -125,41 +129,41 @@ var contract = sdk.GetContract("{{contract_address}}");`,
   read: {
     javascript: `import { readContract } from "thirdweb";
 
-const data = await readContract({ 
-  contract, 
-  method: "{{function}}", 
-  params: [{{args}}] 
+const data = await readContract({
+  contract,
+  method: "{{function}}",
+  params: [{{args}}]
 })`,
     react: `import { useReadContract } from "thirdweb/react";
 
 export default function Component() {
-  const { data, isLoading } = useReadContract({ 
-    contract, 
-    method: "{{function}}", 
-    params: [{{args}}] 
+  const { data, isLoading } = useReadContract({
+    contract,
+    method: "{{function}}",
+    params: [{{args}}]
   });
 }`,
     "react-native": `import { useReadContract } from "thirdweb/react";
 
 export default function Component() {
-  const { data, isLoading } = useReadContract({ 
-    contract, 
-    method: "{{function}}", 
-    params: [{{args}}] 
+  const { data, isLoading } = useReadContract({
+    contract,
+    method: "{{function}}",
+    params: [{{args}}]
   });
 }`,
   },
   write: {
     javascript: `import { prepareContractCall, sendTransaction } from "thirdweb";
 
-const transaction = await prepareContractCall({ 
-  contract, 
-  method: "{{function}}", 
-  params: [{{args}}] 
+const transaction = await prepareContractCall({
+  contract,
+  method: "{{function}}",
+  params: [{{args}}]
 });
-const { transactionHash } = await sendTransaction({ 
-  transaction, 
-  account 
+const { transactionHash } = await sendTransaction({
+  transaction,
+  account
 });`,
     react: `import { prepareContractCall } from "thirdweb"
 import { useSendTransaction } from "thirdweb/react";
@@ -168,25 +172,25 @@ export default function Component() {
   const { mutate: sendTransaction } = useSendTransaction();
 
   const onClick = () => {
-    const transaction = prepareContractCall({ 
-      contract, 
-      method: "{{function}}", 
-      params: [{{args}}] 
+    const transaction = prepareContractCall({
+      contract,
+      method: "{{function}}",
+      params: [{{args}}]
     });
     sendTransaction(transaction);
   }
 }`,
     "react-native": `import { prepareContractCall } from "thirdweb"
 import { useSendTransaction } from "thirdweb/react";
-    
+
 export default function Component() {
   const { mutate: sendTransaction } = useSendTransaction();
-    
+
   const onClick = () => {
-    const transaction = prepareContractCall({ 
-      contract, 
-      method: "{{function}}", 
-      params: [{{args}}] 
+    const transaction = prepareContractCall({
+      contract,
+      method: "{{function}}",
+      params: [{{args}}]
     });
     sendTransaction(transaction);
   }
@@ -195,40 +199,40 @@ export default function Component() {
   events: {
     javascript: `import { prepareEvent, getContractEvents } from "thirdweb";
 
-const preparedEvent = prepareEvent({ 
-  contract, 
-  signature: "{{function}}" 
+const preparedEvent = prepareEvent({
+  contract,
+  signature: "{{function}}"
 });
-const events = await getContractEvents({ 
-  contract, 
-  events: [preparedEvent] 
+const events = await getContractEvents({
+  contract,
+  events: [preparedEvent]
 });`,
     react: `import { prepareEvent } from "thirdweb";
 import { useContractEvents } from "thirdweb/react";
 
-const preparedEvent = prepareEvent({ 
-  contract, 
-  signature: "{{function}}" 
+const preparedEvent = prepareEvent({
+  contract,
+  signature: "{{function}}"
 });
 
 export default function Component() {
-  const { data: event } = useContractEvents({ 
-    contract, 
-    events: [preparedEvent] 
+  const { data: event } = useContractEvents({
+    contract,
+    events: [preparedEvent]
   });
 }`,
     "react-native": `import { prepareEvent } from "thirdweb";
 import { useContractEvents } from "thirdweb/react";
-    
-const preparedEvent = prepareEvent({ 
-  contract, 
-  signature: "{{function}}" 
+
+const preparedEvent = prepareEvent({
+  contract,
+  signature: "{{function}}"
 });
-    
+
 export default function Component() {
-  const { data: event } = useContractEvents({ 
-    contract, 
-    events: [preparedEvent] 
+  const { data: event } = useContractEvents({
+    contract,
+    events: [preparedEvent]
   });
 }`,
   },
@@ -244,12 +248,12 @@ const WALLETS_SNIPPETS = [
     link: "https://portal.thirdweb.com/references/wallets/latest/SmartWallet",
     supportedLanguages: {
       javascript: `import { defineChain } from "thirdweb";
-import { embeddedWallet, smartWallet } from "thirdweb/wallets";
+import { inAppWallet, smartWallet } from "thirdweb/wallets";
 
 const chain = defineChain({{chainId}});
 
-// First, connect the personal wallet, which can be any wallet (metamask, embedded, etc.)
-const personalWallet = embeddedWallet();
+// First, connect the personal wallet, which can be any wallet (metamask, in-app, etc.)
+const personalWallet = inAppWallet();
 const peronalAccount = await personalWallet.connect({
   client,
   chain,
@@ -272,7 +276,7 @@ import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
 export default function App() {
 return (
     <ThirdwebProvider>
-      <ConnectButton 
+      <ConnectButton
         client={client}
         accountAbstraction={{
           chain: defineChain({{chainId}}),
@@ -531,35 +535,61 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   noSidebar = false,
   chainId: chainIdProp,
 }) => {
-  const defaultEnvironment = useSingleQueryParam(
-    "environment",
-  ) as CodeEnvironment;
+  const searchParams = useSearchParams();
+  const defaultEnvironment = searchParams?.get("environment") as
+    | CodeEnvironment
+    | undefined;
+
   const [environment, setEnvironment] = useState<CodeEnvironment>(
     defaultEnvironment || "javascript",
   );
 
   const [tab, setTab] = useState("write");
 
-  const enabledExtensions = useContractEnabledExtensions(abi);
   const address = useActiveAccount()?.address;
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const isAccountFactory = enabledExtensions.some(
-    (extension) => extension.name === "AccountFactory",
+  const functionSelectors = useMemo(() => {
+    return (abi || [])
+      .filter((a) => a.type === "function")
+      .map((fn) => toFunctionSelector(fn));
+  }, [abi]);
+
+  const isAccountFactory = useMemo(() => {
+    return [
+      ERC4337Ext.isGetAllAccountsSupported(functionSelectors),
+      ERC4337Ext.isGetAccountsSupported(functionSelectors),
+      ERC4337Ext.isTotalAccountsSupported(functionSelectors),
+      ERC4337Ext.isGetAccountsOfSignerSupported(functionSelectors),
+      ERC4337Ext.isPredictAccountAddressSupported(functionSelectors),
+    ].every(Boolean);
+  }, [functionSelectors]);
+  const isERC20 = useMemo(
+    () => ERC20Ext.isERC20(functionSelectors),
+    [functionSelectors],
   );
+  const isERC721 = useMemo(() => {
+    // this will have to do for now
+    return [ERC721Ext.isGetNFTsSupported(functionSelectors)].every(Boolean);
+  }, [functionSelectors]);
+
+  const isERC1155 = useMemo(() => {
+    // this will have to do for now
+    return [ERC1155Ext.isGetNFTsSupported(functionSelectors)].every(Boolean);
+  }, [functionSelectors]);
 
   const extensionNamespace = useMemo(() => {
-    if (enabledExtensions.some((e) => e.name === "ERC20")) {
+    if (isERC20) {
       return "erc20";
     }
-    if (enabledExtensions.some((e) => e.name === "ERC721")) {
+    if (isERC721) {
       return "erc721";
     }
-    if (enabledExtensions.some((e) => e.name === "ERC1155")) {
+    if (isERC1155) {
       return "erc1155";
     }
     return undefined;
-  }, [enabledExtensions]);
+  }, [isERC20, isERC721, isERC1155]);
 
   const chainId = useDashboardEVMChainId() || chainIdProp || 1;
   const chainInfo = useSupportedChain(chainId || -1);
@@ -618,12 +648,12 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                   the{" "}
                   <TrackedLink
                     isExternal
-                    href="https://portal.thirdweb.com/references/wallets/latest/SmartWallet"
+                    href="https://portal.thirdweb.com/connect/account-abstraction/overview"
                     category="accounts-page"
                     label="wallet-sdk"
                     color="primary.500"
                   >
-                    Wallet SDK
+                    Connect SDK
                   </TrackedLink>{" "}
                   in your applications. This will ensure account contracts are
                   deployed for your users only when they need it.

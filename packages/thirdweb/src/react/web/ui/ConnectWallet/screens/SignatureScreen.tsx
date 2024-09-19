@@ -13,6 +13,7 @@ import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
+import { useAdminWallet } from "../../../../core/hooks/wallets/useAdminAccount.js";
 import { useDisconnect } from "../../../../core/hooks/wallets/useDisconnect.js";
 import { wait } from "../../../../core/utils/wait.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
@@ -46,12 +47,12 @@ export const SignatureScreen: React.FC<{
     connectLocale,
   } = props;
 
-  const activeWallet = useActiveWallet();
+  const wallet = useActiveWallet();
+  const adminWallet = useAdminWallet();
   const activeAccount = useActiveAccount();
-  const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
+  const siweAuth = useSiweAuth(wallet, activeAccount, props.auth);
   const [status, setStatus] = useState<Status>("idle");
   const { disconnect } = useDisconnect();
-  const wallet = useActiveWallet();
   const locale = connectLocale.signatureScreen;
 
   const signIn = useCallback(async () => {
@@ -66,12 +67,15 @@ export const SignatureScreen: React.FC<{
     }
   }, [onDone, siweAuth]);
 
-  // this should not happen
   if (!wallet) {
     return <LoadingScreen />;
   }
 
-  if (wallet.id === "inApp" || wallet.id === "embedded") {
+  if (
+    wallet.id === "inApp" ||
+    wallet.id === "embedded" ||
+    (wallet.id === "smart" && adminWallet?.id === "inApp")
+  ) {
     return (
       <HeadlessSignIn
         signIn={signIn}
@@ -255,45 +259,43 @@ function HeadlessSignIn({
         {status === "signing" && <Spinner size="xl" color="accentText" />}
 
         {status === "failed" && (
-          <>
-            <Container>
-              <Spacer y="lg" />
-              <Text size="lg" center color="danger">
-                {locale.signingScreen.failedToSignIn}
-              </Text>
+          <Container>
+            <Spacer y="lg" />
+            <Text size="lg" center color="danger">
+              {locale.signingScreen.failedToSignIn}
+            </Text>
 
-              <Spacer y="lg" />
-              <Button
-                fullWidth
-                variant="accent"
-                onClick={() => {
-                  signIn();
-                }}
-                style={{
-                  gap: spacing.xs,
-                  alignItems: "center",
-                  padding: spacing.md,
-                }}
-              >
-                <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
-                {locale.signingScreen.tryAgain}
-              </Button>
-              <Spacer y="sm" />
-              <Button
-                fullWidth
-                variant="secondary"
-                onClick={() => {
-                  disconnect(wallet);
-                }}
-                style={{
-                  alignItems: "center",
-                  padding: spacing.md,
-                }}
-              >
-                {locale.instructionScreen.disconnectWallet}
-              </Button>
-            </Container>
-          </>
+            <Spacer y="lg" />
+            <Button
+              fullWidth
+              variant="accent"
+              onClick={() => {
+                signIn();
+              }}
+              style={{
+                gap: spacing.xs,
+                alignItems: "center",
+                padding: spacing.md,
+              }}
+            >
+              <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
+              {locale.signingScreen.tryAgain}
+            </Button>
+            <Spacer y="sm" />
+            <Button
+              fullWidth
+              variant="secondary"
+              onClick={() => {
+                disconnect(wallet);
+              }}
+              style={{
+                alignItems: "center",
+                padding: spacing.md,
+              }}
+            >
+              {locale.instructionScreen.disconnectWallet}
+            </Button>
+          </Container>
         )}
       </Container>
     </Container>

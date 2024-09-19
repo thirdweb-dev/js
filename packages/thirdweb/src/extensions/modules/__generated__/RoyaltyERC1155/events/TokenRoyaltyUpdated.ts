@@ -21,7 +21,7 @@ export type TokenRoyaltyUpdatedEventFilters = Partial<{
  * Creates an event object for the TokenRoyaltyUpdated event.
  * @param filters - Optional filters to apply to the event.
  * @returns The prepared event object.
- * @module RoyaltyERC1155
+ * @modules RoyaltyERC1155
  * @example
  * ```ts
  * import { getContractEvents } from "thirdweb";

@@ -1,4 +1,6 @@
-import { thirdwebClient } from "@/constants/client";
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type AddContractSubscriptionInput,
   useEngineAddContractSubscription,
@@ -32,11 +34,12 @@ import { useV5DashboardChain } from "lib/v5-adapter";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { getContract } from "thirdweb";
+import { getContract, isAddress } from "thirdweb";
 import {
   Button,
   Card,
   Checkbox,
+  FormErrorMessage,
   FormHelperText,
   FormLabel,
   Text,
@@ -107,6 +110,7 @@ const AddModal = ({
       processTransactionReceipts: false,
       filterFunctions: [],
     },
+    mode: "onChange",
   });
 
   const onSubmit = (data: AddContractSubscriptionForm) => {
@@ -194,26 +198,59 @@ const ModalBodyInputContract = ({
             />
           </FormControl>
 
-          <FormControl isRequired>
+          <FormControl
+            isRequired
+            isInvalid={
+              !!form.getFieldState("contractAddress", form.formState).error
+            }
+          >
             <FormLabel>Contract Address</FormLabel>
             <Input
               type="text"
               placeholder="0x..."
-              {...form.register("contractAddress", { required: true })}
+              {...form.register("contractAddress", {
+                required: true,
+                validate: (v) => {
+                  const isValid = isAddress(v);
+                  return !isValid ? "Invalid address" : true;
+                },
+              })}
             />
+            <FormErrorMessage>
+              {
+                form.getFieldState("contractAddress", form.formState).error
+                  ?.message
+              }
+            </FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired>
+          <FormControl
+            isRequired
+            isInvalid={!!form.getFieldState("webhookUrl", form.formState).error}
+          >
             <FormLabel>Webhook URL</FormLabel>
             <Input
               type="url"
               placeholder="https://"
-              {...form.register("webhookUrl", { required: true })}
+              {...form.register("webhookUrl", {
+                required: true,
+                validate: (v) => {
+                  try {
+                    new URL(v);
+                    return true;
+                  } catch {
+                    return "Invalid URL";
+                  }
+                },
+              })}
             />
             <FormHelperText>
               Engine sends an HTTP request to your backend when new onchain data
               for this contract is detected.
             </FormHelperText>
+            <FormErrorMessage>
+              {form.getFieldState("webhookUrl", form.formState).error?.message}
+            </FormErrorMessage>
           </FormControl>
         </Stack>
       </ModalBody>
@@ -428,14 +465,20 @@ const FilterSelector = ({
   filter: string[];
   setFilter: (value: string[]) => void;
 }) => {
+  const client = useThirdwebClient();
   const chain = useV5DashboardChain(form.getValues("chainId"));
-  const contract = chain
-    ? getContract({
-        address: form.getValues("contractAddress"),
-        chain,
-        client: thirdwebClient,
-      })
-    : undefined;
+  const address = form.getValues("contractAddress");
+  const contract = useMemo(
+    () =>
+      chain
+        ? getContract({
+            address,
+            chain,
+            client,
+          })
+        : undefined,
+    [chain, client, address],
+  );
 
   const abiQuery = useResolveContractAbi(contract);
 

@@ -13,7 +13,7 @@ interface LocalConfigProps {
 
 export const LocalConfig: React.FC<LocalConfigProps> = ({ instanceUrl }) => {
   const { data: walletConfig } = useEngineWalletConfig(instanceUrl);
-  const { mutate: setLocalConfig, isLoading } =
+  const { mutate: setLocalConfig, isPending } =
     useEngineSetWalletConfig(instanceUrl);
 
   const trackEvent = useTrack();
@@ -68,7 +68,7 @@ export const LocalConfig: React.FC<LocalConfigProps> = ({ instanceUrl }) => {
             );
           }}
         >
-          {isLoading ? "Saving..." : "Save"}
+          {isPending ? "Saving..." : "Save"}
         </Button>
       </Flex>
     </Flex>

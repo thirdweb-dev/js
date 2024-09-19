@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.esm.js": "./dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.browser.esm.js"
-  }
-}

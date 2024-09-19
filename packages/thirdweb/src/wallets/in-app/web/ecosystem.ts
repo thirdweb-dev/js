@@ -17,6 +17,8 @@ import { createEcosystemWallet } from "../core/wallet/ecosystem-core.js";
  * - Apple
  * - Facebook
  * - Discord
+ * - LINE
+ * - X
  * - Farcaster
  *
  * Can also be configured to use Account Abstraction to directly connect to a ERC4337 smart account based on those authentication methods.

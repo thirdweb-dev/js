@@ -42,6 +42,7 @@ export function useNFTDrawerTabs({
   tokenId,
 }: UseNFTDrawerTabsParams): NFTDrawerTab[] {
   const functionSelectorQuery = useContractFunctionSelectors(contract);
+  const functionSelectors = functionSelectorQuery.data || [];
   const address = useActiveAccount()?.address;
 
   const isERC721Query = useReadContract(ERC721Ext.isERC721, { contract });
@@ -74,43 +75,41 @@ export function useNFTDrawerTabs({
     const hasERC1155ClaimConditions = (() => {
       return [
         // reads
-        ERC1155Ext.isGetClaimConditionByIdSupported(functionSelectorQuery.data),
-        ERC1155Ext.isGetClaimConditionsSupported(functionSelectorQuery.data),
-        ERC1155Ext.isGetActiveClaimConditionSupported(
-          functionSelectorQuery.data,
-        ),
+        ERC1155Ext.isGetClaimConditionByIdSupported(functionSelectors),
+        ERC1155Ext.isGetClaimConditionsSupported(functionSelectors),
+        ERC1155Ext.isGetActiveClaimConditionSupported(functionSelectors),
         // writes
-        ERC1155Ext.isSetClaimConditionsSupported(functionSelectorQuery.data),
-        ERC1155Ext.isResetClaimEligibilitySupported(functionSelectorQuery.data),
+        ERC1155Ext.isSetClaimConditionsSupported(functionSelectors),
+        ERC1155Ext.isResetClaimEligibilitySupported(functionSelectors),
       ].every(Boolean);
     })();
 
     const isBurnable = (() => {
       if (isERC721) {
-        return ERC721Ext.isBurnSupported(functionSelectorQuery.data);
+        return ERC721Ext.isBurnSupported(functionSelectors);
       }
       if (isERC1155) {
-        return ERC1155Ext.isBurnSupported(functionSelectorQuery.data);
+        return ERC1155Ext.isBurnSupported(functionSelectors);
       }
       return false;
     })();
 
     const supportsUpdateMetadata = (() => {
       if (isERC721) {
-        return ERC721Ext.isUpdateMetadataSupported(functionSelectorQuery.data);
+        return ERC721Ext.isUpdateMetadataSupported(functionSelectors);
       }
       if (isERC1155) {
-        return ERC1155Ext.isUpdateMetadataSupported(functionSelectorQuery.data);
+        return ERC1155Ext.isUpdateMetadataSupported(functionSelectors);
       }
       return false;
     })();
 
     const supportsUpdateTokenURI = (() => {
       if (isERC721) {
-        return ERC721Ext.isUpdateTokenURISupported(functionSelectorQuery.data);
+        return ERC721Ext.isUpdateTokenURISupported(functionSelectors);
       }
       if (isERC1155) {
-        return ERC1155Ext.isUpdateTokenURISupported(functionSelectorQuery.data);
+        return ERC1155Ext.isUpdateTokenURISupported(functionSelectors);
       }
       return false;
     })();
@@ -174,9 +173,7 @@ export function useNFTDrawerTabs({
         },
       ]);
     }
-    if (
-      ERC1155Ext.isMintAdditionalSupplyToSupported(functionSelectorQuery.data)
-    ) {
+    if (ERC1155Ext.isMintAdditionalSupplyToSupported(functionSelectors)) {
       tabs = tabs.concat([
         {
           title: "Mint",
@@ -223,6 +220,6 @@ export function useNFTDrawerTabs({
     tokenId,
     isMinterRole,
     contract,
-    functionSelectorQuery.data,
+    functionSelectors,
   ]);
 }

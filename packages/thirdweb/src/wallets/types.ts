@@ -25,13 +25,17 @@ export const socialAuthOptions = [
   "facebook",
   "discord",
   "line",
+  "x",
+  "coinbase",
   "farcaster",
   "telegram",
 ] as const;
 export type SocialAuthOption = (typeof socialAuthOptions)[number];
+export type OAuthOption = SocialAuthOption | "guest";
 
 export const authOptions = [
   ...socialAuthOptions,
+  "guest",
   "email",
   "phone",
   "passkey",

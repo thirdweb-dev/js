@@ -15,7 +15,7 @@ import { remove } from "thirdweb/extensions/thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 
-function useMultiChainRegContractList(walletAddress?: string) {
+export function useMultiChainRegContractList(walletAddress?: string) {
   return useQuery({
     queryKey: ["dashboard-registry", walletAddress, "multichain-contract-list"],
     queryFn: async () => {
@@ -88,8 +88,8 @@ export function useRemoveContractMutation() {
   const { chainIdToChainRecord } = useAllChainsData();
   const queryClient = useQueryClient();
   const account = useActiveAccount();
-  return useMutation(
-    async (data: RemoveContractParams) => {
+  return useMutation({
+    mutationFn: async (data: RemoveContractParams) => {
       invariant(chainIdToChainRecord, "chains not initialzed yet");
       invariant(data.chainId, "chainId not provided");
       invariant(account, "No wallet connected");
@@ -111,12 +111,13 @@ export function useRemoveContractMutation() {
         },
       });
     },
-    {
-      onSettled: () => {
-        return queryClient.invalidateQueries(["dashboard-registry"]);
-      },
+
+    onSettled: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ["dashboard-registry"],
+      });
     },
-  );
+  });
 }
 
 type AddContractParams = {
@@ -129,8 +130,8 @@ export function useAddContractMutation() {
 
   const queryClient = useQueryClient();
 
-  return useMutation(
-    async (data: AddContractParams) => {
+  return useMutation({
+    mutationFn: async (data: AddContractParams) => {
       invariant(account, "cannot add a contract without an address");
 
       return await addContractToMultiChainRegistry(
@@ -142,10 +143,11 @@ export function useAddContractMutation() {
         300000n,
       );
     },
-    {
-      onSettled: () => {
-        return queryClient.invalidateQueries(["dashboard-registry"]);
-      },
+
+    onSettled: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ["dashboard-registry"],
+      });
     },
-  );
+  });
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
@@ -55,11 +57,11 @@ type Webhook = {
   secret: string;
 };
 
-export type WebhooksPageProps = {
+type PayWebhooksPageProps = {
   clientId: string;
 };
 
-export function WebhooksPage(props: WebhooksPageProps) {
+export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({
     queryKey: ["webhooks", props.clientId],
     queryFn: async () => {
@@ -154,7 +156,7 @@ const formSchema = z.object({
   label: z.string().min(1, "Please enter a label."),
 });
 
-function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
+function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
   const [open, setOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -177,7 +179,9 @@ function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
       return json.result as string;
     },
     onSuccess: () => {
-      return queryClient.invalidateQueries(["webhooks", props.clientId]);
+      return queryClient.invalidateQueries({
+        queryKey: ["webhooks", props.clientId],
+      });
     },
   });
   return (
@@ -264,7 +268,7 @@ function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
             </FormItem>
 
             <DialogFooter>
-              <Button type="submit" disabled={createMutation.isLoading}>
+              <Button type="submit" disabled={createMutation.isPending}>
                 Create
               </Button>
             </DialogFooter>
@@ -276,7 +280,7 @@ function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
 }
 
 function DeleteWebhookButton(
-  props: PropsWithChildren<WebhooksPageProps & { webhookId: string }>,
+  props: PropsWithChildren<PayWebhooksPageProps & { webhookId: string }>,
 ) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -293,7 +297,9 @@ function DeleteWebhookButton(
       return json.result as string;
     },
     onSuccess: () => {
-      return queryClient.invalidateQueries(["webhooks", props.clientId]);
+      return queryClient.invalidateQueries({
+        queryKey: ["webhooks", props.clientId],
+      });
     },
   });
   return (
@@ -325,7 +331,7 @@ function DeleteWebhookButton(
                 },
               );
             }}
-            disabled={deleteMutation.isLoading}
+            disabled={deleteMutation.isPending}
           >
             Yes, Delete Webhook
           </Button>

@@ -1,7 +1,8 @@
+"use client";
+
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -14,15 +15,18 @@ export function ProjectSelectorUI(props: {
   projects: Project[];
   currentProject: Project | undefined;
   team: Team;
+  createProject: () => void;
 }) {
   const { projects, currentProject, team } = props;
   const [searchProjectTerm, setSearchProjectTerm] = useState("");
   const filteredProjects = searchProjectTerm
-    ? projects.filter((project) => project.name.includes(searchProjectTerm))
+    ? projects.filter((project) =>
+        project.name.toLowerCase().includes(searchProjectTerm.toLowerCase()),
+      )
     : projects;
 
   return (
-    <div className="flex flex-col border-l fade-in-0 animate-in duration-300">
+    <div className="flex flex-col border-l border-border fade-in-0 animate-in duration-300">
       <SearchInput
         placeholder="Search Projects"
         value={searchProjectTerm}
@@ -54,7 +58,9 @@ export function ProjectSelectorUI(props: {
                     asChild
                   >
                     {/* TODO - when we have overview page, remove /connect */}
-                    <Link href={`/team/${team.slug}/${project.slug}/connect`}>
+                    <Link
+                      href={`/team/${team.slug}/${project.slug}/connect/analytics`}
+                    >
                       <div className="flex items-center gap-2">
                         {/* TODO - placeholder for now */}
                         <div className="size-4 bg-muted border rounded-full" />
@@ -72,17 +78,14 @@ export function ProjectSelectorUI(props: {
         </div>
       </ScrollShadow>
 
-      <div className="p-2 border-t">
+      <div className="p-2 border-t border-border">
         <Button
           className="px-2 w-full gap-2 justify-start disabled:opacity-100 disabled:pointer-events-auto disabled:cursor-not-allowed"
           variant="ghost"
-          disabled
+          onClick={props.createProject}
         >
           <CirclePlusIcon className="size-4 text-link-foreground" />
           Create Project
-          <Badge className="ml-auto" variant="secondary">
-            Soon{"™️"}
-          </Badge>
         </Button>
       </div>
     </div>

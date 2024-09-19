@@ -1,6 +1,5 @@
 import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Flex } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Button, TrackedLink } from "tw-components";
 import { shortenString } from "utils/usedapp-external";
@@ -12,7 +11,7 @@ interface OnboardingLinkWalletProps {
   onBack: () => void;
 }
 
-export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
+const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
   email,
   onSave,
   onBack,
@@ -87,8 +86,8 @@ export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
         }
       />
       <form>
-        <Flex gap={8} flexDir="column" w="full">
-          <Flex flexDir="column" gap={3}>
+        <div className="flex flex-col w-full gap-8">
+          <div className="flex flex-col gap-3">
             <Button
               w="full"
               size="lg"
@@ -96,8 +95,8 @@ export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
               colorScheme="blue"
               type="button"
               onClick={handleSubmit}
-              isLoading={updateMutation.isLoading}
-              isDisabled={updateMutation.isLoading}
+              isLoading={updateMutation.isPending}
+              isDisabled={updateMutation.isPending}
             >
               Yes, link them
             </Button>
@@ -107,12 +106,12 @@ export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
               fontSize="md"
               variant="outline"
               onClick={onBack}
-              isDisabled={updateMutation.isLoading}
+              isDisabled={updateMutation.isPending}
             >
               Use another email
             </Button>
-          </Flex>
-        </Flex>
+          </div>
+        </div>
       </form>
     </>
   );

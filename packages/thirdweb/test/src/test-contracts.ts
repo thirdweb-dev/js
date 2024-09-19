@@ -1,6 +1,10 @@
 import { getContract } from "../../src/contract/contract.js";
 import { USDT_ABI } from "./abis/usdt.js";
-import { FORKED_ETHEREUM_CHAIN, FORKED_POLYGON_CHAIN, FORKED_BASE_CHAIN } from "./chains.js";
+import {
+  FORKED_BASE_CHAIN,
+  FORKED_ETHEREUM_CHAIN,
+  FORKED_POLYGON_CHAIN,
+} from "./chains.js";
 import { TEST_CLIENT } from "./test-clients.js";
 
 // ERC20
@@ -8,15 +12,17 @@ import { TEST_CLIENT } from "./test-clients.js";
 export const USDT_CONTRACT_ADDRESS =
   "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
-  export const POLYGON_USDT_CONTRACT_ADDRESS =
+export const POLYGON_USDT_CONTRACT_ADDRESS =
   "0xc2132d05d31c914a87c6611c10748aeb04b58e8f";
 
-  export const POLYGON_USDT_IMPLEMENTATION = "0x7FFB3d637014488b63fb9858E279385685AFc1e2";
+export const POLYGON_USDT_IMPLEMENTATION =
+  "0x7FFB3d637014488b63fb9858E279385685AFc1e2";
 
-  export const BASE_USDC_CONTRACT_ADDRESS =
+export const BASE_USDC_CONTRACT_ADDRESS =
   "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
 
-  export const BASE_USDC_IMPLEMENTATION = "0x2ce6311ddae708829bc0784c967b7d77d19fd779";
+export const BASE_USDC_IMPLEMENTATION =
+  "0x2ce6311ddae708829bc0784c967b7d77d19fd779";
 
 export const USDT_CONTRACT = getContract({
   client: TEST_CLIENT,

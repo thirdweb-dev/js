@@ -42,7 +42,7 @@ export function UpdatePartnerForm({
     },
   });
 
-  const { updatePartner, isLoading } = useUpdatePartner({
+  const { mutateAsync: updatePartner, isPending } = useUpdatePartner({
     onSuccess: () => {
       form.reset();
       onSuccess();
@@ -195,12 +195,12 @@ export function UpdatePartnerForm({
           />
         </div>
         <Button
-          disabled={isLoading}
+          disabled={isPending}
           type="submit"
           variant="outline"
           className="w-full"
         >
-          {isLoading && <Loader2 className="size-4 mr-1 animate-spin" />}
+          {isPending && <Loader2 className="size-4 mr-1 animate-spin" />}
           Update
         </Button>
       </form>

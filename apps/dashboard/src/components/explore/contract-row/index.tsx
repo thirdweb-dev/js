@@ -7,7 +7,7 @@ interface ContractRowProps {
   category: ExploreCategory;
 }
 
-export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
+export function ContractRow({ category }: ContractRowProps) {
   return (
     <section>
       {/* Title, Description + View all link */}
@@ -60,18 +60,17 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
           const overrides = Array.isArray(publishedContractId)
             ? publishedContractId[2]
             : undefined;
-
           return (
             <ContractCard
               key={publisher + contractId + overrides?.title}
               publisher={publisher}
               contractId={contractId}
+              titleOverride={overrides?.title}
+              descriptionOverride={overrides?.description}
               tracking={{
                 source: category.id,
                 itemIndex: `${idx}`,
               }}
-              titleOverride={overrides?.title}
-              descriptionOverride={overrides?.description}
               isBeta={category.isBeta}
               modules={
                 modules?.length
@@ -87,4 +86,4 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
       </div>
     </section>
   );
-};
+}

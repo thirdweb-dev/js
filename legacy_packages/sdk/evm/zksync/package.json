@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-sdk-evm-zksync.cjs.js",
-  "module": "dist/thirdweb-dev-sdk-evm-zksync.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-sdk-evm-zksync.esm.js": "./dist/thirdweb-dev-sdk-evm-zksync.browser.esm.js"
-  }
-}

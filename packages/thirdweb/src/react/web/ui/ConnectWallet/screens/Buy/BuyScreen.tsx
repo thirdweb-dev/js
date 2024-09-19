@@ -1,4 +1,5 @@
 import { IdCardIcon } from "@radix-ui/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import { trackPayEvent } from "../../../../../../analytics/track.js";
 import type { Chain } from "../../../../../../chains/types.js";
@@ -10,6 +11,7 @@ import type { BuyWithFiatStatus } from "../../../../../../pay/buyWithFiat/getSta
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
+import type { WalletId } from "../../../../../../wallets/wallet-types.js";
 import {
   type Theme,
   iconSize,
@@ -23,6 +25,7 @@ import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBala
 import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
+import { invalidateWalletBalance } from "../../../../../core/providers/invalidateWalletBalance.js";
 import type { SupportedTokens } from "../../../../../core/utils/defaultTokens.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
@@ -91,6 +94,7 @@ export type BuyScreenProps = {
   theme: "light" | "dark" | Theme;
   onDone: () => void;
   connectOptions: PayEmbedConnectOptions | undefined;
+  hiddenWallets?: WalletId[];
   isEmbed: boolean;
 };
 
@@ -128,6 +132,7 @@ type BuyScreenContentProps = {
   theme: "light" | "dark" | Theme;
   payOptions: PayUIOptions;
   onDone: () => void;
+  hiddenWallets?: WalletId[];
   connectOptions: PayEmbedConnectOptions | undefined;
   isEmbed: boolean;
 };
@@ -223,14 +228,17 @@ function BuyScreenContent(props: BuyScreenContentProps) {
 
   // screens ----------------------------
 
+  const queryClient = useQueryClient();
+
   const onSwapSuccess = useCallback(
     (_status: BuyWithCryptoStatus) => {
       props.payOptions.onPurchaseSuccess?.({
         type: "crypto",
         status: _status,
       });
+      invalidateWalletBalance(queryClient);
     },
-    [props.payOptions.onPurchaseSuccess],
+    [props.payOptions.onPurchaseSuccess, queryClient],
   );
 
   const onFiatSuccess = useCallback(
@@ -239,8 +247,9 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         type: "fiat",
         status: _status,
       });
+      invalidateWalletBalance(queryClient);
     },
-    [props.payOptions.onPurchaseSuccess],
+    [props.payOptions.onPurchaseSuccess, queryClient],
   );
 
   if (screen.id === "connect-payer-wallet") {
@@ -265,6 +274,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
             });
           }
         }}
+        hiddenWallets={props.hiddenWallets}
         recommendedWallets={props.connectOptions?.recommendedWallets}
         showAllWallets={
           props.connectOptions?.showAllWallets === undefined
@@ -541,6 +551,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               {screen.id === "select-wallet" && (
                 <WalletSwitcherDrawerContent
                   client={client}
+                  hiddenWallets={props.hiddenWallets}
                   onSelect={(w) => {
                     const chain = w.getChain();
                     const account = w.getAccount();
@@ -1115,7 +1126,8 @@ function SwapScreenContent(props: {
 
   function showSwapFlow() {
     if (
-      props.payOptions.mode === "direct_payment" &&
+      (props.payOptions.mode === "direct_payment" ||
+        props.payOptions.mode === "fund_wallet") &&
       !isNotEnoughBalance &&
       !swapRequired
     ) {
