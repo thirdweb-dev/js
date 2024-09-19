@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.57.3
+
+### Patch Changes
+
+- [#4696](https://github.com/thirdweb-dev/js/pull/4696) [`0c97d79`](https://github.com/thirdweb-dev/js/commit/0c97d7965e3f681cd1fe2e1c79ecc6897ad52b9c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix default chain when using redirect mode + default to first passed chains if available
+
+- [#4693](https://github.com/thirdweb-dev/js/pull/4693) [`4a87109`](https://github.com/thirdweb-dev/js/commit/4a87109289e6ece5f6f08c55160e5d4e11e034e4) Thanks [@jnsdls](https://github.com/jnsdls)! - fix `getClaimConditions` extension for erc20, erc721 and erc1155
+
 ## 5.57.2
 
 ### Patch Changes
