@@ -114,8 +114,17 @@ export function useContractRouteConfig(
     contract,
   });
   const analyticsSupported = useAnalyticsSupportedForChain(contract.chain.id);
-  const isERC721Query = useReadContract(ERC721Ext.isERC721, { contract });
-  const isERC1155Query = useReadContract(ERC1155Ext.isERC1155, { contract });
+
+  const isERC721 = useMemo(
+    () => ERC721Ext.isGetNFTSupported(functionSelectors),
+    [functionSelectors],
+  );
+
+  const isERC1155 = useMemo(
+    () => ERC1155Ext.isGetNFTSupported(functionSelectors),
+    [functionSelectors],
+  );
+
   const isERC20 = useMemo(
     () => ERC20Ext.isERC20(functionSelectors),
     [functionSelectors],
@@ -251,11 +260,11 @@ export function useContractRouteConfig(
       // others only matter if claim conditions are detected
       if (hasClaimConditions) {
         // if erc721 its that
-        if (isERC721Query.data) {
+        if (isERC721) {
           return "erc721";
         }
         // if erc1155 its that
-        if (isERC1155Query.data) {
+        if (isERC1155) {
           return "erc1155";
         }
         // otherwise it has to be erc20
@@ -265,8 +274,8 @@ export function useContractRouteConfig(
       return null;
     }, [
       hasClaimConditions,
-      isERC721Query.data,
-      isERC1155Query.data,
+      isERC721,
+      isERC1155,
       isDirectListing,
       isEnglishAuction,
     ]);
@@ -281,9 +290,9 @@ export function useContractRouteConfig(
           contract={contract}
           hasDirectListings={isDirectListing}
           hasEnglishAuctions={isEnglishAuction}
-          isErc1155={isERC1155Query.data || false}
+          isErc1155={isERC1155}
           isErc20={isERC20}
-          isErc721={isERC721Query.data || false}
+          isErc721={isERC721}
           isPermissionsEnumerable={isPermissionsEnumerable}
         />
       ),
@@ -326,7 +335,7 @@ export function useContractRouteConfig(
       isEnabled:
         embedType !== null
           ? "enabled"
-          : isERC721Query.isLoading || isERC1155Query.isLoading
+          : functionSelectorQuery.isLoading
             ? "loading"
             : "disabled",
       component: () => (
@@ -352,16 +361,13 @@ export function useContractRouteConfig(
       title: "NFTs",
       path: "nfts",
       isEnabled:
-        isERC721Query.data || isERC1155Query.data
+        isERC721 || isERC1155
           ? "enabled"
-          : isERC721Query.isLoading || isERC1155Query.isLoading
+          : functionSelectorQuery.isLoading
             ? "loading"
             : "disabled",
       component: () => (
-        <LazyContractNFTPage
-          contract={contract}
-          isErc721={isERC721Query.data || false}
-        />
+        <LazyContractNFTPage contract={contract} isErc721={isERC721} />
       ),
     },
     {
