@@ -51,6 +51,7 @@ export function FiatDetailsScreen(props: {
         transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         quote={{
+          intentId: status.intentId,
           fromCurrencyAmount: fiatQuote.fromCurrencyWithFees.amount,
           fromCurrencySymbol: fiatQuote.fromCurrencyWithFees.currencySymbol,
           onRampTokenAmount: fiatQuote.estimatedOnRampAmount,
