@@ -1,5 +1,4 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { Flex } from "@chakra-ui/react";
 import { formatDistance } from "date-fns/formatDistance";
 import { ArrowRightIcon } from "lucide-react";
 import { Link } from "tw-components";
@@ -17,17 +16,12 @@ interface ChangelogProps {
 
 export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
   return (
-    <Flex
-      flexDir="column"
-      gap={6}
-      position="relative"
-      className="border-l border-border py-2"
-    >
+    <div className="border-l border-border py-2 flex flex-col gap-6 relative">
       {changelog.map((item) => (
-        <Flex key={item.title} gap={4}>
+        <div className="flex flex-row gap-4" key={item.title}>
           <div className="size-2.5 bg-border rounded-full shrink-0 -translate-x-1/2 translate-y-1/2" />
 
-          <Flex flexDir="column">
+          <div className="flex flex-col">
             <Link
               isExternal
               href={`${item.url}?utm_source=thirdweb&utm_campaign=changelog`}
@@ -43,8 +37,8 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
                 })}
               </ClientOnly>
             </div>
-          </Flex>
-        </Flex>
+          </div>
+        </div>
       ))}
       <Link
         href="https://blog.thirdweb.com/changelog?utm_source=thirdweb&utm_campaign=changelog"
@@ -53,6 +47,6 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
       >
         View More <ArrowRightIcon className="size-4" />
       </Link>
-    </Flex>
+    </div>
   );
 };

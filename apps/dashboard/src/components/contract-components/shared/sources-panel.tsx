@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import type { Abi } from "abitype";
 import { Link, Text } from "tw-components";
 import type { SourceFile } from "../types";
@@ -11,8 +10,8 @@ interface SourcesPanelProps {
 
 export const SourcesPanel: React.FC<SourcesPanelProps> = ({ sources, abi }) => {
   return (
-    <Flex flexDir="column" gap={8}>
-      <Flex flexDir="column" gap={4}>
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
         {sources && sources?.length > 0 ? (
           <SourcesAccordion sources={sources} abi={abi} />
         ) : (
@@ -27,7 +26,7 @@ export const SourcesPanel: React.FC<SourcesPanelProps> = ({ sources, abi }) => {
             </Link>
           </Text>
         )}
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 };

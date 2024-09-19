@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { getAllActiveSigners, getAllAdmins } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
@@ -30,10 +29,10 @@ export const AccountSigners: React.FC<AccountSignersProps> = ({ contract }) => {
   );
   const data = transformedAdmins.concat(transformedSigners || []);
   return (
-    <Flex direction="column" gap={6}>
+    <div className="flex flex-col gap-6">
       {data.map((item) => (
         <AccountSigner key={item.signer} item={item} />
       ))}
-    </Flex>
+    </div>
   );
 };

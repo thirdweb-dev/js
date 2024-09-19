@@ -4,7 +4,7 @@ import {
   EVMContractInfoProvider,
 } from "@3rdweb-sdk/react";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { Flex, SimpleGrid } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 import {
   type DehydratedState,
   HydrationBoundary,
@@ -96,10 +96,10 @@ const SanctionedAddressesChecker: ComponentWithChildren = ({ children }) => {
         bg="black"
         zIndex="banner"
       >
-        <Flex gap={4} direction="column" align="center">
+        <div className="gap-4 flex flex-col items-center">
           <Heading as="p">Address is blocked</Heading>
           <CustomConnectWallet />
-        </Flex>
+        </div>
       </SimpleGrid>
     );
   }

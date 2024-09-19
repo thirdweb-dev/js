@@ -1,5 +1,4 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
-import { Flex } from "@chakra-ui/react";
 import { CURRENCIES } from "constants/currencies";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { Text } from "tw-components";
@@ -27,7 +26,7 @@ export const PricePreview: React.FC<PricePreviewProps> = ({
   );
 
   return (
-    <Flex direction="column">
+    <div className="flex flex-col">
       <Text fontWeight="bold">Default price</Text>
       {Number(price) === 0 ? (
         <Text>Free</Text>
@@ -41,6 +40,6 @@ export const PricePreview: React.FC<PricePreviewProps> = ({
               : `(${shortenIfAddress(currencyAddress)})`}
         </Text>
       )}
-    </Flex>
+    </div>
   );
 };

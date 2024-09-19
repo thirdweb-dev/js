@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { EmbedSetup } from "./components/embed-setup";
 
@@ -18,10 +17,10 @@ export const ContractEmbedPage: React.FC<ContractEmbedPageProps> = ({
   ercOrMarketplace,
 }) => {
   return (
-    <Flex direction="column" gap={6}>
+    <div className="flex flex-col gap-6">
       {ercOrMarketplace && (
         <EmbedSetup contract={contract} ercOrMarketplace={ercOrMarketplace} />
       )}
-    </Flex>
+    </div>
   );
 };
