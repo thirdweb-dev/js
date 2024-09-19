@@ -3,6 +3,13 @@
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useTheme } from "next-themes";
 import {
+  arbitrumSepolia,
+  baseSepolia,
+  optimismSepolia,
+  polygonAmoy,
+  sepolia,
+} from "thirdweb/chains";
+import {
   ConnectEmbed,
   type ConnectEmbedProps,
   useActiveAccount,
@@ -22,6 +29,13 @@ export function StyledConnectEmbed(
     </div>
   ) : (
     <ConnectEmbed
+      chains={[
+        sepolia,
+        baseSepolia,
+        optimismSepolia,
+        polygonAmoy,
+        arbitrumSepolia,
+      ]}
       wallets={WALLETS}
       client={THIRDWEB_CLIENT}
       theme={theme === "light" ? "light" : "dark"}

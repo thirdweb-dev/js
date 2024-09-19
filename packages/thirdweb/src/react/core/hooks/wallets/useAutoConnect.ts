@@ -56,7 +56,10 @@ export function useAutoConnectCore(
       return autoConnected;
     }
 
-    const lastConnectedChain = await getLastConnectedChain(storage);
+    // this flow can actually be used for a first connection in the case of a redirect
+    // in that case, we default to the passed chain to connect to
+    const lastConnectedChain =
+      (await getLastConnectedChain(storage)) || props.chain;
 
     async function handleWalletConnection(wallet: Wallet) {
       return wallet.autoConnect({

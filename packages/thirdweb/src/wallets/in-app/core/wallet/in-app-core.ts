@@ -104,6 +104,7 @@ export function createInAppWallet(args: {
         createOptions,
         connector,
       );
+
       // set the states
       client = options.client;
       account = connectedAccount;
