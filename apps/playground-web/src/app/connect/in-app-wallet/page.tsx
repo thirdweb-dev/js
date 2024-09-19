@@ -3,7 +3,6 @@ import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import { APIHeader } from "../../../components/blocks/APIHeader";
-import { SponsoredInAppTxPreview } from "../../../components/in-app-wallet/sponsored-tx";
 import { StyledConnectEmbed } from "../../../components/styled-connect-embed";
 
 export const metadata: Metadata = {
@@ -35,9 +34,10 @@ export default function Page() {
 
         <div className="h-14" />
 
-        <section className="space-y-8">
+        {/* TODO: put this in its own section with inapp smart wallet enabled
+          <section className="space-y-8">
           <SponsoredInAppTx />
-        </section>
+        </section> */}
       </main>
     </ThirdwebProvider>
   );
@@ -85,44 +85,43 @@ function AnyAuth() {
   );
 }
 
-function SponsoredInAppTx() {
-  return (
-    <>
-      <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-          Signless Sponsored Transactions
-        </h2>
-        <p className="max-w-[600px]">
-          With in-app wallets, users don&apos;t need to confirm every
-          transaction.
-          <br />
-          Combine it with smart account flag to cover gas costs for the best UX.
-        </p>
-      </div>
-      <CodeExample
-        preview={<SponsoredInAppTxPreview />}
-        code={`import { inAppWallet } from "thirdweb/wallets";
-  import { claimTo } from "thirdweb/extensions/erc1155";
-  import { ConnectButton, TransactionButton } from "thirdweb/react";
+// function SponsoredInAppTx() {
+//   return (
+//     <>
+//       <div className="space-y-2">
+//         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+//           Signless Sponsored Transactions
+//         </h2>
+//         <p className="max-w-[600px]">
+//           With in-app wallets, users don&apos;t need to confirm every
+//           transaction.
+//           <br />
+//           Combine it with smart account flag to cover gas costs for the best UX.
+//         </p>
+//       </div>
+//       <CodeExample
+//         preview={<SponsoredInAppTxPreview />}
+//         code={`import { inAppWallet } from "thirdweb/wallets";
+//   import { claimTo } from "thirdweb/extensions/erc1155";
+//   import { ConnectButton, TransactionButton } from "thirdweb/react";
 
+//   const wallets = [
+//     inAppWallet(
+//       // turn on gas sponsorship for in-app wallets
+//       { smartAccount: { chain, sponsorGas: true }}
+//     )
+//   ];
 
-  const wallets = [
-    inAppWallet(
-      // turn on gas sponsorship for in-app wallets
-      { smartAccount: { chain, sponsorGas: true }}
-    )
-  ];
+//   function App(){
+//     return (<>
+// <ConnectButton client={client} wallets={wallets} />
 
-  function App(){
-    return (<>
-<ConnectButton client={client} wallets={wallets} />
-
-{/* signless, sponsored transactions */}
-<TransactionButton transaction={() => claimTo({ contract, to: "0x123...", tokenId: 0n, quantity: 1n })}>Mint</TransactionButton>
-</>);
-};`}
-        lang="tsx"
-      />
-    </>
-  );
-}
+// {/* signless, sponsored transactions */}
+// <TransactionButton transaction={() => claimTo({ contract, to: "0x123...", tokenId: 0n, quantity: 1n })}>Mint</TransactionButton>
+// </>);
+// };`}
+//         lang="tsx"
+//       />
+//     </>
+//   );
+// }

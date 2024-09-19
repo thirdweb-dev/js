@@ -238,8 +238,12 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
     props.requireApproval,
   ]);
 
+  const preferredChain =
+    props.accountAbstraction?.chain || props.chain || props.chains?.[0];
+
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
+      chain={preferredChain}
       appMetadata={props.appMetadata}
       client={props.client}
       wallets={wallets}
@@ -272,7 +276,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
         <ConnectEmbedContent
           auth={props.auth}
           accountAbstraction={props.accountAbstraction}
-          chain={props.chain || props.accountAbstraction?.chain}
+          chain={preferredChain}
           chains={props.chains}
           client={props.client}
           connectLocale={localeQuery.data}

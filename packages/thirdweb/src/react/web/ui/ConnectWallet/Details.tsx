@@ -1073,7 +1073,7 @@ function InAppWalletUserInfo(props: {
       }
       return walletInfo?.name;
     },
-    enabled: !!activeWallet?.id,
+    enabled: !!activeWallet?.id && !!walletInfo,
   });
 
   const userInfoQuery = useQuery({
