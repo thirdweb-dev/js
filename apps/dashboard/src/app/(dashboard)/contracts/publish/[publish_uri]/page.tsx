@@ -2,12 +2,9 @@ import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { getActiveAccountCookie, getJWTCookie } from "@/constants/cookie";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ContractPublishForm } from "components/contract-components/contract-publish-form";
-import { setOverrides } from "lib/vercel-utils";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
-
-setOverrides();
 
 type DirectDeployPageProps = {
   params: {

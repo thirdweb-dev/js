@@ -1,10 +1,7 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { setOverrides } from "lib/vercel-utils";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { DeployContractInfo } from "../../../published-contract/components/contract-info";
 import { DeployFormForUri } from "../../../published-contract/components/uri-based-deploy";
-
-setOverrides();
 
 type DirectDeployPageProps = {
   params: {

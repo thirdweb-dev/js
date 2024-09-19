@@ -1,8 +1,5 @@
-import { setOverrides } from "lib/vercel-utils";
 import { DeployFormForPublishInfo } from "../../../../components/publish-based-deploy";
 import { moduleFromBase64 } from "../../../../utils/module-base-64";
-
-setOverrides();
 
 export default function PublishedContractVersionDeployPage({
   params,

@@ -1,12 +1,9 @@
 import { Separator } from "@/components/ui/separator";
 import { ChakraProviderSetup } from "../../../../../@/components/ChakraProviderSetup";
 import { PublishedContract } from "../../../../../components/contract-components/published-contract";
-import { setOverrides } from "../../../../../lib/vercel-utils";
 import { PublishedActions } from "../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../components/contract-header";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
-
-setOverrides();
 
 type PublishedContractDeployPageProps = {
   params: {

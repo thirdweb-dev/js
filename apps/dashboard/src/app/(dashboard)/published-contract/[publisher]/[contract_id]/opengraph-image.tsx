@@ -1,7 +1,6 @@
 import { fetchPublisherProfile } from "components/contract-components/fetch-contracts-with-versions";
 import { format } from "date-fns/format";
 import { correctAndUniqueLicenses } from "lib/licenses";
-import { setOverrides } from "lib/vercel-utils";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 import { publishedContractOGImageTemplate } from "./utils/publishedContractOGImageTemplate";
 
@@ -18,7 +17,6 @@ export default async function Image(props: {
     contract_id: string;
   };
 }) {
-  setOverrides();
   const { publisher, contract_id } = props.params;
 
   const [publishedContracts, publisherProfile] = await Promise.all([

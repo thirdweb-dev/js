@@ -23,7 +23,6 @@ import chakraTheme from "../theme";
 import "@/styles/globals.css";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
 import { AnnouncementBanner } from "../components/notices/AnnouncementBanner";
-import { setOverrides } from "../lib/vercel-utils";
 
 const inter = interConstructor({
   subsets: ["latin"],
@@ -51,9 +50,6 @@ const chakraThemeWithFonts = {
 
 const fontSizeCssVars = generateBreakpointTypographyCssVars();
 
-// run this on app load
-setOverrides();
-
 type AppPropsWithLayout = AppProps<{ dehydratedState?: DehydratedState }> & {
   Component: ThirdwebNextPage;
 };
@@ -64,9 +60,7 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
 }) => {
   // run this ONCE on app load
   // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    setOverrides();
-  }, []);
+
   const router = useRouter();
   const { shouldReload } = useBuildId();
 

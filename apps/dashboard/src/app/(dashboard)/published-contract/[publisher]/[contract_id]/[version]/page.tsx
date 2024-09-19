@@ -4,13 +4,10 @@ import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { SimpleGrid } from "@chakra-ui/react";
 import { fetchPublishedContractVersions } from "components/contract-components/fetch-contracts-with-versions";
 import { PublishedContract } from "components/contract-components/published-contract";
-import { setOverrides } from "lib/vercel-utils";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import { PublishedActions } from "../../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../../components/contract-header";
-
-setOverrides();
 
 function mapThirdwebPublisher(publisher: string) {
   if (publisher === "thirdweb.eth") {
