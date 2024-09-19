@@ -142,9 +142,11 @@ export function FiatSteps(props: {
       address: smartAccount.address,
     });
 
+    console.log("onRampTokenAmount", props.partialQuote.onRampTokenAmount);
     const sessionKeyTx = addSessionKey({
       contract: smartAccountContract,
       account: account,
+      // TODO: Env var this.
       // // prod
       // sessionKeyAddress: "0x1629Ce9Df01B10E7CF8837f559037A49d983aA10", // pay engine backend wallet
       // dev
@@ -153,7 +155,8 @@ export function FiatSteps(props: {
         approvedTargets: "*", // the addresses of allowed contracts, or '*' for any contract
         permissionStartTimestamp: new Date(), // the date when the session key becomes active
         permissionEndTimestamp: new Date(Date.now() + 24 * 60 * 60 * 1000), // the date when the session key expires
-        nativeTokenLimitPerTransaction: 1, // TODO: Update
+        // TODO: Perhaps add a buffer here to be safe?
+        nativeTokenLimitPerTransaction: props.partialQuote.onRampTokenAmount,
       },
     });
 
