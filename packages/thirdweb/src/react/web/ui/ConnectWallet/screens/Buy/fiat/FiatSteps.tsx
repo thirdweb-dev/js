@@ -12,6 +12,7 @@ import { getContract } from "../../../../../../../contract/contract.js";
 import { addSessionKey } from "../../../../../../../extensions/erc4337/account/addSessionKey.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
+import { getPayBaseUrl } from "../../../../../../../pay/utils/definitions.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { createAndSignUserOp } from "../../../../../../../wallets/smart/lib/userop.js";
 import { hexlifyUserOp } from "../../../../../../../wallets/smart/lib/utils.js";
@@ -175,7 +176,7 @@ export function FiatSteps(props: {
     console.log("intentId", intentId);
     console.log("toAddress", account.address);
     const response = await fetch(
-      "http://localhost:3008/v2/intent-wallets/deploy",
+      `${getPayBaseUrl()}/v2/intent-wallets/deploy`,
       {
         method: "POST",
         body: JSON.stringify({
