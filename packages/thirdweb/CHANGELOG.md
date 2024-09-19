@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.57.2
+
+### Patch Changes
+
+- [#4686](https://github.com/thirdweb-dev/js/pull/4686) [`1b89464`](https://github.com/thirdweb-dev/js/commit/1b8946408cb903171acd9d5233dcddfa45e235fc) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Force legacy transactions on polygon zkevm cardona testnet
+
 ## 5.57.1
 
 ### Patch Changes
