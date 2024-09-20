@@ -6,7 +6,7 @@ export default function RootTeamLayout(props: {
   params: { team_slug: string };
 }) {
   return (
-    <div className="min-h-full flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col">
       <div className="grow flex flex-col">{props.children}</div>
       <TWAutoConnect />
       <AppFooter />
