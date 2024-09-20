@@ -1,6 +1,7 @@
 "use client";
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { ToolTipLabel } from "@/components/ui/tooltip";
@@ -22,7 +23,7 @@ import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceTemplateValues } from "lib/deployment/template-values";
-import { ExternalLinkIcon } from "lucide-react";
+import { CircleAlertIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
@@ -480,6 +481,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
     enabled: walletChain !== undefined && metadata !== undefined,
   });
 
+  const shouldShowDeterministicDeployWarning =
+    constructorParams.length > 0 && form.watch("deployDeterministic");
+
   return (
     <>
       <FormProvider {...form}>
@@ -837,23 +841,37 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               {metadata?.deployType === "standard" && (
                 <>
                   {/* Deterministic deploy */}
-                  <CheckboxWithLabel>
-                    <Checkbox
-                      {...form.register("deployDeterministic")}
-                      checked={form.watch("deployDeterministic")}
-                      onCheckedChange={(c) =>
-                        form.setValue("deployDeterministic", !!c)
-                      }
-                    />
-                    <ToolTipLabel label="Allows having the same contract address on multiple chains. You can control the address by specifying a salt for create2 deployment below">
-                      <div className="inline-flex gap-1.5 items-center">
-                        <span className="tex-sm">
-                          Deploy at a deterministic address
-                        </span>
-                        <FiHelpCircle className="size-4" />
-                      </div>
-                    </ToolTipLabel>
-                  </CheckboxWithLabel>
+
+                  <div className="flex flex-col gap-3">
+                    <CheckboxWithLabel>
+                      <Checkbox
+                        {...form.register("deployDeterministic")}
+                        checked={form.watch("deployDeterministic")}
+                        onCheckedChange={(c) =>
+                          form.setValue("deployDeterministic", !!c)
+                        }
+                      />
+                      <ToolTipLabel label="Allows having the same contract address on multiple chains. You can control the address by specifying a salt for create2 deployment below">
+                        <div className="inline-flex gap-1.5 items-center">
+                          <span className="tex-sm">
+                            Deploy at a deterministic address
+                          </span>
+                          <FiHelpCircle className="size-4" />
+                        </div>
+                      </ToolTipLabel>
+                    </CheckboxWithLabel>
+
+                    {shouldShowDeterministicDeployWarning && (
+                      <Alert variant="warning">
+                        <CircleAlertIcon className="size-5" />
+                        <AlertTitle>
+                          Deterministic deployment would only result in the same
+                          contract address if you use the same contructor params
+                          on every deployment.
+                        </AlertTitle>
+                      </Alert>
+                    )}
+                  </div>
 
                   {/*  Optional Salt Input */}
                   {isCreate2Deployment && (
