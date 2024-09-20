@@ -13,25 +13,25 @@ import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
 
 export default function LoginPage() {
   return (
-    <div className="bg-background h-full">
+    <div className="bg-muted/30 h-screen relative grid place-items-center">
       <nav className="fixed top-0 w-full flex flex-row justify-between items-center px-6 py-4 z-20">
         <ThirdwebMiniLogo className="max-h-7" />
         <ColorModeToggle />
       </nav>
-      <main className="h-full relative grid place-items-center">
-        <div className="flex flex-col gap-8 z-10">
-          <h1 className="font-semibold text-2xl">Get started with thirdweb</h1>
-          <Suspense>
-            <CustomConnectEmmbed />
-          </Suspense>
-        </div>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          alt=""
-          src="/assets/login/background.svg"
-          className="fixed bottom-0 right-0"
-        />
+      <main className="flex flex-col gap-6 z-10">
+        <h1 className="font-semibold text-2xl lg:text-3xl tracking-tight text-center">
+          Get started with thirdweb
+        </h1>
+        <Suspense>
+          <CustomConnectEmmbed />
+        </Suspense>
       </main>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        alt=""
+        src="/assets/login/background.svg"
+        className="fixed -bottom-12 -right-12 lg:bottom-0 lg:right-0"
+      />
     </div>
   );
 }
@@ -77,6 +77,7 @@ function CustomConnectEmmbed() {
       client={client}
       modalSize={isLG ? "wide" : "compact"}
       theme={getSDKTheme(theme === "light" ? "light" : "dark")}
+      className="shadow-lg"
     />
   );
 }
