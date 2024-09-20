@@ -525,7 +525,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                     onRemove={() => {
                       removePhase(index);
                     }}
-                    isLoading={sendTx.isPending}
+                    isPending={sendTx.isPending}
                   />
                 </ClaimsConditionFormContext.Provider>
               </Fragment>
@@ -631,7 +631,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                     <TransactionButton
                       colorScheme="primary"
                       transactionCount={1}
-                      isDisabled={claimConditionsQuery.isLoading}
+                      isDisabled={claimConditionsQuery.isPending}
                       type="submit"
                       isLoading={sendTx.isPending}
                       loadingText="Saving..."

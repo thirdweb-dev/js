@@ -24,7 +24,7 @@ export const ContractEditModulesPage: React.FC<
     contract,
   });
 
-  if (ownerQuery.isLoading) {
+  if (ownerQuery.isPending) {
     return (
       <div className="items-center justify-center flex h-[300px] md:h-[500px]">
         <Spinner className="size-10" />
@@ -43,7 +43,7 @@ export const ContractEditModulesPage: React.FC<
   const isOwner = ownerQuery.data === account?.address;
 
   const installedModules = {
-    isLoading: installedModulesQuery.isLoading,
+    isPending: installedModulesQuery.isPending,
     data: installedModulesQuery.data
       ? installedModulesQuery.data.map((x) => x.implementation)
       : [],

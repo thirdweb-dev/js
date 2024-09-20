@@ -32,7 +32,7 @@ export const EngineAdmins: React.FC<EngineAdminsProps> = ({ instanceUrl }) => {
       <AdminsTable
         instanceUrl={instanceUrl}
         admins={admins.data || []}
-        isLoading={admins.isLoading}
+        isPending={admins.isPending}
         isFetched={admins.isFetched}
       />
       <AddAdminButton instanceUrl={instanceUrl} />

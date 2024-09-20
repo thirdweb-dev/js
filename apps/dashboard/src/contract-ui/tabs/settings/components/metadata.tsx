@@ -216,12 +216,12 @@ export const SettingsMetadata = ({
               <FormControl
                 display="flex"
                 flexDirection="column"
-                isDisabled={metadata.isLoading || sendTransaction.isPending}
+                isDisabled={metadata.isPending || sendTransaction.isPending}
                 isInvalid={!!getFieldState("image", formState).error}
               >
                 <FormLabel>Image</FormLabel>
                 <FileInput
-                  isDisabled={metadata.isLoading || sendTransaction.isPending}
+                  isDisabled={metadata.isPending || sendTransaction.isPending}
                   accept={{ "image/*": [] }}
                   value={useImageFileOrUrl(watch("image"))}
                   setValue={(file) =>
@@ -246,7 +246,7 @@ export const SettingsMetadata = ({
             >
               <Flex gap={4} direction={{ base: "column", md: "row" }}>
                 <FormControl
-                  isDisabled={metadata.isLoading || sendTransaction.isPending}
+                  isDisabled={metadata.isPending || sendTransaction.isPending}
                   isInvalid={!!getFieldState("name", formState).error}
                 >
                   <FormLabel>Name</FormLabel>
@@ -258,7 +258,7 @@ export const SettingsMetadata = ({
               </Flex>
 
               <FormControl
-                isDisabled={metadata.isLoading || sendTransaction.isPending}
+                isDisabled={metadata.isPending || sendTransaction.isPending}
                 isInvalid={!!getFieldState("description", formState).error}
               >
                 <FormLabel>Description</FormLabel>
@@ -271,14 +271,14 @@ export const SettingsMetadata = ({
           </Flex>
           <Flex direction="column" gap={4}>
             <FormControl
-              isDisabled={metadata.isLoading || sendTransaction.isPending}
+              isDisabled={metadata.isPending || sendTransaction.isPending}
             >
               <FormLabel>Social URLs</FormLabel>
             </FormControl>
             {fields.map((item, index) => (
               <Flex key={item.id}>
                 <FormControl
-                  isDisabled={metadata.isLoading || sendTransaction.isPending}
+                  isDisabled={metadata.isPending || sendTransaction.isPending}
                 >
                   <FormLabel textTransform="capitalize">
                     {/* biome-ignore lint/suspicious/noExplicitAny: FIXME */}
@@ -291,7 +291,7 @@ export const SettingsMetadata = ({
                   <Flex gap={2}>
                     <Input
                       isDisabled={
-                        metadata.isLoading || sendTransaction.isPending
+                        metadata.isPending || sendTransaction.isPending
                       }
                       {...register(`dashboard_social_urls.${index}.value`)}
                       type="url"
@@ -299,7 +299,7 @@ export const SettingsMetadata = ({
                     />
                     <IconButton
                       isDisabled={
-                        metadata.isLoading || sendTransaction.isPending
+                        metadata.isPending || sendTransaction.isPending
                       }
                       icon={<Icon as={FiTrash} boxSize={5} />}
                       aria-label="Remove row"
@@ -311,7 +311,7 @@ export const SettingsMetadata = ({
             ))}
             <Box>
               <Button
-                isDisabled={metadata.isLoading || sendTransaction.isPending}
+                isDisabled={metadata.isPending || sendTransaction.isPending}
                 type="button"
                 size="sm"
                 colorScheme="primary"
@@ -329,7 +329,7 @@ export const SettingsMetadata = ({
           <TransactionButton
             colorScheme="primary"
             transactionCount={1}
-            isDisabled={metadata.isLoading || !formState.isDirty}
+            isDisabled={metadata.isPending || !formState.isDirty}
             type="submit"
             isLoading={sendTransaction.isPending}
             loadingText="Saving..."

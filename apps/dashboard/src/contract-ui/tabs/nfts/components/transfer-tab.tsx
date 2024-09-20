@@ -32,7 +32,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
     contract,
   );
 
-  const { data: isErc1155, isLoading: checking1155 } = useReadContract(
+  const { data: isErc1155, isPending: checking1155 } = useReadContract(
     isERC1155,
     { contract },
   );

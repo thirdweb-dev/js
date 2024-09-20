@@ -46,7 +46,7 @@ const chartLabelToShow: Record<ChartToShow, string> = {
 
 export function DailyConnectionsChartCard(props: {
   walletStats: WalletStats[];
-  isLoading: boolean;
+  isPending: boolean;
 }) {
   const { walletStats } = props;
 
@@ -73,7 +73,7 @@ export function DailyConnectionsChartCard(props: {
     return Array.from(chartDataMap.values());
   }, [walletStats]);
 
-  const disableActions = props.isLoading || barChartData.length === 0;
+  const disableActions = props.isPending || barChartData.length === 0;
 
   return (
     <div className="bg-muted/50 border border-border rounded-lg p-4 md:p-6 relative w-full">
@@ -126,7 +126,7 @@ export function DailyConnectionsChartCard(props: {
         config={chartConfig}
         className="w-full h-[250px] md:h-[350px]"
       >
-        {props.isLoading ? (
+        {props.isPending ? (
           <LoadingChartState />
         ) : barChartData.length === 0 ? (
           <EmptyChartState />

@@ -96,7 +96,7 @@ const StandardAccessTokensPanel = ({
       <AccessTokensTable
         instanceUrl={instanceUrl}
         accessTokens={accessTokens.data ?? []}
-        isLoading={accessTokens.isLoading}
+        isPending={accessTokens.isPending}
         isFetched={accessTokens.isFetched}
       />
       <AddAccessTokenButton instanceUrl={instanceUrl} />
@@ -146,7 +146,7 @@ const KeypairAuthenticationPanel = ({
       <KeypairsTable
         instanceUrl={instanceUrl}
         keypairs={keypairs.data || []}
-        isLoading={keypairs.isLoading}
+        isPending={keypairs.isPending}
         isFetched={keypairs.isFetched}
       />
       <AddKeypairButton instanceUrl={instanceUrl} />

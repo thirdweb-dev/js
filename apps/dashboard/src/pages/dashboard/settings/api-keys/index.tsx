@@ -73,7 +73,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
 
       <ApiKeys
         keys={apiKeys || []}
-        isLoading={keysQuery.isLoading}
+        isPending={keysQuery.isPending}
         isFetched={keysQuery.isFetched}
       />
     </div>

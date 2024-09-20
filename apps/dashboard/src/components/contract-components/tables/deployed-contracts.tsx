@@ -115,7 +115,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
         combinedList={contractListQuery.data}
         limit={limit}
         chainIdsWithDeployments={chainIdsWithDeployments}
-        loading={contractListQuery.isLoading}
+        loading={contractListQuery.isPending}
       />
 
       {contractListQuery.data.length === 0 && contractListQuery.isFetched && (

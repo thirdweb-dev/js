@@ -22,9 +22,9 @@ import { usePartners } from "../../hooks/use-partners";
 import { UpdatePartnerModal } from "../client/update-partner-modal.client";
 
 export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
-  const { partners, isLoading } = usePartners({ ecosystem });
+  const { partners, isPending } = usePartners({ ecosystem });
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="flex flex-col gap-2">
         {Array.from({ length: 3 }).map((_, i) => (

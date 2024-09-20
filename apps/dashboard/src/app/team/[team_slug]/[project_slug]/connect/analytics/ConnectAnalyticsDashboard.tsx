@@ -34,8 +34,8 @@ export function ConnectAnalyticsDashboard(props: {
     <ConnectAnalyticsDashboardUI
       walletUsage={walletUsageQuery.data || []}
       aggregateWalletUsage={walletUsageAggregateQuery.data || []}
-      isLoading={
-        walletUsageQuery.isLoading || walletUsageAggregateQuery.isLoading
+      isPending={
+        walletUsageQuery.isPending || walletUsageAggregateQuery.isPending
       }
     />
   );

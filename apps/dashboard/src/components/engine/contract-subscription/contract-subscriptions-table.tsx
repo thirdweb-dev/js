@@ -52,7 +52,7 @@ function shortenAddress(address: string) {
 interface ContractSubscriptionTableProps {
   instanceUrl: string;
   contractSubscriptions: EngineContractSubscription[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
   autoUpdate: boolean;
 }
@@ -64,7 +64,7 @@ export const ContractSubscriptionTable: React.FC<
 > = ({
   instanceUrl,
   contractSubscriptions,
-  isLoading,
+  isPending,
   isFetched,
   autoUpdate,
 }) => {
@@ -218,7 +218,7 @@ export const ContractSubscriptionTable: React.FC<
         title="contract subscriptions"
         data={contractSubscriptions}
         columns={columns}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {

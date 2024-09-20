@@ -37,7 +37,7 @@ import { TransactionTimeline } from "./transaction-timeline";
 
 interface TransactionsTableProps {
   transactions: Transaction[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
   instanceUrl: string;
 }
@@ -97,7 +97,7 @@ const columnHelper = createColumnHelper<Transaction>();
 
 export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   transactions,
-  isLoading,
+  isPending,
   isFetched,
   instanceUrl,
 }) => {
@@ -264,7 +264,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
         title="transactions"
         data={transactions}
         columns={columns}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onRowClick={(row) => {
           setSelectedTransaction(row);

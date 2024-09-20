@@ -118,7 +118,7 @@ export function FaucetButton({
     faucetWalletBalanceQuery.data.value < toUnits("1", 17);
 
   // loading state
-  if (faucetWalletBalanceQuery.isLoading || canClaimFaucetQuery.isLoading) {
+  if (faucetWalletBalanceQuery.isPending || canClaimFaucetQuery.isPending) {
     return (
       <Button variant="outline" className="w-full gap-2">
         Checking Faucet <Spinner className="size-3" />

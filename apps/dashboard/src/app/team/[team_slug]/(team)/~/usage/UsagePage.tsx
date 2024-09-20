@@ -12,7 +12,7 @@ export const SettingsUsagePage = () => {
   const usageQuery = useAccountUsage();
   const account = meQuery.data;
 
-  if (meQuery.isLoading || !account) {
+  if (meQuery.isPending || !account) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <Spinner className="size-10" />
@@ -34,7 +34,7 @@ export const SettingsUsagePage = () => {
         </HStack>
       </div>
 
-      <Usage usage={usageQuery.data} usageLoading={usageQuery.isLoading} />
+      <Usage usage={usageQuery.data} usagePending={usageQuery.isPending} />
     </div>
   );
 };

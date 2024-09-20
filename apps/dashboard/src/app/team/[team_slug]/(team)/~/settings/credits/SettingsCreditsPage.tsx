@@ -6,9 +6,9 @@ import { ApplyForOpCreditsModal } from "components/onboarding/ApplyForOpCreditsM
 import { Heading, LinkButton } from "tw-components";
 
 export const SettingsGasCreditsPage = () => {
-  const { isLoading } = useLoggedInUser();
+  const { isPending } = useLoggedInUser();
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="grid w-full min-h-[400px] place-items-center">
         <Spinner className="size-10" />

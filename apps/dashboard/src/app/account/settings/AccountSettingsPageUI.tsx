@@ -85,7 +85,7 @@ function AccountAvatarFormControl() {
       saveButton={{
         onClick: handleSave,
         disabled: false,
-        isLoading: updateAvatarMutation.isPending,
+        isPending: updateAvatarMutation.isPending,
       }}
       noPermissionText={undefined}
       errorText={undefined}
@@ -143,7 +143,7 @@ function AccountNameFormControl(props: {
       saveButton={{
         onClick: handleSave,
         disabled: accountName.length === 0,
-        isLoading: updateAccountNameMutation.isPending,
+        isPending: updateAccountNameMutation.isPending,
       }}
       errorText={undefined}
       noPermissionText={undefined} // TODO
@@ -191,7 +191,7 @@ function DeleteAccountCard() {
       description={description}
       buttonLabel={title}
       buttonOnClick={handleDelete}
-      isLoading={deleteAccount.isPending}
+      isPending={deleteAccount.isPending}
       confirmationDialog={{
         title: "Are you sure you want to delete your account?",
         description:

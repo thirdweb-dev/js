@@ -16,7 +16,7 @@ import { HIDDEN_SERVICES } from "./validations";
 
 interface ApiKeysProps {
   keys: ApiKey[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -24,7 +24,7 @@ const columnHelper = createColumnHelper<ApiKey>();
 
 export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
   keys,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const router = useRouter();
@@ -114,7 +114,7 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
       title="api key"
       columns={columns}
       data={keys}
-      isLoading={isLoading}
+      isPending={isPending}
       isFetched={isFetched}
       onRowClick={({ id }) => router.push(`/dashboard/settings/api-keys/${id}`)}
       bodyRowClassName="hover:bg-muted/50"

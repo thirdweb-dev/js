@@ -283,7 +283,7 @@ function ProjectNameSetting(props: {
       saveButton={{
         onClick: handleSubmit,
         disabled: !isNameDirty,
-        isLoading: updateMutation.isPending && isNameDirty,
+        isPending: updateMutation.isPending && isNameDirty,
       }}
       bottomText="Please use 64 characters at maximum"
     >
@@ -349,7 +349,7 @@ function AllowedDomainsSetting(props: {
       saveButton={{
         onClick: handleSubmit,
         disabled: !isDomainsDirty,
-        isLoading: updateMutation.isPending && isDomainsDirty,
+        isPending: updateMutation.isPending && isDomainsDirty,
       }}
       bottomText={"This is only applicable for web applications"}
     >
@@ -417,7 +417,7 @@ function AllowedBundleIDsSetting(props: {
       saveButton={{
         onClick: handleSubmit,
         disabled: !isBundleIdsDirty,
-        isLoading: updateMutation.isPending && isBundleIdsDirty,
+        isPending: updateMutation.isPending && isBundleIdsDirty,
       }}
       noPermissionText={undefined}
       header={{
@@ -523,7 +523,7 @@ function EnabledServicesSetting(props: {
       saveButton={{
         onClick: handleSubmit,
         disabled: !form.formState.isDirty,
-        isLoading: updateMutation.isPending,
+        isPending: updateMutation.isPending,
       }}
       bottomText=""
     >
@@ -739,7 +739,7 @@ function DeleteProject(props: {
         description: description,
       }}
       description={description}
-      isLoading={deleteMutation.isPending}
+      isPending={deleteMutation.isPending}
       title={wording === "project" ? "Delete Project" : "Delete API Key"}
     />
   );

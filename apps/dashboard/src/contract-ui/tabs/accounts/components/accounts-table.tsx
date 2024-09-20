@@ -94,7 +94,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
         title="account"
         columns={columns}
         data={data.map((account) => ({ account }))}
-        isLoading={accountsQuery.isLoading}
+        isPending={accountsQuery.isPending}
         isFetched={accountsQuery.isFetched}
         onRowClick={(row) => {
           router.push(`/${network}/${row.account}`);
@@ -104,13 +104,13 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
       <Center w="100%">
         <Flex gap={2} direction="row" align="center">
           <IconButton
-            isDisabled={totalAccountsQuery.isLoading}
+            isDisabled={totalAccountsQuery.isPending}
             aria-label="first page"
             icon={<Icon as={MdFirstPage} />}
             onClick={() => setCurrentPage(0)}
           />
           <IconButton
-            isDisabled={totalAccountsQuery.isLoading || !canPreviousPage}
+            isDisabled={totalAccountsQuery.isPending || !canPreviousPage}
             aria-label="previous page"
             icon={<Icon as={MdNavigateBefore} />}
             onClick={() => {
@@ -133,7 +133,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
             </Skeleton>
           </Text>
           <IconButton
-            isDisabled={totalAccountsQuery.isLoading || !canNextPage}
+            isDisabled={totalAccountsQuery.isPending || !canNextPage}
             aria-label="next page"
             icon={<Icon as={MdNavigateNext} />}
             onClick={() =>
@@ -146,7 +146,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
             }
           />
           <IconButton
-            isDisabled={totalAccountsQuery.isLoading || !canNextPage}
+            isDisabled={totalAccountsQuery.isPending || !canNextPage}
             aria-label="last page"
             icon={<Icon as={MdLastPage} />}
             onClick={() => setCurrentPage(totalPages - 1)}
@@ -163,7 +163,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
               setPageSize(newPageSize);
             }}
             value={pageSize}
-            isDisabled={totalAccountsQuery.isLoading}
+            isDisabled={totalAccountsQuery.isPending}
           >
             <option value="25">25</option>
             <option value="50">50</option>

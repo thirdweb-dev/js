@@ -94,7 +94,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
     `${publisher}/${contractId}/${version}`,
   );
 
-  const showSkeleton = publishedContractResult.isLoading;
+  const showSkeleton = publishedContractResult.isPending;
 
   return (
     <article

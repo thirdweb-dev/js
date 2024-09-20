@@ -48,7 +48,7 @@ export const CreditsButton = () => {
     0,
   );
 
-  if (!isLoggedIn || meQuery.isLoading || !meQuery.data) {
+  if (!isLoggedIn || meQuery.isPending || !meQuery.data) {
     return null;
   }
 

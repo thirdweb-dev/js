@@ -38,7 +38,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
     return undefined;
   }, [apiKeys, defaultClientId, selectedKey_]);
 
-  const showLoader = loggedInUser.isLoading || keysQuery.isLoading;
+  const showLoader = loggedInUser.isPending || keysQuery.isPending;
 
   return (
     <div>

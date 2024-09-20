@@ -36,7 +36,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     );
   }
 
-  if (functionSelectorQuery.isLoading || !functionSelectorQuery.data) {
+  if (functionSelectorQuery.isPending || !functionSelectorQuery.data) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }

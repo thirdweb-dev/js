@@ -96,7 +96,7 @@ function ImportForm() {
   const address = useActiveAccount()?.address;
   const registry = useAllContractList(address);
 
-  const isLoading =
+  const showLoading =
     form.formState.isSubmitting ||
     addToDashboard.isPending ||
     addToDashboard.isSuccess ||
@@ -205,13 +205,13 @@ function ImportForm() {
 
         <div className="flex justify-end">
           <Button type="submit" className="gap-2">
-            {isLoading ? (
+            {showLoading ? (
               <Spinner className="size-4" />
             ) : (
               <PlusIcon className="size-4" />
             )}
 
-            {isLoading
+            {showLoading
               ? addToDashboard.isSuccess || isRedirecting
                 ? "Redirecting"
                 : "Importing contract"

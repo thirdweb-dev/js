@@ -22,7 +22,7 @@ export const EngineInstancesList = (props: {
   const instances = instancesQuery.data ?? [];
   const trackEvent = useTrack();
 
-  if (instancesQuery.isLoading) {
+  if (instancesQuery.isPending) {
     return (
       <div className="flex justify-center items-center h-[300px]">
         <Spinner className="size-14" />
@@ -122,7 +122,7 @@ export const EngineInstancesList = (props: {
       <EngineInstancesTable
         instances={instances}
         isFetched={instancesQuery.isFetched}
-        isLoading={instancesQuery.isLoading}
+        isPending={instancesQuery.isPending}
         refetch={instancesQuery.refetch}
         engineLinkPrefix={props.engineLinkPrefix}
       />

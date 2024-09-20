@@ -11,7 +11,7 @@ export default function Page() {
   const hasContracts =
     deployedContracts.data && deployedContracts.data?.length > 0;
 
-  if (deployedContracts.isLoading) {
+  if (deployedContracts.isPending) {
     return (
       <div className="min-h-[400px] flex justify-center items-center">
         <Spinner className="size-10" />

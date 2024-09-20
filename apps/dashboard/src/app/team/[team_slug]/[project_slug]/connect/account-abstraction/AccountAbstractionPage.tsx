@@ -65,7 +65,7 @@ export function AccountAbstractionPage(props: {
 
       <div className="h-6" />
 
-      {looggedInUserQuery.isLoading ? (
+      {looggedInUserQuery.isPending ? (
         <div className="flex items-center justify-center h-[400px] border border-border rounded-lg">
           <Spinner className="size-14" />
         </div>

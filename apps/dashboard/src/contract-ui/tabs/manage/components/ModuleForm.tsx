@@ -49,7 +49,7 @@ type InstallModuleFormProps = {
   account: Account;
   installedModules: {
     data?: string[];
-    isLoading: boolean;
+    isPending: boolean;
   };
 };
 
@@ -66,7 +66,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
   const { contract, account } = props;
   const { errors } = formState;
 
-  const { data, isLoading, isFetching } = usePublishedContractsQuery(
+  const { data, isPending, isFetching } = usePublishedContractsQuery(
     watch("publisherAddress"),
   );
 
@@ -288,7 +288,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
                 disabled={
                   installMutation.isPending ||
                   modulesOnly?.length === 0 ||
-                  isLoading
+                  isPending
                 }
                 bg="backgroundHighlight"
                 {...moduleContractInputProps}
@@ -337,7 +337,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
               <Select
                 disabled={
                   !allVersions.data ||
-                  allVersions.isLoading ||
+                  allVersions.isPending ||
                   isModuleCompatibleQuery.data === false ||
                   installMutation.isPending ||
                   isModuleCompatibleQuery.isFetching

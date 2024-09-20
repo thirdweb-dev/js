@@ -12,7 +12,7 @@ const Contracts: ThirdwebNextPage = () => {
   const address = useActiveAccount()?.address;
   const deployedContracts = useAllContractList(address);
 
-  if (deployedContracts.isLoading) {
+  if (deployedContracts.isPending) {
     return (
       <div className="min-h-[500px] flex justify-center items-center">
         <Spinner className="size-10" />

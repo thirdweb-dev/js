@@ -165,7 +165,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   const querySuccess =
     nextTokenIdToMintQuery.isSuccess || totalSupplyQuery.isSuccess;
   const queryLoading =
-    nextTokenIdToMintQuery.isLoading || totalSupplyQuery.isLoading;
+    nextTokenIdToMintQuery.isPending || totalSupplyQuery.isPending;
 
   const {
     getTableProps,

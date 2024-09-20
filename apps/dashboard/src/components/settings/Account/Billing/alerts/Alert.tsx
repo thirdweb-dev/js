@@ -205,9 +205,9 @@ export const BillingAlerts = () => {
 
   if (
     !isLoggedIn ||
-    meQuery.isLoading ||
+    meQuery.isPending ||
     !account ||
-    usageQuery.isLoading ||
+    usageQuery.isPending ||
     !usageQuery.data ||
     router.pathname.includes("/support") ||
     alertConditions.length === 0

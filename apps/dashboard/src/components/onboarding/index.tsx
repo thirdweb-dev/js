@@ -124,7 +124,7 @@ export const Onboarding: React.FC = () => {
   // FIXME: this entire flow needs reworked - re-vist as part of FTUX improvements
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (!isLoggedIn || meQuery.isLoading) {
+    if (!isLoggedIn || meQuery.isPending) {
       return;
     }
     const loadedAccount = meQuery.data;

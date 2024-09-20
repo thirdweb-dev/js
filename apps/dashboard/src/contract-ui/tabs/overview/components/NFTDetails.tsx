@@ -35,7 +35,7 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
       ?.filter((token) => token.metadata.image || token.metadata.animation_url)
       .slice(0, isMobile ? 2 : 3) || [];
 
-  return displayableNFTs.length === 0 && !nftQuery.isLoading ? null : (
+  return displayableNFTs.length === 0 && !nftQuery.isPending ? null : (
     <Flex direction="column" gap={{ base: 3, md: 6 }}>
       <Flex align="center" justify="space-between" w="full">
         <Heading size="title.sm">NFT Details</Heading>
@@ -59,7 +59,7 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
           chainId: contract.chain.id,
         }))}
         trackingCategory={trackingCategory}
-        isLoading={nftQuery.isLoading}
+        isPending={nftQuery.isPending}
       />
     </Flex>
   );

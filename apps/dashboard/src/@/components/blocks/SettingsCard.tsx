@@ -15,7 +15,7 @@ export function SettingsCard(props: {
   saveButton?: {
     onClick?: () => void;
     disabled: boolean;
-    isLoading: boolean;
+    isPending: boolean;
     type?: "submit";
   };
 }) {
@@ -59,12 +59,12 @@ export function SettingsCard(props: {
             size="sm"
             className="gap-2"
             onClick={props.saveButton.onClick}
-            disabled={props.saveButton.disabled || props.saveButton.isLoading}
+            disabled={props.saveButton.disabled || props.saveButton.isPending}
             variant="outline"
             type={props.saveButton.type}
           >
-            {props.saveButton.isLoading && <Spinner className="size-3" />}
-            {props.saveButton.isLoading ? "Saving" : "Save"}
+            {props.saveButton.isPending && <Spinner className="size-3" />}
+            {props.saveButton.isPending ? "Saving" : "Save"}
           </Button>
         )}
       </div>

@@ -10,7 +10,7 @@ export const UpgradeButton = () => {
 
   if (
     !isLoggedIn ||
-    meQuery.isLoading ||
+    meQuery.isPending ||
     !meQuery.data ||
     router.pathname.startsWith("/dashboard/settings/billing")
   ) {

@@ -81,7 +81,7 @@ const Events = () => {
           </Heading>
         </Flex>
 
-        {lumaEventsQuery.isLoading && (
+        {lumaEventsQuery.isPending && (
           <Flex justify="center" align="center" height={200}>
             <Spinner size="lg" />
           </Flex>

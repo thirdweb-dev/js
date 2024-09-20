@@ -34,7 +34,7 @@ const chartLabelToShow: Record<ChartToShow, string> = {
 };
 export function WalletConnectorsChartCard(props: {
   walletStats: WalletStats[];
-  isLoading: boolean;
+  isPending: boolean;
 }) {
   const { walletStats } = props;
   const [chartToShow, setChartToShow] = useState<ChartToShow>(
@@ -90,7 +90,7 @@ export function WalletConnectorsChartCard(props: {
   }, [walletStats, chartToShow]);
 
   const uniqueWalletTypes = Object.keys(chartConfig);
-  const disableActions = props.isLoading || chartData.length === 0;
+  const disableActions = props.isPending || chartData.length === 0;
 
   return (
     <div className="bg-muted/50 border border-border rounded-lg p-4 md:p-6 relative w-full">
@@ -142,7 +142,7 @@ export function WalletConnectorsChartCard(props: {
 
       {/* Chart */}
       <ChartContainer config={chartConfig} className="w-full h-[400px]">
-        {props.isLoading ? (
+        {props.isPending ? (
           <LoadingChartState />
         ) : chartData.length === 0 ? (
           <EmptyChartState />

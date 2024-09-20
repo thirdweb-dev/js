@@ -103,7 +103,7 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
               <Center py={4}>
                 <Flex align="center" gap={2}>
                   <Text size="body.md" fontStyle="italic">
-                    {allRoleMembers.isLoading
+                    {allRoleMembers.isPending
                       ? "loading permissions"
                       : "no permissions found"}
                   </Text>

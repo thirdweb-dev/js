@@ -304,7 +304,7 @@ export function useContractRouteConfig(
       path: "modules",
       isEnabled: isModularCore
         ? "enabled"
-        : functionSelectorQuery.isLoading
+        : functionSelectorQuery.isPending
           ? "loading"
           : "disabled",
       isDefault: true,
@@ -335,7 +335,7 @@ export function useContractRouteConfig(
       isEnabled:
         embedType !== null
           ? "enabled"
-          : functionSelectorQuery.isLoading
+          : functionSelectorQuery.isPending
             ? "loading"
             : "disabled",
       component: () => (
@@ -351,7 +351,7 @@ export function useContractRouteConfig(
       component: () => <LazyContractAnalyticsPage contract={contract} />,
       isDefault: true,
       isBeta: true,
-      isEnabled: analyticsSupported.isLoading
+      isEnabled: analyticsSupported.isPending
         ? "loading"
         : analyticsSupported.data
           ? "enabled"
@@ -363,7 +363,7 @@ export function useContractRouteConfig(
       isEnabled:
         isERC721 || isERC1155
           ? "enabled"
-          : functionSelectorQuery.isLoading
+          : functionSelectorQuery.isPending
             ? "loading"
             : "disabled",
       component: () => (
@@ -373,7 +373,7 @@ export function useContractRouteConfig(
     {
       title: "Tokens",
       path: "tokens",
-      isEnabled: functionSelectorQuery.isLoading
+      isEnabled: functionSelectorQuery.isPending
         ? "loading"
         : isERC20
           ? "enabled"
@@ -390,7 +390,7 @@ export function useContractRouteConfig(
     {
       title: "Direct Listings",
       path: "direct-listings",
-      isEnabled: functionSelectorQuery.isLoading
+      isEnabled: functionSelectorQuery.isPending
         ? "loading"
         : isDirectListing
           ? "enabled"
@@ -400,7 +400,7 @@ export function useContractRouteConfig(
     {
       title: "English Auctions",
       path: "english-auctions",
-      isEnabled: functionSelectorQuery.isLoading
+      isEnabled: functionSelectorQuery.isPending
         ? "loading"
         : isEnglishAuction
           ? "enabled"
@@ -410,7 +410,7 @@ export function useContractRouteConfig(
     {
       title: "Balances",
       path: "split",
-      isEnabled: contractTypeQuery.isLoading
+      isEnabled: contractTypeQuery.isPending
         ? "loading"
         : contractTypeQuery.data === "Split"
           ? "enabled"
@@ -420,7 +420,7 @@ export function useContractRouteConfig(
     {
       title: "Proposals",
       path: "proposals",
-      isEnabled: contractTypeQuery.isLoading
+      isEnabled: contractTypeQuery.isPending
         ? "loading"
         : contractTypeQuery.data === "VoteERC20"
           ? "enabled"
@@ -433,7 +433,7 @@ export function useContractRouteConfig(
       isEnabled:
         hasERC721ClaimConditions || hasERC20ClaimConditions
           ? "enabled"
-          : functionSelectorQuery.isLoading
+          : functionSelectorQuery.isPending
             ? "loading"
             : "disabled",
       component: () => (
@@ -448,7 +448,7 @@ export function useContractRouteConfig(
       path: "accounts",
       isEnabled: accountFactory
         ? "enabled"
-        : functionSelectorQuery.isLoading
+        : functionSelectorQuery.isPending
           ? "loading"
           : "disabled",
       component: () => <LazyContractAccountsPage contract={contract} />,
@@ -458,7 +458,7 @@ export function useContractRouteConfig(
       path: "account",
       isEnabled: isAccount
         ? "enabled"
-        : functionSelectorQuery.isLoading
+        : functionSelectorQuery.isPending
           ? "loading"
           : "disabled",
       component: () => <LazyContractAccountPage contract={contract} />,
@@ -468,7 +468,7 @@ export function useContractRouteConfig(
       path: "account-permissions",
       isEnabled: accountPermissions
         ? "enabled"
-        : functionSelectorQuery.isLoading
+        : functionSelectorQuery.isPending
           ? "loading"
           : "disabled",
       component: () => (
@@ -480,7 +480,7 @@ export function useContractRouteConfig(
       path: "permissions",
       isEnabled: isPermissions
         ? "enabled"
-        : functionSelectorQuery.isLoading
+        : functionSelectorQuery.isPending
           ? "loading"
           : "disabled",
       component: () => (
@@ -496,7 +496,7 @@ export function useContractRouteConfig(
       component: () => (
         <LazyContractSettingsPage
           contract={contract}
-          isLoading={functionSelectorQuery.isLoading}
+          isPending={functionSelectorQuery.isPending}
           isContractMetadataSupported={[
             CommonExt.isGetContractMetadataSupported(functionSelectors),
             CommonExt.isSetContractMetadataSupported(functionSelectors),

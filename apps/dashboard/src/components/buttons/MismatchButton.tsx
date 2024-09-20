@@ -121,7 +121,7 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
         >
           <PopoverTrigger>
             <Button
-              isLoading={evmBalance.isLoading}
+              isLoading={evmBalance.isPending}
               {...props}
               type={networksMismatch || notEnoughBalance ? "button" : type}
               loadingText={loadingText}

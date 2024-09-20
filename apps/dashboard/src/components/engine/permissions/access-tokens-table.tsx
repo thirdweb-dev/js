@@ -32,7 +32,7 @@ import { toDateTimeLocal } from "utils/date-utils";
 interface AccessTokensTableProps {
   instanceUrl: string;
   accessTokens: AccessToken[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -80,7 +80,7 @@ const columns = [
 export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
   instanceUrl,
   accessTokens,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const editDisclosure = useDisclosure();
@@ -93,7 +93,7 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
         title="access tokens"
         data={accessTokens}
         columns={columns}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {

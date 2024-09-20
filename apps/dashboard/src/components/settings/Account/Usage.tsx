@@ -7,12 +7,12 @@ import { UsageCard } from "./UsageCard";
 
 interface UsageProps {
   usage: UsageBillableByService | undefined;
-  usageLoading: boolean;
+  usagePending: boolean;
 }
 
 export const Usage: React.FC<UsageProps> = ({
   usage: usageData,
-  usageLoading,
+  usagePending,
 }) => {
   const bundlerMetrics = useMemo(() => {
     const metric = {
@@ -112,8 +112,8 @@ export const Usage: React.FC<UsageProps> = ({
 
   return (
     <VStack gap={8} w="full">
-      {usageLoading && <Spinner size="sm" />}
-      {!usageLoading && (
+      {usagePending && <Spinner size="sm" />}
+      {!usagePending && (
         <VStack w="full" gap={12}>
           <VStack alignItems="flex-start" gap={6} w="full">
             <Heading as="h4" size="title.sm">

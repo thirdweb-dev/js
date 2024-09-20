@@ -51,7 +51,7 @@ import { prettyPrintCurrency } from "../utils";
 interface BackendWalletsTableProps {
   wallets: BackendWallet[];
   instanceUrl: string;
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -146,7 +146,7 @@ const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
 export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
   wallets,
   instanceUrl,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const editDisclosure = useDisclosure();
@@ -162,7 +162,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
         title="backend wallets"
         data={wallets}
         columns={columns as ColumnDef<BackendWallet, string>[]}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {

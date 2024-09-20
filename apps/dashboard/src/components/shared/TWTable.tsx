@@ -44,7 +44,7 @@ type TWTableProps<TRowData> = {
   // biome-ignore lint/suspicious/noExplicitAny: FIXME
   columns: ColumnDef<TRowData, any>[];
   data: TRowData[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
   onRowClick?: (row: TRowData) => void;
   onMenuClick?: CtaMenuItem<TRowData>[];
@@ -233,7 +233,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
         </TableBody>
       </Table>
 
-      {tableProps.isLoading && (
+      {tableProps.isPending && (
         <div className="flex items-center justify-center">
           <div className="flex py-4 gap-2 items-center">
             <Spinner className="size-4" />
@@ -244,7 +244,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
         </div>
       )}
 
-      {!tableProps.isLoading &&
+      {!tableProps.isPending &&
         tableProps.data.length === 0 &&
         tableProps.isFetched && (
           <div className="flex items-center justify-center">

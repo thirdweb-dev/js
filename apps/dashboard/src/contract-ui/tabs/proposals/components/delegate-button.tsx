@@ -25,7 +25,7 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {
   });
   const delgateMutation = useDelegateMutation();
 
-  if (tokensDelegatedQuery.data || tokensDelegatedQuery.isLoading) {
+  if (tokensDelegatedQuery.data || tokensDelegatedQuery.isPending) {
     return null;
   }
 

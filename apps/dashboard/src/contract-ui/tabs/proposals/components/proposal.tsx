@@ -130,7 +130,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
 
       {proposal.state === VoteExt.ProposalState.active &&
       !hasVotedQuery.data &&
-      !hasVotedQuery.isLoading &&
+      !hasVotedQuery.isPending &&
       tokensDelegatedQuery.data ? (
         <Flex mt="24px" gap={2}>
           <TransactionButton

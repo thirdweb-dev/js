@@ -9,7 +9,7 @@ import { WalletDistributionChartCard } from "./_components/WalletDistributionCha
 export function ConnectAnalyticsDashboardUI(props: {
   walletUsage: WalletStats[];
   aggregateWalletUsage: WalletStats[];
-  isLoading: boolean;
+  isPending: boolean;
 }) {
   const { totalWallets, uniqueWallets } = useMemo(() => {
     return props.aggregateWalletUsage.reduce(
@@ -36,17 +36,17 @@ export function ConnectAnalyticsDashboardUI(props: {
 
       <DailyConnectionsChartCard
         walletStats={props.walletUsage}
-        isLoading={props.isLoading}
+        isPending={props.isPending}
       />
 
       <WalletConnectorsChartCard
         walletStats={props.walletUsage}
-        isLoading={props.isLoading}
+        isPending={props.isPending}
       />
 
       <WalletDistributionChartCard
         walletStats={props.walletUsage}
-        isLoading={props.isLoading}
+        isPending={props.isPending}
       />
     </div>
   );

@@ -29,7 +29,7 @@ export function usePartners({ ecosystem }: { ecosystem: Ecosystem }) {
   });
 
   return {
-    isLoading: user?.jwt ? partnersQuery.isLoading : false,
+    isPending: user?.jwt ? partnersQuery.isPending : false,
     partners: (partnersQuery.data ?? []) satisfies Partner[],
   };
 }

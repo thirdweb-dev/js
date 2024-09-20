@@ -75,10 +75,10 @@ export const CustomConnectWallet = (props: {
   }, [recentChainsv4, favChainsQuery.data, popularChainsWithMeta]);
 
   // ensures login status on pages that need it
-  const { isLoading, isLoggedIn } = useLoggedInUser();
+  const { isPending, isLoggedIn } = useLoggedInUser();
   const pathname = usePathname();
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <>
         <div className="w-[144px] h-[48px] bg-muted border border-border rounded-lg flex items-center justify-center">

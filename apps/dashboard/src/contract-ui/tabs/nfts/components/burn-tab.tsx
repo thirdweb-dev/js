@@ -42,10 +42,10 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
     "Burn successful",
     "Error burning",
   );
-  const { data: isErc721, isLoading: checking721 } = useReadContract(isERC721, {
+  const { data: isErc721, isPending: checking721 } = useReadContract(isERC721, {
     contract,
   });
-  const { data: isErc1155, isLoading: checking1155 } = useReadContract(
+  const { data: isErc1155, isPending: checking1155 } = useReadContract(
     isERC1155,
     { contract },
   );

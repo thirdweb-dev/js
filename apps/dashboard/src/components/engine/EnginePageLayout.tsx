@@ -121,7 +121,7 @@ function QueryAndRenderInstanceHeader(props: {
   const instancesQuery = useEngineInstances();
   const instance = instancesQuery.data?.find((x) => x.id === props.engineId);
 
-  if (instancesQuery.isLoading) {
+  if (instancesQuery.isPending) {
     return <PageLoading />;
   }
 
@@ -151,7 +151,7 @@ function EnsurePermissionAndRenderInstance(props: {
     instanceUrl: props.instance.url,
   });
 
-  if (permissionQuery.isLoading) {
+  if (permissionQuery.isPending) {
     return <PageLoading />;
   }
 

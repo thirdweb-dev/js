@@ -27,14 +27,14 @@ type ProcessedQuery = {
   data?: PayVolumeData;
   isError?: boolean;
   isEmpty?: boolean;
-  isLoading?: boolean;
+  isPending?: boolean;
 };
 
 function processQuery(
   volumeQuery: ReturnType<typeof usePayVolume>,
 ): ProcessedQuery {
-  if (volumeQuery.isLoading) {
-    return { isLoading: true };
+  if (volumeQuery.isPending) {
+    return { isPending: true };
   }
 
   if (volumeQuery.isError) {
@@ -196,7 +196,7 @@ function RenderData(props: {
       <div className="h-10" />
 
       <div className="flex justify-center w-full flex-1 relative">
-        {props.query.isLoading ? (
+        {props.query.isPending ? (
           <AreaChartLoadingState height={`${chartHeight}px`} />
         ) : (
           <ResponsiveContainer width="100%" height={chartHeight}>

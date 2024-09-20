@@ -17,7 +17,7 @@ export function DangerSettingCard(props: {
   description: string;
   buttonLabel: string;
   buttonOnClick: () => void;
-  isLoading: boolean;
+  isPending: boolean;
   confirmationDialog: {
     title: string;
     description: string;
@@ -39,9 +39,9 @@ export function DangerSettingCard(props: {
             <Button
               variant="destructive"
               className="bg-red-600 hover:bg-red-600/80 text-white font-semibold gap-2"
-              disabled={props.isLoading}
+              disabled={props.isPending}
             >
-              {props.isLoading && <Spinner className="size-3" />}
+              {props.isPending && <Spinner className="size-3" />}
               {props.buttonLabel}
             </Button>
           </DialogTrigger>
@@ -66,9 +66,9 @@ export function DangerSettingCard(props: {
                 variant="destructive"
                 className="bg-red-600 hover:bg-red-600/80 text-white font-semibold gap-2"
                 onClick={props.buttonOnClick}
-                disabled={props.isLoading}
+                disabled={props.isPending}
               >
-                {props.isLoading && <Spinner className="size-3" />}
+                {props.isPending && <Spinner className="size-3" />}
                 {props.buttonLabel}
               </Button>
             </DialogFooter>

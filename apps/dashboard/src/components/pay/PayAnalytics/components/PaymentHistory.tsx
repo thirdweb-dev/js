@@ -29,7 +29,7 @@ const pageSize = 10;
 
 type ProcessedQuery = {
   data?: UIData;
-  isLoading?: boolean;
+  isPending?: boolean;
   isError?: boolean;
   isEmpty?: boolean;
 };
@@ -37,8 +37,8 @@ type ProcessedQuery = {
 function processQuery(
   purchasesQuery: ReturnType<typeof usePayPurchases>,
 ): ProcessedQuery {
-  if (purchasesQuery.isLoading) {
-    return { isLoading: true };
+  if (purchasesQuery.isPending) {
+    return { isPending: true };
   }
   if (purchasesQuery.isError) {
     return { isError: true };

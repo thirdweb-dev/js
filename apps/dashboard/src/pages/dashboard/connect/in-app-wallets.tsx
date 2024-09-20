@@ -20,7 +20,7 @@ const TRACKING_CATEGORY = "embedded-wallet";
 const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
   const router = useRouter();
   const defaultClientId = router.query.clientId?.toString();
-  const { isLoading } = useLoggedInUser();
+  const { isPending } = useLoggedInUser();
   const keysQuery = useApiKeys();
 
   const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
@@ -49,7 +49,7 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
     return undefined;
   }, [apiKeys, defaultClientId, selectedKey_]);
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="grid w-full place-items-center">
         <Spinner className="size-14" />
@@ -96,7 +96,7 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
 
       <div className="h-8" />
 
-      {keysQuery.isLoading ? (
+      {keysQuery.isPending ? (
         <div className="flex h-[500px] items-center justify-center">
           <Spinner className="size-10" />
         </div>

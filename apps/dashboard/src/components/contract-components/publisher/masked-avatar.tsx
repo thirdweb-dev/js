@@ -14,7 +14,7 @@ interface PublisherAvatarProps extends Omit<MaskedAvatarProps, "src"> {
 
 export const PublisherAvatar: React.FC<PublisherAvatarProps> = ({
   address,
-  isLoading,
+  isPending,
   ...restProps
 }) => {
   const client = useThirdwebClient();
@@ -24,7 +24,7 @@ export const PublisherAvatar: React.FC<PublisherAvatarProps> = ({
   );
   return (
     <MaskedAvatar
-      isLoading={isLoading || ensQuery.isLoading || publisherProfile.isLoading}
+      isPending={isPending || ensQuery.isPending || publisherProfile.isPending}
       src={
         publisherProfile.data?.avatar
           ? resolveScheme({

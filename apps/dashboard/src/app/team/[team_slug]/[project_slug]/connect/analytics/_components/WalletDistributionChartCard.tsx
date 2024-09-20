@@ -37,7 +37,7 @@ const chartLabelToShow: Record<ChartToShow, string> = {
 
 export function WalletDistributionChartCard(props: {
   walletStats: WalletStats[];
-  isLoading: boolean;
+  isPending: boolean;
 }) {
   const { walletStats } = props;
   const [chartToShow, setChartToShow] = useState<ChartToShow>("total");
@@ -114,7 +114,7 @@ export function WalletDistributionChartCard(props: {
       };
     }, [walletStats]);
 
-  const disableActions = props.isLoading || chartData.length === 0;
+  const disableActions = props.isPending || chartData.length === 0;
   return (
     <div className="bg-muted/50 border border-border rounded-lg p-4 md:p-6 relative w-full">
       <h3 className="text-xl md:text-2xl font-semibold tracking-tight mb-1">
@@ -131,7 +131,7 @@ export function WalletDistributionChartCard(props: {
             setChartToShow(v as ChartToShow);
           }}
           value={chartToShow}
-          disabled={props.isLoading || chartData.length === 0}
+          disabled={props.isPending || chartData.length === 0}
         >
           <SelectTrigger>
             <SelectValue />
@@ -184,7 +184,7 @@ export function WalletDistributionChartCard(props: {
         config={chartConfig}
         className="w-full h-[500px] [&_.recharts-pie-label-text]:fill-foreground mt-6"
       >
-        {props.isLoading ? (
+        {props.isPending ? (
           <LoadingChartState />
         ) : chartData.length === 0 ? (
           <EmptyChartState />

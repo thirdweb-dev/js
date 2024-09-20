@@ -16,7 +16,7 @@ import { AuthorizedWalletRevokeModal } from "./AuthorizedWalletRevokeModal";
 
 interface AuthorizedWalletsTableProps {
   authorizedWallets: AuthorizedWallet[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -24,7 +24,7 @@ const columnHelper = createColumnHelper<AuthorizedWallet>();
 
 export const AuthorizedWalletsTable: ComponentWithChildren<
   AuthorizedWalletsTableProps
-> = ({ authorizedWallets, isLoading, isFetched }) => {
+> = ({ authorizedWallets, isPending, isFetched }) => {
   const toast = useToast();
   const trackEvent = useTrack();
   const { mutateAsync: revokeAccess } = useRevokeAuthorizedWallet();
@@ -153,7 +153,7 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
         title="Authorized Devices"
         columns={columns}
         data={authorizedWallets}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
       />
     </>

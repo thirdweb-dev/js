@@ -33,15 +33,15 @@ type UIData = {
 type ProcessedQuery = {
   data?: UIData;
   isError?: boolean;
-  isLoading?: boolean;
+  isPending?: boolean;
   isEmpty?: boolean;
 };
 
 function processQuery(
   topCustomersQuery: ReturnType<typeof usePayCustomers>,
 ): ProcessedQuery {
-  if (topCustomersQuery.isLoading) {
-    return { isLoading: true };
+  if (topCustomersQuery.isPending) {
+    return { isPending: true };
   }
 
   if (topCustomersQuery.isError) {
@@ -151,7 +151,7 @@ function RenderData(props: { query: ProcessedQuery; loadMore: () => void }) {
           </TableHeadingRow>
         </thead>
         <tbody className="relative">
-          {props.query.isLoading ? (
+          {props.query.isPending ? (
             <>
               {new Array(5).fill(0).map((_, i) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: ok

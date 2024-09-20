@@ -173,7 +173,7 @@ export function ContractPublishForm(props: {
       : initializerParams;
 
   // during loading and after success we should stay in loading state
-  const isLoading = sendTx.isPending || sendTx.isSuccess;
+  const isPending = sendTx.isPending || sendTx.isSuccess;
 
   useIsomorphicLayoutEffect(() => {
     window?.scrollTo({
@@ -400,7 +400,7 @@ export function ContractPublishForm(props: {
                     position="relative"
                     role="group"
                     colorScheme="blue"
-                    isLoading={isLoading}
+                    isLoading={isPending}
                     form="contract-release-form"
                     isDisabled={isDisabled}
                     loadingText={

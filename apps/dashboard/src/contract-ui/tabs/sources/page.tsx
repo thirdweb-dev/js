@@ -99,7 +99,7 @@ const VerifyContractModal: React.FC<
         <Divider mb={4} />
         <ModalBody py={4}>
           <Flex flexDir="column">
-            {veryifyQuery.isLoading && (
+            {veryifyQuery.isPending && (
               <Flex gap={2} align="center">
                 <Spinner color="purple.500" size="sm" />
                 <Heading size="label.md">Verifying...</Heading>
@@ -187,7 +187,7 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
       .reverse();
   }, [contractSourcesQuery.data]);
 
-  if (!contractSourcesQuery || contractSourcesQuery?.isLoading) {
+  if (!contractSourcesQuery || contractSourcesQuery?.isPending) {
     return (
       <Flex direction="row" align="center" gap={2}>
         <Spinner color="purple.500" size="xs" />

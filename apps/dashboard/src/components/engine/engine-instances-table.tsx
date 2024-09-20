@@ -42,7 +42,7 @@ import { FormLabel } from "tw-components";
 
 interface EngineInstancesTableProps {
   instances: EngineInstance[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
   refetch: ReturnType<typeof useEngineInstances>["refetch"];
   engineLinkPrefix: string;
@@ -50,7 +50,7 @@ interface EngineInstancesTableProps {
 
 export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
   instances,
-  isLoading,
+  isPending,
   isFetched,
   refetch,
   engineLinkPrefix,
@@ -141,7 +141,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
         data={instances}
         columns={columns}
         isFetched={isFetched}
-        isLoading={isLoading}
+        isPending={isPending}
         onMenuClick={[
           {
             icon: BiPencil,

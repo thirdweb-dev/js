@@ -81,7 +81,7 @@ function Story() {
             }}
             saveButton={{
               disabled: false,
-              isLoading: false,
+              isPending: false,
               onClick: () => {},
             }}
             noPermissionText={"You do not have permission to edit this"}
@@ -100,7 +100,7 @@ function Story() {
             }}
             saveButton={{
               disabled: false,
-              isLoading: false,
+              isPending: false,
               onClick: () => {},
             }}
             noPermissionText={undefined}
@@ -119,7 +119,7 @@ function Story() {
             }}
             saveButton={{
               disabled: true,
-              isLoading: false,
+              isPending: false,
               onClick: () => {},
             }}
             noPermissionText={undefined}
@@ -138,7 +138,7 @@ function Story() {
             }}
             saveButton={{
               disabled: false,
-              isLoading: true,
+              isPending: true,
               onClick: () => {},
             }}
             noPermissionText={undefined}

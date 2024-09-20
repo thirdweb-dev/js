@@ -114,7 +114,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
   const account = useActiveAccount();
 
-  const { data: walletNFTs, isLoading: isWalletNFTsLoading } = useWalletNFTs(
+  const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs(
     account?.address,
     chainId,
   );
@@ -154,7 +154,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
       })
     : undefined;
 
-  const { data: ownedNFTs, isLoading: isOwnedNFTsLoading } =
+  const { data: ownedNFTs, isPending: isOwnedNFTsLoading } =
     useDashboardOwnedNFTs({
       contract: selectedContract,
       owner: account?.address,

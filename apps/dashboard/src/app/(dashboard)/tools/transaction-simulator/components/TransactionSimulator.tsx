@@ -50,7 +50,8 @@ export const TransactionSimulator = (props: {
 }) => {
   const activeAccount = useActiveAccount();
   const initialFormValues = props.searchParams;
-  const [isLoading, setIsLoading] = useState(false);
+  // TODO - replace this with a mutation.isPending
+  const [isPending, setIsPending] = useState(false);
   const [state, setState] = useState<State>({
     success: false,
     message: "",
@@ -66,7 +67,7 @@ export const TransactionSimulator = (props: {
 
   async function handleSimulation(data: SimulateTransactionForm) {
     try {
-      setIsLoading(true);
+      setIsPending(true);
       const { from, to, value, functionArgs, functionName } = data;
       if (!chain) {
         throw new Error("Invalid chainId");
@@ -154,7 +155,7 @@ ${Object.keys(populatedTransaction)
         shareUrl: "",
       });
     }
-    setIsLoading(false);
+    setIsPending(false);
   }
   return (
     <div className="max-w-[800px] space-y-4">
@@ -259,7 +260,7 @@ ${Object.keys(populatedTransaction)
           </div>
 
           <Button type="submit">
-            {isLoading ? (
+            {isPending ? (
               <>
                 <Spinner className="w-4 h-4 mr-2" />
                 Simulating
@@ -341,11 +342,11 @@ const getCodeExample = (
     }
     return item;
   });
-  return `import { 
+  return `import {
   getContract,
   defineChain,
   prepareContractCall,
-  createThirdwebClient 
+  createThirdwebClient
 } from "thirdweb";
 
 const client = createThirdwebClient({

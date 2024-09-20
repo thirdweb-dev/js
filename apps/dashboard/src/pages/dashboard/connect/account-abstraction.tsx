@@ -84,7 +84,7 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
     desc: "Add account abstraction to your web3 app & unlock powerful features for seamless onboarding, customizable transactions, & maximum security. Get started.",
   };
 
-  const isLoading = looggedInUserQuery.isLoading || keysQuery.isLoading;
+  const isPending = looggedInUserQuery.isPending || keysQuery.isPending;
 
   return (
     <div className="flex flex-col gap-10">
@@ -139,7 +139,7 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
         )}
       </div>
 
-      {isLoading ? (
+      {isPending ? (
         <div className="flex items-center justify-center h-[400px] border border-border rounded-lg">
           <Spinner className="size-14" />
         </div>

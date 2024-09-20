@@ -51,10 +51,13 @@ export const SettingsPlatformFees = ({
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
-  const { mutate, isPending } = useSendAndConfirmTransaction();
-  const { data, isLoading } = useReadContract(getPlatformFeeInfo, { contract });
-  const platformFeeInfo = data
-    ? { platform_fee_recipient: data[0], platform_fee_basis_points: data[1] }
+  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const platformFeesQuery = useReadContract(getPlatformFeeInfo, { contract });
+  const platformFeeInfo = platformFeesQuery.data
+    ? {
+        platform_fee_recipient: platformFeesQuery.data[0],
+        platform_fee_basis_points: platformFeesQuery.data[1],
+      }
     : undefined;
 
   const form = useForm<z.input<typeof CommonPlatformFeeSchema>>({
@@ -93,7 +96,7 @@ export const SettingsPlatformFees = ({
             platformFeeRecipient: data.platform_fee_recipient,
             platformFeeBps: BigInt(data.platform_fee_basis_points),
           });
-          mutate(transaction, {
+          sendAndConfirmTx.mutate(transaction, {
             onSuccess: () => {
               trackEvent({
                 category: "settings",
@@ -136,7 +139,7 @@ export const SettingsPlatformFees = ({
                 formContext={form}
                 variant="filled"
                 {...form.register("platform_fee_recipient")}
-                isDisabled={!address || isPending}
+                isDisabled={!address || sendAndConfirmTx.isPending}
               />
               <FormErrorMessage>
                 {
@@ -165,7 +168,7 @@ export const SettingsPlatformFees = ({
                     shouldTouch: true,
                   })
                 }
-                isDisabled={isPending}
+                isDisabled={sendAndConfirmTx.isPending}
               />
               <FormErrorMessage>
                 {
@@ -182,9 +185,9 @@ export const SettingsPlatformFees = ({
           <TransactionButton
             colorScheme="primary"
             transactionCount={1}
-            isDisabled={isLoading || !form.formState.isDirty}
+            isDisabled={platformFeesQuery.isPending || !form.formState.isDirty}
             type="submit"
-            isLoading={isPending}
+            isLoading={sendAndConfirmTx.isPending}
             loadingText="Saving..."
             size="md"
             borderRadius="xl"

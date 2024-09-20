@@ -155,7 +155,7 @@ export const InAppWalletUsersPageContent = (props: {
           title="active in-app wallets"
           data={itemsToShow}
           columns={columns}
-          isLoading={walletsQuery.isLoading}
+          isPending={walletsQuery.isPending}
           isFetched={walletsQuery.isFetched}
         />
 

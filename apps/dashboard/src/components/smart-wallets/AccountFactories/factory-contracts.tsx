@@ -13,7 +13,7 @@ import { getChainMetadata } from "thirdweb/chains";
 
 interface FactoryContractsProps {
   contracts: BasicContract[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -70,7 +70,7 @@ function NetworkName(props: { id: number }) {
 
 export const FactoryContracts: React.FC<FactoryContractsProps> = ({
   contracts,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   return (
@@ -78,7 +78,7 @@ export const FactoryContracts: React.FC<FactoryContractsProps> = ({
       title="account factories"
       data={contracts}
       columns={columns}
-      isLoading={isLoading}
+      isPending={isPending}
       isFetched={isFetched}
     />
   );

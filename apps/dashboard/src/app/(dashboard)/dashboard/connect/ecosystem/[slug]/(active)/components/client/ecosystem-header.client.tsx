@@ -64,9 +64,9 @@ function EcosystemSelect(props: {
   ecosystem: Ecosystem;
   ecosystemLayoutPath: string;
 }) {
-  const { data: ecosystems, isLoading } = useEcosystemList();
+  const { data: ecosystems, isPending } = useEcosystemList();
 
-  return isLoading ? (
+  return isPending ? (
     <Skeleton className="h-10 w-full md:w-[160px]" />
   ) : (
     <DropdownMenu>

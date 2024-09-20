@@ -44,7 +44,7 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
   const form = useForm({
     defaultValues: { amount: "0", to: account?.address },
   });
-  const { data: _decimals, isLoading } = useReadContract(ERC20Ext.decimals, {
+  const { data: _decimals, isPending } = useReadContract(ERC20Ext.decimals, {
     contract,
   });
   return (
@@ -96,7 +96,7 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
             isLoading={form.formState.isSubmitting}
             type="submit"
             colorScheme="primary"
-            isDisabled={!form.formState.isDirty || isLoading}
+            isDisabled={!form.formState.isDirty || isPending}
             onClick={form.handleSubmit(async (d) => {
               if (!d.to) {
                 return toast.error(

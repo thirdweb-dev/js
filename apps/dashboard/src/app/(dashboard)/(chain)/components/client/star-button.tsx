@@ -92,7 +92,7 @@ export function StarButton(props: {
       disabled={
         !loggedInUser.user?.address ||
         mutation.isPending ||
-        favChainsQuery.isLoading
+        favChainsQuery.isPending
       }
     >
       <ToolTipLabel label={label}>

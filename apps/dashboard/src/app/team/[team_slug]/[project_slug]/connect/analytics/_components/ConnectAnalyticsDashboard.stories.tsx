@@ -31,7 +31,7 @@ function Component() {
       <ConnectAnalyticsDashboardUI
         walletUsage={createWalletStatsStub(30)}
         aggregateWalletUsage={createWalletStatsStub(30)}
-        isLoading={false}
+        isPending={false}
       />
     </div>
   );

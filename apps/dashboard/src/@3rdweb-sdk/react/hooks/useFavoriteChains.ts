@@ -25,7 +25,7 @@ export function useFavoriteChains() {
   }, [favChainsQuery.data, allChains]);
 
   return {
-    isLoading: favChainsQuery.isLoading,
+    isPending: favChainsQuery.isPending,
     data,
   };
 }

@@ -29,7 +29,7 @@ import { toDateTimeLocal } from "utils/date-utils";
 interface KeypairsTableProps {
   instanceUrl: string;
   keypairs: Keypair[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -73,7 +73,7 @@ const columns = [
 export const KeypairsTable: React.FC<KeypairsTableProps> = ({
   instanceUrl,
   keypairs,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const removeDisclosure = useDisclosure();
@@ -85,7 +85,7 @@ export const KeypairsTable: React.FC<KeypairsTableProps> = ({
         title="public keys"
         data={keypairs}
         columns={columns}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {

@@ -78,7 +78,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     },
   });
 
-  if (webhooksQuery.isLoading) {
+  if (webhooksQuery.isPending) {
     return <Spinner className="size-8 mx-auto" />;
   }
 

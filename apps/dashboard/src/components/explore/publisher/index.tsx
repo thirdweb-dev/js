@@ -24,7 +24,7 @@ export const ContractPublisher: React.FC<ContractPublisherProps> = ({
       )}
     >
       <PublisherAvatar
-        isLoading={showSkeleton}
+        isPending={showSkeleton}
         boxSize={5}
         address={addressOrEns || ""}
       />

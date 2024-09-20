@@ -40,7 +40,7 @@ const contract = getContract({ client, chain: sepolia, address: "0x..." });
 
 export default function App() {
   // Get all NFTs
-  const { data: nfts, isLoading } = useReadContract(getNFTs, { contract });
+  const { data: nfts, isPending } = useReadContract(getNFTs, { contract });
 
   // Render NFTs
   return (nfts.data || []).map((nft) => (
@@ -59,7 +59,7 @@ const contract = getContract({ client, chain: sepolia, address: "0x..." });
 
 export default function App() {
   // Get all NFTs
-  const { data: nfts, isLoading } = useReadContract(getNFTs, { contract });
+  const { data: nfts, isPending } = useReadContract(getNFTs, { contract });
 
   // Render NFTs
   return (nfts.data || []).map((nft) => (

@@ -108,7 +108,7 @@ export function WalletAddress(props: {
             {lessShortenedAddress}
           </p>
           <h3 className="text-lg font-semibold">Social Profiles</h3>
-          {profiles.isLoading ? (
+          {profiles.isPending ? (
             <p className="text-sm text-muted-foreground">Loading profiles...</p>
           ) : !profiles.data?.length ? (
             <p className="text-sm text-muted-foreground">No profiles found</p>

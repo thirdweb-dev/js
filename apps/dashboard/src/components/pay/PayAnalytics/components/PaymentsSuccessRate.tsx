@@ -23,7 +23,7 @@ type UIData = {
 type ProcessedQuery = {
   data?: UIData;
   isError?: boolean;
-  isLoading?: boolean;
+  isPending?: boolean;
   isEmpty?: boolean;
 };
 
@@ -31,8 +31,8 @@ function processQuery(
   volumeQuery: ReturnType<typeof usePayVolume>,
   type: PayVolumeType,
 ): ProcessedQuery {
-  if (volumeQuery.isLoading) {
-    return { isLoading: true };
+  if (volumeQuery.isPending) {
+    return { isPending: true };
   }
 
   if (volumeQuery.isError) {
@@ -108,7 +108,7 @@ export function PaymentsSuccessRate(props: {
     <div className="w-full relative flex flex-col">
       <div className="flex justify-between gap-2 items-center">
         <CardHeading> Payments </CardHeading>
-        {!uiQuery.isLoading && (
+        {!uiQuery.isPending && (
           <Select
             value={type}
             onValueChange={(value: PayVolumeType) => {

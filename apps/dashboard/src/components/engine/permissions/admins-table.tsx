@@ -32,7 +32,7 @@ import { Button, FormLabel, Text } from "tw-components";
 interface AdminsTableProps {
   instanceUrl: string;
   admins: EngineAdmin[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -67,7 +67,7 @@ const columns = [
 export const AdminsTable: React.FC<AdminsTableProps> = ({
   instanceUrl,
   admins,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const editDisclosure = useDisclosure();
@@ -80,7 +80,7 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
         title="admins"
         data={admins}
         columns={columns}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {

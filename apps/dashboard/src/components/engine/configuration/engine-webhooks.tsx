@@ -34,7 +34,7 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({
       <WebhooksTable
         instanceUrl={instanceUrl}
         webhooks={webhooks.data || []}
-        isLoading={webhooks.isLoading}
+        isPending={webhooks.isPending}
         isFetched={webhooks.isFetched}
       />
       <AddWebhookButton instanceUrl={instanceUrl} />

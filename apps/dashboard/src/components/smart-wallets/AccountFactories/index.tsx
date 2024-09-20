@@ -75,7 +75,7 @@ export const AccountFactories: React.FC<AccountFactoriesProps> = ({
 
       <FactoryContracts
         contracts={factories.data || []}
-        isLoading={factories.isLoading}
+        isPending={factories.isPending}
         isFetched={factories.isFetched}
       />
     </div>

@@ -21,7 +21,7 @@ const Dashboard: ThirdwebNextPage = (
   const connectionStatus = useActiveWalletConnectionStatus();
 
   const showFTUX = connectionStatus !== "connected";
-  const isLoading = connectionStatus === "connecting";
+  const isPending = connectionStatus === "connecting";
 
   return (
     <Flex flexDir="column" gap={4}>
@@ -29,7 +29,7 @@ const Dashboard: ThirdwebNextPage = (
       <SimpleGrid columns={{ base: 1, lg: 4 }} gap={16}>
         <GridItem colSpan={{ lg: 3 }}>
           <Heading mb={10}>Get started quickly</Heading>
-          {!isLoading && (
+          {!isPending && (
             <ClientOnly fadeInDuration={600} ssr={null}>
               {showFTUX ? (
                 <FTUX />

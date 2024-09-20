@@ -18,7 +18,7 @@ export const ContractCodePage: React.FC<ContractCodePageProps> = ({
 
   const abiQuery = useResolveContractAbi(contract);
 
-  if (abiQuery.isLoading) {
+  if (abiQuery.isPending) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }

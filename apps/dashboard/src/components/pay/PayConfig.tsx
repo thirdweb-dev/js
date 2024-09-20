@@ -109,7 +109,7 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
           saveButton={{
             type: "submit",
             disabled: !apiKey.services || !form.formState.isDirty,
-            isLoading: mutation.isPending,
+            isPending: mutation.isPending,
           }}
           noPermissionText={undefined}
         >

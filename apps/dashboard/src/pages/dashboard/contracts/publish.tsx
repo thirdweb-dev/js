@@ -50,7 +50,7 @@ const Published: ThirdwebNextPage = () => {
     [address, hasContracts],
   );
 
-  if (address && publishedContractsQuery.isLoading) {
+  if (address && publishedContractsQuery.isPending) {
     return (
       <Flex w="full" h="full" alignItems="center" justifyContent="center">
         <Spinner />

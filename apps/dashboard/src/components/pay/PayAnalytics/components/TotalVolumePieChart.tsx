@@ -18,14 +18,14 @@ type ProcessedQuery = {
   };
   isError?: boolean;
   isEmpty?: boolean;
-  isLoading?: boolean;
+  isPending?: boolean;
 };
 
 function processQuery(
   volumeQuery: ReturnType<typeof usePayVolume>,
 ): ProcessedQuery {
-  if (volumeQuery.isLoading) {
-    return { isLoading: true };
+  if (volumeQuery.isPending) {
+    return { isPending: true };
   }
 
   if (volumeQuery.isError) {

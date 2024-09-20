@@ -26,12 +26,12 @@ type ProcessedQuery = {
   };
   isError?: boolean;
   isEmpty?: boolean;
-  isLoading?: boolean;
+  isPending?: boolean;
 };
 
 function processQuery(query: ReturnType<typeof usePayVolume>): ProcessedQuery {
-  if (query.isLoading) {
-    return { isLoading: true };
+  if (query.isPending) {
+    return { isPending: true };
   }
 
   if (query.isError) {
@@ -156,7 +156,7 @@ function RenderData(props: {
       </div>
 
       <div className="relative flex justify-center w-full">
-        {props.query.isLoading ? (
+        {props.query.isPending ? (
           <AreaChartLoadingState height={`${chartHeight}px`} />
         ) : (
           <ResponsiveContainer width="100%" height={chartHeight}>

@@ -34,35 +34,35 @@ function Component() {
       <BadgeContainer label="30 days">
         <DailyConnectionsChartCard
           walletStats={createWalletStatsStub(30)}
-          isLoading={false}
+          isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="60 days">
         <DailyConnectionsChartCard
           walletStats={createWalletStatsStub(60)}
-          isLoading={false}
+          isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="10 days">
         <DailyConnectionsChartCard
           walletStats={createWalletStatsStub(10)}
-          isLoading={false}
+          isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="0 days">
         <DailyConnectionsChartCard
           walletStats={createWalletStatsStub(0)}
-          isLoading={false}
+          isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Loading">
         <DailyConnectionsChartCard
           walletStats={createWalletStatsStub(0)}
-          isLoading={true}
+          isPending={true}
         />
       </BadgeContainer>
     </div>

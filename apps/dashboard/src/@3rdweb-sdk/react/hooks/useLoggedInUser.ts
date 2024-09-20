@@ -17,7 +17,7 @@ declare global {
 }
 
 export function useLoggedInUser(): {
-  isLoading: boolean;
+  isPending: boolean;
   isLoggedIn: boolean;
   user: { address: string; jwt?: string } | null;
 } {
@@ -82,7 +82,7 @@ export function useLoggedInUser(): {
   // if we are "disconnected" we are not logged in
   if (connectionStatus === "disconnected") {
     return {
-      isLoading: false,
+      isPending: false,
       isLoggedIn: false,
       user: null,
     };
@@ -91,7 +91,7 @@ export function useLoggedInUser(): {
   // if we are still connecting, we are "loading"
   if (connectionStatus === "connecting") {
     return {
-      isLoading: true,
+      isPending: true,
       isLoggedIn: false,
       user: null,
     };
@@ -100,7 +100,7 @@ export function useLoggedInUser(): {
   // same if we do not yet have a path
   if (!pathname) {
     return {
-      isLoading: true,
+      isPending: true,
       isLoggedIn: false,
       user: null,
     };
@@ -109,7 +109,7 @@ export function useLoggedInUser(): {
   // if we do not have an address we are not logged in
   if (!connectedAddress) {
     return {
-      isLoading: false,
+      isPending: false,
       isLoggedIn: false,
       user: null,
     };
@@ -118,7 +118,7 @@ export function useLoggedInUser(): {
   // if we are not on a logged in path, we can simply return the connected address
   if (!isLoginRequired(pathname)) {
     return {
-      isLoading: false,
+      isPending: false,
       isLoggedIn: true,
       user: { address: connectedAddress },
     };
@@ -126,7 +126,7 @@ export function useLoggedInUser(): {
 
   // otherwise we return the query data
   return {
-    isLoading: query.isLoading,
+    isPending: query.isPending,
     isLoggedIn: query.data ? query.data.isLoggedIn : false,
     user: query.data?.isLoggedIn
       ? { address: connectedAddress, jwt: query.data.jwt }

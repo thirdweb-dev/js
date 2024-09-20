@@ -137,7 +137,7 @@ const data = await readContract({
     react: `import { useReadContract } from "thirdweb/react";
 
 export default function Component() {
-  const { data, isLoading } = useReadContract({
+  const { data, isPending } = useReadContract({
     contract,
     method: "{{function}}",
     params: [{{args}}]
@@ -146,7 +146,7 @@ export default function Component() {
     "react-native": `import { useReadContract } from "thirdweb/react";
 
 export default function Component() {
-  const { data, isLoading } = useReadContract({
+  const { data, isPending } = useReadContract({
     contract,
     method: "{{function}}",
     params: [{{args}}]
@@ -367,7 +367,7 @@ import { ${args.extensionName} } from "thirdweb/extensions/${args.extensionNames
     case "read": {
       return `${importStatement}
 
-const { data, isLoading } = useReadContract(${args.extensionName}, {
+const { data, isPending } = useReadContract(${args.extensionName}, {
   contract,${args.fnArgs.map((arg) => `\n  ${arg}`).join(",")}
 });`;
     }

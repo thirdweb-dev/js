@@ -36,7 +36,7 @@ function Story() {
             description="This is a description"
             buttonLabel="Some Action"
             buttonOnClick={() => {}}
-            isLoading={false}
+            isPending={false}
             confirmationDialog={{
               title: "This is confirmation title",
               description: "This is confirmation description",
@@ -50,7 +50,7 @@ function Story() {
             description="This is a description"
             buttonLabel="Some Action"
             buttonOnClick={() => {}}
-            isLoading={true}
+            isPending={true}
             confirmationDialog={{
               title: "This is confirmation title",
               description: "This is confirmation description",

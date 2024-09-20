@@ -37,7 +37,7 @@ export const EngineRelayer: React.FC<EngineRelayerProps> = ({
       <RelayersTable
         instanceUrl={instanceUrl}
         relayers={relayers.data || []}
-        isLoading={relayers.isLoading}
+        isPending={relayers.isPending}
         isFetched={relayers.isFetched}
       />
       <AddRelayerButton instanceUrl={instanceUrl} />

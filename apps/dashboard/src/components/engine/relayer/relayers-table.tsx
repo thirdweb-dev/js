@@ -47,7 +47,7 @@ import { type AddModalInput, parseAddressListRaw } from "./add-relayer-button";
 interface RelayersTableProps {
   instanceUrl: string;
   relayers: EngineRelayer[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -56,7 +56,7 @@ const columnHelper = createColumnHelper<EngineRelayer>();
 export const RelayersTable: React.FC<RelayersTableProps> = ({
   instanceUrl,
   relayers,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const editDisclosure = useDisclosure();
@@ -156,7 +156,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
         title="relayers"
         data={relayers}
         columns={columns}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {

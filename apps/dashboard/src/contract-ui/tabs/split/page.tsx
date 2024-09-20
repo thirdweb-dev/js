@@ -105,8 +105,8 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
         <Flex gap={4}>
           <DistributeButton
             balances={balances as Balance[]}
-            balancesIsLoading={
-              balanceQuery.isLoading || nativeBalanceQuery.isLoading
+            balancesisPending={
+              balanceQuery.isPending || nativeBalanceQuery.isPending
             }
             balancesIsError={balanceQuery.isError && nativeBalanceQuery.isError}
             contract={contract}
@@ -132,7 +132,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
                 </StatNumber>
               )}
             </Card>
-            {balanceQuery.isLoading ? (
+            {balanceQuery.isPending ? (
               <Center>
                 <Spinner />
               </Center>

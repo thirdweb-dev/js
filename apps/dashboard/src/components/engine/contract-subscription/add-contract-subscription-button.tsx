@@ -530,7 +530,7 @@ const FilterSelector = ({
 
   return (
     <Card>
-      {abiQuery.isLoading ? (
+      {abiQuery.isPending ? (
         <Spinner size="sm" />
       ) : filterNames.length === 0 ? (
         <Text>

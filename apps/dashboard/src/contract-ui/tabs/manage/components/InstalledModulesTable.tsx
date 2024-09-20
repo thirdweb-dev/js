@@ -35,7 +35,7 @@ export const InstalledModulesTable = (props: {
   contract: ContractOptions;
   installedModules: {
     data?: string[];
-    isLoading: boolean;
+    isPending: boolean;
   };
   refetchModules: () => void;
   ownerAccount?: Account;
@@ -48,7 +48,7 @@ export const InstalledModulesTable = (props: {
     </h2>
   );
 
-  if (!installedModules.isLoading && installedModules.data?.length === 0) {
+  if (!installedModules.isPending && installedModules.data?.length === 0) {
     return (
       <>
         {sectionTitle}
@@ -79,7 +79,7 @@ export const InstalledModulesTable = (props: {
           </thead>
 
           <tbody>
-            {installedModules.isLoading ? (
+            {installedModules.isPending ? (
               <>
                 <SkeletonRow ownerAccount={ownerAccount} />
                 <SkeletonRow ownerAccount={ownerAccount} />

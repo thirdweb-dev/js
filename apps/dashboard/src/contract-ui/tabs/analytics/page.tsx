@@ -53,7 +53,7 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
 
   const analyticsSupported = useAnalyticsSupportedForChain(contract.chain.id);
 
-  if (analyticsSupported.isLoading) {
+  if (analyticsSupported.isPending) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }

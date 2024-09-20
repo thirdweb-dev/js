@@ -22,7 +22,7 @@ const SettingsDevicesPage: ThirdwebNextPage = () => {
           </Text>
           <AuthorizedWalletsTable
             authorizedWallets={authorizedWalletsQuery.data || []}
-            isLoading={authorizedWalletsQuery.isLoading}
+            isPending={authorizedWalletsQuery.isPending}
             isFetched={authorizedWalletsQuery.isFetched}
           />
         </div>
