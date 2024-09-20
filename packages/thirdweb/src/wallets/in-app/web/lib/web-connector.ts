@@ -85,6 +85,23 @@ export class InAppWebConnector implements InAppConnector {
       ecosystem,
       onAuthSuccess: async (authResult) => {
         onAuthSuccess?.(authResult);
+
+        if (
+          this.ecosystem &&
+          authResult.storedToken.authDetails.walletType === "sharded"
+        ) {
+          // If this is an existing sharded ecosystem wallet, we'll need to migrate
+          const result = await this.querier.call<boolean>({
+            procedureName: "migrateFromShardToEnclave",
+            params: {
+              storedToken: authResult.storedToken,
+            },
+          });
+          if (!result) {
+            throw new Error("Failed to migrate from sharded to enclave wallet");
+          }
+        }
+
         await this.initializeWallet(authResult.storedToken.cookieString);
 
         if (!this.wallet) {
@@ -148,6 +165,7 @@ export class InAppWebConnector implements InAppConnector {
         "Cannot initialize wallet, this user does not have a wallet generated yet",
       );
     }
+
     if (user.wallets[0].type === "enclave") {
       this.wallet = new EnclaveWallet({
         client: this.client,

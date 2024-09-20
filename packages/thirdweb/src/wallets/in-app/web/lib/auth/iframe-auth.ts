@@ -28,6 +28,9 @@ export type AuthQuerierTypes = {
     storedToken: AuthStoredTokenWithCookieReturnType["storedToken"];
     recoveryCode?: string;
   };
+  migrateFromShardToEnclave: {
+    storedToken: AuthStoredTokenWithCookieReturnType["storedToken"];
+  };
 };
 
 /**
