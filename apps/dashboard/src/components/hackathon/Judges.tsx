@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { Heading, Text, TrackedLink } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
 
@@ -35,7 +35,7 @@ export const Judges = ({ TRACKING_CATEGORY }: JudgesProps) => {
   ];
 
   return (
-    <VStack spacing={8} position="relative">
+    <div className="space-y-8 relative flex flex-col">
       <Heading size="title.2xl">Judges</Heading>
       <SimpleGrid
         columns={{ base: 1, lg: 4 }}
@@ -71,6 +71,6 @@ export const Judges = ({ TRACKING_CATEGORY }: JudgesProps) => {
           </Flex>
         ))}
       </SimpleGrid>
-    </VStack>
+    </div>
   );
 };

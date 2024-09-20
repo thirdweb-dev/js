@@ -8,7 +8,6 @@ import {
   Link,
   ListItem,
   UnorderedList,
-  VStack,
 } from "@chakra-ui/react";
 import { BsFillCloudUploadFill } from "react-icons/bs";
 import { Heading, Text } from "tw-components";
@@ -46,7 +45,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
               borderWidth="1px"
             >
               <input {...getInputProps()} />
-              <VStack p={6}>
+              <div className="flex flex-col p-6">
                 <Icon
                   as={BsFillCloudUploadFill}
                   boxSize={8}
@@ -69,7 +68,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                       : "Drag & Drop files or folders here, or click to select files"}
                   </Heading>
                 )}
-              </VStack>
+              </div>
             </Center>
           </AspectRatio>
           <Flex gap={2} flexDir="column" w={{ base: "100%", md: "50%" }}>

@@ -23,7 +23,6 @@ import {
   Tooltip,
   Tr,
   UnorderedList,
-  VStack,
 } from "@chakra-ui/react";
 import { Logo } from "components/logo";
 import Papa from "papaparse";
@@ -242,7 +241,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                     borderWidth="1px"
                   >
                     <input {...getInputProps()} />
-                    <VStack p={6}>
+                    <div className="flex flex-col p-6">
                       <Icon
                         as={BsFillCloudUploadFill}
                         boxSize={8}
@@ -264,7 +263,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                             : "Drag & Drop a CSV file here"}
                         </Heading>
                       )}
-                    </VStack>
+                    </div>
                   </Center>
                 </AspectRatio>
                 <Flex gap={2} flexDir="column">

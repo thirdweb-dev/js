@@ -1,12 +1,5 @@
 import { type Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  Flex,
-  FormControl,
-  HStack,
-  Input,
-  VStack,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Flex, FormControl, HStack, Input } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -61,7 +54,6 @@ export const AccountForm: React.FC<AccountFormProps> = ({
     showSubscription && !!account.email?.length,
   );
   const trackEvent = useTrack();
-  const bg = useColorModeValue("backgroundCardHighlight", "transparent");
 
   const form = useForm<AccountValidationSchema>({
     resolver: zodResolver(accountValidationSchema),
@@ -138,15 +130,8 @@ export const AccountForm: React.FC<AccountFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <VStack
-        alignItems="flex-start"
-        w="full"
-        gap={horizontal ? 6 : 8}
-        borderRadius="xl"
-        borderColor="borderColor"
-        borderWidth={padded ? 1 : 0}
-        bg={bg}
-        p={padded ? 6 : 0}
+      <div
+        className={`items-start w-full ${horizontal ? "gap-6" : "gap-8"} rounded-xl ${padded ? "border border-border p-6" : "p-0"} bg-background`}
       >
         <Flex
           gap={horizontal ? 4 : 8}
@@ -252,7 +237,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
             </Button>
           )}
         </HStack>
-      </VStack>
+      </div>
     </form>
   );
 };

@@ -1,4 +1,4 @@
-import { Avatar, Flex, VStack } from "@chakra-ui/react";
+import { Avatar, Flex } from "@chakra-ui/react";
 import { Heading, Text, TrackedLink } from "tw-components";
 
 interface AvatarShowcaseProps {
@@ -18,7 +18,7 @@ export const AvatarShowcase: React.FC<AvatarShowcaseProps> = ({
   trackingCategory,
 }) => {
   return (
-    <VStack spacing={12}>
+    <div className="flex flex-col spacing-y-12">
       <Heading size="title.2xl">{title}</Heading>
       <Flex
         maxW="container.md"
@@ -68,6 +68,6 @@ export const AvatarShowcase: React.FC<AvatarShowcaseProps> = ({
           </Flex>
         ))}
       </Flex>
-    </VStack>
+    </div>
   );
 };

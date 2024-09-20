@@ -1,5 +1,5 @@
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, FocusLock, VStack } from "@chakra-ui/react";
+import { Flex, FocusLock } from "@chakra-ui/react";
 import { AccountForm } from "components/settings/Account/AccountForm";
 import { useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
@@ -60,7 +60,7 @@ const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
           onDuplicateError={onDuplicate}
         />
 
-        <VStack justifyContent="center" w="full" gap={2}>
+        <div className="flex flex-col justify-center w-full gap-2">
           {!existing ? (
             <>
               <Button
@@ -94,7 +94,7 @@ const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
               I don&apos;t have an account
             </Button>
           )}
-        </VStack>
+        </div>
       </Flex>
     </FocusLock>
   );

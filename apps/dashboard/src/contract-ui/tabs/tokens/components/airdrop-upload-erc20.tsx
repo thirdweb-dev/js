@@ -16,7 +16,6 @@ import {
   Thead,
   Tr,
   UnorderedList,
-  VStack,
 } from "@chakra-ui/react";
 import { useQueries } from "@tanstack/react-query";
 import {
@@ -258,7 +257,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
               borderWidth="1px"
             >
               <input {...getInputProps()} />
-              <VStack p={6}>
+              <div className="flex flex-col p-6">
                 <Upload
                   size={16}
                   className={`${noCsv ? "text-red-500" : "text-gray-500"}`}
@@ -278,7 +277,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
                       : "Drag & Drop a CSV file here"}
                   </Heading>
                 )}
-              </VStack>
+              </div>
             </Center>
           </AspectRatio>
           <div className="gap-2 flex flex-col">

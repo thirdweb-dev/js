@@ -1,4 +1,3 @@
-import { VStack } from "@chakra-ui/react";
 import { Heading, Text } from "tw-components";
 
 interface OnboardingTitleProps {
@@ -11,7 +10,7 @@ export const OnboardingTitle: React.FC<OnboardingTitleProps> = ({
   description,
 }) => {
   return (
-    <VStack alignItems="flex-start" gap={3}>
+    <div className="flex flex-col gap-3 items-start">
       <Heading size="title.sm">{heading}</Heading>
 
       {description && (
@@ -19,6 +18,6 @@ export const OnboardingTitle: React.FC<OnboardingTitleProps> = ({
           {description}
         </Text>
       )}
-    </VStack>
+    </div>
   );
 };

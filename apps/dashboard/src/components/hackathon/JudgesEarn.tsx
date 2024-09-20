@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { Heading, Text } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
 
@@ -27,7 +27,7 @@ export const JudgesEarn = () => {
   ];
 
   return (
-    <VStack spacing={8} position="relative">
+    <div className="flex flex-col space-y-8 relative">
       <Heading size="title.2xl">Judges</Heading>
       <SimpleGrid
         columns={{ base: 1, lg: 4 }}
@@ -52,6 +52,6 @@ export const JudgesEarn = () => {
           </Flex>
         ))}
       </SimpleGrid>
-    </VStack>
+    </div>
   );
 };
