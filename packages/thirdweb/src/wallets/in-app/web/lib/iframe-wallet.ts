@@ -10,7 +10,6 @@ import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
-import { getEcosystemPartnerPermissions } from "../../../ecosystem/get-ecosystem-partner-permissions.js";
 import type {
   Account,
   SendTransactionOption,
@@ -199,14 +198,6 @@ export class IFrameWallet implements IWebWallet {
       .walletManagerQuerier as unknown as InAppWalletIframeCommunicator<SignerProcedureTypes>;
     const client = this.client;
     const partnerId = this.ecosystem?.partnerId;
-    const isEcosystem = !!this.ecosystem;
-
-    const permissions = this.ecosystem?.partnerId
-      ? await getEcosystemPartnerPermissions(
-          this.ecosystem.id,
-          this.ecosystem?.partnerId,
-        )
-      : undefined;
 
     const { address } = await querier.call<GetAddressReturnType>({
       procedureName: "getAddress",
@@ -244,10 +235,6 @@ export class IFrameWallet implements IWebWallet {
             partnerId,
             rpcEndpoint: `https://${tx.chainId}.${RPC_URL}`, // TODO (ew) shouldnt be needed
           },
-          // Can hide the iframe if the partner has full control (no user approvals)
-          showIframe: permissions?.permissions.includes("FULL_CONTROL_V1")
-            ? false
-            : isEcosystem,
         });
       return signedTransaction as Hex;
     };
@@ -296,10 +283,6 @@ export class IFrameWallet implements IWebWallet {
             partnerId,
             chainId: 1, // TODO check if we need this
           },
-          // Can hide the iframe if the partner has full control (no user approvals)
-          showIframe: permissions?.permissions.includes("FULL_CONTROL_V1")
-            ? false
-            : isEcosystem,
         });
         return signedMessage as Hex;
       },
@@ -339,10 +322,6 @@ export class IFrameWallet implements IWebWallet {
               partnerId,
               rpcEndpoint: `https://${chainId}.${RPC_URL}`, // TODO (ew) shouldnt be needed
             },
-            // Can hide the iframe if the partner has full control (no user approvals)
-            showIframe: permissions?.permissions.includes("FULL_CONTROL_V1")
-              ? false
-              : isEcosystem,
           });
         return signedTypedData as Hex;
       },
