@@ -4,12 +4,14 @@ import { ecosystemWallet } from "thirdweb/wallets";
 import { StyledConnectEmbed } from "../styled-connect-embed";
 
 const getEcosystem = () => {
-  if (process.env.NEXT_PUBLIC_IN_APP_WALLET_URL?.endsWith(".thirdweb.com")) {
-    // prod ecosystem
-    return "ecosystem.new-age";
+  if (
+    process.env.NEXT_PUBLIC_IN_APP_WALLET_URL?.endsWith(".thirdweb-dev.com")
+  ) {
+    // dev ecosystem
+    return "ecosystem.bonfire-development";
   }
-  // dev ecosystem
-  return "ecosystem.bonfire-development";
+  // prod ecosystem
+  return "ecosystem.new-age";
 };
 
 export function EcosystemConnectEmbed(
