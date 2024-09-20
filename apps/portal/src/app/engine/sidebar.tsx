@@ -97,5 +97,9 @@ export const sidebar: SideBar = {
       name: "FAQ",
       href: `${engineSlug}/faq`,
     },
+    {
+      name: "Troubleshooting",
+      href: `${engineSlug}/troubleshooting`,
+    },
   ],
 };
