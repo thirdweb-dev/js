@@ -135,6 +135,27 @@ export const ConnectWalletSocialOptions = (
   const isEmailEnabled = emailIndex !== -1;
   const phoneIndex = authOptions.indexOf("phone");
   const isPhoneEnabled = phoneIndex !== -1;
+  const socialLogins: SocialAuthOption[] = authOptions.filter((o) =>
+    socialAuthOptions.includes(o as SocialAuthOption),
+  ) as SocialAuthOption[];
+
+  const columnCount = useMemo(() => {
+    switch (socialLogins.length) {
+      case 7:
+        return 4;
+      case 6:
+        return 4;
+      default:
+        return 5;
+    }
+  }, [socialLogins.length]);
+
+  const socialLoginColumns: SocialAuthOption[][] = useMemo(() => {
+    return Array.from(
+      { length: Math.ceil(socialLogins.length / columnCount) },
+      (_, i) => socialLogins.slice(i * columnCount, (i + 1) * columnCount),
+    );
+  }, [socialLogins, columnCount]);
 
   const [manualInputMode, setManualInputMode] = useState<
     "email" | "phone" | "none" | null
@@ -174,10 +195,6 @@ export const ConnectWalletSocialOptions = (
   } else if (inputMode === "phone") {
     type = "tel";
   }
-
-  const socialLogins = authOptions.filter((o) =>
-    socialAuthOptions.includes(o as SocialAuthOption),
-  );
 
   const hasSocialLogins = socialLogins.length > 0;
   const ecosystemInfo = isEcosystemWallet(wallet)
@@ -315,49 +332,46 @@ export const ConnectWalletSocialOptions = (
       )}
       {/* Social Login */}
       {hasSocialLogins && (
-        <Container
-          flex="row"
-          center="x"
-          gap={socialLogins.length > 4 ? "xs" : "sm"}
-          style={{
-            justifyContent: "space-between",
-            display: "grid",
-            gridTemplateColumns: `repeat(${socialLogins.length}, 1fr)`,
-          }}
-        >
-          {socialLogins.map((loginMethod) => {
-            const imgIconSize = (() => {
-              if (!showOnlyIcons) {
-                return iconSize.md;
-              }
-              if (socialLogins.length > 4) {
-                return iconSize.md;
-              }
-              return iconSize.lg;
-            })();
-
-            return (
-              <SocialButton
-                aria-label={`Login with ${loginMethod}`}
-                data-variant={showOnlyIcons ? "icon" : "full"}
-                key={loginMethod}
-                variant={"outline"}
-                disabled={props.disabled}
-                onClick={() => {
-                  handleSocialLogin(loginMethod as SocialAuthOption);
-                }}
-              >
-                <Img
-                  src={socialIcons[loginMethod as SocialAuthOption]}
-                  width={imgIconSize}
-                  height={imgIconSize}
-                  client={props.client}
-                />
-                {!showOnlyIcons &&
-                  `${socialLogins.length === 1 ? "Continue with " : ""}${loginMethodsLabel[loginMethod as SocialAuthOption]}`}
-              </SocialButton>
-            );
-          })}
+        <Container flex="column" gap={socialLogins.length > 4 ? "xs" : "sm"}>
+          {socialLoginColumns.map((column) => (
+            <SocialButtonRow key={column[0]}>
+              {column.map((loginMethod) => {
+                const imgIconSize = (() => {
+                  if (!showOnlyIcons) {
+                    return iconSize.md;
+                  }
+                  if (socialLogins.length > 4) {
+                    return iconSize.md;
+                  }
+                  return iconSize.lg;
+                })();
+                return (
+                  <SocialButton
+                    aria-label={`Login with ${loginMethod}`}
+                    data-variant={showOnlyIcons ? "icon" : "full"}
+                    key={loginMethod}
+                    variant={"outline"}
+                    disabled={props.disabled}
+                    onClick={() => {
+                      handleSocialLogin(loginMethod as SocialAuthOption);
+                    }}
+                    style={{
+                      flexGrow: socialLogins.length < 7 ? 1 : 0,
+                    }}
+                  >
+                    <Img
+                      src={socialIcons[loginMethod as SocialAuthOption]}
+                      width={imgIconSize}
+                      height={imgIconSize}
+                      client={props.client}
+                    />
+                    {!showOnlyIcons &&
+                      `${socialLogins.length === 1 ? "Continue with " : ""}${loginMethodsLabel[loginMethod as SocialAuthOption]}`}
+                  </SocialButton>
+                );
+              })}
+            </SocialButtonRow>
+          ))}
         </Container>
       )}
 
@@ -476,8 +490,27 @@ export const ConnectWalletSocialOptions = (
   );
 };
 
+const SocialButtonRow = (props: { children: React.ReactNode[] }) => (
+  <Container
+    flex="row"
+    center="x"
+    gap={props.children.length > 4 ? "xs" : "sm"}
+    style={{
+      justifyContent: "center",
+      display: "flex",
+      ...{
+        "& > *": {
+          flexBasis: `${100 / props.children.length}%`,
+          maxWidth: `${100 / props.children.length}%`,
+        },
+      },
+    }}
+  >
+    {props.children}
+  </Container>
+);
+
 const SocialButton = /* @__PURE__ */ styled(Button)({
-  flexGrow: 1,
   "&[data-variant='full']": {
     display: "flex",
     justifyContent: "flex-start",
