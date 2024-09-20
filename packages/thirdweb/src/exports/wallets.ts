@@ -31,6 +31,7 @@ export {
   generateAccount,
   type GenerateAccountOptions,
 } from "../wallets/utils/generateAccount.js";
+export { generateInAppWallet } from "../wallets/in-app/core/wallet/generate.js";
 
 // private-key
 export {

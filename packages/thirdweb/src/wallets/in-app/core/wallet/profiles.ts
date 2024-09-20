@@ -63,7 +63,7 @@ export async function linkProfile(
   auth: MultiStepAuthArgsType | SingleStepAuthArgsType,
 ): Promise<Profile[]> {
   if (wallet.id !== "inApp") {
-    throw new Error("Multi-auth currently only supports in-app wallets");
+    throw new Error("Unified identity currently only supports in-app wallets");
   }
 
   return (

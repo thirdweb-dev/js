@@ -8,37 +8,37 @@ import type { Ecosystem } from "../../types.js";
  * @internal
  */
 export async function generateWallet({
-  authToken,
-  client,
-  ecosystem,
+	authToken,
+	client,
+	ecosystem,
 }: {
-  client: ThirdwebClient;
-  ecosystem: Ecosystem;
-  authToken: string;
+	client: ThirdwebClient;
+	authToken: string;
+	ecosystem: Ecosystem;
 }) {
-  const clientFetch = getClientFetch(client, ecosystem);
-  const response = await clientFetch(
-    `${getThirdwebBaseUrl("inAppWallet")}/api/v1/enclave-wallet/generate`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-thirdweb-client-id": client.clientId,
-        Authorization: `Bearer embedded-wallet-token:${authToken}`,
-      },
-    },
-  );
+	const clientFetch = getClientFetch(client, ecosystem);
+	const response = await clientFetch(
+		`${getThirdwebBaseUrl("inAppWallet")}/api/v1/enclave-wallet/generate`,
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"x-thirdweb-client-id": client.clientId,
+				Authorization: `Bearer embedded-wallet-token:${authToken}`,
+			},
+		},
+	);
 
-  if (!response.ok) {
-    throw new Error("Failed to generate wallet");
-  }
+	if (!response.ok) {
+		throw new Error("Failed to generate wallet");
+	}
 
-  const { wallet } = (await response.json()) as {
-    wallet: {
-      address: string;
-      type: "enclave";
-    };
-  };
+	const { wallet } = (await response.json()) as {
+		wallet: {
+			address: string;
+			type: "enclave";
+		};
+	};
 
-  return wallet;
+	return wallet;
 }
