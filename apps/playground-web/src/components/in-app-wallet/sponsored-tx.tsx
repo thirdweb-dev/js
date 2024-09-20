@@ -1,5 +1,6 @@
 "use client";
 
+import { baseSepolia } from "thirdweb/chains";
 import { claimTo, getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
 import {
   MediaRenderer,
@@ -8,6 +9,7 @@ import {
   useReadContract,
 } from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
+import { StyledConnectButton } from "../styled-connect-button";
 import { editionDropContract, editionDropTokenId } from "./constants";
 
 export function SponsoredInAppTxPreview() {
@@ -25,6 +27,14 @@ export function SponsoredInAppTxPreview() {
 
   return (
     <div className="flex flex-col">
+      <div className="flex justify-center">
+        <StyledConnectButton
+          accountAbstraction={{
+            sponsorGas: true,
+            chain: baseSepolia,
+          }}
+        />
+      </div>
       {isNftLoading ? (
         <div className="w-full mt-24">Loading...</div>
       ) : (
@@ -42,24 +52,26 @@ export function SponsoredInAppTxPreview() {
                 You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
                 Kittens
               </p>
-              <TransactionButton
-                transaction={() =>
-                  claimTo({
-                    contract: editionDropContract,
-                    tokenId: editionDropTokenId,
-                    to: smartAccount.address,
-                    quantity: 1n,
-                  })
-                }
-                onError={(error) => {
-                  alert(`Error: ${error.message}`);
-                }}
-                onTransactionConfirmed={async () => {
-                  alert("Minted successful!");
-                }}
-              >
-                Mint
-              </TransactionButton>
+              <div className="flex justify-center">
+                <TransactionButton
+                  transaction={() =>
+                    claimTo({
+                      contract: editionDropContract,
+                      tokenId: editionDropTokenId,
+                      to: smartAccount.address,
+                      quantity: 1n,
+                    })
+                  }
+                  onError={(error) => {
+                    alert(`Error: ${error.message}`);
+                  }}
+                  onTransactionConfirmed={async () => {
+                    alert("Minted successful!");
+                  }}
+                >
+                  Mint
+                </TransactionButton>
+              </div>
             </>
           ) : (
             <p
