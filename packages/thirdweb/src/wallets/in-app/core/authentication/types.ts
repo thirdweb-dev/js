@@ -243,4 +243,5 @@ export type GetUser =
 
 export type GetAuthenticatedUserParams = {
   client: ThirdwebClient;
+  ecosystem?: Ecosystem;
 };

@@ -51,8 +51,8 @@ async function getInAppWalletConnector(
 export async function getAuthenticatedUser(
   options: GetAuthenticatedUserParams,
 ) {
-  const { client } = options;
-  const connector = await getInAppWalletConnector(client);
+  const { client, ecosystem } = options;
+  const connector = await getInAppWalletConnector(client, ecosystem);
   const user = await connector.getUser();
   switch (user.status) {
     case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {

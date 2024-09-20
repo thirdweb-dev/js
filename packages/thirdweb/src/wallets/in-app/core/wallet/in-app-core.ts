@@ -17,10 +17,7 @@ import type {
 } from "../authentication/types.js";
 import type { InAppConnector } from "../interfaces/connector.js";
 
-const connectorCache = new WeakMap<
-  { client: ThirdwebClient; ecosystem?: Ecosystem },
-  InAppConnector
->();
+const connectorCache = new Map<string, InAppConnector>();
 
 /**
  * @internal
@@ -30,7 +27,7 @@ export async function getOrCreateInAppWalletConnector(
   connectorFactory: (client: ThirdwebClient) => Promise<InAppConnector>,
   ecosystem?: Ecosystem,
 ) {
-  const key = { client, ecosystem };
+  const key = JSON.stringify({ clientId: client.clientId, ecosystem });
   if (connectorCache.has(key)) {
     return connectorCache.get(key) as InAppConnector;
   }

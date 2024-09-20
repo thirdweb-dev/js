@@ -20,7 +20,7 @@ import {
   type WalletAddressObjectType,
 } from "../../core/authentication/types.js";
 import type { Ecosystem } from "../types.js";
-import { getEnclaveUserStatus } from "./actions/get-enclave-user-status.js";
+import { getUserStatus } from "./actions/get-enclave-user-status.js";
 import { signMessage as signEnclaveMessage } from "./actions/sign-message.enclave.js";
 import { signTransaction as signEnclaveTransaction } from "./actions/sign-transaction.enclave.js";
 import { signTypedData as signEnclaveTypedData } from "./actions/sign-typed-data.enclave.js";
@@ -96,11 +96,12 @@ export class EnclaveWallet implements IWebWallet {
       return { status: UserWalletStatus.LOGGED_OUT };
     }
 
-    const userStatus = await getEnclaveUserStatus({
+    const userStatus = await getUserStatus({
       authToken: token,
       client: this.client,
       ecosystem: this.ecosystem,
     });
+
     if (!userStatus) {
       return { status: UserWalletStatus.LOGGED_OUT };
     }
@@ -108,10 +109,10 @@ export class EnclaveWallet implements IWebWallet {
 
     const authDetails = {
       email: userStatus.linkedAccounts.find(
-        (account) => account.type === "email",
+        (account) => account.details.email !== undefined,
       )?.details.email,
       phoneNumber: userStatus.linkedAccounts.find(
-        (account) => account.type === "phone",
+        (account) => account.details.phone !== undefined,
       )?.details.phone,
       userWalletId: userStatus.id || "",
       recoveryShareManagement: RecoveryShareManagement.ENCLAVE,

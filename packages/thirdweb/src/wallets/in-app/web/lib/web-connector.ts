@@ -20,7 +20,7 @@ import {
   UserWalletStatus,
 } from "../../core/authentication/types.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
-import { getEnclaveUserStatus } from "../lib/actions/get-enclave-user-status.js";
+import { getUserStatus } from "../lib/actions/get-enclave-user-status.js";
 import type { Ecosystem, InAppWalletConstructorType } from "../types.js";
 import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { Auth, type AuthQuerierTypes } from "./auth/iframe-auth.js";
@@ -152,7 +152,7 @@ export class InAppWebConnector implements InAppConnector {
       );
     }
 
-    const user = await getEnclaveUserStatus({
+    const user = await getUserStatus({
       authToken: authToken || (storedAuthToken as string),
       client: this.client,
       ecosystem: this.ecosystem,

@@ -9,7 +9,7 @@ import type { Ecosystem } from "../../types.js";
  *
  * @internal
  */
-export async function getEnclaveUserStatus({
+export async function getUserStatus({
   authToken,
   client,
   ecosystem,

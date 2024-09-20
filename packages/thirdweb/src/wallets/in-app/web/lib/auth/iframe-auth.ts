@@ -11,7 +11,7 @@ import type {
 import type { ClientIdWithQuerierType, Ecosystem } from "../../types.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { generateWallet } from "../actions/generate-wallet.enclave.js";
-import { getEnclaveUserStatus } from "../actions/get-enclave-user-status.js";
+import { getUserStatus } from "../actions/get-enclave-user-status.js";
 import { BaseLogin } from "./base-login.js";
 
 export type AuthQuerierTypes = {
@@ -111,7 +111,7 @@ export class Auth {
   ): Promise<AuthLoginReturnType> {
     await this.preLogin();
 
-    const user = await getEnclaveUserStatus({
+    const user = await getUserStatus({
       authToken: authToken.storedToken.cookieString,
       client: this.client,
       ecosystem: this.ecosystem,
