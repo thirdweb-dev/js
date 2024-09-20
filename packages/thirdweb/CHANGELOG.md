@@ -1,5 +1,35 @@
 # thirdweb
 
+## 5.58.0
+
+### Minor Changes
+
+- [#4692](https://github.com/thirdweb-dev/js/pull/4692) [`0a7448c`](https://github.com/thirdweb-dev/js/commit/0a7448cb2b739b3882824fc98ef075a0416d6434) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Login to an in-app wallet with your Coinbase account
+
+  ```ts
+  import { inAppWallet } from "thirdweb/react";
+
+  const wallet = inAppWallet();
+
+  const account = await wallet.connect({
+    strategy: "coinbase",
+    chain: mainnet,
+    client: thirdwebClient,
+  });
+  ```
+
+### Patch Changes
+
+- [#4709](https://github.com/thirdweb-dev/js/pull/4709) [`b033784`](https://github.com/thirdweb-dev/js/commit/b0337849a5f7f6542eb48eed013236ec14ce189a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Displays the social login provider in the details modal
+
+- [#4684](https://github.com/thirdweb-dev/js/pull/4684) [`c1008a5`](https://github.com/thirdweb-dev/js/commit/c1008a5314616c2e0ffa33af0fcfa9dd58855e9a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Migrates existing sharded ecosystem wallets to enclaves
+
+- [#4716](https://github.com/thirdweb-dev/js/pull/4716) [`3229e1f`](https://github.com/thirdweb-dev/js/commit/3229e1f03c3cbb62ddc8dccf22ad8a8feb0a95f0) Thanks [@MananTank](https://github.com/MananTank)! - Export `isGetNFTSupported` extension from "thirdweb/erc1155/extensions"
+
+- [#4715](https://github.com/thirdweb-dev/js/pull/4715) [`7d547a4`](https://github.com/thirdweb-dev/js/commit/7d547a4e336ae7c1e43c8413a1640452d1e1f8f9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix showing user info for ecosystem wallets
+
+- [#4718](https://github.com/thirdweb-dev/js/pull/4718) [`11a833e`](https://github.com/thirdweb-dev/js/commit/11a833e1dce3cfa51745e2ddee9354a1c2003905) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improve arrangement of social icons in Connect UI
+
 ## 5.57.3
 
 ### Patch Changes
