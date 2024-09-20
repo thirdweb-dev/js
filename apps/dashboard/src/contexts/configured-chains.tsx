@@ -87,32 +87,6 @@ export const ModifyChainContext = createContext<
 // eslint-disable-next-line no-restricted-syntax
 export const SupportedChainsReadyContext = createContext(false);
 
-/**
- * LEGACY
- *
- * Flag indicating if the "Network Config" Modal is open or not
- */
-// eslint-disable-next-line no-restricted-syntax
-export const isNetworkConfigModalOpenCtx = createContext(false);
-// eslint-disable-next-line no-restricted-syntax
-export const SetIsNetworkConfigModalOpenCtx = createContext<
-  ((value: boolean) => void) | undefined
->(undefined);
-
-/**
- * LEGACY
- *
- * Chain object to be edited in the "Network Config" Modal
- */
-// eslint-disable-next-line no-restricted-syntax
-export const EditChainContext = createContext<ChainMetadata | undefined>(
-  undefined,
-);
-// eslint-disable-next-line no-restricted-syntax
-export const SetEditChainContext = createContext<
-  ((chain: ChainMetadata | undefined) => void) | undefined
->(undefined);
-
 const replaceRpcsWithDevUrl = (chains: ChainMetadata[]) => {
   if (isProd) {
     return chains;
@@ -137,11 +111,6 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
   const [isSupportedChainsReady, setIsSupportedChainsReady] = useState(false);
   const [recentlyUsedChainIds, setRecentlyUsedChainIds] = useState<number[]>(
     [],
-  );
-  const [isNetworkConfigModalOpen, setIsNetworkConfigModalOpen] =
-    useState(false);
-  const [editChain, setEditChain] = useState<ChainMetadata | undefined>(
-    undefined,
   );
 
   const addRecentlyUsedChainId = useCallback((chainId: number) => {
@@ -327,19 +296,7 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
                 <AddRecentlyUsedChainIdsContext.Provider
                   value={addRecentlyUsedChainId}
                 >
-                  <EditChainContext.Provider value={editChain}>
-                    <SetEditChainContext.Provider value={setEditChain}>
-                      <isNetworkConfigModalOpenCtx.Provider
-                        value={isNetworkConfigModalOpen}
-                      >
-                        <SetIsNetworkConfigModalOpenCtx.Provider
-                          value={setIsNetworkConfigModalOpen}
-                        >
-                          {props.children}
-                        </SetIsNetworkConfigModalOpenCtx.Provider>
-                      </isNetworkConfigModalOpenCtx.Provider>
-                    </SetEditChainContext.Provider>
-                  </EditChainContext.Provider>
+                  {props.children}
                 </AddRecentlyUsedChainIdsContext.Provider>
               </RecentlyUsedChainIdsContext.Provider>
             </RemoveChainModification.Provider>

@@ -15,14 +15,15 @@ import {
   useAddRecentlyUsedChainId,
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
-import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { Chain } from "thirdweb";
 import { AutoConnect, ConnectButton, useConnectModal } from "thirdweb/react";
+import { LazyConfigureNetworkModal } from "../../../../components/configure-networks/LazyConfigureNetworkModal";
+import type { StoredChain } from "../../../../contexts/configured-chains";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
 import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
@@ -38,12 +39,10 @@ export const CustomConnectWallet = (props: {
   const { theme } = useTheme();
   const recentChainsv4 = useRecentlyUsedChains();
   const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
-  // const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
   const t = theme === "light" ? "light" : "dark";
   const allv4Chains = useSupportedChains();
   const chainsRecord = useSupportedChainsRecord();
   const favChainsQuery = useFavoriteChains();
-  const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
   const allChains = useMemo(() => {
     return allv4Chains.map(mapV4ChainToV5Chain);
   }, [allv4Chains]);
@@ -51,6 +50,12 @@ export const CustomConnectWallet = (props: {
   const popularChainsWithMeta = useMemo(() => {
     return popularChains.map((x) => chainsRecord[x.id] || x);
   }, [chainsRecord]);
+
+  const [isNetworkConfigModalOpen, setIsNetworkConfigModalOpen] =
+    useState(false);
+  const [editChain, setEditChain] = useState<StoredChain | undefined>(
+    undefined,
+  );
 
   const chainSections = useMemo(() => {
     return [
@@ -102,50 +107,69 @@ export const CustomConnectWallet = (props: {
   }
 
   return (
-    <ConnectButton
-      theme={getSDKTheme(t)}
-      client={thirdwebClient}
-      connectModal={{
-        privacyPolicyUrl: "/privacy",
-        termsOfServiceUrl: "/tos",
-        showThirdwebBranding: false,
-        welcomeScreen: () => <ConnectWalletWelcomeScreen theme={t} />,
-      }}
-      appMetadata={{
-        name: "thirdweb",
-        logoUrl: "https://thirdweb.com/favicon.ico",
-        url: "https://thirdweb.com",
-      }}
-      onDisconnect={async () => {
-        try {
-          // log out the user
-          await fetch("/api/auth/logout", {
-            method: "POST",
-          });
-        } catch (err) {
-          console.error("Failed to log out", err);
-        }
-      }}
-      connectButton={{
-        className: props.connectButtonClassName,
-      }}
-      detailsButton={{
-        className: props.detailsButtonClassName,
-      }}
-      chains={allChains}
-      detailsModal={{
-        networkSelector: {
-          sections: chainSections,
-          onSwitch(chain) {
-            addRecentlyUsedChainId(chain.id);
+    <>
+      <ConnectButton
+        theme={getSDKTheme(t)}
+        client={thirdwebClient}
+        connectModal={{
+          privacyPolicyUrl: "/privacy",
+          termsOfServiceUrl: "/tos",
+          showThirdwebBranding: false,
+          welcomeScreen: () => <ConnectWalletWelcomeScreen theme={t} />,
+        }}
+        appMetadata={{
+          name: "thirdweb",
+          logoUrl: "https://thirdweb.com/favicon.ico",
+          url: "https://thirdweb.com",
+        }}
+        onDisconnect={async () => {
+          try {
+            // log out the user
+            await fetch("/api/auth/logout", {
+              method: "POST",
+            });
+          } catch (err) {
+            console.error("Failed to log out", err);
+          }
+        }}
+        connectButton={{
+          className: props.connectButtonClassName,
+        }}
+        detailsButton={{
+          className: props.detailsButtonClassName,
+        }}
+        chains={allChains}
+        detailsModal={{
+          networkSelector: {
+            sections: chainSections,
+            onSwitch(chain) {
+              addRecentlyUsedChainId(chain.id);
+            },
+            renderChain(props) {
+              return (
+                <CustomChainRenderer
+                  {...props}
+                  openEditChainModal={(c) => {
+                    setIsNetworkConfigModalOpen(true);
+                    setEditChain(c);
+                  }}
+                />
+              );
+            },
+            onCustomClick: () => {
+              setEditChain(undefined);
+              setIsNetworkConfigModalOpen(true);
+            },
           },
-          renderChain: CustomChainRenderer,
-          onCustomClick: () => {
-            setIsNetworkConfigModalOpen(true);
-          },
-        },
-      }}
-    />
+        }}
+      />
+
+      <LazyConfigureNetworkModal
+        open={isNetworkConfigModalOpen}
+        onOpenChange={setIsNetworkConfigModalOpen}
+        editChain={editChain}
+      />
+    </>
   );
 };
 

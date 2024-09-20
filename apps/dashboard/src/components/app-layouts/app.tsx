@@ -11,7 +11,6 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { ConfigureNetworkModal } from "components/configure-networks/ConfigureNetworkModal";
 import { AppShell, type AppShellProps } from "components/layout/app-shell";
 import { Onboarding as OnboardingModal } from "components/onboarding";
 import { OpCreditsGrantedModalWrapper } from "components/onboarding/OpCreditsGrantedModalWrapper";
@@ -20,11 +19,6 @@ import { AllChainsProvider } from "contexts/all-chains";
 import { ChainsProvider } from "contexts/configured-chains";
 import { ErrorProvider } from "contexts/error-handler";
 import { isSanctionedAddress } from "data/eth-sanctioned-addresses";
-import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
-import {
-  useIsNetworkConfigModalOpen,
-  useSetIsNetworkConfigModalOpen,
-} from "hooks/networkConfigModal";
 import { useEffect, useMemo, useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import { Heading } from "tw-components";
@@ -62,7 +56,6 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
                 <DashboardThirdwebProvider>
                   <SanctionedAddressesChecker>
                     <PosthogIdentifier />
-                    <ConfigModal />
 
                     <OnboardingModal />
                     <OpCreditsGrantedModalWrapper />
@@ -105,22 +98,3 @@ const SanctionedAddressesChecker: ComponentWithChildren = ({ children }) => {
   }
   return <>{children}</>;
 };
-
-function ConfigModal() {
-  const isNetworkConfigModalOpen = useIsNetworkConfigModalOpen();
-  const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
-  const addRecentlyUsedChains = useAddRecentlyUsedChainId();
-
-  if (!isNetworkConfigModalOpen) {
-    return null;
-  }
-
-  return (
-    <ConfigureNetworkModal
-      onNetworkAdded={(_chain) => {
-        addRecentlyUsedChains(_chain.chainId);
-      }}
-      onClose={() => setIsNetworkConfigModalOpen(false)}
-    />
-  );
-}

@@ -209,6 +209,7 @@ const ContractPage: ThirdwebNextPage = () => {
                 setChainNotFound(false);
               }
             }}
+            editChain={undefined}
           />
         </div>
       </div>

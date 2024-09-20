@@ -14,15 +14,15 @@ import {
   useAddRecentlyUsedChainId,
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
-import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import { useTheme } from "next-themes";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { useActiveWallet } from "thirdweb/react";
 import { useNetworkSwitcherModal } from "thirdweb/react";
 import { getSDKTheme } from "../../app/components/sdk-component-theme";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
+import { LazyConfigureNetworkModal } from "../configure-networks/LazyConfigureNetworkModal";
 import { CustomChainRenderer } from "./CustomChainRenderer";
 
 interface NetworkSelectorButtonProps {
@@ -41,7 +41,11 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   const client = useThirdwebClient();
   const recentlyUsedChains = useRecentlyUsedChains();
   const addRecentlyUsedChains = useAddRecentlyUsedChainId();
-  const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
+  const [isNetworkConfigModalOpen, setIsNetworkConfigModalOpen] =
+    useState(false);
+  const [editChain, setEditChain] = useState<StoredChain | undefined>(
+    undefined,
+  );
   const { theme } = useTheme();
   const supportedChains = useSupportedChains();
   const supportedChainsRecord = useSupportedChainsRecord();
@@ -137,10 +141,21 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
                 chains: (chains ?? []).map(mapV4ChainToV5Chain),
               },
             ],
-            renderChain: CustomChainRenderer,
+            renderChain(props) {
+              return (
+                <CustomChainRenderer
+                  {...props}
+                  openEditChainModal={(c) => {
+                    setIsNetworkConfigModalOpen(true);
+                    setEditChain(c);
+                  }}
+                />
+              );
+            },
             onCustomClick: networksEnabled
               ? undefined
               : () => {
+                  setEditChain(undefined);
                   setIsNetworkConfigModalOpen(true);
                 },
             async onSwitch(chain) {
@@ -160,6 +175,12 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
 
         <BiChevronDown className="ml-auto size-4" />
       </Button>
+
+      <LazyConfigureNetworkModal
+        open={isNetworkConfigModalOpen}
+        onOpenChange={setIsNetworkConfigModalOpen}
+        editChain={editChain}
+      />
     </>
   );
 };

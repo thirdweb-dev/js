@@ -5,13 +5,10 @@ import { ChainIcon } from "components/icons/ChainIcon";
 import { OPSponsoredChains } from "constants/chains";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
-import {
-  useSetEditChain,
-  useSetIsNetworkConfigModalOpen,
-} from "hooks/networkConfigModal";
 import { SettingsIcon } from "lucide-react";
 import { useMemo } from "react";
 import type { UseNetworkSwitcherModalOptions } from "thirdweb/react";
+import type { StoredChain } from "../../contexts/configured-chains";
 
 type ChainRenderProps = React.ComponentProps<
   NonNullable<UseNetworkSwitcherModalOptions["renderChain"]>
@@ -19,6 +16,7 @@ type ChainRenderProps = React.ComponentProps<
 
 type CustomChainRendererProps = ChainRenderProps & {
   disableChainConfig?: boolean;
+  openEditChainModal: (chain: StoredChain) => void;
 };
 
 export const CustomChainRenderer = ({
@@ -28,10 +26,9 @@ export const CustomChainRenderer = ({
   switchFailed,
   close,
   disableChainConfig,
+  openEditChainModal,
 }: CustomChainRendererProps) => {
-  const setIsOpenNetworkConfigModal = useSetIsNetworkConfigModalOpen();
   const addRecentlyUsedChain = useAddRecentlyUsedChainId();
-  const setEditChain = useSetEditChain();
   const supportedChainsRecord = useSupportedChainsRecord();
 
   const storedChain = useMemo(() => {
@@ -106,9 +103,8 @@ export const CustomChainRenderer = ({
             className="ml-auto p-2 leading-4 md:opacity-0 group-hover:opacity-100 hover:bg-transparent transition-opacity"
             aria-label="Configure Network"
             onClick={() => {
-              setEditChain(storedChain);
+              openEditChainModal(storedChain);
               addRecentlyUsedChain(chain.id);
-              setIsOpenNetworkConfigModal(true);
               if (close) {
                 close();
               } else {
