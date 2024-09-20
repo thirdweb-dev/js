@@ -53,7 +53,7 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
         </TableHeader>
         <TableBody>
           {[...partners].reverse().map((partner: Partner) => (
-            <EcosystemRow
+            <PartnerRow
               key={partner.id}
               partner={partner}
               ecosystem={ecosystem}
@@ -65,7 +65,7 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
   );
 }
 
-function EcosystemRow(props: {
+function PartnerRow(props: {
   partner: Partner;
   ecosystem: Ecosystem;
 }) {
@@ -114,7 +114,7 @@ function EcosystemRow(props: {
           : "Never prompt"}
       </TableCell>
       <td className="table-cell py-1 align-middle">
-        <div className="flex gap-1.5 justify-end">
+        <div className="flex gap-1.5 pr-1.5 justify-end">
           <UpdatePartnerModal
             partner={props.partner}
             ecosystem={props.ecosystem}
