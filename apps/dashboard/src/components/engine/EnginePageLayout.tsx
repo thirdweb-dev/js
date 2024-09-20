@@ -47,12 +47,16 @@ const sidebarLinkMeta: Array<{ pathId: string; label: string }> = [
     label: "Webhooks",
   },
   {
-    pathId: "configuration",
-    label: "Configuration",
-  },
-  {
     pathId: "metrics",
     label: "Metrics",
+  },
+  {
+    pathId: "alerts",
+    label: "Alerts",
+  },
+  {
+    pathId: "configuration",
+    label: "Configuration",
   },
 ];
 

@@ -104,4 +104,11 @@ export const engineKeys = {
     [...engineKeys.all, engineId, "systemMetrics"] as const,
   queueMetrics: (engineId: string) =>
     [...engineKeys.all, engineId, "queueMetrics"] as const,
+
+  alertRules: (engineId: string) =>
+    [...engineKeys.all, engineId, "alertRules"] as const,
+  alerts: (engineId: string) =>
+    [...engineKeys.all, engineId, "alerts"] as const,
+  notificationChannels: (engineId: string) =>
+    [...engineKeys.all, engineId, "notificationChannels"] as const,
 };

@@ -1,6 +1,11 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import type { ApiKey, ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
+import type {
+  EngineAlert,
+  EngineAlertRule,
+  EngineNotificationChannel,
+} from "@3rdweb-sdk/react/hooks/useEngine";
 
 function projectStub(id: string, teamId: string) {
   const project: Project = {
@@ -105,4 +110,49 @@ export function createApiKeyStub() {
   };
 
   return apiKeyStub;
+}
+
+export function createEngineAlertRuleStub(
+  id: string,
+  overrides: Partial<EngineAlertRule> = {},
+): EngineAlertRule {
+  return {
+    title: `Alert Rule ${id}`,
+    routingKey: `alert.${id}`,
+    description: `This is a description for alert rule ${id}`,
+    id: `alert-rule-${id}`,
+    createdAt: new Date(),
+    pausedAt: null,
+    ...overrides,
+  };
+}
+
+export function createEngineNotificationChannelStub(
+  id: string,
+  overrides: Partial<EngineNotificationChannel> = {},
+): EngineNotificationChannel {
+  return {
+    id: Math.random().toString(),
+    subscriptionRoutes: [`alert.${id}`],
+    type: "slack",
+    value:
+      "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+    createdAt: new Date(),
+    pausedAt: new Date(),
+    ...overrides,
+  };
+}
+
+export function createEngineAlertStub(
+  id: string,
+  overrides: Partial<EngineAlert> = {},
+): EngineAlert {
+  return {
+    alertRuleId: `alert-rule-${id}`,
+    endsAt: new Date(),
+    id: Math.random().toString(),
+    startsAt: new Date(),
+    status: "pending",
+    ...overrides,
+  };
 }

@@ -147,3 +147,17 @@ html {
 body {
   min-height: 100%;
 }
+
+/* Fix colors on autofilled inputs  */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  /* Revert text color */
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  color: hsl(var(--foreground)) !important;
+  caret-color: hsl(var(--foreground)) !important;
+
+  /* Revert background color */
+  transition: background-color 5000s ease-in-out 0s;
+}

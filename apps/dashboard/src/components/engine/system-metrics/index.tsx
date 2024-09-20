@@ -70,37 +70,48 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
     );
   }
 
-  let queueMetricsPanel = <Spinner className="h-4 w-4" />;
-  if (!queueMetricsQuery.data || queueMetricsQuery.isError) {
-    queueMetricsPanel = <p>N/A</p>;
-  } else {
+  let queueMetricsPanel = (
+    <div className="border border-border rounded-lg min-h-[200px] flex items-center justify-center">
+      <Spinner className="size-6" />
+    </div>
+  );
+
+  if (
+    !queueMetricsQuery.isPending &&
+    (!queueMetricsQuery.data || queueMetricsQuery.isError)
+  ) {
+    queueMetricsPanel = (
+      <div className="border border-border rounded-lg min-h-[200px] flex items-center justify-center">
+        No Data Available
+      </div>
+    );
+  } else if (queueMetricsQuery.data) {
     const numQueued = queueMetricsQuery.data.result.queued;
     const numPending = queueMetricsQuery.data.result.pending;
     const msToSend = queueMetricsQuery.data.result.latency?.msToSend;
     const msToMine = queueMetricsQuery.data.result.latency?.msToMine;
 
     queueMetricsPanel = (
-      <Card p={16}>
-        <Stack spacing={4}>
+      <Card p={8}>
+        <Stack spacing={6}>
           <Flex gap={2} align="center">
-            <Icon as={FaChartArea} />
             <Heading size="title.md">Queue Metrics</Heading>
           </Flex>
 
-          <div className="flex gap-x-24">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-12">
             <div className="flex-col gap-y-4">
-              <h2 className="font-semibold"># queued</h2>
-              <p>{numQueued}</p>
+              <h2 className="font-semibold"> Queued</h2>
+              <p className="text-muted-foreground">{numQueued}</p>
             </div>
             <div className="flex-col gap-y-4">
-              <h2 className="font-semibold"># pending</h2>
-              <p>{numPending}</p>
+              <h2 className="font-semibold">Pending</h2>
+              <p className="text-muted-foreground">{numPending}</p>
             </div>
 
             {msToSend && (
               <div className="flex-col gap-y-4">
                 <h2 className="font-semibold">Time to send</h2>
-                <p>
+                <p className="text-muted-foreground">
                   p50 {(msToSend.p50 / 1000).toFixed(2)}s, p90{" "}
                   {(msToSend.p90 / 1000).toFixed(2)}s
                 </p>
@@ -109,8 +120,10 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
             {msToMine && (
               <div className="flex-col gap-y-4">
                 <h2 className="font-semibold">Time to mine</h2>
-                p50 {(msToMine.p50 / 1000).toFixed(2)}s, p90{" "}
-                {(msToMine.p90 / 1000).toFixed(2)}s
+                <p className="text-muted-foreground">
+                  p50 {(msToMine.p50 / 1000).toFixed(2)}s, p90{" "}
+                  {(msToMine.p90 / 1000).toFixed(2)}s
+                </p>
               </div>
             )}
           </div>
