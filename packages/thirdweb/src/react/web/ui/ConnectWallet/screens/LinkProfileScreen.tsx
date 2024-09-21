@@ -78,6 +78,7 @@ export function LinkProfileScreen(props: {
             title: props.locale.manageWallet.linkProfile,
             showThirdwebBranding: false,
           }}
+          walletConnect={props.walletConnect}
           isLinking={true}
           goBack={props.onBack}
         />
