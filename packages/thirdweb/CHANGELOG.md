@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.58.2
+
+### Patch Changes
+
+- [#4737](https://github.com/thirdweb-dev/js/pull/4737) [`2707db1`](https://github.com/thirdweb-dev/js/commit/2707db136ed98ed1c39dd5da20f0ebd41dcaf5b9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow linking accounts when using in-app + smart wallets
+
 ## 5.58.1
 
 ### Patch Changes
