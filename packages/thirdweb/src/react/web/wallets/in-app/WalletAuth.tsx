@@ -3,6 +3,7 @@ import { defineChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { linkProfile } from "../../../../wallets/in-app/core/wallet/profiles.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useAddConnectedWallet } from "../../../core/hooks/wallets/useAddConnectedWallet.js";
 import AllWalletsUI from "../../ui/ConnectWallet/Modal/AllWalletsUI.js";
@@ -18,7 +19,7 @@ import { LoadingState } from "../shared/LoadingState.js";
 import type { InAppWalletLocale } from "../shared/locale/types.js";
 
 export function WalletAuth(props: {
-  wallet: Wallet<"inApp">;
+  wallet: Wallet<"inApp" | EcosystemWalletId>;
   client: ThirdwebClient;
   done: () => void;
   size: "compact" | "wide";

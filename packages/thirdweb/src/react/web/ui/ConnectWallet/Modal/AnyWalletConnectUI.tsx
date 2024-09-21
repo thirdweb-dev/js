@@ -287,6 +287,7 @@ export function AnyWalletConnectUI(props: {
           client={props.client}
           size={props.size}
           meta={props.meta}
+          walletConnect={props.walletConnect}
           connectLocale={props.connectLocale}
         />
       </Suspense>
