@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.58.1
+
+### Patch Changes
+
+- [#4733](https://github.com/thirdweb-dev/js/pull/4733) [`824b1bd`](https://github.com/thirdweb-dev/js/commit/824b1bdb69cb02644dbe9d77f965bdab6e046ab5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Enable account linking for ecosystem wallets
+
 ## 5.58.0
 
 ### Minor Changes
