@@ -8,7 +8,6 @@ import {
 import type { BasicContract } from "contract-ui/types/types";
 import { getAllMultichainRegistry } from "dashboard-extensions/common/read/getAllMultichainRegistry";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import { sendAndConfirmTransaction } from "thirdweb";
 import { remove } from "thirdweb/extensions/thirdweb";
@@ -42,7 +41,8 @@ export const useAllContractList = (
 ) => {
   const multiChainQuery = useMultiChainRegContractList(walletAddress);
 
-  const configuredChainsRecord = useSupportedChainsRecord();
+  // TODO - instead of using ALL chains, fetch only the ones used here
+  const { idToChain } = useAllChainsData();
   const contractList = useMemo(() => {
     const data = multiChainQuery.data || [];
 
@@ -51,14 +51,12 @@ export const useAllContractList = (
 
     // biome-ignore lint/complexity/noForEach: FIXME
     data.forEach((net) => {
-      if (net.chainId in configuredChainsRecord) {
-        const chainRecord = configuredChainsRecord[net.chainId];
-        if (chainRecord.status !== "deprecated") {
-          if (chainRecord.testnet) {
-            testnets.push(net);
-          } else {
-            mainnets.push(net);
-          }
+      const chn = idToChain.get(net.chainId);
+      if (chn && chn.status !== "deprecated") {
+        if (chn.testnet) {
+          testnets.push(net);
+        } else {
+          mainnets.push(net);
         }
       }
     });
@@ -71,7 +69,7 @@ export const useAllContractList = (
 
     testnets.sort((a, b) => a.chainId - b.chainId);
     return mainnets.concat(testnets);
-  }, [multiChainQuery.data, onlyMainnet, configuredChainsRecord]);
+  }, [multiChainQuery.data, onlyMainnet, idToChain]);
 
   return {
     ...multiChainQuery,
@@ -85,12 +83,10 @@ type RemoveContractParams = {
 };
 
 export function useRemoveContractMutation() {
-  const { chainIdToChainRecord } = useAllChainsData();
   const queryClient = useQueryClient();
   const account = useActiveAccount();
   return useMutation({
     mutationFn: async (data: RemoveContractParams) => {
-      invariant(chainIdToChainRecord, "chains not initialzed yet");
       invariant(data.chainId, "chainId not provided");
       invariant(account, "No wallet connected");
       const { contractAddress, chainId } = data;

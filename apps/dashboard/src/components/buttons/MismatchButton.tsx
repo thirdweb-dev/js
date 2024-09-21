@@ -37,7 +37,6 @@ import type {
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useSupportedChain } from "hooks/chains/configureChains";
 import { ExternalLinkIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -58,6 +57,7 @@ import {
 import { privateKeyToAccount } from "thirdweb/wallets";
 import { Button, type ButtonProps, Card, Heading, Text } from "tw-components";
 import { THIRDWEB_API_HOST } from "../../constants/urls";
+import { useAllChainsData } from "../../hooks/chains/allChains";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
 
 const GAS_FREE_CHAINS = [
@@ -408,10 +408,12 @@ const MismatchNotice: React.FC<{
   const activeWallet = useActiveWallet();
   const actuallyCanAttemptSwitch =
     activeWallet && activeWallet.id !== "global.safe";
-  const walletConnectedNetworkInfo = useSupportedChain(connectedChainId || -1);
+  const { idToChain } = useAllChainsData();
+  const walletConnectedNetworkInfo = connectedChainId
+    ? idToChain.get(connectedChainId)
+    : undefined;
   const isMobile = useBreakpointValue({ base: true, md: false });
-
-  const chain = useSupportedChain(desiredChainId || -1);
+  const chain = desiredChainId ? idToChain.get(desiredChainId) : undefined;
   const chainV5 = useV5DashboardChain(desiredChainId);
 
   const onSwitchWallet = useCallback(async () => {

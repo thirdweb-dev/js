@@ -22,7 +22,6 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { useState } from "react";
 import { FiArrowLeft, FiArrowRight, FiInfo } from "react-icons/fi";
 import { toTokens } from "thirdweb";
-import type { ChainMetadata } from "thirdweb/chains";
 import {
   Button,
   Card,
@@ -101,7 +100,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   isFetched,
   instanceUrl,
 }) => {
-  const { chainIdToChainRecord } = useAllChainsData();
+  const { idToChain } = useAllChainsData();
   const transactionDisclosure = useDisclosure();
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
@@ -128,7 +127,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           return;
         }
 
-        const chain = chainIdToChainRecord[Number.parseInt(chainId)];
+        const chain = idToChain.get(Number.parseInt(chainId));
         if (chain) {
           return (
             <Flex align="center" gap={2} className="py-2">
@@ -200,7 +199,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           return;
         }
 
-        const chain = chainIdToChainRecord[Number.parseInt(chainId)];
+        const chain = idToChain.get(Number.parseInt(chainId));
         if (chain) {
           const explorer = chain.explorers?.[0];
           if (!explorer) {
@@ -306,7 +305,7 @@ const TransactionDetailsDrawer = ({
   onClickPrevious?: () => void;
   onClickNext?: () => void;
 }) => {
-  const { chainIdToChainRecord } = useAllChainsData();
+  const { idToChain } = useAllChainsData();
   const errorMessageDisclosure = useDisclosure();
   const advancedTxDetailsDisclosure = useDisclosure();
 
@@ -314,10 +313,9 @@ const TransactionDetailsDrawer = ({
     return null;
   }
 
-  const chain: ChainMetadata | undefined =
-    chainIdToChainRecord[Number.parseInt(transaction.chainId)];
-  const decimals = chain.nativeCurrency.decimals || 18;
-  const symbol = chain.nativeCurrency.symbol || "ETH";
+  const chain = idToChain.get(Number.parseInt(transaction.chainId));
+  const decimals = chain?.nativeCurrency.decimals || 18;
+  const symbol = chain?.nativeCurrency.symbol || "ETH";
   const explorer = chain?.explorers?.[0];
 
   const status = statusDetails[transaction.status as EngineStatus];

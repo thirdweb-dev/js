@@ -71,13 +71,13 @@ export const ContractSubscriptionTable: React.FC<
   const removeDisclosure = useDisclosure();
   const [selectedContractSub, setSelectedContractSub] =
     useState<EngineContractSubscription>();
-  const { chainIdToChainRecord } = useAllChainsData();
+  const { idToChain } = useAllChainsData();
 
   const columns = [
     columnHelper.accessor("chainId", {
       header: "Chain",
       cell: (cell) => {
-        const chain = chainIdToChainRecord[cell.getValue()];
+        const chain = idToChain.get(cell.getValue());
         return (
           <Flex align="center" gap={2}>
             <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
@@ -90,7 +90,7 @@ export const ContractSubscriptionTable: React.FC<
       header: "Contract Address",
       cell: (cell) => {
         const { chainId } = cell.row.original;
-        const chain = chainIdToChainRecord[chainId];
+        const chain = idToChain.get(chainId);
         const explorer = chain?.explorers?.[0];
         if (!explorer) {
           return (
@@ -338,8 +338,8 @@ const RemoveModal = ({
     "Successfully removed contract subscription.",
     "Failed to remove contract subscription.",
   );
-  const { chainIdToChainRecord } = useAllChainsData();
-  const chain = chainIdToChainRecord[contractSubscription.chainId];
+  const { idToChain } = useAllChainsData();
+  const chain = idToChain.get(contractSubscription.chainId);
 
   const onClick = () => {
     removeContractSubscription(

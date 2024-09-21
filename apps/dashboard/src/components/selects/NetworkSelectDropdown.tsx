@@ -6,8 +6,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ChainIcon } from "components/icons/ChainIcon";
-import { useSupportedChains } from "hooks/chains/configureChains";
 import { useMemo } from "react";
+import { useAllChainsData } from "../../hooks/chains/allChains";
 
 interface NetworkSelectDropdownProps {
   enabledChainIds?: number[];
@@ -26,26 +26,24 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
   selectedChain,
   onSelect,
 }) => {
-  const supportedChains = useSupportedChains();
+  const { allChains } = useAllChainsData();
 
   const chains = useMemo(() => {
     // return only enabled chains if enabled chains are specified
     if (enabledChainIds && enabledChainIds.length > 0) {
       const enabledChainIdsSet = new Set(enabledChainIds);
-      return supportedChains.filter((chain) =>
-        enabledChainIdsSet.has(chain.chainId),
-      );
+      return allChains.filter((chain) => enabledChainIdsSet.has(chain.chainId));
     }
     // return supported chains that are not disabled if disabled chains are specified
     if (disabledChainIds && disabledChainIds.length > 0) {
       const disabledChainIdsSet = new Set(disabledChainIds);
-      return supportedChains.filter(
+      return allChains.filter(
         (chain) => !disabledChainIdsSet.has(chain.chainId),
       );
     }
     // if no enabled or disabled chains are specified, return all supported chains
-    return supportedChains;
-  }, [supportedChains, enabledChainIds, disabledChainIds]);
+    return allChains;
+  }, [allChains, enabledChainIds, disabledChainIds]);
 
   const cleanChainName = (chainName: string) => {
     return chainName.replace("Mainnet", "");

@@ -1,7 +1,9 @@
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import type { StoredChain } from "contexts/configured-chains";
-import { useAddRecentlyUsedChainId } from "../../hooks/chains/recentlyUsedChains";
+import {
+  type StoredChain,
+  addRecentlyUsedChainId,
+} from "../../stores/chainStores";
 import { ConfigureNetworks } from "./ConfigureNetworks";
 
 export type ConfigureNetworkModalProps = {
@@ -14,8 +16,6 @@ export type ConfigureNetworkModalProps = {
 export const ConfigureNetworkModal: React.FC<ConfigureNetworkModalProps> = (
   props,
 ) => {
-  const addRecentlyUsedChains = useAddRecentlyUsedChainId();
-
   const onModalClose = () => {
     props.onOpenChange(false);
   };
@@ -30,7 +30,7 @@ export const ConfigureNetworkModal: React.FC<ConfigureNetworkModalProps> = (
         <ChakraProviderSetup>
           <ConfigureNetworks
             onNetworkAdded={(chain) => {
-              addRecentlyUsedChains(chain.chainId);
+              addRecentlyUsedChainId(chain.chainId);
               props.onNetworkAdded?.(chain);
               onModalClose();
             }}

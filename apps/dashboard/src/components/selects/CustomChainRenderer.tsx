@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { OPSponsoredChains } from "constants/chains";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
-import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
 import { SettingsIcon } from "lucide-react";
-import { useMemo } from "react";
 import type { UseNetworkSwitcherModalOptions } from "thirdweb/react";
-import type { StoredChain } from "../../contexts/configured-chains";
+import { useAllChainsData } from "../../hooks/chains/allChains";
+import {
+  type StoredChain,
+  addRecentlyUsedChainId,
+} from "../../stores/chainStores";
 
 type ChainRenderProps = React.ComponentProps<
   NonNullable<UseNetworkSwitcherModalOptions["renderChain"]>
@@ -28,15 +29,8 @@ export const CustomChainRenderer = ({
   disableChainConfig,
   openEditChainModal,
 }: CustomChainRendererProps) => {
-  const addRecentlyUsedChain = useAddRecentlyUsedChainId();
-  const supportedChainsRecord = useSupportedChainsRecord();
-
-  const storedChain = useMemo(() => {
-    return chain.id in supportedChainsRecord
-      ? supportedChainsRecord[chain.id]
-      : undefined;
-  }, [chain, supportedChainsRecord]);
-
+  const { idToChain } = useAllChainsData();
+  const storedChain = idToChain.get(chain.id);
   const isDeprecated = storedChain?.status === "deprecated";
   const isSponsored = OPSponsoredChains.includes(chain.id);
 
@@ -104,7 +98,7 @@ export const CustomChainRenderer = ({
             aria-label="Configure Network"
             onClick={() => {
               openEditChainModal(storedChain);
-              addRecentlyUsedChain(chain.id);
+              addRecentlyUsedChainId(chain.id);
               if (close) {
                 close();
               } else {

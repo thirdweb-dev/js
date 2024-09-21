@@ -75,7 +75,7 @@ const AddModal = ({
 }) => {
   const { mutate: createRelayer } = useEngineCreateRelayer(instanceUrl);
   const { data: backendWallets } = useEngineBackendWallets(instanceUrl);
-  const { slugToChainRecord, chainIdToChainRecord } = useAllChainsData();
+  const { idToChain } = useAllChainsData();
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Relayer created successfully.",
@@ -84,13 +84,13 @@ const AddModal = ({
 
   const form = useForm<AddModalInput>({
     defaultValues: {
-      chainId: slugToChainRecord.sepolia.chainId,
+      chainId: 11155111, // sepolia chain id
     },
   });
 
   const onSubmit = (data: AddModalInput) => {
     const createRelayerData: CreateRelayerInput = {
-      chain: chainIdToChainRecord[data.chainId]?.slug ?? "unknown",
+      chain: idToChain.get(data.chainId)?.slug ?? "unknown",
       backendWalletAddress: data.backendWalletAddress,
       name: data.name,
       allowedContracts: parseAddressListRaw(data.allowedContractsRaw),

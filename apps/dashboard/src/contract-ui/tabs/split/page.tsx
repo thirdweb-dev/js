@@ -9,7 +9,6 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import {
   type ThirdwebContract,
@@ -25,6 +24,7 @@ import {
 } from "thirdweb/react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { DistributeButton } from "./components/distribute-button";
 
 export type Balance = {
@@ -41,9 +41,9 @@ interface SplitPageProps {
 
 export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
   const address = useActiveAccount()?.address;
-  const configuredChainsRecord = useSupportedChainsRecord();
+  const { idToChain } = useAllChainsData();
   const chainId = contract.chain.id;
-  const v4Chain = configuredChainsRecord[chainId];
+  const v4Chain = idToChain.get(chainId);
   const contractAddress = contract.address;
   const nativeBalanceQuery = useWalletBalance({
     address: contractAddress,

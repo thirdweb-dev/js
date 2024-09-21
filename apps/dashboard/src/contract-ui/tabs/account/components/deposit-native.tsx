@@ -7,8 +7,8 @@ import { type ChangeEvent, useState } from "react";
 import { prepareTransaction, toWei } from "thirdweb";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { Card } from "tw-components";
-import type { StoredChain } from "../../../../contexts/configured-chains";
 import { useV5DashboardChain } from "../../../../lib/v5-adapter";
+import type { StoredChain } from "../../../../stores/chainStores";
 
 interface DepositNativeProps {
   address: string;

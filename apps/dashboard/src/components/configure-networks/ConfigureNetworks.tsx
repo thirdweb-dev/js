@@ -1,8 +1,10 @@
-import type { StoredChain } from "contexts/configured-chains";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
-import { useModifyChain } from "hooks/chains/useModifyChain";
 import { toast } from "sonner";
+import {
+  type StoredChain,
+  addChainOverrides,
+  addRecentlyUsedChainId,
+} from "../../stores/chainStores";
 import { ConfigureNetworkForm } from "./ConfigureNetworkForm";
 
 function useChainConfigTrack() {
@@ -26,12 +28,10 @@ interface ConfigureNetworksProps {
 
 export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
   const trackChainConfig = useChainConfigTrack();
-  const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
-  const modifyChain = useModifyChain();
   const { editChain } = props;
 
   const handleSubmit = (chain: StoredChain) => {
-    modifyChain(chain);
+    addChainOverrides(chain);
     addRecentlyUsedChainId(chain.chainId);
 
     if (chain.isCustom) {

@@ -28,7 +28,6 @@ import {
 } from "components/contract-components/hooks";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import type { CodeEnvironment } from "components/contract-tabs/code/types";
-import { useSupportedChain } from "hooks/chains/configureChains";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
@@ -38,6 +37,7 @@ import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { useActiveAccount } from "thirdweb/react";
 import { toFunctionSelector } from "thirdweb/utils";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
+import { useAllChainsData } from "../../../../hooks/chains/allChains";
 
 interface CodeOverviewProps {
   abi?: Abi;
@@ -592,7 +592,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   }, [isERC20, isERC721, isERC1155]);
 
   const chainId = useDashboardEVMChainId() || chainIdProp || 1;
-  const chainInfo = useSupportedChain(chainId || -1);
+  const { idToChain } = useAllChainsData();
+  const chainInfo = chainId ? idToChain.get(chainId) : undefined;
 
   const functions = useContractFunctions(abi || []);
   const events = useContractEvents(abi as Abi);

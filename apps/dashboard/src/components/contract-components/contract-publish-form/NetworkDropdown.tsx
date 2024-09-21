@@ -1,8 +1,8 @@
 import { Select } from "chakra-react-select";
 import type { SizeProp } from "chakra-react-select";
-import { useSupportedChains } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
+import { useAllChainsData } from "../../../hooks/chains/allChains";
 
 interface NetworkDropdownProps {
   useCleanChainName?: boolean;
@@ -26,10 +26,10 @@ export const NetworkDropdown: React.FC<NetworkDropdownProps> = ({
   size = "md",
 }) => {
   const form = useFormContext();
-  const supportedChains = useSupportedChains();
+  const { allChains } = useAllChainsData();
 
   const options = useMemo(() => {
-    return supportedChains.map((chain) => {
+    return allChains.map((chain) => {
       return {
         label: useCleanChainName
           ? cleanChainName(chain.name)
@@ -37,7 +37,7 @@ export const NetworkDropdown: React.FC<NetworkDropdownProps> = ({
         value: chain.chainId,
       };
     });
-  }, [supportedChains, useCleanChainName]);
+  }, [allChains, useCleanChainName]);
 
   const defaultValues = useMemo(() => {
     const networksEnabled = form?.watch(

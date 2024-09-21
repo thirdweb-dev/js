@@ -26,9 +26,6 @@ import {
 import { ChainIcon } from "components/icons/ChainIcon";
 import { NetworkSelectDropdown } from "components/selects/NetworkSelectDropdown";
 import type { BasicContract } from "contract-ui/types/types";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useChainSlug } from "hooks/chains/chainSlug";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import {
   DownloadIcon,
   EllipsisVerticalIcon,
@@ -45,6 +42,8 @@ import {
   usePagination,
   useTable,
 } from "react-table";
+import { useAllChainsData } from "../../../hooks/chains/allChains";
+import { useChainSlug } from "../../../hooks/chains/chainSlug";
 import { ImportModal } from "../import-contract/modal";
 import { AsyncContractNameCell, AsyncContractTypeCell } from "./cells";
 import { ShowMoreButton } from "./show-more-button";
@@ -198,8 +197,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
   chainIdsWithDeployments,
   loading,
 }) => {
-  const { chainIdToChainRecord } = useAllChainsData();
-  const configuredChains = useSupportedChainsRecord();
+  const { idToChain } = useAllChainsData();
 
   const columns: Column<(typeof combinedList)[number]>[] = useMemo(
     () => [
@@ -231,9 +229,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
         filter: "equals",
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => {
-          const data =
-            configuredChains[cell.row.original.chainId] ||
-            chainIdToChainRecord[cell.row.original.chainId];
+          const data = idToChain.get(cell.row.original.chainId);
           const cleanedChainName =
             data?.name?.replace("Mainnet", "").trim() ||
             `Unknown Network (#${cell.row.original.chainId})`;
@@ -296,7 +292,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
         },
       },
     ],
-    [configuredChains, chainIdsWithDeployments, chainIdToChainRecord],
+    [chainIdsWithDeployments, idToChain],
   );
 
   const defaultColumn = useMemo(

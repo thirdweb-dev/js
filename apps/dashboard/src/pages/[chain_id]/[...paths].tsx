@@ -2,6 +2,7 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert } from "@/components/ui/alert";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { useStore } from "@/lib/reactive";
 import {
   type EVMContractInfo,
   useEVMContractInfo,
@@ -20,15 +21,10 @@ import { ensQuery } from "components/contract-components/hooks";
 import { ContractMetadata } from "components/custom-contract/contract-header/contract-metadata";
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import { THIRDWEB_DOMAIN } from "constants/urls";
-import { SupportedChainsReadyContext } from "contexts/configured-chains";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { PrimaryDashboardButton } from "contract-ui/components/primary-dashboard-button";
 import { useContractRouteConfig } from "contract-ui/hooks/useRouteConfig";
 import { ContractSidebar } from "core-ui/sidebar/detail-page";
-import {
-  useSupportedChainsRecord,
-  useSupportedChainsSlugRecord,
-} from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { resolveFunctionSelectors } from "lib/selectors";
 import { useV5DashboardChain } from "lib/v5-adapter";
@@ -37,7 +33,7 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   type ThirdwebContract,
   getAddress,
@@ -52,6 +48,8 @@ import { stringify } from "thirdweb/utils";
 import { fetchChain } from "utils/fetchChain";
 import type { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { useAllChainsData } from "../../hooks/chains/allChains";
+import { isChainOverridesLoadedStore } from "../../stores/chainStores";
 
 type EVMContractProps = {
   contractInfo?: EVMContractInfo;
@@ -68,7 +66,7 @@ type EVMContractProps = {
 const ContractPage: ThirdwebNextPage = () => {
   // show optimistic UI first - assume chain is configured until proven otherwise
   const [chainNotFound, setChainNotFound] = useState(false);
-  const isSupportedChainsReady = useContext(SupportedChainsReadyContext);
+  const isChainOverridesLoaded = useStore(isChainOverridesLoadedStore);
 
   const contractInfo = useEVMContractInfo();
 
@@ -77,13 +75,12 @@ const ContractPage: ThirdwebNextPage = () => {
   const contractAddress = contractInfo?.contractAddress || "";
 
   const setContractInfo = useSetEVMContractInfo();
-  const supportedChainsSlugRecord = useSupportedChainsSlugRecord();
-  const configuredChainsRecord = useSupportedChainsRecord();
+  const { idToChain, slugToChain } = useAllChainsData();
 
   // this will go away as part of the RSC rewrite!
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (!isSupportedChainsReady || !chainSlug) {
+    if (!isChainOverridesLoaded || !chainSlug) {
       return;
     }
 
@@ -95,7 +92,7 @@ const ContractPage: ThirdwebNextPage = () => {
       // currently user can only update RPC - so check if it is updated or not
       // if updated, update the contractInfo.chain
 
-      const configuredChain = supportedChainsSlugRecord[chainSlug];
+      const configuredChain = slugToChain.get(chainSlug);
       if (
         configuredChain &&
         getDashboardChainRpc(configuredChain.chainId, configuredChain) !==
@@ -116,32 +113,32 @@ const ContractPage: ThirdwebNextPage = () => {
 
     // if server could not resolve the chain using allChains
     else {
+      const chainFoundBySlug = slugToChain.get(chainSlug);
+      const chainFoundById = idToChain.get(Number(chainSlug));
+
       // if it is configured on client storage, use that
-      if (chainSlug in supportedChainsSlugRecord) {
+      if (chainFoundBySlug) {
         setContractInfo({
           chainSlug,
           contractAddress,
-          chain: supportedChainsSlugRecord[chainSlug],
+          chain: chainFoundBySlug,
         });
-      } else if (chainSlug in configuredChainsRecord) {
+      } else if (chainFoundById) {
         // this is for thirdweb internal tools
         // it allows us to use chainId as slug for a custom network as well
-
-        const chainId = Number(chainSlug);
-        const _chain = configuredChainsRecord[chainId];
 
         // replace the chainId with slug in URL without reloading the page
         // If we don't do this, tanstack router creates issues
         window.history.replaceState(
           null,
           document.title,
-          `/${_chain.slug}/${contractAddress}`,
+          `/${chainSlug}/${contractAddress}`,
         );
 
         setContractInfo({
-          chainSlug: _chain.slug,
+          chainSlug,
           contractAddress,
-          chain: _chain,
+          chain: chainFoundById,
         });
       }
 
@@ -154,11 +151,11 @@ const ContractPage: ThirdwebNextPage = () => {
   }, [
     chain,
     chainSlug,
-    supportedChainsSlugRecord,
-    configuredChainsRecord,
+    idToChain,
+    slugToChain,
     contractAddress,
     setContractInfo,
-    isSupportedChainsReady,
+    isChainOverridesLoaded,
   ]);
 
   const isSlugNumber = !Number.isNaN(Number(chainSlug));
@@ -216,7 +213,7 @@ const ContractPage: ThirdwebNextPage = () => {
     );
   }
 
-  if (!isSupportedChainsReady) {
+  if (!isChainOverridesLoaded) {
     return (
       <div className="h-full flex items-center justify-center">
         <Spinner className="size-10" />

@@ -1,9 +1,9 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { CURRENCIES } from "constants/currencies";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { isAddressZero } from "utils/zeroAddress";
+import { useAllChainsData } from "../../../../hooks/chains/allChains";
 
 interface PricePreviewProps {
   price: string | number | undefined;
@@ -15,8 +15,8 @@ export const PricePreview: React.FC<PricePreviewProps> = ({
   currencyAddress,
 }) => {
   const chainId = useDashboardEVMChainId();
-  const configuredChainsRecord = useSupportedChainsRecord();
-  const chain = chainId ? configuredChainsRecord[chainId] : undefined;
+  const { idToChain } = useAllChainsData();
+  const chain = chainId ? idToChain.get(chainId) : undefined;
 
   const helperCurrencies = chainId ? CURRENCIES[chainId] || [] : [];
 

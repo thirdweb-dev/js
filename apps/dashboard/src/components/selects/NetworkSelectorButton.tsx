@@ -2,26 +2,24 @@
 
 import { Button } from "@/components/ui/button";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useStore } from "@/lib/reactive";
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
-import { useFavoriteChains } from "@3rdweb-sdk/react/hooks/useFavoriteChains";
 import { ChainIcon } from "components/icons/ChainIcon";
-import type { StoredChain } from "contexts/configured-chains";
-import {
-  useSupportedChains,
-  useSupportedChainsRecord,
-} from "hooks/chains/configureChains";
-import {
-  useAddRecentlyUsedChainId,
-  useRecentlyUsedChains,
-} from "hooks/chains/recentlyUsedChains";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { useActiveWallet } from "thirdweb/react";
 import { useNetworkSwitcherModal } from "thirdweb/react";
+import { useFavoriteChainIds } from "../../app/(dashboard)/(chain)/components/client/star-button";
 import { getSDKTheme } from "../../app/components/sdk-component-theme";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
+import { useAllChainsData } from "../../hooks/chains/allChains";
+import {
+  type StoredChain,
+  addRecentlyUsedChainId,
+  recentlyUsedChainIdsStore,
+} from "../../stores/chainStores";
 import { LazyConfigureNetworkModal } from "../configure-networks/LazyConfigureNetworkModal";
 import { CustomChainRenderer } from "./CustomChainRenderer";
 
@@ -39,37 +37,66 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   onSwitchChain,
 }) => {
   const client = useThirdwebClient();
-  const recentlyUsedChains = useRecentlyUsedChains();
-  const addRecentlyUsedChains = useAddRecentlyUsedChainId();
+  const { idToChain, allChains } = useAllChainsData();
+
+  // recently used chains
+  const recentlyUsedChainIds = useStore(recentlyUsedChainIdsStore);
+  const recentlyUsedChains = useMemo(() => {
+    return recentlyUsedChainIds
+      .map((id) => idToChain.get(id))
+      .filter((v) => !!v);
+  }, [recentlyUsedChainIds, idToChain]);
+
+  // configure network modal
   const [isNetworkConfigModalOpen, setIsNetworkConfigModalOpen] =
     useState(false);
   const [editChain, setEditChain] = useState<StoredChain | undefined>(
     undefined,
   );
+
   const { theme } = useTheme();
-  const supportedChains = useSupportedChains();
-  const supportedChainsRecord = useSupportedChainsRecord();
-  const favoriteChainsQuery = useFavoriteChains();
+  const favoriteChainIdsQuery = useFavoriteChainIds();
+
+  const popularChainsWithMetadata = useMemo(() => {
+    // eslint-disable-next-line no-restricted-syntax
+    return popularChains.map((x) =>
+      // eslint-disable-next-line no-restricted-syntax
+      {
+        const v4Chain = idToChain.get(x.id);
+        // eslint-disable-next-line no-restricted-syntax
+        return v4Chain ? mapV4ChainToV5Chain(v4Chain) : x;
+      },
+    );
+  }, [idToChain]);
+
+  const favoriteChainsWithMetadata = useMemo(() => {
+    return (favoriteChainIdsQuery.data || [])
+      .map((id) => {
+        const c = idToChain.get(Number(id));
+        // eslint-disable-next-line no-restricted-syntax
+        return c ? mapV4ChainToV5Chain(c) : undefined;
+      })
+      .filter((x) => !!x);
+  }, [idToChain, favoriteChainIdsQuery.data]);
+
   const networkSwitcherModal = useNetworkSwitcherModal();
 
   const chains = useMemo(() => {
     if (disabledChainIds && disabledChainIds.length > 0) {
       const disabledChainIdsSet = new Set(disabledChainIds);
-      return supportedChains.filter(
+      return allChains.filter(
         (chain) => !disabledChainIdsSet.has(chain.chainId),
       );
     }
 
     if (networksEnabled && networksEnabled.length > 0) {
       const networksEnabledSet = new Set(networksEnabled);
-      return supportedChains.filter((chain) =>
-        networksEnabledSet.has(chain.chainId),
-      );
+      return allChains.filter((chain) => networksEnabledSet.has(chain.chainId));
     }
 
     // if no restrictions, show all supported chains
-    return supportedChains;
-  }, [disabledChainIds, networksEnabled, supportedChains]);
+    return allChains;
+  }, [disabledChainIds, networksEnabled, allChains]);
 
   const filteredRecentlyUsedChains = useMemo(() => {
     if (recentlyUsedChains && recentlyUsedChains.length > 0) {
@@ -103,10 +130,10 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
       if (onSwitchChain) {
         onSwitchChain(chain);
       }
-      addRecentlyUsedChains(chain.chainId);
+      addRecentlyUsedChainId(chain.chainId);
       prevChain.current = chain;
     }
-  }, [chain, onSwitchChain, addRecentlyUsedChains]);
+  }, [chain, onSwitchChain]);
 
   const wallet = useActiveWallet();
 
@@ -128,13 +155,11 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
               },
               {
                 label: "Favorites",
-                chains: (favoriteChainsQuery.data ?? []).map(
-                  mapV4ChainToV5Chain,
-                ),
+                chains: favoriteChainsWithMetadata,
               },
               {
                 label: "Popular",
-                chains: networksEnabled ? [] : popularChains,
+                chains: networksEnabled ? [] : popularChainsWithMetadata,
               },
               {
                 label: "All Networks",
@@ -159,10 +184,11 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
                   setIsNetworkConfigModalOpen(true);
                 },
             async onSwitch(chain) {
-              addRecentlyUsedChains(chain.id);
+              addRecentlyUsedChainId(chain.id);
               if (onSwitchChain) {
-                if (supportedChainsRecord[chain.id]) {
-                  onSwitchChain(supportedChainsRecord[chain.id]);
+                const storedChain = idToChain.get(chain.id);
+                if (storedChain) {
+                  onSwitchChain(storedChain);
                 }
               }
             },

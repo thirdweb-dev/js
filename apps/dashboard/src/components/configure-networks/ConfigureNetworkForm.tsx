@@ -8,13 +8,14 @@ import {
   RadioGroup,
 } from "@chakra-ui/react";
 import { ChainIcon } from "components/icons/ChainIcon";
-import type { StoredChain } from "contexts/configured-chains";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useSupportedChainsNameRecord } from "hooks/chains/configureChains";
-import { useRemoveChainModification } from "hooks/chains/useModifyChain";
 import { getDashboardChainRpc } from "lib/rpc";
 import { useForm } from "react-hook-form";
 import { FormErrorMessage, FormLabel } from "tw-components";
+import { useAllChainsData } from "../../hooks/chains/allChains";
+import {
+  type StoredChain,
+  removeChainOverrides,
+} from "../../stores/chainStores";
 import { ChainIdInput } from "./Form/ChainIdInput";
 import { ConfirmationPopover } from "./Form/ConfirmationPopover";
 import { IconUpload } from "./Form/IconUpload";
@@ -55,9 +56,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
   prefillSlug,
   prefillChainId,
 }) => {
-  const configuredChainNameRecord = useSupportedChainsNameRecord();
-  const { chainIdToChainRecord } = useAllChainsData();
-  const removeChainModification = useRemoveChainModification();
+  const { idToChain, nameToChain } = useAllChainsData();
 
   const form = useForm<NetworkConfigFormData>({
     values: {
@@ -86,11 +85,11 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
 
   const chainId = Number(form.watch("chainId"));
   const isChainIdDirty = form.formState.dirtyFields.chainId;
-  const overwritingChain = isChainIdDirty && chainIdToChainRecord[chainId];
+  const overwritingChain = isChainIdDirty && idToChain.get(chainId);
 
   const editedFrom =
     editingChain?.isModified || editingChain?.isOverwritten
-      ? chainIdToChainRecord[editingChain.chainId]
+      ? idToChain.get(editingChain.chainId)
       : undefined;
 
   const { ref } = form.register("name", {
@@ -104,7 +103,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
           return true;
         }
 
-        const chain = configuredChainNameRecord[value];
+        const chain = nameToChain.get(value);
 
         // valid if chain is not found
         if (!chain) {
@@ -173,7 +172,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
     }
 
     if (editingChain && editingChain.chainId !== configuredNetwork.chainId) {
-      removeChainModification(editingChain.chainId);
+      removeChainOverrides(editingChain.chainId);
     }
 
     if (overwritingChain) {
@@ -394,7 +393,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               variant="outline"
               onClick={() => {
                 onSubmit(editedFrom);
-                removeChainModification(editedFrom.chainId);
+                removeChainOverrides(editedFrom.chainId);
               }}
             >
               Reset

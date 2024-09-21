@@ -3,28 +3,31 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useStore } from "@/lib/reactive";
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { useTrack } from "hooks/analytics/useTrack";
-import {
-  useSupportedChains,
-  useSupportedChainsRecord,
-} from "hooks/chains/configureChains";
-import {
-  useAddRecentlyUsedChainId,
-  useRecentlyUsedChains,
-} from "hooks/chains/recentlyUsedChains";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import type { Chain } from "thirdweb";
-import { AutoConnect, ConnectButton, useConnectModal } from "thirdweb/react";
+import {
+  AutoConnect,
+  ConnectButton,
+  type NetworkSelectorProps,
+  useConnectModal,
+} from "thirdweb/react";
+import { useFavoriteChainIds } from "../../../../app/(dashboard)/(chain)/components/client/star-button";
 import { LazyConfigureNetworkModal } from "../../../../components/configure-networks/LazyConfigureNetworkModal";
-import type { StoredChain } from "../../../../contexts/configured-chains";
-import { useFavoriteChains } from "../../hooks/useFavoriteChains";
+import { useAllChainsData } from "../../../../hooks/chains/allChains";
+import {
+  type StoredChain,
+  addRecentlyUsedChainId,
+  recentlyUsedChainIdsStore,
+} from "../../../../stores/chainStores";
 import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
 
@@ -36,43 +39,81 @@ export const CustomConnectWallet = (props: {
   const thirdwebClient = useThirdwebClient();
   const loginRequired =
     props.loginRequired === undefined ? true : props.loginRequired;
+
   const { theme } = useTheme();
-  const recentChainsv4 = useRecentlyUsedChains();
-  const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
   const t = theme === "light" ? "light" : "dark";
-  const allv4Chains = useSupportedChains();
-  const chainsRecord = useSupportedChainsRecord();
-  const favChainsQuery = useFavoriteChains();
-  const allChains = useMemo(() => {
-    return allv4Chains.map(mapV4ChainToV5Chain);
-  }, [allv4Chains]);
 
-  const popularChainsWithMeta = useMemo(() => {
-    return popularChains.map((x) => chainsRecord[x.id] || x);
-  }, [chainsRecord]);
+  // chains
+  const favChainIdsQuery = useFavoriteChainIds();
+  const recentChainIds = useStore(recentlyUsedChainIdsStore);
+  const { idToChain, allChains } = useAllChainsData();
 
+  const allChainsWithMetadata = useMemo(
+    () => allChains.map(mapV4ChainToV5Chain),
+    [allChains],
+  );
+
+  const recentlyUsedChainsWithMetadata = useMemo(
+    () =>
+      recentChainIds
+        .map((id) => {
+          const c = idToChain.get(id);
+          // eslint-disable-next-line no-restricted-syntax
+          return c ? mapV4ChainToV5Chain(c) : undefined;
+        })
+        .filter((x) => !!x),
+    [recentChainIds, idToChain],
+  );
+
+  const favoriteChainsWithMetadata = useMemo(() => {
+    return (favChainIdsQuery.data || [])
+      .map((id) => {
+        const c = idToChain.get(Number(id));
+        // eslint-disable-next-line no-restricted-syntax
+        return c ? mapV4ChainToV5Chain(c) : undefined;
+      })
+      .filter((x) => !!x);
+  }, [idToChain, favChainIdsQuery.data]);
+
+  const popularChainsWithMetadata = useMemo(() => {
+    // eslint-disable-next-line no-restricted-syntax
+    return popularChains.map((x) =>
+      // eslint-disable-next-line no-restricted-syntax
+      {
+        const v4Chain = idToChain.get(x.id);
+        // eslint-disable-next-line no-restricted-syntax
+        return v4Chain ? mapV4ChainToV5Chain(v4Chain) : x;
+      },
+    );
+  }, [idToChain]);
+
+  // Network Config Modal
   const [isNetworkConfigModalOpen, setIsNetworkConfigModalOpen] =
     useState(false);
   const [editChain, setEditChain] = useState<StoredChain | undefined>(
     undefined,
   );
 
-  const chainSections = useMemo(() => {
+  const chainSections: NetworkSelectorProps["sections"] = useMemo(() => {
     return [
       {
         label: "Favorites",
-        chains: favChainsQuery.data.map(mapV4ChainToV5Chain),
-      },
-      {
-        label: "Popular",
-        chains: popularChainsWithMeta.map(mapV4ChainToV5Chain),
+        chains: favoriteChainsWithMetadata,
       },
       {
         label: "Recent",
-        chains: recentChainsv4.map(mapV4ChainToV5Chain),
+        chains: recentlyUsedChainsWithMetadata,
+      },
+      {
+        label: "Popular",
+        chains: popularChainsWithMetadata,
       },
     ];
-  }, [recentChainsv4, favChainsQuery.data, popularChainsWithMeta]);
+  }, [
+    recentlyUsedChainsWithMetadata,
+    favoriteChainsWithMetadata,
+    popularChainsWithMetadata,
+  ]);
 
   // ensures login status on pages that need it
   const { isPending, isLoggedIn } = useLoggedInUser();
@@ -84,7 +125,7 @@ export const CustomConnectWallet = (props: {
         <div className="w-[144px] h-[48px] bg-muted border border-border rounded-lg flex items-center justify-center">
           <Spinner className="size-4" />
         </div>
-        {/* need autoconnect here so that we actually connect */}
+        {/* need auto connect here so that we actually connect */}
         <AutoConnect client={thirdwebClient} />
       </>
     );
@@ -100,7 +141,7 @@ export const CustomConnectWallet = (props: {
             Sign In
           </Link>
         </Button>
-        {/* need autoconnect here so that we actually connect */}
+        {/* need auto connect here so that we actually connect */}
         <AutoConnect client={thirdwebClient} />
       </>
     );
@@ -138,7 +179,7 @@ export const CustomConnectWallet = (props: {
         detailsButton={{
           className: props.detailsButtonClassName,
         }}
-        chains={allChains}
+        chains={allChainsWithMetadata}
         detailsModal={{
           networkSelector: {
             sections: chainSections,

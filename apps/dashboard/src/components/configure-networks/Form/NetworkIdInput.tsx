@@ -1,8 +1,8 @@
 import { Input } from "@/components/ui/input";
 import { FormControl } from "@chakra-ui/react";
-import { useAllChainsData } from "hooks/chains/allChains";
 import type { UseFormReturn } from "react-hook-form";
 import { FormErrorMessage, FormLabel } from "tw-components";
+import { useAllChainsData } from "../../../hooks/chains/allChains";
 import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
 import { TooltipBox } from "./TooltipBox";
 
@@ -11,7 +11,8 @@ export const NetworkIDInput: React.FC<{
   disabled?: boolean;
 }> = ({ form, disabled }) => {
   const slug = form.watch("slug");
-  const { slugToChainRecord } = useAllChainsData();
+  const { slugToChain } = useAllChainsData();
+  const existingChain = slugToChain.get(slug);
 
   return (
     <FormControl
@@ -52,18 +53,18 @@ export const NetworkIDInput: React.FC<{
                 return true;
               }
 
-              return !(_slug in slugToChainRecord);
+              return !slugToChain.has(_slug);
             },
           },
         })}
       />
       <FormErrorMessage>
         Can not use Network ID {`"${slug}"`}.
-        {slug && slug in slugToChainRecord && (
+        {slug && existingChain && (
           <>
             {" "}
             It is being used by {`"`}
-            {slugToChainRecord[slug].name}
+            {existingChain.name}
             {`"`}
           </>
         )}
