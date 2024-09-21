@@ -52,27 +52,31 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
   };
 
   return (
-    <div className="p-6">
-      <h3 className="text-2xl font-semibold tracking-tight mb-5">
-        {editChain ? "Edit Network" : "Add Custom Network"}
-      </h3>
+    <div>
+      <div className="px-6 pt-6">
+        <h3 className="text-xl font-semibold tracking-tight">
+          {editChain ? "Edit Network" : "Add Custom Network"}
+        </h3>
+      </div>
 
-      {/* Modify the given chain */}
-      {editChain && (
-        <ConfigureNetworkForm
-          editingChain={editChain}
-          onSubmit={handleSubmit}
-        />
-      )}
+      <div>
+        {/* Modify the given chain */}
+        {editChain && (
+          <ConfigureNetworkForm
+            editingChain={editChain}
+            onSubmit={handleSubmit}
+          />
+        )}
 
-      {/* Custom chain */}
-      {!editChain && (
-        <ConfigureNetworkForm
-          prefillSlug={props.prefillSlug}
-          prefillChainId={props.prefillChainId}
-          onSubmit={handleSubmit}
-        />
-      )}
+        {/* Custom chain */}
+        {!editChain && (
+          <ConfigureNetworkForm
+            prefillSlug={props.prefillSlug}
+            prefillChainId={props.prefillChainId}
+            onSubmit={handleSubmit}
+          />
+        )}
+      </div>
     </div>
   );
 };

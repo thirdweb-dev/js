@@ -1,4 +1,3 @@
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
   type StoredChain,
@@ -26,18 +25,15 @@ export const ConfigureNetworkModal: React.FC<ConfigureNetworkModalProps> = (
         className="p-0 z-[10001] max-w-[480px]"
         dialogOverlayClassName="z-[10000]"
       >
-        {/* TODO - remove after moving ConfigureNetworks to shadcn */}
-        <ChakraProviderSetup>
-          <ConfigureNetworks
-            onNetworkAdded={(chain) => {
-              addRecentlyUsedChainId(chain.chainId);
-              props.onNetworkAdded?.(chain);
-              onModalClose();
-            }}
-            onNetworkConfigured={onModalClose}
-            editChain={props.editChain}
-          />
-        </ChakraProviderSetup>
+        <ConfigureNetworks
+          onNetworkAdded={(chain) => {
+            addRecentlyUsedChainId(chain.chainId);
+            props.onNetworkAdded?.(chain);
+            onModalClose();
+          }}
+          onNetworkConfigured={onModalClose}
+          editChain={props.editChain}
+        />
       </DialogContent>
     </Dialog>
   );

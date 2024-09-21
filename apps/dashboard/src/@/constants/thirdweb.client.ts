@@ -1,4 +1,3 @@
-import {} from "@/constants/env";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useActiveAccount } from "thirdweb/react";

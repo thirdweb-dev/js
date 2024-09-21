@@ -1,3 +1,4 @@
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import {
@@ -14,10 +15,10 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
 import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { CircleHelpIcon } from "lucide-react";
 import { Fragment, createContext, useContext, useMemo, useState } from "react";
 import {
   type UseFieldArrayReturn,
@@ -647,5 +648,15 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
         </Flex>
       </Flex>
     </>
+  );
+};
+
+const TooltipBox: React.FC<{
+  content: React.ReactNode;
+}> = ({ content }) => {
+  return (
+    <ToolTipLabel label={<div>{content}</div>}>
+      <CircleHelpIcon className="size-4 text-muted-foreground" />
+    </ToolTipLabel>
   );
 };

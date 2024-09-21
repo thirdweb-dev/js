@@ -11,9 +11,6 @@ export interface StoredChain extends ChainMetadata {
 
   // if this chain (id) is not in our db, user added it
   isCustom?: boolean;
-
-  // TODO - remove this, we can not allow this anymore
-  isOverwritten?: boolean;
 }
 
 export const isChainOverridesLoadedStore = createStore(false);

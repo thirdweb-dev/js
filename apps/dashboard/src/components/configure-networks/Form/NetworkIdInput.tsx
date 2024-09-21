@@ -1,10 +1,8 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Input } from "@/components/ui/input";
-import { FormControl } from "@chakra-ui/react";
 import type { UseFormReturn } from "react-hook-form";
-import { FormErrorMessage, FormLabel } from "tw-components";
 import { useAllChainsData } from "../../../hooks/chains/allChains";
 import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
-import { TooltipBox } from "./TooltipBox";
 
 export const NetworkIDInput: React.FC<{
   form: UseFormReturn<NetworkConfigFormData>;
@@ -15,29 +13,37 @@ export const NetworkIDInput: React.FC<{
   const existingChain = slugToChain.get(slug);
 
   return (
-    <FormControl
+    <FormFieldSetup
+      htmlFor="slug"
       isRequired
-      mt={6}
-      isInvalid={form.formState.errors.slug?.type === "taken"}
+      label="Slug"
+      tooltip={
+        <span>
+          Network slug is used to identify the network in the thirdweb
+          dashboard.
+          <p className="font-semibold mt-2 mb-1">Example</p>
+          <p className="text-muted-foreground text-sm">
+            {"thirdweb.com/<slug>/..."}
+          </p>
+        </span>
+      }
+      errorMessage={
+        form.formState.errors.slug?.type === "taken" ? (
+          <>
+            Can not use {`"${slug}"`}.{" "}
+            {slug &&
+              existingChain &&
+              `It is being used by "${existingChain.name}"`}
+          </>
+        ) : undefined
+      }
     >
-      <FormLabel className="!flex items-center gap-1">
-        Network ID
-        <TooltipBox
-          content={
-            <>
-              Network ID is used to identify the network in the URL
-              <p className="font-semibold mt-2 mb-1">Example</p>
-              <p className="text-link-foreground text-xs">
-                {"thirdweb.com/<network-id>/<contract-address>"}
-              </p>
-            </>
-          }
-        />
-      </FormLabel>
       <Input
         disabled={disabled}
         autoComplete="off"
-        placeholder="e.g. ethereum"
+        placeholder="ethereum"
+        id="slug"
+        className="disabled:opacity-100 disabled:bg-muted/50 disabled:text-muted-foreground bg-muted/50 font-mono"
         onKeyDown={(e) => {
           // only allow alphanumeric characters and dashes
           if (!/^[a-z0-9-]*$/i.test(e.key)) {
@@ -58,17 +64,6 @@ export const NetworkIDInput: React.FC<{
           },
         })}
       />
-      <FormErrorMessage>
-        Can not use Network ID {`"${slug}"`}.
-        {slug && existingChain && (
-          <>
-            {" "}
-            It is being used by {`"`}
-            {existingChain.name}
-            {`"`}
-          </>
-        )}
-      </FormErrorMessage>
-    </FormControl>
+    </FormFieldSetup>
   );
 };

@@ -29,7 +29,7 @@ const RadioGroupItem = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "aspect-square h-4 w-4 rounded-full border border-inverted text-inverted ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
@@ -51,12 +51,12 @@ const RadioGroupItemButton = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "cursor-pointer group flex items-center px-3 peer-hover:border-nonce py-4 space-x-3 space-y-0 border-2 rounded-md min-w-32 font-medium hover:border-foreground/25 transition-all data-[state=checked]:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "cursor-pointer group flex items-center px-3 peer-hover:border-nonce py-4 space-x-3 space-y-0 border-2 rounded-md min-w-32 font-medium hover:border-foreground/25 transition-all data-[state=checked]:border-inverted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
     >
-      <div className="flex items-center justify-center w-4 h-4 border-2 rounded-full transition-all group-data-[state=checked]:border-primary text-primary group-hover:border-foreground/25 aspect-square ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+      <div className="flex items-center justify-center w-4 h-4 border-2 rounded-full transition-all group-data-[state=checked]:border-inverted text-inverted group-hover:border-foreground/25 aspect-square ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
         {/* Show on checked */}
         <RadioGroupPrimitive.Indicator className="flex items-center justify-center transition-all rounded-full">
           <Circle className="w-2 h-2 text-current fill-current" />

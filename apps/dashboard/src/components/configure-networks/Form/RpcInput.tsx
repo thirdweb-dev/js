@@ -1,8 +1,6 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Input } from "@/components/ui/input";
-import { Alert, AlertIcon, FormControl } from "@chakra-ui/react";
 import type { UseFormReturn } from "react-hook-form";
-import { IoWarning } from "react-icons/io5";
-import { FormErrorMessage, FormLabel } from "tw-components";
 import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
 
 export const RpcInput: React.FC<{
@@ -23,21 +21,26 @@ export const RpcInput: React.FC<{
   });
 
   return (
-    <FormControl
+    <FormFieldSetup
       isRequired
-      isInvalid={!!form.formState.errors.rpcUrl}
-      isDisabled={form.watch("status") !== "active"}
+      errorMessage={form.formState.errors.rpcUrl?.message}
+      htmlFor="rpc-url"
+      tooltip={undefined}
+      label="RPC URL"
     >
-      <FormLabel>RPC URL</FormLabel>
-      <Input autoComplete="off" placeholder="https://" type="url" {...reg} />
+      <Input
+        id="rpc-url"
+        autoComplete="off"
+        placeholder="https://"
+        type="url"
+        className="bg-muted/50"
+        {...reg}
+      />
 
-      <FormErrorMessage fontSize="12px">Invalid RPC URL</FormErrorMessage>
-
-      <Alert bg="transparent" p={0} mt={2} fontSize="12px" color="paragraph">
-        <AlertIcon as={IoWarning} color="inherit" />
-        Only add custom networks that you trust. <br /> Malicious RPCs can
-        record activity and lie about the state of the network.
-      </Alert>
-    </FormControl>
+      <p className="text-sm text-muted-foreground mt-2 leading-normal">
+        Only add RPC URL that you trust. Malicious RPCs can record activity and
+        lie about the state of the network.
+      </p>
+    </FormFieldSetup>
   );
 };

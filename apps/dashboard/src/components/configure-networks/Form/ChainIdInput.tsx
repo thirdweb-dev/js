@@ -1,7 +1,6 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Input } from "@/components/ui/input";
-import { FormControl } from "@chakra-ui/react";
 import type { UseFormReturn } from "react-hook-form";
-import { FormLabel } from "tw-components";
 import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
 
 export const ChainIdInput: React.FC<{
@@ -9,15 +8,22 @@ export const ChainIdInput: React.FC<{
   disabled: boolean;
 }> = ({ form, disabled }) => {
   return (
-    <FormControl
+    <FormFieldSetup
+      label="Chain ID"
+      htmlFor="chain-id"
       isRequired
-      isInvalid={form.formState.errors.chainId?.type === "taken"}
+      errorMessage={
+        form.formState.errors.chainId?.type === "taken"
+          ? form.formState.errors.chainId?.message
+          : undefined
+      }
+      tooltip={undefined}
     >
-      <FormLabel>Chain ID</FormLabel>
       <Input
         disabled={disabled}
-        placeholder="e.g. 152"
+        id="chain-id"
         autoComplete="off"
+        className="disabled:opacity-100 disabled:bg-muted/50 disabled:text-muted-foreground bg-muted/50 font-mono"
         onKeyDown={(e) => {
           // prevent typing e, +, -
           if (e.key === "e" || e.key === "+" || e.key === "-") {
@@ -29,6 +35,6 @@ export const ChainIdInput: React.FC<{
           required: true,
         })}
       />
-    </FormControl>
+    </FormFieldSetup>
   );
 };
