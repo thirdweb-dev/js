@@ -1,5 +1,7 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
+import { getClientFetch } from "../../../../utils/fetch.js";
+import type { Ecosystem } from "../../web/types.js";
 import type { Profile } from "./types.js";
 
 /**
@@ -11,14 +13,17 @@ import type { Profile } from "./types.js";
  */
 export async function linkAccount({
   client,
+  ecosystem,
   tokenToLink,
 }: {
   client: ThirdwebClient;
+  ecosystem?: Ecosystem;
   tokenToLink: string;
 }): Promise<Profile[]> {
+  const clientFetch = getClientFetch(client, ecosystem);
   const IN_APP_URL = getThirdwebBaseUrl("inAppWallet");
   const currentAccountToken = localStorage.getItem(
-    `walletToken-${client.clientId}`,
+    `walletToken-${client.clientId}${ecosystem?.id ? `-${ecosystem.id}` : ""}`,
   );
 
   if (!currentAccountToken) {
@@ -26,12 +31,10 @@ export async function linkAccount({
   }
 
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
     Authorization: `Bearer iaw-auth-token:${currentAccountToken}`,
-    "x-thirdweb-client-id": client.clientId,
+    "Content-Type": "application/json",
   };
-
-  const linkedDetailsResp = await fetch(
+  const linkedDetailsResp = await clientFetch(
     `${IN_APP_URL}/api/2024-05-05/account/connect`,
     {
       method: "POST",
@@ -61,23 +64,23 @@ export async function linkAccount({
  */
 export async function getLinkedProfilesInternal({
   client,
-}: { client: ThirdwebClient }): Promise<Profile[]> {
+  ecosystem,
+}: { client: ThirdwebClient; ecosystem?: Ecosystem }): Promise<Profile[]> {
+  const clientFetch = getClientFetch(client, ecosystem);
   const IN_APP_URL = getThirdwebBaseUrl("inAppWallet");
   const currentAccountToken = localStorage.getItem(
-    `walletToken-${client.clientId}`,
+    `walletToken-${client.clientId}${ecosystem?.id ? `-${ecosystem.id}` : ""}`,
   );
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer iaw-auth-token:${currentAccountToken}`,
+    "Content-Type": "application/json",
+  };
   if (!currentAccountToken) {
     throw new Error("Failed to get linked accounts, no user logged in");
   }
 
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer iaw-auth-token:${currentAccountToken}`,
-    "x-thirdweb-client-id": client.clientId,
-  };
-
-  const linkedAccountsResp = await fetch(
+  const linkedAccountsResp = await clientFetch(
     `${IN_APP_URL}/api/2024-05-05/accounts`,
     {
       method: "GET",

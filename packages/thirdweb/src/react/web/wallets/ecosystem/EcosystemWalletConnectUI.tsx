@@ -47,12 +47,12 @@ function EcosystemWalletConnectUI(props: {
     return <LoadingScreen />;
   }
 
-  const goBackToMain =
-    props.size === "compact"
-      ? props.goBack
-      : () => {
-          setSelectionData({});
-        };
+  const goBackToMain = () => {
+    if (props.size === "compact") {
+      props.goBack?.();
+    }
+    setSelectionData({});
+  };
 
   const done = () => {
     props.done();

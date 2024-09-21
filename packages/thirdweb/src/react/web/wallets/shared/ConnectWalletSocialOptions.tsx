@@ -266,7 +266,7 @@ export const ConnectWalletSocialOptions = (
 
       const connectPromise = (() => {
         if (props.isLinking) {
-          if (wallet.id !== "inApp") {
+          if (wallet.id !== "inApp" && !isEcosystemWallet(wallet)) {
             throw new Error("Only in-app wallets support multi-auth");
           }
           return linkProfile(wallet, connectOptions);

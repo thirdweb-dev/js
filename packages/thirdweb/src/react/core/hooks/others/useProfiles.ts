@@ -1,4 +1,5 @@
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Profile } from "../../../../wallets/in-app/core/authentication/types.js";
 import { getProfiles } from "../../../../wallets/in-app/core/wallet/profiles.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -28,7 +29,7 @@ export function useProfiles(): UseQueryResult<Profile[]> {
 
   return useQuery({
     queryKey: ["profiles", wallet?.id],
-    enabled: !!wallet && wallet.id === "inApp",
+    enabled: !!wallet && (wallet.id === "inApp" || isEcosystemWallet(wallet)),
     queryFn: async () => {
       return getProfiles(wallet as Wallet<"inApp">);
     },

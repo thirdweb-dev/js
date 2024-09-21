@@ -1,3 +1,5 @@
+import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
+import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import type { Wallet } from "../../../interfaces/wallet.js";
 import type {
   MultiStepAuthArgsType,
@@ -25,8 +27,8 @@ import type {
  * ```
  * @wallet
  */
-export async function getProfiles(wallet: Wallet<"inApp">) {
-  if (wallet.id !== "inApp") {
+export async function getProfiles(wallet: Wallet<"inApp" | EcosystemWalletId>) {
+  if (wallet.id !== "inApp" && !isEcosystemWallet(wallet)) {
     throw new Error("Multi-auth currently only supports in-app wallets");
   }
 
@@ -59,10 +61,10 @@ export async function getProfiles(wallet: Wallet<"inApp">) {
  * @wallet
  */
 export async function linkProfile(
-  wallet: Wallet<"inApp">,
+  wallet: Wallet<"inApp" | EcosystemWalletId>,
   auth: MultiStepAuthArgsType | SingleStepAuthArgsType,
 ): Promise<Profile[]> {
-  if (wallet.id !== "inApp") {
+  if (wallet.id !== "inApp" && !isEcosystemWallet(wallet)) {
     throw new Error("Multi-auth currently only supports in-app wallets");
   }
 
