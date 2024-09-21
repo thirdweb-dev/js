@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.58.3
+
+### Patch Changes
+
+- [#4740](https://github.com/thirdweb-dev/js/pull/4740) [`915442e`](https://github.com/thirdweb-dev/js/commit/915442e1c4e769b56187311420c7e762325c4872) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable wallet linking and guest mode for ecosystem wallets
+
 ## 5.58.2
 
 ### Patch Changes
