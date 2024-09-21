@@ -5,15 +5,38 @@ To pregenerate an embedded wallet, you can make a `POST` request to the followin
 ```
 https://embedded-wallet.thirdweb.com/api/v1/pregenerate
 ```
+This allows you to safely create wallet addresses for your users before they login to your app.
 
-### Request Body
+## Request Body
 
 The request body should be a JSON object with the following parameters:
 
-- `strategy`: The strategy for wallet generation (currently supports "email")
-- `email`: The email address associated with the wallet to be generated
+- `strategy`: The strategy for wallet generation
+- `email` or `phone` or `userId`: The user identifier associated with the wallet to be generated
 
-### Headers
+### Email based wallets
+
+```
+{ strategy: "email", email: "user@example.com" }
+```
+
+When the user logs in with any method associated with that email (including google, facebook, discord auth), they will get access to the same pregenerated wallet.
+
+### Phone based wallets
+
+```
+{ strategy: "phone", phone: "+1321123321" }
+```
+
+### Custom user id based wallets
+
+```
+{ strategy: "custom_auth_endpoint", userId: "some_user_id" }
+```
+
+Use this when [bringing your own authentication method](/connect/in-app-wallet/custom-auth/configuration). When the user logs in, if the user ids you provide from the auth endpoint match, they will get access to the same pregenerated wallet.
+
+## Headers
 
 You need to include the following headers:
 
@@ -21,7 +44,7 @@ You need to include the following headers:
 - `x-secret-key`: Your secret key for authentication
 - `Content-Type`: Must be set to `application/json`
 
-### Example curl Command
+## Example curl Command
 
 Here's an example curl command to pregenerate an embedded wallet:
 
@@ -38,7 +61,7 @@ curl -X POST 'https://embedded-wallet.thirdweb.com/api/v1/pregenerate' \
 
 Replace the header values with your actual client ID, ecosystem ID, and secret key.
 
-### Response Format
+## Response Format
 
 The API returns a JSON object. The exact structure may vary based on the implementation, but it typically includes information about the pregenerated wallet. Here's a possible structure:
 
