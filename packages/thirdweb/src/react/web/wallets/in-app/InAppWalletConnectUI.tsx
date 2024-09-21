@@ -53,12 +53,14 @@ function InAppWalletConnectUI(props: {
 
   // if the the modal starts out with the wallet's connect ui instead of wallet selector - going back to main screen requires staying on the same component and clearing the selection data
   // otherwise, we go back to the wallet selector by calling props.goBack
-  const goBackToMain =
-    initialScreen === props.wallet
-      ? () => {
-          setSelectionData({});
-        }
-      : props.goBack;
+  const goBackToMain = () => {
+    if (initialScreen === props.wallet) {
+      setSelectionData({});
+    } else {
+      props.goBack?.();
+      setSelectionData({});
+    }
+  };
 
   const done = () => {
     props.done();

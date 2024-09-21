@@ -3,7 +3,7 @@ import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wa
 import type { Profile } from "../../../../wallets/in-app/core/authentication/types.js";
 import { getProfiles } from "../../../../wallets/in-app/core/wallet/profiles.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { useActiveWallet } from "../wallets/useActiveWallet.js";
+import { useAdminWallet } from "../wallets/useAdminAccount.js";
 
 /**
  * Retrieves all linked profiles for the current wallet.
@@ -25,7 +25,7 @@ import { useActiveWallet } from "../wallets/useActiveWallet.js";
  * @wallet
  */
 export function useProfiles(): UseQueryResult<Profile[]> {
-  const wallet = useActiveWallet();
+  const wallet = useAdminWallet();
 
   return useQuery({
     queryKey: ["profiles", wallet?.id],
