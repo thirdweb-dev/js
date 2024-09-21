@@ -6,6 +6,7 @@ import { isInAppWallet } from "../../../../../wallets/in-app/core/wallet/index.j
 import { injectedProvider } from "../../../../../wallets/injected/mipdStore.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
+import { useAdminWallet } from "../../../../core/hooks/wallets/useAdminAccount.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
@@ -26,7 +27,7 @@ export function ManageWalletScreen(props: {
   locale: ConnectLocale;
   client: ThirdwebClient;
 }) {
-  const activeWallet = useActiveWallet();
+  const activeWallet = useAdminWallet();
 
   return (
     <Container

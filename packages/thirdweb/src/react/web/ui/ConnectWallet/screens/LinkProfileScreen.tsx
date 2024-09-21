@@ -7,8 +7,8 @@ import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../../core/design-system/index.js";
-import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
+import { useAdminWallet } from "../../../../core/hooks/wallets/useAdminAccount.js";
 import EcosystemWalletConnectUI from "../../../wallets/ecosystem/EcosystemWalletConnectUI.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
@@ -28,7 +28,7 @@ export function LinkProfileScreen(props: {
   client: ThirdwebClient;
   walletConnect: { projectId?: string } | undefined;
 }) {
-  const activeWallet = useActiveWallet();
+  const activeWallet = useAdminWallet();
   const chain = useActiveWalletChain();
   const queryClient = useQueryClient();
 
