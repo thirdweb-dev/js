@@ -1,4 +1,5 @@
 "use client";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -6,20 +7,12 @@ import {
   FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
@@ -38,7 +31,6 @@ export function UpdatePartnerForm({
       name: partner.name,
       domains: partner.allowlistedDomains.join(","),
       bundleIds: partner.allowlistedBundleIds.join(","),
-      permissions: partner.permissions[0],
     },
   });
 
@@ -70,18 +62,18 @@ export function UpdatePartnerForm({
             allowlistedBundleIds: values.bundleIds
               .split(/,| /)
               .filter((d) => d.length > 0),
-            permissions: [values.permissions],
           });
         })}
         className="flex flex-col gap-4"
       >
-        <div className="grid gap-4 grow">
+        <div className="flex flex-col gap-5 grow">
           <FormField
             control={form.control}
             name="name"
             defaultValue="" // Note: you *must* provide a default value here or the field won't reset
             render={({ field }) => (
               <FormItem className="col-span-4">
+                <FormLabel> Name </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="App name"
@@ -108,21 +100,20 @@ export function UpdatePartnerForm({
             defaultValue="" // Note: you *must* provide a default value here or the field won't reset
             render={({ field }) => (
               <FormItem className="col-span-4 lg:col-span-4">
+                <FormLabel> Domains </FormLabel>
                 <FormControl>
-                  <>
-                    <Input placeholder="Domains" className="peer" {...field} />
-                    <FormDescription
-                      className={cn(
-                        "text-xs block",
-                        form.formState.errors.domains?.message &&
-                          "text-destructive translate-y-0 opacity-100 block", // If there are errors show them rather than the tip
-                      )}
-                    >
-                      {form.formState.errors.domains?.message ??
-                        "Space or comma-separated list of regex domains (e.g. *.example.com)"}
-                    </FormDescription>
-                  </>
+                  <Input placeholder="Domains" className="peer" {...field} />
                 </FormControl>
+                <FormDescription
+                  className={cn(
+                    "text-xs block",
+                    form.formState.errors.domains?.message &&
+                      "text-destructive translate-y-0 opacity-100 block", // If there are errors show them rather than the tip
+                  )}
+                >
+                  {form.formState.errors.domains?.message ??
+                    "Space or comma-separated list of regex domains (e.g. *.example.com)"}
+                </FormDescription>
               </FormItem>
             )}
           />
@@ -132,75 +123,32 @@ export function UpdatePartnerForm({
             defaultValue="" // Note: you *must* provide a default value here or the field won't reset
             render={({ field }) => (
               <FormItem className="col-span-4">
+                <FormLabel> Bundle ID </FormLabel>
                 <FormControl>
-                  <>
-                    <Input
-                      placeholder="Bundle ID"
-                      className="peer"
-                      {...field}
-                    />
-                    <FormDescription
-                      className={cn(
-                        "text-xs block",
-                        form.formState.errors.bundleIds?.message &&
-                          "text-destructive block",
-                      )}
-                    >
-                      {form.formState.errors.bundleIds?.message ??
-                        "Space or comma-separated list of bundle IDs"}
-                    </FormDescription>
-                  </>
+                  <Input placeholder="Bundle ID" className="peer" {...field} />
                 </FormControl>
+                <FormDescription
+                  className={cn(
+                    "text-xs block",
+                    form.formState.errors.bundleIds?.message &&
+                      "text-destructive block",
+                  )}
+                >
+                  {form.formState.errors.bundleIds?.message ??
+                    "Space or comma-separated list of bundle IDs"}
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="permissions"
-            defaultValue="PROMPT_USER_V1" // Note: you *must* provide a default value here or the field won't reset
-            render={({ field }) => (
-              <FormItem className="col-span-4">
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <ToolTipLabel label="Should wallet actions prompt the user for approval?">
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Wallet prompts" />
-                      </SelectTrigger>
-                    </FormControl>
-                  </ToolTipLabel>
-                  <SelectContent>
-                    <SelectItem value="FULL_CONTROL_V1">
-                      Never prompt
-                    </SelectItem>
-                    <SelectItem value="PROMPT_USER_V1">Prompt user</SelectItem>
-                  </SelectContent>
-
-                  <FormDescription
-                    className={cn(
-                      "hidden text-xs transition-all peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0",
-                      form.formState.errors.permissions?.message &&
-                        "text-destructive block", // If there are errors show them rather than the tip
-                    )}
-                  >
-                    {form.formState.errors.permissions?.message ??
-                      "Wallet signing"}
-                  </FormDescription>
-                </Select>
-              </FormItem>
-            )}
-          />
         </div>
+
         <Button
           disabled={isPending}
           type="submit"
-          variant="outline"
-          className="w-full"
+          className="w-full gap-2 mt-4"
         >
-          {isPending && <Loader2 className="size-4 mr-1 animate-spin" />}
+          {isPending && <Spinner className="size-4" />}
           Update
         </Button>
       </form>

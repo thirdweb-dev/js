@@ -44,9 +44,7 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
             <TableHead className="hidden md:table-cell">Domains</TableHead>
             <TableHead className="hidden md:table-cell">Bundle ID</TableHead>
             <TableHead className="hidden sm:table-cell">Partner ID</TableHead>
-            <TableHead className="hidden lg:table-cell">
-              Wallet Prompts
-            </TableHead>
+
             {/* Empty space for delete button */}
             <th className="table-cell" />
           </TableRow>
@@ -108,11 +106,7 @@ function PartnerRow(props: {
           </div>
         </ToolTipLabel>
       </TableCell>
-      <TableCell className="hidden align-top lg:table-cell">
-        {props.partner.permissions.includes("PROMPT_USER_V1")
-          ? "Prompt user"
-          : "Never prompt"}
-      </TableCell>
+
       <td className="table-cell py-1 align-middle">
         <div className="flex gap-1.5 pr-1.5 justify-end">
           <UpdatePartnerModal
