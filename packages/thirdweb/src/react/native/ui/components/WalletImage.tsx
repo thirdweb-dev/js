@@ -65,7 +65,14 @@ export const WalletImage = (props: {
   });
 
   const data = avatar || imageData || WALLET_ICON;
-  return <RNImage theme={props.theme} data={data} size={size} />;
+  return (
+    <RNImage
+      theme={props.theme}
+      data={data}
+      size={size}
+      color={props.theme.colors.accentButtonBg}
+    />
+  );
 };
 
 export function getAuthProviderImage(authProvider: string | null): string {
