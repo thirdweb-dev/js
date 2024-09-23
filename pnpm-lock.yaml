@@ -548,8 +548,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0(react@18.3.1)
       '@next/mdx':
-        specifier: ^13.5.6
-        version: 13.5.7(@mdx-js/loader@2.3.0(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.13))))(@mdx-js/react@2.3.0(react@18.3.1))
+        specifier: ^14.2.13
+        version: 14.2.13(@mdx-js/loader@2.3.0(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.13))))(@mdx-js/react@2.3.0(react@18.3.1))
       '@radix-ui/react-dialog':
         specifier: 1.1.1
         version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3780,8 +3780,8 @@ packages:
   '@next/eslint-plugin-next@14.2.13':
     resolution: {integrity: sha512-z8Mk0VljxhIzsSiZUSdt3wp+t2lKd+jk5a9Jsvh3zDGkItgDMfjv/ZbET6HsxEl/fSihVoHGsXV6VLyDH0lfTQ==}
 
-  '@next/mdx@13.5.7':
-    resolution: {integrity: sha512-VXkH/KPdLiwWSyRyUdU2tcNBKBSNEraKwYVTVZfOwlwGCFP1UoceJZYIMd3oV7RsuH4ouo69Ng5KF3GerDvbqg==}
+  '@next/mdx@14.2.13':
+    resolution: {integrity: sha512-UrNXnCMcChqLJDb8kdoWjw3Hyt1E+xGh8n/4U3ro/kkQjiXJ/3k4+Es+L6oxY+zafg1n+6xpK5whROTNAsKAxA==}
     peerDependencies:
       '@mdx-js/loader': '>=0.15.0'
       '@mdx-js/react': '>=0.15.0'
@@ -19721,7 +19721,7 @@ snapshots:
     dependencies:
       glob: 10.3.10
 
-  '@next/mdx@13.5.7(@mdx-js/loader@2.3.0(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.13))))(@mdx-js/react@2.3.0(react@18.3.1))':
+  '@next/mdx@14.2.13(@mdx-js/loader@2.3.0(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.13))))(@mdx-js/react@2.3.0(react@18.3.1))':
     dependencies:
       source-map: 0.7.4
     optionalDependencies:
