@@ -21,7 +21,6 @@ import {
   Stack,
   Switch,
   Textarea,
-  VStack,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
@@ -305,7 +304,7 @@ export function AccountAbstractionSettingsPage(
               />
             </HStack>
             {form.watch("globalLimit") && (
-              <VStack>
+              <div className="flex flex-col">
                 <FormControl
                   isInvalid={
                     !!form.getFieldState("globalLimit.maxSpend", form.formState)
@@ -337,7 +336,7 @@ export function AccountAbstractionSettingsPage(
                     }
                   </FormErrorMessage>
                 </FormControl>
-              </VStack>
+              </div>
             )}
           </Flex>
         </FormControl>

@@ -1,5 +1,5 @@
 import type { UsageBillableByService } from "@3rdweb-sdk/react/hooks/useApi";
-import { SimpleGrid, Spinner, VStack } from "@chakra-ui/react";
+import { SimpleGrid, Spinner } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { Heading, Text } from "tw-components";
 import { toNumber, toPercent, toSize } from "utils/number";
@@ -111,11 +111,11 @@ export const Usage: React.FC<UsageProps> = ({
   }, [usageData]);
 
   return (
-    <VStack gap={8} w="full">
+    <div className="flex flex-col gap-8 w-full">
       {usagePending && <Spinner size="sm" />}
       {!usagePending && (
-        <VStack w="full" gap={12}>
-          <VStack alignItems="flex-start" gap={6} w="full">
+        <div className="flex flex-col gap-12 w-full">
+          <div className="flex flex-col gap-6 w-full items-start">
             <Heading as="h4" size="title.sm">
               Infrastructure
             </Heading>
@@ -141,9 +141,9 @@ export const Usage: React.FC<UsageProps> = ({
                 tooltip="Storage pinning usage is calculated by GB per file size."
               />
             </SimpleGrid>
-          </VStack>
+          </div>
 
-          <VStack alignItems="flex-start" gap={6} w="full">
+          <div className="w-full gap-8 flex flex-col">
             <Heading as="h4" size="title.sm">
               Wallets
             </Heading>
@@ -159,9 +159,9 @@ export const Usage: React.FC<UsageProps> = ({
                 tooltip="Email wallet (with managed recovery code) usage is calculated by monthly active wallets (i.e. active as defined by at least 1 user log-in via email or social within the billing period month)."
               />
             </SimpleGrid>
-          </VStack>
+          </div>
 
-          <VStack alignItems="flex-start" gap={6} w="full">
+          <div className="w-full gap-8 flex flex-col">
             <Heading as="h4" size="title.sm">
               Payments
             </Heading>
@@ -177,9 +177,9 @@ export const Usage: React.FC<UsageProps> = ({
                 tooltip="(Gasless, Paymaster, Bundler) usage is calculated by sponsored network fees."
               />
             </SimpleGrid>
-          </VStack>
-        </VStack>
+          </div>
+        </div>
       )}
-    </VStack>
+    </div>
   );
 };

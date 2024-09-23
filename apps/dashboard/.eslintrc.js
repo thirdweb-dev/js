@@ -55,6 +55,7 @@ module.exports = {
               "FormErrorMessage",
               "MenuGroup",
               "MenuItem",
+              "VStack",
               // also the types
               "ButtonProps",
               "BadgeProps",

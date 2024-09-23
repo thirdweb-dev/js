@@ -1,4 +1,4 @@
-import { Flex, GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FTUX } from "components/FTUX/FTUX";
 import { AppLayout } from "components/app-layouts/app";
@@ -34,7 +34,7 @@ const Dashboard: ThirdwebNextPage = (
               {showFTUX ? (
                 <FTUX />
               ) : (
-                <VStack gap={10} w="full">
+                <div className="flex flex-col gap-10 w-full">
                   <DelayedDisplay delay={1000}>
                     <OnboardingSteps />
                   </DelayedDisplay>
@@ -72,7 +72,7 @@ const Dashboard: ThirdwebNextPage = (
                       },
                     )}
                   </Flex>
-                </VStack>
+                </div>
               )}
             </ClientOnly>
           )}

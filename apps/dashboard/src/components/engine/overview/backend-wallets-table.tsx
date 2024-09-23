@@ -23,7 +23,6 @@ import {
   Select,
   Stack,
   type UseDisclosureReturn,
-  VStack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -341,7 +340,7 @@ const ReceiveFundsModal = ({
         <ModalHeader>Receive Funds</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <VStack spacing={4} pb={8}>
+          <div className="flex flex-col gap-4 pb-8">
             <Text w="full" textAlign="left">
               Fund this address or QR code:
             </Text>
@@ -355,7 +354,7 @@ const ReceiveFundsModal = ({
               rounded="lg"
               w={200}
             />
-          </VStack>
+          </div>
         </ModalBody>
       </ModalContent>
     </Modal>

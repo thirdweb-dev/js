@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   AccountStatus,
@@ -6,7 +7,7 @@ import {
   useApiKeys,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Flex, HStack, VStack, useBreakpointValue } from "@chakra-ui/react";
+import { Flex, HStack, useBreakpointValue } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { OPSponsoredChains } from "constants/chains";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -273,11 +274,11 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
       overflow="hidden"
       className="bg-muted/50"
     >
-      <VStack
-        gap={2}
-        alignItems="flex-start"
-        p={6}
-        w={rightImageDark && !isMobile ? "60%" : "100%"}
+      <div
+        className={cn(
+          "gap-2 flex flex-col items-start p-6",
+          rightImageDark && !isMobile ? "w-[60%]" : "w-full",
+        )}
       >
         <Heading size="title.sm">{title}</Heading>
         <Text>{description}</Text>
@@ -308,7 +309,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
             </Button>
           )}
         </HStack>
-      </VStack>
+      </div>
       {rightImageDark && !isMobile && theme === "dark" && (
         <ChakraNextImage src={rightImageDark} alt={""} w="50%" priority />
       )}
