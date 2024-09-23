@@ -3,6 +3,7 @@ import type { TypedDataDefinition } from "viem";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
+import { stringify } from "../../../../../utils/json.js";
 import type { Ecosystem } from "../../types.js";
 import { getAuthToken } from "../get-auth-token.js";
 
@@ -30,7 +31,7 @@ export async function signTypedData<
         "x-thirdweb-client-id": client.clientId,
         Authorization: `Bearer embedded-wallet-token:${authToken}`,
       },
-      body: JSON.stringify({
+      body: stringify({
         ...payload,
       }),
     },
