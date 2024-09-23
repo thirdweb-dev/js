@@ -84,10 +84,6 @@
     },
     "clean": {
       "cache": false
-    },
-    "push": {
-      "cache": false,
-      "dependsOn": ["build"]
     }
   }
 }
