@@ -900,8 +900,8 @@ importers:
         specifier: 1.4.0
         version: 1.4.0
       '@noble/hashes':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.5.0
+        version: 1.5.0
       '@passwordless-id/webauthn':
         specifier: ^1.6.1
         version: 1.6.2
@@ -19608,7 +19608,7 @@ snapshots:
     dependencies:
       '@noble/ciphers': 0.5.3
       '@noble/curves': 1.6.0
-      '@noble/hashes': 1.5.0
+      '@noble/hashes': 1.4.0
       '@react-native-async-storage/async-storage': 1.24.0(react-native@0.75.3(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(@types/react@18.3.8)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))
       eventemitter3: 5.0.1
       expo: 51.0.32(@babel/core@7.24.5)(@babel/preset-env@7.25.4(@babel/core@7.24.5))(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -19620,7 +19620,7 @@ snapshots:
     dependencies:
       '@noble/ciphers': 0.5.3
       '@noble/curves': 1.6.0
-      '@noble/hashes': 1.5.0
+      '@noble/hashes': 1.4.0
       '@react-native-async-storage/async-storage': 2.0.0(react-native@0.75.3(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.8)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))
       eventemitter3: 5.0.1
       expo: 51.0.32(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -24543,7 +24543,7 @@ snapshots:
   '@xmtp/frames-validator@0.6.2(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)':
     dependencies:
       '@noble/curves': 1.4.0
-      '@noble/hashes': 1.4.0
+      '@noble/hashes': 1.5.0
       '@xmtp/proto': 3.61.1
       viem: 2.21.12(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
     transitivePeerDependencies:
@@ -34256,7 +34256,7 @@ snapshots:
   webauthn-p256@0.0.5:
     dependencies:
       '@noble/curves': 1.4.0
-      '@noble/hashes': 1.4.0
+      '@noble/hashes': 1.5.0
 
   webidl-conversions@3.0.1: {}
 
