@@ -8,6 +8,7 @@ import {
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
+import { inAppWallet } from "thirdweb/wallets";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
 import { editionDropContract, editionDropTokenId } from "./constants";
@@ -29,10 +30,26 @@ export function SponsoredInAppTxPreview() {
     <div className="flex flex-col">
       <div className="flex justify-center">
         <StyledConnectButton
-          accountAbstraction={{
-            sponsorGas: true,
-            chain: baseSepolia,
-          }}
+          wallets={[
+            inAppWallet({
+              auth: {
+                options: [
+                  "google",
+                  "x",
+                  "discord",
+                  "telegram",
+                  "email",
+                  "phone",
+                  "passkey",
+                  "guest",
+                ],
+              },
+              smartAccount: {
+                chain: baseSepolia,
+                sponsorGas: true,
+              },
+            }),
+          ]}
         />
       </div>
       {isNftLoading ? (
