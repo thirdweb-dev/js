@@ -6,7 +6,6 @@ import {
   Code,
   Container,
   Flex,
-  HStack,
   Icon,
   IconButton,
   Link,
@@ -564,7 +563,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
       </TableContainer>
       <Portal containerRef={portalRef}>
         <Center w="100%">
-          <HStack>
+          <div className="flex flex-row">
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="first page"
@@ -606,7 +605,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
               <option value="250">250</option>
               <option value="500">500</option>
             </Select>
-          </HStack>
+          </div>
         </Center>
       </Portal>
     </Flex>

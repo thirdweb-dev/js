@@ -56,6 +56,7 @@ module.exports = {
               "MenuGroup",
               "MenuItem",
               "VStack",
+              "HStack",
               // also the types
               "ButtonProps",
               "BadgeProps",

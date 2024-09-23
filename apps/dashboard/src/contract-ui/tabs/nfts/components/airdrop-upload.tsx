@@ -5,7 +5,6 @@ import {
   Center,
   Container,
   Flex,
-  HStack,
   Icon,
   IconButton,
   Link,
@@ -449,7 +448,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
       </TableContainer>
       <Portal containerRef={portalRef}>
         <Center w="100%">
-          <HStack>
+          <div className="flex flex-row">
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="first page"
@@ -491,7 +490,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
               <option value="250">250</option>
               <option value="500">500</option>
             </Select>
-          </HStack>
+          </div>
         </Center>
       </Portal>
     </Flex>

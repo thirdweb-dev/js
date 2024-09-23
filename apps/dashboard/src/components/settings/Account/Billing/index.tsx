@@ -6,7 +6,7 @@ import {
   AccountStatus,
   useUpdateAccountPlan,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, HStack, Icon, useDisclosure } from "@chakra-ui/react";
+import { Flex, Icon, useDisclosure } from "@chakra-ui/react";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { AccountForm } from "components/settings/Account/AccountForm";
@@ -141,7 +141,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
     return [
       {
         title: (
-          <HStack justifyContent="space-between">
+          <div className="flex flex-row justify-between">
             <Heading
               size="label.md"
               opacity={!stepsCompleted.account ? 1 : 0.6}
@@ -161,7 +161,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
                 Edit
               </Button>
             )}
-          </HStack>
+          </div>
         ),
         description:
           "This information will be used for billing notifications and invoices.",
@@ -288,10 +288,10 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
         color="blue.500"
         isExternal
       >
-        <HStack alignItems="center" gap={2}>
+        <div className="flex flex-row items-center gap-2">
           <Text color="blue.500">Learn more about thirdweb&apos;s pricing</Text>
           <Icon as={FiExternalLink} />
-        </HStack>
+        </div>
       </TrackedLink>
 
       {downgradePlan && (

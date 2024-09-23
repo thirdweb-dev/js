@@ -3,7 +3,6 @@ import {
   type BoxProps,
   Center,
   Flex,
-  HStack,
   Icon,
   IconButton,
   Image,
@@ -211,7 +210,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
       </TableContainer>
       <Portal containerRef={portalRef}>
         <Center w="100%">
-          <HStack>
+          <div className="flex flex-row">
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="first page"
@@ -253,7 +252,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
               <option value="250">250</option>
               <option value="500">500</option>
             </Select>
-          </HStack>
+          </div>
         </Center>
       </Portal>
     </Flex>

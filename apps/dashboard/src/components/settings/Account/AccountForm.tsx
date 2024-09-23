@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { type Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, FormControl, HStack, Input } from "@chakra-ui/react";
+import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -219,9 +219,11 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           )}
         </Flex>
 
-        <HStack
-          justifyContent={showBillingButton ? "space-between" : "flex-end"}
-          w="full"
+        <div
+          className={cn(
+            "flex flex-row w-full",
+            showBillingButton ? "justify-between" : "justify-end",
+          )}
         >
           {showBillingButton && <ManageBillingButton account={account} />}
 
@@ -240,7 +242,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
               {buttonText}
             </Button>
           )}
-        </HStack>
+        </div>
       </div>
     </form>
   );

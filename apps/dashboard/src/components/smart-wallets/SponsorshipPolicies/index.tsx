@@ -14,7 +14,6 @@ import {
   Divider,
   Flex,
   FormControl,
-  HStack,
   IconButton,
   Input,
   Select,
@@ -274,7 +273,7 @@ export function AccountAbstractionSettingsPage(
       >
         <FormControl>
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
                 <FormLabel pointerEvents={"none"}>
                   Global spend limits
@@ -302,7 +301,7 @@ export function AccountAbstractionSettingsPage(
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("globalLimit") && (
               <div className="flex flex-col">
                 <FormControl
@@ -312,7 +311,7 @@ export function AccountAbstractionSettingsPage(
                   }
                 >
                   <FormLabel>Spend limit</FormLabel>
-                  <HStack alignItems="center">
+                  <div className="flex flex-row items-center">
                     <Input
                       w={"xs"}
                       placeholder="Enter an amount"
@@ -328,7 +327,7 @@ export function AccountAbstractionSettingsPage(
                         </option> */}
                     </Select>
                     <Text>per month</Text>
-                  </HStack>
+                  </div>
                   <FormErrorMessage>
                     {
                       form.getFieldState("globalLimit.maxSpend", form.formState)
@@ -347,7 +346,7 @@ export function AccountAbstractionSettingsPage(
           }
         >
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
                 <FormLabel pointerEvents={"none"}>
                   Restrict to specific chains
@@ -376,7 +375,7 @@ export function AccountAbstractionSettingsPage(
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("allowedChainIds") && (
               <Flex flexDir="column">
                 <NetworkDropdown
@@ -403,7 +402,7 @@ export function AccountAbstractionSettingsPage(
           }
         >
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
                 <FormLabel pointerEvents={"none"}>
                   Restrict to specific contract addresses
@@ -423,7 +422,7 @@ export function AccountAbstractionSettingsPage(
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("allowedContractAddresses") !== null && (
               <Flex flexDir="column">
                 <Textarea
@@ -446,7 +445,7 @@ export function AccountAbstractionSettingsPage(
         <Divider />
         <FormControl>
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
                 <FormLabel pointerEvents={"none"}>
                   Allowlisted/Blocklisted accounts
@@ -467,7 +466,7 @@ export function AccountAbstractionSettingsPage(
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("allowedOrBlockedWallets") !== null && (
               <Select
                 placeholder="Select allowed or blocked wallets"
@@ -523,7 +522,7 @@ export function AccountAbstractionSettingsPage(
         <Divider />
         <FormControl>
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
                 <FormLabel pointerEvents={"none"}>Server verifier</FormLabel>
                 <Text>
@@ -556,9 +555,9 @@ export function AccountAbstractionSettingsPage(
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("serverVerifier").enabled && (
-              <HStack alignItems={"start"}>
+              <div className="flex flex-row items-start">
                 <FormControl
                   isInvalid={
                     !!form.getFieldState("serverVerifier.url", form.formState)
@@ -626,7 +625,7 @@ export function AccountAbstractionSettingsPage(
                     </Button>
                   </Stack>
                 </FormControl>
-              </HStack>
+              </div>
             )}
           </Flex>
         </FormControl>
@@ -638,7 +637,7 @@ export function AccountAbstractionSettingsPage(
           }
         >
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
                 <FormLabel pointerEvents={"none"}>Admin accounts</FormLabel>
                 <Text>
@@ -657,7 +656,7 @@ export function AccountAbstractionSettingsPage(
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("bypassWallets") !== null && (
               <Flex flexDir="column">
                 <Textarea

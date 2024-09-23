@@ -7,7 +7,7 @@ import {
   useApiKeys,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Flex, HStack, useBreakpointValue } from "@chakra-ui/react";
+import { Flex, useBreakpointValue } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { OPSponsoredChains } from "constants/chains";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -282,7 +282,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
       >
         <Heading size="title.sm">{title}</Heading>
         <Text>{description}</Text>
-        <HStack mt={4} alignItems="center">
+        <div className="flex flex-row mt-4 items-center">
           {isLoggedIn ? (
             <Button
               size="sm"
@@ -308,7 +308,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
               Skip
             </Button>
           )}
-        </HStack>
+        </div>
       </div>
       {rightImageDark && !isMobile && theme === "dark" && (
         <ChakraNextImage src={rightImageDark} alt={""} w="50%" priority />

@@ -1,5 +1,5 @@
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, HStack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { Badge, Text, TrackedLink } from "tw-components";
 import { PLANS } from "utils/pricing";
 
@@ -20,7 +20,7 @@ export const BillingPlan: React.FC<BillingPlanProps> = ({
 }) => {
   return (
     <Flex direction={direction} gap={3}>
-      <HStack>
+      <div className="flex flex-row">
         <Text color={titleColor} size={titleSize}>
           Your current plan is
         </Text>
@@ -33,9 +33,9 @@ export const BillingPlan: React.FC<BillingPlanProps> = ({
         >
           {PLANS[account.plan as keyof typeof PLANS].title}
         </Badge>
-      </HStack>
+      </div>
 
-      <HStack>
+      <div className="flex flex-row">
         {description && <Text>{description}</Text>}
 
         <TrackedLink
@@ -48,7 +48,7 @@ export const BillingPlan: React.FC<BillingPlanProps> = ({
             Learn more
           </Text>
         </TrackedLink>
-      </HStack>
+      </div>
     </Flex>
   );
 };

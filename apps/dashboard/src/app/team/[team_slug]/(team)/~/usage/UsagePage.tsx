@@ -2,7 +2,6 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useAccount, useAccountUsage } from "@3rdweb-sdk/react/hooks/useApi";
-import { HStack } from "@chakra-ui/react";
 import { BillingPeriod } from "components/settings/Account/Billing/Period";
 import { BillingPlan } from "components/settings/Account/Billing/Plan";
 import { Usage } from "components/settings/Account/Usage";
@@ -24,14 +23,10 @@ export const SettingsUsagePage = () => {
     <div className="flex flex-col gap-8">
       <div className="flex flex-col">
         <h1 className="font-semibold text-3xl tracking-tight mb-2">Usage</h1>
-        <HStack
-          justifyContent="space-between"
-          flexDir={{ base: "column", lg: "row" }}
-          alignItems={{ base: "flex-start", lg: "center" }}
-        >
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
           <BillingPlan account={account} />
           <BillingPeriod account={account} usage={usageQuery.data} />
-        </HStack>
+        </div>
       </div>
 
       <Usage usage={usageQuery.data} usagePending={usageQuery.isPending} />
