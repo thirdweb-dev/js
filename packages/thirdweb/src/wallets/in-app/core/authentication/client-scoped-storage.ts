@@ -3,6 +3,7 @@ import type { EcosystemWalletId } from "../../../wallet-types.js";
 import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
+  GUEST_SESSION_LOCAL_STORAGE_NAME,
   PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME,
   WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME,
   WALLET_USER_ID_LOCAL_STORAGE_NAME,
@@ -153,6 +154,19 @@ export class ClientScopedStorage {
    */
   async removeWalletUserId(): Promise<boolean> {
     return this.removeItem(WALLET_USER_ID_LOCAL_STORAGE_NAME(this.key));
+  }
+
+  /**
+   * @internal
+   */
+  async getGuestSessionId(): Promise<string | null> {
+    return this.getItem(GUEST_SESSION_LOCAL_STORAGE_NAME(this.key));
+  }
+  /**
+   * @internal
+   */
+  async saveGuestSessionId(sessionId: string): Promise<void> {
+    await this.setItem(GUEST_SESSION_LOCAL_STORAGE_NAME(this.key), sessionId);
   }
 }
 

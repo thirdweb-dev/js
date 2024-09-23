@@ -1,6 +1,7 @@
 import * as WebBrowser from "expo-web-browser";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import type { Wallet } from "../../../interfaces/wallet.js";
 import { getLoginUrl } from "../../core/authentication/getLoginPath.js";
 import { guestAuthenticate } from "../../core/authentication/guest.js";
@@ -166,6 +167,7 @@ export async function guestLogin(
   const { storedToken } = await guestAuthenticate({
     client,
     ecosystem,
+    storage: nativeLocalStorage,
   });
   try {
     const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
