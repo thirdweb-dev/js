@@ -88,13 +88,16 @@ export function LinkedProfilesScreen(props: {
               </Text>
             </MenuButton>
             <Spacer y="xs" />
-            {connectedProfiles?.map((profile) => (
-              <LinkedProfile
-                key={`${profile.type}-${getProfileDisplayName(profile)}`}
-                profile={profile}
-                client={props.client}
-              />
-            ))}
+            {/* Exclude guest as a profile */}
+            {connectedProfiles
+              ?.filter((profile) => profile.type !== "guest")
+              .map((profile) => (
+                <LinkedProfile
+                  key={`${profile.type}-${getProfileDisplayName(profile)}`}
+                  profile={profile}
+                  client={props.client}
+                />
+              ))}
           </Container>
           <Spacer y="md" />
         </Container>
