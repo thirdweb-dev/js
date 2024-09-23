@@ -65,7 +65,7 @@ export class InAppWalletIframeCommunicator<
 /**
  * @internal
  */
-export function createInAppWalletIframeLink({
+function createInAppWalletIframeLink({
   clientId,
   baseUrl,
   path,
@@ -96,4 +96,4 @@ export function createInAppWalletIframeLink({
   }
   return inAppWalletUrl;
 }
-export const IN_APP_WALLET_IFRAME_ID = "thirdweb-in-app-wallet-iframe";
+const IN_APP_WALLET_IFRAME_ID = "thirdweb-in-app-wallet-iframe";

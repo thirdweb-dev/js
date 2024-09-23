@@ -86,7 +86,10 @@ export {
 } from "../extensions/prebuilts/deploy-modular.js";
 
 // Common
-export { grantMinterRole } from "../extensions/modules/common/grantMinterRole.js";
+export {
+  grantMinterRole,
+  type GrantMinterRoleParams,
+} from "../extensions/modules/common/grantMinterRole.js";
 export {
   getDeployedModule,
   getOrDeployModule,

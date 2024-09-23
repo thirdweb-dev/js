@@ -1201,7 +1201,7 @@ function SwitchNetworkButton(props: {
   );
 }
 
-export type DetailsModalConnectOptions = {
+type DetailsModalConnectOptions = {
   connectModal?: ConnectButton_connectModalOptions;
   walletConnect?: {
     projectId?: string;

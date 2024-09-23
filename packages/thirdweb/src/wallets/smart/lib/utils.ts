@@ -1,5 +1,4 @@
-import { concat } from "viem";
-import { isHex, numberToHex, toHex } from "../../../utils/encoding/hex.js";
+import { isHex, toHex } from "../../../utils/encoding/hex.js";
 import type {
   UserOperationV06,
   UserOperationV06Hexed,
@@ -21,15 +20,6 @@ export const generateRandomUint192 = (): bigint => {
     (rand4 << BigInt(64)) |
     (rand5 << BigInt(32)) |
     rand6
-  );
-};
-
-/**
- * @internal
- */
-export const randomNonce = () => {
-  return BigInt(
-    concat([numberToHex(generateRandomUint192()), "0x0000000000000000"]),
   );
 };
 

@@ -1,6 +1,6 @@
 import { createStore } from "../../../../../../../reactive/store.js";
 
-export type PendingTxInfo =
+type PendingTxInfo =
   | {
       type: "swap";
       txHash: string;

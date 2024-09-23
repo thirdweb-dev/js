@@ -69,7 +69,7 @@ const defaultAuthOptions: AuthOption[] = [
   "passkey",
 ];
 
-export type ConnectWalletSocialOptionsProps = {
+type ConnectWalletSocialOptionsProps = {
   select: () => void;
   done: () => void;
   locale: InAppWalletLocale;

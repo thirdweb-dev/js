@@ -39,7 +39,7 @@ import { postAuth } from "./helpers/auth/middleware.js";
 import { getWalletUserDetails } from "./helpers/storage/local.js";
 import { getExistingUserAccount } from "./helpers/wallet/retrieval.js";
 
-export type NativeConnectorOptions = {
+type NativeConnectorOptions = {
   client: ThirdwebClient;
   partnerId?: string | undefined;
   passkeyDomain?: string;

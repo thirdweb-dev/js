@@ -4,7 +4,7 @@ import { toSerializableTransaction } from "../transaction/actions/to-serializabl
 import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
 import { readContract } from "../transaction/read-contract.js";
 
-export type EstimateL1FeeOptions = {
+type EstimateL1FeeOptions = {
   transaction: PreparedTransaction;
   gasPriceOracleAddress?: string;
 };

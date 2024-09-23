@@ -106,11 +106,3 @@ function isStringifiable(value: unknown): boolean {
     return false;
   }
 }
-
-/**
- * Wallet that uses a personal wallet must save the connection params to storage of this type
- */
-export type WithPersonalWalletConnectionOptions = {
-  // last connected personal wallet's id
-  personalWalletId: string;
-};

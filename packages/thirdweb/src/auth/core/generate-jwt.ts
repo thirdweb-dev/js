@@ -2,7 +2,7 @@ import { encodeJWT } from "../../utils/jwt/encode-jwt.js";
 import type { AuthOptions } from "./types.js";
 import type { VerifiedLoginPayload } from "./verify-login-payload.js";
 
-export const DEFAULT_TOKEN_DURATION_SECONDS = 60 * 60 * 24;
+const DEFAULT_TOKEN_DURATION_SECONDS = 60 * 60 * 24;
 
 type GenerateJWTParams<Tctx = unknown> = {
   payload: VerifiedLoginPayload;

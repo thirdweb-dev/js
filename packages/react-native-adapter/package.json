@@ -23,22 +23,20 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/*",
-    "src/*"
-  ],
+  "files": ["dist/*", "src/*"],
   "dependencies": {
-    "@aws-sdk/client-lambda": "3.651.1",
-    "@aws-sdk/credential-providers": "3.651.1",
+    "@aws-sdk/client-lambda": "3.656.0",
+    "@aws-sdk/credential-providers": "3.654.0",
     "@mobile-wallet-protocol/client": "0.0.3",
-    "@walletconnect/react-native-compat": "2.13.2",
-    "aws-amplify": "5.3.19"
+    "@walletconnect/react-native-compat": "2.13.2"
+  },
+  "devDependencies": {
+    "rimraf": "6.0.1"
   },
   "peerDependencies": {
     "@coinbase/wallet-mobile-sdk": "^1",
     "@react-native-async-storage/async-storage": "^1 || ^2",
     "@react-native-community/netinfo": "^11",
-    "amazon-cognito-identity-js": "^6",
     "expo-application": "^5",
     "expo-linking": "^6",
     "expo-web-browser": "^13",
@@ -62,8 +60,7 @@
     "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
     "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
     "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
-    "clean": "rimraf dist",
-    "push": "yalc push"
+    "clean": "rimraf dist"
   },
   "engines": {
     "node": ">=18"

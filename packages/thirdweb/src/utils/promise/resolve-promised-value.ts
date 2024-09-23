@@ -13,7 +13,7 @@ export async function resolvePromisedValue<V>(
   return typeof value === "function" ? await value() : value;
 }
 
-export type PromisedValue<T> = T | (() => Promise<T>);
+type PromisedValue<T> = T | (() => Promise<T>);
 
 export type PromisedObject<T> = {
   [K in keyof T]: PromisedValue<T[K]>;

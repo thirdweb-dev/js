@@ -18,7 +18,7 @@ import { TokenIcon } from "../components/TokenIcon.js";
 import { ThemedText } from "../components/text.js";
 import { RIGHT_CHEVRON } from "../icons/svgs.js";
 
-export type TokenListScreenProps = {
+type TokenListScreenProps = {
   theme: Theme;
   client: ThirdwebClient;
   supportedTokens?: SupportedTokens;

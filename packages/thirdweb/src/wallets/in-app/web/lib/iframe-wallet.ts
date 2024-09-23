@@ -32,19 +32,17 @@ import type {
 import type { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import type { IWebWallet, PostWalletSetup } from "./web-wallet.js";
 
-export type WalletManagementTypes = {
+type WalletManagementTypes = {
   createWallet: undefined;
   setUpNewDevice: undefined;
   getUserStatus: undefined;
 };
-export type WalletManagementUiTypes = {
+type WalletManagementUiTypes = {
   createWalletUi: undefined;
   setUpNewDeviceUi: undefined;
 };
 
-export type InAppWalletInternalHelperType = { showUi: boolean };
-
-export type SignerProcedureTypes = {
+type SignerProcedureTypes = {
   getAddress: undefined;
   signMessage: {
     message: string | Hex;

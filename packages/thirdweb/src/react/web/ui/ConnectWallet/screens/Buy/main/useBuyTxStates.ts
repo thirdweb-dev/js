@@ -140,10 +140,7 @@ export function useTransactionCostAndData(args: {
   });
 }
 
-export async function getTransactionGasCost(
-  tx: PreparedTransaction,
-  from?: string,
-) {
+async function getTransactionGasCost(tx: PreparedTransaction, from?: string) {
   try {
     const gasCost = await estimateGasCost({
       transaction: tx,

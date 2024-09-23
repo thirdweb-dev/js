@@ -1,7 +1,7 @@
 /**
  * @internal
  */
-export function isHttpUrl(url: string) {
+function isHttpUrl(url: string) {
   return url.startsWith("http://") || url.startsWith("https://");
 }
 

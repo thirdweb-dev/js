@@ -95,6 +95,7 @@ export { freezeMetadata } from "../../extensions/erc1155/__generated__/INFTMetad
 export {
   getActiveClaimCondition,
   isGetActiveClaimConditionSupported,
+  type GetActiveClaimConditionParams,
 } from "../../extensions/erc1155/drops/read/getActiveClaimCondition.js";
 export {
   getClaimConditionById,

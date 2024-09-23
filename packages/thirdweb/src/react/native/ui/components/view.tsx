@@ -1,7 +1,7 @@
 import { View, type ViewProps } from "react-native";
 import type { Theme } from "../../../core/design-system/index.js";
 
-export type ThemedViewProps = ViewProps & {
+type ThemedViewProps = ViewProps & {
   theme: Theme;
 };
 

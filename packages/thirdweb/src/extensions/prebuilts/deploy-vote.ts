@@ -11,7 +11,7 @@ import { decimals } from "../erc20/read/decimals.js";
 /**
  * @extension DEPLOY
  */
-export type VoteContractParams = {
+type VoteContractParams = {
   name: string;
   /**
    * The contract address for the ERC20 that will be used as voting power
@@ -57,7 +57,7 @@ export type VoteContractParams = {
 /**
  * @extension DEPLOY
  */
-export type DeployVoteContractOptions = Prettify<
+type DeployVoteContractOptions = Prettify<
   ClientAndChainAndAccount & {
     params: VoteContractParams;
   }

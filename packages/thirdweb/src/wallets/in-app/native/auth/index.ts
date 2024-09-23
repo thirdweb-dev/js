@@ -38,9 +38,7 @@ async function getInAppWalletConnector(client: ThirdwebClient) {
  * ```
  * @wallet
  */
-export async function getAuthenticatedUser(
-  options: GetAuthenticatedUserParams,
-) {
+async function getAuthenticatedUser(options: GetAuthenticatedUserParams) {
   const { client } = options;
   const connector = await getInAppWalletConnector(client);
   const user = await connector.getUser();

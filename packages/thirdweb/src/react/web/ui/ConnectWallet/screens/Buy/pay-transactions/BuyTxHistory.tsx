@@ -1,105 +1,24 @@
 "use client";
-import {
-  ArrowRightIcon,
-  CrossCircledIcon,
-  ExternalLinkIcon,
-} from "@radix-ui/react-icons";
-import { useState } from "react";
+import { ArrowRightIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import {
   fontSize,
   iconSize,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainExplorers } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { useActiveAccount } from "../../../../../../core/hooks/wallets/useActiveAccount.js";
-import { useActiveWallet } from "../../../../../../core/hooks/wallets/useActiveWallet.js";
-import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/useActiveWalletChain.js";
-import { LoadingScreen } from "../../../../../wallets/shared/LoadingScreen.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spinner } from "../../../../components/Spinner.js";
-import { Container, Line, ModalHeader } from "../../../../components/basic.js";
-import { Button, ButtonLink } from "../../../../components/buttons.js";
+import { Container } from "../../../../components/basic.js";
+import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import type { PayerInfo } from "../types.js";
 import {
   BuyTxHistoryButton,
   BuyTxHistoryButtonHeight,
 } from "./BuyTxHistoryButton.js";
-import { TxDetailsScreen } from "./TxDetailsScreen.js";
 import {
   type TxStatusInfo,
   useBuyTransactionsToShow,
 } from "./useBuyTransactionsToShow.js";
-
-/**
- * @internal
- */
-export function PayTxHistoryScreen(props: {
-  title: string;
-  onBack?: () => void;
-  client: ThirdwebClient;
-  onDone: () => void;
-  transactionMode: boolean;
-  isEmbed: boolean;
-}) {
-  const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
-  const activeChain = useActiveWalletChain();
-  const activeWallet = useActiveWallet();
-  const activeAccount = useActiveAccount();
-  const chainExplorers = useChainExplorers(activeChain);
-
-  const payer: PayerInfo | undefined =
-    activeChain && activeAccount && activeWallet
-      ? { chain: activeChain, account: activeAccount, wallet: activeWallet }
-      : undefined;
-
-  if (!payer) {
-    return <LoadingScreen />;
-  }
-
-  if (selectedTx) {
-    return (
-      <TxDetailsScreen
-        title={props.title}
-        client={props.client}
-        statusInfo={selectedTx}
-        onBack={() => setSelectedTx(null)}
-        onDone={props.onDone}
-        transactionMode={props.transactionMode}
-        isEmbed={props.isEmbed}
-        payer={payer}
-      />
-    );
-  }
-
-  return (
-    <Container animate="fadein">
-      <Container p="lg">
-        <ModalHeader title="Transactions" onBack={props.onBack} />
-      </Container>
-      <PayTxHistoryList {...props} onSelectTx={setSelectedTx} />
-      <Line />
-      <Container p="lg">
-        <ButtonLink
-          fullWidth
-          variant="outline"
-          href={`${chainExplorers.explorers[0]?.url}/address/${activeAccount?.address}`}
-          target="_blank"
-          as="a"
-          gap="xs"
-          style={{
-            textDecoration: "none",
-            color: "inherit",
-          }}
-        >
-          View on Explorer{" "}
-          <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
-        </ButtonLink>
-      </Container>
-    </Container>
-  );
-}
 
 /**
  * @internal

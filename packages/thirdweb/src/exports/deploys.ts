@@ -28,6 +28,7 @@ export {
 export {
   deployMarketplaceContract,
   type MarketplaceContractParams,
+  type DeployMarketplaceContractOptions,
 } from "../extensions/prebuilts/deploy-marketplace.js";
 
 export {

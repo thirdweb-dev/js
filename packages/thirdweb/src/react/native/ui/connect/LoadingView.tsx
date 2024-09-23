@@ -3,7 +3,7 @@ import type { Theme } from "../../../core/design-system/index.js";
 import { spacing } from "../../design-system/index.js";
 import { ThemedSpinner } from "../components/spinner.js";
 
-export type LoadingViewProps = {
+type LoadingViewProps = {
   theme: Theme;
 };
 

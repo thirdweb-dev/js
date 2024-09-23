@@ -4,7 +4,7 @@ import { SvgXml } from "react-native-svg";
 import type { Theme } from "../../../core/design-system/index.js";
 import { radius } from "../../design-system/index.js";
 
-export type ImageInfo = {
+type ImageInfo = {
   size: number;
   theme: Theme;
   data?: string | null;

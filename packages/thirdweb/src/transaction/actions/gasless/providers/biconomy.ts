@@ -1,6 +1,6 @@
 import type { Address } from "abitype";
 import { type TransactionSerializable, encodeAbiParameters } from "viem";
-import { ADDRESS_ZERO } from "../../../../constants/addresses.js";
+import { ZERO_ADDRESS } from "../../../../constants/addresses.js";
 import { getContract } from "../../../../contract/contract.js";
 import { isHex } from "../../../../utils/encoding/helpers/is-hex.js";
 import { keccak256 } from "../../../../utils/hashing/keccak256.js";
@@ -62,7 +62,7 @@ export async function prepareBiconomyTransaction({
   const request = {
     from: account.address,
     to: serializableTransaction.to,
-    token: ADDRESS_ZERO,
+    token: ZERO_ADDRESS,
     txGas: serializableTransaction.gas,
     tokenGasPrice: 0n,
     batchId: BATCH_ID,

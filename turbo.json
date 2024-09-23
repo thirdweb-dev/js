@@ -12,7 +12,7 @@
     },
     "typedoc": {
       "outputs": ["typedoc/**"],
-      "dependsOn": ["typedoc-gen#build", "^build"]
+      "dependsOn": ["^build"]
     },
     "thirdweb-dashboard#build": {
       "outputs": [".next/**", "!.next/cache/**"],

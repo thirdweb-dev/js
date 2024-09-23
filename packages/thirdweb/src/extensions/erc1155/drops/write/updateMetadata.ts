@@ -16,7 +16,7 @@ export type UpdateMetadataParams = {
 /**
  * @internal
  */
-export async function getUpdateMetadataParams(
+async function getUpdateMetadataParams(
   options: BaseTransactionOptions<UpdateMetadataParams>,
 ): Promise<BatchBaseURI.UpdateBatchBaseURIParams> {
   const { contract, targetTokenId, newMetadata } = options;

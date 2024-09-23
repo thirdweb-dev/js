@@ -5,7 +5,7 @@ import { RNImage } from "../components/RNImage.js";
 import { ThemedText } from "../components/text.js";
 import { CHECK_CIRCLE } from "../icons/svgs.js";
 
-export type SuccessViewProps = {
+type SuccessViewProps = {
   theme: Theme;
   title: string;
 };

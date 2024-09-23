@@ -1,4 +1,3 @@
-import type { CognitoUserSession } from "amazon-cognito-identity-js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
@@ -6,20 +5,12 @@ import { randomBytesHex } from "../../../../../utils/random.js";
 import type { UserDetailsApiType } from "../../../core/authentication/types.js";
 import {
   ROUTE_EMBEDDED_WALLET_DETAILS,
-  ROUTE_IS_VALID_USER_MANAGED_OTP,
   ROUTE_STORE_USER_SHARES,
-  ROUTE_USER_MANAGED_OTP,
-  ROUTE_VALIDATE_USER_MANAGED_OTP,
-  ROUTE_VERIFY_COGNITO_OTP,
   ROUTE_VERIFY_THIRDWEB_CLIENT_ID,
   THIRDWEB_SESSION_NONCE_HEADER,
 } from "../constants.js";
 import { createErrorMessage } from "../errors.js";
 import { getAuthTokenClient } from "../storage/local.js";
-import type {
-  IsValidUserManagedEmailOTPResponse,
-  VerifiedTokenResponse,
-} from "../types.js";
 
 const EMBEDDED_WALLET_TOKEN_HEADER = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
@@ -117,105 +108,6 @@ export async function fetchUserDetails(args: {
   }
   const result = (await resp.json()) as UserDetailsApiType;
   return result;
-}
-
-export async function generateAuthTokenFromCognitoEmailOtp(
-  session: CognitoUserSession,
-  clientId: string,
-) {
-  const resp = await fetch(ROUTE_VERIFY_COGNITO_OTP, {
-    method: "POST",
-    headers: {
-      ...getSessionHeaders(),
-    },
-    body: JSON.stringify({
-      access_token: session.getAccessToken().getJwtToken(),
-      refresh_token: session.getRefreshToken().getToken(),
-      id_token: session.getIdToken().getJwtToken(),
-      developerClientId: clientId,
-      otpMethod: "email",
-    }),
-  });
-  if (!resp.ok) {
-    const error = await resp.json();
-    throw new Error(
-      `Something went wrong generating auth token from user cognito email otp. ${error.message}`,
-    );
-  }
-  const respJ = await resp.json();
-  return respJ as VerifiedTokenResponse;
-}
-
-export async function sendUserManagedEmailOtp(email: string, clientId: string) {
-  const resp = await fetch(ROUTE_USER_MANAGED_OTP, {
-    method: "POST",
-    headers: {
-      ...getSessionHeaders(),
-    },
-    body: JSON.stringify({
-      email,
-      clientId,
-    }),
-  });
-  if (!resp.ok) {
-    const error = await resp.json();
-    throw new Error(
-      `Something went wrong generating auth token from user cognito email otp. ${error.message}`,
-    );
-  }
-  const respJ = await resp.json();
-  return respJ;
-}
-
-export async function validateUserManagedEmailOtp(options: {
-  email: string;
-  otp: string;
-  clientId: string;
-}) {
-  const resp = await fetch(ROUTE_VALIDATE_USER_MANAGED_OTP, {
-    method: "POST",
-    headers: {
-      ...getSessionHeaders(),
-    },
-    body: JSON.stringify({
-      email: options.email,
-      otp: options.otp,
-      clientId: options.clientId,
-    }),
-  });
-  if (!resp.ok) {
-    const error = await resp.json();
-    throw new Error(
-      `Something went wrong generating auth token from user cognito email otp. ${error.message}`,
-    );
-  }
-  const respJ = await resp.json();
-  return respJ as VerifiedTokenResponse;
-}
-export async function isValidUserManagedEmailOtp(options: {
-  email: string;
-  otp: string;
-  clientId: string;
-}) {
-  const resp = await fetch(ROUTE_IS_VALID_USER_MANAGED_OTP, {
-    method: "POST",
-    headers: {
-      ...getSessionHeaders(),
-    },
-    body: JSON.stringify({
-      email: options.email,
-      otp: options.otp,
-      clientId: options.clientId,
-    }),
-  });
-  if (!resp.ok) {
-    const error = await resp.json();
-    throw new Error(
-      `Something went wrong generating auth token from user cognito email otp. ${error.message}`,
-    );
-  }
-  const respJ = await resp.json();
-  return respJ as IsValidUserManagedEmailOTPResponse;
 }
 
 export async function storeUserShares({

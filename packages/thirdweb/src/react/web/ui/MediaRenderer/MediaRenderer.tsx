@@ -197,11 +197,6 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
     },
   ))();
 
-export interface MediaType {
-  url?: string;
-  mimeType?: string;
-}
-
 const ModelViewer = /* @__PURE__ */ lazy(() => import("./ModelViewer.js"));
 
 interface PlayButtonProps {

@@ -21,12 +21,12 @@ export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
 };
 
-export type SendRawTransactionOptions = {
+type SendRawTransactionOptions = {
   rawTransaction: Hex;
   chainId: number;
 };
 
-export type WatchAssetParams = {
+type WatchAssetParams = {
   type: "ERC20";
   options: {
     address: Address;

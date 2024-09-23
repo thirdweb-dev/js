@@ -55,7 +55,7 @@ export const Drawer = /* @__PURE__ */ forwardRef<HTMLDivElement, DrawerProps>(
   },
 );
 
-export const DrawerContainer = /* @__PURE__ */ StyledDiv((_) => {
+const DrawerContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     zIndex: 10000,
@@ -71,7 +71,7 @@ export const DrawerContainer = /* @__PURE__ */ StyledDiv((_) => {
   };
 });
 
-export const drawerOpenAnimation = keyframes`
+const drawerOpenAnimation = keyframes`
   from {
     opacity: 0;
     transform: translateY(100px);

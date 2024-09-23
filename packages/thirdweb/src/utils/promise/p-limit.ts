@@ -81,7 +81,7 @@ type LimitFunctionCallSignature = {
   ): Promise<ReturnType>;
 };
 
-export type LimitFunction = {
+type LimitFunction = {
   /**
    * The number of promises that are currently running.
    */

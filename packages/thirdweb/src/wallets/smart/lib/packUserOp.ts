@@ -1,7 +1,7 @@
-import { type Hex, concat, pad, slice, toHex } from "viem";
+import { type Hex, concat, pad, toHex } from "viem";
 import type { PackedUserOperation, UserOperationV07 } from "../types.js";
 
-export function getInitCode(unpackedUserOperation: UserOperationV07) {
+function getInitCode(unpackedUserOperation: UserOperationV07) {
   return unpackedUserOperation.factory
     ? concat([
         unpackedUserOperation.factory as Hex,
@@ -10,7 +10,7 @@ export function getInitCode(unpackedUserOperation: UserOperationV07) {
     : "0x";
 }
 
-export function getAccountGasLimits(unpackedUserOperation: UserOperationV07) {
+function getAccountGasLimits(unpackedUserOperation: UserOperationV07) {
   return concat([
     pad(toHex(unpackedUserOperation.verificationGasLimit), {
       size: 16,
@@ -19,14 +19,7 @@ export function getAccountGasLimits(unpackedUserOperation: UserOperationV07) {
   ]) as Hex;
 }
 
-export function unpackAccountGasLimits(accountGasLimits: Hex) {
-  return {
-    verificationGasLimit: BigInt(slice(accountGasLimits, 0, 16)),
-    callGasLimit: BigInt(slice(accountGasLimits, 16)),
-  };
-}
-
-export function getGasLimits(unpackedUserOperation: UserOperationV07) {
+function getGasLimits(unpackedUserOperation: UserOperationV07) {
   return concat([
     pad(toHex(unpackedUserOperation.maxPriorityFeePerGas), {
       size: 16,
@@ -35,14 +28,7 @@ export function getGasLimits(unpackedUserOperation: UserOperationV07) {
   ]) as Hex;
 }
 
-export function unpackGasLimits(gasLimits: Hex) {
-  return {
-    maxPriorityFeePerGas: BigInt(slice(gasLimits, 0, 16)),
-    maxFeePerGas: BigInt(slice(gasLimits, 16)),
-  };
-}
-
-export function getPaymasterAndData(unpackedUserOperation: UserOperationV07) {
+function getPaymasterAndData(unpackedUserOperation: UserOperationV07) {
   return unpackedUserOperation.paymaster
     ? concat([
         unpackedUserOperation.paymaster as Hex,

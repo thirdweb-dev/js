@@ -11,7 +11,7 @@ import { getRpcClient } from "../../rpc/rpc.js";
 import { toTokens } from "../../utils/units.js";
 import type { Account } from "../interfaces/wallet.js";
 
-export type GetTokenBalanceOptions = {
+type GetTokenBalanceOptions = {
   account: Pick<Account, "address">;
   client: ThirdwebClient;
   chain: Chain;

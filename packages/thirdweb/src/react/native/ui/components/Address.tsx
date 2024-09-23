@@ -7,7 +7,7 @@ import { CHECK, COPY_ICON } from "../icons/svgs.js";
 import { RNImage } from "./RNImage.js";
 import { ThemedText } from "./text.js";
 
-export type AddressProps = {
+type AddressProps = {
   account: Account;
   theme: Theme;
   addressOrENS: string;

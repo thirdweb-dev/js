@@ -90,7 +90,7 @@ export function WalletTransactionHistory(props: {
   );
 }
 
-export function TransactionButton(props: {
+function TransactionButton(props: {
   hash: string;
   client: ThirdwebClient;
   chainId: number;

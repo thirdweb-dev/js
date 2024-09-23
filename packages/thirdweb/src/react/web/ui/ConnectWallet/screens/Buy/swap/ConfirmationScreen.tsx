@@ -385,7 +385,7 @@ function ConfirmItem(props: {
 /**
  * @internal
  */
-export function SwapFeesRightAligned(props: {
+function SwapFeesRightAligned(props: {
   quote: BuyWithCryptoQuote;
 }) {
   return (

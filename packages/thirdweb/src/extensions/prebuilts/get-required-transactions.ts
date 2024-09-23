@@ -11,7 +11,7 @@ import type { DeployContractfromDeployMetadataOptions } from "./deploy-published
 /**
  * @internal
  */
-export type DeployTransactionType =
+type DeployTransactionType =
   | "infra"
   | "implementation"
   | "module"
@@ -21,7 +21,7 @@ export type DeployTransactionType =
 /**
  * @internal
  */
-export type DeployTransactionResult = {
+type DeployTransactionResult = {
   type: DeployTransactionType;
   contractId: string;
 };

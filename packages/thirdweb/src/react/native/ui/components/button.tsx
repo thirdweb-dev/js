@@ -9,7 +9,7 @@ import { radius, spacing } from "../../design-system/index.js";
 import { RNImage } from "./RNImage.js";
 import { ThemedText } from "./text.js";
 
-export type ThemedButtonProps = TouchableOpacityProps & {
+type ThemedButtonProps = TouchableOpacityProps & {
   theme: Theme;
   variant?: "primary" | "secondary" | "accent";
 };

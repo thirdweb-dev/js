@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { AuthArgsType } from "../../../core/authentication/types.js";
 import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
@@ -7,10 +6,6 @@ import {
   WALLET_USER_ID_LOCAL_STORAGE_NAME,
 } from "../../../core/constants/settings.js";
 import { DEVICE_SHARE_MISSING_MESSAGE } from "../constants.js";
-
-const CONNECTED_EMAIL_LOCAL_STORAGE_NAME = "embedded-wallet-connected-email";
-const CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME =
-  "embedded-wallet-connected-auth-params";
 
 const getItemFromAsyncStorage = async (key: string) => {
   // @ts-ignore - default import buils but ts doesn't like it
@@ -26,50 +21,6 @@ const removeItemInAsyncStorage = async (key: string) => {
   // @ts-ignore - default import buils but ts doesn't like it
   await AsyncStorage.removeItem(key);
 };
-
-export async function getConnectedEmail() {
-  return getItemFromAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME);
-}
-
-export async function saveConnectedEmail(email: string) {
-  await setItemInAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME, email);
-}
-
-export async function clearConnectedEmail() {
-  await removeItemInAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME);
-}
-
-export async function getConnectedAuthStrategy(): Promise<
-  AuthArgsType["strategy"] | undefined
-> {
-  return (await getItemFromAsyncStorage(
-    CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME,
-  )) as AuthArgsType["strategy"] | undefined;
-}
-
-export async function saveConnectedAuthStrategy(authStrategy: string) {
-  await setItemInAsyncStorage(
-    CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME,
-    authStrategy,
-  );
-}
-
-export async function clearConnectedAuthStrategy() {
-  await removeItemInAsyncStorage(CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME);
-}
-
-export async function isDeviceSharePresentForUser(
-  clientId: string,
-  walletUserId?: string,
-): Promise<boolean> {
-  if (!walletUserId) {
-    return false;
-  }
-  const storedDeviceShare = await getItemFromAsyncStorage(
-    DEVICE_SHARE_LOCAL_STORAGE_NAME(clientId, walletUserId),
-  );
-  return !!storedDeviceShare;
-}
 
 export async function getAuthTokenClient(clientId: string) {
   return getItemFromAsyncStorage(AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId));

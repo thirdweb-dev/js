@@ -4,12 +4,6 @@ export const CONTRACT_DEPLOYER_ADDRESS =
   "0x0000000000000000000000000000000000008006" as const;
 export const KNOWN_CODES_STORAGE = "0x0000000000000000000000000000000000008004";
 export const PUBLISHED_PRIVATE_KEY = "";
-export const PUBLISHED_SIGNER =
-  "0xf472c04EFF6F76eFe570723a55F730126281421a" as const;
-
-export const getMarkerAbi = [
-  "function getMarker(bytes32) public view returns (uint256)",
-];
 
 export const singletonFactoryAbi = [
   "function deploy(bytes32,bytes32,bytes) external payable",

@@ -48,9 +48,7 @@ async function getInAppWalletConnector(
  * ```
  * @wallet
  */
-export async function getAuthenticatedUser(
-  options: GetAuthenticatedUserParams,
-) {
+async function getAuthenticatedUser(options: GetAuthenticatedUserParams) {
   const { client, ecosystem } = options;
   const connector = await getInAppWalletConnector(client, ecosystem);
   const user = await connector.getUser();

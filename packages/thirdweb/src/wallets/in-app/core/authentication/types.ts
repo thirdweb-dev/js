@@ -104,13 +104,6 @@ export type Profile = {
   };
 };
 
-/**
- * @internal
- */
-export type GetHeadlessLoginLinkReturnType = {
-  loginLink: string;
-};
-
 export type UserDetailsApiType = {
   status: string;
   isNewUser: boolean;
@@ -120,7 +113,7 @@ export type UserDetailsApiType = {
 
 // TODO: Clean up tech debt of random type Objects
 // E.g. StoredTokenType is really not used anywhere but it exists as this object for legacy reason
-export type StoredTokenType = {
+type StoredTokenType = {
   jwtToken: string;
   authProvider: AuthProvider;
   authDetails: AuthDetails;
@@ -142,7 +135,7 @@ export type AuthAndWalletRpcReturnType = AuthStoredTokenWithCookieReturnType & {
 export type AuthLoginReturnType = { user: InitializedUser };
 
 // Auth Types
-export type AuthDetails = (
+type AuthDetails = (
   | {
       email?: string;
     }
@@ -157,7 +150,7 @@ export type AuthDetails = (
   walletType?: "sharded" | "enclave";
 };
 
-export type InitializedUser = {
+type InitializedUser = {
   status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED;
   walletAddress: string;
   authDetails: AuthDetails;
@@ -199,11 +192,6 @@ export type SendEmailOtpReturnType = {
   recoveryShareManagement: RecoveryShareManagement;
 };
 export type LogoutReturnType = { success: boolean };
-
-/**
- * @internal
- */
-export type GetAuthDetailsReturnType = { authDetails?: AuthDetails };
 
 // ! Types seem repetitive, but the name should identify which goes where
 // this is the return type from the InAppWallet Class getUserWalletStatus method iframe call

@@ -18,12 +18,12 @@ const SIGNED_KEY_REQUEST_TYPE = [
   { name: "deadline", type: "uint256" },
 ];
 
-export const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_TYPES = {
+const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_TYPES = {
   domain: SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN,
   types: { SignedKeyRequest: SIGNED_KEY_REQUEST_TYPE },
 } as const;
 
-export const SIGNED_KEY_REQUEST_METADATA_ABI = [
+const SIGNED_KEY_REQUEST_METADATA_ABI = [
   {
     components: [
       {

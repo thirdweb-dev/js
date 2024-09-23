@@ -120,7 +120,7 @@ export async function prepareEngineTransaction({
   return { message, signature, messageType } as const;
 }
 
-export const ForwardRequest = [
+const ForwardRequest = [
   { name: "from", type: "address" },
   { name: "to", type: "address" },
   { name: "value", type: "uint256" },
@@ -129,7 +129,7 @@ export const ForwardRequest = [
   { name: "data", type: "bytes" },
 ] as const;
 
-export const ChainAwareForwardRequest = [
+const ChainAwareForwardRequest = [
   { name: "from", type: "address" },
   { name: "to", type: "address" },
   { name: "value", type: "uint256" },

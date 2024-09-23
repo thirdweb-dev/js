@@ -127,60 +127,24 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": [
-        "./dist/types/exports/adapters/*.d.ts"
-      ],
-      "auth": [
-        "./dist/types/exports/auth.d.ts"
-      ],
-      "chains": [
-        "./dist/types/exports/chains.d.ts"
-      ],
-      "contract": [
-        "./dist/types/exports/contract.d.ts"
-      ],
-      "deploys": [
-        "./dist/types/exports/deploys.d.ts"
-      ],
-      "event": [
-        "./dist/types/exports/event.d.ts"
-      ],
-      "extensions/*": [
-        "./dist/types/exports/extensions/*.d.ts"
-      ],
-      "pay": [
-        "./dist/types/exports/pay.d.ts"
-      ],
-      "react": [
-        "./dist/types/exports/react.d.ts"
-      ],
-      "react-native": [
-        "./dist/types/exports/react-native.d.ts"
-      ],
-      "rpc": [
-        "./dist/types/exports/rpc.d.ts"
-      ],
-      "storage": [
-        "./dist/types/exports/storage.d.ts"
-      ],
-      "transaction": [
-        "./dist/types/exports/transaction.d.ts"
-      ],
-      "utils": [
-        "./dist/types/exports/utils.d.ts"
-      ],
-      "wallets": [
-        "./dist/types/exports/wallets.d.ts"
-      ],
-      "wallets/*": [
-        "./dist/types/exports/wallets/*.d.ts"
-      ],
-      "modules": [
-        "./dist/types/exports/modules.d.ts"
-      ],
-      "social": [
-        "./dist/types/exports/social.d.ts"
-      ]
+      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
+      "auth": ["./dist/types/exports/auth.d.ts"],
+      "chains": ["./dist/types/exports/chains.d.ts"],
+      "contract": ["./dist/types/exports/contract.d.ts"],
+      "deploys": ["./dist/types/exports/deploys.d.ts"],
+      "event": ["./dist/types/exports/event.d.ts"],
+      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
+      "pay": ["./dist/types/exports/pay.d.ts"],
+      "react": ["./dist/types/exports/react.d.ts"],
+      "react-native": ["./dist/types/exports/react-native.d.ts"],
+      "rpc": ["./dist/types/exports/rpc.d.ts"],
+      "storage": ["./dist/types/exports/storage.d.ts"],
+      "transaction": ["./dist/types/exports/transaction.d.ts"],
+      "utils": ["./dist/types/exports/utils.d.ts"],
+      "wallets": ["./dist/types/exports/wallets.d.ts"],
+      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
+      "modules": ["./dist/types/exports/modules.d.ts"],
+      "social": ["./dist/types/exports/social.d.ts"]
     }
   },
   "browser": {
@@ -214,13 +178,11 @@
     "@walletconnect/ethereum-provider": "2.16.2",
     "@walletconnect/sign-client": "2.16.2",
     "abitype": "1.0.5",
-    "fast-text-encoding": "^1.0.6",
     "fuse.js": "7.0.0",
     "input-otp": "^1.2.4",
     "mipd": "0.0.7",
-    "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.21.9"
+    "viem": "2.21.11"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -228,8 +190,6 @@
     "@coinbase/wallet-mobile-sdk": "^1",
     "@mobile-wallet-protocol/client": "0.0.3",
     "@react-native-async-storage/async-storage": "^1 || ^2",
-    "amazon-cognito-identity-js": "^6",
-    "aws-amplify": "^5",
     "ethers": "^5 || ^6",
     "expo-linking": "^6",
     "expo-web-browser": "^13",
@@ -271,16 +231,10 @@
     "react-native-svg": {
       "optional": true
     },
-    "aws-amplify": {
-      "optional": true
-    },
     "@aws-sdk/client-lambda": {
       "optional": true
     },
     "@aws-sdk/credential-providers": {
-      "optional": true
-    },
-    "amazon-cognito-identity-js": {
       "optional": true
     },
     "@react-native-async-storage/async-storage": {
@@ -297,7 +251,7 @@
     "bench:compare": "bun run ./benchmarks/run.ts",
     "bench": "vitest -c ./test/vitest.config.ts bench",
     "format": "biome format ./src --write",
-    "lint": "biome check ./src",
+    "lint": "knip && biome check ./src && tsc --project ./tsconfig.build.json --module esnext --noEmit",
     "fix": "biome check ./src --fix",
     "knip": "knip",
     "build:generate": "bun scripts/generate/generate.ts",
@@ -310,7 +264,6 @@
     "build:esm": "tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
     "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
     "clean": "rimraf dist",
-    "push": "yalc push",
     "size": "size-limit",
     "test:watch": "vitest -c ./test/vitest.config.ts dev",
     "test": "vitest run -c ./test/vitest.config.ts --coverage",
@@ -326,44 +279,53 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@aws-sdk/client-lambda": "3.651.1",
-    "@aws-sdk/credential-providers": "3.651.1",
+    "@aws-sdk/client-lambda": "3.656.0",
+    "@aws-sdk/credential-providers": "3.654.0",
+    "@biomejs/biome": "1.9.2",
     "@chromatic-com/storybook": "2.0.2",
     "@codspeed/vitest-plugin": "3.1.1",
     "@coinbase/wallet-mobile-sdk": "1.1.2",
     "@mobile-wallet-protocol/client": "0.0.3",
     "@react-native-async-storage/async-storage": "1.24.0",
-    "@storybook/addon-essentials": "8.3.1",
-    "@storybook/addon-interactions": "8.3.1",
-    "@storybook/addon-links": "8.3.1",
-    "@storybook/addon-onboarding": "8.3.1",
-    "@storybook/blocks": "8.3.1",
-    "@storybook/react": "8.3.1",
-    "@storybook/react-vite": "8.3.1",
-    "@storybook/test": "8.3.1",
+    "@size-limit/preset-big-lib": "11.1.5",
+    "@storybook/addon-essentials": "8.3.2",
+    "@storybook/addon-interactions": "8.3.2",
+    "@storybook/addon-links": "8.3.2",
+    "@storybook/addon-onboarding": "8.3.2",
+    "@storybook/react": "8.3.2",
+    "@storybook/react-vite": "8.3.2",
+    "@storybook/test": "8.3.2",
     "@testing-library/jest-dom": "^6.4.7",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/cross-spawn": "^6.0.6",
-    "@types/react": "^18.3.7",
+    "@types/react": "^18.3.8",
+    "@viem/anvil": "0.0.10",
     "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-v8": "2.1.1",
     "@vitest/ui": "2.1.1",
-    "amazon-cognito-identity-js": "6.3.12",
-    "aws-amplify": "5.3.19",
     "cross-spawn": "7.0.3",
-    "ethers5": "npm:ethers@5.7.2",
-    "ethers6": "npm:ethers@6.13.2",
+    "dotenv-mono": "^1.3.14",
+    "ethers5": "npm:ethers@5",
+    "ethers6": "npm:ethers@6",
     "expo-linking": "6.3.1",
     "expo-web-browser": "13.0.3",
     "happy-dom": "^15.7.4",
-    "msw": "2.4.8",
+    "knip": "^5.30.4",
+    "prettier": "^3.3.2",
+    "react": "18.3.1",
     "react-native": "0.75.3",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-passkey": "3.0.0-beta2",
     "react-native-quick-crypto": "0.7.4",
     "react-native-svg": "15.7.1",
-    "storybook": "8.3.1",
+    "rimraf": "6.0.1",
+    "sharp": "^0.33.5",
+    "size-limit": "11.1.5",
+    "storybook": "8.3.2",
+    "typedoc": "0.26.7",
     "typescript": "5.6.2",
-    "vite": "5.4.6"
+    "vite": "5.4.7",
+    "vitest": "2.1.1"
   }
 }

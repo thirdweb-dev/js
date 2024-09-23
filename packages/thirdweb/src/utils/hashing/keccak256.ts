@@ -8,7 +8,7 @@ import {
 
 type To = "hex" | "bytes";
 
-export type Keccak256Hash<TTo extends To> =
+type Keccak256Hash<TTo extends To> =
   | (TTo extends "bytes" ? Uint8Array : never)
   | (TTo extends "hex" ? Hex : never);
 

@@ -1,7 +1,13 @@
 import type { Address } from "abitype";
-import { ADDRESS_ZERO } from "../../../constants/addresses.js";
+import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { UniswapFee } from "../types.js";
+
+const UniswapFee = {
+  LOWEST: 100,
+  LOW: 500,
+  MEDIUM: 3000,
+  HIGH: 10000,
+} as const;
 
 /**
  * Represents the parameters for the `findUniswapV3Pool` function.
@@ -16,7 +22,7 @@ export type GetUniswapV3PoolParams = {
  * @extension UNISWAP
  */
 export type GetUniswapV3PoolResult = {
-  poolFee: UniswapFee;
+  poolFee: (typeof UniswapFee)[keyof typeof UniswapFee];
   poolAddress: Address;
 };
 
@@ -49,18 +55,18 @@ export async function getUniswapV3Pool(
         contract: options.contract,
         tokenA: options.tokenA,
         tokenB: options.tokenB,
-        fee: Number(fee),
+        fee,
       });
 
       return {
-        poolFee: Number(fee),
+        poolFee: fee,
         poolAddress,
       };
     });
 
   const results = await Promise.all(promises);
   const validPools = results.filter(
-    (result) => result.poolAddress && result.poolAddress !== ADDRESS_ZERO,
+    (result) => result.poolAddress && result.poolAddress !== ZERO_ADDRESS,
   );
 
   return validPools;

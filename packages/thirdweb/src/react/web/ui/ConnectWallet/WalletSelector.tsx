@@ -51,7 +51,7 @@ const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
 // const localWalletId = "local";
 const inAppWalletId: WalletId = "inApp";
 
-export type WalletSelectorProps = {
+type WalletSelectorProps = {
   wallets: Wallet[];
   selectWallet: (wallet: Wallet) => void;
   title: string;

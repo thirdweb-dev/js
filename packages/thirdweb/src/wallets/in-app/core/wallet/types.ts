@@ -76,8 +76,3 @@ export type InAppWalletCreationOptions =
       hidePrivateKeyExport?: boolean;
     }
   | undefined;
-
-export type AuthenticatedUser = {
-  email: string | undefined;
-  walletAddress: string;
-};

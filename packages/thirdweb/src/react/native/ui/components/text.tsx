@@ -1,7 +1,7 @@
 import { StyleSheet, Text, type TextProps } from "react-native";
 import type { Theme } from "../../../core/design-system/index.js";
 
-export type ThemedTextProps = TextProps & {
+type ThemedTextProps = TextProps & {
   theme: Theme;
   type?:
     | "default"

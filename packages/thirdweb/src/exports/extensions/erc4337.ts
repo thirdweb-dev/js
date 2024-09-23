@@ -9,6 +9,7 @@ export {
 export {
   type RemoveAdminOptions,
   removeAdmin,
+  isRemoveAdminSupported,
 } from "../../extensions/erc4337/account/removeAdmin.js";
 
 export {

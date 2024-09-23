@@ -581,7 +581,7 @@ function SignInView({
   );
 }
 
-export function OrDivider({ theme }: { theme: Theme }) {
+function OrDivider({ theme }: { theme: Theme }) {
   return (
     <View
       style={{

@@ -2,10 +2,7 @@ import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
 import { computeContractAddress } from "../../../utils/any-evm/compute-published-contract-address.js";
-import {
-  computeDeploymentInfoFromContractId,
-  computeDeploymentInfoFromMetadata,
-} from "../../../utils/any-evm/compute-published-contract-deploy-info.js";
+import { computeDeploymentInfoFromMetadata } from "../../../utils/any-evm/compute-published-contract-deploy-info.js";
 import type { FetchDeployMetadataResult } from "../../../utils/any-evm/deploy-metadata.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { Prettify } from "../../../utils/type-utils.js";
@@ -21,7 +18,7 @@ export type InfraContractId =
   | "TWCloneFactory"
   | (string & {});
 
-export type GetDeployedInfraParams = Prettify<
+type GetDeployedInfraParams = Prettify<
   ClientAndChain & {
     contractId: InfraContractId;
     constructorParams?: Record<string, unknown>;
@@ -69,29 +66,6 @@ export async function getDeployedInfraContractFromMetadata(options: {
     return factory;
   }
   return null;
-}
-
-/**
- * @internal
- */
-export function prepareInfraContractDeployTransaction(
-  options: GetDeployedInfraParams,
-) {
-  const { client, chain } = options;
-  return prepareTransaction({
-    client,
-    chain,
-    to: () =>
-      computeCreate2FactoryAddress({
-        client,
-        chain,
-      }),
-    data: async () => {
-      const infraContractInfo =
-        await computeDeploymentInfoFromContractId(options);
-      return infraContractInfo.initBytecodeWithsalt;
-    },
-  });
 }
 
 /**

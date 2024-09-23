@@ -265,25 +265,6 @@ const ChainSwitcher = (props: ConnectedModalPropsInner) => {
   );
 };
 
-/** TODO (rn) implement transactions screen
-const Transactions = (props: ConnectedModalPropsInner) => {
-  const { client, wallet, theme } = props;
-  return (
-    <TouchableOpacity style={styles.walletMenuRow} onPress={() => {}}>
-      <RNImage
-        theme={theme}
-        size={32}
-        data={TRANSACTIONS_ICON}
-        color={theme.colors.secondaryIconColor}
-      />
-      <ThemedText theme={theme} type="defaultSemiBold">
-        Transactions
-      </ThemedText>
-    </TouchableOpacity>
-  );
-};
-*/
-
 const ViewFunds = (props: ConnectedModalPropsInner) => {
   const { theme, setModalState } = props;
   return (

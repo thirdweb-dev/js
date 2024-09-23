@@ -1,12 +1,20 @@
 {
-	"$schema": "https://unpkg.com/knip@5/schema.json",
-	"entry": ["src/exports/**/*.ts", "package.json"],
-	"project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs"],
-	"ignoreBinaries": ["printf", "yalc"],
-	"ignoreDependencies": ["ethers", "react", "tslib"],
-	"vitest": {
-		"config": "test/vitest.config.ts",
-		"entry": ["src/**/*.{test,bench}.ts", "test/globalSetup.ts"],
-		"project": ["src/**/*.{ts,tsx}", "test/**/*.ts"]
-	}
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/exports/**", "scripts/**/*.{ts,mjs}", "src/cli/bin.ts", ""],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs"],
+  "ignore": ["src/**/__generated__/**"],
+  "ignoreBinaries": ["printf"],
+  "ignoreDependencies": [
+    "@codspeed/vitest-plugin",
+    "@testing-library/jest-dom",
+    "tslib",
+    "dotenv-mono",
+    "@size-limit/preset-big-lib",
+    "@viem/anvil",
+    "@vitest/coverage-v8"
+  ],
+  "rules": {
+    "optionalPeerDependencies": "off",
+    "enumMembers": "off"
+  }
 }

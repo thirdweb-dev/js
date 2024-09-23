@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { isNativeTokenAddress } from "../../constants/addresses.js";
 import { toTokens } from "../units.js";
 
-export type CurrencyValue = {
+type CurrencyValue = {
   name: string;
   decimals: number;
   symbol: string;

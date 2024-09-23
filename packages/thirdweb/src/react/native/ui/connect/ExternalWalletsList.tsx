@@ -16,7 +16,7 @@ import type { ContainerType } from "../components/Header.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { ThemedText } from "../components/text.js";
 
-export type ExternalWalletsUiProps = {
+type ExternalWalletsUiProps = {
   theme: Theme;
   client: ThirdwebClient;
   connector: (args: {

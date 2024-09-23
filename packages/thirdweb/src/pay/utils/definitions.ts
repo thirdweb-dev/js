@@ -1,6 +1,6 @@
 import { getThirdwebDomains } from "../../utils/domains.js";
 
-export const getPayBaseUrl = () => {
+const getPayBaseUrl = () => {
   const payDomain: string = getThirdwebDomains().pay;
   return payDomain.startsWith("localhost")
     ? `http://${payDomain}`

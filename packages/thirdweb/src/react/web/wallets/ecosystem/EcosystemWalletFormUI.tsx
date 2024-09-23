@@ -14,7 +14,7 @@ import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions
 import type { InAppWalletLocale } from "../shared/locale/types.js";
 import { EcosystemWalletHeader } from "./EcosystemWalletHeader.js";
 
-export type EcosystemWalletFormUIProps = {
+type EcosystemWalletFormUIProps = {
   select: () => void;
   done: () => void;
   locale: InAppWalletLocale;

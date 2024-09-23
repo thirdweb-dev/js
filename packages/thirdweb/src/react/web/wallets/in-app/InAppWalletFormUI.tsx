@@ -15,7 +15,7 @@ import { ModalTitle } from "../../ui/components/modalElements.js";
 import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
 import type { InAppWalletLocale } from "../shared/locale/types.js";
 
-export type InAppWalletFormUIProps = {
+type InAppWalletFormUIProps = {
   select: () => void;
   inAppWalletLocale: InAppWalletLocale;
   connectLocale: ConnectLocale;

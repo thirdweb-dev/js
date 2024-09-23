@@ -7,7 +7,7 @@ import { encodeBytesBeforeMintERC1155Params } from "../__generated__/ClaimableER
 import { getClaimConditionByTokenId } from "../__generated__/ClaimableERC1155/read/getClaimConditionByTokenId.js";
 import { mint as generatedMint } from "../__generated__/ERC1155Core/write/mint.js";
 
-export type MintParams = {
+type MintParams = {
   to: string;
   tokenId: bigint;
   quantity: string | number;

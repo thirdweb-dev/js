@@ -1,4 +1,4 @@
-import { ADDRESS_ZERO } from "../../../constants/addresses.js";
+import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import { randomBytesHex } from "../../../utils/random.js";
@@ -41,7 +41,7 @@ export async function toContractPermissions(options: {
   return {
     approvedTargets:
       permissions.approvedTargets === "*"
-        ? [ADDRESS_ZERO]
+        ? [ZERO_ADDRESS]
         : permissions.approvedTargets,
     nativeTokenLimitPerTransaction: toWei(
       permissions.nativeTokenLimitPerTransaction?.toString() || "0",

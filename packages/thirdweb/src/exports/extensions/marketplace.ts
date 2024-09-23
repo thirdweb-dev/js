@@ -32,8 +32,6 @@ export {
   type CurrencyPriceForListingParams,
 } from "../../extensions/marketplace/direct-listings/read/currencyPriceForListing.js";
 
-export { isCancelListingSupported } from "../../extensions/marketplace/__generated__/IDirectListings/write/cancelListing.js";
-
 // WRITE
 export {
   createListing,
@@ -46,6 +44,7 @@ export {
 } from "../../extensions/marketplace/direct-listings/write/updateListing.js";
 export {
   cancelListing,
+  isCancelListingSupported,
   type CancelListingParams,
 } from "../../extensions/marketplace/__generated__/IDirectListings/write/cancelListing.js";
 export {
@@ -131,10 +130,10 @@ export {
   isBidInAuctionSupported,
 } from "../../extensions/marketplace/english-auctions/write/bidInAuction.js";
 export {
-  cancelAuction,
   type CancelAuctionParams,
+  cancelAuction,
   isCancelAuctionSupported,
-} from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/cancelAuction.js";
+} from "../../extensions/marketplace/english-auctions/write/cancelAuction.js";
 export {
   buyoutAuction,
   type BuyoutAuctionParams,

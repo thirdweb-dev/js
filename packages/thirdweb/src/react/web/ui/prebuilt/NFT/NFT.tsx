@@ -13,7 +13,7 @@ import type { MediaRendererProps } from "../../MediaRenderer/types.js";
  * Props for the <NFT> component
  * @component
  */
-export type NFTProviderProps = {
+type NFTProviderProps = {
   /**
    * The NFT contract address. Accepts both ERC721 and ERC1155 contracts
    */

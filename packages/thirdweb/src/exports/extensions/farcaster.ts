@@ -18,11 +18,14 @@ export { getStorageRegistry } from "../../extensions/farcaster/contracts/getStor
 // EIP712 Signatures
 export {
   type RegisterMessage,
+  type SignRegisterOptions,
   signRegister,
   getRegisterData,
 } from "../../extensions/farcaster/eip712Signatures/registerSignature.js";
 export {
   type SignedKeyRequestMessage,
+  type SignedKeyRequestMetadataOptions,
+  type SignKeyRequestOptions,
   signKeyRequest,
   getKeyRequestData,
   encodeSignedKeyRequestMetadata,
@@ -30,6 +33,7 @@ export {
 } from "../../extensions/farcaster/eip712Signatures/keyRequestSignature.js";
 export {
   type AddMessage,
+  type SignAddOptions,
   signAdd,
   getAddData,
 } from "../../extensions/farcaster/eip712Signatures/addSignature.js";

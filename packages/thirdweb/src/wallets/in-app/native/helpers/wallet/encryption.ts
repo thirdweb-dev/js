@@ -16,7 +16,7 @@ const DEPRECATED_KEY_ITERATION_COUNT = 5000000;
 const CURRENT_KEY_ITERATION_COUNT = 650000;
 const KEY_LENGTH = 256;
 
-export async function getEncryptionKey(
+async function getEncryptionKey(
   pwd: string,
   salt: Uint8Array,
   iterationCounts: number,

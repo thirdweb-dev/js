@@ -53,7 +53,7 @@ export function updateTokenURI(
 /**
  * @internal
  */
-export async function getUpdateTokenParams(
+async function getUpdateTokenParams(
   options: BaseTransactionOptions<UpdateTokenURIParams>,
 ): Promise<SetTokenURIParams> {
   const { tokenId, newMetadata } = options;

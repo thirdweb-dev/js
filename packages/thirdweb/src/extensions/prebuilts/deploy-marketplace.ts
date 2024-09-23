@@ -33,10 +33,11 @@ export type MarketplaceContractParams = {
   trustedForwarders?: string[];
 };
 
-export type DeployMarketplaceContractOptions =
-  Prettify<ClientAndChainAndAccount> & {
+export type DeployMarketplaceContractOptions = Prettify<
+  ClientAndChainAndAccount & {
     params: MarketplaceContractParams;
-  };
+  }
+>;
 
 /**
  * TODO not quite ready for public consumption yet

@@ -14,31 +14,16 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import type { Ethereum } from "../interfaces/ethereum.js";
-import type {
-  Account,
-  SendTransactionOption,
-  Wallet,
-} from "../interfaces/wallet.js";
-import { getValidPublicRPCUrl } from "../utils/chains.js";
-import { normalizeChainId } from "../utils/normalizeChainId.js";
-import type { InjectedConnectOptions, WalletId } from "../wallet-types.js";
-import { injectedProvider } from "./mipdStore.js";
-
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js";
+import type { Ethereum } from "../interfaces/ethereum.js";
+import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
+import { getValidPublicRPCUrl } from "../utils/chains.js";
+import { normalizeChainId } from "../utils/normalizeChainId.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
-
-/**
- * Checks if the provided wallet is an injected wallet.
- *
- * @param wallet - The wallet to check.
- * @returns True if the wallet is an injected wallet, false otherwise.
- */
-export function isInjectedWallet(wallet: Wallet<WalletId>) {
-  return !!injectedProvider(wallet.id);
-}
+import type { InjectedConnectOptions, WalletId } from "../wallet-types.js";
+import { injectedProvider } from "./mipdStore.js";
 
 // TODO: save the provider in data
 export function getInjectedProvider(walletId: WalletId) {

@@ -2,7 +2,7 @@ import { replaceEqualDeep } from "@tanstack/react-query";
 
 /** Forked from https://github.com/epoberezkin/fast-deep-equal */
 // biome-ignore lint/suspicious/noExplicitAny: This function by nature takes any object
-export function deepEqual(a: any, b: any) {
+function deepEqual(a: any, b: any) {
   if (a === b) return true;
 
   if (a && b && typeof a === "object" && typeof b === "object") {

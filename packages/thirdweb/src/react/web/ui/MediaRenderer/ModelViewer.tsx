@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-export const ModelViewer = /* @__PURE__ */ (() =>
+const ModelViewer = /* @__PURE__ */ (() =>
   React.forwardRef<
     HTMLDivElement,
     Pick<MediaRendererProps, "src" | "alt" | "poster" | "style" | "className">

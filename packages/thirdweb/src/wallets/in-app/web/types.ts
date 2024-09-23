@@ -11,18 +11,8 @@ export type Ecosystem = {
   partnerId?: string;
 };
 
-export type EcosystemPermssions = {
-  allowlistedBundleIds: string[];
-  allowlistedDomains: string[];
-  createdAt: string;
-  id: string;
-  name: string;
-  permissions: ("PROMPT_USER_V1" | "FULL_CONTROL_V1")[];
-  updatedAt: string;
-};
-
 // Open to PRs from whoever sees this and knows of a cleaner way to handle things
-export type ClientIdConstructorType = {
+type ClientIdConstructorType = {
   /**
    * the clientId found on the dashboard settings {@link https://thirdweb.com/dashboard/settings}
    */
