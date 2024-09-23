@@ -30,6 +30,16 @@ export async function uploadBatch<const TFiles extends UploadableFile[]>(
         "Unauthorized - You don't have permission to use this service.",
       );
     }
+    if (res.status === 402) {
+      throw new Error(
+        "You have reached your storage limit. Please add a valid payment method to continue using the service.",
+      );
+    }
+    if (res.status === 403) {
+      throw new Error(
+        "Forbidden - You don't have permission to use this service.",
+      );
+    }
     throw new Error(
       `Failed to upload files to IPFS - ${res.status} - ${res.statusText}`,
     );
