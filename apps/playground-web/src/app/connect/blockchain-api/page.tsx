@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <main className="pb-20 container px-0">
+      <main className="container px-0 pb-20">
         <APIHeader
           title="Blockchain API"
           description={
@@ -68,7 +68,7 @@ function ReadContractRaw() {
   return (
     <>
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
           Query blockchain data
         </h2>
         <p className="max-w-[600px]">
@@ -115,7 +115,7 @@ function ReadContractExtension() {
   return (
     <>
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
           Prebuilt read extensions
         </h2>
         <p className="max-w-[600px]">
@@ -160,7 +160,7 @@ function WriteContractExtension() {
   return (
     <>
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
           Prebuilt write extensions
         </h2>
         <p className="max-w-[600px]">
@@ -205,7 +205,7 @@ function WriteContractRaw() {
   return (
     <>
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
           Write data to blockchain
         </h2>
         <p className="max-w-[600px]">
@@ -255,7 +255,7 @@ function WatchEvent() {
   return (
     <>
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
           Listen to blockchain events
         </h2>
         <p className="max-w-[600px]">

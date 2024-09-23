@@ -4,8 +4,8 @@ import { Text } from "tw-components";
 
 const PLEASE_REACH_OUT_MESSAGE = (
   <Text as="span" color="inherit">
-    If you believe this is incorrect or the error persists, please visit our{" "}
-    <Link className="underline font-bold" target="_blank" href="/support">
+    If you believe this is incorrect or the error persists, please visit our
+    <Link className="font-bold underline" target="_blank" href="/support">
       support site
     </Link>
     .

@@ -10,7 +10,7 @@ export const SettingsGasCreditsPage = () => {
 
   if (isPending) {
     return (
-      <div className="grid w-full min-h-[400px] place-items-center">
+      <div className="grid min-h-[400px] w-full place-items-center">
         <Spinner className="size-10" />
       </div>
     );
@@ -18,7 +18,7 @@ export const SettingsGasCreditsPage = () => {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-row gap-4 items-center">
+      <div className="flex flex-row items-center gap-4">
         <Heading size="title.lg" as="h1">
           Apply to the Optimism Superchain App Accelerator
         </Heading>

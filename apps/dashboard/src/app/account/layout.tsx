@@ -10,12 +10,12 @@ export default async function AccountLayout(props: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-full flex flex-col bg-background">
-      <div className="grow flex flex-col">
+    <div className="flex min-h-full flex-col bg-background">
+      <div className="flex grow flex-col">
         <HeaderAndNav />
-        <div className="py-10 border-b border-border">
-          <div className="max-w-[1100px] mx-auto px-6">
-            <h1 className="text-3xl tracking-tight font-semibold">
+        <div className="border-border border-b py-10">
+          <div className="mx-auto max-w-[1100px] px-6">
+            <h1 className="font-semibold text-3xl tracking-tight">
               My Account
             </h1>
           </div>
@@ -58,7 +58,7 @@ async function HeaderAndNav() {
   );
 
   return (
-    <div className="bg-muted/50 border-b">
+    <div className="border-b bg-muted/50">
       <AccountHeader teamsAndProjects={teamsAndProjects} />
     </div>
   );

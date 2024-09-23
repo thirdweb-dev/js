@@ -133,7 +133,7 @@ export function WalletConnectReceiverScreen(props: {
             <WalletLogoSpinner
               client={props.client}
               error={!!errorConnecting}
-              id={"walletConnect"}
+              id="walletConnect"
               hideSpinner={!loading}
             />
           </Container>
@@ -193,7 +193,7 @@ export function WalletConnectReceiverScreen(props: {
                       alignItems: "center",
                     }}
                   >
-                    <ReloadIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+                    <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
                     Retry
                   </Button>
                 </Container>

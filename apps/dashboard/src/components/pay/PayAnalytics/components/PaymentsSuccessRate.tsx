@@ -8,6 +8,7 @@ import {
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useState } from "react";
+import { cn } from "../../../../@/lib/utils";
 import { usePayVolume } from "../hooks/usePayVolume";
 import { CardHeading, FailedToLoad } from "./common";
 
@@ -105,8 +106,8 @@ export function PaymentsSuccessRate(props: {
   );
 
   return (
-    <div className="w-full relative flex flex-col">
-      <div className="flex justify-between gap-2 items-center">
+    <div className="relative flex w-full flex-col">
+      <div className="flex items-center justify-between gap-2">
         <CardHeading> Payments </CardHeading>
         {!uiQuery.isPending && (
           <Select
@@ -115,7 +116,7 @@ export function PaymentsSuccessRate(props: {
               setType(value);
             }}
           >
-            <SelectTrigger className="bg-transparent w-auto">
+            <SelectTrigger className="w-auto bg-transparent">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent position="popper">
@@ -127,7 +128,7 @@ export function PaymentsSuccessRate(props: {
         )}
       </div>
 
-      <div className="flex-1 flex flex-col justify-center">
+      <div className="flex flex-1 flex-col justify-center">
         {!uiQuery.isError ? <RenderData query={uiQuery} /> : <FailedToLoad />}
       </div>
     </div>
@@ -174,21 +175,21 @@ function Bar(props: { rate: number }) {
     <div className="flex items-center gap-0.5">
       <ToolTipLabel label="Succeeded">
         <div
-          className="h-5 bg-success-text transition-all rounded-lg rounded-r-none border-r-0"
+          className="h-5 rounded-lg rounded-r-none border-r-0 bg-success-text transition-all"
           style={{
             width: `${props.rate}%`,
           }}
         />
       </ToolTipLabel>
       <ToolTipLabel label="Failed">
-        <div className="h-5 bg-destructive-text flex-1 transition-all rounded-lg rounded-l-none border-l-0" />
+        <div className="h-5 flex-1 rounded-lg rounded-l-none border-l-0 bg-destructive-text transition-all" />
       </ToolTipLabel>
     </div>
   );
 }
 
 function EmptyBar() {
-  return <div className="flex items-center gap-0.5 h-5 bg-accent rounded-lg" />;
+  return <div className="flex h-5 items-center gap-0.5 rounded-lg bg-accent" />;
 }
 
 function InfoRow(props: {
@@ -201,13 +202,13 @@ function InfoRow(props: {
     <div className="flex justify-between">
       <div className="flex items-center gap-2">
         <div
-          className={`size-5 rounded-lg ${
-            props.amount === undefined
-              ? "bg-accent"
-              : props.type === "success"
-                ? "bg-success-text"
-                : "bg-destructive-text"
-          }`}
+          className={cn("size-5 rounded-lg", {
+            "bg-accent": props.amount === undefined,
+            "bg-success-text":
+              props.amount !== undefined && props.type === "success",
+            "bg-destructive-text":
+              props.amount !== undefined && props.type === "failure",
+          })}
         />
         <p className="text-base text-muted-foreground">{props.label}</p>
       </div>
@@ -219,9 +220,9 @@ function InfoRow(props: {
               ? `$${props.amount.toLocaleString()}`
               : undefined
         }
-        skeletonData={"$50"}
+        skeletonData="$50"
         render={(v) => {
-          return <p className="text-base font-medium">{v}</p>;
+          return <p className="font-medium text-base">{v}</p>;
         }}
       />
     </div>

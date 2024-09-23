@@ -100,9 +100,9 @@ export function ManageEngineAlertsSectionUI(props: {
 
   return (
     <section>
-      <div className="flex gap-4 lg:gap-6 flex-col lg:flex-row justify-between">
+      <div className="flex flex-col justify-between gap-4 lg:flex-row lg:gap-6">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight mb-1">
+          <h2 className="mb-1 font-semibold text-2xl tracking-tight">
             Manage Alerts
           </h2>
           <p className="text-muted-foreground">
@@ -121,7 +121,7 @@ export function ManageEngineAlertsSectionUI(props: {
       <div className="h-5" />
 
       {notificationChannels.length === 0 || isLoading ? (
-        <div className="flex justify-center items-center min-h-[200px] w-full border border-border rounded-lg">
+        <div className="flex min-h-[200px] w-full items-center justify-center rounded-lg border border-border">
           {isLoading ? <Spinner className="size-8" /> : "No alerts set up yet."}
         </div>
       ) : (
@@ -301,7 +301,7 @@ function AlertOptionsButton(props: {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-36">
           <DropdownMenuItem
-            className="text-destructive-text hover:!bg-destructive"
+            className="hover:!bg-destructive text-destructive-text"
             onClick={() => {
               setIsDeleteModalOpen(true);
             }}

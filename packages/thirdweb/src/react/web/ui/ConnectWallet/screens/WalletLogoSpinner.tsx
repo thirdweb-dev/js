@@ -59,7 +59,7 @@ export function WalletLogoSpinner(props: {
           )}
 
           <WalletBg>
-            <WalletImage id={props.id} size={"68"} client={props.client} />
+            <WalletImage id={props.id} size="68" client={props.client} />
           </WalletBg>
         </div>
       </div>

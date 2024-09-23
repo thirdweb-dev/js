@@ -177,10 +177,10 @@ function Inner({
         title: "First NFT uploaded",
         children: (
           <Text size="body.sm">
-            Head to the{" "}
+            Head to the
             <Link href={nftHref} color="blue.500">
               NFTs tab
-            </Link>{" "}
+            </Link>
             to upload your NFT metadata.
           </Text>
         ),
@@ -194,10 +194,10 @@ function Inner({
         title: "Set NFT Metadata",
         children: (
           <Text size="label.sm">
-            Head to the{" "}
+            Head to the
             <Link href={nftHref} color="blue.500">
               NFTs tab
-            </Link>{" "}
+            </Link>
             to set your NFT metadata.
           </Text>
         ),
@@ -210,10 +210,10 @@ function Inner({
         title: "Set Claim Conditions",
         children: (
           <Text size="label.sm">
-            Head to the{" "}
+            Head to the
             <Link href={claimConditionsHref} color="blue.500">
               Claim Conditions tab
-            </Link>{" "}
+            </Link>
             to set your claim conditions. Users will be able to claim your drop
             only if a claim phase is active.
           </Text>
@@ -249,10 +249,10 @@ function Inner({
         title: "First token minted",
         children: (
           <Text size="label.sm">
-            Head to the{" "}
+            Head to the
             <Link href={tokenHref} color="blue.500">
               token tab
-            </Link>{" "}
+            </Link>
             to mint your first token.
           </Text>
         ),
@@ -265,10 +265,10 @@ function Inner({
         title: "First NFT minted",
         children: (
           <Text size="label.sm">
-            Head to the{" "}
+            Head to the
             <Link href={nftHref} color="blue.500">
               NFTs tab
-            </Link>{" "}
+            </Link>
             to mint your first token.
           </Text>
         ),
@@ -282,10 +282,10 @@ function Inner({
         title: "First account created",
         children: (
           <Text size="label.sm">
-            Head to the{" "}
+            Head to the
             <Link href={accountsHref} color="blue.500">
               Accounts tab
-            </Link>{" "}
+            </Link>
             to create your first account.
           </Text>
         ),
@@ -298,10 +298,10 @@ function Inner({
         title: "NFTs revealed",
         children: (
           <Text size="label.sm">
-            Head to the{" "}
+            Head to the
             <Link href={nftHref} color="blue.500">
               NFTs tab
-            </Link>{" "}
+            </Link>
             to reveal your NFTs.
           </Text>
         ),

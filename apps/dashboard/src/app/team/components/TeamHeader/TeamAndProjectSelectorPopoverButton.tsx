@@ -47,14 +47,14 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
       <PopoverTrigger asChild>
         <Button
           size="icon"
-          className="px-1 w-auto !h-auto py-2 rounded-xl"
+          className="!h-auto w-auto rounded-xl px-1 py-2"
           variant="ghost"
           role="combobox"
           aria-expanded={open}
           aria-label={`Select a ${props.focus === "project-selection" ? "project" : "team"}`}
         >
           <ChevronsUpDownIcon
-            className="shrink-0 text-muted-foreground hover:text-foreground size-5"
+            className="size-5 shrink-0 text-muted-foreground hover:text-foreground"
             strokeWidth={1.5}
           />
         </Button>
@@ -63,7 +63,7 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
       {/* Dropdown */}
       <PopoverContent
         sideOffset={5}
-        className="p-0 w-auto rounded-xl shadow-xl"
+        className="w-auto rounded-xl p-0 shadow-xl"
         align={props.focus === "project-selection" ? "center" : "start"}
         onClick={(e) => {
           if (e.target instanceof HTMLAnchorElement) {
@@ -72,7 +72,7 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
         }}
       >
         <DynamicHeight>
-          <div className="flex [&>div]:min-w-[280px] no-scrollbar">
+          <div className="no-scrollbar flex [&>div]:min-w-[280px]">
             {/* Left */}
             <TeamSelectionUI
               currentTeam={currentTeam}

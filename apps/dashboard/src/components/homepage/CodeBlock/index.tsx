@@ -142,7 +142,7 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
           {title && (
             <Text
               fontSize="large"
-              fontWeight={"bold"}
+              fontWeight="bold"
               position="static"
               color={titleColor ? titleColor : "white"}
               px={4}

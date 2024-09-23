@@ -53,7 +53,7 @@ export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="max-w-[250px] justify-between h-full"
+          className="h-full max-w-[250px] justify-between"
         >
           {value === "0" ? (
             "Select chain..."
@@ -64,7 +64,7 @@ export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
                   chains.find((chain) => chain.chainId.toString() === value)
                     ?.icon?.url
                 }
-                className="w-auto h-4 mr-2"
+                className="mr-2 h-4 w-auto"
               />
               {value
                 ? chains.find((chain) => chain.chainId.toString() === value)
@@ -72,7 +72,7 @@ export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
                 : "Select chain..."}
             </div>
           )}
-          <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0">
@@ -86,7 +86,7 @@ export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
                   className={cn(
                     "my-1",
                     value === chain.chainId.toString()
-                      ? "opacity-100 text-medium"
+                      ? "text-medium opacity-100"
                       : "opacity-75",
                   )}
                   key={chain.chainId}
@@ -102,7 +102,7 @@ export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
                 >
                   <ChainIcon
                     iconUrl={chain.icon?.url}
-                    className={cn("w-auto h-4 mr-3")}
+                    className={cn("mr-3 h-4 w-auto")}
                   />
                   {chain.name}
                 </CommandItem>

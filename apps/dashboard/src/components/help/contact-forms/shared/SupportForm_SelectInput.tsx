@@ -30,11 +30,11 @@ export const SupportForm_SelectInput = (props: Props) => {
         required={required}
       />
 
-      <div className="flex flex-col gap-2 items-start">
+      <div className="flex flex-col items-start gap-2">
         <Label htmlFor={name} className="relative">
           {formLabel}
           {required && (
-            <span className="absolute -top-1.5 -right-2 text-destructive">
+            <span className="-top-1.5 -right-2 absolute text-destructive">
               •
             </span>
           )}

@@ -43,7 +43,7 @@ export const InstalledModulesTable = (props: {
   const { installedModules, ownerAccount } = props;
 
   const sectionTitle = (
-    <h2 className="mb-3 text-2xl tracking-tight font-bold">
+    <h2 className="mb-3 font-bold text-2xl tracking-tight">
       Installed Modules
     </h2>
   );
@@ -53,7 +53,7 @@ export const InstalledModulesTable = (props: {
       <>
         {sectionTitle}
         <Alert variant="destructive">
-          <div className="flex gap-3 items-center">
+          <div className="flex items-center gap-3">
             <CircleSlash className="size-6 text-red-400" />
             <AlertTitle className="mb-0">No modules installed</AlertTitle>
           </div>
@@ -221,7 +221,7 @@ function ModuleRow(props: {
               <Button
                 onClick={() => setIsUninstallModalOpen(true)}
                 variant="outline"
-                className="text-red-500 rounded-xl p-3"
+                className="rounded-xl p-3 text-red-500"
               >
                 {uninstallMutation.isPending ? (
                   <Spinner className="size-4" />
@@ -248,15 +248,15 @@ function ModuleRow(props: {
             <DialogHeader>
               <DialogTitle>Uninstall Module</DialogTitle>
               <DialogDescription>
-                Are you sure you want to uninstall{" "}
-                <span className="text-foreground font-medium ">
+                Are you sure you want to uninstall
+                <span className="font-medium text-foreground ">
                   {contractInfo.name}
-                </span>{" "}
+                </span>
                 ?
               </DialogDescription>
             </DialogHeader>
 
-            <DialogFooter className="mt-10 gap-3 md:gap-1 flex-row justify-end">
+            <DialogFooter className="mt-10 flex-row justify-end gap-3 md:gap-1">
               <Button
                 type="button"
                 onClick={() => setIsUninstallModalOpen(false)}
@@ -284,7 +284,7 @@ function ModuleRow(props: {
 
 function TableRow(props: { children: React.ReactNode }) {
   return (
-    <tr className="border-b border-border [&:last-child]:border-b-0">
+    <tr className="border-border border-b [&:last-child]:border-b-0">
       {props.children}
     </tr>
   );
@@ -296,7 +296,7 @@ function TableData({ children }: { children: React.ReactNode }) {
 
 function TableHeading(props: { children: React.ReactNode }) {
   return (
-    <th className="border-b border-border text-left px-3 py-3 text-sm font-medium text-muted-foreground min-w-[150px]">
+    <th className="min-w-[150px] border-border border-b px-3 py-3 text-left font-medium text-muted-foreground text-sm">
       {props.children}
     </th>
   );

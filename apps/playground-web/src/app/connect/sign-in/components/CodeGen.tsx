@@ -8,7 +8,7 @@ const CodeClient = lazy(
 
 function CodeLoading() {
   return (
-    <div className="h-[300px] xl:h-[calc(100vh-100px)] flex items-center justify-center">
+    <div className="flex h-[300px] items-center justify-center xl:h-[calc(100vh-100px)]">
       <LoadingDots />
     </div>
   );
@@ -18,7 +18,7 @@ export function CodeGen(props: {
   connectOptions: ConnectPlaygroundOptions;
 }) {
   return (
-    <div className="w-full flex flex-col grow">
+    <div className="flex w-full grow flex-col">
       <Suspense fallback={<CodeLoading />}>
         <CodeClient
           code={getCode(props.connectOptions)}

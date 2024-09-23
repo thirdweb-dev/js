@@ -58,16 +58,16 @@ const Stat: React.FC<{
   icon: React.FC<{ className?: string }>;
 }> = ({ label, value, icon: Icon }) => {
   return (
-    <dl className="bg-muted/50 rounded-lg border border-border p-4 lg:p-6 flex items-center gap-4 justify-between">
+    <dl className="flex items-center justify-between gap-4 rounded-lg border border-border bg-muted/50 p-4 lg:p-6">
       <div>
-        <dd className="text-3xl lg:text-5xl font-semibold tracking-tight">
+        <dd className="font-semibold text-3xl tracking-tight lg:text-5xl">
           {value?.toLocaleString()}
         </dd>
-        <dt className="text-sm lg:text-lg font-medium text-muted-foreground tracking-tight">
+        <dt className="font-medium text-muted-foreground text-sm tracking-tight lg:text-lg">
           {label}
         </dt>
       </div>
-      <Icon className="text-muted-foreground size-12 opacity-50 hidden lg:block" />
+      <Icon className="hidden size-12 text-muted-foreground opacity-50 lg:block" />
     </dl>
   );
 };

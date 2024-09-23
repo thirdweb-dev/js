@@ -62,7 +62,7 @@ export function TeamOverviewPage(props: {
       <div className="h-10" />
 
       {/* Filters + Add New */}
-      <div className="flex flex-col md:flex-row md:items-center gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center">
         <SearchInput value={searchTerm} onValueChange={setSearchTerm} />
         <div className="flex gap-4">
           <SelectBy value={sortBy} onChange={setSortBy} />
@@ -77,11 +77,11 @@ export function TeamOverviewPage(props: {
 
       {/* Projects */}
       {projectsToShow.length === 0 ? (
-        <div className="border border-border rounded-lg h-[450px] flex items-center justify-center ">
+        <div className="flex h-[450px] items-center justify-center rounded-lg border border-border ">
           No projects found
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {projectsToShow.map((project) => {
             return (
               <ProjectCard
@@ -117,30 +117,30 @@ function ProjectCard(props: {
   return (
     <div
       key={project.id}
-      className="border border-border rounded-lg p-4 relative hover:bg-muted/70 flex items-center gap-4 bg-muted/50 transition-colors"
+      className="relative flex items-center gap-4 rounded-lg border border-border bg-muted/50 p-4 transition-colors hover:bg-muted/70"
     >
       {/* TODO - replace with project image */}
-      <div className="size-10 rounded-full bg-border shrink-0" />
+      <div className="size-10 shrink-0 rounded-full bg-border" />
 
       <div>
         <Link
-          className="static group before:absolute before:top-0 before:bottom-0 before:left-0 before:right-0 before:z-0"
+          className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0"
           // remove /connect when we have overview page
           href={`/team/${team_slug}/${project.slug}/connect/analytics`}
         >
-          <h2 className="text-base font-medium">{project.name}</h2>
+          <h2 className="font-medium text-base">{project.name}</h2>
         </Link>
 
-        <p className="text-muted-foreground text-xs mb-1 flex items-center gap-0.5">
+        <p className="mb-1 flex items-center gap-0.5 text-muted-foreground text-xs">
           {truncate(project.publishableKey, 32)}
           <CopyButton
             text={project.publishableKey}
             iconClassName="z-10 size-3"
-            className="p-2 !h-auto !w-auto hover:bg-background -translate-x-1"
+            className="!h-auto !w-auto -translate-x-1 p-2 hover:bg-background"
           />
         </p>
 
-        <p className="text-xs text-muted-foreground/70 my-1">
+        <p className="my-1 text-muted-foreground/70 text-xs">
           Created on {format(new Date(project.createdAt), "MMM dd, yyyy")}
         </p>
       </div>
@@ -162,9 +162,9 @@ function SearchInput(props: {
         placeholder="Search Projects by name or Client ID"
         value={props.value}
         onChange={(e) => props.onValueChange(e.target.value)}
-        className="pl-9 bg-muted/50"
+        className="bg-muted/50 pl-9"
       />
-      <SearchIcon className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+      <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
     </div>
   );
 }
@@ -181,7 +181,7 @@ function AddNewButton(props: {
           <ChevronDownIcon className="size-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="p-2 min-w-[220px]" sideOffset={12}>
+      <DropdownMenuContent className="min-w-[220px] p-2" sideOffset={12}>
         <div className="flex flex-col gap-1">
           <Button
             variant="ghost"
@@ -216,7 +216,7 @@ function SelectBy(props: {
         props.onChange(v as SortyById);
       }}
     >
-      <SelectTrigger className="min-w-[200px] capitalize bg-muted/50">
+      <SelectTrigger className="min-w-[200px] bg-muted/50 capitalize">
         Sort by {valueToLabel[props.value]}
       </SelectTrigger>
       <SelectContent>

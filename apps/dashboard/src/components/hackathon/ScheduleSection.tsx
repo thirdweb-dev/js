@@ -35,7 +35,7 @@ export const ScheduleSection: React.FC = () => {
         maxW={907}
       >
         <Box
-          pointerEvents={"none"}
+          pointerEvents="none"
           width="100vw"
           height={{ base: "1400px", md: "2200px" }}
           position="absolute"
@@ -43,9 +43,7 @@ export const ScheduleSection: React.FC = () => {
           top="55%"
           left="50%"
           transform="translate(-50%, -50%)"
-          backgroundImage={
-            "radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
-          }
+          backgroundImage="radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
         />
         {items.map(({ day, title, secondTitle }) => (
           <Flex
@@ -62,12 +60,7 @@ export const ScheduleSection: React.FC = () => {
             py={3}
             gap={{ base: 4, md: 12 }}
           >
-            <Flex
-              flexDir="column"
-              alignItems="center"
-              w={"60px"}
-              flexShrink={0}
-            >
+            <Flex flexDir="column" alignItems="center" w="60px" flexShrink={0}>
               <Text size="body.md" color="gray.300" textTransform="uppercase">
                 FEBRUARY
               </Text>
@@ -75,7 +68,7 @@ export const ScheduleSection: React.FC = () => {
                 {day}
               </Heading>
             </Flex>
-            <Flex justifyContent="center" gap={2} ml={4} flexDir={"column"}>
+            <Flex justifyContent="center" gap={2} ml={4} flexDir="column">
               <Heading size="subtitle.sm" fontWeight={500} color="white">
                 {title}
               </Heading>

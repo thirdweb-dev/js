@@ -33,7 +33,7 @@ export const Mobile: Story = {
 
 function Variants() {
   return (
-    <div className="container py-10 max-w-[1100px] mx-auto w-full flex flex-col gap-10">
+    <div className="container mx-auto flex w-full max-w-[1100px] flex-col gap-10 py-10">
       <BadgeContainer label="4 Teams">
         <AccountTeamsUI
           teamsWithRole={[

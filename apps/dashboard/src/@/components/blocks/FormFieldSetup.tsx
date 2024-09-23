@@ -12,22 +12,22 @@ export function FormFieldSetup(props: {
 }) {
   return (
     <div>
-      <div className="mb-2 inline-flex gap-1 items-center">
+      <div className="mb-2 inline-flex items-center gap-1">
         <Label htmlFor={props.htmlFor}>{props.label}</Label>
 
         {props.isRequired && (
-          <AsteriskIcon className="text-destructive-text size-3.5" />
+          <AsteriskIcon className="size-3.5 text-destructive-text" />
         )}
 
         {props.tooltip && (
           <ToolTipLabel label={props.tooltip}>
-            <InfoIcon className="text-muted-foreground size-3.5" />
+            <InfoIcon className="size-3.5 text-muted-foreground" />
           </ToolTipLabel>
         )}
       </div>
       {props.children}
       {props.errorMessage && (
-        <p className="text-destructive-text text-sm mt-1">
+        <p className="mt-1 text-destructive-text text-sm">
           {props.errorMessage}
         </p>
       )}

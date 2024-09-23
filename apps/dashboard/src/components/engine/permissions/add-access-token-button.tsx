@@ -80,7 +80,7 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
         isCentered
       >
         <ModalOverlay />
-        <ModalContent className="!bg-background border border-border rounded-lg">
+        <ModalContent className="!bg-background rounded-lg border border-border">
           <ModalHeader>Access token</ModalHeader>
           <ModalBody as={Flex} flexDir="column" gap={4}>
             <Stack spacing={4}>

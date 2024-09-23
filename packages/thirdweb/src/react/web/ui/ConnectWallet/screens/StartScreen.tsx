@@ -68,7 +68,7 @@ export function StartScreen(props: {
             />
           ) : (
             <GlobalContainer>
-              <GlobeIcon size={"150"} />
+              <GlobeIcon size="150" />
             </GlobalContainer>
           )}
         </Container>

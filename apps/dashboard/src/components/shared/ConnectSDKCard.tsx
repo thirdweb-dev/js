@@ -10,15 +10,15 @@ export function ConnectSDKCard({
   description,
 }: { title?: string; description?: string }) {
   return (
-    <div className="border border-border bg-muted/50 rounded-lg p-6 relative">
-      <h3 className="text-2xl font-semibold tracking-tight mb-1">
+    <div className="relative rounded-lg border border-border bg-muted/50 p-6">
+      <h3 className="mb-1 font-semibold text-2xl tracking-tight">
         {title || "Connect SDK"}
       </h3>
       <p className="mb-8 text-muted-foreground text-sm">
         {description || "Add the Connect SDK to your app."}
       </p>
 
-      <div className="grid gap-6 md:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-[500px]">
+      <div className="grid max-w-[500px] grid-cols-1 gap-6 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
         <DocLink
           link="https://portal.thirdweb.com/typescript/v5/getting-started"
           icon={SiTypescript}
@@ -60,7 +60,7 @@ function BackgroundPattern() {
   const color = "hsl(var(--foreground)/50%)";
   return (
     <div
-      className="hidden xl:block absolute w-[50%] right-2 top-4 bottom-4 z-[1]"
+      className="absolute top-4 right-2 bottom-4 z-[1] hidden w-[50%] xl:block"
       style={{
         backgroundImage: `radial-gradient(${color} 1px, transparent 1px)`,
         backgroundSize: "20px 20px",
@@ -79,7 +79,7 @@ function DocLink(props: {
     <Link
       href={props.link}
       target="_blank"
-      className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm"
+      className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
     >
       <props.icon className="size-4" />
       {props.label}

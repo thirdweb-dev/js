@@ -85,7 +85,7 @@ const SanctionedAddressesChecker: ComponentWithChildren = ({ children }) => {
         bg="black"
         zIndex="banner"
       >
-        <div className="gap-4 flex flex-col items-center">
+        <div className="flex flex-col items-center gap-4">
           <Heading as="p">Address is blocked</Heading>
           <CustomConnectWallet />
         </div>

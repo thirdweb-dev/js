@@ -82,7 +82,7 @@ const StandardAccessTokensPanel = ({
   return (
     <>
       <Text>
-        Access tokens allow API access to Engine.{" "}
+        Access tokens allow API access to Engine.
         <Link
           href="https://portal.thirdweb.com/engine/features/access-tokens"
           color="primary.500"
@@ -132,7 +132,7 @@ const KeypairAuthenticationPanel = ({
         Keypair authentication allows your app to geneate short-lived access
         tokens.
         <br />
-        They are securely signed by your backend and verified with a public key.{" "}
+        They are securely signed by your backend and verified with a public key.
         <Link
           href="https://portal.thirdweb.com/engine/features/keypair-authentication"
           color="primary.500"

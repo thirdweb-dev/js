@@ -204,9 +204,9 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                 showUploadButton
                 showPreview={true}
                 setValue={setFile}
-                className="border border-border rounded transition-all duration-200"
+                className="rounded border border-border transition-all duration-200"
                 selectOrUpload="Upload"
-                helperText={"Media"}
+                helperText="Media"
               />
             </Box>
             <FormHelperText>
@@ -226,7 +226,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                 value={imageUrl}
                 showUploadButton
                 setValue={(file) => setValue("image", file)}
-                className="border border-border rounded transition-all"
+                className="rounded border border-border transition-all"
               />
               <FormHelperText>
                 You can optionally upload an image as the cover of your NFT.

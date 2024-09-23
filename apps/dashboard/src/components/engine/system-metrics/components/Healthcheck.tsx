@@ -22,10 +22,10 @@ export function Healthcheck({ instance }: { instance: EngineInstance }) {
             </ToolTipLabel>
           ) : query.isError ? (
             <ToolTipLabel label="Not Working">
-              <div className="text-lg text-destructive-text">Not Reachable</div>
+              <div className="text-destructive-text text-lg">Not Reachable</div>
             </ToolTipLabel>
           ) : (
-            <div className="flex py-1 h-[28px] w-[70px]">
+            <div className="flex h-[28px] w-[70px] py-1">
               <Skeleton className="h-full w-full" />
             </div>
           )}
@@ -37,10 +37,10 @@ export function Healthcheck({ instance }: { instance: EngineInstance }) {
 
 function PulseDot() {
   return (
-    <ToolTipLabel label={"Live Data"}>
+    <ToolTipLabel label="Live Data">
       <span className="relative flex size-3">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
-        <span className="relative inline-flex rounded-full size-3 bg-primary" />
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
+        <span className="relative inline-flex size-3 rounded-full bg-primary" />
       </span>
     </ToolTipLabel>
   );

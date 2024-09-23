@@ -37,11 +37,7 @@ export function MobileBurgerMenu() {
       </Button>
 
       {showBurgerMenu && (
-        <nav
-          className={
-            "fixed top-[80px] z-50 inset-0 bg-background p-6 animate-in fade-in-20 slide-in-from-top-3 border-t"
-          }
-        >
+        <nav className="fade-in-20 slide-in-from-top-3 fixed inset-0 top-[80px] z-50 animate-in border-t bg-background p-6">
           <Button
             variant="ghost"
             size="icon"

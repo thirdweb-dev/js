@@ -57,7 +57,7 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
         onSelect(v === "all-chains" ? undefined : v);
       }}
     >
-      <SelectTrigger className="inline-flex w-auto border-none bg-transparent hover:bg-muted -translate-x-3 py-1 !h-auto font-medium">
+      <SelectTrigger className="-translate-x-3 !h-auto inline-flex w-auto border-none bg-transparent py-1 font-medium hover:bg-muted">
         <SelectValue />
       </SelectTrigger>
 

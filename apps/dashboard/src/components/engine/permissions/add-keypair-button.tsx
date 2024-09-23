@@ -125,7 +125,7 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
         size="2xl"
       >
         <ModalOverlay />
-        <ModalContent className="!bg-background border border-border rounded-lg">
+        <ModalContent className="!bg-background rounded-lg border border-border">
           <ModalHeader>Add Public Key</ModalHeader>
           <ModalBody as={Flex} flexDir="column" gap={8}>
             <FormControl>
@@ -176,7 +176,7 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
                 <Text>Print the public key.</Text>
                 <CodeBlock
                   fontSize="small"
-                  code={"cat public.key"}
+                  code="cat public.key"
                   language="solidity"
                 />
               </Stack>
@@ -190,9 +190,7 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
                 fontFamily="mono"
                 value={publicKey}
                 onChange={(e) => setPublicKey(e.target.value)}
-                placeholder={
-                  "-----BEGIN PUBLIC KEY-----\n...\n...\n...\n...\n-----END PUBLIC KEY-----"
-                }
+                placeholder="-----BEGIN PUBLIC KEY-----\n...\n...\n...\n...\n-----END PUBLIC KEY-----"
                 rows={6}
                 fontSize="small"
               />

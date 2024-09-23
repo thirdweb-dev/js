@@ -45,7 +45,7 @@ export const LandingShowcaseImage: React.FC<LandingShowcaseImageProps> = ({
           )}
           <Heading pb={4} size="display.sm">
             <Box as="span" bgGradient={gradient} bgClip="text">
-              {titleWithGradient}{" "}
+              {titleWithGradient}
             </Box>
             {title}
           </Heading>

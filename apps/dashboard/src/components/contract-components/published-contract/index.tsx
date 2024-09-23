@@ -232,7 +232,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                         <Heading as="h5" size="label.sm">
                           {publishedContract?.isDeployableViaFactory
                             ? "Factory"
-                            : "Proxy"}{" "}
+                            : "Proxy"}
                           Enabled
                         </Heading>
                         {implementationAddresses &&

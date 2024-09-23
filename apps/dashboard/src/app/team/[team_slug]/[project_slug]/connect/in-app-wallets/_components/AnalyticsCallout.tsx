@@ -42,11 +42,11 @@ export const AnalyticsCallout: React.FC<AnalyticsCalloutProps> = ({
   }, [usageQuery]);
 
   return (
-    <div className="border border-border rounded-lg p-4 md:px-10 md:py-12 flex flex-col lg:flex-row lg:justify-between gap-6 bg-muted/50">
+    <div className="flex flex-col gap-6 rounded-lg border border-border bg-muted/50 p-4 md:px-10 md:py-12 lg:flex-row lg:justify-between">
       {/* Left */}
       <div>
-        <p className="text-xs text-muted-foreground mb-3">Analytics</p>
-        <h2 className="text-2xl tracking-tight font-semibold max-w-[500px] mb-5">
+        <p className="mb-3 text-muted-foreground text-xs">Analytics</p>
+        <h2 className="mb-5 max-w-[500px] font-semibold text-2xl tracking-tight">
           View more insights about how users are interacting with your
           application
         </h2>

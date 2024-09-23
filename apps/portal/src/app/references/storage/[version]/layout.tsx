@@ -3,16 +3,16 @@ import { fetchStorageDoc } from "@/app/references/components/TDoc/fetchDocs/fetc
 import { createMetadata } from "@doc";
 
 export default getTDocLayout({
-	getDoc: fetchStorageDoc,
-	packageSlug: "storage",
-	sdkTitle: "Storage SDK",
+  getDoc: fetchStorageDoc,
+  packageSlug: "storage",
+  sdkTitle: "Storage SDK",
 });
 
 export const metadata = createMetadata({
-	image: {
-		title: "thirdweb Storage SDK Reference",
-		icon: "storage",
-	},
-	title: "References | thirdweb storage SDK ",
-	description: "Full Reference for thirdweb storage SDK.",
+  image: {
+    title: "thirdweb Storage SDK Reference",
+    icon: "storage",
+  },
+  title: "References | thirdweb storage SDK ",
+  description: "Full Reference for thirdweb storage SDK.",
 });

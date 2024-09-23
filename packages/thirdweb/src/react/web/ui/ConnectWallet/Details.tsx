@@ -200,12 +200,14 @@ export const ConnectedWalletDetails: React.FC<{
 
   const avatarSrc = props.detailsButton?.connectedAccountAvatarUrl || pfp;
 
+  const combinedClassName = `${TW_CONNECTED_WALLET} ${
+    props.detailsButton?.className || ""
+  }`;
+
   return (
     <WalletInfoButton
       type="button"
-      className={`${TW_CONNECTED_WALLET} ${
-        props.detailsButton?.className || ""
-      }`}
+      className={combinedClassName}
       style={props.detailsButton?.style}
       data-test="connected-wallet-details"
       onClick={openModal}
@@ -258,7 +260,7 @@ export const ConnectedWalletDetails: React.FC<{
             color="secondaryText"
             weight={400}
           >
-            {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
+            {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}
             {balanceQuery.data.symbol}
           </Text>
         ) : (
@@ -355,7 +357,7 @@ function DetailsModal(props: {
       </div>
 
       {chainNameQuery.isLoading ? (
-        <Skeleton height={"16px"} width={"150px"} />
+        <Skeleton height="16px" width="150px" />
       ) : (
         <Text color="primaryText" size="md" multiline>
           {chainNameQuery.name || `Unknown chain #${walletChain?.id}`}
@@ -364,7 +366,7 @@ function DetailsModal(props: {
               formatNumber(Number(balanceQuery.data.displayValue), 5)
             ) : (
               <Skeleton height="1em" width="100px" />
-            )}{" "}
+            )}
             {balanceQuery.data?.symbol}
           </Text>
         </Text>
@@ -561,12 +563,9 @@ function DetailsModal(props: {
                   }}
                 >
                   <Container color="secondaryText" flex="row" center="both">
-                    <PinBottomIcon
-                      width={iconSize.sm}
-                      height={iconSize.sm}
-                    />{" "}
+                    <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
                   </Container>
-                  {locale.receive}{" "}
+                  {locale.receive}
                 </Button>
               )}
 
@@ -951,7 +950,7 @@ function DetailsModal(props: {
       <WalletUIStatesProvider theme={props.theme} isOpen={false}>
         <ScreenSetupContext.Provider value={screenSetup}>
           <Modal
-            size={"compact"}
+            size="compact"
             open={isOpen}
             setOpen={(_open) => {
               if (!_open) {

@@ -65,22 +65,22 @@ export function ConnectSmartAccountCustomPreview() {
           <div className="py-4">
             <p>Smart Account: {shortenAddress(account.address)}</p>
             <p>
-              Balance: {balanceQuery.data?.displayValue}{" "}
+              Balance: {balanceQuery.data?.displayValue}
               {balanceQuery.data?.symbol}
             </p>
           </div>
-          <Button variant={"outline"} onClick={() => disconnect(wallet)}>
+          <Button variant="outline" onClick={() => disconnect(wallet)}>
             Disconnect
           </Button>
         </>
       ) : (
         <Button
-          variant={"default"}
+          variant="default"
           onClick={connect}
-          className="p-6 rounded-full"
+          className="rounded-full p-6"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={socialIcons.google} alt="Google" className="w-4 h-4 mr-2" />
+          <img src={socialIcons.google} alt="Google" className="mr-2 h-4 w-4" />
           Connect with Google
         </Button>
       )}

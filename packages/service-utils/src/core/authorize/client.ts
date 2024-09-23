@@ -1,5 +1,5 @@
-import type { ApiKeyMetadata } from "../api";
-import type { AuthorizationResult } from "./types";
+import type { ApiKeyMetadata } from "../api.js";
+import type { AuthorizationResult } from "./types.js";
 
 export type ClientAuthorizationPayload = {
   secretKeyHash: string | null;

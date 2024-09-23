@@ -14,7 +14,7 @@ export const ShowMoreButton: React.FC<ShowMoreButtonProps> = ({
   setShowMoreLimit,
 }) => {
   return (
-    <div className="flex justify-center py-4 border-t border-border">
+    <div className="flex justify-center border-border border-t py-4">
       <Button
         onClick={() => setShowMoreLimit(showMoreLimit + limit)}
         variant="ghost"

@@ -24,18 +24,18 @@ export const metadata: Metadata = {
 export default async function ExplorePage() {
   return (
     <div className="flex flex-col">
-      <Breadcrumb className="py-4 px-6 border-b border-border">
+      <Breadcrumb className="border-border border-b px-6 py-4">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbPage>Explore</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="container py-8 flex flex-col gap-4">
-        <h1 className="mb-3 text-3xl lg:text-5xl font-bold tracking-tighter">
+      <div className="container flex flex-col gap-4 py-8">
+        <h1 className="mb-3 font-bold text-3xl tracking-tighter lg:text-5xl">
           Explore
         </h1>
-        <p className="text-base lg:text-lg text-muted-foreground max-w-screen-md">
+        <p className="max-w-screen-md text-base text-muted-foreground lg:text-lg">
           The best place for web3 developers to explore smart contracts from
           world-class web3 protocols & engineers — all deployable with one
           click.

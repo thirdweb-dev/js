@@ -130,7 +130,7 @@ export function getTDocPage(options: {
 
     if (!docName) {
       return {
-        title: sdkTitle + " | thirdweb docs",
+        title: `${sdkTitle} | thirdweb docs`,
       };
     }
     const extensionName = props.params.slug ? props.params.slug[1] : undefined;
@@ -272,12 +272,12 @@ function RenderLinkGroup(props: { linkGroup: LinkGroup; level: number }) {
   if (allChildrenAreLinks) {
     return (
       <div className="flex flex-col gap-3">
-        {props.linkGroup.links.map((_link, i) => {
+        {props.linkGroup.links.map((_link) => {
           const link = _link as LinkMeta;
           return (
             <ArticleIconCard
               title={link.name}
-              key={i}
+              key={link.href}
               href={link.href}
               icon={FileTextIcon}
               className="p-3"
@@ -294,6 +294,7 @@ function RenderLinkGroup(props: { linkGroup: LinkGroup; level: number }) {
       {props.linkGroup.links.map((link, i) => {
         if ("links" in link) {
           return (
+            // biome-ignore lint/suspicious/noArrayIndexKey: nothing better available
             <GroupOfLinks linkGroup={link} level={props.level + 1} key={i} />
           );
         }

@@ -19,7 +19,7 @@ const FAQs = [
     question: "Where will this event take place?",
     answer: (
       <>
-        The ReadyPlayer3 Hackathon will take place via{" "}
+        The ReadyPlayer3 Hackathon will take place via
         <Link href="https://readyplayer3.devpost.com/" color="primary.600">
           DevPost
         </Link>
@@ -51,7 +51,7 @@ const FAQs = [
     question: "Where can I see all the build tracks?",
     answer: (
       <>
-        Check out{" "}
+        Check out
         <Link
           href="https://www.notion.so/thirdweb/thirdweb-s-Ready-Player-3-Hackathon-Build-Tracks-f1eede16a3e343f48a9ec25a395d0afc"
           textDecor="underline"

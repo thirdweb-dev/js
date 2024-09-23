@@ -110,7 +110,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
   }
 
   return (
-    <div className="flex gap-4 items-center" {...getRootProps()}>
+    <div className="flex items-center gap-4" {...getRootProps()}>
       <input {...getInputProps()} />
       {showPreview &&
         (isDisabled ? (
@@ -120,14 +120,14 @@ export const FileInput: React.FC<IFileInputProps> = ({
               maxWidth: previewMaxWidth,
             }}
             className={cn(
-              "opacity-50 cursor-not-allowed bg-muted/50",
-              "w-full flex items-center justify-center hover:bg-accent border border-border hover:ring-2 hover:ring-ring",
+              "cursor-not-allowed bg-muted/50 opacity-50",
+              "flex w-full items-center justify-center border border-border hover:bg-accent hover:ring-2 hover:ring-ring",
               className,
             )}
           >
-            <div className="flex flex-col items-center text-muted-foreground gap-2">
+            <div className="flex flex-col items-center gap-2 text-muted-foreground">
               <FiUpload className="size-6" />
-              <p className="text-sm text-center">{isDisabledText}</p>
+              <p className="text-center text-sm">{isDisabledText}</p>
             </div>
           </div>
         ) : (
@@ -137,14 +137,14 @@ export const FileInput: React.FC<IFileInputProps> = ({
               maxWidth: previewMaxWidth,
             }}
             className={cn(
-              "cursor-pointer relative overflow-hidden",
-              "w-full flex items-center justify-center hover:bg-accent border border-border hover:ring-2 hover:ring-ring",
+              "relative cursor-pointer overflow-hidden",
+              "flex w-full items-center justify-center border border-border hover:bg-accent hover:ring-2 hover:ring-ring",
               fileUrl ? "bg-transparent" : "bg-muted/50",
               className,
             )}
           >
             {noDisplay ? (
-              <div className="flex flex-col items-center text-muted-foreground gap-2">
+              <div className="flex flex-col items-center gap-2 text-muted-foreground">
                 <FiImage className="size-6" />
                 <p className="text-sm">{fileType} uploaded</p>
               </div>
@@ -154,17 +154,17 @@ export const FileInput: React.FC<IFileInputProps> = ({
               ) : (
                 <img
                   alt=""
-                  className="top-0 left-0 absolute w-full h-full object-contain"
+                  className="absolute top-0 left-0 h-full w-full object-contain"
                   src={fileUrl}
                 />
               )
             ) : (
-              <div className="flex flex-col items-center text-muted-foreground gap-2.5">
-                <div className="p-3 bg-background rounded-full flex items-center justify-center border border-border">
+              <div className="flex flex-col items-center gap-2.5 text-muted-foreground">
+                <div className="flex items-center justify-center rounded-full border border-border bg-background p-3">
                   <FiUpload className="size-5" />
                 </div>
                 {!disableHelperText && (
-                  <p className="text-sm text-center">
+                  <p className="text-center text-sm">
                     Upload {helperTextOrFile}
                   </p>
                 )}

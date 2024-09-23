@@ -36,7 +36,7 @@ const HomePageCard = ({
   return (
     <Container
       position="relative"
-      maxW={"container.page"}
+      maxW="container.page"
       mt={20}
       mb={{ base: 12, md: 40 }}
       zIndex={10}
@@ -45,12 +45,12 @@ const HomePageCard = ({
         columns={{ base: 1, md: 2 }}
         gap={{ base: 12, md: 8 }}
         mt={{ base: 4, md: 28 }}
-        flexDirection={"column-reverse"}
+        flexDirection="column-reverse"
       >
         <Flex
           flexDir="column"
           gap={{ base: 6, md: 8 }}
-          w={"100%"}
+          w="100%"
           maxW={{ base: "100%", md: "100%" }}
           order={{ base: 2, md: 1 }}
         >
@@ -106,13 +106,13 @@ const HomePageCard = ({
         </Flex>
 
         <Flex
-          flexDir={"column"}
+          flexDir="column"
           alignItems={{ base: "center", md: "flex-end" }}
           order={{ base: 1, md: 2 }}
         >
           <LandingDesktopMobileImage
             w="full"
-            maxW={"446px"}
+            maxW="446px"
             image={image}
             mobileImage={mobileImage}
           />

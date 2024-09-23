@@ -13,13 +13,13 @@ import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
 
 export default function LoginPage() {
   return (
-    <div className="bg-muted/30 h-screen relative grid place-items-center">
-      <nav className="fixed top-0 w-full flex flex-row justify-between items-center px-6 py-4 z-20">
+    <div className="relative grid h-screen place-items-center bg-muted/30">
+      <nav className="fixed top-0 z-20 flex w-full flex-row items-center justify-between px-6 py-4">
         <ThirdwebMiniLogo className="max-h-7" />
         <ColorModeToggle />
       </nav>
-      <main className="flex flex-col gap-6 z-10">
-        <h1 className="font-semibold text-2xl lg:text-3xl tracking-tight text-center">
+      <main className="z-10 flex flex-col gap-6">
+        <h1 className="text-center font-semibold text-2xl tracking-tight lg:text-3xl">
           Get started with thirdweb
         </h1>
         <Suspense>
@@ -30,7 +30,7 @@ export default function LoginPage() {
       <img
         alt=""
         src="/assets/login/background.svg"
-        className="fixed -bottom-12 -right-12 lg:bottom-0 lg:right-0"
+        className="-bottom-12 -right-12 fixed lg:right-0 lg:bottom-0"
       />
     </div>
   );

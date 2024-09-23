@@ -1234,7 +1234,7 @@ function SwapScreenContent(props: {
         <div>
           {errorMsg.minAmount && (
             <Text color="danger" size="sm" center multiline>
-              Minimum amount is {errorMsg.minAmount}{" "}
+              Minimum amount is {errorMsg.minAmount}
               <TokenSymbol
                 token={toToken}
                 chain={toChain}
@@ -1482,7 +1482,7 @@ function FiatScreenContent(props: {
         <div>
           {errorMsg.minAmount && (
             <Text color="danger" size="sm" center multiline>
-              Minimum amount is {errorMsg.minAmount}{" "}
+              Minimum amount is {errorMsg.minAmount}
               <TokenSymbol
                 token={toToken}
                 chain={toChain}

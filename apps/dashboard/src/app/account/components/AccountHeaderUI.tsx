@@ -21,7 +21,7 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
   return (
     <header
       className={cn(
-        "flex flex-row gap-2 items-center text-foreground justify-between px-6 py-4",
+        "flex flex-row items-center justify-between gap-2 px-6 py-4 text-foreground",
         props.className,
       )}
     >
@@ -35,10 +35,10 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
         <div className="flex items-center gap-1">
           <Link
             href="/account"
-            className="font-normal text-sm flex flex-row gap-2 items-center"
+            className="flex flex-row items-center gap-2 font-normal text-sm"
           >
             {/* TODO - replace with account image */}
-            <div className="bg-muted border border-border size-6 rounded-full" />
+            <div className="size-6 rounded-full border border-border bg-muted" />
             <span> My Account </span>
           </Link>
 
@@ -65,20 +65,20 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
   return (
     <header
       className={cn(
-        "flex flex-row gap-2 items-center text-foreground justify-between px-4 py-4",
+        "flex flex-row items-center justify-between gap-2 px-4 py-4 text-foreground",
         props.className,
       )}
     >
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
           <Link
-            href={"/account"}
+            href="/account"
             className={cn(
-              "font-normal text-sm flex flex-row items-center text-foreground gap-2",
+              "flex flex-row items-center gap-2 font-normal text-foreground text-sm",
             )}
           >
             {/* TODO - replace with account image */}
-            <div className="bg-muted border border-border size-7 rounded-full" />
+            <div className="size-7 rounded-full border border-border bg-muted" />
             <span> My Account </span>
           </Link>
 
@@ -100,5 +100,5 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
 }
 
 function SlashSeparator() {
-  return <div className="h-5 w-[1.5px] bg-foreground/30 rotate-[25deg] mx-2" />;
+  return <div className="mx-2 h-5 w-[1.5px] rotate-[25deg] bg-foreground/30" />;
 }

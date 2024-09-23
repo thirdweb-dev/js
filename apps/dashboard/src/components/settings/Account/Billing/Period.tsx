@@ -37,19 +37,19 @@ export const BillingPeriod: React.FC<BillingPeriodProps> = ({
   }
 
   return (
-    <div className="items-start lg:items-end flex flex-col gap-1">
+    <div className="flex flex-col items-start gap-1 lg:items-end">
       <Text size="body.md" as="span">
         Current billing period:
         <Text as="span" color="bgBlack" pl={2} fontWeight="medium">
           {format(
             new Date(account.currentBillingPeriodStartsAt as string),
             "MMM dd",
-          )}{" "}
-          {" - "}
+          )}
+          -
           {format(
             new Date(account.currentBillingPeriodEndsAt as string),
             "MMM dd",
-          )}{" "}
+          )}
         </Text>
       </Text>
 

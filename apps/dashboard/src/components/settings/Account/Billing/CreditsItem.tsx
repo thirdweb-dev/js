@@ -48,10 +48,8 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
         <Flex gap={2}>
           {isOpCredit ? (
             <ChainIcon
-              ipfsSrc={
-                // Hard-coded here to remove @thirdweb dev/chains
-                "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
-              }
+              ipfsSrc=// Hard-coded here to remove @thirdweb dev/chains
+              "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
               size={24}
             />
           ) : isTwCredit ? (

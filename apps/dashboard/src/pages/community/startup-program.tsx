@@ -145,7 +145,7 @@ const StartupProgram: ThirdwebNextPage = () => {
       </Box>
 
       {/* Aurora gradient */}
-      <HomepageSection overflow={"hidden"}>
+      <HomepageSection overflow="hidden">
         {/* top */}
         <Aurora
           pos={{ left: "50%", top: "0%" }}
@@ -246,7 +246,7 @@ const StartupProgram: ThirdwebNextPage = () => {
       </HomepageSection>
 
       {/* Startups logos */}
-      <HomepageSection pb={20} overflow={"hidden"}>
+      <HomepageSection pb={20} overflow="hidden">
         <Flex
           pt={24}
           flexDir="column"
@@ -255,7 +255,7 @@ const StartupProgram: ThirdwebNextPage = () => {
         >
           <LandingImages
             title={
-              <Box maxW={"700px"}>
+              <Box maxW="700px">
                 <LandingSectionHeading
                   title="The best startups launch with thirdweb"
                   blackToWhiteTitle=""
@@ -269,7 +269,7 @@ const StartupProgram: ThirdwebNextPage = () => {
       </HomepageSection>
 
       {/* Partners */}
-      <HomepageSection pb={4} overflow={"hidden"}>
+      <HomepageSection pb={4} overflow="hidden">
         <Flex
           pt={24}
           flexDir="column"
@@ -309,7 +309,7 @@ const StartupProgram: ThirdwebNextPage = () => {
       </Flex>
 
       {/* Fast Track */}
-      <HomepageSection pb={22} overflow={"hidden"}>
+      <HomepageSection pb={22} overflow="hidden">
         <Flex
           flexDir="column"
           gap={{ base: 6, md: 8 }}
@@ -330,7 +330,7 @@ const StartupProgram: ThirdwebNextPage = () => {
       </HomepageSection>
 
       {/* CTA Founders */}
-      <HomepageSection pb={32} overflow={"hidden"}>
+      <HomepageSection pb={32} overflow="hidden">
         <Box position="relative" mb="20">
           <ChakraNextImage
             src={gradientFive.src}

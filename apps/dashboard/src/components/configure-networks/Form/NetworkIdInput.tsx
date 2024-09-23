@@ -21,16 +21,16 @@ export const NetworkIDInput: React.FC<{
         <span>
           Network slug is used to identify the network in the thirdweb
           dashboard.
-          <p className="font-semibold mt-2 mb-1">Example</p>
+          <p className="mt-2 mb-1 font-semibold">Example</p>
           <p className="text-muted-foreground text-sm">
-            {"thirdweb.com/<slug>/..."}
+            thirdweb.com/&lt;slug&gt;/...
           </p>
         </span>
       }
       errorMessage={
         form.formState.errors.slug?.type === "taken" ? (
           <>
-            Can not use {`"${slug}"`}.{" "}
+            Can not use {`"${slug}"`}.
             {slug &&
               existingChain &&
               `It is being used by "${existingChain.name}"`}
@@ -43,7 +43,7 @@ export const NetworkIDInput: React.FC<{
         autoComplete="off"
         placeholder="ethereum"
         id="slug"
-        className="disabled:opacity-100 disabled:bg-muted/50 disabled:text-muted-foreground bg-muted/50 font-mono"
+        className="bg-muted/50 font-mono disabled:bg-muted/50 disabled:text-muted-foreground disabled:opacity-100"
         onKeyDown={(e) => {
           // only allow alphanumeric characters and dashes
           if (!/^[a-z0-9-]*$/i.test(e.key)) {

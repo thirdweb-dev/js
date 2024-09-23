@@ -92,8 +92,8 @@ function AccountAvatarFormControl() {
     >
       <div className="flex flex-row gap-4 md:justify-between">
         <div>
-          <h3 className="text-xl font-semibold tracking-tight">Avatar</h3>
-          <p className="text-foreground text-sm mt-1.5 mb-4 leading-relaxed">
+          <h3 className="font-semibold text-xl tracking-tight">Avatar</h3>
+          <p className="mt-1.5 mb-4 text-foreground text-sm leading-relaxed">
             This is your account's avatar. <br /> Click on the avatar to upload
             a custom one
           </p>
@@ -102,7 +102,7 @@ function AccountAvatarFormControl() {
           accept={{ "image/*": [] }}
           value={avatar}
           setValue={setAvatar}
-          className="w-20 lg:w-28 rounded-full"
+          className="w-20 rounded-full lg:w-28"
           disableHelperText
         />
       </div>
@@ -214,15 +214,13 @@ function AccountEmailFormControl(props: {
         description:
           "Enter the email address you want to use to log in with thirdweb. This email will be used for account related notifications",
       }}
-      bottomText={
-        "Emails must be verified to be able to login with them or be used as primary email"
-      }
+      bottomText="Emails must be verified to be able to login with them or be used as primary email"
       errorText={undefined}
       noPermissionText={undefined}
     >
-      <div className="flex gap-4 justify-between items-center border rounded-lg p-4 bg-card">
+      <div className="flex items-center justify-between gap-4 rounded-lg border bg-card p-4">
         {/* Start */}
-        <div className="flex flex-col lg:flex-row lg:items-center items-start gap-2 lg:gap-3">
+        <div className="flex flex-col items-start gap-2 lg:flex-row lg:items-center lg:gap-3">
           <p className="text-sm"> {props.email}</p>
           <Badge
             className="capitalize "
@@ -289,7 +287,7 @@ function EmailUpdateDialog(props: {
       <DialogContent className="p-0">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="p-6 flex flex-col gap-4 pb-10">
+            <div className="flex flex-col gap-4 p-6 pb-10">
               <DialogHeader className="pr-10">
                 <DialogTitle className="text-2xl">Update Email</DialogTitle>
                 <DialogDescription>
@@ -316,7 +314,7 @@ function EmailUpdateDialog(props: {
               />
             </div>
 
-            <DialogFooter className="gap-4 lg:gap-1 bg-muted/50 p-6 border-t">
+            <DialogFooter className="gap-4 border-t bg-muted/50 p-6 lg:gap-1">
               <DialogClose asChild>
                 <Button variant="outline"> Cancel </Button>
               </DialogClose>

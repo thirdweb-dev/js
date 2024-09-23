@@ -13,7 +13,7 @@ export const SettingsUsagePage = () => {
 
   if (meQuery.isPending || !account) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <Spinner className="size-10" />
       </div>
     );
@@ -22,8 +22,8 @@ export const SettingsUsagePage = () => {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col">
-        <h1 className="font-semibold text-3xl tracking-tight mb-2">Usage</h1>
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
+        <h1 className="mb-2 font-semibold text-3xl tracking-tight">Usage</h1>
+        <div className="flex flex-col items-start justify-between lg:flex-row lg:items-center">
           <BillingPlan account={account} />
           <BillingPeriod account={account} usage={usageQuery.data} />
         </div>

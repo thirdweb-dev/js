@@ -4,7 +4,7 @@ import { Heading, Text } from "tw-components";
 
 const MajorSection = () => {
   return (
-    <div className="w-full flex flex-col xl:flex-row items-center xl:items-start gap-[60px]">
+    <div className="flex w-full flex-col items-center gap-[60px] xl:flex-row xl:items-start">
       <Heading
         size="title.lg"
         fontWeight="semibold"
@@ -13,7 +13,7 @@ const MajorSection = () => {
       >
         However, there are two major obstacles to mass adoption.
       </Heading>
-      <div className="flex flex-row max-w-[96rem]">
+      <div className="flex max-w-[96rem] flex-row">
         <LandingGridSection desktopColumns={2}>
           <div className="flex flex-col gap-6">
             <ChakraNextImage

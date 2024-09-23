@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.1/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
   "organizeImports": {
     "enabled": true
   },
@@ -7,6 +7,15 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "nursery": {
+        "noEnum": "warn",
+        "noDuplicateElseIf": "error",
+        "noDynamicNamespaceImportAccess": "error",
+        "noExportedImports": "error",
+        "noMissingVarFunction": "error",
+        "useConsistentCurlyBraces": "error",
+        "useSortedClasses": "error"
+      },
       "correctness": {
         "useHookAtTopLevel": "error",
         "noNewSymbol": "error",

@@ -37,7 +37,7 @@ export const RpcInput: React.FC<{
         {...reg}
       />
 
-      <p className="text-sm text-muted-foreground mt-2 leading-normal">
+      <p className="mt-2 text-muted-foreground text-sm leading-normal">
         Only add RPC URL that you trust. Malicious RPCs can record activity and
         lie about the state of the network.
       </p>

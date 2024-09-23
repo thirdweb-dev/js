@@ -78,7 +78,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
         </Heading>
         <Text fontStyle="normal">
           Publishing your contract makes it shareable, discoverable, and
-          deployable in a single click.{" "}
+          deployable in a single click.
           <Link
             color="blue.500"
             isExternal
@@ -97,7 +97,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
               value={logoUrl}
               // @ts-expect-error - we upload the file later this is fine
               setValue={(file) => form.setValue("logo", file)}
-              className="border border-border rounded transition-all duration-200"
+              className="rounded border border-border transition-all duration-200"
               renderPreview={(fileUrl) => (
                 <Image
                   alt=""

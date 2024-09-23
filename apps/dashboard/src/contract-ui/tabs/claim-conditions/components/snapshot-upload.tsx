@@ -272,7 +272,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                       <>
                         <Text as={ListItem}>
                           Files <em>must</em> contain one .csv file with a list
-                          of addresses and their <Code>maxClaimable</Code>.{" "}
+                          of addresses and their <Code>maxClaimable</Code>.
                           (amount each wallet is allowed to claim)
                           <br />
                           <Link
@@ -285,7 +285,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                           </Link>
                         </Text>
                         <Text as={ListItem}>
-                          You may optionally add <Code>price</Code> and{" "}
+                          You may optionally add <Code>price</Code> and
                           <Code>currencyAddress</Code> overrides as well. This
                           lets you override the currency and price you would
                           like to charge per wallet you specified
@@ -312,7 +312,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                           </Link>
                         </Text>
                         <Text as={ListItem}>
-                          You may optionally add a <Code>maxClaimable</Code>{" "}
+                          You may optionally add a <Code>maxClaimable</Code>
                           column override. (amount each wallet is allowed to
                           claim) If not specified, the default value is the one
                           you have set on your claim phase.
@@ -327,10 +327,10 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                           </Link>
                         </Text>
                         <Text as={ListItem}>
-                          You may optionally add <Code>price</Code> and{" "}
+                          You may optionally add <Code>price</Code> and
                           <Code>currencyAddress</Code> overrides. This lets you
                           override the currency and price you would like to
-                          charge per wallet you specified.{" "}
+                          charge per wallet you specified.
                           <strong>
                             When defining a custom currency address, you must
                             also define a price override.
@@ -577,7 +577,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
               onClick={() => previousPage()}
             />
             <Text whiteSpace="nowrap">
-              Page <strong>{pageIndex + 1}</strong> of{" "}
+              Page <strong>{pageIndex + 1}</strong> of
               <strong>{pageOptions.length}</strong>
             </Text>
             <IconButton

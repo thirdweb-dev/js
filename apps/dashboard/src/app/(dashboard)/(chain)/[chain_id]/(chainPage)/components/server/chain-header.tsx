@@ -22,25 +22,25 @@ export function ChainHeader(props: ChainHeaderProps) {
       {!props.headerImageUrl && <div className="h-8 md:hidden" />}
       <AspectRatio
         ratio={props.headerImageUrl ? 4 : 8}
-        className="border-b border-border max-sm:-mx-4"
+        className="max-sm:-mx-4 border-border border-b"
       >
         {props.headerImageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={props.headerImageUrl}
             alt=""
-            className="object-cover object-center h-full w-full"
+            className="h-full w-full object-cover object-center"
           />
         )}
       </AspectRatio>
       {/* below header */}
-      <div className="relative flex flex-row justify-end items-end">
+      <div className="relative flex flex-row items-end justify-end">
         {/* chain logo */}
 
         <ChainIcon
           iconUrl={props.logoUrl}
           className={cn(
-            "p-2 lg:p-4 absolute top-0 left-0 size-20 lg:size-36 rounded-full -translate-y-[50%] overflow-hidden border border-border bg-muted",
+            "-translate-y-[50%] absolute top-0 left-0 size-20 overflow-hidden rounded-full border border-border bg-muted p-2 lg:size-36 lg:p-4",
             props.headerImageUrl && "lg:left-4",
           )}
         />
@@ -48,7 +48,7 @@ export function ChainHeader(props: ChainHeaderProps) {
         {/* action group */}
         <div className="pt-3 lg:pt-6">
           {/* Desktop only */}
-          <div className="hidden lg:flex flex-row gap-2">
+          <div className="hidden flex-row gap-2 lg:flex">
             <AddChainToWallet
               chain={
                 // Do not include chain overrides for chain pages

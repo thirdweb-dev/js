@@ -86,7 +86,7 @@ const DashboardSettingsStorage: ThirdwebNextPage = () => {
                 fontFamily="mono"
                 overflow={{ base: "scroll", md: "inherit" }}
               >
-                {"https://{client-id}.ipfscdn.io/ipfs/"}
+                https://&lt;your-client-id&gt;.ipfscdn.io/ipfs/
               </Text>
               <Flex>
                 <Tooltip
@@ -112,7 +112,7 @@ const DashboardSettingsStorage: ThirdwebNextPage = () => {
             </Card>
             <Text>
               Gateway requests need to be authenticated using a client ID. You
-              can get it by creating an API key from the{" "}
+              can get it by creating an API key from the
               <Link href="/dashboard/settings/api-keys" color="primary.500">
                 dashboard settings
               </Link>
@@ -165,7 +165,7 @@ const DashboardSettingsStorage: ThirdwebNextPage = () => {
               </Card>
               <Text>
                 If this is the first time that you are running this command, you
-                may have to first login using your secret key.{" "}
+                may have to first login using your secret key.
                 <Link
                   href="https://portal.thirdweb.com/cli/upload"
                   color="primary.500"

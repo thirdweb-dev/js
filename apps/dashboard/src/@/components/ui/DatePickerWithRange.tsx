@@ -48,9 +48,9 @@ export function DatePickerWithRange(props: {
       <PopoverTrigger asChild>
         <Button
           id="date"
-          variant={"outline"}
+          variant="outline"
           className={cn(
-            "justify-start text-left font-normal gap-2",
+            "justify-start gap-2 text-left font-normal",
             props.className,
           )}
         >
@@ -60,7 +60,7 @@ export function DatePickerWithRange(props: {
               {format(from, "LLL dd, y")} - {format(to, "LLL dd, y")}
             </>
           )}
-          <ChevronDownIcon className="h-4 w-4 ml-auto text-muted-foreground" />
+          <ChevronDownIcon className="ml-auto h-4 w-4 text-muted-foreground" />
         </Button>
       </PopoverTrigger>
 
@@ -69,7 +69,7 @@ export function DatePickerWithRange(props: {
         <DynamicHeight>
           <div>
             {!isValid && (
-              <p className="text-sm pt-2 justify-center text-destructive-text text-center flex items-center gap-2">
+              <p className="flex items-center justify-center gap-2 pt-2 text-center text-destructive-text text-sm">
                 <CalendarX2Icon className="h-4 w-4" />
                 Invalid date range
               </p>

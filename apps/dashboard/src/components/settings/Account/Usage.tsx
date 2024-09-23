@@ -83,7 +83,7 @@ export const Usage: React.FC<UsageProps> = ({
       title: "Unlimited requests",
       total: (
         <>
-          Max rate:{" "}
+          Max rate:
           <Text color="bgBlack" as="span">
             {usageData.rateLimits.rpc} requests per second
           </Text>
@@ -101,7 +101,7 @@ export const Usage: React.FC<UsageProps> = ({
       title: "Unlimited requests",
       total: (
         <>
-          Max rate:{" "}
+          Max rate:
           <Text color="bgBlack" as="span">
             {usageData.rateLimits.storage} requests per second
           </Text>
@@ -111,11 +111,11 @@ export const Usage: React.FC<UsageProps> = ({
   }, [usageData]);
 
   return (
-    <div className="flex flex-col gap-8 w-full">
+    <div className="flex w-full flex-col gap-8">
       {usagePending && <Spinner size="sm" />}
       {!usagePending && (
-        <div className="flex flex-col gap-12 w-full">
-          <div className="flex flex-col gap-6 w-full items-start">
+        <div className="flex w-full flex-col gap-12">
+          <div className="flex w-full flex-col items-start gap-6">
             <Heading as="h4" size="title.sm">
               Infrastructure
             </Heading>
@@ -143,7 +143,7 @@ export const Usage: React.FC<UsageProps> = ({
             </SimpleGrid>
           </div>
 
-          <div className="w-full gap-8 flex flex-col">
+          <div className="flex w-full flex-col gap-8">
             <Heading as="h4" size="title.sm">
               Wallets
             </Heading>
@@ -161,7 +161,7 @@ export const Usage: React.FC<UsageProps> = ({
             </SimpleGrid>
           </div>
 
-          <div className="w-full gap-8 flex flex-col">
+          <div className="flex w-full flex-col gap-8">
             <Heading as="h4" size="title.sm">
               Payments
             </Heading>

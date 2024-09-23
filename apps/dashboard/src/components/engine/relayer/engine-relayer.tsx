@@ -27,7 +27,6 @@ export const EngineRelayer: React.FC<EngineRelayerProps> = ({
             color="primary.500"
             isExternal
           >
-            {" "}
             Learn more about relayers
           </Link>
           .

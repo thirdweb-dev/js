@@ -18,9 +18,9 @@ export function LinkWalletUI(props: {
 
   return (
     <div>
-      <div className="flex items-start gap-4 flex-col lg:flex-row lg:justify-between">
+      <div className="flex flex-col items-start gap-4 lg:flex-row lg:justify-between">
         <div>
-          <h2 className="font-semibold text-xl tracking-tight mb-0.5">
+          <h2 className="mb-0.5 font-semibold text-xl tracking-tight">
             Linked Wallets
           </h2>
           <p className="text-muted-foreground text-sm">
@@ -29,7 +29,7 @@ export function LinkWalletUI(props: {
         </div>
 
         {/* TODO - handle linking */}
-        <Button variant="primary" className="max-sm:w-full gap-2">
+        <Button variant="primary" className="gap-2 max-sm:w-full">
           <PlusIcon className="size-4" />
           Link a Wallet
         </Button>
@@ -45,10 +45,10 @@ export function LinkWalletUI(props: {
 
       <div className="h-4" />
 
-      <ul className="bg-muted/50 border rounded-lg">
+      <ul className="rounded-lg border bg-muted/50">
         {walletsToShow.map((v) => {
           return (
-            <li key={v} className="border-b border-border p-4 last:border-b-0">
+            <li key={v} className="border-border border-b p-4 last:border-b-0">
               <WalletRow address={v} />
             </li>
           );
@@ -56,11 +56,11 @@ export function LinkWalletUI(props: {
 
         {/* No Result Found */}
         {walletsToShow.length === 0 && (
-          <div className="p-4 h-[200px] justify-center flex items-center">
-            <div className="text-center flex flex-col gap-3">
+          <div className="flex h-[200px] items-center justify-center p-4">
+            <div className="flex flex-col gap-3 text-center">
               <p className="text-sm">No Wallets Found</p>
               {searchValue && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Your search for {`"${searchValue}"`} did not match any wallets
                 </p>
               )}
@@ -76,7 +76,7 @@ function WalletRow(props: {
   address: string;
 }) {
   return (
-    <div className="flex gap-2 items-center justify-between">
+    <div className="flex items-center justify-between gap-2">
       {/* start */}
       <WalletAddress
         address={props.address}

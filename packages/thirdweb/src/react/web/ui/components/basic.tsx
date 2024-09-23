@@ -57,7 +57,7 @@ export function ModalHeader(props: {
           }}
         />
       )}
-      <Container flex="row" gap="xs" center={"both"}>
+      <Container flex="row" gap="xs" center="both">
         {typeof title === "string" ? <ModalTitle>{title}</ModalTitle> : title}
       </Container>
     </div>

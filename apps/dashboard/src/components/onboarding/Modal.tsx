@@ -37,7 +37,7 @@ export const OnboardingModal: ComponentWithChildren<OnboardingModalProps> = ({
       blockScrollOnMount={false}
     >
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalBody p={8} as={Flex} gap={4} flexDir="column">
           <AspectRatio ratio={1} w="40px">
             <IconLogo />

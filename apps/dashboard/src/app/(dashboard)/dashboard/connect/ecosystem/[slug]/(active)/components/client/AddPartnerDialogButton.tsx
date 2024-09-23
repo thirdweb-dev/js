@@ -27,7 +27,7 @@ export function AddPartnerDialogButton(props: {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="mb-2">
-          <DialogTitle className="text-2xl font-semibold tracking-tight">
+          <DialogTitle className="font-semibold text-2xl tracking-tight">
             Add Partner
           </DialogTitle>
         </DialogHeader>

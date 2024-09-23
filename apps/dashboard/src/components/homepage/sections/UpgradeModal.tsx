@@ -81,7 +81,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
       </Flex>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent className="!bg-background border border-border rounded-lg">
+        <ModalContent className="!bg-background rounded-lg border border-border">
           <ModalHeader>
             <Heading size="title.md" mt={2}>
               Are you sure you want to upgrade to the Growth plan?

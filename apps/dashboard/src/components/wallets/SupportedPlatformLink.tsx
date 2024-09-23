@@ -25,7 +25,7 @@ export function SupportedPlatformLink(props: {
       href={props.href}
       target="_blank"
       className={cn(
-        "flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm",
+        "flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground",
         props.className,
       )}
     >

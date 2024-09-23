@@ -62,7 +62,7 @@ export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
 
   if (!dashboardAccount) {
     return (
-      <div className="flex items-center justify-center h-[500px]">
+      <div className="flex h-[500px] items-center justify-center">
         <Spinner className="size-10" />
       </div>
     );
@@ -238,7 +238,7 @@ export const InAppWalletSettingsUI: React.FC<
         <NativeAppsFieldset form={form} />
 
         <div className="flex justify-end">
-          <Button type="submit" variant={"primary"} className="gap-2">
+          <Button type="submit" variant="primary" className="gap-2">
             {props.isUpdating && <Spinner className="size-4" />}
             Save changes
           </Button>
@@ -295,7 +295,7 @@ function BrandingFieldset(props: {
                 <Input {...field} />
               </FormControl>
               <FormDescription>
-                Name that will be displayed in the emails sent to users.{" "}
+                Name that will be displayed in the emails sent to users.
                 <br className="max-sm:hidden" /> Defaults to your API Key's
                 name.
               </FormDescription>
@@ -315,7 +315,7 @@ function BrandingFieldset(props: {
                 <Input {...field} />
               </FormControl>
               <FormDescription>
-                Logo that will display in the emails sent to users.{" "}
+                Logo that will display in the emails sent to users.
                 <br className="max-sm:hidden" /> The image must be squared with
                 recommended size of 72x72 px.
               </FormDescription>
@@ -341,7 +341,7 @@ function JSONWebTokenFields(props: {
         title="Custom JSON Web Token"
         description={
           <>
-            Optionally allow users to authenticate with a custom JWT.{" "}
+            Optionally allow users to authenticate with a custom JWT.
             <TrackedLinkTW
               target="_blank"
               href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-jwt-auth-server"
@@ -436,7 +436,7 @@ function AuthEndpointFields(props: {
         description={
           <>
             Optionally allow users to authenticate with any arbitrary payload
-            that you provide.{" "}
+            that you provide.
             <TrackedLinkTW
               target="_blank"
               href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-auth-server"
@@ -495,7 +495,7 @@ function AuthEndpointFields(props: {
         />
 
         <div>
-          <Label className="inline-block mb-3">Custom Headers</Label>
+          <Label className="mb-3 inline-block">Custom Headers</Label>
           <div className="flex flex-col gap-4">
             {customHeaderFields.fields.map((field, customHeaderIdx) => {
               return (
@@ -522,7 +522,7 @@ function AuthEndpointFields(props: {
                     }}
                     className="!w-auto px-3"
                   >
-                    <Trash2Icon className="size-4 text-destructive-text shrink-0" />
+                    <Trash2Icon className="size-4 shrink-0 text-destructive-text" />
                   </Button>
                 </div>
               );
@@ -543,7 +543,7 @@ function AuthEndpointFields(props: {
             </Button>
           </div>
 
-          <p className="text-muted-foreground text-sm mt-3">
+          <p className="mt-3 text-muted-foreground text-sm">
             Set custom headers to be sent along the request with the payload to
             the authentication endpoint above. This can be used to verify the
             incoming requests
@@ -602,9 +602,9 @@ function Fieldset(props: {
 }) {
   return (
     <DynamicHeight>
-      <fieldset className="border p-4 md:p-6 border-border rounded-lg bg-muted/50">
+      <fieldset className="rounded-lg border border-border bg-muted/50 p-4 md:p-6">
         {/* put inside div to remove defualt styles on legend  */}
-        <div className="text-xl font-semibold tracking-tight mb-4">
+        <div className="mb-4 font-semibold text-xl tracking-tight">
           <legend> {props.legend}</legend>
         </div>
 
@@ -621,12 +621,12 @@ function SwitchContainer(props: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex justify-between items-center gap-6">
+    <div className="flex items-center justify-between gap-6">
       <div>
         <Label htmlFor={props.switchId} className="text-base">
           {props.title}
         </Label>
-        <p className="text-muted-foreground text-sm mt-0.5 ">
+        <p className="mt-0.5 text-muted-foreground text-sm ">
           {props.description}
         </p>
       </div>

@@ -113,7 +113,7 @@ const CodePlayground = ({
       <Aurora
         pos={{ left: "50%", top: "50%" }}
         size={{ width: "1500px", height: "1500px" }}
-        color={"hsl(280deg 78% 30% / 30%)"}
+        color="hsl(280deg 78% 30% / 30%)"
         zIndex={3}
       />
 
@@ -135,13 +135,13 @@ const CodePlayground = ({
           <Flex
             background="rgba(0,0,0,1)"
             boxShadow="0 0 1px 1px hsl(0deg 0% 100% / 15%)"
-            justify={"center"}
+            justify="center"
             transform={{ base: "translateY(20px)", md: "translateY(50%)" }}
             zIndex={100}
-            backdropFilter={"blur(10px)"}
-            borderRadius={"8px"}
+            backdropFilter="blur(10px)"
+            borderRadius="8px"
             padding="2px"
-            gap={"2px"}
+            gap="2px"
             flexWrap="wrap"
             w="100%"
             margin="0 auto"
@@ -296,13 +296,13 @@ const CodePlayground = ({
         <Flex
           background="rgba(0,0,0,0.6)"
           boxShadow="0 0 1px 1px hsl(0deg 0% 100% / 15%)"
-          justify={"center"}
+          justify="center"
           margin="0 auto"
           transform={{ base: "translateY(20px)", lg: "translateY(50%)" }}
           zIndex={100}
-          backdropFilter={"blur(10px)"}
-          borderRadius={"8px"}
-          gap={"2px"}
+          backdropFilter="blur(10px)"
+          borderRadius="8px"
+          gap="2px"
           flexWrap="wrap"
           maxW={{ base: "calc(100% - 40px)", sm: "calc(100% - 60px)" }}
         >

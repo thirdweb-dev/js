@@ -342,7 +342,7 @@ const EnginePricing = ({ isMobile }: { isMobile: boolean }) => {
   return (
     <Flex flexDir="column" gap={4}>
       <Text>
-        Host Engine on thirdweb with no setup or maintenance required.{" "}
+        Host Engine on thirdweb with no setup or maintenance required.
         <TrackedLink
           href="https://portal.thirdweb.com/engine"
           isExternal
@@ -404,12 +404,12 @@ const EnginePricing = ({ isMobile }: { isMobile: boolean }) => {
 
 const EcosystemPricing = () => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
-      <h3 className="font-medium text-3xl col-span-1 lg:col-span-2 row-start-1 flex lg:hidden order-1">
+    <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <h3 className="order-1 col-span-1 row-start-1 flex font-medium text-3xl lg:col-span-2 lg:hidden">
         Ecosystem Wallets
       </h3>
-      <div className="col-span-1 lg:col-span-2 flex flex-col gap-4 order-3 lg:order-2">
-        <h3 className="font-medium text-3xl col-span-1 lg:col-span-2 row-start-1 hidden lg:flex">
+      <div className="order-3 col-span-1 flex flex-col gap-4 lg:order-2 lg:col-span-2">
+        <h3 className="col-span-1 row-start-1 hidden font-medium text-3xl lg:col-span-2 lg:flex">
           Ecosystem Wallets
         </h3>
         <p>
@@ -435,12 +435,12 @@ const EcosystemPricing = () => {
               target="_blank"
             >
               <span>Learn More</span>
-              <ArrowRightIcon className="size-4 opacity-50 -rotate-45" />
+              <ArrowRightIcon className="-rotate-45 size-4 opacity-50" />
             </NextLink>
           </Button>
         </div>
       </div>
-      <EcosystemWalletPricingCard className="col-span-1 order-2 lg:order-3" />
+      <EcosystemWalletPricingCard className="order-2 col-span-1 lg:order-3" />
     </div>
   );
 };

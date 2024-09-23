@@ -36,7 +36,7 @@ export const Mobile: Story = {
 
 function Component() {
   return (
-    <div className="flex flex-col gap-6 lg:max-w-[1000px] lg:mx-auto min-w-0 py-6 px-4">
+    <div className="flex min-w-0 flex-col gap-6 px-4 py-6 lg:mx-auto lg:max-w-[1000px]">
       <BadgeContainer label="Normal">
         <TableDemo />
       </BadgeContainer>

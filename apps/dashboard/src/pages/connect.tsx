@@ -234,7 +234,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
             </Text>
 
             {/* Supported platforms */}
-            <Flex alignItems="center" gap={2} justifyContent={"center"}>
+            <Flex alignItems="center" gap={2} justifyContent="center">
               <Text
                 mr={2}
                 display={["none", "block"]}
@@ -249,7 +249,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
                   trackingCategory={TRACKING_CATEGORY}
                   platform={platform}
                   href={href}
-                  className="text-foreground hover:text-link-foreground bg-background px-3 py-2 rounded-lg text-xs border border-border hover:border-link-foreground"
+                  className="rounded-lg border border-border bg-background px-3 py-2 text-foreground text-xs hover:border-link-foreground hover:text-link-foreground"
                 />
               ))}
             </Flex>

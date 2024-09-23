@@ -4,7 +4,7 @@ import { Heading } from "tw-components";
 
 const DesireSection = () => {
   return (
-    <div className="w-full flex flex-col xl:flex-row items-center xl:items-start gap-[60px]">
+    <div className="flex w-full flex-col items-center gap-[60px] xl:flex-row xl:items-start">
       <Heading
         size="title.lg"
         fontWeight="semibold"
@@ -13,7 +13,7 @@ const DesireSection = () => {
       >
         thirdweb will...
       </Heading>
-      <div className="max-w-[96rem] flex flex-row">
+      <div className="flex max-w-[96rem] flex-row">
         <LandingGridSection desktopColumns={2}>
           <LandingIconSectionItem
             shouldShowNoBorder

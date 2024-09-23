@@ -19,7 +19,7 @@ export function EngineDeleteAlertModal(props: {
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent className="p-0">
         <DialogHeader className="mb-4 p-6">
-          <DialogTitle className="text-2xl font-semibold tracking-tight">
+          <DialogTitle className="font-semibold text-2xl tracking-tight">
             Delete Alert
           </DialogTitle>
 
@@ -28,7 +28,7 @@ export function EngineDeleteAlertModal(props: {
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className="p-6 bg-muted/50 border-t border-border gap-4 lg:gap-2">
+        <DialogFooter className="gap-4 border-border border-t bg-muted/50 p-6 lg:gap-2">
           <Button
             variant="outline"
             onClick={() => {

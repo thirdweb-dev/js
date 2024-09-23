@@ -99,7 +99,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   return (
     <article
       className={cn(
-        "min-h-[220px] p-4 border border-border relative rounded-lg flex flex-col",
+        "relative flex min-h-[220px] flex-col rounded-lg border border-border p-4",
         !showSkeleton ? "bg-muted/50 hover:bg-muted" : "pointer-events-none",
       )}
     >
@@ -130,7 +130,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
             <>
               <Link
                 target="_blank"
-                className="text-success-text flex items-center gap-1 text-sm z-1 hover:underline font-medium relative"
+                className="relative z-1 flex items-center gap-1 font-medium text-sm text-success-text hover:underline"
                 href={resolveScheme({
                   uri: publishedContractResult.data.audit,
                   client,
@@ -139,17 +139,17 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                 <ShieldCheckIcon className="size-4" />
                 Audited
               </Link>
-              <div className="size-1 bg-muted-foreground/50 rounded-full" />
+              <div className="size-1 rounded-full bg-muted-foreground/50" />
             </>
           )}
 
           {/* Version */}
           <SkeletonContainer
-            skeletonData={"0.0.0"}
+            skeletonData="0.0.0"
             loadedData={publishedContractResult.data?.version}
             render={(v) => {
               return (
-                <p className="text-muted-foreground text-sm font-medium">
+                <p className="font-medium text-muted-foreground text-sm">
                   v{v}
                 </p>
               );
@@ -159,7 +159,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
 
         {/* Tags */}
         {isBeta ? (
-          <Badge className="border-[#a21caf] dark:border-[#86198f] text-white  dark:bg-[linear-gradient(154deg,#4a044e,#2e1065)] bg-[linear-gradient(154deg,#d946ef,#9333ea)] py-[3px] px-[8px]">
+          <Badge className="border-[#a21caf] bg-[linear-gradient(154deg,#d946ef,#9333ea)] px-[8px] py-[3px] text-white dark:border-[#86198f] dark:bg-[linear-gradient(154deg,#4a044e,#2e1065)]">
             Beta
           </Badge>
         ) : null}
@@ -177,7 +177,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
         }
         render={(v) => {
           return (
-            <h3 className="text-lg font-semibold tracking-tight">
+            <h3 className="font-semibold text-lg tracking-tight">
               {v.replace("[Beta]", "")}
             </h3>
           );
@@ -185,7 +185,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
       />
 
       {publishedContractResult.data ? (
-        <p className="text-sm text-muted-foreground leading-5 mt-1">
+        <p className="mt-1 text-muted-foreground text-sm leading-5">
           {descriptionOverride || publishedContractResult.data?.description}
         </p>
       ) : (
@@ -196,7 +196,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
         </div>
       )}
       {modules.length ? (
-        <div className="mt-auto pt-3 flex flex-row gap-1 flex-wrap">
+        <div className="mt-auto flex flex-row flex-wrap gap-1 pt-3">
           {modules.slice(0, 2).map((m) => (
             <Badge variant="outline" key={m.publisher + m.moduleId + m.version}>
               {m.moduleId.split("ERC")[0]}
@@ -209,7 +209,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
       ) : null}
       <div
         className={cn(
-          "pt-3 relative z-1 flex gap-2 justify-between",
+          "relative z-1 flex justify-between gap-2 pt-3",
           !modules?.length && "mt-auto",
         )}
       >
@@ -218,11 +218,11 @@ export const ContractCard: React.FC<ContractCardProps> = ({
           showSkeleton={showSkeleton}
         />
 
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <Button
             variant="primary"
             size="sm"
-            className="gap-1.5 py-1.5 px-2.5 text-xs h-auto relative z-10"
+            className="relative z-10 h-auto gap-1.5 px-2.5 py-1.5 text-xs"
             asChild
           >
             <Link

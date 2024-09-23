@@ -16,21 +16,21 @@ interface ChangelogProps {
 
 export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
   return (
-    <div className="border-l border-border py-2 flex flex-col gap-6 relative">
+    <div className="relative flex flex-col gap-6 border-border border-l py-2">
       {changelog.map((item) => (
         <div className="flex flex-row gap-4" key={item.title}>
-          <div className="size-2.5 bg-border rounded-full shrink-0 -translate-x-1/2 translate-y-1/2" />
+          <div className="-translate-x-1/2 size-2.5 shrink-0 translate-y-1/2 rounded-full bg-border" />
 
           <div className="flex flex-col">
             <Link
               isExternal
               href={`${item.url}?utm_source=thirdweb&utm_campaign=changelog`}
               role="group"
-              className="line-clamp-2 !text-muted-foreground hover:!text-foreground text-sm hover:!no-underline"
+              className="!text-muted-foreground hover:!text-foreground hover:!no-underline line-clamp-2 text-sm"
             >
               {item.title}
             </Link>
-            <div className="text-muted-foreground opacity-70 text-xs mt-1">
+            <div className="mt-1 text-muted-foreground text-xs opacity-70">
               <ClientOnly ssr={<Skeleton className="h-2" />}>
                 {formatDistance(new Date(item.published_at), Date.now(), {
                   addSuffix: true,

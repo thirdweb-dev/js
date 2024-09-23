@@ -1,5 +1,6 @@
 import { AwsClient } from "aws4fetch";
-import { type UsageEvent, usageEventSchema } from "../core/usage";
+import { type UsageEvent, usageEventSchema } from "../core/usage.js";
+export { type UsageEvent } from "../core/usage.js";
 
 // Initialize a singleton for AWS usage.
 let _aws: AwsClient | undefined;
@@ -67,4 +68,4 @@ async function publishUsageEvents(
   });
 }
 
-export { publishUsageEvents, type UsageEvent };
+export { publishUsageEvents };

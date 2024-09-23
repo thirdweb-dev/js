@@ -93,15 +93,15 @@ export function WalletConnectorsChartCard(props: {
   const disableActions = props.isPending || chartData.length === 0;
 
   return (
-    <div className="bg-muted/50 border border-border rounded-lg p-4 md:p-6 relative w-full">
-      <h3 className="text-xl md:text-2xl font-semibold tracking-tight mb-1">
+    <div className="relative w-full rounded-lg border border-border bg-muted/50 p-4 md:p-6">
+      <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
         Connected Wallets
       </h3>
-      <p className="text-muted-foreground mb-3 text-sm">
+      <p className="mb-3 text-muted-foreground text-sm">
         The different types of wallets used to connect to your app each day.
       </p>
 
-      <div className="md:absolute top-6 right-6 mb-4 md:mb-0 md:flex items-center gap-2 grid grid-cols-2">
+      <div className="top-6 right-6 mb-4 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
         <Select
           onValueChange={(v) => {
             setChartToShow(v as ChartToShow);
@@ -141,7 +141,7 @@ export function WalletConnectorsChartCard(props: {
       </div>
 
       {/* Chart */}
-      <ChartContainer config={chartConfig} className="w-full h-[400px]">
+      <ChartContainer config={chartConfig} className="h-[400px] w-full">
         {props.isPending ? (
           <LoadingChartState />
         ) : chartData.length === 0 ? (

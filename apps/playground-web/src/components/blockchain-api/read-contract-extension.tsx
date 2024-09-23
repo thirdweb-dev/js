@@ -23,7 +23,7 @@ export function ReadContractExtensionPreview() {
       <MediaRenderer
         client={THIRDWEB_CLIENT}
         src={data?.metadata.image}
-        className="shadow-gray-100 rounded-2xl"
+        className="rounded-2xl shadow-gray-100"
         gatewayUrl="https://ipfs.io/ipfs/"
       />
     </div>

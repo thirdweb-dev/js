@@ -11,13 +11,13 @@ export function RenderCode(props: {
   return (
     <div
       className={cn(
-        "relative max-w-full border group rounded-xl bg-code",
+        "group relative max-w-full rounded-xl border bg-code",
         props.className,
       )}
     >
       <ScrollShadow
         scrollableClassName={cn("p-4 lg:p-6", props.scrollableClassName)}
-        className={"text-xs md:text-sm [&_*]:leading-relaxed"}
+        className="text-xs md:text-sm [&_*]:leading-relaxed"
         shadowColor="hsl(var(--code))"
       >
         <div
@@ -28,7 +28,7 @@ export function RenderCode(props: {
       <CopyButton
         text={props.code}
         iconClassName="size-3"
-        className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 z-10 p-2 border transition-opacity duration-300 bg-code"
+        className="absolute top-4 right-4 z-10 border bg-code p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       />
     </div>
   );

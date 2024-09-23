@@ -31,8 +31,7 @@ export function CustomRadioGroup<T extends string>(props: {
           >
             <RadioGroupItem value={option.value} id={option.value} />
             <Label htmlFor={option.value} className="cursor-pointer">
-              {" "}
-              {option.label}{" "}
+              {option.label}
             </Label>
           </div>
         );

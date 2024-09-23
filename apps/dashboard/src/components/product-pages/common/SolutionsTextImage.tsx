@@ -13,7 +13,7 @@ export const SolutionsTextImage: ComponentWithChildren<
 > = ({ image, title, children }) => {
   return (
     <ProductSection>
-      <div className="flex flex-col md:flex-row gap-12 items-center py-6 md:py-12">
+      <div className="flex flex-col items-center gap-12 py-6 md:flex-row md:py-12">
         <ChakraNextImage
           maxW={{ base: "100%", md: "50%" }}
           objectFit="contain"

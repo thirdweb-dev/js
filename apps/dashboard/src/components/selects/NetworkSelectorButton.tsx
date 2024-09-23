@@ -142,7 +142,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
       <Button
         variant="outline"
         disabled={isDisabled || !wallet}
-        className="w-full text-left justify-start gap-2"
+        className="w-full justify-start gap-2 text-left"
         onClick={() => {
           networkSwitcherModal.open({
             theme: getSDKTheme(theme === "light" ? "light" : "dark"),

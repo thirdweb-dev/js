@@ -36,7 +36,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
             </Heading>
           </Flex>
           <Text>
-            Upgrade to a{" "}
+            Upgrade to a
             <TrackedLink
               href="/dashboard/engine/create"
               isExternal
@@ -45,7 +45,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
               label="metrics-cloud-hosted-upsell"
             >
               Cloud-Hosted Engine managed by thirdweb
-            </TrackedLink>{" "}
+            </TrackedLink>
             to view these metrics.
           </Text>
         </Stack>
@@ -60,7 +60,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
             <Heading size="title.md">System Metrics</Heading>
           </Flex>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 gap-4">
+          <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Healthcheck instance={instance} />
           </div>
           <StatusCodes datapoints={systemMetricsQuery.data.data.statusCodes} />
@@ -71,7 +71,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
   }
 
   let queueMetricsPanel = (
-    <div className="border border-border rounded-lg min-h-[200px] flex items-center justify-center">
+    <div className="flex min-h-[200px] items-center justify-center rounded-lg border border-border">
       <Spinner className="size-6" />
     </div>
   );
@@ -81,7 +81,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
     (!queueMetricsQuery.data || queueMetricsQuery.isError)
   ) {
     queueMetricsPanel = (
-      <div className="border border-border rounded-lg min-h-[200px] flex items-center justify-center">
+      <div className="flex min-h-[200px] items-center justify-center rounded-lg border border-border">
         No Data Available
       </div>
     );
@@ -98,7 +98,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
             <Heading size="title.md">Queue Metrics</Heading>
           </Flex>
 
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-12">
+          <div className="flex flex-col gap-6 lg:flex-row lg:gap-12">
             <div className="flex-col gap-y-4">
               <h2 className="font-semibold"> Queued</h2>
               <p className="text-muted-foreground">{numQueued}</p>
@@ -112,7 +112,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
               <div className="flex-col gap-y-4">
                 <h2 className="font-semibold">Time to send</h2>
                 <p className="text-muted-foreground">
-                  p50 {(msToSend.p50 / 1000).toFixed(2)}s, p90{" "}
+                  p50 {(msToSend.p50 / 1000).toFixed(2)}s, p90
                   {(msToSend.p90 / 1000).toFixed(2)}s
                 </p>
               </div>
@@ -121,7 +121,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
               <div className="flex-col gap-y-4">
                 <h2 className="font-semibold">Time to mine</h2>
                 <p className="text-muted-foreground">
-                  p50 {(msToMine.p50 / 1000).toFixed(2)}s, p90{" "}
+                  p50 {(msToMine.p50 / 1000).toFixed(2)}s, p90
                   {(msToMine.p90 / 1000).toFixed(2)}s
                 </p>
               </div>

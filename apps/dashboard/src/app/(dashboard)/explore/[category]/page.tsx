@@ -52,7 +52,7 @@ export default async function ExploreCategoryPage(
 
   return (
     <div className="flex flex-col">
-      <Breadcrumb className="py-4 px-6 border-b border-border">
+      <Breadcrumb className="border-border border-b px-6 py-4">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
@@ -67,18 +67,18 @@ export default async function ExploreCategoryPage(
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="container py-8 flex flex-col gap-4">
-        <h1 className="mb-3 text-3xl lg:text-5xl font-bold tracking-tighter">
+      <div className="container flex flex-col gap-4 py-8">
+        <h1 className="mb-3 font-bold text-3xl tracking-tighter lg:text-5xl">
           {category.displayName || category.name}
         </h1>
-        <p className="text-base lg:text-lg text-muted-foreground max-w-screen-md">
-          {category.description}{" "}
+        <p className="max-w-screen-md text-base text-muted-foreground lg:text-lg">
+          {category.description}
           {category.learnMore && (
             <Link href={category.learnMore}>Learn more</Link>
           )}
         </p>
         <div className="h-10" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           {category.contracts.map((publishedContractId, idx) => {
             const publisher: string = Array.isArray(publishedContractId)
               ? publishedContractId[0].split("/")[0]

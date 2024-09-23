@@ -12,7 +12,7 @@ export function BuyMerchPreview() {
       <div className="h-10" />
       <PayEmbed
         client={THIRDWEB_CLIENT}
-        theme={"light"}
+        theme="light"
         payOptions={{
           mode: "direct_payment",
           paymentInfo: {

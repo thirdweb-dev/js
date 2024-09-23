@@ -93,7 +93,7 @@ const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
 
         <PricingCard
           size="sm"
-          ctaTitle={"Claim your 1-month free"}
+          ctaTitle="Claim your 1-month free"
           name={AccountPlan.Growth}
           ctaHint="Your free trial will end after 30 days."
           canTrialGrowth={true}

@@ -59,7 +59,7 @@ export function ConnectedButton(
                 fontSize: fontSize.sm,
               }}
             >
-              {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
+              {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}
               {balanceQuery.data?.symbol}
             </ThemedText>
           ) : (

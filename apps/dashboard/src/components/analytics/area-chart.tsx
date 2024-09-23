@@ -139,7 +139,7 @@ const AreaChart = <
                     })
                   : payload
             }
-            className="text-xs font-sans"
+            className="font-sans text-xs"
             stroke="hsl(var(--muted-foreground))"
             tickLine={false}
             axisLine={{ stroke: "hsl(var(--border))" }}
@@ -164,7 +164,7 @@ const AreaChart = <
                 ? category.format(payload)
                 : payload.toString();
             }}
-            className="text-xs font-sans"
+            className="font-sans text-xs"
             domain={([dataMin, dataMax]) => [
               // start from 0 unless dataMin is below 0 in which case start from dataMin - 10%
               Math.min(0, dataMin - Math.round(dataMin * 0.1)),
@@ -217,7 +217,7 @@ export const AreaChartLoadingState = (props: { height?: string }) => {
         height: props.height,
       }}
     >
-      <div className="flex items-center justify-center filter backdrop-blur-sm z-10 absolute inset-0">
+      <div className="absolute inset-0 z-10 flex items-center justify-center filter backdrop-blur-sm">
         <p className="text-muted-foreground">Loading Chart</p>
       </div>
       <AreaChart

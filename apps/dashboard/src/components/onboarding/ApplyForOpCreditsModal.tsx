@@ -152,7 +152,7 @@ export const ApplyForOpCreditsModal: React.FC = () => {
                     <AlertDescription as={Text}>
                       You need to add a payment method to be able to claim
                       credits. This is to prevent abuse, you will not be
-                      charged.{" "}
+                      charged.
                       <Text
                         as="span"
                         onClick={() => {

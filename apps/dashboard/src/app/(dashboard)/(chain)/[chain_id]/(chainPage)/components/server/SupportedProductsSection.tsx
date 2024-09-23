@@ -20,27 +20,26 @@ export function SupportedProductsSection(props: {
   return (
     <section>
       <SectionTitle title="thirdweb Products" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {enabledProducts.map((product) => {
           return (
             <div
               key={product.id}
-              className="border rounded-lg p-4 flex gap-3 relative hover:bg-muted bg-muted/50 transition-colors duration-300 pr-8"
+              className="relative flex gap-3 rounded-lg border bg-muted/50 p-4 pr-8 transition-colors duration-300 hover:bg-muted"
             >
-              <CircleCheckIcon className="size-5 text-success-text absolute top-4 right-4" />
-              <product.icon className="size-5 shrink-0 mt-0.5" />
+              <CircleCheckIcon className="absolute top-4 right-4 size-5 text-success-text" />
+              <product.icon className="mt-0.5 size-5 shrink-0" />
               <div>
-                <h3 className="font-medium mb-1.5">
+                <h3 className="mb-1.5 font-medium">
                   <Link
                     href={product.link}
                     className="before:absolute before:inset-0"
                     target="_blank"
                   >
-                    {" "}
-                    {product.name}{" "}
+                    {product.name}
                   </Link>
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {product.description}
                 </p>
               </div>

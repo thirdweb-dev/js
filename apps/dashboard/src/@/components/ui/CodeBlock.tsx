@@ -20,12 +20,12 @@ export const CodeBlock = ({
       {({ className, tokens, getLineProps, getTokenProps }) => (
         <Card className={className}>
           {canCopy && (
-            <CopyButton text={code} className="float-right p-2 m-2" />
+            <CopyButton text={code} className="float-right m-2 p-2" />
           )}
 
           <div
             className={cn(
-              "block font-mono text-sm whitespace-pre-wrap p-4 overflow-auto",
+              "block overflow-auto whitespace-pre-wrap p-4 font-mono text-sm",
               className,
             )}
           >

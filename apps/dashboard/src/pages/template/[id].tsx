@@ -32,7 +32,7 @@ const CodeBlock: React.FC<{ text: string }> = (props) => {
       py={3}
       px={4}
       my={4}
-      minW={"300px"}
+      minW="300px"
       gap={1}
       align="center"
       alignSelf="start"
@@ -97,31 +97,33 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
   {
     erc721: (
       <TemplateContents
-        overview=<Text
-          fontWeight={400}
-          fontSize={16}
-          lineHeight={1.5}
-          opacity={0.7}
-          color="whiteAlpha.900"
-        >
-          A web and mobile friendly page for users to claim NFTs from a smart
-          contract implementing{" "}
-          <Link
-            href="https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Claimable"
-            isExternal
-            color="blue.300"
+        overview={
+          <Text
+            fontWeight={400}
+            fontSize={16}
+            lineHeight={1.5}
+            opacity={0.7}
+            color="whiteAlpha.900"
           >
-            ERC721Claimable
-          </Link>
-          , such as the{" "}
-          <Link href="/thirdweb.eth/DropERC721" isExternal color="blue.300">
-            NFT Drop
-          </Link>
-          .
-        </Text>
+            A web and mobile friendly page for users to claim NFTs from a smart
+            contract implementing
+            <Link
+              href="https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Claimable"
+              isExternal
+              color="blue.300"
+            >
+              ERC721Claimable
+            </Link>
+            , such as the
+            <Link href="/thirdweb.eth/DropERC721" isExternal color="blue.300">
+              NFT Drop
+            </Link>
+            .
+          </Text>
+        }
         featurePoints={[
           <Fragment key="react">
-            Built with our{" "}
+            Built with our
             <Link
               fontWeight="500"
               isExternal
@@ -134,7 +136,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
           </Fragment>,
           "Uses Vite, TypeScript, and Tailwind.",
           <Fragment key="nft-renderer">
-            Render NFT metadata with the{" "}
+            Render NFT metadata with the
             <Link
               fontWeight="500"
               isExternal
@@ -142,11 +144,11 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               color="blue.300"
             >
               NFT Renderer
-            </Link>{" "}
+            </Link>
             UI Component.
           </Fragment>,
           <Fragment key="connect-wallet">
-            Configure wallet options with the{" "}
+            Configure wallet options with the
             <Link
               fontWeight="500"
               isExternal
@@ -154,11 +156,11 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               color="blue.300"
             >
               Connect Wallet Button
-            </Link>{" "}
+            </Link>
             UI Component.
           </Fragment>,
           <Fragment key="contract-metadata">
-            View{" "}
+            View
             <Link
               fontWeight="500"
               isExternal
@@ -166,11 +168,11 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               color="blue.300"
             >
               contract metadata
-            </Link>{" "}
+            </Link>
             such as the name, remaining & total supply, description, etc.
           </Fragment>,
           <Fragment key="claim-phases">
-            Claim NFTs from the smart contract under the criteria of{" "}
+            Claim NFTs from the smart contract under the criteria of
             <Link
               fontWeight="500"
               isExternal
@@ -185,7 +187,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
         ]}
         runningLocally={
           <div>
-            Deploy a new{" "}
+            Deploy a new
             <Link
               href="/thirdweb.eth/DropERC721"
               isExternal
@@ -193,8 +195,8 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               fontWeight="500"
             >
               NFT Drop
-            </Link>{" "}
-            or import your existing one using the{" "}
+            </Link>
+            or import your existing one using the
             <Link
               href="/dashboard"
               isExternal
@@ -206,7 +208,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             .
             <br />
             <br />
-            Configure your smart contract address and chain name in the{" "}
+            Configure your smart contract address and chain name in the
             <Link
               href="https://github.com/thirdweb-example/nft-drop/blob/main/src/consts/parameters.ts"
               isExternal
@@ -214,13 +216,13 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               fontWeight="500"
             >
               consts/parameters.ts
-            </Link>{" "}
+            </Link>
             file.
             <br />
             <br />
             Run the application from the command line:
-            <CodeBlock text={"npm run dev"} />
-            This will make the application available to preview at{" "}
+            <CodeBlock text="npm run dev" />
+            This will make the application available to preview at
             <Link
               href="http://localhost:3000"
               isExternal
@@ -236,20 +238,22 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
     ),
     "marketplace-v3": (
       <TemplateContents
-        overview=<Text
-          fontWeight={400}
-          fontSize={16}
-          lineHeight={1.5}
-          opacity={0.7}
-          color="whiteAlpha.900"
-        >
-          Create your own NFT marketplace where users can buy and sell NFTs from
-          your NFT collection. This template provides the foundation for
-          building an NFT marketplace application.
-        </Text>
+        overview={
+          <Text
+            fontWeight={400}
+            fontSize={16}
+            lineHeight={1.5}
+            opacity={0.7}
+            color="whiteAlpha.900"
+          >
+            Create your own NFT marketplace where users can buy and sell NFTs
+            from your NFT collection. This template provides the foundation for
+            building an NFT marketplace application.
+          </Text>
+        }
         featurePoints={[
           <Fragment key="react-sdk">
-            Built with our{" "}
+            Built with our
             <Link
               fontWeight="500"
               isExternal
@@ -262,7 +266,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
           </Fragment>,
           "Uses Next.js, TypeScript, and CSS Modules.",
           <Fragment key="ui-components">
-            Display all NFTs from your collection using the{" "}
+            Display all NFTs from your collection using the
             <Link
               fontWeight="500"
               isExternal
@@ -270,7 +274,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               color="blue.300"
             >
               NFT Media Renderer
-            </Link>{" "}
+            </Link>
             UI component.
           </Fragment>,
           "Allow users to buy, sell and make offers on NFTs in your collection.",
@@ -280,7 +284,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
         ]}
         runningLocally={
           <div>
-            Deploy a new{" "}
+            Deploy a new
             <Link
               href="/thirdweb.eth/MarketplaceV3"
               isExternal
@@ -288,8 +292,8 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               fontWeight="500"
             >
               Marketplace V3
-            </Link>{" "}
-            smart contract using the{" "}
+            </Link>
+            smart contract using the
             <Link
               href="/dashboard"
               isExternal
@@ -301,7 +305,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             .
             <br />
             <br />
-            Configure your smart contract address and chain name in the{" "}
+            Configure your smart contract address and chain name in the
             <Link
               href="https://github.com/thirdweb-example/marketplace-v3/blob/main/const/contractAddresses.ts"
               isExternal
@@ -309,13 +313,13 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               fontWeight="500"
             >
               const/contractAddresses.ts
-            </Link>{" "}
+            </Link>
             file.
             <br />
             <br />
             Run the application from the command line:
-            <CodeBlock text={"npm run dev"} />
-            This will make the application available to preview at{" "}
+            <CodeBlock text="npm run dev" />
+            This will make the application available to preview at
             <Link
               href="http://localhost:3000"
               isExternal
@@ -345,7 +349,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
         }
         featurePoints={[
           <Fragment key="react-sdk">
-            Built with our{" "}
+            Built with our
             <Link
               fontWeight="500"
               isExternal
@@ -359,7 +363,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
           "Uses Vite, TypeScript, and Tailwind.",
           "Compatible with both ERC721 and ERC1155 NFT collections.",
           <Fragment key="nft-media-renderer">
-            Display all NFTs from your collection using the{" "}
+            Display all NFTs from your collection using the
             <Link
               fontWeight="500"
               isExternal
@@ -367,7 +371,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               color="blue.300"
             >
               NFT Media Renderer
-            </Link>{" "}
+            </Link>
             UI component.
           </Fragment>,
           "Search for NFTs by token ID, or paginate through all NFTs.",
@@ -375,7 +379,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
         ]}
         runningLocally={
           <div>
-            Deploy a new{" "}
+            Deploy a new
             <Link
               href="/thirdweb.eth/TokenERC721"
               isExternal
@@ -383,8 +387,8 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               fontWeight="500"
             >
               NFT collection
-            </Link>{" "}
-            or import your existing one using the{" "}
+            </Link>
+            or import your existing one using the
             <Link
               href="/dashboard"
               isExternal
@@ -396,7 +400,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             .
             <br />
             <br />
-            Set your smart contract address and chain name in the{" "}
+            Set your smart contract address and chain name in the
             <Link
               href="https://github.com/thirdweb-example/nft-gallery/blob/main/src/consts/parameters.ts"
               isExternal
@@ -404,13 +408,13 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               fontWeight="500"
             >
               consts/parameters.ts
-            </Link>{" "}
+            </Link>
             file.
             <br />
             <br />
             Run the application from the command line:
-            <CodeBlock text={"npm run dev"} />
-            This will make the application available to preview at{" "}
+            <CodeBlock text="npm run dev" />
+            This will make the application available to preview at
             <Link
               href="http://localhost:3000"
               isExternal
@@ -506,9 +510,9 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
                 borderRadius="8px"
                 height="26px"
                 padding="6px 12px"
-                display={"flex"}
-                alignItems={"center"}
-                justifyContent={"center"}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
                 mt={1}
               >
                 <Text
@@ -560,7 +564,7 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
 
           <Flex mt={8}>
             <ProductButton
-              title={"View Demo"}
+              title="View Demo"
               href={props.template.homepage}
               color="blackAlpha.900"
               bg="white"
@@ -576,7 +580,7 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
               variant="outline"
               borderWidth="2px"
               w="full"
-              py={"22px"}
+              py="22px"
               textAlign="center"
               borderRadius="md"
               href={props.template.repo}
@@ -601,7 +605,7 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
           }}
           pl={{ base: 0, md: 16 }}
           minHeight="75vh"
-          height={"100%"}
+          height="100%"
         >
           <Image
             src={props.template.img}

@@ -58,8 +58,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFT prebuilt component", () => {
       }
       return (
         <div>
-          Contract: {String(context.contract)}, Token ID:{" "}
-          {context.tokenId.toString()}
+          Contract: {String(context.contract.address)}
+          Token ID: {context.tokenId.toString()}
         </div>
       );
     }

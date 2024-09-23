@@ -31,7 +31,7 @@ const ImageUpload = React.forwardRef<HTMLInputElement, ImageUploadProps>(
         <div
           {...getRootProps()}
           className={cn(
-            "border bg-card relative group cursor-pointer hover:border-primary flex-col gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 overflow-hidden transition-all rounded-md flex items-center justify-center p-4 py-6 text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+            "group relative flex cursor-pointer flex-col items-center justify-center gap-1.5 overflow-hidden rounded-md border bg-card p-4 py-6 text-muted-foreground transition-all hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
             isDragActive ? "border-primary" : "border-input",
             !activeFile ? "w-full" : "min-h-32 min-w-32",
             className,
@@ -47,8 +47,8 @@ const ImageUpload = React.forwardRef<HTMLInputElement, ImageUploadProps>(
             />
           ) : (
             <>
-              <UploadIcon className="w-5 h-5 transition-all group-hover:scale-110" />
-              <p className="text-xs text-center">
+              <UploadIcon className="h-5 w-5 transition-all group-hover:scale-110" />
+              <p className="text-center text-xs">
                 Drag and drop a file or click to upload
               </p>
             </>

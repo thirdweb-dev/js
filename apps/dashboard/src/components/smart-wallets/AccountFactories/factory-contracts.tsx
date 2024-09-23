@@ -60,7 +60,7 @@ function NetworkName(props: { id: number }) {
     <SkeletonContainer
       className="inline-block"
       loadedData={chainQuery.data?.name}
-      skeletonData={"Ethereum Mainnet"}
+      skeletonData="Ethereum Mainnet"
       render={(v) => {
         return <p className="text-muted-foreground text-sm">{v}</p>;
       }}

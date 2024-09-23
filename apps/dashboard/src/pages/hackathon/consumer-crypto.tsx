@@ -157,11 +157,7 @@ const Hackathon = () => {
         </HomepageSection>
         <Divider mt={16} />
 
-        <Flex
-          flexDir={"column"}
-          gap={{ base: 100, md: 180 }}
-          overflowX="hidden"
-        >
+        <Flex flexDir="column" gap={{ base: 100, md: 180 }} overflowX="hidden">
           <Reason />
 
           <HomepageSection>
@@ -225,7 +221,7 @@ const Hackathon = () => {
                 </Text>
                 <Text size="body.xl" color="white">
                   Participants will be able to submit their project to the form
-                  in the hackathon landing page before the deadline, on{" "}
+                  in the hackathon landing page before the deadline, on
                   <b>February 18th at 9:00am PST</b>.
                 </Text>
               </Flex>
@@ -237,10 +233,10 @@ const Hackathon = () => {
               flexDir="column"
               alignItems="center"
               gap={8}
-              position={"relative"}
+              position="relative"
             >
               <Box
-                pointerEvents={"none"}
+                pointerEvents="none"
                 width="100vw"
                 height={{ base: "800px", md: "1000px" }}
                 position="absolute"
@@ -248,9 +244,7 @@ const Hackathon = () => {
                 top="55%"
                 left="50%"
                 transform="translate(-50%, -50%)"
-                backgroundImage={
-                  "radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
-                }
+                backgroundImage="radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
               />
               <Heading size="title.2xl" textStyle="center">
                 Judging Criteria

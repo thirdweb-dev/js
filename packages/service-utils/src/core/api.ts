@@ -1,4 +1,4 @@
-import type { ServiceName } from "./services";
+import type { ServiceName } from "./services.js";
 
 export type UserOpData = {
   sender: string;

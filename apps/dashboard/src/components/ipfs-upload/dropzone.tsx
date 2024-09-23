@@ -400,14 +400,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
           p={{ base: 2, md: 2 }}
           pt={2}
           bg="bgWhite"
-          justifyContent={"space-between"}
+          justifyContent="space-between"
         >
           {/* If user is uploading just one file,
           we allow them to choose if they want to upload without a folder */}
           {files.length === 1 &&
             !storageUpload.isPending &&
             ipfsHashes.length === 0 && (
-              <Flex direction={"row"} gap={"2"}>
+              <Flex direction="row" gap="2">
                 <Checkbox
                   id="dropzone_uploadWithoutDirectory"
                   defaultChecked={uploadToAFolder}

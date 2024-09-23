@@ -68,10 +68,10 @@ const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
         heading="Linking Wallets"
         description={
           <>
-            We&apos;ve noticed that there is another account associated with{" "}
-            <strong>{email}</strong>. Would you like to link your wallet{" "}
+            We&apos;ve noticed that there is another account associated with
+            <strong>{email}</strong>. Would you like to link your wallet
             <strong>{shortenString(user?.address ?? "")}</strong> to the
-            existing account? Once you agree, we will email you the details.{" "}
+            existing account? Once you agree, we will email you the details.
             <TrackedLink
               href="https://portal.thirdweb.com/account/billing/account-info"
               color="blue.500"
@@ -86,7 +86,7 @@ const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
         }
       />
       <form>
-        <div className="flex flex-col w-full gap-8">
+        <div className="flex w-full flex-col gap-8">
           <div className="flex flex-col gap-3">
             <Button
               w="full"

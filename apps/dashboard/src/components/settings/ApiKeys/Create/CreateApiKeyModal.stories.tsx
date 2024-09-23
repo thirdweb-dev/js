@@ -66,7 +66,7 @@ function Story(props: {
   });
 
   return (
-    <div className="p-6 flex justify-center items-center grow">
+    <div className="flex grow items-center justify-center p-6">
       <CreateAPIKeyDialogUI
         wording={props.wording}
         open={isOpen}

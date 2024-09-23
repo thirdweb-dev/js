@@ -46,7 +46,7 @@ export const LandingEndCTA: React.FC<LandingEndCTAProps> = ({
     <Container maxW={containerMaxW || "container.md"}>
       <Flex flexDir="column" gap={12}>
         <Heading pt={{ base: 20, md: 0 }} size="display.md" textAlign="center">
-          {title}{" "}
+          {title}
           {titleWithGradient && (
             <Box as="span" bgGradient={gradient} bgClip="text">
               {titleWithGradient}

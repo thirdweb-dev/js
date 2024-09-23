@@ -1,7 +1,6 @@
-import type { CoreServiceConfig } from "../api";
-import type { AuthorizationResult } from "../authorize/types";
-
-import type { UsageLimitResult } from "./types";
+import type { CoreServiceConfig } from "../api.js";
+import type { AuthorizationResult } from "../authorize/types.js";
+import type { UsageLimitResult } from "./types.js";
 
 export async function usageLimit(
   authzResult: AuthorizationResult,

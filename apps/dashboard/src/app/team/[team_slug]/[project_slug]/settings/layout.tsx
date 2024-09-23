@@ -11,10 +11,10 @@ export default function Layout(props: {
   const layoutPath = `/team/${team_slug}/${project_slug}/settings`;
 
   return (
-    <div className="grow flex flex-col">
-      <div className="py-10 border-b border-border">
+    <div className="flex grow flex-col">
+      <div className="border-border border-b py-10">
         <div className="container">
-          <h1 className="text-3xl tracking-tight font-semibold">
+          <h1 className="font-semibold text-3xl tracking-tight">
             Project Settings
           </h1>
         </div>

@@ -66,7 +66,7 @@ export function UpdatePartnerForm({
         })}
         className="flex flex-col gap-4"
       >
-        <div className="flex flex-col gap-5 grow">
+        <div className="flex grow flex-col gap-5">
           <FormField
             control={form.control}
             name="name"
@@ -85,8 +85,8 @@ export function UpdatePartnerForm({
                   className={cn(
                     "text-xs transition-all",
                     form.formState.errors.name?.message
-                      ? "text-destructive block opacity-100 translate-y-0"
-                      : "opacity-0 hidden",
+                      ? "block translate-y-0 text-destructive opacity-100"
+                      : "hidden opacity-0",
                   )}
                 >
                   {form.formState.errors.name?.message}
@@ -106,9 +106,9 @@ export function UpdatePartnerForm({
                 </FormControl>
                 <FormDescription
                   className={cn(
-                    "text-xs block",
+                    "block text-xs",
                     form.formState.errors.domains?.message &&
-                      "text-destructive translate-y-0 opacity-100 block", // If there are errors show them rather than the tip
+                      "block translate-y-0 text-destructive opacity-100", // If there are errors show them rather than the tip
                   )}
                 >
                   {form.formState.errors.domains?.message ??
@@ -129,9 +129,9 @@ export function UpdatePartnerForm({
                 </FormControl>
                 <FormDescription
                   className={cn(
-                    "text-xs block",
+                    "block text-xs",
                     form.formState.errors.bundleIds?.message &&
-                      "text-destructive block",
+                      "block text-destructive",
                   )}
                 >
                   {form.formState.errors.bundleIds?.message ??
@@ -146,7 +146,7 @@ export function UpdatePartnerForm({
         <Button
           disabled={isPending}
           type="submit"
-          className="w-full gap-2 mt-4"
+          className="mt-4 w-full gap-2"
         >
           {isPending && <Spinner className="size-4" />}
           Update

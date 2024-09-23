@@ -72,7 +72,7 @@ export function ScrollShadow(props: {
 
   return (
     <div
-      className={cn(props.className, "relative overflow-hidden z-base")}
+      className={cn(props.className, "relative z-base overflow-hidden")}
       ref={wrapperEl}
       style={
         {
@@ -81,7 +81,7 @@ export function ScrollShadow(props: {
       }
     >
       <div
-        className={`${styles.scrollShadowTop} ${styles.scrollShadowY}`}
+        className={cn(styles.scrollShadowTop, styles.scrollShadowY)}
         ref={shadowTopEl}
         style={{
           opacity: "0",
@@ -89,21 +89,21 @@ export function ScrollShadow(props: {
         }}
       />
       <div
-        className={`${styles.scrollShadowBottom} ${styles.scrollShadowY}`}
+        className={cn(styles.scrollShadowBottom, styles.scrollShadowY)}
         ref={shadowBottomEl}
         style={{
           opacity: "0",
         }}
       />
       <div
-        className={`${styles.scrollShadowLeft} ${styles.scrollShadowX}`}
+        className={cn(styles.scrollShadowLeft, styles.scrollShadowX)}
         ref={shadowLeftEl}
         style={{
           opacity: "0",
         }}
       />
       <div
-        className={`${styles.scrollShadowRight} ${styles.scrollShadowX}`}
+        className={cn(styles.scrollShadowRight, styles.scrollShadowX)}
         ref={shadowRightEl}
         style={{
           opacity: "0",

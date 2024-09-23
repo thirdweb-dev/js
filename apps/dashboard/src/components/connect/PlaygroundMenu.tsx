@@ -80,7 +80,7 @@ export const PlaygroundMenu: React.FC<PlaygroundMenuProps> = ({
           maxW="fit-content"
           textAlign="left"
         >
-          Learn more {"→"}
+          Learn more →
         </Text>
       </Flex>
     </Card>

@@ -10,7 +10,7 @@ export function ColorModeToggle() {
   const { setTheme, theme } = useTheme();
 
   return (
-    <ClientOnly ssr={<Skeleton className="size-10 bg-accent border" />}>
+    <ClientOnly ssr={<Skeleton className="size-10 border bg-accent" />}>
       <Button
         variant="ghost"
         size="icon"

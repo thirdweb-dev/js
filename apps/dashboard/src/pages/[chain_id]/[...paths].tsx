@@ -176,7 +176,7 @@ const ContractPage: ThirdwebNextPage = () => {
 
   if (!contractInfo) {
     return (
-      <div className="h-full flex items-center justify-center">
+      <div className="flex h-full items-center justify-center">
         <Spinner className="size-10" />
       </div>
     );
@@ -186,7 +186,7 @@ const ContractPage: ThirdwebNextPage = () => {
     return (
       <div className="mx-auto max-w-[500px]">
         <Alert variant="warning">
-          You tried to connecting to {isSlugNumber ? "Chain" : "Network"} ID{" "}
+          You tried to connecting to {isSlugNumber ? "Chain" : "Network"} ID
           {`"`}
           {chainSlug}
           {`"`} but it is not configured yet. Please configure it and try again
@@ -194,7 +194,7 @@ const ContractPage: ThirdwebNextPage = () => {
 
         <div className="h-10" />
 
-        <div className="border border-border rounded-lg">
+        <div className="rounded-lg border border-border">
           <ConfigureNetworks
             prefillSlug={isSlugNumber ? undefined : chainSlug}
             prefillChainId={isSlugNumber ? chainSlug : undefined}
@@ -215,7 +215,7 @@ const ContractPage: ThirdwebNextPage = () => {
 
   if (!isChainOverridesLoaded) {
     return (
-      <div className="h-full flex items-center justify-center">
+      <div className="flex h-full items-center justify-center">
         <Spinner className="size-10" />
       </div>
     );
@@ -330,7 +330,7 @@ ContractPage.getLayout = (page, props: EVMContractProps) => {
   return (
     // app layout has to come first in both getLayout and fallback
     <AppLayout
-      layout={"custom-contract"}
+      layout="custom-contract"
       dehydratedState={props.dehydratedState}
       // has to be passed directly because the provider can not be above app layout in the tree
       contractInfo={props.contractInfo}
@@ -365,7 +365,7 @@ ContractPage.getLayout = (page, props: EVMContractProps) => {
 
 function PageSkeleton() {
   return (
-    <div className="h-full flex items-center justify-center">
+    <div className="flex h-full items-center justify-center">
       <Spinner className="size-10" />
     </div>
   );
@@ -373,7 +373,7 @@ function PageSkeleton() {
 
 // app layout has to come first in both getLayout and fallback
 ContractPage.fallback = (
-  <AppLayout layout={"custom-contract"} noSEOOverride hasSidebar={true}>
+  <AppLayout layout="custom-contract" noSEOOverride hasSidebar={true}>
     <PageSkeleton />
   </AppLayout>
 );

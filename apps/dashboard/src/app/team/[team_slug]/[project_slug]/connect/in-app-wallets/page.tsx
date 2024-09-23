@@ -24,14 +24,14 @@ export default async function Page(props: {
 
   return (
     <div>
-      <h1 className="font-semibold text-2xl md:text-3xl tracking-tight mb-3">
+      <h1 className="mb-3 font-semibold text-2xl tracking-tight md:text-3xl">
         In-App Wallets
       </h1>
 
-      <p className="max-w-[700px] text-muted-foreground mt-3 mb-7">
+      <p className="mt-3 mb-7 max-w-[700px] text-muted-foreground">
         A wallet infrastructure that enables apps to create, manage, and control
         their users wallets. Email login, social login, and bring-your-own auth
-        supported.{" "}
+        supported.
         <TrackedLinkTW
           target="_blank"
           href="https://portal.thirdweb.com/connect/in-app-wallet/overview"

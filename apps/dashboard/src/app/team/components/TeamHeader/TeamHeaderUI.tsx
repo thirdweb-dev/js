@@ -29,7 +29,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
   return (
     <header
       className={cn(
-        "flex flex-row gap-2 items-center text-foreground justify-between px-6 py-4",
+        "flex flex-row items-center justify-between gap-2 px-6 py-4 text-foreground",
         props.className,
       )}
     >
@@ -43,10 +43,10 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
         <div className="flex items-center gap-1">
           <Link
             href={`/team/${currentTeam.slug}`}
-            className="font-normal text-sm flex flex-row gap-2 items-center"
+            className="flex flex-row items-center gap-2 font-normal text-sm"
           >
             {/* TODO - replace with team image */}
-            <div className="bg-muted border border-border size-6 rounded-full" />
+            <div className="size-6 rounded-full border border-border bg-muted" />
 
             <span> {currentTeam.name} </span>
             <TeamPlanBadge plan={teamPlan} />
@@ -67,7 +67,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             <div className="flex items-center gap-1">
               <Link
                 href={`/team/${props.currentTeam.slug}/${props.currentProject.slug}`}
-                className="font-semibold text-sm flex flex-row gap-1 items-center"
+                className="flex flex-row items-center gap-1 font-semibold text-sm"
               >
                 {props.currentProject.name}
               </Link>
@@ -94,7 +94,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
 }
 
 function SlashSeparator() {
-  return <div className="h-5 w-[1.5px] bg-foreground/30 rotate-[25deg] mx-2" />;
+  return <div className="mx-2 h-5 w-[1.5px] rotate-[25deg] bg-foreground/30" />;
 }
 
 export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
@@ -106,7 +106,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
   return (
     <header
       className={cn(
-        "flex flex-row gap-2 items-center text-foreground justify-between px-4 py-4",
+        "flex flex-row items-center justify-between gap-2 px-4 py-4 text-foreground",
         props.className,
       )}
     >
@@ -115,11 +115,11 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
           <Link
             href={`/team/${currentTeam.slug}`}
             className={cn(
-              "font-normal text-sm flex flex-row items-center text-foreground gap-2",
+              "flex flex-row items-center gap-2 font-normal text-foreground text-sm",
             )}
           >
             {/* TODO - replace with team image */}
-            <div className="bg-muted border border-border size-7 rounded-full" />
+            <div className="size-7 rounded-full border border-border bg-muted" />
 
             {!props.currentProject && (
               <span className="font-semibold">{currentTeam.name}</span>
@@ -139,7 +139,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
             <div className="flex items-center gap-1">
               <Link
                 href={`/team/${props.currentTeam.slug}/${props.currentProject.slug}`}
-                className="font-semibold text-sm truncate max-lg:max-w-[130px]"
+                className="truncate font-semibold text-sm max-lg:max-w-[130px]"
               >
                 {props.currentProject.name}
               </Link>

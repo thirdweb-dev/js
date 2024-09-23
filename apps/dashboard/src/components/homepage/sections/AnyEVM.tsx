@@ -37,10 +37,10 @@ export const AnyEVMSection = () => {
 
         <Flex
           flexDir="column"
-          justifyContent={"center"}
-          alignItems={"center"}
-          marginTop={"16px"}
-          w={"100%"}
+          justifyContent="center"
+          alignItems="center"
+          marginTop="16px"
+          w="100%"
         >
           <LinkButton
             href="/chainlist"
@@ -55,8 +55,8 @@ export const AnyEVMSection = () => {
             _hover={{
               background: "rgba(255,255,255,0.9)!important",
             }}
-            maxW={"320px"}
-            width={"100%"}
+            maxW="320px"
+            width="100%"
           >
             See the Chainlist
           </LinkButton>

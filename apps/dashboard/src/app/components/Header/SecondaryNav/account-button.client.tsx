@@ -24,19 +24,19 @@ export function AccountButton(props: {
       <DropdownMenuTrigger asChild>
         <Button
           size="icon"
-          className="rounded-full !p-0 !h-auto size-10 hover:ring-2 hover:ring-offset-2"
+          className="!p-0 !h-auto size-10 rounded-full hover:ring-2 hover:ring-offset-2"
           variant="ghost"
         >
           {/* TODO - replace with account image */}
-          <div className="size-9 rounded-full bg-muted border border-border" />
+          <div className="size-9 rounded-full border border-border bg-muted" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="p-0 w-[300px] rounded-lg" align="end">
-        <div className="p-4 pb-5 border-b border-border">
+      <DropdownMenuContent className="w-[300px] rounded-lg p-0" align="end">
+        <div className="border-border border-b p-4 pb-5">
           <SkeletonContainer
             skeletonData="user@example.com"
             loadedData={props.email}
-            render={(v) => <p className="text-sm text-muted-foreground">{v}</p>}
+            render={(v) => <p className="text-muted-foreground text-sm">{v}</p>}
           />
 
           <div className="h-3" />
@@ -51,10 +51,10 @@ export function AccountButton(props: {
             Account Settings
           </Link>
 
-          <div className="flex justify-between gap-2 items-center">
+          <div className="flex items-center justify-between gap-2">
             <p className="text-muted-foreground text-sm">Theme</p>
 
-            <div className="ml-auto flex items-center border border-border px-2 py-0.5 rounded-lg gap-1">
+            <div className="ml-auto flex items-center gap-1 rounded-lg border border-border px-2 py-0.5">
               <Button
                 size="icon"
                 onClick={() => setTheme("light")}
@@ -91,7 +91,7 @@ export function AccountButton(props: {
 
           <Button
             variant="link"
-            className="gap-2 py-1 text-start justify-start text-muted-foreground px-0 !h-auto hover:!no-underline hover:text-foreground"
+            className="!h-auto hover:!no-underline justify-start gap-2 px-0 py-1 text-start text-muted-foreground hover:text-foreground"
             onClick={props.logout}
           >
             <LogOutIcon className="size-4" />

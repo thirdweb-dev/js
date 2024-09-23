@@ -132,7 +132,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
     <form onSubmit={handleSubmit}>
       <div
         className={cn(
-          "items-start w-full rounded-xl bg-background",
+          "w-full items-start rounded-xl bg-background",
           horizontal ? "gap-6" : "gap-8",
           padded ? "border border-border p-6" : "p-0",
         )}
@@ -221,7 +221,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
 
         <div
           className={cn(
-            "flex flex-row w-full",
+            "flex w-full flex-row",
             showBillingButton ? "justify-between" : "justify-end",
           )}
         >

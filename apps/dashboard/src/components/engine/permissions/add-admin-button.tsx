@@ -60,7 +60,7 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent
-          className="!bg-background border border-border rounded-lg"
+          className="!bg-background rounded-lg border border-border"
           as="form"
           onSubmit={form.handleSubmit((data) => {
             if (!isAddress(data.walletAddress)) {

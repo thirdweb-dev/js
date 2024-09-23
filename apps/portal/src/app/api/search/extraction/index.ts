@@ -61,15 +61,19 @@ export async function extractSearchData(rootDir: string): Promise<PageData[]> {
 
   if (noMainFound.length) {
     console.warn(
-      `\n\nNo <main> element found in below routes, They will not be included in search results :\n`,
+      "\n\nNo <main> element found in below routes, They will not be included in search results :\n",
     );
-    noMainFound.forEach((f) => console.warn("* " + f));
+    for (const f of noMainFound) {
+      console.warn(`* ${f}`);
+    }
     console.warn("\n");
   }
 
   if (noH1Found.length) {
-    console.warn(`\n\nNo <h1> element found in below routes :\n`);
-    noH1Found.forEach((f) => console.warn("* " + f));
+    console.warn("\n\nNo <h1> element found in below routes :\n");
+    for (const f of noH1Found) {
+      console.warn(`* ${f}`);
+    }
     console.warn("\n");
   }
 
@@ -84,7 +88,8 @@ function getPageSections(main: X_HTMLElement): PageSectionData[] {
   function collector(node: X_Node) {
     if (node instanceof X_CommentNode) {
       return;
-    } else if (node instanceof X_HTMLElement) {
+    }
+    if (node instanceof X_HTMLElement) {
       if (ignoreTags.has(node.tagName)) {
         return;
       }
@@ -120,10 +125,10 @@ function getPageSections(main: X_HTMLElement): PageSectionData[] {
       const text = node.text;
       if (text) {
         if (lastSection) {
-          lastSection.content += node.text + " ";
+          lastSection.content += `${node.text} `;
         } else {
           sectionData.push({
-            content: node.text + " ",
+            content: `${node.text} `,
             href: "",
           });
         }
@@ -133,10 +138,10 @@ function getPageSections(main: X_HTMLElement): PageSectionData[] {
 
   collector(main);
 
-  sectionData.forEach((s) => {
+  for (const s of sectionData) {
     s.title = s.title ? trimExtraSpace(s.title) : s.title;
     s.content = trimExtraSpace(s.content);
-  });
+  }
 
   return sectionData.filter((s) => s.title || s.content);
 }

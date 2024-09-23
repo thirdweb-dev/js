@@ -292,7 +292,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
             onClick={() => previousPage()}
           />
           <Text whiteSpace="nowrap">
-            Page <strong>{pageIndex + 1}</strong> of{" "}
+            Page <strong>{pageIndex + 1}</strong> of
             <Skeleton
               as="span"
               display="inline"

@@ -12,7 +12,7 @@ export const FeatureItem: React.FC<FeatureItemProps> = ({ text }) => {
 
   return (
     <Flex gap={2} alignItems="flex-start">
-      <Icon as={IoCheckmarkCircle} boxSize={5} mt={0.5} />{" "}
+      <Icon as={IoCheckmarkCircle} boxSize={5} mt={0.5} />
       {Array.isArray(text) ? (
         <Flex alignItems="center" justifyItems="center" gap={2}>
           <Text>{titleStr}</Text>

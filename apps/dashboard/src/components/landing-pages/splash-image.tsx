@@ -47,7 +47,7 @@ export const SplashImage: React.FC<SplashImageProps> = ({
               textAlign="center"
               px={{ base: 2, md: 0 }}
             >
-              {title}{" "}
+              {title}
               <Box as="span" bgGradient={gradient} bgClip="text">
                 {titleWithGradient}
               </Box>

@@ -27,7 +27,7 @@ export const HexConverter = () => {
   return (
     <div className="space-y-24">
       <div className="space-y-4">
-        <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Label htmlFor="hex-input" className="min-w-60 text-xl">
             Hex
           </Label>
@@ -35,10 +35,10 @@ export const HexConverter = () => {
             id="hex-input"
             value={hex}
             onChange={(e) => onChange({ hex: e.target.value })}
-            className="text-xl p-6"
+            className="p-6 text-xl"
           />
         </div>
-        <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Label htmlFor="dec-input" className="min-w-60 text-xl">
             Decimal
           </Label>
@@ -47,10 +47,10 @@ export const HexConverter = () => {
             type="number"
             value={dec}
             onChange={(e) => onChange({ dec: e.target.valueAsNumber })}
-            className="text-xl p-6"
+            className="p-6 text-xl"
           />
         </div>
-        <div className="flex justify-end mt-4">
+        <div className="mt-4 flex justify-end">
           <ShareButton
             cta="Share on X"
             href="https://twitter.com/intent/tweet?text=Easy-to-use%20hex%20converter%20by%20thirdweb%20%F0%9F%98%8D&url=https%3A%2F%2Fthirdweb.com%2Ftools%2Fhex-converter"
@@ -60,7 +60,7 @@ export const HexConverter = () => {
 
       <Card className="flex flex-col gap-2 p-4">
         <p>
-          Or use the{" "}
+          Or use the
           <a
             href="https://portal.thirdweb.com/typescript/v5"
             target="_blank"
@@ -90,34 +90,34 @@ export const HexConverter = () => {
       </Card>
 
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold">
+        <h1 className="font-bold text-2xl">
           Convert between hexadecimal and decimal units
         </h1>
         <p>
           Hexadecimal (base 16) is preferred in the Ethereum Virtual Machine
           (EVM) for its:
         </p>
-        <h2 className="text-md font-bold">Compactness</h2>
+        <h2 className="font-bold text-md">Compactness</h2>
         <p>
           Each hex digit represents 4 bits, making it concise for large binary
           numbers.
         </p>
-        <h2 className="text-md font-bold">Alignment</h2>
+        <h2 className="font-bold text-md">Alignment</h2>
         <p>
           Hex aligns with binary computing, aiding data representation and
           processing.
         </p>
-        <h2 className="text-md font-bold">Standard</h2>
+        <h2 className="font-bold text-md">Standard</h2>
         <p>
           Widely used in programming and cryptography for simplicity with binary
           data.
         </p>
-        <h2 className="text-md font-bold">Length</h2>
+        <h2 className="font-bold text-md">Length</h2>
         <p>
           Ensures consistent string lengths, crucial for Ethereum addresses and
           hashes.
         </p>
-        <h2 className="text-md font-bold">Conversion</h2>
+        <h2 className="font-bold text-md">Conversion</h2>
         <p>
           Straightforward mapping to binary facilitates error-free conversions.
         </p>

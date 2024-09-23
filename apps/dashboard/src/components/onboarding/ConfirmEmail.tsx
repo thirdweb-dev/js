@@ -169,13 +169,13 @@ const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
         description={
           !completed ? (
             <>
-              We&apos;ve sent a 6 letter confirmation code to{" "}
+              We&apos;ve sent a 6 letter confirmation code to
               <strong>{email}</strong>. Copy the code and paste it below.
             </>
           ) : (
             <>
-              We&apos;ve linked{" "}
-              <strong>{shortenString(user?.address ?? "")}</strong> wallet to{" "}
+              We&apos;ve linked
+              <strong>{shortenString(user?.address ?? "")}</strong> wallet to
               <strong>{email}</strong> thirdweb account.
             </>
           )

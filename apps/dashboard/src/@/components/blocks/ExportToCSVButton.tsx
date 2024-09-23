@@ -30,7 +30,7 @@ export function ExportToCSVButton(props: {
     <Button
       variant="outline"
       disabled={props.disabled}
-      className={cn("border flex gap-2 items-center text-xs", props.className)}
+      className={cn("flex items-center gap-2 border text-xs", props.className)}
       onClick={async () => {
         exportMutation.mutate();
       }}

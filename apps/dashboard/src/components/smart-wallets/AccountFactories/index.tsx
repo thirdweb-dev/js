@@ -54,7 +54,7 @@ export const AccountFactories: React.FC<AccountFactoriesProps> = ({
   const factories = useFactories();
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col lg:flex-row gap-3 lg:gap-8 lg:justify-between lg:items-center">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
         <p className="text-muted-foreground text-sm">
           Click an account factory contract to view analytics and accounts
           created.

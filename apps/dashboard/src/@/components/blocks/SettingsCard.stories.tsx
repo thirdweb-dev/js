@@ -28,8 +28,8 @@ export const Mobile: Story = {
 
 function Story() {
   return (
-    <div className="min-h-screen bg-background text-foreground py-6">
-      <div className="lg:p-10 container max-w-[1100px] flex flex-col gap-10">
+    <div className="min-h-screen bg-background py-6 text-foreground">
+      <div className="container flex max-w-[1100px] flex-col gap-10 lg:p-10">
         <BadgeContainer label="No Header">
           <SettingsCard
             bottomText="This is bottom text"
@@ -84,7 +84,7 @@ function Story() {
               isPending: false,
               onClick: () => {},
             }}
-            noPermissionText={"You do not have permission to edit this"}
+            noPermissionText="You do not have permission to edit this"
             errorText={undefined}
           >
             <ChildrenPlaceholder />
@@ -154,8 +154,8 @@ function Story() {
 
 function ChildrenPlaceholder() {
   return (
-    <div className="h-10 flex items-center justify-center text-muted-foreground/50 text-xs">
-      {"CHILDREN GOES HERE"}
+    <div className="flex h-10 items-center justify-center text-muted-foreground/50 text-xs">
+      CHILDREN GOES HERE
     </div>
   );
 }

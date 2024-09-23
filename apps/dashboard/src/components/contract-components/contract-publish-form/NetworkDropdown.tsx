@@ -53,7 +53,7 @@ export const NetworkDropdown: React.FC<NetworkDropdownProps> = ({
   }, [form, options]);
 
   return (
-    <div className="flex flex-row gap-2 items-center w-full">
+    <div className="flex w-full flex-row items-center gap-2">
       <Select
         size={size}
         placeholder={`${

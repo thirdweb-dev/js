@@ -105,15 +105,15 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
         }}
       />
 
-      <div className="flex flex-col gap-4 lg:flex-row content-start justify-between">
+      <div className="flex flex-col content-start justify-between gap-4 lg:flex-row">
         <div className="flex flex-col gap-1.5">
-          <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight">
+          <h1 className="font-semibold text-2xl tracking-tight lg:text-3xl">
             Account Abstraction
           </h1>
 
           <p className="text-muted-foreground text-sm">
             Easily integrate Account abstraction (ERC-4337) compliant smart
-            accounts into your apps.{" "}
+            accounts into your apps.
             <TrackedLinkTW
               target="_blank"
               label="docs-wallets"
@@ -140,7 +140,7 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
       </div>
 
       {isPending ? (
-        <div className="flex items-center justify-center h-[400px] border border-border rounded-lg">
+        <div className="flex h-[400px] items-center justify-center rounded-lg border border-border">
           <Spinner className="size-14" />
         </div>
       ) : (

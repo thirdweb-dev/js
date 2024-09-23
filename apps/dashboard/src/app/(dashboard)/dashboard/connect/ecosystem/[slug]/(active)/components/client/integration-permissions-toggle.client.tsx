@@ -102,8 +102,8 @@ export function IntegrationPermissionsToggle({
 export function IntegrationPermissionsToggleSkeleton() {
   return (
     <div className="flex flex-col gap-2 py-2 md:flex-row md:gap-4">
-      <Skeleton className="w-full h-14 md:w-32" />
-      <Skeleton className="w-full h-14 md:w-32" />
+      <Skeleton className="h-14 w-full md:w-32" />
+      <Skeleton className="h-14 w-full md:w-32" />
     </div>
   );
 }

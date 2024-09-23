@@ -243,7 +243,6 @@ function SmartWalletConnecting(props: {
                   }
                 }}
               >
-                {" "}
                 {personalWalletChainSwitchStatus === "switching"
                   ? "Switching"
                   : "Switch Network"}

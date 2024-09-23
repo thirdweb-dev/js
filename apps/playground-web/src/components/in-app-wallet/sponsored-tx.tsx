@@ -8,6 +8,7 @@ import {
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
+import { inAppWallet } from "thirdweb/wallets";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
 import { editionDropContract, editionDropTokenId } from "./constants";
@@ -29,14 +30,30 @@ export function SponsoredInAppTxPreview() {
     <div className="flex flex-col">
       <div className="flex justify-center">
         <StyledConnectButton
-          accountAbstraction={{
-            sponsorGas: true,
-            chain: baseSepolia,
-          }}
+          wallets={[
+            inAppWallet({
+              auth: {
+                options: [
+                  "google",
+                  "x",
+                  "discord",
+                  "telegram",
+                  "email",
+                  "phone",
+                  "passkey",
+                  "guest",
+                ],
+              },
+              smartAccount: {
+                chain: baseSepolia,
+                sponsorGas: true,
+              },
+            }),
+          ]}
         />
       </div>
       {isNftLoading ? (
-        <div className="w-full mt-24">Loading...</div>
+        <div className="mt-24 w-full">Loading...</div>
       ) : (
         <>
           {nft ? (
@@ -48,8 +65,8 @@ export function SponsoredInAppTxPreview() {
           ) : null}
           {smartAccount ? (
             <>
-              <p className="mb-2 font-semibold text-center">
-                You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
+              <p className="mb-2 text-center font-semibold">
+                You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}
                 Kittens
               </p>
               <div className="flex justify-center">

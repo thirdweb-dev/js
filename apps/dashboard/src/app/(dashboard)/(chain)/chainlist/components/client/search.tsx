@@ -45,10 +45,10 @@ export const SearchInput: React.FC = () => {
 
   return (
     <div className="relative w-full">
-      <SearchIcon className="absolute size-4 top-[50%] -translate-y-1/2 left-3 text-muted-foreground" />
+      <SearchIcon className="-translate-y-1/2 absolute top-[50%] left-3 size-4 text-muted-foreground" />
       <Input
         placeholder="Search by name or chain ID"
-        className={"pl-9 h-10 py-2 rounded-lg"}
+        className="h-10 rounded-lg py-2 pl-9"
         defaultValue={searchParams?.get("query") || ""}
         onChange={(e) => handleSearch(e.target.value)}
         ref={inputRef}
@@ -56,7 +56,7 @@ export const SearchInput: React.FC = () => {
       {searchParams?.has("query") && (
         <Button
           size="icon"
-          className="absolute top-[50%] -translate-y-1/2 right-2 text-muted-foreground"
+          className="-translate-y-1/2 absolute top-[50%] right-2 text-muted-foreground"
           variant="ghost"
           onClick={() => {
             const params = new URLSearchParams(searchParams ?? undefined);

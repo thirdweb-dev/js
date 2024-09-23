@@ -30,7 +30,7 @@ export function AllFilters(props: { hideChainType?: boolean }) {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="w-auto h-10 gap-2 p-2 lg:px-4 lg:py-2 lg:h-10 lg:border-0"
+          className="h-10 w-auto gap-2 p-2 lg:h-10 lg:border-0 lg:px-4 lg:py-2"
         >
           <Filter strokeWidth={1} className="lg:size-4" />
           <span className="hidden lg:inline">All Filters</span>
@@ -39,7 +39,7 @@ export function AllFilters(props: { hideChainType?: boolean }) {
 
       <PopoverContent
         align="end"
-        className="flex flex-col gap-4 mt-0.5 max-w-full"
+        className="mt-0.5 flex max-w-full flex-col gap-4"
       >
         <h3 className="font-bold">Filters</h3>
 
@@ -112,7 +112,7 @@ const FilterSection: React.FC<PropsWithChildren<FilterSectionProps>> = ({
 }) => {
   return (
     <section className="flex flex-col">
-      <h4 className="mb-2 text-sm font-semibold text-muted-foreground">
+      <h4 className="mb-2 font-semibold text-muted-foreground text-sm">
         {title}
       </h4>
       {children}
@@ -182,7 +182,7 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className={value === "all" ? undefined : "pr-11 border-primary"}
+            className={value === "all" ? undefined : "border-primary pr-11"}
           >
             {value === "mainnets"
               ? "Mainnets Only"
@@ -196,7 +196,7 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
           <Button
             variant="ghost"
             size="icon"
-            className="absolute h-auto w-10 right-[1px] top-[1px] bottom-[1px]"
+            className="absolute top-[1px] right-[1px] bottom-[1px] h-auto w-10"
             onClick={() => {
               const url = makeUrl("all");
               router.replace(url);
@@ -208,7 +208,7 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
       </div>
       <PopoverContent
         align="end"
-        className="flex flex-col gap-4 mt-0.5 max-w-full"
+        className="mt-0.5 flex max-w-full flex-col gap-4"
       >
         {section}
       </PopoverContent>
@@ -254,7 +254,7 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
         />
         <Label
           htmlFor="deprecated"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
           Include Deprecated
         </Label>
@@ -275,7 +275,7 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className={hasFilters ? "pr-11 border-primary" : undefined}
+            className={hasFilters ? "border-primary pr-11" : undefined}
           >
             Chain Options
             {!hasFilters && <ChevronDownIcon className="ml-2 size-4" />}
@@ -285,7 +285,7 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
           <Button
             variant="ghost"
             size="icon"
-            className="absolute h-auto w-10 right-[1px] top-[1px] bottom-[1px]"
+            className="absolute top-[1px] right-[1px] bottom-[1px] h-auto w-10"
             onClick={() => {
               mutableSearchParams.delete("includeDeprecated");
               mutableSearchParams.delete("page");
@@ -301,7 +301,7 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
       </div>
       <PopoverContent
         align="end"
-        className="flex flex-col gap-4 mt-0.5 max-w-full"
+        className="mt-0.5 flex max-w-full flex-col gap-4"
       >
         {section}
       </PopoverContent>
@@ -336,7 +336,7 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
   const section = (
     <FilterSection title="Services">
       {products.map((product) => (
-        <div className="flex items-center gap-2 group" key={product.id}>
+        <div className="group flex items-center gap-2" key={product.id}>
           <Checkbox
             id={product.id}
             checked={isServiceActive(mutableSearchParams, product.id)}
@@ -351,7 +351,7 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
           />
           <Label
             htmlFor={product.id}
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             {product.name}
           </Label>
@@ -366,7 +366,7 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
               router.push(url);
             }}
             size="sm"
-            className="ml-auto rounded-full lg:opacity-0 group-hover:opacity-100"
+            className="ml-auto rounded-full group-hover:opacity-100 lg:opacity-0"
             variant="ghost"
           >
             Only
@@ -399,7 +399,7 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className={hasActiveFilter ? "pr-11 border-primary" : undefined}
+            className={hasActiveFilter ? "border-primary pr-11" : undefined}
           >
             {buttonTitle}
             {!hasActiveFilter && <ChevronDownIcon className="ml-2 size-4" />}
@@ -409,7 +409,7 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
           <Button
             variant="ghost"
             size="icon"
-            className="absolute h-auto w-10 right-[1px] top-[1px] bottom-[1px]"
+            className="absolute top-[1px] right-[1px] bottom-[1px] h-auto w-10"
             onClick={() => {
               mutableSearchParams.delete("service");
               mutableSearchParams.delete("page");
@@ -425,7 +425,7 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
       </div>
       <PopoverContent
         align="end"
-        className="flex flex-col gap-4 mt-0.5 max-w-full"
+        className="mt-0.5 flex max-w-full flex-col gap-4"
       >
         {section}
       </PopoverContent>

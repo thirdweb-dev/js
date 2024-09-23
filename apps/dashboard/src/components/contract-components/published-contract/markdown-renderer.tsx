@@ -183,7 +183,7 @@ export const MarkdownRenderer: React.FC<
             {...cleanedProps(props)}
             borderColor="borderColor"
             textAlign="left"
-            borderBottomWidth={"inherit"}
+            borderBottomWidth="inherit"
           />
         ),
         thead: (props) => <Thead {...cleanedProps(props)} />,

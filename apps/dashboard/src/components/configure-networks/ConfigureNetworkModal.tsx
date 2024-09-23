@@ -22,7 +22,7 @@ export const ConfigureNetworkModal: React.FC<ConfigureNetworkModalProps> = (
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent
-        className="p-0 z-[10001] max-w-[480px]"
+        className="z-[10001] max-w-[480px] p-0"
         dialogOverlayClassName="z-[10000]"
       >
         <ConfigureNetworks

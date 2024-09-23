@@ -29,9 +29,9 @@ export async function getAllTSReferencesLinks() {
     for (const key in doc) {
       const value = doc[key as keyof TransformedDoc];
       if (Array.isArray(value)) {
-        value.forEach((v) => {
+        for (const v of value) {
           validReferenceLinks.add(`/references/${path}/${version}/${v.name}`);
-        });
+        }
       }
     }
   }

@@ -34,15 +34,15 @@ export function ColorFormGroup(props: {
     .filter((colorSection) => colorSection.colors.length > 0);
 
   return (
-    <section className="flex flex-col border rounded-lg bg-muted">
+    <section className="flex flex-col rounded-lg border bg-muted">
       {/* heading */}
-      <div className="p-4 flex items-center gap-4 justify-between border-b">
-        <h2 className="text-base font-semibold"> Colors </h2>
-        <div className="relative grow max-w-[320px]">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+      <div className="flex items-center justify-between gap-4 border-b p-4">
+        <h2 className="font-semibold text-base"> Colors </h2>
+        <div className="relative max-w-[320px] grow">
+          <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
           <Input
             placeholder="Search"
-            className="pl-9 rounded-lg"
+            className="rounded-lg pl-9"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -57,7 +57,7 @@ export function ColorFormGroup(props: {
           {colorSectionsToShow.map((colorSection) => {
             return (
               <div key={colorSection.section}>
-                <h3 className="px-2 flex items-center gap-1.5 font-semibold text-muted-foreground py-3 text-sm">
+                <h3 className="flex items-center gap-1.5 px-2 py-3 font-semibold text-muted-foreground text-sm">
                   <SectionIcon className="size-4" />
                   {colorSection.section}
                 </h3>
@@ -65,11 +65,11 @@ export function ColorFormGroup(props: {
                   {colorSection.colors.map((color) => {
                     return (
                       <label
-                        className="cursor-pointer p-2 gap-3 flex items-center hover:bg-secondary rounded-lg transition-colors"
+                        className="flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors hover:bg-secondary"
                         key={color.colorId}
                         htmlFor="color-input"
                       >
-                        <div className="border rounded-full">
+                        <div className="rounded-full border">
                           <ColorInput
                             id="color-input"
                             className="size-10"
@@ -97,7 +97,7 @@ export function ColorFormGroup(props: {
                         </div>
                         <div>
                           <div>{color.label}</div>
-                          <div className="text-xs text-muted-foreground ml-auto font-mono">
+                          <div className="ml-auto font-mono text-muted-foreground text-xs">
                             {themeObj.colors[color.colorId]}
                           </div>
                         </div>
@@ -110,7 +110,7 @@ export function ColorFormGroup(props: {
           })}
 
           {colorSectionsToShow.length === 0 && (
-            <p className="py-14 px-2 text-center text-muted-foreground">
+            <p className="px-2 py-14 text-center text-muted-foreground">
               No colors found
             </p>
           )}

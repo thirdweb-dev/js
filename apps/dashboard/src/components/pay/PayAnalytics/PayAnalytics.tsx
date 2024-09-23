@@ -62,12 +62,12 @@ export function PayAnalytics(props: { clientId: string }) {
 
   return (
     <div>
-      <div className="flex mb-2">
+      <div className="mb-2 flex">
         <Filters range={range} setRange={setRange} />
       </div>
       <div className="flex flex-col gap-10 lg:gap-4">
         <GridWithSeparator>
-          <div className="border-b border-border pb-6 xl:pb-0 xl:border-none flex items-center">
+          <div className="flex items-center border-border border-b pb-6 xl:border-none xl:pb-0">
             <TotalVolumePieChart
               clientId={clientId}
               from={range.from}
@@ -82,7 +82,7 @@ export function PayAnalytics(props: { clientId: string }) {
           />
         </GridWithSeparator>
 
-        <div className="grid gap-4 grid-cols-1 xl:grid-cols-2 ">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 ">
           <CardContainer>
             <Payouts
               clientId={clientId}
@@ -101,7 +101,7 @@ export function PayAnalytics(props: { clientId: string }) {
         </div>
 
         <GridWithSeparator>
-          <div className="border-b border-border pb-6 xl:pb-0 xl:border-none">
+          <div className="border-border border-b pb-6 xl:border-none xl:pb-0">
             <PayNewCustomers
               clientId={clientId}
               from={range.from}
@@ -149,14 +149,14 @@ function Filters(props: { range: Range; setRange: (range: Range) => void }) {
   const { range, setRange } = props;
 
   const presets = (
-    <div className="p-4 border-b border-border mb-2">
+    <div className="mb-2 border-border border-b p-4">
       <Select
         value={range.type}
         onValueChange={(id: DurationId) => {
           setRange(getLastNDaysRange(id));
         }}
       >
-        <SelectTrigger className="bg-transparent flex">
+        <SelectTrigger className="flex bg-transparent">
           <SelectValue placeholder="Select" />
         </SelectTrigger>
         <SelectContent position="popper">
@@ -168,8 +168,7 @@ function Filters(props: { range: Range; setRange: (range: Range) => void }) {
 
           {range.type === "custom" && (
             <SelectItem value="custom">
-              {format(range.from, "LLL dd, y")} -{" "}
-              {format(range.to, "LLL dd, y")}
+              {format(range.from, "LLL dd, y")} -{format(range.to, "LLL dd, y")}
             </SelectItem>
           )}
         </SelectContent>
@@ -198,7 +197,7 @@ function Filters(props: { range: Range; setRange: (range: Range) => void }) {
         }
         header={presets}
         labelOverride={range.label}
-        className="p-0 border-none w-auto"
+        className="w-auto border-none p-0"
       />
     </div>
   );
@@ -206,17 +205,17 @@ function Filters(props: { range: Range; setRange: (range: Range) => void }) {
 
 function GridWithSeparator(props: { children: React.ReactNode }) {
   return (
-    <div className="p-4 xl:p-6 relative border border-border grid gap-6 lg:gap-12 grid-cols-1 xl:grid-cols-2 rounded-xl">
+    <div className="relative grid grid-cols-1 gap-6 rounded-xl border border-border p-4 lg:gap-12 xl:grid-cols-2 xl:p-6">
       {props.children}
       {/* Desktop - horizontal middle */}
-      <div className="absolute left-[50%] w-[1px] top-6 bottom-6 bg-border hidden xl:block" />
+      <div className="absolute top-6 bottom-6 left-[50%] hidden w-[1px] bg-border xl:block" />
     </div>
   );
 }
 
 function CardContainer(props: { children: React.ReactNode }) {
   return (
-    <div className="border border-border rounded-xl p-4 xl:p-6 flex">
+    <div className="flex rounded-xl border border-border p-4 xl:p-6">
       {props.children}
     </div>
   );

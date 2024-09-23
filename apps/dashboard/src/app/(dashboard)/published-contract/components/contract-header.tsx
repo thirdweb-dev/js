@@ -17,15 +17,15 @@ export function DeployContractHeader(
   props: PropsWithChildren<DeployContractHeaderProps>,
 ) {
   return (
-    <div className="py-2 flex flex-col gap-4">
-      <div className="flex flex-col md:flex-row justify-between gap-6 md:items-center">
+    <div className="flex flex-col gap-4 py-2">
+      <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
         <DeployContractInfo
           name={props.activeVersion.name}
           displayName={props.activeVersion.displayName}
           description={props.activeVersion.description}
           logo={props.activeVersion.logo}
         />
-        <div className="flex flex-col-reverse md:flex-row gap-3">
+        <div className="flex flex-col-reverse gap-3 md:flex-row">
           {
             <DeployContractVersionSelector
               availableVersions={

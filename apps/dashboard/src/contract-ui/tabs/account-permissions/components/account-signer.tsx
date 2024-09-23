@@ -66,7 +66,7 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
             <Flex direction="column">
               <Text fontWeight="bold">Maximum value per transaction</Text>
               <Text textTransform="capitalize">
-                {nativeTokenLimitPerTransaction.toString()}{" "}
+                {nativeTokenLimitPerTransaction.toString()}
                 {chain?.nativeCurrency.symbol}
               </Text>
             </Flex>

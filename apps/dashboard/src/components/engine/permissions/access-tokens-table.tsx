@@ -43,7 +43,7 @@ const columns = [
     header: "Access Token",
     cell: (cell) => {
       return (
-        <p className="font-mono py-3 text-foreground">{cell.getValue()}</p>
+        <p className="py-3 font-mono text-foreground">{cell.getValue()}</p>
       );
     },
   }),
@@ -186,7 +186,7 @@ const EditModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Update Access Token</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -269,7 +269,7 @@ const RemoveModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Delete Access Token</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

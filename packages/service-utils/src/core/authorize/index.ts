@@ -4,10 +4,10 @@ import {
   type CoreServiceConfig,
   fetchAccountFromApi,
   fetchKeyMetadataFromApi,
-} from "../api";
-import { authorizeClient } from "./client";
-import { authorizeService } from "./service";
-import type { AuthorizationResult } from "./types";
+} from "../api.js";
+import { authorizeClient } from "./client.js";
+import { authorizeService } from "./service.js";
+import type { AuthorizationResult } from "./types.js";
 
 export type AuthorizationInput = {
   secretKey: string | null;

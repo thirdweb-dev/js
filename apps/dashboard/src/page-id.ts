@@ -1,3 +1,4 @@
+// biome-ignore lint/nursery/noEnum: planned to be removed in the future
 export enum PageId {
   // none case (for previous page id)
   None = "none",

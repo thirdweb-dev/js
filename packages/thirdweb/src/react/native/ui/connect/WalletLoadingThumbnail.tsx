@@ -70,7 +70,7 @@ function WalletLoadingThumbnail({
             stroke={showError ? "transparent" : theme.colors.accentText}
             strokeWidth={3}
             fill="transparent"
-            strokeDasharray={"100 300"}
+            strokeDasharray="100 300"
             strokeDashoffset={spin}
           />
         )}

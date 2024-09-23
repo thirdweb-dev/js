@@ -21,7 +21,7 @@ export default async function Page(props: {
   return (
     <div>
       <div>
-        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight mb-1">
+        <h1 className="mb-1 font-semibold text-2xl tracking-tight md:text-3xl">
           Connect Analytics
         </h1>
         <p className="text-muted-foreground text-sm md:text-base">

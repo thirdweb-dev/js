@@ -77,8 +77,8 @@ export function AddPartnerForm({
                   className={cn(
                     "text-xs transition-all",
                     form.formState.errors.name?.message
-                      ? "text-destructive block opacity-100 translate-y-0"
-                      : "opacity-0 lg:-translate-y-4 hidden",
+                      ? "block translate-y-0 text-destructive opacity-100"
+                      : "lg:-translate-y-4 hidden opacity-0",
                   )}
                 >
                   {form.formState.errors.name?.message}

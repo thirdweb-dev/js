@@ -60,7 +60,7 @@ const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
           onDuplicateError={onDuplicate}
         />
 
-        <div className="flex flex-col justify-center w-full gap-2">
+        <div className="flex w-full flex-col justify-center gap-2">
           {!existing ? (
             <>
               <Button

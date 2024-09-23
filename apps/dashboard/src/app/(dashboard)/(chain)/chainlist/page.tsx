@@ -35,17 +35,17 @@ export default function ChainListPage(props: { searchParams: SearchParams }) {
       : "grid";
 
   return (
-    <section className="container mx-auto py-10 px-4 h-full flex flex-col">
+    <section className="container mx-auto flex h-full flex-col px-4 py-10">
       <header className="flex flex-col gap-4">
-        <div className="flex gap-4 flex-col lg:flex-row lg:justify-between lg:items-center">
-          <div className="flex gap-4 flex-row items-center justify-between lg:justify-start lg:flex-col">
-            <h1 className="font-semibold text-4xl lg:text-5xl tracking-tighter">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-row items-center justify-between gap-4 lg:flex-col lg:justify-start">
+            <h1 className="font-semibold text-4xl tracking-tighter lg:text-5xl">
               Chainlist
             </h1>
             <AddYourChainButton className="lg:hidden" />
           </div>
-          <div className="flex flex-row lg:flex-col gap-4 items-end">
-            <div className="flex flex-row gap-4 w-full">
+          <div className="flex flex-row items-end gap-4 lg:flex-col">
+            <div className="flex w-full flex-row gap-4">
               <SearchInput />
               <ChainListView activeView={activeView} />
               <AddYourChainButton className="hidden lg:flex" />
@@ -53,7 +53,7 @@ export default function ChainListPage(props: { searchParams: SearchParams }) {
 
             <div className="flex flex-row gap-2">
               <AllFilters />
-              <div className="hidden lg:flex flex-row gap-2">
+              <div className="hidden flex-row gap-2 lg:flex">
                 <ChainTypeFilter />
                 <ChainOptionsFilter />
                 <ChainServiceFilter />

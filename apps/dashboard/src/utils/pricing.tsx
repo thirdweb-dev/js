@@ -198,10 +198,10 @@ export const FAQ_GENERAL = [
     description: (
       <Text>
         Nope! You can self serve and upgrade to the Growth plan in the Dashboard
-        under{" "}
+        under
         <Link href="/dashboard/settings/billing" color="blue.500">
           Billing
-        </Link>{" "}
+        </Link>
         whenever you are ready!
       </Text>
     ),
@@ -211,10 +211,10 @@ export const FAQ_GENERAL = [
     description: (
       <Text>
         You can review your usage history at any time on the Dashboard by
-        visiting the{" "}
+        visiting the
         <Link href="/dashboard/settings/usage" color="blue.500">
           Usage
-        </Link>{" "}
+        </Link>
         tab under Settings.
       </Text>
     ),

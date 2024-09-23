@@ -38,7 +38,7 @@ const SettingsApiKeyPage: ThirdwebNextPage = () => {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-5">
+      <div className="mb-5 flex items-center gap-2">
         <Link
           href="/dashboard/settings/api-keys"
           className="text-muted-foreground hover:text-foreground"

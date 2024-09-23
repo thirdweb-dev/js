@@ -83,7 +83,7 @@ const VerifyContractModal: React.FC<
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent
-        className="!bg-background border border-border rounded-lg"
+        className="!bg-background rounded-lg border border-border"
         pb={2}
         mx={{ base: 4, md: 0 }}
       >
@@ -125,7 +125,6 @@ const VerifyContractModal: React.FC<
                           <Icon as={FiCheckCircle} color="green.600" />
                           {result.alreadyVerified && (
                             <Heading size="label.md">
-                              {" "}
                               {result.explorerUrl}: Already verified
                             </Heading>
                           )}

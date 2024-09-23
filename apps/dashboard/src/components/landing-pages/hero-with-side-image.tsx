@@ -69,7 +69,7 @@ export const LandingHeroWithSideImage: React.FC<
             )}
           </Flex>
           <Heading as="h1" size="display.sm" px={{ base: 2, md: 0 }} mr={6}>
-            {title}{" "}
+            {title}
             <Box as="span" bgGradient={gradient} bgClip="text">
               {titleWithGradient}
             </Box>

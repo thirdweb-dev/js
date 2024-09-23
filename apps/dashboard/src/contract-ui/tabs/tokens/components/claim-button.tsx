@@ -63,7 +63,7 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
           <SheetTitle>Claim tokens</SheetTitle>
         </SheetHeader>
         <form>
-          <div className="flex flex-col gap-6 mt-10">
+          <div className="mt-10 flex flex-col gap-6">
             <FormControl isRequired isInvalid={!!form.formState.errors.to}>
               <FormLabel>To Address</FormLabel>
               <Input

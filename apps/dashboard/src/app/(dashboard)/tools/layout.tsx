@@ -11,8 +11,8 @@ export default function ToolLayout({
   children,
 }: { children: React.ReactNode }) {
   return (
-    <section className="flex flex-col h-full gap-8">
-      <main className="container pb-20 flex-1">
+    <section className="flex h-full flex-col gap-8">
+      <main className="container flex-1 pb-20">
         <div className="h-14" />
         <ToolsTabs />
         <div className="h-8" />

@@ -36,7 +36,7 @@ function createList(len: number) {
 
 function Story() {
   return (
-    <div className="py-6 max-w-[600px] mx-auto w-full px-4 flex flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-[600px] flex-col gap-6 px-4 py-6">
       <VariantTest defaultValues={[]} storyLabel="5 items" listLen={5} />
       <VariantTest defaultValues={[]} storyLabel="5000 items" listLen={5000} />
       <VariantTest

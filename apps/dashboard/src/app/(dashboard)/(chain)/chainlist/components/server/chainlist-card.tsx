@@ -31,12 +31,12 @@ export async function ChainListCard({
 
   return (
     <div className="relative h-full">
-      <Card className="w-full h-full bg-muted/50 hover:bg-muted">
+      <Card className="h-full w-full bg-muted/50 hover:bg-muted">
         <CardHeader className="flex flex-row items-center justify-between p-4">
           <div className="flex flex-row items-center gap-2">
             <ChainIcon iconUrl={iconUrl} className="size-6" />
             <Link
-              className="static group before:content-[''] before:absolute before:top-0 before:bottom-0 before:left-0 before:right-0 before:z-0"
+              className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0 before:content-['']"
               href={`/${chainSlug}`}
             >
               <CardTitle className="text-xl">{chainName}</CardTitle>
@@ -49,9 +49,9 @@ export async function ChainListCard({
         <CardContent className="px-4 pt-0 pb-4">
           {/* table of `chain id` `native token` `managed support`, header row on left value row on right */}
           <table className="w-full">
-            <tbody className="[&_td>*]:min-h-[25px] text-sm">
+            <tbody className="text-sm [&_td>*]:min-h-[25px]">
               <tr>
-                <th className="font-normal text-left text-muted-foreground">
+                <th className="text-left font-normal text-muted-foreground">
                   Chain ID
                 </th>
                 <td className="text-right">
@@ -59,14 +59,14 @@ export async function ChainListCard({
                     textToCopy={chainId.toString()}
                     textToShow={chainId.toString()}
                     tooltip="Copy Chain ID"
-                    className="inline-flex z-10 relative text-base translate-x-2 py-0.5"
+                    className="relative z-10 inline-flex translate-x-2 py-0.5 text-base"
                     variant="ghost"
                     copyIconPosition="left"
                   />
                 </td>
               </tr>
               <tr>
-                <th className="font-normal text-left text-muted-foreground">
+                <th className="text-left font-normal text-muted-foreground">
                   Native Token
                 </th>
                 <td className="text-right">
@@ -76,7 +76,7 @@ export async function ChainListCard({
                 </td>
               </tr>
               <tr>
-                <th className="font-normal text-left text-muted-foreground">
+                <th className="text-left font-normal text-muted-foreground">
                   Available Services
                 </th>
 
@@ -90,17 +90,17 @@ export async function ChainListCard({
           </table>
 
           {(isDeprecated || chainMetadata?.gasSponsored) && (
-            <div className="flex gap-5 pt-4 mt-5 border-t">
+            <div className="mt-5 flex gap-5 border-t pt-4">
               {!isDeprecated && chainMetadata?.gasSponsored && (
-                <div className="gap-1.5 flex items-center">
-                  <TicketCheckIcon className="text-foreground size-5" />
+                <div className="flex items-center gap-1.5">
+                  <TicketCheckIcon className="size-5 text-foreground" />
                   <p className="text-sm">Gas Sponsored</p>
                 </div>
               )}
 
               {isDeprecated && (
-                <div className="gap-1.5 flex items-center">
-                  <CircleAlertIcon className="text-destructive-text size-5" />
+                <div className="flex items-center gap-1.5">
+                  <CircleAlertIcon className="size-5 text-destructive-text" />
                   <p className="text-sm">Deprecated</p>
                 </div>
               )}

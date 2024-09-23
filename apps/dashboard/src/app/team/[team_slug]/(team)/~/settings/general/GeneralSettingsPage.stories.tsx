@@ -47,7 +47,7 @@ const testTeam: Team = {
 
 function Story() {
   return (
-    <div className="bg-background min-h-screen text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <SettingsLayout
         params={{
           team_slug: testTeam.slug,
@@ -65,8 +65,8 @@ function Story() {
 
 function ComponentVariantions() {
   return (
-    <div className="pt-20 border-t p-6 border-border">
-      <div className="max-w-[1100px] mx-auto">
+    <div className="border-border border-t p-6 pt-20">
+      <div className="mx-auto max-w-[1100px]">
         <h2 className="mb-5 text-3xl"> Component variations </h2>
         <div className="flex flex-col gap-6">
           <LeaveTeamCard enabled={true} teamName="foo" />

@@ -316,7 +316,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
                 top={2}
                 right={2}
               >
-                <b>{listing.currencyValue.displayValue}</b>{" "}
+                <b>{listing.currencyValue.displayValue}</b>
                 {listing.currencyValue.symbol}
               </SkeletonText>
             </Flex>

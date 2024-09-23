@@ -33,7 +33,7 @@ export const DeepLinkConnectUI = (props: {
 
       <Container flex="row" center="x" animate="fadein" py="3xl">
         <PulsatingContainer>
-          <WalletImage id={props.wallet.id} client={props.client} size={"80"} />
+          <WalletImage id={props.wallet.id} client={props.client} size="80" />
         </PulsatingContainer>
       </Container>
 

@@ -916,7 +916,7 @@ export function useNetworkSwitcherModal() {
       setRootEl(
         <CustomThemeProvider theme={props.theme}>
           <Modal
-            size={"compact"}
+            size="compact"
             open={true}
             setOpen={(value) => {
               if (!value) {

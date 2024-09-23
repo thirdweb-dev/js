@@ -79,13 +79,13 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
   });
 
   if (webhooksQuery.isPending) {
-    return <Spinner className="size-8 mx-auto" />;
+    return <Spinner className="mx-auto size-8" />;
   }
 
   if (!webhooksQuery.data?.length) {
     return (
-      <div className="border border-border rounded-lg p-8 text-center flex flex-col items-center gap-8">
-        <h2 className="text-xl font-semibold">No webhooks configured yet.</h2>
+      <div className="flex flex-col items-center gap-8 rounded-lg border border-border p-8 text-center">
+        <h2 className="font-semibold text-xl">No webhooks configured yet.</h2>
         <CreateWebhookButton clientId={props.clientId}>
           <Button variant="primary" className="gap-1">
             <PlusIcon className="size-4" />
@@ -124,10 +124,8 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
                 <CopyTextButton
                   textToShow={shortenString(webhook.secret)}
                   textToCopy={webhook.secret}
-                  tooltip={
-                    "Use this secret to validate the authenticity of incoming webhook requests."
-                  }
-                  copyIconPosition={"right"}
+                  tooltip="Use this secret to validate the authenticity of incoming webhook requests."
+                  copyIconPosition="right"
                 />
               </TableCell>
               <TableCell>

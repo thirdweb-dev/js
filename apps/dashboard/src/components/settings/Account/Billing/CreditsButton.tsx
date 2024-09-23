@@ -99,7 +99,7 @@ export const CreditsButton = () => {
       </Box>
       <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
         <ModalOverlay />
-        <ModalContent className="!bg-background border border-border rounded-lg">
+        <ModalContent className="!bg-background rounded-lg border border-border">
           <ModalCloseButton />
           <ModalHeader>Credits Balance</ModalHeader>
           <ModalBody>

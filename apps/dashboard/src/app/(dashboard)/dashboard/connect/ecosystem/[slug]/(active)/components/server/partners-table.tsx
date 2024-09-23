@@ -29,7 +29,7 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
       <div className="flex flex-col gap-2">
         {Array.from({ length: 3 }).map((_, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: static list with index as key
-          <Skeleton key={i} className="w-full h-10 rounded-md" />
+          <Skeleton key={i} className="h-10 w-full rounded-md" />
         ))}
       </div>
     );
@@ -83,22 +83,22 @@ function PartnerRow(props: {
         isDeleting && "animate-pulse",
       )}
     >
-      <TableCell className="truncate align-top max-w-32">
+      <TableCell className="max-w-32 truncate align-top">
         {props.partner.name}
       </TableCell>
-      <TableCell className="hidden align-top md:table-cell max-w-32 text-wrap">
+      <TableCell className="hidden max-w-32 text-wrap align-top md:table-cell">
         {props.partner.allowlistedDomains.map((domain) => (
           <div key={domain}>{domain}</div>
         ))}
       </TableCell>
-      <TableCell className="hidden align-top max-w-32 md:table-cell">
+      <TableCell className="hidden max-w-32 align-top md:table-cell">
         {props.partner.allowlistedBundleIds.map((domain) => (
           <div key={domain} className="truncate">
             {domain}
           </div>
         ))}
       </TableCell>
-      <TableCell className="hidden align-top max-w-32 sm:table-cell">
+      <TableCell className="hidden max-w-32 align-top sm:table-cell">
         <ToolTipLabel label={props.partner.id}>
           <div className="truncate">
             <CopyButton text={props.partner.id} className="mr-1" />
@@ -108,7 +108,7 @@ function PartnerRow(props: {
       </TableCell>
 
       <td className="table-cell py-1 align-middle">
-        <div className="flex gap-1.5 pr-1.5 justify-end">
+        <div className="flex justify-end gap-1.5 pr-1.5">
           <UpdatePartnerModal
             partner={props.partner}
             ecosystem={props.ecosystem}
@@ -117,7 +117,7 @@ function PartnerRow(props: {
               type="button"
               variant="outline"
               size="icon"
-              className="text-accent-foreground/50 hover:text-accent-foreground hover:bg-accent"
+              className="text-accent-foreground/50 hover:bg-accent hover:text-accent-foreground"
               disabled={isDeleting}
             >
               <Pencil className="size-4" />
@@ -129,7 +129,7 @@ function PartnerRow(props: {
             description={
               <span>
                 Their partner key will no longer be able to use your ecosystem
-                wallet. Their users will still have access to their assets at{" "}
+                wallet. Their users will still have access to their assets at
                 <Link
                   href={`https://${props.ecosystem.slug}.ecosystem.thirdweb.com`}
                   target="_blank"
@@ -151,7 +151,7 @@ function PartnerRow(props: {
               type="button"
               variant="outline"
               size="icon"
-              className="text-destructive hover:text-destructive-foreground hover:bg-destructive"
+              className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
               disabled={isDeleting}
             >
               <Trash2 className="size-4" />

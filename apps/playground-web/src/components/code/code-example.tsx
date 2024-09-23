@@ -13,15 +13,15 @@ export const CodeExample: React.FC<CodeExampleProps> = ({
   preview,
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 items-center rounded-xl border overflow-hidden">
+    <div className="grid grid-cols-1 items-center overflow-hidden rounded-xl border md:grid-cols-2">
       <div className="h-full md:border-r">
         <Code
           code={code}
           lang={lang}
-          className="border-none h-full rounded-none"
+          className="h-full rounded-none border-none"
         />
       </div>
-      <div className="py-8 h-full grid place-items-center bg-secondary/10 relative min-h-[300px]">
+      <div className="relative grid h-full min-h-[300px] place-items-center bg-secondary/10 py-8">
         {preview}
         <BackgroundPattern />
       </div>

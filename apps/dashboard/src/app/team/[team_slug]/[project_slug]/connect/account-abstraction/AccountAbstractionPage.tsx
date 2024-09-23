@@ -45,13 +45,13 @@ export function AccountAbstractionPage(props: {
 
   return (
     <div>
-      <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight mb-1">
+      <h1 className="mb-1 font-semibold text-2xl tracking-tight lg:text-3xl">
         Account Abstraction
       </h1>
 
       <p className="text-muted-foreground text-sm">
         Easily integrate Account abstraction (ERC-4337) compliant smart accounts
-        into your apps.{" "}
+        into your apps.
         <TrackedLinkTW
           target="_blank"
           label="docs-wallets"
@@ -66,7 +66,7 @@ export function AccountAbstractionPage(props: {
       <div className="h-6" />
 
       {looggedInUserQuery.isPending ? (
-        <div className="flex items-center justify-center h-[400px] border border-border rounded-lg">
+        <div className="flex h-[400px] items-center justify-center rounded-lg border border-border">
           <Spinner className="size-14" />
         </div>
       ) : (

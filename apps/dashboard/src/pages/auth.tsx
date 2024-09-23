@@ -129,7 +129,7 @@ const AuthLanding: ThirdwebNextPage = () => {
               description={
                 <>
                   Secure your backend with a web3-compatible authentication
-                  system compliant with the widely used{" "}
+                  system compliant with the widely used
                   <TrackedLink
                     href="https://jwt.io/"
                     category={TRACKING_CATEGORY}
@@ -138,7 +138,7 @@ const AuthLanding: ThirdwebNextPage = () => {
                     isExternal
                   >
                     JSON Web Token
-                  </TrackedLink>{" "}
+                  </TrackedLink>
                   standard.
                 </>
               }

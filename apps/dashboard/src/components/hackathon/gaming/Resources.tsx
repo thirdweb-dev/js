@@ -28,7 +28,7 @@ export const Resources: React.FC = () => {
       <SimpleGrid columns={{ base: 1, lg: 3 }} gap={8}>
         {resources.map(({ name, link, image }) => (
           <TrackedLink
-            overflow={"hidden"}
+            overflow="hidden"
             href={link}
             isExternal
             category="readyplayer3"
@@ -39,9 +39,9 @@ export const Resources: React.FC = () => {
             position="relative"
             backgroundImage={`linear-gradient(to bottom, hsl(319deg 98% 10%), hsl(300deg 100% 8% / 52%)), url(${image})`}
             backgroundPosition="center"
-            backgroundSize={"100%"}
+            backgroundSize="100%"
             height={{ base: "150px", md: "220px" }}
-            borderRadius={"12px"}
+            borderRadius="12px"
             transition="background-size 200ms ease"
             _hover={{
               backgroundSize: "110%",
@@ -51,9 +51,9 @@ export const Resources: React.FC = () => {
             lineHeight={1.3}
             textAlign="center"
             p={6}
-            display={"flex"}
-            justifyContent={"center"}
-            alignItems={"center"}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
             fontWeight={700}
           >
             {name}

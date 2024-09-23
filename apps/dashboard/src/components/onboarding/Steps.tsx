@@ -208,7 +208,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
           <Flex flexDir="column" gap={4}>
             <Text>
               Successful applicants will receive gas grants which can be used
-              across all supported{" "}
+              across all supported
               <Link
                 href="https://blog.thirdweb.com/accelerating-the-superchain-with-optimism"
                 isExternal
@@ -276,13 +276,13 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
     >
       <div
         className={cn(
-          "gap-2 flex flex-col items-start p-6",
+          "flex flex-col items-start gap-2 p-6",
           rightImageDark && !isMobile ? "w-[60%]" : "w-full",
         )}
       >
         <Heading size="title.sm">{title}</Heading>
         <Text>{description}</Text>
-        <div className="flex flex-row mt-4 items-center">
+        <div className="mt-4 flex flex-row items-center">
           {isLoggedIn ? (
             <Button
               size="sm"
@@ -311,10 +311,10 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         </div>
       </div>
       {rightImageDark && !isMobile && theme === "dark" && (
-        <ChakraNextImage src={rightImageDark} alt={""} w="50%" priority />
+        <ChakraNextImage src={rightImageDark} alt="" w="50%" priority />
       )}
       {rightImageLight && !isMobile && theme === "light" && (
-        <ChakraNextImage src={rightImageLight} alt={""} w="50%" priority />
+        <ChakraNextImage src={rightImageLight} alt="" w="50%" priority />
       )}
     </Card>
   );

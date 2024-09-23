@@ -53,7 +53,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
         className="z-[9001]"
       >
         <DialogHeader>
-          <DialogTitle className="text-2xl font-semibold tracking-tight">
+          <DialogTitle className="font-semibold text-2xl tracking-tight">
             Import Contract
           </DialogTitle>
           <DialogDescription>

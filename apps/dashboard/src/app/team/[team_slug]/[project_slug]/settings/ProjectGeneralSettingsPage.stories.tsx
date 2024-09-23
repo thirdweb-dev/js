@@ -69,7 +69,7 @@ function Story(props: {
     },
   });
   return (
-    <div className="max-w-[1100px] py-6 px-4 w-full mx-auto">
+    <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
       <ProjectGeneralSettingsPageUI
         apiKey={apiKeyStub}
         wording={props.wording}

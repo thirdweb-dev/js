@@ -34,16 +34,16 @@ export function AccountTeamsUI(props: {
 
   return (
     <div>
-      <div className="flex items-start gap-4 flex-col lg:flex-row lg:justify-between">
+      <div className="flex flex-col items-start gap-4 lg:flex-row lg:justify-between">
         <div>
-          <h2 className="font-semibold text-xl tracking-tight mb-0.5">Teams</h2>
+          <h2 className="mb-0.5 font-semibold text-xl tracking-tight">Teams</h2>
           <p className="text-muted-foreground text-sm">
             The teams that are associated with your thirdweb account
           </p>
         </div>
 
         <ToolTipLabel label="Coming Soon">
-          <Button variant="primary" disabled className="max-sm:w-full gap-2">
+          <Button variant="primary" disabled className="gap-2 max-sm:w-full">
             <PlusIcon className="size-4" />
             Create a Team
           </Button>
@@ -60,13 +60,13 @@ export function AccountTeamsUI(props: {
 
       <div className="h-4" />
 
-      <ul className="bg-muted/50 border rounded-lg">
+      <ul className="rounded-lg border bg-muted/50">
         {/* Teams List */}
         {teamsToShow.map((v) => {
           return (
             <li
               key={v.team.id}
-              className="border-b border-border p-4 last:border-b-0"
+              className="border-border border-b p-4 last:border-b-0"
             >
               <TeamRow team={v.team} role={v.role} />
             </li>
@@ -75,11 +75,11 @@ export function AccountTeamsUI(props: {
 
         {/* No Result Found */}
         {teamsToShow.length === 0 && (
-          <div className="p-4 h-[200px] justify-center flex items-center">
+          <div className="flex h-[200px] items-center justify-center p-4">
             <div className="text-center">
               <p className="mb-3 text-sm">No teams found</p>
               {teamSearchValue && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Your search for {`"${teamSearchValue}"`} did not match any
                   teams
                 </p>
@@ -99,11 +99,11 @@ function TeamRow(props: {
   const plan = getValidTeamPlan(props.team);
 
   return (
-    <div className="flex gap-2 items-center justify-between">
+    <div className="flex items-center justify-between gap-2">
       {/* start */}
       <div className="flex items-center gap-4">
         {/* TODO - render team avatar  */}
-        <div className="border rounded-full size-8 bg-muted" />
+        <div className="size-8 rounded-full border bg-muted" />
 
         <div>
           <div className="flex items-center gap-3">

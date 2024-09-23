@@ -2,10 +2,10 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "svg-jsx"],
   "extends": [
-    "next/core-web-vitals",
-    "plugin:tailwindcss/recommended",
-    "plugin:mdx/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@next/next/recommended",
+    "plugin:storybook/recommended"
   ],
   "rules": {
     "no-unused-vars": "off",

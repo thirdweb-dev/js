@@ -12,7 +12,7 @@ import {
 
 export function FailedToLoad() {
   return (
-    <div className="min-h-[250px] flex items-center justify-center flex-1">
+    <div className="flex min-h-[250px] flex-1 items-center justify-center">
       <div className="flex items-center gap-2">
         <OctagonXIcon className="size-5 text-destructive-foreground" />
         <p className="text-muted-foreground">Unable to load</p>
@@ -23,14 +23,14 @@ export function FailedToLoad() {
 
 export function NoDataOverlay() {
   return (
-    <div className="absolute inset-0 flex items-center justify-center backdrop-blur-sm text-muted-foreground bg-background/30 text-sm rounded-lg">
+    <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/30 text-muted-foreground text-sm backdrop-blur-sm">
       No data available
     </div>
   );
 }
 
 export function CardHeading(props: { children: React.ReactNode }) {
-  return <h3 className="text-base font-medium">{props.children}</h3>;
+  return <h3 className="font-medium text-base">{props.children}</h3>;
 }
 
 export function ChangeBadge(props: { percent: number }) {
@@ -46,7 +46,7 @@ export function ChangeBadge(props: { percent: number }) {
       <div>
         <Badge
           variant={props.percent >= 0 ? "success" : "destructive"}
-          className="text-sm gap-1 px-2 py-1.5"
+          className="gap-1 px-2 py-1.5 text-sm"
         >
           {props.percent >= 0 ? (
             <ArrowUpIcon className="size-4 " />
@@ -66,16 +66,16 @@ export function TableData({ children }: { children: React.ReactNode }) {
 
 export function TableHeadingRow({ children }: { children: React.ReactNode }) {
   return (
-    <tr className="sticky top-0 bg-background z-10">
+    <tr className="sticky top-0 z-10 bg-background">
       {children}
-      <div className="border-b border-border absolute inset-0 z-10" />
+      <div className="absolute inset-0 z-10 border-border border-b" />
     </tr>
   );
 }
 
 export function TableHeading(props: { children: React.ReactNode }) {
   return (
-    <th className="bg-muted/50 border-b border-border text-left px-3 py-3 text-sm font-medium text-muted-foreground min-w-[150px]">
+    <th className="min-w-[150px] border-border border-b bg-muted/50 px-3 py-3 text-left font-medium text-muted-foreground text-sm">
       {props.children}
     </th>
   );
@@ -92,7 +92,7 @@ export function IntervalSelector(props: {
         props.setIntervalType(value);
       }}
     >
-      <SelectTrigger className="bg-transparent w-auto">
+      <SelectTrigger className="w-auto bg-transparent">
         <SelectValue placeholder="Select" />
       </SelectTrigger>
       <SelectContent position="popper">
