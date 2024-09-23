@@ -1,5 +1,19 @@
 # thirdweb
 
+## 5.58.4
+
+### Patch Changes
+
+- [#4752](https://github.com/thirdweb-dev/js/pull/4752) [`e9ae980`](https://github.com/thirdweb-dev/js/commit/e9ae98084af24199155f997f724c7ea8ff860876) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [ReactNative] Respect icon theme color in connect button and detail modal
+
+- [#4738](https://github.com/thirdweb-dev/js/pull/4738) [`a4dac95`](https://github.com/thirdweb-dev/js/commit/a4dac9563002a2909902b84aa5b764e3fae27b6b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix jsdoc for getClaimParams
+
+- [#4753](https://github.com/thirdweb-dev/js/pull/4753) [`1133ccc`](https://github.com/thirdweb-dev/js/commit/1133ccc23931f1984e400ee83f1641bdb56f0d90) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix abi resolution fallback
+
+- [#4756](https://github.com/thirdweb-dev/js/pull/4756) [`33936b3`](https://github.com/thirdweb-dev/js/commit/33936b3a86be85427f01f8974af5c3e530f7bdaf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle biging serialization for ecosystem wallets
+
+- [#4687](https://github.com/thirdweb-dev/js/pull/4687) [`fc2ecdf`](https://github.com/thirdweb-dev/js/commit/fc2ecdfd9868496c4dca0cf980fae68d6209edce) Thanks [@gregfromstl](https://github.com/gregfromstl)! - React: Hides guest accounts from linked profiles screen
+
 ## 5.58.3
 
 ### Patch Changes
