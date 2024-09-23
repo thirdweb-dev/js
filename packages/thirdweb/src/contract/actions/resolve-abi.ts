@@ -1,10 +1,7 @@
 import { type Abi, formatAbi, parseAbi } from "abitype";
-import { getInstalledModules } from "../../extensions/modules/__generated__/IModularCore/read/getInstalledModules.js";
 import { download } from "../../storage/download.js";
-import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { ThirdwebContract } from "../contract.js";
-import { getBytecode } from "./get-bytecode.js";
 
 const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
 
@@ -117,7 +114,11 @@ export async function resolveAbiFromBytecode(
   // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any contract type
   contract: ThirdwebContract<any>,
 ): Promise<Abi> {
-  const bytecode = await getBytecode(contract);
+  const [{ resolveImplementation }, { extractIPFSUri }] = await Promise.all([
+    import("../../utils/bytecode/resolveImplementation.js"),
+    import("../../utils/bytecode/extractIPFS.js"),
+  ]);
+  const { bytecode } = await resolveImplementation(contract);
   if (bytecode === "0x") {
     const { id, name } = contract.chain;
     throw new Error(
@@ -366,6 +367,9 @@ async function resolveModularModuleAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
+    const { getInstalledModules } = await import(
+      "../../extensions/modules/__generated__/IModularCore/read/getInstalledModules.js"
+    );
     const modules = await getInstalledModules({ contract });
     // if there are no plugins, return the root ABI
     if (!modules.length) {
@@ -434,14 +438,15 @@ function joinAbis(options: JoinAbisOptions): Abi {
     .filter((item) => item.type !== "constructor");
 
   if (options.rootAbi) {
-    mergedPlugins = [...(options.rootAbi || []), ...mergedPlugins].filter(
-      Boolean,
-    );
+    mergedPlugins = [...options.rootAbi, ...mergedPlugins]
+      .filter((item) => item.type !== "fallback" && item.type !== "receive")
+      .filter(Boolean);
   }
 
   // unique by formatting every abi and then throwing them in a set
   // TODO: this may not be super efficient...
   const humanReadableAbi = [...new Set(formatAbi(mergedPlugins))];
+
   // finally parse it back out
   return parseAbi(humanReadableAbi);
 }
