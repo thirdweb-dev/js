@@ -34,7 +34,7 @@ export async function usageLimit(
   ) {
     return {
       usageLimited: true,
-      status: 403,
+      status: 402,
       errorMessage: `You've used all of your total usage credits for Storage Pinning. Please add your payment method at https://thirdweb.com/dashboard/settings/billing.`,
       errorCode: "PAYMENT_METHOD_REQUIRED",
     };
@@ -47,7 +47,7 @@ export async function usageLimit(
   ) {
     return {
       usageLimited: true,
-      status: 403,
+      status: 402,
       errorMessage: `You've used all of your total usage credits for Embedded Wallets. Please add your payment method at https://thirdweb.com/dashboard/settings/billing.`,
       errorCode: "PAYMENT_METHOD_REQUIRED",
     };
