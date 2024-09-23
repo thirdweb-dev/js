@@ -353,7 +353,7 @@
     "react-native": "0.75.3",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-passkey": "3.0.0-beta2",
-    "react-native-quick-crypto": "0.7.4",
+    "react-native-quick-crypto": "0.7.5",
     "react-native-svg": "15.7.1",
     "rimraf": "6.0.1",
     "sharp": "^0.33.5",
