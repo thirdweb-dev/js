@@ -1,5 +1,5 @@
 import { CodeExample } from "@/components/code/code-example";
-import { StyledConnectEmbed } from "../../../components/styled-connect-embed";
+import { InAppConnectEmbed } from "../../../components/in-app-wallet/connect-button";
 import ThirdwebProvider from "../../../components/thirdweb-provider";
 
 export default function Page() {
@@ -28,7 +28,7 @@ function AnyAuth() {
       </div>
 
       <CodeExample
-        preview={<StyledConnectEmbed />}
+        preview={<InAppConnectEmbed />}
         code={`import { inAppWallet } from "thirdweb/wallets";
         import { ConnectEmbed } from "thirdweb/react";
 
@@ -37,7 +37,21 @@ function AnyAuth() {
           inAppWallet(
             // built-in auth methods
             { auth: {
-              options: ["email", "phone", "passkey", "google", "apple", "facebook"]
+              options: [ 
+              "google",
+              "x",
+              "apple",
+              "discord",
+              "facebook",
+              "farcaster",
+              "telegram",
+              "coinbase",
+              "line",
+              "email",
+              "phone",
+              "passkey",
+              "guest",
+              ]
               }
             }
             // or bring your own auth endpoint
