@@ -260,7 +260,7 @@ export const ConnectedWalletDetails: React.FC<{
             color="secondaryText"
             weight={400}
           >
-            {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}
+            {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
             {balanceQuery.data.symbol}
           </Text>
         ) : (
@@ -366,7 +366,7 @@ function DetailsModal(props: {
               formatNumber(Number(balanceQuery.data.displayValue), 5)
             ) : (
               <Skeleton height="1em" width="100px" />
-            )}
+            )}{" "}
             {balanceQuery.data?.symbol}
           </Text>
         </Text>
