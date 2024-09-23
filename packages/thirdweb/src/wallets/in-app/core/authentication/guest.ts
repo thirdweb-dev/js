@@ -1,6 +1,9 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
+import { randomBytesHex } from "../../../../utils/random.js";
+import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import type { Ecosystem } from "../../web/types.js";
+import { ClientScopedStorage } from "./client-scoped-storage.js";
 import { getLoginCallbackUrl } from "./getLoginPath.js";
 import type { AuthStoredTokenWithCookieReturnType } from "./types.js";
 
@@ -10,8 +13,21 @@ import type { AuthStoredTokenWithCookieReturnType } from "./types.js";
  */
 export async function guestAuthenticate(args: {
   client: ThirdwebClient;
+  storage: AsyncStorage;
   ecosystem?: Ecosystem;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
+  const storage = new ClientScopedStorage({
+    storage: args.storage,
+    clientId: args.client.clientId,
+    ecosystemId: args.ecosystem?.id,
+  });
+
+  let sessionId = await storage.getGuestSessionId();
+  if (!sessionId) {
+    sessionId = randomBytesHex(32);
+    storage.saveGuestSessionId(sessionId);
+  }
+
   const clientFetch = getClientFetch(args.client, args.ecosystem);
   const authResult = await (async () => {
     const path = getLoginCallbackUrl({
@@ -25,7 +41,7 @@ export async function guestAuthenticate(args: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        sessionId: "guest",
+        sessionId,
       }),
     });
 

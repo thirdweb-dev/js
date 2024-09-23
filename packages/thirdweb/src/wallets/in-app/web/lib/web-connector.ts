@@ -316,6 +316,7 @@ export class InAppWebConnector implements InAppConnector {
         return guestAuthenticate({
           client: this.client,
           ecosystem: this.ecosystem,
+          storage: webLocalStorage,
         });
       }
       case "wallet": {

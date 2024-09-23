@@ -52,3 +52,9 @@ export const DEVICE_SHARE_LOCAL_STORAGE_NAME = (key: string, userId: string) =>
  */
 export const WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME = (key: string) =>
   `walletConnectSessions-${key}`;
+
+/**
+ * @internal
+ */
+export const GUEST_SESSION_LOCAL_STORAGE_NAME = (key: string) =>
+  `thirdweb_guest_session_id_${key}`;

@@ -105,6 +105,7 @@ export class InAppNativeConnector implements InAppConnector {
         return guestAuthenticate({
           client: this.options.client,
           ecosystem: params.ecosystem,
+          storage: nativeLocalStorage,
         });
       }
       case "wallet": {
