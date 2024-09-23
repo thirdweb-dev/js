@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.39
+
+### Patch Changes
+
+- [#4760](https://github.com/thirdweb-dev/js/pull/4760) [`57a0e27`](https://github.com/thirdweb-dev/js/commit/57a0e271b3f84348c79e99e4e15b239a1a2fce0d) Thanks [@arcoraven](https://github.com/arcoraven)! - fix: Return 402 status if payment required
+
 ## 0.4.38
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.58.5
+
+### Patch Changes
+
+- [#4759](https://github.com/thirdweb-dev/js/pull/4759) [`2d34771`](https://github.com/thirdweb-dev/js/commit/2d34771e189146e4c2619f7585f9cbfa3e190bac) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Fix guest account creation uniqueness
+
+- [#4763](https://github.com/thirdweb-dev/js/pull/4763) [`399ba2e`](https://github.com/thirdweb-dev/js/commit/399ba2efd075bb0a62ff83e30779ab1aa535e203) Thanks [@jnsdls](https://github.com/jnsdls)! - improve error handling for 402 and 403 error codes in storage upload
+
 ## 5.58.4
 
 ### Patch Changes

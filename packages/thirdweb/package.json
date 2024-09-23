@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.58.4",
+  "version": "5.58.5",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -214,7 +214,6 @@
     "@walletconnect/ethereum-provider": "2.16.2",
     "@walletconnect/sign-client": "2.16.2",
     "abitype": "1.0.5",
-
     "fuse.js": "7.0.0",
     "input-otp": "^1.2.4",
     "mipd": "0.0.7",
