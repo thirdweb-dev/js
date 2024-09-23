@@ -50,14 +50,14 @@ export function RecentEngineAlertsSectionUI(props: {
   const { alerts, isLoading } = props;
   return (
     <section>
-      <h2 className="text-2xl font-semibold tracking-tight mb-1">
+      <h2 className="mb-1 font-semibold text-2xl tracking-tight">
         Recent Alerts
       </h2>
 
       <div className="h-2" />
 
       {alerts.length === 0 || isLoading ? (
-        <div className="flex justify-center items-center min-h-[200px] w-full border border-border rounded-lg">
+        <div className="flex min-h-[200px] w-full items-center justify-center rounded-lg border border-border">
           {isLoading ? <Spinner className="size-8" /> : "No alerts triggered."}
         </div>
       ) : (

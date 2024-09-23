@@ -16,7 +16,7 @@ function AnyAuth() {
   return (
     <>
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
           Your own Ecosystem
         </h2>
         <p className="max-w-[600px]">

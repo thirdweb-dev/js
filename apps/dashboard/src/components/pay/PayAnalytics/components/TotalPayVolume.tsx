@@ -148,8 +148,8 @@ function RenderData(props: {
       : "hsl(var(--destructive-text))";
 
   return (
-    <div className="flex flex-col  flex-1">
-      <div className="flex flex-col lg:flex-row lg:justify-between gap-2 lg:items-center">
+    <div className="flex flex-1 flex-col">
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
         <CardHeading>Volume</CardHeading>
 
         {props.query.data && (
@@ -195,7 +195,7 @@ function RenderData(props: {
 
       <div className="h-10" />
 
-      <div className="flex justify-center w-full flex-1 relative">
+      <div className="relative flex w-full flex-1 justify-center">
         {props.query.isPending ? (
           <AreaChartLoadingState height={`${chartHeight}px`} />
         ) : (
@@ -215,11 +215,11 @@ function RenderData(props: {
                       | GraphData
                       | undefined;
                     return (
-                      <div className="bg-popover px-4 py-2 rounded border border-border">
-                        <p className="text-muted-foreground mb-1 text-sm">
+                      <div className="rounded border border-border bg-popover px-4 py-2">
+                        <p className="mb-1 text-muted-foreground text-sm">
                           {payload?.date}
                         </p>
-                        <p className="text-medium text-base">
+                        <p className="text-base text-medium">
                           ${payload?.value.toLocaleString()}
                         </p>
                       </div>
@@ -243,7 +243,7 @@ function RenderData(props: {
                   dataKey="date"
                   axisLine={false}
                   tickLine={false}
-                  className="text-xs font-sans"
+                  className="font-sans text-xs"
                   stroke="hsl(var(--muted-foreground))"
                   dy={10}
                 />

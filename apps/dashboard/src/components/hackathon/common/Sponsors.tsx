@@ -32,7 +32,7 @@ export const Sponsors: React.FC<SponsorProps> = ({
         display={{ base: "grid", md: "flex" }}
         gridTemplateColumns={{ base: "1fr 1fr", md: "none" }}
         flexWrap="wrap"
-        alignItems={"center"}
+        alignItems="center"
       >
         {sponsors.map(({ name, link, logo }) => (
           <TrackedLink

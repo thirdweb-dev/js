@@ -21,20 +21,20 @@ export const UsageCard: React.FC<UsageCardProps> = ({
   tooltip,
 }) => {
   return (
-    <div className="p-4 bg-background border border-border rounded-lg min-h-[140px] flex flex-col">
+    <div className="flex min-h-[140px] flex-col rounded-lg border border-border bg-background p-4">
       <div className="flex items-center gap-2">
-        <h3 className="text-base font-medium">{name}</h3>
+        <h3 className="font-medium text-base">{name}</h3>
         {tooltip && (
           <ToolTipLabel label={tooltip}>
-            <CircleHelpIcon className="text-muted-foreground size-4" />
+            <CircleHelpIcon className="size-4 text-muted-foreground" />
           </ToolTipLabel>
         )}
       </div>
 
       <div className="h-6" />
 
-      <div className="flex flex-col gap-2 mt-auto">
-        {title && <p className="mb-2 text-foreground font-semibold">{title}</p>}
+      <div className="mt-auto flex flex-col gap-2">
+        {title && <p className="mb-2 font-semibold text-foreground">{title}</p>}
 
         {total !== undefined && (
           <p className="text-muted-foreground text-sm">
@@ -45,8 +45,8 @@ export const UsageCard: React.FC<UsageCardProps> = ({
         {progress !== undefined && <Progress value={progress} />}
 
         {overage && (
-          <p className="text-muted-foreground mt-2 text-sm">
-            Additional overage fees to your next invoice will be{" "}
+          <p className="mt-2 text-muted-foreground text-sm">
+            Additional overage fees to your next invoice will be
             <span className="text-foreground">{toUSD(overage)}</span>
           </p>
         )}
@@ -59,7 +59,7 @@ function Progress(props: {
   value: number;
 }) {
   return (
-    <div className="bg-muted rounded-full">
+    <div className="rounded-full bg-muted">
       <div
         className={cn(
           "h-2 rounded-full",

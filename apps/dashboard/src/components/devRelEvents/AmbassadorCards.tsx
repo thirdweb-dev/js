@@ -35,7 +35,7 @@ export const AmbassadorCard: ComponentWithChildren<AmbassadorProps> = ({
         }}
       />
       <Flex
-        direction={"column"}
+        direction="column"
         mt="16px"
         color="paragraph"
         lineHeight={1.6}

@@ -59,7 +59,7 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
 
   return (
     <div>
-      <div className="flex lg:justify-between gap-4 flex-col lg:flex-row">
+      <div className="flex flex-col gap-4 lg:flex-row lg:justify-between">
         <div>
           <h1 className="font-semibold text-3xl tracking-tigher">
             In-App Wallets
@@ -70,7 +70,7 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
           <p className="max-w-[500px] text-muted-foreground ">
             A wallet infrastructure that enables apps to create, manage, and
             control their users wallets. Email login, social login, and
-            bring-your-own auth supported.{" "}
+            bring-your-own auth supported.
             <TrackedLinkTW
               target="_blank"
               href="https://portal.thirdweb.com/connect/in-app-wallet/overview"

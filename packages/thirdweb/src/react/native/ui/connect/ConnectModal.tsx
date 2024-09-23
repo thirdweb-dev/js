@@ -523,7 +523,7 @@ function SignInView({
         </WalletLoadingThumbnail>
         <Spacer size="xl" />
         <ThemedText theme={theme} type="subtitle">
-          {"Complete sign in"}
+          Complete sign in
         </ThemedText>
         <Spacer size="xs" />
         <ThemedText theme={theme} type="subtext">

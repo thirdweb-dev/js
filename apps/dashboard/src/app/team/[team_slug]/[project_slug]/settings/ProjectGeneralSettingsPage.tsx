@@ -292,7 +292,7 @@ function ProjectNameSetting(props: {
         placeholder={wording === "project" ? "My Project" : "My API Key"}
         type="text"
         {...form.register("name")}
-        className="bg-background max-w-[350px]"
+        className="max-w-[350px] bg-background"
       />
     </SettingsCard>
   );
@@ -308,29 +308,29 @@ function AllowedDomainsSetting(props: {
   const isDomainsDirty = form.getFieldState("domains").isDirty;
 
   const helperText = (
-    <ul className="list-disc text-sm text-muted-foreground pl-3 [&>li]:pl-1 flex flex-col gap-1.5 py-1">
+    <ul className="flex list-disc flex-col gap-1.5 py-1 pl-3 text-muted-foreground text-sm [&>li]:pl-1">
       <li>
-        Authorize all domains with{" "}
-        <span className="bg-muted text-xs font-mono inline-block px-2 rounded">
+        Authorize all domains with
+        <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
           *
         </span>
-        {". "}
+        .
         <span>
-          Example:{" "}
-          <span className="bg-muted text-xs font-mono inline-block px-2 rounded">
+          Example:
+          <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
             *.thirdweb.com
-          </span>{" "}
-          accepts all{" "}
-          <span className="bg-muted text-xs font-mono inline-block px-2 rounded">
+          </span>
+          accepts all
+          <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
             .thirdweb.com
-          </span>{" "}
+          </span>
           sites
         </span>
       </li>
       <li>
-        Authorize localhost URLs with{" "}
-        <span className="bg-muted text-xs font-mono inline-block px-2 rounded">
-          {"localhost:<port>"}
+        Authorize localhost URLs with
+        <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
+          localhost:&lt;port&gt;
         </span>
       </li>
       <li>Enter domains separated by commas or new lines</li>
@@ -351,11 +351,11 @@ function AllowedDomainsSetting(props: {
         disabled: !isDomainsDirty,
         isPending: updateMutation.isPending && isDomainsDirty,
       }}
-      bottomText={"This is only applicable for web applications"}
+      bottomText="This is only applicable for web applications"
     >
       <div className="flex flex-col gap-6">
         <div className="relative">
-          <Label htmlFor="domains" className="inline-block mb-2">
+          <Label htmlFor="domains" className="mb-2 inline-block">
             Allowed Domains
           </Label>
 
@@ -442,7 +442,7 @@ function AllowedBundleIDsSetting(props: {
             All Bundle IDs
           </CheckboxWithLabel>
 
-          <Label className="inline-block mb-2">Allowed Bundle IDs</Label>
+          <Label className="mb-2 inline-block">Allowed Bundle IDs</Label>
 
           <Textarea
             placeholder="com.thirdweb.app"
@@ -551,12 +551,12 @@ function EnabledServicesSetting(props: {
             return (
               <div
                 key={srv.name}
-                className="border-t py-5 border-border flex items-start gap-6 justify-between"
+                className="flex items-start justify-between gap-6 border-border border-t py-5"
               >
                 {/* Left */}
                 <div className="flex flex-col gap-4">
                   <div>
-                    <h4 className="text-base font-semibold">{service.title}</h4>
+                    <h4 className="font-semibold text-base">{service.title}</h4>
                     <p className="text-muted-foreground text-sm">
                       {service.description}
                     </p>
@@ -568,7 +568,7 @@ function EnabledServicesSetting(props: {
                         asChild
                         size="sm"
                         variant="outline"
-                        className="min-w-32 gap-2 justify-between"
+                        className="min-w-32 justify-between gap-2"
                       >
                         <Link href={configurationLink}>
                           Configure
@@ -626,16 +626,16 @@ function APIKeyDetails({
   const { createdAt, updatedAt, lastAccessedAt } = apiKey;
 
   return (
-    <div className="border border-border bg-muted/50 rounded-lg py-6 px-4 lg:px-6 flex flex-col gap-6">
+    <div className="flex flex-col gap-6 rounded-lg border border-border bg-muted/50 px-4 py-6 lg:px-6">
       <div>
         <h3>Client ID</h3>
-        <p className="text-muted-foreground text-sm mb-2">
+        <p className="mb-2 text-muted-foreground text-sm">
           Identifies your application.
         </p>
 
         <CopyTextButton
           textToCopy={apiKey.key}
-          className="truncate w-full justify-between font-mono px-3 !h-auto py-3 bg-card max-w-[350px]"
+          className="!h-auto w-full max-w-[350px] justify-between truncate bg-card px-3 py-3 font-mono"
           textToShow={apiKey.key}
           copyIconPosition="right"
           tooltip="Copy Client ID"
@@ -646,19 +646,19 @@ function APIKeyDetails({
       {apiKey.secretMasked && (
         <div>
           <h3>Secret Key</h3>
-          <p className="text-muted-foreground text-sm mb-2">
-            Identifies and authenticates your application from a backend. <br />{" "}
+          <p className="mb-2 text-muted-foreground text-sm">
+            Identifies and authenticates your application from a backend. <br />
             This is not the full secret key, Refer to your saved secret key at
             the time of creation for the full secret key.
           </p>
 
-          <div className="px-4 py-3 border border-border rounded-lg font-mono text-sm bg-card max-w-[350px]">
+          <div className="max-w-[350px] rounded-lg border border-border bg-card px-4 py-3 font-mono text-sm">
             {apiKey.secretMasked}
           </div>
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <TimeInfo label="Created" date={createdAt} />
         <TimeInfo label="Last Updated" date={updatedAt} />
         <TimeInfo label="Last Accessed" date={lastAccessedAt} />

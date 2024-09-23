@@ -1,6 +1,7 @@
 {
   "name": "@thirdweb-dev/service-utils",
   "version": "0.4.38",
+  "type": "module",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -25,8 +26,12 @@
   },
   "typesVersions": {
     "*": {
-      "node": ["./dist/types/node/index.d.ts"],
-      "cf-worker": ["./dist/types/cf-worker/index.d.ts"]
+      "node": [
+        "./dist/types/node/index.d.ts"
+      ],
+      "cf-worker": [
+        "./dist/types/cf-worker/index.d.ts"
+      ]
     }
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/pay",
@@ -35,22 +40,24 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "sideEffects": false,
   "dependencies": {
     "aws4fetch": "1.0.20",
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20240909.0",
+    "@cloudflare/workers-types": "4.20240919.0",
     "@types/node": "20.14.9",
     "typescript": "5.6.2",
     "vitest": "2.1.1"
   },
   "scripts": {
     "format": "biome format ./src --write",
-    "lint": "biome check ./src",
-    "fix": "biome check ./src --fix",
+    "lint": "biome check ./src && tsc --project ./tsconfig.build.json --module esnext --noEmit",
+    "fix": "biome check ./src --fix --unsafe",
     "clean": "rm -rf dist/",
     "build": "pnpm clean && pnpm build:types && pnpm build:cjs && pnpm build:esm",
     "build:cjs": "tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",

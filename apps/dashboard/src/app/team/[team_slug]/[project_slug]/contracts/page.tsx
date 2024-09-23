@@ -13,14 +13,14 @@ export default function Page() {
 
   if (deployedContracts.isPending) {
     return (
-      <div className="min-h-[400px] flex justify-center items-center">
+      <div className="flex min-h-[400px] items-center justify-center">
         <Spinner className="size-10" />
       </div>
     );
   }
 
   return (
-    <div className="pb-10 pt-10">
+    <div className="pt-10 pb-10">
       {!hasContracts ? (
         <GetStartedWithContractsDeploy />
       ) : (

@@ -51,7 +51,7 @@ export function TransactionButton(props: TransactionButtonProps) {
   return (
     <ThemedButton
       disabled={!account || disabled || isPending}
-      variant={"primary"}
+      variant="primary"
       onPress={() => handleClick()}
       style={buttonProps.style as StyleProp<ViewStyle>}
       theme={theme}

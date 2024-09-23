@@ -3,9 +3,12 @@ import {
   validApiKeyMeta,
   validBundlerServiceConfig,
   validServiceConfig,
-} from "../../mocks";
-import type { CoreServiceConfig } from "../api";
-import { type ServiceAuthorizationPayload, authorizeService } from "./service";
+} from "../../mocks.js";
+import type { CoreServiceConfig } from "../api.js";
+import {
+  type ServiceAuthorizationPayload,
+  authorizeService,
+} from "./service.js";
 
 describe("authorizeService", () => {
   it("should authorize service with valid service scope and action", () => {

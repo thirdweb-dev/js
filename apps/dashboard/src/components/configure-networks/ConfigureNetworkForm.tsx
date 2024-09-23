@@ -198,7 +198,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         return handleSubmit(e);
       }}
     >
-      <div className="flex flex-col gap-5 mt-4 px-6 pb-6">
+      <div className="mt-4 flex flex-col gap-5 px-6 pb-6">
         {/* Name + Slug */}
         <div className="grid grid-cols-2 gap-4">
           {/* name */}
@@ -213,7 +213,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               id="name"
               autoComplete="off"
               placeholder="My Network"
-              className="disabled:opacity-100 disabled:bg-muted/50 disabled:text-muted-foreground bg-muted/50"
+              className="bg-muted/50 disabled:bg-muted/50 disabled:text-muted-foreground disabled:opacity-100"
               type="text"
               onChange={(e) => {
                 const value = e.target.value;
@@ -256,7 +256,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               disabled={!isFullyEditable}
               placeholder="ETH"
               autoComplete="off"
-              className="disabled:opacity-100 disabled:bg-muted/50 disabled:text-muted-foreground bg-muted/50 font-mono"
+              className="bg-muted/50 font-mono disabled:bg-muted/50 disabled:text-muted-foreground disabled:opacity-100"
               type="text"
               {...form.register("currencySymbol", { required: true })}
             />
@@ -315,7 +315,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
             label="Icon"
             tooltip={undefined}
           >
-            <div className="flex gap-1 items-center">
+            <div className="flex items-center gap-1">
               <ChainIcon size={20} ipfsSrc={form.watch("icon")} />
               <IconUpload
                 onUpload={(uri) => {
@@ -330,7 +330,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         <RpcInput form={form} />
 
         {overwritingChain && (
-          <div className="p-3 text-sm text-destructive-text rounded-lg border border-border flex items-center gap-2">
+          <div className="flex items-center gap-2 rounded-lg border border-border p-3 text-destructive-text text-sm">
             <CircleAlertIcon className="size-4" />
             <p>
               Chain ID {chainId} is taken by {`${overwritingChain.name}`}
@@ -340,8 +340,8 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       </div>
 
       {/* Buttons  */}
-      <div className="flex gap-4 flex-col md:flex-row justify-end p-6 bg-muted/50 border-t border-border">
-        <Button type={"submit"} disabled={disableSubmit}>
+      <div className="flex flex-col justify-end gap-4 border-border border-t bg-muted/50 p-6 md:flex-row">
+        <Button type="submit" disabled={disableSubmit}>
           {editingChain ? "Update Network" : "Add Network"}
         </Button>
 

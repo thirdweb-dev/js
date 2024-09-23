@@ -35,7 +35,7 @@ export const Mobile: Story = {
 function Variants() {
   return (
     <ThirdwebProvider>
-      <div className="container py-10 max-w-[1132px] mx-auto w-full flex flex-col gap-10">
+      <div className="container mx-auto flex w-full max-w-[1132px] flex-col gap-10 py-10">
         <AccountSettingsPageUI
           account={{
             name: "John Doe",

@@ -6,7 +6,7 @@ export function AAFooterSection(props: {
   trackingCategory: string;
 }) {
   return (
-    <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
       <FooterCard
         title="Docs"
         links={docLinks}
@@ -34,8 +34,8 @@ function FooterCard(props: {
   trackingCategory: string;
 }) {
   return (
-    <div className="bg-muted/50 p-4 lg:p-6 rounded-lg border border-border">
-      <h3 className="text-lg lg:text-xl font-semibold tracking-tight mb-5">
+    <div className="rounded-lg border border-border bg-muted/50 p-4 lg:p-6">
+      <h3 className="mb-5 font-semibold text-lg tracking-tight lg:text-xl">
         {props.title}
       </h3>
 
@@ -47,7 +47,7 @@ function FooterCard(props: {
             category={props.trackingCategory}
             label={link.trackingLabel}
             target="_blank"
-            className="text-muted-foreground hover:text-foreground text-sm"
+            className="text-muted-foreground text-sm hover:text-foreground"
           >
             {link.label}
           </TrackedLinkTW>

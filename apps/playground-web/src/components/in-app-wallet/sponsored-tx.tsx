@@ -53,7 +53,7 @@ export function SponsoredInAppTxPreview() {
         />
       </div>
       {isNftLoading ? (
-        <div className="w-full mt-24">Loading...</div>
+        <div className="mt-24 w-full">Loading...</div>
       ) : (
         <>
           {nft ? (
@@ -65,8 +65,8 @@ export function SponsoredInAppTxPreview() {
           ) : null}
           {smartAccount ? (
             <>
-              <p className="mb-2 font-semibold text-center">
-                You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
+              <p className="mb-2 text-center font-semibold">
+                You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}
                 Kittens
               </p>
               <div className="flex justify-center">

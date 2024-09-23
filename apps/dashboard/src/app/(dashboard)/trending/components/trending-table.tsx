@@ -88,14 +88,14 @@ export function TrendingContractSection(props: {
                     <Link
                       href={`/${contract.chainMetadata.chainId}/${contract.contractAddress}`}
                       target="_blank"
-                      className="before:absolute before:inset-0 before:z-0 static before:content-[''] "
+                      className="static before:absolute before:inset-0 before:z-0 before:content-[''] "
                     >
                       {getContractName(contract)}
                     </Link>
                   </TableCell>
 
                   {/* % Change */}
-                  <TableCell className="text-left flex justify-start">
+                  <TableCell className="flex justify-start text-left">
                     <ChangeCell
                       displayCount={contract.transactionCount}
                       change={contract.transactionCountChange}
@@ -116,7 +116,7 @@ export function TrendingContractSection(props: {
                         {contract.type}
                       </Badge>
                     ) : (
-                      <DotIcon className="size-6 inline text-muted-foreground" />
+                      <DotIcon className="inline size-6 text-muted-foreground" />
                     )}
                   </TableCell>
 
@@ -138,7 +138,7 @@ export function TrendingContractSection(props: {
                   {/* Value Moved */}
                   <TableCell className="text-right">
                     {contract.valueMoved || (
-                      <DotIcon className="size-6 inline text-muted-foreground" />
+                      <DotIcon className="inline size-6 text-muted-foreground" />
                     )}
                   </TableCell>
                 </TableRow>
@@ -148,7 +148,7 @@ export function TrendingContractSection(props: {
         </TableContainer>
 
         {props.showPagination && (
-          <div className="w-full flex flex-row gap-4 justify-end mt-10">
+          <div className="mt-10 flex w-full flex-row justify-end gap-4">
             <TablePagination />
           </div>
         )}
@@ -166,7 +166,7 @@ function ChangeCell(props: { displayCount: string; change: number }) {
   const badge = (
     <Badge
       variant={variant}
-      className="gap-1.5 px-2 py-1 min-w-[80px] flex justify-center"
+      className="flex min-w-[80px] justify-center gap-1.5 px-2 py-1"
     >
       {props.change > 0 ? (
         <CircleArrowUp className="size-4" />
@@ -177,7 +177,7 @@ function ChangeCell(props: { displayCount: string; change: number }) {
     </Badge>
   );
   return (
-    <div className="flex flex-row items-center gap-2 justify-end group">
+    <div className="group flex flex-row items-center justify-end gap-2">
       {badge}
     </div>
   );
@@ -189,7 +189,7 @@ function ChainCell(props: { chainMetadata: ChainMetadata }) {
     <Link
       href={`/${chainMetadata.chainId}`}
       target="_blank"
-      className="flex flex-row items-center gap-3 hover:underline relative z-1"
+      className="relative z-1 flex flex-row items-center gap-3 hover:underline"
     >
       <ChainIcon iconUrl={chainMetadata.icon?.url} className="size-6" />
       {chainMetadata.name.split(" ")[0]}

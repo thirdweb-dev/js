@@ -122,7 +122,7 @@ export const CustomConnectWallet = (props: {
   if (isPending) {
     return (
       <>
-        <div className="w-[144px] h-[48px] bg-muted border border-border rounded-lg flex items-center justify-center">
+        <div className="flex h-[48px] w-[144px] items-center justify-center rounded-lg border border-border bg-muted">
           <Spinner className="size-4" />
         </div>
         {/* need auto connect here so that we actually connect */}
@@ -227,7 +227,7 @@ function ConnectWalletWelcomeScreen(props: {
         backgroundColor: props.theme === "dark" ? "#18132f" : "#c7b5f1",
         backgroundImage: `url("/assets/connect-wallet/welcome-gradient-${props.theme}.png")`,
       }}
-      className="flex flex-col p-6 h-full bg-cover bg-center bg-no-repeat"
+      className="flex h-full flex-col bg-center bg-cover bg-no-repeat p-6"
     >
       <div className="flex flex-grow flex-col justify-center">
         <div>
@@ -248,7 +248,7 @@ function ConnectWalletWelcomeScreen(props: {
 
           <div className="h-10" />
           <h2
-            className="text-xl text-center font-semibold"
+            className="text-center font-semibold text-xl"
             style={{
               color: fontColor,
             }}
@@ -259,7 +259,7 @@ function ConnectWalletWelcomeScreen(props: {
           <div className="h-4" />
 
           <p
-            className="text-center opacity-80 font-semibold"
+            className="text-center font-semibold opacity-80"
             style={{
               color: fontColor,
             }}
@@ -270,7 +270,7 @@ function ConnectWalletWelcomeScreen(props: {
       </div>
 
       <TrackedAnchorLink
-        className="text-center font-semibold opacity-70 hover:opacity-100 hover:no-underline"
+        className="text-center font-semibold opacity-70 hover:no-underline hover:opacity-100"
         target="_blank"
         category="custom-connect-wallet"
         label="new-to-wallets"

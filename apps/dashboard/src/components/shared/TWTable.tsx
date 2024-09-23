@@ -200,7 +200,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                         <Button
                           variant="ghost"
                           aria-label="Actions"
-                          className="relative z-10 p-2.5 !h-auto"
+                          className="!h-auto relative z-10 p-2.5"
                         >
                           <FaEllipsisVertical className="size-4" />
                         </Button>
@@ -213,7 +213,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                                 key={text}
                                 onClick={() => onClick(row.original)}
                                 className={cn(
-                                  "gap-3 px-3 py-3 min-w-[170px] cursor-pointer",
+                                  "min-w-[170px] cursor-pointer gap-3 px-3 py-3",
                                   isDestructive && "!text-destructive-text",
                                 )}
                               >
@@ -235,7 +235,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
 
       {tableProps.isPending && (
         <div className="flex items-center justify-center">
-          <div className="flex py-4 gap-2 items-center">
+          <div className="flex items-center gap-2 py-4">
             <Spinner className="size-4" />
             <p className="text-muted-foreground text-sm">
               Loading {pluralize(tableProps.title, 0, false)}
@@ -248,9 +248,8 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
         tableProps.data.length === 0 &&
         tableProps.isFetched && (
           <div className="flex items-center justify-center">
-            <div className="flex py-4 gap-4 items-center">
+            <div className="flex items-center gap-4 py-4">
               <p className="text-muted-foreground text-sm">
-                {" "}
                 No {pluralize(tableProps.title, 0, false)} found.
               </p>
             </div>
@@ -298,7 +297,7 @@ const ShowMoreButton: React.FC<ShowMoreButtonProps> = ({
     <div className="flex flex-col">
       <Separator />
       <div className="flex items-center justify-center">
-        <div className="gap-2 flex items-center">
+        <div className="flex items-center gap-2">
           {shouldShowMore && (
             <Button
               variant="ghost"

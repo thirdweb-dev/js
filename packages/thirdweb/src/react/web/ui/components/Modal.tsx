@@ -120,7 +120,7 @@ export const Modal: React.FC<{
               </Dialog.Title>
               {props.size === "compact" ? (
                 <DynamicHeight maxHeight={compactModalMaxHeight}>
-                  {props.children}{" "}
+                  {props.children}
                 </DynamicHeight>
               ) : (
                 props.children

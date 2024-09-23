@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type { SortBy, TimeRange } from "../../../../lib/search";
@@ -24,14 +25,14 @@ export function SortingHeader(props: SortingHeaderProps) {
     props.sortBy === "transactionCountChange" ? "justify-start" : "justify-end";
 
   if (!enableSorting) {
-    return <div className={`flex flex-row ${justify}`}>{props.title}</div>;
+    return <div className={cn("flex flex-row", justify)}>{props.title}</div>;
   }
 
   return (
-    <div className={`flex flex-row ${justify}`}>
+    <div className={cn("flex flex-row", justify)}>
       <Button
-        className={"flex flex-row items-center gap-1 px-0 cursor-pointer"}
-        variant={"link"}
+        className="flex cursor-pointer flex-row items-center gap-1 px-0"
+        variant="link"
         onClick={() => {
           router.replace(
             `${path}?sortBy=${props.sortBy}${timeRange?.length ? `&timeRange=${timeRange}` : ""}${page ? `&page=${page}` : ""}`,

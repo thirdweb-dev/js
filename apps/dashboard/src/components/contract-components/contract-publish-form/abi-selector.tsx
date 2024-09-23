@@ -26,7 +26,7 @@ export const AbiSelector: React.FC<AbiSelectorProps> = ({
   }, [abi]);
 
   return (
-    <div className="flex flex-row gap-2 items-center w-full">
+    <div className="flex w-full flex-row items-center gap-2">
       <Select
         placeholder="Select function"
         options={options}

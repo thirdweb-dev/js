@@ -6,10 +6,10 @@ import Image from "next/image";
 
 export const PublishUpsellCard: React.FC = () => {
   return (
-    <div className="border border-border rounded-xl p-8 md:p-10 flex gap-10 shadow-lg bg-muted/50">
+    <div className="flex gap-10 rounded-xl border border-border bg-muted/50 p-8 shadow-lg md:p-10">
       <div className="flex flex-col gap-6">
-        <h2 className="text-3xl tracking-tigher font-bold">
-          {"Accelerate your protocol's growth"}
+        <h2 className="font-bold text-3xl tracking-tigher">
+          Accelerate your protocol's growth
         </h2>
 
         <p className="text-muted-foreground">
@@ -19,14 +19,14 @@ export const PublishUpsellCard: React.FC = () => {
 
         <div className="flex gap-2">
           <Image
-            className="size-6 hidden md:block"
+            className="hidden size-6 md:block"
             src={require("../../../../public/assets/product-pages/publish/hero-icon-1.png")}
             alt=""
           />
 
           <p className="text-muted-foreground">
             <span className="font-semibold text-foreground">
-              Save development time.{" "}
+              Save development time.
             </span>
             Focus on protocol development and save time by not having to build
             middleware layer yourself.
@@ -35,20 +35,20 @@ export const PublishUpsellCard: React.FC = () => {
 
         <div className="flex gap-2">
           <Image
-            className="size-6 hidden md:block"
+            className="hidden size-6 md:block"
             src={require("../../../../public/assets/product-pages/publish/hero-icon-2.png")}
             alt=""
           />
           <p className="text-muted-foreground">
             <span className="font-semibold text-foreground">
-              Shareable landing page.{" "}
+              Shareable landing page.
             </span>
             By publishing your contract, your contracts become easily shareable
             with a landing page for your contract.
           </p>
         </div>
 
-        <div className="flex gap-2 mt-auto pt-4">
+        <div className="mt-auto flex gap-2 pt-4">
           <Button asChild>
             <TrackedLinkTW
               category="publish_upsell"
@@ -73,7 +73,7 @@ export const PublishUpsellCard: React.FC = () => {
         </div>
       </div>
       <Image
-        className="hidden md:block grayscale invert dark:filter-none w-[40%]"
+        className="hidden w-[40%] grayscale invert md:block dark:filter-none"
         draggable={false}
         src={require("../../../../public/assets/landingpage/explore-featured.png")}
         alt=""

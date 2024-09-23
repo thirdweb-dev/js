@@ -164,7 +164,7 @@ export function FiatSteps(props: {
   const onRampTokenInfo = (
     <div>
       <Text color="primaryText" size="sm">
-        {formatNumber(Number(onRampTokenAmount), 6)}{" "}
+        {formatNumber(Number(onRampTokenAmount), 6)}
         <TokenSymbol token={onRampToken} chain={onRampChain} size="sm" inline />
       </Text>
     </div>
@@ -204,7 +204,7 @@ export function FiatSteps(props: {
             textDecoration: "line-through",
           }}
         >
-          {formatNumber(Number(toTokenAmount), 6)}{" "}
+          {formatNumber(Number(toTokenAmount), 6)}
           <TokenSymbol
             token={toToken}
             chain={toChain}
@@ -212,9 +212,9 @@ export function FiatSteps(props: {
             inline
             color="secondaryText"
           />
-        </Text>{" "}
+        </Text>
         <Text color="danger" size="sm" inline>
-          {formatNumber(Number(props.status.destination.amount), 6)}{" "}
+          {formatNumber(Number(props.status.destination.amount), 6)}
           <TokenSymbol
             token={{
               address: props.status.destination.token.tokenAddress,
@@ -232,7 +232,7 @@ export function FiatSteps(props: {
 
   const toTokenInfo = partialSuccessToTokenInfo || (
     <Text color="primaryText" size="sm">
-      {formatNumber(Number(toTokenAmount), 6)}{" "}
+      {formatNumber(Number(toTokenAmount), 6)}
       <TokenSymbol token={toToken} chain={toChain} size="sm" inline />
     </Text>
   );
@@ -251,7 +251,7 @@ export function FiatSteps(props: {
           }}
         >
           {toChainName.name}
-        </Text>{" "}
+        </Text>
         <Text size="xs" inline>
           {destinationName.name}
         </Text>
@@ -316,13 +316,13 @@ export function FiatSteps(props: {
       <PaymentStep
         title={
           <Text color="primaryText" size="md">
-            Get{" "}
+            Get
             <TokenSymbol
               token={onRampToken}
               chain={onRampChain}
               size="md"
               inline
-            />{" "}
+            />
             with {props.partialQuote.fromCurrencySymbol}
           </Text>
         }
@@ -356,13 +356,13 @@ export function FiatSteps(props: {
       <PaymentStep
         title={
           <Text color="primaryText" size="md">
-            Convert{" "}
+            Convert
             <TokenSymbol
               token={onRampToken}
               chain={onRampChain}
               size="md"
               inline
-            />{" "}
+            />
             to <TokenSymbol token={toToken} chain={toChain} size="md" inline />
           </Text>
         }
@@ -396,7 +396,7 @@ export function FiatSteps(props: {
           <>
             <Spacer y="md" />
             <Text color="danger" size="sm" center>
-              Expected {props.status.source?.token.symbol}, Got{" "}
+              Expected {props.status.source?.token.symbol}, Got
               {props.status.destination?.token.symbol} instead
             </Text>
             <Spacer y="sm" />
@@ -490,7 +490,7 @@ function PaymentStep(props: {
             gap="xxs"
             target="_blank"
           >
-            {props.explorer.label}{" "}
+            {props.explorer.label}
             <ExternalLinkIcon width={iconSize.xs} height={iconSize.xs} />
           </ButtonLink>
         </>

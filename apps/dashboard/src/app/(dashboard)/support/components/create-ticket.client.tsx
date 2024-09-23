@@ -129,7 +129,7 @@ export function CreateTicket() {
           {/* render the form */}
           {user?.jwt ? (
             <>
-              <div className="py-4 flex flex-col gap-4 mt-3">
+              <div className="mt-3 flex flex-col gap-4 py-4">
                 <SupportForm_SelectInput
                   formLabel="What do you need help with?"
                   name="product"
@@ -159,13 +159,13 @@ export function CreateTicket() {
               </DialogFooter>
             </>
           ) : (
-            <div className="flex flex-col gap-2 py-4 mt-4">
+            <div className="mt-4 flex flex-col gap-2 py-4">
               <Button variant="default" asChild size="lg">
                 <Link href={`/login?next=${encodeURIComponent("/support")}`}>
                   Sign In
                 </Link>
               </Button>
-              <p className="text-center text-xs text-warning-foreground">
+              <p className="text-center text-warning-foreground text-xs">
                 Please sign in to create a ticket
               </p>
             </div>

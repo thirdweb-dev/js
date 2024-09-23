@@ -36,7 +36,7 @@ export const HeroSection = ({ TRACKING_CATEGORY }: HeroSectionProps) => {
               px={{ base: 2, md: 0 }}
               fontSize={{ base: "36px", sm: "45px" }}
             >
-              Full-stack, <OpenSource TRACKING_CATEGORY={TRACKING_CATEGORY} />{" "}
+              Full-stack, <OpenSource TRACKING_CATEGORY={TRACKING_CATEGORY} />
               web3 development platform
             </Heading>
           </Flex>

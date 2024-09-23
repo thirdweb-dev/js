@@ -10,8 +10,8 @@ export async function fetchTypeScriptDoc(version: string) {
     }
     v4Prom = (async () => {
       const doc = await import("./v4-legacy-docs/sdk.json");
-
-      return transform(doc as any);
+      // @ts-expect-error - works fine!
+      return transform(doc);
     })();
     return v4Prom;
   }
@@ -24,7 +24,8 @@ export async function fetchTypeScriptDoc(version: string) {
       "../../../../../../../../packages/thirdweb/typedoc/documentation.json"
     );
 
-    return transform(doc as any);
+    // @ts-expect-error - works fine!
+    return transform(doc);
   })();
   return v5Prom;
 }

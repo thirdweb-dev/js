@@ -157,7 +157,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                   key={tb.title}
                   p={0}
                   bg="transparent"
-                  boxShadow={"none"}
+                  boxShadow="none"
                   label={
                     tb.isDisabled ? (
                       <Card py={2} px={4} bgColor="backgroundHighlight">

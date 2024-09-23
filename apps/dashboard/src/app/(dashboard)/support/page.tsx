@@ -124,18 +124,18 @@ const HELP_PRODUCTS = [
 export default function SupportPage() {
   return (
     <main className="flex flex-col gap-12 pb-12">
-      <div className="py-20 bg-gradient-to-b from-card/0 to-card">
-        <header className="container flex flex-col gap-8 items-center">
-          <div className="p-2 rounded-full from-[#F213A4] to-[#5204BF] bg-gradient-to-r">
+      <div className="bg-gradient-to-b from-card/0 to-card py-20">
+        <header className="container flex flex-col items-center gap-8">
+          <div className="rounded-full bg-gradient-to-r from-[#F213A4] to-[#5204BF] p-2">
             <div className="rounded-full bg-background p-6 shadow-md">
               <BookOpenIcon className="size-8" />
             </div>
           </div>
-          <div className="flex flex-col gap-2 max-w-2xl items-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-center md:text-balance">
+          <div className="flex max-w-2xl flex-col items-center gap-2">
+            <h1 className="text-center font-bold text-4xl md:text-balance md:text-5xl">
               How can we help?
             </h1>
-            <p className="text-lg text-center text-muted-foreground">
+            <p className="text-center text-lg text-muted-foreground">
               Our dedicated support team is here to help you with any questions
               or issues you may have. Contact us today and let us assist you.
             </p>
@@ -144,15 +144,15 @@ export default function SupportPage() {
         </header>
       </div>
       <section className="container flex flex-col gap-6">
-        <h2 className="text-3xl font-bold">Knowledge base</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <h2 className="font-bold text-3xl">Knowledge base</h2>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {HELP_PRODUCTS.map((product) => (
             <Card
-              className="col-span-1 bg-muted/50 relative"
+              className="relative col-span-1 bg-muted/50"
               key={product.title}
             >
-              <CardHeader className="flex flex-row gap-2 items-center justify-between">
-                <div className="flex flex-row gap-2 items-center">
+              <CardHeader className="flex flex-row items-center justify-between gap-2">
+                <div className="flex flex-row items-center gap-2">
                   {product.icon && (
                     <Image
                       src={product.icon}
@@ -166,7 +166,7 @@ export default function SupportPage() {
                   variant="ghost"
                   size="sm"
                   asChild
-                  className="gap-1 flex flex-row absolute right-2 top-4 px-2 text-muted-foreground hover:text-foreground text-sm"
+                  className="absolute top-4 right-2 flex flex-row gap-1 px-2 text-muted-foreground text-sm hover:text-foreground"
                 >
                   <Link href={product.viewAllUrl} target="_blank">
                     <span>View All</span>
@@ -183,7 +183,7 @@ export default function SupportPage() {
                         href={article.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-muted-foreground hover:text-foreground text-sm"
+                        className="text-muted-foreground text-sm hover:text-foreground"
                       >
                         {article.title}
                       </Link>
@@ -196,10 +196,10 @@ export default function SupportPage() {
         </div>
       </section>
       <div className="container">
-        <Card className="flex flex-row gap-4 justify-between items-center border-[#5865F2] bg-[#5865F2]/20">
+        <Card className="flex flex-row items-center justify-between gap-4 border-[#5865F2] bg-[#5865F2]/20">
           <div className="flex flex-col gap-2">
             <CardHeader>
-              <CardTitle className="text-3xl font-bold">
+              <CardTitle className="font-bold text-3xl">
                 Discord Comunity
               </CardTitle>
             </CardHeader>
@@ -209,7 +209,7 @@ export default function SupportPage() {
                 developers, ask questions, and get help.
               </p>
               <Button
-                className="mr-auto gap-2 flex flex-row bg-[#5865F2] hover:bg-[#5865F2]/80 text-white"
+                className="mr-auto flex flex-row gap-2 bg-[#5865F2] text-white hover:bg-[#5865F2]/80"
                 asChild
               >
                 <Link href="https://discord.gg/thirdweb">
@@ -228,7 +228,7 @@ export default function SupportPage() {
           <Image
             src={discordIllustration}
             alt="discord illustration"
-            className="hidden md:block max-w-64 p-6 ml-auto object-cover"
+            className="ml-auto hidden max-w-64 object-cover p-6 md:block"
           />
         </Card>
       </div>

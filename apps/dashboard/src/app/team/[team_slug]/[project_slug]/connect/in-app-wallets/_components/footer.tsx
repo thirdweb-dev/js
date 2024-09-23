@@ -6,7 +6,7 @@ export function InAppWaletFooterSection(props: {
   trackingCategory: string;
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
       <ViewDocs trackingCategory={props.trackingCategory} />
       <Templates trackingCategory={props.trackingCategory} />
     </div>
@@ -18,7 +18,7 @@ function ViewDocs(props: {
 }) {
   const TRACKING_CATEGORY = props.trackingCategory;
   return (
-    <div className="p-4 lg:p-6 bg-muted/50 border border-border rounded-lg">
+    <div className="rounded-lg border border-border bg-muted/50 p-4 lg:p-6">
       <div className="flex items-center gap-2">
         <h3 className="font-semibold">View Docs</h3>
         <ArrowRightIcon className="size-4" />
@@ -113,12 +113,12 @@ function GuideLink(props: {
   return (
     <TrackedLinkTW
       category={props.trackingCategory}
-      label={"guide"}
+      label="guide"
       trackingProps={{
         guide: props.label,
       }}
       href={props.href}
-      className="text-sm !text-muted-foreground hover:!text-foreground"
+      className="!text-muted-foreground hover:!text-foreground text-sm"
       target="_blank"
     >
       {props.children}
@@ -130,7 +130,7 @@ function Templates(props: {
   trackingCategory: string;
 }) {
   return (
-    <div className="p-4 lg:p-6 bg-muted/50 border border-border rounded-lg">
+    <div className="rounded-lg border border-border bg-muted/50 p-4 lg:p-6">
       <div className="flex items-center gap-2">
         <h3 className="font-semibold">Relevant Templates</h3>
         <ArrowRightIcon className="size-4" />

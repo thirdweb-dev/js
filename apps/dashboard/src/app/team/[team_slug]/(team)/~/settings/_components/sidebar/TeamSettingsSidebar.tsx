@@ -11,7 +11,7 @@ export function TeamSettingsSidebar(props: {
   );
 
   return (
-    <aside className="w-[250px] hidden lg:flex flex-col gap-4 sticky top-0 self-start lg:-ml-2 grow-0 shrink-0">
+    <aside className="lg:-ml-2 sticky top-0 hidden w-[250px] shrink-0 grow-0 flex-col gap-4 self-start lg:flex">
       <RenderLinkGroup links={teamGroupLinks} title="Team" />
       <RenderLinkGroup links={accountGroupLinks} title="Account" />
     </aside>
@@ -29,7 +29,7 @@ function RenderLinkGroup(props: {
     <>
       <div className="flex items-center gap-1.5 px-4">
         {/* TODO - using placeholder for now */}
-        <div className="size-4 bg-muted rounded-full border border-border" />
+        <div className="size-4 rounded-full border border-border bg-muted" />
         <p className="text-muted-foreground text-xs">{props.title}</p>
       </div>
 

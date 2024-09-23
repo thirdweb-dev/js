@@ -125,8 +125,8 @@ function TeamSlugFormControl(props: {
       }}
       noPermissionText={undefined} // TODO
     >
-      <div className="relative border border-border rounded-lg flex md:w-[450px]">
-        <div className="bg-muted/50 text-muted-foreground/80 self-stretch flex items-center px-3 text-sm border-r border-border rounded-l-lg font-mono">
+      <div className="relative flex rounded-lg border border-border md:w-[450px]">
+        <div className="flex items-center self-stretch rounded-l-lg border-border border-r bg-muted/50 px-3 font-mono text-muted-foreground/80 text-sm">
           thirdweb.com/team/
         </div>
         <Input
@@ -134,7 +134,7 @@ function TeamSlugFormControl(props: {
           onChange={(e) => {
             setTeamSlug(e.target.value.slice(0, maxTeamURLLength));
           }}
-          className="border-0 font-mono truncate"
+          className="truncate border-0 font-mono"
         />
       </div>
     </SettingsCard>
@@ -175,8 +175,8 @@ function TeamAvatarFormControl() {
     >
       <div className="flex flex-row gap-4 md:justify-between">
         <div>
-          <h3 className="text-xl font-semibold tracking-tight">Team Avatar</h3>
-          <p className="text-foreground text-sm mt-1.5 mb-4 leading-relaxed">
+          <h3 className="font-semibold text-xl tracking-tight">Team Avatar</h3>
+          <p className="mt-1.5 mb-4 text-foreground text-sm leading-relaxed">
             This is your team's avatar. <br /> Click on the avatar to upload a
             custom one
           </p>
@@ -185,7 +185,7 @@ function TeamAvatarFormControl() {
           accept={{ "image/*": [] }}
           value={teamAvatar}
           setValue={setTeamAvatar}
-          className="w-20 lg:w-28 rounded-full"
+          className="w-20 rounded-full lg:w-28"
           disableHelperText
         />
       </div>
@@ -202,7 +202,7 @@ function TeamIdCard(props: {
         title: "Team ID",
         description: "This is your team's ID on thirdweb",
       }}
-      bottomText={"Used when interacting with the thirdweb API"}
+      bottomText="Used when interacting with the thirdweb API"
       noPermissionText={undefined} // TODO
       errorText={undefined}
     >
@@ -210,7 +210,7 @@ function TeamIdCard(props: {
         textToCopy={props.team.id}
         textToShow={props.team.id}
         variant="outline"
-        className="font-mono px-3 w-full lg:w-[450px] justify-between text-muted-foreground bg-card truncate py-2"
+        className="w-full justify-between truncate bg-card px-3 py-2 font-mono text-muted-foreground lg:w-[450px]"
         tooltip="Copy Team ID"
         copyIconPosition="right"
       />
@@ -269,9 +269,7 @@ export function LeaveTeamCard(props: {
       bottomText="To leave this Team, ensure at least one more Member has the Owner role."
       errorText={undefined}
       noPermissionText={undefined}
-    >
-      {" "}
-    </SettingsCard>
+    />
   );
 }
 
@@ -328,9 +326,7 @@ export function DeleteTeamCard(props: {
       }}
       bottomText=""
       errorText={undefined}
-      noPermissionText={"You need additional permissions to delete your team."}
-    >
-      {" "}
-    </SettingsCard>
+      noPermissionText="You need additional permissions to delete your team."
+    />
   );
 }

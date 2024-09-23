@@ -18,7 +18,7 @@ export const ContractPublisher: React.FC<ContractPublisherProps> = ({
 
   return (
     <Link
-      className="gap-1.5 flex items-center shrink-0 hover:underline"
+      className="flex shrink-0 items-center gap-1.5 hover:underline"
       href={replaceDeployerAddress(
         `/${ensQuery.data?.ensName || ensQuery.data?.address || addressOrEns}`,
       )}

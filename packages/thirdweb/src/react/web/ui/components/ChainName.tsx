@@ -24,7 +24,7 @@ export const ChainName: React.FC<{
     );
   }
 
-  return <Skeleton width={"50px"} height={fontSize[props.size]} />;
+  return <Skeleton width="50px" height={fontSize[props.size]} />;
 };
 
 function shorterChainName(name: string) {

@@ -24,7 +24,7 @@ export function ResourcesDropdownButton() {
         <DropdownMenuTrigger asChild>
           <Button
             variant="link"
-            className="text-muted-foreground text-sm gap-1 !p-0 !h-auto hover:!no-underline hover:text-foreground font-normal"
+            className="!p-0 !h-auto hover:!no-underline gap-1 font-normal text-muted-foreground text-sm hover:text-foreground"
           >
             Resources
             <ChevronDownIcon className="size-4" />
@@ -62,11 +62,11 @@ export function ResourcesDropdownButton() {
           <DropdownMenuItem>
             <Button
               variant="ghost"
-              className="text-sm gap-2 !p-1 !h-auto text-left justify-between w-full"
+              className="!p-1 !h-auto w-full justify-between gap-2 text-left text-sm"
               onClick={() => setIsCMDSearchModalOpen(true)}
             >
               Search Contracts
-              <span className="items-center flex gap-0.5 text-xs text-muted-foreground">
+              <span className="flex items-center gap-0.5 text-muted-foreground text-xs">
                 <CommandIcon className="size-3" />K
               </span>
             </Button>

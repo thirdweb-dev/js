@@ -16,7 +16,7 @@ export const DefaultFactory: React.FC<DefaultFactoryProps> = ({ abi }) => {
     <Flex px={0} pb={0} flexDir="column" gap={12}>
       <UnorderedList>
         <Text as={ListItem}>
-          Default factory lets users deploy your contract to{" "}
+          Default factory lets users deploy your contract to
           <strong>any EVM network</strong>.
         </Text>
         <Text as={ListItem}>
@@ -24,7 +24,7 @@ export const DefaultFactory: React.FC<DefaultFactoryProps> = ({ abi }) => {
           makes it much cheaper to deploy.
         </Text>
         <Text as={ListItem}>
-          The factory is{" "}
+          The factory is
           <Link
             color="primary.500"
             isExternal

@@ -26,7 +26,7 @@ export const ContractEditModulesPage: React.FC<
 
   if (ownerQuery.isPending) {
     return (
-      <div className="items-center justify-center flex h-[300px] md:h-[500px]">
+      <div className="flex h-[300px] items-center justify-center md:h-[500px]">
         <Spinner className="size-10" />
       </div>
     );
@@ -34,7 +34,7 @@ export const ContractEditModulesPage: React.FC<
 
   if (!ownerQuery.data) {
     return (
-      <div className="items-center justify-center flex h-[300px] md:h-[500px]">
+      <div className="flex h-[300px] items-center justify-center md:h-[500px]">
         <p className="text-red-500"> Failed to resolve contract owner </p>
       </div>
     );
@@ -55,7 +55,7 @@ export const ContractEditModulesPage: React.FC<
       {isOwner && (
         <div>
           <div>
-            <h2 className="text-2xl tracking-tight font-bold mb-1">
+            <h2 className="mb-1 font-bold text-2xl tracking-tight">
               Edit Modules
             </h2>
             <p className="text-muted-foreground">
@@ -78,7 +78,7 @@ export const ContractEditModulesPage: React.FC<
             <UserXIcon className="size-6 text-red-400" />
             <div>
               <AlertTitle>
-                You do not have permissions to edit modules{" "}
+                You do not have permissions to edit modules
               </AlertTitle>
               <AlertDescription>
                 Connect owner wallet to edit modules

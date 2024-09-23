@@ -10,7 +10,7 @@ const Table = React.forwardRef<
   <table
     ref={ref}
     className={cn(
-      "caption-bottom w-full text-sm border-collapse tabular-nums lining-nums align-top",
+      "w-full caption-bottom border-collapse align-top text-sm lining-nums tabular-nums",
       className,
     )}
     {...props}
@@ -25,7 +25,7 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      "bg-muted/50 border-b border-border [&_tr]:border-b",
+      "border-border border-b bg-muted/50 [&_tr]:border-b",
       className,
     )}
     {...props}
@@ -53,7 +53,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      "border-t border-border bg-muted/50 font-medium [&>tr]:last:border-b-0",
+      "border-border border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
       className,
     )}
     {...props}
@@ -68,7 +68,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "border-b border-border last:border-0 data-[state=selected]:bg-muted",
+      "border-border border-b last:border-0 data-[state=selected]:bg-muted",
       className,
     )}
     {...props}
@@ -83,7 +83,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "px-6 py-4 uppercase text-xs text-left tracking-wider align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      "px-6 py-4 text-left align-middle font-medium text-muted-foreground text-xs uppercase tracking-wider [&:has([role=checkbox])]:pr-0",
       className,
     )}
     {...props}
@@ -98,7 +98,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "px-6 py-4 text-sm text-start align-middle [&:has([role=checkbox])]:pr-0",
+      "px-6 py-4 text-start align-middle text-sm [&:has([role=checkbox])]:pr-0",
       className,
     )}
     {...props}
@@ -112,7 +112,7 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={cn("text-sm text-muted-foreground py-4", className)}
+    className={cn("py-4 text-muted-foreground text-sm", className)}
     {...props}
   />
 ));
@@ -121,7 +121,7 @@ TableCaption.displayName = "TableCaption";
 function TableContainer(props: { children: React.ReactNode }) {
   return (
     <ScrollShadow
-      className="border border-border rounded-lg whitespace-nowrap relative"
+      className="relative whitespace-nowrap rounded-lg border border-border"
       shadowColor="hsl(var(--muted))"
     >
       {props.children}

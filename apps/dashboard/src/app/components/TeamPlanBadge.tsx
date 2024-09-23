@@ -14,7 +14,7 @@ export function TeamPlanBadge(props: {
             ? "success"
             : "default"
       }
-      className={cn("capitalize px-1.5", props.className)}
+      className={cn("px-1.5 capitalize", props.className)}
     >
       {props.plan}
     </Badge>

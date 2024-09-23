@@ -459,7 +459,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
       )}
 
       <Flex onSubmit={handleFormSubmit} direction="column" as="form" gap={10}>
-        <Flex direction={"column"} gap={6}>
+        <Flex direction="column" gap={6}>
           {/* Show the reason why the form is disabled */}
           {!isAdmin && (
             <Text>Connect with admin wallet to edit claim conditions.</Text>

@@ -17,7 +17,7 @@ export default async function DirectDeployPage(props: DirectDeployPageProps) {
     uri: parsedUri.startsWith("ipfs://") ? parsedUri : `ipfs://${parsedUri}`,
   });
   return (
-    <div className="container py-8 flex flex-col gap-4">
+    <div className="container flex flex-col gap-4 py-8">
       <DeployContractInfo
         name={metadata.name}
         displayName={metadata.displayName}

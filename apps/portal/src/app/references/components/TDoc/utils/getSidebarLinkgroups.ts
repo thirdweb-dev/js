@@ -101,7 +101,7 @@ export function getCustomTag(
       return findTag(doc.blockTags);
     }
     case "function": {
-      if (doc.signatures && doc.signatures[0] && doc.signatures[0].blockTags) {
+      if (doc.signatures?.[0]?.blockTags) {
         return findTag(doc.signatures?.[0].blockTags);
       }
       return undefined;
@@ -168,7 +168,7 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
             if (!acc[extensionName]) {
               acc[extensionName] = [];
             }
-            acc[extensionName]!.push(d);
+            acc[extensionName]?.push(d);
           }
           return acc;
         },
@@ -194,8 +194,8 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
         });
       } else {
         linkGroups
-          .find((group) => group.name === name)!
-          .links.push({ name: "Extensions", links: extensionLinkGroups });
+          .find((group) => group.name === name)
+          ?.links.push({ name: "Extensions", links: extensionLinkGroups });
       }
     }
 
@@ -207,7 +207,7 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
             if (!acc[extensionName]) {
               acc[extensionName] = [];
             }
-            acc[extensionName]!.push(d);
+            acc[extensionName]?.push(d);
           }
           return acc;
         },
@@ -233,8 +233,8 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
         });
       } else {
         linkGroups
-          .find((group) => group.name === name)!
-          .links.push({ name: "Modules", links: extensionLinkGroups });
+          .find((group) => group.name === name)
+          ?.links.push({ name: "Modules", links: extensionLinkGroups });
       }
     }
 
@@ -244,18 +244,18 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
     });
 
     // sort into groups
-    nonExtensions.forEach((d) => {
+    for (const d of nonExtensions) {
       const [tag] = getCustomTag(d) || [];
 
       if (tag) {
         if (!groups[tag]) {
           groups[tag] = [];
         }
-        groups[tag]!.push(d);
+        groups[tag]?.push(d);
       } else {
         ungroupedLinks.push(d);
       }
-    });
+    }
 
     // If a group only has one item, do not create a group for it and add it to noGroups
     for (const _tag in groups) {
@@ -268,11 +268,11 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
     }
 
     // throw error if we don't know where to put the group in sidebar ( because this leads to it not being added in sidebar at all )
-    Object.keys(groups).forEach((tag) => {
+    for (const tag of Object.keys(groups)) {
       if (!sidebarGroupOrder.includes(tag as TagKey)) {
         throw new Error(`${tag} not added in sidebarGroupOrder array`);
       }
-    });
+    }
 
     const links: SidebarLink[] = [];
 
@@ -291,16 +291,16 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
       });
     };
 
-    sidebarGroupOrder.forEach((tag) => {
+    for (const tag of sidebarGroupOrder) {
       addGroup(tag);
-    });
+    }
 
-    ungroupedLinks.forEach((d) => {
+    for (const d of ungroupedLinks) {
       links.push({
         name: d.name,
         href: getLink(`${path}/${d.name}`),
       });
-    });
+    }
 
     const target = linkGroups.find((group) => group.name === name);
 

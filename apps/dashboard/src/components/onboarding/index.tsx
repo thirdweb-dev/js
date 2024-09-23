@@ -18,7 +18,7 @@ const OnboardingChoosePlan = lazy(() => import("./ChoosePlan"));
 
 function Loading() {
   return (
-    <div className="justify-center items-center flex h-[200px]">
+    <div className="flex h-[200px] items-center justify-center">
       <Spinner className="size-5" />
     </div>
   );

@@ -54,7 +54,7 @@ export function WalletAddress(props: {
 
   // special case for zero address
   if (address === ZERO_ADDRESS) {
-    return <span className="font-mono cursor-pointer">{shortenedAddress}</span>;
+    return <span className="cursor-pointer font-mono">{shortenedAddress}</span>;
   }
 
   return (
@@ -64,7 +64,7 @@ export function WalletAddress(props: {
           onClick={(e) => e.stopPropagation()}
           variant="link"
           className={cn(
-            "flex flex-row gap-2 items-center px-0",
+            "flex flex-row items-center gap-2 px-0",
             props.className,
           )}
         >
@@ -75,7 +75,7 @@ export function WalletAddress(props: {
               thirdwebClient={thirdwebClient}
             />
           )}
-          <span className="font-mono cursor-pointer">
+          <span className="cursor-pointer font-mono">
             {profiles.data?.[0]?.name || shortenedAddress}
           </span>
         </Button>
@@ -89,7 +89,7 @@ export function WalletAddress(props: {
       >
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Wallet Address</h3>
+            <h3 className="font-semibold text-lg">Wallet Address</h3>
             <Button
               variant="outline"
               size="sm"
@@ -104,18 +104,18 @@ export function WalletAddress(props: {
               {hasCopied ? "Copied!" : "Copy"}
             </Button>
           </div>
-          <p className="text-sm font-mono bg-muted p-2 rounded text-center">
+          <p className="rounded bg-muted p-2 text-center font-mono text-sm">
             {lessShortenedAddress}
           </p>
-          <h3 className="text-lg font-semibold">Social Profiles</h3>
+          <h3 className="font-semibold text-lg">Social Profiles</h3>
           {profiles.isPending ? (
-            <p className="text-sm text-muted-foreground">Loading profiles...</p>
+            <p className="text-muted-foreground text-sm">Loading profiles...</p>
           ) : !profiles.data?.length ? (
-            <p className="text-sm text-muted-foreground">No profiles found</p>
+            <p className="text-muted-foreground text-sm">No profiles found</p>
           ) : (
             profiles.data?.map((profile) => (
               <div
-                className="flex flex-row gap-2 items-center"
+                className="flex flex-row items-center gap-2"
                 key={profile.type + profile.name}
               >
                 {profile.avatar &&
@@ -136,13 +136,13 @@ export function WalletAddress(props: {
                       )}
                     </Avatar>
                   )}
-                <div className="flex flex-col gap-1 w-full">
-                  <div className="flex flex-row gap-4 w-full items-center justify-between">
-                    <h4 className="text-md font-semibold">{profile.name}</h4>
+                <div className="flex w-full flex-col gap-1">
+                  <div className="flex w-full flex-row items-center justify-between gap-4">
+                    <h4 className="font-semibold text-md">{profile.name}</h4>
                     <Badge variant="outline">{profile.type}</Badge>
                   </div>
                   {profile.bio && (
-                    <p className="text-sm text-muted-foreground whitespace-normal line-clamp-1">
+                    <p className="line-clamp-1 whitespace-normal text-muted-foreground text-sm">
                       {profile.bio}
                     </p>
                   )}
@@ -153,7 +153,7 @@ export function WalletAddress(props: {
           <Button
             asChild
             variant="upsell"
-            className="text-sm flex flex-row gap-2 items-center"
+            className="flex flex-row items-center gap-2 text-sm"
             size="sm"
           >
             <a

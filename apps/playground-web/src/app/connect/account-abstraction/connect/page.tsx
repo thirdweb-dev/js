@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <main className="pb-20 container px-0">
+      <main className="container px-0 pb-20">
         <APIHeader
           title="Account Abstraction"
           description={
@@ -44,7 +44,7 @@ function ConnectSmartAccount() {
   return (
     <>
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
           Connect smart accounts
         </h2>
         <p className="max-w-[600px]">

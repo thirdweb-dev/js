@@ -20,7 +20,7 @@ export const AllVariants: Story = {
 
 function Component() {
   return (
-    <div className="min-h-screen bg-background p-6 text-foregroun flex flex-col gap-6">
+    <div className="flex min-h-screen flex-col gap-6 bg-background p-6 text-foregroun">
       <Variants size="default" />
       <Variants size="sm" />
       <Variants size="icon" />

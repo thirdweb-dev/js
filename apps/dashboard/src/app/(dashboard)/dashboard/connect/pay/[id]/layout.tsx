@@ -26,8 +26,8 @@ export default async function Layout(props: {
 
   return (
     <div>
-      <div className="flex-col gap-4 flex lg:flex-row w-full relative">
-        <div className="max-sm:w-full lg:min-w-[200px] lg:absolute right-0 bottom-3 z-10">
+      <div className="relative flex w-full flex-col gap-4 lg:flex-row">
+        <div className="right-0 bottom-3 z-10 max-sm:w-full lg:absolute lg:min-w-[200px]">
           <APIKeySelector apiKeys={apiKeys} selectedApiKey={selectedKey} />
         </div>
 

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Page(props: { children: React.ReactNode }) {
   return (
-    <main className="pb-20 container px-0">
+    <main className="container px-0 pb-20">
       <APIHeader
         title="Onboard users to web3"
         description={

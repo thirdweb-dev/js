@@ -219,7 +219,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
               textToShow={`${transactionHash.slice(0, 6)}...${transactionHash.slice(-4)}`}
               variant="ghost"
               tooltip="Copy transaction hash"
-              className="font-mono text-sm text-muted-foreground"
+              className="font-mono text-muted-foreground text-sm"
             />
           );
         }
@@ -492,7 +492,7 @@ const TransactionDetailsDrawer = ({
           <Text>
             {transaction.value
               ? toTokens(BigInt(transaction.value), decimals)
-              : 0}{" "}
+              : 0}
             {symbol}
           </Text>
         </FormControl>

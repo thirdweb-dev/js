@@ -247,7 +247,7 @@ export function SwapTxDetailsTable(
         <TokenInfoRow
           chainId={toToken.chainId}
           client={client}
-          label={"Receive"}
+          label="Receive"
           tokenAmount={toToken.amount}
           tokenSymbol={toToken.symbol || ""}
           tokenAddress={toToken.address}

@@ -45,7 +45,7 @@ const partnersCompanies = [
 
 const PartnersSection = () => {
   return (
-    <div className="items-center justify-center flex-wrap gap-10 mt-6 flex flex-row">
+    <div className="mt-6 flex flex-row flex-wrap items-center justify-center gap-10">
       {partnersCompanies.slice(0, 10).map((partner, idx) => (
         <ChakraNextImage
           // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>

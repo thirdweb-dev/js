@@ -13,7 +13,7 @@ export function SidebarLayout(props: {
   return (
     <div
       className={cn(
-        "flex flex-col lg:flex-row gap-6 container px-4 w-full grow max-sm:pt-6",
+        "container flex w-full grow flex-col gap-6 px-4 max-sm:pt-6 lg:flex-row",
         props.className,
       )}
     >
@@ -23,7 +23,7 @@ export function SidebarLayout(props: {
         triggerClassName={props.mobileSidebarClassName}
       />
       {/* min-w-0 is enough to ensure the content inside does not stretch this container */}
-      <main className="grow max-sm:w-full flex flex-col lg:pt-8 pb-10 min-w-0">
+      <main className="flex min-w-0 grow flex-col pb-10 max-sm:w-full lg:pt-8">
         {children}
       </main>
     </div>

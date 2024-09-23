@@ -350,7 +350,7 @@ export const ConnectWalletSocialOptions = (
                     aria-label={`Login with ${loginMethod}`}
                     data-variant={showOnlyIcons ? "icon" : "full"}
                     key={loginMethod}
-                    variant={"outline"}
+                    variant="outline"
                     disabled={props.disabled}
                     onClick={() => {
                       handleSocialLogin(loginMethod as SocialAuthOption);

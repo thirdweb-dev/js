@@ -44,8 +44,8 @@ export function SocialProfiles() {
   });
 
   return (
-    <div className="flex w-[300px] min-h-[300px] flex-col gap-4">
-      <div className="flex gap-2 items-center">
+    <div className="flex min-h-[300px] w-[300px] flex-col gap-4">
+      <div className="flex items-center gap-2">
         <Input
           placeholder="Enter an address or ENS"
           value={address}
@@ -66,15 +66,15 @@ export function SocialProfiles() {
           />
         ))}
       {(profiles?.length === 0 || !profiles) && !isPending && (
-        <div className="flex-1 flex flex-col items-center justify-center">
-          <div className="text-center text-lg font-semibold text-muted-foreground">
+        <div className="flex flex-1 flex-col items-center justify-center">
+          <div className="text-center font-semibold text-lg text-muted-foreground">
             No profiles found.
           </div>
         </div>
       )}
       {isPending && (
-        <div className="w-full flex justify-center items-center h-full">
-          <Loader2Icon className="animate-spin size-10 text-muted-foreground" />
+        <div className="flex h-full w-full items-center justify-center">
+          <Loader2Icon className="size-10 animate-spin text-muted-foreground" />
         </div>
       )}
     </div>
@@ -100,15 +100,15 @@ function SocialProfileCard({ profile }: { profile: SocialProfile }) {
   });
 
   return (
-    <div className="flex gap-4 bg-background border rounded-lg p-4 shadow-md">
+    <div className="flex gap-4 rounded-lg border bg-background p-4 shadow-md">
       {avatar ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={avatar} alt={profile.name} className="size-10 rounded-full" />
       ) : (
         <div className="size-10 rounded-full bg-muted-foreground" />
       )}
-      <div className="flex gap-2 items-center justify-between flex-1">
-        <div className="text-base font-semibold">{profile.name}</div>
+      <div className="flex flex-1 items-center justify-between gap-2">
+        <div className="font-semibold text-base">{profile.name}</div>
         <Badge variant="secondary">{profile.type.toUpperCase()}</Badge>
       </div>
     </div>

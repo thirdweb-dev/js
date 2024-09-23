@@ -34,8 +34,8 @@ export default async function Page(props: {
 
       {/* Deprecated Alert */}
       {isDeprecated && (
-        <section className="bg-destructive rounded-lg text-destructive-foreground border border-destructive-foreground/20">
-          <div className="container py-4 flex flex-row items-center gap-4">
+        <section className="rounded-lg border border-destructive-foreground/20 bg-destructive text-destructive-foreground">
+          <div className="container flex flex-row items-center gap-4 py-4">
             <CircleAlertIcon className="size-6 flex-shrink-0" />
             <h3 className="font-medium">
               This chain has been marked as deprecated. Some or all services may
@@ -63,13 +63,13 @@ export default async function Page(props: {
       {topContracts.length > 0 && (
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-xl tracking-tight font-semibold">
+            <h2 className="font-semibold text-xl tracking-tight">
               Popular Contracts
             </h2>
             <Button asChild variant="outline">
               <Link
                 href={`/${chain.slug}/popular`}
-                className="flex gap-2 items-center"
+                className="flex items-center gap-2"
               >
                 See All
                 <ArrowRightIcon className="size-4" />

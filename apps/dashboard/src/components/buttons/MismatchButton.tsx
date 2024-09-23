@@ -194,12 +194,12 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
         >
           <DialogContent
             className={cn(
-              "gap-0 p-0 z-[10001]",
+              "z-[10001] gap-0 p-0",
               dialog === "no-funds" && "max-w-[480px]",
               dialog === "pay" && "max-w-[360px] border-none bg-transparent",
             )}
             dialogOverlayClassName="z-[10000]"
-            dialogCloseClassName={"focus:ring-0"}
+            dialogCloseClassName="focus:ring-0"
           >
             <DynamicHeight>
               {dialog === "no-funds" && (
@@ -300,7 +300,7 @@ function NoFundsDialogContent(props: {
       <div className="flex flex-col gap-6 p-6 ">
         {/* Header */}
         <DialogHeader>
-          <DialogTitle className="text-2xl font-semibold tracking-tight">
+          <DialogTitle className="font-semibold text-2xl tracking-tight">
             Not Enough Funds
           </DialogTitle>
 
@@ -313,7 +313,7 @@ function NoFundsDialogContent(props: {
         {/* Get Funds content */}
 
         {!chainWithServiceInfoQuery.data ? (
-          <div className="h-[300px] flex justify-center items-center">
+          <div className="flex h-[300px] items-center justify-center">
             <Spinner className="size-10" />
           </div>
         ) : (
@@ -341,7 +341,7 @@ function NoFundsDialogContent(props: {
         )}
       </div>
       {/* Footer */}
-      <div className="border-t border-border p-6 flex justify-between gap-4">
+      <div className="flex justify-between gap-4 border-border border-t p-6">
         <ButtonShadcn variant="outline" onClick={props.onCloseModal}>
           Close
         </ButtonShadcn>
@@ -367,21 +367,21 @@ function GetFundsFromFaucet(props: {
   const amountToGive = "0.01";
 
   return (
-    <div className="border border-border px-4 py-6 rounded-lg flex justify-center">
-      <div className="flex flex-col items-center w-full">
+    <div className="flex justify-center rounded-lg border border-border px-4 py-6">
+      <div className="flex w-full flex-col items-center">
         <div className="flex items-center">
           <GiftIcon bg="hsl(var(--background))" className="size-12" />
         </div>
 
         <div className="h-3" />
 
-        <h2 className="text-lg tracking-tight font-semibold text-center px-4">
+        <h2 className="px-4 text-center font-semibold text-lg tracking-tight">
           Get Testnet Funds
         </h2>
 
         <div className="h-3" />
 
-        <p className="text-sm text-muted-foreground text-center">
+        <p className="text-center text-muted-foreground text-sm">
           A testnet faucet is an online service that provides free testnet
           currency to web3 app and blockchain developers. This allows them to
           experiment with and test smart contracts and decentralized
@@ -455,14 +455,14 @@ const MismatchNotice: React.FC<{
       </Heading>
 
       <Text>
-        Your wallet is connected to the{" "}
+        Your wallet is connected to the
         <Box as="strong" textTransform="capitalize">
           {walletConnectedNetworkInfo?.name}
-        </Box>{" "}
-        network but this action requires you to connect to the{" "}
+        </Box>
+        network but this action requires you to connect to the
         <Box as="strong" textTransform="capitalize">
           {chain?.name}
-        </Box>{" "}
+        </Box>
         network.
       </Text>
 

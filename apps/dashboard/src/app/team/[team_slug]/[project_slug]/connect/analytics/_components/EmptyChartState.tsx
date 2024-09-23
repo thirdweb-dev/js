@@ -26,8 +26,8 @@ export function EmptyChartState() {
   const barChartData = useMemo(() => generateRandomData(), []);
 
   return (
-    <div className="w-full h-full relative z-0">
-      <span className="text-base text-muted-foreground font-semibold absolute inset-0 flex items-center justify-center z-[1]">
+    <div className="relative z-0 h-full w-full">
+      <span className="absolute inset-0 z-[1] flex items-center justify-center font-semibold text-base text-muted-foreground">
         No data available
       </span>
       <SkeletonBarChart data={barChartData} />
@@ -37,7 +37,7 @@ export function EmptyChartState() {
 
 export function LoadingChartState() {
   return (
-    <div className="w-full h-full pointer-events-none flex items-center justify-center bg-muted/50 rounded-lg">
+    <div className="pointer-events-none flex h-full w-full items-center justify-center rounded-lg bg-muted/50">
       <Spinner className="size-10" />
     </div>
   );
@@ -49,7 +49,7 @@ function SkeletonBarChart(props: {
   return (
     <ChartContainer
       config={skeletonChartConfig}
-      className="w-full h-full pointer-events-none blur-[5px]"
+      className="pointer-events-none h-full w-full blur-[5px]"
     >
       <BarChart
         data={props.data}
@@ -57,7 +57,7 @@ function SkeletonBarChart(props: {
           top: 20,
         }}
       >
-        <Bar dataKey="value" fill={"var(--color-value)"} radius={8} />
+        <Bar dataKey="value" fill="var(--color-value)" radius={8} />
       </BarChart>
     </ChartContainer>
   );

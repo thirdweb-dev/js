@@ -43,7 +43,7 @@ export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
     >
       <Button
         variant="ghost"
-        className="gap-1.5 px-1 py-0 !h-auto hover:bg-transparent text-muted-foreground hover:text-foreground"
+        className="!h-auto gap-1.5 px-1 py-0 text-muted-foreground hover:bg-transparent hover:text-foreground"
         size="sm"
       >
         Upload Icon

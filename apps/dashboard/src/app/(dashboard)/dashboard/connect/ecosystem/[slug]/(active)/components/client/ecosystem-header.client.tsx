@@ -73,10 +73,10 @@ function EcosystemSelect(props: {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="relative flex justify-start w-full pl-3 pr-8 truncate md:w-48"
+          className="relative flex w-full justify-start truncate pr-8 pl-3 md:w-48"
         >
           <div className="truncate">{props.ecosystem?.name}</div>
-          <ChevronsUpDown className="absolute w-4 h-4 text-muted-foreground right-2" />
+          <ChevronsUpDown className="absolute right-2 h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-full md:w-48">
@@ -85,10 +85,10 @@ function EcosystemSelect(props: {
             <DropdownMenuItem key={ecosystem.id} asChild>
               <Link
                 href={`${props.ecosystemLayoutPath}/${ecosystem.slug}`}
-                className="relative flex items-center pl-8 pr-3 cursor-pointer"
+                className="relative flex cursor-pointer items-center pr-3 pl-8"
               >
                 {ecosystem.slug === props.ecosystem.slug && (
-                  <CheckIcon className="absolute w-4 h-4 text-foreground left-2" />
+                  <CheckIcon className="absolute left-2 h-4 w-4 text-foreground" />
                 )}
                 <div className="truncate">{ecosystem.name}</div>
               </Link>
@@ -97,8 +97,8 @@ function EcosystemSelect(props: {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <Link href={`${props.ecosystemLayoutPath}/create`} className="">
-          <DropdownMenuItem className="relative flex items-center pl-8 pr-3 cursor-pointer">
-            <PlusCircleIcon className="absolute w-4 h-4 left-2" />
+          <DropdownMenuItem className="relative flex cursor-pointer items-center pr-3 pl-8">
+            <PlusCircleIcon className="absolute left-2 h-4 w-4" />
             <div className="truncate">New Ecosystem</div>
           </DropdownMenuItem>
         </Link>
@@ -131,13 +131,13 @@ export function EcosystemHeader(props: {
     <div className="flex flex-col gap-8">
       <EcosystemAlertBanner ecosystem={ecosystem} />
       <header className="flex flex-col gap-12">
-        <div className="flex flex-col justify-between gap-4 md:flex-row md:grid-cols-4">
+        <div className="flex flex-col justify-between gap-4 md:grid-cols-4 md:flex-row">
           <div className="flex items-center gap-4">
             {!ecosystem.imageUrl ? (
               <Skeleton className="size-24" />
             ) : (
               ecosystem.imageUrl && (
-                <div className="relative overflow-hidden rounded-md size-24">
+                <div className="relative size-24 overflow-hidden rounded-md">
                   <Image
                     src={resolveScheme({
                       uri: ecosystem.imageUrl,
@@ -156,7 +156,7 @@ export function EcosystemHeader(props: {
               {!ecosystem.name ? (
                 <Skeleton className="h-12 w-[225px]" />
               ) : (
-                <h2 className="text-4xl font-bold text-foreground">
+                <h2 className="font-bold text-4xl text-foreground">
                   {ecosystem.name}
                 </h2>
               )}

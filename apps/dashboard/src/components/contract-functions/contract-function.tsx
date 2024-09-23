@@ -100,7 +100,7 @@ function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
         <Flex alignItems="baseline" gap={1} flexWrap="wrap">
           <Heading size="subtitle.md">{camelToTitle(fn.name)}</Heading>
           <Heading size="subtitle.sm" className="text-muted-foreground">
-            ({fn.name}){" "}
+            ({fn.name})
           </Heading>
         </Flex>
         {isFunction && (
@@ -298,10 +298,10 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
       : 0;
 
   const functionSection = (e: ExtensionFunctions) => (
-    <Flex key={e.extension} flexDir={"column"} mb={6}>
+    <Flex key={e.extension} flexDir="column" mb={6}>
       {e.extension ? (
         <>
-          <Flex alignItems="center" alignContent={"center"} gap={2}>
+          <Flex alignItems="center" alignContent="center" gap={2}>
             <Image
               src="/assets/dashboard/extension-check.svg"
               alt="Extension detected"
@@ -316,7 +316,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
         </>
       ) : (
         <>
-          <Flex alignItems="center" alignContent={"center"} gap={2}>
+          <Flex alignItems="center" alignContent="center" gap={2}>
             <Heading as="label" size="label.md">
               Other Functions
             </Heading>
@@ -358,14 +358,14 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
             >
               <TabList as={Flex}>
                 {writeFunctions.length > 0 && (
-                  <Tab gap={2} flex={"1 1 0"}>
+                  <Tab gap={2} flex="1 1 0">
                     <Heading color="inherit" my={1} size="label.md">
                       Write
                     </Heading>
                   </Tab>
                 )}
                 {viewFunctions.length > 0 && (
-                  <Tab gap={2} flex={"1 1 0"}>
+                  <Tab gap={2} flex="1 1 0">
                     <Heading color="inherit" my={1} size="label.md">
                       Read
                     </Heading>

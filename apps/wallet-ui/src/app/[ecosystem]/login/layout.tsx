@@ -12,7 +12,7 @@ export default async function Layout({
   }
 
   return (
-    <main className="flex flex-col items-center justify-center w-full">
+    <main className="flex w-full flex-col items-center justify-center">
       {children}
     </main>
   );

@@ -41,9 +41,7 @@ function Variants(props: {
 
   return (
     <ThirdwebProvider>
-      <div
-        className={"flex flex-col gap-6 bg-gray-700 px-4 py-10 min-h-screen"}
-      >
+      <div className="flex min-h-screen flex-col gap-6 bg-gray-700 px-4 py-10">
         <BadgeContainer label="Team, Free">
           <Comp
             teamsAndProjects={teamsAndProjectsStub}

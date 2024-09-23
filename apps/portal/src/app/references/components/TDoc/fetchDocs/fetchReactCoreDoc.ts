@@ -8,7 +8,8 @@ export async function fetchReactCoreDoc() {
   prom = (async () => {
     const doc = await import("./v4-legacy-docs/react-core.json");
 
-    return transform(doc as any);
+    // @ts-expect-error - works fine!
+    return transform(doc);
   })();
   return prom;
 }

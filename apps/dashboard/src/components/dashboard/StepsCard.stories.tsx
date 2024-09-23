@@ -57,7 +57,7 @@ function Component(props: {
   const { cardTitle, cardDescription } = props;
   return (
     <div className="min-h-screen bg-background p-4 text-foreground">
-      <div className="max-w-[1000px] mx-auto flex flex-col gap-12">
+      <div className="mx-auto flex max-w-[1000px] flex-col gap-12">
         <BadgeContainer label="2 steps, 0 Completed">
           <StepsCard
             steps={[
@@ -121,6 +121,6 @@ function Component(props: {
 
 function ChildrenPlaceholder() {
   return (
-    <div className="h-[50px] bg-gradient-to-r from-muted to-muted/50 rounded-lg" />
+    <div className="h-[50px] rounded-lg bg-gradient-to-r from-muted to-muted/50" />
   );
 }

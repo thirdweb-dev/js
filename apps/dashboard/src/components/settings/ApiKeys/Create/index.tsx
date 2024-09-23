@@ -90,7 +90,7 @@ export const CreateAPIKeyDialogUI = (props: {
       }}
     >
       <DialogContent
-        className="p-0 z-[10001]"
+        className="z-[10001] p-0"
         dialogOverlayClassName="z-[10000]"
         dialogCloseClassName={screen.id === "api-details" ? "hidden" : ""}
       >
@@ -289,35 +289,35 @@ function CreateAPIKeyForm(props: {
                     </FormControl>
                     <FormMessage />
                     <div className="pt-1">
-                      <FormDescription className="mb-2 leading-relaxed text-sm">
+                      <FormDescription className="mb-2 text-sm leading-relaxed">
                         Prevent third-parties from using your Client ID by
                         restricting access to allowed domains. Highly
                         recommended for frontend applications.
                       </FormDescription>
 
-                      <ul className="list-disc text-sm text-muted-foreground pl-3 [&>li]:pl-1 flex flex-col gap-2 ">
+                      <ul className="flex list-disc flex-col gap-2 pl-3 text-muted-foreground text-sm [&>li]:pl-1 ">
                         <li>
-                          Authorize all domains with{" "}
-                          <span className="bg-muted text-xs font-mono inline-block px-2 rounded">
+                          Authorize all domains with
+                          <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
                             *
                           </span>
                           <br />
                           <span>
-                            Example:{" "}
-                            <span className="bg-muted text-xs font-mono inline-block px-2 rounded">
+                            Example:
+                            <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
                               *.thirdweb.com
-                            </span>{" "}
-                            accepts all{" "}
-                            <span className="bg-muted text-xs font-mono inline-block px-2 rounded">
+                            </span>
+                            accepts all
+                            <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
                               .thirdweb.com
-                            </span>{" "}
+                            </span>
                             sites
                           </span>
                         </li>
                         <li>
-                          Authorize local URLs with{" "}
-                          <span className="bg-muted text-xs font-mono inline-block px-2 rounded">
-                            {"localhost:<port>"}
+                          Authorize local URLs with
+                          <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
+                            localhost:&lt;port&gt;
                           </span>
                         </li>
                         <li>Separate domains by commas or new lines</li>
@@ -330,16 +330,16 @@ function CreateAPIKeyForm(props: {
           </div>
         </div>
 
-        <DialogFooter className="border-t border-border p-6 bg-muted/50 flex gap-4 md:gap-2">
+        <DialogFooter className="flex gap-4 border-border border-t bg-muted/50 p-6 md:gap-2">
           <DialogClose asChild>
-            <Button variant="outline" className="gap-2 min-w-28">
+            <Button variant="outline" className="min-w-28 gap-2">
               Cancel
             </Button>
           </DialogClose>
           <Button
             type="submit"
             disabled={props.createKeyMutation.isPending}
-            className="gap-2 min-w-28"
+            className="min-w-28 gap-2"
           >
             {props.createKeyMutation.isPending && (
               <Spinner className="size-4" />
@@ -360,7 +360,7 @@ function DomainsAlert(props: {
 }) {
   return (
     <div>
-      <div className="p-6 mb-4">
+      <div className="mb-4 p-6">
         <DialogHeader>
           <DialogTitle className="text-2xl">
             {props.type === "no-domain" && "No Domains Configured"}
@@ -375,11 +375,11 @@ function DomainsAlert(props: {
         </DialogHeader>
       </div>
 
-      <DialogFooter className="border-t border-border p-6 bg-muted/50 flex !justify-between gap-4">
+      <DialogFooter className="!justify-between flex gap-4 border-border border-t bg-muted/50 p-6">
         <Button
           variant="outline"
           onClick={props.onGoBack}
-          className="gap-2 min-w-28"
+          className="min-w-28 gap-2"
         >
           <ArrowLeftIcon className="size-4" />
           Update Domains
@@ -389,7 +389,7 @@ function DomainsAlert(props: {
           type="button"
           onClick={props.onProceed}
           disabled={props.isCreating}
-          className="gap-2 min-w-28"
+          className="min-w-28 gap-2"
           variant="destructive"
         >
           {props.isCreating && <Spinner className="size-4" />}
@@ -419,13 +419,13 @@ function APIKeyDetails(props: {
 
         <section>
           <h3>Client ID</h3>
-          <p className="text-muted-foreground text-sm mb-2">
+          <p className="mb-2 text-muted-foreground text-sm">
             Identifies your application.
           </p>
 
           <CopyTextButton
             textToCopy={apiKey.key}
-            className="truncate w-full justify-between font-mono bg-muted/50 px-3 !h-auto py-3"
+            className="!h-auto w-full justify-between truncate bg-muted/50 px-3 py-3 font-mono"
             textToShow={apiKey.key}
             copyIconPosition="right"
             tooltip="Copy Client ID"
@@ -436,13 +436,13 @@ function APIKeyDetails(props: {
 
         <section>
           <h3>Secret Key</h3>
-          <p className="text-muted-foreground text-sm mb-2">
+          <p className="mb-2 text-muted-foreground text-sm">
             Identifies and authenticates your application from a backend.
           </p>
 
           <CopyTextButton
             textToCopy={apiKey.secret || ""}
-            className="truncate w-full justify-between font-mono bg-muted/50 px-3 !h-auto py-3"
+            className="!h-auto w-full justify-between truncate bg-muted/50 px-3 py-3 font-mono"
             textToShow={apiKey.secret || ""}
             copyIconPosition="right"
             tooltip="Copy Secret Key"
@@ -456,7 +456,7 @@ function APIKeyDetails(props: {
           <AlertDescription>
             <div className="mb-5">
               Secret keys cannot be recovered. If you lose your secret key, you
-              will need to create a{" "}
+              will need to create a
               {props.wording === "project" ? "project" : "API key"}
             </div>
             <CheckboxWithLabel className="text-foreground">
@@ -472,12 +472,12 @@ function APIKeyDetails(props: {
         </Alert>
       </div>
 
-      <DialogFooter className="border-t border-border p-6 bg-muted/50 flex">
+      <DialogFooter className="flex border-border border-t bg-muted/50 p-6">
         <Button
           type="button"
           onClick={props.onComplete}
           disabled={!secretStored}
-          className="gap-2 min-w-28"
+          className="min-w-28 gap-2"
         >
           Complete
         </Button>

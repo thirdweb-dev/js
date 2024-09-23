@@ -41,7 +41,7 @@ export function WalletConnectDisconnectScreen(props: {
             <WalletLogoSpinner
               client={props.client}
               error={!!props.error}
-              id={"walletConnect"}
+              id="walletConnect"
               hideSpinner={true}
             />
           </Container>
@@ -83,7 +83,7 @@ export function WalletConnectDisconnectScreen(props: {
                       alignItems: "center",
                     }}
                   >
-                    <ReloadIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+                    <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
                     Retry
                   </Button>
                 </Container>

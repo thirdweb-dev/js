@@ -10,7 +10,7 @@ export const OnboardingTitle: React.FC<OnboardingTitleProps> = ({
   description,
 }) => {
   return (
-    <div className="flex flex-col gap-3 items-start">
+    <div className="flex flex-col items-start gap-3">
       <Heading size="title.sm">{heading}</Heading>
 
       {description && (

@@ -34,7 +34,7 @@ const Dashboard: ThirdwebNextPage = (
               {showFTUX ? (
                 <FTUX />
               ) : (
-                <div className="flex flex-col gap-10 w-full">
+                <div className="flex w-full flex-col gap-10">
                   <DelayedDisplay delay={1000}>
                     <OnboardingSteps />
                   </DelayedDisplay>

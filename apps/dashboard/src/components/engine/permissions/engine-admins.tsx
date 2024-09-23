@@ -17,13 +17,12 @@ export const EngineAdmins: React.FC<EngineAdminsProps> = ({ instanceUrl }) => {
       <div className="flex flex-col gap-2">
         <Heading size="title.md">Admins</Heading>
         <Text>
-          Admins are allowed to manage your Engine instance from the dashboard.{" "}
+          Admins are allowed to manage your Engine instance from the dashboard.
           <Link
             href="https://portal.thirdweb.com/engine/features/admins"
             color="primary.500"
             isExternal
           >
-            {" "}
             Learn more about admins
           </Link>
           .

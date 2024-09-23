@@ -12,28 +12,28 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
   return (
     <section>
       <SectionTitle title="Buy Funds" />
-      <div className="border border-border px-4 py-10 rounded-lg flex justify-center bg-muted/30">
-        <div className="max-w-[520px] flex flex-col items-center ">
+      <div className="flex justify-center rounded-lg border border-border bg-muted/30 px-4 py-10">
+        <div className="flex max-w-[520px] flex-col items-center ">
           <div className="flex items-center">
             <ChainIcon
-              className="size-12 -mr-2 rounded-full border p-1"
+              className="-mr-2 size-12 rounded-full border p-1"
               iconUrl={props.chain.icon?.url}
             />
             <CreditCardIcon
               bg="hsl(var(--background))"
-              className="size-12 -ml-2"
+              className="-ml-2 size-12"
             />
           </div>
 
           <div className="h-6" />
 
-          <h2 className="text-lg tracking-tight font-semibold text-center px-4">
+          <h2 className="px-4 text-center font-semibold text-lg tracking-tight">
             Buy Funds on {sanitizedChainName} using thirdweb Pay
           </h2>
 
           <div className="h-2" />
 
-          <p className="text-muted-foreground text-sm max-w-[520px] text-center px-4">
+          <p className="max-w-[520px] px-4 text-center text-muted-foreground text-sm">
             Instantly onramp, bridge & swap into {sanitizedChainName} with any
             token.
           </p>
@@ -49,9 +49,9 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
 
           <Link
             href="https://portal.thirdweb.com/connect/pay/overview"
-            className="inline-flex gap-1.5 items-center text-sm text-muted-foreground hover:text-foreground"
+            className="inline-flex items-center gap-1.5 text-muted-foreground text-sm hover:text-foreground"
           >
-            Learn more about thirdweb Pay{" "}
+            Learn more about thirdweb Pay
             <ExternalLinkIcon className="size-3" />
           </Link>
         </div>

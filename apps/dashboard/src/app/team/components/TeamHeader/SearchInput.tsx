@@ -12,9 +12,9 @@ export function SearchInput(props: {
         placeholder={props.placeholder}
         value={props.value}
         onChange={(e) => props.onValueChange(e.target.value)}
-        className="pl-9 py-6 focus-visible:ring-0 rounded-none border-0 bg-transparent focus:shadow-none focus-visible:ring-transparent !ring-offset-transparent"
+        className="!ring-offset-transparent rounded-none border-0 bg-transparent py-6 pl-9 focus:shadow-none focus-visible:ring-0 focus-visible:ring-transparent"
       />
-      <SearchIcon className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+      <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
     </div>
   );
 }

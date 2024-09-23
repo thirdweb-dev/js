@@ -12,7 +12,7 @@ export const ContractDirectListingsPage: React.FC<
 > = ({ contract }) => {
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-row items-center justify-between">
         <Heading size="title.sm">Contract Listings</Heading>
         <div className="flex flex-row gap-4">
           <CreateListingButton

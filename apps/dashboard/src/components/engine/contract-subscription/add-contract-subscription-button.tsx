@@ -157,7 +157,7 @@ const AddModal = ({
     >
       <ModalOverlay />
       <ModalContent
-        className="!bg-background border border-border rounded-lg"
+        className="!bg-background rounded-lg border border-border"
         as="form"
         onSubmit={form.handleSubmit(onSubmit)}
       >
@@ -352,7 +352,7 @@ const ModalBodyInputData = ({
                       </Radio>
                       <Radio value="true">
                         <Text>
-                          Specific events{" "}
+                          Specific events
                           {!!filterEvents.length &&
                             `(${filterEvents.length} selected)`}
                         </Text>
@@ -408,7 +408,7 @@ const ModalBodyInputData = ({
                       </Radio>
                       <Radio value="true">
                         <Text>
-                          Specific functions{" "}
+                          Specific functions
                           {!!filterFunctions.length &&
                             `(${filterFunctions.length} selected)`}
                         </Text>

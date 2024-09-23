@@ -156,7 +156,7 @@ export function TransactionButton(props: TransactionButtonProps) {
       <Button
         gap="xs"
         disabled={!account || disabled || isPending}
-        variant={"primary"}
+        variant="primary"
         unstyled={unstyled}
         data-is-loading={isPending}
         onClick={() => handleClick()}

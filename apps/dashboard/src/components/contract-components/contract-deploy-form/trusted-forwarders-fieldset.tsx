@@ -22,18 +22,18 @@ export const TrustedForwardersFieldset: React.FC<
           ).error
         }
       >
-        <div className="flex gap-6 justify-between items-center">
+        <div className="flex items-center justify-between gap-6">
           {/* left */}
           <div>
             <FormLabel>Trusted Forwarders</FormLabel>
 
             <FormHelperText className="!text-sm text-muted-foreground">
-              <span className="text-muted-foreground text-sm mb-1 block">
+              <span className="mb-1 block text-muted-foreground text-sm">
                 Trusted forwarder addresses to enable ERC-2771 transactions
                 (i.e. gasless).
               </span>
 
-              <span className="text-muted-foreground text-sm block">
+              <span className="block text-muted-foreground text-sm">
                 You can provide your own forwarder, or click the button below to
                 use default forwarders provided by thirdweb. Leave empty if not
                 needed.
@@ -42,7 +42,7 @@ export const TrustedForwardersFieldset: React.FC<
           </div>
         </div>
 
-        <div className="block pt-3 fade-in-0 animate-in duration-400">
+        <div className="fade-in-0 block animate-in pt-3 duration-400">
           <InputGroup size="md">
             <Flex flexDir="column" w="full">
               <SolidityInput

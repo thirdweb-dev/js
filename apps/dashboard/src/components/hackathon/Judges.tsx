@@ -35,7 +35,7 @@ export const Judges = ({ TRACKING_CATEGORY }: JudgesProps) => {
   ];
 
   return (
-    <div className="gap-8 relative flex flex-col">
+    <div className="relative flex flex-col gap-8">
       <Heading size="title.2xl">Judges</Heading>
       <SimpleGrid
         columns={{ base: 1, lg: 4 }}

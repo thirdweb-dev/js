@@ -44,7 +44,7 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
     >
       <Button
         disabled={disabled}
-        className="gap-2 w-full"
+        className="w-full gap-2"
         variant="outline"
         onClick={() => {
           // Connct directly to this chain

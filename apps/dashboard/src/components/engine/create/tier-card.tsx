@@ -70,7 +70,7 @@ export const EngineTierCard = ({
 
   const card = (
     <div
-      className="border border-border rounded-xl flex flex-col gap-6 p-6 bg-muted/20"
+      className="flex flex-col gap-6 rounded-xl border border-border bg-muted/20 p-6"
       style={{
         background: isPrimaryCta
           ? "linear-gradient(to top, hsl(var(--muted)), hsl(var(--muted)/50%))"
@@ -79,16 +79,16 @@ export const EngineTierCard = ({
     >
       <Flex flexDir="column" gap={4}>
         {/* Name */}
-        <h3 className="text-3xl font-semibold tracking-tight">{name}</h3>
+        <h3 className="font-semibold text-3xl tracking-tight">{name}</h3>
 
         {/* Price */}
         {monthlyPriceUsd === "custom" ? (
-          <p className="text-lg font-semibold text-muted-foreground">
+          <p className="font-semibold text-lg text-muted-foreground">
             Custom Pricing
           </p>
         ) : (
           <Flex gap={2} alignItems="baseline">
-            <p className="text-foreground text-3xl font-semibold tracking-tight">
+            <p className="font-semibold text-3xl text-foreground tracking-tight">
               ${monthlyPriceUsd}
             </p>
             <p className="text-muted-foreground">per month</p>
@@ -105,8 +105,8 @@ export const EngineTierCard = ({
         )}
         {features.map((feature) => (
           <Flex key={feature} gap={3} align="center">
-            <CheckIcon className="size-4 text-green-500 shrink-0" />
-            <p className="text-sm text-muted-foreground">{feature}</p>
+            <CheckIcon className="size-4 shrink-0 text-green-500" />
+            <p className="text-muted-foreground text-sm">{feature}</p>
           </Flex>
         ))}
       </Stack>

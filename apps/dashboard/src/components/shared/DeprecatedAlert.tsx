@@ -81,14 +81,14 @@ export const DeprecatedAlert: React.FC<DeprecatedAlertProps> = ({ chain }) => {
           {isDeprecatedSoon ? " will be deprecated soon" : " is deprecated"}
         </AlertTitle>
         <AlertDescription as={Text}>
-          {message}{" "}
+          {message}
           {recommendedChain && (
             <>
               <br />
-              We recommend switching to{" "}
+              We recommend switching to
               <Link href={`/${recommendedChain.id}`} color="primary.500">
                 {recommendedChain.name}
-              </Link>{" "}
+              </Link>
               to continue testing your smart contracts.
             </>
           )}

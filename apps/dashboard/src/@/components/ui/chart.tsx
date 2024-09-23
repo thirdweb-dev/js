@@ -233,7 +233,7 @@ const ChartTooltipContent = React.forwardRef<
                     )}
                     <div
                       className={cn(
-                        "flex flex-1 gap-2 justify-between leading-none",
+                        "flex flex-1 justify-between gap-2 leading-none",
                         nestLabel ? "items-end" : "items-center",
                       )}
                     >
@@ -244,7 +244,7 @@ const ChartTooltipContent = React.forwardRef<
                         </span>
                       </div>
                       {item.value && (
-                        <span className="font-mono font-medium tabular-nums text-foreground">
+                        <span className="font-medium font-mono text-foreground tabular-nums">
                           {valueFormatter
                             ? valueFormatter(item.value) || item.value
                             : item.value}
@@ -287,7 +287,7 @@ const ChartLegendContent = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "flex items-center justify-center gap-x-4 gap-y-2 overflow-x-auto flex-wrap",
+          "flex flex-wrap items-center justify-center gap-x-4 gap-y-2 overflow-x-auto",
           verticalAlign === "top" ? "pb-3" : "pt-3",
           className,
         )}

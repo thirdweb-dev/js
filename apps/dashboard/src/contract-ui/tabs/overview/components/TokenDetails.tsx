@@ -9,7 +9,7 @@ interface TokenDetailsProps {
 export const TokenDetails: React.FC<TokenDetailsProps> = ({ contract }) => {
   return (
     <div className="flex flex-col gap-6">
-      <div className="items-center justify-between w-full flex flex-row">
+      <div className="flex w-full flex-row items-center justify-between">
         <Heading size="title.sm">Token Details</Heading>
       </div>
       <TokenSupply contract={contract} />

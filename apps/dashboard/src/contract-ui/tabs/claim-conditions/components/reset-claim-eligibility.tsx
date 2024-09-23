@@ -106,7 +106,7 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
             </>
           }
         >
-          <CircleHelpIcon className="size-4 text-muted-foreground ml-2" />
+          <CircleHelpIcon className="ml-2 size-4 text-muted-foreground" />
         </ToolTipLabel>
       </TransactionButton>
     </AdminOnly>

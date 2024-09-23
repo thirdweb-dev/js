@@ -78,7 +78,7 @@ export function LeftSection(props: {
             setConnectOptions={setConnectOptions}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
             {/* Modal title */}
             <div className="flex flex-col gap-2">
               <Label htmlFor="modal-title"> Modal Title </Label>
@@ -112,7 +112,7 @@ export function LeftSection(props: {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
             {/* TOS link */}
             <div className="flex flex-col gap-2">
               <Label htmlFor="tos-link"> Terms of Service Link </Label>
@@ -146,7 +146,7 @@ export function LeftSection(props: {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
             {/* Thirdweb Branding */}
             <section className="flex items-center gap-2">
               <Checkbox
@@ -264,7 +264,7 @@ export function LeftSection(props: {
       </CollapsibleSection>
 
       <CollapsibleSection title="Button Options" icon={RectangleHorizontalIcon}>
-        <div className="pt-5 flex flex-col gap-2">
+        <div className="flex flex-col gap-2 pt-5">
           <Label htmlFor="btn-label"> Button Label </Label>
           <Input
             id="btn-label"

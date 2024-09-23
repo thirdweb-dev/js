@@ -214,11 +214,12 @@
     "@walletconnect/ethereum-provider": "2.16.2",
     "@walletconnect/sign-client": "2.16.2",
     "abitype": "1.0.5",
+
     "fuse.js": "7.0.0",
     "input-otp": "^1.2.4",
     "mipd": "0.0.7",
     "uqr": "0.1.2",
-    "viem": "2.21.11"
+    "viem": "2.21.12"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -288,7 +289,7 @@
     "bench": "vitest -c ./test/vitest.config.ts bench",
     "format": "biome format ./src --write",
     "lint": "knip && biome check ./src && tsc --project ./tsconfig.build.json --module esnext --noEmit",
-    "fix": "biome check ./src --fix",
+    "fix": "biome check ./src --fix --unsafe",
     "knip": "knip",
     "build:generate": "bun scripts/generate/generate.ts",
     "build:generate-wallets": "bun scripts/wallets/generate.ts",

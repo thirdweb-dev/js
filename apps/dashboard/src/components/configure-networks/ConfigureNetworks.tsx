@@ -54,7 +54,7 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
   return (
     <div>
       <div className="px-6 pt-6">
-        <h3 className="text-xl font-semibold tracking-tight">
+        <h3 className="font-semibold text-xl tracking-tight">
           {editChain ? "Edit Network" : "Add Custom Network"}
         </h3>
       </div>

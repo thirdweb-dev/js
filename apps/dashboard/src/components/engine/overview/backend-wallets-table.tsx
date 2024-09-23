@@ -269,7 +269,7 @@ const EditModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Update Backend Wallet</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -336,7 +336,7 @@ const ReceiveFundsModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Receive Funds</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -419,7 +419,7 @@ const SendFundsModal = ({
       <ModalContent
         as="form"
         onSubmit={form.handleSubmit(onSubmit)}
-        className="!bg-background border border-border rounded-lg"
+        className="!bg-background rounded-lg border border-border"
       >
         <ModalHeader>Send Funds</ModalHeader>
         <ModalCloseButton />
@@ -481,7 +481,7 @@ const SendFundsModal = ({
                 </InputRightAddon>
               </InputGroup>
               <FormHelperText textAlign="right">
-                Current amount:{" "}
+                Current amount:
                 {prettyPrintCurrency({
                   amount: backendWalletBalance.displayValue,
                   symbol: backendWalletBalance.symbol,

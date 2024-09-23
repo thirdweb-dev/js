@@ -15,7 +15,7 @@ export const HackathonFooter = ({
   const trackEvent = useTrack();
 
   return (
-    <div className="flex flex-col items-center bg-[url('/assets/hackathon/footer-bg.png')] bg-cover bg-no-repeat bg-center w-full py-20 gap-10 rounded-t-[50px] px-6">
+    <div className="flex w-full flex-col items-center gap-10 rounded-t-[50px] bg-[url('/assets/hackathon/footer-bg.png')] bg-center bg-cover bg-no-repeat px-6 py-20">
       <ChakraNextImage
         src={require("../../../public/assets/landingpage/thirdwebw.svg")}
         alt="hackathon-partner"

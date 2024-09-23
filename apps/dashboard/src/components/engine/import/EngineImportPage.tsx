@@ -62,8 +62,8 @@ export const EngineImportPage = () => {
   };
 
   return (
-    <div className="max-w-[550px] mx-auto">
-      <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
+    <div className="mx-auto max-w-[550px]">
+      <h1 className="font-semibold text-2xl tracking-tight md:text-3xl">
         Import Engine Instance
       </h1>
 
@@ -76,7 +76,7 @@ export const EngineImportPage = () => {
       <div className="h-3" />
 
       <TrackedLinkTW
-        className="p-3 rounded-lg border border-border bg-muted/50 flex items-center gap-2 justify-between hover:bg-accent text-sm"
+        className="flex items-center justify-between gap-2 rounded-lg border border-border bg-muted/50 p-3 text-sm hover:bg-accent"
         href="https://portal.thirdweb.com/infrastructure/engine/get-started"
         target="_blank"
         category="engine"
@@ -111,10 +111,10 @@ export const EngineImportPage = () => {
                 required: "URL is required",
               })}
             />
-            <div className="flex items-center gap-2 mt-2">
-              <CircleAlertIcon className="size-3 text-warning-foreground !static" />
-              <p className="text-sm text-muted-foreground">
-                Do not import a URL you do not recognize{" "}
+            <div className="mt-2 flex items-center gap-2">
+              <CircleAlertIcon className="!static size-3 text-warning-foreground" />
+              <p className="text-muted-foreground text-sm">
+                Do not import a URL you do not recognize
               </p>
             </div>
           </FormControl>
@@ -125,7 +125,7 @@ export const EngineImportPage = () => {
         <Button
           type="submit"
           variant="primary"
-          className="w-full text-base gap-2"
+          className="w-full gap-2 text-base"
         >
           <CloudDownloadIcon className="size-4" />
           Import

@@ -34,6 +34,7 @@ import { resolveAddress } from "thirdweb/extensions/ens";
 import { isAddress } from "thirdweb/utils";
 import { Button, Heading, Text } from "tw-components";
 import { csvMimeTypes } from "utils/batch";
+import { cn } from "../../../../@/lib/utils";
 export interface ERC20AirdropAddressInput {
   address: string;
   quantity: string;
@@ -173,7 +174,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
     setValidAirdrop(filteredData);
   }, [normalizeQuery.data.result]);
   return (
-    <div className="gap-6 flex flex-col w-full">
+    <div className="flex w-full flex-col gap-6">
       {normalizeQuery.pending && <div>Loading... </div>}
       {normalizeQuery.data?.result.length && validAirdrop.length > 0 ? (
         <>
@@ -181,9 +182,9 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
             portalRef={paginationPortalRef}
             data={normalizeQuery.data.result}
           />
-          <div className="flex flex-col justify-between mt-4 md:mt-0">
+          <div className="mt-4 flex flex-col justify-between md:mt-0">
             <div ref={paginationPortalRef} />
-            <div className="gap-2 flex flex-row mt-3 w-full md:w-auto ml-auto">
+            <div className="mt-3 ml-auto flex w-full flex-row gap-2 md:w-auto">
               <Button
                 borderRadius="md"
                 disabled={validAirdrop.length === 0}
@@ -239,7 +240,9 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
               <div className="flex flex-col p-6">
                 <Upload
                   size={16}
-                  className={`${noCsv ? "text-red-500" : "text-gray-500"} my-auto`}
+                  className={cn("my-auto text-gray-500", {
+                    "text-red-500": noCsv,
+                  })}
                 />
                 {isDragActive ? (
                   <Heading as={Text} size="label.md">
@@ -259,13 +262,13 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
               </div>
             </Center>
           </AspectRatio>
-          <div className="gap-2 flex flex-col">
+          <div className="flex flex-col gap-2">
             <Heading size="subtitle.sm">Requirements</Heading>
             <UnorderedList>
               <ListItem>
                 Files <em>must</em> contain one .csv file with an address and
                 quantity column, if the quantity column is not provided, that
-                record will be flagged as invalid.{" "}
+                record will be flagged as invalid.
                 <Link download color="primary.500" href="/airdrop.csv">
                   Download an example CSV
                 </Link>
@@ -307,7 +310,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
             >
               <div className="flex flex-row items-center gap-2">
                 <CircleAlert size={16} className="text-red-500" />
-                <div className="font-bold text-red-500 cursor-default">
+                <div className="cursor-default font-bold text-red-500">
                   {address}
                 </div>
               </div>
@@ -416,7 +419,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
                 onClick={() => previousPage()}
               />
               <Text whiteSpace="nowrap">
-                Page <strong>{pageIndex + 1}</strong> of{" "}
+                Page <strong>{pageIndex + 1}</strong> of
                 <strong>{pageOptions.length}</strong>
               </Text>
               <IconButton

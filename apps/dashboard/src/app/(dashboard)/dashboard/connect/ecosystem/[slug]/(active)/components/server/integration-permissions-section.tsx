@@ -11,11 +11,11 @@ export function IntegrationPermissionsSection({
   return (
     <section className="flex flex-col gap-4 md:gap-8">
       <div className="flex flex-col gap-1">
-        <h4 className="text-2xl font-semibold text-foreground">
+        <h4 className="font-semibold text-2xl text-foreground">
           Integration permissions
         </h4>
         {ecosystem ? (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {ecosystem.permission === "PARTNER_WHITELIST"
               ? "Your ecosystem has an allowlist. Only preset partners can add your wallet to their app."
               : "Your ecosystem is public. Anyone can add your wallet to their app."}

@@ -118,7 +118,7 @@ export const LandingGuidesShowcase: React.FC<LandingGuidesShowcaseProps> = ({
               lineHeight={{ base: 1.5, md: undefined }}
               position="relative"
             >
-              See all of our {solution.replace("-", " ")}{" "}
+              See all of our {solution.replace("-", " ")}
               {caseStudies ? "case studies" : "guides"}
             </Heading>
             <Icon as={FiArrowRight} />

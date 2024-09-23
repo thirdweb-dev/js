@@ -45,7 +45,7 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
           textToShow={`${cell.getValue().slice(0, 5)}...${cell.getValue().slice(-5)}`}
           tooltip="Copy Client ID"
           variant="ghost"
-          className="font-mono text-muted-foreground -translate-x-2"
+          className="-translate-x-2 font-mono text-muted-foreground"
           onClick={() => {
             trackEvent({
               category: "api_key_button",
@@ -94,12 +94,12 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
         }
 
         return (
-          <div className="flex flex-col xl:flex-row items-start gap-2">
+          <div className="flex flex-col items-start gap-2 xl:flex-row">
             {value.map((srv) => {
               const service = getServiceByName(srv.name as ServiceName);
               return !HIDDEN_SERVICES.includes(service?.name) ? (
                 <Badge variant="default" key={srv.name}>
-                  {service?.title}{" "}
+                  {service?.title}
                 </Badge>
               ) : null;
             })}

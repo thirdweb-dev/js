@@ -92,14 +92,14 @@ export function EngineAlertDialogForm(props: {
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent
-        className="p-0 z-[10001]"
+        className="z-[10001] p-0"
         dialogOverlayClassName="z-[10000]"
       >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="p-6">
               <DialogHeader className="mb-4">
-                <DialogTitle className="text-2xl font-semibold tracking-tight">
+                <DialogTitle className="font-semibold text-2xl tracking-tight">
                   {props.title}
                 </DialogTitle>
               </DialogHeader>
@@ -208,7 +208,7 @@ export function EngineAlertDialogForm(props: {
               </div>
             </div>
 
-            <DialogFooter className="p-6 bg-muted/50 border-t border-border mt-4 gap-4 lg:gap-2 ">
+            <DialogFooter className="mt-4 gap-4 border-border border-t bg-muted/50 p-6 lg:gap-2 ">
               <Button
                 variant="outline"
                 onClick={() => {

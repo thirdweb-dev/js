@@ -766,7 +766,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                     isTWPublisher={isTWPublisher}
                   />
                 ) : (
-                  <div className="min-h-[250px] flex justify-center items-center">
+                  <div className="flex min-h-[250px] items-center justify-center">
                     <Spinner className="size-8" />
                   </div>
                 ))}
@@ -803,9 +803,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               <FormControl isRequired>
                 <FormLabel>Chain</FormLabel>
 
-                <p className="text-muted-foreground text-sm mb-3">
+                <p className="mb-3 text-muted-foreground text-sm">
                   Select a network to deploy this contract on. We recommend
-                  starting with a testnet.{" "}
+                  starting with a testnet.
                   <TrackedLinkTW
                     href="/chainlist"
                     category="deploy"
@@ -818,7 +818,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 </p>
 
                 <div className="flex flex-col gap-3">
-                  <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex flex-col gap-4 md:flex-row">
                     <NetworkSelectorButton
                       networksEnabled={
                         metadata?.name === "AccountFactory" ||
@@ -852,7 +852,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                         }
                       />
                       <ToolTipLabel label="Allows having the same contract address on multiple chains. You can control the address by specifying a salt for create2 deployment below">
-                        <div className="inline-flex gap-1.5 items-center">
+                        <div className="inline-flex items-center gap-1.5">
                           <span className="tex-sm">
                             Deploy at a deterministic address
                           </span>
@@ -886,7 +886,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                         <FormHelperText mt={0}>string</FormHelperText>
                       </Flex>
                       <SolidityInput
-                        solidityType={"string"}
+                        solidityType="string"
                         {...form.register("saltForCreate2")}
                       />
                       <div className="h-2" />
@@ -917,7 +917,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   }
                 />
                 <span>
-                  Import so I can find it in the list of my contracts at{" "}
+                  Import so I can find it in the list of my contracts at
                   <TrackedLinkTW
                     className="text-link-foreground hover:text-foreground"
                     href="/dashboard"

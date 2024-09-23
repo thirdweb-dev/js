@@ -19,7 +19,7 @@ export const SettingsBillingPage = () => {
 
   if (!account) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <Spinner className="size-10" />
       </div>
     );

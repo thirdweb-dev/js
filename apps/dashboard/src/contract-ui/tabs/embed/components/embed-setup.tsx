@@ -434,7 +434,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
             )}
 
             <FormHelperText>
-              You need a client ID to use embeds.{" "}
+              You need a client ID to use embeds.
               <Link
                 href="https://portal.thirdweb.com/account/api-keys"
                 color="primary.500"
@@ -484,7 +484,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               )}
               <FormHelperText>
                 A relayer can be used to make the transaction gasless for the
-                end user.{" "}
+                end user.
                 <Link
                   isExternal
                   color="blue.500"

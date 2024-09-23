@@ -1,5 +1,6 @@
 import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { cookies } from "next/headers";
+import { cn } from "../../lib/utils";
 import { AuthButton } from "./auth-button";
 
 export function BasicAuthPreview() {
@@ -10,15 +11,18 @@ export function BasicAuthPreview() {
         <AuthButton />
       </div>
       {jwt && !!jwt.value && (
-        <table className="table-auto rounded-lg backdrop-blur border-collapse">
+        <table className="table-auto border-collapse rounded-lg backdrop-blur">
           <tbody>
             {Object.keys(jwt).map((key) => (
               <tr key={key} className="">
-                <td className="border p-2 rounded">{key}</td>
+                <td className="rounded border p-2">{key}</td>
                 <td
-                  className={`border p-2 max-w-[250px] max-h-[200px] overflow-y-auto break-words whitespace-normal ${
-                    key === "value" ? "text-xs" : ""
-                  }`}
+                  className={cn(
+                    "max-h-[200px] max-w-[250px] overflow-y-auto whitespace-normal break-words border p-2",
+                    {
+                      "text-xs": key === "value",
+                    },
+                  )}
                 >
                   {jwt[key as keyof RequestCookie]}
                 </td>

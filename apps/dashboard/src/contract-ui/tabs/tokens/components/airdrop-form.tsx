@@ -85,7 +85,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
             });
           })}
         >
-          <div className="flex flex-col md:flex-row w-full gap-6 mb-3">
+          <div className="mb-3 flex w-full flex-col gap-6 md:flex-row">
             {airdropFormOpen ? (
               <AirdropUploadERC20
                 onClose={() => setAirdropFormOpen(false)}
@@ -94,7 +94,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                 }
               />
             ) : (
-              <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex flex-col gap-4 md:flex-row">
                 <Button
                   colorScheme="primary"
                   borderRadius="md"
@@ -104,7 +104,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                   Upload addresses
                 </Button>
                 {addresses.length > 0 && (
-                  <div className="gap-2 flex flex-row items-center justify-center text-green-500">
+                  <div className="flex flex-row items-center justify-center gap-2 text-green-500">
                     <CircleCheck className="text-green-500" size={16} />
                     <Text size="body.sm" color="inherit">
                       <strong>{addresses.length} addresses</strong> ready to be

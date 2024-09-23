@@ -38,7 +38,7 @@ export default async function PublishedContractPage(
       <Separator />
       {/* TODO: remove the chakra things :) */}
       <ChakraProviderSetup>
-        <div className="grid grid-cols-12 gap-6 md:gap-10 w-full">
+        <div className="grid w-full grid-cols-12 gap-6 md:gap-10">
           <PublishedContract
             publishedContract={publishedContract}
             walletOrEns={props.params.publisher}

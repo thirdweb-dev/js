@@ -35,12 +35,12 @@ export const CustomChainRenderer = ({
   const isSponsored = OPSponsoredChains.includes(chain.id);
 
   return (
-    <div className="flex w-full justify-start hover:bg-accent rounded-lg px-2 py-1 cursor-pointer min-h-[48px]">
-      <div className="flex flex-1 items-center group">
+    <div className="flex min-h-[48px] w-full cursor-pointer justify-start rounded-lg px-2 py-1 hover:bg-accent">
+      <div className="group flex flex-1 items-center">
         {/* biome-ignore lint/a11y/useKeyWithClickEvents: FIXME */}
         <div
           className={cn(
-            "flex flex-1 gap-4 items-center",
+            "flex flex-1 items-center gap-4",
             isDeprecated ? "cursor-not-allowed" : "cursor-pointer",
           )}
           onClick={() => {
@@ -51,7 +51,7 @@ export const CustomChainRenderer = ({
         >
           <ChainIcon ipfsSrc={chain.icon?.url} size={32} />
           <div className="flex flex-col gap-1">
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center gap-2">
               <p
                 className={cn(
                   "font-semibold text-base",
@@ -61,7 +61,7 @@ export const CustomChainRenderer = ({
                 {chain.name}
               </p>
               {isDeprecated && (
-                <div className="text-xs font-medium cursor-not-allowed flex rounded-xl items-center overflow-hidden shrink-0 py-1 px-2 border">
+                <div className="flex shrink-0 cursor-not-allowed items-center overflow-hidden rounded-xl border px-2 py-1 font-medium text-xs">
                   Deprecated
                 </div>
               )}
@@ -70,21 +70,21 @@ export const CustomChainRenderer = ({
                   style={{
                     background: "linear-gradient(to right, #701953, #5454B2)",
                   }}
-                  className="text-xs font-medium cursor-not-allowed flex rounded-xl items-center overflow-hidden shrink-0 py-1 px-2"
+                  className="flex shrink-0 cursor-not-allowed items-center overflow-hidden rounded-xl px-2 py-1 font-medium text-xs"
                 >
                   Sponsored
                 </div>
               )}
             </div>
             {switching && (
-              <div className="flex text-link-foreground text-xs font-medium items-center gap-1">
+              <div className="flex items-center gap-1 font-medium text-link-foreground text-xs">
                 Confirm in your wallet
                 <Spinner className="size-3" />
               </div>
             )}
 
             {switchFailed && (
-              <div className="text-destructive-text text-xs font-semibold">
+              <div className="font-semibold text-destructive-text text-xs">
                 Error switching network
               </div>
             )}
@@ -94,7 +94,7 @@ export const CustomChainRenderer = ({
         {!disableChainConfig && storedChain && (
           <Button
             variant="ghost"
-            className="ml-auto p-2 leading-4 md:opacity-0 group-hover:opacity-100 hover:bg-transparent transition-opacity"
+            className="ml-auto p-2 leading-4 transition-opacity hover:bg-transparent group-hover:opacity-100 md:opacity-0"
             aria-label="Configure Network"
             onClick={() => {
               openEditChainModal(storedChain);

@@ -25,12 +25,12 @@ export function TeamSelectorMobileMenuButton(
       <DialogTrigger asChild>
         <Button
           size="icon"
-          className="px-1 w-auto !h-auto py-2 rounded-xl"
+          className="!h-auto w-auto rounded-xl px-1 py-2"
           variant="ghost"
           aria-label="Select Project"
         >
           <ChevronsUpDownIcon
-            className="shrink-0 text-muted-foreground hover:text-foreground size-5"
+            className="size-5 shrink-0 text-muted-foreground hover:text-foreground"
             strokeWidth={1.5}
           />
         </Button>

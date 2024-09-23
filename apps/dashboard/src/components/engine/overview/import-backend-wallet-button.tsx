@@ -54,7 +54,7 @@ export const ImportBackendWalletButton: React.FC<
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent
-          className="!bg-background border border-border rounded-lg"
+          className="!bg-background rounded-lg border border-border"
           as="form"
           onSubmit={form.handleSubmit((data) => {
             importBackendWallet(data, {

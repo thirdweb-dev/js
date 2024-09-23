@@ -13,7 +13,7 @@ export function CollapsibleSection(props: {
       chevronPosition="right"
       chevronClassName="size-5"
       trigger={
-        <span className="flex gap-3 items-center tracking-tight font-semibold text-lg">
+        <span className="flex items-center gap-3 font-semibold text-lg tracking-tight">
           <props.icon className="size-5" />
           {props.title}
         </span>

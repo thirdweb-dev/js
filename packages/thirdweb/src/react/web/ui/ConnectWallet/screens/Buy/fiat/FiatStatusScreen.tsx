@@ -118,7 +118,7 @@ export function OnrampStatusScreen(props: {
           <StepBar steps={2} currentStep={1} />
           <Spacer y="sm" />
           <Text size="xs">
-            Step 1 of 2 - Buying {props.quote.onRampToken.token.symbol} with{" "}
+            Step 1 of 2 - Buying {props.quote.onRampToken.token.symbol} with
             {props.quote.fromCurrencyWithFees.currencySymbol}
           </Text>
         </>

@@ -115,7 +115,7 @@ export const SignatureScreen: React.FC<{
           <>
             <Container flex="row" center="x" animate="fadein" py="3xl">
               <PulsatingContainer>
-                <WalletImage id={wallet.id} client={props.client} size={"80"} />
+                <WalletImage id={wallet.id} client={props.client} size="80" />
               </PulsatingContainer>
             </Container>
 

@@ -27,7 +27,7 @@ export function MobileSidebar(props: {
   const defaultTrigger = (
     <Button
       className={cn(
-        "w-full lg:hidden text-left justify-between gap-2 bg-muted/50",
+        "w-full justify-between gap-2 bg-muted/50 text-left lg:hidden",
         props.triggerClassName,
       )}
       variant="outline"
@@ -41,7 +41,7 @@ export function MobileSidebar(props: {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{props.trigger || defaultTrigger}</DialogTrigger>
       <DialogContent
-        className="p-4 rounded-t-xl rounded-b-none"
+        className="rounded-t-xl rounded-b-none p-4"
         dialogCloseClassName="hidden"
         onClick={(e) => {
           if (e.target instanceof HTMLAnchorElement) {
@@ -55,7 +55,7 @@ export function MobileSidebar(props: {
               <Button size="sm" variant="ghost" asChild key={link.href}>
                 <NavLink
                   href={link.href}
-                  className="!text-left justify-start flex gap-2 h-auto py-3"
+                  className="!text-left flex h-auto justify-start gap-2 py-3"
                   activeClassName="bg-accent"
                   exactMatch={link.exactMatch}
                   tracking={link.tracking}

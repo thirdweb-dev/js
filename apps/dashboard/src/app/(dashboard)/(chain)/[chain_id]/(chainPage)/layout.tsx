@@ -79,7 +79,7 @@ export default async function ChainPageLayout({
 
   return (
     <>
-      <div className="border-b border-border h-14 pl-7 flex">
+      <div className="flex h-14 border-border border-b pl-7">
         <Breadcrumb className="my-auto">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -119,10 +119,10 @@ export default async function ChainPageLayout({
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="container flex flex-row h-full">
+      <div className="container flex h-full flex-row">
         <Sidebar links={sidebarLinks} />
 
-        <div className="flex flex-col w-full pb-10">
+        <div className="flex w-full flex-col pb-10">
           {/* Icon + Background */}
           <ChainHeader
             headerImageUrl={chainMetadata?.headerImgUrl}
@@ -130,7 +130,7 @@ export default async function ChainPageLayout({
             chain={chain}
           />
 
-          <div className="flex lg:hidden justify-end">
+          <div className="flex justify-end lg:hidden">
             <MobileSidebar
               links={sidebarLinks}
               trigger={
@@ -142,7 +142,7 @@ export default async function ChainPageLayout({
                 <div className="mt-5 border-t pt-6 pb-2">
                   <Link
                     href="/chainlist"
-                    className="px-2 text-sm flex justify-start gap-2 items-center text-muted-foreground hover:text-foreground"
+                    className="flex items-center justify-start gap-2 px-2 text-muted-foreground text-sm hover:text-foreground"
                   >
                     <ArrowLeftIcon className="size-4" />
                     View all chains
@@ -157,14 +157,14 @@ export default async function ChainPageLayout({
           <div className="flex flex-col gap-3 md:gap-2">
             {/* Gas Sponsored badge - Mobile */}
             {chainMetadata?.gasSponsored && (
-              <div className="md:hidden flex">
+              <div className="flex md:hidden">
                 <GasSponseredBadge />
               </div>
             )}
 
             {/* Chain name */}
-            <div className="flex flex-row gap-1.5 items-center">
-              <h1 className="text-2xl font-semibold lg:text-3xl lg:font-semibold tracking-tight">
+            <div className="flex flex-row items-center gap-1.5">
+              <h1 className="font-semibold text-2xl tracking-tight lg:font-semibold lg:text-3xl">
                 {chain.name}
               </h1>
 
@@ -185,13 +185,13 @@ export default async function ChainPageLayout({
 
             {/* description */}
             {chainMetadata?.about && (
-              <p className="text-muted-foreground text-sm lg:text-base mb-2">
+              <p className="mb-2 text-muted-foreground text-sm lg:text-base">
                 {chainMetadata.about}
               </p>
             )}
 
             {/* mobile action row */}
-            <div className="sm:hidden w-full">
+            <div className="w-full sm:hidden">
               <div className="grid grid-cols-2 gap-2">
                 <AddChainToWallet
                   chain={
@@ -219,7 +219,7 @@ export default async function ChainPageLayout({
 
 function GasSponseredBadge() {
   return (
-    <div className="flex items-center gap-2 rounded-full text-[hsl(334,81.12%,69.65%)] bg-[hsla(335,57%,51%,0.2)] px-2.5 py-1">
+    <div className="flex items-center gap-2 rounded-full bg-[hsla(335,57%,51%,0.2)] px-2.5 py-1 text-[hsl(334,81.12%,69.65%)]">
       <TicketCheckIcon className="size-4" />
       <span className="font-medium text-xs">Gas Sponsored</span>
     </div>

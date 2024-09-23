@@ -17,11 +17,11 @@ export const ColorModeToggle: React.FC = () => {
             : ("dark" as const)
           : undefined
       }
-      skeletonData={"light"}
+      skeletonData="light"
       render={(v) => {
         return (
           <Button
-            className="p-2 md:p-3 fade-in-0"
+            className="fade-in-0 p-2 md:p-3"
             variant="ghost"
             aria-label="toggle color"
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}

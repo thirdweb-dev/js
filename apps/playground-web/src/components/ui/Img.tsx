@@ -23,7 +23,7 @@ export function Img(props: imgElementProps) {
         }}
       />
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-accent animate-pulse rounded-lg" />
+        <div className="absolute inset-0 flex animate-pulse items-center justify-center rounded-lg bg-accent" />
       )}
     </div>
   );

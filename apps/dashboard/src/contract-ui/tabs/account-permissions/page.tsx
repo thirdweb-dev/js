@@ -11,7 +11,7 @@ export const AccountPermissionsPage: React.FC<AccountPermissionsPageProps> = ({
 }) => {
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-row items-center justify-between">
         <Heading size="title.sm">Account Signers</Heading>
       </div>
       <AccountSigners contract={contract} />

@@ -1,4 +1,5 @@
 import { useDebouncedCallback } from "use-debounce";
+import { cn } from "../../../../../lib/utils";
 import styles from "./ColorInput.module.css";
 
 export function ColorInput(props: {
@@ -19,7 +20,7 @@ export function ColorInput(props: {
         debouncedOnChange(e.target.value);
       }}
       type="color"
-      className={`${styles.ColorInput} ${props.className}`}
+      className={cn(styles.ColorInput, props.className)}
       value={props.value}
     />
   );

@@ -74,8 +74,7 @@ export default async function ChainListLayout(props: {
   const searchParams = { type: props.params.chain_type, ...props.searchParams };
   return (
     <>
-      {" "}
-      <div className="border-b border-border h-14 pl-7 flex">
+      <div className="flex h-14 border-border border-b pl-7">
         <Breadcrumb className="my-auto">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -111,19 +110,19 @@ export default async function ChainListLayout(props: {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <section className="container mx-auto py-10 px-4 h-full flex flex-col">
+      <section className="container mx-auto flex h-full flex-col px-4 py-10">
         <header className="flex flex-col gap-4">
-          <div className="flex gap-4 flex-col lg:flex-row lg:justify-between lg:items-center">
-            <div className="flex gap-4 flex-row items-center justify-between lg:justify-start lg:flex-col">
-              <h1 className="font-semibold text-4xl lg:text-5xl tracking-tighter">
-                List of{" "}
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-row items-center justify-between gap-4 lg:flex-col lg:justify-start">
+              <h1 className="font-semibold text-4xl tracking-tighter lg:text-5xl">
+                List of
                 {props.params.chain_type.charAt(0).toUpperCase() +
                   props.params.chain_type.slice(1)}
               </h1>
               <AddYourChainButton className="lg:hidden" />
             </div>
-            <div className="flex flex-row lg:flex-col gap-4 items-end">
-              <div className="flex flex-row gap-4 w-full">
+            <div className="flex flex-row items-end gap-4 lg:flex-col">
+              <div className="flex w-full flex-row gap-4">
                 <SearchInput />
                 <ChainListView activeView={activeView} />
                 <AddYourChainButton className="hidden lg:flex" />
@@ -131,7 +130,7 @@ export default async function ChainListLayout(props: {
 
               <div className="flex flex-row gap-2">
                 <AllFilters hideChainType={true} />
-                <div className="hidden lg:flex flex-row gap-2">
+                <div className="hidden flex-row gap-2 lg:flex">
                   <ChainOptionsFilter />
                   <ChainServiceFilter />
                 </div>

@@ -36,7 +36,7 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
         <div className="flex flex-col gap-6">
           {fields.map((field, index) => {
             return (
-              <div key={field.id} className="flex gap-3 items-end">
+              <div key={field.id} className="flex items-end gap-3">
                 <FormControl
                   isInvalid={
                     !!form.getFieldState(
@@ -122,9 +122,9 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
         {totalShares !== 10000 && (
           <Alert
             variant="destructive"
-            className="h-auto flex items-center gap-2"
+            className="flex h-auto items-center gap-2"
           >
-            <InfoIcon className="size-5 !text-destructive-text shrink-0 !static" />
+            <InfoIcon className="!text-destructive-text !static size-5 shrink-0" />
             <AlertTitle className="!m-0 !p-0 !text-destructive-text">
               Total shares need to add up to 100%, Total shares currently add up
               to {totalShares / 100}%

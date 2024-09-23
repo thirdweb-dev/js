@@ -103,7 +103,7 @@ function DocSidebarNonCollapsible(props: {
         {href ? (
           <Link
             className={cn(
-              "block lg:text-base text-muted-foreground hover:text-foreground font-medium",
+              "block font-medium text-muted-foreground hover:text-foreground lg:text-base",
               isCategoryActive && "!text-foreground",
             )}
             href={href}
@@ -111,7 +111,7 @@ function DocSidebarNonCollapsible(props: {
             {name}
           </Link>
         ) : (
-          <div className="lg:text-base font-semibold">{name}</div>
+          <div className="font-semibold lg:text-base">{name}</div>
         )}
       </div>
 

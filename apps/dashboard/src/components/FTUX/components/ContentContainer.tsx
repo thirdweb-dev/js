@@ -99,7 +99,7 @@ export const ContentContainer: React.FC<SlideStateProps> = ({
       justify="space-between"
     >
       <Center flexGrow={1} position="relative">
-        <Flex gap={8} direction="column" height="100%" width={"100%"}>
+        <Flex gap={8} direction="column" height="100%" width="100%">
           <Box position="relative" w="full" mt="auto">
             <SlideContent
               slideIndex={slideIndex}
@@ -108,7 +108,7 @@ export const ContentContainer: React.FC<SlideStateProps> = ({
             />
           </Box>
 
-          <ButtonGroup variant="solid" gap={1} mt={"auto"}>
+          <ButtonGroup variant="solid" gap={1} mt="auto">
             <Button onClick={goToPreviousStep} isDisabled={slideIndex === 0}>
               Back
             </Button>

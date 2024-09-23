@@ -53,14 +53,10 @@ export function MobileBurgerMenuButton(props: {
       </Button>
 
       {isMenuOpen && (
-        <div
-          className={
-            "fixed p-6 inset-0 z-50 bg-background fade-in-0 animate-in duration-200 flex flex-col"
-          }
-        >
+        <div className="fade-in-0 fixed inset-0 z-50 flex animate-in flex-col bg-background p-6 duration-200">
           <Button
             variant="ghost"
-            className="!h-auto p-1 absolute top-4 right-4"
+            className="!h-auto absolute top-4 right-4 p-1"
             onClick={() => setIsMenuOpen(false)}
           >
             <XIcon className="size-7 text-muted-foreground" />
@@ -82,7 +78,7 @@ export function MobileBurgerMenuButton(props: {
           <div className="flex flex-col gap-4">
             <Link
               href="/account"
-              className="text-muted-foreground text-base hover:text-foreground gap-2 flex items-center "
+              className="flex items-center gap-2 text-base text-muted-foreground hover:text-foreground "
             >
               <SettingsIcon className="size-4" />
               Account Settings
@@ -90,7 +86,7 @@ export function MobileBurgerMenuButton(props: {
 
             <Button
               variant="link"
-              className="gap-2 py-1 text-base text-start justify-start text-muted-foreground px-0 !h-auto hover:!no-underline hover:text-foreground"
+              className="!h-auto hover:!no-underline justify-start gap-2 px-0 py-1 text-start text-base text-muted-foreground hover:text-foreground"
               onClick={props.logout}
             >
               <LogOutIcon className="size-4" />
@@ -105,7 +101,7 @@ export function MobileBurgerMenuButton(props: {
           <div className="flex flex-col gap-5">
             <Button
               variant="link"
-              className="text-muted-foreground text-base gap-2 !p-0 !h-auto hover:!no-underline hover:text-foreground text-left justify-between"
+              className="!p-0 !h-auto hover:!no-underline justify-between gap-2 text-left text-base text-muted-foreground hover:text-foreground"
               onClick={() => {
                 setIsCMDSearchModalOpen(true);
                 setIsMenuOpen(false);
@@ -145,7 +141,7 @@ export function MobileBurgerMenuButton(props: {
 
             <Link
               href="/"
-              className="text-muted-foreground text-base hover:text-foreground"
+              className="text-base text-muted-foreground hover:text-foreground"
             >
               Home Page
             </Link>
@@ -156,10 +152,10 @@ export function MobileBurgerMenuButton(props: {
             <div className="h-6" />
 
             {/* Theme */}
-            <div className="flex justify-between gap-2 items-center">
-              <p className="text-muted-foreground text-base">Theme</p>
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-base text-muted-foreground">Theme</p>
 
-              <div className="ml-auto flex items-center border px-2 py-0.5 rounded-lg gap-1">
+              <div className="ml-auto flex items-center gap-1 rounded-lg border px-2 py-0.5">
                 <Button
                   size="icon"
                   onClick={() => setTheme("light")}

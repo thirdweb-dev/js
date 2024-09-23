@@ -1,10 +1,11 @@
+import { cn } from "../../../lib/utils";
 import style from "./Spinner.module.css";
 
 export function Spinner(props: { className?: string }) {
   return (
     <svg
       viewBox="0 0 50 50"
-      className={`${style.loader} ${props.className || "size-4"}`}
+      className={cn(style.loader, props.className || "size-4")}
     >
       <title>loading</title>
       <circle

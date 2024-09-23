@@ -13,7 +13,7 @@ export function TeamSettingsMobileNav(props: {
 
   if (!showFull) {
     return (
-      <div className="py-4 px-4 border-b border-border flex items-center gap-2 text-muted-foreground">
+      <div className="flex items-center gap-2 border-border border-b px-4 py-4 text-muted-foreground">
         <Link
           href={teamLinks[0].href}
           className="inline-flex items-center gap-1"
@@ -26,7 +26,7 @@ export function TeamSettingsMobileNav(props: {
 
         {activeLink && activeLink !== teamLinks[0] && (
           <>
-            <span aria-hidden className="opacity-50 font-semibold">
+            <span aria-hidden className="font-semibold opacity-50">
               /
             </span>
             <span className="text-foreground">{activeLink.name}</span>
@@ -43,7 +43,7 @@ export function TeamSettingsMobileNav(props: {
           <li key={link.href}>
             <Link
               href={link.href}
-              className="p-4 border-b flex border-border"
+              className="flex border-border border-b p-4"
               onClick={() => {
                 if (link === teamLinks[0]) {
                   setShowFull(false);

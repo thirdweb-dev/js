@@ -123,7 +123,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
             }}
           />
           <Text whiteSpace="nowrap">
-            Page <strong>{currentPage + 1}</strong> of{" "}
+            Page <strong>{currentPage + 1}</strong> of
             <Skeleton
               as="span"
               display="inline"

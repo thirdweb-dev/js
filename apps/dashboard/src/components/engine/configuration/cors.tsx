@@ -63,7 +63,7 @@ export const EngineCorsConfig: React.FC<EngineCorsConfigProps> = ({
       </Flex>
 
       <Textarea
-        placeholder={"https://example.com\nhttp://localhost:3000"}
+        placeholder="https://example.com\nhttp://localhost:3000"
         rows={4}
         {...form.register("raw")}
       />

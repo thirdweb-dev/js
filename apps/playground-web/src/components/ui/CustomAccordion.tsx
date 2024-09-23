@@ -75,11 +75,11 @@ export function CustomAccordion(props: CustomAccordionProps) {
           setIsOpen((c) => !c);
         }}
         className={cn(
-          "flex flex-1 items-center gap-3 w-full cursor-pointer",
+          "flex w-full flex-1 cursor-pointer items-center gap-3",
           props.triggerContainerClassName,
           isOpen && props.activeTriggerClassName,
           props.chevronPosition === "right"
-            ? "justify-between flex-row-reverse"
+            ? "flex-row-reverse justify-between"
             : "",
         )}
       >
@@ -99,15 +99,15 @@ export function CustomAccordion(props: CustomAccordionProps) {
           id={contentId}
           aria-labelledby={buttonId}
           data-open={isOpen}
-          className={"overflow-hidden"}
+          className="overflow-hidden"
         >
           <div
             className={cn(
-              "duration-500 fade-in-0 animate-in",
+              "fade-in-0 animate-in duration-500",
               !isOpen && "hidden",
             )}
           >
-            <div className="pb-2 pt-1">{props.children}</div>
+            <div className="pt-1 pb-2">{props.children}</div>
           </div>
         </div>
       </DynamicHeight>

@@ -13,8 +13,8 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <div className="max-w-[700px] py-10 mx-auto">
-      <h1 className="text-5xl tracking-tighter font-semibold mb-8">
+    <div className="mx-auto max-w-[700px] py-10">
+      <h1 className="mb-8 font-semibold text-5xl tracking-tighter">
         Styleguide
       </h1>
       <div className="my-10" />
@@ -26,10 +26,10 @@ export default function Page() {
 function Colors() {
   return (
     <div>
-      <h2 className="text-2xl mb-5 font-semibold tracking-tight">
+      <h2 className="mb-5 font-semibold text-2xl tracking-tight">
         Backgrounds
       </h2>
-      <div className="flex-col md:flex-row flex gap-4 flex-wrap">
+      <div className="flex flex-col flex-wrap gap-4 md:flex-row">
         <BgColorPreview className="bg-background" />
         <BgColorPreview className="bg-muted/30" />
         <BgColorPreview className="bg-muted/50" />
@@ -39,13 +39,13 @@ function Colors() {
 
       <div className="my-14" />
 
-      <h2 className="text-2xl mb-5 font-semibold tracking-tight">Buttons</h2>
+      <h2 className="mb-5 font-semibold text-2xl tracking-tight">Buttons</h2>
 
       <ButtonsPreview />
 
       <div className="my-14" />
 
-      <h2 className="text-2xl mb-5 font-semibold tracking-tight">
+      <h2 className="mb-5 font-semibold text-2xl tracking-tight">
         Disabled Buttons
       </h2>
 
@@ -53,7 +53,7 @@ function Colors() {
 
       <div className="my-14" />
 
-      <h2 className="text-2xl mb-5 font-semibold tracking-tight">Badges</h2>
+      <h2 className="mb-5 font-semibold text-2xl tracking-tight">Badges</h2>
 
       <div className="flex items-center gap-4">
         <Badge> Default </Badge>
@@ -66,7 +66,7 @@ function Colors() {
 
       <div className="my-14" />
 
-      <h2 className="text-2xl mb-5 font-semibold tracking-tight">
+      <h2 className="mb-5 font-semibold text-2xl tracking-tight">
         Foregrounds
       </h2>
 
@@ -80,11 +80,11 @@ function Colors() {
 
       <div className="my-14" />
 
-      <h2 className="text-2xl mb-5 font-semibold tracking-tight">
+      <h2 className="mb-5 font-semibold text-2xl tracking-tight">
         Chart colors
       </h2>
 
-      <div className="flex-col md:flex-row flex gap-4 flex-wrap">
+      <div className="flex flex-col flex-wrap gap-4 md:flex-row">
         <ChartColorPreview name="1" />
         <ChartColorPreview name="2" />
         <ChartColorPreview name="3" />
@@ -94,9 +94,9 @@ function Colors() {
 
       <div className="my-14" />
 
-      <h2 className="text-2xl mb-5 font-semibold tracking-tight">Alerts</h2>
+      <h2 className="mb-5 font-semibold text-2xl tracking-tight">Alerts</h2>
 
-      <div className="flex-col flex gap-6">
+      <div className="flex flex-col gap-6">
         <AlertPreview variant="default" />
         <AlertPreview variant="destructive" />
         <AlertPreview variant="info" />
@@ -105,7 +105,7 @@ function Colors() {
 
       <div className="my-10" />
 
-      <div className="flex-col flex gap-6">
+      <div className="flex flex-col gap-6">
         <AlertPreview variant="default" showDescription />
         <AlertPreview variant="destructive" showDescription />
         <AlertPreview variant="info" showDescription />
@@ -114,7 +114,7 @@ function Colors() {
 
       <div className="my-14" />
 
-      <h2 className="text-2xl mb-5 font-semibold tracking-tight">
+      <h2 className="mb-5 font-semibold text-2xl tracking-tight">
         Inputs + Label
       </h2>
 
@@ -142,7 +142,7 @@ function Colors() {
 
       <div className="my-14" />
 
-      <h2 className="text-2xl mb-5 font-semibold tracking-tight">Checkboxes</h2>
+      <h2 className="mb-5 font-semibold text-2xl tracking-tight">Checkboxes</h2>
 
       <div className="flex gap-4">
         <Checkbox />
@@ -156,7 +156,7 @@ function ButtonsPreview(props: {
   disabled?: boolean;
 }) {
   return (
-    <div className="gap-4 flex items-center">
+    <div className="flex items-center gap-4">
       <Button disabled={props.disabled}> Default </Button>
       <Button variant="outline" disabled={props.disabled}>
         Outline
@@ -197,9 +197,7 @@ function AlertPreview(props: {
 function ChartColorPreview(props: { name: string }) {
   return (
     <div
-      className={
-        "md:w-[100px] h-[100px] rounded-lg flex items-center justify-center text-xs text-white"
-      }
+      className="flex h-[100px] items-center justify-center rounded-lg text-white text-xs md:w-[100px]"
       style={{
         background: `hsl(var(--chart-${props.name}))`,
       }}
@@ -213,7 +211,7 @@ function BgColorPreview(props: { className: string }) {
   return (
     <div
       className={cn(
-        "w-full md:w-[150px] h-[150px] rounded-lg border border-border flex items-center justify-center text-xs",
+        "flex h-[150px] w-full items-center justify-center rounded-lg border border-border text-xs md:w-[150px]",
         props.className,
       )}
     >
@@ -224,7 +222,7 @@ function BgColorPreview(props: { className: string }) {
 
 function TextColorPreview(props: { className: string }) {
   return (
-    <p className={cn("text-base rounded-lg", props.className)}>
+    <p className={cn("rounded-lg text-base", props.className)}>
       {props.className}
     </p>
   );

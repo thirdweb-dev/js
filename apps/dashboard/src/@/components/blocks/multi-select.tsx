@@ -109,12 +109,12 @@ export const MultiSelect = React.forwardRef<
             {...props}
             onClick={handleTogglePopover}
             className={cn(
-              "flex w-full p-3 rounded-md border min-h-10 h-auto items-center justify-between bg-inherit hover:bg-inherit",
+              "flex h-auto min-h-10 w-full items-center justify-between rounded-md border bg-inherit p-3 hover:bg-inherit",
               className,
             )}
           >
             {selectedValues.length > 0 ? (
-              <div className="flex justify-between w-full">
+              <div className="flex w-full justify-between">
                 {/* badges */}
                 <div className="flex flex-wrap items-center gap-1.5">
                   {selectedValues.slice(0, maxCount).map((value) => {
@@ -147,21 +147,21 @@ export const MultiSelect = React.forwardRef<
                       event.stopPropagation();
                       handleClear();
                     }}
-                    className="hover:bg-muted p-1 rounded"
+                    className="rounded p-1 hover:bg-muted"
                   >
                     <XIcon className="h-4 cursor-pointer text-muted-foreground" />
                   </div>
 
                   <Separator
                     orientation="vertical"
-                    className="flex min-h-6 h-full"
+                    className="flex h-full min-h-6"
                   />
                   <ChevronDown className="h-4 cursor-pointer text-muted-foreground" />
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-between w-full">
-                <span className="text-sm text-muted-foreground">
+              <div className="flex w-full items-center justify-between">
+                <span className="text-muted-foreground text-sm">
                   {placeholder}
                 </span>
                 <ChevronDown className="h-4 cursor-pointer text-muted-foreground" />
@@ -186,10 +186,10 @@ export const MultiSelect = React.forwardRef<
                 placeholder="Search"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-                className="pl-10 py-4 !h-auto focus-visible:ring-0 focus-visible:ring-offset-0 border-0 border-b border-border rounded-b-none"
+                className="!h-auto rounded-b-none border-0 border-border border-b py-4 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
                 onKeyDown={handleInputKeyDown}
               />
-              <SearchIcon className="size-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-4 size-4 text-muted-foreground" />
             </div>
 
             <ScrollShadow
@@ -199,7 +199,7 @@ export const MultiSelect = React.forwardRef<
               {/* List */}
               <div>
                 {optionsToShow.length === 0 && (
-                  <div className="py-10 justify-center flex">
+                  <div className="flex justify-center py-10">
                     No results found
                   </div>
                 )}
@@ -213,7 +213,7 @@ export const MultiSelect = React.forwardRef<
                       aria-selected={isSelected}
                       onClick={() => toggleOption(option.value)}
                       variant="ghost"
-                      className="cursor-pointer flex gap-3 py-2 px-3 w-full justify-start rounded-sm"
+                      className="flex w-full cursor-pointer justify-start gap-3 rounded-sm px-3 py-2"
                       ref={
                         i === optionsToShow.length - 1 ? lastItemRef : undefined
                       }
@@ -247,7 +247,7 @@ function ClosableBadge(props: {
   onClose: () => void;
 }) {
   return (
-    <span className="rounded-xl py-1 px-2 text-xs flex items-center gap-3 bg-muted border border-border text-foreground">
+    <span className="flex items-center gap-3 rounded-xl border border-border bg-muted px-2 py-1 text-foreground text-xs">
       {props.label}
       <XIcon
         className="h-3 w-3 cursor-pointer text-muted-foreground"

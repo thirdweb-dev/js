@@ -33,12 +33,12 @@ export function HooksPreview() {
       {account && wallet ? (
         <>
           <p className="py-4">Connected as {shortenAddress(account.address)}</p>
-          <Button variant={"outline"} onClick={() => disconnect(wallet)}>
+          <Button variant="outline" onClick={() => disconnect(wallet)}>
             Disconnect
           </Button>
         </>
       ) : (
-        <Button variant={"default"} onClick={connect}>
+        <Button variant="default" onClick={connect}>
           Connect with Metamask
         </Button>
       )}

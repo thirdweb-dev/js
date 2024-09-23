@@ -32,14 +32,14 @@ export function InAppWalletFormGroup(props: {
 
   return (
     <div className="rounded-xl border bg-muted">
-      <div className="flex gap-2 justify-between items-center p-4">
+      <div className="flex items-center justify-between gap-2 p-4">
         <Link
           target="_blank"
-          className="flex items-center gap-2 group"
+          className="group flex items-center gap-2"
           href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
         >
           <h2 className="font-semibold tracking-tight">In-App Wallet</h2>
-          <ExternalLinkIcon className="size-4 text-muted-foreground group-hover:text-foreground mt-[-2px]" />
+          <ExternalLinkIcon className="mt-[-2px] size-4 text-muted-foreground group-hover:text-foreground" />
         </Link>
         <Switch
           checked={connectOptions.inAppWallet.enabled}
@@ -53,13 +53,13 @@ export function InAppWalletFormGroup(props: {
       </div>
 
       {connectOptions.inAppWallet.enabled && (
-        <div className="grid grid-cols-3 gap-2 animate-in fade-in-0 duration-500 p-4 pt-0">
+        <div className="fade-in-0 grid animate-in grid-cols-3 gap-2 p-4 pt-0 duration-500">
           {allInAppWalletLoginMethods.map((method) => {
             const enabled = connectOptions.inAppWallet.methods.includes(method);
             return (
               <label
                 className={cn(
-                  "flex items-center gap-2 rounded-lg py-1.5 cursor-pointer",
+                  "flex cursor-pointer items-center gap-2 rounded-lg py-1.5",
                   !enabled && "opacity-50",
                 )}
                 key={method}
@@ -92,7 +92,7 @@ export function InAppWalletFormGroup(props: {
                     });
                   }}
                 />
-                <span className="text-sm font-medium leading-none capitalize select-none">
+                <span className="select-none font-medium text-sm capitalize leading-none">
                   {method}
                 </span>
               </label>

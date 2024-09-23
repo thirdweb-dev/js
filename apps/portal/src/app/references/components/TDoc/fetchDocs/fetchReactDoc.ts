@@ -12,7 +12,8 @@ export async function fetchReactDoc() {
       import("./v4-legacy-docs/react.json"),
       fetchReactCoreDoc(),
     ]);
-    return mergeDocs(reactCoreDoc, transform(doc as any));
+    // @ts-expect-error - works fine!
+    return mergeDocs(reactCoreDoc, transform(doc));
   })();
   return prom;
 }

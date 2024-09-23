@@ -10,10 +10,10 @@ const defaultDescription =
 
 export const DescriptionInput = (props: Props) => {
   return (
-    <div className="flex flex-col gap-2 items-start">
+    <div className="flex flex-col items-start gap-2">
       <Label htmlFor="markdown" className="relative">
         Description
-        <span className="absolute -top-1.5 -right-2 text-destructive">•</span>
+        <span className="-top-1.5 -right-2 absolute text-destructive">•</span>
       </Label>
 
       <Textarea

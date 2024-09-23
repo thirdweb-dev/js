@@ -24,7 +24,7 @@ export function Sidebar(props: SidebarContentProps) {
   return (
     <aside
       className={cn(
-        "w-[230px] flex-shrink-0 hidden lg:block self-start sticky top-0",
+        "sticky top-0 hidden w-[230px] flex-shrink-0 self-start lg:block",
         props.className,
       )}
     >
@@ -37,7 +37,7 @@ export function Sidebar(props: SidebarContentProps) {
               <NavLink
                 key={link.href}
                 href={link.href}
-                className="py-2 hover:bg-muted rounded-md px-3 text-muted-foreground text-sm flex items-center gap-2"
+                className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-muted"
                 activeClassName="text-foreground"
                 exactMatch={link.exactMatch}
               >

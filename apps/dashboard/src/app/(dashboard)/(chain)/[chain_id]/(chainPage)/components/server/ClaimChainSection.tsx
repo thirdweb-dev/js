@@ -7,9 +7,9 @@ export function ClaimChainSection() {
   return (
     <section>
       <SectionTitle title="Claim Chain" />
-      <div className="border p-4 rounded-lg bg-muted/50">
+      <div className="rounded-lg border bg-muted/50 p-4">
         <p className="mb-1"> This chain page is unclaimed </p>
-        <p className="text-muted-foreground text-sm mb-5">
+        <p className="mb-5 text-muted-foreground text-sm">
           Are you the owner of this ecosystem? Claim this page to add additional
           information on this page to help your developers get started!
         </p>
@@ -21,7 +21,7 @@ export function ClaimChainSection() {
             target="_blank"
           >
             <span>Claim Chain</span>
-            <ExternalLinkIcon className="size-4 -mt-[3px]" />
+            <ExternalLinkIcon className="-mt-[3px] size-4" />
           </Link>
         </Button>
       </div>

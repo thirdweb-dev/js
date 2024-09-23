@@ -283,7 +283,7 @@ function SendFundsForm(props: {
         <Input
           required
           id="receiver"
-          placeholder={"0x... or ENS name"}
+          placeholder="0x... or ENS name"
           variant="outline"
           value={receiverAddress}
           onChange={(e) => {

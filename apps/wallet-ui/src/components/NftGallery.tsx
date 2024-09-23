@@ -49,10 +49,10 @@ async function NftGalleryEmpty({ chainId }: { chainId?: number }) {
   return (
     <div
       key="empty"
-      className="flex flex-col items-center justify-center h-full gap-5 text-center opacity-50 min-h-[300px] border rounded-md"
+      className="flex h-full min-h-[300px] flex-col items-center justify-center gap-5 rounded-md border text-center opacity-50"
     >
-      {chain && <ChainIcon iconUrl={chain.icon?.url} className="w-24 h-24" />}
-      <div className="text-xl font-medium">No NFTs found</div>
+      {chain && <ChainIcon iconUrl={chain.icon?.url} className="h-24 w-24" />}
+      <div className="font-medium text-xl">No NFTs found</div>
     </div>
   );
 }
@@ -61,7 +61,7 @@ function NftGalleryLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
       key="layout"
-      className="grid justify-between w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      className="grid w-full grid-cols-1 justify-between gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
     >
       {children}
     </div>

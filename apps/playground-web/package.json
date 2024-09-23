@@ -9,7 +9,7 @@
     "format": "biome format ./src --write",
     "prelint": "biome check ./src",
     "lint": "eslint ./src",
-    "prefix": "biome check ./src --fix",
+    "prefix": "biome check ./src --fix --unsafe",
     "fix": "eslint ./src --fix"
   },
   "dependencies": {
@@ -30,7 +30,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "0.441.0",
-    "next": "14.2.12",
+    "next": "14.2.13",
     "next-themes": "^0.3.0",
     "prettier": "^3.3.2",
     "react": "18.3.1",
@@ -46,7 +46,7 @@
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18",
     "eslint": "8.57.0",
-    "eslint-config-next": "14.2.12",
+    "eslint-config-next": "14.2.13",
     "eslint-plugin-react-compiler": "0.0.0-experimental-ca16900-20240916",
     "postcss": "8.4.47",
     "tailwindcss": "3.4.12",

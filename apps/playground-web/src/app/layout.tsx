@@ -53,8 +53,8 @@ export default function RootLayout({
         <div className="relative">
           <div className="flex flex-col lg:flex-row">
             <AppSidebar />
-            <div className="flex flex-col grow">
-              <div className="grow relative container px-4 md:px-6">
+            <div className="flex grow flex-col">
+              <div className="container relative grow px-4 md:px-6">
                 <Providers>{children}</Providers>
               </div>
             </div>

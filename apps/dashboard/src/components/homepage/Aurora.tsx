@@ -10,7 +10,7 @@ interface AuroraProps {
 export const Aurora: React.FC<AuroraProps> = ({ zIndex, color, pos, size }) => {
   return (
     <Box
-      pointerEvents={"none"}
+      pointerEvents="none"
       width={size.width}
       height={size.height}
       position="absolute"

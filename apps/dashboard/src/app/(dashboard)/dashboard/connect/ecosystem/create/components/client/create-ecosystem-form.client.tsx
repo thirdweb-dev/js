@@ -183,7 +183,7 @@ export function CreateEcosystemForm(props: {
               className="w-full"
               disabled={isPending}
             >
-              {isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
+              {isPending && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
               Create
             </Button>
           )}

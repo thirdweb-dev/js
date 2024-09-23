@@ -83,7 +83,7 @@ export function ChainLiveStats(props: { rpc: string }) {
             textToCopy={props.rpc}
             copyIconPosition="right"
             variant="ghost"
-            className="px-2 py-1 -translate-x-2 text-base"
+            className="-translate-x-2 px-2 py-1 text-base"
             iconClassName="size-4"
           />
         </div>
@@ -96,7 +96,7 @@ export function ChainLiveStats(props: { rpc: string }) {
         ) : stats.data ? (
           <p className="fade-in-0 animate-in">{stats.data.latency}ms</p>
         ) : (
-          <div className="flex py-1 h-[28px] w-[70px]">
+          <div className="flex h-[28px] w-[70px] py-1">
             <Skeleton className="h-full w-full" />
           </div>
         )}
@@ -109,7 +109,7 @@ export function ChainLiveStats(props: { rpc: string }) {
         ) : stats.data ? (
           <p className="fade-in-0 animate-in">{stats.data.blockNumber}</p>
         ) : (
-          <div className="flex py-1 h-[28px] w-[140px]">
+          <div className="flex h-[28px] w-[140px] py-1">
             <Skeleton className="h-full w-full" />
           </div>
         )}
@@ -120,10 +120,10 @@ export function ChainLiveStats(props: { rpc: string }) {
 
 function PulseDot() {
   return (
-    <ToolTipLabel label={"Live Data"}>
+    <ToolTipLabel label="Live Data">
       <span className="relative flex size-2">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
-        <span className="relative inline-flex rounded-full size-2 bg-primary" />
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
+        <span className="relative inline-flex size-2 rounded-full bg-primary" />
       </span>
     </ToolTipLabel>
   );

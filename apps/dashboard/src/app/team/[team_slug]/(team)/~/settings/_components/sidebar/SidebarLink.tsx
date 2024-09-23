@@ -18,7 +18,7 @@ export function SidebarLink(props: {
         href={props.href}
         onClick={props.onClick}
         className={cn(
-          "w-full text-muted-foreground text-left !justify-start font-normal",
+          "!justify-start w-full text-left font-normal text-muted-foreground",
           pathname === props.href && "text-foreground",
         )}
       >

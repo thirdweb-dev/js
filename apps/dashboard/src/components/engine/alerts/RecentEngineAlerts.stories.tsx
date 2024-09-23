@@ -33,7 +33,7 @@ export const Mobile: Story = {
 
 function Story() {
   return (
-    <div className="py-6 container max-w-[1154px] flex flex-col gap-14">
+    <div className="container flex max-w-[1154px] flex-col gap-14 py-6">
       <BadgeContainer label="3 Alerts">
         <RecentEngineAlertsSectionUI
           isLoading={false}

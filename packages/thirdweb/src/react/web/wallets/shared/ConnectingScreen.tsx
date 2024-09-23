@@ -86,7 +86,7 @@ export const ConnectingScreen: React.FC<{
                   alignItems: "center",
                 }}
               >
-                <ReloadIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+                <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
                 {locale.tryAgain}
               </Button>
             </Container>

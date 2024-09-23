@@ -28,8 +28,8 @@ export const Mobile: Story = {
 
 function Story() {
   return (
-    <div className="min-h-screen bg-background text-foreground py-4">
-      <div className="lg:p-10 container max-w-[1000px] flex flex-col gap-8">
+    <div className="min-h-screen bg-background py-4 text-foreground">
+      <div className="container flex max-w-[1000px] flex-col gap-8 lg:p-10">
         <BadgeContainer label="Base">
           <DangerSettingCard
             title="This is a title"

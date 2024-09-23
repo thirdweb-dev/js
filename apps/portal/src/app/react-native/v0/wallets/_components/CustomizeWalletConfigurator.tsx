@@ -1,38 +1,37 @@
-import React from "react";
-import Link from "next/link";
 import {
-	Details,
-	CodeBlock,
-	Paragraph,
-	InlineCode,
+  CodeBlock,
+  Details,
+  InlineCode,
+  Paragraph,
 } from "@/components/Document";
+import Link from "next/link";
 
 type Props = {
-	configurator: string;
-	config: string;
-	connectUI: string;
-	selectUI: string;
+  configurator: string;
+  config: string;
+  connectUI: string;
+  selectUI: string;
 };
 
 export function CustomizeWalletConfigurator({
-	configurator,
-	config,
-	connectUI,
-	selectUI,
+  configurator,
+  config,
+  connectUI,
+  selectUI,
 }: Props) {
-	return (
-		<Details summary="Customize" id="customize" tags={["Optional"]}>
-			<Paragraph>
-				The <InlineCode code={config} /> contains the default config for
-				metadata and UI. you can optionally choose to override the defaults to
-				customize the wallet.{" "}
-				<Link href="/wallet/build-a-wallet#create-a-wallet-configurator-function">
-					Learn more about these configs
-				</Link>
-			</Paragraph>
-			<CodeBlock
-				lang="tsx"
-				code={`\
+  return (
+    <Details summary="Customize" id="customize" tags={["Optional"]}>
+      <Paragraph>
+        The <InlineCode code={config} /> contains the default config for
+        metadata and UI. you can optionally choose to override the defaults to
+        customize the wallet.
+        <Link href="/wallet/build-a-wallet#create-a-wallet-configurator-function">
+          Learn more about these configs
+        </Link>
+      </Paragraph>
+      <CodeBlock
+        lang="tsx"
+        code={`\
 const ${config} = ${configurator}({ ... });
 
 // override metadata
@@ -46,23 +45,23 @@ ${config}.connectUI = ${connectUI}; // react component
 ${config}.selectUI = ${selectUI}; // react component
 
 `}
-			></CodeBlock>
+      />
 
-			<Paragraph>
-				Once the config is ready, you can use it with <code>ConnectWallet</code>{" "}
-				component or <code>useConnect</code> hook as shown below
-			</Paragraph>
+      <Paragraph>
+        Once the config is ready, you can use it with <code>ConnectWallet</code>
+        component or <code>useConnect</code> hook as shown below
+      </Paragraph>
 
-			<CodeBlock
-				lang="tsx"
-				code={`\
+      <CodeBlock
+        lang="tsx"
+        code={`\
 // add to ThirdwebProvider to add it in ConnectWallet's modal
 <ThirdwebProvider supportedWallets={[${config}]} clientId="your-client-id"/>;
 
 // or use it with useConnect hook
 const connect = useConnect();
 connect(${config}, { ... });`}
-			/>
-		</Details>
-	);
+      />
+    </Details>
+  );
 }

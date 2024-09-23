@@ -18,7 +18,7 @@ export const EngineExplorer: React.FC<EngineExplorerProps> = ({
   const token = useLoggedInUser().user?.jwt ?? null;
   return (
     <ClientOnly ssr={null}>
-      <div className="bg-background border border-border rounded-lg dark pt-4 py-10">
+      <div className="dark rounded-lg border border-border bg-background py-10 pt-4">
         <SwaggerUI
           url={`${instanceUrl}${instanceUrl.endsWith("/") ? "" : "/"}json`}
           docExpansion="none"

@@ -99,7 +99,7 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
             colorScheme="primary"
             onClick={() => setIsAddingCurrency(false)}
           >
-            {"<-"}
+            &lt;-
           </Button>
           <Input
             w="auto"

@@ -316,15 +316,15 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
             </FormErrorMessage>
 
             {isModuleCompatibleQuery.isFetching && selectedModule && (
-              <div className="flex items-center gap-1.5 mt-2 text-link-foreground">
+              <div className="mt-2 flex items-center gap-1.5 text-link-foreground">
                 <p className="font-medium text-sm">Checking Compatibility</p>
                 <Spinner className="size-3" />
               </div>
             )}
 
             {isModuleCompatibleQuery.isError && (
-              <div className="flex items-center gap-1.5 mt-2">
-                <p className="text-yellow-600 text-sm">
+              <div className="mt-2 flex items-center gap-1.5">
+                <p className="text-sm text-yellow-600">
                   Module may not be compatible
                 </p>
               </div>
@@ -361,7 +361,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         </div>
 
         {moduleInstallParams.isFetching ? (
-          <Skeleton h={"80px"} mt={4} />
+          <Skeleton h="80px" mt={4} />
         ) : (
           moduleInstallParams.data &&
           !isModuleCompatibleQuery.isFetching &&

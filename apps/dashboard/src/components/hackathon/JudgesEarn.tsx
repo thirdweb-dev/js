@@ -27,7 +27,7 @@ export const JudgesEarn = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-8 relative">
+    <div className="relative flex flex-col gap-8">
       <Heading size="title.2xl">Judges</Heading>
       <SimpleGrid
         columns={{ base: 1, lg: 4 }}

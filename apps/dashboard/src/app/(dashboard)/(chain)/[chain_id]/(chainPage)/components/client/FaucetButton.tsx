@@ -129,7 +129,7 @@ export function FaucetButton({
   // faucet is empty
   if (isFaucetEmpty) {
     return (
-      <Button variant="outline" disabled className="w-full !opacity-100 ">
+      <Button variant="outline" disabled className="!opacity-100 w-full ">
         Faucet is empty right now
       </Button>
     );
@@ -138,10 +138,10 @@ export function FaucetButton({
   // Can not claim
   if (canClaimFaucetQuery.data && canClaimFaucetQuery.data.canClaim === false) {
     return (
-      <Button variant="outline" className="w-full !opacity-100 " disabled>
+      <Button variant="outline" className="!opacity-100 w-full " disabled>
         {canClaimFaucetQuery.data.type === "throttle" && (
           <>
-            Your next claim is available{" "}
+            Your next claim is available
             {formatTime(canClaimFaucetQuery.data.ttlSeconds)}
           </>
         )}
@@ -163,7 +163,7 @@ export function FaucetButton({
 
   // eligible to claim and faucet has balance
   return (
-    <div className="flex flex-col w-full text-center">
+    <div className="flex w-full flex-col text-center">
       <Button
         variant="primary"
         className="w-full gap-2"
@@ -185,8 +185,8 @@ export function FaucetButton({
       </Button>
 
       {faucetWalletBalanceQuery.data && (
-        <p className="mt-3 text-xs text-muted-foreground">
-          {Number(faucetWalletBalanceQuery.data.displayValue).toFixed(3)}{" "}
+        <p className="mt-3 text-muted-foreground text-xs">
+          {Number(faucetWalletBalanceQuery.data.displayValue).toFixed(3)}
           {faucetWalletBalanceQuery.data.symbol} left in the faucet
         </p>
       )}

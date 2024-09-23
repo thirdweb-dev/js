@@ -23,7 +23,7 @@ export default async function ModulesPage() {
   return (
     <>
       <Heading level={1} id="built-in-extensions">
-        Built-in modules{" "}
+        Built-in modules
       </Heading>
       <Paragraph>
         The SDK comes packed with a set of built-in modules for convenient use.
@@ -42,7 +42,7 @@ export default async function ModulesPage() {
                 <Td>
                   <Link
                     href={`/references/typescript/v5/functions#${item.toLowerCase()}`}
-                    className="text-accent-500 hover:text-f-100 flex flex-nowrap items-center gap-4 whitespace-nowrap font-medium transition-colors"
+                    className="flex flex-nowrap items-center gap-4 whitespace-nowrap font-medium text-accent-500 transition-colors hover:text-f-100"
                   >
                     {item}
                   </Link>
@@ -53,9 +53,9 @@ export default async function ModulesPage() {
           })}
         </TBody>
       </Table>
-      More modules are being added regularly. You can also{" "}
+      More modules are being added regularly. You can also
       <Link
-        className="text-accent-500 hover:text-f-100 font-medium transition-colors"
+        className="font-medium text-accent-500 transition-colors hover:text-f-100"
         href="/contracts/modular-contracts/get-started/create-module-contract"
       >
         create your own modules

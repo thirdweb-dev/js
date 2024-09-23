@@ -10,7 +10,7 @@ export function APIHeader(props: {
 }) {
   return (
     <div
-      className="flex flex-col-reverse lg:flex-row gap-6 items-center justify-between py-8 lg:py-14 mb-12 px-6 lg:px-14 rounded-3xl"
+      className="mb-12 flex flex-col-reverse items-center justify-between gap-6 rounded-3xl px-6 py-8 lg:flex-row lg:px-14 lg:py-14"
       style={{
         background:
           "linear-gradient(to top, hsl(var(--secondary)/80%), transparent)",
@@ -18,10 +18,10 @@ export function APIHeader(props: {
     >
       {/* Left */}
       <div>
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-2">
+        <h1 className="mb-2 font-bold text-4xl tracking-tighter md:text-5xl">
           {props.title}
         </h1>
-        <p className="max-w-[700px] text-muted-foreground mb-5 text-balance">
+        <p className="mb-5 max-w-[700px] text-balance text-muted-foreground">
           {props.description}
         </p>
 
@@ -44,7 +44,7 @@ export function APIHeader(props: {
         src={props.heroLink}
         width={600}
         height={400}
-        className="lg:max-w-[500px] rounded-2xl max-h-[300px] object-contain"
+        className="max-h-[300px] rounded-2xl object-contain lg:max-w-[500px]"
         alt=""
         priority={true}
       />

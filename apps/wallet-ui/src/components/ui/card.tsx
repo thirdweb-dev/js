@@ -7,7 +7,7 @@ export default function Card({
   return (
     <div
       className={cn(
-        "relative border p-2 border-border rounded-lg overflow-hidden transition-shadow shadow hover:shadow-md",
+        "relative overflow-hidden rounded-lg border border-border p-2 shadow transition-shadow hover:shadow-md",
         className,
       )}
     >

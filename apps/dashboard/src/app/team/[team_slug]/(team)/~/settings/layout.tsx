@@ -27,9 +27,9 @@ export default function Layout(props: {
   return (
     <div>
       {/* Huge page title  */}
-      <div className="py-10 border-b border-border">
+      <div className="border-border border-b py-10">
         <div className="container">
-          <h1 className="text-3xl tracking-tight font-semibold">
+          <h1 className="font-semibold text-3xl tracking-tight">
             Team Settings
           </h1>
         </div>
@@ -44,7 +44,7 @@ export default function Layout(props: {
         />
       </div>
 
-      <div className="flex gap-8 container grow [&>*]:py-8 lg:[&>*]:py-10 lg:min-h-[900px]">
+      <div className="container flex grow gap-8 lg:min-h-[900px] [&>*]:py-8 lg:[&>*]:py-10">
         <TeamSettingsSidebar teamSlug={props.params.team_slug} />
         <div
           className={cn(

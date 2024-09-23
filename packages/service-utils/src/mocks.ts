@@ -1,4 +1,4 @@
-import type { ApiKeyMetadata, CoreServiceConfig } from "./core/api";
+import type { ApiKeyMetadata, CoreServiceConfig } from "./core/api.js";
 
 export const validApiKeyMeta: ApiKeyMetadata = {
   id: "1",

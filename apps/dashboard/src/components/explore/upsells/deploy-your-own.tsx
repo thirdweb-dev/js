@@ -6,19 +6,19 @@ import { CodeBlock } from "tw-components";
 
 export const DeployUpsellCard: React.FC = () => {
   return (
-    <section className="px-4 py-6 md:px-8 md:py-14 border-border border rounded-xl shadow-lg">
-      <h3 className="font-bold tracking-tight text-2xl">
+    <section className="rounded-xl border border-border px-4 py-6 shadow-lg md:px-8 md:py-14">
+      <h3 className="font-bold text-2xl tracking-tight">
         Didn't find what you're looking for? Build your own!
       </h3>
 
       <div className="h-8" />
 
       <p className="text-muted-foreground ">
-        Create a contract with a single command.{" "}
+        Create a contract with a single command.
         <TrackedLinkTW
           category="deploy_upsell"
           label="contract_kit"
-          className="text-link-foreground inline-flex items-center gap-1.5"
+          className="inline-flex items-center gap-1.5 text-link-foreground"
           href="https://portal.thirdweb.com/contracts/build/overview"
           target="_blank"
         >
@@ -38,11 +38,11 @@ export const DeployUpsellCard: React.FC = () => {
       <div className="h-8" />
 
       <p className="text-muted-foreground ">
-        Deploy a contract with a single command.{" "}
+        Deploy a contract with a single command.
         <TrackedLinkTW
           category="deploy_upsell"
           label="portal_deploy"
-          className="text-link-foreground inline-flex items-center gap-1.5"
+          className="inline-flex items-center gap-1.5 text-link-foreground"
           href="https://portal.thirdweb.com/contracts/deploy/overview"
           target="_blank"
         >

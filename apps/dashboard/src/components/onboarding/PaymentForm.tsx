@@ -120,7 +120,7 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
               />
             ) : (
               <Alert
-                status={"info"}
+                status="info"
                 borderRadius="md"
                 as={Flex}
                 alignItems="start"

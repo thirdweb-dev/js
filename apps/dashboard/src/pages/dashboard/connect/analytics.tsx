@@ -42,9 +42,9 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
 
   return (
     <div>
-      <div className="flex lg:items-center gap-4 flex-col lg:flex-row lg:justify-between">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight mb-1">
+          <h1 className="mb-1 font-semibold text-3xl tracking-tight">
             Connect Analytics
           </h1>
           <p className="text-muted-foreground">
@@ -67,7 +67,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
       <div className="h-4 lg:h-8" />
 
       {showLoader ? (
-        <div className="grid w-full place-items-center h-[800px] border border-border rounded-lg bg-muted/50">
+        <div className="grid h-[800px] w-full place-items-center rounded-lg border border-border bg-muted/50">
           <Spinner className="size-14" />
         </div>
       ) : (
@@ -88,13 +88,13 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
 
 function NoAPIFoundCard() {
   return (
-    <div className="bg-muted/50 border border-border rounded-lg py-10 px-4 lg:px-6 flex items-center flex-col">
-      <h3 className="font-semibold text-2xl mb-3">No API keys found</h3>
-      <p className="text-muted-foreground text-sm mb-6">
+    <div className="flex flex-col items-center rounded-lg border border-border bg-muted/50 px-4 py-10 lg:px-6">
+      <h3 className="mb-3 font-semibold text-2xl">No API keys found</h3>
+      <p className="mb-6 text-muted-foreground text-sm">
         Start using the Connect SDK in your app with a free API key.
       </p>
       <Button asChild variant="primary">
-        <Link href={"/dashboard/settings/api-keys"}>Create API Key</Link>
+        <Link href="/dashboard/settings/api-keys">Create API Key</Link>
       </Button>
     </div>
   );

@@ -21,12 +21,12 @@ export const ConfirmEngineTierDialog = (props: {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="md:max-w-[400px] z-[10001]"
+        className="z-[10001] md:max-w-[400px]"
         dialogOverlayClassName="z-[10000]"
       >
         <DialogHeader>
-          <DialogTitle className="leading-snug pr-4">
-            Are you sure you want to deploy a{" "}
+          <DialogTitle className="pr-4 leading-snug">
+            Are you sure you want to deploy a
             {tier === "STARTER" ? "Standard" : "Premium"} Engine?
           </DialogTitle>
 

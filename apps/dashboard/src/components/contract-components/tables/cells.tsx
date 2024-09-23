@@ -39,7 +39,7 @@ export const AsyncContractNameCell = memo(
         loadedData={
           contractMetadata.isFetching ? undefined : contractMetadata.data?.name
         }
-        skeletonData={"Custom Contract"}
+        skeletonData="Custom Contract"
         render={(v) => {
           return (
             <Link
@@ -84,12 +84,12 @@ export const AsyncContractTypeCell = memo(
     return (
       <SkeletonContainer
         loadedData={contractType || contractMetadata.data?.contractType}
-        skeletonData={"Custom Contract"}
+        skeletonData="Custom Contract"
         render={(v) => {
           if (v === contractType) {
             return (
               <Badge
-                className="line-clamp-1 max-w-[200px] truncate inline-block py-1"
+                className="line-clamp-1 inline-block max-w-[200px] truncate py-1"
                 variant="outline"
               >
                 {v}

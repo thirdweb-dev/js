@@ -41,25 +41,25 @@ export async function ChainListRow({
       <TableCell>{favoriteButton}</TableCell>
       {/* Name */}
       <TableCell>
-        <div className="flex flex-row items-center gap-4 w-[370px]">
+        <div className="flex w-[370px] flex-row items-center gap-4">
           <div className="flex items-center gap-2">
             <ChainIcon iconUrl={iconUrl} className="size-6" />
             <Link
               href={`/${chainSlug}`}
-              className="static group before:content-[''] before:absolute before:top-0 before:bottom-0 before:left-0 before:right-0 before:z-0"
+              className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0 before:content-['']"
             >
               {chainName}
             </Link>
 
             {!isDeprecated && chainMetadata?.gasSponsored && (
               <ToolTipLabel label="Gas Sponsored">
-                <TicketCheckIcon className="text-link-foreground size-5 z-10 " />
+                <TicketCheckIcon className="z-10 size-5 text-link-foreground " />
               </ToolTipLabel>
             )}
 
             {isDeprecated && (
               <ToolTipLabel label="Deprecated">
-                <CircleAlertIcon className="text-destructive-text size-5 z-10 " />
+                <CircleAlertIcon className="z-10 size-5 text-destructive-text " />
               </ToolTipLabel>
             )}
           </div>
@@ -71,7 +71,7 @@ export async function ChainListRow({
           textToCopy={chainId.toString()}
           textToShow={chainId.toString()}
           tooltip="Copy Chain ID"
-          className="z-10 relative text-base"
+          className="relative z-10 text-base"
           variant="ghost"
           copyIconPosition="right"
         />
@@ -80,8 +80,8 @@ export async function ChainListRow({
       <TableCell>{currencySymbol}</TableCell>
 
       <TableCell>
-        <div className="flex flex-row gap-14 items-center w-[520px] ">
-          <div className="flex items-center gap-7 z-10">
+        <div className="flex w-[520px] flex-row items-center gap-14 ">
+          <div className="z-10 flex items-center gap-7">
             {products.map((p) => {
               return (
                 <ProductIcon
@@ -134,9 +134,9 @@ function ProductIcon(props: {
       label={props.label}
       leftIcon={
         props.isEnabled ? (
-          <CheckIcon className="text-success-text size-4" />
+          <CheckIcon className="size-4 text-success-text" />
         ) : (
-          <XIcon className="text-destructive-text size-4" />
+          <XIcon className="size-4 text-destructive-text" />
         )
       }
     >

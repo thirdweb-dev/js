@@ -76,7 +76,7 @@ export function SwapConfirmationScreen(props: {
           <StepBar steps={2} currentStep={2} />
           <Spacer y="sm" />
           <Text size="xs">
-            Step 2 of 2 - Converting {props.fromTokenSymbol} to{" "}
+            Step 2 of 2 - Converting {props.fromTokenSymbol} to
             {props.toTokenSymbol}
           </Text>
           <Spacer y="md" />
@@ -352,7 +352,7 @@ function RenderTokenInfo(props: {
       {name ? (
         <Text size="xs">{name}</Text>
       ) : (
-        <Skeleton width={"100px"} height={fontSize.xs} />
+        <Skeleton width="100px" height={fontSize.xs} />
       )}
     </Container>
   );

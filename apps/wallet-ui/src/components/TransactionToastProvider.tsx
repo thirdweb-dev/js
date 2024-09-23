@@ -36,7 +36,7 @@ export function TransactionToastProvider() {
         id: toast(transactionHash),
         description: shortenHex(transactionHash),
         duration: Number.POSITIVE_INFINITY,
-        icon: <Loader2 className="w-4 h-4 animate-spin" />,
+        icon: <Loader2 className="h-4 w-4 animate-spin" />,
         action: chainData.explorers?.length ? (
           <Link
             target="_blank"
@@ -57,7 +57,7 @@ export function TransactionToastProvider() {
             id: toast(transactionHash),
             description: shortenHex(receipt.transactionHash),
             duration: 5000,
-            icon: <CheckIcon className="w-4 h-4" />,
+            icon: <CheckIcon className="h-4 w-4" />,
             action: chainData.explorers?.length ? (
               <Link
                 target="_blank"
@@ -76,7 +76,7 @@ export function TransactionToastProvider() {
           toast.error("Transaction failed", {
             id: toast(transactionHash),
             description: e.message,
-            icon: <OctagonXIcon className="w-4 h-4" />,
+            icon: <OctagonXIcon className="h-4 w-4" />,
             duration: 5000,
             action: chainData.explorers?.length ? (
               <Link

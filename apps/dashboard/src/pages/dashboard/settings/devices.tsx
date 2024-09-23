@@ -12,7 +12,7 @@ const SettingsDevicesPage: ThirdwebNextPage = () => {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
-        <div className="flex flex-col gap-4 justify-between">
+        <div className="flex flex-col justify-between gap-4">
           <Heading size="title.lg" as="h1">
             Authorized Devices
           </Heading>

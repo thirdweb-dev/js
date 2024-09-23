@@ -3,37 +3,38 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type React from "react";
 
-export function SettingsCard(props: {
-  bottomText: React.ReactNode;
-  header?: {
-    description: string | undefined;
-    title: string;
-  };
-  children: React.ReactNode;
-  errorText: string | undefined;
-  noPermissionText: string | undefined;
-  saveButton?: {
-    onClick?: () => void;
-    disabled: boolean;
-    isPending: boolean;
-    type?: "submit";
-  };
-}) {
+export function SettingsCard(
+  props: React.PropsWithChildren<{
+    bottomText: React.ReactNode;
+    header?: {
+      description: string | undefined;
+      title: string;
+    };
+    errorText: string | undefined;
+    noPermissionText: string | undefined;
+    saveButton?: {
+      onClick?: () => void;
+      disabled: boolean;
+      isPending: boolean;
+      type?: "submit";
+    };
+  }>,
+) {
   return (
-    <div className="border border-border rounded-lg bg-muted/50 relative">
+    <div className="relative rounded-lg border border-border bg-muted/50">
       <div
         className={cn(
-          "border-b border-border px-4 lg:px-6 py-6 relative",
+          "relative border-border border-b px-4 py-6 lg:px-6",
           props.noPermissionText && "cursor-not-allowed",
         )}
       >
         {props.header && (
           <>
-            <h3 className="text-xl font-semibold tracking-tight">
+            <h3 className="font-semibold text-xl tracking-tight">
               {props.header.title}
             </h3>
             {props.header.description && (
-              <p className="text-foreground text-sm mt-1.5 mb-4">
+              <p className="mt-1.5 mb-4 text-foreground text-sm">
                 {props.header.description}
               </p>
             )}
@@ -43,7 +44,7 @@ export function SettingsCard(props: {
         {props.children}
       </div>
 
-      <div className="px-4 lg:px-6 py-3 flex items-center justify-between gap-2 min-h-[60px]">
+      <div className="flex min-h-[60px] items-center justify-between gap-2 px-4 py-3 lg:px-6">
         {props.noPermissionText ? (
           <p className="text-muted-foreground text-sm">
             {props.noPermissionText}

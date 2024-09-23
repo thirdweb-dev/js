@@ -39,7 +39,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
     <div className="bg-background">
       <Grid
         minH="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
-        templateColumns={"auto 1fr"}
+        templateColumns="auto 1fr"
         templateRows={{ base: "auto auto 1fr auto", md: "auto 1fr auto" }}
         backgroundColor="backgroundBody"
       >
@@ -53,10 +53,8 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
           position="sticky"
           zIndex="sticky"
           w={{ md: hasSidebar ? SIDEBAR_WIDTH : "auto" }}
-          className="top-0 bg-background border-b md:border-b-0 md:border-r border-border"
-        >
-          {" "}
-        </GridItem>
+          className="top-0 border-border border-b bg-background md:border-r md:border-b-0"
+        />
         <GridItem
           minH={{ base: "100vh", md: "unset" }}
           pt={{ base: 6, md: 10 }}

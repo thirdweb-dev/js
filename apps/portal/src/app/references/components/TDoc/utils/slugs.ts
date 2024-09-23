@@ -31,7 +31,7 @@ export function getSlugToDocMap(doc: TransformedDoc) {
   for (const key in doc) {
     const value = doc[key as keyof TransformedDoc];
     if (Array.isArray(value)) {
-      value.forEach((v) => {
+      for (const v of value) {
         if (v.kind === "function") {
           const extensionBlockTag = v.signatures
             ?.find((s) =>
@@ -51,13 +51,13 @@ export function getSlugToDocMap(doc: TransformedDoc) {
               slugToDocMap[ensureUniqueSlug(name)] = v;
 
               // skip to next loop
-              return;
+              continue;
             }
           }
         }
 
         slugToDocMap[ensureUniqueSlug(v.name)] = v;
-      });
+      }
     }
   }
 
@@ -69,9 +69,9 @@ export function getLinkMap(doc: TransformedDoc, path: string) {
   for (const key in doc) {
     const value = doc[key as keyof TransformedDoc];
     if (Array.isArray(value)) {
-      value.forEach((v) => {
+      for (const v of value) {
         linkMap.set(v.name, `${path}/${v.name}`);
-      });
+      }
     }
   }
 

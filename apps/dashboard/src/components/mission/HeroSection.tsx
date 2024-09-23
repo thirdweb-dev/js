@@ -3,7 +3,7 @@ import { Heading } from "tw-components";
 
 const HeroSection = ({ text }: { text: string }) => {
   return (
-    <div className="flex flex-col items-center mt-5 md:mt-[140px]">
+    <div className="mt-5 flex flex-col items-center md:mt-[140px]">
       <LandingDesktopMobileImage
         image={require("../../../public/assets/landingpage/desktop/xl-logo.png")}
         mobileImage={require("../../../public/assets/landingpage/mobile/xl-logo.png")}

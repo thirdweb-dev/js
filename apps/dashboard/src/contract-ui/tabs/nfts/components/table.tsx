@@ -209,7 +209,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
     <Flex gap={4} direction="column">
       <TableContainer
         maxW="100%"
-        className="relative border border-border rounded-lg"
+        className="relative rounded-lg border border-border"
       >
         {getNFTsQuery.isFetching && (
           <Spinner
@@ -336,7 +336,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
             onClick={() => previousPage()}
           />
           <Text whiteSpace="nowrap">
-            Page <strong>{pageIndex + 1}</strong> of{" "}
+            Page <strong>{pageIndex + 1}</strong> of
             <Skeleton as="span" display="inline" isLoaded={querySuccess}>
               <strong>{pageCount}</strong>
             </Skeleton>

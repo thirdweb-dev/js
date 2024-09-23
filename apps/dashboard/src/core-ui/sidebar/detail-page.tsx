@@ -72,7 +72,7 @@ export const ContractSidebar: React.FC<ContractSidebarProps> = ({
               }))}
           />
           <NavLinkSection
-            title={"Extensions"}
+            title="Extensions"
             icon={
               <Image
                 src="/assets/dashboard/extension-check.svg"

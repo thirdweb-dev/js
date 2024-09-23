@@ -24,21 +24,21 @@ export function DangerSettingCard(props: {
   };
 }) {
   return (
-    <div className="border border-red-500/70 rounded-lg overflow-hidden">
-      <div className="px-4 lg:px-6 py-6 bg-muted/50">
-        <h3 className="text-xl font-semibold tracking-tight">{props.title}</h3>
+    <div className="overflow-hidden rounded-lg border border-red-500/70">
+      <div className="bg-muted/50 px-4 py-6 lg:px-6">
+        <h3 className="font-semibold text-xl tracking-tight">{props.title}</h3>
 
-        <p className="text-foreground text-sm mt-1.5 mb-4">
+        <p className="mt-1.5 mb-4 text-foreground text-sm">
           {props.description}
         </p>
       </div>
 
-      <div className="bg-red-100 dark:bg-red-500/20 px-4 lg:px-6 py-4 flex justify-end border-red-500/70 border-t">
+      <div className="flex justify-end border-red-500/70 border-t bg-red-100 px-4 py-4 lg:px-6 dark:bg-red-500/20">
         <Dialog>
           <DialogTrigger asChild>
             <Button
               variant="destructive"
-              className="bg-red-600 hover:bg-red-600/80 text-white font-semibold gap-2"
+              className="gap-2 bg-red-600 font-semibold text-white hover:bg-red-600/80"
               disabled={props.isPending}
             >
               {props.isPending && <Spinner className="size-3" />}
@@ -64,7 +64,7 @@ export function DangerSettingCard(props: {
 
               <Button
                 variant="destructive"
-                className="bg-red-600 hover:bg-red-600/80 text-white font-semibold gap-2"
+                className="gap-2 bg-red-600 font-semibold text-white hover:bg-red-600/80"
                 onClick={props.buttonOnClick}
                 disabled={props.isPending}
               >

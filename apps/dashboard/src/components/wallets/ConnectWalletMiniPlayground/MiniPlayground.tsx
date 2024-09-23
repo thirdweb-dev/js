@@ -473,7 +473,7 @@ function WalletIconButton(props: {
         opacity={props.isSelected ? 1 : 0.2}
         filter={props.isSelected ? "none" : "grayscale(0.5)"}
         transition="opacity 200ms ease"
-        className="border rounded-lg border-border"
+        className="rounded-lg border border-border"
       >
         <Image
           width={14}

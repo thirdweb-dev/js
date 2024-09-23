@@ -23,7 +23,7 @@ export const SDKSection: React.FC<SDKSectionProps> = ({
       <Aurora
         pos={{ left: "50%", top: "50%" }}
         size={{ width: "1500px", height: "1500px" }}
-        color={"hsl(280deg 78% 30% / 30%)"}
+        color="hsl(280deg 78% 30% / 30%)"
       />
       <Flex flexDir="column" align="center" as="section">
         <Heading
@@ -41,7 +41,7 @@ export const SDKSection: React.FC<SDKSectionProps> = ({
           as="h3"
           size="subtitle.lg"
           textAlign="center"
-          maxW={"container.md"}
+          maxW="container.md"
           color="whiteAlpha.700"
           fontWeight={400}
           fontSize="20px"

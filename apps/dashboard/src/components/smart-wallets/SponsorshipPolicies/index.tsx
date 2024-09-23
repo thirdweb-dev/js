@@ -163,7 +163,7 @@ export function AccountAbstractionSettingsPage(
 
   if (!dashboardAccountQuery.data) {
     return (
-      <div className="flex items-center justify-center h-[400px]">
+      <div className="flex h-[400px] items-center justify-center">
         <Spinner className="size-4" />
       </div>
     );
@@ -174,16 +174,16 @@ export function AccountAbstractionSettingsPage(
       <Flex
         flexDir={{ base: "column", lg: "row" }}
         gap={8}
-        justifyContent={"space-between"}
-        alignItems={"left"}
+        justifyContent="space-between"
+        alignItems="left"
       >
-        <Flex flexDir={"column"} gap={2}>
+        <Flex flexDir="column" gap={2}>
           <Text>
-            Configure the rules and rules for your sponsored transactions.{" "}
+            Configure the rules and rules for your sponsored transactions.
             <TrackedLink
               category={trackingCategory}
               href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules"
-              color={"primary.500"}
+              color="primary.500"
             >
               View documentation
             </TrackedLink>
@@ -275,9 +275,7 @@ export function AccountAbstractionSettingsPage(
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>
-                  Global spend limits
-                </FormLabel>
+                <FormLabel pointerEvents="none">Global spend limits</FormLabel>
                 <Text>
                   Maximum gas cost (in USD) that you want to sponsor. This
                   applies for the duration of the billing period (monthly). Once
@@ -313,15 +311,15 @@ export function AccountAbstractionSettingsPage(
                   <FormLabel>Spend limit</FormLabel>
                   <div className="flex flex-row items-center">
                     <Input
-                      w={"xs"}
+                      w="xs"
                       placeholder="Enter an amount"
                       {...form.register("globalLimit.maxSpend")}
                     />
                     <Select
-                      w={"xs"}
+                      w="xs"
                       {...form.register("globalLimit.maxSpendUnit")}
                     >
-                      <option value={"usd"}>USD</option>
+                      <option value="usd">USD</option>
                       {/* TODO native currency <option value={"native"}>
                           Native Currency (ie. ETH)
                         </option> */}
@@ -348,19 +346,19 @@ export function AccountAbstractionSettingsPage(
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>
+                <FormLabel pointerEvents="none">
                   Restrict to specific chains
                 </FormLabel>
                 <Text>
                   Only sponsor transactions on the specified chains. By default,
-                  transactions can be sponsored on any of the{" "}
+                  transactions can be sponsored on any of the
                   <TrackedLink
                     color="primary.500"
                     isExternal
                     category={trackingCategory}
                     href="https://portal.thirdweb.com/wallets/smart-wallet/infrastructure#supported-chains"
                   >
-                    supported chains.{" "}
+                    supported chains.
                   </TrackedLink>
                 </Text>
               </Box>
@@ -404,7 +402,7 @@ export function AccountAbstractionSettingsPage(
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>
+                <FormLabel pointerEvents="none">
                   Restrict to specific contract addresses
                 </FormLabel>
                 <Text>
@@ -447,7 +445,7 @@ export function AccountAbstractionSettingsPage(
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>
+                <FormLabel pointerEvents="none">
                   Allowlisted/Blocklisted accounts
                 </FormLabel>
                 <Text>
@@ -524,15 +522,15 @@ export function AccountAbstractionSettingsPage(
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>Server verifier</FormLabel>
+                <FormLabel pointerEvents="none">Server verifier</FormLabel>
                 <Text>
                   Specify your own endpoint that will verify each transaction
                   and decide whether it should be sponsored or not. This gives
-                  you fine grained control and lets you build your own rules.{" "}
+                  you fine grained control and lets you build your own rules.
                   <TrackedLink
                     category={trackingCategory}
                     href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules#setting-up-a-server-verifier"
-                    color={"primary.500"}
+                    color="primary.500"
                   >
                     View server verifier documentation
                   </TrackedLink>
@@ -579,7 +577,7 @@ export function AccountAbstractionSettingsPage(
                 </FormControl>
                 <FormControl>
                   <FormLabel size="label.sm">Custom Headers</FormLabel>
-                  <Stack gap={3} alignItems={"end"}>
+                  <Stack gap={3} alignItems="end">
                     {customHeaderFields.fields.map((_, customHeaderIdx) => {
                       return (
                         // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
@@ -639,7 +637,7 @@ export function AccountAbstractionSettingsPage(
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>Admin accounts</FormLabel>
+                <FormLabel pointerEvents="none">Admin accounts</FormLabel>
                 <Text>
                   These accounts won&apos;t be subject to any sponsorship rules.
                   All transactions will be sponsored.

@@ -86,7 +86,7 @@ export const RecurringPaymentFailureAlert: React.FC<
             </Heading>
           </AlertTitle>
           <AlertDescription mt={4} mb={2}>
-            <Flex direction={"column"} gap={4}>
+            <Flex direction="column" gap={4}>
               <Text>
                 {reason ? `${reason}. ` : ""}
                 {resolution ? `${resolution}. ` : ""}
