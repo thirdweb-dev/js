@@ -55,7 +55,7 @@
     "@tanstack/react-table": "^8.17.3",
     "@thirdweb-dev/service-utils": "workspace:*",
     "@vercel/og": "^0.6.2",
-    "abitype": "1.0.5",
+    "abitype": "1.0.6",
     "chakra-react-select": "^4.7.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
