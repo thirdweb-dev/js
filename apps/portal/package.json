@@ -29,7 +29,7 @@
     "@tryghost/content-api": "^1.11.21",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "date-fns": "^3.6.0",
+    "date-fns": "^4.1.0",
     "escape-string-regexp": "^5.0.0",
     "flexsearch": "^0.7.43",
     "github-slugger": "^2.0.0",
