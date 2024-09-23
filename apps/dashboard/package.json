@@ -73,7 +73,7 @@
     "next-plausible": "^3.12.0",
     "next-seo": "^6.5.0",
     "next-themes": "^0.3.0",
-    "nextjs-toploader": "^1.6.12",
+    "nextjs-toploader": "^3.6.15",
     "papaparse": "^5.4.1",
     "pluralize": "^8.0.0",
     "posthog-js": "1.67.1",
