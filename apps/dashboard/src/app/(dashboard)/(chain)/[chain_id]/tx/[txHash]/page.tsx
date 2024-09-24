@@ -46,7 +46,7 @@ export default async function Page(props: {
       <header className="flex flex-col gap-y-2">
         <p className="font-bold text-3xl">Transaction Details</p>
         <div className="flex gap-x-2">
-          {shortenAddress(transaction.from)} called on
+          {shortenAddress(transaction.from)} called on{" "}
           {shortenAddress(transaction.to || ZERO_ADDRESS)}
         </div>
       </header>
@@ -131,8 +131,8 @@ export default async function Page(props: {
         <div className="grid grid-cols-2">
           <div className="flex items-center gap-x-2">Gas fees (Gwei)</div>
           <p>
-            Base: {toTokens(block.baseFeePerGas || 0n, 9)} | Max:
-            {toTokens(transaction.maxFeePerGas || 0n, 9)} | Max priority:
+            Base: {toTokens(block.baseFeePerGas || 0n, 9)} | Max:{" "}
+            {toTokens(transaction.maxFeePerGas || 0n, 9)} | Max priority:{" "}
             {transaction.maxPriorityFeePerGas?.toString()}
           </p>
         </div>
@@ -150,7 +150,7 @@ export default async function Page(props: {
           <div className="flex items-center gap-x-2">Other</div>
           <p>
             Txn type: {hexToNumber(transaction.typeHex || "0x0")} (
-            {transaction.type}) | Nonce: {transaction.nonce} | Position:
+            {transaction.type}) | Nonce: {transaction.nonce} | Position:{" "}
             {transaction.transactionIndex}
           </p>
         </div>

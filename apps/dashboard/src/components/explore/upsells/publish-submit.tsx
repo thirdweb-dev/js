@@ -26,7 +26,7 @@ export const PublishUpsellCard: React.FC = () => {
 
           <p className="text-muted-foreground">
             <span className="font-semibold text-foreground">
-              Save development time.
+              Save development time.{" "}
             </span>
             Focus on protocol development and save time by not having to build
             middleware layer yourself.
@@ -41,7 +41,7 @@ export const PublishUpsellCard: React.FC = () => {
           />
           <p className="text-muted-foreground">
             <span className="font-semibold text-foreground">
-              Shareable landing page.
+              Shareable landing page.{" "}
             </span>
             By publishing your contract, your contracts become easily shareable
             with a landing page for your contract.

@@ -4,7 +4,7 @@ import { Text } from "tw-components";
 
 const PLEASE_REACH_OUT_MESSAGE = (
   <Text as="span" color="inherit">
-    If you believe this is incorrect or the error persists, please visit our
+    If you believe this is incorrect or the error persists, please visit our{" "}
     <Link className="font-bold underline" target="_blank" href="/support">
       support site
     </Link>
@@ -108,16 +108,16 @@ function parseErrorCode(
 
       if (error.message.includes("MetaMask Message Signature")) {
         return `
-          There was an error with the metamask signature. 
-          If you are using a Ledger wallet, make sure you go to settings 
+          There was an error with the metamask signature.
+          If you are using a Ledger wallet, make sure you go to settings
           and enable the "Allow Contract Data" setting
         `;
       }
 
       if (error.data?.message?.includes("max code size exceeded")) {
         return `
-          This contract is bigger than the size limit (24,567 bytes). 
-          You need to reduce the size of the contract before deploying. 
+          This contract is bigger than the size limit (24,567 bytes).
+          You need to reduce the size of the contract before deploying.
           We recommend enabling the optimizer in your compiler.
         `;
       }

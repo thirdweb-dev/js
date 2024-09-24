@@ -119,7 +119,7 @@ const BuildLanding: ThirdwebNextPage = () => {
               <>
                 Keep your user&apos;s accounts and funds secure with audited and
                 battle-tested contracts. Every pre-built contract has undergone
-                a full audit by our security partners,
+                a full audit by our security partners,{" "}
                 <TrackedLink
                   href="https://0xmacro.com/"
                   category={TRACKING_CATEGORY}

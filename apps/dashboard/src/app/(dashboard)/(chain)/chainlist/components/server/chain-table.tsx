@@ -236,13 +236,13 @@ export async function ChainsData(props: {
       )}
       <div className="h-4" />
       <p className="text-balance text-center text-muted-foreground text-sm">
-        Showing
-        <span className="text-accent-foreground">{paginatedChains.length}</span>
-        out of
+        Showing{" "}
+        <span className="text-accent-foreground">{paginatedChains.length}</span>{" "}
+        out of{" "}
         {filteredCount !== totalCount ? (
           <>
-            <span className="text-accent-foreground">{filteredCount}</span>
-            chains that match filters. (Total:
+            <span className="text-accent-foreground">{filteredCount}</span>{" "}
+            chains that match filters. (Total:{" "}
             <span className="text-accent-foreground">{totalCount}</span>)
           </>
         ) : (

@@ -33,7 +33,7 @@ const DashboardContractsBuild: ThirdwebNextPage = () => {
             color="blue.500"
           >
             Base contracts
-          </TrackedLink>
+          </TrackedLink>{" "}
           are prebuilt smart contracts that you can build on top of or modify,
           e.g. ERC721, ERC1155, ERC20. These contracts work out-of-the-box and
           do not require any functions to be implemented.
@@ -46,7 +46,7 @@ const DashboardContractsBuild: ThirdwebNextPage = () => {
             color="blue.500"
           >
             Extensions
-          </TrackedLink>
+          </TrackedLink>{" "}
           are Solidity interfaces and industry standards that are recognizable
           by the Dashboard and unlock functionality in the SDKs. They are
           composable pieces of logic that can be added to base contracts easily.

@@ -115,7 +115,7 @@ export default async function ChainListLayout(props: {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-row items-center justify-between gap-4 lg:flex-col lg:justify-start">
               <h1 className="font-semibold text-4xl tracking-tighter lg:text-5xl">
-                List of
+                List of{" "}
                 {props.params.chain_type.charAt(0).toUpperCase() +
                   props.params.chain_type.slice(1)}
               </h1>

@@ -91,7 +91,7 @@ export const TokenRow = (props: {
         {address &&
           (balanceQuery.data ? (
             <ThemedText theme={theme} type="subtext">
-              {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}
+              {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
               {balanceQuery.data?.symbol}
             </ThemedText>
           ) : (

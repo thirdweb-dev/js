@@ -57,7 +57,7 @@ export const SolidityRawInput: React.FC<SolidityInputWithTypeProps> = ({
         onChange={handleChange}
       />
       <FormHelperText>
-        Input should be passed in JSON format - Ex:
+        Input should be passed in JSON format - Ex:{" "}
         {formatHint(solidityType, solidityComponents)}
       </FormHelperText>
     </Flex>

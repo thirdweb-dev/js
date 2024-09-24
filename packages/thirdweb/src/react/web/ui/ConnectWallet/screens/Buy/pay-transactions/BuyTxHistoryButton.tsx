@@ -72,7 +72,7 @@ export function BuyTxHistoryButton(props: {
             }}
           >
             <Text size="sm" color="primaryText">
-              Buy
+              Buy{" "}
               {formatNumber(
                 Number(
                   props.txInfo.type === "swap"
@@ -80,7 +80,7 @@ export function BuyTxHistoryButton(props: {
                     : props.txInfo.status.quote.estimatedToTokenAmount,
                 ),
                 6,
-              )}
+              )}{" "}
               {props.txInfo.status.quote.toToken.symbol}
             </Text>
           </Container>

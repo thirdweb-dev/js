@@ -120,7 +120,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                 </GridItem>
                 <GridItem colSpan={9}>
                   <Text fontFamily="mono" size="body.md">
-                    {(renderData.quantity || 0n).toString()}
+                    {(renderData.quantity || 0n).toString()}{" "}
                     {/* For listings that are completed, the `quantity` would be `0`
                     So we show this text to make it clear */}
                     {LISTING_STATUS[renderData.status] === "Completed"
@@ -136,16 +136,16 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                     </GridItem>
                     <GridItem colSpan={9}>
                       <Text fontFamily="mono" size="body.md">
-                        {renderData.currencyValuePerToken.displayValue}
+                        {renderData.currencyValuePerToken.displayValue}{" "}
                         {renderData.currencyValuePerToken.symbol}
                       </Text>
                     </GridItem>
                   </>
                 )}
 
-                {/* 
+                {/*
                   Todo: Add a Buy button somewhere in this section once the Dashboard is fully migrated to v5 (?)
-                  Kien already shipped a prebuilt component for the Marketplace Buy Button in SDK v5 
+                  Kien already shipped a prebuilt component for the Marketplace Buy Button in SDK v5
                 */}
               </SimpleGrid>
             </Card>

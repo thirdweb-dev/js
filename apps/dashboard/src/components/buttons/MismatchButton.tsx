@@ -455,14 +455,14 @@ const MismatchNotice: React.FC<{
       </Heading>
 
       <Text>
-        Your wallet is connected to the
+        Your wallet is connected to the{" "}
         <Box as="strong" textTransform="capitalize">
           {walletConnectedNetworkInfo?.name}
-        </Box>
-        network but this action requires you to connect to the
+        </Box>{" "}
+        network but this action requires you to connect to the{" "}
         <Box as="strong" textTransform="capitalize">
           {chain?.name}
-        </Box>
+        </Box>{" "}
         network.
       </Text>
 

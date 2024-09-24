@@ -26,7 +26,7 @@ export const ConfirmEngineTierDialog = (props: {
       >
         <DialogHeader>
           <DialogTitle className="pr-4 leading-snug">
-            Are you sure you want to deploy a
+            Are you sure you want to deploy a{" "}
             {tier === "STARTER" ? "Standard" : "Premium"} Engine?
           </DialogTitle>
 

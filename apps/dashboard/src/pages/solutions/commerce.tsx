@@ -170,7 +170,7 @@ const Commerce: ThirdwebNextPage = () => {
               icon={require("../../../public/assets/solutions-pages/commerce/hero-icon-1.png")}
             >
               <Text size="body.lg">
-                Distribute membership passes with contracts from
+                Distribute membership passes with contracts from{" "}
                 <TrackedLink
                   category={TRACKING_CATEGORY}
                   color="white"
@@ -179,8 +179,8 @@ const Commerce: ThirdwebNextPage = () => {
                   label="use-case-explore"
                 >
                   Explore
-                </TrackedLink>
-                or using
+                </TrackedLink>{" "}
+                or using{" "}
                 <TrackedLink
                   category={TRACKING_CATEGORY}
                   isExternal
@@ -220,7 +220,7 @@ const Commerce: ThirdwebNextPage = () => {
               icon={require("../../../public/assets/solutions-pages/commerce/hero-icon-4.png")}
             >
               <Text size="body.lg">
-                Authenticate web3 users using
+                Authenticate web3 users using{" "}
                 <TrackedLink
                   category={TRACKING_CATEGORY}
                   isExternal
@@ -258,7 +258,7 @@ const Commerce: ThirdwebNextPage = () => {
               more on what merchants/users want and find valuable.&quot;
             </i>
             <br />
-            <br />- <b>Zain</b>,
+            <br />- <b>Zain</b>,{" "}
             <Link
               color="blue.500"
               href="https://www.lazertechnologies.com/blog/how-to-create-a-token-gated-experience-on-shopify-using-thirdweb"

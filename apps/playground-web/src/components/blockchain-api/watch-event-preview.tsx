@@ -51,8 +51,8 @@ export function WatchEventPreview() {
     <ul className="m-auto text-sm lg:text-base">
       {items.map((item) => (
         <li key={item.hash}>
-          <span className="font-bold">{item.from}</span> transferred
-          <span className="font-bold text-green-500">{item.value} USDC</span> to
+          <span className="font-bold">{item.from}</span> transferred{" "}
+          <span className="font-bold text-green-500">{item.value} USDC</span> to{" "}
           <span className="font-bold">{item.to}</span>
         </li>
       ))}

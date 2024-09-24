@@ -481,7 +481,7 @@ const SendFundsModal = ({
                 </InputRightAddon>
               </InputGroup>
               <FormHelperText textAlign="right">
-                Current amount:
+                Current amount:{" "}
                 {prettyPrintCurrency({
                   amount: backendWalletBalance.displayValue,
                   symbol: backendWalletBalance.symbol,

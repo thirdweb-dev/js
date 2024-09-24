@@ -83,7 +83,7 @@ export const Usage: React.FC<UsageProps> = ({
       title: "Unlimited requests",
       total: (
         <>
-          Max rate:
+          Max rate:{" "}
           <Text color="bgBlack" as="span">
             {usageData.rateLimits.rpc} requests per second
           </Text>

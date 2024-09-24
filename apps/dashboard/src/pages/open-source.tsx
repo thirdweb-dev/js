@@ -339,7 +339,7 @@ const OSS: ThirdwebNextPage = ({ contributors }: PageProps) => {
                     <Heading size="title.sm">@{contributor.login}</Heading>
                   </TrackedLink>
                   <Text size="label.md" color="gray.500">
-                    {contributor.contributions}
+                    {contributor.contributions}{" "}
                     {contributor.contributions === 1
                       ? "contribution"
                       : "contributions"}

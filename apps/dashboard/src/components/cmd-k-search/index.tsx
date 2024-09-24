@@ -340,7 +340,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
           </Link>
         </h3>
         <p className="text-muted-foreground text-xs">
-          {result.chainMetadata.name} -
+          {result.chainMetadata.name} -{" "}
           <span className="font-mono">
             {shortenIfAddress(result.contractAddress)}
           </span>

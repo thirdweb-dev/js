@@ -109,7 +109,7 @@ const Ambassadors: ThirdwebNextPage = () => {
           >
             <Flex flexDir="column" gap={0}>
               <Heading as="h1" size="display.lg" mb={4} textAlign="center">
-                Become a
+                Become a{" "}
                 <Heading
                   size="display.lg"
                   as="span"

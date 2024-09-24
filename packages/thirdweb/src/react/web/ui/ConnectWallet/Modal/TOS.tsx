@@ -49,7 +49,7 @@ export function TOS(props: {
             disabled={!requireApproval}
           />
         )}
-        {locale.prefix}
+        {locale.prefix}{" "}
         {termsOfServiceUrl && (
           <Link
             inline
@@ -60,7 +60,8 @@ export function TOS(props: {
               whiteSpace: "nowrap",
             }}
           >
-            {locale.termsOfService}
+            {" "}
+            {locale.termsOfService}{" "}
           </Link>
         )}
         {bothGiven && `${locale.and} `}

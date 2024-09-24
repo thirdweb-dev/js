@@ -29,13 +29,13 @@ export const ContractPermissionsPage: React.FC<
           Missing PermissionsEnumerable Extension
         </Heading>
         <Text>
-          This contract does not support the <Code>PermissionsEnumerable</Code>
+          This contract does not support the <Code>PermissionsEnumerable</Code>{" "}
           extension.
           <br />
-          As a result, you can only view and manage basic permissions via the
+          As a result, you can only view and manage basic permissions via the{" "}
           <Link href={explorerHref} color="primary.500">
             Explorer
-          </Link>
+          </Link>{" "}
           at the moment.
         </Text>
 

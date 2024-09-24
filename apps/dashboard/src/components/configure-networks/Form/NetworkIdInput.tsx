@@ -23,14 +23,14 @@ export const NetworkIDInput: React.FC<{
           dashboard.
           <p className="mt-2 mb-1 font-semibold">Example</p>
           <p className="text-muted-foreground text-sm">
-            thirdweb.com/&lt;slug&gt;/...
+            {"thirdweb.com/<slug>..."}
           </p>
         </span>
       }
       errorMessage={
         form.formState.errors.slug?.type === "taken" ? (
           <>
-            Can not use {`"${slug}"`}.
+            Can not use {`"${slug}"`}.{" "}
             {slug &&
               existingChain &&
               `It is being used by "${existingChain.name}"`}

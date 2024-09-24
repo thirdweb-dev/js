@@ -297,27 +297,27 @@ function CreateAPIKeyForm(props: {
 
                       <ul className="flex list-disc flex-col gap-2 pl-3 text-muted-foreground text-sm [&>li]:pl-1 ">
                         <li>
-                          Authorize all domains with
+                          Authorize all domains with{" "}
                           <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
                             *
                           </span>
                           <br />
                           <span>
-                            Example:
+                            Example:{" "}
                             <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
                               *.thirdweb.com
-                            </span>
-                            accepts all
+                            </span>{" "}
+                            accepts all{" "}
                             <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
                               .thirdweb.com
-                            </span>
+                            </span>{" "}
                             sites
                           </span>
                         </li>
                         <li>
-                          Authorize local URLs with
+                          Authorize local URLs with{" "}
                           <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
-                            localhost:&lt;port&gt;
+                            {"localhost:<port>"}
                           </span>
                         </li>
                         <li>Separate domains by commas or new lines</li>
@@ -456,7 +456,7 @@ function APIKeyDetails(props: {
           <AlertDescription>
             <div className="mb-5">
               Secret keys cannot be recovered. If you lose your secret key, you
-              will need to create a
+              will need to create a{" "}
               {props.wording === "project" ? "project" : "API key"}
             </div>
             <CheckboxWithLabel className="text-foreground">

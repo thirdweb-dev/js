@@ -39,7 +39,7 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
             ? ", and can be overridden for specific wallets in the snapshot. "
             : ". "}
           Limits are set per wallets and not per user, sophisticated actors
-          could get around wallet restrictions.
+          could get around wallet restrictions.{" "}
           <Link
             isExternal
             color="blue.500"

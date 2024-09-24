@@ -96,7 +96,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                 <>
                   <Box as="span" textDecor="line-through" opacity={0.4}>
                     ${plan.price}
-                  </Box>
+                  </Box>{" "}
                   $0
                 </>
               ) : (
@@ -108,7 +108,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
           </Flex>
           {remainingTrialDays > 0 && (
             <Text size="body.sm" fontStyle="italic">
-              Your free trial will
+              Your free trial will{" "}
               {remainingTrialDays > 1
                 ? `end in ${remainingTrialDays} days.`
                 : "end today."}

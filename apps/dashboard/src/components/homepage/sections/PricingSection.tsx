@@ -25,14 +25,14 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             textAlign="center"
             px={{ base: 2, md: 0 }}
           >
-            Simple, transparent & flexible
+            Simple, transparent & flexible{" "}
             <Box bgGradient="linear(to-r, #4DABEE, #692AC1)" bgClip="text">
               pricing for every team.
             </Box>
           </Heading>
           {onHomepage && (
             <Text textAlign="center" size="body.lg">
-              Learn more about
+              Learn more about{" "}
               <TrackedLink
                 category={trackingCategory}
                 href="/pricing"

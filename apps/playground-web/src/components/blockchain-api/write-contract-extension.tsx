@@ -74,7 +74,7 @@ export function WriteContractExtensionPreview() {
               href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
               className="mt-3 text-center text-green-400"
             >
-              Tx sent:
+              Tx sent:{" "}
               <span className="underline">{shortenAddress(txHash, 6)}</span>
             </a>
           )}

@@ -419,7 +419,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
                 onClick={() => previousPage()}
               />
               <Text whiteSpace="nowrap">
-                Page <strong>{pageIndex + 1}</strong> of
+                Page <strong>{pageIndex + 1}</strong> of{" "}
                 <strong>{pageOptions.length}</strong>
               </Text>
               <IconButton

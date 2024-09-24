@@ -20,7 +20,7 @@ export function ContractRow({ category }: ContractRowProps) {
           </Link>
 
           <p className="text-muted-foreground">
-            {category.description}
+            {category.description}{" "}
             {category.learnMore && (
               <Link
                 target="_blank"

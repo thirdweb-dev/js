@@ -134,7 +134,7 @@ export function SwapStatusScreen(props: {
                 </Text>
                 <Spacer y="sm" />
                 <Text size="sm" color="danger">
-                  Expected {swapStatus.data.quote.toToken.symbol}, Got
+                  Expected {swapStatus.data.quote.toToken.symbol}, Got{" "}
                   {swapStatus.data.destination.token.symbol} instead
                 </Text>
               </Container>

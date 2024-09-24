@@ -64,7 +64,7 @@ export const SettingDetectedState: React.FC<SettingDetectedStateProps> = ({
             <Heading size="subtitle.md">Missing extension</Heading>
           </Flex>
           <Text>
-            This contract does not implement the required extension for
+            This contract does not implement the required extension for{" "}
             <strong>{metadata.name}</strong>.
           </Text>
           <TrackedLink

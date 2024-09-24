@@ -23,7 +23,7 @@ export const EngineContractSubscriptions: React.FC<
         <Flex flexDir="column" gap={2}>
           <Heading size="title.md">Contract Subscriptions</Heading>
           <Text>
-            Subscribe to event logs and transaction receipts on any contract.
+            Subscribe to event logs and transaction receipts on any contract.{" "}
             <TrackedLink
               href="https://portal.thirdweb.com/engine/features/contract-subscriptions"
               color="primary.500"

@@ -55,7 +55,7 @@
   "scripts": {
     "format": "biome format ./src --write",
     "lint": "biome check ./src",
-    "fix": "biome check ./src --fix --unsafe",
+    "fix": "biome check ./src --fix",
     "build": "pnpm clean && pnpm build:cjs && pnpm build:esm && pnpm build:types",
     "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
     "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",

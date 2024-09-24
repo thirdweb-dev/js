@@ -139,7 +139,7 @@ const Community: ThirdwebNextPage = () => {
             >
               <Heading mt={8} textAlign="center" size="title.2xl">
                 A decentralized internet begins
-                <br /> with
+                <br /> with{" "}
                 <Box
                   as="span"
                   bgGradient="linear(to-r, #BFA3DA, #C735B0)"
@@ -229,7 +229,7 @@ const Community: ThirdwebNextPage = () => {
                     size="title.2xl"
                     color="#ECECEC"
                   >
-                    {title1}
+                    {title1}{" "}
                     <Box
                       as="span"
                       bgGradient="linear(to-r, #BFA3DA, #C735B0)"
@@ -288,7 +288,7 @@ const Community: ThirdwebNextPage = () => {
 
         <Container maxW="container.page" position="relative" py={12}>
           <Heading as="h2" size="title.2xl" textAlign="center" mb={4}>
-            and most importantly...
+            and most importantly...{" "}
             <Box
               as="span"
               bgGradient="linear(to-r, #BFA3DA, #C735B0)"
@@ -325,13 +325,13 @@ const Community: ThirdwebNextPage = () => {
           my={{ base: 12, md: 24 }}
         >
           <Heading mt={8} size="display.md">
-            Start
+            Start{" "}
             <Box
               as="span"
               bgGradient="linear(to-r, #BFA3DA, #C735B0)"
               bgClip="text"
             >
-              building
+              building{" "}
             </Box>
             today.
           </Heading>

@@ -104,14 +104,14 @@ const SolutionsMinting: ThirdwebNextPage = () => {
               title="Explore"
               description={
                 <>
-                  A broad set of options for
+                  A broad set of options for{" "}
                   <TrackedLink
                     category={TRACKING_CATEGORY}
                     href="https://portal.thirdweb.com/typescript/latest/extensions"
                     color="primary.500"
                   >
                     distributing NFTs
-                  </TrackedLink>
+                  </TrackedLink>{" "}
                   including claimable drops, private/public sales, airdrops,
                   open editions, delayed reveals.
                 </>
@@ -125,14 +125,14 @@ const SolutionsMinting: ThirdwebNextPage = () => {
               description={
                 <>
                   Integrate minting into applications using a variety of web3
-                  API configurations including as an
+                  API configurations including as an{" "}
                   <TrackedLink
                     category={TRACKING_CATEGORY}
                     href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
                     color="primary.500"
                   >
                     distributing NFTs
-                  </TrackedLink>
+                  </TrackedLink>{" "}
                   , self-hosted via a web3 REST API or as a managed service.
                 </>
               }

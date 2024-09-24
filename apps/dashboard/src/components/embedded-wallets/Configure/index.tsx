@@ -295,7 +295,7 @@ function BrandingFieldset(props: {
                 <Input {...field} />
               </FormControl>
               <FormDescription>
-                Name that will be displayed in the emails sent to users.
+                Name that will be displayed in the emails sent to users.{" "}
                 <br className="max-sm:hidden" /> Defaults to your API Key's
                 name.
               </FormDescription>
@@ -315,7 +315,7 @@ function BrandingFieldset(props: {
                 <Input {...field} />
               </FormControl>
               <FormDescription>
-                Logo that will display in the emails sent to users.
+                Logo that will display in the emails sent to users.{" "}
                 <br className="max-sm:hidden" /> The image must be squared with
                 recommended size of 72x72 px.
               </FormDescription>
@@ -341,7 +341,7 @@ function JSONWebTokenFields(props: {
         title="Custom JSON Web Token"
         description={
           <>
-            Optionally allow users to authenticate with a custom JWT.
+            Optionally allow users to authenticate with a custom JWT.{" "}
             <TrackedLinkTW
               target="_blank"
               href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-jwt-auth-server"
@@ -436,7 +436,7 @@ function AuthEndpointFields(props: {
         description={
           <>
             Optionally allow users to authenticate with any arbitrary payload
-            that you provide.
+            that you provide.{" "}
             <TrackedLinkTW
               target="_blank"
               href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-auth-server"

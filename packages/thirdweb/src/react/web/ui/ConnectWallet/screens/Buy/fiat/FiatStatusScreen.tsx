@@ -111,19 +111,18 @@ export function OnrampStatusScreen(props: {
   return (
     <Container p="lg">
       <ModalHeader title={props.title} onBack={props.onBack} />
-
       {props.hasTwoSteps && (
         <>
           <Spacer y="lg" />
           <StepBar steps={2} currentStep={1} />
           <Spacer y="sm" />
           <Text size="xs">
-            Step 1 of 2 - Buying {props.quote.onRampToken.token.symbol} with
+            Step 1 of 2 - Buying {props.quote.onRampToken.token.symbol} with{" "}
             {props.quote.fromCurrencyWithFees.currencySymbol}
           </Text>
         </>
       )}
-
+      packages/thirdweb/src/react/web/ui/ConnectWallet/screens/Buy/TransactionModeScreen.tsx
       <OnrampStatusScreenUI
         uiStatus={uiStatus}
         onDone={props.onDone}

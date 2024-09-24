@@ -141,7 +141,7 @@ export function FaucetButton({
       <Button variant="outline" className="!opacity-100 w-full " disabled>
         {canClaimFaucetQuery.data.type === "throttle" && (
           <>
-            Your next claim is available
+            Your next claim is available{" "}
             {formatTime(canClaimFaucetQuery.data.ttlSeconds)}
           </>
         )}
@@ -186,7 +186,7 @@ export function FaucetButton({
 
       {faucetWalletBalanceQuery.data && (
         <p className="mt-3 text-muted-foreground text-xs">
-          {Number(faucetWalletBalanceQuery.data.displayValue).toFixed(3)}
+          {Number(faucetWalletBalanceQuery.data.displayValue).toFixed(3)}{" "}
           {faucetWalletBalanceQuery.data.symbol} left in the faucet
         </p>
       )}

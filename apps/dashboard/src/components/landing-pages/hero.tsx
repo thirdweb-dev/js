@@ -63,7 +63,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               textAlign="center"
               px={{ base: 2, md: 0 }}
             >
-              {title}
+              {title}{" "}
               <Box as="span" bgGradient={gradient} bgClip="text">
                 {titleWithGradient}
               </Box>

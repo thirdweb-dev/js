@@ -492,7 +492,7 @@ const TransactionDetailsDrawer = ({
           <Text>
             {transaction.value
               ? toTokens(BigInt(transaction.value), decimals)
-              : 0}
+              : 0}{" "}
             {symbol}
           </Text>
         </FormControl>

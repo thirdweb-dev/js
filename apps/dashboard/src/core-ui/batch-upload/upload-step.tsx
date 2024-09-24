@@ -76,11 +76,11 @@ export const UploadStep: React.FC<UploadStepProps> = ({
             <UnorderedList>
               <ListItem>
                 Files <em>must</em> contain one .csv or .json file with
-                metadata. -
+                metadata. -{" "}
                 <Link download color="blue.500" href="/example.csv">
                   Download example.csv
                 </Link>
-                .
+                .{" "}
                 <Link download color="blue.500" href="/example.json">
                   Download example.json
                 </Link>
@@ -92,11 +92,11 @@ export const UploadStep: React.FC<UploadStepProps> = ({
               </ListItem>
               <ListItem>
                 Asset names <em>must</em> be sequential 0,1,2,3...n.[extension].
-                It doesn&apos;t matter at what number you begin. (Example:
+                It doesn&apos;t matter at what number you begin. (Example:{" "}
                 <Code>131.png</Code>, <Code>132.png</Code>).
               </ListItem>
               <ListItem>
-                Make sure to drag and drop the CSV/JSON and the images
+                Make sure to drag and drop the CSV/JSON and the images{" "}
                 <strong>at the same time</strong>.
               </ListItem>
             </UnorderedList>
@@ -109,23 +109,23 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                 <br />
                 <small>
                   They both have to follow the asset naming convention above.
-                  (Example: <Code>0.png</Code> and <Code>0.mp4</Code>,
+                  (Example: <Code>0.png</Code> and <Code>0.mp4</Code>,{" "}
                   <Code>1.png</Code> and <Code>1.glb</Code>, etc.)
                 </small>
               </ListItem>
               <ListItem>
                 When uploading files, we will upload them and pin them to IPFS
                 automatically for you. If you already have the files uploaded,
-                you can add an <Code>image</Code> and/or
-                <Code>animation_url</Code> column and add the IPFS hashes there.
+                you can add an <Code>image</Code> and/or{" "}
+                <Code>animation_url</Code> column and add the IPFS hashes there.{" "}
                 <Link download color="blue.500" href="/example-with-ipfs.csv">
                   Download example.csv
                 </Link>
               </ListItem>
               <ListItem>
                 If you want to make your media files map to your NFTs, you can
-                add add the name of your files to the <Code>image</Code> and
-                <Code>animation_url</Code> column.
+                add add the name of your files to the <Code>image</Code> and{" "}
+                <Code>animation_url</Code> column.{" "}
                 <Link download color="blue.500" href="/example-with-maps.csv">
                   Download example.csv
                 </Link>

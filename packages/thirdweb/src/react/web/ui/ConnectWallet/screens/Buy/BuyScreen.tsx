@@ -1234,7 +1234,7 @@ function SwapScreenContent(props: {
         <div>
           {errorMsg.minAmount && (
             <Text color="danger" size="sm" center multiline>
-              Minimum amount is {errorMsg.minAmount}
+              Minimum amount is {errorMsg.minAmount}{" "}
               <TokenSymbol
                 token={toToken}
                 chain={toChain}
@@ -1483,6 +1483,9 @@ function FiatScreenContent(props: {
           {errorMsg.minAmount && (
             <Text color="danger" size="sm" center multiline>
               Minimum amount is {errorMsg.minAmount}
+              {
+                " packages/thirdweb/src/react/web/ui/ConnectWallet/TransactionsScreen.tsx"
+              }
               <TokenSymbol
                 token={toToken}
                 chain={toChain}

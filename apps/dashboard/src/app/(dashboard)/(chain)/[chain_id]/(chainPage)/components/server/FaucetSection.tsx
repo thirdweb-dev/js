@@ -34,7 +34,7 @@ export async function FaucetSection(props: { chain: ChainMetadata }) {
           <div className="h-2" />
 
           <p className="max-w-[520px] px-4 text-center text-muted-foreground text-sm">
-            Get free {chain.nativeCurrency.symbol} fast and reliably.
+            Get free {chain.nativeCurrency.symbol} fast and reliably.{" "}
             {amountToGive} {chain.nativeCurrency.symbol}/day.
           </p>
 

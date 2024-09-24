@@ -50,8 +50,8 @@ export const slides: Slide[] = [
               color="blue.500"
             >
               Hooks
-            </TrackedLink>
-            and
+            </TrackedLink>{" "}
+            and{" "}
             <TrackedLink
               category={TRACK_CATEGORY}
               href="https://portal.thirdweb.com/typescript"
@@ -60,7 +60,7 @@ export const slides: Slide[] = [
               color="blue.500"
             >
               functions
-            </TrackedLink>
+            </TrackedLink>{" "}
             that let you easily interact with contracts, wallets, and
             transactions.
           </ListItem>
@@ -73,7 +73,7 @@ export const slides: Slide[] = [
               color="blue.500"
             >
               In-App wallets
-            </TrackedLink>
+            </TrackedLink>{" "}
             with different key management structures.
           </ListItem>
           <ListItem>
@@ -85,7 +85,7 @@ export const slides: Slide[] = [
               color="blue.500"
             >
               Plug and play UI components
-            </TrackedLink>
+            </TrackedLink>{" "}
             that you can drop into your app to easily integrate web3
             functionality
           </ListItem>
@@ -147,7 +147,7 @@ export const slides: Slide[] = [
               color="blue.500"
             >
               Interact
-            </TrackedLink>
+            </TrackedLink>{" "}
             with contracts.
           </ListItem>
           <ListItem>
@@ -159,7 +159,7 @@ export const slides: Slide[] = [
               color="blue.500"
             >
               Deploy
-            </TrackedLink>
+            </TrackedLink>{" "}
             contracts to blockchain.
           </ListItem>
         </UnorderedList>
@@ -203,8 +203,8 @@ export const slides: Slide[] = [
           }}
         >
           Privacy Policy
-        </TrackedLink>
-        and
+        </TrackedLink>{" "}
+        and{" "}
         <TrackedLink
           href="/tos"
           isExternal

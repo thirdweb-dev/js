@@ -113,7 +113,7 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
 
           <p className="text-muted-foreground text-sm">
             Easily integrate Account abstraction (ERC-4337) compliant smart
-            accounts into your apps.
+            accounts into your apps.{" "}
             <TrackedLinkTW
               target="_blank"
               label="docs-wallets"

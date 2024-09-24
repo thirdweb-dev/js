@@ -133,31 +133,31 @@ const Web3SDK: ThirdwebNextPage = () => {
             description={
               <>
                 Interact with your contracts from your app in the programming
-                language that you’re familiar with our
+                language that you’re familiar with our{" "}
                 <Link
                   color="blue.500"
                   href="https://portal.thirdweb.com/typescript/v5/react"
                 >
                   React
                 </Link>
-                ,
+                ,{" "}
                 <Link
                   color="blue.500"
                   href="https://portal.thirdweb.com/react-native/latest"
                 >
                   ReactNative
                 </Link>
-                ,
+                ,{" "}
                 <Link
                   color="blue.500"
                   href="https://portal.thirdweb.com/typescript/latest"
                 >
                   TypeScript
                 </Link>
-                ,
+                ,{" "}
                 <Link color="blue.500" href="https://portal.thirdweb.com/unity">
                   Unity
-                </Link>
+                </Link>{" "}
                 SDKs.
               </>
             }

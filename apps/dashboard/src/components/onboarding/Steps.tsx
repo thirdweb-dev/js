@@ -208,7 +208,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
           <Flex flexDir="column" gap={4}>
             <Text>
               Successful applicants will receive gas grants which can be used
-              across all supported
+              across all supported{" "}
               <Link
                 href="https://blog.thirdweb.com/accelerating-the-superchain-with-optimism"
                 isExternal

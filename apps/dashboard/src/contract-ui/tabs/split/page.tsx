@@ -126,7 +126,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
                   <Text size="body.md">
                     <Text as="span" size="label.md">
                       Your Share:
-                    </Text>
+                    </Text>{" "}
                     {shareOfBalancesForConnectedWallet[ZERO_ADDRESS]}
                   </Text>
                 </StatNumber>
@@ -157,7 +157,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
                         <Text size="body.md">
                           <Text as="span" size="label.md">
                             Your Share:
-                          </Text>
+                          </Text>{" "}
                           {
                             shareOfBalancesForConnectedWallet[
                               balance.token_address
@@ -198,13 +198,13 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
               <Text>
                 <Text as="span" size="label.md">
                   Address:
-                </Text>
+                </Text>{" "}
                 {split.address}
               </Text>
               <Text>
                 <Text as="span" size="label.md">
                   Percentage:
-                </Text>
+                </Text>{" "}
                 {split.splitPercentage}%
               </Text>
             </Card>

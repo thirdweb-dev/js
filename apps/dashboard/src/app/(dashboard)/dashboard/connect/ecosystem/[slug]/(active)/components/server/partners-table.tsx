@@ -129,7 +129,7 @@ function PartnerRow(props: {
             description={
               <span>
                 Their partner key will no longer be able to use your ecosystem
-                wallet. Their users will still have access to their assets at
+                wallet. Their users will still have access to their assets at{" "}
                 <Link
                   href={`https://${props.ecosystem.slug}.ecosystem.thirdweb.com`}
                   target="_blank"

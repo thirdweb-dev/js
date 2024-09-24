@@ -184,7 +184,7 @@ const AccountHeader = (props: ConnectedModalProps) => {
             fontSize: fontSize.sm,
           }}
         >
-          {formatNumber(Number(balanceQuery.data.displayValue), 5)}
+          {formatNumber(Number(balanceQuery.data.displayValue), 5)}{" "}
           {balanceQuery.data?.symbol}
         </ThemedText>
       ) : (

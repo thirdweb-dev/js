@@ -142,7 +142,7 @@ export const ClaimerSelection = () => {
                 <strong>
                   {field.snapshot?.length} address
                   {field.snapshot?.length === 1 ? "" : "es"}
-                </strong>
+                </strong>{" "}
                 in snapshot
               </Text>
             </Flex>

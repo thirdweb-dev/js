@@ -99,7 +99,7 @@ export function SponsoredTxZksyncPreview() {
           {txHash ? (
             <div className="flex flex-col justify-center p-2">
               <p className="mb-2 text-center text-green-500">
-                Minted! Tx Hash:
+                Minted! Tx Hash:{" "}
                 <a
                   href={`${chain.blockExplorers?.[0]?.url}/tx/${txHash}`}
                   target="_blank"

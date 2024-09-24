@@ -55,7 +55,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
 
         <p className="text-muted-foreground text-sm">
           An API key is required to use thirdweb&apos;s services through the SDK
-          and CLI.
+          and CLI.{" "}
           <Link
             target="_blank"
             color="blue.500"

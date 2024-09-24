@@ -805,7 +805,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
                 <p className="mb-3 text-muted-foreground text-sm">
                   Select a network to deploy this contract on. We recommend
-                  starting with a testnet.
+                  starting with a testnet.{" "}
                   <TrackedLinkTW
                     href="/chainlist"
                     category="deploy"
@@ -917,7 +917,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   }
                 />
                 <span>
-                  Import so I can find it in the list of my contracts at
+                  Import so I can find it in the list of my contracts at{" "}
                   <TrackedLinkTW
                     className="text-link-foreground hover:text-foreground"
                     href="/dashboard"

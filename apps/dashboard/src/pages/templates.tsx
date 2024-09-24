@@ -432,7 +432,7 @@ const Templates: ThirdwebNextPage = () => {
             mb={4}
             textAlign="center"
           >
-            Explore
+            Explore{" "}
             <Text
               fontSize={{ base: "64px", md: "64px" }}
               fontWeight={700}

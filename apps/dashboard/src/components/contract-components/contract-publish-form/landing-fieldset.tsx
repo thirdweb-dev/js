@@ -78,7 +78,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
         </Heading>
         <Text fontStyle="normal">
           Publishing your contract makes it shareable, discoverable, and
-          deployable in a single click.
+          deployable in a single click.{" "}
           <Link
             color="blue.500"
             isExternal

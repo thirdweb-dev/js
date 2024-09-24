@@ -186,7 +186,7 @@ const ContractPage: ThirdwebNextPage = () => {
     return (
       <div className="mx-auto max-w-[500px]">
         <Alert variant="warning">
-          You tried to connecting to {isSlugNumber ? "Chain" : "Network"} ID
+          You tried to connecting to {isSlugNumber ? "Chain" : "Network"} ID{" "}
           {`"`}
           {chainSlug}
           {`"`} but it is not configured yet. Please configure it and try again

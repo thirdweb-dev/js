@@ -134,7 +134,7 @@ const ChainValidation: React.FC = () => {
                     {validationReport.chainIdSupported && (
                       <Tr>
                         <Td>
-                          Chain ID
+                          Chain ID{" "}
                           {existingChain?.id ? (
                             <Code mr={1}>{existingChain.id}</Code>
                           ) : (

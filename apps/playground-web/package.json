@@ -9,7 +9,7 @@
     "format": "biome format ./src --write",
     "prelint": "biome check ./src",
     "lint": "eslint ./src",
-    "prefix": "biome check ./src --fix --unsafe",
+    "prefix": "biome check ./src --fix",
     "fix": "eslint ./src --fix"
   },
   "dependencies": {

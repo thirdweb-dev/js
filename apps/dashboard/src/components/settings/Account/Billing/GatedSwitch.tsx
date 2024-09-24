@@ -21,7 +21,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
       label={
         upgradeRequired ? (
           <div className="w-[220px]">
-            To access this feature, you need to upgrade to the
+            To access this feature, you need to upgrade to the{" "}
             <TrackedLinkTW
               target="_blank"
               href="/dashboard/settings/billing"

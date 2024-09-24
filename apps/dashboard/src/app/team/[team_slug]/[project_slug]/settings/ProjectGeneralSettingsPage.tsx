@@ -310,27 +310,27 @@ function AllowedDomainsSetting(props: {
   const helperText = (
     <ul className="flex list-disc flex-col gap-1.5 py-1 pl-3 text-muted-foreground text-sm [&>li]:pl-1">
       <li>
-        Authorize all domains with
+        Authorize all domains with{" "}
         <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
           *
         </span>
-        .
+        {". "}
         <span>
-          Example:
+          Example:{" "}
           <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
             *.thirdweb.com
-          </span>
+          </span>{" "}
           accepts all
           <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
             .thirdweb.com
-          </span>
+          </span>{" "}
           sites
         </span>
       </li>
       <li>
-        Authorize localhost URLs with
+        Authorize localhost URLs with{" "}
         <span className="inline-block rounded bg-muted px-2 font-mono text-xs">
-          localhost:&lt;port&gt;
+          {"localhost:<port>"}
         </span>
       </li>
       <li>Enter domains separated by commas or new lines</li>
@@ -647,7 +647,7 @@ function APIKeyDetails({
         <div>
           <h3>Secret Key</h3>
           <p className="mb-2 text-muted-foreground text-sm">
-            Identifies and authenticates your application from a backend. <br />
+            Identifies and authenticates your application from a backend. <br />{" "}
             This is not the full secret key, Refer to your saved secret key at
             the time of creation for the full secret key.
           </p>

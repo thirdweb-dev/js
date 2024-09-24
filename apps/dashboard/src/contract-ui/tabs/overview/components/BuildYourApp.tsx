@@ -47,7 +47,7 @@ export const BuildYourApp: React.FC<BuildYourAppProps> = ({
               color="blue.500"
             >
               Learn more
-            </LinkOverlay>
+            </LinkOverlay>{" "}
             about how you can use thirdweb tools to build apps on top of this
             contract.
           </Text>

@@ -69,7 +69,7 @@ const Timer: React.FC<TimerProps> = ({ date }) => {
               fontVariantNumeric: "tabular-nums",
             }}
           >
-            {value < 10 ? `0${value}` : value}
+            {value < 10 ? `0${value}` : value}{" "}
           </Text>
           <Text fontWeight={500} fontSize="14px" color="#e984f3" mt={1}>
             {value === 1 ? label : `${label}s`}

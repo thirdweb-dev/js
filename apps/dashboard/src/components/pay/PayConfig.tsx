@@ -118,9 +118,9 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
               Fee Sharing
             </h3>
             <p className="mt-1.5 mb-4 text-foreground text-sm">
-              thirdweb collects a 1% fee per end user transaction through
+              thirdweb collects a 1% fee per end user transaction through{" "}
               <strong>Buy With Crypto</strong>. We share 30% of this fee with
-              you.
+              you.{" "}
               <Link
                 href="https://portal.thirdweb.com/connect/pay/fee-sharing"
                 target="_blank"

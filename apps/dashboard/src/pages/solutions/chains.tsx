@@ -132,7 +132,7 @@ const SolutionsChains: ThirdwebNextPage = () => {
                     id: "chainlist",
                     description: (
                       <Text key="chainlist" size="body.lg" color="#B1B1B1">
-                        Added to
+                        Added to{" "}
                         <TrackedLink
                           href="/chainlist"
                           isExternal

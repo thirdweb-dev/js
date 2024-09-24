@@ -18,7 +18,7 @@ const ValidateChainPage: ThirdwebNextPage = () => {
         <div className="flex flex-col gap-2">
           <Heading as="h1">Validate Chain</Heading>
           <Text>
-            Validate a given chain is compatible with
+            Validate a given chain is compatible with{" "}
             <Link href="/chains" color="blue.500">
               thirdweb
             </Link>

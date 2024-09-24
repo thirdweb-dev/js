@@ -255,10 +255,10 @@ function ModuleRow(props: {
             <DialogHeader>
               <DialogTitle>Uninstall Module</DialogTitle>
               <DialogDescription>
-                Are you sure you want to uninstall
+                Are you sure you want to uninstall{" "}
                 <span className="font-medium text-foreground ">
                   {contractInfo.name}
-                </span>
+                </span>{" "}
                 ?
               </DialogDescription>
             </DialogHeader>

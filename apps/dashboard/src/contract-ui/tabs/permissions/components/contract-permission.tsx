@@ -174,14 +174,14 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               <Text color="primary.800" _dark={{ color: "primary.100" }}>
                 {isRestricted ? (
                   <>
-                    The tokens in this contract are currently
+                    The tokens in this contract are currently{" "}
                     <strong>non-transferable</strong>. Only wallets that you
                     explicitly add to the list below will be able to transfer
                     tokens.
                   </>
                 ) : (
                   <>
-                    Transferring tokens in this contract is currently
+                    Transferring tokens in this contract is currently{" "}
                     <strong>not restricted</strong>. Everyone is free to
                     transfer their tokens.
                   </>

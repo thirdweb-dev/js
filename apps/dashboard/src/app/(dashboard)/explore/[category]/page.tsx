@@ -72,7 +72,7 @@ export default async function ExploreCategoryPage(
           {category.displayName || category.name}
         </h1>
         <p className="max-w-screen-md text-base text-muted-foreground lg:text-lg">
-          {category.description}
+          {category.description}{" "}
           {category.learnMore && (
             <Link href={category.learnMore}>Learn more</Link>
           )}

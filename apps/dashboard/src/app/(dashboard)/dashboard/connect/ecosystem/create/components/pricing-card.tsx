@@ -14,7 +14,7 @@ export function EcosystemWalletPricingCard(props: { className?: string }) {
       <Image src={headerImage} alt="" sizes="50vw" className="w-full" />
       <div className="relative border-border border-t p-4 pb-8 md:p-6 md:pb-8">
         <h4 className="font-bold text-4xl text-foreground">
-          $250
+          $250{" "}
           <span className="font-normal text-lg text-muted-foreground">
             per month
           </span>

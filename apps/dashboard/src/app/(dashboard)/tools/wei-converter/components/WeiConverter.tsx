@@ -75,7 +75,7 @@ export const WeiConverter = () => {
 
       <Card className="flex flex-col gap-2 p-4">
         <p>
-          Or use the
+          Or use the{" "}
           <a
             href="https://portal.thirdweb.com/typescript/v5"
             target="_blank"

@@ -60,7 +60,7 @@ export function FiatFees(props: {
           Amount
         </Text>
         <Text color="primaryText" inline>
-          {formatNumber(Number(props.quote.fromCurrency.amount), 2)}
+          {formatNumber(Number(props.quote.fromCurrency.amount), 2)}{" "}
           {props.quote.fromCurrency.currencySymbol}
         </Text>
       </div>
@@ -83,8 +83,7 @@ export function FiatFees(props: {
             </Text>
 
             <Text color="primaryText" inline>
-              {feeAmount === 0 ? "~" : ""}
-              {feeAmount} {fee.currencySymbol}
+              {feeAmount === 0 ? "~" : ""} {feeAmount} {fee.currencySymbol}
             </Text>
           </div>
         );
@@ -105,7 +104,7 @@ export function FiatFees(props: {
           Total
         </Text>
         <Text color="primaryText" inline>
-          {formatNumber(Number(props.quote.fromCurrencyWithFees.amount), 6)}
+          {formatNumber(Number(props.quote.fromCurrencyWithFees.amount), 6)}{" "}
           {props.quote.fromCurrencyWithFees.currencySymbol}
         </Text>
       </div>

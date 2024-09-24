@@ -13,7 +13,6 @@
         "noDynamicNamespaceImportAccess": "error",
         "noExportedImports": "error",
         "noMissingVarFunction": "error",
-        "useConsistentCurlyBraces": "error",
         "useSortedClasses": "error"
       },
       "correctness": {

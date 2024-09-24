@@ -32,7 +32,7 @@ export const PricePreview: React.FC<PricePreviewProps> = ({
         <Text>Free</Text>
       ) : (
         <Text>
-          {price}
+          {price}{" "}
           {foundCurrency
             ? foundCurrency.symbol
             : isAddressZero(currencyAddress || "")

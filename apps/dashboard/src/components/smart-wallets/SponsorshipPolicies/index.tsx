@@ -179,7 +179,7 @@ export function AccountAbstractionSettingsPage(
       >
         <Flex flexDir="column" gap={2}>
           <Text>
-            Configure the rules and rules for your sponsored transactions.
+            Configure the rules and rules for your sponsored transactions.{" "}
             <TrackedLink
               category={trackingCategory}
               href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules"
@@ -351,7 +351,7 @@ export function AccountAbstractionSettingsPage(
                 </FormLabel>
                 <Text>
                   Only sponsor transactions on the specified chains. By default,
-                  transactions can be sponsored on any of the
+                  transactions can be sponsored on any of the{" "}
                   <TrackedLink
                     color="primary.500"
                     isExternal
@@ -526,7 +526,7 @@ export function AccountAbstractionSettingsPage(
                 <Text>
                   Specify your own endpoint that will verify each transaction
                   and decide whether it should be sponsored or not. This gives
-                  you fine grained control and lets you build your own rules.
+                  you fine grained control and lets you build your own rules.{" "}
                   <TrackedLink
                     category={trackingCategory}
                     href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules#setting-up-a-server-verifier"

@@ -36,7 +36,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
             </Heading>
           </Flex>
           <Text>
-            Upgrade to a
+            Upgrade to a{" "}
             <TrackedLink
               href="/dashboard/engine/create"
               isExternal
@@ -45,7 +45,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
               label="metrics-cloud-hosted-upsell"
             >
               Cloud-Hosted Engine managed by thirdweb
-            </TrackedLink>
+            </TrackedLink>{" "}
             to view these metrics.
           </Text>
         </Stack>
@@ -112,7 +112,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
               <div className="flex-col gap-y-4">
                 <h2 className="font-semibold">Time to send</h2>
                 <p className="text-muted-foreground">
-                  p50 {(msToSend.p50 / 1000).toFixed(2)}s, p90
+                  p50 {(msToSend.p50 / 1000).toFixed(2)}s, p90{" "}
                   {(msToSend.p90 / 1000).toFixed(2)}s
                 </p>
               </div>
@@ -121,7 +121,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
               <div className="flex-col gap-y-4">
                 <h2 className="font-semibold">Time to mine</h2>
                 <p className="text-muted-foreground">
-                  p50 {(msToMine.p50 / 1000).toFixed(2)}s, p90
+                  p50 {(msToMine.p50 / 1000).toFixed(2)}s, p90{" "}
                   {(msToMine.p90 / 1000).toFixed(2)}s
                 </p>
               </div>

@@ -168,7 +168,8 @@ function Filters(props: { range: Range; setRange: (range: Range) => void }) {
 
           {range.type === "custom" && (
             <SelectItem value="custom">
-              {format(range.from, "LLL dd, y")} -{format(range.to, "LLL dd, y")}
+              {format(range.from, "LLL dd, y")} -{" "}
+              {format(range.to, "LLL dd, y")}
             </SelectItem>
           )}
         </SelectContent>

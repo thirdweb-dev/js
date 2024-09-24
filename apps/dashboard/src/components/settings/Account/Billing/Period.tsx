@@ -44,12 +44,12 @@ export const BillingPeriod: React.FC<BillingPeriodProps> = ({
           {format(
             new Date(account.currentBillingPeriodStartsAt as string),
             "MMM dd",
-          )}
+          )}{" "}
           -
           {format(
             new Date(account.currentBillingPeriodEndsAt as string),
             "MMM dd",
-          )}
+          )}{" "}
         </Text>
       </Text>
 

@@ -108,19 +108,19 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
         proposal.votes.abstain > 0n) && (
         <>
           <Text mt="16px">
-            <strong>For:</strong>
+            <strong>For:</strong>{" "}
             {decimalQuery.isPending
               ? "Loading..."
               : toTokens(proposal.votes.for, decimalQuery.data || 18)}
           </Text>
           <Text>
-            <strong>Against:</strong>
+            <strong>Against:</strong>{" "}
             {decimalQuery.isPending
               ? "Loading..."
               : toTokens(proposal.votes.against, decimalQuery.data || 18)}
           </Text>
           <Text>
-            <strong>Abstained:</strong>
+            <strong>Abstained:</strong>{" "}
             {decimalQuery.isPending
               ? "Loading..."
               : toTokens(proposal.votes.abstain, decimalQuery.data || 18)}

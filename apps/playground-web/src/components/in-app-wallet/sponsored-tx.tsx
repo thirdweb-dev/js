@@ -66,7 +66,7 @@ export function SponsoredInAppTxPreview() {
           {smartAccount ? (
             <>
               <p className="mb-2 text-center font-semibold">
-                You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}
+                You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
                 Kittens
               </p>
               <div className="flex justify-center">

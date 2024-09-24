@@ -55,7 +55,7 @@ export function WriteContractRawPreview() {
               <div>
                 <span className="text-green-600">
                   {balance ? toTokens(balance, 18) : "0.0"}
-                </span>
+                </span>{" "}
                 TWCOIN
               </div>
             </div>
@@ -129,7 +129,7 @@ export function WriteContractRawPreview() {
               href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
               className="mt-3 text-center text-green-400"
             >
-              Tx sent:
+              Tx sent:{" "}
               <span className="underline">{shortenAddress(txHash, 6)}</span>
             </a>
           )}

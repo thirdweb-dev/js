@@ -24,7 +24,7 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
       <Flex flexDir="column" gap={2}>
         <Heading size="title.md">Backend Wallets</Heading>
         <Text>
-          Select the type of backend wallets to use.
+          Select the type of backend wallets to use.{" "}
           <Link
             href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
             color="primary.500"

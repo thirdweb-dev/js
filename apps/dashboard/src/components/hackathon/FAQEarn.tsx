@@ -7,13 +7,13 @@ const faqs = [
     title: "How do we integrate the Earn Alliance task system?",
     description: (
       <Text fontSize="16px" color="#fff">
-        Check out the docs, and email
+        Check out the docs, and email{" "}
         <Link
           href="mailto:hackathon@earnalliance.com"
           style={{ color: "lightblue", textDecoration: "underline" }}
         >
           hackathon@earnalliance.com
-        </Link>
+        </Link>{" "}
         to access the test dashboard for Earn Alliance challenges and the event
         system.
       </Text>

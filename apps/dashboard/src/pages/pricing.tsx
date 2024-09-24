@@ -342,7 +342,7 @@ const EnginePricing = ({ isMobile }: { isMobile: boolean }) => {
   return (
     <Flex flexDir="column" gap={4}>
       <Text>
-        Host Engine on thirdweb with no setup or maintenance required.
+        Host Engine on thirdweb with no setup or maintenance required.{" "}
         <TrackedLink
           href="https://portal.thirdweb.com/engine"
           isExternal

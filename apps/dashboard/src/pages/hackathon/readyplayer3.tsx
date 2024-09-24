@@ -425,7 +425,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
                       CoinDesk
                     </ListItem>
                     <ListItem>
-                      Top 3 teams receive a complimentary 1-Year Subscription to
+                      Top 3 teams receive a complimentary 1-Year Subscription to{" "}
                       <Link
                         href="https://www.scenario.gg/"
                         isExternal

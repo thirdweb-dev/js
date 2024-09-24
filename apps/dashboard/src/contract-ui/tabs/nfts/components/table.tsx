@@ -336,7 +336,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
             onClick={() => previousPage()}
           />
           <Text whiteSpace="nowrap">
-            Page <strong>{pageIndex + 1}</strong> of
+            Page <strong>{pageIndex + 1}</strong> of{" "}
             <Skeleton as="span" display="inline" isLoaded={querySuccess}>
               <strong>{pageCount}</strong>
             </Skeleton>

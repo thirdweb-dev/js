@@ -646,7 +646,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                 </Flex>
                 <AlertDescription>
                   The recommended way to use account factories is to integrate
-                  the
+                  the{" "}
                   <TrackedLink
                     isExternal
                     href="https://portal.thirdweb.com/connect/account-abstraction/overview"
@@ -655,7 +655,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                     color="primary.500"
                   >
                     Connect SDK
-                  </TrackedLink>
+                  </TrackedLink>{" "}
                   in your applications. This will ensure account contracts are
                   deployed for your users only when they need it.
                 </AlertDescription>
@@ -714,8 +714,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                   category="code-tab"
                   label={environment}
                 >
-                  Learn how in the
-                  {environment === "react-native" ? "React Native" : "Unity"}
+                  Learn how in the{" "}
+                  {environment === "react-native" ? "React Native" : "Unity"}{" "}
                   documentation
                 </TrackedLink>
                 .
@@ -749,7 +749,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             <Text>
               You will need to pass a client ID/secret key to use
               thirdweb&apos;s infrastructure services. If you don&apos;t have
-              any API keys yet you can create one for free from the
+              any API keys yet you can create one for free from the{" "}
               <Link href="/dashboard/settings/api-keys" color="primary.500">
                 dashboard settings
               </Link>

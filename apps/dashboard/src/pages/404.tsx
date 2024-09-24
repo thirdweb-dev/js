@@ -64,7 +64,7 @@ const PageNotFound: ThirdwebNextPage = () => {
           can&apos;t be found here.
         </Heading>
         <Text size="body.2xl" textAlign="center" mt={3}>
-          Try our
+          Try our{" "}
           <TrackedLink
             category="page-not-found"
             label="homepage"
@@ -73,7 +73,7 @@ const PageNotFound: ThirdwebNextPage = () => {
           >
             homepage
           </TrackedLink>
-          ,
+          ,{" "}
           <TrackedLink
             category="page-not-found"
             label="homepage"
@@ -81,8 +81,8 @@ const PageNotFound: ThirdwebNextPage = () => {
             color="blue.500"
           >
             dashboard
-          </TrackedLink>
-          or
+          </TrackedLink>{" "}
+          or{" "}
           <TrackedLink
             category="page-not-found"
             label="portal"
@@ -90,7 +90,7 @@ const PageNotFound: ThirdwebNextPage = () => {
             color="blue.500"
           >
             developer portal
-          </TrackedLink>
+          </TrackedLink>{" "}
           instead.
         </Text>
       </HomepageSection>

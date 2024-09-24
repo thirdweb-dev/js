@@ -15,7 +15,7 @@ export const ListLabel: React.FC<ListLabelProps> = ({ nft }) => {
           <strong>Name:</strong> {nft.metadata?.name || "N/A"}
         </ListItem>
         <ListItem>
-          <strong>Contract Address:</strong>
+          <strong>Contract Address:</strong>{" "}
           {shortenIfAddress(nft.contractAddress)}
         </ListItem>
         <ListItem>

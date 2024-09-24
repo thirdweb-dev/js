@@ -13,7 +13,7 @@ export default async function Layout(props: {
           <p className="text-muted-foreground leading-7">
             Pay allows your users to purchase cryptocurrencies and execute
             transactions with their credit card or debit card, or with any token
-            via cross-chain routing.
+            via cross-chain routing.{" "}
             <Link
               target="_blank"
               href="https://portal.thirdweb.com/connect/pay/overview"

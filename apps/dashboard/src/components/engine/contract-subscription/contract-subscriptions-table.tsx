@@ -413,7 +413,7 @@ const RemoveModal = ({
                 <FormLabel>Filters</FormLabel>
                 {contractSubscription.processEventLogs && (
                   <Text>
-                    Logs:
+                    Logs:{" "}
                     {contractSubscription.filterEvents.length === 0
                       ? "All"
                       : contractSubscription.filterEvents.join(", ")}
@@ -421,7 +421,7 @@ const RemoveModal = ({
                 )}
                 {contractSubscription.processTransactionReceipts && (
                   <Text>
-                    Receipts:
+                    Receipts:{" "}
                     {contractSubscription.filterFunctions.length === 0
                       ? "All"
                       : contractSubscription.filterFunctions.join(", ")}

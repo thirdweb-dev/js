@@ -250,7 +250,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                     <ListItem>
                       Files <em>must</em> contain one .csv file with an address
                       and quantity column, if the quantity column is not
-                      provided, it will default to 1 NFT per wallet. -
+                      provided, it will default to 1 NFT per wallet. -{" "}
                       <Link download color="primary.500" href="/airdrop.csv">
                         Download an example CSV
                       </Link>
@@ -462,7 +462,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
               onClick={() => previousPage()}
             />
             <Text whiteSpace="nowrap">
-              Page <strong>{pageIndex + 1}</strong> of
+              Page <strong>{pageIndex + 1}</strong> of{" "}
               <strong>{pageOptions.length}</strong>
             </Text>
             <IconButton

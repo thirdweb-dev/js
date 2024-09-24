@@ -85,7 +85,7 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
             </FormControl>
           </Stack>
           <Text>
-            Burning these
+            Burning these{" "}
             {`${Number.parseInt(form.watch("amount")) > 1 ? form.watch("amount") : ""} `}
             tokens will remove them from the total circulating supply. This
             action is irreversible.

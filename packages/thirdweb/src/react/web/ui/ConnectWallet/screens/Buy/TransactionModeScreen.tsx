@@ -140,7 +140,7 @@ export function TransactionModeScreen(props: {
                     ),
                     6,
                   ),
-                )}
+                )}{" "}
                 {transactionCostAndData.token.symbol}
               </Text>
             </Container>

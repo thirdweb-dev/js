@@ -31,7 +31,7 @@ export default async function Page(props: {
       <p className="mt-3 mb-7 max-w-[700px] text-muted-foreground">
         A wallet infrastructure that enables apps to create, manage, and control
         their users wallets. Email login, social login, and bring-your-own auth
-        supported.
+        supported.{" "}
         <TrackedLinkTW
           target="_blank"
           href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
