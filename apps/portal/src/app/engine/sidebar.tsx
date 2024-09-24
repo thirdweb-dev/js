@@ -69,6 +69,10 @@ export const sidebar: SideBar = {
           href: `${engineSlug}/features/contract-subscriptions`,
         },
         {
+          name: "Alert Notifications",
+          href: `${engineSlug}/features/alert-notifications`,
+        },
+        {
           name: "Security",
           href: `${engineSlug}/features/security`,
         },
