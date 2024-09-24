@@ -8,7 +8,7 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../../core/design-system/index.js";
 import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
-import { useAdminWallet } from "../../../../core/hooks/wallets/useAdminAccount.js";
+import { useAdminWallet } from "../../../../core/hooks/wallets/useAdminWallet.js";
 import EcosystemWalletConnectUI from "../../../wallets/ecosystem/EcosystemWalletConnectUI.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";

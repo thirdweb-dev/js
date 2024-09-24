@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { type Wallet, linkProfile } from "../../../../exports/wallets.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
+import { linkProfile } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import { hasStoredPasskey } from "../../../../wallets/in-app/web/lib/auth/passkeys.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { FingerPrintIcon } from "../../ui/ConnectWallet/icons/FingerPrintIcon.js";
@@ -141,7 +142,8 @@ function LoginScreen(props: {
     setStatus("loading");
     try {
       if (props.isLinking) {
-        await linkProfile(wallet as Wallet<"inApp">, {
+        await linkProfile({
+          client,
           strategy: "passkey",
           type: "sign-in",
         }).catch((e) => {
@@ -214,7 +216,8 @@ function SignupScreen(props: {
     setStatus("loading");
     try {
       if (props.isLinking) {
-        await linkProfile(wallet as Wallet<"inApp">, {
+        await linkProfile({
+          client,
           strategy: "passkey",
           type: "sign-up",
         });

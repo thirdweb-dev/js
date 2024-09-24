@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "../client/client.js";
 import { version } from "../version.js";
-import type { Ecosystem } from "../wallets/in-app/web/types.js";
+import type { Ecosystem } from "../wallets/in-app/core/wallet/types.js";
 import { LruMap } from "./caching/lru.js";
 import {
   type OperatingSystem,

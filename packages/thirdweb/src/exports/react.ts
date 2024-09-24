@@ -40,7 +40,7 @@ export type { MediaRendererProps } from "../react/web/ui/MediaRenderer/types.js"
 
 // wallet hooks
 export { useActiveWallet } from "../react/core/hooks/wallets/useActiveWallet.js";
-export { useAdminWallet } from "../react/core/hooks/wallets/useAdminAccount.js";
+export { useAdminWallet } from "../react/core/hooks/wallets/useAdminWallet.js";
 export { useActiveWalletChain } from "../react/core/hooks/wallets/useActiveWalletChain.js";
 export { useActiveWalletConnectionStatus } from "../react/core/hooks/wallets/useActiveWalletConnectionStatus.js";
 export { useActiveAccount } from "../react/core/hooks/wallets/useActiveAccount.js";
@@ -56,7 +56,7 @@ export { useSendCalls } from "../react/core/hooks/wallets/useSendCalls.js";
 export { useSwitchActiveWalletChain } from "../react/core/hooks/wallets/useSwitchActiveWalletChain.js";
 export { useCallsStatus } from "../react/core/hooks/wallets/useCallsStatus.js";
 export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
-export { useProfiles } from "../react/core/hooks/others/useProfiles.js";
+export { useProfiles } from "../react/web/hooks/wallets/useProfiles.js";
 
 // chain hooks
 export { useChainMetadata } from "../react/core/hooks/others/useChainQuery.js";

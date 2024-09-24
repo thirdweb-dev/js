@@ -6,11 +6,17 @@ import type {
   OAuthOption,
   SocialAuthOption,
 } from "../../../types.js";
+import type { EcosystemWalletId } from "../../../wallet-types.js";
 import type {
   AuthStoredTokenWithCookieReturnType,
   MultiStepAuthArgsType,
   SingleStepAuthArgsType,
 } from "../authentication/types.js";
+
+export type Ecosystem = {
+  id: EcosystemWalletId;
+  partnerId?: string;
+};
 
 export type InAppWalletConnectionOptions = (
   | MultiStepAuthArgsType

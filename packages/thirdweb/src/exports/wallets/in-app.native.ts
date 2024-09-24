@@ -7,6 +7,8 @@ export {
   authenticate,
   getUserEmail,
   getUserPhoneNumber,
+  getProfiles,
+  linkProfile,
 } from "../../wallets/in-app/native/auth/index.js";
 
 export { type GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/types.js";

@@ -3,7 +3,7 @@ import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import type { OAuthOption } from "../../../../../wallets/types.js";
 import { getLoginUrl } from "../../../core/authentication/getLoginPath.js";
 import type { AuthStoredTokenWithCookieReturnType } from "../../../core/authentication/types.js";
-import type { Ecosystem } from "../../types.js";
+import type { Ecosystem } from "../../../core/wallet/types.js";
 import { DEFAULT_POP_UP_SIZE } from "./constants.js";
 
 const closeWindow = ({

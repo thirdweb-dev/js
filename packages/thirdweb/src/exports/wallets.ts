@@ -98,9 +98,14 @@ export type {
 } from "../wallets/in-app/core/wallet/types.js";
 
 export {
+  preAuthenticate,
+  authenticate,
+  authenticateWithRedirect,
+  getUserEmail,
+  getUserPhoneNumber,
   getProfiles,
   linkProfile,
-} from "../wallets/in-app/core/wallet/profiles.js";
+} from "../wallets/in-app/web/lib/auth/index.js";
 
 export {
   getUser,

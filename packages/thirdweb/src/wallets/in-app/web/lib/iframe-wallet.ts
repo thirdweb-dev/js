@@ -8,22 +8,21 @@ import { getAddress } from "../../../../utils/address.js";
 import { getThirdwebDomains } from "../../../../utils/domains.js";
 import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
-import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type {
   Account,
   SendTransactionOption,
 } from "../../../interfaces/wallet.js";
-import { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
+import type { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
 import {
   type GetUser,
   type GetUserWalletStatusRpcReturnType,
   UserWalletStatus,
   type WalletAddressObjectType,
 } from "../../core/authentication/types.js";
+import type { Ecosystem } from "../../core/wallet/types.js";
 import type {
   ClientIdWithQuerierType,
-  Ecosystem,
   GetAddressReturnType,
   SignMessageReturnType,
   SignTransactionReturnType,
@@ -86,20 +85,17 @@ export class IFrameWallet implements IWebWallet {
     client,
     ecosystem,
     querier,
+    localStorage,
   }: Prettify<
     ClientIdWithQuerierType & {
       ecosystem?: Ecosystem;
+      localStorage: ClientScopedStorage;
     }
   >) {
     this.client = client;
     this.ecosystem = ecosystem;
     this.walletManagerQuerier = querier;
-
-    this.localStorage = new ClientScopedStorage({
-      storage: webLocalStorage,
-      clientId: client.clientId,
-      ecosystemId: ecosystem?.id,
-    });
+    this.localStorage = localStorage;
   }
 
   /**

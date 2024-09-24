@@ -1,7 +1,8 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
-import type { Ecosystem } from "../../web/types.js";
+import type { Ecosystem } from "../wallet/types.js";
+import type { ClientScopedStorage } from "./client-scoped-storage.js";
 import type { Profile } from "./types.js";
 
 /**
@@ -15,16 +16,16 @@ export async function linkAccount({
   client,
   ecosystem,
   tokenToLink,
+  storage,
 }: {
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
   tokenToLink: string;
+  storage: ClientScopedStorage;
 }): Promise<Profile[]> {
   const clientFetch = getClientFetch(client, ecosystem);
   const IN_APP_URL = getThirdwebBaseUrl("inAppWallet");
-  const currentAccountToken = localStorage.getItem(
-    `walletToken-${client.clientId}${ecosystem?.id ? `-${ecosystem.id}` : ""}`,
-  );
+  const currentAccountToken = await storage.getAuthCookie();
 
   if (!currentAccountToken) {
     throw new Error("Failed to link account, no user logged in");
@@ -65,20 +66,23 @@ export async function linkAccount({
 export async function getLinkedProfilesInternal({
   client,
   ecosystem,
-}: { client: ThirdwebClient; ecosystem?: Ecosystem }): Promise<Profile[]> {
+  storage,
+}: {
+  client: ThirdwebClient;
+  ecosystem?: Ecosystem;
+  storage: ClientScopedStorage;
+}): Promise<Profile[]> {
   const clientFetch = getClientFetch(client, ecosystem);
   const IN_APP_URL = getThirdwebBaseUrl("inAppWallet");
-  const currentAccountToken = localStorage.getItem(
-    `walletToken-${client.clientId}${ecosystem?.id ? `-${ecosystem.id}` : ""}`,
-  );
+  const currentAccountToken = await storage.getAuthCookie();
+  if (!currentAccountToken) {
+    throw new Error("Failed to get linked accounts, no user logged in");
+  }
 
   const headers: Record<string, string> = {
     Authorization: `Bearer iaw-auth-token:${currentAccountToken}`,
     "Content-Type": "application/json",
   };
-  if (!currentAccountToken) {
-    throw new Error("Failed to get linked accounts, no user logged in");
-  }
 
   const linkedAccountsResp = await clientFetch(
     `${IN_APP_URL}/api/2024-05-05/accounts`,

@@ -1,6 +1,5 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { webLocalStorage } from "../../../../../utils/storage/webStorage.js";
-import { ClientScopedStorage } from "../../../core/authentication/client-scoped-storage.js";
+import type { ClientScopedStorage } from "../../../core/authentication/client-scoped-storage.js";
 import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
@@ -8,7 +7,8 @@ import type {
   LogoutReturnType,
   SendEmailOtpReturnType,
 } from "../../../core/authentication/types.js";
-import type { ClientIdWithQuerierType, Ecosystem } from "../../types.js";
+import type { Ecosystem } from "../../../core/wallet/types.js";
+import type { ClientIdWithQuerierType } from "../../types.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { generateWallet } from "../actions/generate-wallet.enclave.js";
 import { getUserStatus } from "../actions/get-enclave-user-status.js";
@@ -56,22 +56,20 @@ export class Auth {
     onAuthSuccess,
     ecosystem,
     baseUrl,
+    localStorage,
   }: ClientIdWithQuerierType & {
     baseUrl: string;
     ecosystem?: Ecosystem;
     onAuthSuccess: (
       authDetails: AuthAndWalletRpcReturnType,
     ) => Promise<AuthLoginReturnType>;
+    localStorage: ClientScopedStorage;
   }) {
     this.client = client;
     this.ecosystem = ecosystem;
 
     this.AuthQuerier = querier;
-    this.localStorage = new ClientScopedStorage({
-      storage: webLocalStorage,
-      clientId: client.clientId,
-      ecosystemId: ecosystem?.id,
-    });
+    this.localStorage = localStorage;
     this.onAuthSuccess = onAuthSuccess;
     this.BaseLogin = new BaseLogin({
       postLogin: async (result) => {

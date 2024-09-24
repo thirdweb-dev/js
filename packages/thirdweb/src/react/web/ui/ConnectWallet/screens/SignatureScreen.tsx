@@ -13,7 +13,7 @@ import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
-import { useAdminWallet } from "../../../../core/hooks/wallets/useAdminAccount.js";
+import { useAdminWallet } from "../../../../core/hooks/wallets/useAdminWallet.js";
 import { useDisconnect } from "../../../../core/hooks/wallets/useDisconnect.js";
 import { wait } from "../../../../core/utils/wait.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";

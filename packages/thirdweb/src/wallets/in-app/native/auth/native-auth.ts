@@ -11,8 +11,8 @@ import type {
   MultiStepAuthArgsType,
   OAuthRedirectObject,
 } from "../../core/authentication/types.js";
+import type { Ecosystem } from "../../core/wallet/types.js";
 import { verifyOtp } from "../../web/lib/auth/otp.js";
-import type { Ecosystem } from "../../web/types.js";
 import {
   deleteAccount,
   getSessionHeaders,

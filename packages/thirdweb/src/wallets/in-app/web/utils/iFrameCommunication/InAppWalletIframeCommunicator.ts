@@ -1,7 +1,7 @@
 import { webLocalStorage } from "../../../../../utils/storage/webStorage.js";
 import { ClientScopedStorage } from "../../../core/authentication/client-scoped-storage.js";
 import { IN_APP_WALLET_PATH } from "../../../core/constants/settings.js";
-import type { Ecosystem } from "../../types.js";
+import type { Ecosystem } from "../../../core/wallet/types.js";
 import { IframeCommunicator } from "./IframeCommunicator.js";
 
 /**

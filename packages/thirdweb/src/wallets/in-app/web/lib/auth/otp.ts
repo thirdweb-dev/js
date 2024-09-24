@@ -8,7 +8,7 @@ import type {
   MultiStepAuthArgsType,
   PreAuthArgsType,
 } from "../../../core/authentication/types.js";
-import type { Ecosystem } from "../../types.js";
+import type { Ecosystem } from "../../../core/wallet/types.js";
 
 /**
  * @internal

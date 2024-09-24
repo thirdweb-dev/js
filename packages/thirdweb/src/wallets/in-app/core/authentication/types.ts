@@ -4,7 +4,7 @@ import type { Address } from "../../../../utils/address.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import type { Wallet } from "../../../interfaces/wallet.js";
 import type { AuthOption, OAuthOption } from "../../../types.js";
-import type { Ecosystem } from "../../web/types.js";
+import type { Ecosystem } from "../wallet/types.js";
 
 export type MultiStepAuthProviderType =
   | {
@@ -24,14 +24,16 @@ export type MultiStepAuthArgsType = MultiStepAuthProviderType & {
   verificationCode: string;
 };
 
+export type SocialAuthArgsType = {
+  strategy: OAuthOption;
+  openedWindow?: Window;
+  closeOpenedWindow?: (window: Window) => void;
+  redirectUrl?: string;
+  mode?: "redirect" | "popup" | "window";
+};
+
 export type SingleStepAuthArgsType =
-  | {
-      strategy: OAuthOption;
-      openedWindow?: Window;
-      closeOpenedWindow?: (window: Window) => void;
-      redirectUrl?: string;
-      mode?: "redirect" | "popup" | "window";
-    }
+  | SocialAuthArgsType
   | { strategy: "jwt"; jwt: string; encryptionKey: string }
   | { strategy: "auth_endpoint"; payload: string; encryptionKey: string }
   | { strategy: "iframe_email_verification"; email: string }

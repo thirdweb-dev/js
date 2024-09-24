@@ -8,18 +8,9 @@ import type {
   CreateWalletArgs,
   EcosystemWalletId,
 } from "../../../wallet-types.js";
-import type { Ecosystem } from "../../web/types.js";
-import {
-  getLinkedProfilesInternal,
-  linkAccount as linkProfileWithToken,
-} from "../authentication/linkAccount.js";
-import type {
-  MultiStepAuthArgsType,
-  Profile,
-  SingleStepAuthArgsType,
-} from "../authentication/types.js";
 import type { InAppConnector } from "../interfaces/connector.js";
 import { getOrCreateInAppWalletConnector } from "./in-app-core.js";
+import type { Ecosystem } from "./types.js";
 
 /**
  * @internal
@@ -52,13 +43,6 @@ export function createEcosystemWallet(args: {
       return chain;
     },
     getConfig: () => createOptions,
-    getProfiles: async () => {
-      if (!client) {
-        return [];
-      }
-
-      return getLinkedProfilesInternal({ client, ecosystem });
-    },
     getAccount: () => account,
     autoConnect: async (options) => {
       const { autoConnectInAppWallet } = await import("./index.js");
@@ -132,29 +116,6 @@ export function createEcosystemWallet(args: {
     switchChain: async (newChain) => {
       chain = newChain;
       emitter.emit("chainChanged", newChain);
-    },
-    // This is not included on the global interface but is force-resolved in linkProfile
-    linkProfile: async (
-      options: SingleStepAuthArgsType | MultiStepAuthArgsType,
-    ): Promise<Profile[]> => {
-      if (!client) {
-        throw new Error(
-          "No client found, please connect the wallet before linking a profile",
-        );
-      }
-
-      const connector = await getOrCreateInAppWalletConnector(
-        client,
-        connectorFactory,
-        ecosystem,
-      );
-
-      const { storedToken } = await connector.authenticate(options);
-      return await linkProfileWithToken({
-        client,
-        ecosystem,
-        tokenToLink: storedToken.cookieString,
-      });
     },
   } as Wallet<EcosystemWalletId>;
 }

@@ -8,7 +8,7 @@ import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { getEcosystemWalletAuthOptions } from "../../../../wallets/ecosystem/get-ecosystem-wallet-auth-options.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Profile } from "../../../../wallets/in-app/core/authentication/types.js";
-import { linkProfile } from "../../../../wallets/in-app/core/wallet/profiles.js";
+import { linkProfile } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import { loginWithOauthRedirect } from "../../../../wallets/in-app/web/lib/auth/oauth.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
@@ -269,7 +269,7 @@ export const ConnectWalletSocialOptions = (
           if (wallet.id !== "inApp" && !isEcosystemWallet(wallet)) {
             throw new Error("Only in-app wallets support multi-auth");
           }
-          return linkProfile(wallet, connectOptions);
+          return linkProfile(connectOptions);
         }
 
         const connectPromise = wallet.connect(connectOptions);

@@ -3,13 +3,19 @@ import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { SocialAuthOption } from "../../../../wallets/types.js";
 import type { Account } from "../../../interfaces/wallet.js";
+import { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
 import { guestAuthenticate } from "../../core/authentication/guest.js";
+import {
+  getLinkedProfilesInternal,
+  linkAccount,
+} from "../../core/authentication/linkAccount.js";
 import {
   loginWithPasskey,
   registerPasskey,
 } from "../../core/authentication/passkeys.js";
 import { siweAuthenticate } from "../../core/authentication/siwe.js";
 import {
+  type AuthArgsType,
   type AuthLoginReturnType,
   type AuthStoredTokenWithCookieReturnType,
   type GetUser,
@@ -20,8 +26,9 @@ import {
   UserWalletStatus,
 } from "../../core/authentication/types.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
+import type { Ecosystem } from "../../core/wallet/types.js";
 import { getUserStatus } from "../lib/actions/get-enclave-user-status.js";
-import type { Ecosystem, InAppWalletConstructorType } from "../types.js";
+import type { InAppWalletConstructorType } from "../types.js";
 import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { Auth, type AuthQuerierTypes } from "./auth/iframe-auth.js";
 import { loginWithOauth, loginWithOauthRedirect } from "./auth/oauth.js";
@@ -34,9 +41,10 @@ import { IFrameWallet } from "./iframe-wallet.js";
  * @internal
  */
 export class InAppWebConnector implements InAppConnector {
-  protected client: ThirdwebClient;
-  protected ecosystem?: Ecosystem;
-  protected querier: InAppWalletIframeCommunicator<AuthQuerierTypes>;
+  private client: ThirdwebClient;
+  private ecosystem?: Ecosystem;
+  private querier: InAppWalletIframeCommunicator<AuthQuerierTypes>;
+  private localStorage: ClientScopedStorage;
 
   private wallet?: EnclaveWallet | IFrameWallet;
   /**
@@ -72,6 +80,11 @@ export class InAppWebConnector implements InAppConnector {
     this.client = client;
     this.ecosystem = ecosystem;
     this.passkeyDomain = passkeyDomain;
+    this.localStorage = new ClientScopedStorage({
+      storage: webLocalStorage,
+      clientId: client.clientId,
+      ecosystemId: ecosystem?.id,
+    });
     this.querier = new InAppWalletIframeCommunicator({
       clientId: client.clientId,
       ecosystem,
@@ -82,6 +95,7 @@ export class InAppWebConnector implements InAppConnector {
       client,
       querier: this.querier,
       baseUrl,
+      localStorage: this.localStorage,
       ecosystem,
       onAuthSuccess: async (authResult) => {
         onAuthSuccess?.(authResult);
@@ -171,6 +185,7 @@ export class InAppWebConnector implements InAppConnector {
         client: this.client,
         ecosystem: this.ecosystem,
         address: user.wallets[0].address,
+        storage: this.localStorage,
       });
       return;
     }
@@ -179,6 +194,7 @@ export class InAppWebConnector implements InAppConnector {
       client: this.client,
       ecosystem: this.ecosystem,
       querier: this.querier,
+      localStorage: this.localStorage,
     });
   }
 
@@ -416,6 +432,23 @@ export class InAppWebConnector implements InAppConnector {
         id: this.passkeyDomain ?? window.location.hostname,
         name: this.passkeyDomain ?? window.document.title,
       },
+    });
+  }
+
+  async linkProfile(args: AuthArgsType) {
+    const { storedToken } = await this.authenticate(args);
+    return await linkAccount({
+      client: args.client,
+      tokenToLink: storedToken.cookieString,
+      storage: this.localStorage,
+    });
+  }
+
+  async getProfiles() {
+    return getLinkedProfilesInternal({
+      client: this.client,
+      ecosystem: this.ecosystem,
+      storage: this.localStorage,
     });
   }
 }

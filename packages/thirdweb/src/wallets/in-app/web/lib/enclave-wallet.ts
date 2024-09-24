@@ -6,20 +6,19 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import { getAddress } from "../../../../utils/address.js";
 import { type Hex, toHex } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
-import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type {
   Account,
   SendTransactionOption,
 } from "../../../interfaces/wallet.js";
-import { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
+import type { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
 import {
   type GetUser,
   RecoveryShareManagement,
   UserWalletStatus,
   type WalletAddressObjectType,
 } from "../../core/authentication/types.js";
-import type { Ecosystem } from "../types.js";
+import type { Ecosystem } from "../../core/wallet/types.js";
 import { getUserStatus } from "./actions/get-enclave-user-status.js";
 import { signMessage as signEnclaveMessage } from "./actions/sign-message.enclave.js";
 import { signTransaction as signEnclaveTransaction } from "./actions/sign-transaction.enclave.js";
@@ -48,29 +47,26 @@ export type UserStatus = {
 };
 
 export class EnclaveWallet implements IWebWallet {
-  public client: ThirdwebClient;
-  public ecosystem?: Ecosystem;
-  public address: string;
-  protected localStorage: ClientScopedStorage;
+  private client: ThirdwebClient;
+  private ecosystem?: Ecosystem;
+  private address: string;
+  private localStorage: ClientScopedStorage;
 
   constructor({
     client,
     ecosystem,
     address,
+    storage,
   }: Prettify<{
     client: ThirdwebClient;
     ecosystem?: Ecosystem;
     address: string;
+    storage: ClientScopedStorage;
   }>) {
     this.client = client;
     this.ecosystem = ecosystem;
     this.address = address;
-
-    this.localStorage = new ClientScopedStorage({
-      storage: webLocalStorage,
-      clientId: client.clientId,
-      ecosystemId: ecosystem?.id,
-    });
+    this.localStorage = storage;
   }
 
   /**

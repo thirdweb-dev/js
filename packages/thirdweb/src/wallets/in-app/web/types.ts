@@ -2,14 +2,9 @@
 // types for class constructors still a little messy right now.
 
 import type { ThirdwebClient } from "../../../client/client.js";
-import type { EcosystemWalletId } from "../../wallet-types.js";
 import type { AuthAndWalletRpcReturnType } from "../core/authentication/types.js";
+import type { Ecosystem } from "../core/wallet/types.js";
 import type { InAppWalletIframeCommunicator } from "./utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
-
-export type Ecosystem = {
-  id: EcosystemWalletId;
-  partnerId?: string;
-};
 
 // Open to PRs from whoever sees this and knows of a cleaner way to handle things
 type ClientIdConstructorType = {

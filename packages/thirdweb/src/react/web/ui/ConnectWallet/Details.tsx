@@ -19,7 +19,7 @@ import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deplo
 import { formatNumber } from "../../../../utils/formatNumber.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
-import type { Ecosystem } from "../../../../wallets/in-app/web/types.js";
+import type { Ecosystem } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import {
@@ -58,7 +58,7 @@ import {
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
-import { useAdminWallet } from "../../../core/hooks/wallets/useAdminAccount.js";
+import { useAdminWallet } from "../../../core/hooks/wallets/useAdminWallet.js";
 import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
 import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/useSwitchActiveWalletChain.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
