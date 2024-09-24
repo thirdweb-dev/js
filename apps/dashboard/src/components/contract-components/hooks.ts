@@ -7,7 +7,6 @@ import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { type ThirdwebContract, getContract } from "thirdweb";
 import {
-  getBytecode,
   resolveContractAbi,
   fetchDeployMetadata as sdkFetchDeployMetadata,
 } from "thirdweb/contract";
@@ -16,7 +15,11 @@ import {
   getContractPublisher,
   getPublishedUriFromCompilerUri,
 } from "thirdweb/extensions/thirdweb";
-import { extractIPFSUri, isAddress } from "thirdweb/utils";
+import {
+  extractIPFSUri,
+  isAddress,
+  resolveImplementation,
+} from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import {
   type PublishedContractWithVersion,
@@ -111,7 +114,7 @@ export function usePublishedContractsFromDeploy(contract: ThirdwebContract) {
       contract.address,
     ],
     queryFn: async () => {
-      const bytecode = await getBytecode(contract);
+      const { bytecode } = await resolveImplementation(contract);
       const contractUri = extractIPFSUri(bytecode);
       if (!contractUri) {
         throw new Error("No IPFS URI found in bytecode");

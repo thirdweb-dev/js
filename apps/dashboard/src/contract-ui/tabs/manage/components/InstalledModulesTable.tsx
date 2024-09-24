@@ -24,6 +24,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { toast } from "sonner";
 import {
   type ContractOptions,
+  getContract,
   sendTransaction,
   waitForReceipt,
 } from "thirdweb";
@@ -146,7 +147,13 @@ function ModuleRow(props: {
   const { contract, moduleAddress, ownerAccount } = props;
   const [isUninstallModalOpen, setIsUninstallModalOpen] = useState(false);
 
-  const contractInfo = useModuleContractInfo(contract);
+  const contractInfo = useModuleContractInfo(
+    getContract({
+      address: moduleAddress,
+      chain: contract.chain,
+      client: contract.client,
+    }),
+  );
 
   const uninstallMutation = useMutation({
     mutationFn: async (account: Account) => {
