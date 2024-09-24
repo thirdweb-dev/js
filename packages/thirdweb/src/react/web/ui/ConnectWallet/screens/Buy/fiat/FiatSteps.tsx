@@ -232,7 +232,7 @@ export function FiatSteps(props: {
 
   const toTokenInfo = partialSuccessToTokenInfo || (
     <Text color="primaryText" size="sm">
-      {formatNumber(Number(toTokenAmount), 6)}{" "}
+      {formatNumber(Number(toTokenAmount), 6)}
       <TokenSymbol token={toToken} chain={toChain} size="sm" inline />
     </Text>
   );
@@ -490,7 +490,7 @@ function PaymentStep(props: {
             gap="xxs"
             target="_blank"
           >
-            {props.explorer.label}{" "}
+            {props.explorer.label}
             <ExternalLinkIcon width={iconSize.xs} height={iconSize.xs} />
           </ButtonLink>
         </>

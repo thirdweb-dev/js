@@ -3,7 +3,7 @@ import { mobileViewport } from "../../../stories/utils";
 import { SidebarLayout } from "./SidebarLayout";
 
 const meta = {
-  title: "layouts/SidebarLayout",
+  title: "blocks/SidebarLayout",
   component: Story,
   parameters: {
     nextjs: {
@@ -55,8 +55,8 @@ function Story() {
 
 function ContentPlaceholder() {
   return (
-    <div className="bg-muted grow flex items-center justify-center">
-      <p className="text-muted-foreground text-3xl"> CHILDREN </p>
+    <div className="flex grow items-center justify-center bg-muted">
+      <p className="text-3xl text-muted-foreground"> CHILDREN </p>
     </div>
   );
 }

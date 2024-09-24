@@ -199,7 +199,7 @@ type GeneratePayloadInput = {
   uid?: string;
 } & ({ quantity: string } | { quantityWei: bigint });
 
-export const MintRequest20 = [
+const MintRequest20 = [
   { name: "to", type: "address" },
   { name: "primarySaleRecipient", type: "address" },
   { name: "quantity", type: "uint256" },

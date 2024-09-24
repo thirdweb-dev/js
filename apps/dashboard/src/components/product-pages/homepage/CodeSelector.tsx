@@ -40,7 +40,7 @@ const contract = getContract({ client, chain: sepolia, address: "0x..." });
 
 export default function App() {
   // Get all NFTs
-  const { data: nfts, isLoading } = useReadContract(getNFTs, { contract });
+  const { data: nfts, isPending } = useReadContract(getNFTs, { contract });
 
   // Render NFTs
   return (nfts.data || []).map((nft) => (
@@ -59,7 +59,7 @@ const contract = getContract({ client, chain: sepolia, address: "0x..." });
 
 export default function App() {
   // Get all NFTs
-  const { data: nfts, isLoading } = useReadContract(getNFTs, { contract });
+  const { data: nfts, isPending } = useReadContract(getNFTs, { contract });
 
   // Render NFTs
   return (nfts.data || []).map((nft) => (
@@ -96,14 +96,14 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
       <Flex
         background="rgba(0,0,0,0.4)"
         boxShadow="0 0 1px 1px hsl(0deg 0% 100% / 15%)"
-        justify={"center"}
+        justify="center"
         margin="0 auto"
         transform={{ base: "translateY(20px)", md: "translateY(50%)" }}
         zIndex={100}
-        backdropFilter={"blur(10px)"}
-        borderRadius={"8px"}
+        backdropFilter="blur(10px)"
+        borderRadius="8px"
         padding="2px"
-        gap={"2px"}
+        gap="2px"
         maxW="calc(100% - 60px)"
         flexWrap="wrap"
       >
@@ -160,7 +160,7 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
             px={4}
             text="Docs"
             href={docs}
-            icon={<Icon color={"white"} as={CgFileDocument} />}
+            icon={<Icon color="white" as={CgFileDocument} />}
             onClick={() =>
               trackEvent({
                 category: "code-selector",
@@ -173,7 +173,7 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
           <CustomLinkButton
             text="Run"
             href={`https://replit.com/@thirdweb/${activeLanguage}-sdk`}
-            icon={<Icon color={"white"} as={AiOutlineCode} />}
+            icon={<Icon color="white" as={AiOutlineCode} />}
             onClick={() =>
               trackEvent({
                 category: "code-selector",
@@ -212,9 +212,9 @@ const CustomLinkButton: React.FC<CustomLinkButtonProps> = ({
       padding={0}
       fontWeight={400}
       fontSize="14px"
-      borderRadius={"10px"}
-      fontFamily={"mono"}
-      color={"white"}
+      borderRadius="10px"
+      fontFamily="mono"
+      color="white"
       _hover={{
         bg: "trnasparent",
       }}

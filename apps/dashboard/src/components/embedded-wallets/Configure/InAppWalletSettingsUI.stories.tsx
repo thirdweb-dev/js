@@ -52,8 +52,8 @@ function Variants(props: {
   canEditAdvancedFeatures: boolean;
 }) {
   return (
-    <div className="py-6 max-w-[1140px] mx-auto w-full px-4">
-      <div className="flex gap-10 flex-col">
+    <div className="mx-auto w-full max-w-[1140px] px-4 py-6">
+      <div className="flex flex-col gap-10">
         <InAppWalletSettingsUI
           canEditAdvancedFeatures={props.canEditAdvancedFeatures}
           apiKey={apiKeyStub}

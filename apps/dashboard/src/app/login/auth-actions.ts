@@ -13,34 +13,46 @@ import type {
 const THIRDWEB_API_HOST =
   process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
+const THIRDWEB_API_SECRET = process.env.API_SERVER_SECRET || "";
+
 export async function getLoginPayload(
   params: GenerateLoginPayloadParams,
 ): Promise<LoginPayload> {
-  const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/payload`, {
+  if (!THIRDWEB_API_SECRET) {
+    throw new Error("API_SERVER_SECRET is not set");
+  }
+  const res = await fetch(`${THIRDWEB_API_HOST}/v2/siwe/payload`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-service-api-key": THIRDWEB_API_SECRET,
+    },
     body: JSON.stringify({
       address: params.address,
       chainId: params.chainId?.toString(),
     }),
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
+
   if (!res.ok) {
     console.error("Failed to fetch login payload", res.status, res.statusText);
     throw new Error("Failed to fetch login payload");
   }
-  return (await res.json()).payload;
+  return (await res.json()).data.payload;
 }
 
 export async function doLogin(payload: VerifyLoginPayloadParams) {
+  if (!THIRDWEB_API_SECRET) {
+    throw new Error("API_SERVER_SECRET is not set");
+  }
+
   // forward the request to the API server
-  const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/login`, {
+  const res = await fetch(`${THIRDWEB_API_HOST}/v2/siwe/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "x-service-api-key": THIRDWEB_API_SECRET,
     },
-    body: JSON.stringify({ payload }),
+    body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
@@ -67,7 +79,9 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
 
   const json = await res.json();
 
-  if (!json.token) {
+  const jwt = json.data.jwt;
+
+  if (!jwt) {
     console.error("Failed to login - invalid json", json);
     throw new Error("Failed to login - invalid json");
   }
@@ -77,7 +91,7 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${json.token}`,
+      Authorization: `Bearer ${jwt}`,
     },
   });
   // if we do not have a user, create one
@@ -85,7 +99,7 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
     const newUserRes = await fetch(`${THIRDWEB_API_HOST}/v1/account/create`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${json.token}`,
+        Authorization: `Bearer ${jwt}`,
       },
     });
 
@@ -104,7 +118,7 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
   // set the token cookie
   cookieStore.set(
     COOKIE_PREFIX_TOKEN + getAddress(payload.payload.address),
-    json.token,
+    jwt,
     {
       httpOnly: true,
       secure: true,

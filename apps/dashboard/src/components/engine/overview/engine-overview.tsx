@@ -90,7 +90,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
         <BackendWalletsTable
           instanceUrl={instanceUrl}
           wallets={backendWallets.data ?? []}
-          isLoading={backendWallets.isLoading}
+          isPending={backendWallets.isPending}
           isFetched={backendWallets.isFetched}
         />
       </Flex>
@@ -119,7 +119,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
         </Flex>
         <TransactionsTable
           transactions={transactionsQuery.data?.transactions ?? []}
-          isLoading={transactionsQuery.isLoading}
+          isPending={transactionsQuery.isPending}
           isFetched={transactionsQuery.isFetched}
           instanceUrl={instanceUrl}
         />

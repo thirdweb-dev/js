@@ -1,12 +1,14 @@
-import { thirdwebClient } from "@/constants/client";
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { type ChangeEvent, useState } from "react";
 import { prepareTransaction, toWei } from "thirdweb";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { Card } from "tw-components";
-import type { StoredChain } from "../../../../contexts/configured-chains";
 import { useV5DashboardChain } from "../../../../lib/v5-adapter";
+import type { StoredChain } from "../../../../stores/chainStores";
 
 interface DepositNativeProps {
   address: string;
@@ -19,6 +21,7 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
   symbol,
   chain,
 }) => {
+  const client = useThirdwebClient();
   const { mutate: transfer, isPending } = useSendAndConfirmTransaction();
   const [amount, setAmount] = useState("");
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +60,7 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
           const transaction = prepareTransaction({
             to: address,
             chain: v5Chain,
-            client: thirdwebClient,
+            client,
             value: toWei(amount),
           });
           transfer(transaction, {

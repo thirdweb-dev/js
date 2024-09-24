@@ -17,15 +17,6 @@ import {
 } from "../wallet/recoveryCode.js";
 import { setUpShareForNewDevice } from "../wallet/retrieval.js";
 
-export async function preAuth(args: {
-  authenticationMethod: AuthProvider;
-  email?: string;
-  phone?: string;
-}) {
-  // TODO: Add tracking here
-  Promise.resolve(args);
-}
-
 export async function postAuth({
   storedToken,
   client,

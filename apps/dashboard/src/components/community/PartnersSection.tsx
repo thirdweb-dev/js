@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 
 const partnersCompanies = [
@@ -46,13 +45,7 @@ const partnersCompanies = [
 
 const PartnersSection = () => {
   return (
-    <Flex
-      alignItems="center"
-      justifyContent="center"
-      flexWrap="wrap"
-      gap={10}
-      mt="24px"
-    >
+    <div className="mt-6 flex flex-row flex-wrap items-center justify-center gap-10">
       {partnersCompanies.slice(0, 10).map((partner, idx) => (
         <ChakraNextImage
           // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -62,7 +55,7 @@ const PartnersSection = () => {
           alt="partner"
         />
       ))}
-    </Flex>
+    </div>
   );
 };
 

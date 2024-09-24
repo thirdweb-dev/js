@@ -1,4 +1,5 @@
 import { computeClientIdFromSecretKey } from "../utils/client-id.js";
+import { isJWT } from "../utils/jwt/is-jwt.js";
 import type { Prettify } from "../utils/type-utils.js";
 
 type FetchConfig = {
@@ -54,10 +55,10 @@ export type CreateThirdwebClientOptions = Prettify<
   (
     | {
         clientId: string;
-        secretKey?: never;
+        secretKey?: string;
       }
     | {
-        clientId?: never;
+        clientId?: string;
         secretKey: string;
       }
   ) &
@@ -102,23 +103,28 @@ export function createThirdwebClient(
   options: CreateThirdwebClientOptions,
 ): ThirdwebClient {
   const { clientId, secretKey, ...rest } = options;
-  // if secretKey is provided, compute the clientId from it (and ignore any clientId passed in)
+
+  let realClientId: string | undefined = clientId;
+
   if (secretKey) {
-    return {
-      ...rest,
-      clientId: computeClientIdFromSecretKey(secretKey),
-      secretKey,
-    } as const;
-  }
-  // otherwise if clientId is provided, use it
-  if (clientId) {
-    return {
-      ...rest,
-      clientId: options.clientId,
-      secretKey: undefined,
-    } as const;
+    if (isJWT(secretKey)) {
+      // when passing a JWT as secret key we HAVE to also have a clientId
+      if (!clientId) {
+        throw new Error("clientId must be provided when using a JWT secretKey");
+      }
+    } else {
+      realClientId = computeClientIdFromSecretKey(secretKey);
+    }
   }
 
-  // otherwise throw an error
-  throw new Error("clientId or secretKey must be provided");
+  // only path we get here is if we have no secretKey and no clientId
+  if (!realClientId) {
+    throw new Error("clientId or secretKey must be provided");
+  }
+
+  return {
+    ...rest,
+    clientId: realClientId,
+    secretKey,
+  } as const;
 }

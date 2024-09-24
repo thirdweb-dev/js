@@ -1,0 +1,128 @@
+import { Tabs, TabsList, TabsContent, TabsTrigger, DocImage } from "@doc";
+
+# Retrieving In-App Wallet User Details on the Server
+
+## Using the thirdweb TypeScript SDK
+
+You can query user details through the thirdweb SDK using a wallet address, email, phone number, or user ID. **This function requires a secret key to be present on the thirdweb client and should only be used on the server.**
+
+<Tabs defaultValue='wallet'>
+  <TabsList>
+    <TabsTrigger value='wallet'>Wallet</TabsTrigger>
+    <TabsTrigger value='email'>Email</TabsTrigger>
+    <TabsTrigger value='phone'>Phone</TabsTrigger>
+    <TabsTrigger value='id'>User ID</TabsTrigger>
+  </TabsList>
+
+<TabsContent value='wallet'>
+```ts
+import { getUser } from "thirdweb";
+
+const user = await getUser({
+  client,
+  walletAddress: "0x123...",
+});
+```
+</TabsContent>
+
+<TabsContent value='email'>
+```ts
+import { getUser } from "thirdweb";
+
+const user = await getUser({
+  client,
+  email: "user@example.com",
+});
+```
+</TabsContent>
+
+<TabsContent value='phone'>
+```ts
+import { getUser } from "thirdweb";
+
+const user = await getUser({
+  client,
+  phone: "+11234567890",
+});
+```
+</TabsContent>
+
+<TabsContent value='id'>
+```ts
+import { getUser } from "thirdweb";
+
+const user = await getUser({
+  client,
+  id: "1234567890",
+});
+```
+</TabsContent>
+
+</Tabs>
+
+## Fetching User Details via API
+
+To get the user details, you can make a `GET` request to the following endpoint:
+
+```
+https://embedded-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details
+```
+
+### Query Parameters
+
+You can query user details using one of the following parameters:
+
+- `walletAddress`: The user's wallet address
+- `email`: The user's email address
+- `phone`: The user's phone number
+- `id`: The user's ID
+
+### Authentication
+
+You need to include your ThirdWeb Client Secret in the Authorization header.
+
+### Example curl Command
+
+Here's an example curl command to fetch user details:
+
+```bash
+curl -X GET 'https://embedded-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=walletAddress&walletAddress=0x123456789abcdef' \
+  -H 'Authorization: Bearer YOUR_THIRD_WEB_CLIENT_SECRET'
+```
+
+Replace `YOUR_THIRD_WEB_CLIENT_SECRET` with your actual ThirdWeb Client Secret.
+
+### Response Format
+
+The API returns a JSON array with the following structure for each user:
+
+```json
+[
+  {
+    "userId": "string",
+    "walletAddress": "string",
+    "email": "string (optional)",
+    "phone": "string (optional)",
+    "createdAt": "string",
+    "linkedAccounts": [
+      {
+        "type": "string",
+        "details": {
+          "phone": "string",
+          // or
+          "email": "string",
+          // or
+          "address": "string",
+          // or
+          "id": "string",
+          // Additional key-value pairs may be present
+        }
+      }
+    ]
+  }
+]
+```
+
+Note: The `details` object in `linkedAccounts` will contain different fields based on the account type.
+
+Remember to handle the response appropriately in your chosen programming language, including error cases and parsing the JSON response.

@@ -48,10 +48,10 @@ export function useNFTDrawerTabs({
   const isERC721Query = useReadContract(ERC721Ext.isERC721, { contract });
 
   // Check if the contract is ERC721 or ERC1155
-  const isERC721 = isERC721Query.isLoading
+  const isERC721 = isERC721Query.isPending
     ? false
     : isERC721Query.data || false;
-  const isERC1155 = isERC721Query.isLoading ? false : !isERC721;
+  const isERC1155 = isERC721Query.isPending ? false : !isERC721;
 
   const balanceOfQuery = useReadContract(ERC1155Ext.balanceOf, {
     contract,

@@ -1,4 +1,3 @@
-import { thirdwebClient } from "@/constants/client";
 import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import {
   Center,
@@ -10,7 +9,6 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import {
   type ThirdwebContract,
@@ -26,6 +24,7 @@ import {
 } from "thirdweb/react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { DistributeButton } from "./components/distribute-button";
 
 export type Balance = {
@@ -41,22 +40,14 @@ interface SplitPageProps {
 }
 
 export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
-  return <ContractSplitContent contract={contract} />;
-};
-
-type SplitContentProps = {
-  contract: ThirdwebContract;
-};
-
-const ContractSplitContent: React.FC<SplitContentProps> = ({ contract }) => {
   const address = useActiveAccount()?.address;
-  const configuredChainsRecord = useSupportedChainsRecord();
+  const { idToChain } = useAllChainsData();
   const chainId = contract.chain.id;
-  const v4Chain = configuredChainsRecord[chainId];
+  const v4Chain = idToChain.get(chainId);
   const contractAddress = contract.address;
   const nativeBalanceQuery = useWalletBalance({
     address: contractAddress,
-    client: thirdwebClient,
+    client: contract.client,
     chain: contract.chain,
   });
   const { data: allRecipientsPercentages } = useReadContract(
@@ -114,8 +105,8 @@ const ContractSplitContent: React.FC<SplitContentProps> = ({ contract }) => {
         <Flex gap={4}>
           <DistributeButton
             balances={balances as Balance[]}
-            balancesIsLoading={
-              balanceQuery.isLoading || nativeBalanceQuery.isLoading
+            balancesisPending={
+              balanceQuery.isPending || nativeBalanceQuery.isPending
             }
             balancesIsError={balanceQuery.isError && nativeBalanceQuery.isError}
             contract={contract}
@@ -141,7 +132,7 @@ const ContractSplitContent: React.FC<SplitContentProps> = ({ contract }) => {
                 </StatNumber>
               )}
             </Card>
-            {balanceQuery.isLoading ? (
+            {balanceQuery.isPending ? (
               <Center>
                 <Spinner />
               </Center>

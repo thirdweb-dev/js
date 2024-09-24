@@ -35,8 +35,8 @@ export async function getExistingUserAccount(args: { client: ThirdwebClient }) {
 }
 
 async function getWalletPrivateKeyFromShares(shares: string[]) {
-  const sss = await import("./sss.js");
-  let privateKeyHex = sss.secrets.combine(shares, 0);
+  const { secrets } = await import("./sss.js");
+  let privateKeyHex = secrets.combine(shares, 0);
   if (!isHex(privateKeyHex)) {
     privateKeyHex = `0x${privateKeyHex}`;
   }
@@ -169,7 +169,7 @@ async function getShares<
   };
 }
 
-export async function getAccountAddressFromShares(args: {
+async function getAccountAddressFromShares(args: {
   client: ThirdwebClient;
   shares: string[];
 }) {

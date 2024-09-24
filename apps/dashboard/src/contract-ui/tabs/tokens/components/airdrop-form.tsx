@@ -1,167 +1,143 @@
-import {
-  DrawerBody,
-  DrawerHeader,
-  Flex,
-  Icon,
-  Stack,
-  useDisclosure,
-  useModalContext,
-} from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import {
-  type AirdropAddressInput,
-  AirdropUpload,
-} from "contract-ui/tabs/nfts/components/airdrop-upload";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { CircleCheck, Upload } from "lucide-react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
-import { BsCircleFill } from "react-icons/bs";
-import { FiUpload } from "react-icons/fi";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { transferBatch } from "thirdweb/extensions/erc20";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { Button, Heading, Text } from "tw-components";
-
+import { useSendAndConfirmTransaction } from "thirdweb/react";
+import { Button, Text } from "tw-components";
+import {
+  AirdropUploadERC20,
+  type ERC20AirdropAddressInput,
+} from "./airdrop-upload-erc20";
 interface TokenAirdropFormProps {
   contract: ThirdwebContract;
+  toggle?: Dispatch<SetStateAction<boolean>>;
 }
+const GAS_COST_PER_ERC20_TRANSFER = 21000;
 
 export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
   contract,
+  toggle,
 }) => {
-  const address = useActiveAccount()?.address;
-  const { handleSubmit, setValue, watch, formState } = useForm<{
-    addresses: AirdropAddressInput[];
+  const { handleSubmit, setValue, watch } = useForm<{
+    addresses: ERC20AirdropAddressInput[];
   }>({
     defaultValues: { addresses: [] },
   });
   const trackEvent = useTrack();
-  const modalContext = useModalContext();
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   const sendTransaction = useSendAndConfirmTransaction();
-
-  const { onSuccess, onError } = useTxNotifications(
-    "Airdrop successful",
-    "Error transferring",
-    contract,
-  );
-
   const addresses = watch("addresses");
-
+  const [airdropFormOpen, setAirdropFormOpen] = useState(false);
+  // The real number should be slightly higher since there's a lil bit of overhead cost
+  const estimateGasCost =
+    GAS_COST_PER_ERC20_TRANSFER * (addresses || []).length;
   return (
     <>
-      <DrawerHeader>
-        <Heading>Airdrop tokens</Heading>
-      </DrawerHeader>
-      <DrawerBody>
-        <Stack pt={3}>
-          <form
-            onSubmit={handleSubmit((data) => {
-              trackEvent({
-                category: "token",
-                action: "airdrop",
-                label: "attempt",
-                contractAddress: contract.address,
-              });
-
-              const tx = transferBatch({
-                contract,
-                batch: data.addresses
-                  .filter((address) => address.quantity !== undefined)
-                  .map((address) => ({
-                    to: address.address,
-                    amount: address.quantity,
-                  })),
-              });
-
-              sendTransaction.mutate(tx, {
-                onSuccess: () => {
-                  onSuccess();
-                  trackEvent({
-                    category: "token",
-                    action: "airdrop",
-                    label: "success",
-                    contract_address: contract.address,
-                  });
-                  modalContext.onClose();
-                },
-                onError: (error) => {
-                  trackEvent({
-                    category: "token",
-                    action: "airdrop",
-                    label: "success",
-                    contract_address: contract.address,
-                    error,
-                  });
-                  onError(error);
-                },
-              });
-            })}
-          >
-            <Stack>
-              <Stack
-                spacing={6}
-                w="100%"
-                direction={{ base: "column", md: "row" }}
-                mb={3}
-              >
-                <AirdropUpload
-                  isOpen={isOpen}
-                  onClose={onClose}
-                  setAirdrop={(value) =>
-                    setValue("addresses", value, { shouldDirty: true })
-                  }
-                />
-                <Flex direction={{ base: "column", md: "row" }} gap={4}>
-                  <Button
-                    colorScheme="primary"
-                    borderRadius="md"
-                    onClick={onOpen}
-                    rightIcon={<Icon as={FiUpload} />}
-                  >
-                    Upload addresses
-                  </Button>
-
-                  <Flex
-                    gap={2}
-                    direction="row"
-                    align="center"
-                    justify="center"
-                    color={addresses.length === 0 ? "orange.500" : "green.500"}
-                  >
-                    {addresses.length > 0 && (
-                      <>
-                        <Icon as={BsCircleFill} boxSize={2} />
-                        <Text size="body.sm" color="inherit">
-                          <strong>{addresses.length} addresses</strong> ready to
-                          be airdropped
-                        </Text>
-                      </>
-                    )}
-                  </Flex>
-                </Flex>
-              </Stack>
-              <Text>
-                You can airdrop to a maximum of 250 addresses at a time. If you
-                have more, please do it in multiple transactions.
-              </Text>
+      <div className="pt-3">
+        <form
+          onSubmit={handleSubmit((data) => {
+            trackEvent({
+              category: "token",
+              action: "airdrop",
+              label: "attempt",
+              contractAddress: contract.address,
+            });
+            const tx = transferBatch({
+              contract,
+              batch: data.addresses
+                .filter((address) => address.quantity !== undefined)
+                .map((address) => ({
+                  to: address.address,
+                  amount: address.quantity,
+                })),
+            });
+            const promise = sendTransaction.mutateAsync(tx, {
+              onSuccess: () => {
+                trackEvent({
+                  category: "token",
+                  action: "airdrop",
+                  label: "success",
+                  contract_address: contract.address,
+                });
+                // Close the sheet/modal on success
+                if (toggle) {
+                  toggle(false);
+                }
+              },
+              onError: (error) => {
+                trackEvent({
+                  category: "token",
+                  action: "airdrop",
+                  label: "success",
+                  contract_address: contract.address,
+                  error,
+                });
+                console.error(error);
+              },
+            });
+            toast.promise(promise, {
+              loading: "Airdropping tokens",
+              success: "Tokens airdropped successfully",
+              error: "Failed to airdrop tokens",
+            });
+          })}
+        >
+          <div className="mb-3 flex w-full flex-col gap-6 md:flex-row">
+            {airdropFormOpen ? (
+              <AirdropUploadERC20
+                onClose={() => setAirdropFormOpen(false)}
+                setAirdrop={(value) =>
+                  setValue("addresses", value, { shouldDirty: true })
+                }
+              />
+            ) : (
+              <div className="flex flex-col gap-4 md:flex-row">
+                <Button
+                  colorScheme="primary"
+                  borderRadius="md"
+                  onClick={() => setAirdropFormOpen(true)}
+                  rightIcon={<Upload size={16} />}
+                >
+                  Upload addresses
+                </Button>
+                {addresses.length > 0 && (
+                  <div className="flex flex-row items-center justify-center gap-2 text-green-500">
+                    <CircleCheck className="text-green-500" size={16} />
+                    <Text size="body.sm" color="inherit">
+                      <strong>{addresses.length} addresses</strong> ready to be
+                      airdropped
+                    </Text>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          {addresses?.length > 0 && !airdropFormOpen && (
+            <>
+              {estimateGasCost && (
+                <Text>
+                  This transaction requires at least {estimateGasCost} gas.
+                  Since each chain has a different gas limit, please split this
+                  operation into multiple transactions if necessary. Usually
+                  under 10M gas is safe.
+                </Text>
+              )}
               <TransactionButton
                 transactionCount={1}
                 isLoading={sendTransaction.isPending}
                 type="submit"
                 colorScheme="primary"
-                disabled={!!address && addresses.length === 0}
                 alignSelf="flex-end"
-                isDisabled={!formState.isDirty}
               >
                 Airdrop
               </TransactionButton>
-            </Stack>
-          </form>
-        </Stack>
-      </DrawerBody>
+            </>
+          )}
+        </form>
+      </div>
     </>
   );
 };

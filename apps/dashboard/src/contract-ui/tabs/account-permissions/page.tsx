@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Heading } from "tw-components";
 import { AccountSigners } from "./components/account-signers";
@@ -11,11 +10,11 @@ export const AccountPermissionsPage: React.FC<AccountPermissionsPageProps> = ({
   contract,
 }) => {
   return (
-    <Flex direction="column" gap={6}>
-      <Flex direction="row" justify="space-between" align="center">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-row items-center justify-between">
         <Heading size="title.sm">Account Signers</Heading>
-      </Flex>
+      </div>
       <AccountSigners contract={contract} />
-    </Flex>
+    </div>
   );
 };

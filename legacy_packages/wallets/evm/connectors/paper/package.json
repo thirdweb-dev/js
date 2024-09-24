@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-connectors-paper.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-connectors-paper.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-connectors-paper.esm.js": "./dist/thirdweb-dev-wallets-evm-connectors-paper.browser.esm.js"
-  }
-}

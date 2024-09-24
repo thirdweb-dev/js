@@ -2,7 +2,6 @@ import type {
   Account,
   UsageBillableByService,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { VStack } from "@chakra-ui/react";
 import { format } from "date-fns/format";
 import { useMemo } from "react";
 import { Text } from "tw-components";
@@ -38,7 +37,7 @@ export const BillingPeriod: React.FC<BillingPeriodProps> = ({
   }
 
   return (
-    <VStack alignItems={{ base: "flex-start", lg: "flex-end" }} gap={1}>
+    <div className="flex flex-col items-start gap-1 lg:items-end">
       <Text size="body.md" as="span">
         Current billing period:
         <Text as="span" color="bgBlack" pl={2} fontWeight="medium">
@@ -46,7 +45,7 @@ export const BillingPeriod: React.FC<BillingPeriodProps> = ({
             new Date(account.currentBillingPeriodStartsAt as string),
             "MMM dd",
           )}{" "}
-          {" - "}
+          -
           {format(
             new Date(account.currentBillingPeriodEndsAt as string),
             "MMM dd",
@@ -60,6 +59,6 @@ export const BillingPeriod: React.FC<BillingPeriodProps> = ({
           {totalUsd}
         </Text>
       </Text>
-    </VStack>
+    </div>
   );
 };

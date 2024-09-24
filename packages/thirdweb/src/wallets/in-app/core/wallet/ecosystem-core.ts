@@ -10,6 +10,7 @@ import type {
 } from "../../../wallet-types.js";
 import type { InAppConnector } from "../interfaces/connector.js";
 import { getOrCreateInAppWalletConnector } from "./in-app-core.js";
+import type { Ecosystem } from "./types.js";
 
 /**
  * @internal
@@ -25,6 +26,10 @@ export function createEcosystemWallet(args: {
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
   let client: ThirdwebClient | undefined;
+  const ecosystem: Ecosystem = {
+    id,
+    partnerId: createOptions?.partnerId,
+  };
 
   return {
     id,
@@ -38,7 +43,6 @@ export function createEcosystemWallet(args: {
       return chain;
     },
     getConfig: () => createOptions,
-
     getAccount: () => account,
     autoConnect: async (options) => {
       const { autoConnectInAppWallet } = await import("./index.js");
@@ -46,10 +50,7 @@ export function createEcosystemWallet(args: {
       const connector = await getOrCreateInAppWalletConnector(
         options.client,
         connectorFactory,
-        {
-          id,
-          partnerId: createOptions?.partnerId,
-        },
+        ecosystem,
       );
 
       const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
@@ -75,10 +76,7 @@ export function createEcosystemWallet(args: {
       const connector = await getOrCreateInAppWalletConnector(
         options.client,
         connectorFactory,
-        {
-          id,
-          partnerId: createOptions?.partnerId,
-        },
+        ecosystem,
       );
 
       const [connectedAccount, connectedChain] = await connectInAppWallet(
@@ -104,10 +102,7 @@ export function createEcosystemWallet(args: {
         const connector = await getOrCreateInAppWalletConnector(
           client,
           connectorFactory,
-          {
-            id,
-            partnerId: createOptions?.partnerId,
-          },
+          ecosystem,
         );
         const result = await connector.logout();
         if (!result.success) {
@@ -122,5 +117,5 @@ export function createEcosystemWallet(args: {
       chain = newChain;
       emitter.emit("chainChanged", newChain);
     },
-  };
+  } as Wallet<EcosystemWalletId>;
 }

@@ -11,7 +11,7 @@ import { headerLinks } from "./headerLinks";
 export function DashboardHeader() {
   return (
     // the "h-24" avoids layout shift when connecting wallet (connected wallet button is taller than disconnected...)
-    <header className="flex flex-row items-center justify-between flex-shrink-0 h-20 border-b border-border md:h-20 py-4 px-4 lg:px-6 bg-muted/50">
+    <header className="flex h-20 flex-shrink-0 flex-row items-center justify-between border-border border-b bg-muted/50 px-4 py-4 md:h-20 lg:px-6">
       {/* Left */}
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
@@ -21,13 +21,13 @@ export function DashboardHeader() {
           </Link>
         </div>
 
-        <div className="items-center hidden gap-2 md:flex">
+        <div className="hidden items-center gap-2 md:flex">
           {headerLinks.left.map((link) => (
             <NavLink
               key={link.href}
               href={link.href}
               target={link.href.startsWith("https") ? "_blank" : undefined}
-              className="text-muted-foreground font-normal text-sm py-2 px-[10px] hover:text-foreground"
+              className="px-[10px] py-2 font-normal text-muted-foreground text-sm hover:text-foreground"
               activeClassName="font-medium text-foreground"
             >
               {link.name}
@@ -38,13 +38,13 @@ export function DashboardHeader() {
       {/* Right */}
       <div className="flex items-center gap-4">
         <div className="items-center gap-2 lg:flex">
-          <div className="items-center hidden gap-2 lg:flex">
+          <div className="hidden items-center gap-2 lg:flex">
             {headerLinks.right.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 target={link.href.startsWith("https") ? "_blank" : undefined}
-                className="text-muted-foreground font-normal text-sm py-2 px-[10px] hover:text-foreground"
+                className="px-[10px] py-2 font-normal text-muted-foreground text-sm hover:text-foreground"
               >
                 {link.name}
               </Link>
@@ -55,7 +55,7 @@ export function DashboardHeader() {
 
         <ClientOnly
           ssr={
-            <div className="w-[144px] h-[48px] bg-muted/50 border rounded-lg flex items-center justify-center">
+            <div className="flex h-[48px] w-[144px] items-center justify-center rounded-lg border bg-muted/50">
               <Spinner className="size-4" />
             </div>
           }

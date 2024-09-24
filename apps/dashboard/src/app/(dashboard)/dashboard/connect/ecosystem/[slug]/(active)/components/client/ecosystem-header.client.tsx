@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TabLinks } from "@/components/ui/tabs";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   AlertTriangleIcon,
   CheckIcon,
@@ -64,19 +64,19 @@ function EcosystemSelect(props: {
   ecosystem: Ecosystem;
   ecosystemLayoutPath: string;
 }) {
-  const { data: ecosystems, isLoading } = useEcosystemList();
+  const { data: ecosystems, isPending } = useEcosystemList();
 
-  return isLoading ? (
+  return isPending ? (
     <Skeleton className="h-10 w-full md:w-[160px]" />
   ) : (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="relative flex justify-start w-full pl-3 pr-8 truncate md:w-48"
+          className="relative flex w-full justify-start truncate pr-8 pl-3 md:w-48"
         >
           <div className="truncate">{props.ecosystem?.name}</div>
-          <ChevronsUpDown className="absolute w-4 h-4 text-muted-foreground right-2" />
+          <ChevronsUpDown className="absolute right-2 h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-full md:w-48">
@@ -85,10 +85,10 @@ function EcosystemSelect(props: {
             <DropdownMenuItem key={ecosystem.id} asChild>
               <Link
                 href={`${props.ecosystemLayoutPath}/${ecosystem.slug}`}
-                className="relative flex items-center pl-8 pr-3 cursor-pointer"
+                className="relative flex cursor-pointer items-center pr-3 pl-8"
               >
                 {ecosystem.slug === props.ecosystem.slug && (
-                  <CheckIcon className="absolute w-4 h-4 text-foreground left-2" />
+                  <CheckIcon className="absolute left-2 h-4 w-4 text-foreground" />
                 )}
                 <div className="truncate">{ecosystem.name}</div>
               </Link>
@@ -97,8 +97,8 @@ function EcosystemSelect(props: {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <Link href={`${props.ecosystemLayoutPath}/create`} className="">
-          <DropdownMenuItem className="relative flex items-center pl-8 pr-3 cursor-pointer">
-            <PlusCircleIcon className="absolute w-4 h-4 left-2" />
+          <DropdownMenuItem className="relative flex cursor-pointer items-center pr-3 pl-8">
+            <PlusCircleIcon className="absolute left-2 h-4 w-4" />
             <div className="truncate">New Ecosystem</div>
           </DropdownMenuItem>
         </Link>
@@ -123,6 +123,7 @@ export function EcosystemHeader(props: {
     refetchOnWindowFocus: false,
     initialData: props.ecosystem,
   });
+  const client = useThirdwebClient();
 
   const ecosystem = fetchedEcosystem ?? props.ecosystem;
 
@@ -130,17 +131,17 @@ export function EcosystemHeader(props: {
     <div className="flex flex-col gap-8">
       <EcosystemAlertBanner ecosystem={ecosystem} />
       <header className="flex flex-col gap-12">
-        <div className="flex flex-col justify-between gap-4 md:flex-row md:grid-cols-4">
+        <div className="flex flex-col justify-between gap-4 md:grid-cols-4 md:flex-row">
           <div className="flex items-center gap-4">
             {!ecosystem.imageUrl ? (
               <Skeleton className="size-24" />
             ) : (
               ecosystem.imageUrl && (
-                <div className="relative overflow-hidden rounded-md size-24">
+                <div className="relative size-24 overflow-hidden rounded-md">
                   <Image
                     src={resolveScheme({
                       uri: ecosystem.imageUrl,
-                      client: thirdwebClient,
+                      client,
                     })}
                     sizes="100px"
                     alt={ecosystem.name}
@@ -155,7 +156,7 @@ export function EcosystemHeader(props: {
               {!ecosystem.name ? (
                 <Skeleton className="h-12 w-[225px]" />
               ) : (
-                <h2 className="text-4xl font-bold text-foreground">
+                <h2 className="font-bold text-4xl text-foreground">
                   {ecosystem.name}
                 </h2>
               )}

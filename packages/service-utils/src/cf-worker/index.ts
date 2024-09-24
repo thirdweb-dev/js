@@ -3,22 +3,21 @@ import type {
   KVNamespace,
   Response,
 } from "@cloudflare/workers-types";
+import type { Request } from "@cloudflare/workers-types";
 import type {
   AccountMetadata,
   ApiKeyMetadata,
   CoreServiceConfig,
-} from "../core/api";
-import { authorize } from "../core/authorize";
+} from "../core/api.js";
+import { authorize } from "../core/authorize/index.js";
+import type { AuthorizationInput } from "../core/authorize/index.js";
+import type { AuthorizationResult } from "../core/authorize/types.js";
+import type { CoreAuthInput } from "../core/types.js";
 
-import type { Request } from "@cloudflare/workers-types";
-import type { AuthorizationInput } from "../core/authorize";
-import type { AuthorizationResult } from "../core/authorize/types";
-import type { CoreAuthInput } from "../core/types";
-
-export * from "./usage";
-export * from "../core/services";
-export * from "../core/rateLimit";
-export * from "../core/usageLimit";
+export * from "./usage.js";
+export * from "../core/services.js";
+export * from "../core/rateLimit/index.js";
+export * from "../core/usageLimit/index.js";
 
 export type WorkerServiceConfig = CoreServiceConfig & {
   kvStore: KVNamespace;

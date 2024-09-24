@@ -37,7 +37,7 @@ const chartLabelToShow: Record<ChartToShow, string> = {
 
 export function WalletDistributionChartCard(props: {
   walletStats: WalletStats[];
-  isLoading: boolean;
+  isPending: boolean;
 }) {
   const { walletStats } = props;
   const [chartToShow, setChartToShow] = useState<ChartToShow>("total");
@@ -114,24 +114,24 @@ export function WalletDistributionChartCard(props: {
       };
     }, [walletStats]);
 
-  const disableActions = props.isLoading || chartData.length === 0;
+  const disableActions = props.isPending || chartData.length === 0;
   return (
-    <div className="bg-muted/50 border border-border rounded-lg p-4 md:p-6 relative w-full">
-      <h3 className="text-xl md:text-2xl font-semibold tracking-tight mb-1">
+    <div className="relative w-full rounded-lg border border-border bg-muted/50 p-4 md:p-6">
+      <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
         Wallet Distribution
       </h3>
-      <p className="text-muted-foreground mb-3 text-sm">
+      <p className="mb-3 text-muted-foreground text-sm">
         Distribution of wallet types used to connect to your app.
       </p>
 
       {/* Selector */}
-      <div className="md:absolute top-6 right-6 mb-4 md:mb-0 md:flex items-center gap-2 grid grid-cols-2">
+      <div className="top-6 right-6 mb-4 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
         <Select
           onValueChange={(v) => {
             setChartToShow(v as ChartToShow);
           }}
           value={chartToShow}
-          disabled={props.isLoading || chartData.length === 0}
+          disabled={props.isPending || chartData.length === 0}
         >
           <SelectTrigger>
             <SelectValue />
@@ -182,9 +182,9 @@ export function WalletDistributionChartCard(props: {
       {/* Chart */}
       <ChartContainer
         config={chartConfig}
-        className="w-full h-[500px] [&_.recharts-pie-label-text]:fill-foreground mt-6"
+        className="mt-6 h-[500px] w-full [&_.recharts-pie-label-text]:fill-foreground"
       >
-        {props.isLoading ? (
+        {props.isPending ? (
           <LoadingChartState />
         ) : chartData.length === 0 ? (
           <EmptyChartState />

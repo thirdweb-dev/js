@@ -25,8 +25,8 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({ contract }) => {
           w="inherit"
         >
           <TrackedLinkButton
-            category={"smart-wallet"}
-            variant={"solid"}
+            category="smart-wallet"
+            variant="solid"
             label="docs-factory-page"
             href="https://portal.thirdweb.com/wallets/smart-wallet/get-started#3-connect-smart-wallets-in-your-application"
             isExternal

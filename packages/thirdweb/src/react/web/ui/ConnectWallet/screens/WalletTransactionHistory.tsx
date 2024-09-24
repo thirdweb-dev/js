@@ -90,7 +90,7 @@ export function WalletTransactionHistory(props: {
   );
 }
 
-export function TransactionButton(props: {
+function TransactionButton(props: {
   hash: string;
   client: ThirdwebClient;
   chainId: number;
@@ -176,12 +176,12 @@ export function TransactionButton(props: {
       <Container flex="row" gap="xxs" center="y">
         {isLoading && <Spinner size="sm" color="primaryText" />}
         {!isLoading && receipt && receipt.status === "success" && (
-          <Text size="md" color={"success"}>
+          <Text size="md" color="success">
             <CheckIcon width={iconSize.md} height={iconSize.md} />
           </Text>
         )}
         {(error || (!isLoading && receipt && receipt.status !== "success")) && (
-          <Text size="md" color={"danger"}>
+          <Text size="md" color="danger">
             <CrossCircledIcon width={iconSize.md} height={iconSize.md} />
           </Text>
         )}

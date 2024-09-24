@@ -184,7 +184,7 @@ type GeneratePayloadInput = {
   validityEndTimestamp?: Date;
 };
 
-export const MintRequestERC1155 = [
+const MintRequestERC1155 = [
   { type: "address", name: "to" },
   { type: "uint256", name: "tokenId" },
   { type: "uint256", name: "amount" },

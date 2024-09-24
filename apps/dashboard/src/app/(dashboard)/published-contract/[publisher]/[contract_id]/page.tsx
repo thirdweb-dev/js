@@ -1,12 +1,9 @@
 import { Separator } from "@/components/ui/separator";
 import { ChakraProviderSetup } from "../../../../../@/components/ChakraProviderSetup";
 import { PublishedContract } from "../../../../../components/contract-components/published-contract";
-import { setOverrides } from "../../../../../lib/vercel-utils";
 import { PublishedActions } from "../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../components/contract-header";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
-
-setOverrides();
 
 type PublishedContractDeployPageProps = {
   params: {
@@ -41,7 +38,7 @@ export default async function PublishedContractPage(
       <Separator />
       {/* TODO: remove the chakra things :) */}
       <ChakraProviderSetup>
-        <div className="grid grid-cols-12 gap-6 md:gap-10 w-full">
+        <div className="grid w-full grid-cols-12 gap-6 md:gap-10">
           <PublishedContract
             publishedContract={publishedContract}
             walletOrEns={props.params.publisher}

@@ -352,7 +352,7 @@ function RenderTokenInfo(props: {
       {name ? (
         <Text size="xs">{name}</Text>
       ) : (
-        <Skeleton width={"100px"} height={fontSize.xs} />
+        <Skeleton width="100px" height={fontSize.xs} />
       )}
     </Container>
   );
@@ -385,7 +385,7 @@ function ConfirmItem(props: {
 /**
  * @internal
  */
-export function SwapFeesRightAligned(props: {
+function SwapFeesRightAligned(props: {
   quote: BuyWithCryptoQuote;
 }) {
   return (

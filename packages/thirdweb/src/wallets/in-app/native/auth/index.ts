@@ -1,12 +1,12 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import {
   type AuthArgsType,
-  type AuthLoginReturnType,
   type GetAuthenticatedUserParams,
   type PreAuthArgsType,
   UserWalletStatus,
 } from "../../core/authentication/types.js";
 import { getOrCreateInAppWalletConnector } from "../../core/wallet/in-app-core.js";
+import type { Ecosystem } from "../../core/wallet/types.js";
 
 // ---- KEEP IN SYNC WITH /wallets/in-app/web/lib/auth/index.ts ---- //
 // duplication needed for separate exports between web and native
@@ -14,11 +14,15 @@ import { getOrCreateInAppWalletConnector } from "../../core/wallet/in-app-core.j
 /**
  * @internal
  */
-async function getInAppWalletConnector(client: ThirdwebClient) {
+async function getInAppWalletConnector(
+  client: ThirdwebClient,
+  ecosystem?: Ecosystem,
+) {
   return getOrCreateInAppWalletConnector(client, async (client) => {
     const { InAppNativeConnector } = await import("../native-connector.js");
     return new InAppNativeConnector({
       client: client,
+      ecosystem: ecosystem,
     });
   });
 }
@@ -38,9 +42,7 @@ async function getInAppWalletConnector(client: ThirdwebClient) {
  * ```
  * @wallet
  */
-export async function getAuthenticatedUser(
-  options: GetAuthenticatedUserParams,
-) {
+async function getAuthenticatedUser(options: GetAuthenticatedUserParams) {
   const { client } = options;
   const connector = await getInAppWalletConnector(client);
   const user = await connector.getUser();
@@ -133,9 +135,61 @@ export async function preAuthenticate(args: PreAuthArgsType) {
  * ```
  * @wallet
  */
-export async function authenticate(
-  args: AuthArgsType,
-): Promise<AuthLoginReturnType> {
+export async function authenticate(args: AuthArgsType) {
   const connector = await getInAppWalletConnector(args.client);
-  return connector.connect(args);
+  return connector.authenticate(args);
+}
+
+/**
+ * Connects a new profile (authentication method) to the current user.
+ * The connected profile can be any valid in-app wallet including email, phone, passkey, etc.
+ * The inputs mirror those used when authenticating normally.
+ *
+ * **When a profile is linked to the account, that profile can then be used to sign into the account.**
+ *
+ * This method is only available for in-app wallets.
+ *
+ * @param wallet - The wallet to link an additional profile to.
+ * @param auth - The authentications options to add the new profile.
+ * @returns A promise that resolves to the currently linked profiles when the connection is successful.
+ * @throws If the connection fails, if the profile is already linked to the account, or if the profile is already associated with another account.
+ *
+ * @example
+ * ```ts
+ * const wallet = inAppWallet();
+ *
+ * await wallet.connect({ client, strategy: "google" });
+ * const profiles = await linkProfile({ client, strategy: "discord" });
+ * ```
+ * @wallet
+ */
+export async function linkProfile(args: AuthArgsType) {
+  const connector = await getInAppWalletConnector(args.client, args.ecosystem);
+  return await connector.linkProfile(args);
+}
+
+/**
+ * Gets the linked profiles for the connected in-app or ecosystem wallet.
+ *
+ * @returns An array of accounts user profiles linked to the connected wallet.
+ *
+ * @example
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ *
+ * const wallet = inAppWallet();
+ * wallet.connect({ strategy: "google" });
+ *
+ * const profiles = await getProfiles({
+ *  client,
+ * });
+ *
+ * console.log(profiles[0].type);
+ * console.log(profiles[0].details.email);
+ * ```
+ * @wallet
+ */
+export async function getProfiles(args: GetAuthenticatedUserParams) {
+  const connector = await getInAppWalletConnector(args.client, args.ecosystem);
+  return connector.getProfiles();
 }

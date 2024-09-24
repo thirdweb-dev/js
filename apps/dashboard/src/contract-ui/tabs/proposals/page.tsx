@@ -1,7 +1,4 @@
-import {
-  useVoteProposalList,
-  useVoteTokenBalances,
-} from "@3rdweb-sdk/react/hooks/useVote";
+import { voteTokenBalances } from "@3rdweb-sdk/react/hooks/useVote";
 import {
   Divider,
   Flex,
@@ -12,7 +9,8 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import * as VoteExt from "thirdweb/extensions/vote";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { Card, Heading } from "tw-components";
 import { DelegateButton } from "./components/delegate-button";
 import { Proposal } from "./components/proposal";
@@ -26,19 +24,24 @@ export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
   contract,
 }) => {
   const address = useActiveAccount()?.address;
-  const data = useVoteProposalList(contract);
-
+  const proposalsQuery = useReadContract(VoteExt.getAll, {
+    contract,
+  });
   const balanceAddresses: string[] = useMemo(() => {
     return [address, contract.address].filter((a) => !!a) as string[];
   }, [address, contract.address]);
+  const proposals = useMemo(
+    () => (proposalsQuery.data || []).reverse(),
+    [proposalsQuery.data],
+  );
+  const voteTokenBalancesQuery = useReadContract(voteTokenBalances, {
+    contract,
+    addresses: balanceAddresses,
+    queryOptions: {
+      enabled: balanceAddresses.length > 0,
+    },
+  });
 
-  const proposals = useMemo(() => (data.data || []).reverse(), [data]);
-
-  const { data: balances } = useVoteTokenBalances(contract, balanceAddresses);
-
-  if (!contract) {
-    return null;
-  }
   return (
     <Flex direction="column" gap={6}>
       <Flex direction="row" justify="space-between" align="center">
@@ -59,7 +62,7 @@ export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
         <Divider />
         <Heading size="title.sm">Voting Tokens</Heading>
         <Stack direction="row">
-          {balances?.map((balance) => (
+          {voteTokenBalancesQuery.data?.map((balance) => (
             <Card as={Stat} key={balance.address} maxWidth="240px">
               <StatLabel>
                 {balance.address?.toLowerCase() === address?.toLowerCase()

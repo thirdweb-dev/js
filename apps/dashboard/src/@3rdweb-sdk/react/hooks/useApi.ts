@@ -5,7 +5,6 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { THIRDWEB_ANALYTICS_API_HOST, THIRDWEB_API_HOST } from "constants/urls";
-import type { ChainMetadata } from "thirdweb/chains";
 import invariant from "tiny-invariant";
 import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
@@ -945,30 +944,5 @@ export function useAuthorizedWallets() {
     },
     enabled: !!user?.address && isLoggedIn,
     gcTime: 0,
-  });
-}
-
-/**
- *
- */
-async function fetchChainsFromApi() {
-  // always fetch from prod for chains for now
-  // TODO: re-visit this
-  const res = await fetch("https://api.thirdweb.com/v1/chains");
-  const json = await res.json();
-
-  if (json.error) {
-    throw new Error(json.error.message);
-  }
-
-  return json.data as ChainMetadata[];
-}
-
-export function useApiChains() {
-  return useQuery({
-    queryKey: ["all-chains"],
-    queryFn: () => {
-      return fetchChainsFromApi();
-    },
   });
 }

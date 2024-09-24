@@ -1,4 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-service-utils-cf-worker.cjs.js",
-  "module": "dist/thirdweb-dev-service-utils-cf-worker.esm.js"
-}

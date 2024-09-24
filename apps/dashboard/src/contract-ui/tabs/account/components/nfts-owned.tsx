@@ -8,7 +8,7 @@ interface NftsOwnedProps {
 }
 
 export const NftsOwned: React.FC<NftsOwnedProps> = ({ contract }) => {
-  const { data: walletNFTs, isLoading: isWalletNFTsLoading } = useWalletNFTs(
+  const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs(
     contract.address,
     contract.chain.id,
   );
@@ -29,7 +29,7 @@ export const NftsOwned: React.FC<NftsOwnedProps> = ({ contract }) => {
         chainId: contract.chain.id,
       }))}
       allNfts
-      isLoading={isWalletNFTsLoading}
+      isPending={isWalletNFTsLoading}
       trackingCategory="account_nfts_owned"
     />
   ) : isWalletNFTsLoading ? null : error ? (

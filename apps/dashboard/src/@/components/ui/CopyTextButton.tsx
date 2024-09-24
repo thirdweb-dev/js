@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useClipboard } from "hooks/useClipboard";
 import { CheckIcon, CopyIcon } from "lucide-react";
-import { useState } from "react";
 import { Button } from "./button";
 import { ToolTipLabel } from "./tooltip";
 
@@ -22,15 +22,15 @@ export function CopyTextButton(props: {
   copyIconPosition: "left" | "right";
   onClick?: () => void;
 }) {
-  const [isCopied, setIsCopied] = useState(false);
-  const copyButton = isCopied ? (
+  const { hasCopied, onCopy } = useClipboard(props.textToCopy, 1000);
+  const copyButton = hasCopied ? (
     <CheckIcon
-      className={cn("size-3 text-green-500 shrink-0", props.iconClassName)}
+      className={cn("size-3 shrink-0 text-green-500", props.iconClassName)}
     />
   ) : (
     <CopyIcon
       className={cn(
-        "size-3 text-muted-foreground shrink-0",
+        "size-3 shrink-0 text-muted-foreground",
         props.iconClassName,
       )}
     />
@@ -42,26 +42,24 @@ export function CopyTextButton(props: {
         variant={props.variant || "outline"}
         aria-label={props.tooltip}
         className={cn(
-          "h-auto w-auto px-2.5 py-1.5 flex gap-2 rounded-lg text-foreground font-normal",
+          "flex h-auto w-auto gap-2 rounded-lg px-2.5 py-1.5 font-normal text-foreground",
           props.className,
         )}
         onClick={(e) => {
-          navigator.clipboard.writeText(props.textToCopy);
-          setIsCopied(true);
-          setTimeout(() => setIsCopied(false), 1000);
+          onCopy();
           e.stopPropagation();
           props.onClick?.();
         }}
       >
         {props.copyIconPosition === "right" ? (
           <>
-            <span className="truncate min-w-0"> {props.textToShow} </span>
+            <span className="min-w-0 truncate"> {props.textToShow} </span>
             {copyButton}
           </>
         ) : (
           <>
             {copyButton}
-            <span className="truncate min-w-0"> {props.textToShow} </span>
+            <span className="min-w-0 truncate"> {props.textToShow} </span>
           </>
         )}
       </Button>

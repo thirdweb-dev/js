@@ -3,7 +3,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useQuery } from "@tanstack/react-query";
 import type { EnsureLoginResponse } from "app/api/auth/ensure-login/route";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
@@ -17,7 +17,7 @@ declare global {
 }
 
 export function useLoggedInUser(): {
-  isLoading: boolean;
+  isPending: boolean;
   isLoggedIn: boolean;
   user: { address: string; jwt?: string } | null;
 } {
@@ -27,10 +27,16 @@ export function useLoggedInUser(): {
   const connectionStatus = useActiveWalletConnectionStatus();
   // this is to work around the fact that `connectionStatus` ends up as "disconnected"
   // which we *do* care about, but only after we have been "connecting" at least once
-  const statusWasEverConnecting = useRef(false);
-  if (connectionStatus === "connecting" || connectionStatus === "connected") {
-    statusWasEverConnecting.current = true;
-  }
+  const [statusWasEverConnecting, setStatusWasEverConnecting] = useState(
+    connectionStatus === "connecting" || connectionStatus === "connected",
+  );
+  // needs to be a useEffect for now
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (connectionStatus === "connecting" || connectionStatus === "connected") {
+      setStatusWasEverConnecting(true);
+    }
+  }, [connectionStatus]);
 
   const query = useQuery({
     // enabled if:
@@ -40,7 +46,7 @@ export function useLoggedInUser(): {
     enabled:
       !!pathname &&
       connectionStatus !== "connecting" &&
-      statusWasEverConnecting.current &&
+      statusWasEverConnecting &&
       isLoginRequired(pathname),
     // the last "persist", part of the queryKey, is to make sure that we do not cache this query in indexDB
     // convention in v4 of the SDK that we are (ab)using here
@@ -71,19 +77,12 @@ export function useLoggedInUser(): {
     if (query.data?.redirectTo) {
       router.replace(query.data.redirectTo);
     }
-    if (query.data?.jwt) {
-      // necessary for legacy things for now (SDK picks it up from there)
-      // eslint-disable-next-line react-compiler/react-compiler
-      window.TW_AUTH_TOKEN = query.data.jwt;
-    } else {
-      window.TW_AUTH_TOKEN = undefined;
-    }
-  }, [query.data?.redirectTo, query.data?.jwt, router]);
+  }, [query.data?.redirectTo, router]);
 
   // if we are "disconnected" we are not logged in
   if (connectionStatus === "disconnected") {
     return {
-      isLoading: false,
+      isPending: false,
       isLoggedIn: false,
       user: null,
     };
@@ -92,7 +91,7 @@ export function useLoggedInUser(): {
   // if we are still connecting, we are "loading"
   if (connectionStatus === "connecting") {
     return {
-      isLoading: true,
+      isPending: true,
       isLoggedIn: false,
       user: null,
     };
@@ -101,7 +100,7 @@ export function useLoggedInUser(): {
   // same if we do not yet have a path
   if (!pathname) {
     return {
-      isLoading: true,
+      isPending: true,
       isLoggedIn: false,
       user: null,
     };
@@ -110,7 +109,7 @@ export function useLoggedInUser(): {
   // if we do not have an address we are not logged in
   if (!connectedAddress) {
     return {
-      isLoading: false,
+      isPending: false,
       isLoggedIn: false,
       user: null,
     };
@@ -119,7 +118,7 @@ export function useLoggedInUser(): {
   // if we are not on a logged in path, we can simply return the connected address
   if (!isLoginRequired(pathname)) {
     return {
-      isLoading: false,
+      isPending: false,
       isLoggedIn: true,
       user: { address: connectedAddress },
     };
@@ -127,7 +126,7 @@ export function useLoggedInUser(): {
 
   // otherwise we return the query data
   return {
-    isLoading: query.isLoading,
+    isPending: query.isPending,
     isLoggedIn: query.data ? query.data.isLoggedIn : false,
     user: query.data?.isLoggedIn
       ? { address: connectedAddress, jwt: query.data.jwt }

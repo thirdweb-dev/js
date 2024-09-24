@@ -28,7 +28,6 @@ import {
 } from "components/contract-components/hooks";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import type { CodeEnvironment } from "components/contract-tabs/code/types";
-import { useSupportedChain } from "hooks/chains/configureChains";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
@@ -38,6 +37,7 @@ import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { useActiveAccount } from "thirdweb/react";
 import { toFunctionSelector } from "thirdweb/utils";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
+import { useAllChainsData } from "../../../../hooks/chains/allChains";
 
 interface CodeOverviewProps {
   abi?: Abi;
@@ -137,7 +137,7 @@ const data = await readContract({
     react: `import { useReadContract } from "thirdweb/react";
 
 export default function Component() {
-  const { data, isLoading } = useReadContract({
+  const { data, isPending } = useReadContract({
     contract,
     method: "{{function}}",
     params: [{{args}}]
@@ -146,7 +146,7 @@ export default function Component() {
     "react-native": `import { useReadContract } from "thirdweb/react";
 
 export default function Component() {
-  const { data, isLoading } = useReadContract({
+  const { data, isPending } = useReadContract({
     contract,
     method: "{{function}}",
     params: [{{args}}]
@@ -367,7 +367,7 @@ import { ${args.extensionName} } from "thirdweb/extensions/${args.extensionNames
     case "read": {
       return `${importStatement}
 
-const { data, isLoading } = useReadContract(${args.extensionName}, {
+const { data, isPending } = useReadContract(${args.extensionName}, {
   contract,${args.fnArgs.map((arg) => `\n  ${arg}`).join(",")}
 });`;
     }
@@ -592,7 +592,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   }, [isERC20, isERC721, isERC1155]);
 
   const chainId = useDashboardEVMChainId() || chainIdProp || 1;
-  const chainInfo = useSupportedChain(chainId || -1);
+  const { idToChain } = useAllChainsData();
+  const chainInfo = chainId ? idToChain.get(chainId) : undefined;
 
   const functions = useContractFunctions(abi || []);
   const events = useContractEvents(abi as Abi);
@@ -707,7 +708,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               <Text>
                 Install the latest version of the SDK. <br />
                 <TrackedLink
-                  color={"primary.500"}
+                  color="primary.500"
                   href={`https://portal.thirdweb.com/${environment}`}
                   isExternal
                   category="code-tab"
@@ -781,21 +782,21 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                     >
                       <TabList as={Flex}>
                         {(writeFunctions || []).length > 0 && (
-                          <Tab gap={2} flex={"1 1 0"}>
+                          <Tab gap={2} flex="1 1 0">
                             <Heading color="inherit" my={1} size="label.md">
                               Write
                             </Heading>
                           </Tab>
                         )}
                         {(readFunctions || []).length > 0 && (
-                          <Tab gap={2} flex={"1 1 0"}>
+                          <Tab gap={2} flex="1 1 0">
                             <Heading color="inherit" my={1} size="label.md">
                               Read
                             </Heading>
                           </Tab>
                         )}
                         {(events || []).length > 0 && (
-                          <Tab gap={2} flex={"1 1 0"}>
+                          <Tab gap={2} flex="1 1 0">
                             <Heading color="inherit" my={1} size="label.md">
                               Events
                             </Heading>

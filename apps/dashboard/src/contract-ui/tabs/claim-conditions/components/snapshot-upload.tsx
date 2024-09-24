@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   AspectRatio,
   Box,
@@ -6,7 +6,6 @@ import {
   Code,
   Container,
   Flex,
-  HStack,
   Icon,
   IconButton,
   Link,
@@ -23,7 +22,6 @@ import {
   Tooltip,
   Tr,
   UnorderedList,
-  VStack,
 } from "@chakra-ui/react";
 import { Logo } from "components/logo";
 import Papa from "papaparse";
@@ -75,6 +73,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
   dropType,
   isDisabled,
 }) => {
+  const client = useThirdwebClient();
   const [validSnapshot, setValidSnapshot] = useState<SnapshotAddressInput[]>(
     value || [],
   );
@@ -148,7 +147,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
           try {
             resolvedAddress = isAddress(address)
               ? address
-              : await resolveAddress({ client: thirdwebClient, name: address });
+              : await resolveAddress({ client, name: address });
             isValid = !!resolvedAddress;
           } catch {
             isValid = false;
@@ -180,7 +179,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
       setSnapshotData(ordered);
     };
     normalizeAddresses(validSnapshot);
-  }, [validSnapshot]);
+  }, [validSnapshot, client]);
 
   const removeInvalid = useCallback(() => {
     const filteredData = snapshotData.filter(({ isValid }) => isValid);
@@ -241,7 +240,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                     borderWidth="1px"
                   >
                     <input {...getInputProps()} />
-                    <VStack p={6}>
+                    <div className="flex flex-col p-6">
                       <Icon
                         as={BsFillCloudUploadFill}
                         boxSize={8}
@@ -263,7 +262,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                             : "Drag & Drop a CSV file here"}
                         </Heading>
                       )}
-                    </VStack>
+                    </div>
                   </Center>
                 </AspectRatio>
                 <Flex gap={2} flexDir="column">
@@ -273,7 +272,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                       <>
                         <Text as={ListItem}>
                           Files <em>must</em> contain one .csv file with a list
-                          of addresses and their <Code>maxClaimable</Code>.{" "}
+                          of addresses and their <Code>maxClaimable</Code>.
                           (amount each wallet is allowed to claim)
                           <br />
                           <Link
@@ -564,7 +563,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
       </TableContainer>
       <Portal containerRef={portalRef}>
         <Center w="100%">
-          <HStack>
+          <div className="flex flex-row">
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="first page"
@@ -606,7 +605,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
               <option value="250">250</option>
               <option value="500">500</option>
             </Select>
-          </HStack>
+          </div>
         </Center>
       </Portal>
     </Flex>

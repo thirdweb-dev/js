@@ -13,11 +13,13 @@ import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { CircleAlertIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
-import { SmartWallets } from "../../../../../../components/smart-wallets";
+import { AccountFactories } from "../../../../../../components/smart-wallets/AccountFactories";
 import { AAFooterSection } from "./AAFooterSection";
 import { isOpChainId } from "./isOpChain";
 
 const TRACKING_CATEGORY = "smart-wallet";
+
+// TODO - the factories shown on this page is not project specific, need to revamp this page
 
 export function AccountAbstractionPage(props: {
   apiKeyServices: ApiKeyService[];
@@ -43,7 +45,7 @@ export function AccountAbstractionPage(props: {
 
   return (
     <div>
-      <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight mb-1">
+      <h1 className="mb-1 font-semibold text-2xl tracking-tight lg:text-3xl">
         Account Abstraction
       </h1>
 
@@ -63,8 +65,8 @@ export function AccountAbstractionPage(props: {
 
       <div className="h-6" />
 
-      {looggedInUserQuery.isLoading ? (
-        <div className="flex items-center justify-center h-[400px] border border-border rounded-lg">
+      {looggedInUserQuery.isPending ? (
+        <div className="flex h-[400px] items-center justify-center rounded-lg border border-border">
           <Spinner className="size-14" />
         </div>
       ) : (
@@ -87,10 +89,7 @@ export function AccountAbstractionPage(props: {
             )
           )}
 
-          <SmartWallets
-            apiKeyServices={apiKeyServices}
-            trackingCategory={TRACKING_CATEGORY}
-          />
+          <AccountFactories trackingCategory={TRACKING_CATEGORY} />
         </div>
       )}
 

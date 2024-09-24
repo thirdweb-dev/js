@@ -75,10 +75,10 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
     [listingsQuery?.data],
   );
 
-  if (!countQuery.isLoading && (countQuery.data || 0n) === 0n) {
+  if (!countQuery.isPending && (countQuery.data || 0n) === 0n) {
     return null;
   }
-  if (!listingsQuery.isLoading && listings.length === 0) {
+  if (!listingsQuery.isPending && listings.length === 0) {
     return null;
   }
 
@@ -101,7 +101,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
       </Flex>
       <ListingCards
         listings={listings}
-        isLoading={listingsQuery.isLoading}
+        isPending={listingsQuery.isPending}
         trackingCategory={trackingCategory}
       />
     </>
@@ -137,10 +137,10 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
     [auctionsQuery?.data],
   );
 
-  if (!countQuery.isLoading && (countQuery.data || 0n) === 0n) {
+  if (!countQuery.isPending && (countQuery.data || 0n) === 0n) {
     return null;
   }
-  if (!auctionsQuery.isLoading && auctions.length === 0) {
+  if (!auctionsQuery.isPending && auctions.length === 0) {
     return null;
   }
 
@@ -163,7 +163,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
       </Flex>
       <ListingCards
         listings={auctions}
-        isLoading={auctionsQuery.isLoading}
+        isPending={auctionsQuery.isPending}
         trackingCategory={trackingCategory}
       />
     </>
@@ -237,19 +237,19 @@ const dummyMetadata: (idx: number) => ListingData = (idx) => ({
 
 interface ListingCardsProps {
   listings: ListingData[];
-  isLoading: boolean;
+  isPending: boolean;
   trackingCategory: string;
   isMarketplaceV1?: boolean;
 }
 const ListingCards: React.FC<ListingCardsProps> = ({
   listings,
-  isLoading,
+  isPending,
   isMarketplaceV1,
   trackingCategory,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  listings = isLoading
+  listings = isPending
     ? Array.from({ length: isMobile ? 2 : 3 }).map((_, idx) =>
         dummyMetadata(idx),
       )
@@ -274,7 +274,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
         >
           <Card p={0} position="relative">
             <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
-              <Skeleton isLoaded={!isLoading}>
+              <Skeleton isLoaded={!isPending}>
                 <NFTMediaWithEmptyState
                   metadata={listing.asset.metadata}
                   requireInteraction
@@ -284,11 +284,11 @@ const ListingCards: React.FC<ListingCardsProps> = ({
               </Skeleton>
             </AspectRatio>
             <Flex p={4} pb={3} gap={1} direction="column">
-              <Skeleton w={!isLoading ? "100%" : "50%"} isLoaded={!isLoading}>
+              <Skeleton w={!isPending ? "100%" : "50%"} isLoaded={!isPending}>
                 <Heading size="label.md">{listing.asset.metadata.name}</Heading>
               </Skeleton>
               {isMarketplaceV1 && (
-                <SkeletonText isLoaded={!isLoading}>
+                <SkeletonText isLoaded={!isPending}>
                   <Text size="body.sm">
                     {listing.type === "direct-listing"
                       ? "Direct Listing"
@@ -300,13 +300,13 @@ const ListingCards: React.FC<ListingCardsProps> = ({
               <Text size="body.sm" mt={4}>
                 Seller
               </Text>
-              <SkeletonText isLoaded={!isLoading}>
+              <SkeletonText isLoaded={!isPending}>
                 <WalletAddress address={listing.creatorAddress} />
               </SkeletonText>
               <SkeletonText
                 as={Badge}
                 background="backgroundHighlight"
-                isLoaded={!isLoading}
+                isLoaded={!isPending}
                 skeletonHeight={3.5}
                 noOfLines={1}
                 position="absolute"

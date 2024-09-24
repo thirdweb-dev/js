@@ -1,6 +1,8 @@
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { FrameRequest } from "@coinbase/onchainkit";
 import { CoinbaseKit } from "classes/CoinbaseKit";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getContract } from "thirdweb";
 import { base } from "thirdweb/chains";
 import { errorResponse } from "utils/api";
 import {
@@ -37,8 +39,11 @@ export default async function handler(
   // Get encoded data
   const data = await getErc721PreparedEncodedData(
     accountAddress,
-    contractAddress,
-    base,
+    getContract({
+      chain: base,
+      address: contractAddress,
+      client: getThirdwebClient(),
+    }),
   );
 
   // Return transaction details response to farcaster

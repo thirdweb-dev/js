@@ -45,7 +45,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
     <div className="relative">
       <Button
         asChild
-        className="absolute top-4 right-6 flex flex-row gap-1 items-center"
+        className="absolute top-4 right-6 flex flex-row items-center gap-1"
         size="sm"
         variant="outline"
         onClick={() => {

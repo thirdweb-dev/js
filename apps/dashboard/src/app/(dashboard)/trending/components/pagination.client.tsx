@@ -33,7 +33,7 @@ export function TablePagination() {
             }}
           />
         </PaginationItem>
-        <PaginationItem className="px-4 border rounded-lg h-full flex items-center bg-secondary">
+        <PaginationItem className="flex h-full items-center rounded-lg border bg-secondary px-4">
           {page}
         </PaginationItem>
         <PaginationItem>

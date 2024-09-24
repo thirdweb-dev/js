@@ -1,5 +1,5 @@
-import { sha256 } from "@noble/hashes/sha256";
 import { startProxy } from "@viem/anvil";
+import { computeClientIdFromSecretKey } from "../src/utils/client-id.js";
 import {
   BASE_FORK_BLOCK_NUMBER,
   FORK_BLOCK_NUMBER,
@@ -11,9 +11,7 @@ require("dotenv-mono").load();
 
 const SECRET_KEY = process.env.TW_SECRET_KEY as string;
 
-const clientId = SECRET_KEY
-  ? Buffer.from(sha256(SECRET_KEY)).toString("hex").slice(0, 32)
-  : "";
+const clientId = computeClientIdFromSecretKey(SECRET_KEY);
 
 export default async function globalSetup() {
   const shutdownMainnet = await startProxy({

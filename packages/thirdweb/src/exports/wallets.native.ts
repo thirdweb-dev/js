@@ -85,6 +85,18 @@ export type {
   InAppWalletSocialAuth as EmbeddedWalletSocialAuth,
 } from "../wallets/in-app/core/wallet/types.js";
 
+export {
+  preAuthenticate,
+  authenticate,
+  getUserEmail,
+  getUserPhoneNumber,
+  getProfiles,
+  linkProfile,
+} from "../wallets/in-app/native/auth/index.js";
+export const authenticateWithRedirect = () => {
+  throw new Error("Not supported in native");
+};
+
 export type {
   CoinbaseWalletCreationOptions,
   CoinbaseSDKWalletConnectionOptions,

@@ -1,6 +1,6 @@
-import { type CoreServiceConfig, updateRateLimitedAt } from "../api";
-import type { AuthorizationResult } from "../authorize/types";
-import type { RateLimitResult } from "./types";
+import { type CoreServiceConfig, updateRateLimitedAt } from "../api.js";
+import type { AuthorizationResult } from "../authorize/types.js";
+import type { RateLimitResult } from "./types.js";
 
 const RATE_LIMIT_WINDOW_SECONDS = 10;
 

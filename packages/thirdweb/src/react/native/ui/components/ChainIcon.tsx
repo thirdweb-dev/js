@@ -7,7 +7,7 @@ import { useChainIconUrl } from "../../../core/hooks/others/useChainQuery.js";
 import { CHAIN_ICON } from "../icons/svgs.js";
 import { RNImage } from "./RNImage.js";
 
-export type ChainIconProps = {
+type ChainIconProps = {
   theme: Theme;
   size: number;
   client: ThirdwebClient;

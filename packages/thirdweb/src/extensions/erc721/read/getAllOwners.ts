@@ -1,4 +1,4 @@
-import { ADDRESS_ZERO } from "../../../constants/addresses.js";
+import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { min } from "../../../utils/bigint.js";
 import { ownerOf } from "../__generated__/IERC721A/read/ownerOf.js";
@@ -78,7 +78,7 @@ export async function getAllOwners(
   for (let i = start; i < maxId; i++) {
     promises.push(
       ownerOf({ contract: options.contract, tokenId: i })
-        .catch(() => ADDRESS_ZERO)
+        .catch(() => ZERO_ADDRESS)
         .then((owner) => ({
           tokenId: i,
           owner,

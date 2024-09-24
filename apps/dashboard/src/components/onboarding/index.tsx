@@ -18,7 +18,7 @@ const OnboardingChoosePlan = lazy(() => import("./ChoosePlan"));
 
 function Loading() {
   return (
-    <div className="justify-center items-center flex h-[200px]">
+    <div className="flex h-[200px] items-center justify-center">
       <Spinner className="size-5" />
     </div>
   );
@@ -124,7 +124,7 @@ export const Onboarding: React.FC = () => {
   // FIXME: this entire flow needs reworked - re-vist as part of FTUX improvements
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (!isLoggedIn || meQuery.isLoading) {
+    if (!isLoggedIn || meQuery.isPending) {
       return;
     }
     const loadedAccount = meQuery.data;

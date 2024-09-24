@@ -133,13 +133,13 @@ type GenerateReqInput = {
   contents: ContentType;
 };
 
-export const AirdropContentERC1155 = [
+const AirdropContentERC1155 = [
   { name: "recipient", type: "address" },
   { name: "tokenId", type: "uint256" },
   { name: "amount", type: "uint256" },
 ] as const;
 
-export const AirdropRequestERC1155 = [
+const AirdropRequestERC1155 = [
   { name: "uid", type: "bytes32" },
   { name: "tokenAddress", type: "address" },
   { name: "expirationTimestamp", type: "uint256" },

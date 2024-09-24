@@ -75,7 +75,7 @@ export function isSmartWallet(
  * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
  * @internal
  */
-export const personalAccountToSmartAccountMap = new WeakMap<
+const personalAccountToSmartAccountMap = new WeakMap<
   Account,
   Wallet<"smart">
 >();

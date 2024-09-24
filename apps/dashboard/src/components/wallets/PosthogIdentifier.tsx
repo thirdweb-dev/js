@@ -1,5 +1,7 @@
-import { thirdwebClient } from "@/constants/client";
-import posthog from "posthog-js-opensource";
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import posthog from "posthog-js";
 import { useEffect } from "react";
 import {
   useActiveAccount,
@@ -18,12 +20,13 @@ const walletIdToPHName: Record<string, string> = {
 };
 
 export const PosthogIdentifier: React.FC = () => {
+  const client = useThirdwebClient();
   const account = useActiveAccount();
   const chain = useActiveWalletChain();
   const balance = useWalletBalance({
     address: account?.address,
     chain,
-    client: thirdwebClient,
+    client,
   });
   const wallet = useActiveWallet();
 

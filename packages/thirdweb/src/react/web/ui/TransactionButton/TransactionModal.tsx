@@ -17,7 +17,7 @@ import { Modal } from "../components/Modal.js";
 import type { LocaleId } from "../types.js";
 import { ExecutingTxScreen } from "./ExecutingScreen.js";
 
-export type ModalProps = {
+type ModalProps = {
   title: string;
   onComplete: () => void;
   onClose: () => void;
@@ -65,9 +65,7 @@ export function TransactionModal(props: ModalProps) {
   );
 }
 
-export function TransactionModalContent(
-  props: ModalProps & { onBack?: () => void },
-) {
+function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
   const localeQuery = useConnectLocale(props.localeId);
   const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
 

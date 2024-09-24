@@ -26,7 +26,7 @@ export default async function DashboardContractTrendingPage(props: {
 
   return (
     <ContractsSidebarLayout>
-      <h1 className="text-2xl md:text-3xl tracking-tight font-semibold mb-5">
+      <h1 className="mb-5 font-semibold text-2xl tracking-tight md:text-3xl">
         Trending Contracts
       </h1>
 

@@ -1,7 +1,6 @@
-import type { CoreServiceConfig } from "../api";
-import type { AuthorizationResult } from "../authorize/types";
-
-import type { UsageLimitResult } from "./types";
+import type { CoreServiceConfig } from "../api.js";
+import type { AuthorizationResult } from "../authorize/types.js";
+import type { UsageLimitResult } from "./types.js";
 
 export async function usageLimit(
   authzResult: AuthorizationResult,
@@ -35,7 +34,7 @@ export async function usageLimit(
   ) {
     return {
       usageLimited: true,
-      status: 403,
+      status: 402,
       errorMessage: `You've used all of your total usage credits for Storage Pinning. Please add your payment method at https://thirdweb.com/dashboard/settings/billing.`,
       errorCode: "PAYMENT_METHOD_REQUIRED",
     };
@@ -48,7 +47,7 @@ export async function usageLimit(
   ) {
     return {
       usageLimited: true,
-      status: 403,
+      status: 402,
       errorMessage: `You've used all of your total usage credits for Embedded Wallets. Please add your payment method at https://thirdweb.com/dashboard/settings/billing.`,
       errorCode: "PAYMENT_METHOD_REQUIRED",
     };

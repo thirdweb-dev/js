@@ -1,12 +1,12 @@
 import { Separator } from "@/components/ui/separator";
-import { thirdwebClient } from "@/constants/client";
-import { isAddress } from "thirdweb";
-import { fetchDeployMetadata } from "thirdweb/contract";
-import { resolveAddress } from "thirdweb/extensions/ens";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import {
   fetchPublishedContractVersion,
   fetchPublishedContractVersions,
-} from "../../../../components/contract-components/fetch-contracts-with-versions";
+} from "components/contract-components/fetch-contracts-with-versions";
+import { isAddress } from "thirdweb";
+import { fetchDeployMetadata } from "thirdweb/contract";
+import { resolveAddress } from "thirdweb/extensions/ens";
 import { DeployActions } from "./contract-actions-deploy.client";
 import { DeployContractHeader } from "./contract-header";
 import { DeployFormForUri } from "./uri-based-deploy";
@@ -26,11 +26,12 @@ function mapThirdwebPublisher(publisher: string) {
 }
 
 export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
+  const client = getThirdwebClient();
   // resolve ENS if required
   const publisherAddress = isAddress(props.publisher)
     ? props.publisher
     : await resolveAddress({
-        client: thirdwebClient,
+        client,
         name: mapThirdwebPublisher(props.publisher),
       });
 
@@ -52,7 +53,7 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
     .map((m) => m.publishMetadataUri);
   const [contractMetadata, ...fetchedModules] = await Promise.all([
     fetchDeployMetadata({
-      client: thirdwebClient,
+      client,
       // force `ipfs://` prefix
       uri: publishedContract.publishMetadataUri.startsWith("ipfs://")
         ? publishedContract.publishMetadataUri
@@ -60,7 +61,7 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
     }).catch(() => null),
     ...(moduleUris || []).map((uri) =>
       fetchDeployMetadata({
-        client: thirdwebClient,
+        client,
         // force `ipfs://` prefix
         uri: uri.startsWith("ipfs://") ? uri : `ipfs://${uri}`,
       }).catch(() => null),
@@ -83,6 +84,7 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
       <DeployFormForUri
         contractMetadata={contractMetadata}
         modules={fetchedModules.filter((m) => m !== null)}
+        pathname={`/${props.publisher}/${props.contract_id}${props.version ? `/${props.version}` : ""}/deploy`}
       />
     </>
   );

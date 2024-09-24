@@ -1,4 +1,4 @@
-export function isReactNative(): boolean {
+function isReactNative(): boolean {
   return (
     typeof document === "undefined" &&
     typeof navigator !== "undefined" &&
@@ -6,7 +6,7 @@ export function isReactNative(): boolean {
   );
 }
 
-export function isNode(): boolean {
+function isNode(): boolean {
   return (
     typeof process !== "undefined" &&
     typeof process.versions !== "undefined" &&

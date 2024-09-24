@@ -4,8 +4,8 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
-import { linkProfile } from "../../../../wallets/in-app/core/wallet/profiles.js";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
+import { linkProfile } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import { loginWithOauthRedirect } from "../../../../wallets/in-app/web/lib/auth/oauth.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -50,7 +50,7 @@ export function SocialLogin(props: {
     const walletConfig = wallet.getConfig();
     const authMode =
       walletConfig && "auth" in walletConfig
-        ? walletConfig?.auth?.mode ?? "popup"
+        ? (walletConfig?.auth?.mode ?? "popup")
         : "popup";
 
     if (
@@ -92,7 +92,8 @@ export function SocialLogin(props: {
 
       setStatus("connecting");
       if (props.isLinking) {
-        await linkProfile(wallet as Wallet<"inApp">, {
+        await linkProfile({
+          client: props.client,
           strategy: props.socialAuth,
           openedWindow: socialWindow,
           closeOpenedWindow: (openedWindow) => {

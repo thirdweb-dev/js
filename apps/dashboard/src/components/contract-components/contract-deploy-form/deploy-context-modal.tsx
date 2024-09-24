@@ -77,12 +77,12 @@ export function DeployStatusModal(props: {
     <Dialog open={isModalOpen}>
       <DialogContent
         dialogCloseClassName="hidden"
-        className="md:max-w-[480px] p-0 gap-0 z-[10001]"
+        className="z-[10001] gap-0 p-0 md:max-w-[480px]"
         dialogOverlayClassName="z-[10000]"
       >
-        <div className="p-6 flex flex-col gap-6">
+        <div className="flex flex-col gap-6 p-6">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-semibold tracking-tight">
+            <DialogTitle className="font-semibold text-2xl tracking-tight">
               Deploy Status
             </DialogTitle>
           </DialogHeader>
@@ -104,7 +104,7 @@ export function DeployStatusModal(props: {
         </div>
 
         {viewContractLink && (
-          <div className="flex justify-between mt-2 border-border border-t p-6 gap-4">
+          <div className="mt-2 flex justify-between gap-4 border-border border-t p-6">
             <Button variant="outline" onClick={() => setIsModalOpen(false)}>
               Close
             </Button>
@@ -131,11 +131,11 @@ function RenderDeployModalStep(props: DeployModalStepProps) {
     <div className="rounded-lg border border-border">
       <div
         className={cn(
-          "flex gap-4 p-4 items-center",
+          "flex items-center gap-4 p-4",
           !isActive && !hasCompleted && "opacity-30",
         )}
       >
-        <div className="flex items-center justify-center shrink-0">
+        <div className="flex shrink-0 items-center justify-center">
           {isActive ? (
             <Spinner className="size-6 text-link-foreground" />
           ) : hasCompleted ? (
@@ -146,7 +146,7 @@ function RenderDeployModalStep(props: DeployModalStepProps) {
         </div>
 
         <div className="flex flex-col">
-          <h3 className="text-semibold mb-1 font-semibold">{title}</h3>
+          <h3 className="mb-1 font-semibold text-semibold">{title}</h3>
           <p className="text-muted-foreground text-sm">{description}</p>
         </div>
       </div>

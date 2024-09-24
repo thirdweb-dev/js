@@ -6,7 +6,7 @@ const REGEX_MAIN_VERSION = new RegExp(MAIN_VERSION_IDENTIFIER);
 /**
  * @internal
  */
-export type Semver = {
+type Semver = {
   major: number;
   minor: number;
   patch: number;
@@ -17,7 +17,7 @@ export type Semver = {
  * @internal
  * @param version - The version to convert to a Semver
  */
-export function toSemver(version: string): Semver {
+function toSemver(version: string): Semver {
   if (version.length > MAX_LENGTH) {
     throw new Error(`version is longer than ${MAX_LENGTH} characters`);
   }
@@ -56,21 +56,4 @@ export function isIncrementalVersion(current: string, next: string) {
   }
   const eqMinor = nextSemver.minor === currentSemver.minor;
   return eqMajor && eqMinor && nextSemver.patch > currentSemver.patch;
-}
-
-/**
- * @internal
- */
-export function isDowngradeVersion(current: string, next: string) {
-  const currentSemver = toSemver(current);
-  const nextSemver = toSemver(next);
-  if (nextSemver.major < currentSemver.major) {
-    return true;
-  }
-  const eqMajor = nextSemver.major === currentSemver.major;
-  if (eqMajor && nextSemver.minor < currentSemver.minor) {
-    return true;
-  }
-  const eqMinor = nextSemver.minor === currentSemver.minor;
-  return eqMajor && eqMinor && nextSemver.patch < currentSemver.patch;
 }

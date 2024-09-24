@@ -2,7 +2,6 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useAccount, useAccountUsage } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, HStack } from "@chakra-ui/react";
 import { BillingPeriod } from "components/settings/Account/Billing/Period";
 import { BillingPlan } from "components/settings/Account/Billing/Plan";
 import { Usage } from "components/settings/Account/Usage";
@@ -12,29 +11,25 @@ export const SettingsUsagePage = () => {
   const usageQuery = useAccountUsage();
   const account = meQuery.data;
 
-  if (meQuery.isLoading || !account) {
+  if (meQuery.isPending || !account) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <Spinner className="size-10" />
       </div>
     );
   }
 
   return (
-    <Flex flexDir="column" gap={8}>
-      <Flex direction="column">
-        <h1 className="font-semibold text-3xl tracking-tight mb-2">Usage</h1>
-        <HStack
-          justifyContent="space-between"
-          flexDir={{ base: "column", lg: "row" }}
-          alignItems={{ base: "flex-start", lg: "center" }}
-        >
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col">
+        <h1 className="mb-2 font-semibold text-3xl tracking-tight">Usage</h1>
+        <div className="flex flex-col items-start justify-between lg:flex-row lg:items-center">
           <BillingPlan account={account} />
           <BillingPeriod account={account} usage={usageQuery.data} />
-        </HStack>
-      </Flex>
+        </div>
+      </div>
 
-      <Usage usage={usageQuery.data} usageLoading={usageQuery.isLoading} />
-    </Flex>
+      <Usage usage={usageQuery.data} usagePending={usageQuery.isPending} />
+    </div>
   );
 };

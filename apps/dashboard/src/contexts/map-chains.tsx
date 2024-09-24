@@ -1,5 +1,5 @@
 import type { Chain } from "thirdweb";
-import type { StoredChain } from "./configured-chains";
+import type { StoredChain } from "../stores/chainStores";
 
 export function mapV4ChainToV5Chain(v4Chain: StoredChain) {
   const chain: Chain = {

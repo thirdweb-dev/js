@@ -8,11 +8,10 @@ import {
   Select,
   Stack,
   useBreakpointValue,
-  useClipboard,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
+import { useClipboard } from "hooks/useClipboard";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -28,7 +27,8 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import type { StoredChain } from "../../../../contexts/configured-chains";
+import { useAllChainsData } from "../../../../hooks/chains/allChains";
+import type { StoredChain } from "../../../../stores/chainStores";
 
 interface EmbedSetupProps {
   contract: ThirdwebContract;
@@ -236,11 +236,9 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   );
 
   const chainId = useDashboardEVMChainId();
-  const configuredChains = useSupportedChainsRecord();
+  const { idToChain } = useAllChainsData();
 
-  const chain = (configuredChains[chainId as number] as
-    | StoredChain
-    | undefined) || {
+  const chain: StoredChain = (chainId ? idToChain.get(chainId) : undefined) || {
     name: "Unknown Chain",
     chainId: chainId || -1,
     rpc: [],

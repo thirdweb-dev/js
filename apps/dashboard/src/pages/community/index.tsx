@@ -325,13 +325,12 @@ const Community: ThirdwebNextPage = () => {
           my={{ base: 12, md: 24 }}
         >
           <Heading mt={8} size="display.md">
-            Start
+            Start{" "}
             <Box
               as="span"
               bgGradient="linear(to-r, #BFA3DA, #C735B0)"
               bgClip="text"
             >
-              {" "}
               building{" "}
             </Box>
             today.

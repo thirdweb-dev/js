@@ -37,6 +37,18 @@ export const DISCORD_ICON = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink
 </g>
 </svg>`;
 
+export const COINBASE_ICON = `<svg width="556" height="556" viewBox="0 0 556 556" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_148_5)">
+<path d="M278 0C431.533 0 556 124.467 556 278C556 431.533 431.533 556 278 556C124.467 556 0 431.533 0 278C0 124.467 124.467 0 278 0Z" fill="#0052FF"/>
+<path d="M278.482 375.19C224.49 375.19 180.862 331.41 180.862 277.5C180.862 223.59 224.61 179.81 278.482 179.81C326.81 179.81 366.943 215.027 374.656 261.218H473C464.684 160.875 380.803 82 278.362 82C170.497 82 83 169.559 83 277.5C83 385.441 170.497 473 278.362 473C380.803 473 464.684 394.125 473 293.782H374.536C366.823 339.973 326.81 375.19 278.482 375.19Z" fill="white"/>
+</g>
+<defs>
+<clipPath id="clip0_148_5">
+<rect width="556" height="556" fill="white"/>
+</clipPath>
+</defs>
+</svg>`;
+
 export const LINE_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320"><defs><style>.cls-1{fill:#06c755;}.cls-2{fill:#fff;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="LINE_LOGO" data-name="LINE LOGO"><rect class="cls-1" width="320" height="320" rx="72.14"/><path class="cls-2" d="M266.66,144.92c0-47.74-47.86-86.58-106.69-86.58S53.28,97.18,53.28,144.92c0,42.8,38,78.65,89.22,85.42,3.48.75,8.21,2.29,9.4,5.26,1.08,2.7.71,6.93.35,9.65,0,0-1.25,7.53-1.52,9.13-.47,2.7-2.15,10.55,9.24,5.76s61.44-36.18,83.82-61.95h0C259.25,181.24,266.66,164,266.66,144.92Z"/><path class="cls-1" d="M231.16,172.49h-30a2,2,0,0,1-2-2v0h0V123.94h0v0a2,2,0,0,1,2-2h30a2,2,0,0,1,2,2v7.57a2,2,0,0,1-2,2H210.79v7.85h20.37a2,2,0,0,1,2,2V151a2,2,0,0,1-2,2H210.79v7.86h20.37a2,2,0,0,1,2,2v7.56A2,2,0,0,1,231.16,172.49Z"/><path class="cls-1" d="M120.29,172.49a2,2,0,0,0,2-2v-7.56a2,2,0,0,0-2-2H99.92v-37a2,2,0,0,0-2-2H90.32a2,2,0,0,0-2,2v46.53h0v0a2,2,0,0,0,2,2h30Z"/><rect class="cls-1" x="128.73" y="121.85" width="11.64" height="50.64" rx="2.04"/><path class="cls-1" d="M189.84,121.85h-7.56a2,2,0,0,0-2,2v27.66l-21.3-28.77a1.2,1.2,0,0,0-.17-.21v0l-.12-.12,0,0-.11-.09-.06,0-.11-.08-.06,0-.11-.06-.07,0-.11,0-.07,0-.12,0-.08,0-.12,0h-.08l-.11,0h-7.71a2,2,0,0,0-2,2v46.56a2,2,0,0,0,2,2h7.57a2,2,0,0,0,2-2V142.81l21.33,28.8a2,2,0,0,0,.52.52h0l.12.08.06,0,.1.05.1,0,.07,0,.14,0h0a2.42,2.42,0,0,0,.54.07h7.52a2,2,0,0,0,2-2V123.89A2,2,0,0,0,189.84,121.85Z"/></g></g></svg>`;
 
 export const FARCASTER_ICON = `<svg width={width} height={height} viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -97,6 +109,8 @@ export const X_ICON = `<svg width="320" height="320" viewBox="0 0 320 320" fill=
 <rect width="320" height="320" rx="24" fill="black"/>
 <path d="M177.315 145.335L245.068 67H229.013L170.182 135.017L123.195 67H69L140.055 169.854L69 252H85.0563L147.183 180.172L196.805 252H251L177.311 145.335H177.315ZM155.323 170.76L148.124 160.518L90.8417 79.022H115.503L161.731 144.792L168.93 155.034L229.02 240.525H204.359L155.323 170.764V170.76Z" fill="white"/>
 </svg>`;
+
+export const GUEST_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
 
 export const WALLET_ICON = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M12.6667 4.66667V2.66667C12.6667 2.48986 12.5964 2.32029 12.4714 2.19526C12.3464 2.07024 12.1768 2 12 2H3.33333C2.97971 2 2.64057 2.14048 2.39052 2.39052C2.14048 2.64057 2 2.97971 2 3.33333C2 3.68696 2.14048 4.02609 2.39052 4.27614C2.64057 4.52619 2.97971 4.66667 3.33333 4.66667H13.3333C13.5101 4.66667 13.6797 4.7369 13.8047 4.86193C13.9298 4.98695 14 5.15652 14 5.33333V8M14 8H12C11.6464 8 11.3072 8.14048 11.0572 8.39052C10.8071 8.64057 10.6667 8.97971 10.6667 9.33333C10.6667 9.68696 10.8071 10.0261 11.0572 10.2761C11.3072 10.5262 11.6464 10.6667 12 10.6667H14C14.1768 10.6667 14.3464 10.5964 14.4714 10.4714C14.5964 10.3464 14.6667 10.1768 14.6667 10V8.66667C14.6667 8.48986 14.5964 8.32029 14.4714 8.19526C14.3464 8.07024 14.1768 8 14 8Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
@@ -183,8 +197,6 @@ export const COINS_ICON = `<svg
         strokeLinejoin="round"
       />
     </svg>`;
-
-export const TRANSACTIONS_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-logs"><path d="M13 12h8"/><path d="M13 18h8"/><path d="M13 6h8"/><path d="M3 12h1"/><path d="M3 18h1"/><path d="M3 6h1"/><path d="M8 12h1"/><path d="M8 18h1"/><path d="M8 6h1"/></svg>`;
 
 export const RIGHT_CHEVRON = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>

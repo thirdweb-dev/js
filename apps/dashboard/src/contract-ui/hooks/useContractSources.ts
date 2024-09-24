@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useQuery } from "@tanstack/react-query";
 import type { ThirdwebContract } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
@@ -8,6 +8,7 @@ import invariant from "tiny-invariant";
 // An example for a contract that has IPFS URIs in its metadata: abstract-testnet/0x8A24a7Df38fA5fCCcFD1259e90Fb6996fDdfcADa
 
 export function useContractSources(contract?: ThirdwebContract) {
+  const client = useThirdwebClient();
   return useQuery({
     queryKey: [
       "contract-sources",
@@ -36,7 +37,7 @@ export function useContractSources(contract?: ThirdwebContract) {
             const ipfsHash = ipfsLink.split("ipfs/")[1];
             const source = await download({
               uri: `ipfs://${ipfsHash}`,
-              client: thirdwebClient,
+              client,
             })
               .then((r) => r.text())
               .catch(() => "Failed to fetch source from IPFS");

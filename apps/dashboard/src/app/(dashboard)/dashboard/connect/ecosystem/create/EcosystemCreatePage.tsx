@@ -5,9 +5,9 @@ export function EcosystemCreatePage(props: {
   ecosystemLayoutPath: string;
 }) {
   return (
-    <div className="flex flex-col w-full gap-6">
+    <div className="flex w-full flex-col gap-6">
       <header className="flex flex-col gap-1">
-        <h2 className="text-3xl font-semibold text-foreground tracking-tight">
+        <h2 className="font-semibold text-3xl text-foreground tracking-tight">
           Create an Ecosystem
         </h2>
         <p className="text-muted-foreground">

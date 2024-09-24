@@ -24,7 +24,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
             To access this feature, you need to upgrade to the{" "}
             <TrackedLinkTW
               target="_blank"
-              href={"/dashboard/settings/billing"}
+              href="/dashboard/settings/billing"
               category="advancedFeature"
               label={trackingLabel}
               className="text-link-foreground hover:text-foreground"
@@ -36,7 +36,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
         ) : undefined
       }
     >
-      <div className="inline-flex gap-2 items-center">
+      <div className="inline-flex items-center gap-2">
         {upgradeRequired && <Badge>Growth</Badge>}
         <Switch
           checked={checked}

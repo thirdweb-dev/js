@@ -55,7 +55,7 @@ const getKey = (accountContract: ThirdwebContract) => {
   return `${accountContract.chain.id}:${accountContract.address}`;
 };
 
-export const markAccountDeploying = (accountContract: ThirdwebContract) => {
+const markAccountDeploying = (accountContract: ThirdwebContract) => {
   isDeployingSet.add(getKey(accountContract));
 };
 
@@ -63,7 +63,7 @@ export const clearAccountDeploying = (accountContract: ThirdwebContract) => {
   isDeployingSet.delete(getKey(accountContract));
 };
 
-export const isAccountDeploying = (accountContract: ThirdwebContract) => {
+const isAccountDeploying = (accountContract: ThirdwebContract) => {
   return isDeployingSet.has(getKey(accountContract));
 };
 

@@ -6,6 +6,7 @@ export {
 } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOfBatch.js";
 export {
   getNFT,
+  isGetNFTSupported,
   type GetNFTParams,
 } from "../../extensions/erc1155/read/getNFT.js";
 export {
@@ -94,6 +95,7 @@ export { freezeMetadata } from "../../extensions/erc1155/__generated__/INFTMetad
 export {
   getActiveClaimCondition,
   isGetActiveClaimConditionSupported,
+  type GetActiveClaimConditionParams,
 } from "../../extensions/erc1155/drops/read/getActiveClaimCondition.js";
 export {
   getClaimConditionById,

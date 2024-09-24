@@ -39,14 +39,14 @@ const dummyMetadata: (idx: number) => NFTWithContract = (idx) => ({
 interface NFTCardsProps {
   nfts: Array<NFTWithContract>;
   trackingCategory: TrackedLinkProps["category"];
-  isLoading: boolean;
+  isPending: boolean;
   allNfts?: boolean;
 }
 
 export const NFTCards: React.FC<NFTCardsProps> = ({
   nfts,
   trackingCategory,
-  isLoading,
+  isPending,
   allNfts,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -62,7 +62,7 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
       gap={{ base: 3, md: 6 }}
       columns={allNfts ? { base: 2, md: 4 } : { base: 2, md: 3 }}
     >
-      {(isLoading ? dummyData : nfts).map((token) => {
+      {(isPending ? dummyData : nfts).map((token) => {
         const tokenId = token.id.toString();
 
         return (
@@ -75,7 +75,7 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
           >
             <Card p={0} h="full">
               <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
-                <Skeleton isLoaded={!isLoading}>
+                <Skeleton isLoaded={!isPending}>
                   <NFTMediaWithEmptyState
                     metadata={token.metadata}
                     requireInteraction
@@ -85,10 +85,10 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
                 </Skeleton>
               </AspectRatio>
               <Flex p={4} pb={3} gap={3} direction="column">
-                <Skeleton w={!isLoading ? "100%" : "50%"} isLoaded={!isLoading}>
+                <Skeleton w={!isPending ? "100%" : "50%"} isLoaded={!isPending}>
                   <Heading size="label.md">{token.metadata.name}</Heading>
                 </Skeleton>
-                <SkeletonText isLoaded={!isLoading}>
+                <SkeletonText isLoaded={!isPending}>
                   <Text noOfLines={3}>
                     {token.metadata.description ? (
                       token.metadata.description

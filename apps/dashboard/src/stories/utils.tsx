@@ -6,7 +6,7 @@ function StoryBadge(props: {
 }) {
   return (
     <Badge
-      className="self-start mb-3 text-xs px-3 py-1 font-normal bg-muted border-none text-muted-foreground"
+      className="mb-3 self-start border-none bg-muted px-3 py-1 font-normal text-muted-foreground text-xs"
       variant="outline"
     >
       {props.label}

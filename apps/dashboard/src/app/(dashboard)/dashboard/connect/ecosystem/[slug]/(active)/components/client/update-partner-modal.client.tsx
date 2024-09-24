@@ -20,11 +20,8 @@ export function UpdatePartnerModal({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent
-        className="w-[90vw] sm:w-auto z-[10001]"
-        dialogOverlayClassName="z-[10000]"
-      >
-        <DialogHeader>
+      <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
+        <DialogHeader className="mb-2">
           <DialogTitle>Update {partner.name}</DialogTitle>
         </DialogHeader>
         <UpdatePartnerForm

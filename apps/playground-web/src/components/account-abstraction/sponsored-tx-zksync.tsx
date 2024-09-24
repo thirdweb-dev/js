@@ -38,12 +38,12 @@ export function SponsoredTxZksyncPreview() {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col items-center justify-center">
       {isNftLoading ? (
-        <div className="w-full mt-24">Loading...</div>
+        <div className="mt-24 w-full">Loading...</div>
       ) : (
         <>
-          <div className="flex flex-col justify-center p-2 gap-2">
+          <div className="flex flex-col justify-center gap-2 p-2">
             <ConnectButton
               client={THIRDWEB_CLIENT}
               chain={chain}
@@ -66,8 +66,8 @@ export function SponsoredTxZksyncPreview() {
           ) : null}
           {smartAccount ? (
             <div className="flex flex-col justify-center p-2">
-              <p className="font-semibold text-center mb-2">
-                You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
+              <p className="mb-2 text-center font-semibold">
+                You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}
                 Kittens
               </p>
               <TransactionButton
@@ -98,7 +98,7 @@ export function SponsoredTxZksyncPreview() {
           ) : null}
           {txHash ? (
             <div className="flex flex-col justify-center p-2">
-              <p className="text-green-500 text-center mb-2">
+              <p className="mb-2 text-center text-green-500">
                 Minted! Tx Hash:{" "}
                 <a
                   href={`${chain.blockExplorers?.[0]?.url}/tx/${txHash}`}

@@ -1,4 +1,6 @@
-import { thirdwebClient } from "@/constants/client";
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type EngineContractSubscription,
   useEngineRemoveContractSubscription,
@@ -50,7 +52,7 @@ function shortenAddress(address: string) {
 interface ContractSubscriptionTableProps {
   instanceUrl: string;
   contractSubscriptions: EngineContractSubscription[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
   autoUpdate: boolean;
 }
@@ -62,20 +64,20 @@ export const ContractSubscriptionTable: React.FC<
 > = ({
   instanceUrl,
   contractSubscriptions,
-  isLoading,
+  isPending,
   isFetched,
   autoUpdate,
 }) => {
   const removeDisclosure = useDisclosure();
   const [selectedContractSub, setSelectedContractSub] =
     useState<EngineContractSubscription>();
-  const { chainIdToChainRecord } = useAllChainsData();
+  const { idToChain } = useAllChainsData();
 
   const columns = [
     columnHelper.accessor("chainId", {
       header: "Chain",
       cell: (cell) => {
-        const chain = chainIdToChainRecord[cell.getValue()];
+        const chain = idToChain.get(cell.getValue());
         return (
           <Flex align="center" gap={2}>
             <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
@@ -88,7 +90,7 @@ export const ContractSubscriptionTable: React.FC<
       header: "Contract Address",
       cell: (cell) => {
         const { chainId } = cell.row.original;
-        const chain = chainIdToChainRecord[chainId];
+        const chain = idToChain.get(chainId);
         const explorer = chain?.explorers?.[0];
         if (!explorer) {
           return (
@@ -216,7 +218,7 @@ export const ContractSubscriptionTable: React.FC<
         title="contract subscriptions"
         data={contractSubscriptions}
         columns={columns}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {
@@ -249,6 +251,7 @@ const ChainLastBlockTimestamp = ({
   chainId: number;
   blockNumber: bigint;
 }) => {
+  const client = useThirdwebClient();
   const chain = useV5DashboardChain(chainId);
   // Get the block timestamp to display how delayed the last processed block is.
   const ethBlockQuery = useQuery({
@@ -257,8 +260,8 @@ const ChainLastBlockTimestamp = ({
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const rpcRequest = getRpcClient({
-        client: thirdwebClient,
-        chain: chain,
+        client,
+        chain,
       });
       const block = await eth_getBlockByNumber(rpcRequest, {
         blockNumber,
@@ -335,8 +338,8 @@ const RemoveModal = ({
     "Successfully removed contract subscription.",
     "Failed to remove contract subscription.",
   );
-  const { chainIdToChainRecord } = useAllChainsData();
-  const chain = chainIdToChainRecord[contractSubscription.chainId];
+  const { idToChain } = useAllChainsData();
+  const chain = idToChain.get(contractSubscription.chainId);
 
   const onClick = () => {
     removeContractSubscription(
@@ -371,7 +374,7 @@ const RemoveModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Remove Contract Subscription</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

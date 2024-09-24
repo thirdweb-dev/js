@@ -1,11 +1,11 @@
-import { Flex, Link } from "@chakra-ui/react";
-import posthog from "posthog-js-opensource";
+import Link from "next/link";
+import posthog from "posthog-js";
 import { Text } from "tw-components";
 
 const PLEASE_REACH_OUT_MESSAGE = (
   <Text as="span" color="inherit">
     If you believe this is incorrect or the error persists, please visit our{" "}
-    <Link fontWeight="700" href="/support" isExternal textDecor="underline">
+    <Link className="font-bold underline" target="_blank" href="/support">
       support site
     </Link>
     .
@@ -18,14 +18,14 @@ export function parseErrorToMessage(error: unknown): string | JSX.Element {
   const message = parseError(error);
 
   return (
-    <Flex gap={4} flexDir="column">
+    <div className="flex flex-col gap-4">
       <Text as="span" color="inherit" noOfLines={3}>
         {message}
       </Text>
       <Text fontStyle="italic" as="span" color="inherit">
         {PLEASE_REACH_OUT_MESSAGE}
       </Text>
-    </Flex>
+    </div>
   );
 }
 
@@ -108,16 +108,16 @@ function parseErrorCode(
 
       if (error.message.includes("MetaMask Message Signature")) {
         return `
-          There was an error with the metamask signature. 
-          If you are using a Ledger wallet, make sure you go to settings 
+          There was an error with the metamask signature.
+          If you are using a Ledger wallet, make sure you go to settings
           and enable the "Allow Contract Data" setting
         `;
       }
 
       if (error.data?.message?.includes("max code size exceeded")) {
         return `
-          This contract is bigger than the size limit (24,567 bytes). 
-          You need to reduce the size of the contract before deploying. 
+          This contract is bigger than the size limit (24,567 bytes).
+          You need to reduce the size of the contract before deploying.
           We recommend enabling the optimizer in your compiler.
         `;
       }

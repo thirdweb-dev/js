@@ -5,7 +5,7 @@ import { getContract } from "../../contract/contract.js";
 import type { Prettify } from "../type-utils.js";
 import { toUnits } from "../units.js";
 
-export type AmountOrAmountInWei =
+type AmountOrAmountInWei =
   | {
       amount: string | number;
     }

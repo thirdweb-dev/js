@@ -8,7 +8,7 @@ import { URL } from "node:url";
 const toPath = (urlOrPath: string | URL) =>
   urlOrPath instanceof URL ? fileURLToPath(urlOrPath) : urlOrPath;
 
-export type Options = {
+type Options = {
   /**
    * The directory to start from.
    * @default process.cwd()
@@ -55,7 +55,7 @@ async function findUp(
   return undefined;
 }
 
-export type PackageDirectoryOptions = {
+type PackageDirectoryOptions = {
   /**
    * The directory to start searching from.
    * @default process.cwd()

@@ -37,7 +37,7 @@ export default async function ExtensionPage() {
   return (
     <>
       <Heading level={1} id="built-in-extensions">
-        Built-in extensions for common standards{" "}
+        Built-in extensions for common standards
       </Heading>
       <Paragraph>
         The SDK comes packed with a set of built-in extensions for common
@@ -60,7 +60,7 @@ export default async function ExtensionPage() {
                 <Td>
                   <Link
                     href={`/references/typescript/v5/functions#${item.toLowerCase()}`}
-                    className="text-accent-500 hover:text-f-100 flex flex-nowrap items-center gap-4 whitespace-nowrap font-medium transition-colors"
+                    className="flex flex-nowrap items-center gap-4 whitespace-nowrap font-medium text-accent-500 transition-colors hover:text-f-100"
                   >
                     thirdweb/extensions/{item.toLowerCase()}
                   </Link>
@@ -71,20 +71,20 @@ export default async function ExtensionPage() {
           })}
         </TBody>
       </Table>
-      More extensions are being added regularly. Anyone can{" "}
+      More extensions are being added regularly. Anyone can
       <Link
-        className="text-accent-500 hover:text-f-100 font-medium transition-colors"
+        className="font-medium text-accent-500 transition-colors hover:text-f-100"
         href="/typescript/v5/extensions/create"
       >
         create an extension
-      </Link>{" "}
-      and contribute it back to the repository. You can also{" "}
+      </Link>
+      and contribute it back to the repository. You can also
       <Link
-        className="text-accent-500 hover:text-f-100 font-medium transition-colors"
+        className="font-medium text-accent-500 transition-colors hover:text-f-100"
         href="/typescript/v5/extensions/generate"
       >
         generate extensions
-      </Link>{" "}
+      </Link>
       for any deployed contract.
     </>
   );

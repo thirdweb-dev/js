@@ -13,7 +13,7 @@ export const toArrFromList = (str: string, allowTrailingSlash = false) => {
     .filter((v) => v.length > 0);
 };
 
-export const fromArrayToList = (arr: string[]) => {
+export const joinWithComma = (arr: string[]) => {
   return arr.join(", ");
 };
 

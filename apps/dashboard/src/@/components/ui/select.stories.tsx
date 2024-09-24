@@ -31,7 +31,7 @@ function randomName() {
 
 function Component() {
   return (
-    <div className="min-h-screen bg-background p-6 text-foregroun flex flex-col gap-10">
+    <div className="flex min-h-screen flex-col gap-10 bg-background p-6 text-foregroun">
       <BadgeContainer label="5 items, no placeholder, no label, value filled">
         <SelectDemo listItems={5} selectFirst />
       </BadgeContainer>

@@ -23,11 +23,11 @@ import {
   Stack,
   Switch,
   Tooltip,
-  useClipboard,
   useToast,
 } from "@chakra-ui/react";
 import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
 import { AnimatePresence, motion } from "framer-motion";
+import { useClipboard } from "hooks/useClipboard";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { Fragment, useMemo, useState } from "react";

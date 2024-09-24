@@ -67,7 +67,7 @@ const Events = () => {
         <Aurora
           pos={{ left: "50%", top: "50%" }}
           size={{ width: "2000px", height: "2000px" }}
-          color={"hsl(280deg 78% 30% / 30%)"}
+          color="hsl(280deg 78% 30% / 30%)"
         />
 
         <Flex
@@ -81,7 +81,7 @@ const Events = () => {
           </Heading>
         </Flex>
 
-        {lumaEventsQuery.isLoading && (
+        {lumaEventsQuery.isPending && (
           <Flex justify="center" align="center" height={200}>
             <Spinner size="lg" />
           </Flex>

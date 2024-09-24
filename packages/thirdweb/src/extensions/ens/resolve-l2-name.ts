@@ -21,10 +21,7 @@ export type ResolveL2NameOptions = {
  *
  * @internal
  */
-export const convertReverseNodeToBytes = (
-  address: Address,
-  chainId: number,
-) => {
+const convertReverseNodeToBytes = (address: Address, chainId: number) => {
   const addressFormatted = address.toLocaleLowerCase() as Address;
   const addressNode = keccak256(addressFormatted.substring(2) as Hex);
   const cointype = (0x80000000 | chainId) >>> 0;

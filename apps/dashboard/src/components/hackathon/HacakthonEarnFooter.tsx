@@ -1,4 +1,4 @@
-import { Flex, Icon, VStack } from "@chakra-ui/react";
+import { Flex, Icon } from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -15,17 +15,7 @@ export const HackathonEarnFooter = ({
   const trackEvent = useTrack();
 
   return (
-    <VStack
-      bg='url("/assets/hackathon/footer-bg.png")'
-      bgSize="cover"
-      bgRepeat="no-repeat"
-      bgPosition="center"
-      w="100%"
-      py={20}
-      gap={10}
-      borderTopRadius="50px"
-      px={6}
-    >
+    <div className="flex w-full flex-col items-center gap-10 rounded-t-[50px] bg-[url('/assets/hackathon/footer-bg.png')] bg-center bg-cover bg-no-repeat px-6 py-20">
       <ChakraNextImage
         src={require("../../../public/assets/landingpage/earnxtw.svg")}
         alt="Hackathon"
@@ -108,6 +98,6 @@ export const HackathonEarnFooter = ({
           Submission
         </LinkButton>
       </Flex>
-    </VStack>
+    </div>
   );
 };

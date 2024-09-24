@@ -11,7 +11,7 @@ interface ContractSettingsPageProps {
   isPrimarySaleSupported: boolean;
   isRoyaltiesSupported: boolean;
   isPlatformFeesSupported: boolean;
-  isLoading: boolean;
+  isPending: boolean;
 }
 
 export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
@@ -20,7 +20,7 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
   isPrimarySaleSupported,
   isRoyaltiesSupported,
   isPlatformFeesSupported,
-  isLoading,
+  isPending,
 }) => {
   return (
     <Flex direction="column" gap={4}>
@@ -31,7 +31,7 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
               <SettingsMetadata
                 contract={contract}
                 detectedState={
-                  isLoading
+                  isPending
                     ? "loading"
                     : isContractMetadataSupported
                       ? "enabled"
@@ -45,7 +45,7 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
               <SettingsPrimarySale
                 contract={contract}
                 detectedState={
-                  isLoading
+                  isPending
                     ? "loading"
                     : isPrimarySaleSupported
                       ? "enabled"
@@ -60,7 +60,7 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
               <SettingsRoyalties
                 contract={contract}
                 detectedState={
-                  isLoading
+                  isPending
                     ? "loading"
                     : isRoyaltiesSupported
                       ? "enabled"
@@ -75,7 +75,7 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
               <SettingsPlatformFees
                 contract={contract}
                 detectedState={
-                  isLoading
+                  isPending
                     ? "loading"
                     : isPlatformFeesSupported
                       ? "enabled"

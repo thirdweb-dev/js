@@ -60,7 +60,7 @@ export const EngineVersionBadge = ({
           {current}
 
           {/* Notification Dot */}
-          <span className="absolute -top-1 -right-1">
+          <span className="-top-1 -right-1 absolute">
             <PulseDot />
           </span>
         </Button>
@@ -94,11 +94,11 @@ const UpdateVersionModal = (props: {
           dialogOverlayClassName="z-[10000]"
         >
           <DialogHeader>
-            <DialogTitle className="text-2xl font-semibold tracking-tight pr-4 mb-6">
+            <DialogTitle className="mb-6 pr-4 font-semibold text-2xl tracking-tight">
               Update your self-hosted Engine to {latest}
             </DialogTitle>
             <DialogDescription>
-              View the changelog in the{" "}
+              View the changelog in the
               <TrackedLinkTW
                 href="https://github.com/thirdweb-dev/engine/releases"
                 category="engine"
@@ -169,8 +169,8 @@ const UpdateVersionModal = (props: {
 function PulseDot() {
   return (
     <span className="relative flex size-2">
-      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
-      <span className="relative inline-flex rounded-full size-2 bg-primary" />
+      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
+      <span className="relative inline-flex size-2 rounded-full bg-primary" />
     </span>
   );
 }

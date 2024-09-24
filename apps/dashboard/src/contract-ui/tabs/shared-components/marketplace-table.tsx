@@ -280,13 +280,13 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
       <Center w="100%">
         <Flex gap={2} direction="row" align="center">
           <IconButton
-            isDisabled={!canPreviousPage || totalCountQuery.isLoading}
+            isDisabled={!canPreviousPage || totalCountQuery.isPending}
             aria-label="first page"
             icon={<Icon as={MdFirstPage} />}
             onClick={() => gotoPage(0)}
           />
           <IconButton
-            isDisabled={!canPreviousPage || totalCountQuery.isLoading}
+            isDisabled={!canPreviousPage || totalCountQuery.isPending}
             aria-label="previous page"
             icon={<Icon as={MdNavigateBefore} />}
             onClick={() => previousPage()}
@@ -302,13 +302,13 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
             </Skeleton>
           </Text>
           <IconButton
-            isDisabled={!canNextPage || totalCountQuery.isLoading}
+            isDisabled={!canNextPage || totalCountQuery.isPending}
             aria-label="next page"
             icon={<Icon as={MdNavigateNext} />}
             onClick={() => nextPage()}
           />
           <IconButton
-            isDisabled={!canNextPage || totalCountQuery.isLoading}
+            isDisabled={!canNextPage || totalCountQuery.isPending}
             aria-label="last page"
             icon={<Icon as={MdLastPage} />}
             onClick={() => gotoPage(pageCount - 1)}
@@ -319,7 +319,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
               setPageSize(Number.parseInt(e.target.value as string, 10));
             }}
             value={pageSize}
-            isDisabled={totalCountQuery.isLoading}
+            isDisabled={totalCountQuery.isPending}
           >
             <option value="25">25</option>
             <option value="50">50</option>

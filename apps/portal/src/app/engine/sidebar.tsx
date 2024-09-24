@@ -69,6 +69,10 @@ export const sidebar: SideBar = {
           href: `${engineSlug}/features/contract-subscriptions`,
         },
         {
+          name: "Alert Notifications",
+          href: `${engineSlug}/features/alert-notifications`,
+        },
+        {
           name: "Security",
           href: `${engineSlug}/features/security`,
         },
@@ -96,6 +100,10 @@ export const sidebar: SideBar = {
     {
       name: "FAQ",
       href: `${engineSlug}/faq`,
+    },
+    {
+      name: "Troubleshooting",
+      href: `${engineSlug}/troubleshooting`,
     },
   ],
 };

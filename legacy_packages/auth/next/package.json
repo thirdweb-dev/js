@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-auth-next.cjs.js",
-  "module": "dist/thirdweb-dev-auth-next.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-auth-next.esm.js": "./dist/thirdweb-dev-auth-next.browser.esm.js"
-  }
-}

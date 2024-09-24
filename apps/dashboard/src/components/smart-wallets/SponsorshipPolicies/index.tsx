@@ -1,3 +1,5 @@
+"use client";
+
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type ApiKeyService,
@@ -12,14 +14,12 @@ import {
   Divider,
   Flex,
   FormControl,
-  HStack,
   IconButton,
   Input,
   Select,
   Stack,
   Switch,
   Textarea,
-  VStack,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
@@ -34,20 +34,19 @@ import {
   Button,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Text,
   TrackedLink,
 } from "tw-components";
-import { fromArrayToList, toArrFromList } from "utils/string";
+import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
 
-interface SponsorshipPoliciesProps {
+type AccountAbstractionSettingsPageProps = {
   apiKeyServices: ApiKeyService[];
   trackingCategory: string;
-}
+};
 
-const sponsorshipPoliciesValidationSchema = z.object({
+const aaSettingsFormSchema = z.object({
   allowedChainIds: z.array(z.number()).nullable(),
   allowedContractAddresses: z
     .string()
@@ -96,15 +95,16 @@ const sponsorshipPoliciesValidationSchema = z.object({
   allowedOrBlockedWallets: z.string().nullable(),
 });
 
-export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
-  apiKeyServices,
-  trackingCategory,
-}) => {
+export function AccountAbstractionSettingsPage(
+  props: AccountAbstractionSettingsPageProps,
+) {
+  const { apiKeyServices, trackingCategory } = props;
   const bundlerServiceId = apiKeyServices?.find(
     (s) => s.name === "bundler",
   )?.id;
   const { data: policy } = usePolicies(bundlerServiceId);
-  const { mutate: updatePolicy } = useUpdatePolicies();
+  const { mutate: updatePolicy, isPending: updatingPolicy } =
+    useUpdatePolicies();
   const trackEvent = useTrack();
   const dashboardAccountQuery = useAccount();
 
@@ -117,19 +117,19 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
       allowedContractAddresses:
         policy?.allowedContractAddresses &&
         policy?.allowedContractAddresses?.length > 0
-          ? fromArrayToList(policy?.allowedContractAddresses)
+          ? joinWithComma(policy?.allowedContractAddresses)
           : null,
       allowedWallets:
         policy?.allowedWallets && policy?.allowedWallets?.length > 0
-          ? fromArrayToList(policy?.allowedWallets)
+          ? joinWithComma(policy?.allowedWallets)
           : null,
       blockedWallets:
         policy?.blockedWallets && policy?.blockedWallets?.length > 0
-          ? fromArrayToList(policy?.blockedWallets)
+          ? joinWithComma(policy?.blockedWallets)
           : null,
       bypassWallets:
         policy?.bypassWallets && policy?.bypassWallets?.length > 0
-          ? fromArrayToList(policy?.bypassWallets)
+          ? joinWithComma(policy?.bypassWallets)
           : null,
       serverVerifier: policy?.serverVerifier?.url
         ? { ...policy.serverVerifier, enabled: true }
@@ -145,8 +145,8 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
     [policy],
   );
 
-  const form = useForm<z.infer<typeof sponsorshipPoliciesValidationSchema>>({
-    resolver: zodResolver(sponsorshipPoliciesValidationSchema),
+  const form = useForm<z.infer<typeof aaSettingsFormSchema>>({
+    resolver: zodResolver(aaSettingsFormSchema),
     defaultValues: transformedQueryData,
     values: transformedQueryData,
   });
@@ -163,7 +163,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
 
   if (!dashboardAccountQuery.data) {
     return (
-      <div className="flex items-center justify-center h-[400px]">
+      <div className="flex h-[400px] items-center justify-center">
         <Spinner className="size-4" />
       </div>
     );
@@ -174,19 +174,16 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
       <Flex
         flexDir={{ base: "column", lg: "row" }}
         gap={8}
-        justifyContent={"space-between"}
-        alignItems={"left"}
+        justifyContent="space-between"
+        alignItems="left"
       >
-        <Flex flexDir={"column"} gap={2}>
-          <Heading size="title.md" as="h1">
-            Sponsorship rules
-          </Heading>
+        <Flex flexDir="column" gap={2}>
           <Text>
             Configure the rules and rules for your sponsored transactions.{" "}
             <TrackedLink
               category={trackingCategory}
               href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules"
-              color={"primary.500"}
+              color="primary.500"
             >
               View documentation
             </TrackedLink>
@@ -276,11 +273,9 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
       >
         <FormControl>
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>
-                  Global spend limits
-                </FormLabel>
+                <FormLabel pointerEvents="none">Global spend limits</FormLabel>
                 <Text>
                   Maximum gas cost (in USD) that you want to sponsor. This
                   applies for the duration of the billing period (monthly). Once
@@ -304,9 +299,9 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("globalLimit") && (
-              <VStack>
+              <div className="flex flex-col">
                 <FormControl
                   isInvalid={
                     !!form.getFieldState("globalLimit.maxSpend", form.formState)
@@ -314,23 +309,23 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                   }
                 >
                   <FormLabel>Spend limit</FormLabel>
-                  <HStack alignItems="center">
+                  <div className="flex flex-row items-center">
                     <Input
-                      w={"xs"}
+                      w="xs"
                       placeholder="Enter an amount"
                       {...form.register("globalLimit.maxSpend")}
                     />
                     <Select
-                      w={"xs"}
+                      w="xs"
                       {...form.register("globalLimit.maxSpendUnit")}
                     >
-                      <option value={"usd"}>USD</option>
+                      <option value="usd">USD</option>
                       {/* TODO native currency <option value={"native"}>
                           Native Currency (ie. ETH)
                         </option> */}
                     </Select>
                     <Text>per month</Text>
-                  </HStack>
+                  </div>
                   <FormErrorMessage>
                     {
                       form.getFieldState("globalLimit.maxSpend", form.formState)
@@ -338,7 +333,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                     }
                   </FormErrorMessage>
                 </FormControl>
-              </VStack>
+              </div>
             )}
           </Flex>
         </FormControl>
@@ -349,9 +344,9 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
           }
         >
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>
+                <FormLabel pointerEvents="none">
                   Restrict to specific chains
                 </FormLabel>
                 <Text>
@@ -363,7 +358,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                     category={trackingCategory}
                     href="https://portal.thirdweb.com/wallets/smart-wallet/infrastructure#supported-chains"
                   >
-                    supported chains.{" "}
+                    supported chains.
                   </TrackedLink>
                 </Text>
               </Box>
@@ -378,7 +373,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("allowedChainIds") && (
               <Flex flexDir="column">
                 <NetworkDropdown
@@ -405,9 +400,9 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
           }
         >
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>
+                <FormLabel pointerEvents="none">
                   Restrict to specific contract addresses
                 </FormLabel>
                 <Text>
@@ -425,7 +420,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("allowedContractAddresses") !== null && (
               <Flex flexDir="column">
                 <Textarea
@@ -448,9 +443,9 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
         <Divider />
         <FormControl>
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>
+                <FormLabel pointerEvents="none">
                   Allowlisted/Blocklisted accounts
                 </FormLabel>
                 <Text>
@@ -469,7 +464,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("allowedOrBlockedWallets") !== null && (
               <Select
                 placeholder="Select allowed or blocked wallets"
@@ -525,9 +520,9 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
         <Divider />
         <FormControl>
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>Server verifier</FormLabel>
+                <FormLabel pointerEvents="none">Server verifier</FormLabel>
                 <Text>
                   Specify your own endpoint that will verify each transaction
                   and decide whether it should be sponsored or not. This gives
@@ -535,7 +530,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                   <TrackedLink
                     category={trackingCategory}
                     href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules#setting-up-a-server-verifier"
-                    color={"primary.500"}
+                    color="primary.500"
                   >
                     View server verifier documentation
                   </TrackedLink>
@@ -558,9 +553,9 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("serverVerifier").enabled && (
-              <HStack alignItems={"start"}>
+              <div className="flex flex-row items-start">
                 <FormControl
                   isInvalid={
                     !!form.getFieldState("serverVerifier.url", form.formState)
@@ -582,7 +577,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                 </FormControl>
                 <FormControl>
                   <FormLabel size="label.sm">Custom Headers</FormLabel>
-                  <Stack gap={3} alignItems={"end"}>
+                  <Stack gap={3} alignItems="end">
                     {customHeaderFields.fields.map((_, customHeaderIdx) => {
                       return (
                         // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
@@ -628,7 +623,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                     </Button>
                   </Stack>
                 </FormControl>
-              </HStack>
+              </div>
             )}
           </Flex>
         </FormControl>
@@ -640,9 +635,9 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
           }
         >
           <Flex flexDir="column" gap={4}>
-            <HStack justifyContent="space-between" alignItems="center">
+            <div className="flex flex-row items-center justify-between">
               <Box>
-                <FormLabel pointerEvents={"none"}>Admin accounts</FormLabel>
+                <FormLabel pointerEvents="none">Admin accounts</FormLabel>
                 <Text>
                   These accounts won&apos;t be subject to any sponsorship rules.
                   All transactions will be sponsored.
@@ -659,7 +654,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                   );
                 }}
               />
-            </HStack>
+            </div>
             {form.watch("bypassWallets") !== null && (
               <Flex flexDir="column">
                 <Textarea
@@ -680,11 +675,15 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
         <Divider />
 
         <Box alignSelf="flex-end">
-          <Button type="submit" colorScheme="primary">
+          <Button
+            type="submit"
+            colorScheme="primary"
+            isLoading={updatingPolicy}
+          >
             Save changes
           </Button>
         </Box>
       </Flex>
     </Flex>
   );
-};
+}

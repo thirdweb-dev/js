@@ -30,39 +30,39 @@ export const Mobile: Story = {
 
 function Component() {
   return (
-    <div className="flex flex-col gap-10 py-10 container">
+    <div className="container flex flex-col gap-10 py-10">
       <BadgeContainer label="30 days">
         <WalletDistributionChartCard
           walletStats={createWalletStatsStub(30)}
-          isLoading={false}
+          isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="60 days">
         <WalletDistributionChartCard
           walletStats={createWalletStatsStub(60)}
-          isLoading={false}
+          isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="10 days">
         <WalletDistributionChartCard
           walletStats={createWalletStatsStub(10)}
-          isLoading={false}
+          isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="0 days">
         <WalletDistributionChartCard
           walletStats={createWalletStatsStub(0)}
-          isLoading={false}
+          isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Loading">
         <WalletDistributionChartCard
           walletStats={createWalletStatsStub(0)}
-          isLoading={true}
+          isPending={true}
         />
       </BadgeContainer>
     </div>

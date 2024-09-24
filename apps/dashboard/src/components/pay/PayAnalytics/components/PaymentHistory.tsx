@@ -29,7 +29,7 @@ const pageSize = 10;
 
 type ProcessedQuery = {
   data?: UIData;
-  isLoading?: boolean;
+  isPending?: boolean;
   isError?: boolean;
   isEmpty?: boolean;
 };
@@ -37,8 +37,8 @@ type ProcessedQuery = {
 function processQuery(
   purchasesQuery: ReturnType<typeof usePayPurchases>,
 ): ProcessedQuery {
-  if (purchasesQuery.isLoading) {
-    return { isLoading: true };
+  if (purchasesQuery.isPending) {
+    return { isPending: true };
   }
   if (purchasesQuery.isError) {
     return { isError: true };
@@ -81,7 +81,7 @@ export function PaymentHistory(props: {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col lg:flex-row lg:justify-between gap-2 lg:items-center">
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
         <CardHeading> Transaction History</CardHeading>
         {!uiQuery.isError && (
           <ExportToCSVButton
@@ -138,35 +138,27 @@ function RenderData(props: {
             </TableHeadingRow>
           </thead>
           <tbody>
-            {!props.query.isEmpty && (
-              <>
-                {props.query.data && !props.isLoadingMore ? (
-                  <>
-                    {props.query.data.purchases.map((purchase) => {
-                      return (
-                        <TableRow
-                          key={purchase.purchaseId}
-                          purchase={purchase}
-                        />
-                      );
-                    })}
-                  </>
-                ) : (
-                  <>
-                    {new Array(pageSize).fill(0).map((_, i) => (
-                      // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                      <SkeletonTableRow key={i} />
-                    ))}
-                  </>
-                )}
-              </>
-            )}
+            {!props.query.isEmpty &&
+              (props.query.data && !props.isLoadingMore ? (
+                <>
+                  {props.query.data.purchases.map((purchase) => {
+                    return (
+                      <TableRow key={purchase.purchaseId} purchase={purchase} />
+                    );
+                  })}
+                </>
+              ) : (
+                new Array(pageSize).fill(0).map((_, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: ok
+                  <SkeletonTableRow key={i} />
+                ))
+              ))}
           </tbody>
         </table>
       </ScrollShadow>
       <div className="h-8" />
       {props.query.isEmpty ? (
-        <div className="min-h-[150px] flex items-center justify-center w-full text-muted-foreground text-sm">
+        <div className="flex min-h-[150px] w-full items-center justify-center text-muted-foreground text-sm">
           No data available
         </div>
       ) : (
@@ -186,7 +178,7 @@ function TableRow(props: { purchase: PayPurchasesData["purchases"][0] }) {
   return (
     <tr
       key={purchase.purchaseId}
-      className="border-b border-border fade-in-0 duration-300"
+      className="fade-in-0 border-border border-b duration-300"
     >
       {/* Bought */}
       <TableData>{`${formatTokenAmount(purchase.toAmount)} ${purchase.toToken.symbol}`}</TableData>
@@ -201,12 +193,12 @@ function TableRow(props: { purchase: PayPurchasesData["purchases"][0] }) {
       {/* Type */}
       <TableData>
         <Badge
-          variant={"secondary"}
+          variant="secondary"
           className={cn(
             "uppercase",
             purchase.purchaseType === "ONRAMP"
-              ? "bg-fuchsia-200 dark:bg-fuchsia-950 text-fuchsia-800 dark:text-fuchsia-200"
-              : "bg-indigo-200 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-200",
+              ? "bg-fuchsia-200 text-fuchsia-800 dark:bg-fuchsia-950 dark:text-fuchsia-200"
+              : "bg-indigo-200 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-200",
           )}
         >
           {purchase.purchaseType === "ONRAMP" ? "Fiat" : "Crypto"}
@@ -246,7 +238,7 @@ function TableRow(props: { purchase: PayPurchasesData["purchases"][0] }) {
 
 function SkeletonTableRow() {
   return (
-    <tr className="border-b border-border">
+    <tr className="border-border border-b">
       <TableData>
         <Skeleton className="h-7 w-20" />
       </TableData>

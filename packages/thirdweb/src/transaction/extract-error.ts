@@ -46,7 +46,7 @@ export async function extractError<abi extends Abi>(args: {
   return error;
 }
 
-export const __DEV__ = process.env.NODE_ENV !== "production";
+const __DEV__ = process.env.NODE_ENV !== "production";
 
 class TransactionError<abi extends Abi> extends Error {
   public contractAddress: string | undefined;

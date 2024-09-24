@@ -17,10 +17,14 @@ export type EVMContractInfo = {
 
 type SetEVMContractInfo = (info: EVMContractInfo) => void;
 
+// Legacy: will be removed with contract page -> app router refactor
+// eslint-disable-next-line no-restricted-syntax
 const EVMContractInfoContext = createContext<EVMContractInfo | undefined>(
   undefined,
 );
 
+// Legacy: will be removed with contract page -> app router refactor
+// eslint-disable-next-line no-restricted-syntax
 const SetEVMContractInfoContext = createContext<SetEVMContractInfo | undefined>(
   undefined,
 );

@@ -13,7 +13,6 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useNFTDrawerTabs } from "core-ui/nft-drawer/useNftDrawerTabs";
-import { useChainSlug } from "hooks/chains/chainSlug";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { IoChevronBack } from "react-icons/io5";
@@ -24,6 +23,7 @@ import { useReadContract } from "thirdweb/react";
 import { Badge, Button, Card, CodeBlock, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { useChainSlug } from "../../../../hooks/chains/chainSlug";
 import { NftProperty } from "./nft-property";
 
 function isValidUrl(possibleUrl?: string | null) {
@@ -157,7 +157,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                   key={tb.title}
                   p={0}
                   bg="transparent"
-                  boxShadow={"none"}
+                  boxShadow="none"
                   label={
                     tb.isDisabled ? (
                       <Card py={2} px={4} bgColor="backgroundHighlight">

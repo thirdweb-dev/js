@@ -11,7 +11,7 @@ export function ChainOverviewSection(props: { chain: ChainMetadata }) {
   return (
     <section>
       <SectionTitle title="Chain Overview" />
-      <div className="grid grid-cols-1 gap-6 lg:gap-8 md:grid-cols-2 lg:grid-cols-3 border rounded-lg p-4 md:p-6 bg-muted/50">
+      <div className="grid grid-cols-1 gap-6 rounded-lg border bg-muted/50 p-4 md:grid-cols-2 md:p-6 lg:grid-cols-3 lg:gap-8">
         {/* Info */}
         {chain.infoURL && (
           <PrimaryInfoItem title="Info">
@@ -33,7 +33,7 @@ export function ChainOverviewSection(props: { chain: ChainMetadata }) {
             textToShow={chain.chainId.toString()}
             tooltip="Copy Chain ID"
             variant="ghost"
-            className="-translate-x-2 py-1 px-2 text-base"
+            className="-translate-x-2 px-2 py-1 text-base"
             iconClassName="size-4"
             copyIconPosition="right"
           />

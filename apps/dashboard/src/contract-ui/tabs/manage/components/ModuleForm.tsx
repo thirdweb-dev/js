@@ -1,8 +1,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { FormControl, Input, Select, Skeleton, Spacer } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   useAllVersions,
@@ -14,6 +13,7 @@ import { toast } from "sonner";
 import {
   type Chain,
   type ContractOptions,
+  type ThirdwebClient,
   sendTransaction,
   waitForReceipt,
 } from "thirdweb";
@@ -49,13 +49,14 @@ type InstallModuleFormProps = {
   account: Account;
   installedModules: {
     data?: string[];
-    isLoading: boolean;
+    isPending: boolean;
   };
 };
 
 export type InstallModuleForm = UseFormReturn<FormData>;
 
 export const InstallModuleForm = (props: InstallModuleFormProps) => {
+  const client = useThirdwebClient();
   const form = useForm<FormData>({
     defaultValues: {
       version: "latest",
@@ -65,7 +66,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
   const { contract, account } = props;
   const { errors } = formState;
 
-  const { data, isLoading, isFetching } = usePublishedContractsQuery(
+  const { data, isPending, isFetching } = usePublishedContractsQuery(
     watch("publisherAddress"),
   );
 
@@ -175,7 +176,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
       return Promise.all(
         moduleAddress.map(async (address) => {
           const result = await resolveImplementation({
-            client: thirdwebClient,
+            client,
             address,
             chain: contract.chain,
           });
@@ -222,6 +223,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         moduleInfo: {
           bytecodeUri: selectedModule.metadata.bytecodeUri,
         },
+        client,
       });
     },
     retry: false,
@@ -286,7 +288,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
                 disabled={
                   installMutation.isPending ||
                   modulesOnly?.length === 0 ||
-                  isLoading
+                  isPending
                 }
                 bg="backgroundHighlight"
                 {...moduleContractInputProps}
@@ -314,15 +316,15 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
             </FormErrorMessage>
 
             {isModuleCompatibleQuery.isFetching && selectedModule && (
-              <div className="flex items-center gap-1.5 mt-2 text-link-foreground">
+              <div className="mt-2 flex items-center gap-1.5 text-link-foreground">
                 <p className="font-medium text-sm">Checking Compatibility</p>
                 <Spinner className="size-3" />
               </div>
             )}
 
             {isModuleCompatibleQuery.isError && (
-              <div className="flex items-center gap-1.5 mt-2">
-                <p className="text-yellow-600 text-sm">
+              <div className="mt-2 flex items-center gap-1.5">
+                <p className="text-sm text-yellow-600">
                   Module may not be compatible
                 </p>
               </div>
@@ -335,7 +337,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
               <Select
                 disabled={
                   !allVersions.data ||
-                  allVersions.isLoading ||
+                  allVersions.isPending ||
                   isModuleCompatibleQuery.data === false ||
                   installMutation.isPending ||
                   isModuleCompatibleQuery.isFetching
@@ -359,7 +361,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         </div>
 
         {moduleInstallParams.isFetching ? (
-          <Skeleton h={"80px"} mt={4} />
+          <Skeleton h="80px" mt={4} />
         ) : (
           moduleInstallParams.data &&
           !isModuleCompatibleQuery.isFetching &&
@@ -405,10 +407,11 @@ async function isModuleCompatible(options: {
   moduleInfo: {
     bytecodeUri: string;
   };
+  client: ThirdwebClient;
 }) {
   // 1. get module's bytecode
   const res = await download({
-    client: thirdwebClient,
+    client: options.client,
     uri: options.moduleInfo.bytecodeUri,
   });
 
@@ -419,7 +422,7 @@ async function isModuleCompatible(options: {
     const isCompatible = await checkModulesCompatibility({
       chain: options.contractInfo.chain,
       coreBytecode: options.contractInfo.bytecode,
-      client: thirdwebClient,
+      client: options.client,
       moduleBytecodes: [
         moduleBytecode,
         ...options.contractInfo.installedModuleBytecodes,

@@ -153,6 +153,11 @@ export function createConnectionManager(storage: AsyncStorage) {
     const connectedWallet = await handleConnection(wallet, options);
     options?.onConnect?.(connectedWallet);
     handleSetActiveWallet(connectedWallet);
+    wallet.subscribe("accountChanged", async () => {
+      const newConnectedWallet = await handleConnection(wallet, options);
+      options?.onConnect?.(newConnectedWallet);
+      handleSetActiveWallet(newConnectedWallet);
+    });
     return connectedWallet;
   };
 

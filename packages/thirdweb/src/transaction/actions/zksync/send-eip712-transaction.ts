@@ -16,7 +16,7 @@ import {
   getEip712Domain,
 } from "./getEip721Domain.js";
 
-export type SendEip712TransactionOptions = {
+type SendEip712TransactionOptions = {
   account: Account;
   // TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
   // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type

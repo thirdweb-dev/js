@@ -1,6 +1,8 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert } from "@/components/ui/alert";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { useStore } from "@/lib/reactive";
 import {
   type EVMContractInfo,
   useEVMContractInfo,
@@ -12,26 +14,26 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
+import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { AppLayout } from "components/app-layouts/app";
 import { ConfigureNetworks } from "components/configure-networks/ConfigureNetworks";
 import { ensQuery } from "components/contract-components/hooks";
 import { ContractMetadata } from "components/custom-contract/contract-header/contract-metadata";
+import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import { THIRDWEB_DOMAIN } from "constants/urls";
-import { SupportedChainsReadyContext } from "contexts/configured-chains";
+import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { PrimaryDashboardButton } from "contract-ui/components/primary-dashboard-button";
 import { useContractRouteConfig } from "contract-ui/hooks/useRouteConfig";
 import { ContractSidebar } from "core-ui/sidebar/detail-page";
-import {
-  useSupportedChainsRecord,
-  useSupportedChainsSlugRecord,
-} from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
+import { resolveFunctionSelectors } from "lib/selectors";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   type ThirdwebContract,
   getAddress,
@@ -46,11 +48,8 @@ import { stringify } from "thirdweb/utils";
 import { fetchChain } from "utils/fetchChain";
 import type { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
-import { DeprecatedAlert } from "../../components/shared/DeprecatedAlert";
-import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
-import { resolveFunctionSelectors } from "../../lib/selectors";
-import { useV5DashboardChain } from "../../lib/v5-adapter";
+import { useAllChainsData } from "../../hooks/chains/allChains";
+import { isChainOverridesLoadedStore } from "../../stores/chainStores";
 
 type EVMContractProps = {
   contractInfo?: EVMContractInfo;
@@ -67,7 +66,7 @@ type EVMContractProps = {
 const ContractPage: ThirdwebNextPage = () => {
   // show optimistic UI first - assume chain is configured until proven otherwise
   const [chainNotFound, setChainNotFound] = useState(false);
-  const isSupportedChainsReady = useContext(SupportedChainsReadyContext);
+  const isChainOverridesLoaded = useStore(isChainOverridesLoadedStore);
 
   const contractInfo = useEVMContractInfo();
 
@@ -76,13 +75,12 @@ const ContractPage: ThirdwebNextPage = () => {
   const contractAddress = contractInfo?.contractAddress || "";
 
   const setContractInfo = useSetEVMContractInfo();
-  const supportedChainsSlugRecord = useSupportedChainsSlugRecord();
-  const configuredChainsRecord = useSupportedChainsRecord();
+  const { idToChain, slugToChain } = useAllChainsData();
 
   // this will go away as part of the RSC rewrite!
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (!isSupportedChainsReady || !chainSlug) {
+    if (!isChainOverridesLoaded || !chainSlug) {
       return;
     }
 
@@ -94,7 +92,7 @@ const ContractPage: ThirdwebNextPage = () => {
       // currently user can only update RPC - so check if it is updated or not
       // if updated, update the contractInfo.chain
 
-      const configuredChain = supportedChainsSlugRecord[chainSlug];
+      const configuredChain = slugToChain.get(chainSlug);
       if (
         configuredChain &&
         getDashboardChainRpc(configuredChain.chainId, configuredChain) !==
@@ -115,32 +113,32 @@ const ContractPage: ThirdwebNextPage = () => {
 
     // if server could not resolve the chain using allChains
     else {
+      const chainFoundBySlug = slugToChain.get(chainSlug);
+      const chainFoundById = idToChain.get(Number(chainSlug));
+
       // if it is configured on client storage, use that
-      if (chainSlug in supportedChainsSlugRecord) {
+      if (chainFoundBySlug) {
         setContractInfo({
           chainSlug,
           contractAddress,
-          chain: supportedChainsSlugRecord[chainSlug],
+          chain: chainFoundBySlug,
         });
-      } else if (chainSlug in configuredChainsRecord) {
+      } else if (chainFoundById) {
         // this is for thirdweb internal tools
         // it allows us to use chainId as slug for a custom network as well
-
-        const chainId = Number(chainSlug);
-        const _chain = configuredChainsRecord[chainId];
 
         // replace the chainId with slug in URL without reloading the page
         // If we don't do this, tanstack router creates issues
         window.history.replaceState(
           null,
           document.title,
-          `/${_chain.slug}/${contractAddress}`,
+          `/${chainSlug}/${contractAddress}`,
         );
 
         setContractInfo({
-          chainSlug: _chain.slug,
+          chainSlug,
           contractAddress,
-          chain: _chain,
+          chain: chainFoundById,
         });
       }
 
@@ -153,34 +151,32 @@ const ContractPage: ThirdwebNextPage = () => {
   }, [
     chain,
     chainSlug,
-    supportedChainsSlugRecord,
-    configuredChainsRecord,
+    idToChain,
+    slugToChain,
     contractAddress,
     setContractInfo,
-    isSupportedChainsReady,
+    isChainOverridesLoaded,
   ]);
 
   const isSlugNumber = !Number.isNaN(Number(chainSlug));
-
   const router = useRouter();
-
   const activeTab = router.query?.paths?.[1] || "overview";
-
   const v5Chain = useV5DashboardChain(chain?.chainId);
+  const client = useThirdwebClient();
   const contract = useMemo(() => {
     if (!contractAddress || !v5Chain) {
       return undefined;
     }
     return getContract({
       address: contractAddress,
-      client: thirdwebClient,
+      client,
       chain: v5Chain,
     });
-  }, [contractAddress, v5Chain]);
+  }, [contractAddress, v5Chain, client]);
 
   if (!contractInfo) {
     return (
-      <div className="h-full flex items-center justify-center">
+      <div className="flex h-full items-center justify-center">
         <Spinner className="size-10" />
       </div>
     );
@@ -198,7 +194,7 @@ const ContractPage: ThirdwebNextPage = () => {
 
         <div className="h-10" />
 
-        <div className="border border-border rounded-lg">
+        <div className="rounded-lg border border-border">
           <ConfigureNetworks
             prefillSlug={isSlugNumber ? undefined : chainSlug}
             prefillChainId={isSlugNumber ? chainSlug : undefined}
@@ -210,15 +206,16 @@ const ContractPage: ThirdwebNextPage = () => {
                 setChainNotFound(false);
               }
             }}
+            editChain={undefined}
           />
         </div>
       </div>
     );
   }
 
-  if (!isSupportedChainsReady) {
+  if (!isChainOverridesLoaded) {
     return (
-      <div className="h-full flex items-center justify-center">
+      <div className="flex h-full items-center justify-center">
         <Spinner className="size-10" />
       </div>
     );
@@ -333,7 +330,7 @@ ContractPage.getLayout = (page, props: EVMContractProps) => {
   return (
     // app layout has to come first in both getLayout and fallback
     <AppLayout
-      layout={"custom-contract"}
+      layout="custom-contract"
       dehydratedState={props.dehydratedState}
       // has to be passed directly because the provider can not be above app layout in the tree
       contractInfo={props.contractInfo}
@@ -368,7 +365,7 @@ ContractPage.getLayout = (page, props: EVMContractProps) => {
 
 function PageSkeleton() {
   return (
-    <div className="h-full flex items-center justify-center">
+    <div className="flex h-full items-center justify-center">
       <Spinner className="size-10" />
     </div>
   );
@@ -376,7 +373,7 @@ function PageSkeleton() {
 
 // app layout has to come first in both getLayout and fallback
 ContractPage.fallback = (
-  <AppLayout layout={"custom-contract"} noSEOOverride hasSidebar={true}>
+  <AppLayout layout="custom-contract" noSEOOverride hasSidebar={true}>
     <PageSkeleton />
   </AppLayout>
 );
@@ -427,7 +424,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
         address,
         // eslint-disable-next-line no-restricted-syntax
         chain: mapV4ChainToV5Chain(chain),
-        client: thirdwebClient,
+        client: getThirdwebClient(),
       });
 
       const [isErc20, isErc721, isErc1155, _contractMetadata] =

@@ -22,9 +22,9 @@ export const EngineInstancesList = (props: {
   const instances = instancesQuery.data ?? [];
   const trackEvent = useTrack();
 
-  if (instancesQuery.isLoading) {
+  if (instancesQuery.isPending) {
     return (
-      <div className="flex justify-center items-center h-[300px]">
+      <div className="flex h-[300px] items-center justify-center">
         <Spinner className="size-14" />
       </div>
     );
@@ -32,7 +32,7 @@ export const EngineInstancesList = (props: {
 
   if (instances.length === 0) {
     return (
-      <div className="max-w-[600px] mx-auto">
+      <div className="mx-auto max-w-[600px]">
         <Image
           alt="Engine hero image"
           src={require("../../../public/assets/engine/empty-state-header.png")}
@@ -40,7 +40,7 @@ export const EngineInstancesList = (props: {
 
         <div className="h-6" />
 
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tighter">
+        <h1 className="font-bold text-2xl tracking-tighter md:text-3xl">
           Your scalable web3 backend server
         </h1>
 
@@ -84,8 +84,8 @@ export const EngineInstancesList = (props: {
 
         <div className="h-10" />
 
-        <div className="flex items-center gap-4 justify-between rounded-lg border border-border p-6 bg-muted/50">
-          <p className="text-lg font-semibold tracking-tight">
+        <div className="flex items-center justify-between gap-4 rounded-lg border border-border bg-muted/50 p-6">
+          <p className="font-semibold text-lg tracking-tight">
             Already have an Engine Instance?
           </p>
 
@@ -103,8 +103,8 @@ export const EngineInstancesList = (props: {
 
   return (
     <div>
-      <div className="flex flex-col md:flex-row gap-4 justify-between md:items-center">
-        <h1 className="text-4xl font-bold">Engine</h1>
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <h1 className="font-bold text-4xl">Engine</h1>
         <div className="flex flex-row gap-2">
           <ImportEngineLink
             label="Import"
@@ -122,7 +122,7 @@ export const EngineInstancesList = (props: {
       <EngineInstancesTable
         instances={instances}
         isFetched={instancesQuery.isFetched}
-        isLoading={instancesQuery.isLoading}
+        isPending={instancesQuery.isPending}
         refetch={instancesQuery.refetch}
         engineLinkPrefix={props.engineLinkPrefix}
       />
@@ -135,8 +135,8 @@ export const EngineInstancesList = (props: {
 
 function LearnMoreCard() {
   return (
-    <div className="p-4 border border-border rounded-lg relative hover:bg-muted/50">
-      <h3 className="font-semibold tracking-tight mb-1">
+    <div className="relative rounded-lg border border-border p-4 hover:bg-muted/50">
+      <h3 className="mb-1 font-semibold tracking-tight">
         <Link
           href="https://portal.thirdweb.com/engine"
           target="_blank"
@@ -150,7 +150,7 @@ function LearnMoreCard() {
         Dive into features and integration guides.
       </p>
 
-      <ExternalLinkIcon className="size-4 text-muted-foreground absolute right-4 top-4" />
+      <ExternalLinkIcon className="absolute top-4 right-4 size-4 text-muted-foreground" />
     </div>
   );
 }

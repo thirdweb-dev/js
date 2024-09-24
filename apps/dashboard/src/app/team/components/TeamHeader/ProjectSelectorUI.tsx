@@ -20,11 +20,13 @@ export function ProjectSelectorUI(props: {
   const { projects, currentProject, team } = props;
   const [searchProjectTerm, setSearchProjectTerm] = useState("");
   const filteredProjects = searchProjectTerm
-    ? projects.filter((project) => project.name.includes(searchProjectTerm))
+    ? projects.filter((project) =>
+        project.name.toLowerCase().includes(searchProjectTerm.toLowerCase()),
+      )
     : projects;
 
   return (
-    <div className="flex flex-col border-l border-border fade-in-0 animate-in duration-300">
+    <div className="fade-in-0 flex animate-in flex-col border-border border-l duration-300">
       <SearchInput
         placeholder="Search Projects"
         value={searchProjectTerm}
@@ -38,7 +40,7 @@ export function ProjectSelectorUI(props: {
         className="grow"
       >
         <div className="flex flex-col p-2">
-          <h2 className="text-muted-foreground text-xs mx-2 mb-2 mt-2 font-medium">
+          <h2 className="mx-2 mt-2 mb-2 font-medium text-muted-foreground text-xs">
             Projects
           </h2>
 
@@ -49,7 +51,7 @@ export function ProjectSelectorUI(props: {
                 <li key={project.slug}>
                   <Button
                     className={cn(
-                      "gap-2 pl-2 w-full justify-between !opacity-100 disabled:opacity-100 disabled:pointer-events-auto disabled:cursor-not-allowed",
+                      "!opacity-100 w-full justify-between gap-2 pl-2 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-100",
                       isSelected && "bg-accent",
                     )}
                     variant="ghost"
@@ -61,7 +63,7 @@ export function ProjectSelectorUI(props: {
                     >
                       <div className="flex items-center gap-2">
                         {/* TODO - placeholder for now */}
-                        <div className="size-4 bg-muted border rounded-full" />
+                        <div className="size-4 rounded-full border bg-muted" />
                         <span className="truncate"> {project.name} </span>
                       </div>
                       {isSelected && (
@@ -76,9 +78,9 @@ export function ProjectSelectorUI(props: {
         </div>
       </ScrollShadow>
 
-      <div className="p-2 border-t border-border">
+      <div className="border-border border-t p-2">
         <Button
-          className="px-2 w-full gap-2 justify-start disabled:opacity-100 disabled:pointer-events-auto disabled:cursor-not-allowed"
+          className="w-full justify-start gap-2 px-2 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-100"
           variant="ghost"
           onClick={props.createProject}
         >

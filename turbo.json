@@ -12,7 +12,7 @@
     },
     "typedoc": {
       "outputs": ["typedoc/**"],
-      "dependsOn": ["typedoc-gen#build", "^build"]
+      "dependsOn": ["^build"]
     },
     "thirdweb-dashboard#build": {
       "outputs": [".next/**", "!.next/cache/**"],
@@ -20,26 +20,10 @@
     },
     "portal#build": {
       "outputs": [".next/**", "!.next/cache/**", "searchIndex.json"],
-      "dependsOn": [
-        "^build",
-        "thirdweb#typedoc",
-        "@thirdweb-dev/sdk#typedoc",
-        "@thirdweb-dev/react#typedoc",
-        "@thirdweb-dev/react-core#typedoc",
-        "@thirdweb-dev/storage#typedoc",
-        "@thirdweb-dev/wallets#typedoc"
-      ]
+      "dependsOn": ["^build", "thirdweb#typedoc"]
     },
     "portal#dev": {
-      "dependsOn": [
-        "^build",
-        "thirdweb#typedoc",
-        "@thirdweb-dev/sdk#typedoc",
-        "@thirdweb-dev/react#typedoc",
-        "@thirdweb-dev/react-core#typedoc",
-        "@thirdweb-dev/storage#typedoc",
-        "@thirdweb-dev/wallets#typedoc"
-      ]
+      "dependsOn": ["^build", "thirdweb#typedoc"]
     },
     "playground-web#build": {
       "outputs": [".next/**", "!.next/cache/**"],
@@ -47,65 +31,6 @@
     },
     "wallet-ui#build": {
       "outputs": [".next/**", "!.next/cache/**"],
-      "dependsOn": ["^build"]
-    },
-    "@thirdweb-dev/chains#build": {
-      "outputs": ["dist/**", "chains/**"],
-      "dependsOn": ["^build"],
-      "inputs": ["package.json", "scripts/**", "data/**", "src/**", "chains/**"]
-    },
-    "@thirdweb-dev/wallets#build": {
-      "outputs": ["dist/**", "evm/**"],
-      "dependsOn": ["^build"],
-      "env": ["THIRDWEB_EWS_SDK_VERSION"]
-    },
-    "@thirdweb-dev/payments#build": {
-      "outputs": ["dist/**"],
-      "dependsOn": ["^build"],
-      "env": ["THIRDWEB_PAYMENTS_SDK_VERSION"]
-    },
-    "@thirdweb-dev/pay#build": {
-      "outputs": ["dist/**", "integrations/**"],
-      "dependsOn": ["^build"]
-    },
-    "@thirdweb-dev/sdk#build": {
-      "outputs": ["dist/**", "evm/**"],
-      "dependsOn": ["^build"]
-    },
-    "@thirdweb-dev/react#build": {
-      "outputs": ["dist/**", "evm/**"],
-      "dependsOn": ["^build"]
-    },
-    "@thirdweb-dev/react-core#build": {
-      "outputs": ["dist/**", "evm/**"],
-      "dependsOn": ["^build"]
-    },
-    "@thirdweb-dev/react-native#build": {
-      "outputs": ["dist/**"],
-      "dependsOn": ["^build"]
-    },
-    "@thirdweb-dev/react-native-compat#build": {
-      "outputs": ["src/**"],
-      "dependsOn": ["^build"]
-    },
-    "@thirdweb-dev/auth#build": {
-      "outputs": [
-        "dist/**",
-        "evm/**",
-        "express/**",
-        "next/**",
-        "fastify/**",
-        "next-auth/**"
-      ],
-      "dependsOn": ["^build"]
-    },
-    "@thirdweb-dev/contracts-js#build": {
-      "outputs": ["dist/**", "factories/**", "src/**", "package.json"],
-      "inputs": ["package.json"],
-      "dependsOn": ["^build"]
-    },
-    "@thirdweb-dev/service-utils#build": {
-      "outputs": ["dist/**", "cf-worker/**", "node/**"],
       "dependsOn": ["^build"]
     },
     "thirdweb#update-version": {
@@ -159,10 +84,6 @@
     },
     "clean": {
       "cache": false
-    },
-    "push": {
-      "cache": false,
-      "dependsOn": ["build"]
     }
   }
 }

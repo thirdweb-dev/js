@@ -37,7 +37,7 @@ export function parseTheme(theme: "light" | "dark" | Theme | undefined): Theme {
   return themeObj;
 }
 
-export function isValidTheme(theme: unknown): theme is Theme {
+function isValidTheme(theme: unknown): theme is Theme {
   return (
     theme === "dark" ||
     theme === "light" ||

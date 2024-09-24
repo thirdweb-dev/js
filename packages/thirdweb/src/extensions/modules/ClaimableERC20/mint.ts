@@ -6,7 +6,7 @@ import { type Hex, padHex } from "../../../utils/encoding/hex.js";
 import { encodeBytesBeforeMintERC20Params } from "../__generated__/ClaimableERC20/encode/encodeBytesBeforeMintERC20.js";
 import { mint as generatedMint } from "../__generated__/ERC20Core/write/mint.js";
 
-export type MintParams = {
+type MintParams = {
   to: string;
   quantity: string | number;
 };

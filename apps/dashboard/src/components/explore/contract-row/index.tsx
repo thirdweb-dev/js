@@ -7,14 +7,14 @@ interface ContractRowProps {
   category: ExploreCategory;
 }
 
-export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
+export function ContractRow({ category }: ContractRowProps) {
   return (
     <section>
       {/* Title, Description + View all link */}
       <div className="flex items-center justify-between gap-4">
         <header className="flex flex-col gap-1.5">
           <Link href={`/explore/${category.id}`}>
-            <h2 className="text-2xl font-semibold tracking-tight">
+            <h2 className="font-semibold text-2xl tracking-tight">
               {category.displayName || category.name}
             </h2>
           </Link>
@@ -25,7 +25,7 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
               <Link
                 target="_blank"
                 href={category.learnMore}
-                className="text-link-foreground inline"
+                className="inline text-link-foreground"
               >
                 Learn more
               </Link>
@@ -36,7 +36,7 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
         {category.contracts.length > 6 && (
           <Link
             href={`/explore/${category.id}`}
-            className="shrink-0 text-link-foreground flex gap-1 items-center text-base hover:text-foreground"
+            className="flex shrink-0 items-center gap-1 text-base text-link-foreground hover:text-foreground"
           >
             View all
             <ArrowRightIcon className="size-4" />
@@ -46,7 +46,7 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
 
       <div className="h-5" />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 z-0 relative">
+      <div className="relative z-0 grid grid-cols-1 gap-4 md:grid-cols-3">
         {category.contracts.slice(0, 6).map((publishedContractId, idx) => {
           const publisher: string = Array.isArray(publishedContractId)
             ? publishedContractId[0].split("/")[0]
@@ -60,18 +60,17 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
           const overrides = Array.isArray(publishedContractId)
             ? publishedContractId[2]
             : undefined;
-
           return (
             <ContractCard
               key={publisher + contractId + overrides?.title}
               publisher={publisher}
               contractId={contractId}
+              titleOverride={overrides?.title}
+              descriptionOverride={overrides?.description}
               tracking={{
                 source: category.id,
                 itemIndex: `${idx}`,
               }}
-              titleOverride={overrides?.title}
-              descriptionOverride={overrides?.description}
               isBeta={category.isBeta}
               modules={
                 modules?.length
@@ -87,4 +86,4 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
       </div>
     </section>
   );
-};
+}

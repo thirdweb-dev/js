@@ -10,7 +10,7 @@ export const UpgradeButton = () => {
 
   if (
     !isLoggedIn ||
-    meQuery.isLoading ||
+    meQuery.isPending ||
     !meQuery.data ||
     router.pathname.startsWith("/dashboard/settings/billing")
   ) {
@@ -23,7 +23,7 @@ export const UpgradeButton = () => {
     <TrackedLinkButton
       category="header"
       label="upgrade"
-      href={"/dashboard/settings/billing"}
+      href="/dashboard/settings/billing"
       variant="outline"
       colorScheme="blue"
       size="sm"

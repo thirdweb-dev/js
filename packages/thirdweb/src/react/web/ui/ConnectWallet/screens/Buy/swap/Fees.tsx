@@ -83,8 +83,7 @@ export function FiatFees(props: {
             </Text>
 
             <Text color="primaryText" inline>
-              {feeAmount === 0 ? "~" : ""}
-              {feeAmount} {fee.currencySymbol}{" "}
+              {feeAmount === 0 ? "~" : ""} {feeAmount} {fee.currencySymbol}
             </Text>
           </div>
         );

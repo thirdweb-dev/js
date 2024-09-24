@@ -56,5 +56,6 @@ export default {
   signInWithPhone: "Se connecter avec le numéro de téléphone",
   phoneRequired: "Le numéro de téléphone est requis",
   passkey: "Passkey",
-  linkWallet: "Link a Wallet",
+  linkWallet: "Lier un portefeuille",
+  loginAsGuest: "Connectez-vous en tant qu'invité",
 } satisfies InAppWalletLocale;

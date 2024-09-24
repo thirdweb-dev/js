@@ -3,8 +3,8 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Address } from "../../../../utils/address.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import type { Wallet } from "../../../interfaces/wallet.js";
-import type { AuthOption, SocialAuthOption } from "../../../types.js";
-import type { Ecosystem } from "../../web/types.js";
+import type { AuthOption, OAuthOption } from "../../../types.js";
+import type { Ecosystem } from "../wallet/types.js";
 
 export type MultiStepAuthProviderType =
   | {
@@ -24,14 +24,16 @@ export type MultiStepAuthArgsType = MultiStepAuthProviderType & {
   verificationCode: string;
 };
 
+export type SocialAuthArgsType = {
+  strategy: OAuthOption;
+  openedWindow?: Window;
+  closeOpenedWindow?: (window: Window) => void;
+  redirectUrl?: string;
+  mode?: "redirect" | "popup" | "window";
+};
+
 export type SingleStepAuthArgsType =
-  | {
-      strategy: SocialAuthOption;
-      openedWindow?: Window;
-      closeOpenedWindow?: (window: Window) => void;
-      redirectUrl?: string;
-      mode?: "redirect" | "popup" | "window";
-    }
+  | SocialAuthArgsType
   | { strategy: "jwt"; jwt: string; encryptionKey: string }
   | { strategy: "auth_endpoint"; payload: string; encryptionKey: string }
   | { strategy: "iframe_email_verification"; email: string }
@@ -52,6 +54,10 @@ export type SingleStepAuthArgsType =
       strategy: "wallet";
       wallet: Wallet;
       chain: Chain;
+    }
+  | {
+      strategy: "guest";
+      client: ThirdwebClient;
     };
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
@@ -63,11 +69,13 @@ export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
 export enum RecoveryShareManagement {
   USER_MANAGED = "USER_MANAGED",
   CLOUD_MANAGED = "AWS_MANAGED",
+  ENCLAVE = "ENCLAVE",
 }
 
 // TODO: remove usage of enums, instead use object with as const
 export enum AuthProvider {
   COGNITO = "Cognito",
+  GUEST = "Guest",
   GOOGLE = "Google",
   EMAIL_OTP = "EmailOtp",
   CUSTOM_JWT = "CustomJWT",
@@ -76,14 +84,15 @@ export enum AuthProvider {
   APPLE = "Apple",
   PASSKEY = "Passkey",
   DISCORD = "Discord",
+  COINBASE = "Coinbase",
   X = "X",
   LINE = "Line",
   FARCASTER = "Farcaster",
   TELEGRAM = "Telegram",
 }
 
-export type OauthOption = {
-  strategy: SocialAuthOption;
+export type OAuthRedirectObject = {
+  strategy: OAuthOption;
   redirectUrl: string;
 };
 
@@ -97,13 +106,6 @@ export type Profile = {
   };
 };
 
-/**
- * @internal
- */
-export type GetHeadlessLoginLinkReturnType = {
-  loginLink: string;
-};
-
 export type UserDetailsApiType = {
   status: string;
   isNewUser: boolean;
@@ -113,7 +115,7 @@ export type UserDetailsApiType = {
 
 // TODO: Clean up tech debt of random type Objects
 // E.g. StoredTokenType is really not used anywhere but it exists as this object for legacy reason
-export type StoredTokenType = {
+type StoredTokenType = {
   jwtToken: string;
   authProvider: AuthProvider;
   authDetails: AuthDetails;
@@ -128,13 +130,14 @@ export type AuthStoredTokenWithCookieReturnType = {
   };
 };
 export type AuthAndWalletRpcReturnType = AuthStoredTokenWithCookieReturnType & {
-  walletDetails: SetUpWalletRpcReturnType;
+  // Will just be WalletAddressObjectType for enclave wallets
+  walletDetails: SetUpWalletRpcReturnType | WalletAddressObjectType;
 };
 
 export type AuthLoginReturnType = { user: InitializedUser };
 
 // Auth Types
-export type AuthDetails = (
+type AuthDetails = (
   | {
       email?: string;
     }
@@ -146,9 +149,10 @@ export type AuthDetails = (
   encryptionKey?: string;
   backupRecoveryCodes?: string[];
   recoveryShareManagement: RecoveryShareManagement;
+  walletType?: "sharded" | "enclave";
 };
 
-export type InitializedUser = {
+type InitializedUser = {
   status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED;
   walletAddress: string;
   authDetails: AuthDetails;
@@ -191,11 +195,6 @@ export type SendEmailOtpReturnType = {
 };
 export type LogoutReturnType = { success: boolean };
 
-/**
- * @internal
- */
-export type GetAuthDetailsReturnType = { authDetails?: AuthDetails };
-
 // ! Types seem repetitive, but the name should identify which goes where
 // this is the return type from the InAppWallet Class getUserWalletStatus method iframe call
 export type GetUserWalletStatusRpcReturnType =
@@ -234,4 +233,5 @@ export type GetUser =
 
 export type GetAuthenticatedUserParams = {
   client: ThirdwebClient;
+  ecosystem?: Ecosystem;
 };

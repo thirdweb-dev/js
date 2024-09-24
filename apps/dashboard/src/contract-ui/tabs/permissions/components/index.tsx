@@ -101,7 +101,7 @@ export function Permissions({
         {roles.map((role) => {
           return (
             <ContractPermission
-              isLoading={allRoleMembers.isLoading}
+              isPending={allRoleMembers.isPending}
               key={role}
               role={role}
               description={ROLE_DESCRIPTION_MAP[role] || ""}

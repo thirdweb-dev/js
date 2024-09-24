@@ -6,11 +6,10 @@ export async function fetchStorageDoc() {
     return prom;
   }
   prom = (async () => {
-    const doc = await import(
-      "../../../../../../../../legacy_packages/storage/typedoc/documentation.json"
-    );
+    const doc = await import("./v4-legacy-docs/storage.json");
 
-    return transform(doc as any);
+    // @ts-expect-error - works fine!
+    return transform(doc);
   })();
   return prom;
 }

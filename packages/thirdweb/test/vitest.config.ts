@@ -6,7 +6,6 @@ import { defineConfig } from "vitest/config";
 const plugins = process.env.CI ? [codspeedPlugin()] : [];
 
 export default defineConfig({
-  // @ts-expect-error - this is a valid vite config
   plugins: [...plugins, react()],
   test: {
     alias: {
@@ -32,11 +31,8 @@ export default defineConfig({
       ],
       include: ["src/**"],
     },
-    environmentMatchGlobs: [
-      ["src/react/**/*.test.tsx", "happy-dom"],
-      ["src/**/*.test.ts", "node"],
-      ["src/**/*", "node"], // all other files use node
-    ],
+    environmentMatchGlobs: [["src/react/**/*.test.tsx", "happy-dom"]],
+    environment: "node",
     include: ["src/**/*.test.{ts,tsx}"],
     setupFiles: [join(__dirname, "./reactSetup.ts")],
     globalSetup: [join(__dirname, "./globalSetup.ts")],

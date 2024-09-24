@@ -21,12 +21,10 @@ export const CustomToolTip: React.FC<CustomToolTipProps> = ({
 }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="flex flex-col p-3 gap-2 border-none outline-none rounded-lg backdrop-blur-lg bg-[rgba(255,255,255,0.2)] dark:bg-[rgba(0,0,0,0.2)] ">
+      <div className="flex flex-col gap-2 rounded-lg border-none bg-[rgba(255,255,255,0.2)] p-3 outline-none backdrop-blur-lg dark:bg-[rgba(0,0,0,0.2)] ">
         {payload[0]?.payload?.time && (
           <div className="flex flex-col gap-0.5">
-            <label className="text-xs font-semibold text-foreground">
-              Date
-            </label>
+            <h5 className="font-semibold text-foreground text-xs">Date</h5>
             <p className="text-xs">
               {new Date(payload[0].payload.time).toLocaleDateString(
                 undefined,
@@ -36,10 +34,10 @@ export const CustomToolTip: React.FC<CustomToolTipProps> = ({
           </div>
         )}
         <div className="flex flex-col gap-0.5">
-          <label className="text-xs font-semibold text-foreground">
+          <h5 className="font-semibold text-foreground text-xs">
             {valueLabel}
-          </label>
-          <p className="text-xs font-mono">
+          </h5>
+          <p className="font-mono text-xs">
             {valueFormatter
               ? valueFormatter(payload[0].value)
               : payload[0].value.toLocaleString()}

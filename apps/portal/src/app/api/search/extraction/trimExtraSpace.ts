@@ -1,3 +1,3 @@
 export function trimExtraSpace(text: string) {
-	return text.replace(/\s+/g, " ").trim();
+  return text.replace(/\s+/g, " ").trim();
 }

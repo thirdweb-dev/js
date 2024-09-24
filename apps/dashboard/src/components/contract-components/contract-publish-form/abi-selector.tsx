@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import type { Abi } from "abitype";
 import { Select } from "chakra-react-select";
 import { useMemo } from "react";
@@ -27,7 +26,7 @@ export const AbiSelector: React.FC<AbiSelectorProps> = ({
   }, [abi]);
 
   return (
-    <Flex gap={2} alignItems="center" w="full">
+    <div className="flex w-full flex-row items-center gap-2">
       <Select
         placeholder="Select function"
         options={options}
@@ -45,6 +44,6 @@ export const AbiSelector: React.FC<AbiSelectorProps> = ({
           }
         }}
       />
-    </Flex>
+    </div>
   );
 };

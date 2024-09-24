@@ -115,7 +115,7 @@ export function ExecutingTxScreen(props: {
                   color: "inherit",
                 }}
               >
-                View on Explorer{" "}
+                View on Explorer
                 <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
               </ButtonLink>
             </>

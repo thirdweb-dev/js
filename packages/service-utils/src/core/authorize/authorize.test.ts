@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { authorize } from ".";
-import type { CoreServiceConfig } from "../api";
+import type { CoreServiceConfig } from "../api.js";
+import { authorize } from "./index.js";
 
 const validServiceConfig: CoreServiceConfig = {
   apiUrl: "https://api.example.com",

@@ -3,9 +3,9 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { shortenAddress } from "../../../../../utils/address.js";
 import type { Profile } from "../../../../../wallets/in-app/core/authentication/types.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
-import { useProfiles } from "../../../../core/hooks/others/useProfiles.js";
 import { useSocialProfiles } from "../../../../core/social/useSocialProfiles.js";
 import { getWalletIcon } from "../../../../core/utils/walletIcon.js";
+import { useProfiles } from "../../../hooks/wallets/useProfiles.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { Img } from "../../components/Img.js";
 import { Spacer } from "../../components/Spacer.js";
@@ -44,7 +44,9 @@ export function LinkedProfilesScreen(props: {
   locale: ConnectLocale;
   client: ThirdwebClient;
 }) {
-  const { data: connectedProfiles, isLoading } = useProfiles();
+  const { data: connectedProfiles, isLoading } = useProfiles({
+    client: props.client,
+  });
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -88,13 +90,16 @@ export function LinkedProfilesScreen(props: {
               </Text>
             </MenuButton>
             <Spacer y="xs" />
-            {connectedProfiles?.map((profile) => (
-              <LinkedProfile
-                key={`${profile.type}-${getProfileDisplayName(profile)}`}
-                profile={profile}
-                client={props.client}
-              />
-            ))}
+            {/* Exclude guest as a profile */}
+            {connectedProfiles
+              ?.filter((profile) => profile.type !== "guest")
+              .map((profile) => (
+                <LinkedProfile
+                  key={`${profile.type}-${getProfileDisplayName(profile)}`}
+                  profile={profile}
+                  client={props.client}
+                />
+              ))}
           </Container>
           <Spacer y="md" />
         </Container>

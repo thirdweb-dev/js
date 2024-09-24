@@ -121,7 +121,7 @@ export function TransferConfirmationScreen(
       <TokenInfoRow
         chainId={chain.id}
         client={client}
-        label={"Amount"}
+        label="Amount"
         tokenAmount={tokenAmount}
         tokenSymbol={isNativeToken(token) ? symbol || "" : token.symbol}
         tokenAddress={
@@ -177,7 +177,7 @@ export function TransferConfirmationScreen(
           <Container flex="row" gap="xs" center="both" color="success">
             <CheckCircledIcon width={iconSize.sm} height={iconSize.sm} />
             <Text color="success" size="sm">
-              {"Payment completed"}
+              Payment completed
             </Text>
           </Container>
           <Spacer y="md" />

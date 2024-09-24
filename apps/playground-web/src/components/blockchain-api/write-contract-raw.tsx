@@ -42,12 +42,12 @@ export function WriteContractRawPreview() {
     <div className="flex flex-col">
       {account ? (
         <>
-          <div className="rounded-2xl border py-2 px-3 mb-3 backdrop-blur">
+          <div className="mb-3 rounded-2xl border px-3 py-2 backdrop-blur">
             <div className="text-2xl">Your balance</div>
             <div className="flex flex-row justify-start gap-3">
               <Image
                 src="/twcoin.svg"
-                className="mx-auto rounded-2xl animate-bounce size-5"
+                className="mx-auto size-5 animate-bounce rounded-2xl"
                 width={50}
                 height={50}
                 alt=""
@@ -62,7 +62,7 @@ export function WriteContractRawPreview() {
           </div>
 
           <input
-            className="bg-transparent border rounded-lg py-2 px-3 mb-3"
+            className="mb-3 rounded-lg border bg-transparent px-3 py-2"
             type="text"
             placeholder="0x..."
             onChange={(e) => setTo(e.target.value)}
@@ -113,13 +113,13 @@ export function WriteContractRawPreview() {
       )}
 
       {balance === 0n && (
-        <div className="text-xs mt-2">
+        <div className="mt-2 text-xs">
           Claim some test tokens from the example above
         </div>
       )}
 
       {error ? (
-        <div className="text-red-600 mt-4 text-center">{error}</div>
+        <div className="mt-4 text-center text-red-600">{error}</div>
       ) : (
         <>
           {txHash && sepolia.blockExplorers && (
@@ -127,7 +127,7 @@ export function WriteContractRawPreview() {
               target="_blank"
               rel="noreferrer"
               href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
-              className="text-center text-green-400 mt-3"
+              className="mt-3 text-center text-green-400"
             >
               Tx sent:{" "}
               <span className="underline">{shortenAddress(txHash, 6)}</span>

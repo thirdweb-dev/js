@@ -143,9 +143,9 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                   </>
                 )}
 
-                {/* 
+                {/*
                   Todo: Add a Buy button somewhere in this section once the Dashboard is fully migrated to v5 (?)
-                  Kien already shipped a prebuilt component for the Marketplace Buy Button in SDK v5 
+                  Kien already shipped a prebuilt component for the Marketplace Buy Button in SDK v5
                 */}
               </SimpleGrid>
             </Card>

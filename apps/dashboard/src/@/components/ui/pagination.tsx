@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
-    role="navigation"
     aria-label="pagination"
     className={cn("mx-auto flex w-full justify-center", className)}
     {...props}
@@ -47,7 +46,7 @@ const PaginationLink = ({
   <Button
     variant={!isActive ? "outline" : "default"}
     className={cn(
-      "px-3 py-2 h-auto",
+      "h-auto px-3 py-2",
       className,
       props.disabled && "cursor-not-allowed",
     )}

@@ -1,5 +1,4 @@
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { thirdwebClient } from "@/constants/client";
 import { useDashboardEVMChainId, useEVMContractInfo } from "@3rdweb-sdk/react";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
@@ -115,7 +114,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
   const account = useActiveAccount();
 
-  const { data: walletNFTs, isLoading: isWalletNFTsLoading } = useWalletNFTs(
+  const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs(
     account?.address,
     chainId,
   );
@@ -151,11 +150,11 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
     ? getContract({
         address: form.watch("selected.contractAddress"),
         chain: contract.chain,
-        client: thirdwebClient,
+        client: contract.client,
       })
     : undefined;
 
-  const { data: ownedNFTs, isLoading: isOwnedNFTsLoading } =
+  const { data: ownedNFTs, isPending: isOwnedNFTsLoading } =
     useDashboardOwnedNFTs({
       contract: selectedContract,
       owner: account?.address,

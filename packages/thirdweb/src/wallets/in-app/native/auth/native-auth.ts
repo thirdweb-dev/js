@@ -1,16 +1,18 @@
 import * as WebBrowser from "expo-web-browser";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import type { Wallet } from "../../../interfaces/wallet.js";
 import { getLoginUrl } from "../../core/authentication/getLoginPath.js";
+import { guestAuthenticate } from "../../core/authentication/guest.js";
 import { siweAuthenticate } from "../../core/authentication/siwe.js";
 import type {
   AuthStoredTokenWithCookieReturnType,
   MultiStepAuthArgsType,
-  OauthOption,
+  OAuthRedirectObject,
 } from "../../core/authentication/types.js";
+import type { Ecosystem } from "../../core/wallet/types.js";
 import { verifyOtp } from "../../web/lib/auth/otp.js";
-import type { Ecosystem } from "../../web/types.js";
 import {
   deleteAccount,
   getSessionHeaders,
@@ -53,7 +55,7 @@ export async function otpLogin(
 }
 
 export async function authenticate(
-  auth: OauthOption,
+  auth: OAuthRedirectObject,
   client: ThirdwebClient,
 ): Promise<AuthStoredTokenWithCookieReturnType> {
   const loginUrl = getLoginUrl({
@@ -98,7 +100,7 @@ export async function authenticate(
 }
 
 export async function socialLogin(
-  auth: OauthOption,
+  auth: OAuthRedirectObject,
   client: ThirdwebClient,
 ): Promise<AuthStoredTokenWithCookieReturnType> {
   const { storedToken } = await authenticate(auth, client);
@@ -135,6 +137,37 @@ export async function siweLogin(
     ecosystem,
     wallet,
     chain,
+  });
+  try {
+    const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
+      jwtToken: storedToken.jwtToken,
+      authDetails: storedToken.authDetails,
+      authProvider: storedToken.authProvider,
+      developerClientId: storedToken.developerClientId,
+      cookieString: storedToken.cookieString,
+      // we should always store the jwt cookie since there's no concept of cookie in react native
+      shouldStoreCookieString: true,
+      isNewUser: storedToken.isNewUser,
+    };
+
+    await postAuth({ storedToken: toStoreToken, client });
+
+    return { storedToken };
+  } catch (e) {
+    throw new Error(
+      createErrorMessage("Malformed response from post authentication", e),
+    );
+  }
+}
+
+export async function guestLogin(
+  client: ThirdwebClient,
+  ecosystem?: Ecosystem,
+): Promise<AuthStoredTokenWithCookieReturnType> {
+  const { storedToken } = await guestAuthenticate({
+    client,
+    ecosystem,
+    storage: nativeLocalStorage,
   });
   try {
     const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {

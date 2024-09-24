@@ -1,5 +1,14 @@
 {
-  "extends": "@thirdweb-dev/tsconfig/sdk.json",
-  "include": ["src", "types"],
-  "exclude": ["dist", "build", "node_modules"]
+  // This configuration is used for local development and type checking.
+  "extends": "./tsconfig.base.json",
+  "include": ["src", "test"],
+  "exclude": [],
+  // "references": [{ "path": "./scripts/tsconfig.json" }],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "paths": {
+      "~test/*": ["./test/src/*"]
+    }
+  }
 }

@@ -30,7 +30,7 @@ export function executeProposal(
 /**
  * @internal
  */
-export async function getExecuteParams(
+async function getExecuteParams(
   options: BaseTransactionOptions<{ proposalId: bigint }>,
 ): Promise<ExecuteParams> {
   const { proposalId } = options;

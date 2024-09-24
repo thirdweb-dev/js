@@ -23,26 +23,24 @@ export function EcosystemWalletHeader(props: {
     <ModalHeader
       onBack={props.onBack}
       title={
-        <>
-          {walletInfo.isLoading ? (
-            <Skeleton height="24px" width="200px" />
-          ) : (
-            <>
-              {!walletInfo.data?.image_id ? null : (
-                <Img
-                  src={walletInfo.data?.image_id}
-                  style={{
-                    borderRadius: radius.sm,
-                  }}
-                  width={iconSize.md}
-                  height={iconSize.md}
-                  client={props.client}
-                />
-              )}
-              <ModalTitle>{walletInfo.data?.name}</ModalTitle>
-            </>
-          )}
-        </>
+        walletInfo.isLoading ? (
+          <Skeleton height="24px" width="200px" />
+        ) : (
+          <>
+            {!walletInfo.data?.image_id ? null : (
+              <Img
+                src={walletInfo.data?.image_id}
+                style={{
+                  borderRadius: radius.sm,
+                }}
+                width={iconSize.md}
+                height={iconSize.md}
+                client={props.client}
+              />
+            )}
+            <ModalTitle>{walletInfo.data?.name}</ModalTitle>
+          </>
+        )
       }
       leftAligned
     />

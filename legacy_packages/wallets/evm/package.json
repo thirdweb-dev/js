@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm.esm.js": "./dist/thirdweb-dev-wallets-evm.browser.esm.js"
-  }
-}

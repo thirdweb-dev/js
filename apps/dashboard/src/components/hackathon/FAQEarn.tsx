@@ -82,11 +82,11 @@ const faqs = [
 
 const FAQEarn = ({ TRACKING_CATEGORY }: { TRACKING_CATEGORY: string }) => {
   return (
-    <Container maxW={"container.page"} as={Flex} justifyContent="center">
+    <Container maxW="container.page" as={Flex} justifyContent="center">
       <LandingFAQ
         hideMarginTop
         TRACKING_CATEGORY={TRACKING_CATEGORY}
-        title={"FAQ"}
+        title="FAQ"
         faqs={faqs}
         titleSize="title.2xl"
       />

@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Heading } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
@@ -14,12 +13,7 @@ export const SolutionsTextImage: ComponentWithChildren<
 > = ({ image, title, children }) => {
   return (
     <ProductSection>
-      <Flex
-        direction={{ base: "column", md: "row" }}
-        gap={12}
-        alignItems="center"
-        py={{ base: 6, md: 12 }}
-      >
+      <div className="flex flex-col items-center gap-12 py-6 md:flex-row md:py-12">
         <ChakraNextImage
           maxW={{ base: "100%", md: "50%" }}
           objectFit="contain"
@@ -32,13 +26,13 @@ export const SolutionsTextImage: ComponentWithChildren<
           borderRadius={{ base: "none", md: "lg" }}
         />
 
-        <Flex flexDir="column" gap={4}>
+        <div className="flex flex-col gap-4">
           <Heading as="h2" size="title.xl" mb={4}>
             {title}
           </Heading>
           {children}
-        </Flex>
-      </Flex>
+        </div>
+      </div>
     </ProductSection>
   );
 };

@@ -1,4 +1,5 @@
 import { useDebouncedCallback } from "use-debounce";
+import { cn } from "../../../../../lib/utils";
 import styles from "./ColorInput.module.css";
 
 export function ColorInput(props: {
@@ -6,6 +7,7 @@ export function ColorInput(props: {
   onChange: (value: string) => void;
   onClick?: () => void;
   className?: string;
+  id?: string;
 }) {
   const debouncedOnChange = useDebouncedCallback((value) => {
     props.onChange(value);
@@ -13,11 +15,12 @@ export function ColorInput(props: {
 
   return (
     <input
+      id={props.id}
       onChange={(e) => {
         debouncedOnChange(e.target.value);
       }}
       type="color"
-      className={`${styles.ColorInput} ${props.className}`}
+      className={cn(styles.ColorInput, props.className)}
       value={props.value}
     />
   );

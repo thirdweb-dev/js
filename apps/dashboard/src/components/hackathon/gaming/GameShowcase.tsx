@@ -79,7 +79,7 @@ export const GameShowcase = () => {
       >
         <ModalOverlay />
 
-        <ModalContent className="!bg-background border border-border rounded-lg">
+        <ModalContent className="!bg-background rounded-lg border border-border">
           <Box
             position="absolute"
             top={{ base: "-50px", md: "-10px" }}

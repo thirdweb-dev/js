@@ -159,7 +159,7 @@ export async function ChainsData(props: {
       <main>
         {/* empty state */}
         {paginatedChains.length === 0 ? (
-          <div className="border p-8 h-[300px] lg:h-[500px] flex justify-center items-center rounded-lg">
+          <div className="flex h-[300px] items-center justify-center rounded-lg border p-8 lg:h-[500px]">
             <p className="text-2xl">No Results found</p>
           </div>
         ) : props.activeView === "table" ? (
@@ -191,7 +191,7 @@ export async function ChainsData(props: {
                       <div className="relative h-6 w-6">
                         <StarButton
                           chainId={chain.chainId}
-                          className="absolute z-10 top-0 h-full w-full left-0"
+                          className="absolute top-0 left-0 z-10 h-full w-full"
                         />
                       </div>
                     }
@@ -202,7 +202,7 @@ export async function ChainsData(props: {
             </Table>
           </TableContainer>
         ) : (
-          <ul className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {paginatedChains.map((chain) => (
               <li key={chain.chainId} className="h-full">
                 <ChainListCard
@@ -219,7 +219,7 @@ export async function ChainsData(props: {
                     <div className="relative h-6 w-6">
                       <StarButton
                         chainId={chain.chainId}
-                        className="absolute z-10 top-0 h-full w-full left-0"
+                        className="absolute top-0 left-0 z-10 h-full w-full"
                       />
                     </div>
                   }
@@ -235,7 +235,7 @@ export async function ChainsData(props: {
         <ChainlistPagination totalPages={totalPages} activePage={activePage} />
       )}
       <div className="h-4" />
-      <p className="text-sm text-center text-muted-foreground text-balance">
+      <p className="text-balance text-center text-muted-foreground text-sm">
         Showing{" "}
         <span className="text-accent-foreground">{paginatedChains.length}</span>{" "}
         out of{" "}

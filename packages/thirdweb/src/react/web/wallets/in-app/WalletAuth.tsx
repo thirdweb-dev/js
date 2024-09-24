@@ -1,8 +1,9 @@
 import { Suspense, useRef, useState } from "react";
 import { defineChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { linkProfile } from "../../../../wallets/in-app/core/wallet/profiles.js";
+import { linkProfile } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useAddConnectedWallet } from "../../../core/hooks/wallets/useAddConnectedWallet.js";
 import AllWalletsUI from "../../ui/ConnectWallet/Modal/AllWalletsUI.js";
@@ -18,7 +19,7 @@ import { LoadingState } from "../shared/LoadingState.js";
 import type { InAppWalletLocale } from "../shared/locale/types.js";
 
 export function WalletAuth(props: {
-  wallet: Wallet<"inApp">;
+  wallet: Wallet<"inApp" | EcosystemWalletId>;
   client: ThirdwebClient;
   done: () => void;
   size: "compact" | "wide";
@@ -53,7 +54,8 @@ export function WalletAuth(props: {
     setStatus("loading");
     walletToConnect.current = walletToLink;
     try {
-      await linkProfile(wallet as Wallet<"inApp">, {
+      await linkProfile({
+        client: props.client,
         strategy: "wallet",
         wallet: walletToLink,
         chain: wallet.getChain() || defineChain(1),

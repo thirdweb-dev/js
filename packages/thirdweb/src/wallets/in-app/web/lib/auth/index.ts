@@ -1,14 +1,14 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import type { OneOf } from "../../../../../utils/type-utils.js";
 import type { SocialAuthOption } from "../../../../../wallets/types.js";
 import {
   type AuthArgsType,
   type GetAuthenticatedUserParams,
   type PreAuthArgsType,
+  type SocialAuthArgsType,
   UserWalletStatus,
 } from "../../../core/authentication/types.js";
 import { getOrCreateInAppWalletConnector } from "../../../core/wallet/in-app-core.js";
-import type { Ecosystem } from "../../types.js";
+import type { Ecosystem } from "../../../core/wallet/types.js";
 
 // ---- KEEP IN SYNC WITH /wallets/in-app/native/auth/index.ts ---- //
 // duplication needed for separate exports between web and native
@@ -48,11 +48,9 @@ async function getInAppWalletConnector(
  * ```
  * @wallet
  */
-export async function getAuthenticatedUser(
-  options: GetAuthenticatedUserParams,
-) {
-  const { client } = options;
-  const connector = await getInAppWalletConnector(client);
+async function getAuthenticatedUser(options: GetAuthenticatedUserParams) {
+  const { client, ecosystem } = options;
+  const connector = await getInAppWalletConnector(client, ecosystem);
   const user = await connector.getUser();
   switch (user.status) {
     case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
@@ -144,24 +142,94 @@ export async function preAuthenticate(args: PreAuthArgsType) {
  * ```
  * @wallet
  */
-export async function authenticate(
-  args: OneOf<
-    | AuthArgsType
-    | {
-        strategy: SocialAuthOption;
-        client: ThirdwebClient;
-        ecosystem?: Ecosystem;
-        redirect: boolean;
-      }
-  >,
+export async function authenticate(args: AuthArgsType) {
+  const connector = await getInAppWalletConnector(args.client, args.ecosystem);
+  return connector.authenticate(args);
+}
+
+/**
+ * Authenticates the user based on the provided authentication arguments using a redirect.
+ * @param args - The authentication arguments.
+ * @returns A promise that resolves to the authentication result.
+ * @example
+ * ```ts
+ * import { authenticate } from "thirdweb/wallets/in-app";
+ *
+ * const result = await authenticate({
+ *  client,
+ *  strategy: "google",
+ *  mode: "redirect",
+ *  redirectUrl: "https://example.org",
+ * });
+ * ```
+ * @wallet
+ */
+export async function authenticateWithRedirect(
+  args: SocialAuthArgsType & { client: ThirdwebClient; ecosystem?: Ecosystem },
 ) {
   const connector = await getInAppWalletConnector(args.client, args.ecosystem);
-  const isRedirect = args.redirect || args.mode !== "popup";
-  if (isRedirect && connector.authenticateWithRedirect && args.strategy)
-    return connector.authenticateWithRedirect(
-      args.strategy as SocialAuthOption,
-      args.mode,
-      args.redirectUrl,
+  if (!connector.authenticateWithRedirect) {
+    throw new Error(
+      "authenticateWithRedirect is not supported on this platform",
     );
-  return connector.connect(args);
+  }
+  return connector.authenticateWithRedirect(
+    args.strategy as SocialAuthOption,
+    args.mode,
+    args.redirectUrl,
+  );
+}
+
+/**
+ * Connects a new profile (authentication method) to the current user.
+ * The connected profile can be any valid in-app wallet including email, phone, passkey, etc.
+ * The inputs mirror those used when authenticating normally.
+ *
+ * **When a profile is linked to the account, that profile can then be used to sign into the account.**
+ *
+ * This method is only available for in-app wallets.
+ *
+ * @param wallet - The wallet to link an additional profile to.
+ * @param auth - The authentications options to add the new profile.
+ * @returns A promise that resolves to the currently linked profiles when the connection is successful.
+ * @throws If the connection fails, if the profile is already linked to the account, or if the profile is already associated with another account.
+ *
+ * @example
+ * ```ts
+ * const wallet = inAppWallet();
+ *
+ * await wallet.connect({ client, strategy: "google" });
+ * const profiles = await linkProfile({ client, strategy: "discord" });
+ * ```
+ * @wallet
+ */
+export async function linkProfile(args: AuthArgsType) {
+  const connector = await getInAppWalletConnector(args.client, args.ecosystem);
+  return await connector.linkProfile(args);
+}
+
+/**
+ * Gets the linked profiles for the connected in-app or ecosystem wallet.
+ *
+ * @returns An array of accounts user profiles linked to the connected wallet.
+ *
+ * @example
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ *
+ * const wallet = inAppWallet();
+ * wallet.connect({ strategy: "google" });
+ *
+ * const profiles = await getProfiles({
+ *  client,
+ * });
+ *
+ * console.log(profiles[0].type);
+ * console.log(profiles[0].details.email);
+ * ```
+ * @wallet
+ */
+export async function getProfiles(args: GetAuthenticatedUserParams) {
+  const connector = await getInAppWalletConnector(args.client, args.ecosystem);
+  return connector.getProfiles();
 }

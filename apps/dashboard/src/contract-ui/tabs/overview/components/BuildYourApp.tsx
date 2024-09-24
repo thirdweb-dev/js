@@ -32,7 +32,7 @@ export const BuildYourApp: React.FC<BuildYourAppProps> = ({
       px={{ base: 4, md: 8 }}
       py={{ base: 6, md: 8 }}
       as={LinkBox}
-      transition={"all 0.2s"}
+      transition="all 0.2s"
       _hover={{ borderColor: "whiteAlpha.300" }}
     >
       <SimpleGrid {...{ columns: { base: 1, md: 2 } }} gap={8}>

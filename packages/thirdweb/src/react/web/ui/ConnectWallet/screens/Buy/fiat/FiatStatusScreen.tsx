@@ -111,7 +111,6 @@ export function OnrampStatusScreen(props: {
   return (
     <Container p="lg">
       <ModalHeader title={props.title} onBack={props.onBack} />
-
       {props.hasTwoSteps && (
         <>
           <Spacer y="lg" />
@@ -123,7 +122,7 @@ export function OnrampStatusScreen(props: {
           </Text>
         </>
       )}
-
+      packages/thirdweb/src/react/web/ui/ConnectWallet/screens/Buy/TransactionModeScreen.tsx
       <OnrampStatusScreenUI
         uiStatus={uiStatus}
         onDone={props.onDone}

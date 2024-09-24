@@ -38,13 +38,13 @@ import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { toArrFromList } from "utils/string";
 
-interface ConfigureProps {
+type InAppWalletSettingsPageProps = {
   apiKey: Pick<
     ApiKey,
     "id" | "name" | "domains" | "bundleIds" | "services" | "redirectUrls"
   >;
   trackingCategory: string;
-}
+};
 
 const TRACKING_CATEGORY = "embedded-wallet";
 
@@ -54,7 +54,7 @@ type UpdateAPIKeyTrackingData = {
   hasCustomAuthEndpoint: boolean;
 };
 
-export const Configure: React.FC<ConfigureProps> = (props) => {
+export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
   const { data: dashboardAccount } = useAccount();
   const mutation = useUpdateApiKey();
   const { trackingCategory } = props;
@@ -62,7 +62,7 @@ export const Configure: React.FC<ConfigureProps> = (props) => {
 
   if (!dashboardAccount) {
     return (
-      <div className="flex items-center justify-center h-[500px]">
+      <div className="flex h-[500px] items-center justify-center">
         <Spinner className="size-10" />
       </div>
     );
@@ -109,10 +109,10 @@ export const Configure: React.FC<ConfigureProps> = (props) => {
       isUpdating={mutation.isPending}
     />
   );
-};
+}
 
 export const InAppWalletSettingsUI: React.FC<
-  ConfigureProps & {
+  InAppWalletSettingsPageProps & {
     canEditAdvancedFeatures: boolean;
     updateApiKey: (
       apiKey: UpdateKeyInput,
@@ -238,7 +238,7 @@ export const InAppWalletSettingsUI: React.FC<
         <NativeAppsFieldset form={form} />
 
         <div className="flex justify-end">
-          <Button type="submit" variant={"primary"} className="gap-2">
+          <Button type="submit" variant="primary" className="gap-2">
             {props.isUpdating && <Spinner className="size-4" />}
             Save changes
           </Button>
@@ -495,7 +495,7 @@ function AuthEndpointFields(props: {
         />
 
         <div>
-          <Label className="inline-block mb-3">Custom Headers</Label>
+          <Label className="mb-3 inline-block">Custom Headers</Label>
           <div className="flex flex-col gap-4">
             {customHeaderFields.fields.map((field, customHeaderIdx) => {
               return (
@@ -522,7 +522,7 @@ function AuthEndpointFields(props: {
                     }}
                     className="!w-auto px-3"
                   >
-                    <Trash2Icon className="size-4 text-destructive-text shrink-0" />
+                    <Trash2Icon className="size-4 shrink-0 text-destructive-text" />
                   </Button>
                 </div>
               );
@@ -543,7 +543,7 @@ function AuthEndpointFields(props: {
             </Button>
           </div>
 
-          <p className="text-muted-foreground text-sm mt-3">
+          <p className="mt-3 text-muted-foreground text-sm">
             Set custom headers to be sent along the request with the payload to
             the authentication endpoint above. This can be used to verify the
             incoming requests
@@ -602,9 +602,9 @@ function Fieldset(props: {
 }) {
   return (
     <DynamicHeight>
-      <fieldset className="border p-4 md:p-6 border-border rounded-lg bg-muted/50">
+      <fieldset className="rounded-lg border border-border bg-muted/50 p-4 md:p-6">
         {/* put inside div to remove defualt styles on legend  */}
-        <div className="text-xl font-semibold tracking-tight mb-4">
+        <div className="mb-4 font-semibold text-xl tracking-tight">
           <legend> {props.legend}</legend>
         </div>
 
@@ -621,12 +621,12 @@ function SwitchContainer(props: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex justify-between items-center gap-6">
+    <div className="flex items-center justify-between gap-6">
       <div>
         <Label htmlFor={props.switchId} className="text-base">
           {props.title}
         </Label>
-        <p className="text-muted-foreground text-sm mt-0.5 ">
+        <p className="mt-0.5 text-muted-foreground text-sm ">
           {props.description}
         </p>
       </div>

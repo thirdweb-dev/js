@@ -2,9 +2,9 @@ import { WalletAddress } from "@/components/blocks/wallet-address";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { formatDistance } from "date-fns/formatDistance";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useActiveAccount } from "thirdweb/react";
 import { Badge, Card, Heading, Text } from "tw-components";
+import { useAllChainsData } from "../../../../hooks/chains/allChains";
 
 export type AccountSignerType = {
   signer: string;
@@ -20,8 +20,8 @@ interface AccountSignerProps {
 export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
   const address = useActiveAccount()?.address;
   const chainId = useDashboardEVMChainId();
-  const configuredChainsRecord = useSupportedChainsRecord();
-  const chain = chainId ? configuredChainsRecord[chainId] : undefined;
+  const { idToChain } = useAllChainsData();
+  const chain = chainId ? idToChain.get(chainId) : undefined;
   const isMobile = useBreakpointValue({ base: true, md: false });
   const {
     isAdmin,

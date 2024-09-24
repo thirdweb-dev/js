@@ -1,4 +1,4 @@
-import { Flex, GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FTUX } from "components/FTUX/FTUX";
 import { AppLayout } from "components/app-layouts/app";
@@ -21,7 +21,7 @@ const Dashboard: ThirdwebNextPage = (
   const connectionStatus = useActiveWalletConnectionStatus();
 
   const showFTUX = connectionStatus !== "connected";
-  const isLoading = connectionStatus === "connecting";
+  const isPending = connectionStatus === "connecting";
 
   return (
     <Flex flexDir="column" gap={4}>
@@ -29,12 +29,12 @@ const Dashboard: ThirdwebNextPage = (
       <SimpleGrid columns={{ base: 1, lg: 4 }} gap={16}>
         <GridItem colSpan={{ lg: 3 }}>
           <Heading mb={10}>Get started quickly</Heading>
-          {!isLoading && (
+          {!isPending && (
             <ClientOnly fadeInDuration={600} ssr={null}>
               {showFTUX ? (
                 <FTUX />
               ) : (
-                <VStack gap={10} w="full">
+                <div className="flex w-full flex-col gap-10">
                   <DelayedDisplay delay={1000}>
                     <OnboardingSteps />
                   </DelayedDisplay>
@@ -72,7 +72,7 @@ const Dashboard: ThirdwebNextPage = (
                       },
                     )}
                   </Flex>
-                </VStack>
+                </div>
               )}
             </ClientOnly>
           )}

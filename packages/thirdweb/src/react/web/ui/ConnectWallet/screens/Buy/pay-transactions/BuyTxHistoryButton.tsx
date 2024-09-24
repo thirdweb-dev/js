@@ -82,7 +82,7 @@ export function BuyTxHistoryButton(props: {
                 6,
               )}{" "}
               {props.txInfo.status.quote.toToken.symbol}
-            </Text>{" "}
+            </Text>
           </Container>
 
           <Spacer y="xxs" />

@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveScheme } from "thirdweb/storage";
 
 export function DeployContractInfo(props: {
@@ -11,15 +11,15 @@ export function DeployContractInfo(props: {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex gap-4 items-center flex-1">
+      <div className="flex flex-1 items-center gap-4">
         {props.logo && (
-          <div className="rounded-xl p-2 border border-border shrink-0 items-center justify-center hidden md:flex">
+          <div className="hidden shrink-0 items-center justify-center rounded-xl border border-border p-2 md:flex">
             {/*eslint-disable-next-line @next/next/no-img-element*/}
             <img
               className="size-12"
               alt={props.name}
               src={resolveScheme({
-                client: thirdwebClient,
+                client: getThirdwebClient(),
                 uri: props.logo,
               })}
             />
@@ -27,7 +27,7 @@ export function DeployContractInfo(props: {
         )}
 
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+          <h1 className="font-bold text-2xl tracking-tight md:text-3xl">
             {contractNameDisplay}
           </h1>
           <p className="text-muted-foreground text-sm">{props.description}</p>

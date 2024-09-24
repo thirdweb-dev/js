@@ -14,12 +14,23 @@ import { trackPayEvent } from "../../../../analytics/track.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
+import { getLastAuthProvider } from "../../../../react/core/utils/storage.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import { formatNumber } from "../../../../utils/formatNumber.js";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
+import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
+import type { Ecosystem } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
-import type { AppMetadata } from "../../../../wallets/types.js";
-import type { WalletId } from "../../../../wallets/wallet-types.js";
+import {
+  type AppMetadata,
+  type SocialAuthOption,
+  socialAuthOptions,
+} from "../../../../wallets/types.js";
+import type {
+  EcosystemWalletId,
+  WalletId,
+} from "../../../../wallets/wallet-types.js";
 import {
   CustomThemeProvider,
   parseTheme,
@@ -47,6 +58,7 @@ import {
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
+import { useAdminWallet } from "../../../core/hooks/wallets/useAdminWallet.js";
 import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
 import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/useSwitchActiveWalletChain.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
@@ -188,12 +200,14 @@ export const ConnectedWalletDetails: React.FC<{
 
   const avatarSrc = props.detailsButton?.connectedAccountAvatarUrl || pfp;
 
+  const combinedClassName = `${TW_CONNECTED_WALLET} ${
+    props.detailsButton?.className || ""
+  }`;
+
   return (
     <WalletInfoButton
       type="button"
-      className={`${TW_CONNECTED_WALLET} ${
-        props.detailsButton?.className || ""
-      }`}
+      className={combinedClassName}
       style={props.detailsButton?.style}
       data-test="connected-wallet-details"
       onClick={openModal}
@@ -343,7 +357,7 @@ function DetailsModal(props: {
       </div>
 
       {chainNameQuery.isLoading ? (
-        <Skeleton height={"16px"} width={"150px"} />
+        <Skeleton height="16px" width="150px" />
       ) : (
         <Text color="primaryText" size="md" multiline>
           {chainNameQuery.name || `Unknown chain #${walletChain?.id}`}
@@ -549,12 +563,9 @@ function DetailsModal(props: {
                   }}
                 >
                   <Container color="secondaryText" flex="row" center="both">
-                    <PinBottomIcon
-                      width={iconSize.sm}
-                      height={iconSize.sm}
-                    />{" "}
+                    <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
                   </Container>
-                  {locale.receive}{" "}
+                  {locale.receive}
                 </Button>
               )}
 
@@ -939,7 +950,7 @@ function DetailsModal(props: {
       <WalletUIStatesProvider theme={props.theme} isOpen={false}>
         <ScreenSetupContext.Provider value={screenSetup}>
           <Modal
-            size={"compact"}
+            size="compact"
             open={isOpen}
             setOpen={(_open) => {
               if (!_open) {
@@ -1060,12 +1071,51 @@ function InAppWalletUserInfo(props: {
   const { client, locale } = props;
   const account = useActiveAccount();
   const activeWallet = useActiveWallet();
+  const adminWallet = useAdminWallet();
   const { data: walletInfo } = useWalletInfo(activeWallet?.id);
   const isSmartWallet = hasSmartAccount(activeWallet);
+  const { data: walletName } = useQuery({
+    queryKey: [activeWallet?.id, "wallet-name"],
+    queryFn: async () => {
+      const lastAuthProvider = await getLastAuthProvider(webLocalStorage);
+      if (lastAuthProvider === "guest") {
+        return "Guest";
+      }
+      if (
+        lastAuthProvider &&
+        (activeWallet?.id === "inApp" || activeWallet?.id === "smart") &&
+        socialAuthOptions.includes(lastAuthProvider as SocialAuthOption)
+      ) {
+        return (
+          lastAuthProvider.slice(0, 1).toUpperCase() + lastAuthProvider.slice(1)
+        );
+      }
+      return walletInfo?.name;
+    },
+    enabled: !!activeWallet?.id && !!walletInfo,
+  });
 
   const userInfoQuery = useQuery({
     queryKey: ["in-app-wallet-user", client, account?.address],
     queryFn: async () => {
+      const isInAppWallet =
+        adminWallet &&
+        (adminWallet.id === "inApp" || adminWallet.id.startsWith("ecosystem."));
+
+      if (!isInAppWallet) {
+        return null;
+      }
+
+      let ecosystem: Ecosystem | undefined;
+      if (isEcosystemWallet(adminWallet)) {
+        const ecosystemWallet = adminWallet as Wallet<EcosystemWalletId>;
+        const partnerId = ecosystemWallet.getConfig()?.partnerId;
+        ecosystem = {
+          id: ecosystemWallet.id,
+          partnerId,
+        };
+      }
+
       const { getUserEmail, getUserPhoneNumber } = await import(
         "../../../../wallets/in-app/web/lib/auth/index.js"
       );
@@ -1073,25 +1123,27 @@ function InAppWalletUserInfo(props: {
       const [email, phone] = await Promise.all([
         getUserEmail({
           client: client,
+          ecosystem,
         }),
         getUserPhoneNumber({
           client: client,
+          ecosystem,
         }),
       ]);
 
       return email || phone || null;
     },
-    enabled: !isSmartWallet,
+    enabled: !!adminWallet,
   });
 
-  if (isSmartWallet) {
+  if (!userInfoQuery.data && isSmartWallet) {
     return <ConnectedToSmartWallet client={client} connectLocale={locale} />;
   }
 
-  if (userInfoQuery.data || walletInfo) {
+  if (userInfoQuery.data || walletName) {
     return (
       <Text size="xs" weight={400}>
-        {userInfoQuery.data || walletInfo?.name}
+        {userInfoQuery.data || walletName}
       </Text>
     );
   }
@@ -1148,7 +1200,7 @@ function SwitchNetworkButton(props: {
   );
 }
 
-export type DetailsModalConnectOptions = {
+type DetailsModalConnectOptions = {
   connectModal?: ConnectButton_connectModalOptions;
   walletConnect?: {
     projectId?: string;

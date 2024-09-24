@@ -1,20 +1,16 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
-import {
-  type QueryClient,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-base-64";
-import { ensQuery } from "components/contract-components/hooks";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { resolveScheme } from "thirdweb/storage";
-import invariant from "tiny-invariant";
 import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
@@ -93,16 +89,17 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   modules = [],
   isBeta,
 }) => {
+  const client = useThirdwebClient();
   const publishedContractResult = usePublishedContract(
     `${publisher}/${contractId}/${version}`,
   );
 
-  const showSkeleton = publishedContractResult.isLoading;
+  const showSkeleton = publishedContractResult.isPending;
 
   return (
     <article
       className={cn(
-        "min-h-[220px] p-4 border border-border relative rounded-lg flex flex-col",
+        "relative flex min-h-[220px] flex-col rounded-lg border border-border p-4",
         !showSkeleton ? "bg-muted/50 hover:bg-muted" : "pointer-events-none",
       )}
     >
@@ -133,26 +130,26 @@ export const ContractCard: React.FC<ContractCardProps> = ({
             <>
               <Link
                 target="_blank"
-                className="text-success-text flex items-center gap-1 text-sm z-1 hover:underline font-medium relative"
+                className="relative z-1 flex items-center gap-1 font-medium text-sm text-success-text hover:underline"
                 href={resolveScheme({
                   uri: publishedContractResult.data.audit,
-                  client: thirdwebClient,
+                  client,
                 })}
               >
                 <ShieldCheckIcon className="size-4" />
                 Audited
               </Link>
-              <div className="size-1 bg-muted-foreground/50 rounded-full" />
+              <div className="size-1 rounded-full bg-muted-foreground/50" />
             </>
           )}
 
           {/* Version */}
           <SkeletonContainer
-            skeletonData={"0.0.0"}
+            skeletonData="0.0.0"
             loadedData={publishedContractResult.data?.version}
             render={(v) => {
               return (
-                <p className="text-muted-foreground text-sm font-medium">
+                <p className="font-medium text-muted-foreground text-sm">
                   v{v}
                 </p>
               );
@@ -162,7 +159,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
 
         {/* Tags */}
         {isBeta ? (
-          <Badge className="border-[#a21caf] dark:border-[#86198f] text-white  dark:bg-[linear-gradient(154deg,#4a044e,#2e1065)] bg-[linear-gradient(154deg,#d946ef,#9333ea)] py-[3px] px-[8px]">
+          <Badge className="border-[#a21caf] bg-[linear-gradient(154deg,#d946ef,#9333ea)] px-[8px] py-[3px] text-white dark:border-[#86198f] dark:bg-[linear-gradient(154deg,#4a044e,#2e1065)]">
             Beta
           </Badge>
         ) : null}
@@ -180,7 +177,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
         }
         render={(v) => {
           return (
-            <h3 className="text-lg font-semibold tracking-tight">
+            <h3 className="font-semibold text-lg tracking-tight">
               {v.replace("[Beta]", "")}
             </h3>
           );
@@ -188,7 +185,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
       />
 
       {publishedContractResult.data ? (
-        <p className="text-sm text-muted-foreground leading-5 mt-1">
+        <p className="mt-1 text-muted-foreground text-sm leading-5">
           {descriptionOverride || publishedContractResult.data?.description}
         </p>
       ) : (
@@ -199,7 +196,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
         </div>
       )}
       {modules.length ? (
-        <div className="mt-auto pt-3 flex flex-row gap-1 flex-wrap">
+        <div className="mt-auto flex flex-row flex-wrap gap-1 pt-3">
           {modules.slice(0, 2).map((m) => (
             <Badge variant="outline" key={m.publisher + m.moduleId + m.version}>
               {m.moduleId.split("ERC")[0]}
@@ -212,7 +209,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
       ) : null}
       <div
         className={cn(
-          "pt-3 relative z-1 flex gap-2 justify-between",
+          "relative z-1 flex justify-between gap-2 pt-3",
           !modules?.length && "mt-auto",
         )}
       >
@@ -221,11 +218,11 @@ export const ContractCard: React.FC<ContractCardProps> = ({
           showSkeleton={showSkeleton}
         />
 
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <Button
             variant="primary"
             size="sm"
-            className="gap-1.5 py-1.5 px-2.5 text-xs h-auto relative z-10"
+            className="relative z-10 h-auto gap-1.5 px-2.5 py-1.5 text-xs"
             asChild
           >
             <Link
@@ -254,55 +251,12 @@ type PublishedContractId =
   | `${string}/${string}`
   | `${string}/${string}/${string}`;
 
-async function publishedContractQueryFn(
-  publisher: string,
-  contractId: string,
-  version: string,
-  queryClient: QueryClient,
-) {
-  const publisherEns = await queryClient.fetchQuery(ensQuery(publisher));
-  // START prefill both publisher ens variations
-  if (publisherEns.address) {
-    queryClient.setQueryData(
-      ensQuery(publisherEns.address).queryKey,
-      publisherEns,
-    );
-  }
-  if (publisherEns.ensName) {
-    queryClient.setQueryData(
-      ensQuery(publisherEns.ensName).queryKey,
-      publisherEns,
-    );
-  }
-  // END prefill both publisher ens variations
-  invariant(publisherEns.address, "publisher address not found");
-  const latestPublishedVersion = await fetchPublishedContractVersion(
-    publisherEns.address,
-    contractId,
-    version,
-  );
-  invariant(latestPublishedVersion, "no published version found");
-
-  return {
-    ...latestPublishedVersion,
-    publishedContractId: `${publisher}/${contractId}/${version}`,
-  };
-}
-
-export function publishedContractQuery(
-  publishedContractId: PublishedContractId,
-  queryClient: QueryClient,
-) {
-  const [publisher, contractId, version] = publishedContractId.split("/");
-  return {
-    queryKey: ["published-contract", { publisher, contractId, version }],
-    queryFn: () =>
-      publishedContractQueryFn(publisher, contractId, version, queryClient),
-    enabled: !!publisher || !!contractId,
-  };
-}
-
 function usePublishedContract(publishedContractId: PublishedContractId) {
-  const queryClient = useQueryClient();
-  return useQuery(publishedContractQuery(publishedContractId, queryClient));
+  const [publisher, contractId, version] = publishedContractId.split("/");
+  return useQuery({
+    queryKey: ["published-contract", { publishedContractId }],
+    queryFn: () =>
+      fetchPublishedContractVersion(publisher, contractId, version),
+    enabled: !!publisher || !!contractId,
+  });
 }

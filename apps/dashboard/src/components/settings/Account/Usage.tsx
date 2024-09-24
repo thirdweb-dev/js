@@ -1,5 +1,5 @@
 import type { UsageBillableByService } from "@3rdweb-sdk/react/hooks/useApi";
-import { SimpleGrid, Spinner, VStack } from "@chakra-ui/react";
+import { SimpleGrid, Spinner } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { Heading, Text } from "tw-components";
 import { toNumber, toPercent, toSize } from "utils/number";
@@ -7,12 +7,12 @@ import { UsageCard } from "./UsageCard";
 
 interface UsageProps {
   usage: UsageBillableByService | undefined;
-  usageLoading: boolean;
+  usagePending: boolean;
 }
 
 export const Usage: React.FC<UsageProps> = ({
   usage: usageData,
-  usageLoading,
+  usagePending,
 }) => {
   const bundlerMetrics = useMemo(() => {
     const metric = {
@@ -101,7 +101,7 @@ export const Usage: React.FC<UsageProps> = ({
       title: "Unlimited requests",
       total: (
         <>
-          Max rate:{" "}
+          Max rate:
           <Text color="bgBlack" as="span">
             {usageData.rateLimits.storage} requests per second
           </Text>
@@ -111,11 +111,11 @@ export const Usage: React.FC<UsageProps> = ({
   }, [usageData]);
 
   return (
-    <VStack gap={8} w="full">
-      {usageLoading && <Spinner size="sm" />}
-      {!usageLoading && (
-        <VStack w="full" gap={12}>
-          <VStack alignItems="flex-start" gap={6} w="full">
+    <div className="flex w-full flex-col gap-8">
+      {usagePending && <Spinner size="sm" />}
+      {!usagePending && (
+        <div className="flex w-full flex-col gap-12">
+          <div className="flex w-full flex-col items-start gap-6">
             <Heading as="h4" size="title.sm">
               Infrastructure
             </Heading>
@@ -141,9 +141,9 @@ export const Usage: React.FC<UsageProps> = ({
                 tooltip="Storage pinning usage is calculated by GB per file size."
               />
             </SimpleGrid>
-          </VStack>
+          </div>
 
-          <VStack alignItems="flex-start" gap={6} w="full">
+          <div className="flex w-full flex-col gap-8">
             <Heading as="h4" size="title.sm">
               Wallets
             </Heading>
@@ -159,9 +159,9 @@ export const Usage: React.FC<UsageProps> = ({
                 tooltip="Email wallet (with managed recovery code) usage is calculated by monthly active wallets (i.e. active as defined by at least 1 user log-in via email or social within the billing period month)."
               />
             </SimpleGrid>
-          </VStack>
+          </div>
 
-          <VStack alignItems="flex-start" gap={6} w="full">
+          <div className="flex w-full flex-col gap-8">
             <Heading as="h4" size="title.sm">
               Payments
             </Heading>
@@ -177,9 +177,9 @@ export const Usage: React.FC<UsageProps> = ({
                 tooltip="(Gasless, Paymaster, Bundler) usage is calculated by sponsored network fees."
               />
             </SimpleGrid>
-          </VStack>
-        </VStack>
+          </div>
+        </div>
       )}
-    </VStack>
+    </div>
   );
 };

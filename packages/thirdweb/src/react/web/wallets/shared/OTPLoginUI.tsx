@@ -4,8 +4,10 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
-import { linkProfile } from "../../../../wallets/in-app/core/wallet/profiles.js";
-import { preAuthenticate } from "../../../../wallets/in-app/web/lib/auth/index.js";
+import {
+  linkProfile,
+  preAuthenticate,
+} from "../../../../wallets/in-app/web/lib/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -126,13 +128,15 @@ export function OTPLoginUI(props: {
 
   async function link(otp: string) {
     if ("email" in userInfo) {
-      await linkProfile(wallet as Wallet<"inApp">, {
+      await linkProfile({
+        client: props.client,
         strategy: "email",
         email: userInfo.email,
         verificationCode: otp,
       });
     } else if ("phone" in userInfo) {
-      await linkProfile(wallet as Wallet<"inApp">, {
+      await linkProfile({
+        client: props.client,
         strategy: "phone",
         phoneNumber: userInfo.phone,
         verificationCode: otp,
@@ -280,11 +284,9 @@ export function OTPLoginUI(props: {
 
             <Container p={isWideModal ? undefined : "lg"}>
               {accountStatus === "error" && (
-                <>
-                  <Text size="sm" center color="danger">
-                    {locale.emailLoginScreen.failedToSendCode}
-                  </Text>
-                </>
+                <Text size="sm" center color="danger">
+                  {locale.emailLoginScreen.failedToSendCode}
+                </Text>
               )}
 
               {accountStatus === "sending" && (

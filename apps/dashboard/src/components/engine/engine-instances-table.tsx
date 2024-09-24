@@ -42,7 +42,7 @@ import { FormLabel } from "tw-components";
 
 interface EngineInstancesTableProps {
   instances: EngineInstance[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
   refetch: ReturnType<typeof useEngineInstances>["refetch"];
   engineLinkPrefix: string;
@@ -50,7 +50,7 @@ interface EngineInstancesTableProps {
 
 export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
   instances,
-  isLoading,
+  isPending,
   isFetched,
   refetch,
   engineLinkPrefix,
@@ -95,11 +95,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
           );
         } else if (status === "paymentFailed") {
           badge = (
-            <ToolTipLabel
-              label={
-                "There was an error charging your payment method. Please contact support@thirdweb.com."
-              }
-            >
+            <ToolTipLabel label="There was an error charging your payment method. Please contact support@thirdweb.com.">
               <div>
                 <Badge variant="destructive" className="gap-1.5">
                   <CircleAlertIcon className="size-3" />
@@ -121,7 +117,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
               <div className="flex flex-col gap-0.5">
                 <Link
                   href={`${engineLinkPrefix}/${id}`}
-                  className="text-foreground flex text-lg font-semibold items-center before:absolute before:inset-0 before:bg-transparent"
+                  className="flex items-center font-semibold text-foreground text-lg before:absolute before:inset-0 before:bg-transparent"
                 >
                   {name}
                 </Link>
@@ -141,7 +137,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
         data={instances}
         columns={columns}
         isFetched={isFetched}
-        isLoading={isLoading}
+        isPending={isPending}
         onMenuClick={[
           {
             icon: BiPencil,
@@ -217,7 +213,7 @@ const EditModal = (props: {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
         <DialogHeader className="mb-3">
-          <DialogTitle className="text-2xl font-semibold tracking-tight">
+          <DialogTitle className="font-semibold text-2xl tracking-tight">
             Edit Engine Instance
           </DialogTitle>
         </DialogHeader>
@@ -325,13 +321,13 @@ function RemoveFromDashboardModalContent(props: {
   return (
     <>
       <DialogHeader>
-        <DialogTitle className="text-2xl font-semibold tracking-tight mb-3">
+        <DialogTitle className="mb-3 font-semibold text-2xl tracking-tight">
           Remove Engine Instance
         </DialogTitle>
         <DialogDescription className="text-muted-foreground">
-          <span className="block mb-2">
-            Are you sure you want to remove{" "}
-            <em className="not-italic font-semibold">"{instance.name}"</em> from
+          <span className="mb-2 block">
+            Are you sure you want to remove
+            <em className="font-semibold not-italic">"{instance.name}"</em> from
             your dashboard?
           </span>
           <span className="block">
@@ -393,7 +389,7 @@ function CancelSubscriptionModalContent(props: {
   return (
     <div>
       <DialogHeader>
-        <DialogTitle className="text-2xl font-semibold tracking-tight mb-1">
+        <DialogTitle className="mb-1 font-semibold text-2xl tracking-tight">
           Cancel Engine Subscription
         </DialogTitle>
         <DialogDescription className="text-muted-foreground">
@@ -405,7 +401,7 @@ function CancelSubscriptionModalContent(props: {
       <div className="h-3" />
 
       <Alert variant="destructive">
-        <TriangleAlertIcon className="size-5 !text-destructive-text" />
+        <TriangleAlertIcon className="!text-destructive-text size-5" />
         <AlertTitle>This action is irreversible!</AlertTitle>
         <AlertDescription>
           You will no longer be able to access this Engine's local backend

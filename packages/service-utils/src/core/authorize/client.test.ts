@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { validApiKeyMeta } from "../../mocks";
-import { type ClientAuthorizationPayload, authorizeClient } from "./client";
+import { validApiKeyMeta } from "../../mocks.js";
+import { type ClientAuthorizationPayload, authorizeClient } from "./client.js";
 
 describe("authorizeClient", () => {
   const validAuthOptions: ClientAuthorizationPayload = {

@@ -105,7 +105,7 @@ export function SwapStatusScreen(props: {
                 height={iconSize["3xl"]}
               />
               <Spacer y="sm" />
-              <Text color={"primaryText"} size="lg">
+              <Text color="primaryText" size="lg">
                 Buy Complete
               </Text>
             </Container>
@@ -129,7 +129,7 @@ export function SwapStatusScreen(props: {
               <Container color="success" flex="column" center="x">
                 <AccentFailIcon size={iconSize["3xl"]} />
                 <Spacer y="xl" />
-                <Text color={"primaryText"} size="lg">
+                <Text color="primaryText" size="lg">
                   Incomplete
                 </Text>
                 <Spacer y="sm" />
@@ -151,7 +151,7 @@ export function SwapStatusScreen(props: {
               <Container flex="column" center="both">
                 <AccentFailIcon size={iconSize["3xl"]} />
                 <Spacer y="xl" />
-                <Text color={"primaryText"} size="lg">
+                <Text color="primaryText" size="lg">
                   Transaction Failed
                 </Text>
 
@@ -189,7 +189,7 @@ export function SwapStatusScreen(props: {
                 <Spinner size="3xl" color="accentText" />
               </div>
               <Spacer y="lg" />
-              <Text color={"primaryText"} size="lg">
+              <Text color="primaryText" size="lg">
                 Buy Pending
               </Text>
             </Container>

@@ -1,10 +1,13 @@
 "use client";
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Accordion,
   AccordionButton,
@@ -17,8 +20,10 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceTemplateValues } from "lib/deployment/template-values";
-import { ExternalLinkIcon } from "lucide-react";
+import { CircleAlertIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
@@ -33,9 +38,6 @@ import {
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
-import { thirdwebClient } from "../../../@/constants/client";
-import { useLoggedInUser } from "../../../@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { useTxNotifications } from "../../../hooks/useTxNotifications";
 import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
 import { addContractToMultiChainRegistry } from "../utils";
 import { Fieldset } from "./common";
@@ -60,6 +62,7 @@ import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
 
 interface CustomContractFormProps {
   metadata: FetchDeployMetadataResult;
+  jwt: string;
   modules?: FetchDeployMetadataResult[];
 }
 
@@ -109,10 +112,20 @@ function checkTwPublisher(publisher: string | undefined) {
   }
 }
 
+function rewriteTwPublisher(publisher: string | undefined) {
+  if (checkTwPublisher(publisher)) {
+    return "deployer.thirdweb.eth";
+  }
+  return publisher;
+}
+
 export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   metadata,
   modules,
+  jwt,
 }) => {
+  const thirdwebClient = useThirdwebClient(jwt);
+
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
   useLoggedInUser();
@@ -120,6 +133,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
     "Successfully deployed contract",
     "Failed to deploy contract",
   );
+  const trackEvent = useTrack();
 
   const constructorParams =
     metadata.abi.find((a) => a.type === "constructor")?.inputs || [];
@@ -182,6 +196,18 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               chainId: walletChain?.id,
             },
           );
+
+          // if _defaultAdmin is not prefilled with activeAccount address with the replaceTemplateValues, do it here
+          // because _defaultAdmin is hidden in the form
+          if (
+            param.name === "_defaultAdmin" &&
+            param.type === "address" &&
+            !acc[param.name] &&
+            activeAccount
+          ) {
+            acc[param.name] = activeAccount.address;
+          }
+
           return acc;
         },
         {} as Record<string, string>,
@@ -369,6 +395,16 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         });
       }
 
+      // handle split things
+      const payees: string[] = [];
+      const shares: string[] = [];
+      if (isSplit && params.recipients?.length) {
+        for (const recipient of params.recipients) {
+          payees.push(recipient.address);
+          shares.push(recipient.sharesBps.toString());
+        }
+      }
+
       if (metadata.name === "MarketplaceV3") {
         // special case for marketplace
         return await deployMarketplaceContract({
@@ -391,6 +427,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
       const initializeParams = {
         ...params.contractMetadata,
         ...params.deployParams,
+        payees,
+        shares,
         _contractURI,
       };
 
@@ -443,6 +481,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
     enabled: walletChain !== undefined && metadata !== undefined,
   });
 
+  const shouldShowDeterministicDeployWarning =
+    constructorParams.length > 0 && form.watch("deployDeterministic");
+
   return (
     <>
       <FormProvider {...form}>
@@ -454,7 +495,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           id="custom-contract-form"
           as="form"
           onSubmit={form.handleSubmit(async (formData) => {
-            if (!walletChain?.id || !activeAccount) {
+            if (!walletChain?.id || !activeAccount || !jwt) {
               return;
             }
 
@@ -475,11 +516,37 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 },
               ];
             }
+
+            const publisherAnalyticsData = metadata.publisher
+              ? {
+                  publisherAndContractName: `${rewriteTwPublisher(metadata.publisher)}/${metadata.name}`,
+                }
+              : {};
+
+            trackEvent({
+              category: "custom-contract",
+              action: "deploy",
+              label: "attempt",
+              ...publisherAnalyticsData,
+              chainId: walletChain.id,
+              metadataUri: metadata.metadataUri,
+            });
+
             deployStatusModal.setViewContractLink("");
             deployStatusModal.open(steps);
             try {
               // do the actual deployment
               const contractAddr = await deployMutation.mutateAsync(formData);
+
+              trackEvent({
+                category: "custom-contract",
+                action: "deploy",
+                label: "success",
+                ...publisherAnalyticsData,
+                contractAddress: contractAddr,
+                chainId: walletChain.id,
+                metadataUri: metadata.metadataUri,
+              });
               deployStatusModal.nextStep();
               // if add to dashboard is checked, add the contract to the dashboard
               if (formData.addToDashboard) {
@@ -492,14 +559,33 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   activeAccount,
                   300000n,
                 );
+                trackEvent({
+                  category: "custom-contract",
+                  action: "add-to-dashboard",
+                  label: "success",
+                  ...publisherAnalyticsData,
+                  contractAddress: contractAddr,
+                  chainId: walletChain.id,
+                  metadataUri: metadata.metadataUri,
+                });
                 deployStatusModal.nextStep();
               }
+
               deployStatusModal.setViewContractLink(
                 `/${walletChain.id}/${contractAddr}`,
               );
             } catch (e) {
               onError(e);
               console.error("failed to deploy contract", e);
+              trackEvent({
+                category: "custom-contract",
+                action: "error",
+                label: "success",
+                ...publisherAnalyticsData,
+                chainId: walletChain.id,
+                metadataUri: metadata.metadataUri,
+                error: e,
+              });
               deployStatusModal.close();
             }
           })}
@@ -672,21 +758,18 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   );
                 })}
 
-              {isModular && (
-                <>
-                  {modules?.length ? (
-                    <ModularContractDefaultModulesFieldset
-                      form={form}
-                      modules={modules}
-                      isTWPublisher={isTWPublisher}
-                    />
-                  ) : (
-                    <div className="min-h-[250px] flex justify-center items-center">
-                      <Spinner className="size-8" />
-                    </div>
-                  )}
-                </>
-              )}
+              {isModular &&
+                (modules?.length ? (
+                  <ModularContractDefaultModulesFieldset
+                    form={form}
+                    modules={modules}
+                    isTWPublisher={isTWPublisher}
+                  />
+                ) : (
+                  <div className="flex min-h-[250px] items-center justify-center">
+                    <Spinner className="size-8" />
+                  </div>
+                ))}
 
               {advancedParams.length > 0 && (
                 <Accordion allowToggle>
@@ -720,7 +803,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               <FormControl isRequired>
                 <FormLabel>Chain</FormLabel>
 
-                <p className="text-muted-foreground text-sm mb-3">
+                <p className="mb-3 text-muted-foreground text-sm">
                   Select a network to deploy this contract on. We recommend
                   starting with a testnet.{" "}
                   <TrackedLinkTW
@@ -735,7 +818,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 </p>
 
                 <div className="flex flex-col gap-3">
-                  <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex flex-col gap-4 md:flex-row">
                     <NetworkSelectorButton
                       networksEnabled={
                         metadata?.name === "AccountFactory" ||
@@ -758,23 +841,37 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               {metadata?.deployType === "standard" && (
                 <>
                   {/* Deterministic deploy */}
-                  <CheckboxWithLabel>
-                    <Checkbox
-                      {...form.register("deployDeterministic")}
-                      checked={form.watch("deployDeterministic")}
-                      onCheckedChange={(c) =>
-                        form.setValue("deployDeterministic", !!c)
-                      }
-                    />
-                    <ToolTipLabel label="Allows having the same contract address on multiple chains. You can control the address by specifying a salt for create2 deployment below">
-                      <div className="inline-flex gap-1.5 items-center">
-                        <span className="tex-sm">
-                          Deploy at a deterministic address
-                        </span>
-                        <FiHelpCircle className="size-4" />
-                      </div>
-                    </ToolTipLabel>
-                  </CheckboxWithLabel>
+
+                  <div className="flex flex-col gap-3">
+                    <CheckboxWithLabel>
+                      <Checkbox
+                        {...form.register("deployDeterministic")}
+                        checked={form.watch("deployDeterministic")}
+                        onCheckedChange={(c) =>
+                          form.setValue("deployDeterministic", !!c)
+                        }
+                      />
+                      <ToolTipLabel label="Allows having the same contract address on multiple chains. You can control the address by specifying a salt for create2 deployment below">
+                        <div className="inline-flex items-center gap-1.5">
+                          <span className="tex-sm">
+                            Deploy at a deterministic address
+                          </span>
+                          <FiHelpCircle className="size-4" />
+                        </div>
+                      </ToolTipLabel>
+                    </CheckboxWithLabel>
+
+                    {shouldShowDeterministicDeployWarning && (
+                      <Alert variant="warning">
+                        <CircleAlertIcon className="size-5" />
+                        <AlertTitle>
+                          Deterministic deployment would only result in the same
+                          contract address if you use the same contructor params
+                          on every deployment.
+                        </AlertTitle>
+                      </Alert>
+                    )}
+                  </div>
 
                   {/*  Optional Salt Input */}
                   {isCreate2Deployment && (
@@ -789,7 +886,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                         <FormHelperText mt={0}>string</FormHelperText>
                       </Flex>
                       <SolidityInput
-                        solidityType={"string"}
+                        solidityType="string"
                         {...form.register("saltForCreate2")}
                       />
                       <div className="h-2" />

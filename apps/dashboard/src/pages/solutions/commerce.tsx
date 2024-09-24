@@ -186,7 +186,7 @@ const Commerce: ThirdwebNextPage = () => {
                   isExternal
                   color="white"
                   fontWeight="medium"
-                  href={"https://portal.thirdweb.com/contracts/build/overview"}
+                  href="https://portal.thirdweb.com/contracts/build/overview"
                   label="use-case-contractkit"
                 >
                   Solidity SDK
@@ -226,7 +226,7 @@ const Commerce: ThirdwebNextPage = () => {
                   isExternal
                   color="white"
                   fontWeight="medium"
-                  href={"/auth"}
+                  href="/auth"
                   label="use-case-auth"
                 >
                   Auth

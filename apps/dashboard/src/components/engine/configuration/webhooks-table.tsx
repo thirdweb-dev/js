@@ -36,7 +36,7 @@ export function beautifyString(str: string): string {
 interface WebhooksTableProps {
   instanceUrl: string;
   webhooks: EngineWebhook[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -109,7 +109,7 @@ const columns = [
 export const WebhooksTable: React.FC<WebhooksTableProps> = ({
   instanceUrl,
   webhooks,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const [webhookToRevoke, setWebhookToRevoke] = useState<EngineWebhook>();
@@ -166,7 +166,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent className="!bg-background border border-border rounded-lg">
+        <ModalContent className="!bg-background rounded-lg border border-border">
           <ModalHeader>Delete webhook</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -209,7 +209,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
         title="webhooks"
         data={activeWebhooks}
         columns={columns}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {

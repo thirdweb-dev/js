@@ -219,10 +219,7 @@ export function useSendTransactionCore(args: {
   });
 }
 
-export async function getTotalTxCostForBuy(
-  tx: PreparedTransaction,
-  from?: string,
-) {
+async function getTotalTxCostForBuy(tx: PreparedTransaction, from?: string) {
   try {
     const gasCost = await estimateGasCost({
       transaction: tx,

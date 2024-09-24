@@ -39,7 +39,21 @@ export const navLinks: SidebarLink[] = [
   },
   {
     name: "In-App Wallet",
-    href: "/connect/in-app-wallet",
+    expanded: true,
+    links: [
+      {
+        name: "Any auth method",
+        href: "/connect/in-app-wallet",
+      },
+      {
+        name: "Your own Ecosystem",
+        href: "/connect/in-app-wallet/ecosystem",
+      },
+      {
+        name: "Sponsor Gas",
+        href: "/connect/in-app-wallet/sponsor",
+      },
+    ],
   },
   {
     name: "Social",

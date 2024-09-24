@@ -75,7 +75,7 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
           <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
             <FormControl isRequired isInvalid={!!errors.to}>
               <FormLabel>Amount</FormLabel>
-              <Input placeholder={"1"} {...register("amount")} />
+              <Input placeholder="1" {...register("amount")} />
               <FormHelperText>How many would you like to mint?</FormHelperText>
               <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
             </FormControl>

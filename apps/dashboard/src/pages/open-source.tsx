@@ -359,7 +359,7 @@ const OSS: ThirdwebNextPage = ({ contributors }: PageProps) => {
             {bounties.map((bounty) => (
               <AccordionItem
                 key={bounty.id}
-                background={"rgba(0,0,0,0.2)"}
+                background="rgba(0,0,0,0.2)"
                 boxShadow="0 0 0 1px hsl(0deg 0% 100% / 15%)"
                 borderRadius="12px"
                 p={{ base: 6, md: 8 }}

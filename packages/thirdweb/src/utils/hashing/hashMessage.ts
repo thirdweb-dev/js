@@ -6,7 +6,7 @@ import { keccak256 } from "./keccak256.js";
 const presignMessagePrefix = "\x19Ethereum Signed Message:\n";
 type To = "hex" | "bytes";
 
-export type HashMessage<TTo extends To> =
+type HashMessage<TTo extends To> =
   | (TTo extends "bytes" ? ByteArray : never)
   | (TTo extends "hex" ? Hex : never);
 

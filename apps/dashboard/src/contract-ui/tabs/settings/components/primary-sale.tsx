@@ -143,7 +143,7 @@ export const SettingsPrimarySale = ({
           <TransactionButton
             colorScheme="primary"
             transactionCount={1}
-            isDisabled={query.isLoading || !form.formState.isDirty}
+            isDisabled={query.isPending || !form.formState.isDirty}
             type="submit"
             isLoading={mutation.isPending}
             loadingText="Saving..."

@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-wallets-private-key.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-wallets-private-key.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-wallets-private-key.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-private-key.browser.esm.js"
-  }
-}

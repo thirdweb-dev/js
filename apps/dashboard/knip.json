@@ -3,6 +3,6 @@
   "next": true,
   "ignore": ["src/@/components/ui/**"],
   "project": ["src/**"],
-  "ignoreBinaries": ["only-allow", "knip", "biome"],
+  "ignoreBinaries": ["only-allow", "biome"],
   "ignoreDependencies": ["@storybook/blocks", "@thirdweb-dev/service-utils"]
 }

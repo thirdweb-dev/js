@@ -15,7 +15,7 @@ export const ContractMetadataFieldset: React.FC<
 > = ({ form }) => {
   return (
     <Fieldset legend="Contract Metadata">
-      <div className="flex flex-col md:grid gap-6 md:grid-cols-[270px_1fr]">
+      <div className="flex flex-col gap-6 md:grid md:grid-cols-[270px_1fr]">
         <div>
           <FormControl
             display="flex"
@@ -34,7 +34,7 @@ export const ContractMetadataFieldset: React.FC<
                   shouldTouch: true,
                 })
               }
-              className="border-2 border-border rounded transition-all duration-200 border-dotted"
+              className="rounded border-2 border-border border-dotted transition-all duration-200"
             />
             <FormErrorMessage>
               {
@@ -87,7 +87,7 @@ export const ContractMetadataFieldset: React.FC<
           </FormControl>
 
           <FormControl
-            className="grow flex flex-col"
+            className="flex grow flex-col"
             isInvalid={
               !!form.getFieldState(
                 "contractMetadata.description",

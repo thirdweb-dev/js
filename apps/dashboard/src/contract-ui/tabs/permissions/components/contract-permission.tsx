@@ -9,14 +9,14 @@ import { PermissionEditor } from "./permissions-editor";
 interface ContractPermissionProps {
   role: string;
   description: string;
-  isLoading: boolean;
+  isPending: boolean;
   contract: ThirdwebContract;
 }
 
 export const ContractPermission: React.FC<ContractPermissionProps> = ({
   role,
   description,
-  isLoading,
+  isPending,
 
   contract,
 }) => {
@@ -46,10 +46,10 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
 
             {role === "transfer" && (
               <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
-                {isLoading || isSubmitting ? (
+                {isPending || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
-                    <Text>{isLoading ? "Loading ..." : "Updating ..."}</Text>
+                    <Text>{isPending ? "Loading ..." : "Updating ..."}</Text>
                   </Flex>
                 ) : (
                   <Select
@@ -81,10 +81,10 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
 
             {role === "lister" && (
               <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
-                {isLoading || isSubmitting ? (
+                {isPending || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
-                    <Text>{isLoading ? "Loading ..." : "Updating ..."}</Text>
+                    <Text>{isPending ? "Loading ..." : "Updating ..."}</Text>
                   </Flex>
                 ) : (
                   <Select
@@ -116,10 +116,10 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
 
             {role === "asset" && (
               <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
-                {isLoading || isSubmitting ? (
+                {isPending || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
-                    <Text>{isLoading ? "Loading ..." : "Updating ..."}</Text>
+                    <Text>{isPending ? "Loading ..." : "Updating ..."}</Text>
                   </Flex>
                 ) : (
                   <Select
@@ -261,7 +261,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             </Flex>
           )}
 
-          {isLoading ? (
+          {isPending ? (
             <Spinner />
           ) : (
             isRestricted &&

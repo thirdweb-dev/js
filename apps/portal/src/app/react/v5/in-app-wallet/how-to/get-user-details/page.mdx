@@ -1,0 +1,60 @@
+import { Tabs, TabsList, TabsContent, TabsTrigger, DocImage } from "@doc";
+
+# Retrieving In-App Wallet User Details on the Server
+
+You can query user details through the thirdweb SDK using a wallet address, email, phone number, or user ID. **This function requires a secret key to be present on the thirdweb client and should only be used on the server.**
+
+<Tabs defaultValue='wallet'>
+  <TabsList>
+    <TabsTrigger value='wallet'>Wallet</TabsTrigger>
+    <TabsTrigger value='email'>Email</TabsTrigger>
+    <TabsTrigger value='phone'>Phone</TabsTrigger>
+    <TabsTrigger value='id'>User ID</TabsTrigger>
+  </TabsList>
+
+<TabsContent value='wallet'>
+```ts
+import { getUser } from "thirdweb";
+
+const user = await getUser({
+  client,
+  walletAddress: "0x123...",
+});
+```
+</TabsContent>
+
+<TabsContent value='email'>
+```ts
+import { getUser } from "thirdweb";
+
+const user = await getUser({
+  client,
+  email: "user@example.com",
+});
+```
+</TabsContent>
+
+<TabsContent value='phone'>
+```ts
+import { getUser } from "thirdweb";
+
+const user = await getUser({
+  client,
+  phone: "+11234567890",
+});
+```
+</TabsContent>
+
+<TabsContent value='id'>
+```ts
+import { getUser } from "thirdweb";
+
+const user = await getUser({
+  client,
+  id: "1234567890",
+});
+```
+</TabsContent>
+
+</Tabs>
+

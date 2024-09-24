@@ -166,11 +166,7 @@ const HackathonEarn = () => {
 
         <Divider mt={16} />
 
-        <Flex
-          flexDir={"column"}
-          gap={{ base: 100, md: 180 }}
-          overflowX="hidden"
-        >
+        <Flex flexDir="column" gap={{ base: 100, md: 180 }} overflowX="hidden">
           <EarnReasonSection />
 
           <HomepageSection>
@@ -250,11 +246,11 @@ const HackathonEarn = () => {
               flexDir="column"
               alignItems="center"
               gap={8}
-              position={"relative"}
+              position="relative"
               padding="0 22px"
             >
               <Box
-                pointerEvents={"none"}
+                pointerEvents="none"
                 width="100vw"
                 height={{ base: "800px", md: "1000px" }}
                 position="absolute"
@@ -262,9 +258,7 @@ const HackathonEarn = () => {
                 top="55%"
                 left="50%"
                 transform="translate(-50%, -50%)"
-                backgroundImage={
-                  "radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
-                }
+                backgroundImage="radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
               />
               <Heading size="title.2xl" textStyle="center">
                 Judging Criteria
@@ -305,10 +299,10 @@ const HackathonEarn = () => {
               flexDir="column"
               alignItems="center"
               gap={8}
-              position={"relative"}
+              position="relative"
             >
               <Box
-                pointerEvents={"none"}
+                pointerEvents="none"
                 width="100vw"
                 height={{ base: "800px", md: "1000px" }}
                 position="absolute"
@@ -316,9 +310,7 @@ const HackathonEarn = () => {
                 top="55%"
                 left="50%"
                 transform="translate(-50%, -50%)"
-                backgroundImage={
-                  "radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
-                }
+                backgroundImage="radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
               />
               <Heading size="title.2xl" textStyle="center">
                 Event Details

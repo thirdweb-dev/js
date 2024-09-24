@@ -1,10 +1,10 @@
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { ProfileMetadata } from "constants/schemas";
-import { type ThirdwebContract, getContract, isAddress } from "thirdweb";
-import { polygon } from "thirdweb/chains";
+import { isAddress } from "thirdweb";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import {
+  getContractPublisher,
   getPublishedContractVersions,
   getPublisherProfileUri,
 } from "thirdweb/extensions/thirdweb";
@@ -17,25 +17,14 @@ function mapThirdwebPublisher(publisher: string) {
   return publisher;
 }
 
-let publisherContract: ThirdwebContract;
-function getPublisherContract() {
-  if (!publisherContract) {
-    publisherContract = getContract({
-      client: thirdwebClient,
-      address: "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808",
-      chain: polygon,
-    });
-  }
-  return publisherContract;
-}
-
 export async function fetchPublisherProfile(publisherAddress: string) {
+  const client = getThirdwebClient();
   const profileUri = await getPublisherProfileUri({
-    contract: getPublisherContract(),
+    contract: getContractPublisher(client),
     publisher: isAddress(publisherAddress)
       ? publisherAddress
       : await resolveAddress({
-          client: thirdwebClient,
+          client,
           name: mapThirdwebPublisher(publisherAddress),
         }),
   });
@@ -44,7 +33,7 @@ export async function fetchPublisherProfile(publisherAddress: string) {
   }
   try {
     const res = await download({
-      client: thirdwebClient,
+      client,
       uri: profileUri,
     });
     return res.json() as Promise<ProfileMetadata>;
@@ -57,12 +46,13 @@ export async function fetchPublishedContractVersions(
   publisherAddress: string,
   contractId: string,
 ) {
+  const client = getThirdwebClient();
   const allVersions = await getPublishedContractVersions({
-    contract: getPublisherContract(),
+    contract: getContractPublisher(client),
     publisher: isAddress(publisherAddress)
       ? publisherAddress
       : await resolveAddress({
-          client: thirdwebClient,
+          client,
           name: mapThirdwebPublisher(publisherAddress),
         }),
     contractId: contractId,
@@ -78,7 +68,7 @@ export async function fetchPublishedContractVersions(
   const responses = await Promise.allSettled(
     sortedVersions.map((v) =>
       fetchDeployMetadata({
-        client: thirdwebClient,
+        client,
         uri: v.publishMetadataUri,
       }).then((m) => ({ ...m, ...v })),
     ),

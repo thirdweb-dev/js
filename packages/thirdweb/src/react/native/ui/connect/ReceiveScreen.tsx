@@ -9,7 +9,7 @@ import { WalletImage } from "../components/WalletImage.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 
-export type ReceiveScreenProps = {
+type ReceiveScreenProps = {
   theme: Theme;
   wallet: Wallet;
   account: Account;

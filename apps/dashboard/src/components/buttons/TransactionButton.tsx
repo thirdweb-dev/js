@@ -49,7 +49,7 @@ function useWalletRequiresExternalConfirmation() {
 export const TransactionButton: React.FC<TransactionButtonProps> = ({
   children,
   transactionCount,
-  isLoading,
+  isLoading: isPending,
   size,
   colorScheme,
   variant,
@@ -88,7 +88,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
       returnFocusOnClose={false}
       initialFocusRef={initialFocusRef}
       isLazy
-      isOpen={walletRequiresExternalConfirmation && isLoading}
+      isOpen={walletRequiresExternalConfirmation && isPending}
     >
       <PopoverTrigger>
         <ButtonComponent
@@ -96,14 +96,14 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
           position="relative"
           role="group"
           colorScheme={colorScheme}
-          isLoading={isLoading}
+          isLoading={isPending}
           size={size}
           variant={variant}
           {...restButtonProps}
           overflow="hidden"
           boxSizing="border-box"
           pl={
-            isLoading || !isConnected
+            isPending || !isConnected
               ? undefined
               : `calc(${52 + numberWidth}px + var(--chakra-space-${
                   size === "sm" ? 3 : size === "lg" ? 6 : size === "xs" ? 2 : 4

@@ -18,7 +18,7 @@ import { TokenIcon } from "../components/TokenIcon.js";
 import { ThemedText } from "../components/text.js";
 import { RIGHT_CHEVRON } from "../icons/svgs.js";
 
-export type TokenListScreenProps = {
+type TokenListScreenProps = {
   theme: Theme;
   client: ThirdwebClient;
   supportedTokens?: SupportedTokens;
@@ -88,18 +88,15 @@ export const TokenRow = (props: {
         <ThemedText theme={theme} type="defaultSemiBold">
           {tokenName}
         </ThemedText>
-        {address && (
-          <>
-            {balanceQuery.data ? (
-              <ThemedText theme={theme} type="subtext">
-                {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
-                {balanceQuery.data?.symbol}
-              </ThemedText>
-            ) : (
-              <Skeleton theme={theme} style={{ width: 80, height: 14 }} />
-            )}
-          </>
-        )}
+        {address &&
+          (balanceQuery.data ? (
+            <ThemedText theme={theme} type="subtext">
+              {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
+              {balanceQuery.data?.symbol}
+            </ThemedText>
+          ) : (
+            <Skeleton theme={theme} style={{ width: 80, height: 14 }} />
+          ))}
       </View>
       {props.onTokenSelected && (
         <>

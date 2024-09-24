@@ -36,14 +36,22 @@ export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
   };
 
   return (
-    <FileInput setValue={handleIconUpload} accept={{ "image/*": [] }}>
-      <Button variant="ghost" className="gap-2 px-2" size="sm">
-        {storageUpload.isPending ? (
-          <Spinner className="size-4" />
-        ) : (
-          <FiUpload className="size-4" />
-        )}
+    <FileInput
+      setValue={handleIconUpload}
+      accept={{ "image/*": [] }}
+      className="flex items-center"
+    >
+      <Button
+        variant="ghost"
+        className="!h-auto gap-1.5 px-1 py-0 text-muted-foreground hover:bg-transparent hover:text-foreground"
+        size="sm"
+      >
         Upload Icon
+        {storageUpload.isPending ? (
+          <Spinner className="size-3" />
+        ) : (
+          <FiUpload className="size-3" />
+        )}
       </Button>
     </FileInput>
   );

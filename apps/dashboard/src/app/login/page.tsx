@@ -1,7 +1,7 @@
 "use client";
 
 import { ColorModeToggle } from "@/components/color-mode-toggle";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
@@ -13,25 +13,25 @@ import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
 
 export default function LoginPage() {
   return (
-    <div className="bg-background h-full">
-      <nav className="fixed top-0 w-full flex flex-row justify-between items-center px-6 py-4 z-20">
+    <div className="relative grid h-screen place-items-center bg-muted/30">
+      <nav className="fixed top-0 z-20 flex w-full flex-row items-center justify-between px-6 py-4">
         <ThirdwebMiniLogo className="max-h-7" />
         <ColorModeToggle />
       </nav>
-      <main className="h-full relative grid place-items-center">
-        <div className="flex flex-col gap-8 z-10">
-          <h1 className="font-semibold text-2xl">Get started with thirdweb</h1>
-          <Suspense>
-            <CustomConnectEmmbed />
-          </Suspense>
-        </div>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          alt=""
-          src="/assets/login/background.svg"
-          className="fixed bottom-0 right-0"
-        />
+      <main className="z-10 flex flex-col gap-6">
+        <h1 className="text-center font-semibold text-2xl tracking-tight lg:text-3xl">
+          Get started with thirdweb
+        </h1>
+        <Suspense>
+          <CustomConnectEmmbed />
+        </Suspense>
       </main>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        alt=""
+        src="/assets/login/background.svg"
+        className="-bottom-12 -right-12 fixed lg:right-0 lg:bottom-0"
+      />
     </div>
   );
 }
@@ -42,6 +42,7 @@ function CustomConnectEmmbed() {
   const router = useDashboardRouter();
   const { theme } = useTheme();
   const nextSearchParam = searchParams?.get("next");
+  const client = useThirdwebClient();
 
   function onLoginSuccessful() {
     if (nextSearchParam && isValidRedirectPath(nextSearchParam)) {
@@ -73,9 +74,10 @@ function CustomConnectEmmbed() {
           return isLoggedInResult;
         },
       }}
-      client={thirdwebClient}
+      client={client}
       modalSize={isLG ? "wide" : "compact"}
       theme={getSDKTheme(theme === "light" ? "light" : "dark")}
+      className="shadow-lg"
     />
   );
 }

@@ -19,16 +19,14 @@ export const CTAFooter: React.FC = () => {
       zIndex={1}
     >
       <Box
-        pointerEvents={"none"}
+        pointerEvents="none"
         width="2400px"
         height="1400px"
         position="absolute"
         top="50%"
         left="50%"
         transform="translate(-50%, -50%)"
-        backgroundImage={
-          "radial-gradient(ellipse at center, hsl(300deg 100% 50% / 10%), transparent 60%)"
-        }
+        backgroundImage="radial-gradient(ellipse at center, hsl(300deg 100% 50% / 10%), transparent 60%)"
       />
 
       <Logo forceShowWordMark color="#fff" />

@@ -56,10 +56,10 @@ export default async function Layout({
   );
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="mb-4 border-b pt-36 bg-card">
-        <div className="container flex flex-col items-end justify-between w-full gap-4 py-4 md:flex-row bg-card">
-          <h2 className="text-4xl font-bold">
+    <div className="flex w-full flex-col">
+      <div className="mb-4 border-b bg-card pt-36">
+        <div className="container flex w-full flex-col items-end justify-between gap-4 bg-card py-4 md:flex-row">
+          <h2 className="font-bold text-4xl">
             {ens || shortenAddress(params.address)}
           </h2>
           <ChainCombobox chains={simpleHashChains} />

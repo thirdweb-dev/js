@@ -1,4 +1,3 @@
-import type { ThirdwebClient } from "../../../../client/client.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import type { NFT, NFTInput } from "../../../../utils/nft/parseNft.js";
 import * as BatchBaseURI from "../../__generated__/DropERC721/write/updateBatchBaseURI.js";
@@ -12,16 +11,15 @@ import * as GetNFT from "../../read/getNFT.js";
 export type UpdateMetadataParams = {
   targetTokenId: bigint;
   newMetadata: NFTInput;
-  client: ThirdwebClient;
 };
 
 /**
  * @internal
  */
-export async function getUpdateMetadataParams(
+async function getUpdateMetadataParams(
   options: BaseTransactionOptions<UpdateMetadataParams>,
 ): Promise<BatchBaseURI.UpdateBatchBaseURIParams> {
-  const { contract, targetTokenId, newMetadata, client } = options;
+  const { contract, targetTokenId, newMetadata } = options;
   const batchCount = await BaseURICount.getBaseURICount(options);
   if (batchCount === 0n) {
     throw new Error(
@@ -76,7 +74,7 @@ export async function getUpdateMetadataParams(
   const { uploadOrExtractURIs } = await import("../../../../utils/ipfs.js");
   const batchOfUris = await uploadOrExtractURIs(
     newMetadatas,
-    client,
+    contract.client,
     Number(startTokenId),
   );
 

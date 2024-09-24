@@ -217,7 +217,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
       />
 
       <Flex
-        overflow={"hidden"}
+        overflow="hidden"
         sx={{
           // overwrite the theme colors because the home page is *always* in "dark mode"
           "--chakra-colors-heading": "#F2F2F7",
@@ -234,7 +234,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
 
         {/* Hero Auroras */}
         <Box
-          pointerEvents={"none"}
+          pointerEvents="none"
           width={{ base: "1000px", md: "2000px" }}
           height={{ base: "1000px", md: "2000px" }}
           position="absolute"
@@ -242,13 +242,11 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
           top="300px"
           left="30%"
           transform="translate(-50%, -50%)"
-          backgroundImage={
-            "radial-gradient(ellipse at center, hsl(300deg 100% 50% / 20%), transparent 60%)"
-          }
+          backgroundImage="radial-gradient(ellipse at center, hsl(300deg 100% 50% / 20%), transparent 60%)"
         />
 
         <Box
-          pointerEvents={"none"}
+          pointerEvents="none"
           width="2000px"
           height="2000px"
           position="absolute"
@@ -256,9 +254,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
           top="300px"
           left="70%"
           transform="translate(-50%, -50%)"
-          backgroundImage={
-            "radial-gradient(ellipse at center, hsl(276deg 100% 50% / 20%), transparent 60%)"
-          }
+          backgroundImage="radial-gradient(ellipse at center, hsl(276deg 100% 50% / 20%), transparent 60%)"
         />
 
         <Box maxW="100vw" overflowX="hidden">
@@ -316,7 +312,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
               </Text>
 
               <ClientOnly fadeInDuration={400} ssr={<Box height="220px" />}>
-                <Flex alignItems={"center"} flexDirection="column">
+                <Flex alignItems="center" flexDirection="column">
                   {isAfter(new Date(), new Date("2021-01-16T00:00:00.000Z")) ? (
                     <>
                       <Timer date="2023-02-13T23:59:59-05:00" />
@@ -433,7 +429,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
                       <Link
                         href="https://www.scenario.gg/"
                         isExternal
-                        textDecor={"underline"}
+                        textDecor="underline"
                         pb={1}
                         textDecorationThickness="1px"
                         textUnderlineOffset="4px"
@@ -459,7 +455,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
             </Flex>
 
             <Box
-              pointerEvents={"none"}
+              pointerEvents="none"
               width="2400px"
               height="2400px"
               position="absolute"
@@ -467,9 +463,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
               top="50%"
               left="50%"
               transform="translate(-50%, -50%)"
-              backgroundImage={
-                "radial-gradient(ellipse at center, hsl(300deg 100% 50% / 12%), transparent 60%)"
-              }
+              backgroundImage="radial-gradient(ellipse at center, hsl(300deg 100% 50% / 12%), transparent 60%)"
             />
           </HomepageSection>
 
@@ -499,7 +493,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
             />
 
             <Box
-              pointerEvents={"none"}
+              pointerEvents="none"
               width={{ base: "1000px", md: "2200px" }}
               height={{ base: "1400px", md: "2200px" }}
               position="absolute"
@@ -507,9 +501,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
               top="55%"
               left="50%"
               transform="translate(-50%, -50%)"
-              backgroundImage={
-                "radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
-              }
+              backgroundImage="radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
             />
           </HomepageSection>
 
@@ -517,7 +509,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
           <HomepageSection my={40}>
             <GameShowcase />
             <Box
-              pointerEvents={"none"}
+              pointerEvents="none"
               width={{ base: "1400px", md: "2200px" }}
               height={{ base: "2200px", md: "1200px" }}
               position="absolute"

@@ -35,10 +35,10 @@ export const StepsCard: React.FC<StepsCardProps> = ({
 
   return (
     <div
-      className={cn("border border-border rounded-lg p-4 lg:p-6 bg-muted/30")}
+      className={cn("rounded-lg border border-border bg-muted/30 p-4 lg:p-6")}
     >
       {/* Title + Desc */}
-      <h2 className="text-xl lg:text-2xl font-semibold tracking-tight text-left mb-3">
+      <h2 className="mb-3 text-left font-semibold text-xl tracking-tight lg:text-2xl">
         {title}
       </h2>
 
@@ -57,13 +57,13 @@ export const StepsCard: React.FC<StepsCardProps> = ({
         </p>
       </div>
 
-      <div className="flex flex-col gap-5 w-full">
+      <div className="flex w-full flex-col gap-5">
         {steps.map(({ children, ...step }, index) => {
           const showChildren =
             !step.completed || (step.completed && step.showCompletedChildren);
           return (
             <div
-              className="flex flex-col md:flex-row gap-2 lg:gap-3 md:items-start"
+              className="flex flex-col gap-2 md:flex-row md:items-start lg:gap-3"
               // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
               key={index}
             >
@@ -74,11 +74,11 @@ export const StepsCard: React.FC<StepsCardProps> = ({
 
               <div className="grow">
                 {/* Heading + Desc */}
-                <div className="flex flex-col mb-3">
+                <div className="mb-3 flex flex-col">
                   {typeof step.title === "string" ? (
                     <h3
                       className={cn(
-                        "text-base font-medium",
+                        "font-medium text-base",
                         step.completed && "text-muted-foreground",
                       )}
                     >
@@ -110,7 +110,7 @@ function StepNumberBadge(props: {
   isCompleted: boolean;
 }) {
   return (
-    <div className="border border-border shrink-0 rounded-full flex items-center justify-center self-start size-7 bg-muted/50">
+    <div className="flex size-7 shrink-0 items-center justify-center self-start rounded-full border border-border bg-muted/50">
       {props.isCompleted ? (
         <CheckIcon className="size-4 text-green-500" />
       ) : (

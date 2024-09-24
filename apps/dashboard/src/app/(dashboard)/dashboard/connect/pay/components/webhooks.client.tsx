@@ -1,3 +1,5 @@
+"use client";
+
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
@@ -55,11 +57,11 @@ type Webhook = {
   secret: string;
 };
 
-type WebhooksPageProps = {
+type PayWebhooksPageProps = {
   clientId: string;
 };
 
-export function WebhooksPage(props: WebhooksPageProps) {
+export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({
     queryKey: ["webhooks", props.clientId],
     queryFn: async () => {
@@ -76,14 +78,14 @@ export function WebhooksPage(props: WebhooksPageProps) {
     },
   });
 
-  if (webhooksQuery.isLoading) {
-    return <Spinner className="size-8 mx-auto" />;
+  if (webhooksQuery.isPending) {
+    return <Spinner className="mx-auto size-8" />;
   }
 
   if (!webhooksQuery.data?.length) {
     return (
-      <div className="border border-border rounded-lg p-8 text-center flex flex-col items-center gap-8">
-        <h2 className="text-xl font-semibold">No webhooks configured yet.</h2>
+      <div className="flex flex-col items-center gap-8 rounded-lg border border-border p-8 text-center">
+        <h2 className="font-semibold text-xl">No webhooks configured yet.</h2>
         <CreateWebhookButton clientId={props.clientId}>
           <Button variant="primary" className="gap-1">
             <PlusIcon className="size-4" />
@@ -122,10 +124,8 @@ export function WebhooksPage(props: WebhooksPageProps) {
                 <CopyTextButton
                   textToShow={shortenString(webhook.secret)}
                   textToCopy={webhook.secret}
-                  tooltip={
-                    "Use this secret to validate the authenticity of incoming webhook requests."
-                  }
-                  copyIconPosition={"right"}
+                  tooltip="Use this secret to validate the authenticity of incoming webhook requests."
+                  copyIconPosition="right"
                 />
               </TableCell>
               <TableCell>
@@ -154,7 +154,7 @@ const formSchema = z.object({
   label: z.string().min(1, "Please enter a label."),
 });
 
-function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
+function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
   const [open, setOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -278,7 +278,7 @@ function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
 }
 
 function DeleteWebhookButton(
-  props: PropsWithChildren<WebhooksPageProps & { webhookId: string }>,
+  props: PropsWithChildren<PayWebhooksPageProps & { webhookId: string }>,
 ) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();

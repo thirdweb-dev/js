@@ -32,7 +32,7 @@ export const WeiConverter = () => {
   return (
     <div className="space-y-24">
       <div className="space-y-4">
-        <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Label htmlFor="wei-input" className="min-w-64 text-xl">
             Wei
           </Label>
@@ -40,10 +40,10 @@ export const WeiConverter = () => {
             id="wei-input"
             value={wei}
             onChange={(e) => onChange({ wei: e.target.value })}
-            className="text-xl p-6"
+            className="p-6 text-xl"
           />
         </div>
-        <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Label htmlFor="gwei-input" className="min-w-64 text-xl">
             Gwei
           </Label>
@@ -51,10 +51,10 @@ export const WeiConverter = () => {
             id="gwei-input"
             value={gwei}
             onChange={(e) => onChange({ gwei: e.target.value })}
-            className="text-xl p-6"
+            className="p-6 text-xl"
           />
         </div>
-        <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Label htmlFor="ether-input" className="min-w-64 text-xl">
             Ether
           </Label>
@@ -62,7 +62,7 @@ export const WeiConverter = () => {
             id="ether-input"
             value={ether}
             onChange={(e) => onChange({ ether: e.target.value })}
-            className="text-xl p-6"
+            className="p-6 text-xl"
           />
         </div>
         <div className="flex justify-end">
@@ -105,11 +105,11 @@ export const WeiConverter = () => {
       </Card>
 
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold">
+        <h1 className="font-bold text-2xl">
           Convert between wei, gwei, and ether units
         </h1>
-        <h2 className="text-md font-bold">What is wei?</h2>
-        <ul className="list-disc ml-5">
+        <h2 className="font-bold text-md">What is wei?</h2>
+        <ul className="ml-5 list-disc">
           <li>
             <strong>Definition:</strong> The smallest denomination of Ether,
             used for precise calculations.
@@ -122,8 +122,8 @@ export const WeiConverter = () => {
             for precise handling of Ether values.
           </li>
         </ul>
-        <h2 className="text-md font-bold">What is gwei?</h2>
-        <ul className="list-disc ml-5">
+        <h2 className="font-bold text-md">What is gwei?</h2>
+        <ul className="ml-5 list-disc">
           <li>
             <strong>Definition:</strong> A commonly used denomination of Ether,
             particularly for gas prices.
@@ -136,8 +136,8 @@ export const WeiConverter = () => {
             transactions on the Ethereum network.
           </li>
         </ul>
-        <h2 className="text-md font-bold">What is ether?</h2>
-        <ul className="list-disc ml-5">
+        <h2 className="font-bold text-md">What is ether?</h2>
+        <ul className="ml-5 list-disc">
           <li>
             <strong>Definition:</strong> The primary unit of currency on the
             Ethereum blockchain.

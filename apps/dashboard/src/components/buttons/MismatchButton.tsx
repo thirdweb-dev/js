@@ -1,3 +1,5 @@
+"use client";
+
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button as ButtonShadcn } from "@/components/ui/button";
@@ -8,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
@@ -35,7 +37,6 @@ import type {
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useSupportedChain } from "hooks/chains/configureChains";
 import { ExternalLinkIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -56,6 +57,7 @@ import {
 import { privateKeyToAccount } from "thirdweb/wallets";
 import { Button, type ButtonProps, Card, Heading, Text } from "tw-components";
 import { THIRDWEB_API_HOST } from "../../constants/urls";
+import { useAllChainsData } from "../../hooks/chains/allChains";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
 
 const GAS_FREE_CHAINS = [
@@ -81,10 +83,11 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
     const activeWalletChain = useActiveWalletChain();
     const [dialog, setDialog] = useState<undefined | "no-funds" | "pay">();
     const { theme } = useTheme();
+    const client = useThirdwebClient();
     const evmBalance = useWalletBalance({
       address: account?.address,
       chain: activeWalletChain,
-      client: thirdwebClient,
+      client,
     });
 
     const initialFocusRef = useRef<HTMLButtonElement>(null);
@@ -118,7 +121,7 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
         >
           <PopoverTrigger>
             <Button
-              isLoading={evmBalance.isLoading}
+              isLoading={evmBalance.isPending}
               {...props}
               type={networksMismatch || notEnoughBalance ? "button" : type}
               loadingText={loadingText}
@@ -191,12 +194,12 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
         >
           <DialogContent
             className={cn(
-              "gap-0 p-0 z-[10001]",
+              "z-[10001] gap-0 p-0",
               dialog === "no-funds" && "max-w-[480px]",
               dialog === "pay" && "max-w-[360px] border-none bg-transparent",
             )}
             dialogOverlayClassName="z-[10000]"
-            dialogCloseClassName={"focus:ring-0"}
+            dialogCloseClassName="focus:ring-0"
           >
             <DynamicHeight>
               {dialog === "no-funds" && (
@@ -216,7 +219,7 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
 
               {dialog === "pay" && (
                 <PayEmbed
-                  client={thirdwebClient}
+                  client={client}
                   theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
                   className="!w-auto"
                   payOptions={{
@@ -297,7 +300,7 @@ function NoFundsDialogContent(props: {
       <div className="flex flex-col gap-6 p-6 ">
         {/* Header */}
         <DialogHeader>
-          <DialogTitle className="text-2xl font-semibold tracking-tight">
+          <DialogTitle className="font-semibold text-2xl tracking-tight">
             Not Enough Funds
           </DialogTitle>
 
@@ -310,7 +313,7 @@ function NoFundsDialogContent(props: {
         {/* Get Funds content */}
 
         {!chainWithServiceInfoQuery.data ? (
-          <div className="h-[300px] flex justify-center items-center">
+          <div className="flex h-[300px] items-center justify-center">
             <Spinner className="size-10" />
           </div>
         ) : (
@@ -338,7 +341,7 @@ function NoFundsDialogContent(props: {
         )}
       </div>
       {/* Footer */}
-      <div className="border-t border-border p-6 flex justify-between gap-4">
+      <div className="flex justify-between gap-4 border-border border-t p-6">
         <ButtonShadcn variant="outline" onClick={props.onCloseModal}>
           Close
         </ButtonShadcn>
@@ -364,21 +367,21 @@ function GetFundsFromFaucet(props: {
   const amountToGive = "0.01";
 
   return (
-    <div className="border border-border px-4 py-6 rounded-lg flex justify-center">
-      <div className="flex flex-col items-center w-full">
+    <div className="flex justify-center rounded-lg border border-border px-4 py-6">
+      <div className="flex w-full flex-col items-center">
         <div className="flex items-center">
           <GiftIcon bg="hsl(var(--background))" className="size-12" />
         </div>
 
         <div className="h-3" />
 
-        <h2 className="text-lg tracking-tight font-semibold text-center px-4">
+        <h2 className="px-4 text-center font-semibold text-lg tracking-tight">
           Get Testnet Funds
         </h2>
 
         <div className="h-3" />
 
-        <p className="text-sm text-muted-foreground text-center">
+        <p className="text-center text-muted-foreground text-sm">
           A testnet faucet is an online service that provides free testnet
           currency to web3 app and blockchain developers. This allows them to
           experiment with and test smart contracts and decentralized
@@ -405,10 +408,12 @@ const MismatchNotice: React.FC<{
   const activeWallet = useActiveWallet();
   const actuallyCanAttemptSwitch =
     activeWallet && activeWallet.id !== "global.safe";
-  const walletConnectedNetworkInfo = useSupportedChain(connectedChainId || -1);
+  const { idToChain } = useAllChainsData();
+  const walletConnectedNetworkInfo = connectedChainId
+    ? idToChain.get(connectedChainId)
+    : undefined;
   const isMobile = useBreakpointValue({ base: true, md: false });
-
-  const chain = useSupportedChain(desiredChainId || -1);
+  const chain = desiredChainId ? idToChain.get(desiredChainId) : undefined;
   const chainV5 = useV5DashboardChain(desiredChainId);
 
   const onSwitchWallet = useCallback(async () => {
@@ -488,18 +493,19 @@ const MismatchNotice: React.FC<{
 
 const GetLocalHostTestnetFunds: React.FC = () => {
   const address = useActiveAccount()?.address;
+  const client = useThirdwebClient();
   const requestFunds = async () => {
     if (!address) {
       return toast.error("No active account detected");
     }
     const faucet = privateKeyToAccount({
       privateKey: LOCAL_NODE_PKEY,
-      client: thirdwebClient,
+      client,
     });
     const transaction = prepareTransaction({
       to: address,
       chain: localhost,
-      client: thirdwebClient,
+      client,
       value: toWei("10"),
     });
     const promise = sendTransaction({

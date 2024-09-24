@@ -25,15 +25,15 @@ type ProcessedQuery = {
     percentChange: number;
   };
   isError?: boolean;
-  isLoading?: boolean;
+  isPending?: boolean;
   isEmpty?: boolean;
 };
 
 function processQuery(
   newCustomersQuery: ReturnType<typeof usePayNewCustomers>,
 ): ProcessedQuery {
-  if (newCustomersQuery.isLoading) {
-    return { isLoading: true };
+  if (newCustomersQuery.isPending) {
+    return { isPending: true };
   }
 
   if (newCustomersQuery.isError) {
@@ -94,9 +94,9 @@ export function PayNewCustomers(props: {
   );
 
   return (
-    <section className="relative flex flex-col min-h-[320px]">
+    <section className="relative flex min-h-[320px] flex-col">
       {/* header */}
-      <div className="flex justify-between gap-2 items-center mb-1">
+      <div className="mb-1 flex items-center justify-between gap-2">
         <CardHeading>New Customers </CardHeading>
 
         <div className={!uiQuery.data ? "invisible" : ""}>
@@ -134,7 +134,7 @@ function RenderData(props: {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-5">
+      <div className="mb-5 flex items-center gap-3">
         <SkeletonContainer
           loadedData={
             props.query.isEmpty ? "NA" : props.query.data?.totalNewCustomers
@@ -142,7 +142,7 @@ function RenderData(props: {
           skeletonData={100}
           render={(v) => {
             return (
-              <p className="text-4xl tracking-tighter font-semibold">{v}</p>
+              <p className="font-semibold text-4xl tracking-tighter">{v}</p>
             );
           }}
         />
@@ -159,8 +159,8 @@ function RenderData(props: {
         )}
       </div>
 
-      <div className="relative flex justify-center w-full ">
-        {props.query.isLoading ? (
+      <div className="relative flex w-full justify-center ">
+        {props.query.isPending ? (
           <AreaChartLoadingState height={`${chartHeight}px`} />
         ) : (
           <ResponsiveContainer width="100%" height={chartHeight}>
@@ -178,11 +178,11 @@ function RenderData(props: {
                     | GraphDataItem
                     | undefined;
                   return (
-                    <div className="bg-popover px-4 py-2 rounded border border-border">
-                      <p className="text-muted-foreground mb-1 text-sm">
+                    <div className="rounded border border-border bg-popover px-4 py-2">
+                      <p className="mb-1 text-muted-foreground text-sm">
                         {payload?.date}
                       </p>
-                      <p className="text-medium text-base">
+                      <p className="text-base text-medium">
                         Customers: {payload?.value}
                       </p>
                     </div>
@@ -204,7 +204,7 @@ function RenderData(props: {
                   dataKey="date"
                   axisLine={false}
                   tickLine={false}
-                  className="text-xs font-sans mt-5"
+                  className="mt-5 font-sans text-xs"
                   stroke="hsl(var(--muted-foreground))"
                   dy={12}
                 />

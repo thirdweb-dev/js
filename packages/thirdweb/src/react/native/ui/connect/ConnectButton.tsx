@@ -144,7 +144,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         transparent={true}
         onRequestClose={closeModal}
       >
-        <KeyboardAvoidingView behavior={"padding"} style={{ flex: 1 }}>
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
           <Animated.View
             style={[styles.modalOverlay, { opacity: fadeAnim.current }]}
           />

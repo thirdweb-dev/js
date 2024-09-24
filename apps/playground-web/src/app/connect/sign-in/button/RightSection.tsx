@@ -83,7 +83,7 @@ export function RightSection(props: {
   }, [connectOptions.enableAuth, doLogout]);
 
   return (
-    <div className="flex flex-col xl:w-[764px] gap-4 shrink-0 xl:max-h-[100vh] xl:sticky xl:top-0">
+    <div className="flex shrink-0 flex-col gap-4 xl:sticky xl:top-0 xl:max-h-[100vh] xl:w-[764px]">
       <TabButtons
         tabs={[
           {
@@ -106,7 +106,7 @@ export function RightSection(props: {
 
       <div
         className={cn(
-          "flex justify-center grow rounded-lg relative min-h-[300px]",
+          "relative flex min-h-[300px] grow justify-center rounded-lg",
           previewTab === "modal" && "scale-75 lg:scale-100",
           previewTab !== "code" && "items-center",
         )}
@@ -146,7 +146,7 @@ export function RightSection(props: {
               />
               {/* Fake X icon to make it looks exactly like a modal  */}
               <XIcon
-                className="absolute top-6 right-6 cursor-not-allowed size-6"
+                className="absolute top-6 right-6 size-6 cursor-not-allowed"
                 style={{
                   color: themeObj.colors.secondaryIconColor,
                 }}
@@ -237,7 +237,7 @@ function TabButtons(props: {
 }) {
   return (
     <div>
-      <div className="flex justify-start md:inline-flex p-2 rounded-lg gap-1 border bg-muted shadow-md">
+      <div className="flex justify-start gap-1 rounded-lg border bg-muted p-2 shadow-md md:inline-flex">
         {props.tabs.map((tab) => (
           <Button
             key={tab.name}
@@ -246,8 +246,8 @@ function TabButtons(props: {
             className={cn(
               "gap-2 px-4 text-base",
               tab.isActive
-                ? "text-foreground bg-accent"
-                : "text-muted-foreground bg-transparent",
+                ? "bg-accent text-foreground"
+                : "bg-transparent text-muted-foreground",
             )}
           >
             {tab.name}

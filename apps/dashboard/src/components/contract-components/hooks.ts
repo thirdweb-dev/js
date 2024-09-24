@@ -1,11 +1,12 @@
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import type { Abi } from "abitype";
 import { isEnsName, resolveEns } from "lib/ens";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { type ThirdwebContract, getContract } from "thirdweb";
 import {
-  getBytecode,
   resolveContractAbi,
   fetchDeployMetadata as sdkFetchDeployMetadata,
 } from "thirdweb/contract";
@@ -14,9 +15,12 @@ import {
   getContractPublisher,
   getPublishedUriFromCompilerUri,
 } from "thirdweb/extensions/thirdweb";
-import { extractIPFSUri, isAddress } from "thirdweb/utils";
+import {
+  extractIPFSUri,
+  isAddress,
+  resolveImplementation,
+} from "thirdweb/utils";
 import invariant from "tiny-invariant";
-import { useV5DashboardChain } from "../../lib/v5-adapter";
 import {
   type PublishedContractWithVersion,
   fetchPublishedContractVersions,
@@ -48,7 +52,7 @@ async function fetchDeployMetadata(contractId: string) {
 
   return removeUndefinedFromObjectDeep(
     await sdkFetchDeployMetadata({
-      client: thirdwebClient,
+      client: getThirdwebClient(),
       uri: contractIdIpfsHash,
     }),
   );
@@ -102,6 +106,7 @@ export function useAllVersions(
 }
 
 export function usePublishedContractsFromDeploy(contract: ThirdwebContract) {
+  const client = useThirdwebClient();
   return useQuery({
     queryKey: [
       "published-contracts-from-deploy",
@@ -109,14 +114,14 @@ export function usePublishedContractsFromDeploy(contract: ThirdwebContract) {
       contract.address,
     ],
     queryFn: async () => {
-      const bytecode = await getBytecode(contract);
+      const { bytecode } = await resolveImplementation(contract);
       const contractUri = extractIPFSUri(bytecode);
       if (!contractUri) {
         throw new Error("No IPFS URI found in bytecode");
       }
 
       const publishURIs = await getPublishedUriFromCompilerUri({
-        contract: getContractPublisher(thirdwebClient),
+        contract: getContractPublisher(client),
         compilerMetadataUri: contractUri,
       });
 
@@ -188,7 +193,7 @@ async function fetchPublishedContracts(address?: string | null) {
   invariant(address, "address is not defined");
   const tempResult = (
     (await getAllPublishedContracts({
-      contract: getContractPublisher(thirdwebClient),
+      contract: getContractPublisher(getThirdwebClient()),
       publisher: address,
     })) || []
   ).filter((c) => c.contractId);
@@ -286,13 +291,14 @@ export function useContractEvents(abi: Abi) {
 
 export function useCustomFactoryAbi(contractAddress: string, chainId: number) {
   const chain = useV5DashboardChain(chainId);
+  const client = useThirdwebClient();
   const contract = useMemo(() => {
     return getContract({
-      client: thirdwebClient,
+      client,
       address: contractAddress,
       chain,
     });
-  }, [contractAddress, chain]);
+  }, [contractAddress, chain, client]);
   return useQuery({
     queryKey: ["custom-factory-abi", contract],
     queryFn: () => resolveContractAbi<Abi>(contract),

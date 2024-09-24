@@ -89,7 +89,7 @@ export const PublishedContracts: React.FC<PublishedContractsProps> = ({
         contractDetails={slicedData}
         hidePublisher
       >
-        {publishedContractsQuery.isLoading && (
+        {publishedContractsQuery.isPending && (
           <Center>
             <Flex py={4} direction="row" gap={4} align="center">
               <Spinner size="sm" />

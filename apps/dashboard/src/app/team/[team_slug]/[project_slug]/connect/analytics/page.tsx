@@ -1,7 +1,7 @@
 import { getProject } from "@/api/projects";
+import { ConnectSDKCard } from "components/shared/ConnectSDKCard";
 import { notFound } from "next/navigation";
 import { ConnectAnalyticsDashboard } from "./ConnectAnalyticsDashboard";
-import { ConnectSDKCard } from "./_components/ConnectSDKCard";
 
 export default async function Page(props: {
   params: {
@@ -21,7 +21,7 @@ export default async function Page(props: {
   return (
     <div>
       <div>
-        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight mb-1">
+        <h1 className="mb-1 font-semibold text-2xl tracking-tight md:text-3xl">
           Connect Analytics
         </h1>
         <p className="text-muted-foreground text-sm md:text-base">
@@ -32,7 +32,7 @@ export default async function Page(props: {
       <div className="h-6 lg:h-8" />
       <ConnectAnalyticsDashboard clientId={project.publishableKey} />
       <div className="h-4 lg:h-8" />
-      <ConnectSDKCard />
+      <ConnectSDKCard description="Add the Connect SDK to your app to get started collecting analytics." />
     </div>
   );
 }

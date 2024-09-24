@@ -1,39 +1,37 @@
-import { Image, type ImgProps, Skeleton } from "@chakra-ui/react";
+import { SkeletonContainer } from "../../@/components/ui/skeleton";
+import { cn } from "../../@/lib/utils";
 import hexagon from "./hexagon.png";
 
-export interface MaskedAvatarProps
-  extends Omit<ImgProps, "as" | "viewBox" | "boxSize"> {
+export interface MaskedAvatarProps {
   src: string;
-  isLoading?: boolean;
-  name?: string;
+  isPending?: boolean;
+  alt?: string;
   boxSize?: number;
+  className?: string;
 }
 
 export const MaskedAvatar: React.FC<MaskedAvatarProps> = ({
   src,
-  name,
+  alt,
   boxSize = 12,
-  isLoading,
-  ...restBoxProps
+  isPending,
+  className,
 }) => {
   return (
-    <Skeleton
-      isLoaded={!isLoading}
+    <SkeletonContainer
+      className={cn(className, `size-${boxSize}`)}
       style={{
         WebkitMaskImage: `url("${hexagon.src}")`,
         WebkitMaskSize: "cover",
         mask: `url("${hexagon.src}")`,
         maskSize: "cover",
       }}
-      boxSize={boxSize}
-    >
-      <Image
-        boxSize={boxSize}
-        objectFit="cover"
-        {...restBoxProps}
-        src={src}
-        alt={name || ""}
-      />
-    </Skeleton>
+      skeletonData={false}
+      loadedData={isPending}
+      render={() => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className="object-cover" src={src} alt={alt || ""} />
+      )}
+    />
   );
 };

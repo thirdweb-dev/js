@@ -26,9 +26,6 @@ import {
 import { ChainIcon } from "components/icons/ChainIcon";
 import { NetworkSelectDropdown } from "components/selects/NetworkSelectDropdown";
 import type { BasicContract } from "contract-ui/types/types";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useChainSlug } from "hooks/chains/chainSlug";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import {
   DownloadIcon,
   EllipsisVerticalIcon,
@@ -45,6 +42,8 @@ import {
   usePagination,
   useTable,
 } from "react-table";
+import { useAllChainsData } from "../../../hooks/chains/allChains";
+import { useChainSlug } from "../../../hooks/chains/chainSlug";
 import { ImportModal } from "../import-contract/modal";
 import { AsyncContractNameCell, AsyncContractTypeCell } from "./cells";
 import { ShowMoreButton } from "./show-more-button";
@@ -81,9 +80,9 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
               setImportModalOpen(false);
             }}
           />
-          <div className="flex flex-col lg:flex-row lg:justify-between gap-4 md:pb-4">
+          <div className="flex flex-col gap-4 md:pb-4 lg:flex-row lg:justify-between">
             <div>
-              <h1 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-1.5">
+              <h1 className="mb-1.5 font-semibold text-3xl tracking-tight lg:text-4xl">
                 Your contracts
               </h1>
               <p className="text-muted-foreground text-sm">
@@ -115,11 +114,11 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
         combinedList={contractListQuery.data}
         limit={limit}
         chainIdsWithDeployments={chainIdsWithDeployments}
-        loading={contractListQuery.isLoading}
+        loading={contractListQuery.isPending}
       />
 
       {contractListQuery.data.length === 0 && contractListQuery.isFetched && (
-        <div className="flex items-center h-[100px] justify-center text-muted-foreground">
+        <div className="flex h-[100px] items-center justify-center text-muted-foreground">
           No contracts found
         </div>
       )}
@@ -198,8 +197,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
   chainIdsWithDeployments,
   loading,
 }) => {
-  const { chainIdToChainRecord } = useAllChainsData();
-  const configuredChains = useSupportedChainsRecord();
+  const { idToChain } = useAllChainsData();
 
   const columns: Column<(typeof combinedList)[number]>[] = useMemo(
     () => [
@@ -231,16 +229,14 @@ const ContractTable: React.FC<ContractTableProps> = ({
         filter: "equals",
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => {
-          const data =
-            configuredChains[cell.row.original.chainId] ||
-            chainIdToChainRecord[cell.row.original.chainId];
+          const data = idToChain.get(cell.row.original.chainId);
           const cleanedChainName =
             data?.name?.replace("Mainnet", "").trim() ||
             `Unknown Network (#${cell.row.original.chainId})`;
           return (
             <div className="flex items-center gap-2">
               <ChainIcon size={24} ipfsSrc={data?.icon?.url} />
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {cleanedChainName}
               </p>
               {data?.testnet && (
@@ -296,7 +292,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
         },
       },
     ],
-    [configuredChains, chainIdsWithDeployments, chainIdToChainRecord],
+    [chainIdsWithDeployments, idToChain],
   );
 
   const defaultColumn = useMemo(
@@ -340,7 +336,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
 
   return (
     <TableContainer>
-      {isFetching && <Spinner className="size-3 absolute top-2 right-4" />}
+      {isFetching && <Spinner className="absolute top-2 right-4 size-3" />}
       <Table {...getTableProps()}>
         <TableHeader>
           {headerGroups.map((headerGroup, index) => (
@@ -353,7 +349,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
                   key={i}
                   className="py-3"
                 >
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     {column.render("Header")}
                     <span>
                       {column.canFilter ? column.render("Filter") : null}
@@ -386,7 +382,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
       )}
       {loading && (
         <div className="flex items-center justify-center py-4">
-          <div className="flex gap-2 items-center text-muted-foreground">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <Spinner className="size-3" />
             Loading contracts
           </div>

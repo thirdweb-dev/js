@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { download } from "thirdweb/storage";
 import type { NFTMetadata } from "thirdweb/utils";
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
@@ -42,7 +42,7 @@ export async function transformAlchemyResponseToNFT(
             metadata: shouldDownloadURI(rawUri)
               ? await download({
                   uri: handleArbitraryTokenURI(rawUri),
-                  client: thirdwebClient,
+                  client: getThirdwebClient(),
                 })
                   .then((res) => res.json())
                   .catch(() => ({}))

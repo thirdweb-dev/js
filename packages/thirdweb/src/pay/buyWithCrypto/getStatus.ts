@@ -11,7 +11,7 @@ import { getPayBuyWithCryptoStatusUrl } from "../utils/definitions.js";
 /**
  * @buyCrypto
  */
-export type BuyWithCryptoQuoteSummary = {
+type BuyWithCryptoQuoteSummary = {
   fromToken: PayTokenInfo;
   toToken: PayTokenInfo;
 
@@ -45,9 +45,9 @@ export type BuyWithCryptoTransaction = {
   transactionHash: string;
 };
 
-export type BuyWithCryptoStatuses = "NONE" | "PENDING" | "FAILED" | "COMPLETED";
+type BuyWithCryptoStatuses = "NONE" | "PENDING" | "FAILED" | "COMPLETED";
 
-export type BuyWithCryptoSubStatuses =
+type BuyWithCryptoSubStatuses =
   | "NONE"
   | "WAITING_BRIDGE"
   | "REVERTED_ON_CHAIN"
@@ -56,7 +56,7 @@ export type BuyWithCryptoSubStatuses =
   | "UNKNOWN_ERROR"
   | "REFUNDED";
 
-export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN" | "TRANSFER";
+type SwapType = "SAME_CHAIN" | "CROSS_CHAIN" | "TRANSFER";
 
 /**
  * The object returned by the [`getBuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus) function to represent the status of a quoted transaction

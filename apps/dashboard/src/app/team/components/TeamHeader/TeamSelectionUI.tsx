@@ -15,13 +15,16 @@ export function TeamSelectionUI(props: {
   setHoveredTeam: (team: Team | undefined) => void;
   currentTeam: Team | undefined;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
+  upgradeTeamLink: string | undefined;
 }) {
   const { setHoveredTeam, currentTeam, teamsAndProjects } = props;
   const teamPlan = currentTeam ? getValidTeamPlan(currentTeam) : undefined;
   const teams = teamsAndProjects.map((x) => x.team);
   const [searchTeamTerm, setSearchTeamTerm] = useState("");
   const filteredTeams = searchTeamTerm
-    ? teams.filter((team) => team.name.includes(searchTeamTerm))
+    ? teams.filter((team) =>
+        team.name.toLowerCase().includes(searchTeamTerm.toLowerCase()),
+      )
     : teams;
 
   return (
@@ -36,21 +39,21 @@ export function TeamSelectionUI(props: {
         scrollableClassName="max-h-[400px] lg:max-h-[600px]"
         className="grow"
       >
-        <div className="p-2 flex flex-col">
+        <div className="flex flex-col p-2">
           <Button
-            className={cn("w-full justify-start px-2 gap-2")}
+            className={cn("w-full justify-start gap-2 px-2")}
             variant="ghost"
             onMouseEnter={() => setHoveredTeam(undefined)}
             asChild
           >
             <Link href="/account">
               {/* TODO account image - placeholder for now */}
-              <div className="size-4 bg-muted border rounded-full" />
+              <div className="size-4 rounded-full border bg-muted" />
               My Account
             </Link>
           </Button>
 
-          <h2 className="text-muted-foreground text-xs mx-2 mb-2 mt-4 font-medium">
+          <h2 className="mx-2 mt-4 mb-2 font-medium text-muted-foreground text-xs">
             Teams
           </h2>
 
@@ -68,7 +71,7 @@ export function TeamSelectionUI(props: {
                 >
                   <Button
                     className={cn(
-                      "gap-2 pl-2 w-full justify-between !opacity-100",
+                      "!opacity-100 w-full justify-between gap-2 pl-2",
                       isSelected && "bg-accent",
                     )}
                     variant="ghost"
@@ -77,7 +80,7 @@ export function TeamSelectionUI(props: {
                     <Link href={`/team/${team.slug}`}>
                       <div className="flex items-center gap-2">
                         {/* TODO - placeholder for now */}
-                        <div className="size-4 bg-muted border rounded-full" />
+                        <div className="size-4 rounded-full border bg-muted" />
 
                         <span className="truncate"> {team.name} </span>
                       </div>
@@ -92,30 +95,31 @@ export function TeamSelectionUI(props: {
 
             <li className="py-0.5">
               <Button
-                className="px-2 w-full gap-2 justify-start disabled:opacity-100 disabled:pointer-events-auto disabled:cursor-not-allowed"
+                className="w-full justify-start gap-2 px-2 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-100"
                 variant="ghost"
                 disabled
               >
                 <CirclePlusIcon className="size-4 text-link-foreground" />
                 Create Team
                 <Badge className="ml-auto" variant="secondary">
-                  Soon{"™️"}
+                  Soon™️
                 </Badge>
               </Button>
             </li>
           </ul>
         </div>
       </ScrollShadow>
-      {/* TODO - what do we do on this button click? */}
+
       {/* Bottom */}
-      {teamPlan && teamPlan !== "pro" && (
-        <div className="p-2 border-t border-border">
+      {teamPlan && teamPlan !== "pro" && props.upgradeTeamLink && (
+        <div className="border-border border-t p-2">
           <Button
+            asChild
             variant="primary"
             className="w-full"
             onMouseEnter={() => setHoveredTeam(undefined)}
           >
-            Upgrade Team
+            <Link href={props.upgradeTeamLink}>Upgrade Team</Link>
           </Button>
         </div>
       )}

@@ -12,7 +12,6 @@ type UpdatePartnerParams = {
   name: string;
   allowlistedDomains: string[];
   allowlistedBundleIds: string[];
-  permissions: ["PROMPT_USER_V1" | "FULL_CONTROL_V1"];
 };
 
 export function useUpdatePartner(
@@ -45,7 +44,6 @@ export function useUpdatePartner(
             name: params.name,
             allowlistedDomains: params.allowlistedDomains,
             allowlistedBundleIds: params.allowlistedBundleIds,
-            permissions: params.permissions,
           }),
         },
       );

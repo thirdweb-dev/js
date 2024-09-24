@@ -4,7 +4,6 @@ import {
   useAccount,
   useApiKeys,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeys } from "components/settings/ApiKeys";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
@@ -38,25 +37,21 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
   }, [apiKeys, account]);
 
   return (
-    <Flex flexDir="column" gap={8}>
+    <div className="flex flex-col gap-8">
       <LazyCreateAPIKeyDialog
         open={isCreateModalOpen}
         onOpenChange={setIsCreateModalOpen}
         wording="api-key"
       />
 
-      <Flex direction="column" gap={2}>
-        <Flex
-          justifyContent="space-between"
-          direction={{ base: "column", md: "row" }}
-          gap={4}
-        >
-          <h1 className="text-3xl font-semibold tracking-tight">API Keys</h1>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col justify-between gap-4 md:flex-row">
+          <h1 className="font-semibold text-3xl tracking-tight">API Keys</h1>
           <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
             <PlusIcon className="size-4" />
             Create API Key
           </Button>
-        </Flex>
+        </div>
 
         <p className="text-muted-foreground text-sm">
           An API key is required to use thirdweb&apos;s services through the SDK
@@ -70,7 +65,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
             Learn more
           </Link>
         </p>
-      </Flex>
+      </div>
 
       {hasSmartWalletsWithoutBilling && (
         <SmartWalletsBillingAlert dismissable />
@@ -78,10 +73,10 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
 
       <ApiKeys
         keys={apiKeys || []}
-        isLoading={keysQuery.isLoading}
+        isPending={keysQuery.isPending}
         isFetched={keysQuery.isFetched}
       />
-    </Flex>
+    </div>
   );
 };
 

@@ -135,4 +135,3 @@ export async function getCognitoRecoveryPasswordV2(client: ThirdwebClient) {
   return (JSON.parse(encKeyResult.body) as { recoveryShareEncKey: string })
     .recoveryShareEncKey;
 }
-export const getCognitoRecoveryPassword = getCognitoRecoveryPasswordV2;

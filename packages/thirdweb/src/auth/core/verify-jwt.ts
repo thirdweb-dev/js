@@ -6,14 +6,14 @@ import type { AuthOptions } from "./types.js";
 /**
  * @auth
  */
-export type VerifyJWTParams = {
+type VerifyJWTParams = {
   jwt: string;
 };
 
 /**
  * @auth
  */
-export type VerifyJWTResult =
+type VerifyJWTResult =
   | {
       valid: true;
       parsedJWT: JWTPayload;

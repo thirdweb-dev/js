@@ -105,7 +105,7 @@ export function areUint8ArraysEqual(a: Uint8Array, b: Uint8Array): boolean {
  * //=> 'Hello'
  * ```
  */
-export function uint8ArrayToString(array: Uint8Array): string {
+function uint8ArrayToString(array: Uint8Array): string {
   assertUint8Array(array);
   return cachedTextDecoder().decode(array);
 }

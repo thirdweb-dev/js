@@ -1,3 +1,4 @@
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import {
@@ -14,10 +15,10 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
 import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { CircleHelpIcon } from "lucide-react";
 import { Fragment, createContext, useContext, useMemo, useState } from "react";
 import {
   type UseFieldArrayReturn,
@@ -162,6 +163,8 @@ interface ClaimsConditionFormContextData {
   claimConditionType: ClaimConditionType;
 }
 
+// legacy, but we SHOULD remove this and instead pass down props!
+// eslint-disable-next-line no-restricted-syntax
 const ClaimsConditionFormContext = createContext<
   ClaimsConditionFormContextData | undefined
 >(undefined);
@@ -456,7 +459,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
       )}
 
       <Flex onSubmit={handleFormSubmit} direction="column" as="form" gap={10}>
-        <Flex direction={"column"} gap={6}>
+        <Flex direction="column" gap={6}>
           {/* Show the reason why the form is disabled */}
           {!isAdmin && (
             <Text>Connect with admin wallet to edit claim conditions.</Text>
@@ -523,7 +526,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                     onRemove={() => {
                       removePhase(index);
                     }}
-                    isLoading={sendTx.isPending}
+                    isPending={sendTx.isPending}
                   />
                 </ClaimsConditionFormContext.Provider>
               </Fragment>
@@ -629,7 +632,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                     <TransactionButton
                       colorScheme="primary"
                       transactionCount={1}
-                      isDisabled={claimConditionsQuery.isLoading}
+                      isDisabled={claimConditionsQuery.isPending}
                       type="submit"
                       isLoading={sendTx.isPending}
                       loadingText="Saving..."
@@ -645,5 +648,15 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
         </Flex>
       </Flex>
     </>
+  );
+};
+
+const TooltipBox: React.FC<{
+  content: React.ReactNode;
+}> = ({ content }) => {
+  return (
+    <ToolTipLabel label={<div>{content}</div>}>
+      <CircleHelpIcon className="size-4 text-muted-foreground" />
+    </ToolTipLabel>
   );
 };

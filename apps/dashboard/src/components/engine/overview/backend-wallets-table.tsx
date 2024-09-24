@@ -23,7 +23,6 @@ import {
   Select,
   Stack,
   type UseDisclosureReturn,
-  VStack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -51,7 +50,7 @@ import { prettyPrintCurrency } from "../utils";
 interface BackendWalletsTableProps {
   wallets: BackendWallet[];
   instanceUrl: string;
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -146,7 +145,7 @@ const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
 export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
   wallets,
   instanceUrl,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const editDisclosure = useDisclosure();
@@ -162,7 +161,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
         title="backend wallets"
         data={wallets}
         columns={columns as ColumnDef<BackendWallet, string>[]}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {
@@ -270,7 +269,7 @@ const EditModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Update Backend Wallet</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -337,11 +336,11 @@ const ReceiveFundsModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Receive Funds</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <VStack spacing={4} pb={8}>
+          <div className="flex flex-col gap-4 pb-8">
             <Text w="full" textAlign="left">
               Fund this address or QR code:
             </Text>
@@ -355,7 +354,7 @@ const ReceiveFundsModal = ({
               rounded="lg"
               w={200}
             />
-          </VStack>
+          </div>
         </ModalBody>
       </ModalContent>
     </Modal>
@@ -420,7 +419,7 @@ const SendFundsModal = ({
       <ModalContent
         as="form"
         onSubmit={form.handleSubmit(onSubmit)}
-        className="!bg-background border border-border rounded-lg"
+        className="!bg-background rounded-lg border border-border"
       >
         <ModalHeader>Send Funds</ModalHeader>
         <ModalCloseButton />

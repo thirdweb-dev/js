@@ -15,25 +15,25 @@ export async function FaucetSection(props: { chain: ChainMetadata }) {
   return (
     <section>
       <SectionTitle title="Faucet" />
-      <div className="border border-border px-4 py-10 rounded-lg flex justify-center bg-muted/50">
-        <div className="max-w-[520px] w-full flex flex-col items-center ">
+      <div className="flex justify-center rounded-lg border border-border bg-muted/50 px-4 py-10">
+        <div className="flex w-full max-w-[520px] flex-col items-center ">
           <div className="flex items-center">
             <ChainIcon
-              className="size-12 -mr-2 rounded-full border p-1"
+              className="-mr-2 size-12 rounded-full border p-1"
               iconUrl={props.chain.icon?.url}
             />
-            <GiftIcon bg="hsl(var(--background))" className="size-12 -ml-2" />
+            <GiftIcon bg="hsl(var(--background))" className="-ml-2 size-12" />
           </div>
 
           <div className="h-6" />
 
-          <h2 className="text-lg tracking-tight font-semibold text-center px-4">
+          <h2 className="px-4 text-center font-semibold text-lg tracking-tight">
             {sanitizedChainName} Faucet
           </h2>
 
           <div className="h-2" />
 
-          <p className="text-muted-foreground text-sm max-w-[520px] text-center px-4">
+          <p className="max-w-[520px] px-4 text-center text-muted-foreground text-sm">
             Get free {chain.nativeCurrency.symbol} fast and reliably.{" "}
             {amountToGive} {chain.nativeCurrency.symbol}/day.
           </p>

@@ -1,6 +1,9 @@
-import { Checkbox } from "@/components/ui/checkbox";
-import { thirdwebClient } from "@/constants/client";
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
+
+import { Checkbox } from "@/components/ui/checkbox";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import {
   Box,
   Flex,
@@ -73,6 +76,8 @@ function usePlaygroundWallets() {
     email: true,
     passkey: true,
     phone: true,
+    coinbase: false,
+    guest: false,
   });
 
   const [enabledWallets, setEnabledWallets] = useState<WalletRecord>({
@@ -296,8 +301,13 @@ export const MiniPlayground: React.FC<{
                 {Object.keys(socialOptions).map((_key) => {
                   const key = _key as InAppWalletAuth;
                   return (
-                    <label key={key} className="flex items-center gap-2">
+                    <label
+                      key={key}
+                      htmlFor={key}
+                      className="flex items-center gap-2"
+                    >
                       <Checkbox
+                        id={key}
                         checked={socialOptions[key]}
                         onCheckedChange={(checked) => {
                           setSocialOptions((v) => ({
@@ -402,7 +412,7 @@ export const MiniPlayground: React.FC<{
             <Box className={fontClassName}>
               <ConnectEmbed
                 wallets={wallets}
-                client={thirdwebClient}
+                client={getThirdwebClient()}
                 header={{
                   title: modalTitle,
                   titleIcon: modalTitleIconUrl,
@@ -463,7 +473,7 @@ function WalletIconButton(props: {
         opacity={props.isSelected ? 1 : 0.2}
         filter={props.isSelected ? "none" : "grayscale(0.5)"}
         transition="opacity 200ms ease"
-        className="border border-border rounded-lg"
+        className="rounded-lg border border-border"
       >
         <Image
           width={14}

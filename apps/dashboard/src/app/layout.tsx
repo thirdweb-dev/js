@@ -7,12 +7,8 @@ import PlausibleProvider from "next-plausible";
 import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
-import { setOverrides } from "../lib/vercel-utils";
 import { PostHogProvider } from "./components/root-providers";
 import { AppRouterProviders } from "./providers";
-
-// run this on app load
-setOverrides();
 
 const fontSans = Inter({
   subsets: ["latin"],

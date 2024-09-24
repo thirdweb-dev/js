@@ -1,19 +1,11 @@
-import { thirdwebClient } from "@/constants/client";
 import type { FrameValidationData } from "@coinbase/onchainkit";
-import { encode, getContract } from "thirdweb";
-import type { Chain } from "thirdweb/chains";
+import { type ThirdwebContract, encode } from "thirdweb";
 import { claimTo } from "thirdweb/extensions/erc721";
 
-export const getErc721PreparedEncodedData = async (
+export async function getErc721PreparedEncodedData(
   walletAddress: string,
-  contractAddress: string,
-  chain: Chain,
-) => {
-  const contract = getContract({
-    address: contractAddress,
-    chain: chain,
-    client: thirdwebClient,
-  });
+  contract: ThirdwebContract,
+) {
   // Prepare erc721 transaction data. Takes in destination address and quantity as parameters
   const transaction = claimTo({ contract, to: walletAddress, quantity: 1n });
 
@@ -22,7 +14,7 @@ export const getErc721PreparedEncodedData = async (
 
   // Return encoded transaction data
   return encodedTransactionData;
-};
+}
 
 export const getFarcasterAccountAddress = (
   interactor: FrameValidationData["interactor"],

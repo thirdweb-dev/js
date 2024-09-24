@@ -30,6 +30,7 @@ import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import {
   APPLE_ICON,
+  COINBASE_ICON,
   DISCORD_ICON,
   FACEBOOK_ICON,
   FARCASTER_ICON,
@@ -53,6 +54,7 @@ const defaultAuthOptions: InAppWalletAuth[] = [
 const socialIcons = {
   google: GOOGLE_ICON,
   facebook: FACEBOOK_ICON,
+  coinbase: COINBASE_ICON,
   apple: APPLE_ICON,
   discord: DISCORD_ICON,
   line: LINE_ICON,
@@ -124,7 +126,37 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           }}
         />
       ) : null}
+      {authOptions.includes("guest") ? <GuestLogin {...props} /> : null}
     </View>
+  );
+}
+
+function GuestLogin(props: InAppWalletFormUIProps) {
+  const { theme, wallet, client, connector } = props;
+  const connectInAppWallet = useCallback(() => {
+    connector({
+      wallet,
+      connectFn: async () => {
+        await wallet.connect({
+          client,
+          strategy: "guest",
+        });
+        await setLastAuthProvider("guest", nativeLocalStorage);
+        return wallet;
+      },
+      authMethod: "guest",
+    });
+  }, [connector, wallet, client]);
+
+  return (
+    <ThemedButtonWithIcon
+      theme={theme}
+      title="Continue as guest"
+      icon={getAuthProviderImage("guest")}
+      onPress={() => {
+        connectInAppWallet();
+      }}
+    />
   );
 }
 

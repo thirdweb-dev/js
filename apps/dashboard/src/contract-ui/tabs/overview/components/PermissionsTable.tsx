@@ -8,11 +8,11 @@ import {
   Stack,
   Tag,
   Tooltip,
-  useClipboard,
   useToast,
 } from "@chakra-ui/react";
 import { useTabHref } from "contract-ui/utils";
 import { AnimatePresence, motion } from "framer-motion";
+import { useClipboard } from "hooks/useClipboard";
 import { useMemo } from "react";
 import { FiCopy } from "react-icons/fi";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
@@ -103,7 +103,7 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
               <Center py={4}>
                 <Flex align="center" gap={2}>
                   <Text size="body.md" fontStyle="italic">
-                    {allRoleMembers.isLoading
+                    {allRoleMembers.isPending
                       ? "loading permissions"
                       : "no permissions found"}
                   </Text>

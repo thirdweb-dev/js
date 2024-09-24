@@ -1,8 +1,0 @@
-{
-  "extends": "@thirdweb-dev/tsconfig/base.json",
-  "include": ["src", "types"],
-  "exclude": ["dist", "build", "node_modules"],
-  "compilerOptions": {
-    "noUncheckedIndexedAccess": false // explicitly set to false (default is true)
-  }
-}

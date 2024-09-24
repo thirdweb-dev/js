@@ -1,29 +1,20 @@
 import type { ThirdwebClient } from "../client/client.js";
 import { version } from "../version.js";
-import type { Ecosystem } from "../wallets/in-app/web/types.js";
+import type { Ecosystem } from "../wallets/in-app/core/wallet/types.js";
 import { LruMap } from "./caching/lru.js";
 import {
   type OperatingSystem,
   detectOS,
   detectPlatform,
 } from "./detect-platform.js";
+import { isJWT } from "./jwt/is-jwt.js";
 
 const DEFAULT_REQUEST_TIMEOUT = 60000;
-
-const FETCH_CACHE = new WeakMap<
-  { client: ThirdwebClient; ecosystem?: Ecosystem },
-  (url: string, init?: RequestInit) => Promise<Response>
->();
 
 /**
  * @internal
  */
 export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
-  if (FETCH_CACHE.has({ client, ecosystem })) {
-    // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
-    return FETCH_CACHE.get({ client, ecosystem })!;
-  }
-
   /**
    * @internal
    */
@@ -41,15 +32,26 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       if (!headers) {
         headers = new Headers();
       }
-      const authToken = getTWAuthToken();
+      // auth token if secret key === jwt
+      const authToken =
+        client.secretKey && isJWT(client.secretKey)
+          ? client.secretKey
+          : undefined;
+      // secret key if secret key !== jwt
+      const secretKey =
+        client.secretKey && !isJWT(client.secretKey)
+          ? client.secretKey
+          : undefined;
+      const clientId = client.clientId;
+
       // if we have an auth token set, use that (thirdweb.com/dashboard sets this for the user)
       // pay urls should never send the auth token, because we always want the "developer" to be the one making the request, not the "end user"
       if (authToken && !isPayUrl(url)) {
         headers.set("authorization", `Bearer ${authToken}`);
-      } else if (client.secretKey) {
-        headers.set("x-secret-key", client.secretKey);
-      } else if (client.clientId) {
-        headers.set("x-client-id", client.clientId);
+      } else if (secretKey) {
+        headers.set("x-secret-key", secretKey);
+      } else if (clientId) {
+        headers.set("x-client-id", clientId);
       }
 
       if (ecosystem) {
@@ -83,7 +85,6 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       }
     });
   }
-  FETCH_CACHE.set({ client, ecosystem }, fetchWithHeaders);
   return fetchWithHeaders;
 }
 
@@ -96,7 +97,7 @@ const THIRDWEB_DOMAINS = [
   ".thirdweb-dev.com",
 ] as const;
 
-const IS_THIRDWEB_URL_CACHE = new LruMap<boolean>(4096);
+export const IS_THIRDWEB_URL_CACHE = new LruMap<boolean>(4096);
 
 /**
  * @internal
@@ -195,17 +196,4 @@ function parseOs(os: OperatingSystem | NodeJS.Platform) {
       // if we somehow fall through here, just replace all spaces with underscores and send it
       return osLowerCased.replace(/\s/gi, "_");
   }
-}
-
-function getTWAuthToken(): string | null {
-  if (
-    typeof globalThis !== "undefined" &&
-    "TW_AUTH_TOKEN" in globalThis &&
-    // biome-ignore lint/suspicious/noExplicitAny: get around globalThis typing
-    typeof (globalThis as any).TW_AUTH_TOKEN === "string"
-  ) {
-    // biome-ignore lint/suspicious/noExplicitAny: get around globalThis typing
-    return (globalThis as any).TW_AUTH_TOKEN as string;
-  }
-  return null;
 }

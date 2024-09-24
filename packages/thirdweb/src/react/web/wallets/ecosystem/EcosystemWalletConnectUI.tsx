@@ -8,8 +8,10 @@ import {
   useSetSelectionData,
 } from "../../providers/wallet-ui-states-provider.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
+import { WalletAuth } from "../in-app/WalletAuth.js";
 import { useInAppWalletLocale } from "../in-app/useInAppWalletLocale.js";
 import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
+import { GuestLogin } from "../shared/GuestLogin.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { OTPLoginUI } from "../shared/OTPLoginUI.js";
 import { PassKeyLogin } from "../shared/PassKeyLogin.js";
@@ -35,6 +37,7 @@ function EcosystemWalletConnectUI(props: {
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
   };
+  walletConnect: { projectId?: string } | undefined;
   isLinking?: boolean;
 }) {
   const data = useSelectionData();
@@ -47,12 +50,12 @@ function EcosystemWalletConnectUI(props: {
     return <LoadingScreen />;
   }
 
-  const goBackToMain =
-    props.size === "compact"
-      ? props.goBack
-      : () => {
-          setSelectionData({});
-        };
+  const goBackToMain = () => {
+    if (props.size === "compact") {
+      props.goBack?.();
+    }
+    setSelectionData({});
+  };
 
   const done = () => {
     props.done();
@@ -110,6 +113,37 @@ function EcosystemWalletConnectUI(props: {
         size={props.size}
         connectLocale={props.connectLocale}
         isLinking={props.isLinking}
+      />
+    );
+  }
+
+  if (state?.walletLogin) {
+    return (
+      <WalletAuth
+        meta={props.meta}
+        inAppLocale={locale}
+        walletConnect={props.walletConnect}
+        wallet={props.wallet}
+        client={props.client}
+        size={props.size}
+        done={done}
+        onBack={goBackToMain || (() => setSelectionData({}))}
+        locale={props.connectLocale}
+      />
+    );
+  }
+
+  if (state?.guestLogin) {
+    return (
+      <GuestLogin
+        locale={locale}
+        done={done}
+        goBack={goBackToMain}
+        wallet={props.wallet}
+        state={state}
+        client={props.client}
+        size={props.size}
+        connectLocale={props.connectLocale}
       />
     );
   }

@@ -12,6 +12,7 @@ import { AppLayout } from "components/app-layouts/app";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
+import { ConnectSDKCard } from "components/shared/ConnectSDKCard";
 import { SmartWallets } from "components/smart-wallets";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { CircleAlertIcon } from "lucide-react";
@@ -20,10 +21,8 @@ import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useMemo, useState } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
-import {} from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 import { ConnectSidebarLayout } from "../../../app/(dashboard)/dashboard/connect/DashboardConnectLayout";
-import { AAFooterSection } from "../../../app/team/[team_slug]/[project_slug]/connect/account-abstraction/AAFooterSection";
 import { isOpChainId } from "../../../app/team/[team_slug]/[project_slug]/connect/account-abstraction/isOpChain";
 
 const TRACKING_CATEGORY = "smart-wallet";
@@ -85,7 +84,7 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
     desc: "Add account abstraction to your web3 app & unlock powerful features for seamless onboarding, customizable transactions, & maximum security. Get started.",
   };
 
-  const isLoading = looggedInUserQuery.isLoading || keysQuery.isLoading;
+  const isPending = looggedInUserQuery.isPending || keysQuery.isPending;
 
   return (
     <div className="flex flex-col gap-10">
@@ -106,9 +105,9 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
         }}
       />
 
-      <div className="flex flex-col gap-4 lg:flex-row content-start justify-between">
+      <div className="flex flex-col content-start justify-between gap-4 lg:flex-row">
         <div className="flex flex-col gap-1.5">
-          <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight">
+          <h1 className="font-semibold text-2xl tracking-tight lg:text-3xl">
             Account Abstraction
           </h1>
 
@@ -140,8 +139,8 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
         )}
       </div>
 
-      {isLoading ? (
-        <div className="flex items-center justify-center h-[400px] border border-border rounded-lg">
+      {isPending ? (
+        <div className="flex h-[400px] items-center justify-center rounded-lg border border-border">
           <Spinner className="size-14" />
         </div>
       ) : (
@@ -175,7 +174,10 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
         </>
       )}
 
-      <AAFooterSection trackingCategory={TRACKING_CATEGORY} />
+      <ConnectSDKCard
+        title="Get Started"
+        description="Add account abstraction to your app with the Connect SDK."
+      />
     </div>
   );
 };

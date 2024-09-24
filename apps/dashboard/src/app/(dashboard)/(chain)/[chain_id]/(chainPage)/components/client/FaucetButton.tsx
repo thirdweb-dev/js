@@ -2,8 +2,8 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { thirdwebClient } from "@/constants/client";
 import { THIRDWEB_ENGINE_FAUCET_WALLET } from "@/constants/env";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CanClaimResponseType } from "app/api/testnet-faucet/can-claim/CanClaimResponseType";
@@ -36,6 +36,7 @@ export function FaucetButton({
   chain: ChainMetadata;
   amount: string;
 }) {
+  const client = useThirdwebClient();
   const address = useActiveAccount()?.address;
   const chainId = chain.chainId;
   // do not include local overrides for chain pages
@@ -44,7 +45,7 @@ export function FaucetButton({
   const faucetWalletBalanceQuery = useWalletBalance({
     address: THIRDWEB_ENGINE_FAUCET_WALLET,
     chain: definedChain,
-    client: thirdwebClient,
+    client,
   });
   const trackEvent = useTrack();
 
@@ -117,7 +118,7 @@ export function FaucetButton({
     faucetWalletBalanceQuery.data.value < toUnits("1", 17);
 
   // loading state
-  if (faucetWalletBalanceQuery.isLoading || canClaimFaucetQuery.isLoading) {
+  if (faucetWalletBalanceQuery.isPending || canClaimFaucetQuery.isPending) {
     return (
       <Button variant="outline" className="w-full gap-2">
         Checking Faucet <Spinner className="size-3" />
@@ -128,7 +129,7 @@ export function FaucetButton({
   // faucet is empty
   if (isFaucetEmpty) {
     return (
-      <Button variant="outline" disabled className="w-full !opacity-100 ">
+      <Button variant="outline" disabled className="!opacity-100 w-full ">
         Faucet is empty right now
       </Button>
     );
@@ -137,7 +138,7 @@ export function FaucetButton({
   // Can not claim
   if (canClaimFaucetQuery.data && canClaimFaucetQuery.data.canClaim === false) {
     return (
-      <Button variant="outline" className="w-full !opacity-100 " disabled>
+      <Button variant="outline" className="!opacity-100 w-full " disabled>
         {canClaimFaucetQuery.data.type === "throttle" && (
           <>
             Your next claim is available{" "}
@@ -162,7 +163,7 @@ export function FaucetButton({
 
   // eligible to claim and faucet has balance
   return (
-    <div className="flex flex-col w-full text-center">
+    <div className="flex w-full flex-col text-center">
       <Button
         variant="primary"
         className="w-full gap-2"
@@ -184,7 +185,7 @@ export function FaucetButton({
       </Button>
 
       {faucetWalletBalanceQuery.data && (
-        <p className="mt-3 text-xs text-muted-foreground">
+        <p className="mt-3 text-muted-foreground text-xs">
           {Number(faucetWalletBalanceQuery.data.displayValue).toFixed(3)}{" "}
           {faucetWalletBalanceQuery.data.symbol} left in the faucet
         </p>

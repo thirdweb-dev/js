@@ -32,7 +32,7 @@ import { Button, FormLabel, Text } from "tw-components";
 interface AdminsTableProps {
   instanceUrl: string;
   admins: EngineAdmin[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -67,7 +67,7 @@ const columns = [
 export const AdminsTable: React.FC<AdminsTableProps> = ({
   instanceUrl,
   admins,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const editDisclosure = useDisclosure();
@@ -80,7 +80,7 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
         title="admins"
         data={admins}
         columns={columns}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {
@@ -174,7 +174,7 @@ const EditModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Update Admin</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -257,7 +257,7 @@ const RemoveModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Remove Admin</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

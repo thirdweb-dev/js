@@ -88,7 +88,7 @@ const membersStub: TeamMember[] = [
 
 function Story() {
   return (
-    <div className="bg-background min-h-screen text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <SettingsLayout
         params={{
           team_slug: freeTeam.slug,
@@ -110,9 +110,9 @@ function Story() {
 
 function CompVariants() {
   return (
-    <div className="py-10 border-t border-border">
-      <div className="max-w-[1000px] mx-auto px-4">
-        <h2 className="text-3xl font-semibold py-4"> Invite Variants </h2>
+    <div className="border-border border-t py-10">
+      <div className="mx-auto max-w-[1000px] px-4">
+        <h2 className="py-4 font-semibold text-3xl"> Invite Variants </h2>
 
         {/* Invite */}
         <div className="flex flex-col gap-10">

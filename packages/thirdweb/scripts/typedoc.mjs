@@ -1,7 +1,9 @@
 // @ts-check
-import { typedoc } from "typedoc-gen";
+import TypeDoc from "typedoc";
 
-typedoc({
+const jsonOut = "typedoc/documentation.json";
+
+const app = await TypeDoc.Application.bootstrapWithPlugins({
   entryPoints: ["src/exports/**/*.ts", "src/extensions/modules/**/index.ts"],
   exclude: [
     "src/exports/*.native.ts",
@@ -11,4 +13,13 @@ typedoc({
     "src/**/*.test.tsx",
     "src/**/*.bench.ts",
   ],
+  excludeInternal: true,
+  tsconfig: "tsconfig.typedoc.json",
 });
+
+const project = await app.convert();
+if (!project) {
+  throw new Error("Failed to create project");
+}
+
+await app.generateJson(project, jsonOut);

@@ -167,7 +167,7 @@ export function ClaimButton(props: ClaimButtonProps) {
  * For NFT Drop and Token Drop we fall back to the name & image of the contract
  * @internal
  */
-export async function getPayMetadata(
+async function getPayMetadata(
   options: BaseTransactionOptions<{ tokenId?: bigint }>,
 ): Promise<{ name?: string; image?: string }> {
   const { contract, tokenId } = options;
@@ -190,7 +190,7 @@ export async function getPayMetadata(
 /**
  * @internal Export for test
  */
-export async function getClaimTransaction({
+async function getClaimTransaction({
   contract,
   account,
   claimParams,

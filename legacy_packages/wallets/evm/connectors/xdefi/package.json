@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-connectors-xdefi.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-connectors-xdefi.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-connectors-xdefi.esm.js": "./dist/thirdweb-dev-wallets-evm-connectors-xdefi.browser.esm.js"
-  }
-}

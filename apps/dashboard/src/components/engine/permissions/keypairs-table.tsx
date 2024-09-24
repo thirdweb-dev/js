@@ -1,3 +1,4 @@
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import {
   type Keypair,
   useEngineRemoveKeypair,
@@ -28,7 +29,7 @@ import { toDateTimeLocal } from "utils/date-utils";
 interface KeypairsTableProps {
   instanceUrl: string;
   keypairs: Keypair[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -39,6 +40,14 @@ const columns = [
     header: "Label",
     cell: (cell) => {
       return <Text>{cell.getValue()}</Text>;
+    },
+  }),
+  columnHelper.accessor("hash", {
+    header: "Key ID",
+    cell: (cell) => {
+      return (
+        <CopyAddressButton address={cell.getValue()} copyIconPosition="right" />
+      );
     },
   }),
   columnHelper.accessor("publicKey", {
@@ -64,7 +73,7 @@ const columns = [
 export const KeypairsTable: React.FC<KeypairsTableProps> = ({
   instanceUrl,
   keypairs,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const removeDisclosure = useDisclosure();
@@ -76,7 +85,7 @@ export const KeypairsTable: React.FC<KeypairsTableProps> = ({
         title="public keys"
         data={keypairs}
         columns={columns}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {
@@ -149,7 +158,7 @@ const RemoveModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Remove Keypair</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

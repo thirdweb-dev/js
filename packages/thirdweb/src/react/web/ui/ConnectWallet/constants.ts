@@ -14,8 +14,6 @@ export const wideModalScreenThreshold = wideModalWidth + 40;
 export const wideModalMaxHeight = "570px";
 export const compactModalMaxHeight = "660px";
 
-export const defaultTheme = "dark";
-
 export const modalCloseFadeOutDuration = 250;
 
 /**

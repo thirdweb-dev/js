@@ -107,10 +107,9 @@ const DeployOptions = () => {
         tabClassName="font-medium !text-sm"
       />
 
-      {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-      <div
-        className="bg-muted/50 p-4 hover:bg-muted cursor-pointer mt-3 rounded-lg flex items-center gap-2 border border-border"
-        role="button"
+      <button
+        className="mt-3 flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-muted/50 p-4 hover:bg-muted"
+        type="button"
         onClick={() => {
           activeTabContent.onClick?.();
           if (activeTabContent.href) {
@@ -142,7 +141,7 @@ const DeployOptions = () => {
             {activeTabContent.description}
           </p>
         </div>
-      </div>
+      </button>
     </>
   );
 };

@@ -191,7 +191,7 @@ export const CmdKSearchModal = (props: {
       }}
     >
       <DialogContent
-        className="p-0 gap-0 z-[10000001]"
+        className="z-[10000001] gap-0 p-0"
         dialogOverlayClassName="z-[10000000]"
       >
         {/* Title */}
@@ -207,7 +207,7 @@ export const CmdKSearchModal = (props: {
 
             {/* Search */}
             <div className="relative mt-4 ">
-              <SearchIcon className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
               <Input
                 autoFocus
                 placeholder="Name or Contract Address"
@@ -215,7 +215,7 @@ export const CmdKSearchModal = (props: {
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
               />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <div className="-translate-y-1/2 absolute top-1/2 right-3">
                 {isFetching ? (
                   <Spinner className="size-5 text-muted-foreground" />
                 ) : searchValue.length > 0 ? (
@@ -223,7 +223,7 @@ export const CmdKSearchModal = (props: {
                     size="sm"
                     aria-label="Clear search"
                     variant="ghost"
-                    className="p-2 translate-x-2"
+                    className="translate-x-2 p-2"
                     onClick={() => setSearchValue("")}
                   >
                     <XIcon className="size-4 text-muted-foreground" />
@@ -234,10 +234,10 @@ export const CmdKSearchModal = (props: {
           </div>
 
           {searchValue.length > 0 && (!isFetching || data.length) ? (
-            <div className="border-t border-border">
+            <div className="border-border border-t">
               <ScrollShadow scrollableClassName="max-h-[50vh] md:max-h-[500px] p-2 rounded-lg">
                 {!data || data?.length === 0 ? (
-                  <div className="h-[100px] flex justify-center items-center p-4 text-muted-foreground">
+                  <div className="flex h-[100px] items-center justify-center p-4 text-muted-foreground">
                     No contracts found
                   </div>
                 ) : (
@@ -278,19 +278,19 @@ export const CmdKSearch: React.FC = () => {
 
   return (
     <>
-      <div className="hidden lg:block w-[300px] relative">
+      <div className="relative hidden w-[300px] lg:block">
         <Input
           onClick={() => setOpen(true)}
           placeholder="Search any contract"
           className="bg-transparent pr-4"
         />
-        <div className="flex items-center text-sm text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2 gap-[2px]">
+        <div className="-translate-y-1/2 absolute top-1/2 right-3 flex items-center gap-[2px] text-muted-foreground text-sm">
           <CommandIcon className="size-3" /> K
         </div>
       </div>
 
       <Button
-        className="lg:hidden p-2"
+        className="p-2 lg:hidden"
         aria-label="Search any contract"
         variant="ghost"
         onClick={() => setOpen(true)}
@@ -319,7 +319,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
   return (
     <div
       className={cn(
-        "relative flex gap-4 items-center rounded-lg p-3 hover:bg-muted",
+        "relative flex items-center gap-4 rounded-lg p-3 hover:bg-muted",
         isActive && "bg-muted",
       )}
     >
@@ -329,7 +329,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
         className="shrink-0"
       />
       <div className="flex flex-col gap-1">
-        <h3 className="line-clamp-2 text-foreground font-semibold">
+        <h3 className="line-clamp-2 font-semibold text-foreground">
           <Link
             href={`/${result.chainMetadata.chainId}/${result.contractAddress}`}
             onMouseEnter={onMouseEnter}
@@ -339,14 +339,14 @@ const SearchResult: React.FC<SearchResultProps> = ({
             {shortenIfAddress(result.name)}
           </Link>
         </h3>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-muted-foreground text-xs">
           {result.chainMetadata.name} -{" "}
           <span className="font-mono">
             {shortenIfAddress(result.contractAddress)}
           </span>
         </p>
       </div>
-      <div className="flex ml-auto shrink-0">
+      <div className="ml-auto flex shrink-0">
         <ArrowRightIcon className="size-4 text-muted-foreground/50" />
       </div>
     </div>

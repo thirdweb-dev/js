@@ -110,7 +110,7 @@ function hashType({
   return keccak256(encodedHashType);
 }
 
-export function encodeType({
+function encodeType({
   primaryType,
   types,
 }: {

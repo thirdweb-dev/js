@@ -113,7 +113,7 @@ export function TransactionModeScreen(props: {
         <Container flex="row">
           <Container flex="column" expand>
             <Text size="md" color="primaryText" weight={700}>
-              {"Price"}
+              Price
             </Text>
           </Container>
           <Container expand>

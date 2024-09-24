@@ -94,7 +94,7 @@ function AllWalletsUI(props: {
             }}
             tabIndex={-1}
             variant="outline"
-            placeholder={"Search Wallet"}
+            placeholder="Search Wallet"
             value={searchTerm}
             onChange={(e) => {
               listContainer.current?.parentElement?.scroll({

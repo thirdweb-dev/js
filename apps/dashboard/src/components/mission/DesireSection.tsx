@@ -1,16 +1,10 @@
-import { Flex } from "@chakra-ui/react";
 import { LandingGridSection } from "components/landing-pages/grid-section";
 import { LandingIconSectionItem } from "components/landing-pages/icon-section-item";
 import { Heading } from "tw-components";
 
 const DesireSection = () => {
   return (
-    <Flex
-      w="full"
-      flexDir={{ base: "column", xl: "row" }}
-      alignItems={{ base: "center", xl: "flex-start" }}
-      gap="60px"
-    >
+    <div className="flex w-full flex-col items-center gap-[60px] xl:flex-row xl:items-start">
       <Heading
         size="title.lg"
         fontWeight="semibold"
@@ -19,7 +13,7 @@ const DesireSection = () => {
       >
         thirdweb will...
       </Heading>
-      <Flex maxW="2xl">
+      <div className="flex max-w-[96rem] flex-row">
         <LandingGridSection desktopColumns={2}>
           <LandingIconSectionItem
             shouldShowNoBorder
@@ -53,8 +47,8 @@ const DesireSection = () => {
             description="There is infinite upside to building in open. Open-sourcing all of our tools increases transparency and security for the whole industry. Anybody can contribute to thirdweb by proposing new features, identifying bugs and optimising gas."
           />
         </LandingGridSection>
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 };
 

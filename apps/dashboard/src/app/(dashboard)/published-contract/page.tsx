@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
 
@@ -13,7 +13,7 @@ export default async function Page(props: {
   }
 
   const contractMetadata = await fetchDeployMetadata({
-    client: thirdwebClient,
+    client: getThirdwebClient(),
     // force `ipfs://` prefix
     uri: props.searchParams.uri.startsWith("ipfs://")
       ? props.searchParams.uri

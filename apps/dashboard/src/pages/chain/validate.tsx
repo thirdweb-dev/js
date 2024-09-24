@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import ChainValidation from "components/chain-validation";
 import { NextSeo } from "next-seo";
@@ -15,8 +14,8 @@ const ValidateChainPage: ThirdwebNextPage = () => {
         noindex
         nofollow
       />
-      <Flex direction="column" gap={8}>
-        <Flex flexDir="column" gap={2}>
+      <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-2">
           <Heading as="h1">Validate Chain</Heading>
           <Text>
             Validate a given chain is compatible with{" "}
@@ -25,10 +24,10 @@ const ValidateChainPage: ThirdwebNextPage = () => {
             </Link>
             .
           </Text>
-        </Flex>
+        </div>
 
         <ChainValidation />
-      </Flex>
+      </div>
     </>
   );
 };

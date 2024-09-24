@@ -1,10 +1,12 @@
 "use client";
 import { ShuffleIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { isInAppWallet } from "../../../../../wallets/in-app/core/wallet/index.js";
 import { injectedProvider } from "../../../../../wallets/injected/mipdStore.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
+import { useAdminWallet } from "../../../../core/hooks/wallets/useAdminWallet.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
@@ -25,7 +27,7 @@ export function ManageWalletScreen(props: {
   locale: ConnectLocale;
   client: ThirdwebClient;
 }) {
-  const activeWallet = useActiveWallet();
+  const activeWallet = useAdminWallet();
 
   return (
     <Container
@@ -56,21 +58,23 @@ export function ManageWalletScreen(props: {
           />
 
           {/* Multi-auth */}
-          {activeWallet?.id === "inApp" && (
-            <MenuButton
-              onClick={() => {
-                props.setScreen("linked-profiles");
-              }}
-              style={{
-                fontSize: fontSize.sm,
-              }}
-            >
-              <MultiUserIcon size={iconSize.md} />
-              <Text color="primaryText">
-                {props.locale.manageWallet.linkedProfiles}
-              </Text>
-            </MenuButton>
-          )}
+          {activeWallet &&
+            (activeWallet?.id === "inApp" ||
+              isEcosystemWallet(activeWallet)) && (
+              <MenuButton
+                onClick={() => {
+                  props.setScreen("linked-profiles");
+                }}
+                style={{
+                  fontSize: fontSize.sm,
+                }}
+              >
+                <MultiUserIcon size={iconSize.md} />
+                <Text color="primaryText">
+                  {props.locale.manageWallet.linkedProfiles}
+                </Text>
+              </MenuButton>
+            )}
 
           {/* Wallet Connect Receiver */}
           <MenuButton

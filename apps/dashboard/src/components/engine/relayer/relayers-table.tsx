@@ -47,7 +47,7 @@ import { type AddModalInput, parseAddressListRaw } from "./add-relayer-button";
 interface RelayersTableProps {
   instanceUrl: string;
   relayers: EngineRelayer[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -56,19 +56,19 @@ const columnHelper = createColumnHelper<EngineRelayer>();
 export const RelayersTable: React.FC<RelayersTableProps> = ({
   instanceUrl,
   relayers,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const editDisclosure = useDisclosure();
   const removeDisclosure = useDisclosure();
   const [selectedRelayer, setSelectedRelayer] = useState<EngineRelayer>();
-  const { chainIdToChainRecord } = useAllChainsData();
+  const { idToChain } = useAllChainsData();
 
   const columns = [
     columnHelper.accessor("chainId", {
       header: "Chain",
       cell: (cell) => {
-        const chain = chainIdToChainRecord[Number.parseInt(cell.getValue())];
+        const chain = idToChain.get(Number.parseInt(cell.getValue()));
         return (
           <Flex align="center" gap={2}>
             <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
@@ -81,7 +81,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
       header: "Backend Wallet",
       cell: (cell) => {
         const { chainId, backendWalletAddress } = cell.row.original;
-        const chain = chainIdToChainRecord[Number.parseInt(chainId)];
+        const chain = idToChain.get(Number.parseInt(chainId));
 
         const explorer = chain?.explorers?.[0];
         if (!explorer) {
@@ -156,7 +156,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
         title="relayers"
         data={relayers}
         columns={columns}
-        isLoading={isLoading}
+        isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
           {
@@ -208,7 +208,7 @@ const EditModal = ({
 }) => {
   const { mutate: updateRelayer } = useEngineUpdateRelayer(instanceUrl);
   const { data: backendWallets } = useEngineBackendWallets(instanceUrl);
-  const { chainIdToChainRecord } = useAllChainsData();
+  const { idToChain } = useAllChainsData();
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated relayer",
@@ -227,7 +227,7 @@ const EditModal = ({
   const onSubmit = (data: AddModalInput) => {
     const updateRelayerData: UpdateRelayerInput = {
       id: relayer.id,
-      chain: chainIdToChainRecord[data.chainId]?.slug ?? "unknown",
+      chain: idToChain.get(data.chainId)?.slug ?? "unknown",
       backendWalletAddress: data.backendWalletAddress,
       name: data.name,
       allowedContracts: parseAddressListRaw(data.allowedContractsRaw),
@@ -262,7 +262,7 @@ const EditModal = ({
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
       <ModalContent
-        className="!bg-background border border-border rounded-lg"
+        className="!bg-background rounded-lg border border-border"
         as="form"
         onSubmit={form.handleSubmit(onSubmit)}
       >
@@ -347,7 +347,7 @@ const RemoveModal = ({
     "Successfully removed relayer",
     "Failed to remove relayer",
   );
-  const { chainIdToChainRecord } = useAllChainsData();
+  const { idToChain } = useAllChainsData();
 
   const onClick = () => {
     revokeRelayer(
@@ -380,7 +380,7 @@ const RemoveModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Remove Relayer</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -392,12 +392,11 @@ const RemoveModal = ({
                 <ChainIcon
                   size={12}
                   ipfsSrc={
-                    chainIdToChainRecord[Number.parseInt(relayer.chainId)]?.icon
-                      ?.url
+                    idToChain.get(Number.parseInt(relayer.chainId))?.icon?.url
                   }
                 />
                 <Text>
-                  {chainIdToChainRecord[Number.parseInt(relayer.chainId)]?.name}
+                  {idToChain.get(Number.parseInt(relayer.chainId))?.name}
                 </Text>
               </Flex>
             </FormControl>

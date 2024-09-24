@@ -165,7 +165,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   const querySuccess =
     nextTokenIdToMintQuery.isSuccess || totalSupplyQuery.isSuccess;
   const queryLoading =
-    nextTokenIdToMintQuery.isLoading || totalSupplyQuery.isLoading;
+    nextTokenIdToMintQuery.isPending || totalSupplyQuery.isPending;
 
   const {
     getTableProps,
@@ -209,7 +209,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
     <Flex gap={4} direction="column">
       <TableContainer
         maxW="100%"
-        className="relative border border-border rounded-lg"
+        className="relative rounded-lg border border-border"
       >
         {getNFTsQuery.isFetching && (
           <Spinner

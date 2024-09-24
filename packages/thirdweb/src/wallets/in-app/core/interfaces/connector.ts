@@ -1,12 +1,14 @@
 import type { SocialAuthOption } from "../../../../wallets/types.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import type {
+  AuthArgsType,
   AuthLoginReturnType,
   AuthStoredTokenWithCookieReturnType,
   GetUser,
   LogoutReturnType,
   MultiStepAuthArgsType,
   PreAuthArgsType,
+  Profile,
   SingleStepAuthArgsType,
 } from "../authentication/types.js";
 
@@ -33,4 +35,6 @@ export interface InAppConnector {
     args: MultiStepAuthArgsType | SingleStepAuthArgsType,
   ): Promise<AuthLoginReturnType>;
   logout(): Promise<LogoutReturnType>;
+  linkProfile(args: AuthArgsType): Promise<Profile[]>;
+  getProfiles(): Promise<Profile[]>;
 }

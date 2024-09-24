@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ZERO_ADDRESS, isAddress, toTokens } from "thirdweb";
@@ -34,7 +34,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const balance = await getWalletBalance({
       address,
       chain,
-      client: thirdwebClient,
+      client: getThirdwebClient(),
     });
     return [
       {

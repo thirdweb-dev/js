@@ -25,7 +25,7 @@ export type LensProfileSchema = {
 /**
  * @internal
  */
-export type MetadataAttribute =
+type MetadataAttribute =
   | {
       type: "Boolean";
       key: string;

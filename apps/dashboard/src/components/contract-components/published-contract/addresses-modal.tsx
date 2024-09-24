@@ -14,7 +14,7 @@ export const AddressesModal: React.FC<AddressesModalProps> = ({
   buttonTitle,
   modalTitle,
 }) => {
-  const { chainIdToChainRecord } = useAllChainsData();
+  const { idToChain } = useAllChainsData();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -35,47 +35,45 @@ export const AddressesModal: React.FC<AddressesModalProps> = ({
         </Link>
       </Text>
 
-      {chainIdToChainRecord && (
-        <Drawer
-          size="lg"
-          allowPinchZoom
-          isOpen={isOpen}
-          onClose={onClose}
-          header={{
-            children: (
-              <Heading as="h3" size="title.sm">
-                {modalTitle}
-              </Heading>
-            ),
-          }}
-        >
-          <Flex flexDir="column" gap={{ base: 2, md: 1 }}>
-            {Object.entries(chainAddressRecord).map(([chainId, address]) =>
-              !address ? null : (
-                <Flex
-                  key={chainId}
-                  flexDir={{ base: "column", md: "row" }}
-                  alignItems={{ base: "auto", md: "center" }}
-                  justifyContent="space-between"
+      <Drawer
+        size="lg"
+        allowPinchZoom
+        isOpen={isOpen}
+        onClose={onClose}
+        header={{
+          children: (
+            <Heading as="h3" size="title.sm">
+              {modalTitle}
+            </Heading>
+          ),
+        }}
+      >
+        <Flex flexDir="column" gap={{ base: 2, md: 1 }}>
+          {Object.entries(chainAddressRecord).map(([chainId, address]) =>
+            !address ? null : (
+              <Flex
+                key={chainId}
+                flexDir={{ base: "column", md: "row" }}
+                alignItems={{ base: "auto", md: "center" }}
+                justifyContent="space-between"
+              >
+                <Text size="body.md">
+                  {idToChain.get(Number.parseInt(chainId))?.name}
+                </Text>
+                <Link
+                  href={`${THIRDWEB_DOMAIN}/${chainId}/${address}`}
+                  isExternal
+                  color="blue.500"
                 >
-                  <Text size="body.md">
-                    {chainIdToChainRecord[Number.parseInt(chainId)]?.name}
+                  <Text color="inherit" fontFamily="mono">
+                    {address}
                   </Text>
-                  <Link
-                    href={`${THIRDWEB_DOMAIN}/${chainId}/${address}`}
-                    isExternal
-                    color="blue.500"
-                  >
-                    <Text color="inherit" fontFamily="mono">
-                      {address}
-                    </Text>
-                  </Link>
-                </Flex>
-              ),
-            )}
-          </Flex>
-        </Drawer>
-      )}
+                </Link>
+              </Flex>
+            ),
+          )}
+        </Flex>
+      </Drawer>
     </>
   );
 };

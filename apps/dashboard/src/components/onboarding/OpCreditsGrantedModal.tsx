@@ -59,7 +59,7 @@ Apply here!`,
       closeOnEsc={false}
     >
       <ModalOverlay />
-      <ModalContent className="!bg-background border border-border rounded-lg">
+      <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader textAlign="center">Congratulations!</ModalHeader>
         <ModalBody>
           <Flex flexDir="column" gap={4} position="relative">

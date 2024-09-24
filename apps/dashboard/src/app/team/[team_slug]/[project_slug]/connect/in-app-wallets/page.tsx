@@ -1,7 +1,7 @@
 import { getProject } from "@/api/projects";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { notFound } from "next/navigation";
-import { EmbeddedWallets } from "../../../../../../components/embedded-wallets";
+import { InAppWalletUsersPageContent } from "../../../../../../components/embedded-wallets/Users";
 import { AnalyticsCallout } from "./_components/AnalyticsCallout";
 import { InAppWaletFooterSection } from "./_components/footer";
 
@@ -24,11 +24,11 @@ export default async function Page(props: {
 
   return (
     <div>
-      <h1 className="font-semibold text-2xl md:text-3xl tracking-tight mb-3">
+      <h1 className="mb-3 font-semibold text-2xl tracking-tight md:text-3xl">
         In-App Wallets
       </h1>
 
-      <p className="max-w-[700px] text-muted-foreground mt-3 mb-7">
+      <p className="mt-3 mb-7 max-w-[700px] text-muted-foreground">
         A wallet infrastructure that enables apps to create, manage, and control
         their users wallets. Email login, social login, and bring-your-own auth
         supported.{" "}
@@ -43,11 +43,8 @@ export default async function Page(props: {
         </TrackedLinkTW>
       </p>
 
-      <EmbeddedWallets
-        apiKey={{
-          ...project,
-          key: project.publishableKey, // clientId
-        }}
+      <InAppWalletUsersPageContent
+        clientId={project.publishableKey}
         trackingCategory={TRACKING_CATEGORY}
       />
 

@@ -1,16 +1,10 @@
-import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { LandingGridSection } from "components/landing-pages/grid-section";
 import { Heading, Text } from "tw-components";
 
 const MajorSection = () => {
   return (
-    <Flex
-      w="full"
-      flexDir={{ base: "column", xl: "row" }}
-      alignItems={{ base: "center", xl: "flex-start" }}
-      gap="60px"
-    >
+    <div className="flex w-full flex-col items-center gap-[60px] xl:flex-row xl:items-start">
       <Heading
         size="title.lg"
         fontWeight="semibold"
@@ -19,29 +13,29 @@ const MajorSection = () => {
       >
         However, there are two major obstacles to mass adoption.
       </Heading>
-      <Flex maxW="2xl">
+      <div className="flex max-w-[96rem] flex-row">
         <LandingGridSection desktopColumns={2}>
-          <Flex flexDir="column" gap={6}>
+          <div className="flex flex-col gap-6">
             <ChakraNextImage
               src={require("../../../public/assets/landingpage/mobile/complexity.png")}
               alt="img-one"
             />
-            <Flex flexDir="column" gap={4}>
+            <div className="flex flex-col gap-4">
               <Text size="body.xl" color="white" fontWeight="bold">
                 Developer complexity
               </Text>
               To build a web3 app, developers need to piece together 10+
               different tools that don&apos;t natively talk to each other —
               creating a messy, fragmented DX that stifles innovation.
-            </Flex>
-          </Flex>
+            </div>
+          </div>
 
-          <Flex flexDir="column" gap={6}>
+          <div className="flex flex-col gap-6">
             <ChakraNextImage
               src={require("../../../public/assets/landingpage/mobile/user-experience.png")}
               alt="img-one"
             />
-            <Flex flexDir="column" gap={4}>
+            <div className="flex flex-col gap-4">
               <Text size="body.xl" color="white" fontWeight="bold">
                 User experience
               </Text>
@@ -49,11 +43,11 @@ const MajorSection = () => {
               their private keys, purchase & transfer crypto, pay gas, and sign
               a transaction for every action — creating a daunting onboarding
               process that stifles adoption.
-            </Flex>
-          </Flex>
+            </div>
+          </div>
         </LandingGridSection>
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 };
 

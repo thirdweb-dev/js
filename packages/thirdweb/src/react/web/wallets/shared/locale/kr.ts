@@ -52,5 +52,6 @@ export default {
   signInWithPhone: "전화번호로 로그인",
   phoneRequired: "전화번호가 필요합니다",
   passkey: "비밀번호",
-  linkWallet: "Link a Wallet",
+  linkWallet: "지갑 연결",
+  loginAsGuest: "게스트로 로그인",
 } satisfies InAppWalletLocale;

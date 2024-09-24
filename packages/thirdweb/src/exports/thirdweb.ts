@@ -9,7 +9,10 @@ declare module "abitype" {
  * CONSTANTS
  */
 export {
-  ADDRESS_ZERO,
+  /**
+   * @deprecated Use {@link ZERO_ADDRESS}.
+   */
+  ZERO_ADDRESS as ADDRESS_ZERO,
   ZERO_ADDRESS,
   NATIVE_TOKEN_ADDRESS,
 } from "../constants/addresses.js";

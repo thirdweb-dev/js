@@ -29,7 +29,7 @@ export function PoweredByThirdweb() {
             color: "currentColor",
           }}
         >
-          {"Powered by"}
+          Powered by
         </Text>
         <ThirdwebTextIcon height={13} />
       </Container>

@@ -28,7 +28,7 @@ export function MobileHeader() {
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <header
-      className="py-4 xl:hidden border-b px-4 flex justify-between gap-4 sticky top-0 z-10 bg-background "
+      className="sticky top-0 z-10 flex justify-between gap-4 border-b bg-background px-4 py-4 xl:hidden "
       onClick={(e) => {
         if (e.target instanceof HTMLAnchorElement) {
           setIsOpen(false);
@@ -42,7 +42,7 @@ export function MobileHeader() {
         title="thirdweb Docs"
       >
         <Image src={thirdwebIconSrc} className="size-7" alt="" />
-        <span className="text-xl font-bold leading-none tracking-tight">
+        <span className="font-bold text-xl leading-none tracking-tight">
           Playground
         </span>
       </Link>
@@ -62,16 +62,16 @@ export function MobileHeader() {
       </Button>
 
       {isOpen && (
-        <div className="fixed left-0 top-[75px] right-0 bottom-0 bg-background p-6 z-50 flex flex-col gap-6 fade-in-0 animate-in duration-200 slide-in-from-top-5 overflow-auto">
+        <div className="fade-in-0 slide-in-from-top-5 fixed top-[75px] right-0 bottom-0 left-0 z-50 flex animate-in flex-col gap-6 overflow-auto bg-background p-6 duration-200">
           <Sidebar links={navLinks} />
-          <div className="flex flex-col gap-4 mt-auto">
+          <div className="mt-auto flex flex-col gap-4">
             {otherLinks.map((link) => {
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   target="_blank"
-                  className="text-muted-foreground hover:text-foreground flex items-center gap-2 "
+                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground "
                 >
                   {link.name}
                 </Link>

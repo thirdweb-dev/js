@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { ANVIL_CHAIN } from "../../../test/src/chains.js";
+import {
+  ANVIL_CHAIN,
+  FORKED_ETHEREUM_CHAIN_WITH_MINING,
+} from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
@@ -46,6 +49,21 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         address,
       });
       expect(isDeployed).toBe(true);
+
+      const ethAddress = await deployPublishedContract({
+        client: TEST_CLIENT,
+        chain: FORKED_ETHEREUM_CHAIN_WITH_MINING,
+        account: TEST_ACCOUNT_A,
+        contractId: "AccountFactory",
+        contractParams: {
+          defaultAdmin: TEST_ACCOUNT_A.address,
+          entrypoint: ENTRYPOINT_ADDRESS_v0_6,
+        },
+        salt: "test",
+      });
+
+      // ensure they are the same address!
+      expect(address).toBe(ethAddress);
     });
 
     it("should deploy a published autofactory contract", async () => {
@@ -82,6 +100,21 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         address,
       });
       expect(isDeployed).toBe(true);
+
+      // deploy on forked ethereum
+      const ethAddress = await deployPublishedContract({
+        client: TEST_CLIENT,
+        chain: FORKED_ETHEREUM_CHAIN_WITH_MINING,
+        account: TEST_ACCOUNT_A,
+        contractId: "Airdrop",
+        contractParams: {
+          defaultAdmin: TEST_ACCOUNT_A.address,
+          contractURI: "",
+        },
+        salt: "test",
+      });
+      // ensure they are the same address!
+      expect(address).toBe(ethAddress);
     });
 
     // TODO: Replace these tests' live contracts with mocks

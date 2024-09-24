@@ -155,24 +155,3 @@ export const IconButton = /* @__PURE__ */ StyledButton((_) => {
     },
   };
 });
-
-export const InputButton = /* @__PURE__ */ StyledButton((_) => {
-  const theme = useCustomTheme();
-  return {
-    all: "unset",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: radius.sm,
-    padding: spacing.sm,
-    cursor: "pointer",
-    WebkitTapHighlightColor: "transparent",
-    color: theme.colors.secondaryText,
-    "&:hover": {
-      color: theme.colors.primaryText,
-    },
-    "&[disabled]": {
-      cursor: "not-allowed",
-    },
-  };
-});

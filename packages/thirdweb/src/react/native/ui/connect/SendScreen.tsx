@@ -21,7 +21,7 @@ import { ErrorView } from "./ErrorView.js";
 import { SuccessView } from "./SuccessView.js";
 import { TokenListScreen, TokenRow } from "./TokenListScreen.js";
 
-export type SendScreenProps = {
+type SendScreenProps = {
   theme: Theme;
   client: ThirdwebClient;
   onClose?: () => void;

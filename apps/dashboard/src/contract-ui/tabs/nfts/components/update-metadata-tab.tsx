@@ -36,12 +36,12 @@ const UpdateMetadataTab: React.FC<UpdateMetadataTabProps> = ({
           useUpdateMetadata={useUpdateMetadata}
         />
       </Drawer>
-      <Flex direction={"column"} gap={6}>
+      <Flex direction="column" gap={6}>
         <Text>
           You can update the metadata of this NFT at any time, this will only
           change the representation of the NFT, not the owner or tokenId.
         </Text>
-        <Flex justifyContent={"right"}>
+        <Flex justifyContent="right">
           <Button colorScheme="primary" onClick={onOpen}>
             Update Metadata
           </Button>

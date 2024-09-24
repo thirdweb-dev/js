@@ -29,15 +29,15 @@ export function InviteSection(props: {
 
   if (teamPlan !== "pro") {
     bottomSection = (
-      <div className="px-4 lg:px6 py-4 flex items-center justify-between border-t border-border gap-4">
+      <div className="lg:px6 flex items-center justify-between gap-4 border-border border-t px-4 py-4">
         <p className="text-muted-foreground text-sm">
-          This feature is only available on the{" "}
+          This feature is only available on the
           <Link
             href="https://thirdweb.com/pricing"
             target="_blank"
             className="text-link-foreground hover:text-foreground"
           >
-            Pro plan <ExternalLinkIcon className="size-3 inline" />
+            Pro plan <ExternalLinkIcon className="inline size-3" />
           </Link>
         </p>
 
@@ -49,7 +49,7 @@ export function InviteSection(props: {
     );
   } else if (!props.userHasEditPermission) {
     bottomSection = (
-      <div className="px-4 lg:px-6 py-4 flex items-center justify-between border-t border-border min-h-[60px]">
+      <div className="flex min-h-[60px] items-center justify-between border-border border-t px-4 py-4 lg:px-6">
         <p className="text-muted-foreground text-sm">
           You don't have permission to invite members
         </p>
@@ -57,7 +57,7 @@ export function InviteSection(props: {
     );
   } else {
     bottomSection = (
-      <div className="py-4 px-4 lg:px-6 flex items-center lg:justify-end border-t border-border">
+      <div className="flex items-center border-border border-t px-4 py-4 lg:justify-end lg:px-6">
         <Button variant="outline" size="sm" className="gap-2 max-sm:w-full">
           <UserPlus className="size-3" />
           Invite
@@ -68,18 +68,18 @@ export function InviteSection(props: {
 
   return (
     <section>
-      <h2 className="text-2xl font-semibold tracking-tight mb-3">Invite</h2>
+      <h2 className="mb-3 font-semibold text-2xl tracking-tight">Invite</h2>
 
       {/* Card */}
-      <div className="border border-border rounded-lg bg-muted/50">
+      <div className="rounded-lg border border-border bg-muted/50">
         {/* Invite via Link */}
         <div
           className={cn(
-            "px-4 lg:px-6 py-4",
+            "px-4 py-4 lg:px-6",
             !inviteEnabled && "cursor-not-allowed",
           )}
         >
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
             <p className="text-foreground text-sm">
               Invite new members via email or link
             </p>
@@ -96,18 +96,18 @@ export function InviteSection(props: {
           </div>
         </div>
 
-        <div className="px-4 mt-2 lg:my-0 lg:px-6">
+        <div className="mt-2 px-4 lg:my-0 lg:px-6">
           <Separator />
         </div>
 
         {/* Invite via Email Send */}
-        <div className="px-4 lg:px-6 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="px-4 py-6 lg:px-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <Label
                 htmlFor="email"
                 className={cn(
-                  "text-sm mb-1 block",
+                  "mb-1 block text-sm",
                   !inviteEnabled && "text-muted-foreground",
                 )}
               >
@@ -126,7 +126,7 @@ export function InviteSection(props: {
               <Label
                 htmlFor="role"
                 className={cn(
-                  "text-sm mb-1 block",
+                  "mb-1 block text-sm",
                   !inviteEnabled && "text-muted-foreground",
                 )}
               >

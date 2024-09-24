@@ -46,7 +46,7 @@ const chartLabelToShow: Record<ChartToShow, string> = {
 
 export function DailyConnectionsChartCard(props: {
   walletStats: WalletStats[];
-  isLoading: boolean;
+  isPending: boolean;
 }) {
   const { walletStats } = props;
 
@@ -73,18 +73,18 @@ export function DailyConnectionsChartCard(props: {
     return Array.from(chartDataMap.values());
   }, [walletStats]);
 
-  const disableActions = props.isLoading || barChartData.length === 0;
+  const disableActions = props.isPending || barChartData.length === 0;
 
   return (
-    <div className="bg-muted/50 border border-border rounded-lg p-4 md:p-6 relative w-full">
-      <h3 className="text-xl md:text-2xl font-semibold tracking-tight mb-1">
+    <div className="relative w-full rounded-lg border border-border bg-muted/50 p-4 md:p-6">
+      <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
         Daily Connections
       </h3>
-      <p className="text-muted-foreground mb-3 text-sm">
+      <p className="mb-3 text-muted-foreground text-sm">
         Total and unique wallets addresses that connected to your app each day.
       </p>
 
-      <div className="md:absolute top-6 right-6 mb-4 md:mb-0 md:flex items-center gap-2 grid grid-cols-2">
+      <div className="top-6 right-6 mb-4 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
         {/* Selector */}
         <Select
           onValueChange={(v) => {
@@ -124,9 +124,9 @@ export function DailyConnectionsChartCard(props: {
       {/* Chart */}
       <ChartContainer
         config={chartConfig}
-        className="w-full h-[250px] md:h-[350px]"
+        className="h-[250px] w-full md:h-[350px]"
       >
-        {props.isLoading ? (
+        {props.isPending ? (
           <LoadingChartState />
         ) : barChartData.length === 0 ? (
           <EmptyChartState />
@@ -158,7 +158,7 @@ export function DailyConnectionsChartCard(props: {
                 <LabelList
                   position="top"
                   offset={12}
-                  className="fill-foreground invisible sm:visible"
+                  className="invisible fill-foreground sm:visible"
                   fontSize={12}
                 />
               )}

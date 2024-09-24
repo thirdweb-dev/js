@@ -34,7 +34,7 @@ export type GetClaimParamsOptions = {
  * @extension ERC1155
  * @example
  * ```ts
- * import { getClaimParams } from "thirdweb/extensions/erc1155";
+ * import { getClaimParams } from "thirdweb/utils";
  *
  * const claimParams = await getClaimParams({
  *  contract,

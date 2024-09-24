@@ -1,5 +1,3 @@
-import { ZERO_ADDRESS } from "thirdweb";
-
 export const networkKeys = {
   all: ["network"] as const,
   chain: (chainId?: number) => [...networkKeys.all, chainId] as const,
@@ -106,42 +104,11 @@ export const engineKeys = {
     [...engineKeys.all, engineId, "systemMetrics"] as const,
   queueMetrics: (engineId: string) =>
     [...engineKeys.all, engineId, "queueMetrics"] as const,
-};
 
-export const splitsKeys = {
-  all: ["splits"] as const,
-  lists: () => [...splitsKeys.all, "list"] as const,
-  list: (address = ZERO_ADDRESS) => [...splitsKeys.lists(), address] as const,
-  detail: (address = ZERO_ADDRESS) => [...splitsKeys.all, address] as const,
-  currencies: (address = ZERO_ADDRESS) =>
-    [...splitsKeys.detail(address), "currencies"] as const,
-  balances: (address = ZERO_ADDRESS) =>
-    [...splitsKeys.detail(address), "balances"] as const,
-};
-
-export const voteKeys = {
-  all: ["vote"] as const,
-  detail: (address = ZERO_ADDRESS) => [...voteKeys.all, address] as const,
-  proposals: (address = ZERO_ADDRESS) =>
-    [...voteKeys.detail(address), "proposals"] as const,
-  proposal: (proposalId = "-1", address = ZERO_ADDRESS) =>
-    [...voteKeys.proposals(address), proposalId] as const,
-  balances: (address = ZERO_ADDRESS, addresses = [] as string[]) =>
-    [...voteKeys.detail(address), "balances", { addresses }] as const,
-  delegations: (address = ZERO_ADDRESS) =>
-    [...voteKeys.detail(address), "delegations"] as const,
-  delegation: (address = ZERO_ADDRESS, userAddress = ZERO_ADDRESS) =>
-    [...voteKeys.delegations(address), userAddress] as const,
-  userHasVotedOnProposal: (
-    proposalId = "-1",
-    address = ZERO_ADDRESS,
-    userAddress = ZERO_ADDRESS,
-  ) =>
-    [
-      ...voteKeys.proposal(proposalId, address),
-      "hasVotedOnProposal",
-      userAddress,
-    ] as const,
-  canExecuteProposal: (proposalId = "-1", address = ZERO_ADDRESS) =>
-    [...voteKeys.proposal(proposalId, address), "canExecute"] as const,
+  alertRules: (engineId: string) =>
+    [...engineKeys.all, engineId, "alertRules"] as const,
+  alerts: (engineId: string) =>
+    [...engineKeys.all, engineId, "alerts"] as const,
+  notificationChannels: (engineId: string) =>
+    [...engineKeys.all, engineId, "notificationChannels"] as const,
 };

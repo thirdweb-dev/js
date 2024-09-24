@@ -9,12 +9,11 @@ export async function fetchReactDoc() {
   }
   prom = (async () => {
     const [doc, reactCoreDoc] = await Promise.all([
-      import(
-        "../../../../../../../../legacy_packages/react/typedoc/documentation.json"
-      ),
+      import("./v4-legacy-docs/react.json"),
       fetchReactCoreDoc(),
     ]);
-    return mergeDocs(reactCoreDoc, transform(doc as any));
+    // @ts-expect-error - works fine!
+    return mergeDocs(reactCoreDoc, transform(doc));
   })();
   return prom;
 }

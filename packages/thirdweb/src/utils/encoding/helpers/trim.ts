@@ -3,7 +3,7 @@ import type { Hex } from "./is-hex.js";
 type TrimOptions = {
   dir?: "left" | "right";
 };
-export type TrimReturnType<TValue extends Uint8Array | Hex> = TValue extends Hex
+type TrimReturnType<TValue extends Uint8Array | Hex> = TValue extends Hex
   ? Hex
   : Uint8Array;
 

@@ -121,9 +121,7 @@ export function FiatDetailsScreen(props: {
 }
 
 // if the toToken is the same as the onRampToken, no swap is required
-export function isSwapRequiredAfterOnRamp(
-  buyWithFiatStatus: BuyWithFiatStatus,
-) {
+function isSwapRequiredAfterOnRamp(buyWithFiatStatus: BuyWithFiatStatus) {
   if (buyWithFiatStatus.status === "NOT_FOUND") {
     return false;
   }

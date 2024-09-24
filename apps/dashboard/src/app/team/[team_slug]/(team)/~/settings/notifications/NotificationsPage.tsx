@@ -11,7 +11,7 @@ export const SettingsNotificationsPage = () => {
 
   if (!account) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <Spinner className="size-10" />
       </div>
     );
@@ -19,11 +19,11 @@ export const SettingsNotificationsPage = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight mb-0.5">
+      <h1 className="mb-0.5 font-semibold text-2xl tracking-tight">
         Notification Settings
       </h1>
 
-      <p className="text-muted-foreground mb-7">
+      <p className="mb-7 text-muted-foreground">
         Configure your email notification preferences
       </p>
 

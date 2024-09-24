@@ -1,17 +1,19 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useMultiChainRegContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { useQuery } from "@tanstack/react-query";
-import type { BasicContract } from "contract-ui/types/types";
 import { PlusIcon } from "lucide-react";
 import { defineChain, getContract } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
-import { thirdwebClient } from "../../../@/constants/client";
 import { FactoryContracts } from "./factory-contracts";
 
-const useFactories = () => {
+function useFactories() {
   const { user, isLoggedIn } = useLoggedInUser();
+  const client = useThirdwebClient();
 
   const contractListQuery = useMultiChainRegContractList(user?.address);
 
@@ -23,22 +25,24 @@ const useFactories = () => {
       "factories",
     ],
     queryFn: async () => {
-      return await Promise.all(
+      const factories = await Promise.all(
         (contractListQuery.data || []).map(async (c) => {
           const contract = getContract({
             // eslint-disable-next-line no-restricted-syntax
             chain: defineChain(c.chainId),
             address: c.address,
-            client: thirdwebClient,
+            client,
           });
           const m = await getCompilerMetadata(contract);
           return m.name.indexOf("AccountFactory") > -1 ? c : null;
         }),
       );
+
+      return factories.filter((f) => f !== null);
     },
     enabled: !!user?.address && isLoggedIn && !!contractListQuery.data?.length,
   });
-};
+}
 
 interface AccountFactoriesProps {
   trackingCategory: string;
@@ -50,7 +54,7 @@ export const AccountFactories: React.FC<AccountFactoriesProps> = ({
   const factories = useFactories();
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col lg:flex-row gap-3 lg:gap-8 lg:justify-between lg:items-center">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
         <p className="text-muted-foreground text-sm">
           Click an account factory contract to view analytics and accounts
           created.
@@ -70,8 +74,8 @@ export const AccountFactories: React.FC<AccountFactoriesProps> = ({
       </div>
 
       <FactoryContracts
-        contracts={(factories.data || []) as BasicContract[]}
-        isLoading={factories.isLoading}
+        contracts={factories.data || []}
+        isPending={factories.isPending}
         isFetched={factories.isFetched}
       />
     </div>

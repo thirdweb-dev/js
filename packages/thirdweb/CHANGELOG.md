@@ -1,5 +1,159 @@
 # thirdweb
 
+## 5.58.5
+
+### Patch Changes
+
+- [#4759](https://github.com/thirdweb-dev/js/pull/4759) [`2d34771`](https://github.com/thirdweb-dev/js/commit/2d34771e189146e4c2619f7585f9cbfa3e190bac) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Fix guest account creation uniqueness
+
+- [#4763](https://github.com/thirdweb-dev/js/pull/4763) [`399ba2e`](https://github.com/thirdweb-dev/js/commit/399ba2efd075bb0a62ff83e30779ab1aa535e203) Thanks [@jnsdls](https://github.com/jnsdls)! - improve error handling for 402 and 403 error codes in storage upload
+
+## 5.58.4
+
+### Patch Changes
+
+- [#4752](https://github.com/thirdweb-dev/js/pull/4752) [`e9ae980`](https://github.com/thirdweb-dev/js/commit/e9ae98084af24199155f997f724c7ea8ff860876) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [ReactNative] Respect icon theme color in connect button and detail modal
+
+- [#4738](https://github.com/thirdweb-dev/js/pull/4738) [`a4dac95`](https://github.com/thirdweb-dev/js/commit/a4dac9563002a2909902b84aa5b764e3fae27b6b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix jsdoc for getClaimParams
+
+- [#4753](https://github.com/thirdweb-dev/js/pull/4753) [`1133ccc`](https://github.com/thirdweb-dev/js/commit/1133ccc23931f1984e400ee83f1641bdb56f0d90) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix abi resolution fallback
+
+- [#4756](https://github.com/thirdweb-dev/js/pull/4756) [`33936b3`](https://github.com/thirdweb-dev/js/commit/33936b3a86be85427f01f8974af5c3e530f7bdaf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle biging serialization for ecosystem wallets
+
+- [#4687](https://github.com/thirdweb-dev/js/pull/4687) [`fc2ecdf`](https://github.com/thirdweb-dev/js/commit/fc2ecdfd9868496c4dca0cf980fae68d6209edce) Thanks [@gregfromstl](https://github.com/gregfromstl)! - React: Hides guest accounts from linked profiles screen
+
+## 5.58.3
+
+### Patch Changes
+
+- [#4740](https://github.com/thirdweb-dev/js/pull/4740) [`915442e`](https://github.com/thirdweb-dev/js/commit/915442e1c4e769b56187311420c7e762325c4872) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable wallet linking and guest mode for ecosystem wallets
+
+## 5.58.2
+
+### Patch Changes
+
+- [#4737](https://github.com/thirdweb-dev/js/pull/4737) [`2707db1`](https://github.com/thirdweb-dev/js/commit/2707db136ed98ed1c39dd5da20f0ebd41dcaf5b9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow linking accounts when using in-app + smart wallets
+
+## 5.58.1
+
+### Patch Changes
+
+- [#4733](https://github.com/thirdweb-dev/js/pull/4733) [`824b1bd`](https://github.com/thirdweb-dev/js/commit/824b1bdb69cb02644dbe9d77f965bdab6e046ab5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Enable account linking for ecosystem wallets
+
+## 5.58.0
+
+### Minor Changes
+
+- [#4692](https://github.com/thirdweb-dev/js/pull/4692) [`0a7448c`](https://github.com/thirdweb-dev/js/commit/0a7448cb2b739b3882824fc98ef075a0416d6434) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Login to an in-app wallet with your Coinbase account
+
+  ```ts
+  import { inAppWallet } from "thirdweb/react";
+
+  const wallet = inAppWallet();
+
+  const account = await wallet.connect({
+    strategy: "coinbase",
+    chain: mainnet,
+    client: thirdwebClient,
+  });
+  ```
+
+### Patch Changes
+
+- [#4709](https://github.com/thirdweb-dev/js/pull/4709) [`b033784`](https://github.com/thirdweb-dev/js/commit/b0337849a5f7f6542eb48eed013236ec14ce189a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Displays the social login provider in the details modal
+
+- [#4684](https://github.com/thirdweb-dev/js/pull/4684) [`c1008a5`](https://github.com/thirdweb-dev/js/commit/c1008a5314616c2e0ffa33af0fcfa9dd58855e9a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Migrates existing sharded ecosystem wallets to enclaves
+
+- [#4716](https://github.com/thirdweb-dev/js/pull/4716) [`3229e1f`](https://github.com/thirdweb-dev/js/commit/3229e1f03c3cbb62ddc8dccf22ad8a8feb0a95f0) Thanks [@MananTank](https://github.com/MananTank)! - Export `isGetNFTSupported` extension from "thirdweb/erc1155/extensions"
+
+- [#4715](https://github.com/thirdweb-dev/js/pull/4715) [`7d547a4`](https://github.com/thirdweb-dev/js/commit/7d547a4e336ae7c1e43c8413a1640452d1e1f8f9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix showing user info for ecosystem wallets
+
+- [#4718](https://github.com/thirdweb-dev/js/pull/4718) [`11a833e`](https://github.com/thirdweb-dev/js/commit/11a833e1dce3cfa51745e2ddee9354a1c2003905) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improve arrangement of social icons in Connect UI
+
+## 5.57.3
+
+### Patch Changes
+
+- [#4696](https://github.com/thirdweb-dev/js/pull/4696) [`0c97d79`](https://github.com/thirdweb-dev/js/commit/0c97d7965e3f681cd1fe2e1c79ecc6897ad52b9c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix default chain when using redirect mode + default to first passed chains if available
+
+- [#4693](https://github.com/thirdweb-dev/js/pull/4693) [`4a87109`](https://github.com/thirdweb-dev/js/commit/4a87109289e6ece5f6f08c55160e5d4e11e034e4) Thanks [@jnsdls](https://github.com/jnsdls)! - fix `getClaimConditions` extension for erc20, erc721 and erc1155
+
+## 5.57.2
+
+### Patch Changes
+
+- [#4686](https://github.com/thirdweb-dev/js/pull/4686) [`1b89464`](https://github.com/thirdweb-dev/js/commit/1b8946408cb903171acd9d5233dcddfa45e235fc) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Force legacy transactions on polygon zkevm cardona testnet
+
+## 5.57.1
+
+### Patch Changes
+
+- [#4665](https://github.com/thirdweb-dev/js/pull/4665) [`6ce7c83`](https://github.com/thirdweb-dev/js/commit/6ce7c83a3b9eb2374ad2f8163d9c6a68bba4bc42) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update @mobile-wallet-protocol/client to 0.0.3
+
+- [#4659](https://github.com/thirdweb-dev/js/pull/4659) [`406de39`](https://github.com/thirdweb-dev/js/commit/406de39ecdd4e901cc1fe163cc833fe9fd656d3e) Thanks [@jnsdls](https://github.com/jnsdls)! - - Allow using valid JWTs for authorization
+  - update dependencies
+  - simplify updateMetadata extension params for ERC721 and ERC1155
+
+## 5.57.0
+
+### Minor Changes
+
+- [#4631](https://github.com/thirdweb-dev/js/pull/4631) [`a468439`](https://github.com/thirdweb-dev/js/commit/a46843992ba6acff6023af63b66b91c9e7f9ec6d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds guest account option. These accounts will only persist for the duration of the user's session unless they link an additionaly auth method to recover the account with.
+
+  ```ts
+  import { inAppWallet } from "thirdweb/wallets";
+
+  const wallet = inAppWallet();
+
+  const account = await wallet.connect({
+    client,
+    strategy: "guest",
+  });
+  ```
+
+### Patch Changes
+
+- [#4644](https://github.com/thirdweb-dev/js/pull/4644) [`e89ffd4`](https://github.com/thirdweb-dev/js/commit/e89ffd4aa2c0710a565c72ec4dc1038fdbd74029) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Handle custom id for published contract
+
+- [#4653](https://github.com/thirdweb-dev/js/pull/4653) [`00ce74a`](https://github.com/thirdweb-dev/js/commit/00ce74a060b7ef214293b2562f4e761481e6d319) Thanks [@jnsdls](https://github.com/jnsdls)! - make getNFTs work for more ERC1155 contracts
+
+## 5.56.0
+
+### Minor Changes
+
+- [#4607](https://github.com/thirdweb-dev/js/pull/4607) [`7b94bf5`](https://github.com/thirdweb-dev/js/commit/7b94bf55fd236cbebf365ab11821b5117b59942b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose `checkModulesCompatibility` function
+
+- [#4601](https://github.com/thirdweb-dev/js/pull/4601) [`a4a4136`](https://github.com/thirdweb-dev/js/commit/a4a41364cd2f1b7b52717f619d70e005edc74edc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - `useAdminWallet()` Hook + automatically auth when using inapp + smart accounts
+
+  ### Add `useAdminWallet()` hook to get the admin wallet for a smart wallet
+
+  ```ts
+  const activeWallet = useActiveWallet(); // smart wallet
+  const adminWallet = useAdminWallet(); // the personal wallet that controls the smart wallet
+  ```
+
+  ### Automatically auth when using inapp + smart accounts
+
+  When using auth with an inapp + smart wallet, ConnectButton and ConnectEmebed will automatically auth without having to click sign in.
+
+- [#4604](https://github.com/thirdweb-dev/js/pull/4604) [`3009a0f`](https://github.com/thirdweb-dev/js/commit/3009a0f6e5924f08b7b320baa303fbae948ef9b7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose publishContract extension
+
+### Patch Changes
+
+- [#4628](https://github.com/thirdweb-dev/js/pull/4628) [`3961ef4`](https://github.com/thirdweb-dev/js/commit/3961ef477eb819ef6b51c0817ea37dfce45b4f3f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle function sigantures and contract ABIs in resolveMethod
+
+- [#4602](https://github.com/thirdweb-dev/js/pull/4602) [`07b949d`](https://github.com/thirdweb-dev/js/commit/07b949dd8c07ffdeda40a5549c31ad4b09abbbf1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow topping up from a different wallet with the same currency
+
+- [#4603](https://github.com/thirdweb-dev/js/pull/4603) [`b837b69`](https://github.com/thirdweb-dev/js/commit/b837b690ae27fb8bf45f6cd51820f7591e94dab0) Thanks [@jnsdls](https://github.com/jnsdls)! - bump various dependencies
+
+- [#4639](https://github.com/thirdweb-dev/js/pull/4639) [`c320b18`](https://github.com/thirdweb-dev/js/commit/c320b189f664cdf4b77c8ebef377abdf230f303a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export Abi types
+
+- [#4557](https://github.com/thirdweb-dev/js/pull/4557) [`fb0daab`](https://github.com/thirdweb-dev/js/commit/fb0daabbf612be5c844de5f66d3cd49f383b7fe5) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose some Marketplace extensions for detecting supported features
+
+- [#4630](https://github.com/thirdweb-dev/js/pull/4630) [`2b6a2fd`](https://github.com/thirdweb-dev/js/commit/2b6a2fda3d07b708f503f36205e68bd8b9fe1f20) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Invalidate balances on Pay success
+
+- [#4621](https://github.com/thirdweb-dev/js/pull/4621) [`5bde075`](https://github.com/thirdweb-dev/js/commit/5bde07508ae0c0438d7da076a7b3233a224e0c2f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow customizing PayEmbed metadata for top-up flow
+
 ## 5.55.0
 
 ### Minor Changes

@@ -1,4 +1,6 @@
-import { thirdwebClient } from "@/constants/client";
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveScheme } from "thirdweb/storage";
 import {
   MaskedAvatar,
@@ -12,21 +14,22 @@ interface PublisherAvatarProps extends Omit<MaskedAvatarProps, "src"> {
 
 export const PublisherAvatar: React.FC<PublisherAvatarProps> = ({
   address,
-  isLoading,
+  isPending,
   ...restProps
 }) => {
+  const client = useThirdwebClient();
   const ensQuery = useEns(address);
   const publisherProfile = usePublisherProfile(
     ensQuery.data?.address || undefined,
   );
   return (
     <MaskedAvatar
-      isLoading={isLoading || ensQuery.isLoading || publisherProfile.isLoading}
+      isPending={isPending || ensQuery.isPending || publisherProfile.isPending}
       src={
         publisherProfile.data?.avatar
           ? resolveScheme({
               uri: publisherProfile.data.avatar,
-              client: thirdwebClient,
+              client,
             })
           : ""
       }

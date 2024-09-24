@@ -29,7 +29,7 @@ const realNFTs = [
   },
 ];
 
-describe("createAndReveal", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("createAndReveal", () => {
   let contract: ThirdwebContract;
   beforeAll(async () => {
     const address = await deployERC721Contract({

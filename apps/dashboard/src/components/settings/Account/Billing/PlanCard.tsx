@@ -1,5 +1,5 @@
 import { useAccount, useAccountCredits } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, HStack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { Badge, Card, Heading, Text } from "tw-components";
 import { PLANS } from "utils/pricing";
 import { CreditsItem } from "./CreditsItem";
@@ -17,7 +17,7 @@ export const BillingPlanCard = () => {
 
   return (
     <Card as={Flex} flexDir="column" gap={2}>
-      <HStack>
+      <div className="flex flex-row">
         <Heading size="title.xs">Your current plan is</Heading>
         <Badge
           borderRadius="md"
@@ -28,7 +28,7 @@ export const BillingPlanCard = () => {
         >
           {PLANS[account.plan as keyof typeof PLANS].title}
         </Badge>
-      </HStack>
+      </div>
 
       <Flex flexDir="column" gap={4}>
         <Text size="body.md" />

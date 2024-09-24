@@ -1,5 +1,5 @@
 import {
-  ADDRESS_ZERO,
+  ZERO_ADDRESS,
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
@@ -52,7 +52,7 @@ export async function generateMerkleTreeInfoERC20(
   // get token decimals
   const tokenAddress = options.tokenAddress;
   const tokenDecimals = await (async () => {
-    if (isNativeTokenAddress(tokenAddress) || tokenAddress === ADDRESS_ZERO) {
+    if (isNativeTokenAddress(tokenAddress) || tokenAddress === ZERO_ADDRESS) {
       throw new Error("Token address can't be zero address or native token");
     }
     const [{ getContract }, { decimals: getDecimals }] = await Promise.all([

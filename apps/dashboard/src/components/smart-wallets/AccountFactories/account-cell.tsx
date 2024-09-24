@@ -1,5 +1,7 @@
+"use client";
+
 import { SkeletonContainer } from "@/components/ui/skeleton";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import type { BasicContract } from "contract-ui/types/types";
 import { memo } from "react";
 import { getContract } from "thirdweb";
@@ -13,10 +15,11 @@ interface AsyncFactoryAccountCellProps {
 
 function useAccountCount(address: string, chainId: number) {
   const chain = useV5DashboardChain(chainId);
+  const client = useThirdwebClient();
   const contract = getContract({
     address,
     chain,
-    client: thirdwebClient,
+    client,
   });
 
   return useReadContract(getAllAccounts, {

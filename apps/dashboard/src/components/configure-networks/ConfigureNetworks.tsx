@@ -1,9 +1,10 @@
-import type { StoredChain } from "contexts/configured-chains";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
-import { useModifyChain } from "hooks/chains/useModifyChain";
-import { useEditChain } from "hooks/networkConfigModal";
 import { toast } from "sonner";
+import {
+  type StoredChain,
+  addChainOverrides,
+  addRecentlyUsedChainId,
+} from "../../stores/chainStores";
 import { ConfigureNetworkForm } from "./ConfigureNetworkForm";
 
 function useChainConfigTrack() {
@@ -22,16 +23,15 @@ interface ConfigureNetworksProps {
   onNetworkAdded?: (chain: StoredChain) => void;
   prefillSlug?: string;
   prefillChainId?: string;
+  editChain: StoredChain | undefined;
 }
 
 export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
   const trackChainConfig = useChainConfigTrack();
-  const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
-  const modifyChain = useModifyChain();
-  const editChain = useEditChain();
+  const { editChain } = props;
 
   const handleSubmit = (chain: StoredChain) => {
-    modifyChain(chain);
+    addChainOverrides(chain);
     addRecentlyUsedChainId(chain.chainId);
 
     if (chain.isCustom) {
@@ -52,27 +52,31 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
   };
 
   return (
-    <div className="p-6">
-      <h3 className="text-2xl font-semibold tracking-tight mb-5">
-        {editChain ? "Edit Network" : "Add Custom Network"}
-      </h3>
+    <div>
+      <div className="px-6 pt-6">
+        <h3 className="font-semibold text-xl tracking-tight">
+          {editChain ? "Edit Network" : "Add Custom Network"}
+        </h3>
+      </div>
 
-      {/* Modify the given chain */}
-      {editChain && (
-        <ConfigureNetworkForm
-          editingChain={editChain}
-          onSubmit={handleSubmit}
-        />
-      )}
+      <div>
+        {/* Modify the given chain */}
+        {editChain && (
+          <ConfigureNetworkForm
+            editingChain={editChain}
+            onSubmit={handleSubmit}
+          />
+        )}
 
-      {/* Custom chain */}
-      {!editChain && (
-        <ConfigureNetworkForm
-          prefillSlug={props.prefillSlug}
-          prefillChainId={props.prefillChainId}
-          onSubmit={handleSubmit}
-        />
-      )}
+        {/* Custom chain */}
+        {!editChain && (
+          <ConfigureNetworkForm
+            prefillSlug={props.prefillSlug}
+            prefillChainId={props.prefillChainId}
+            onSubmit={handleSubmit}
+          />
+        )}
+      </div>
     </div>
   );
 };

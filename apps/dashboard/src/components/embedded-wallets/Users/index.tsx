@@ -66,7 +66,7 @@ const columns = [
   }),
 ];
 
-export const Users = (props: {
+export const InAppWalletUsersPageContent = (props: {
   clientId: string;
   trackingCategory: string;
 }) => {
@@ -129,7 +129,7 @@ export const Users = (props: {
     <div>
       <div className="flex flex-col gap-6">
         {/* Top section */}
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <Button
             disabled={theWalletsWeWant.length === 0}
             variant="outline"
@@ -139,8 +139,8 @@ export const Users = (props: {
             Download as .csv
           </Button>
 
-          <div className="flex gap-2 items-center justify-end">
-            <p className="text-sm text-muted-foreground">
+          <div className="flex items-center justify-end gap-2">
+            <p className="text-muted-foreground text-sm">
               Active last {ACTIVE_THRESHOLD_DAYS} days
             </p>
             <Switch
@@ -155,7 +155,7 @@ export const Users = (props: {
           title="active in-app wallets"
           data={itemsToShow}
           columns={columns}
-          isLoading={walletsQuery.isLoading}
+          isPending={walletsQuery.isPending}
           isFetched={walletsQuery.isFetched}
         />
 

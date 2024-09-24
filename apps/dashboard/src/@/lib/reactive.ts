@@ -1,4 +1,6 @@
-type Store<T> = {
+import { useSyncExternalStore } from "react";
+
+export type Store<T> = {
   getValue(): T;
   setValue(newValue: T): void;
   subscribe(listener: () => void): () => void;
@@ -44,4 +46,8 @@ export function createStore<T>(initialValue: T): Store<T> {
       };
     },
   };
+}
+
+export function useStore<T>(store: Store<T>): T {
+  return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }

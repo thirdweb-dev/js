@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { ZERO_ADDRESS, toTokens } from "thirdweb";
 import {
   eth_getBlockByHash,
@@ -9,16 +10,17 @@ import {
   getRpcClient,
 } from "thirdweb/rpc";
 import { hexToNumber, shortenAddress, toEther } from "thirdweb/utils";
-import { mapV4ChainToV5Chain } from "../../../../../../contexts/map-chains";
 import { getChain } from "../../../utils";
 
 export default async function Page(props: {
   params: { chain_id: string; txHash: `0x${string}` };
 }) {
+  // consider if we want to pass the JWT here, likely no need to do it but we could?
+  const client = getThirdwebClient();
   const chain = await getChain(props.params.chain_id);
 
   const rpcRequest = getRpcClient({
-    client: thirdwebClient,
+    client,
     // Do not include chain overrides for chain pages
     // eslint-disable-next-line no-restricted-syntax
     chain: mapV4ChainToV5Chain(chain),
@@ -40,9 +42,9 @@ export default async function Page(props: {
   });
 
   return (
-    <main className="flex flex-col gap-y-10 container py-6">
+    <main className="container flex flex-col gap-y-10 py-6">
       <header className="flex flex-col gap-y-2">
-        <p className="text-3xl font-bold">Transaction Details</p>
+        <p className="font-bold text-3xl">Transaction Details</p>
         <div className="flex gap-x-2">
           {shortenAddress(transaction.from)} called on{" "}
           {shortenAddress(transaction.to || ZERO_ADDRESS)}
@@ -53,12 +55,12 @@ export default async function Page(props: {
 
       <section className="flex flex-col gap-y-2">
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">Transaction hash</div>
+          <div className="flex items-center gap-x-2">Transaction hash</div>
           <p>{transaction.hash}</p>
         </div>
 
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">
+          <div className="flex items-center gap-x-2">
             Status {/* and method */}
           </div>
           <div className="flex gap-x-2">
@@ -73,12 +75,12 @@ export default async function Page(props: {
         </div>
 
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">Block</div>
+          <div className="flex items-center gap-x-2">Block</div>
           <p>{Number(transaction.blockNumber)}</p>
         </div>
 
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">Timestamp</div>
+          <div className="flex items-center gap-x-2">Timestamp</div>
           <p>
             {new Date(
               Number.parseInt(block.timestamp.toString()) * 1000,
@@ -91,12 +93,12 @@ export default async function Page(props: {
 
       <section className="flex flex-col gap-y-2">
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">From</div>
+          <div className="flex items-center gap-x-2">From</div>
           <p>{transaction.from}</p>
         </div>
 
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">
+          <div className="flex items-center gap-x-2">
             Interacted with contract
           </div>
           <p>{transaction.to}</p>
@@ -107,27 +109,27 @@ export default async function Page(props: {
 
       <section className="flex flex-col gap-y-2">
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">Value</div>
+          <div className="flex items-center gap-x-2">Value</div>
           <p>{toEther(transaction.value)} ETH</p>
         </div>
 
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">Transaction fee</div>
+          <div className="flex items-center gap-x-2">Transaction fee</div>
           <p>{toEther((transaction.gasPrice || 0n) * receipt.gasUsed)} ETH</p>
         </div>
 
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">Gas price</div>
+          <div className="flex items-center gap-x-2">Gas price</div>
           <p>{toEther(transaction.gasPrice || 0n)} ETH</p>
         </div>
 
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">Gas usage</div>
+          <div className="flex items-center gap-x-2">Gas usage</div>
           <p>{receipt.gasUsed.toString()}</p>
         </div>
 
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">Gas fees (Gwei)</div>
+          <div className="flex items-center gap-x-2">Gas fees (Gwei)</div>
           <p>
             Base: {toTokens(block.baseFeePerGas || 0n, 9)} | Max:{" "}
             {toTokens(transaction.maxFeePerGas || 0n, 9)} | Max priority:{" "}
@@ -136,7 +138,7 @@ export default async function Page(props: {
         </div>
 
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">Burnt fees</div>
+          <div className="flex items-center gap-x-2">Burnt fees</div>
           <p>{toEther(block.baseFeePerGas || 0n * receipt.gasUsed)}</p>
         </div>
       </section>
@@ -145,7 +147,7 @@ export default async function Page(props: {
 
       <section className="flex flex-col gap-y-2">
         <div className="grid grid-cols-2">
-          <div className="flex gap-x-2 items-center">Other</div>
+          <div className="flex items-center gap-x-2">Other</div>
           <p>
             Txn type: {hexToNumber(transaction.typeHex || "0x0")} (
             {transaction.type}) | Nonce: {transaction.nonce} | Position:{" "}
@@ -154,8 +156,8 @@ export default async function Page(props: {
         </div>
 
         <div className="grid grid-cols-2 items-start">
-          <div className="flex gap-x-2 items-center">Raw Input:</div>
-          <div className="bg-muted/50 p-4 rounded-lg break-words text-sm">
+          <div className="flex items-center gap-x-2">Raw Input:</div>
+          <div className="break-words rounded-lg bg-muted/50 p-4 text-sm">
             {transaction.input}
           </div>
         </div>

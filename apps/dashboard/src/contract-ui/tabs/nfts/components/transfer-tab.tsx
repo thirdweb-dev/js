@@ -32,7 +32,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
     contract,
   );
 
-  const { data: isErc1155, isLoading: checking1155 } = useReadContract(
+  const { data: isErc1155, isPending: checking1155 } = useReadContract(
     isERC1155,
     { contract },
   );
@@ -106,7 +106,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
                 isInvalid={!!form.formState.errors.to}
               >
                 <FormLabel>Amount</FormLabel>
-                <Input placeholder={"1"} {...form.register("amount")} />
+                <Input placeholder="1" {...form.register("amount")} />
                 <FormHelperText>
                   How many would you like to transfer?
                 </FormHelperText>

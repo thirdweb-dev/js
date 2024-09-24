@@ -6,7 +6,7 @@ import type { Wallet } from "../interfaces/wallet.js";
 import { getCallsStatus } from "./get-calls-status.js";
 import type { GetCallsStatusResponse, WalletSendCallsId } from "./types.js";
 
-export const DEFAULT_MAX_BLOCKS_WAIT_TIME = 100;
+const DEFAULT_MAX_BLOCKS_WAIT_TIME = 100;
 
 const map = new Map<string, Promise<GetCallsStatusResponse>>();
 

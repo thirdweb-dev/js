@@ -1,6 +1,5 @@
 "use client";
-
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
@@ -32,7 +31,9 @@ import { NetworksFieldset } from "./networks-fieldset";
 export function ContractPublishForm(props: {
   publishMetadata: FetchDeployMetadataResult;
   onPublishSuccess: () => Promise<void>;
+  jwt: string;
 }) {
+  const client = getThirdwebClient(props.jwt);
   useLoggedInUser();
   const [customFactoryAbi, setCustomFactoryAbi] = useState<Abi>([]);
   const [fieldsetToShow, setFieldsetToShow] = useState<
@@ -172,7 +173,7 @@ export function ContractPublishForm(props: {
       : initializerParams;
 
   // during loading and after success we should stay in loading state
-  const isLoading = sendTx.isPending || sendTx.isSuccess;
+  const isPending = sendTx.isPending || sendTx.isSuccess;
 
   useIsomorphicLayoutEffect(() => {
     window?.scrollTo({
@@ -254,7 +255,7 @@ export function ContractPublishForm(props: {
 
             const tx = publishContract({
               account,
-              contract: getContractPublisher(thirdwebClient),
+              contract: getContractPublisher(client),
               metadata,
               previousMetadata: props.publishMetadata,
             });
@@ -399,7 +400,7 @@ export function ContractPublishForm(props: {
                     position="relative"
                     role="group"
                     colorScheme="blue"
-                    isLoading={isLoading}
+                    isLoading={isPending}
                     form="contract-release-form"
                     isDisabled={isDisabled}
                     loadingText={

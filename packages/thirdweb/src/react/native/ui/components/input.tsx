@@ -12,7 +12,7 @@ import { radius, spacing } from "../../design-system/index.js";
 import { RIGHT_ARROW } from "../icons/svgs.js";
 import { ThemedSpinner } from "./spinner.js";
 
-export type ThemedInputProps = {
+type ThemedInputProps = {
   theme: Theme;
   rightView?: React.ReactNode;
 } & TextInputProps;

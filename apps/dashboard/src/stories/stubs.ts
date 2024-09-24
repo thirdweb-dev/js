@@ -1,6 +1,11 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import type { ApiKey, ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
+import type {
+  EngineAlert,
+  EngineAlertRule,
+  EngineNotificationChannel,
+} from "@3rdweb-sdk/react/hooks/useEngine";
 
 function projectStub(id: string, teamId: string) {
   const project: Project = {
@@ -83,24 +88,71 @@ export function createApiKeyStub() {
     actions: [],
   };
 
+  const secretKey = generateRandomString(86);
+
   const apiKeyStub: ApiKey = {
     id: "api-key-id-foo",
-    name: "api key name foo",
+    name: "xyz",
     key: generateRandomString(31),
     accountId: "account-id-foo",
     bundleIds: ["bundle-id-foo", "bundle-id-bar"],
     createdAt: new Date().toISOString(),
     creatorWalletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
     domains: ["example1.com", "example2.com"],
-    secretMasked: "",
+    secretMasked: `${secretKey.slice(0, 3)}...${secretKey.slice(-4)}`,
     walletAddresses: ["0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37"],
     redirectUrls: [],
     revokedAt: "",
     lastAccessedAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     services: [embeddedWalletService],
-    secret: generateRandomString(86),
+    secret: secretKey,
   };
 
   return apiKeyStub;
+}
+
+export function createEngineAlertRuleStub(
+  id: string,
+  overrides: Partial<EngineAlertRule> = {},
+): EngineAlertRule {
+  return {
+    title: `Alert Rule ${id}`,
+    routingKey: `alert.${id}`,
+    description: `This is a description for alert rule ${id}`,
+    id: `alert-rule-${id}`,
+    createdAt: new Date(),
+    pausedAt: null,
+    ...overrides,
+  };
+}
+
+export function createEngineNotificationChannelStub(
+  id: string,
+  overrides: Partial<EngineNotificationChannel> = {},
+): EngineNotificationChannel {
+  return {
+    id: Math.random().toString(),
+    subscriptionRoutes: [`alert.${id}`],
+    type: "slack",
+    value:
+      "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+    createdAt: new Date(),
+    pausedAt: new Date(),
+    ...overrides,
+  };
+}
+
+export function createEngineAlertStub(
+  id: string,
+  overrides: Partial<EngineAlert> = {},
+): EngineAlert {
+  return {
+    alertRuleId: `alert-rule-${id}`,
+    endsAt: new Date(),
+    id: Math.random().toString(),
+    startsAt: new Date(),
+    status: "pending",
+    ...overrides,
+  };
 }

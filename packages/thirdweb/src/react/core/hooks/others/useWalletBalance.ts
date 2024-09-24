@@ -11,13 +11,13 @@ import {
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
 
-export type UseWalletBalanceOptions = Prettify<
+type UseWalletBalanceOptions = Prettify<
   Omit<GetWalletBalanceOptions, "address" | "chain"> & {
     address: string | undefined;
     chain: Chain | undefined;
   }
 >;
-export type UseWalletBalanceQueryOptions = Omit<
+type UseWalletBalanceQueryOptions = Omit<
   UseQueryOptions<GetWalletBalanceResult>,
   "queryFn" | "queryKey"
 >;

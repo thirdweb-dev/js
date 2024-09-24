@@ -24,12 +24,9 @@ export const LandingSectionHeading: React.FC<LandingSectionHeadingProps> = ({
     <Heading size={titleSize} lineHeight={lineHeight}>
       {title}{" "}
       {titleWithGradient && (
-        <>
-          {" "}
-          <Box as="span" bgGradient={gradient} bgClip="text">
-            {titleWithGradient}
-          </Box>
-        </>
+        <Box as="span" bgGradient={gradient} bgClip="text">
+          {titleWithGradient}
+        </Box>
       )}
     </Heading>
   </Flex>

@@ -86,7 +86,7 @@ const DashboardSettingsStorage: ThirdwebNextPage = () => {
                 fontFamily="mono"
                 overflow={{ base: "scroll", md: "inherit" }}
               >
-                {"https://{client-id}.ipfscdn.io/ipfs/"}
+                https://&lt;your-client-id&gt;.ipfscdn.io/ipfs/
               </Text>
               <Flex>
                 <Tooltip

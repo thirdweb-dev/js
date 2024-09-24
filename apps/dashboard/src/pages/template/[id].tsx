@@ -32,7 +32,7 @@ const CodeBlock: React.FC<{ text: string }> = (props) => {
       py={3}
       px={4}
       my={4}
-      minW={"300px"}
+      minW="300px"
       gap={1}
       align="center"
       alignSelf="start"
@@ -55,25 +55,23 @@ const TemplateContents: React.FC<TemplateContentsProps> = (props) => {
       {props.overview}
 
       {props.featurePoints.length > 0 && (
-        <>
-          <Box as="ul" listStyleType="inherit" pl={4} mt={4}>
-            {props.featurePoints.map((feature, idx) => (
-              <Box
-                as="li"
-                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                key={idx}
-                fontWeight={400}
-                fontSize={16}
-                lineHeight={1.5}
-                opacity={0.7}
-                color="whiteAlpha.900"
-                mb={2}
-              >
-                {feature}
-              </Box>
-            ))}
-          </Box>
-        </>
+        <Box as="ul" listStyleType="inherit" pl={4} mt={4}>
+          {props.featurePoints.map((feature, idx) => (
+            <Box
+              as="li"
+              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+              key={idx}
+              fontWeight={400}
+              fontSize={16}
+              lineHeight={1.5}
+              opacity={0.7}
+              color="whiteAlpha.900"
+              mb={2}
+            >
+              {feature}
+            </Box>
+          ))}
+        </Box>
       )}
 
       <Heading as="h3" fontSize="24px" fontWeight={700} mt={12} mb={4}>
@@ -100,30 +98,28 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
     erc721: (
       <TemplateContents
         overview={
-          <>
-            <Text
-              fontWeight={400}
-              fontSize={16}
-              lineHeight={1.5}
-              opacity={0.7}
-              color="whiteAlpha.900"
+          <Text
+            fontWeight={400}
+            fontSize={16}
+            lineHeight={1.5}
+            opacity={0.7}
+            color="whiteAlpha.900"
+          >
+            A web and mobile friendly page for users to claim NFTs from a smart
+            contract implementing{" "}
+            <Link
+              href="https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Claimable"
+              isExternal
+              color="blue.300"
             >
-              A web and mobile friendly page for users to claim NFTs from a
-              smart contract implementing{" "}
-              <Link
-                href="https://portal.thirdweb.com/contracts/build/extensions/erc-721/ERC721Claimable"
-                isExternal
-                color="blue.300"
-              >
-                ERC721Claimable
-              </Link>
-              , such as the{" "}
-              <Link href="/thirdweb.eth/DropERC721" isExternal color="blue.300">
-                NFT Drop
-              </Link>
-              .
-            </Text>
-          </>
+              ERC721Claimable
+            </Link>
+            , such as the{" "}
+            <Link href="/thirdweb.eth/DropERC721" isExternal color="blue.300">
+              NFT Drop
+            </Link>
+            .
+          </Text>
         }
         featurePoints={[
           <Fragment key="react">
@@ -164,7 +160,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             UI Component.
           </Fragment>,
           <Fragment key="contract-metadata">
-            View{" "}
+            View
             <Link
               fontWeight="500"
               isExternal
@@ -225,7 +221,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             <br />
             <br />
             Run the application from the command line:
-            <CodeBlock text={"npm run dev"} />
+            <CodeBlock text="npm run dev" />
             This will make the application available to preview at{" "}
             <Link
               href="http://localhost:3000"
@@ -243,19 +239,17 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
     "marketplace-v3": (
       <TemplateContents
         overview={
-          <>
-            <Text
-              fontWeight={400}
-              fontSize={16}
-              lineHeight={1.5}
-              opacity={0.7}
-              color="whiteAlpha.900"
-            >
-              Create your own NFT marketplace where users can buy and sell NFTs
-              from your NFT collection. This template provides the foundation
-              for building an NFT marketplace application.
-            </Text>
-          </>
+          <Text
+            fontWeight={400}
+            fontSize={16}
+            lineHeight={1.5}
+            opacity={0.7}
+            color="whiteAlpha.900"
+          >
+            Create your own NFT marketplace where users can buy and sell NFTs
+            from your NFT collection. This template provides the foundation for
+            building an NFT marketplace application.
+          </Text>
         }
         featurePoints={[
           <Fragment key="react-sdk">
@@ -324,8 +318,8 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             <br />
             <br />
             Run the application from the command line:
-            <CodeBlock text={"npm run dev"} />
-            This will make the application available to preview at{" "}
+            <CodeBlock text="npm run dev" />
+            This will make the application available to preview at
             <Link
               href="http://localhost:3000"
               isExternal
@@ -342,18 +336,16 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
     "nft-gallery": (
       <TemplateContents
         overview={
-          <>
-            <Text
-              fontWeight={400}
-              fontSize={16}
-              lineHeight={1.5}
-              opacity={0.7}
-              color="whiteAlpha.900"
-            >
-              Showcase your NFT collection with a gallery application that
-              allows users to view the metadata of all NFTs in your collection.
-            </Text>
-          </>
+          <Text
+            fontWeight={400}
+            fontSize={16}
+            lineHeight={1.5}
+            opacity={0.7}
+            color="whiteAlpha.900"
+          >
+            Showcase your NFT collection with a gallery application that allows
+            users to view the metadata of all NFTs in your collection.
+          </Text>
         }
         featurePoints={[
           <Fragment key="react-sdk">
@@ -396,7 +388,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
             >
               NFT collection
             </Link>{" "}
-            or import your existing one using the{" "}
+            or import your existing one using the
             <Link
               href="/dashboard"
               isExternal
@@ -416,12 +408,12 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               fontWeight="500"
             >
               consts/parameters.ts
-            </Link>{" "}
+            </Link>
             file.
             <br />
             <br />
-            Run the application from the command line:
-            <CodeBlock text={"npm run dev"} />
+            Run the application from the command line:{" "}
+            <CodeBlock text="npm run dev" />
             This will make the application available to preview at{" "}
             <Link
               href="http://localhost:3000"
@@ -518,9 +510,9 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
                 borderRadius="8px"
                 height="26px"
                 padding="6px 12px"
-                display={"flex"}
-                alignItems={"center"}
-                justifyContent={"center"}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
                 mt={1}
               >
                 <Text
@@ -572,7 +564,7 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
 
           <Flex mt={8}>
             <ProductButton
-              title={"View Demo"}
+              title="View Demo"
               href={props.template.homepage}
               color="blackAlpha.900"
               bg="white"
@@ -588,7 +580,7 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
               variant="outline"
               borderWidth="2px"
               w="full"
-              py={"22px"}
+              py="22px"
               textAlign="center"
               borderRadius="md"
               href={props.template.repo}
@@ -613,7 +605,7 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
           }}
           pl={{ base: 0, md: 16 }}
           minHeight="75vh"
-          height={"100%"}
+          height="100%"
         >
           <Image
             src={props.template.img}

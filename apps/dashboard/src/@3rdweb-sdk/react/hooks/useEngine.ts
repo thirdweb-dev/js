@@ -1539,3 +1539,177 @@ export function useEngineSystemMetrics(engineId: string) {
     refetchInterval: 5_000,
   });
 }
+
+export interface EngineAlertRule {
+  id: string;
+  title: string;
+  // A unique string identifying the alert.
+  // Note the "." which allows `subscriptionRoutes` to use wildcards in notificationChannel.
+  // Example: "alert.sla-5xx-99"
+  routingKey: string;
+  description: string;
+  createdAt: Date;
+  pausedAt: Date | null;
+}
+
+export function useEngineAlertRules(engineId: string) {
+  const { isLoggedIn } = useLoggedInUser();
+
+  return useQuery({
+    queryKey: engineKeys.alertRules(engineId),
+    queryFn: async () => {
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/alert-rules`,
+        { method: "GET" },
+      );
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+
+      const json = await res.json();
+      return json.data as EngineAlertRule[];
+    },
+    enabled: isLoggedIn,
+  });
+}
+
+export interface EngineAlert {
+  id: string;
+  alertRuleId: string;
+  status: "pending" | "firing" | "resolved";
+  startsAt: Date;
+  endsAt: Date | null;
+}
+
+export function useEngineAlerts(engineId: string, limit: number, offset = 0) {
+  const { isLoggedIn } = useLoggedInUser();
+
+  return useQuery({
+    queryKey: engineKeys.alerts(engineId),
+    queryFn: async () => {
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/alerts?limit=${limit}&offset=${offset}`,
+        { method: "GET" },
+      );
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+
+      const json = await res.json();
+      return json.data as EngineAlert[];
+    },
+    enabled: isLoggedIn,
+  });
+}
+
+export const EngineNotificationChannelTypeConfig = {
+  slack: {
+    display: "Slack",
+    valueDisplay: "Slack Webhook URL",
+  },
+  email: {
+    display: "Email",
+    valueDisplay: "Email Address",
+  },
+} as const;
+
+type EngineNotificationChannelType =
+  keyof typeof EngineNotificationChannelTypeConfig;
+
+export type EngineNotificationChannel = {
+  id: string;
+  type: EngineNotificationChannelType;
+  value: string;
+  createdAt: Date;
+  pausedAt: Date | null;
+  // A list of routingKeys to listen to. Supports wildcards.
+  // Example: [ 'alert.sla-5xx-99' ] or [ 'alert.*' ] will both notify when
+  // the alert with routingKey `alert.sla-5xx-99` triggers.
+  subscriptionRoutes: string[];
+};
+
+export function useEngineNotificationChannels(engineId: string) {
+  const { isLoggedIn } = useLoggedInUser();
+
+  return useQuery({
+    queryKey: engineKeys.notificationChannels(engineId),
+    queryFn: async () => {
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/notification-channels`,
+        { method: "GET" },
+      );
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+
+      const json = await res.json();
+      return json.data as EngineNotificationChannel[];
+    },
+    enabled: isLoggedIn,
+  });
+}
+
+export interface CreateNotificationChannelInput {
+  subscriptionRoutes: string[];
+  type: "slack" | "email"; // TODO: Add others when implemented.
+  value: string;
+}
+
+export function useEngineCreateNotificationChannel(engineId: string) {
+  const { isLoggedIn } = useLoggedInUser();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async (input: CreateNotificationChannelInput) => {
+      invariant(isLoggedIn, "Must be logged in.");
+
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/notification-channels`,
+        {
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+
+      const json = await res.json();
+      return json.data as EngineNotificationChannel;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.notificationChannels(engineId),
+        });
+      },
+    },
+  );
+}
+
+export function useEngineDeleteNotificationChannel(engineId: string) {
+  const { isLoggedIn } = useLoggedInUser();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async (notificationChannelId: string) => {
+      invariant(isLoggedIn, "Must be logged in.");
+
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/notification-channels/${notificationChannelId}`,
+        { method: "DELETE" },
+      );
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+      res.body?.cancel();
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries({
+          queryKey: engineKeys.notificationChannels(engineId),
+        });
+      },
+    },
+  );
+}

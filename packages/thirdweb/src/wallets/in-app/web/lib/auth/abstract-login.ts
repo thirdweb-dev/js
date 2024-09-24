@@ -5,7 +5,8 @@ import type {
   AuthProvider,
   SendEmailOtpReturnType,
 } from "../../../core/authentication/types.js";
-import type { ClientIdWithQuerierType, Ecosystem } from "../../types.js";
+import type { Ecosystem } from "../../../core/wallet/types.js";
+import type { ClientIdWithQuerierType } from "../../types.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
 export type LoginQuerierTypes = {

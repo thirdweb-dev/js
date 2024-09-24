@@ -3,6 +3,12 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { stringify } from "../../../utils/json.js";
 import { nativeLocalStorage } from "../../../utils/storage/nativeStorage.js";
 import type { Account, Wallet } from "../../interfaces/wallet.js";
+import { ClientScopedStorage } from "../core/authentication/client-scoped-storage.js";
+import { guestAuthenticate } from "../core/authentication/guest.js";
+import {
+  getLinkedProfilesInternal,
+  linkAccount,
+} from "../core/authentication/linkAccount.js";
 import {
   loginWithPasskey,
   registerPasskey,
@@ -16,17 +22,18 @@ import {
   type LogoutReturnType,
   type MultiStepAuthArgsType,
   type MultiStepAuthProviderType,
-  type OauthOption,
+  type OAuthRedirectObject,
   UserWalletStatus,
 } from "../core/authentication/types.js";
 import type { InAppConnector } from "../core/interfaces/connector.js";
+import type { Ecosystem } from "../core/wallet/types.js";
 import { sendOtp, verifyOtp } from "../web/lib/auth/otp.js";
-import type { Ecosystem } from "../web/types.js";
 import {
   authEndpoint,
   authenticate,
   customJwt,
   deleteActiveAccount,
+  guestLogin,
   otpLogin,
   siweLogin,
   socialLogin,
@@ -37,23 +44,33 @@ import { postAuth } from "./helpers/auth/middleware.js";
 import { getWalletUserDetails } from "./helpers/storage/local.js";
 import { getExistingUserAccount } from "./helpers/wallet/retrieval.js";
 
-export type NativeConnectorOptions = {
+type NativeConnectorOptions = {
   client: ThirdwebClient;
-  partnerId?: string | undefined;
+  ecosystem?: Ecosystem;
   passkeyDomain?: string;
 };
 
 export class InAppNativeConnector implements InAppConnector {
-  private options: NativeConnectorOptions;
+  private client: ThirdwebClient;
+  private ecosystem?: Ecosystem;
+  private passkeyDomain?: string;
+  private localStorage: ClientScopedStorage;
 
   constructor(options: NativeConnectorOptions) {
-    this.options = options;
+    this.client = options.client;
+    this.ecosystem = options.ecosystem;
+    this.passkeyDomain = options.passkeyDomain;
+    this.localStorage = new ClientScopedStorage({
+      storage: nativeLocalStorage,
+      clientId: this.client.clientId,
+      ecosystemId: this.ecosystem?.id,
+    });
   }
 
   async getUser(): Promise<GetUser> {
-    const localData = await getWalletUserDetails(this.options.client.clientId);
+    const localData = await getWalletUserDetails(this.client.clientId);
     const userStatus = await fetchUserDetails({
-      client: this.options.client,
+      client: this.client,
       email: localData?.email,
     });
     if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED) {
@@ -80,13 +97,13 @@ export class InAppNativeConnector implements InAppConnector {
     return { status: UserWalletStatus.LOGGED_OUT };
   }
   getAccount(): Promise<Account> {
-    return getExistingUserAccount({ client: this.options.client });
+    return getExistingUserAccount({ client: this.client });
   }
 
   preAuthenticate(args: MultiStepAuthProviderType): Promise<void> {
     return sendOtp({
       ...args,
-      client: this.options.client,
+      client: this.client,
     });
   }
 
@@ -99,9 +116,16 @@ export class InAppNativeConnector implements InAppConnector {
       case "phone": {
         return verifyOtp(params);
       }
+      case "guest": {
+        return guestAuthenticate({
+          client: this.client,
+          ecosystem: params.ecosystem,
+          storage: nativeLocalStorage,
+        });
+      }
       case "wallet": {
         return siweAuthenticate({
-          client: this.options.client,
+          client: this.client,
           wallet: params.wallet,
           chain: params.chain,
         });
@@ -115,7 +139,7 @@ export class InAppNativeConnector implements InAppConnector {
         const ExpoLinking = require("expo-linking");
         const redirectUrl =
           params.redirectUrl || (ExpoLinking.createURL("") as string);
-        return authenticate({ strategy, redirectUrl }, this.options.client);
+        return authenticate({ strategy, redirectUrl }, this.client);
       }
       case "passkey":
         return this.passkeyAuth(params);
@@ -132,7 +156,7 @@ export class InAppNativeConnector implements InAppConnector {
           email: params.email,
           verificationCode: params.verificationCode,
           strategy: "email",
-          client: this.options.client,
+          client: this.client,
         });
       }
       case "phone": {
@@ -140,7 +164,7 @@ export class InAppNativeConnector implements InAppConnector {
           phoneNumber: params.phoneNumber,
           verificationCode: params.verificationCode,
           strategy: "phone",
-          client: this.options.client,
+          client: this.client,
         });
       }
       case "google":
@@ -150,6 +174,7 @@ export class InAppNativeConnector implements InAppConnector {
       case "x":
       case "farcaster":
       case "telegram":
+      case "coinbase":
       case "apple": {
         const ExpoLinking = require("expo-linking");
         const redirectUrl =
@@ -157,6 +182,11 @@ export class InAppNativeConnector implements InAppConnector {
         return this.socialLogin({
           strategy,
           redirectUrl,
+        });
+      }
+      case "guest": {
+        return this.guestLogin({
+          ecosystem: params.ecosystem,
         });
       }
       case "wallet": {
@@ -207,7 +237,7 @@ export class InAppNativeConnector implements InAppConnector {
     ecosystem?: Ecosystem;
   }): Promise<AuthStoredTokenWithCookieReturnType> {
     const { type, passkeyName, client, ecosystem } = args;
-    const domain = this.options.passkeyDomain;
+    const domain = this.passkeyDomain;
     if (!domain) {
       throw new Error(
         "Passkey domain is required for native platforms. Please pass it in the 'auth' options when creating the inAppWallet().",
@@ -297,12 +327,14 @@ export class InAppNativeConnector implements InAppConnector {
 
   // TODO (rn) expose in the interface
   async deleteActiveAccount() {
-    return deleteActiveAccount({ client: this.options.client });
+    return deleteActiveAccount({ client: this.client });
   }
 
-  private async socialLogin(auth: OauthOption): Promise<AuthLoginReturnType> {
+  private async socialLogin(
+    auth: OAuthRedirectObject,
+  ): Promise<AuthLoginReturnType> {
     try {
-      const { storedToken } = await socialLogin(auth, this.options.client);
+      const { storedToken } = await socialLogin(auth, this.client);
       const account = await this.getAccount();
       return {
         user: {
@@ -327,7 +359,7 @@ export class InAppNativeConnector implements InAppConnector {
   }): Promise<AuthLoginReturnType> {
     try {
       const { storedToken } = await siweLogin(
-        this.options.client,
+        this.client,
         options.wallet,
         options.chain,
       );
@@ -355,12 +387,34 @@ export class InAppNativeConnector implements InAppConnector {
     }
   }
 
+  private async guestLogin(options: {
+    ecosystem?: Ecosystem;
+  }): Promise<AuthLoginReturnType> {
+    try {
+      const { storedToken } = await guestLogin(this.client, options.ecosystem);
+      const account = await this.getAccount();
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          account,
+          authDetails: storedToken.authDetails,
+          walletAddress: account.address,
+        },
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Error generating guest account: ${error.message}`);
+      }
+      throw new Error("An unknown error occurred generating guest account");
+    }
+  }
+
   private async customJwt(authOptions: {
     jwt: string;
     password: string;
   }): Promise<AuthLoginReturnType> {
     try {
-      const { storedToken } = await customJwt(authOptions, this.options.client);
+      const { storedToken } = await customJwt(authOptions, this.client);
       const account = await this.getAccount();
       return {
         user: {
@@ -381,10 +435,7 @@ export class InAppNativeConnector implements InAppConnector {
     encryptionKey: string;
   }): Promise<AuthLoginReturnType> {
     try {
-      const { storedToken } = await authEndpoint(
-        authOptions,
-        this.options.client,
-      );
+      const { storedToken } = await authEndpoint(authOptions, this.client);
       const account = await this.getAccount();
       return {
         user: {
@@ -401,7 +452,24 @@ export class InAppNativeConnector implements InAppConnector {
   }
 
   logout(): Promise<LogoutReturnType> {
-    return logoutUser(this.options.client.clientId);
+    return logoutUser(this.client.clientId);
+  }
+
+  async linkProfile(args: AuthArgsType) {
+    const { storedToken } = await this.authenticate(args);
+    return await linkAccount({
+      client: args.client,
+      tokenToLink: storedToken.cookieString,
+      storage: this.localStorage,
+    });
+  }
+
+  async getProfiles() {
+    return getLinkedProfilesInternal({
+      client: this.client,
+      ecosystem: this.ecosystem,
+      storage: this.localStorage,
+    });
   }
 }
 

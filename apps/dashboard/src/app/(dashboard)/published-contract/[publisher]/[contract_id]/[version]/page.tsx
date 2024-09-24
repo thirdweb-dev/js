@@ -1,16 +1,13 @@
+import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Separator } from "@/components/ui/separator";
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { SimpleGrid } from "@chakra-ui/react";
+import { fetchPublishedContractVersions } from "components/contract-components/fetch-contracts-with-versions";
+import { PublishedContract } from "components/contract-components/published-contract";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
-import { ChakraProviderSetup } from "../../../../../../@/components/ChakraProviderSetup";
-import { fetchPublishedContractVersions } from "../../../../../../components/contract-components/fetch-contracts-with-versions";
-import { PublishedContract } from "../../../../../../components/contract-components/published-contract";
-import { setOverrides } from "../../../../../../lib/vercel-utils";
 import { PublishedActions } from "../../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../../components/contract-header";
-
-setOverrides();
 
 function mapThirdwebPublisher(publisher: string) {
   if (publisher === "thirdweb.eth") {
@@ -34,7 +31,7 @@ export default async function PublishedContractPage(
   const publisherAddress = isAddress(props.params.publisher)
     ? props.params.publisher
     : await resolveAddress({
-        client: thirdwebClient,
+        client: getThirdwebClient(),
         name: mapThirdwebPublisher(props.params.publisher),
       });
 

@@ -26,7 +26,7 @@ export function useEcosystemList() {
 
   return {
     ...ecosystemQuery,
-    isLoading: isLoggedIn ? ecosystemQuery.isLoading : false,
+    isPending: isLoggedIn ? ecosystemQuery.isPending : false,
     ecosystems: (ecosystemQuery.data ?? []) satisfies Ecosystem[],
   };
 }

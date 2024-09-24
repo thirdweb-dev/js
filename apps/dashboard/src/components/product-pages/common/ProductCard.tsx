@@ -51,7 +51,7 @@ export const ProductCard: ComponentWithChildren<ProductCardProps> = ({
         </Heading>
       )}
       <Flex
-        direction={"column"}
+        direction="column"
         fontSize="body.lg"
         mt="16px"
         color="paragraph"

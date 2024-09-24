@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <main className="pb-20 container px-0">
+      <main className="container px-0 pb-20">
         <APIHeader
           title="Sign in"
           description={
@@ -38,11 +38,11 @@ export default function Page() {
 function Hooks() {
   return (
     <>
-      <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight mb-2">
+      <h2 className="mb-2 font-semibold text-2xl tracking-tight sm:text-3xl">
         Create custom UI using hooks
       </h2>
 
-      <p className="max-w-[600px] mb-5">
+      <p className="mb-5 max-w-[600px]">
         Build your own connect UI using react hooks.
         <br />
         Wallet state management is all handled for you.

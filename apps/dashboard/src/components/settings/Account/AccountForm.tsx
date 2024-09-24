@@ -1,12 +1,6 @@
+import { cn } from "@/lib/utils";
 import { type Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  Flex,
-  FormControl,
-  HStack,
-  Input,
-  VStack,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -61,8 +55,6 @@ export const AccountForm: React.FC<AccountFormProps> = ({
     showSubscription && !!account.email?.length,
   );
   const trackEvent = useTrack();
-  const bg = useColorModeValue("backgroundCardHighlight", "transparent");
-
   const form = useForm<AccountValidationSchema>({
     resolver: zodResolver(accountValidationSchema),
     defaultValues: {
@@ -138,15 +130,12 @@ export const AccountForm: React.FC<AccountFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <VStack
-        alignItems="flex-start"
-        w="full"
-        gap={horizontal ? 6 : 8}
-        borderRadius="xl"
-        borderColor="borderColor"
-        borderWidth={padded ? 1 : 0}
-        bg={bg}
-        p={padded ? 6 : 0}
+      <div
+        className={cn(
+          "w-full items-start rounded-xl bg-background",
+          horizontal ? "gap-6" : "gap-8",
+          padded ? "border border-border p-6" : "p-0",
+        )}
       >
         <Flex
           gap={horizontal ? 4 : 8}
@@ -230,9 +219,11 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           )}
         </Flex>
 
-        <HStack
-          justifyContent={showBillingButton ? "space-between" : "flex-end"}
-          w="full"
+        <div
+          className={cn(
+            "flex w-full flex-row",
+            showBillingButton ? "justify-between" : "justify-end",
+          )}
         >
           {showBillingButton && <ManageBillingButton account={account} />}
 
@@ -251,8 +242,8 @@ export const AccountForm: React.FC<AccountFormProps> = ({
               {buttonText}
             </Button>
           )}
-        </HStack>
-      </VStack>
+        </div>
+      </div>
     </form>
   );
 };

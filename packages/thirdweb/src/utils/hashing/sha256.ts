@@ -8,7 +8,7 @@ import {
 
 type To = "hex" | "bytes";
 
-export type Sha256Hash<TTo extends To> =
+type Sha256Hash<TTo extends To> =
   | (TTo extends "bytes" ? Uint8Array : never)
   | (TTo extends "hex" ? Hex : never);
 

@@ -1,4 +1,6 @@
-import { thirdwebClient } from "@/constants/client";
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type AddContractSubscriptionInput,
   useEngineAddContractSubscription,
@@ -155,7 +157,7 @@ const AddModal = ({
     >
       <ModalOverlay />
       <ModalContent
-        className="!bg-background border border-border rounded-lg"
+        className="!bg-background rounded-lg border border-border"
         as="form"
         onSubmit={form.handleSubmit(onSubmit)}
       >
@@ -463,14 +465,20 @@ const FilterSelector = ({
   filter: string[];
   setFilter: (value: string[]) => void;
 }) => {
+  const client = useThirdwebClient();
   const chain = useV5DashboardChain(form.getValues("chainId"));
-  const contract = chain
-    ? getContract({
-        address: form.getValues("contractAddress"),
-        chain,
-        client: thirdwebClient,
-      })
-    : undefined;
+  const address = form.getValues("contractAddress");
+  const contract = useMemo(
+    () =>
+      chain
+        ? getContract({
+            address,
+            chain,
+            client,
+          })
+        : undefined,
+    [chain, client, address],
+  );
 
   const abiQuery = useResolveContractAbi(contract);
 
@@ -522,7 +530,7 @@ const FilterSelector = ({
 
   return (
     <Card>
-      {abiQuery.isLoading ? (
+      {abiQuery.isPending ? (
         <Spinner size="sm" />
       ) : filterNames.length === 0 ? (
         <Text>

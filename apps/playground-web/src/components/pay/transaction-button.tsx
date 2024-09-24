@@ -57,7 +57,7 @@ export function PayTransactionButtonPreview() {
             }}
           />
           <div className="h-10" />
-          <h4 className="font-bold py-4">ERC20 Transfer (no metadata)</h4>
+          <h4 className="py-4 font-bold">ERC20 Transfer (no metadata)</h4>
           <TransactionButton
             transaction={() => {
               if (!account) throw new Error("No active account");

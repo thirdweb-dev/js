@@ -27,7 +27,7 @@ export function WriteContractExtensionPreview() {
     <div className="flex flex-col">
       <Image
         src="/twcoin.svg"
-        className="mx-auto rounded-2xl animate-bounce size-32"
+        className="mx-auto size-32 animate-bounce rounded-2xl"
         width={50}
         height={50}
         alt=""
@@ -64,7 +64,7 @@ export function WriteContractExtensionPreview() {
       )}
 
       {error ? (
-        <div className="text-red-600 text-sm mt-4 text-center">{error}</div>
+        <div className="mt-4 text-center text-red-600 text-sm">{error}</div>
       ) : (
         <>
           {txHash && sepolia.blockExplorers && (
@@ -72,7 +72,7 @@ export function WriteContractExtensionPreview() {
               target="_blank"
               rel="noreferrer"
               href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
-              className="text-center text-green-400 mt-3"
+              className="mt-3 text-center text-green-400"
             >
               Tx sent:{" "}
               <span className="underline">{shortenAddress(txHash, 6)}</span>

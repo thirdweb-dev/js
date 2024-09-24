@@ -1,4 +1,6 @@
-import { thirdwebClient } from "@/constants/client";
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import { ImageIcon } from "lucide-react";
 import { MediaRenderer } from "thirdweb/react";
@@ -15,6 +17,7 @@ export const NFTMediaWithEmptyState: React.FC<{
   requireInteraction?: boolean;
   controls?: boolean;
 }> = (props) => {
+  const client = useThirdwebClient();
   if (!(props.metadata.image || props.metadata.animation_url)) {
     return (
       <div
@@ -23,13 +26,13 @@ export const NFTMediaWithEmptyState: React.FC<{
           height: props.height,
         }}
         className={cn(
-          "overflow-hidden rounded-xl object-contain flex-shrink-0 border border-border grid place-items-center",
+          "grid flex-shrink-0 place-items-center overflow-hidden rounded-xl border border-border object-contain",
           props.className,
         )}
       >
-        <div className="flex flex-col gap-1 items-center">
+        <div className="flex flex-col items-center gap-1">
           <ImageIcon className="size-6" />
-          <span className="text-sm font-semibold">No Media</span>
+          <span className="font-semibold text-sm">No Media</span>
         </div>
       </div>
     );
@@ -41,19 +44,19 @@ export const NFTMediaWithEmptyState: React.FC<{
         height: props.height,
       }}
       className={cn(
-        "overflow-hidden rounded-xl object-contain flex-shrink-0",
+        "flex-shrink-0 overflow-hidden rounded-xl object-contain",
 
         props.className,
       )}
     >
       <MediaRenderer
-        client={thirdwebClient}
+        client={client}
         src={props.metadata.animation_url || props.metadata.image}
         alt={props.metadata.name?.toString() || ""}
         poster={props.metadata.image}
         requireInteraction={props.requireInteraction}
         controls={props.controls}
-        className="w-full h-full"
+        className="h-full w-full"
       />
     </div>
   );

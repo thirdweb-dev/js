@@ -2,7 +2,7 @@ import { encodePacked } from "viem";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import {
-  ADDRESS_ZERO,
+  ZERO_ADDRESS,
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
 import { keccak256 } from "../../hashing/keccak256.js";
@@ -15,11 +15,11 @@ export async function hashEntry(options: {
   client: ThirdwebClient;
   tokenDecimals: number;
 }) {
-  const currencyAddress = options.entry.currencyAddress || ADDRESS_ZERO;
+  const currencyAddress = options.entry.currencyAddress || ZERO_ADDRESS;
   const currencyDecimals = await (async () => {
     if (
       isNativeTokenAddress(currencyAddress) ||
-      currencyAddress === ADDRESS_ZERO
+      currencyAddress === ZERO_ADDRESS
     ) {
       return 18;
     }

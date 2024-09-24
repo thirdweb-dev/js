@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { Heading, Text } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
 
@@ -27,7 +27,7 @@ export const JudgesEarn = () => {
   ];
 
   return (
-    <VStack spacing={8} position="relative">
+    <div className="relative flex flex-col gap-8">
       <Heading size="title.2xl">Judges</Heading>
       <SimpleGrid
         columns={{ base: 1, lg: 4 }}
@@ -39,10 +39,9 @@ export const JudgesEarn = () => {
           <Flex key={judge.name} flexDir="column" gap={2} alignItems="center">
             <MaskedAvatar
               boxSize={40}
-              objectFit="cover"
               src={judge.image}
               alt={judge.name}
-              borderRadius="full"
+              className="rounded-full"
             />
             <Heading size="title.sm" mt={4} textAlign="center">
               {judge.name}
@@ -53,6 +52,6 @@ export const JudgesEarn = () => {
           </Flex>
         ))}
       </SimpleGrid>
-    </VStack>
+    </div>
   );
 };

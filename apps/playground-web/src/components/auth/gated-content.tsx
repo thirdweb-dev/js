@@ -51,14 +51,14 @@ export async function GatedContentPreview() {
         <div className="mx-auto">
           <AuthButton />
         </div>
-        <div className="text-center mx-auto px-3 lg:max-w-[450px]">
+        <div className="mx-auto px-3 text-center lg:max-w-[450px]">
           You are logged in. However you cannot see the secret content because
           you own less than 10 $TWCOIN.
           <br />
           Mint some tokens{" "}
           <Link
             href="/connect/blockchain-api"
-            className="text-yellow-400 font-bold"
+            className="font-bold text-yellow-400"
           >
             here
           </Link>
@@ -74,10 +74,10 @@ export async function GatedContentPreview() {
       <div className="mx-auto">
         <AuthButton />
       </div>
-      <div className="text-center text-green-600 font-bold text-lg">
+      <div className="text-center font-bold text-green-600 text-lg">
         Congratulations!
       </div>
-      <div className="text-center mx-auto px-3">
+      <div className="mx-auto px-3 text-center">
         You can see this message because you own more than 10 TWCOIN.
         <br />
         Mint a free commemorative NFT{" "}
@@ -85,7 +85,7 @@ export async function GatedContentPreview() {
           href="https://thirdweb.com/arbitrum/0xE7d6D628163de95D1c72c343ee852539B51f35Dc/nfts/0"
           rel="noreferrer"
           target="_blank"
-          className="underline text-yellow-400 font-bold"
+          className="font-bold text-yellow-400 underline"
         >
           here
         </a>

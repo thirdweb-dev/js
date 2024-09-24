@@ -21,6 +21,8 @@ interface ErrorContext {
   dismissError: () => void;
 }
 
+// TODO: figure out a way to remove this context
+// eslint-disable-next-line no-restricted-syntax
 const ErrorContext = createContext<ErrorContext>({
   onError: () => undefined,
   dismissError: () => undefined,
@@ -76,26 +78,26 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
         }}
       >
         <DialogContent
-          className="max-w-[480px] gap-0 p-0 z-[10001]"
+          className="z-[10001] max-w-[480px] gap-0 p-0"
           dialogOverlayClassName="z-[10000]"
         >
           {/* min-w-0 is actually required here  */}
-          <div className="flex flex-col gap-6 p-6 min-w-0">
+          <div className="flex min-w-0 flex-col gap-6 p-6">
             {/* Header */}
             <DialogHeader>
-              <div className="flex justify-start mb-1">
-                <div className="p-2 bg-destructive text-destructive-text rounded-xl">
+              <div className="mb-1 flex justify-start">
+                <div className="rounded-xl bg-destructive p-2 text-destructive-text">
                   <CircleAlertIcon className="size-6" />
                 </div>
               </div>
 
-              <DialogTitle className="text-2xl font-semibold tracking-tight">
+              <DialogTitle className="font-semibold text-2xl tracking-tight">
                 Failed to send transaction
               </DialogTitle>
             </DialogHeader>
 
             {/* min-w-0 is actually required here  */}
-            <div className="flex flex-col gap-5 min-w-0">
+            <div className="flex min-w-0 flex-col gap-5">
               {/* From */}
               {currentError?.info?.from && (
                 <CopyAddressFormControl
@@ -115,7 +117,7 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
               {/* Chain */}
               <div className="flex flex-col gap-1.5">
                 <p className="font-semibold text-sm">Chain</p>
-                <p className="text-muted-foreground border border-border px-3 py-2 rounded-lg text-sm">
+                <p className="rounded-lg border border-border px-3 py-2 text-muted-foreground text-sm">
                   {currentError?.info?.network?.name} (
                   {currentError?.info?.network?.chainId})
                 </p>
@@ -125,14 +127,14 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
               {currentError?.reason && (
                 <div className="flex flex-col gap-1.5">
                   <p className="font-semibold text-sm">Root Cause</p>
-                  <code className="font-medium max-h-[250px] overflow-auto font-mono p-3 whitespace-pre-wrap border border-border rounded-lg text-sm text-destructive-text">
+                  <code className="max-h-[250px] overflow-auto whitespace-pre-wrap rounded-lg border border-border p-3 font-medium font-mono text-destructive-text text-sm">
                     {currentError.reason}
                   </code>
                 </div>
               )}
 
               <div className="flex gap-2 text-muted-foreground text-sm">
-                <InfoIcon className="size-4 shrink-0 mt-0.5" />
+                <InfoIcon className="mt-0.5 size-4 shrink-0" />
                 Copying the error message will let you report this error with
                 all its details to our team.
               </div>
@@ -140,14 +142,14 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
           </div>
 
           {/* Footer */}
-          <div className="border-t border-border flex justify-end p-6 gap-2">
+          <div className="flex justify-end gap-2 border-border border-t p-6">
             {currentError?.reason && (
               <CopyTextButton
                 copyIconPosition="left"
                 textToCopy={currentError.reason}
                 textToShow="Copy Error"
                 tooltip="Copy root cause of the error shown above"
-                className="py-2 text-sm px-4"
+                className="px-4 py-2 text-sm"
               />
             )}
 
@@ -182,7 +184,7 @@ function CopyAddressFormControl(props: { address: string; label: string }) {
         copyIconPosition="left"
         iconClassName="size-3"
         tooltip="Copy Address"
-        className="py-2 px-3 text-sm justify-start font-mono text-muted-foreground"
+        className="justify-start px-3 py-2 font-mono text-muted-foreground text-sm"
       />
     </div>
   );

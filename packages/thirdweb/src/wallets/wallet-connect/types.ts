@@ -193,10 +193,3 @@ type SavedConnectParams = {
   chain: Chain;
   pairingTopic?: string;
 };
-
-export type WalletConnectMetadata = {
-  name: string;
-  url: string;
-  description: string;
-  icons: string[];
-};

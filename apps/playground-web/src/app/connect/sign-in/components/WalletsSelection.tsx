@@ -54,15 +54,15 @@ export function WalletsSelection(props: {
   }
 
   return (
-    <section className="border rounded-xl overflow-hidden bg-muted">
+    <section className="overflow-hidden rounded-xl border bg-muted">
       {/* heading */}
-      <div className="p-4 flex items-center gap-4 justify-between">
-        <h2 className="text-base font-semibold"> Other Wallets </h2>
-        <div className="relative grow max-w-[320px]">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+      <div className="flex items-center justify-between gap-4 p-4">
+        <h2 className="font-semibold text-base"> Other Wallets </h2>
+        <div className="relative max-w-[320px] grow">
+          <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
           <Input
             placeholder="Search from 350+ wallets"
-            className="pl-9 rounded-lg"
+            className="rounded-lg pl-9"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -75,10 +75,10 @@ export function WalletsSelection(props: {
         <ScrollShadow
           scrollableClassName="h-[250px] px-2"
           shadowColor="hsl(var(--muted))"
-          className="fade-in-0 duration-500 animate-in"
+          className="fade-in-0 animate-in duration-500"
         >
           <div className="h-2" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1.5">
+          <div className="grid grid-cols-1 gap-x-4 gap-y-1.5 md:grid-cols-2">
             {wallets.map((wallet) => {
               const enabled = connectOptions.walletIds.includes(wallet.id);
               return (
@@ -109,7 +109,7 @@ export function WalletsSelection(props: {
       )}
 
       {!wallets && (
-        <div className="h-[250px] flex justify-center items-center">
+        <div className="flex h-[250px] items-center justify-center">
           <LoadingDots />
         </div>
       )}
@@ -127,7 +127,7 @@ function WalletButton(props: {
   return (
     <Button
       className={cn(
-        "gap-3 py-1.5 !h-auto px-2 justify-between hover:bg-accent ",
+        "!h-auto justify-between gap-3 px-2 py-1.5 hover:bg-accent ",
       )}
       onClick={props.onClick}
       variant="ghost"

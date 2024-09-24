@@ -197,11 +197,6 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
     },
   ))();
 
-export interface MediaType {
-  url?: string;
-  mimeType?: string;
-}
-
 const ModelViewer = /* @__PURE__ */ lazy(() => import("./ModelViewer.js"));
 
 interface PlayButtonProps {
@@ -549,7 +544,7 @@ const IframePlayer = /* @__PURE__ */ (() =>
       <div style={{ position: "relative", ...style }} {...restProps}>
         <iframe
           title={alt || "thirdweb iframe player"}
-          src={playing ? src ?? undefined : undefined}
+          src={playing ? (src ?? undefined) : undefined}
           ref={ref}
           style={{
             objectFit: "contain",

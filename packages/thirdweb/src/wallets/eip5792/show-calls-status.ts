@@ -6,7 +6,7 @@ import { isSmartWallet } from "../smart/index.js";
 import { isWalletConnect } from "../wallet-connect/controller.js";
 import type { WalletSendCallsId } from "./types.js";
 
-export type ShowCallsStatusOptions = {
+type ShowCallsStatusOptions = {
   wallet: Wallet;
   bundleId: WalletSendCallsId;
 };

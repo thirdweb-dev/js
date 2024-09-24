@@ -7,7 +7,7 @@ import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { SendTransactionResult, TransactionReceipt } from "../types.js";
 
-export const DEFAULT_MAX_BLOCKS_WAIT_TIME = 100;
+const DEFAULT_MAX_BLOCKS_WAIT_TIME = 100;
 
 const map = new Map<string, Promise<TransactionReceipt>>();
 

@@ -1,7 +1,6 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
 import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import {
   type ServiceName,
@@ -17,7 +16,7 @@ import { HIDDEN_SERVICES } from "./validations";
 
 interface ApiKeysProps {
   keys: ApiKey[];
-  isLoading: boolean;
+  isPending: boolean;
   isFetched: boolean;
 }
 
@@ -25,7 +24,7 @@ const columnHelper = createColumnHelper<ApiKey>();
 
 export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
   keys,
-  isLoading,
+  isPending,
   isFetched,
 }) => {
   const router = useRouter();
@@ -46,7 +45,7 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
           textToShow={`${cell.getValue().slice(0, 5)}...${cell.getValue().slice(-5)}`}
           tooltip="Copy Client ID"
           variant="ghost"
-          className="font-mono text-muted-foreground"
+          className="-translate-x-2 font-mono text-muted-foreground"
           onClick={() => {
             trackEvent({
               category: "api_key_button",
@@ -95,20 +94,16 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
         }
 
         return (
-          <Flex
-            flexDir={{ base: "column", xl: "row" }}
-            alignItems="flex-start"
-            gap={2}
-          >
+          <div className="flex flex-col items-start gap-2 xl:flex-row">
             {value.map((srv) => {
               const service = getServiceByName(srv.name as ServiceName);
               return !HIDDEN_SERVICES.includes(service?.name) ? (
                 <Badge variant="default" key={srv.name}>
-                  {service?.title}{" "}
+                  {service?.title}
                 </Badge>
               ) : null;
             })}
-          </Flex>
+          </div>
         );
       },
     }),
@@ -119,9 +114,10 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
       title="api key"
       columns={columns}
       data={keys}
-      isLoading={isLoading}
+      isPending={isPending}
       isFetched={isFetched}
       onRowClick={({ id }) => router.push(`/dashboard/settings/api-keys/${id}`)}
+      bodyRowClassName="hover:bg-muted/50"
     />
   );
 };

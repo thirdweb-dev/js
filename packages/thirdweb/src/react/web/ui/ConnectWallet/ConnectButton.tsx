@@ -293,8 +293,12 @@ export function ConnectButton(props: ConnectButtonProps) {
       : props.connectModal?.size || "compact";
   }, [wallets.length, props.connectModal?.size]);
 
+  const preferredChain =
+    props.accountAbstraction?.chain || props.chain || props.chains?.[0];
+
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
+      chain={preferredChain}
       appMetadata={props.appMetadata}
       client={props.client}
       wallets={wallets}
@@ -309,12 +313,11 @@ export function ConnectButton(props: ConnectButtonProps) {
   );
 
   if (!localeQuery.data) {
+    const combinedClassName = `${props.connectButton?.className || ""} ${TW_CONNECT_WALLET}`;
     return (
       <AnimatedButton
         disabled={true}
-        className={`${
-          props.connectButton?.className || ""
-        } ${TW_CONNECT_WALLET}`}
+        className={combinedClassName}
         variant="primary"
         type="button"
         style={{
@@ -336,7 +339,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         shouldSetActive={true}
         accountAbstraction={props.accountAbstraction}
         auth={props.auth}
-        chain={props.chain || props.accountAbstraction?.chain}
+        chain={preferredChain}
         chains={props.chains}
         client={props.client}
         connectLocale={localeQuery.data}
@@ -409,12 +412,11 @@ function ConnectButtonInner(
 
   if (!activeAccount) {
     // Connect Wallet button
+    const combinedClassName = `${props.connectButton?.className || ""} ${TW_CONNECT_WALLET}`;
     return (
       <AnimatedButton
         disabled={isLoading}
-        className={`${
-          props.connectButton?.className || ""
-        } ${TW_CONNECT_WALLET}`}
+        className={combinedClassName}
         data-theme={theme}
         data-is-loading={isLoading}
         variant="primary"
@@ -450,12 +452,11 @@ function ConnectButtonInner(
     // loading state if loading
     // TODO: figure out a way to consolidate the loading states with the ones from locale loading
     if (siweAuth.isLoading || siweAuth.isLoggingIn || siweAuth.isLoggingOut) {
+      const combinedClassName = `${props.connectButton?.className || ""} ${TW_CONNECT_WALLET}`;
       return (
         <AnimatedButton
           disabled={true}
-          className={`${
-            props.connectButton?.className || ""
-          } ${TW_CONNECT_WALLET}`}
+          className={combinedClassName}
           variant="primary"
           type="button"
           style={{

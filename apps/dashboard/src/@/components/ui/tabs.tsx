@@ -27,7 +27,7 @@ export function TabLinks(props: {
   return (
     <div className={cn("relative", props.className)}>
       {/* Bottom line */}
-      <div className="h-[1px] bg-border absolute bottom-0 left-0 right-0" />
+      <div className="absolute right-0 bottom-0 left-0 h-[1px] bg-border" />
 
       <ScrollShadow
         scrollableClassName="pb-[8px] relative"
@@ -51,7 +51,7 @@ export function TabLinks(props: {
                   href={tab.href}
                   aria-disabled={tab.isDisabled}
                   className={cn(
-                    "rounded-lg hover:bg-muted px-3 font-normal text-sm lg:text-sm relative h-auto text-muted-foreground",
+                    "relative h-auto rounded-lg px-3 font-normal text-muted-foreground text-sm hover:bg-muted lg:text-sm",
                     !tab.isActive && !tab.isDisabled && "hover:text-foreground",
                     tab.isDisabled && "pointer-events-none",
                     tab.isActive && "!text-foreground",
@@ -67,7 +67,7 @@ export function TabLinks(props: {
         {/* Active line */}
         <div
           ref={lineRef}
-          className="absolute left-0 bottom-0 h-[2px] bg-foreground rounded-lg fade-in-0 animate-in"
+          className="fade-in-0 absolute bottom-0 left-0 h-[2px] animate-in rounded-lg bg-foreground"
         />
       </ScrollShadow>
     </div>
@@ -94,7 +94,7 @@ export function TabButtons(props: {
   return (
     <div className={cn("relative", props.containerClassName)}>
       {/* Bottom line */}
-      <div className="h-[1px] bg-border absolute bottom-0 left-0 right-0" />
+      <div className="absolute right-0 bottom-0 left-0 h-[1px] bg-border" />
 
       <ScrollShadow
         scrollableClassName="pb-[8px] relative"
@@ -111,7 +111,7 @@ export function TabButtons(props: {
                 variant="ghost"
                 ref={tab.isActive ? activeTabRef : undefined}
                 className={cn(
-                  "rounded-lg hover:bg-accent px-2 lg:px-3 font-medium text-sm lg:text-base relative h-auto inline-flex gap-1.5 items-center",
+                  "relative inline-flex h-auto items-center gap-1.5 rounded-lg px-2 font-medium text-sm hover:bg-accent lg:px-3 lg:text-base",
                   !tab.isActive &&
                     "text-muted-foreground hover:text-foreground",
                   !tab.isEnabled && "cursor-not-allowed opacity-50",
@@ -130,7 +130,7 @@ export function TabButtons(props: {
         {/* Active line */}
         <div
           ref={lineRef}
-          className="absolute left-0 bottom-0 h-[2px] bg-foreground rounded-lg fade-in-0 animate-in"
+          className="fade-in-0 absolute bottom-0 left-0 h-[2px] animate-in rounded-lg bg-foreground"
         />
       </ScrollShadow>
     </div>

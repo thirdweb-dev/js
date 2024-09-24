@@ -5,11 +5,11 @@ import {
   Flex,
   Icon,
   IconButton,
-  useClipboard,
   useColorModeValue,
   useTheme,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
+import { useClipboard } from "hooks/useClipboard";
 import { Highlight, themes } from "prism-react-renderer";
 import { useEffect, useRef, useState } from "react";
 import { BsLightning } from "react-icons/bs";
@@ -142,7 +142,7 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
           {title && (
             <Text
               fontSize="large"
-              fontWeight={"bold"}
+              fontWeight="bold"
               position="static"
               color={titleColor ? titleColor : "white"}
               px={4}

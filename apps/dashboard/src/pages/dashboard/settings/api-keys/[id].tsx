@@ -1,14 +1,15 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { type ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
+import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { AppLayout } from "components/app-layouts/app";
-import { ApiKeyDetails } from "components/settings/ApiKeys/Details";
-import { EditApiKey } from "components/settings/ApiKeys/Edit";
 import { SettingsSidebarLayout } from "core-ui/sidebar/settings";
+import { ChevronRightIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import type { ThirdwebNextPage } from "utils/types";
+import { ProjectGeneralSettingsPage } from "../../../../app/team/[team_slug]/[project_slug]/settings/ProjectGeneralSettingsPage";
 
 const SettingsApiKeyPage: ThirdwebNextPage = () => {
   const keysQuery = useApiKeys();
@@ -35,21 +36,37 @@ const SettingsApiKeyPage: ThirdwebNextPage = () => {
     );
   }
 
-  return <APIKeyDetailsPage apiKey={apiKey} />;
-};
+  return (
+    <div>
+      <div className="mb-5 flex items-center gap-2">
+        <Link
+          href="/dashboard/settings/api-keys"
+          className="text-muted-foreground hover:text-foreground"
+        >
+          API Keys
+        </Link>
 
-function APIKeyDetailsPage(props: {
-  apiKey: ApiKey;
-}) {
-  const { apiKey } = props;
-  const [editing, setEditing] = useState(false);
+        <span aria-hidden>
+          <ChevronRightIcon className="size-4 text-muted-foreground/80" />
+        </span>
 
-  return editing ? (
-    <EditApiKey apiKey={apiKey} onCancel={() => setEditing(false)} />
-  ) : (
-    <ApiKeyDetails apiKey={apiKey} onEdit={() => setEditing(true)} />
+        <span className="text-foreground">{apiKey.name}</span>
+      </div>
+
+      <ProjectGeneralSettingsPage
+        apiKey={apiKey}
+        paths={{
+          inAppConfig: `/dashboard/wallets/embedded?tab=1&clientId=${apiKey.key}`,
+          aaConfig: `/dashboard/wallets/smart-wallet?tab=1&clientId=${apiKey.key}`,
+          payConfig: `/dashboard/connect/pay/${apiKey.id}/settings`,
+          afterDeleteRedirectTo: "/dashboard/settings/api-keys",
+        }}
+        onKeyUpdated={undefined}
+        wording="api-key"
+      />
+    </div>
   );
-}
+};
 
 SettingsApiKeyPage.getLayout = (page, props) => (
   <AppLayout

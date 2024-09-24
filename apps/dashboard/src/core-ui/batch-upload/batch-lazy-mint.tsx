@@ -5,7 +5,6 @@ import {
   Container,
   Flex,
   FormControl,
-  HStack,
   Icon,
   Input,
   InputGroup,
@@ -268,7 +267,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
                 w="100%"
                 mb={2}
               >
-                <HStack>
+                <div className="flex flex-row">
                   <Icon
                     boxSize={5}
                     as={IoChevronBack}
@@ -279,7 +278,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
                   <Heading size="title.md">
                     When will you reveal your NFTs?
                   </Heading>
-                </HStack>
+                </div>
               </Flex>
               <SelectReveal
                 form={form}

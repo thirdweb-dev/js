@@ -8,7 +8,7 @@ import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { getEcosystemWalletAuthOptions } from "../../../../wallets/ecosystem/get-ecosystem-wallet-auth-options.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Profile } from "../../../../wallets/in-app/core/authentication/types.js";
-import { linkProfile } from "../../../../wallets/in-app/core/wallet/profiles.js";
+import { linkProfile } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import { loginWithOauthRedirect } from "../../../../wallets/in-app/web/lib/auth/oauth.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
@@ -53,6 +53,9 @@ export type ConnectWalletSelectUIState =
         type: SocialAuthOption;
         connectionPromise: Promise<Account | Profile[]>;
       };
+      guestLogin?: {
+        connectionPromise: Promise<Account | Profile[]>;
+      };
       passkeyLogin?: boolean;
       walletLogin?: boolean;
     };
@@ -66,7 +69,7 @@ const defaultAuthOptions: AuthOption[] = [
   "passkey",
 ];
 
-export type ConnectWalletSocialOptionsProps = {
+type ConnectWalletSocialOptionsProps = {
   select: () => void;
   done: () => void;
   locale: InAppWalletLocale;
@@ -108,6 +111,7 @@ export const ConnectWalletSocialOptions = (
     discord: locale.signInWithDiscord,
     line: "LINE",
     x: "X",
+    coinbase: "Coinbase",
     farcaster: "Farcaster",
     telegram: "Telegram",
   };
@@ -124,13 +128,34 @@ export const ConnectWalletSocialOptions = (
     retry: false,
   });
   const authOptions = isEcosystemWallet(wallet)
-    ? ecosystemAuthOptions ?? defaultAuthOptions
-    : wallet.getConfig()?.auth?.options ?? defaultAuthOptions;
+    ? (ecosystemAuthOptions ?? defaultAuthOptions)
+    : (wallet.getConfig()?.auth?.options ?? defaultAuthOptions);
 
   const emailIndex = authOptions.indexOf("email");
   const isEmailEnabled = emailIndex !== -1;
   const phoneIndex = authOptions.indexOf("phone");
   const isPhoneEnabled = phoneIndex !== -1;
+  const socialLogins: SocialAuthOption[] = authOptions.filter((o) =>
+    socialAuthOptions.includes(o as SocialAuthOption),
+  ) as SocialAuthOption[];
+
+  const columnCount = useMemo(() => {
+    switch (socialLogins.length) {
+      case 7:
+        return 4;
+      case 6:
+        return 4;
+      default:
+        return 5;
+    }
+  }, [socialLogins.length]);
+
+  const socialLoginColumns: SocialAuthOption[][] = useMemo(() => {
+    return Array.from(
+      { length: Math.ceil(socialLogins.length / columnCount) },
+      (_, i) => socialLogins.slice(i * columnCount, (i + 1) * columnCount),
+    );
+  }, [socialLogins, columnCount]);
 
   const [manualInputMode, setManualInputMode] = useState<
     "email" | "phone" | "none" | null
@@ -157,6 +182,7 @@ export const ConnectWalletSocialOptions = (
   }
 
   const passKeyEnabled = authOptions.includes("passkey");
+  const guestEnabled = authOptions.includes("guest");
 
   const placeholder =
     inputMode === "email" ? locale.emailPlaceholder : locale.phonePlaceholder;
@@ -170,10 +196,6 @@ export const ConnectWalletSocialOptions = (
     type = "tel";
   }
 
-  const socialLogins = authOptions.filter((o) =>
-    socialAuthOptions.includes(o as SocialAuthOption),
-  );
-
   const hasSocialLogins = socialLogins.length > 0;
   const ecosystemInfo = isEcosystemWallet(wallet)
     ? {
@@ -181,6 +203,27 @@ export const ConnectWalletSocialOptions = (
         partnerId: wallet.getConfig()?.partnerId,
       }
     : undefined;
+
+  const handleGuestLogin = async () => {
+    const connectOptions = {
+      client: props.client,
+      ecosystem: ecosystemInfo,
+      strategy: "guest" as const,
+    };
+    const connectPromise = (async () => {
+      const result = await wallet.connect(connectOptions);
+      setLastAuthProvider("guest", webLocalStorage);
+      return result;
+    })();
+
+    setData({
+      guestLogin: {
+        connectionPromise: connectPromise,
+      },
+    });
+
+    props.select(); // show Connect UI
+  };
 
   // Need to trigger login on button click to avoid popup from being blocked
   const handleSocialLogin = async (strategy: SocialAuthOption) => {
@@ -223,15 +266,15 @@ export const ConnectWalletSocialOptions = (
 
       const connectPromise = (() => {
         if (props.isLinking) {
-          if (wallet.id !== "inApp") {
+          if (wallet.id !== "inApp" && !isEcosystemWallet(wallet)) {
             throw new Error("Only in-app wallets support multi-auth");
           }
-          return linkProfile(wallet, connectOptions);
-        } else {
-          const connectPromise = wallet.connect(connectOptions);
-          setLastAuthProvider(strategy, webLocalStorage);
-          return connectPromise;
+          return linkProfile(connectOptions);
         }
+
+        const connectPromise = wallet.connect(connectOptions);
+        setLastAuthProvider(strategy, webLocalStorage);
+        return connectPromise;
       })();
 
       setData({
@@ -289,50 +332,46 @@ export const ConnectWalletSocialOptions = (
       )}
       {/* Social Login */}
       {hasSocialLogins && (
-        <Container
-          flex="row"
-          center="x"
-          gap={socialLogins.length > 4 ? "xs" : "sm"}
-          style={{
-            justifyContent: "space-between",
-            display: "grid",
-            gridTemplateColumns: `repeat(${socialLogins.length}, 1fr)`,
-          }}
-        >
-          {socialLogins.map((loginMethod) => {
-            const imgIconSize = (() => {
-              if (!showOnlyIcons) {
-                return iconSize.md;
-              } else {
-                if (socialLogins.length > 4) {
-                  return iconSize.md;
-                }
-                return iconSize.lg;
-              }
-            })();
-
-            return (
-              <SocialButton
-                aria-label={`Login with ${loginMethod}`}
-                data-variant={showOnlyIcons ? "icon" : "full"}
-                key={loginMethod}
-                variant={"outline"}
-                disabled={props.disabled}
-                onClick={() => {
-                  handleSocialLogin(loginMethod as SocialAuthOption);
-                }}
-              >
-                <Img
-                  src={socialIcons[loginMethod as SocialAuthOption]}
-                  width={imgIconSize}
-                  height={imgIconSize}
-                  client={props.client}
-                />
-                {!showOnlyIcons &&
-                  `${socialLogins.length === 1 ? "Continue with " : ""}${loginMethodsLabel[loginMethod as SocialAuthOption]}`}
-              </SocialButton>
-            );
-          })}
+        <Container flex="column" gap={socialLogins.length > 4 ? "xs" : "sm"}>
+          {socialLoginColumns.map((column) => (
+            <SocialButtonRow key={column[0]}>
+              {column.map((loginMethod) => {
+                const imgIconSize = (() => {
+                  if (!showOnlyIcons) {
+                    return iconSize.md;
+                  }
+                  if (socialLogins.length > 4) {
+                    return iconSize.md;
+                  }
+                  return iconSize.lg;
+                })();
+                return (
+                  <SocialButton
+                    aria-label={`Login with ${loginMethod}`}
+                    data-variant={showOnlyIcons ? "icon" : "full"}
+                    key={loginMethod}
+                    variant="outline"
+                    disabled={props.disabled}
+                    onClick={() => {
+                      handleSocialLogin(loginMethod as SocialAuthOption);
+                    }}
+                    style={{
+                      flexGrow: socialLogins.length < 7 ? 1 : 0,
+                    }}
+                  >
+                    <Img
+                      src={socialIcons[loginMethod as SocialAuthOption]}
+                      width={imgIconSize}
+                      height={imgIconSize}
+                      client={props.client}
+                    />
+                    {!showOnlyIcons &&
+                      `${socialLogins.length === 1 ? "Continue with " : ""}${loginMethodsLabel[loginMethod as SocialAuthOption]}`}
+                  </SocialButton>
+                );
+              })}
+            </SocialButtonRow>
+          ))}
         </Container>
       )}
 
@@ -341,115 +380,137 @@ export const ConnectWalletSocialOptions = (
         (isEmailEnabled || isPhoneEnabled) && <TextDivider text={locale.or} />}
 
       {/* Email/Phone Login */}
-      {isEmailEnabled && (
-        <>
-          {inputMode === "email" ? (
-            <InputSelectionUI
-              type={type}
-              onSelect={(value) => {
-                setData({ emailLogin: value });
-                props.select();
-              }}
-              placeholder={placeholder}
-              name="email"
-              errorMessage={(input) => {
-                const isValidEmail = validateEmail(input.toLowerCase());
-                if (!isValidEmail) {
-                  return locale.invalidEmail;
-                }
-                return undefined;
-              }}
-              disabled={props.disabled}
-              emptyErrorMessage={emptyErrorMessage}
-              submitButtonText={locale.submitEmail}
-            />
-          ) : (
-            <WalletTypeRowButton
-              client={props.client}
-              icon={emailIcon}
-              onClick={() => {
-                setManualInputMode("email");
-              }}
-              title={locale.emailPlaceholder}
-              disabled={props.disabled}
-            />
-          )}
-        </>
-      )}
-      {isPhoneEnabled && (
-        <>
-          {inputMode === "phone" ? (
-            <InputSelectionUI
-              format="phone"
-              type={type}
-              onSelect={(value) => {
-                // removes white spaces and special characters
-                setData({ phoneLogin: value.replace(/[-\(\) ]/g, "") });
-                props.select();
-              }}
-              placeholder={placeholder}
-              name="phone"
-              errorMessage={(_input) => {
-                // removes white spaces and special characters
-                const input = _input.replace(/[-\(\) ]/g, "");
-                const isPhone = /^[0-9]+$/.test(input);
-
-                if (!isPhone && isPhoneEnabled) {
-                  return locale.invalidPhone;
-                }
-
-                return undefined;
-              }}
-              disabled={props.disabled}
-              emptyErrorMessage={emptyErrorMessage}
-              submitButtonText={locale.submitEmail}
-            />
-          ) : (
-            <WalletTypeRowButton
-              client={props.client}
-              icon={phoneIcon}
-              onClick={() => {
-                setManualInputMode("phone");
-              }}
-              title={locale.phonePlaceholder}
-              disabled={props.disabled}
-            />
-          )}
-        </>
-      )}
-
-      {passKeyEnabled && (
-        <>
+      {isEmailEnabled &&
+        (inputMode === "email" ? (
+          <InputSelectionUI
+            type={type}
+            onSelect={(value) => {
+              setData({ emailLogin: value });
+              props.select();
+            }}
+            placeholder={placeholder}
+            name="email"
+            errorMessage={(input) => {
+              const isValidEmail = validateEmail(input.toLowerCase());
+              if (!isValidEmail) {
+                return locale.invalidEmail;
+              }
+              return undefined;
+            }}
+            disabled={props.disabled}
+            emptyErrorMessage={emptyErrorMessage}
+            submitButtonText={locale.submitEmail}
+          />
+        ) : (
           <WalletTypeRowButton
             client={props.client}
-            icon={passkeyIcon}
+            icon={emailIcon}
             onClick={() => {
-              handlePassKeyLogin();
+              setManualInputMode("email");
             }}
-            title={locale.passkey}
+            title={locale.emailPlaceholder}
             disabled={props.disabled}
           />
-        </>
+        ))}
+      {isPhoneEnabled &&
+        (inputMode === "phone" ? (
+          <InputSelectionUI
+            format="phone"
+            type={type}
+            onSelect={(value) => {
+              // removes white spaces and special characters
+              setData({ phoneLogin: value.replace(/[-\(\) ]/g, "") });
+              props.select();
+            }}
+            placeholder={placeholder}
+            name="phone"
+            errorMessage={(_input) => {
+              // removes white spaces and special characters
+              const input = _input.replace(/[-\(\) ]/g, "");
+              const isPhone = /^[0-9]+$/.test(input);
+
+              if (!isPhone && isPhoneEnabled) {
+                return locale.invalidPhone;
+              }
+
+              return undefined;
+            }}
+            disabled={props.disabled}
+            emptyErrorMessage={emptyErrorMessage}
+            submitButtonText={locale.submitEmail}
+          />
+        ) : (
+          <WalletTypeRowButton
+            client={props.client}
+            icon={phoneIcon}
+            onClick={() => {
+              setManualInputMode("phone");
+            }}
+            title={locale.phonePlaceholder}
+            disabled={props.disabled}
+          />
+        ))}
+
+      {passKeyEnabled && (
+        <WalletTypeRowButton
+          client={props.client}
+          icon={passkeyIcon}
+          onClick={() => {
+            handlePassKeyLogin();
+          }}
+          title={locale.passkey}
+          disabled={props.disabled}
+        />
+      )}
+
+      {/* Guest login */}
+      {guestEnabled && (
+        <WalletTypeRowButton
+          client={props.client}
+          icon={getWalletIcon("guest")}
+          onClick={() => {
+            handleGuestLogin();
+          }}
+          title={locale.loginAsGuest}
+          disabled={props.disabled}
+        />
       )}
 
       {props.isLinking && (
-        <>
-          <WalletTypeRowButton
-            client={props.client}
-            icon={getWalletIcon("")}
-            onClick={() => {
-              handleWalletLogin();
-            }}
-            title={locale.linkWallet}
-          />
-        </>
+        <WalletTypeRowButton
+          client={props.client}
+          icon={getWalletIcon("")}
+          onClick={() => {
+            handleWalletLogin();
+          }}
+          title={locale.linkWallet}
+        />
       )}
     </Container>
   );
 };
 
+const SocialButtonRow = (props: { children: React.ReactNode[] }) => (
+  <Container
+    flex="row"
+    center="x"
+    gap={props.children.length > 4 ? "xs" : "sm"}
+    style={{
+      justifyContent: "center",
+      display: "flex",
+      ...{
+        "& > *": {
+          flexBasis: `${100 / props.children.length}%`,
+          maxWidth: `${100 / props.children.length}%`,
+        },
+      },
+    }}
+  >
+    {props.children}
+  </Container>
+);
+
 const SocialButton = /* @__PURE__ */ styled(Button)({
-  flexGrow: 1,
   "&[data-variant='full']": {
     display: "flex",
     justifyContent: "flex-start",

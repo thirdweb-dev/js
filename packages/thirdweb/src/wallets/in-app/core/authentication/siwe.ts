@@ -4,7 +4,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
 import type { Wallet } from "../../../interfaces/wallet.js";
-import type { Ecosystem } from "../../web/types.js";
+import type { Ecosystem } from "../wallet/types.js";
 import { getLoginCallbackUrl, getLoginUrl } from "./getLoginPath.js";
 import type { AuthStoredTokenWithCookieReturnType } from "./types.js";
 

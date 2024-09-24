@@ -19,7 +19,7 @@ export function PublishedContractBreadcrumbs() {
   const segments = pathname.split("/").filter((segment) => segment !== "");
 
   return (
-    <Breadcrumb className="py-4 px-6 border-b border-border">
+    <Breadcrumb className="border-border border-b px-6 py-4">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink aria-label="Explore" asChild>

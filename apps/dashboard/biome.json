@@ -1,8 +1,16 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
   "extends": ["../../biome.json"],
-
-  "files": {
-    "ignore": ["src/graphql/**"]
-  }
+  "overrides": [
+    {
+      "include": ["src/css/swagger-ui.css"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noImportantInKeyframe": "off"
+          }
+        }
+      }
+    }
+  ]
 }

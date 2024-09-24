@@ -71,7 +71,7 @@ function RenderModule(props: {
 
   return (
     <div>
-      <h3 className="text-lg mb-2 text-muted-foreground font-medium">
+      <h3 className="mb-2 font-medium text-lg text-muted-foreground">
         {module.name}
       </h3>
       <div className="flex flex-col gap-3">

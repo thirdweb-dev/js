@@ -6,7 +6,6 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Flex,
-  HStack,
   Icon,
   Menu,
   MenuButton,
@@ -65,10 +64,13 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
                 </Text>
                 <Flex flexDir="column" gap={2}>
                   {oldPlanFeatures.map((feat) => (
-                    <HStack key={Array.isArray(feat) ? feat[0] : feat}>
+                    <div
+                      className="flex flex-row"
+                      key={Array.isArray(feat) ? feat[0] : feat}
+                    >
                       <Icon as={FiX} boxSize={4} color="red.500" />
                       <Text>{Array.isArray(feat) ? feat[0] : feat}</Text>
-                    </HStack>
+                    </div>
                   ))}
                 </Flex>
               </Flex>
@@ -123,7 +125,7 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
           </AlertDialogBody>
 
           <AlertDialogFooter>
-            <HStack alignItems="center" gap={3}>
+            <div className="flex flex-row items-center gap-3">
               <Button
                 onClick={() =>
                   onConfirm(feedback === "other" ? otherFeedback : feedback)
@@ -140,7 +142,7 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
               <Button ref={cancelRef} onClick={onClose} size="sm">
                 Keep {oldPlan} plan
               </Button>
-            </HStack>
+            </div>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>

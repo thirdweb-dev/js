@@ -50,7 +50,7 @@ export const ProductLearnMoreCard: React.FC<ProductLearnMoreCardProps> = ({
         gap={1}
         role="group"
       >
-        <span>Learn more</span>{" "}
+        <span>Learn more</span>
         <Icon
           as={FiArrowRight}
           transform="rotate(-45deg)"

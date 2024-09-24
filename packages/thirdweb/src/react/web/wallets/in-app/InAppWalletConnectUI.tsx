@@ -9,6 +9,7 @@ import {
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
+import { GuestLogin } from "../shared/GuestLogin.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { OTPLoginUI } from "../shared/OTPLoginUI.js";
 import { PassKeyLogin } from "../shared/PassKeyLogin.js";
@@ -52,12 +53,14 @@ function InAppWalletConnectUI(props: {
 
   // if the the modal starts out with the wallet's connect ui instead of wallet selector - going back to main screen requires staying on the same component and clearing the selection data
   // otherwise, we go back to the wallet selector by calling props.goBack
-  const goBackToMain =
-    initialScreen === props.wallet
-      ? () => {
-          setSelectionData({});
-        }
-      : props.goBack;
+  const goBackToMain = () => {
+    if (initialScreen === props.wallet) {
+      setSelectionData({});
+    } else {
+      props.goBack?.();
+      setSelectionData({});
+    }
+  };
 
   const done = () => {
     props.done();
@@ -131,6 +134,21 @@ function InAppWalletConnectUI(props: {
         size={props.size}
         connectLocale={props.connectLocale}
         isLinking={props.isLinking}
+      />
+    );
+  }
+
+  if (state?.guestLogin) {
+    return (
+      <GuestLogin
+        locale={locale}
+        done={done}
+        goBack={goBackToMain}
+        wallet={props.wallet}
+        state={state}
+        client={props.client}
+        size={props.size}
+        connectLocale={props.connectLocale}
       />
     );
   }

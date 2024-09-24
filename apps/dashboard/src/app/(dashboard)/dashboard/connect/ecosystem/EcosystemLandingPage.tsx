@@ -33,7 +33,7 @@ export async function EcosystemLandingPage(props: {
   // otherwise we fall through to the page
 
   return (
-    <main className="container flex flex-col max-w-2xl gap-8 pb-6 mx-auto">
+    <main className="container mx-auto flex max-w-2xl flex-col gap-8 pb-6">
       <Image
         src={headerImage}
         alt="Ecosystems"
@@ -41,7 +41,7 @@ export async function EcosystemLandingPage(props: {
         className="w-full"
       />
       <div className="flex flex-col gap-2 text-left">
-        <h2 className="text-2xl font-bold sm:text-3xl text-foreground text-balance">
+        <h2 className="text-balance font-bold text-2xl text-foreground sm:text-3xl">
           One wallet, a whole ecosystem of apps and games
         </h2>
         <p className="text-muted-foreground">
@@ -76,20 +76,20 @@ export async function EcosystemLandingPage(props: {
           </Link>
         </Button>
       </div>
-      <div className="w-full h-0 my-2 border-t" />
+      <div className="my-2 h-0 w-full border-t" />
       <Link
         href="https://portal.thirdweb.com/connect/ecosystems/overview"
-        className="mb-6 group"
+        className="group mb-6"
       >
         <Card className="flex flex-col gap-3 p-6 md:p-8 md:px-10">
           <div className="flex items-center gap-2">
             <BookMarkedIcon className="size-5 text-muted-foreground" />
-            <h4 className="text-lg font-bold">Learn more</h4>
+            <h4 className="font-bold text-lg">Learn more</h4>
           </div>
-          <p className="text-muted-foreground text-md">
+          <p className="text-md text-muted-foreground">
             Learn how to create and manage Ecosystem Wallets in our docs.
           </p>
-          <div className="flex flex-row items-center gap-2 mt-4 transition-all group-hover:gap-3 group-hover:text-primary/80 text-primary text-md">
+          <div className="mt-4 flex flex-row items-center gap-2 text-md text-primary transition-all group-hover:gap-3 group-hover:text-primary/80">
             View Docs <MoveRightIcon className="size-4" />
           </div>
         </Card>

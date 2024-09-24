@@ -18,13 +18,13 @@ import { CustomFormGroup } from "./common";
 interface ClaimConditionsPhaseProps {
   contract: ThirdwebContract;
   onRemove: () => void;
-  isLoading: boolean;
+  isPending: boolean;
 }
 
 export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
   contract,
   onRemove,
-  isLoading,
+  isPending,
 }) => {
   const {
     form,
@@ -69,7 +69,7 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
             <Button
               variant="ghost"
               onClick={onRemove}
-              isDisabled={isLoading}
+              isDisabled={isPending}
               colorScheme="red"
               size="sm"
               rightIcon={<Icon as={FiX} />}

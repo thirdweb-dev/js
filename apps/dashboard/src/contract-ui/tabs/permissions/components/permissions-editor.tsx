@@ -13,10 +13,10 @@ import {
   InputRightAddon,
   Stack,
   Tooltip,
-  useClipboard,
   useToast,
 } from "@chakra-ui/react";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
+import { useClipboard } from "hooks/useClipboard";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { BiPaste } from "react-icons/bi";

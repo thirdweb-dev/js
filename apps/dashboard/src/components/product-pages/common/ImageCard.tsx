@@ -74,7 +74,7 @@ export const ImageCard: ComponentWithChildren<ImageCardProps> = ({
           )}
           {href && (
             <Flex alignItems="center">
-              {linkTitle || <span>Visit website</span>}{" "}
+              {linkTitle || <span>Visit website</span>}
               <Icon
                 as={FiArrowRight}
                 transform="rotate(-45deg)"

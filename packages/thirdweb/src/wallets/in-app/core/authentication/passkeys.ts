@@ -2,7 +2,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
-import type { Ecosystem } from "../../web/types.js";
+import type { Ecosystem } from "../wallet/types.js";
 import { ClientScopedStorage } from "./client-scoped-storage.js";
 import type { AuthStoredTokenWithCookieReturnType } from "./types.js";
 

@@ -1,10 +1,10 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Flex, Input, Select, type SelectProps } from "@chakra-ui/react";
 import { CURRENCIES, type CurrencyMetadata } from "constants/currencies";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo, useState } from "react";
 import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS, isAddress } from "thirdweb";
 import { Button } from "tw-components";
+import { useAllChainsData } from "../../hooks/chains/allChains";
 
 interface CurrencySelectorProps extends SelectProps {
   value: string;
@@ -26,8 +26,8 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
   ...props
 }) => {
   const chainId = useDashboardEVMChainId();
-  const configuredChainsRecord = useSupportedChainsRecord();
-  const chain = chainId ? configuredChainsRecord[chainId] : undefined;
+  const { idToChain } = useAllChainsData();
+  const chain = chainId ? idToChain.get(chainId) : undefined;
 
   const helperCurrencies =
     defaultCurrencies.length > 0
@@ -99,7 +99,7 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
             colorScheme="primary"
             onClick={() => setIsAddingCurrency(false)}
           >
-            {"<-"}
+            &lt;-
           </Button>
           <Input
             w="auto"

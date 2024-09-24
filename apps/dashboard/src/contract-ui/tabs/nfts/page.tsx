@@ -36,7 +36,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     );
   }
 
-  if (functionSelectorQuery.isLoading || !functionSelectorQuery.data) {
+  if (functionSelectorQuery.isPending || !functionSelectorQuery.data) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
@@ -74,9 +74,9 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-row items-center justify-between">
         <h2 className="font-bold text-xl">Contract NFTs</h2>
-        <div className="flex gap-2 flex-col md:flex-row">
+        <div className="flex flex-col gap-2 md:flex-row">
           {isRevealable && <NFTRevealButton contract={contract} />}
           {isERC721ClaimToSupported && (
             /**

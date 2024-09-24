@@ -34,7 +34,7 @@ type TWQueryTableProps<TRowData, TInputData> = {
   query: UseQueryResult<TInputData, unknown>;
   selectData: (data?: TInputData) => TRowData[];
   onRowClick?: (row: TRowData) => void;
-  pagination?: Omit<PaginationProps<TInputData>, "data" | "isLoading">;
+  pagination?: Omit<PaginationProps<TInputData>, "data" | "isPending">;
   title: string;
 };
 
@@ -42,7 +42,7 @@ export function TWQueryTable<TRowData, TInputData>(
   tableProps: TWQueryTableProps<TRowData, TInputData>,
 ) {
   const data = tableProps.selectData(tableProps.query.data);
-  const isLoading = tableProps.query.isLoading;
+  const isPending = tableProps.query.isPending;
   const isFetching = tableProps.query.isFetching;
   const isFetched = tableProps.query.isFetched;
 
@@ -131,7 +131,7 @@ export function TWQueryTable<TRowData, TInputData>(
             })}
           </Tbody>
         </Table>
-        {isLoading && (
+        {isPending && (
           <Center>
             <Flex py={4} direction="row" gap={4} align="center">
               <Spinner size="sm" />
@@ -140,7 +140,7 @@ export function TWQueryTable<TRowData, TInputData>(
           </Center>
         )}
 
-        {!isLoading && !isFetching && data.length === 0 && isFetched && (
+        {!isPending && !isFetching && data.length === 0 && isFetched && (
           <Center>
             <Flex py={4} direction="column" gap={4} align="center">
               <Text>No {pluralize(tableProps.title, 0, false)} found.</Text>
@@ -152,7 +152,7 @@ export function TWQueryTable<TRowData, TInputData>(
       {tableProps.pagination && (
         <Pagination
           {...tableProps.pagination}
-          isLoading={isLoading}
+          isPending={isPending}
           data={tableProps.query.data}
         />
       )}
@@ -162,7 +162,7 @@ export function TWQueryTable<TRowData, TInputData>(
 
 type PaginationProps<TInputData> = {
   data?: TInputData;
-  isLoading: boolean;
+  isPending: boolean;
   pageSize: number;
   setPageSize?: (value: SetStateAction<number>) => void;
   pageSizeOptions?: number[];
@@ -238,7 +238,7 @@ function Pagination<TInputData>(paginationProps: PaginationProps<TInputData>) {
       <GridItem colSpan={8}>
         <Center>
           <ButtonGroup fontFamily="mono" variant="outline" size="sm">
-            {paginationProps.isLoading
+            {paginationProps.isPending
               ? new Array(MAX_PAGE_BUTTONS).fill("0").map((val, i) => {
                   return (
                     <Skeleton

@@ -8,10 +8,6 @@ coverage:
         target: auto
         flags:
           - packages
-      legacy_packages:
-        target: auto
-        flags:
-          - legacy_packages 
       
 
 github_checks:

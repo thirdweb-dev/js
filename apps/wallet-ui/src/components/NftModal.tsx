@@ -82,7 +82,7 @@ export function NftModal({
       toast.error("Transaction failed", {
         id: "fail",
         description: e.message,
-        icon: <OctagonXIcon className="w-4 h-4" />,
+        icon: <OctagonXIcon className="h-4 w-4" />,
         duration: 5000,
         action: (
           <Button
@@ -118,16 +118,16 @@ export function NftModal({
       <DialogTrigger asChild>
         <button type="button">{children}</button>
       </DialogTrigger>
-      <DialogContent className="sm:w-[425px] p-0 gap-0 rounded-xl md:rounded-xl overflow-hidden">
-        <div className="relative w-full h-[425px]">
+      <DialogContent className="gap-0 overflow-hidden rounded-xl p-0 sm:w-[425px] md:rounded-xl">
+        <div className="relative h-[425px] w-full">
           <img
             src={data.image_url || data.collection.image_url}
             alt={data.name}
-            className="object-cover w-full h-full object-center"
+            className="h-full w-full object-cover object-center"
           />
         </div>
 
-        <div className="flex flex-col gap-6 p-6 border border-t-0 md:rounded-b-xl">
+        <div className="flex flex-col gap-6 border border-t-0 p-6 md:rounded-b-xl">
           <DialogHeader className="grid grid-cols-4 gap-2 space-y-0">
             <div className="col-span-3">
               <DialogTitle className="mb-1">
@@ -147,7 +147,7 @@ export function NftModal({
                 )}
               </DialogDescription>
             </div>
-            <div className="flex items-start justify-end h-full col-span-1">
+            <div className="col-span-1 flex h-full items-start justify-end">
               <Badge variant="secondary">{chainData?.name}</Badge>
             </div>
           </DialogHeader>
@@ -156,7 +156,7 @@ export function NftModal({
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="flex flex-col w-full space-y-4"
+                  className="flex w-full flex-col space-y-4"
                 >
                   <FormField
                     control={form.control}
@@ -172,7 +172,7 @@ export function NftModal({
                   />
                   <Button disabled={isPending} type="submit">
                     {isPending && (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     )}
                     Transfer
                   </Button>

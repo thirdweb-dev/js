@@ -60,7 +60,7 @@ export function CountrySelector({
               key={country.countryIsoCode}
               value={`${country.countryIsoCode} +${country.phoneNumberCode}`}
             >
-              {country.countryName} +{country.phoneNumberCode}{" "}
+              {country.countryName} +{country.phoneNumberCode}
             </Option>
           );
         })}

@@ -221,6 +221,10 @@ export const sidebar: SideBar = {
                   name: "Retrieving Linked Profiles",
                   href: `${inAppSlug}/guides/retrieve-linked-profiles`,
                 },
+                {
+                  name: "Retrieving User Info",
+                  href: `${inAppSlug}/guides/get-user-details`,
+                },
               ],
             },
             {
@@ -254,10 +258,6 @@ export const sidebar: SideBar = {
               ],
             },
             {
-              name: "Backend APIs",
-              href: `${inAppSlug}/guides/get-in-app-wallet-details-on-server`,
-            },
-            {
               name: "FAQs",
               href: `${inAppSlug}/faqs`,
             },
@@ -284,7 +284,10 @@ export const sidebar: SideBar = {
               name: "Integrating with Partners",
               href: `${ecosystemSlug}/integrating-partners`,
             },
-
+            {
+              name: "Pregenerate Wallets",
+              href: `${ecosystemSlug}/pregenerate-wallets`,
+            },
             {
               name: "Ecosystem Wallet Explorer Page",
               href: `${ecosystemSlug}/wallet-explorer`,

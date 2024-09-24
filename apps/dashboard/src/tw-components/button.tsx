@@ -8,9 +8,9 @@ import {
   Link,
   forwardRef,
   useButtonGroup,
-  useClipboard,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useClipboard } from "hooks/useClipboard";
 import { forwardRef as reactForwardRef } from "react";
 import { FiCheck, FiCopy, FiExternalLink } from "react-icons/fi";
 import { fontWeights, letterSpacings, lineHeights } from "theme/typography";

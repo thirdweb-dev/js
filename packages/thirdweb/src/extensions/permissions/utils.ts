@@ -23,14 +23,9 @@ export const roleMap = {
 /**
  * @extension PERMISSIONS
  */
-export type ThirdwebContractRole = keyof typeof roleMap;
+type ThirdwebContractRole = keyof typeof roleMap;
 
-export const ALL_ROLES = /* @__PURE__ */ (() =>
-  Object.keys(roleMap))() as ThirdwebContractRole[];
-
-export function isThirdwebContractRole(
-  role: string,
-): role is ThirdwebContractRole {
+function isThirdwebContractRole(role: string): role is ThirdwebContractRole {
   return role in roleMap;
 }
 

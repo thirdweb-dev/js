@@ -8,34 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { FiX } from "react-icons/fi";
-import { Heading, Text, TrackedLink } from "tw-components";
-import Message from "./message";
-
-export const FieldAlert = ({
-  message,
-}: {
-  message:
-    | "NoDomains"
-    | "AnyDomain"
-    | "NoBundleIds"
-    | "AnyBundleId"
-    | "SecretKey";
-}) => {
-  return (
-    <Alert status="warning" variant="left-accent">
-      <Flex direction="column" gap={2}>
-        <Heading as={AlertTitle} size="label.md">
-          {/* biome-ignore lint/suspicious/noExplicitAny: FIXME */}
-          {(Message as any)[`${message}Title`]}
-        </Heading>
-        <Text as={AlertDescription} size="body.md">
-          {/* biome-ignore lint/suspicious/noExplicitAny: FIXME */}
-          {(Message as any)[`${message}Description`]}
-        </Text>
-      </Flex>
-    </Alert>
-  );
-};
+import { Text, TrackedLink } from "tw-components";
 
 export const SmartWalletsBillingAlert = ({
   dismissable = false,

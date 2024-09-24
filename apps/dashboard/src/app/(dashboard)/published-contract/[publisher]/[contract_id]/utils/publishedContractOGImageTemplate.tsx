@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { thirdwebClient } from "@/constants/client";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ImageResponse } from "next/og";
 import { download } from "thirdweb/storage";
 
@@ -174,6 +174,8 @@ export async function publishedContractOGImageTemplate(params: {
     ),
   ).then((res) => res.arrayBuffer());
 
+  const client = getThirdwebClient();
+
   const [
     inter400,
     inter500,
@@ -195,13 +197,13 @@ export async function publishedContractOGImageTemplate(params: {
     params.logo
       ? download({
           uri: params.logo,
-          client: thirdwebClient,
+          client,
         }).then((res) => res.arrayBuffer())
       : undefined,
     params.publisherAvatar
       ? download({
           uri: params.publisherAvatar,
-          client: thirdwebClient,
+          client,
         }).then((res) => res.arrayBuffer())
       : undefined,
   ]);

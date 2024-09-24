@@ -5,7 +5,7 @@ import { download } from "../../storage/download.js";
 import type { Hex } from "../encoding/hex.js";
 import type { Prettify } from "../type-utils.js";
 
-export type FetchDeployMetadataOptions = {
+type FetchDeployMetadataOptions = {
   uri: string;
   client: ThirdwebClient;
 };
@@ -50,6 +50,7 @@ export async function fetchDeployMetadata(
     ...parsedMeta,
     version: rawMeta.version,
     bytecode: deployBytecode,
+    name: rawMeta.name,
   };
 }
 
@@ -75,7 +76,7 @@ async function fetchAndParseCompilerMetadata(
 
 // types
 
-export type RawCompilerMetadata = {
+type RawCompilerMetadata = {
   name: string;
   metadataUri: string;
   bytecodeUri: string;

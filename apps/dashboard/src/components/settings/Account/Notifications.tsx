@@ -86,7 +86,7 @@ function SettingSwitch(props: {
   id: string;
 }) {
   return (
-    <div className="flex gap-6 justify-between border-b border-border py-6 items-center">
+    <div className="flex items-center justify-between gap-6 border-border border-b py-6">
       <div>
         <Label className="text-foreground text-lg" htmlFor={props.id}>
           {props.label}

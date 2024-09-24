@@ -1,17 +1,23 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
   "extends": ["../../biome.json"],
   "linter": {
     "rules": {
-      "style": {
-        "noRestrictedGlobals": {
-          "options": { "deniedGlobals": ["Buffer"] },
-          "level": "error"
-        },
-        "noUselessElse": "off"
+      "nursery": {
+        "noProcessEnv": "warn"
       }
     }
   },
+  "overrides": [{
+    "include": ["src/**/*.test.ts","src/**/*.test.tsx", "src/stories/**"],
+    "linter": {
+      "rules": {
+        "nursery": {
+          "noProcessEnv": "off"
+        }
+      }
+    }
+  }],
   "files": {
     "ignore": [
       "src/crypto/aes/lib/md5.ts",

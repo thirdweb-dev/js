@@ -1,52 +1,20 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { thirdwebClient } from "@/constants/client";
-import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { UserXIcon } from "lucide-react";
-import { useMemo } from "react";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { getInstalledModules, owner } from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { useV5DashboardChain } from "../../../lib/v5-adapter";
 import { InstalledModulesTable } from "./components/InstalledModulesTable";
 import { InstallModuleForm } from "./components/ModuleForm";
 
 interface ContractEditModulesPageProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
 }
 
 export const ContractEditModulesPage: React.FC<
   ContractEditModulesPageProps
-> = ({ contractAddress }) => {
-  const contractInfo = useEVMContractInfo();
-
-  const chainId = contractInfo?.chain?.chainId;
-
-  if (!contractAddress || !chainId) {
-    return (
-      <div className="items-center justify-center flex h-[300px] md:h-[500px]">
-        <Spinner className="size-10" />
-      </div>
-    );
-  }
-
-  return <Content contractAddress={contractAddress} chainId={chainId} />;
-};
-
-function Content(props: { contractAddress: string; chainId: number }) {
-  const { contractAddress, chainId } = props;
+> = ({ contract }) => {
   const account = useActiveAccount();
-  const chain = useV5DashboardChain(chainId);
-
-  const contract = useMemo(
-    () =>
-      getContract({
-        client: thirdwebClient,
-        address: contractAddress,
-        chain: chain,
-      }),
-    [contractAddress, chain],
-  );
 
   const installedModulesQuery = useReadContract(getInstalledModules, {
     contract,
@@ -56,13 +24,9 @@ function Content(props: { contractAddress: string; chainId: number }) {
     contract,
   });
 
-  function refetchModules() {
-    installedModulesQuery.refetch();
-  }
-
-  if (ownerQuery.isLoading) {
+  if (ownerQuery.isPending) {
     return (
-      <div className="items-center justify-center flex h-[300px] md:h-[500px]">
+      <div className="flex h-[300px] items-center justify-center md:h-[500px]">
         <Spinner className="size-10" />
       </div>
     );
@@ -70,7 +34,7 @@ function Content(props: { contractAddress: string; chainId: number }) {
 
   if (!ownerQuery.data) {
     return (
-      <div className="items-center justify-center flex h-[300px] md:h-[500px]">
+      <div className="flex h-[300px] items-center justify-center md:h-[500px]">
         <p className="text-red-500"> Failed to resolve contract owner </p>
       </div>
     );
@@ -79,7 +43,7 @@ function Content(props: { contractAddress: string; chainId: number }) {
   const isOwner = ownerQuery.data === account?.address;
 
   const installedModules = {
-    isLoading: installedModulesQuery.isLoading,
+    isPending: installedModulesQuery.isPending,
     data: installedModulesQuery.data
       ? installedModulesQuery.data.map((x) => x.implementation)
       : [],
@@ -91,7 +55,7 @@ function Content(props: { contractAddress: string; chainId: number }) {
       {isOwner && (
         <div>
           <div>
-            <h2 className="text-2xl tracking-tight font-bold mb-1">
+            <h2 className="mb-1 font-bold text-2xl tracking-tight">
               Edit Modules
             </h2>
             <p className="text-muted-foreground">
@@ -101,7 +65,7 @@ function Content(props: { contractAddress: string; chainId: number }) {
           <div className="h-10" />
           <InstallModuleForm
             contract={contract}
-            refetchModules={refetchModules}
+            refetchModules={() => installedModulesQuery.refetch()}
             account={account}
             installedModules={installedModules}
           />
@@ -114,7 +78,7 @@ function Content(props: { contractAddress: string; chainId: number }) {
             <UserXIcon className="size-6 text-red-400" />
             <div>
               <AlertTitle>
-                You do not have permissions to edit modules{" "}
+                You do not have permissions to edit modules
               </AlertTitle>
               <AlertDescription>
                 Connect owner wallet to edit modules
@@ -128,10 +92,10 @@ function Content(props: { contractAddress: string; chainId: number }) {
 
       <InstalledModulesTable
         installedModules={installedModules}
-        refetchModules={refetchModules}
+        refetchModules={() => installedModulesQuery.refetch()}
         contract={contract}
         ownerAccount={isOwner ? account : undefined}
       />
     </div>
   );
-}
+};

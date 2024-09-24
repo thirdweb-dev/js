@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { rateLimit } from ".";
-import { validApiKeyMeta, validServiceConfig } from "../../mocks";
-import { updateRateLimitedAt } from "../api";
-import type { AuthorizationResult } from "../authorize/types";
+import { validApiKeyMeta, validServiceConfig } from "../../mocks.js";
+import { updateRateLimitedAt } from "../api.js";
+import type { AuthorizationResult } from "../authorize/types.js";
+import { rateLimit } from "./index.js";
 
 const mockRedis = {
   incr: vi.fn(),

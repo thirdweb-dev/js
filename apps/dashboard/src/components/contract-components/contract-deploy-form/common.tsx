@@ -4,11 +4,11 @@ export function Fieldset(props: {
 }) {
   return (
     <fieldset>
-      <legend className="text-2xl mb-3 font-semibold tracking-tight">
+      <legend className="mb-3 font-semibold text-2xl tracking-tight">
         {props.legend}
       </legend>
 
-      <div className="border rounded-lg border-border p-4 md:p-6">
+      <div className="rounded-lg border border-border p-4 md:p-6">
         {props.children}
       </div>
     </fieldset>

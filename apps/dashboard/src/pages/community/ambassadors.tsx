@@ -114,7 +114,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                   size="display.lg"
                   as="span"
                   bgGradient="linear-gradient(243.9deg, #BFA3DA 21.81%, #84309C 48.81%, #C735B0 86.61%);"
-                  bgClip={"text"}
+                  bgClip="text"
                 >
                   thirdweb <br /> Architect.
                 </Heading>
@@ -210,7 +210,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                 textAlign="center"
                 bgGradient="linear-gradient(243.9deg, #3385FF
                     21.81%, #91B7F0 48.81%, #95BBF2 86.61%);"
-                bgClip={"text"}
+                bgClip="text"
               >
                 Forge the future internet
               </Heading>
@@ -246,7 +246,7 @@ const Ambassadors: ThirdwebNextPage = () => {
               mb={4}
               textAlign="center"
               bgGradient="linear-gradient(243.9deg, #BFA3DA 21.81%, #84309C 48.81%, #C735B0 86.61%);"
-              bgClip={"text"}
+              bgClip="text"
             >
               Architect Characteristics
             </Heading>
@@ -304,7 +304,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                 textAlign="center"
                 bgGradient="linear-gradient(243.9deg, #3385FF
                     21.81%, #91B7F0 48.81%, #95BBF2 86.61%);"
-                bgClip={"text"}
+                bgClip="text"
               >
                 Architect Responsibilities
               </Heading>
@@ -371,7 +371,7 @@ const Ambassadors: ThirdwebNextPage = () => {
               mb={4}
               textAlign="center"
               bgGradient="linear-gradient(243.9deg, #BFA3DA 21.81%, #84309C 48.81%, #C735B0 86.61%);"
-              bgClip={"text"}
+              bgClip="text"
             >
               Ignite
             </Heading>
@@ -429,7 +429,7 @@ const Ambassadors: ThirdwebNextPage = () => {
               <Heading
                 bgGradient="linear-gradient(243.9deg, #3385FF
                     21.81%, #91B7F0 48.81%, #95BBF2 86.61%);"
-                bgClip={"text"}
+                bgClip="text"
                 size="label.xl"
                 mb={4}
               />
@@ -440,7 +440,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                 textAlign="center"
                 bgGradient="linear-gradient(243.9deg, #3385FF
                     21.81%, #91B7F0 48.81%, #95BBF2 86.61%);"
-                bgClip={"text"}
+                bgClip="text"
               >
                 Influence <br />
               </Heading>
@@ -516,7 +516,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                 mb={4}
                 textAlign="center"
                 bgGradient="linear-gradient(243.9deg, #BFA3DA 21.81%, #84309C 48.81%, #C735B0 86.61%);"
-                bgClip={"text"}
+                bgClip="text"
               >
                 Innovate
               </Heading>
@@ -577,12 +577,12 @@ const Ambassadors: ThirdwebNextPage = () => {
             align={{ base: "initial", md: "center" }}
           >
             <Heading as="h2" size="display.md" mb={4} textAlign="center">
-              Meet the{" "}
+              Meet the
               <Heading
                 size="display.md"
                 as="span"
                 bgGradient="linear-gradient(243.9deg, #BFA3DA 21.81%, #84309C 48.81%, #C735B0 86.61%);"
-                bgClip={"text"}
+                bgClip="text"
               >
                 Ambassadors.
               </Heading>
@@ -598,7 +598,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                 >
                   <MaskedAvatar
                     src={ambassador.profileImage}
-                    alt=""
+                    alt={ambassador.name}
                     boxSize={20}
                   />
                   <Heading size="title.sm">{ambassador.name}</Heading>
@@ -619,12 +619,12 @@ const Ambassadors: ThirdwebNextPage = () => {
           >
             <Flex flexDir="column" gap={0}>
               <Heading as="h2" size="display.md" mb={4} textAlign="center">
-                Ready to{" "}
+                Ready to
                 <Heading
                   size="display.md"
                   as="span"
                   bgGradient="linear-gradient(243.9deg, #BFA3DA 21.81%, #84309C 48.81%, #C735B0 86.61%);"
-                  bgClip={"text"}
+                  bgClip="text"
                 >
                   forge?
                 </Heading>

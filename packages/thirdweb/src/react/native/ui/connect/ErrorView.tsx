@@ -5,7 +5,7 @@ import { RNImage } from "../components/RNImage.js";
 import { ThemedText } from "../components/text.js";
 import { CLOSE_CIRCLE } from "../icons/svgs.js";
 
-export type ErrorViewProps = {
+type ErrorViewProps = {
   theme: Theme;
   title: string;
 };

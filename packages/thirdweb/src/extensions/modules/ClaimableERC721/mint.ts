@@ -7,7 +7,7 @@ import { encodeBytesBeforeMintERC721Params } from "../__generated__/ClaimableERC
 import { getClaimCondition } from "../__generated__/ClaimableERC721/read/getClaimCondition.js";
 import { mint as generatedMint } from "../__generated__/ERC721Core/write/mint.js";
 
-export type MintParams = {
+type MintParams = {
   to: string;
   quantity: string | number;
 };

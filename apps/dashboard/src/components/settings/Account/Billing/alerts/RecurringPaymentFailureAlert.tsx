@@ -67,17 +67,15 @@ export const RecurringPaymentFailureAlert: React.FC<
       variant="left-accent"
       bg="backgroundCardHighlight"
     >
-      <>
-        <OnboardingModal
-          isOpen={isPaymentMethodOpen}
-          onClose={onPaymentMethodClose}
-        >
-          <LazyOnboardingBilling
-            onSave={handlePaymentAdded}
-            onCancel={onPaymentMethodClose}
-          />
-        </OnboardingModal>
-      </>
+      <OnboardingModal
+        isOpen={isPaymentMethodOpen}
+        onClose={onPaymentMethodClose}
+      >
+        <LazyOnboardingBilling
+          onSave={handlePaymentAdded}
+          onCancel={onPaymentMethodClose}
+        />
+      </OnboardingModal>
 
       <Flex>
         <AlertIcon boxSize={4} mt={1} ml={1} />
@@ -88,7 +86,7 @@ export const RecurringPaymentFailureAlert: React.FC<
             </Heading>
           </AlertTitle>
           <AlertDescription mt={4} mb={2}>
-            <Flex direction={"column"} gap={4}>
+            <Flex direction="column" gap={4}>
               <Text>
                 {reason ? `${reason}. ` : ""}
                 {resolution ? `${resolution}. ` : ""}

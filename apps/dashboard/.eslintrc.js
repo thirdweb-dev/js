@@ -2,9 +2,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:import/typescript",
     "plugin:@next/next/recommended",
-    "plugin:promise/recommended",
     "plugin:storybook/recommended",
   ],
   rules: {
@@ -15,6 +13,11 @@ module.exports = {
         selector: "CallExpression[callee.name='useEffect']",
         message:
           'Are you *sure* you need to use "useEffect" here? If you loading any async function prefer using "useQuery".',
+      },
+      {
+        selector: "CallExpression[callee.name='createContext']",
+        message:
+          'Are you *sure* you need to use a "Context"? In almost all cases you should prefer passing props directly.',
       },
       {
         selector: "CallExpression[callee.name='defineChain']",
@@ -52,6 +55,8 @@ module.exports = {
               "FormErrorMessage",
               "MenuGroup",
               "MenuItem",
+              "VStack",
+              "HStack",
               // also the types
               "ButtonProps",
               "BadgeProps",
@@ -98,7 +103,7 @@ module.exports = {
     ],
   },
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint", "import", "react-compiler"],
+  plugins: ["@typescript-eslint", "react-compiler"],
   parserOptions: {
     ecmaVersion: 2019,
     ecmaFeatures: {

@@ -52,7 +52,7 @@ export const EngineContractSubscriptions: React.FC<
       <ContractSubscriptionTable
         instanceUrl={instanceUrl}
         contractSubscriptions={contractSubscriptionsQuery.data ?? []}
-        isLoading={contractSubscriptionsQuery.isLoading}
+        isPending={contractSubscriptionsQuery.isPending}
         isFetched={contractSubscriptionsQuery.isFetched}
         autoUpdate={autoUpdate}
       />

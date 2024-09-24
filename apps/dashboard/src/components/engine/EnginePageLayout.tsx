@@ -47,12 +47,16 @@ const sidebarLinkMeta: Array<{ pathId: string; label: string }> = [
     label: "Webhooks",
   },
   {
-    pathId: "configuration",
-    label: "Configuration",
-  },
-  {
     pathId: "metrics",
     label: "Metrics",
+  },
+  {
+    pathId: "alerts",
+    label: "Alerts",
+  },
+  {
+    pathId: "configuration",
+    label: "Configuration",
   },
 ];
 
@@ -121,7 +125,7 @@ function QueryAndRenderInstanceHeader(props: {
   const instancesQuery = useEngineInstances();
   const instance = instancesQuery.data?.find((x) => x.id === props.engineId);
 
-  if (instancesQuery.isLoading) {
+  if (instancesQuery.isPending) {
     return <PageLoading />;
   }
 
@@ -151,7 +155,7 @@ function EnsurePermissionAndRenderInstance(props: {
     instanceUrl: props.instance.url,
   });
 
-  if (permissionQuery.isLoading) {
+  if (permissionQuery.isPending) {
     return <PageLoading />;
   }
 
@@ -208,7 +212,7 @@ function RenderEngineInstanceHeader(props: {
       <div className="flex">
         <Button
           variant="ghost"
-          className="px-2 py-1 -translate-x-2 flex items-center gap-2 text-muted-foreground hover:text-foreground h-auto"
+          className="-translate-x-2 flex h-auto items-center gap-2 px-2 py-1 text-muted-foreground hover:text-foreground"
         >
           <Link
             href={props.rootPath}
@@ -222,15 +226,15 @@ function RenderEngineInstanceHeader(props: {
 
       <div className="h-5" />
 
-      <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:justify-between">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-3xl md:text-5xl font-semibold tracking-tighter">
+          <h1 className="font-semibold text-3xl tracking-tighter md:text-5xl">
             {instance.name}
           </h1>
 
           <div className="h-1" />
 
-          <div className="flex gap-3 items-center">
+          <div className="flex items-center gap-3">
             {!instance.name.startsWith("https://") && (
               <CopyTextButton
                 copyIconPosition="right"
@@ -238,7 +242,7 @@ function RenderEngineInstanceHeader(props: {
                 textToCopy={instance.url}
                 tooltip="Copy Engine URL"
                 variant="ghost"
-                className="px-2 py-1 -translate-x-2 h-auto text-muted-foreground"
+                className="-translate-x-2 h-auto px-2 py-1 text-muted-foreground"
               />
             )}
           </div>
@@ -263,17 +267,17 @@ function EngineErrorPage(props: {
     <div>
       <Link
         href={props.rootPath}
-        className="gap-2 flex items-center text-muted-foreground hover:text-foreground"
+        className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
       >
         <ArrowLeftIcon className="size-5" />
         Back
       </Link>
 
-      <div className="border rounded-lg border-border mt-5">
+      <div className="mt-5 rounded-lg border border-border">
         <MessageContainer>
-          <div className="flex flex-col gap-4 items-center">
+          <div className="flex flex-col items-center gap-4">
             <CircleAlertIcon className="size-16 text-destructive-text" />
-            <p className="text-muted-foreground text-center">
+            <p className="text-center text-muted-foreground">
               {props.children}
             </p>
           </div>
@@ -287,7 +291,7 @@ function MessageContainer(props: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="h-[300px] lg:h-[400px] flex items-center justify-center">
+    <div className="flex h-[300px] items-center justify-center lg:h-[400px]">
       {props.children}
     </div>
   );

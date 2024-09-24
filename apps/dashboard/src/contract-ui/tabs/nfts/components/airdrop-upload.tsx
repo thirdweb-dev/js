@@ -1,11 +1,10 @@
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   AspectRatio,
   Box,
   Center,
   Container,
   Flex,
-  HStack,
   Icon,
   IconButton,
   Link,
@@ -22,7 +21,6 @@ import {
   Tooltip,
   Tr,
   UnorderedList,
-  VStack,
 } from "@chakra-ui/react";
 import { Logo } from "components/logo";
 import Papa from "papaparse";
@@ -58,6 +56,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   isOpen,
   onClose,
 }) => {
+  const client = useThirdwebClient();
   const [validAirdrop, setValidAirdrop] = useState<AirdropAddressInput[]>([]);
   const [airdropData, setAirdropData] = useState<AirdropAddressInput[]>([]);
   const [noCsv, setNoCsv] = useState(false);
@@ -127,7 +126,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
           try {
             resolvedAddress = isAddress(address)
               ? address
-              : await resolveAddress({ name: address, client: thirdwebClient });
+              : await resolveAddress({ name: address, client });
             isValid = !!resolvedAddress;
           } catch {
             isValid = false;
@@ -159,7 +158,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
       setAirdropData(ordered);
     };
     normalizeAddresses(validAirdrop);
-  }, [validAirdrop]);
+  }, [validAirdrop, client]);
 
   const removeInvalid = useCallback(() => {
     const filteredData = airdropData.filter(({ isValid }) => isValid);
@@ -220,7 +219,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                     borderWidth="1px"
                   >
                     <input {...getInputProps()} />
-                    <VStack p={6}>
+                    <div className="flex flex-col p-6">
                       <Icon
                         as={BsFillCloudUploadFill}
                         boxSize={8}
@@ -242,7 +241,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                             : "Drag & Drop a CSV file here"}
                         </Heading>
                       )}
-                    </VStack>
+                    </div>
                   </Center>
                 </AspectRatio>
                 <Flex gap={2} flexDir="column">
@@ -449,7 +448,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
       </TableContainer>
       <Portal containerRef={portalRef}>
         <Center w="100%">
-          <HStack>
+          <div className="flex flex-row">
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="first page"
@@ -491,7 +490,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
               <option value="250">250</option>
               <option value="500">500</option>
             </Select>
-          </HStack>
+          </div>
         </Center>
       </Portal>
     </Flex>

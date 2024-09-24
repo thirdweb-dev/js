@@ -8,7 +8,7 @@ import { useActiveAccount } from "../wallets/useActiveAccount.js";
 /**
  * Configuration for the `useSendTransaction` hook.
  */
-export type SendAndConfirmTransactionConfig = {
+type SendAndConfirmTransactionConfig = {
   /**
    * Configuration for gasless transactions.
    * Refer to [`GaslessOptions`](https://portal.thirdweb.com/references/typescript/v5/GaslessOptions) for more details.

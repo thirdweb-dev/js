@@ -103,7 +103,6 @@ export const slides: Slide[] = [
       <Text size="body.lg">
         <UnorderedList>
           <ListItem>
-            {" "}
             <TrackedLink
               category={TRACK_CATEGORY}
               href="https://portal.thirdweb.com/contracts/build/overview"
@@ -128,7 +127,7 @@ export const slides: Slide[] = [
             .
           </ListItem>
           <ListItem>
-            Discover{" "}
+            Discover
             <TrackedLink
               category={TRACK_CATEGORY}
               href="/explore"
@@ -140,7 +139,6 @@ export const slides: Slide[] = [
             .
           </ListItem>
           <ListItem>
-            {" "}
             <TrackedLink
               category={TRACK_CATEGORY}
               href="https://portal.thirdweb.com/contracts/interact/overview"
@@ -153,7 +151,6 @@ export const slides: Slide[] = [
             with contracts.
           </ListItem>
           <ListItem>
-            {" "}
             <TrackedLink
               category={TRACK_CATEGORY}
               href="https://portal.thirdweb.com/contracts/deploy/overview"
@@ -194,7 +191,7 @@ export const slides: Slide[] = [
     content: (
       <Text size="body.lg" w="90%">
         By connecting your wallet you acknowledge that you have read and agree
-        to our{" "}
+        to our
         <TrackedLink
           href="/privacy"
           isExternal

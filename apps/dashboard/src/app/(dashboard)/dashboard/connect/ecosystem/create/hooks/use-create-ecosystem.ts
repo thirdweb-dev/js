@@ -1,4 +1,4 @@
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   type UseMutationOptions,
@@ -24,6 +24,8 @@ export function useCreateEcosystem(
   const { isLoggedIn } = useLoggedInUser();
   const queryClient = useQueryClient();
 
+  const client = useThirdwebClient();
+
   return useMutation({
     // Returns the created ecosystem slug
     mutationFn: async (params: CreateEcosystemParams): Promise<string> => {
@@ -32,7 +34,7 @@ export function useCreateEcosystem(
       }
 
       const imageUri = await upload({
-        client: thirdwebClient,
+        client,
         files: [params.logo],
       });
 

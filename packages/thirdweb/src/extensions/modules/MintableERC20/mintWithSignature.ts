@@ -179,7 +179,7 @@ type GeneratePayloadInput = {
   uid?: Hex;
 } & ({ quantity: string } | { quantityWei: bigint });
 
-export const MintRequestERC20 = [
+const MintRequestERC20 = [
   { type: "address", name: "to" },
   { type: "uint256", name: "amount" },
   { type: "bytes", name: "data" },

@@ -78,7 +78,7 @@ const Web3SDK: ThirdwebNextPage = () => {
             Use SDKs in programming languages that you are most comfortable
             with.
             <Flex
-              mt={"auto"}
+              mt="auto"
               pt={8}
               justifyContent="flex-end"
               alignItems="flex-end"
@@ -117,7 +117,7 @@ const Web3SDK: ThirdwebNextPage = () => {
         <Aurora
           pos={{ left: "50%", top: "40%" }}
           size={{ width: "2000px", height: "1300px" }}
-          color={"hsl(223deg 40% 15%)"}
+          color="hsl(223deg 40% 15%)"
         />
       </ProductSection>
 

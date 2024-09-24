@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { thirdwebClient } from "@/constants/client";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import type { Abi, AbiFunction } from "abitype";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { ArrowDown } from "lucide-react";
@@ -50,7 +50,8 @@ export const TransactionSimulator = (props: {
 }) => {
   const activeAccount = useActiveAccount();
   const initialFormValues = props.searchParams;
-  const [isLoading, setIsLoading] = useState(false);
+  // TODO - replace this with a mutation.isPending
+  const [isPending, setIsPending] = useState(false);
   const [state, setState] = useState<State>({
     success: false,
     message: "",
@@ -62,16 +63,17 @@ export const TransactionSimulator = (props: {
   const chain = useV5DashboardChain(
     Number.isInteger(Number(chainId)) ? chainId : undefined,
   );
+  const client = useThirdwebClient();
 
   async function handleSimulation(data: SimulateTransactionForm) {
     try {
-      setIsLoading(true);
+      setIsPending(true);
       const { from, to, value, functionArgs, functionName } = data;
       if (!chain) {
         throw new Error("Invalid chainId");
       }
       const contract = getContract({
-        client: thirdwebClient,
+        client,
         chain,
         address: to,
       });
@@ -153,7 +155,7 @@ ${Object.keys(populatedTransaction)
         shareUrl: "",
       });
     }
-    setIsLoading(false);
+    setIsPending(false);
   }
   return (
     <div className="max-w-[800px] space-y-4">
@@ -164,10 +166,10 @@ ${Object.keys(populatedTransaction)
 
       <form
         onSubmit={form.handleSubmit(handleSimulation)}
-        className="space-y-4 flex-col"
+        className="flex-col space-y-4"
       >
         <Card className="flex flex-col gap-4 p-4">
-          <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Label htmlFor="chainId" className="min-w-60">
               Chain ID
             </Label>
@@ -178,11 +180,11 @@ ${Object.keys(populatedTransaction)
               defaultValue={initialFormValues.chainId}
               {...form.register("chainId", { required: true })}
               // Hide spinner.
-              className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
           </div>
 
-          <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Label htmlFor="from" className="min-w-60">
               From Address
             </Label>
@@ -211,7 +213,7 @@ ${Object.keys(populatedTransaction)
         </div>
 
         <Card className="flex flex-col gap-4 p-4">
-          <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Label htmlFor="to" className="min-w-60">
               Contract Address
             </Label>
@@ -221,7 +223,7 @@ ${Object.keys(populatedTransaction)
               {...form.register("to", { required: true })}
             />
           </div>
-          <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Label htmlFor="functionName" className="min-w-60">
               Function Name
             </Label>
@@ -231,7 +233,7 @@ ${Object.keys(populatedTransaction)
               {...form.register("functionName", { required: true })}
             />
           </div>
-          <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Label htmlFor="functionArgs" className="min-w-60">
               Function Arguments
             </Label>
@@ -247,7 +249,7 @@ ${Object.keys(populatedTransaction)
               }
             />
           </div>
-          <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Label htmlFor="value" className="min-w-60">
               Value
             </Label>
@@ -258,9 +260,9 @@ ${Object.keys(populatedTransaction)
           </div>
 
           <Button type="submit">
-            {isLoading ? (
+            {isPending ? (
               <>
-                <Spinner className="w-4 h-4 mr-2" />
+                <Spinner className="mr-2 h-4 w-4" />
                 Simulating
               </>
             ) : (
@@ -276,7 +278,7 @@ ${Object.keys(populatedTransaction)
             <ArrowDown />
           </div>
           <Card className="max-w-[800px] p-4">
-            <p className="text-sm font-mono whitespace-pre-wrap overflow-auto">
+            <p className="overflow-auto whitespace-pre-wrap font-mono text-sm">
               {state.success
                 ? "--- ✅ Simulation succeeded ---\n"
                 : "--- ❌ Simulation failed ---\n"}
@@ -302,7 +304,7 @@ ${Object.keys(populatedTransaction)
       </div>
 
       {state.codeExample && (
-        <div className="max-w-[800px] flex flex-col gap-2 pt-16 ">
+        <div className="flex max-w-[800px] flex-col gap-2 pt-16 ">
           <a
             href="https://portal.thirdweb.com/references/typescript/v5/simulateTransaction"
             target="_blank"
@@ -340,11 +342,11 @@ const getCodeExample = (
     }
     return item;
   });
-  return `import { 
+  return `import {
   getContract,
   defineChain,
   prepareContractCall,
-  createThirdwebClient 
+  createThirdwebClient
 } from "thirdweb";
 
 const client = createThirdwebClient({
