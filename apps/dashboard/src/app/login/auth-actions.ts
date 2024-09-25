@@ -95,7 +95,8 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
     },
   });
   // if we do not have a user, create one
-  if (userRes.status === 404) {
+  // TODO: this should only need to check for 404, but because of secretKey auth it can also be 400 error
+  if (userRes.status === 404 || userRes.status === 400) {
     const newUserRes = await fetch(`${THIRDWEB_API_HOST}/v1/account/create`, {
       method: "POST",
       headers: {
