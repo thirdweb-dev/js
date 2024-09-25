@@ -174,27 +174,5 @@ export {
   type TokensMintedWithSignatureEventFilters,
 } from "../../extensions/erc1155/__generated__/ISignatureMintERC1155/events/TokensMintedWithSignature.js";
 
-// Packs
-export {
-  packCreatedEvent,
-  type PackCreatedEventFilters,
-} from "../../extensions/erc1155/__generated__/IPack/events/PackCreated.js";
-export {
-  packOpenedEvent,
-  type PackOpenedEventFilters,
-} from "../../extensions/erc1155/__generated__/IPack/events/PackOpened.js";
-export {
-  packUpdatedEvent,
-  type PackUpdatedEventFilters,
-} from "../../extensions/erc1155/__generated__/IPack/events/PackUpdated.js";
-export {
-  createPack,
-  type CreatePackParams,
-} from "../../extensions/erc1155/__generated__/IPack/write/createPack.js";
-export {
-  openPack,
-  type OpenPackParams,
-} from "../../extensions/erc1155/__generated__/IPack/write/openPack.js";
-
 // Zora 1155 contract
 export { nextTokenId } from "../../extensions/erc1155/__generated__/Zora1155/read/nextTokenId.js";
