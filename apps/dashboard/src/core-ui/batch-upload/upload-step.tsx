@@ -30,7 +30,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
     <Flex flexGrow={1} align="center" overflow="auto">
       <Container maxW="container.page">
         <Flex gap={8} flexDir={{ base: "column", md: "row" }}>
-          <div className="aspect-square w-full md:w-1/2">
+          <div className="relative aspect-square w-full md:w-1/2">
             <Center
               borderRadius="md"
               {...getRootProps()}

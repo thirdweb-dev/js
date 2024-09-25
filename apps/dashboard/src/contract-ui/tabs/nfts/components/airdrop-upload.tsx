@@ -204,7 +204,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
           <Flex flexGrow={1} align="center" overflow="auto">
             <Container maxW="container.page">
               <Flex gap={8} flexDir="column">
-                <div className="aspect-[21/9] w-full">
+                <div className="relative aspect-[21/9] w-full">
                   <Center
                     borderRadius="md"
                     {...getRootProps()}

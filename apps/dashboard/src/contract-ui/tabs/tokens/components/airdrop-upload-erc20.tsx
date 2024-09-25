@@ -222,7 +222,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
         </>
       ) : (
         <div className="flex flex-col gap-8">
-          <div className="aspect-[21/9] w-full">
+          <div className="relative aspect-[21/9] w-full">
             <Center
               borderRadius="md"
               {...getRootProps()}

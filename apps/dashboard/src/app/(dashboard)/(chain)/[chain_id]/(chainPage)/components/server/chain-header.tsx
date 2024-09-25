@@ -21,7 +21,7 @@ export function ChainHeader(props: ChainHeaderProps) {
       {!props.headerImageUrl && <div className="h-8 md:hidden" />}
       <div
         className={cn(
-          "max-sm:-mx-4 border-border border-b",
+          "max-sm:-mx-4 relative border-border border-b",
           props.headerImageUrl ? "aspect-[4/1]" : "aspect-[8/1]",
         )}
       >

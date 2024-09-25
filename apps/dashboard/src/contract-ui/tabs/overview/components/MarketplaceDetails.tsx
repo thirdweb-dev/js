@@ -272,7 +272,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
           _hover={{ opacity: 0.75, textDecoration: "none" }}
         >
           <Card p={0} position="relative">
-            <div className="aspect-square w-full overflow-hidden rounded-xl">
+            <div className="relative aspect-square w-full overflow-hidden rounded-xl">
               <Skeleton isLoaded={!isPending}>
                 <NFTMediaWithEmptyState
                   metadata={listing.asset.metadata}

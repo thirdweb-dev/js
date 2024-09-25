@@ -76,7 +76,7 @@ export const IpfsUploadDropzone: React.FC = () => {
     <Flex flexDir="column" gap={4}>
       <div
         className={cn(
-          "w-full",
+          "relative w-full",
           droppedFiles.length
             ? "aspect-square md:aspect-[16/9]"
             : "aspect-[2] md:aspect-[36/9]",
@@ -234,7 +234,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                 alignItems="center"
               >
                 <GridItem colSpan={5} rowSpan={2}>
-                  <div className="aspect-square">
+                  <div className="relative aspect-square">
                     <Box
                       rounded="lg"
                       overflow="hidden"

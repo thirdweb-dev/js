@@ -86,7 +86,7 @@ export const GameShowcase = () => {
           >
             <ModalCloseButton />
           </Box>
-          <div className="aspect-[16/9] w-full">
+          <div className="relative aspect-[16/9] w-full">
             <Box
               bg="#000"
               borderRadius={{ base: "md", md: "lg" }}

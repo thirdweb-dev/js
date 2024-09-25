@@ -51,7 +51,7 @@ export const GuideCard: React.FC<GuideCardProps> = ({
         _hover={{ opacity: 0.86 }}
         overflow="hidden"
       >
-        <div className="aspect-[2400/1260] w-full">
+        <div className="relative aspect-[2400/1260] w-full">
           <Box bg="rgba(0,0,0,.8)">
             <NextImage
               loading="lazy"

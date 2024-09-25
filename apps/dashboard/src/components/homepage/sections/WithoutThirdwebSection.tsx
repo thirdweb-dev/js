@@ -113,7 +113,7 @@ export const WithoutThirdwebSection: React.FC = () => {
     >
       <SimpleGrid columns={12} gap={8} w="full">
         <GridItem colSpan={{ base: 12, md: 6 }}>
-          <div className="aspect-[16/10] w-full">
+          <div className="relative aspect-[16/10] w-full">
             <HomePageCodeBlock
               darkTheme={darkTheme}
               color="white"
@@ -131,7 +131,7 @@ export const WithoutThirdwebSection: React.FC = () => {
           </div>
         </GridItem>
         <GridItem colSpan={{ base: 12, md: 6 }}>
-          <div className="aspect-[16/10] w-full">
+          <div className="relative aspect-[16/10] w-full">
             <HomePageCodeBlock
               darkTheme={darkTheme}
               color="white"

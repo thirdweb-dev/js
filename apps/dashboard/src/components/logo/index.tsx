@@ -6,7 +6,7 @@ export const IconLogo: React.FC<{ extraClass?: string; color?: string }> = ({
   extraClass,
 }) => {
   return (
-    <div className={cn("aspect-[516/321]", extraClass || "")}>
+    <div className={cn("relative aspect-[516/321]", extraClass || "")}>
       <svg viewBox="0 0 516 321" fill="none">
         <title>thirdweb</title>
         <g clipPath="url(#clip0_3:35)">
@@ -100,7 +100,7 @@ export const Logo: React.FC<ILogoProps> = ({
       {(hideWordmark && !forceShowWordMark) ?? (
         <div
           className={cn(
-            "aspect-[1377/267] w-24 flex-shrink-0 md:w-28",
+            "relative aspect-[1377/267] w-24 flex-shrink-0 md:w-28",
             forceShowWordMark ? "block" : "none md:block",
           )}
           style={color ? { color } : undefined}
