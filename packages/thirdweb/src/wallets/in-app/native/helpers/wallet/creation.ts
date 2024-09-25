@@ -2,6 +2,7 @@ import { secp256k1 } from "@noble/curves/secp256k1";
 import { publicKeyToAddress } from "viem/utils";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { stringToHex, toHex } from "../../../../../utils/encoding/hex.js";
+import type { ClientScopedStorage } from "../../../core/authentication/client-scoped-storage.js";
 import type { SetUpWalletRpcReturnType } from "../../../core/authentication/types.js";
 import { storeUserShares } from "../api/fetchers.js";
 import { logoutUser } from "../auth/logout.js";
@@ -15,18 +16,21 @@ import { createErrorMessage } from "../errors.js";
 import { setDeviceShare } from "../storage/local.js";
 import { encryptShareWeb } from "./encryption.js";
 
-export async function setUpNewUserWallet(
-  recoveryCode: string,
-  client: ThirdwebClient,
-) {
+export async function setUpNewUserWallet(args: {
+  recoveryCode: string;
+  client: ThirdwebClient;
+  storage: ClientScopedStorage;
+}) {
+  const { client, recoveryCode, storage } = args;
   try {
     return await generateWallet({
       client,
       recoveryCode: recoveryCode,
+      storage,
     });
   } catch (e) {
     // we log user out so they aren't in the weird state where they are logged in but the wallet is not initialized
-    await logoutUser(client.clientId);
+    await logoutUser({ client, storage });
     throw new Error(
       `Error creating new ews account. Please try signing in again. Original Error: ${e}`,
     );
@@ -37,9 +41,11 @@ export async function setUpNewUserWallet(
 async function generateWallet({
   client,
   recoveryCode,
+  storage,
 }: {
   client: ThirdwebClient;
   recoveryCode: string;
+  storage: ClientScopedStorage;
 }): Promise<
   {
     recoveryCode: string;
@@ -49,6 +55,7 @@ async function generateWallet({
 
   const maybeDeviceShare = await storeShares({
     client,
+    storage,
     walletAddress: walletDetails.publicAddress,
     authShare: walletDetails.shares[AUTH_SHARE_INDEX],
     deviceShare: walletDetails.shares[DEVICE_SHARE_INDEX],
@@ -112,6 +119,7 @@ export async function storeShares<R extends string | undefined>({
   authShare,
   deviceShare,
   recoveryShares,
+  storage,
 }: {
   client: ThirdwebClient;
   walletAddress: string;
@@ -120,6 +128,7 @@ export async function storeShares<R extends string | undefined>({
   recoveryShares?: R extends string
     ? { share: R; recoveryCode: string }[]
     : never;
+  storage: ClientScopedStorage;
 }): Promise<{ deviceShareStored: string } | undefined> {
   let maybeEncryptedRecoveryShares:
     | { share: string; isClientEncrypted: boolean }[]
@@ -144,6 +153,7 @@ export async function storeShares<R extends string | undefined>({
     client,
     maybeEncryptedRecoveryShares,
     walletAddress,
+    storage,
   });
 
   try {

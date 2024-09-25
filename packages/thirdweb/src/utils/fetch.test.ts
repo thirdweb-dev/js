@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ThirdwebClient } from "../client/client.js";
-import type { Ecosystem } from "../wallets/in-app/web/types.js";
+import type { Ecosystem } from "../wallets/in-app/core/wallet/types.js";
 import {
   IS_THIRDWEB_URL_CACHE,
   getClientFetch,

@@ -4,6 +4,7 @@ import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../contract/contract.js";
 import { isHex } from "../utils/encoding/hex.js";
 import { stringify } from "../utils/json.js";
+import { IS_DEV } from "../utils/process.js";
 
 /**
  * @internal
@@ -46,15 +47,13 @@ export async function extractError<abi extends Abi>(args: {
   return error;
 }
 
-const __DEV__ = process.env.NODE_ENV !== "production";
-
 class TransactionError<abi extends Abi> extends Error {
   public contractAddress: string | undefined;
   public chainId: number | undefined;
 
   constructor(reason: string, contract?: ThirdwebContract<abi>) {
     let message = reason;
-    if (__DEV__ && contract) {
+    if (IS_DEV && contract) {
       // show more infor in dev
       message = [
         reason,

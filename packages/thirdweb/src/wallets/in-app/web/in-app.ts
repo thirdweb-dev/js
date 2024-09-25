@@ -206,5 +206,5 @@ export function inAppWallet(
         passkeyDomain: createOptions?.auth?.passkeyDomain,
       });
     },
-  });
+  }) as Wallet<"inApp">;
 }

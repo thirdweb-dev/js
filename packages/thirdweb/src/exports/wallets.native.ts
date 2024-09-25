@@ -5,6 +5,12 @@ export {
   walletConnect,
 } from "../wallets/native/create-wallet.js";
 export { inAppWallet } from "../wallets/in-app/native/in-app.js";
+export { ecosystemWallet } from "../wallets/in-app/native/ecosystem.js";
+export type {
+  EcosystemWalletCreationOptions,
+  EcosystemWalletConnectionOptions,
+  EcosystemWalletAutoConnectOptions,
+} from "../wallets/ecosystem/types.js";
 export { smartWallet } from "../wallets/smart/smart-wallet.js";
 
 export type { Wallet, Account } from "../wallets/interfaces/wallet.js";

@@ -140,6 +140,13 @@ export function createWallet<const ID extends WalletId>(
         creationOptions as CreateWalletArgs<"inApp">[1],
       ) as Wallet<ID>;
     }
+    /**
+     * ECOSYSTEM WALLET
+     */
+    case isEcosystemWallet(id):
+      return ecosystemWallet(
+        ...(args as CreateWalletArgs<EcosystemWalletId>),
+      ) as Wallet<ID>;
 
     /**
      * COINBASE WALLET VIA SDK
@@ -160,11 +167,6 @@ export function createWallet<const ID extends WalletId>(
         },
       }) as Wallet<ID>;
     }
-    case isEcosystemWallet(id):
-      return ecosystemWallet(
-        ...(args as CreateWalletArgs<EcosystemWalletId>),
-      ) as Wallet<ID>;
-
     /**
      * WALLET CONNECT AND INJECTED WALLETS + walletConnect standalone
      */
