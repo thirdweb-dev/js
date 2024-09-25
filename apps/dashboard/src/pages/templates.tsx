@@ -311,7 +311,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
         py={{ base: 10 }}
         flexGrow={1}
       >
-        <Box>
+        <div>
           <Heading as="h2" fontSize="20px" mb={3}>
             <TrackedLink
               as={LinkOverlay}
@@ -364,7 +364,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           >
             {description}
           </Text>
-        </Box>
+        </div>
         <Flex
           direction="row"
           alignItems="center"

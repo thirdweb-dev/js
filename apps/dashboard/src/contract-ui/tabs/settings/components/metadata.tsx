@@ -1,6 +1,5 @@
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import {
-  Box,
   Flex,
   FormControl,
   Icon,
@@ -309,7 +308,7 @@ export const SettingsMetadata = ({
                 </FormControl>
               </Flex>
             ))}
-            <Box>
+            <div>
               <Button
                 isDisabled={metadata.isPending || sendTransaction.isPending}
                 type="button"
@@ -321,7 +320,7 @@ export const SettingsMetadata = ({
               >
                 Add URL
               </Button>
-            </Box>
+            </div>
           </Flex>
         </Flex>
 

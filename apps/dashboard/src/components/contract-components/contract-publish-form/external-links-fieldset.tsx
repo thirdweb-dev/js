@@ -1,4 +1,4 @@
-import { Box, Flex, Icon } from "@chakra-ui/react";
+import { Flex, Icon } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
@@ -37,7 +37,7 @@ export const ExternalLinksFieldset = () => {
         {fields.map((item, index) => (
           <ExternalLinksInput key={item.id} remove={remove} index={index} />
         ))}
-        <Box>
+        <div>
           <Button
             type="button"
             size="sm"
@@ -53,7 +53,7 @@ export const ExternalLinksFieldset = () => {
           >
             Add Resource
           </Button>
-        </Box>
+        </div>
       </Flex>
     </Flex>
   );

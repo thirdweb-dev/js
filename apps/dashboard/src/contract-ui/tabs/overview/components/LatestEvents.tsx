@@ -115,7 +115,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
   const href = useTabHref("events");
 
   return (
-    <Box>
+    <div>
       <SimpleGrid
         columns={9}
         gap={2}
@@ -212,6 +212,6 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
           )}
         </ButtonGroup>
       </SimpleGrid>
-    </Box>
+    </div>
   );
 };

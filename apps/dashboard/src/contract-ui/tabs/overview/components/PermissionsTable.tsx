@@ -130,7 +130,7 @@ const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
   const { onCopy } = useClipboard(data.member);
 
   return (
-    <Box>
+    <div>
       <SimpleGrid
         columns={9}
         gap={2}
@@ -225,6 +225,6 @@ const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
           )}
         </Flex>
       </SimpleGrid>
-    </Box>
+    </div>
   );
 };

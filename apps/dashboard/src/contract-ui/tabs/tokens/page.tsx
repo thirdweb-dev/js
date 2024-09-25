@@ -1,4 +1,4 @@
-import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
+import { ButtonGroup, Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 import { TokenAirdropButton } from "./components/airdrop-button";
@@ -30,7 +30,7 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
           To enable Token features you will have to extend an ERC20 interface in
           your contract.
         </Text>
-        <Box>
+        <div>
           <LinkButton
             isExternal
             href="https://portal.thirdweb.com/contracts/build/extensions/erc-20/ERC20"
@@ -38,7 +38,7 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
           >
             Learn more
           </LinkButton>
-        </Box>
+        </div>
       </Card>
     );
   }

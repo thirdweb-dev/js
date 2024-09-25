@@ -4,7 +4,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Box,
   Divider,
   DrawerBody,
   DrawerFooter,
@@ -273,7 +272,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
                 />
               </div>
             )}
-            <Box>
+            <div>
               <FileInput
                 previewMaxWidth="200px"
                 value={mediaFileUrl as File | string}
@@ -284,7 +283,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
                 selectOrUpload="Upload"
                 helperText={nft?.metadata ? "New Media" : "Media"}
               />
-            </Box>
+            </div>
             <FormHelperText>
               You can upload image, audio, video, html, text, pdf, and 3d model
               files here.

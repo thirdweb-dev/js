@@ -257,7 +257,7 @@ export const MiniPlayground: React.FC<{
             )}
 
             {/* Web3 Wallets */}
-            <Box>
+            <div>
               <FormItem label="Web3 Wallets">
                 <Flex flexWrap="wrap" gap={3}>
                   {(Object.keys(enabledWallets) as WalletIdSubset[]).map(
@@ -293,7 +293,7 @@ export const MiniPlayground: React.FC<{
                 </TrackedLink>
                 <Icon as={FiChevronRight} w={4} h={4} color="blue.500" />
               </Flex>
-            </Box>
+            </div>
 
             {/* Social Logins */}
             <FormItem label="Email & Social Logins">

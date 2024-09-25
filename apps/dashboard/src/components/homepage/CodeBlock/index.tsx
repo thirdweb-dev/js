@@ -209,26 +209,24 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
               as={Code}
               h="full"
             >
-              <Box>
-                <Box>
-                  <Box as="span" display="block" my={1} color="heading">
-                    {tokens.map((line, i) => (
-                      // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                      <Box key={i} {...getLineProps({ line })}>
-                        <LineNumbers
-                          lineNumber={i + 1}
-                          lineHeight={chakraTheme.sizes["5"]}
-                          totalLines={tokens.length}
-                        />
-                        {line.map((token, key) => (
-                          // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                          <span key={key} {...getTokenProps({ token })} />
-                        ))}
-                      </Box>
-                    ))}
-                  </Box>
+              <div>
+                <Box as="span" display="block" my={1} color="heading">
+                  {tokens.map((line, i) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+                    <Box key={i} {...getLineProps({ line })}>
+                      <LineNumbers
+                        lineNumber={i + 1}
+                        lineHeight={chakraTheme.sizes["5"]}
+                        totalLines={tokens.length}
+                      />
+                      {line.map((token, key) => (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+                        <span key={key} {...getTokenProps({ token })} />
+                      ))}
+                    </Box>
+                  ))}
                 </Box>
-              </Box>
+              </div>
             </Box>
           )}
         </Highlight>

@@ -109,7 +109,7 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
             ))}
           </Select>
         </Flex>
-        <Box>
+        <div>
           <FormControl display="flex" alignItems="center">
             <FormLabel htmlFor="auto-update" mb="0">
               Auto-Update
@@ -122,7 +122,7 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
               />
             </LightMode>
           </FormControl>
-        </Box>
+        </div>
       </Flex>
       <Card p={0} overflow="hidden">
         <SimpleGrid
@@ -314,9 +314,9 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
               <Text fontFamily="mono" noOfLines={1}>
                 {transaction.blockNumber}
               </Text>
-              <Box>
+              <div>
                 <Icon as={FiChevronDown} />
-              </Box>
+              </div>
             </Stack>
           </Box>
         </SimpleGrid>

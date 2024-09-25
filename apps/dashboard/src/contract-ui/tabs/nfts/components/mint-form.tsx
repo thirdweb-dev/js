@@ -4,7 +4,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Box,
   Divider,
   DrawerBody,
   DrawerFooter,
@@ -207,7 +206,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
           </FormControl>
           <FormControl isInvalid={!!mediaFileError}>
             <FormLabel>Media</FormLabel>
-            <Box>
+            <div>
               <FileInput
                 previewMaxWidth="200px"
                 value={mediaFileUrl as File | string}
@@ -218,7 +217,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
                 selectOrUpload="Upload"
                 helperText="Media"
               />
-            </Box>
+            </div>
             <FormHelperText>
               You can upload image, audio, video, html, text, pdf, and 3d model
               files here.
