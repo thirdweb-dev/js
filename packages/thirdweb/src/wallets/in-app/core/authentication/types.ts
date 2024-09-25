@@ -129,6 +129,11 @@ export type AuthAndWalletRpcReturnType = AuthStoredTokenWithCookieReturnType & {
   walletDetails: SetUpWalletRpcReturnType | WalletAddressObjectType;
 };
 
+export type AuthResultAndRecoveryCode = AuthStoredTokenWithCookieReturnType & {
+  deviceShareStored?: string;
+  encryptionKey?: string;
+};
+
 export type AuthLoginReturnType = { user: InitializedUser };
 
 // Auth Types
@@ -156,7 +161,7 @@ type InitializedUser = {
 
 // In App Wallet Types
 
-export type WalletAddressObjectType = {
+type WalletAddressObjectType = {
   /**
    * User's wallet address
    */

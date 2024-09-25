@@ -15,11 +15,12 @@ import type {
 } from "../../../interfaces/wallet.js";
 import type { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
 import type {
+  AuthResultAndRecoveryCode,
   GetUser,
   GetUserWalletStatusRpcReturnType,
-  WalletAddressObjectType,
 } from "../../core/authentication/types.js";
 import type { Ecosystem } from "../../core/wallet/types.js";
+import type { IWebWallet } from "../../core/wallet/web-wallet.js";
 import type {
   ClientIdWithQuerierType,
   GetAddressReturnType,
@@ -28,7 +29,6 @@ import type {
   SignedTypedDataReturnType,
 } from "../types.js";
 import type { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
-import type { IWebWallet, PostWalletSetup } from "./web-wallet.js";
 
 type WalletManagementTypes = {
   createWallet: undefined;
@@ -102,19 +102,13 @@ export class IFrameWallet implements IWebWallet {
    * @returns `{walletAddress : string }` The user's wallet details
    * @internal
    */
-  async postWalletSetUp(
-    props: PostWalletSetup,
-  ): Promise<WalletAddressObjectType> {
-    if ("isIframeStorageEnabled" in props) {
-      if (!props.isIframeStorageEnabled) {
-        await this.localStorage.saveDeviceShare(
-          props.deviceShareStored,
-          props.walletUserId,
-        );
-      }
-      return { walletAddress: props.walletAddress };
+  async postWalletSetUp(authResult: AuthResultAndRecoveryCode): Promise<void> {
+    if (authResult.deviceShareStored) {
+      await this.localStorage.saveDeviceShare(
+        authResult.deviceShareStored,
+        authResult.storedToken.authDetails.userWalletId,
+      );
     }
-    throw new Error("Invalid postWalletSetUp props");
   }
 
   /**

@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
-import { createWallet } from "../../../../wallets/create-wallet.js";
 import { getUrlToken } from "../../../../wallets/in-app/web/lib/get-url-token.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
@@ -8,6 +7,7 @@ import {
   getStoredActiveWalletId,
   getStoredConnectedWalletIds,
 } from "../../../../wallets/manager/index.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 import { setLastAuthProvider } from "../../utils/storage.js";
 import { timeoutPromise } from "../../utils/timeoutPromise.js";
@@ -18,6 +18,7 @@ import { useSetActiveWalletConnectionStatus } from "./useSetActiveWalletConnecti
 export function useAutoConnectCore(
   storage: AsyncStorage,
   props: AutoConnectProps & { wallets: Wallet[] },
+  createWalletFn: (id: WalletId) => Wallet,
   getInstalledWallets?: () => Wallet[],
 ) {
   const manager = useConnectionManagerCtx("useAutoConnect");
@@ -73,7 +74,7 @@ export function useAutoConnectCore(
     const activeWallet =
       lastActiveWalletId &&
       (availableWallets.find((w) => w.id === lastActiveWalletId) ||
-        createWallet(lastActiveWalletId));
+        createWalletFn(lastActiveWalletId));
 
     if (activeWallet) {
       try {

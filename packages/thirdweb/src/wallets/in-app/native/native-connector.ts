@@ -1,10 +1,11 @@
-import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { stringify } from "../../../utils/json.js";
 import { nativeLocalStorage } from "../../../utils/storage/nativeStorage.js";
-import type { Account, Wallet } from "../../interfaces/wallet.js";
+import type { Account } from "../../interfaces/wallet.js";
+import { authEndpoint } from "../core/authentication/authEndpoint.js";
 import { ClientScopedStorage } from "../core/authentication/client-scoped-storage.js";
 import { guestAuthenticate } from "../core/authentication/guest.js";
+import { customJwt } from "../core/authentication/jwt.js";
 import {
   getLinkedProfilesInternal,
   linkAccount,
@@ -22,26 +23,17 @@ import type {
   LogoutReturnType,
   MultiStepAuthArgsType,
   MultiStepAuthProviderType,
-  OAuthRedirectObject,
+  SingleStepAuthArgsType,
 } from "../core/authentication/types.js";
 import type { InAppConnector } from "../core/interfaces/connector.js";
+import { EnclaveWallet } from "../core/wallet/enclave-wallet.js";
 import type { Ecosystem } from "../core/wallet/types.js";
+import type { IWebWallet } from "../core/wallet/web-wallet.js";
+import { getUserStatus } from "../web/lib/actions/get-enclave-user-status.js";
 import { sendOtp, verifyOtp } from "../web/lib/auth/otp.js";
-import {
-  authEndpoint,
-  authenticate,
-  customJwt,
-  deleteActiveAccount,
-  guestLogin,
-  otpLogin,
-  siweLogin,
-  socialLogin,
-} from "./auth/native-auth.js";
-import { fetchUserDetails } from "./helpers/api/fetchers.js";
+import { deleteActiveAccount, socialAuth } from "./auth/native-auth.js";
 import { logoutUser } from "./helpers/auth/logout.js";
-import { postAuth } from "./helpers/auth/middleware.js";
-import { getWalletUserDetails } from "./helpers/storage/local.js";
-import { getExistingUserAccount } from "./helpers/wallet/retrieval.js";
+import { ShardedWallet } from "./helpers/wallet/sharded-wallet.js";
 
 type NativeConnectorOptions = {
   client: ThirdwebClient;
@@ -54,6 +46,7 @@ export class InAppNativeConnector implements InAppConnector {
   private ecosystem?: Ecosystem;
   private passkeyDomain?: string;
   private localStorage: ClientScopedStorage;
+  private wallet?: IWebWallet;
 
   constructor(options: NativeConnectorOptions) {
     this.client = options.client;
@@ -66,42 +59,57 @@ export class InAppNativeConnector implements InAppConnector {
     });
   }
 
-  async getUser(): Promise<GetUser> {
-    const localData = await getWalletUserDetails(this.client.clientId);
-    const userStatus = await fetchUserDetails({
+  async initializeWallet(authToken?: string) {
+    const storedAuthToken = await this.localStorage.getAuthCookie();
+    if (!authToken && storedAuthToken === null) {
+      throw new Error(
+        "No auth token provided and no stored auth token found to initialize the wallet",
+      );
+    }
+    const user = await getUserStatus({
+      authToken: authToken || (storedAuthToken as string),
       client: this.client,
-      email: localData?.email,
-      storage: this.localStorage,
+      ecosystem: this.ecosystem,
     });
-    if (userStatus.status === "Logged In, Wallet Initialized") {
-      return {
-        status: userStatus.status,
-        authDetails: userStatus.storedToken.authDetails,
-        walletAddress: userStatus.walletAddress,
-        account: await this.getAccount(),
-      };
+    if (!user) {
+      throw new Error("Cannot initialize wallet, no user logged in");
     }
-    if (userStatus.status === "Logged In, New Device") {
-      return {
-        status: "Logged In, New Device",
-        authDetails: userStatus.storedToken.authDetails,
-        walletAddress: userStatus.walletAddress,
-      };
+    const wallet = user.wallets[0];
+    // TODO (enclaves): Migration to enclave wallet if sharded
+    if (wallet && wallet.type === "enclave") {
+      this.wallet = new EnclaveWallet({
+        client: this.client,
+        ecosystem: this.ecosystem,
+        address: wallet.address,
+        storage: this.localStorage,
+      });
+    } else {
+      this.wallet = new ShardedWallet({
+        client: this.client,
+        storage: this.localStorage,
+      });
     }
-    if (userStatus.status === "Logged In, Wallet Uninitialized") {
-      return {
-        status: "Logged In, Wallet Uninitialized",
-        authDetails: userStatus.storedToken.authDetails,
-      };
-    }
-    // Logged out
-    return { status: "Logged Out" };
   }
+
+  async getUser(): Promise<GetUser> {
+    if (!this.wallet) {
+      const localAuthToken = await this.localStorage.getAuthCookie();
+      if (!localAuthToken) {
+        return { status: "Logged Out" };
+      }
+      await this.initializeWallet(localAuthToken);
+    }
+    if (!this.wallet) {
+      throw new Error("Wallet not initialized");
+    }
+    return this.wallet.getUserWalletStatus();
+  }
+
   getAccount(): Promise<Account> {
-    return getExistingUserAccount({
-      client: this.client,
-      storage: this.localStorage,
-    });
+    if (!this.wallet) {
+      throw new Error("Wallet not initialized");
+    }
+    return this.wallet.getAccount();
   }
 
   preAuthenticate(args: MultiStepAuthProviderType): Promise<void> {
@@ -144,100 +152,63 @@ export class InAppNativeConnector implements InAppConnector {
         const ExpoLinking = require("expo-linking");
         const redirectUrl =
           params.redirectUrl || (ExpoLinking.createURL("") as string);
-        return authenticate({
+        return socialAuth({
           auth: { strategy, redirectUrl },
           client: this.client,
+          ecosystem: this.ecosystem,
         });
       }
       case "passkey":
         return this.passkeyAuth(params);
+      case "jwt":
+        return customJwt({
+          jwt: params.jwt,
+          client: this.client,
+          storage: this.localStorage,
+        });
+      case "auth_endpoint":
+        return authEndpoint({
+          payload: params.payload,
+          client: this.client,
+          storage: this.localStorage,
+        });
       default:
         throw new Error(`Unsupported authentication type: ${strategy}`);
     }
   }
 
-  async connect(params: AuthArgsType): Promise<AuthLoginReturnType> {
-    const strategy = params.strategy;
-    switch (strategy) {
-      case "email": {
-        return await this.validateOtp({
-          email: params.email,
-          verificationCode: params.verificationCode,
-          strategy: "email",
-          client: this.client,
-          ecosystem: params.ecosystem,
-        });
-      }
-      case "phone": {
-        return await this.validateOtp({
-          phoneNumber: params.phoneNumber,
-          verificationCode: params.verificationCode,
-          strategy: "phone",
-          client: this.client,
-          ecosystem: params.ecosystem,
-        });
-      }
-      case "google":
-      case "facebook":
-      case "discord":
-      case "line":
-      case "x":
-      case "farcaster":
-      case "telegram":
-      case "coinbase":
-      case "apple": {
-        const ExpoLinking = require("expo-linking");
-        const redirectUrl =
-          params.redirectUrl || (ExpoLinking.createURL("") as string); // Will default to the app scheme
-        return this.socialLogin({
-          strategy,
-          redirectUrl,
-        });
-      }
-      case "guest": {
-        return this.guestLogin({
-          ecosystem: params.ecosystem,
-        });
-      }
-      case "wallet": {
-        return this.siweLogin({
-          wallet: params.wallet,
-          chain: params.chain,
-        });
-      }
-      case "jwt": {
-        return this.customJwt({
-          jwt: params.jwt,
-          password: params.encryptionKey,
-        });
-      }
-      case "auth_endpoint": {
-        return this.authEndpoint({
-          payload: params.payload,
-          encryptionKey: params.encryptionKey,
-        });
-      }
-      case "passkey": {
-        const authToken = await this.passkeyAuth(params);
-        const account = await this.getAccount();
-        return {
-          user: {
-            status: "Logged In, Wallet Initialized",
-            account,
-            authDetails: authToken.storedToken.authDetails,
-            walletAddress: account.address,
-          },
-        };
-      }
-      case "iframe": {
-        throw new Error("iframe_email_verification is not supported in native");
-      }
-      case "iframe_email_verification": {
-        throw new Error("iframe_email_verification is not supported in native");
-      }
-      default:
-        assertUnreachable(strategy);
+  async connect(
+    params: MultiStepAuthArgsType | SingleStepAuthArgsType,
+  ): Promise<AuthLoginReturnType> {
+    const authResult = await this.authenticate({
+      ...params,
+      client: this.client,
+      ecosystem: this.ecosystem,
+    });
+    await this.initializeWallet(authResult.storedToken.cookieString);
+    if (!this.wallet) {
+      throw new Error("Wallet not initialized");
     }
+    const encryptionKey =
+      params.strategy === "jwt"
+        ? params.encryptionKey
+        : params.strategy === "auth_endpoint"
+          ? params.encryptionKey
+          : undefined;
+
+    await this.wallet.postWalletSetUp({
+      ...authResult,
+      encryptionKey,
+    });
+    const account = await this.getAccount();
+    return {
+      user: {
+        status: "Logged In, Wallet Initialized",
+        account,
+        authDetails: authResult.storedToken.authDetails,
+        walletAddress: account.address,
+      },
+    };
   }
 
   private async passkeyAuth(args: {
@@ -284,23 +255,6 @@ export class InAppNativeConnector implements InAppConnector {
         });
       }
 
-      const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
-        jwtToken: authToken.storedToken.jwtToken,
-        authDetails: authToken.storedToken.authDetails,
-        authProvider: authToken.storedToken.authProvider,
-        developerClientId: authToken.storedToken.developerClientId,
-        cookieString: authToken.storedToken.cookieString,
-        // we should always store the jwt cookie since there's no concept of cookie in react native
-        shouldStoreCookieString: true,
-        isNewUser: authToken.storedToken.isNewUser,
-      };
-
-      await postAuth({
-        storedToken: toStoreToken,
-        client,
-        storage,
-      });
-
       return authToken;
     } catch (error) {
       console.error(
@@ -313,180 +267,12 @@ export class InAppNativeConnector implements InAppConnector {
     }
   }
 
-  private async validateOtp(
-    options: MultiStepAuthArgsType & {
-      client: ThirdwebClient;
-      ecosystem?: Ecosystem;
-    },
-  ): Promise<AuthLoginReturnType> {
-    try {
-      const { storedToken } = await otpLogin({
-        ...options,
-        storage: this.localStorage,
-      });
-      const account = await this.getAccount();
-      return {
-        user: {
-          status: "Logged In, Wallet Initialized",
-          account,
-          authDetails: storedToken.authDetails,
-          walletAddress: account.address,
-        },
-      };
-    } catch (error) {
-      console.error(`Error while validating OTP: ${error}`);
-      if (error instanceof Error) {
-        throw new Error(`Error while validating otp: ${error.message}`);
-      }
-      throw new Error("An unknown error occurred while validating otp");
-    }
-  }
-
   // TODO (rn) expose in the interface
   async deleteActiveAccount() {
     return deleteActiveAccount({
       client: this.client,
       storage: this.localStorage,
     });
-  }
-
-  private async socialLogin(
-    auth: OAuthRedirectObject,
-  ): Promise<AuthLoginReturnType> {
-    try {
-      const { storedToken } = await socialLogin({
-        auth,
-        client: this.client,
-        storage: this.localStorage,
-      });
-      const account = await this.getAccount();
-      return {
-        user: {
-          status: "Logged In, Wallet Initialized",
-          account,
-          authDetails: storedToken.authDetails,
-          walletAddress: account.address,
-        },
-      };
-    } catch (error) {
-      console.error(`Error while signing in with: ${auth}. ${error}`);
-      if (error instanceof Error) {
-        throw new Error(`Error signing in with ${auth}: ${error.message}`);
-      }
-      throw new Error(`An unknown error occurred signing in with ${auth}`);
-    }
-  }
-
-  private async siweLogin(options: {
-    wallet: Wallet;
-    chain: Chain;
-  }): Promise<AuthLoginReturnType> {
-    try {
-      const { storedToken } = await siweLogin({
-        client: this.client,
-        wallet: options.wallet,
-        chain: options.chain,
-        ecosystem: this.ecosystem,
-        storage: this.localStorage,
-      });
-      const account = await this.getAccount();
-      return {
-        user: {
-          status: "Logged In, Wallet Initialized",
-          account,
-          authDetails: storedToken.authDetails,
-          walletAddress: account.address,
-        },
-      };
-    } catch (error) {
-      console.error(
-        `Error while signing in with: ${options.wallet.id}. ${error}`,
-      );
-      if (error instanceof Error) {
-        throw new Error(
-          `Error signing in with ${options.wallet.id}: ${error.message}`,
-        );
-      }
-      throw new Error(
-        `An unknown error occurred signing in with ${options.wallet.id}`,
-      );
-    }
-  }
-
-  private async guestLogin(options: {
-    ecosystem?: Ecosystem;
-  }): Promise<AuthLoginReturnType> {
-    try {
-      const { storedToken } = await guestLogin({
-        client: this.client,
-        ecosystem: options.ecosystem,
-        storage: this.localStorage,
-      });
-      const account = await this.getAccount();
-      return {
-        user: {
-          status: "Logged In, Wallet Initialized",
-          account,
-          authDetails: storedToken.authDetails,
-          walletAddress: account.address,
-        },
-      };
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error generating guest account: ${error.message}`);
-      }
-      throw new Error("An unknown error occurred generating guest account");
-    }
-  }
-
-  private async customJwt(authOptions: {
-    jwt: string;
-    password: string;
-  }): Promise<AuthLoginReturnType> {
-    try {
-      const { storedToken } = await customJwt({
-        authOptions,
-        client: this.client,
-        storage: this.localStorage,
-      });
-      const account = await this.getAccount();
-      return {
-        user: {
-          status: "Logged In, Wallet Initialized",
-          account,
-          authDetails: storedToken.authDetails,
-          walletAddress: account.address,
-        },
-      };
-    } catch (error) {
-      console.error(`Error while verifying auth: ${error}`);
-      throw error;
-    }
-  }
-
-  private async authEndpoint(authOptions: {
-    payload: string;
-    encryptionKey: string;
-  }): Promise<AuthLoginReturnType> {
-    try {
-      const { storedToken } = await authEndpoint({
-        authOptions,
-        client: this.client,
-        storage: this.localStorage,
-      });
-      const account = await this.getAccount();
-      return {
-        user: {
-          status: "Logged In, Wallet Initialized",
-          account,
-          authDetails: storedToken.authDetails,
-          walletAddress: account.address,
-        },
-      };
-    } catch (error) {
-      console.error(`Error while verifying auth_endpoint auth: ${error}`);
-      throw error;
-    }
   }
 
   logout(): Promise<LogoutReturnType> {
@@ -512,8 +298,4 @@ export class InAppNativeConnector implements InAppConnector {
       storage: this.localStorage,
     });
   }
-}
-
-function assertUnreachable(x: never): never {
-  throw new Error(`Invalid param: ${x}`);
 }

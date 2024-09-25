@@ -1,10 +1,22 @@
 import type {
   InAppWalletAutoConnectOptions,
   InAppWalletConnectionOptions,
-  InAppWalletCreationOptions,
 } from "../in-app/core/wallet/types.js";
 
-export type EcosystemWalletCreationOptions = InAppWalletCreationOptions & {
+export type EcosystemWalletCreationOptions = {
+  auth?: {
+    /**
+     * Whether to display the social auth prompt in a popup or redirect
+     */
+    mode?: "popup" | "redirect" | "window";
+    /**
+     * Optional url to redirect to after authentication
+     */
+    redirectUrl?: string;
+  };
+  /**
+   * The partnerId of the ecosystem wallet to connect to
+   */
   partnerId?: string;
 };
 

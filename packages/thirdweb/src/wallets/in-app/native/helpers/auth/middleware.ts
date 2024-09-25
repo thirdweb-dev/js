@@ -13,12 +13,12 @@ import { setUpShareForNewDevice } from "../wallet/retrieval.js";
 export async function postAuth({
   storedToken,
   client,
-  recoveryCode,
+  encryptionKey,
   storage,
 }: {
   storedToken: AuthStoredTokenWithCookieReturnType["storedToken"];
   client: ThirdwebClient;
-  recoveryCode?: string;
+  encryptionKey?: string;
   storage: ClientScopedStorage;
 }) {
   if (storedToken.shouldStoreCookieString) {
@@ -40,7 +40,7 @@ export async function postAuth({
     const _recoveryCode = await getRecoveryCode({
       storedToken,
       client,
-      recoveryCode,
+      recoveryCode: encryptionKey,
       storage,
     });
     if (!_recoveryCode) {
@@ -59,7 +59,7 @@ export async function postAuth({
       const _recoveryCode = await getRecoveryCode({
         storedToken,
         client,
-        recoveryCode,
+        recoveryCode: encryptionKey,
         storage,
       });
       if (!_recoveryCode) {
@@ -69,63 +69,6 @@ export async function postAuth({
         await setUpShareForNewDevice({
           client: client,
           recoveryCode: _recoveryCode,
-          storage,
-        });
-      } catch (error) {
-        console.error("Error setting up wallet on device", error);
-        throw error;
-      }
-    }
-  }
-
-  return storedToken;
-}
-
-export async function postAuthUserManaged(args: {
-  storedToken: AuthStoredTokenWithCookieReturnType["storedToken"];
-  client: ThirdwebClient;
-  password: string;
-  storage: ClientScopedStorage;
-}) {
-  const { storedToken, client, password, storage } = args;
-  const _password = await getRecoveryCode({
-    storedToken,
-    client,
-    recoveryCode: password,
-    storage,
-  });
-
-  if (storedToken.shouldStoreCookieString) {
-    await storage.saveAuthCookie(storedToken.cookieString);
-  }
-
-  await setWallerUserDetails({
-    clientId: client.clientId,
-    userId: storedToken.authDetails.userWalletId,
-    email:
-      "email" in storedToken.authDetails
-        ? storedToken.authDetails.email
-        : "phoneNumber" in storedToken.authDetails
-          ? storedToken.authDetails.phoneNumber
-          : undefined,
-  });
-
-  if (storedToken.isNewUser) {
-    await setUpNewUserWallet({
-      client,
-      recoveryCode: _password,
-      storage,
-    });
-  } else {
-    try {
-      // existing device share
-      await getDeviceShare(client.clientId);
-    } catch {
-      // trying to recreate device share from recovery code to derive wallet
-      try {
-        await setUpShareForNewDevice({
-          client,
-          recoveryCode: _password,
           storage,
         });
       } catch (error) {

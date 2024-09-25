@@ -71,7 +71,12 @@ export function ecosystemWallet(
   };
   return createInAppWallet({
     ecosystem,
-    createOptions,
+    createOptions: {
+      auth: {
+        ...createOptions?.auth,
+        options: [], // controlled by ecosystem
+      },
+    },
     connectorFactory: async (client: ThirdwebClient) => {
       const { InAppWebConnector } = await import("./lib/web-connector.js");
       return new InAppWebConnector({

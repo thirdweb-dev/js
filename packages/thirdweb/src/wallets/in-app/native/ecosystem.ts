@@ -71,13 +71,18 @@ export function ecosystemWallet(
   };
   return createInAppWallet({
     ecosystem,
-    createOptions,
+    createOptions: {
+      auth: {
+        ...createOptions?.auth,
+        options: [], // controlled by ecosystem
+      },
+    },
     connectorFactory: async (client: ThirdwebClient) => {
       const { InAppNativeConnector } = await import("./native-connector.js");
       return new InAppNativeConnector({
         client,
-        passkeyDomain: createOptions?.auth?.passkeyDomain,
         ecosystem,
+        // TODO (enclave): passkeyDomain for ecosystem wallets
       });
     },
   }) as Wallet<EcosystemWalletId>;

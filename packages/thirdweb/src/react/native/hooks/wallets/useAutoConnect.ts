@@ -1,4 +1,5 @@
 import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
+import { createWallet } from "../../../../wallets/native/create-wallet.js";
 import type { AutoConnectProps } from "../../../core/hooks/connection/types.js";
 import { useAutoConnectCore } from "../../../core/hooks/wallets/useAutoConnect.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
@@ -23,8 +24,12 @@ import { getDefaultWallets } from "../../wallets/defaultWallets.js";
  * @returns whether the auto connect was successful.
  */
 export function useAutoConnect(props: AutoConnectProps) {
-  return useAutoConnectCore(nativeLocalStorage, {
-    ...props,
-    wallets: props.wallets || getDefaultWallets(props),
-  });
+  return useAutoConnectCore(
+    nativeLocalStorage,
+    {
+      ...props,
+      wallets: props.wallets || getDefaultWallets(props),
+    },
+    createWallet,
+  );
 }

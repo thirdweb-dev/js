@@ -11,18 +11,18 @@ import type {
   Account,
   SendTransactionOption,
 } from "../../../interfaces/wallet.js";
-import type { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
+import { getUserStatus } from "../../web/lib/actions/get-enclave-user-status.js";
+import { signMessage as signEnclaveMessage } from "../../web/lib/actions/sign-message.enclave.js";
+import { signTransaction as signEnclaveTransaction } from "../../web/lib/actions/sign-transaction.enclave.js";
+import { signTypedData as signEnclaveTypedData } from "../../web/lib/actions/sign-typed-data.enclave.js";
+import type { ClientScopedStorage } from "../authentication/client-scoped-storage.js";
 import type {
   AuthDetails,
+  AuthResultAndRecoveryCode,
   GetUser,
-  WalletAddressObjectType,
-} from "../../core/authentication/types.js";
-import type { Ecosystem } from "../../core/wallet/types.js";
-import { getUserStatus } from "./actions/get-enclave-user-status.js";
-import { signMessage as signEnclaveMessage } from "./actions/sign-message.enclave.js";
-import { signTransaction as signEnclaveTransaction } from "./actions/sign-transaction.enclave.js";
-import { signTypedData as signEnclaveTypedData } from "./actions/sign-typed-data.enclave.js";
-import type { IWebWallet, PostWalletSetup } from "./web-wallet.js";
+} from "../authentication/types.js";
+import type { Ecosystem } from "./types.js";
+import type { IWebWallet } from "./web-wallet.js";
 
 export type UserStatus = {
   linkedAccounts: {
@@ -73,12 +73,8 @@ export class EnclaveWallet implements IWebWallet {
    * @returns `{walletAddress: string }` The user's wallet details
    * @internal
    */
-  async postWalletSetUp({
-    walletAddress,
-    authToken,
-  }: PostWalletSetup): Promise<WalletAddressObjectType> {
-    await this.localStorage.saveAuthCookie(authToken);
-    return { walletAddress };
+  async postWalletSetUp(authResult: AuthResultAndRecoveryCode): Promise<void> {
+    await this.localStorage.saveAuthCookie(authResult.storedToken.cookieString);
   }
 
   /**

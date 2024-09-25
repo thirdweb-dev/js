@@ -25,14 +25,15 @@ import type {
   SingleStepAuthArgsType,
 } from "../../core/authentication/types.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
+import { EnclaveWallet } from "../../core/wallet/enclave-wallet.js";
 import type { Ecosystem } from "../../core/wallet/types.js";
+import type { IWebWallet } from "../../core/wallet/web-wallet.js";
 import { getUserStatus } from "../lib/actions/get-enclave-user-status.js";
 import type { InAppWalletConstructorType } from "../types.js";
 import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { Auth, type AuthQuerierTypes } from "./auth/iframe-auth.js";
 import { loginWithOauth, loginWithOauthRedirect } from "./auth/oauth.js";
 import { sendOtp, verifyOtp } from "./auth/otp.js";
-import { EnclaveWallet } from "./enclave-wallet.js";
 import { IFrameWallet } from "./iframe-wallet.js";
 
 /**
@@ -44,7 +45,7 @@ export class InAppWebConnector implements InAppConnector {
   private querier: InAppWalletIframeCommunicator<AuthQuerierTypes>;
   private localStorage: ClientScopedStorage;
 
-  private wallet?: EnclaveWallet | IFrameWallet;
+  private wallet?: IWebWallet;
   /**
    * Used to manage the Auth state of the user.
    */
@@ -120,10 +121,14 @@ export class InAppWebConnector implements InAppConnector {
           throw new Error("Failed to initialize wallet");
         }
 
+        const deviceShareStored =
+          "deviceShareStored" in authResult.walletDetails
+            ? authResult.walletDetails.deviceShareStored
+            : undefined;
+
         await this.wallet.postWalletSetUp({
-          ...authResult.walletDetails,
-          authToken: authResult.storedToken.cookieString,
-          walletUserId: authResult.storedToken.authDetails.userWalletId,
+          storedToken: authResult.storedToken,
+          deviceShareStored,
         });
 
         if (authResult.storedToken.authDetails.walletType !== "enclave") {
@@ -222,11 +227,11 @@ export class InAppWebConnector implements InAppConnector {
   async getUser(): Promise<GetUser> {
     // If we don't have a wallet yet we'll create one
     if (!this.wallet) {
-      const maybeAuthToken = await this.localStorage.getAuthCookie();
-      if (!maybeAuthToken) {
+      const localAuthToken = await this.localStorage.getAuthCookie();
+      if (!localAuthToken) {
         return { status: "Logged Out" };
       }
-      await this.initializeWallet(maybeAuthToken);
+      await this.initializeWallet(localAuthToken);
     }
     if (!this.wallet) {
       throw new Error("Wallet not initialized");
