@@ -14,11 +14,10 @@ import type {
   SendTransactionOption,
 } from "../../../interfaces/wallet.js";
 import type { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
-import {
-  type GetUser,
-  type GetUserWalletStatusRpcReturnType,
-  UserWalletStatus,
-  type WalletAddressObjectType,
+import type {
+  GetUser,
+  GetUserWalletStatusRpcReturnType,
+  WalletAddressObjectType,
 } from "../../core/authentication/types.js";
 import type { Ecosystem } from "../../core/wallet/types.js";
 import type {
@@ -160,22 +159,22 @@ export class IFrameWallet implements IWebWallet {
         procedureName: "getUserStatus",
         params: undefined,
       });
-    if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED) {
+    if (userStatus.status === "Logged In, Wallet Initialized") {
       return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+        status: "Logged In, Wallet Initialized",
         ...userStatus.user,
         account: await this.getAccount(),
       };
     }
-    if (userStatus.status === UserWalletStatus.LOGGED_IN_NEW_DEVICE) {
+    if (userStatus.status === "Logged In, New Device") {
       return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        status: "Logged In, New Device",
         ...userStatus.user,
       };
     }
-    if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED) {
+    if (userStatus.status === "Logged In, Wallet Uninitialized") {
       return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        status: "Logged In, Wallet Uninitialized",
         ...userStatus.user,
       };
     }

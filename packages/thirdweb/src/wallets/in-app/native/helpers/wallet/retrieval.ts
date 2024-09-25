@@ -6,6 +6,7 @@ import {
 } from "../../../../../utils/encoding/hex.js";
 import type { Account } from "../../../../interfaces/wallet.js";
 import { privateKeyToAccount } from "../../../../private-key.js";
+import type { ClientScopedStorage } from "../../../core/authentication/client-scoped-storage.js";
 import type { SetUpWalletRpcReturnType } from "../../../core/authentication/types.js";
 import { getUserShares } from "../api/fetchers.js";
 import {
@@ -20,13 +21,17 @@ import { decryptShareWeb } from "./encryption.js";
  * For users on a known device and logged in.
  * Will throw if called on a new device // user not logged in
  */
-export async function getExistingUserAccount(args: { client: ThirdwebClient }) {
-  const { client } = args;
+export async function getExistingUserAccount(args: {
+  client: ThirdwebClient;
+  storage: ClientScopedStorage;
+}) {
+  const { client, storage } = args;
   const { authShare, deviceShare } = await getShares({
     client,
     authShare: { toRetrieve: true },
     deviceShare: { toRetrieve: true },
     recoveryShare: { toRetrieve: false },
+    storage,
   });
   return getAccountFromShares({
     client,
@@ -74,6 +79,7 @@ async function getShares<
   authShare,
   deviceShare,
   recoveryShare,
+  storage,
 }: {
   client: ThirdwebClient;
   authShare: { toRetrieve: A };
@@ -86,6 +92,7 @@ async function getShares<
         toRetrieve: R;
       };
   deviceShare: { toRetrieve: D };
+  storage: ClientScopedStorage;
 }): Promise<{
   authShare: A extends true ? string : undefined;
   recoveryShare: R extends true ? string : undefined;
@@ -119,7 +126,7 @@ async function getShares<
     );
   }
 
-  const userShares = await getUserShares(client, getShareUrl);
+  const userShares = await getUserShares({ client, getShareUrl, storage });
   const { authShare: _authShare, maybeEncryptedRecoveryShares } = userShares;
 
   let recoverShareToReturn: string | undefined;
@@ -180,15 +187,18 @@ async function getAccountAddressFromShares(args: {
 export async function setUpShareForNewDevice({
   recoveryCode,
   client,
+  storage,
 }: {
   recoveryCode: string;
   client: ThirdwebClient;
+  storage: ClientScopedStorage;
 }): Promise<SetUpWalletRpcReturnType> {
   const { recoveryShare, authShare } = await getShares({
     client,
     authShare: { toRetrieve: true },
     recoveryShare: { toRetrieve: true, recoveryCode },
     deviceShare: { toRetrieve: false },
+    storage,
   });
   // instead of recreating a new share, just save the recovery one as the new device share
   const deviceShare = recoveryShare;
@@ -201,6 +211,7 @@ export async function setUpShareForNewDevice({
     client,
     walletAddress,
     deviceShare,
+    storage,
   });
 
   if (!maybeDeviceShare?.deviceShareStored) {

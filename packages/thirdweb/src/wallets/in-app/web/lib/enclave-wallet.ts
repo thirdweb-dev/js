@@ -12,11 +12,10 @@ import type {
   SendTransactionOption,
 } from "../../../interfaces/wallet.js";
 import type { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
-import {
-  type GetUser,
-  RecoveryShareManagement,
-  UserWalletStatus,
-  type WalletAddressObjectType,
+import type {
+  AuthDetails,
+  GetUser,
+  WalletAddressObjectType,
 } from "../../core/authentication/types.js";
 import type { Ecosystem } from "../../core/wallet/types.js";
 import { getUserStatus } from "./actions/get-enclave-user-status.js";
@@ -89,7 +88,7 @@ export class EnclaveWallet implements IWebWallet {
   async getUserWalletStatus(): Promise<GetUser> {
     const token = await this.localStorage.getAuthCookie();
     if (!token) {
-      return { status: UserWalletStatus.LOGGED_OUT };
+      return { status: "Logged Out" };
     }
 
     const userStatus = await getUserStatus({
@@ -99,11 +98,11 @@ export class EnclaveWallet implements IWebWallet {
     });
 
     if (!userStatus) {
-      return { status: UserWalletStatus.LOGGED_OUT };
+      return { status: "Logged Out" };
     }
     const wallet = userStatus.wallets[0];
 
-    const authDetails = {
+    const authDetails: AuthDetails = {
       email: userStatus.linkedAccounts.find(
         (account) => account.details.email !== undefined,
       )?.details.email,
@@ -111,18 +110,18 @@ export class EnclaveWallet implements IWebWallet {
         (account) => account.details.phone !== undefined,
       )?.details.phone,
       userWalletId: userStatus.id || "",
-      recoveryShareManagement: RecoveryShareManagement.ENCLAVE,
+      recoveryShareManagement: "ENCLAVE",
     };
 
     if (!wallet) {
       return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        status: "Logged In, Wallet Uninitialized",
         authDetails,
       };
     }
 
     return {
-      status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+      status: "Logged In, Wallet Initialized",
       walletAddress: wallet.address,
       authDetails,
       account: await this.getAccount(),

@@ -12,7 +12,6 @@ import type {
   WalletAutoConnectionOption,
   WalletConnectionOption,
 } from "../../../wallet-types.js";
-import { UserWalletStatus } from "../authentication/types.js";
 import type { InAppConnector } from "../interfaces/connector.js";
 
 /**
@@ -142,7 +141,7 @@ async function convertToSmartAccount(options: {
 async function getAuthenticatedUser(connector: InAppConnector) {
   const user = await connector.getUser();
   switch (user.status) {
-    case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
+    case "Logged In, Wallet Initialized": {
       return user;
     }
   }

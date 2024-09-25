@@ -5,6 +5,7 @@ import {
 } from "@aws-sdk/credential-providers";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { stringToBytes } from "../../../../../utils/encoding/to-bytes.js";
+import type { ClientScopedStorage } from "../../../core/authentication/client-scoped-storage.js";
 import { authFetchEmbeddedWalletUser } from "../api/fetchers.js";
 import {
   AWS_REGION,
@@ -16,14 +17,18 @@ import {
   ROUTE_COGNITO_IDENTITY_POOL_URL,
 } from "../constants.js";
 
-export async function getCognitoRecoveryPasswordV1(client: ThirdwebClient) {
-  const idTokenResponse = await authFetchEmbeddedWalletUser(
-    client,
-    ROUTE_AUTH_COGNITO_ID_TOKEN_V1,
-    {
+export async function getCognitoRecoveryPasswordV1(args: {
+  client: ThirdwebClient;
+  storage: ClientScopedStorage;
+}) {
+  const idTokenResponse = await authFetchEmbeddedWalletUser({
+    client: args.client,
+    url: ROUTE_AUTH_COGNITO_ID_TOKEN_V1,
+    props: {
       method: "GET",
     },
-  );
+    storage: args.storage,
+  });
   if (!idTokenResponse.ok) {
     throw new Error(
       `Failed to fetch id token from Cognito: ${JSON.stringify(
@@ -73,14 +78,18 @@ export async function getCognitoRecoveryPasswordV1(client: ThirdwebClient) {
   return result;
 }
 
-export async function getCognitoRecoveryPasswordV2(client: ThirdwebClient) {
-  const idTokenResponse = await authFetchEmbeddedWalletUser(
-    client,
-    ROUTE_AUTH_COGNITO_ID_TOKEN_V2,
-    {
+export async function getCognitoRecoveryPasswordV2(args: {
+  client: ThirdwebClient;
+  storage: ClientScopedStorage;
+}) {
+  const idTokenResponse = await authFetchEmbeddedWalletUser({
+    client: args.client,
+    url: ROUTE_AUTH_COGNITO_ID_TOKEN_V2,
+    props: {
       method: "GET",
     },
-  );
+    storage: args.storage,
+  });
   if (!idTokenResponse.ok) {
     throw new Error(
       `Failed to fetch id token from Cognito: ${JSON.stringify(

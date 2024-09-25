@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  AUTH_TOKEN_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
   WALLET_USER_DETAILS_LOCAL_STORAGE_NAME,
   WALLET_USER_ID_LOCAL_STORAGE_NAME,
@@ -22,28 +21,28 @@ const removeItemInAsyncStorage = async (key: string) => {
   await AsyncStorage.removeItem(key);
 };
 
-export async function getAuthTokenClient(clientId: string) {
-  return getItemFromAsyncStorage(AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId));
-}
+// export async function getAuthTokenClient(clientId: string) {
+//   return getItemFromAsyncStorage(AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId));
+// }
 
-export async function setAuthTokenClient(
-  cookieString: string,
-  clientId: string,
-): Promise<void> {
-  const authToken = AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId);
-  await setItemInAsyncStorage(authToken, cookieString);
-}
+// export async function setAuthTokenClient(
+//   cookieString: string,
+//   clientId: string,
+// ): Promise<void> {
+//   const authToken = AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId);
+//   await setItemInAsyncStorage(authToken, cookieString);
+// }
 
-export async function removeAuthTokenInClient(
-  clientId: string,
-): Promise<boolean> {
-  const verifiedTokenString = await getAuthTokenClient(clientId);
-  if (verifiedTokenString) {
-    await removeItemInAsyncStorage(AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId));
-    return true;
-  }
-  return false;
-}
+// export async function removeAuthTokenInClient(
+//   clientId: string,
+// ): Promise<boolean> {
+//   const verifiedTokenString = await getAuthTokenClient(clientId);
+//   if (verifiedTokenString) {
+//     await removeItemInAsyncStorage(AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId));
+//     return true;
+//   }
+//   return false;
+// }
 
 export async function setWallerUserDetails({
   clientId,

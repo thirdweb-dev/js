@@ -1,9 +1,8 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
-import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import type { Ecosystem } from "../wallet/types.js";
-import { ClientScopedStorage } from "./client-scoped-storage.js";
+import type { ClientScopedStorage } from "./client-scoped-storage.js";
 import type { AuthStoredTokenWithCookieReturnType } from "./types.js";
 
 function getVerificationPath() {
@@ -56,7 +55,7 @@ export interface PasskeyClient {
 
 export async function registerPasskey(options: {
   client: ThirdwebClient;
-  storage: AsyncStorage;
+  storage: ClientScopedStorage;
   passkeyClient: PasskeyClient;
   ecosystem?: Ecosystem;
   username?: string;
@@ -65,11 +64,6 @@ export async function registerPasskey(options: {
   if (!options.passkeyClient.isAvailable()) {
     throw new Error("Passkeys are not available on this device");
   }
-  const storage = new ClientScopedStorage({
-    storage: options.storage,
-    clientId: options.client.clientId,
-    ecosystemId: options.ecosystem?.id,
-  });
   const fetchWithId = getClientFetch(options.client, options.ecosystem);
   const generatedName = options.username ?? generateUsername(options.ecosystem);
   // 1. request challenge from  server
@@ -125,7 +119,7 @@ export async function registerPasskey(options: {
     );
   }
   // 4. store the credentialId in local storage
-  await storage.savePasskeyCredentialId(registration.credentialId);
+  await options.storage.savePasskeyCredentialId(registration.credentialId);
 
   // 5. returns back the IAW authentication token
   return verifData;
@@ -133,7 +127,7 @@ export async function registerPasskey(options: {
 
 export async function loginWithPasskey(options: {
   client: ThirdwebClient;
-  storage: AsyncStorage;
+  storage: ClientScopedStorage;
   passkeyClient: PasskeyClient;
   rp: RpInfo;
   ecosystem?: Ecosystem;
@@ -141,11 +135,6 @@ export async function loginWithPasskey(options: {
   if (!options.passkeyClient.isAvailable()) {
     throw new Error("Passkeys are not available on this device");
   }
-  const storage = new ClientScopedStorage({
-    storage: options.storage,
-    clientId: options.client.clientId,
-    ecosystemId: options.ecosystem?.id,
-  });
   const fetchWithId = getClientFetch(options.client, options.ecosystem);
   // 1. request challenge from  server/iframe
   const res = await fetchWithId(getChallengePath("sign-in"));
@@ -155,7 +144,8 @@ export async function loginWithPasskey(options: {
   }
   const challenge = challengeData.challenge;
   // 1.2. find the user's credentialId in local storage
-  const credentialId = (await storage.getPasskeyCredentialId()) ?? undefined;
+  const credentialId =
+    (await options.storage.getPasskeyCredentialId()) ?? undefined;
   // 2. initiate login
   const authentication = await options.passkeyClient.authenticate({
     credentialId,
@@ -198,7 +188,7 @@ export async function loginWithPasskey(options: {
   }
 
   // 5. store the credentialId in local storage
-  await storage.savePasskeyCredentialId(authentication.credentialId);
+  await options.storage.savePasskeyCredentialId(authentication.credentialId);
 
   // 6. return the auth'd user type
   return verifData;

@@ -3,6 +3,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import type { Wallet } from "../../../interfaces/wallet.js";
+import type { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
 import { getLoginUrl } from "../../core/authentication/getLoginPath.js";
 import { guestAuthenticate } from "../../core/authentication/guest.js";
 import { siweAuthenticate } from "../../core/authentication/siwe.js";
@@ -29,6 +30,7 @@ export async function otpLogin(
   options: MultiStepAuthArgsType & {
     client: ThirdwebClient;
     ecosystem?: Ecosystem;
+    storage: ClientScopedStorage;
   },
 ): Promise<AuthStoredTokenWithCookieReturnType> {
   const { storedToken } = await verifyOtp(options);
@@ -44,7 +46,11 @@ export async function otpLogin(
       isNewUser: storedToken.isNewUser,
     };
 
-    await postAuth({ storedToken: toStoreToken, client: options.client });
+    await postAuth({
+      storedToken: toStoreToken,
+      client: options.client,
+      storage: options.storage,
+    });
 
     return { storedToken };
   } catch (e) {
@@ -54,10 +60,11 @@ export async function otpLogin(
   }
 }
 
-export async function authenticate(
-  auth: OAuthRedirectObject,
-  client: ThirdwebClient,
-): Promise<AuthStoredTokenWithCookieReturnType> {
+export async function authenticate(args: {
+  auth: OAuthRedirectObject;
+  client: ThirdwebClient;
+}): Promise<AuthStoredTokenWithCookieReturnType> {
+  const { auth, client } = args;
   const loginUrl = getLoginUrl({
     authOption: auth.strategy,
     client,
@@ -99,11 +106,13 @@ export async function authenticate(
   return JSON.parse(authResult);
 }
 
-export async function socialLogin(
-  auth: OAuthRedirectObject,
-  client: ThirdwebClient,
-): Promise<AuthStoredTokenWithCookieReturnType> {
-  const { storedToken } = await authenticate(auth, client);
+export async function socialLogin(args: {
+  auth: OAuthRedirectObject;
+  client: ThirdwebClient;
+  storage: ClientScopedStorage;
+}): Promise<AuthStoredTokenWithCookieReturnType> {
+  const { auth, client, storage } = args;
+  const { storedToken } = await authenticate({ auth, client });
   try {
     const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
       jwtToken: storedToken.jwtToken,
@@ -116,7 +125,7 @@ export async function socialLogin(
       isNewUser: storedToken.isNewUser,
     };
 
-    await postAuth({ storedToken: toStoreToken, client });
+    await postAuth({ storedToken: toStoreToken, client, storage });
 
     return { storedToken };
   } catch (e) {
@@ -126,12 +135,14 @@ export async function socialLogin(
   }
 }
 
-export async function siweLogin(
-  client: ThirdwebClient,
-  wallet: Wallet,
-  chain: Chain,
-  ecosystem?: Ecosystem,
-): Promise<AuthStoredTokenWithCookieReturnType> {
+export async function siweLogin(args: {
+  client: ThirdwebClient;
+  wallet: Wallet;
+  chain: Chain;
+  ecosystem?: Ecosystem;
+  storage: ClientScopedStorage;
+}): Promise<AuthStoredTokenWithCookieReturnType> {
+  const { client, ecosystem, wallet, chain, storage } = args;
   const { storedToken } = await siweAuthenticate({
     client,
     ecosystem,
@@ -150,7 +161,7 @@ export async function siweLogin(
       isNewUser: storedToken.isNewUser,
     };
 
-    await postAuth({ storedToken: toStoreToken, client });
+    await postAuth({ storedToken: toStoreToken, client, storage });
 
     return { storedToken };
   } catch (e) {
@@ -160,10 +171,12 @@ export async function siweLogin(
   }
 }
 
-export async function guestLogin(
-  client: ThirdwebClient,
-  ecosystem?: Ecosystem,
-): Promise<AuthStoredTokenWithCookieReturnType> {
+export async function guestLogin(args: {
+  client: ThirdwebClient;
+  ecosystem?: Ecosystem;
+  storage: ClientScopedStorage;
+}): Promise<AuthStoredTokenWithCookieReturnType> {
+  const { client, ecosystem, storage } = args;
   const { storedToken } = await guestAuthenticate({
     client,
     ecosystem,
@@ -181,7 +194,7 @@ export async function guestLogin(
       isNewUser: storedToken.isNewUser,
     };
 
-    await postAuth({ storedToken: toStoreToken, client });
+    await postAuth({ storedToken: toStoreToken, client, storage });
 
     return { storedToken };
   } catch (e) {
@@ -191,11 +204,12 @@ export async function guestLogin(
   }
 }
 
-export async function customJwt(
-  authOptions: { jwt: string; password: string },
-  client: ThirdwebClient,
-): Promise<AuthStoredTokenWithCookieReturnType> {
-  const { jwt, password } = authOptions;
+export async function customJwt(args: {
+  authOptions: { jwt: string; password: string };
+  client: ThirdwebClient;
+  storage: ClientScopedStorage;
+}): Promise<AuthStoredTokenWithCookieReturnType> {
+  const { jwt, password } = args.authOptions;
 
   const resp = await fetch(ROUTE_AUTH_JWT_CALLBACK, {
     method: "POST",
@@ -204,7 +218,7 @@ export async function customJwt(
     },
     body: JSON.stringify({
       jwt: jwt,
-      developerClientId: client.clientId,
+      developerClientId: args.client.clientId,
     }),
   });
   if (!resp.ok) {
@@ -228,7 +242,12 @@ export async function customJwt(
       isNewUser: verifiedToken.isNewUser,
     };
 
-    await postAuthUserManaged(toStoreToken, client, password);
+    await postAuthUserManaged({
+      storedToken: toStoreToken,
+      client: args.client,
+      password,
+      storage: args.storage,
+    });
 
     return { storedToken: verifiedToken };
   } catch (e) {
@@ -238,11 +257,12 @@ export async function customJwt(
   }
 }
 
-export async function authEndpoint(
-  authOptions: { payload: string; encryptionKey: string },
-  client: ThirdwebClient,
-): Promise<AuthStoredTokenWithCookieReturnType> {
-  const { payload, encryptionKey } = authOptions;
+export async function authEndpoint(args: {
+  authOptions: { payload: string; encryptionKey: string };
+  client: ThirdwebClient;
+  storage: ClientScopedStorage;
+}): Promise<AuthStoredTokenWithCookieReturnType> {
+  const { payload, encryptionKey } = args.authOptions;
 
   const resp = await fetch(ROUTE_AUTH_ENDPOINT_CALLBACK, {
     method: "POST",
@@ -251,7 +271,7 @@ export async function authEndpoint(
     },
     body: JSON.stringify({
       payload: payload,
-      developerClientId: client.clientId,
+      developerClientId: args.client.clientId,
     }),
   });
   if (!resp.ok) {
@@ -277,7 +297,12 @@ export async function authEndpoint(
       isNewUser: verifiedToken.isNewUser,
     };
 
-    await postAuthUserManaged(toStoreToken, client, encryptionKey);
+    await postAuthUserManaged({
+      storedToken: toStoreToken,
+      client: args.client,
+      password: encryptionKey,
+      storage: args.storage,
+    });
 
     return { storedToken: verifiedToken };
   } catch (e) {
@@ -292,11 +317,15 @@ export async function authEndpoint(
 
 export async function deleteActiveAccount(options: {
   client: ThirdwebClient;
+  storage: ClientScopedStorage;
 }): Promise<boolean> {
   await verifyClientId(options.client);
 
   try {
-    return deleteAccount(options.client);
+    return deleteAccount({
+      client: options.client,
+      storage: options.storage,
+    });
   } catch (e) {
     throw new Error(createErrorMessage("Error deleting the active account", e));
   }

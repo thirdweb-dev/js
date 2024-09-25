@@ -14,16 +14,15 @@ import {
   registerPasskey,
 } from "../../core/authentication/passkeys.js";
 import { siweAuthenticate } from "../../core/authentication/siwe.js";
-import {
-  type AuthArgsType,
-  type AuthLoginReturnType,
-  type AuthStoredTokenWithCookieReturnType,
-  type GetUser,
-  type LogoutReturnType,
-  type MultiStepAuthArgsType,
-  type MultiStepAuthProviderType,
-  type SingleStepAuthArgsType,
-  UserWalletStatus,
+import type {
+  AuthArgsType,
+  AuthLoginReturnType,
+  AuthStoredTokenWithCookieReturnType,
+  GetUser,
+  LogoutReturnType,
+  MultiStepAuthArgsType,
+  MultiStepAuthProviderType,
+  SingleStepAuthArgsType,
 } from "../../core/authentication/types.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
 import type { Ecosystem } from "../../core/wallet/types.js";
@@ -147,7 +146,7 @@ export class InAppWebConnector implements InAppConnector {
 
         return {
           user: {
-            status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+            status: "Logged In, Wallet Initialized",
             authDetails: authResult.storedToken.authDetails,
             account: await this.wallet.getAccount(),
             walletAddress: authResult.walletDetails.walletAddress,
@@ -225,7 +224,7 @@ export class InAppWebConnector implements InAppConnector {
     if (!this.wallet) {
       const maybeAuthToken = await this.localStorage.getAuthCookie();
       if (!maybeAuthToken) {
-        return { status: UserWalletStatus.LOGGED_OUT };
+        return { status: "Logged Out" };
       }
       await this.initializeWallet(maybeAuthToken);
     }
@@ -408,7 +407,7 @@ export class InAppWebConnector implements InAppConnector {
   ) {
     const { PasskeyWebClient } = await import("./auth/passkeys.js");
     const passkeyClient = new PasskeyWebClient();
-    const storage = webLocalStorage;
+    const storage = this.localStorage;
     if (args.type === "sign-up") {
       return registerPasskey({
         client: this.client,

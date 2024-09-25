@@ -14,16 +14,15 @@ import {
   registerPasskey,
 } from "../core/authentication/passkeys.js";
 import { siweAuthenticate } from "../core/authentication/siwe.js";
-import {
-  type AuthArgsType,
-  type AuthLoginReturnType,
-  type AuthStoredTokenWithCookieReturnType,
-  type GetUser,
-  type LogoutReturnType,
-  type MultiStepAuthArgsType,
-  type MultiStepAuthProviderType,
-  type OAuthRedirectObject,
-  UserWalletStatus,
+import type {
+  AuthArgsType,
+  AuthLoginReturnType,
+  AuthStoredTokenWithCookieReturnType,
+  GetUser,
+  LogoutReturnType,
+  MultiStepAuthArgsType,
+  MultiStepAuthProviderType,
+  OAuthRedirectObject,
 } from "../core/authentication/types.js";
 import type { InAppConnector } from "../core/interfaces/connector.js";
 import type { Ecosystem } from "../core/wallet/types.js";
@@ -72,8 +71,9 @@ export class InAppNativeConnector implements InAppConnector {
     const userStatus = await fetchUserDetails({
       client: this.client,
       email: localData?.email,
+      storage: this.localStorage,
     });
-    if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED) {
+    if (userStatus.status === "Logged In, Wallet Initialized") {
       return {
         status: userStatus.status,
         authDetails: userStatus.storedToken.authDetails,
@@ -81,23 +81,27 @@ export class InAppNativeConnector implements InAppConnector {
         account: await this.getAccount(),
       };
     }
-    if (userStatus.status === UserWalletStatus.LOGGED_IN_NEW_DEVICE) {
+    if (userStatus.status === "Logged In, New Device") {
       return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        status: "Logged In, New Device",
         authDetails: userStatus.storedToken.authDetails,
+        walletAddress: userStatus.walletAddress,
       };
     }
-    if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED) {
+    if (userStatus.status === "Logged In, Wallet Uninitialized") {
       return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        status: "Logged In, Wallet Uninitialized",
         authDetails: userStatus.storedToken.authDetails,
       };
     }
     // Logged out
-    return { status: UserWalletStatus.LOGGED_OUT };
+    return { status: "Logged Out" };
   }
   getAccount(): Promise<Account> {
-    return getExistingUserAccount({ client: this.client });
+    return getExistingUserAccount({
+      client: this.client,
+      storage: this.localStorage,
+    });
   }
 
   preAuthenticate(args: MultiStepAuthProviderType): Promise<void> {
@@ -128,6 +132,7 @@ export class InAppNativeConnector implements InAppConnector {
           client: this.client,
           wallet: params.wallet,
           chain: params.chain,
+          ecosystem: params.ecosystem,
         });
       }
       case "google":
@@ -139,7 +144,10 @@ export class InAppNativeConnector implements InAppConnector {
         const ExpoLinking = require("expo-linking");
         const redirectUrl =
           params.redirectUrl || (ExpoLinking.createURL("") as string);
-        return authenticate({ strategy, redirectUrl }, this.client);
+        return authenticate({
+          auth: { strategy, redirectUrl },
+          client: this.client,
+        });
       }
       case "passkey":
         return this.passkeyAuth(params);
@@ -157,6 +165,7 @@ export class InAppNativeConnector implements InAppConnector {
           verificationCode: params.verificationCode,
           strategy: "email",
           client: this.client,
+          ecosystem: params.ecosystem,
         });
       }
       case "phone": {
@@ -165,6 +174,7 @@ export class InAppNativeConnector implements InAppConnector {
           verificationCode: params.verificationCode,
           strategy: "phone",
           client: this.client,
+          ecosystem: params.ecosystem,
         });
       }
       case "google":
@@ -212,7 +222,7 @@ export class InAppNativeConnector implements InAppConnector {
         const account = await this.getAccount();
         return {
           user: {
-            status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+            status: "Logged In, Wallet Initialized",
             account,
             authDetails: authToken.storedToken.authDetails,
             walletAddress: account.address,
@@ -238,6 +248,7 @@ export class InAppNativeConnector implements InAppConnector {
   }): Promise<AuthStoredTokenWithCookieReturnType> {
     const { type, passkeyName, client, ecosystem } = args;
     const domain = this.passkeyDomain;
+    const storage = this.localStorage;
     if (!domain) {
       throw new Error(
         "Passkey domain is required for native platforms. Please pass it in the 'auth' options when creating the inAppWallet().",
@@ -246,7 +257,6 @@ export class InAppNativeConnector implements InAppConnector {
     try {
       const { PasskeyNativeClient } = await import("./auth/passkeys.js");
       const passkeyClient = new PasskeyNativeClient();
-      const storage = nativeLocalStorage;
       let authToken: AuthStoredTokenWithCookieReturnType;
 
       if (type === "sign-up") {
@@ -285,7 +295,11 @@ export class InAppNativeConnector implements InAppConnector {
         isNewUser: authToken.storedToken.isNewUser,
       };
 
-      await postAuth({ storedToken: toStoreToken, client });
+      await postAuth({
+        storedToken: toStoreToken,
+        client,
+        storage,
+      });
 
       return authToken;
     } catch (error) {
@@ -306,11 +320,14 @@ export class InAppNativeConnector implements InAppConnector {
     },
   ): Promise<AuthLoginReturnType> {
     try {
-      const { storedToken } = await otpLogin(options);
+      const { storedToken } = await otpLogin({
+        ...options,
+        storage: this.localStorage,
+      });
       const account = await this.getAccount();
       return {
         user: {
-          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          status: "Logged In, Wallet Initialized",
           account,
           authDetails: storedToken.authDetails,
           walletAddress: account.address,
@@ -327,18 +344,25 @@ export class InAppNativeConnector implements InAppConnector {
 
   // TODO (rn) expose in the interface
   async deleteActiveAccount() {
-    return deleteActiveAccount({ client: this.client });
+    return deleteActiveAccount({
+      client: this.client,
+      storage: this.localStorage,
+    });
   }
 
   private async socialLogin(
     auth: OAuthRedirectObject,
   ): Promise<AuthLoginReturnType> {
     try {
-      const { storedToken } = await socialLogin(auth, this.client);
+      const { storedToken } = await socialLogin({
+        auth,
+        client: this.client,
+        storage: this.localStorage,
+      });
       const account = await this.getAccount();
       return {
         user: {
-          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          status: "Logged In, Wallet Initialized",
           account,
           authDetails: storedToken.authDetails,
           walletAddress: account.address,
@@ -358,15 +382,17 @@ export class InAppNativeConnector implements InAppConnector {
     chain: Chain;
   }): Promise<AuthLoginReturnType> {
     try {
-      const { storedToken } = await siweLogin(
-        this.client,
-        options.wallet,
-        options.chain,
-      );
+      const { storedToken } = await siweLogin({
+        client: this.client,
+        wallet: options.wallet,
+        chain: options.chain,
+        ecosystem: this.ecosystem,
+        storage: this.localStorage,
+      });
       const account = await this.getAccount();
       return {
         user: {
-          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          status: "Logged In, Wallet Initialized",
           account,
           authDetails: storedToken.authDetails,
           walletAddress: account.address,
@@ -391,11 +417,15 @@ export class InAppNativeConnector implements InAppConnector {
     ecosystem?: Ecosystem;
   }): Promise<AuthLoginReturnType> {
     try {
-      const { storedToken } = await guestLogin(this.client, options.ecosystem);
+      const { storedToken } = await guestLogin({
+        client: this.client,
+        ecosystem: options.ecosystem,
+        storage: this.localStorage,
+      });
       const account = await this.getAccount();
       return {
         user: {
-          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          status: "Logged In, Wallet Initialized",
           account,
           authDetails: storedToken.authDetails,
           walletAddress: account.address,
@@ -414,11 +444,15 @@ export class InAppNativeConnector implements InAppConnector {
     password: string;
   }): Promise<AuthLoginReturnType> {
     try {
-      const { storedToken } = await customJwt(authOptions, this.client);
+      const { storedToken } = await customJwt({
+        authOptions,
+        client: this.client,
+        storage: this.localStorage,
+      });
       const account = await this.getAccount();
       return {
         user: {
-          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          status: "Logged In, Wallet Initialized",
           account,
           authDetails: storedToken.authDetails,
           walletAddress: account.address,
@@ -435,11 +469,15 @@ export class InAppNativeConnector implements InAppConnector {
     encryptionKey: string;
   }): Promise<AuthLoginReturnType> {
     try {
-      const { storedToken } = await authEndpoint(authOptions, this.client);
+      const { storedToken } = await authEndpoint({
+        authOptions,
+        client: this.client,
+        storage: this.localStorage,
+      });
       const account = await this.getAccount();
       return {
         user: {
-          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          status: "Logged In, Wallet Initialized",
           account,
           authDetails: storedToken.authDetails,
           walletAddress: account.address,
@@ -452,7 +490,10 @@ export class InAppNativeConnector implements InAppConnector {
   }
 
   logout(): Promise<LogoutReturnType> {
-    return logoutUser(this.client.clientId);
+    return logoutUser({
+      client: this.client,
+      storage: this.localStorage,
+    });
   }
 
   async linkProfile(args: AuthArgsType) {
