@@ -188,12 +188,12 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
         <Flex shadow="sm">
           <Container maxW="container.page">
             <Flex align="center" justify="space-between" p={4}>
-              <Flex gap={2}>
+              <div className="flex flex-row gap-2">
                 <Logo hideWordmark />
                 <Heading size="title.md">
                   {validAirdrop.length ? "Edit" : "Upload"} Airdrop
                 </Heading>
-              </Flex>
+              </div>
             </Flex>
           </Container>
         </Flex>
@@ -239,7 +239,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                     </div>
                   </div>
                 </div>
-                <Flex gap={2} flexDir="column">
+                <div className="flex flex-row gap-2">
                   <Heading size="subtitle.sm">Requirements</Heading>
                   <UnorderedList>
                     <ListItem>
@@ -255,7 +255,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                       found will be kept.
                     </ListItem>
                   </UnorderedList>
-                </Flex>
+                </div>
               </Flex>
             </Container>
           </Flex>

@@ -42,7 +42,7 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
             <Heading size="label.lg">
               <WalletAddress shortenAddress={isMobile} address={signer} />
             </Heading>
-            <Flex gap={2}>
+            <div className="flex flex-row gap-2">
               {isAdmin ? (
                 <Badge borderRadius="lg" p={1.5}>
                   Admin Key
@@ -57,7 +57,7 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
                   Currently connected
                 </Badge>
               )}
-            </Flex>
+            </div>
           </Flex>
         </Flex>
 

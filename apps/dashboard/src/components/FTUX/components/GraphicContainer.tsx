@@ -22,6 +22,7 @@ export const GraphicContainer: React.FC<SlideStateProps> = ({
 
   return (
     <div className="relative aspect-[16/9] w-full md:aspect-square">
+      {/* @to be completed */}
       <Center
         as={motion.div}
         initial={`slide-${slideIndex}`}

@@ -71,10 +71,10 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
               </Text>
             </Flex>
 
-            <Flex gap={2}>
+            <div className="flex flex-row gap-2">
               <ImportBackendWalletButton instanceUrl={instanceUrl} />
               <CreateBackendWalletButton instanceUrl={instanceUrl} />
-            </Flex>
+            </div>
           </Flex>
 
           <Flex flexDirection="row-reverse">

@@ -288,7 +288,7 @@ export const SettingsMetadata = ({
                       ) ||
                       "New URL"}
                   </FormLabel>
-                  <Flex gap={2}>
+                  <div className="flex flex-row gap-2">
                     <Input
                       isDisabled={
                         metadata.isPending || sendTransaction.isPending
@@ -305,7 +305,7 @@ export const SettingsMetadata = ({
                       aria-label="Remove row"
                       onClick={() => remove(index)}
                     />
-                  </Flex>
+                  </div>
                 </FormControl>
               </Flex>
             ))}

@@ -209,12 +209,12 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
         <Flex shadow="sm">
           <Container maxW="container.page">
             <Flex align="center" justify="space-between" p={4}>
-              <Flex gap={2}>
+              <div className="flex flex-row gap-2">
                 <Logo hideWordmark />
                 <Heading size="title.md">
                   {validSnapshot.length ? "Edit" : "Upload"} Snapshot
                 </Heading>
-              </Flex>
+              </div>
             </Flex>
           </Container>
         </Flex>
@@ -260,7 +260,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                     </div>
                   </div>
                 </div>
-                <Flex gap={2} flexDir="column">
+                <div className="flex flex-row gap-2">
                   <Heading size="label.md">Requirements</Heading>
                   <UnorderedList spacing={1}>
                     {dropType === "specific" ? (
@@ -351,7 +351,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                       wallet can claim, not how many they can receive in total.
                     </Text>
                   </UnorderedList>
-                </Flex>
+                </div>
               </Flex>
             </Container>
           </Flex>

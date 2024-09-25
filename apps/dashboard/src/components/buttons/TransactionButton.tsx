@@ -203,12 +203,12 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
   if (walletId === "global.safe") {
     const isChainIdSupported = chainId in CHAIN_ID_TO_GNOSIS;
     return (
-      <Flex direction="column" gap={4}>
+      <div className="flex flex-col gap-4">
         <Heading size="label.lg">
-          <Flex gap={2} align="center">
+          <div className="flex flex-row items-center gap-2">
             <Icon color="primary.500" boxSize={6} as={FiInfo} />
             <span>Execute Transaction</span>
-          </Flex>
+          </div>
         </Heading>
         <Text>
           You will need to execute this transaction in your Safe to continue.
@@ -233,17 +233,17 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
         >
           Go To Safe
         </LinkButton>
-      </Flex>
+      </div>
     );
   }
   if (walletId === "walletConnect") {
     return (
-      <Flex direction="column" gap={4}>
+      <div className="flex flex-col gap-4">
         <Heading size="label.lg">
-          <Flex gap={2} align="center">
+          <div className="flex flex-row items-center gap-2">
             <Icon color="primary.500" boxSize={6} as={FiInfo} />
             <span>Approve Transaction</span>
-          </Flex>
+          </div>
         </Heading>
         <Text>
           You will need to approve this transaction in your connected wallet.
@@ -255,7 +255,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
             action will continue automatically.
           </Text>
         )}
-      </Flex>
+      </div>
     );
   }
 

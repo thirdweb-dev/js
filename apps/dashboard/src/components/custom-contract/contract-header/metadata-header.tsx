@@ -154,7 +154,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
             </Text>
           </Skeleton>
         )}
-        <Flex gap={2}>
+        <div className="flex flex-row gap-2">
           <AddressCopyButton size="xs" address={address} />
           {validBlockExplorers?.map((validBlockExplorer) => (
             <LinkButton
@@ -178,7 +178,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
               {e.name}
             </LinkButton>
           ))}
-        </Flex>
+        </div>
       </Flex>
     </Flex>
   );

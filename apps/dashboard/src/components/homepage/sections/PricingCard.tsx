@@ -60,7 +60,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     >
       <Flex flexDir="column" gap={6}>
         <Flex flexDir="column" gap={3}>
-          <Flex gap={2}>
+          <div className="flex flex-row gap-2">
             <Heading
               as="h3"
               size={size === "lg" ? "title.lg" : "title.sm"}
@@ -79,7 +79,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                 Current plan
               </Badge>
             )}
-          </Flex>
+          </div>
           <Text maxW={320} h={12}>
             {plan.description}
           </Text>

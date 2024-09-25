@@ -556,7 +556,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
             flexDir={{ base: "column", md: isColumn ? "column" : "row" }}
             gap={2}
           >
-            <Flex gap={2}>
+            <div className="flex flex-row gap-2">
               <AdminOnly contract={contract}>
                 <Menu>
                   <MenuButton
@@ -616,7 +616,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                   tokenId={tokenId}
                 />
               )}
-            </Flex>
+            </div>
 
             <Flex>
               <AdminOnly contract={contract} fallback={<Box pb={5} />}>
