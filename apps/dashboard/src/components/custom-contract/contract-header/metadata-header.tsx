@@ -1,7 +1,7 @@
 "use client";
 
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { Center, Flex, Skeleton, useBreakpointValue } from "@chakra-ui/react";
+import { Flex, Skeleton, useBreakpointValue } from "@chakra-ui/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import Link from "next/link";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -119,13 +119,9 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
                 cursor="pointer"
               >
                 {chain.icon?.url && (
-                  <Center
-                    boxSize={5}
-                    mr={{ base: 0, md: -0.5 }}
-                    borderRadius="full"
-                  >
+                  <div className="md:-mr-0.5 mr-0 flex h-5 w-5 items-center justify-center rounded-full">
                     <ChainIcon ipfsSrc={chain.icon.url} size={24} />
-                  </Center>
+                  </div>
                 )}
                 <Heading
                   display={{

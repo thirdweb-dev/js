@@ -5,7 +5,6 @@ import {
 import {
   Box,
   ButtonGroup,
-  Center,
   Flex,
   Icon,
   List,
@@ -85,14 +84,14 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
 
         <List overflow="auto">
           {allEvents.length === 0 ? (
-            <Center py={4}>
+            <div className="flex items-center justify-center py-4">
               <Flex align="center" gap={2}>
                 {autoUpdate && <Spinner size="sm" speed="0.69s" />}
                 <Text size="body.md" fontStyle="italic">
                   {autoUpdate ? "listening for events" : "no events to show"}
                 </Text>
               </Flex>
-            </Center>
+            </div>
           ) : null}
           <AnimatePresence initial={false}>
             {allEvents?.slice(0, 3).map((e) => (

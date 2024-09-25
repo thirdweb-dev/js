@@ -1,12 +1,5 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
-import {
-  Center,
-  Flex,
-  Icon,
-  IconButton,
-  Select,
-  Skeleton,
-} from "@chakra-ui/react";
+import { Flex, Icon, IconButton, Select, Skeleton } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { useRouter } from "next/router";
@@ -101,7 +94,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
         }}
       />
       {/* pagination */}
-      <Center w="100%">
+      <div className="flex w-full items-center justify-center">
         <Flex gap={2} direction="row" align="center">
           <IconButton
             isDisabled={totalAccountsQuery.isPending}
@@ -172,7 +165,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
             <option value="500">500</option>
           </Select>
         </Flex>
-      </Center>
+      </div>
     </Flex>
   );
 };

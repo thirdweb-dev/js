@@ -1,5 +1,5 @@
+import { cn } from "@/lib/utils";
 import {
-  Center,
   Code,
   Container,
   Flex,
@@ -31,18 +31,12 @@ export const UploadStep: React.FC<UploadStepProps> = ({
       <Container maxW="container.page">
         <Flex gap={8} flexDir={{ base: "column", md: "row" }}>
           <div className="relative aspect-square w-full md:w-1/2">
-            <Center
-              borderRadius="md"
+            <div
+              className={cn(
+                "h-full cursor-pointer rounded-md border border-border hover:border-blue-500",
+                hasFailed ? "bg-red-200" : "bg-card",
+              )}
               {...getRootProps()}
-              cursor="pointer"
-              bg={hasFailed ? "red.200" : "inputBg"}
-              _hover={{
-                bg: hasFailed ? "red.200" : "inputBgHover",
-                borderColor: "blue.500",
-              }}
-              borderColor="inputBorder"
-              borderWidth="1px"
-              h="100%"
             >
               <input {...getInputProps()} />
               <div className="flex flex-col p-6">
@@ -70,7 +64,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                   </Heading>
                 )}
               </div>
-            </Center>
+            </div>
           </div>
           <Flex gap={2} flexDir="column" w={{ base: "100%", md: "50%" }}>
             <Heading size="subtitle.sm">Requirements</Heading>

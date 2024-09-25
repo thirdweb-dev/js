@@ -1,7 +1,7 @@
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { cn } from "@/lib/utils";
 import {
   Box,
-  Center,
   Code,
   Container,
   Flex,
@@ -226,27 +226,21 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
             <Container maxW="container.page">
               <Flex gap={8} flexDir="column">
                 <div className="relative aspect-[21/9] w-full">
-                  <Center
-                    borderRadius="md"
+                  <div
+                    className={cn(
+                      "flex h-full cursor-pointer rounded-md border border-border hover:border-primary",
+                      noCsv ? "bg-red-200" : "bg-card",
+                    )}
                     {...getRootProps()}
-                    cursor="pointer"
-                    bg={noCsv ? "red.200" : "inputBg"}
-                    _hover={{
-                      bg: "inputBgHover",
-                      borderColor: "primary.500",
-                    }}
-                    borderColor="inputBorder"
-                    borderWidth="1px"
-                    h="100%"
                   >
                     <input {...getInputProps()} />
-                    <div className="flex flex-col p-6">
+                    <div className="!m-auto flex flex-col">
                       <Icon
                         as={BsFillCloudUploadFill}
                         boxSize={8}
                         mb={2}
                         color={noCsv ? "red.500" : "gray.600"}
-                        my="auto"
+                        mx="auto"
                       />
                       {isDragActive ? (
                         <Heading as={Text} size="label.md">
@@ -264,7 +258,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                         </Heading>
                       )}
                     </div>
-                  </Center>
+                  </div>
                 </div>
                 <Flex gap={2} flexDir="column">
                   <Heading size="label.md">Requirements</Heading>
@@ -563,7 +557,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
         </Table>
       </TableContainer>
       <Portal containerRef={portalRef}>
-        <Center w="100%">
+        <div className="flex w-full items-center justify-center">
           <div className="flex flex-row">
             <IconButton
               isDisabled={!canPreviousPage}
@@ -607,7 +601,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
               <option value="500">500</option>
             </Select>
           </div>
-        </Center>
+        </div>
       </Portal>
     </Flex>
   );

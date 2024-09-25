@@ -1,7 +1,6 @@
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
-  Center,
   IconButton,
   Link,
   ListItem,
@@ -223,17 +222,12 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
       ) : (
         <div className="flex flex-col gap-8">
           <div className="relative aspect-[21/9] w-full">
-            <Center
-              borderRadius="md"
+            <div
+              className={cn(
+                "flex cursor-pointer items-center justify-center rounded-md border border-border hover:border-primary",
+                noCsv ? "bg-red-200" : "bg-card",
+              )}
               {...getRootProps()}
-              cursor="pointer"
-              bg={noCsv ? "red.200" : "inputBg"}
-              _hover={{
-                bg: "inputBgHover",
-                borderColor: "primary.500",
-              }}
-              borderColor="inputBorder"
-              borderWidth="1px"
             >
               <input {...getInputProps()} />
               <div className="flex flex-col p-6">
@@ -259,7 +253,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
                   </Heading>
                 )}
               </div>
-            </Center>
+            </div>
           </div>
           <div className="flex flex-col gap-2">
             <Heading size="subtitle.sm">Requirements</Heading>
@@ -403,7 +397,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
       {/* Only need to show the Pagination components if we have more than 25 records */}
       {data.length > 25 && (
         <Portal containerRef={portalRef}>
-          <Center w="100%">
+          <div className="flex w-full items-center justify-center">
             <div className="flex flex-row">
               <IconButton
                 isDisabled={!canPreviousPage}
@@ -446,7 +440,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
                 <option value="500">500</option>
               </Select>
             </div>
-          </Center>
+          </div>
         </Portal>
       )}
     </>

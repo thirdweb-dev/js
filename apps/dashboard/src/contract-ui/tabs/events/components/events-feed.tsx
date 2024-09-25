@@ -10,7 +10,6 @@ import {
   AccordionPanel,
   Box,
   ButtonGroup,
-  Center,
   Divider,
   Flex,
   FormControl,
@@ -148,14 +147,14 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
 
         <List overflow="auto">
           {filteredEvents.length === 0 && (
-            <Center py={4}>
+            <div className="flex items-center justify-center py-4">
               <Flex align="center" gap={2}>
                 {autoUpdate && <Spinner size="sm" speed="0.69s" />}
                 <Text size="body.md" fontStyle="italic">
                   {autoUpdate ? "listening for events" : "no events to show"}
                 </Text>
               </Flex>
-            </Center>
+            </div>
           )}
           <Accordion
             as={AnimatePresence}
@@ -406,9 +405,9 @@ const TransactionData: React.FC<TransactionDataProps> = ({
               </Card>
             }
           >
-            <Center>
+            <div className="flex items-center justify-center">
               <Icon as={AiOutlineQuestionCircle} color="gray.600" />
-            </Center>
+            </div>
           </Tooltip>
 
           <Text fontWeight="bold">{name}</Text>

@@ -1,5 +1,5 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import { Box, Center, Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
 import { GetStartedSection } from "components/homepage/sections/GetStartedSection";
 import { HeroSection } from "components/homepage/sections/HeroSection";
@@ -80,7 +80,7 @@ const HomePage: ThirdwebNextPage = () => {
         <Box px={4}>
           <LandingCardWithMetrics
             title={
-              <Center flexDir="column" textAlign="center">
+              <div className="flex flex-col items-center justify-center text-center">
                 <Heading size="display.sm" color="white">
                   Trusted by the best
                 </Heading>
@@ -89,7 +89,7 @@ const HomePage: ThirdwebNextPage = () => {
                   Powering web3 apps across verticals — from onchain games to
                   creator platforms.
                 </Text>
-              </Center>
+              </div>
             }
             desktopColumns={3}
             TRACKING_CATEGORY={TRACKING_CATEGORY}

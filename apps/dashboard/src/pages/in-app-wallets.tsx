@@ -1,4 +1,4 @@
-import { Center, Container, Flex } from "@chakra-ui/react";
+import { Container, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { LandingCardWithImage } from "components/landing-pages/card-with-image";
 import { LandingDynamicSelector } from "components/landing-pages/dynamic-selector";
@@ -123,11 +123,11 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
         <LandingGridSection
           desktopColumns={4}
           title={
-            <Center>
+            <div className="flex items-center justify-center">
               <Heading size="display.sm" color="white">
                 Abstract away complexity for your users
               </Heading>
-            </Center>
+            </div>
           }
         >
           <LandingCardWithImage

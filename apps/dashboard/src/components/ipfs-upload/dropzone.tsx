@@ -7,7 +7,6 @@ import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardS
 import {
   Box,
   ButtonGroup,
-  Center,
   Divider,
   Flex,
   GridItem,
@@ -87,12 +86,7 @@ export const IpfsUploadDropzone: React.FC = () => {
             <FileUpload files={droppedFiles} updateFiles={setDroppedFiles} />
           </div>
         ) : !address ? (
-          <Center
-            border="2px solid"
-            borderColor="borderColor"
-            borderRadius="xl"
-            h="full"
-          >
+          <div className="flex h-full items-center justify-center rounded-xl border-2 border-border">
             <Text
               size="label.lg"
               className="text-muted-foreground"
@@ -100,23 +94,14 @@ export const IpfsUploadDropzone: React.FC = () => {
             >
               Please connect your wallet to begin uploading.
             </Text>
-          </Center>
+          </div>
         ) : (
-          <Center
+          <div
+            className={cn(
+              "flex items-center justify-center rounded-xl border-2 border-border border-solid bg-transparent hover:border-blue-600 dark:border-blue-400",
+              address ? "cursor-pointer" : "cursor-default",
+            )}
             {...getRootProps()}
-            bg="transparent"
-            _hover={{
-              _light: {
-                borderColor: "blue.600",
-              },
-              _dark: {
-                borderColor: "blue.400",
-              },
-            }}
-            border="2px solid"
-            borderColor="borderColor"
-            borderRadius="xl"
-            cursor={address ? "pointer" : "default"}
           >
             <input {...getInputProps()} />
 
@@ -148,7 +133,7 @@ export const IpfsUploadDropzone: React.FC = () => {
                 )}
               </Flex>
             }
-          </Center>
+          </div>
         )}
       </div>
       <Flex flexDir="column" gap={{ base: 6, md: 3 }} />
@@ -440,14 +425,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                 isIndeterminate={storageUpload.isPending}
                 position="relative"
               />
-              <Center
-                display={{ base: "none", md: "block" }}
-                position="absolute"
-                left={0}
-                right={0}
-                top={0}
-                bottom={0}
-              >
+              <div className="absolute top-0 right-0 bottom-0 left-0 hidden md:block">
                 {/* <Text
                   mt={0.5}
                   size="label.xs"
@@ -474,7 +452,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                 >
                   {Math.round(progressPercent)}%
                 </Text> */}
-              </Center>
+              </div>
             </Flex>
           )}
           <ButtonGroup ml={{ base: "0", md: "auto" }}>

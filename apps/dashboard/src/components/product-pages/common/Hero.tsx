@@ -1,5 +1,4 @@
 import {
-  Center,
   Container,
   Flex,
   GridItem,
@@ -49,13 +48,7 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
   imageHeight,
 }) => {
   return (
-    <Center
-      w="100%"
-      as="section"
-      flexDirection="column"
-      bg="#030A19"
-      padding={{ base: 0, md: "64px" }}
-    >
+    <section className="flex w-full flex-col items-center justify-center bg-[#030A19] p-0 md:p-[64px]">
       <SimpleGrid
         as={Container}
         maxW="container.page"
@@ -170,11 +163,7 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
           </SimpleGrid>
         </Flex>
         {image && (
-          <Center
-            display={{ base: "none", md: "flex" }}
-            padding={{ base: "24px", md: "48px" }}
-            gridColumnEnd={{ base: undefined, md: "span 3" }}
-          >
+          <div className="hidden items-center justify-center p-6 md:col-span-3 md:flex md:p-12">
             <ChakraNextImage
               maxH={{ base: imageHeight ? imageHeight : "480px" }}
               style={{ objectFit: "contain" }}
@@ -186,7 +175,7 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
                   (max-width: 1200px) 50vw,
                   33vw"
             />
-          </Center>
+          </div>
         )}
       </SimpleGrid>
 
@@ -197,6 +186,6 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
       >
         {children}
       </Container>
-    </Center>
+    </section>
   );
 };

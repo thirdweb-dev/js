@@ -1,4 +1,4 @@
-import { Center, Container, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import LandingCardWithMetrics from "components/landing-pages/card-with-metrics";
 import { LandingEndCTA } from "components/landing-pages/end-cta";
 import { LandingGridSection } from "components/landing-pages/grid-section";
@@ -326,7 +326,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
 
         <LandingGridSection
           title={
-            <Center flexDir="column" textAlign="center">
+            <div className="flex flex-col items-center justify-center text-center">
               <Heading size="display.sm" color="white">
                 The complete stack for web3 games
               </Heading>
@@ -334,7 +334,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
               <Text size="body.lg" mt={6}>
                 Everything you need to build full-featured onchain games.
               </Text>
-            </Center>
+            </div>
           }
         >
           <SolutionsGamingCard
@@ -415,7 +415,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
 
         <LandingCardWithMetrics
           title={
-            <Center flexDir="column" textAlign="center">
+            <div className="flex flex-col items-center justify-center text-center">
               <Heading size="display.sm" color="white">
                 Trusted by the best
               </Heading>
@@ -424,7 +424,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
                 Powering web3 apps across verticals — from onchain games to
                 creator platforms.
               </Text>
-            </Center>
+            </div>
           }
           desktopColumns={3}
           TRACKING_CATEGORY={TRACKING_CATEGORY}

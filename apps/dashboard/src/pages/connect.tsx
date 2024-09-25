@@ -1,4 +1,4 @@
-import { Center, Container, Flex, Spacer } from "@chakra-ui/react";
+import { Container, Flex, Spacer } from "@chakra-ui/react";
 import Carousel from "components/connect/Carousel";
 import CodePlayground from "components/connect/CodePlayground";
 import { LandingCardWithImage } from "components/landing-pages/card-with-image";
@@ -302,7 +302,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
           <Flex flexDir="column" gap={6}>
             <LandingGridSection
               title={
-                <Center>
+                <div className="flex items-center justify-center">
                   <Heading
                     size="display.sm"
                     color="white"
@@ -311,7 +311,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
                   >
                     Everything you need to build seamless web3 apps
                   </Heading>
-                </Center>
+                </div>
               }
               desktopColumns={4}
             >
@@ -407,7 +407,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
 
           <LandingCardWithMetrics
             title={
-              <Center flexDir="column" textAlign="center">
+              <div className="flex flex-col items-center justify-center text-center">
                 <Heading size="display.sm" color="white">
                   Trusted by the best
                 </Heading>
@@ -416,7 +416,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
                   thirdweb Connect powers the best web3 projects — from
                   marketplaces, to collectibles, to games.
                 </Text>
-              </Center>
+              </div>
             }
             desktopColumns={3}
             TRACKING_CATEGORY={TRACKING_CATEGORY}

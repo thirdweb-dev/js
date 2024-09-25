@@ -1,6 +1,5 @@
 import {
   Box,
-  Center,
   Flex,
   Icon,
   List,
@@ -100,7 +99,7 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
 
           <List overflow="auto">
             {members.length === 0 && (
-              <Center py={4}>
+              <div className="flex items-center justify-center py-4">
                 <Flex align="center" gap={2}>
                   <Text size="body.md" fontStyle="italic">
                     {allRoleMembers.isPending
@@ -108,7 +107,7 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
                       : "no permissions found"}
                   </Text>
                 </Flex>
-              </Center>
+              </div>
             )}
             <AnimatePresence initial={false}>
               {members.map((e) => (

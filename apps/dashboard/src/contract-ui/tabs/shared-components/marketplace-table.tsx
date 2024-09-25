@@ -1,7 +1,6 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   ButtonGroup,
-  Center,
   Flex,
   Icon,
   IconButton,
@@ -277,7 +276,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
           </Tbody>
         </Table>
       </TableContainer>
-      <Center w="100%">
+      <div className="flex w-full items-center justify-center">
         <Flex gap={2} direction="row" align="center">
           <IconButton
             isDisabled={!canPreviousPage || totalCountQuery.isPending}
@@ -328,7 +327,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
             <option value="500">500</option>
           </Select>
         </Flex>
-      </Center>
+      </div>
     </Flex>
   );
 };

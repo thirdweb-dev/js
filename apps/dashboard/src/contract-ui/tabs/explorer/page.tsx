@@ -1,4 +1,4 @@
-import { Center, Flex, Skeleton } from "@chakra-ui/react";
+import { Flex, Skeleton } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useContractFunctions } from "components/contract-components/hooks";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
@@ -32,7 +32,7 @@ export const ContractExplorerPage: React.FC<ContractCodePageProps> = ({
             contract={contract}
           />
         ) : (
-          <Center>
+          <div className="flex items-center justify-center">
             <Flex direction="column" textAlign="center" gap={2}>
               <Heading as="p" size="label.md">
                 No callable functions discovered in ABI.
@@ -42,7 +42,7 @@ export const ContractExplorerPage: React.FC<ContractCodePageProps> = ({
                 explorer, check back soon for full proxy support.
               </Text>
             </Flex>
-          </Center>
+          </div>
         )}
       </Skeleton>
     </Flex>

@@ -1,7 +1,6 @@
 import {
   Box,
   type BoxProps,
-  Center,
   Flex,
   Icon,
   IconButton,
@@ -209,7 +208,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
         </Table>
       </TableContainer>
       <Portal containerRef={portalRef}>
-        <Center w="100%">
+        <div className="flex w-full items-center justify-center">
           <div className="flex flex-row">
             <IconButton
               isDisabled={!canPreviousPage}
@@ -253,7 +252,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
               <option value="500">500</option>
             </Select>
           </div>
-        </Center>
+        </div>
       </Portal>
     </Flex>
   );
