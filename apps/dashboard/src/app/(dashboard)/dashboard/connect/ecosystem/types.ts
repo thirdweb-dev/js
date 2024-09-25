@@ -1,10 +1,26 @@
+export const authOptions = [
+  "google",
+  "facebook",
+  "x",
+  "discord",
+  "farcaster",
+  "telegram",
+  "phone",
+  "email",
+  "guest",
+  "apple",
+  "coinbase",
+  "line",
+] as const;
+export type AuthOption = (typeof authOptions)[number];
+
 export type Ecosystem = {
   name: string;
   imageUrl?: string;
   id: string;
   slug: string;
   permission: "PARTNER_WHITELIST" | "ANYONE";
-  authOptions: unknown;
+  authOptions: (typeof authOptions)[number][];
   url: string;
   status: "active" | "requested" | "paymentFailed";
   createdAt: string;

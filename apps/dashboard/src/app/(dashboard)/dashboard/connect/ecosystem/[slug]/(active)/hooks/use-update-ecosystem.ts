@@ -4,11 +4,12 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import type { Ecosystem } from "../../../types";
+import type { AuthOption, Ecosystem } from "../../../types";
 
 type UpdateEcosystemParams = {
   ecosystem: Ecosystem;
-  permission: "PARTNER_WHITELIST" | "ANYONE";
+  permission?: "PARTNER_WHITELIST" | "ANYONE";
+  authOptions?: AuthOption[];
 };
 
 export function useUpdateEcosystem(
@@ -38,6 +39,7 @@ export function useUpdateEcosystem(
           },
           body: JSON.stringify({
             permission: params.permission,
+            authOptions: params.authOptions,
           }),
         },
       );
