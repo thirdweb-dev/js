@@ -1,14 +1,14 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
-import type { AddPackContentsParams } from "../../extensions/erc1155/__generated__/IPack/write/addPackContents.js";
-import {
-  type CreatePackParams as CreatePackParams1155,
-  createPack as createPack1155,
-} from "../../extensions/erc1155/__generated__/IPack/write/createPack.js";
 import { upload } from "../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../transaction/types.js";
 import type { NFTInput } from "../../utils/nft/parseNft.js";
 import { toUnits } from "../../utils/units.js";
+import type { AddPackContentsParams } from "./__generated__/IPack/write/addPackContents.js";
+import {
+  type CreatePackParams,
+  createPack,
+} from "./__generated__/IPack/write/createPack.js";
 
 export enum PACK_TOKEN_TYPE {
   ERC20 = 0,
@@ -37,7 +37,7 @@ export type ERC1155Reward = {
 /**
  * @extension PACK
  */
-export type CreatePackParams = {
+export type CreateNewPackParams = {
   client: ThirdwebClient;
   contract: ThirdwebContract;
   /**
@@ -77,9 +77,9 @@ export type CreatePackParams = {
  * @extension PACK
  * @example
  * ```ts
- * import { createPack } from "thirdweb/extensions/pack";
+ * import { createNewPack } from "thirdweb/extensions/pack";
  *
- * const transaction = createPack({
+ * const transaction = createNewPack({
  *   contract: packContract,
  *   client,
  *   recipient: "0x...",
@@ -113,8 +113,10 @@ export type CreatePackParams = {
  * });
  * ```
  */
-export function createPack(options: BaseTransactionOptions<CreatePackParams>) {
-  return createPack1155({
+export function createNewPack(
+  options: BaseTransactionOptions<CreateNewPackParams>,
+) {
+  return createPack({
     contract: options.contract,
     asyncParams: async () => getCreatePackParams(options),
   });
@@ -124,8 +126,8 @@ export function createPack(options: BaseTransactionOptions<CreatePackParams>) {
  * @internal
  */
 export async function getCreatePackParams(
-  options: BaseTransactionOptions<CreatePackParams>,
-): Promise<CreatePackParams1155> {
+  options: BaseTransactionOptions<CreateNewPackParams>,
+): Promise<CreatePackParams> {
   const {
     contract,
     recipient,

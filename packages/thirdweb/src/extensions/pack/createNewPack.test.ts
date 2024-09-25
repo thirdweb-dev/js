@@ -20,7 +20,7 @@ import { openPack } from "../erc1155/__generated__/IPack/write/openPack.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
 import { deployPackContract } from "../prebuilts/deploy-pack.js";
-import { createPack } from "./createPack.js";
+import { createNewPack } from "./createNewPack.js";
 
 const account = TEST_ACCOUNT_A;
 const client = TEST_CLIENT;
@@ -114,7 +114,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
 
     // Create pack
     await sendAndConfirmTransaction({
-      transaction: createPack({
+      transaction: createNewPack({
         contract: packContract,
         erc20Rewards: [
           {
