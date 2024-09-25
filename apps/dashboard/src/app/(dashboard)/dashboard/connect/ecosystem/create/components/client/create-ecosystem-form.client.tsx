@@ -1,6 +1,7 @@
 "use client";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -25,6 +26,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import invariant from "tiny-invariant";
 import { z } from "zod";
+import { authOptions } from "../../../types";
 import { useCreateEcosystem } from "../../hooks/use-create-ecosystem";
 
 const formSchema = z.object({
@@ -40,6 +42,7 @@ const formSchema = z.object({
     message: "Logo is required",
   }),
   permission: z.union([z.literal("PARTNER_WHITELIST"), z.literal("ANYONE")]),
+  authOptions: z.array(z.string()),
 });
 
 export function CreateEcosystemForm(props: {
@@ -56,6 +59,7 @@ export function CreateEcosystemForm(props: {
     resolver: zodResolver(formSchema),
     defaultValues: {
       permission: "PARTNER_WHITELIST",
+      authOptions: ["google", "twitter", "discord", "email", "phone"],
     },
   });
 
@@ -161,6 +165,38 @@ export function CreateEcosystemForm(props: {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="authOptions"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Authentication options</FormLabel>
+                  <FormControl>
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-2">
+                      {authOptions.map((option) => (
+                        <CheckboxWithLabel key={option}>
+                          <Checkbox
+                            id={option}
+                            checked={field.value.includes(option)}
+                            onClick={() => {
+                              if (field.value.includes(option)) {
+                                field.onChange([
+                                  ...field.value.filter((o) => o !== option),
+                                ]);
+                              } else {
+                                field.onChange([...field.value, option]);
+                              }
+                            }}
+                          />
+                          {option.slice(0, 1).toUpperCase() + option.slice(1)}
+                        </CheckboxWithLabel>
+                      ))}
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
           {billingAccountInfo?.status !== AccountStatus.ValidPayment ? (
             <ToolTipLabel label="Please update your payment method to create an ecosystem">
@@ -202,6 +238,7 @@ export function CreateEcosystemForm(props: {
             name: formDataToBeConfirmed.name,
             logo: formDataToBeConfirmed.logo,
             permission: formDataToBeConfirmed.permission,
+            authOptions: formDataToBeConfirmed.authOptions,
           });
         }}
       />

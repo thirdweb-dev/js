@@ -12,6 +12,7 @@ type CreateEcosystemParams = {
   name: string;
   logo: File;
   permission: "PARTNER_WHITELIST" | "ANYONE";
+  authOptions?: string[];
 };
 
 export function useCreateEcosystem(
@@ -47,6 +48,7 @@ export function useCreateEcosystem(
             name: params.name,
             imageUrl: imageUri,
             permission: params.permission,
+            authOptions: params.authOptions,
           }),
         },
       );
