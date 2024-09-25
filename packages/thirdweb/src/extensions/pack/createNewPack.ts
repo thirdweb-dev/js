@@ -125,7 +125,7 @@ export function createNewPack(
 /**
  * @internal
  */
-export async function getCreatePackParams(
+async function getCreatePackParams(
   options: BaseTransactionOptions<CreateNewPackParams>,
 ): Promise<CreatePackParams> {
   const {
@@ -185,7 +185,7 @@ export async function getCreatePackParams(
 /**
  * @internal
  */
-export async function processErc20Rewards(options: {
+async function processErc20Rewards(options: {
   content?: ERC20Reward[];
   packContract: ThirdwebContract;
   tokenOwner: string;
@@ -286,7 +286,7 @@ export async function processErc20Rewards(options: {
 /**
  * @internal
  */
-export async function processErc721Rewards(options: {
+async function processErc721Rewards(options: {
   content?: ERC721Reward[];
   packContract: ThirdwebContract;
   tokenOwner: string;
@@ -358,7 +358,7 @@ export async function processErc721Rewards(options: {
   };
 }
 
-export async function processErc1155Rewards(options: {
+async function processErc1155Rewards(options: {
   content?: ERC1155Reward[];
   packContract: ThirdwebContract;
   tokenOwner: string;

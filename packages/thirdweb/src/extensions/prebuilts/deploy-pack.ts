@@ -121,7 +121,7 @@ export async function deployPackContract(options: DeployPackContractOptions) {
 /**
  * @internal
  */
-export async function getInitializeTransaction(options: {
+async function getInitializeTransaction(options: {
   client: ThirdwebClient;
   implementationContract: ThirdwebContract;
   params: PackContractParams;

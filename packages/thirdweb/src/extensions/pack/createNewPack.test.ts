@@ -13,10 +13,10 @@ import { balanceOf as balanceOfERC721 } from "../erc721/__generated__/IERC721A/r
 import { ownerOf } from "../erc721/__generated__/IERC721A/read/ownerOf.js";
 import { setApprovalForAll } from "../erc721/__generated__/IERC721A/write/setApprovalForAll.js";
 import { mintTo as mintToERC721 } from "../erc721/write/mintTo.js";
-import { getPackContents } from "../erc1155/__generated__/IPack/read/getPackContents.js";
-import { getTokenCountOfBundle } from "../erc1155/__generated__/IPack/read/getTokenCountOfBundle.js";
-import { getUriOfBundle } from "../erc1155/__generated__/IPack/read/getUriOfBundle.js";
 import { openPack } from "../erc1155/__generated__/IPack/write/openPack.js";
+import { getPackContents } from "../pack/__generated__/IPack/read/getPackContents.js";
+import { getTokenCountOfBundle } from "../pack/__generated__/IPack/read/getTokenCountOfBundle.js";
+import { getUriOfBundle } from "../pack/__generated__/IPack/read/getUriOfBundle.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
 import { deployPackContract } from "../prebuilts/deploy-pack.js";
@@ -203,7 +203,26 @@ describe.runIf(process.env.TW_SECRET_KEY)("createPack", () => {
         ownerOf({ contract: erc721Contract, tokenId: 0n }),
       ],
     );
-    expect(packContent).not.toStrictEqual(remainingPackContent);
+
+    // The remaining content should not be the same after the pack is opened
+    // (it should have less token)
+    expect(remainingPackContent).not.toStrictEqual([
+      [
+        {
+          assetContract: erc20Contract.address,
+          tokenType: 0,
+          tokenId: 0n,
+          totalAmount: 1000000000000000000n,
+        },
+        {
+          assetContract: erc721Contract.address,
+          tokenType: 1,
+          tokenId: 0n,
+          totalAmount: 1n,
+        },
+      ],
+      [1000000000000000000n, 1n],
+    ]);
 
     // Since opening a Pack gives "random" rewards, in this case we can check if
     // the recipient received either ERC20 token, or one ERC721 token
