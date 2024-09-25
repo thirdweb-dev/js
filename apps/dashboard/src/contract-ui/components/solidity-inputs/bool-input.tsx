@@ -1,4 +1,4 @@
-import { ButtonGroup, Flex } from "@chakra-ui/react";
+import { ButtonGroup } from "@chakra-ui/react";
 import { Button } from "tw-components";
 import type { SolidityInputProps } from ".";
 
@@ -10,7 +10,7 @@ export const SolidityBoolInput: React.FC<SolidityInputProps> = ({
   const inputName = name as string;
   const watchInput = form.watch(inputName);
   return (
-    <Flex>
+    <div className="flex flex-row">
       <ButtonGroup isAttached size="sm" colorScheme="blue">
         <Button
           onClick={() => form.setValue(inputName, "true")}
@@ -27,6 +27,6 @@ export const SolidityBoolInput: React.FC<SolidityInputProps> = ({
           False
         </Button>
       </ButtonGroup>
-    </Flex>
+    </div>
   );
 };

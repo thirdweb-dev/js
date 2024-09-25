@@ -346,7 +346,7 @@ const BillingAlertNotification: React.FC<BillingAlertNotificationProps> = ({
         />
       </OnboardingModal>
 
-      <Flex>
+      <div className="flex flex-row">
         <AlertIcon boxSize={4} mt={1} ml={1} />
         <Flex flexDir="column" pl={1}>
           <AlertTitle>
@@ -357,7 +357,7 @@ const BillingAlertNotification: React.FC<BillingAlertNotificationProps> = ({
           <AlertDescription mb={2} as={Flex} direction="column">
             <Text mb={showCTAs ? "4" : "0"}>{description}</Text>
             {showCTAs && (
-              <Flex>
+              <div className="flex flex-row">
                 {isBilling && account ? (
                   <ManageBillingButton
                     account={account}
@@ -390,11 +390,11 @@ const BillingAlertNotification: React.FC<BillingAlertNotificationProps> = ({
                 >
                   Contact Support
                 </TrackedLinkButton>
-              </Flex>
+              </div>
             )}
           </AlertDescription>
         </Flex>
-      </Flex>
+      </div>
 
       {onDismiss && (
         <IconButton

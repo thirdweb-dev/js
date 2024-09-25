@@ -377,7 +377,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
           </Button>
         </Flex>
       )}
-      <Flex direction="column">
+      <div className="flex flex-col">
         <Divider flexShrink={0} />
         <Flex
           direction={{ base: "column-reverse", md: "row" }}
@@ -532,7 +532,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
             )}
           </ButtonGroup>
         </Flex>
-      </Flex>
+      </div>
     </Flex>
   );
 };

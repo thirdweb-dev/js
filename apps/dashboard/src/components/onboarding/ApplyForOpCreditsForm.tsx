@@ -233,7 +233,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
           <FormHelperText>Minimum 150 characters recommended.</FormHelperText>
         </FormControl>
       </Flex>
-      <Flex>
+      <div className="flex flex-row">
         <Button
           w="full"
           type="submit"
@@ -242,7 +242,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
         >
           {form.formState.isSubmitting ? "Applying..." : "Apply now"}
         </Button>
-      </Flex>
+      </div>
     </Flex>
   );
 };

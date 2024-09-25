@@ -334,7 +334,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
             return address;
           }
           return (
-            <Flex>
+            <div className="flex flex-row">
               <Tooltip
                 label={
                   address.startsWith("0x")
@@ -349,7 +349,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
                   </Text>
                 </Stack>
               </Tooltip>
-            </Flex>
+            </div>
           );
         },
       },

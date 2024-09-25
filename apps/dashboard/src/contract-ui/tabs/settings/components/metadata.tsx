@@ -200,13 +200,13 @@ export const SettingsMetadata = ({
         direction="column"
       >
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
-          <Flex direction="column">
+          <div className="flex flex-col">
             <Heading size="title.md">Metadata</Heading>
             <Text size="body.md" fontStyle="italic">
               Settings to organize and distinguish between your different
               contracts.
             </Text>
-          </Flex>
+          </div>
           <Flex gap={4} direction={{ base: "column", md: "row" }}>
             <Flex
               flexShrink={0}

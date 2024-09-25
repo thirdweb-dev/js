@@ -63,18 +63,18 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
 
         {isAdmin ? null : (
           <SimpleGrid columns={{ base: 2, md: 4 }} gap={2}>
-            <Flex direction="column">
+            <div className="flex flex-col">
               <Text fontWeight="bold">Maximum value per transaction</Text>
               <Text textTransform="capitalize">
                 {nativeTokenLimitPerTransaction.toString()}{" "}
                 {chain?.nativeCurrency.symbol}
               </Text>
-            </Flex>
-            <Flex direction="column">
+            </div>
+            <div className="flex flex-col">
               <Text fontWeight="bold">Approved targets</Text>
               <Text textTransform="capitalize">{approvedTargets.length}</Text>
-            </Flex>
-            <Flex direction="column">
+            </div>
+            <div className="flex flex-col">
               <Text fontWeight="bold">Expiration</Text>
               <Text>
                 {formatDistance(
@@ -85,7 +85,7 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
                   },
                 )}
               </Text>
-            </Flex>
+            </div>
           </SimpleGrid>
         )}
       </Flex>

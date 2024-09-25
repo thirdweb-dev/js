@@ -29,7 +29,7 @@ export const PaymentVerificationFailureAlert: React.FC<
       variant="left-accent"
       bg="inputBg"
     >
-      <Flex>
+      <div className="flex flex-row">
         <AlertIcon boxSize={4} mt={1} ml={1} />
         <Flex flexDir="column" pl={1}>
           <AlertTitle>
@@ -57,7 +57,7 @@ export const PaymentVerificationFailureAlert: React.FC<
             </Flex>
           </AlertDescription>
         </Flex>
-      </Flex>
+      </div>
     </Alert>
   );
 };

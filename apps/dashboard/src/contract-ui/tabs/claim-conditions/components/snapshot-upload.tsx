@@ -428,7 +428,7 @@ const SnapshotTableColumns = [
         return address;
       }
       return (
-        <Flex>
+        <div className="flex flex-row">
           <Tooltip
             label={
               address.startsWith("0x")
@@ -443,7 +443,7 @@ const SnapshotTableColumns = [
               </Text>
             </Stack>
           </Tooltip>
-        </Flex>
+        </div>
       );
     },
   },

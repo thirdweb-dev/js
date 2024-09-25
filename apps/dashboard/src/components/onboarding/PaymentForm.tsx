@@ -127,7 +127,7 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
                 variant="left-accent"
                 bg="inputBg"
               >
-                <Flex>
+                <div className="flex flex-row">
                   <AlertIcon boxSize={4} mt={1} ml={1} />
                   <Flex flexDir="column" gap={1} pl={1}>
                     <AlertDescription as={Text} fontSize="body.md">
@@ -135,7 +135,7 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
                       on your payment method.
                     </AlertDescription>
                   </Flex>
-                </Flex>
+                </div>
               </Alert>
             )}
 

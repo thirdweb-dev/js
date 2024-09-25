@@ -9,7 +9,6 @@ import {
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
-  Flex,
   FormControl,
   Input,
   Stack,
@@ -266,13 +265,13 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
           <FormControl isInvalid={!!mediaFileError}>
             <FormLabel>Media</FormLabel>
             {nft?.metadata && !mediaFileUrl && (
-              <Flex>
+              <div className="flex flex-row">
                 <NFTMediaWithEmptyState
                   metadata={nft.metadata}
                   width="200px"
                   height="200px"
                 />
-              </Flex>
+              </div>
             )}
             <Box>
               <FileInput

@@ -480,7 +480,7 @@ const TransactionDetailsDrawer = ({
         {/* On-chain details */}
 
         <FormControl>
-          <Flex>
+          <div className="flex flex-row">
             <FormLabel>Value</FormLabel>
             <Tooltip
               label={`The amount of ${symbol} sent to the "To" .`}
@@ -488,7 +488,7 @@ const TransactionDetailsDrawer = ({
             >
               <FiInfo />
             </Tooltip>
-          </Flex>
+          </div>
           <Text>
             {transaction.value
               ? toTokens(BigInt(transaction.value), decimals)
@@ -527,7 +527,7 @@ const TransactionDetailsDrawer = ({
               <Stack spacing={4}>
                 {transaction.nonce && (
                   <FormControl>
-                    <Flex>
+                    <div className="flex flex-row">
                       <FormLabel>Nonce</FormLabel>
                       <Tooltip
                         label="The nonce value this transaction was submitted to mempool."
@@ -535,14 +535,14 @@ const TransactionDetailsDrawer = ({
                       >
                         <FiInfo />
                       </Tooltip>
-                    </Flex>
+                    </div>
                     <Text>{transaction.nonce ?? "N/A"}</Text>
                   </FormControl>
                 )}
 
                 {transaction.gasLimit && (
                   <FormControl>
-                    <Flex>
+                    <div className="flex flex-row">
                       <FormLabel>Gas Units</FormLabel>
                       <Tooltip
                         label="The gas units spent for this transaction."
@@ -550,14 +550,14 @@ const TransactionDetailsDrawer = ({
                       >
                         <FiInfo />
                       </Tooltip>
-                    </Flex>
+                    </div>
                     <Text>{Number(transaction.gasLimit).toLocaleString()}</Text>
                   </FormControl>
                 )}
 
                 {transaction.gasPrice && (
                   <FormControl>
-                    <Flex>
+                    <div className="flex flex-row">
                       <FormLabel>Gas Price</FormLabel>
                       <Tooltip
                         label="The price in wei spent for each gas unit."
@@ -565,7 +565,7 @@ const TransactionDetailsDrawer = ({
                       >
                         <FiInfo />
                       </Tooltip>
-                    </Flex>
+                    </div>
                     <Text>{Number(transaction.gasPrice).toLocaleString()}</Text>
                   </FormControl>
                 )}

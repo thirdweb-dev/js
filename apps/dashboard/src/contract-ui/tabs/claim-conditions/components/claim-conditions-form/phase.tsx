@@ -94,21 +94,21 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
 
         {!field.isEditing ? (
           <SimpleGrid columns={{ base: 2, md: 4 }} gap={2}>
-            <Flex direction="column">
+            <div className="flex flex-col">
               <Text fontWeight="bold">Phase start</Text>
               <Text>{field.startTime?.toLocaleString()}</Text>
-            </Flex>
-            <Flex direction="column">
+            </div>
+            <div className="flex flex-col">
               <Text fontWeight="bold">
                 {isErc20 ? "Tokens" : "NFTs"} to drop
               </Text>
               <Text textTransform="capitalize">{field.maxClaimableSupply}</Text>
-            </Flex>
+            </div>
             <PricePreview
               price={field.price}
               currencyAddress={field.currencyAddress}
             />
-            <Flex direction="column">
+            <div className="flex flex-col">
               <Text fontWeight="bold">Limit per wallet</Text>
               {claimConditionType === "specific" ? (
                 <Text>Set in the snapshot</Text>
@@ -119,7 +119,7 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
                   {field.maxClaimablePerWallet}
                 </Text>
               )}
-            </Flex>
+            </div>
           </SimpleGrid>
         ) : (
           <>

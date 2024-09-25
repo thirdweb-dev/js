@@ -77,7 +77,7 @@ export const RecurringPaymentFailureAlert: React.FC<
         />
       </OnboardingModal>
 
-      <Flex>
+      <div className="flex flex-row">
         <AlertIcon boxSize={4} mt={1} ml={1} />
         <Flex flexDir="column" pl={1}>
           <AlertTitle>
@@ -95,7 +95,7 @@ export const RecurringPaymentFailureAlert: React.FC<
                   : "We will retry several times over the next 10 days after your invoice date, after which you will lose access to your services."}
               </Text>
               {affectedServices.length > 0 && (
-                <Flex direction="column">
+                <div className="flex flex-col">
                   <Text>Affected services:</Text>
                   <UnorderedList mb={4}>
                     {affectedServices.map((service) => (
@@ -104,9 +104,9 @@ export const RecurringPaymentFailureAlert: React.FC<
                       </li>
                     ))}
                   </UnorderedList>
-                </Flex>
+                </div>
               )}
-              <Flex>
+              <div className="flex flex-row">
                 {account && (
                   <ManageBillingButton
                     account={account}
@@ -135,11 +135,11 @@ export const RecurringPaymentFailureAlert: React.FC<
                 >
                   Contact Support
                 </TrackedLinkButton>
-              </Flex>
+              </div>
             </Flex>
           </AlertDescription>
         </Flex>
-      </Flex>
+      </div>
 
       {onDismiss && (
         <IconButton
