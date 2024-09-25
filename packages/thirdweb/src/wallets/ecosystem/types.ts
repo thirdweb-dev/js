@@ -1,14 +1,11 @@
 import type {
   InAppWalletAutoConnectOptions,
   InAppWalletConnectionOptions,
+  InAppWalletCreationOptions,
 } from "../in-app/core/wallet/types.js";
 
-export type EcosystemWalletCreationOptions = {
+export type EcosystemWalletCreationOptions = InAppWalletCreationOptions & {
   partnerId?: string;
-  auth?: {
-    mode?: "popup" | "redirect" | "window";
-    redirectUrl?: string;
-  };
 };
 
 export type EcosystemWalletConnectionOptions = InAppWalletConnectionOptions;

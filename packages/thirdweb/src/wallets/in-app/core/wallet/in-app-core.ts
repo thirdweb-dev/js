@@ -4,7 +4,10 @@ import { getCachedChainIfExists } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 import { createWalletEmitter } from "../../../wallet-emitter.js";
-import type { CreateWalletArgs } from "../../../wallet-types.js";
+import type {
+  CreateWalletArgs,
+  EcosystemWalletId,
+} from "../../../wallet-types.js";
 import type { InAppConnector } from "../interfaces/connector.js";
 import type { Ecosystem } from "./types.js";
 
@@ -33,15 +36,17 @@ export async function getOrCreateInAppWalletConnector(
 export function createInAppWallet(args: {
   createOptions?: CreateWalletArgs<"inApp">[1];
   connectorFactory: (client: ThirdwebClient) => Promise<InAppConnector>;
-}): Wallet<"inApp"> {
-  const { createOptions, connectorFactory } = args;
+  ecosystem?: Ecosystem;
+}): Wallet<"inApp" | EcosystemWalletId> {
+  const { createOptions, connectorFactory, ecosystem } = args;
+  const walletId = ecosystem ? ecosystem.id : "inApp";
   const emitter = createWalletEmitter<"inApp">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
   let client: ThirdwebClient | undefined;
 
   return {
-    id: "inApp",
+    id: walletId,
     subscribe: emitter.subscribe,
     getChain() {
       if (!chain) {
@@ -59,6 +64,7 @@ export function createInAppWallet(args: {
       const connector = await getOrCreateInAppWalletConnector(
         options.client,
         connectorFactory,
+        ecosystem,
       );
       const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
         options,
@@ -72,7 +78,7 @@ export function createInAppWallet(args: {
       chain = connectedChain;
       trackConnect({
         client: options.client,
-        walletType: "inApp",
+        walletType: walletId,
         walletAddress: account.address,
       });
       // return only the account
@@ -83,6 +89,7 @@ export function createInAppWallet(args: {
       const connector = await getOrCreateInAppWalletConnector(
         options.client,
         connectorFactory,
+        ecosystem,
       );
 
       const [connectedAccount, connectedChain] = await connectInAppWallet(
@@ -96,7 +103,7 @@ export function createInAppWallet(args: {
       chain = connectedChain;
       trackConnect({
         client: options.client,
-        walletType: "inApp",
+        walletType: walletId,
         walletAddress: account.address,
       });
       // return only the account
@@ -108,6 +115,7 @@ export function createInAppWallet(args: {
         const connector = await getOrCreateInAppWalletConnector(
           client,
           connectorFactory,
+          ecosystem,
         );
         const result = await connector.logout();
         if (!result.success) {
@@ -125,6 +133,7 @@ export function createInAppWallet(args: {
         const connector = await getOrCreateInAppWalletConnector(
           client,
           connectorFactory,
+          ecosystem,
         );
         const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
           {
@@ -142,5 +151,5 @@ export function createInAppWallet(args: {
       }
       emitter.emit("chainChanged", newChain);
     },
-  } as Wallet<"inApp">;
+  };
 }

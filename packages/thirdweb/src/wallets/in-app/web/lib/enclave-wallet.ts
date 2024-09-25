@@ -136,6 +136,7 @@ export class EnclaveWallet implements IWebWallet {
   async getAccount(): Promise<Account> {
     const client = this.client;
     const ecosystem = this.ecosystem;
+    const storage = this.localStorage;
 
     const _signTransaction = async (tx: SendTransactionOption) => {
       const rpcRequest = getRpcClient({
@@ -176,6 +177,7 @@ export class EnclaveWallet implements IWebWallet {
       return signEnclaveTransaction({
         client,
         ecosystem,
+        storage,
         payload: transaction,
       });
     };
@@ -223,6 +225,7 @@ export class EnclaveWallet implements IWebWallet {
           client,
           ecosystem,
           payload: messagePayload,
+          storage,
         });
         return signature as Hex;
       },
@@ -232,6 +235,7 @@ export class EnclaveWallet implements IWebWallet {
           client,
           ecosystem,
           payload: parsedTypedData,
+          storage,
         });
 
         return signature as Hex;

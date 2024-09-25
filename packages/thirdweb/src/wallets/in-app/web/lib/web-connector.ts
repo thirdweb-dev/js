@@ -34,7 +34,6 @@ import { Auth, type AuthQuerierTypes } from "./auth/iframe-auth.js";
 import { loginWithOauth, loginWithOauthRedirect } from "./auth/oauth.js";
 import { sendOtp, verifyOtp } from "./auth/otp.js";
 import { EnclaveWallet } from "./enclave-wallet.js";
-import { getAuthToken } from "./get-auth-token.js";
 import { IFrameWallet } from "./iframe-wallet.js";
 
 /**
@@ -159,7 +158,7 @@ export class InAppWebConnector implements InAppConnector {
   }
 
   async initializeWallet(authToken?: string) {
-    const storedAuthToken = await getAuthToken(this.client, this.ecosystem);
+    const storedAuthToken = await this.localStorage.getAuthCookie();
     if (!authToken && storedAuthToken === null) {
       throw new Error(
         "No auth token provided and no stored auth token found to initialize the wallet",
@@ -224,7 +223,7 @@ export class InAppWebConnector implements InAppConnector {
   async getUser(): Promise<GetUser> {
     // If we don't have a wallet yet we'll create one
     if (!this.wallet) {
-      const maybeAuthToken = await getAuthToken(this.client, this.ecosystem);
+      const maybeAuthToken = await this.localStorage.getAuthCookie();
       if (!maybeAuthToken) {
         return { status: UserWalletStatus.LOGGED_OUT };
       }
