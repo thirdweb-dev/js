@@ -1,7 +1,6 @@
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
-  AspectRatio,
   Center,
   IconButton,
   Link,
@@ -223,7 +222,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
         </>
       ) : (
         <div className="flex flex-col gap-8">
-          <AspectRatio ratio={21 / 9} w="100%">
+          <div className="aspect-[21/9] w-full">
             <Center
               borderRadius="md"
               {...getRootProps()}
@@ -261,7 +260,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
                 )}
               </div>
             </Center>
-          </AspectRatio>
+          </div>
           <div className="flex flex-col gap-2">
             <Heading size="subtitle.sm">Requirements</Heading>
             <UnorderedList>

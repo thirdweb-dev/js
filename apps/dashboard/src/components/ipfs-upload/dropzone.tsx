@@ -2,9 +2,9 @@
 
 import { Label } from "@/components/ui/label";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { cn } from "@/lib/utils";
 import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
 import {
-  AspectRatio,
   Box,
   ButtonGroup,
   Center,
@@ -74,22 +74,24 @@ export const IpfsUploadDropzone: React.FC = () => {
   });
   return (
     <Flex flexDir="column" gap={4}>
-      <AspectRatio
-        ratio={{
-          base: droppedFiles.length ? 1 : 8 / 4,
-          md: droppedFiles.length ? 16 / 9 : 36 / 9,
-        }}
-        w="100%"
+      <div
+        className={cn(
+          "w-full",
+          droppedFiles.length
+            ? "aspect-square md:aspect-[16/9]"
+            : "aspect-[2] md:aspect-[36/9]",
+        )}
       >
         {droppedFiles.length ? (
-          <Box border="2px solid" borderColor="borderColor" borderRadius="xl">
+          <div className="h-full rounded-xl border-2 border-border">
             <FileUpload files={droppedFiles} updateFiles={setDroppedFiles} />
-          </Box>
+          </div>
         ) : !address ? (
           <Center
             border="2px solid"
             borderColor="borderColor"
             borderRadius="xl"
+            h="full"
           >
             <Text
               size="label.lg"
@@ -148,7 +150,7 @@ export const IpfsUploadDropzone: React.FC = () => {
             }
           </Center>
         )}
-      </AspectRatio>
+      </div>
       <Flex flexDir="column" gap={{ base: 6, md: 3 }} />
     </Flex>
   );
@@ -232,7 +234,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                 alignItems="center"
               >
                 <GridItem colSpan={5} rowSpan={2}>
-                  <AspectRatio ratio={1}>
+                  <div className="aspect-square">
                     <Box
                       rounded="lg"
                       overflow="hidden"
@@ -250,7 +252,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                         client={client}
                       />
                     </Box>
-                  </AspectRatio>
+                  </div>
                 </GridItem>
                 <GridItem colSpan={16} rowSpan={1}>
                   <Heading size="label.md" as="label" noOfLines={2}>

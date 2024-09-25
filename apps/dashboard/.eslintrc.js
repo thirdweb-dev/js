@@ -57,6 +57,7 @@ module.exports = {
               "MenuItem",
               "VStack",
               "HStack",
+              "AspectRatio",
               // also the types
               "ButtonProps",
               "BadgeProps",
@@ -67,6 +68,7 @@ module.exports = {
               "HelpTextProps",
               "MenuGroupProps",
               "MenuItemProps",
+              "AspectRatioProps",
             ],
             message:
               'Use the equivalent component from "tw-components" instead.',

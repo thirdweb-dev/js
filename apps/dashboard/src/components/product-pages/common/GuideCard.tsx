@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import NextImage from "next/image";
 import {
@@ -51,7 +51,7 @@ export const GuideCard: React.FC<GuideCardProps> = ({
         _hover={{ opacity: 0.86 }}
         overflow="hidden"
       >
-        <AspectRatio ratio={2400 / 1260} w="full">
+        <div className="aspect-[2400/1260] w-full">
           <Box bg="rgba(0,0,0,.8)">
             <NextImage
               loading="lazy"
@@ -63,7 +63,7 @@ export const GuideCard: React.FC<GuideCardProps> = ({
               33vw"
             />
           </Box>
-        </AspectRatio>
+        </div>
         <Flex
           flexGrow={1}
           flexDir="column"

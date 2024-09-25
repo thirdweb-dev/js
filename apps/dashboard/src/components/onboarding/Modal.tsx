@@ -1,5 +1,4 @@
 import {
-  AspectRatio,
   Flex,
   Modal,
   ModalBody,
@@ -39,9 +38,9 @@ export const OnboardingModal: ComponentWithChildren<OnboardingModalProps> = ({
       <ModalOverlay />
       <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalBody p={8} as={Flex} gap={4} flexDir="column">
-          <AspectRatio ratio={1} w="40px">
+          <div className="aspect-square w-[40px]">
             <IconLogo />
-          </AspectRatio>
+          </div>
 
           <Flex flexDir="column" gap={8}>
             {children}

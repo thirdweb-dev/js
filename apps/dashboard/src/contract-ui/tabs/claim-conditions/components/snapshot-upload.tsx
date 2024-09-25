@@ -1,6 +1,5 @@
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
-  AspectRatio,
   Box,
   Center,
   Code,
@@ -226,7 +225,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
           <Flex flexGrow={1} align="center" overflow="auto">
             <Container maxW="container.page">
               <Flex gap={8} flexDir="column">
-                <AspectRatio ratio={21 / 9} w="100%">
+                <div className="aspect-[21/9] w-full">
                   <Center
                     borderRadius="md"
                     {...getRootProps()}
@@ -238,6 +237,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                     }}
                     borderColor="inputBorder"
                     borderWidth="1px"
+                    h="100%"
                   >
                     <input {...getInputProps()} />
                     <div className="flex flex-col p-6">
@@ -246,6 +246,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                         boxSize={8}
                         mb={2}
                         color={noCsv ? "red.500" : "gray.600"}
+                        my="auto"
                       />
                       {isDragActive ? (
                         <Heading as={Text} size="label.md">
@@ -264,7 +265,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                       )}
                     </div>
                   </Center>
-                </AspectRatio>
+                </div>
                 <Flex gap={2} flexDir="column">
                   <Heading size="label.md">Requirements</Heading>
                   <UnorderedList spacing={1}>

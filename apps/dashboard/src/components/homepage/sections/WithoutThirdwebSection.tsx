@@ -1,4 +1,4 @@
-import { AspectRatio, GridItem, SimpleGrid } from "@chakra-ui/react";
+import { GridItem, SimpleGrid } from "@chakra-ui/react";
 import { themes } from "prism-react-renderer";
 import { HomePageCodeBlock } from "../CodeBlock";
 import { KeyFeatureLayout } from "./key-features/KeyFeatureLayout";
@@ -113,7 +113,7 @@ export const WithoutThirdwebSection: React.FC = () => {
     >
       <SimpleGrid columns={12} gap={8} w="full">
         <GridItem colSpan={{ base: 12, md: 6 }}>
-          <AspectRatio ratio={16 / 10} w="full">
+          <div className="aspect-[16/10] w-full">
             <HomePageCodeBlock
               darkTheme={darkTheme}
               color="white"
@@ -128,10 +128,10 @@ export const WithoutThirdwebSection: React.FC = () => {
               titleColor="gray.600"
               borderTopRadius={0}
             />
-          </AspectRatio>
+          </div>
         </GridItem>
         <GridItem colSpan={{ base: 12, md: 6 }}>
-          <AspectRatio ratio={16 / 10} w="full">
+          <div className="aspect-[16/10] w-full">
             <HomePageCodeBlock
               darkTheme={darkTheme}
               color="white"
@@ -146,7 +146,7 @@ export const WithoutThirdwebSection: React.FC = () => {
               titleColor="white"
               borderTopRadius={0}
             />
-          </AspectRatio>
+          </div>
         </GridItem>
       </SimpleGrid>
     </KeyFeatureLayout>

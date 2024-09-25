@@ -1,5 +1,4 @@
 import {
-  AspectRatio,
   Box,
   Flex,
   Modal,
@@ -87,14 +86,14 @@ export const GameShowcase = () => {
           >
             <ModalCloseButton />
           </Box>
-          <AspectRatio ratio={{ base: 16 / 9, md: 16 / 9 }} w="100%">
+          <div className="aspect-[16/9] w-full">
             <Box
               bg="#000"
               borderRadius={{ base: "md", md: "lg" }}
               as="iframe"
               src={selectedGame}
             />
-          </AspectRatio>
+          </div>
         </ModalContent>
       </Modal>
     </Flex>

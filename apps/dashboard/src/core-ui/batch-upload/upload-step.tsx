@@ -1,5 +1,4 @@
 import {
-  AspectRatio,
   Center,
   Code,
   Container,
@@ -31,7 +30,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
     <Flex flexGrow={1} align="center" overflow="auto">
       <Container maxW="container.page">
         <Flex gap={8} flexDir={{ base: "column", md: "row" }}>
-          <AspectRatio w={{ base: "100%", md: "50%" }}>
+          <div className="aspect-square w-full md:w-1/2">
             <Center
               borderRadius="md"
               {...getRootProps()}
@@ -43,6 +42,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
               }}
               borderColor="inputBorder"
               borderWidth="1px"
+              h="100%"
             >
               <input {...getInputProps()} />
               <div className="flex flex-col p-6">
@@ -51,6 +51,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                   boxSize={8}
                   mb={2}
                   color={hasFailed ? "red.500" : "gray.600"}
+                  my="auto"
                 />
                 {isDragActive ? (
                   <Heading as={Text} size="label.md" color="gray.600">
@@ -70,7 +71,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                 )}
               </div>
             </Center>
-          </AspectRatio>
+          </div>
           <Flex gap={2} flexDir="column" w={{ base: "100%", md: "50%" }}>
             <Heading size="subtitle.sm">Requirements</Heading>
             <UnorderedList>
