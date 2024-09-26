@@ -45,6 +45,8 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
     throw new Error("API_SERVER_SECRET is not set");
   }
 
+  const cookieStore = cookies();
+
   // forward the request to the API server
   const res = await fetch(`${THIRDWEB_API_HOST}/v2/siwe/login`, {
     method: "POST",
@@ -52,10 +54,21 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
       "Content-Type": "application/json",
       "x-service-api-key": THIRDWEB_API_SECRET,
     },
-    body: JSON.stringify(payload),
+    // set the createAccount flag to true to create a new account if it does not exist
+    body: JSON.stringify({ ...payload, createAccount: true }),
   });
 
+  // if the request failed, log the error and throw an error
   if (!res.ok) {
+    try {
+      // clear the cookies to prevent any weird issues
+      cookieStore.delete(
+        COOKIE_PREFIX_TOKEN + getAddress(payload.payload.address),
+      );
+      cookieStore.delete(COOKIE_ACTIVE_ACCOUNT);
+    } catch {
+      // ignore any errors on this
+    }
     try {
       const response = await res.text();
       // try to log the rich error message
@@ -85,36 +98,6 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
     console.error("Failed to login - invalid json", json);
     throw new Error("Failed to login - invalid json");
   }
-
-  // check if we have a thirdweb account for the token
-  const userRes = await fetch(`${THIRDWEB_API_HOST}/v1/account/me`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${jwt}`,
-    },
-  });
-  // if we do not have a user, create one
-  // TODO: this should only need to check for 404, but because of secretKey auth it can also be 400 error
-  if (userRes.status === 404 || userRes.status === 400) {
-    const newUserRes = await fetch(`${THIRDWEB_API_HOST}/v1/account/create`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    });
-
-    if (newUserRes.status !== 200) {
-      console.error(
-        "Failed to create new user",
-        newUserRes.status,
-        newUserRes.statusText,
-      );
-      throw new Error("Failed to create new user");
-    }
-  }
-
-  const cookieStore = cookies();
 
   // set the token cookie
   cookieStore.set(
