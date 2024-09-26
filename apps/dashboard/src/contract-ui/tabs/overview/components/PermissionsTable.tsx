@@ -7,13 +7,13 @@ import {
   Stack,
   Tag,
   Tooltip,
-  useToast,
 } from "@chakra-ui/react";
 import { useTabHref } from "contract-ui/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
 import { useMemo } from "react";
 import { FiCopy } from "react-icons/fi";
+import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { useReadContract } from "thirdweb/react";
 import {
@@ -126,7 +126,6 @@ interface PermissionsItemProps {
 }
 
 const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
-  const toast = useToast();
   const { onCopy } = useClipboard(data.member);
 
   return (
@@ -183,14 +182,7 @@ const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
                 bg="transparent"
                 onClick={() => {
                   onCopy();
-                  toast({
-                    variant: "solid",
-                    position: "bottom",
-                    title: "Address copied.",
-                    status: "success",
-                    duration: 5000,
-                    isClosable: true,
-                  });
+                  toast.info("Address copied.");
                 }}
               >
                 <Icon as={FiCopy} boxSize={3} />

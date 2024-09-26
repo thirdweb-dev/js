@@ -16,7 +16,6 @@ import {
   SimpleGrid,
   Tooltip,
   chakra,
-  useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
@@ -27,6 +26,7 @@ import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { BsFillCloudUploadFill } from "react-icons/bs";
 import { FiExternalLink, FiTrash2, FiUploadCloud } from "react-icons/fi";
+import { toast } from "sonner";
 import { MediaRenderer } from "thirdweb/react";
 import { useActiveAccount } from "thirdweb/react";
 import {
@@ -45,7 +45,6 @@ const TRACKING_CATEGORY = "ipfs_uploader";
 const UNACCEPTED_FILE_TYPES = ["text/html"];
 
 export const IpfsUploadDropzone: React.FC = () => {
-  const toast = useToast();
   const address = useActiveAccount()?.address;
 
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
@@ -56,13 +55,8 @@ export const IpfsUploadDropzone: React.FC = () => {
         UNACCEPTED_FILE_TYPES.includes(f.type),
       );
       if (invalidFiles.length) {
-        const description = `${invalidFiles.length} ${invalidFiles.length > 1 ? "files have" : "file has"} been removed from the list. Uploading ${UNACCEPTED_FILE_TYPES.join(", ")} files is restricted.`;
-        toast({
-          title: "Error",
-          description,
-          status: "error",
-          isClosable: true,
-          duration: 6000,
+        toast.error("Error", {
+          description: `${invalidFiles.length} ${invalidFiles.length > 1 ? "files have" : "file has"} been removed from the list. Uploading ${UNACCEPTED_FILE_TYPES.join(", ")} files is restricted.`,
         });
       }
       setDroppedFiles((prev) => [

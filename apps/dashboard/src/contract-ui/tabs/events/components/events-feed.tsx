@@ -22,7 +22,6 @@ import {
   Stack,
   Switch,
   Tooltip,
-  useToast,
 } from "@chakra-ui/react";
 import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
 import { AnimatePresence, motion } from "framer-motion";
@@ -31,6 +30,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { Fragment, useMemo, useState } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { stringify } from "thirdweb/utils";
 import {
@@ -191,7 +191,6 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
   contractAddress,
   chainSlug,
 }) => {
-  const toast = useToast();
   const { onCopy } = useClipboard(transaction.transactionHash);
 
   const router = useRouter();
@@ -257,14 +256,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                   bg="transparent"
                   onClick={() => {
                     onCopy();
-                    toast({
-                      variant: "solid",
-                      position: "bottom",
-                      title: "Transaction hash copied.",
-                      status: "success",
-                      duration: 5000,
-                      isClosable: true,
-                    });
+                    toast.info("Transaction hash copied.");
                   }}
                 >
                   <Icon as={FiCopy} boxSize={3} />

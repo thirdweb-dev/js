@@ -12,13 +12,13 @@ import {
   Spinner,
   Stack,
   Tooltip,
-  useToast,
 } from "@chakra-ui/react";
 import { useTabHref } from "contract-ui/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
 import { useState } from "react";
 import { FiCopy } from "react-icons/fi";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import {
   Button,
@@ -109,7 +109,6 @@ interface EventsFeedItemProps {
 }
 
 const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
-  const toast = useToast();
   const { onCopy } = useClipboard(transaction.transactionHash);
 
   const href = useTabHref("events");
@@ -170,14 +169,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
                 bg="transparent"
                 onClick={() => {
                   onCopy();
-                  toast({
-                    variant: "solid",
-                    position: "bottom",
-                    title: "Transaction hash copied.",
-                    status: "success",
-                    duration: 5000,
-                    isClosable: true,
-                  });
+                  toast.info("Transaction hash copied.");
                 }}
               >
                 <Icon as={FiCopy} boxSize={3} />

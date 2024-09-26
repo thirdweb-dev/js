@@ -58,6 +58,8 @@ module.exports = {
               "VStack",
               "HStack",
               "AspectRatio",
+              "useToast",
+              "useClipboard",
               // also the types
               "ButtonProps",
               "BadgeProps",
