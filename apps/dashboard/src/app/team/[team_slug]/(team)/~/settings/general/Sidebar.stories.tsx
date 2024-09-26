@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { teamStub } from "../../../../../../../stories/stubs";
 import {
   BadgeContainer,
   mobileViewport,
@@ -39,7 +40,25 @@ function Story(props: {
 }) {
   return (
     <div className="container min-h-screen py-6 text-foreground">
-      {props.type === "desktop" && <TeamSettingsSidebar teamSlug="foo" />}
+      {props.type === "desktop" && (
+        <div className="flex flex-col gap-10">
+          <BadgeContainer label="account loaded">
+            <TeamSettingsSidebar
+              team={teamStub("foo", "free")}
+              account={{
+                id: "x",
+              }}
+            />
+          </BadgeContainer>
+
+          <BadgeContainer label="account loading">
+            <TeamSettingsSidebar
+              team={teamStub("foo", "free")}
+              account={undefined}
+            />
+          </BadgeContainer>
+        </div>
+      )}
 
       {props.type === "mobile" && (
         <div className="flex flex-col gap-4">

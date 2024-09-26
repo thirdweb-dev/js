@@ -2,7 +2,6 @@ import type { Team } from "@/api/team";
 import { Toaster } from "@/components/ui/sonner";
 import type { Meta, StoryObj } from "@storybook/react";
 import { mobileViewport } from "../../../../../../../stories/utils";
-import SettingsLayout from "../layout";
 import {
   DeleteTeamCard,
   GeneralSettingsPage,
@@ -47,17 +46,9 @@ const testTeam: Team = {
 
 function Story() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <SettingsLayout
-        params={{
-          team_slug: testTeam.slug,
-        }}
-      >
-        <GeneralSettingsPage team={testTeam} />
-      </SettingsLayout>
-
+    <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
+      <GeneralSettingsPage team={testTeam} />
       <ComponentVariantions />
-
       <Toaster richColors />
     </div>
   );

@@ -9,6 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { useState } from "react";
 import { ProjectSelectorUI } from "./ProjectSelectorUI";
@@ -20,6 +21,7 @@ type TeamSwitcherProps = {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   focus: "project-selection" | "team-selection";
   createProject: () => void;
+  account: Pick<Account, "email" | "id"> | undefined;
 };
 
 export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
@@ -83,6 +85,7 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
                   ? `/team/${currentTeam.slug}/~/settings/billing`
                   : undefined
               }
+              account={props.account}
             />
 
             {/* Right */}

@@ -35,10 +35,10 @@ export function AccountHeader(props: {
 
   const headerProps: AccountHeaderCompProps = {
     teamsAndProjects: props.teamsAndProjects,
-    email: myAccountQuery.data?.email,
     logout: logout,
     connectButton: <CustomConnectWallet />,
     createProject: () => setIsCreateProjectDialogOpen(true),
+    account: myAccountQuery.data,
   };
 
   return (

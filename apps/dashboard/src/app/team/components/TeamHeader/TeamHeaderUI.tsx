@@ -1,6 +1,9 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
+import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
+import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
 import { cn } from "@/lib/utils";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
 import { SecondaryNav } from "../../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../../components/MobileBurgerMenuButton";
@@ -16,7 +19,7 @@ export type TeamHeaderCompProps = {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   currentProject: Project | undefined;
   className?: string;
-  email: string | undefined;
+  account: Pick<Account, "email" | "id"> | undefined;
   logout: () => void;
   connectButton: React.ReactNode;
   createProject: () => void;
@@ -45,8 +48,8 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             href={`/team/${currentTeam.slug}`}
             className="flex flex-row items-center gap-2 font-normal text-sm"
           >
-            {/* TODO - replace with team image */}
-            <div className="size-6 rounded-full border border-border bg-muted" />
+            {/* TODO - set team image */}
+            <GradientAvatar id={currentTeam.id} src={""} className="size-6" />
 
             <span> {currentTeam.name} </span>
             <TeamPlanBadge plan={teamPlan} />
@@ -58,6 +61,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             teamsAndProjects={props.teamsAndProjects}
             focus="team-selection"
             createProject={props.createProject}
+            account={props.account}
           />
         </div>
 
@@ -67,8 +71,10 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             <div className="flex items-center gap-1">
               <Link
                 href={`/team/${props.currentTeam.slug}/${props.currentProject.slug}`}
-                className="flex flex-row items-center gap-1 font-semibold text-sm"
+                className="flex flex-row items-center gap-2 font-semibold text-sm"
               >
+                {/* TODO - set project avatar image */}
+                <ProjectAvatar src="" className="size-6" />
                 {props.currentProject.name}
               </Link>
 
@@ -78,6 +84,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
                 teamsAndProjects={props.teamsAndProjects}
                 focus="project-selection"
                 createProject={props.createProject}
+                account={props.account}
               />
             </div>
           </>
@@ -85,7 +92,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
       </div>
 
       <SecondaryNav
-        email={props.email}
+        account={props.account}
         logout={props.logout}
         connectButton={props.connectButton}
       />
@@ -110,7 +117,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
         props.className,
       )}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
         <div className="flex items-center gap-1">
           <Link
             href={`/team/${currentTeam.slug}`}
@@ -118,8 +125,8 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
               "flex flex-row items-center gap-2 font-normal text-foreground text-sm",
             )}
           >
-            {/* TODO - replace with team image */}
-            <div className="size-7 rounded-full border border-border bg-muted" />
+            {/* TODO - set team image */}
+            <GradientAvatar id={currentTeam.id} src={""} className="size-6" />
 
             {!props.currentProject && (
               <span className="font-semibold">{currentTeam.name}</span>
@@ -130,6 +137,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
             currentTeam={props.currentTeam}
             teamsAndProjects={props.teamsAndProjects}
             upgradeTeamLink={`/team/${currentTeam.slug}/settings`}
+            account={props.account}
           />
         </div>
 
@@ -139,9 +147,11 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
             <div className="flex items-center gap-1">
               <Link
                 href={`/team/${props.currentTeam.slug}/${props.currentProject.slug}`}
-                className="truncate font-semibold text-sm max-lg:max-w-[130px]"
+                className="flex items-center gap-2 font-semibold text-sm"
               >
-                {props.currentProject.name}
+                <span className="truncate max-sm:max-w-[130px]">
+                  {props.currentProject.name}
+                </span>
               </Link>
 
               <ProjectSelectorMobileMenuButton
@@ -156,7 +166,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
       </div>
 
       <MobileBurgerMenuButton
-        email={props.email}
+        email={props.account?.email}
         logout={props.logout}
         connectButton={props.connectButton}
       />

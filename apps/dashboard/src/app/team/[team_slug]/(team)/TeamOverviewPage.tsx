@@ -13,6 +13,7 @@ import { ChevronDownIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
+import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
 import { CopyButton } from "@/components/ui/CopyButton";
 import {
   Select,
@@ -119,8 +120,8 @@ function ProjectCard(props: {
       key={project.id}
       className="relative flex items-center gap-4 rounded-lg border border-border bg-muted/50 p-4 transition-colors hover:bg-muted/70"
     >
-      {/* TODO - replace with project image */}
-      <div className="size-10 shrink-0 rounded-full bg-border" />
+      {/* TODO - set image */}
+      <ProjectAvatar className="size-10 rounded-full" src="" />
 
       <div>
         <Link

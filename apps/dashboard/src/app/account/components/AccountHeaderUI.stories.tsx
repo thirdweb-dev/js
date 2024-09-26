@@ -45,13 +45,26 @@ function Variants(props: {
   return (
     <ThirdwebProvider>
       <div className="flex min-h-screen flex-col gap-6 bg-gray-700 px-4 py-10">
-        <BadgeContainer label="Logged in">
+        <BadgeContainer label="Account Loaded">
           <Comp
             teamsAndProjects={teamsAndProjectsStub}
-            email="eng@thirdweb.com"
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
             createProject={() => {}}
+            account={{
+              id: "foo",
+              email: "foo@example.com",
+            }}
+          />
+        </BadgeContainer>
+
+        <BadgeContainer label="Account Loading">
+          <Comp
+            teamsAndProjects={teamsAndProjectsStub}
+            logout={() => {}}
+            connectButton={<ConnectButtonStub />}
+            createProject={() => {}}
+            account={undefined}
           />
         </BadgeContainer>
       </div>

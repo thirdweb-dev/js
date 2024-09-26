@@ -2,6 +2,7 @@
 
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
+import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -62,9 +63,9 @@ export function ProjectSelectorUI(props: {
                       href={`/team/${team.slug}/${project.slug}/connect/analytics`}
                     >
                       <div className="flex items-center gap-2">
-                        {/* TODO - placeholder for now */}
-                        <div className="size-4 rounded-full border bg-muted" />
-                        <span className="truncate"> {project.name} </span>
+                        {/* TODO - set Image */}
+                        <ProjectAvatar src="" className="size-6" />
+                        <span className="truncate"> {project.name}</span>
                       </div>
                       {isSelected && (
                         <CheckIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
