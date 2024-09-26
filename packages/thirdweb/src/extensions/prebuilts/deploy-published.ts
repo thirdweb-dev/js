@@ -33,6 +33,7 @@ export type DeployPublishedContractOptions = {
   version?: string;
   implementationConstructorParams?: Record<string, unknown>;
   salt?: string;
+  compilerType?: "solc" | "zksolc";
 };
 
 /**
@@ -92,12 +93,14 @@ export async function deployPublishedContract(
     version,
     implementationConstructorParams,
     salt,
+    compilerType,
   } = options;
   const deployMetadata = await fetchPublishedContractMetadata({
     client,
-    contractId: isZkSyncChain(chain) ? `${contractId}_ZkSync` : contractId,
+    contractId,
     publisher,
     version,
+    compilerType,
   });
 
   return deployContractfromDeployMetadata({
@@ -108,6 +111,7 @@ export async function deployPublishedContract(
     initializeParams: contractParams,
     implementationConstructorParams,
     salt,
+    compilerType,
   });
 }
 
@@ -126,6 +130,7 @@ export type DeployContractfromDeployMetadataOptions = {
     initializeParams?: Record<string, unknown>;
   }[];
   salt?: string;
+  compilerType?: "solc" | "zksolc";
 };
 
 /**
@@ -143,6 +148,7 @@ export async function deployContractfromDeployMetadata(
     implementationConstructorParams,
     modules,
     salt,
+    compilerType,
   } = options;
   switch (deployMetadata?.deployType) {
     case "standard": {
@@ -176,6 +182,7 @@ export async function deployContractfromDeployMetadata(
               client,
             })),
           publisher: deployMetadata.publisher,
+          compilerType,
         });
 
       const initializeTransaction = await getInitializeTransaction({

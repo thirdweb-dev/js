@@ -18,6 +18,7 @@ export type CompilerMetadata = {
   };
   licenses: string[];
   isPartialAbi?: boolean;
+  zk_version?: string;
 };
 
 /**
@@ -26,29 +27,37 @@ export type CompilerMetadata = {
  * @returns The formatted metadata.
  * @internal
  */
-// biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-export function formatCompilerMetadata(metadata: any): CompilerMetadata {
-  const compilationTarget = metadata.settings.compilationTarget;
+export function formatCompilerMetadata(
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
+  metadata: any,
+  compilerType?: "solc" | "zksolc",
+): CompilerMetadata {
+  let meta = metadata;
+  if (compilerType === "zksolc") {
+    meta = metadata.source_metadata || meta;
+  }
+  const compilationTarget = meta.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
   const name = compilationTarget[targets[0] as keyof typeof compilationTarget];
   const info = {
-    title: metadata.output.devdoc.title,
-    author: metadata.output.devdoc.author,
-    details: metadata.output.devdoc.detail,
-    notice: metadata.output.userdoc.notice,
+    title: meta.output.devdoc.title,
+    author: meta.output.devdoc.author,
+    details: meta.output.devdoc.detail,
+    notice: meta.output.userdoc.notice,
   };
   const licenses: string[] = [
     ...new Set(
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-      Object.entries(metadata.sources).map(([, src]) => (src as any).license),
+      Object.entries(meta.sources).map(([, src]) => (src as any).license),
     ),
   ];
   return {
     name,
-    abi: metadata?.output?.abi || [],
-    metadata,
+    abi: meta?.output?.abi || [],
+    metadata: meta,
     info,
     licenses,
-    isPartialAbi: metadata.isPartialAbi,
+    isPartialAbi: meta.isPartialAbi,
+    zk_version: metadata.zk_version,
   };
 }

@@ -8,6 +8,7 @@ import type { Prettify } from "../type-utils.js";
 type FetchDeployMetadataOptions = {
   uri: string;
   client: ThirdwebClient;
+  compilerType?: "solc" | "zksolc";
 };
 
 export type FetchDeployMetadataResult = Partial<ExtendedMetadata> &
@@ -22,19 +23,25 @@ export type FetchDeployMetadataResult = Partial<ExtendedMetadata> &
 export async function fetchDeployMetadata(
   options: FetchDeployMetadataOptions,
 ): Promise<FetchDeployMetadataResult> {
+  const isZksolc = options.compilerType === "zksolc";
   const rawMeta: RawCompilerMetadata = await download({
     uri: options.uri,
     client: options.client,
   }).then((r) => r.json());
-  // TODO: proper handling of different compiler metadata types
-  const metadataUri =
-    rawMeta.compilers?.zksolc?.length > 0 && rawMeta.name.endsWith("_ZkSync")
-      ? rawMeta.compilers.zksolc[0].metadataUri
-      : rawMeta.metadataUri;
-  const bytecodeUri =
-    rawMeta.compilers?.zksolc?.length > 0 && rawMeta.name.endsWith("_ZkSync")
-      ? rawMeta.compilers.zksolc[0].bytecodeUri
-      : rawMeta.bytecodeUri;
+
+  if (
+    isZksolc &&
+    (!rawMeta.compilers?.zksolc || rawMeta.compilers?.zksolc.length === 0)
+  ) {
+    throw new Error(`No zksolc metadata found for contract: ${rawMeta.name}`);
+  }
+
+  const metadataUri = isZksolc
+    ? rawMeta.compilers.zksolc[0].metadataUri
+    : rawMeta.metadataUri;
+  const bytecodeUri = isZksolc
+    ? rawMeta.compilers.zksolc[0].bytecodeUri
+    : rawMeta.bytecodeUri;
   const [deployBytecode, parsedMeta] = await Promise.all([
     download({ uri: bytecodeUri, client: options.client }).then(
       (res) => res.text() as Promise<Hex>,
@@ -42,6 +49,7 @@ export async function fetchDeployMetadata(
     fetchAndParseCompilerMetadata({
       client: options.client,
       uri: metadataUri,
+      compilerType: options.compilerType,
     }),
   ]);
 
@@ -66,12 +74,18 @@ async function fetchAndParseCompilerMetadata(
       requestTimeoutMs: CONTRACT_METADATA_TIMEOUT_SEC,
     })
   ).json();
-  if (!metadata || !metadata.output) {
+  if (
+    (!metadata || !metadata.output) &&
+    (!metadata.source_metadata || !metadata.source_metadata.output)
+  ) {
     throw new Error(
       `Could not resolve metadata for contract at ${options.uri}`,
     );
   }
-  return { ...metadata, ...formatCompilerMetadata(metadata) };
+  return {
+    ...metadata,
+    ...formatCompilerMetadata(metadata, options.compilerType),
+  };
 }
 
 // types
@@ -128,6 +142,7 @@ type ParsedCompilerMetadata = {
   };
   licenses: string[];
   isPartialAbi?: boolean;
+  zk_version?: string;
 };
 
 export type CompilerMetadata = Prettify<

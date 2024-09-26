@@ -27,6 +27,7 @@ export async function getOrDeployInfraForPublishedContract(
     constructorParams?: Record<string, unknown>;
     publisher?: string;
     version?: string;
+    compilerType?: "solc" | "zksolc";
   },
 ): Promise<{
   cloneFactoryContract: ThirdwebContract;
@@ -40,6 +41,7 @@ export async function getOrDeployInfraForPublishedContract(
     constructorParams,
     publisher,
     version,
+    compilerType,
   } = args;
 
   if (isZkSyncChain(chain)) {
@@ -50,9 +52,10 @@ export async function getOrDeployInfraForPublishedContract(
     });
     const compilerMetadata = await fetchPublishedContractMetadata({
       client,
-      contractId: `${contractId}_ZkSync`, // different contract id for zkSync
+      contractId,
       publisher,
       version,
+      compilerType,
     });
     const implementationContract = await zkDeployContractDeterministic({
       chain,
