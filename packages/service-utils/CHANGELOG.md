@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.40
+
+### Patch Changes
+
+- [#4789](https://github.com/thirdweb-dev/js/pull/4789) [`e384001`](https://github.com/thirdweb-dev/js/commit/e38400195f2644ef8dfcfbce5fa127a9a218247d) Thanks [@MananTank](https://github.com/MananTank)! - Fix whitespaces in UI components
+
 ## 0.4.39
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-adapter
 
+## 1.4.3
+
+### Patch Changes
+
+- [#4789](https://github.com/thirdweb-dev/js/pull/4789) [`e384001`](https://github.com/thirdweb-dev/js/commit/e38400195f2644ef8dfcfbce5fa127a9a218247d) Thanks [@MananTank](https://github.com/MananTank)! - Fix whitespaces in UI components
+
 ## 1.4.2
 
 ### Patch Changes
