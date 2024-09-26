@@ -13,6 +13,8 @@ export function ProjectGeneralSettingsPageForTeams(props: {
   const { team_slug, project_slug, apiKey } = props;
   const projectSettingsLayout = `/team/${team_slug}/${project_slug}/settings`;
 
+  // TODO - add a Project Image form field on this page
+
   return (
     <ProjectGeneralSettingsPage
       apiKey={apiKey}

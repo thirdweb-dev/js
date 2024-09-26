@@ -4,9 +4,9 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { mobileViewport } from "../../../../../../../stories/utils";
 import {
   DeleteTeamCard,
-  GeneralSettingsPage,
   LeaveTeamCard,
-} from "./GeneralSettingsPage";
+  TeamGeneralSettingsPageUI,
+} from "./TeamGeneralSettingsPageUI";
 
 const meta = {
   title: "Team/Settings/General",
@@ -47,7 +47,12 @@ const testTeam: Team = {
 function Story() {
   return (
     <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
-      <GeneralSettingsPage team={testTeam} />
+      <TeamGeneralSettingsPageUI
+        team={testTeam}
+        updateTeamImage={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }}
+      />
       <ComponentVariantions />
       <Toaster richColors />
     </div>

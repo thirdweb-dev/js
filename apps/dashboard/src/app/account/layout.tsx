@@ -10,7 +10,7 @@ export default async function AccountLayout(props: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-full flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       <div className="flex grow flex-col">
         <HeaderAndNav />
         <div className="border-border border-b py-10">
