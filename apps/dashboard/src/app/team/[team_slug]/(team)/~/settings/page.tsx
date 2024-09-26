@@ -1,6 +1,8 @@
 import { getTeamBySlug } from "@/api/team";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { notFound } from "next/navigation";
-import { GeneralSettingsPage } from "./general/GeneralSettingsPage";
+import { getAuthToken } from "../../../../../api/lib/getAuthToken";
+import { TeamGeneralSettingsPage } from "./general/TeamGeneralSettingsPage";
 
 export default async function Page(props: {
   params: {
@@ -8,10 +10,12 @@ export default async function Page(props: {
   };
 }) {
   const team = await getTeamBySlug(props.params.team_slug);
-
-  if (!team) {
+  const token = getAuthToken();
+  if (!team || !token) {
     notFound();
   }
 
-  return <GeneralSettingsPage team={team} />;
+  return (
+    <TeamGeneralSettingsPage team={team} client={getThirdwebClient(token)} />
+  );
 }

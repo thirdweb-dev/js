@@ -1,8 +1,7 @@
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { cn } from "@/lib/utils";
 import {
-  AspectRatio,
   Box,
-  Center,
   Container,
   Flex,
   Icon,
@@ -189,12 +188,12 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
         <Flex shadow="sm">
           <Container maxW="container.page">
             <Flex align="center" justify="space-between" p={4}>
-              <Flex gap={2}>
+              <div className="flex flex-row gap-2">
                 <Logo hideWordmark />
                 <Heading size="title.md">
                   {validAirdrop.length ? "Edit" : "Upload"} Airdrop
                 </Heading>
-              </Flex>
+              </div>
             </Flex>
           </Container>
         </Flex>
@@ -205,18 +204,13 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
           <Flex flexGrow={1} align="center" overflow="auto">
             <Container maxW="container.page">
               <Flex gap={8} flexDir="column">
-                <AspectRatio ratio={21 / 9} w="100%">
-                  <Center
-                    borderRadius="md"
+                <div className="relative aspect-[21/9] w-full">
+                  <div
+                    className={cn(
+                      "h-full cursor-pointer rounded-md border border-border hover:border-primary",
+                      noCsv ? "bg-red-200" : "bg-card",
+                    )}
                     {...getRootProps()}
-                    cursor="pointer"
-                    bg={noCsv ? "red.200" : "inputBg"}
-                    _hover={{
-                      bg: "inputBgHover",
-                      borderColor: "primary.500",
-                    }}
-                    borderColor="inputBorder"
-                    borderWidth="1px"
                   >
                     <input {...getInputProps()} />
                     <div className="flex flex-col p-6">
@@ -225,6 +219,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                         boxSize={8}
                         mb={2}
                         color={noCsv ? "red.500" : "gray.600"}
+                        my="auto"
                       />
                       {isDragActive ? (
                         <Heading as={Text} size="label.md">
@@ -242,9 +237,9 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                         </Heading>
                       )}
                     </div>
-                  </Center>
-                </AspectRatio>
-                <Flex gap={2} flexDir="column">
+                  </div>
+                </div>
+                <div className="flex flex-row gap-2">
                   <Heading size="subtitle.sm">Requirements</Heading>
                   <UnorderedList>
                     <ListItem>
@@ -260,7 +255,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                       found will be kept.
                     </ListItem>
                   </UnorderedList>
-                </Flex>
+                </div>
               </Flex>
             </Container>
           </Flex>
@@ -339,7 +334,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
             return address;
           }
           return (
-            <Flex>
+            <div className="flex flex-row">
               <Tooltip
                 label={
                   address.startsWith("0x")
@@ -354,7 +349,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
                   </Text>
                 </Stack>
               </Tooltip>
-            </Flex>
+            </div>
           );
         },
       },
@@ -447,7 +442,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
         </Table>
       </TableContainer>
       <Portal containerRef={portalRef}>
-        <Center w="100%">
+        <div className="flex w-full items-center justify-center">
           <div className="flex flex-row">
             <IconButton
               isDisabled={!canPreviousPage}
@@ -491,7 +486,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
               <option value="500">500</option>
             </Select>
           </div>
-        </Center>
+        </div>
       </Portal>
     </Flex>
   );

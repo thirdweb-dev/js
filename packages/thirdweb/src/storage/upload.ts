@@ -33,6 +33,25 @@ type UploadReturnType<TFiles extends UploadableFile[]> = TFiles extends {
  * @returns A promise that resolves to the uploaded file URI or URIs (when passing multiple files).
  * @throws An error if the upload fails.
  * @example
+ *
+ * ### Uploading JSON objects
+ *
+ * ```ts
+ * import { upload } from "thirdweb/storage";
+ * const uri = await upload({
+ *  client,
+ *  files: [
+ *    {
+ *      name: "something",
+ *      data: {
+ *        hello: "world",
+ *      },
+ *    },
+ *  ],
+ * });
+ *
+ * ### Uploading files
+ *
  * ```ts
  * import { upload } from "thirdweb/storage";
  * const uri = await upload({

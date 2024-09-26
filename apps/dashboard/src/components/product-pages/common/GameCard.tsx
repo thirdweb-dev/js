@@ -1,4 +1,4 @@
-import { Box, Center, Flex, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { useTrack } from "hooks/analytics/useTrack";
 import NextImage, { type StaticImageData } from "next/image";
@@ -70,7 +70,7 @@ export const GameCard: React.FC<GameCardProps> = ({
               (max-width: 1200px) 50vw,
               33vw"
         />
-        <Center position="absolute" top={0} bottom={0} left={0} right={0}>
+        <div className="absolute inset-0 flex items-center justify-center">
           <Button
             leftIcon={<IoGameControllerOutline />}
             color="white"
@@ -80,7 +80,7 @@ export const GameCard: React.FC<GameCardProps> = ({
           >
             Play Game
           </Button>
-        </Center>
+        </div>
       </Box>
 
       <Flex direction="column" gap={2} pb={4} px={4}>

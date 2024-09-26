@@ -36,7 +36,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
     <Card position="relative">
       <Flex direction="column" gap={3}>
         <Stack spacing={2} mb="12px">
-          <Flex>
+          <div className="flex flex-row">
             <Stack spacing={1} flexGrow={1}>
               <Heading size="subtitle.sm" textTransform="capitalize">
                 {role === "minter" ? "Minter / Creator" : role}
@@ -148,7 +148,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                 )}
               </Flex>
             )}
-          </Flex>
+          </div>
 
           {role === "transfer" && (
             <Flex

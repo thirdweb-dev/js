@@ -5,7 +5,6 @@ import {
 import {
   Box,
   ButtonGroup,
-  Center,
   Flex,
   Icon,
   List,
@@ -13,13 +12,13 @@ import {
   Spinner,
   Stack,
   Tooltip,
-  useToast,
 } from "@chakra-ui/react";
 import { useTabHref } from "contract-ui/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
 import { useState } from "react";
 import { FiCopy } from "react-icons/fi";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import {
   Button,
@@ -85,14 +84,14 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
 
         <List overflow="auto">
           {allEvents.length === 0 ? (
-            <Center py={4}>
+            <div className="flex items-center justify-center py-4">
               <Flex align="center" gap={2}>
                 {autoUpdate && <Spinner size="sm" speed="0.69s" />}
                 <Text size="body.md" fontStyle="italic">
                   {autoUpdate ? "listening for events" : "no events to show"}
                 </Text>
               </Flex>
-            </Center>
+            </div>
           ) : null}
           <AnimatePresence initial={false}>
             {allEvents?.slice(0, 3).map((e) => (
@@ -110,13 +109,12 @@ interface EventsFeedItemProps {
 }
 
 const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
-  const toast = useToast();
   const { onCopy } = useClipboard(transaction.transactionHash);
 
   const href = useTabHref("events");
 
   return (
-    <Box>
+    <div>
       <SimpleGrid
         columns={9}
         gap={2}
@@ -171,14 +169,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
                 bg="transparent"
                 onClick={() => {
                   onCopy();
-                  toast({
-                    variant: "solid",
-                    position: "bottom",
-                    title: "Transaction hash copied.",
-                    status: "success",
-                    duration: 5000,
-                    isClosable: true,
-                  });
+                  toast.info("Transaction hash copied.");
                 }}
               >
                 <Icon as={FiCopy} boxSize={3} />
@@ -213,6 +204,6 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
           )}
         </ButtonGroup>
       </SimpleGrid>
-    </Box>
+    </div>
   );
 };

@@ -1,5 +1,5 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import { Box, Center, Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Aurora } from "components/homepage/Aurora";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
@@ -34,8 +34,8 @@ const PageNotFound: ThirdwebNextPage = () => {
           color="hsl(289deg 78% 30% / 35%)"
         />
 
-        <Center mb={6}>
-          <Center p={2} position="relative" mb={6}>
+        <div className="mb-6 flex items-center justify-center">
+          <div className="relative mb-6 flex items-center justify-center p-2">
             <Box
               position="absolute"
               bgGradient="linear(to-r, #F213A4, #040BBF)"
@@ -54,8 +54,8 @@ const PageNotFound: ThirdwebNextPage = () => {
               placeholder="empty"
               src={NotFound}
             />
-          </Center>
-        </Center>
+          </div>
+        </div>
         <Heading textAlign="center" size="display.md">
           Uh oh.
           <br />

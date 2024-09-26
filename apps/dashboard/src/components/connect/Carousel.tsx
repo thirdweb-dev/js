@@ -1,5 +1,5 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Box, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useCallback, useEffect, useState } from "react";
@@ -68,12 +68,7 @@ const Carousel = ({ TRACKING_CATEGORY }: { TRACKING_CATEGORY: string }) => {
   }, [selectedShowCaseIdx, canAnimate]);
 
   return (
-    <Flex
-      flexDir={{ base: "column", md: "row" }}
-      gap={{ base: "24px", md: 0 }}
-      alignItems="stretch"
-      w="full"
-    >
+    <div className="flex w-full flex-col items-stretch gap-6 md:flex-row md:gap-0">
       <Box
         w="full"
         display={{ base: "flex", md: "none" }}
@@ -153,7 +148,7 @@ const Carousel = ({ TRACKING_CATEGORY }: { TRACKING_CATEGORY: string }) => {
           );
         })}
       </SimpleGrid>
-      <Flex width="full" maxW="786px">
+      <div className="flex w-full max-w-[786px] flex-row">
         {showcaseImages.map((img, idx) => (
           <ChakraNextImage
             // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
@@ -175,8 +170,8 @@ const Carousel = ({ TRACKING_CATEGORY }: { TRACKING_CATEGORY: string }) => {
             priority
           />
         ))}
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 };
 

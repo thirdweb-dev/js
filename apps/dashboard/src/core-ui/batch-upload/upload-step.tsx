@@ -1,6 +1,5 @@
+import { cn } from "@/lib/utils";
 import {
-  AspectRatio,
-  Center,
   Code,
   Container,
   Flex,
@@ -31,18 +30,13 @@ export const UploadStep: React.FC<UploadStepProps> = ({
     <Flex flexGrow={1} align="center" overflow="auto">
       <Container maxW="container.page">
         <Flex gap={8} flexDir={{ base: "column", md: "row" }}>
-          <AspectRatio w={{ base: "100%", md: "50%" }}>
-            <Center
-              borderRadius="md"
+          <div className="relative aspect-square w-full md:w-1/2">
+            <div
+              className={cn(
+                "h-full cursor-pointer rounded-md border border-border hover:border-blue-500",
+                hasFailed ? "bg-red-200" : "bg-card",
+              )}
               {...getRootProps()}
-              cursor="pointer"
-              bg={hasFailed ? "red.200" : "inputBg"}
-              _hover={{
-                bg: hasFailed ? "red.200" : "inputBgHover",
-                borderColor: "blue.500",
-              }}
-              borderColor="inputBorder"
-              borderWidth="1px"
             >
               <input {...getInputProps()} />
               <div className="flex flex-col p-6">
@@ -51,6 +45,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                   boxSize={8}
                   mb={2}
                   color={hasFailed ? "red.500" : "gray.600"}
+                  my="auto"
                 />
                 {isDragActive ? (
                   <Heading as={Text} size="label.md" color="gray.600">
@@ -69,8 +64,8 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                   </Heading>
                 )}
               </div>
-            </Center>
-          </AspectRatio>
+            </div>
+          </div>
           <Flex gap={2} flexDir="column" w={{ base: "100%", md: "50%" }}>
             <Heading size="subtitle.sm">Requirements</Heading>
             <UnorderedList>

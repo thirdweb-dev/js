@@ -67,6 +67,7 @@ export type Account = {
     paymentFailureCode: string;
     serviceCutoffDate: string;
   }[];
+  // TODO - add image URL
 };
 
 interface UpdateAccountInput {

@@ -45,7 +45,7 @@ export function TeamHeader(props: {
     currentProject: props.currentProject,
     currentTeam: props.currentTeam,
     teamsAndProjects: props.teamsAndProjects,
-    email: myAccountQuery.data?.email,
+    account: myAccountQuery.data,
     logout: logout,
     connectButton: <CustomConnectWallet />,
     createProject: () => setIsCreateProjectDialogOpen(true),

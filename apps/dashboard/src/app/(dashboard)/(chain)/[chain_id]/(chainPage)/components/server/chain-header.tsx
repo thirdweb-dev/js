@@ -1,4 +1,3 @@
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -20,9 +19,11 @@ export function ChainHeader(props: ChainHeaderProps) {
     // force the banner image to be 4:1 aspect ratio and full-width on mobile devices
     <div className="flex flex-col">
       {!props.headerImageUrl && <div className="h-8 md:hidden" />}
-      <AspectRatio
-        ratio={props.headerImageUrl ? 4 : 8}
-        className="max-sm:-mx-4 border-border border-b"
+      <div
+        className={cn(
+          "max-sm:-mx-4 relative border-border border-b",
+          props.headerImageUrl ? "aspect-[4/1]" : "aspect-[8/1]",
+        )}
       >
         {props.headerImageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
@@ -32,7 +33,7 @@ export function ChainHeader(props: ChainHeaderProps) {
             className="h-full w-full object-cover object-center"
           />
         )}
-      </AspectRatio>
+      </div>
       {/* below header */}
       <div className="relative flex flex-row items-end justify-end">
         {/* chain logo */}

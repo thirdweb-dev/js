@@ -536,7 +536,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
           {phases?.length === 0 && (
             <Alert status="warning" borderRadius="md">
               <AlertIcon />
-              <Flex direction="column">
+              <div className="flex flex-col">
                 <AlertTitle as={Heading} size="label.lg">
                   {isMultiPhase
                     ? "Missing Claim Phases"
@@ -547,7 +547,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                     ? "You need to set at least one claim phase for people to claim this drop."
                     : "You need to set claim conditions for people to claim this drop."}
                 </AlertDescription>
-              </Flex>
+              </div>
             </Alert>
           )}
 
@@ -556,7 +556,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
             flexDir={{ base: "column", md: isColumn ? "column" : "row" }}
             gap={2}
           >
-            <Flex gap={2}>
+            <div className="flex flex-row gap-2">
               <AdminOnly contract={contract}>
                 <Menu>
                   <MenuButton
@@ -616,9 +616,9 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                   tokenId={tokenId}
                 />
               )}
-            </Flex>
+            </div>
 
-            <Flex>
+            <div className="flex flex-row">
               <AdminOnly contract={contract} fallback={<Box pb={5} />}>
                 <Flex justifyContent="center" alignItems="center" gap={3}>
                   {(hasRemovedPhases || hasAddedPhases) && (
@@ -643,7 +643,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                   ) : null}
                 </Flex>
               </AdminOnly>
-            </Flex>
+            </div>
           </Flex>
         </Flex>
       </Flex>

@@ -45,7 +45,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
   return (
     <Card p={6} as={Flex} flexDir="column" gap={3}>
       <Flex flexDir="column" gap={4}>
-        <Flex gap={2}>
+        <div className="flex flex-row gap-2">
           {isOpCredit ? (
             <ChainIcon
               ipfsSrc=// Hard-coded here to remove @thirdweb dev/chains
@@ -87,7 +87,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
               Apply Now
             </LinkButton>
           )}
-        </Flex>
+        </div>
         <Flex gap={6}>
           <Flex flexDir="column" gap={1}>
             <Text>Remaining Credits</Text>

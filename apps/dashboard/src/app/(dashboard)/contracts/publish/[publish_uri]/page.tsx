@@ -5,6 +5,7 @@ import { ContractPublishForm } from "components/contract-components/contract-pub
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
+import { getPublishedContractsWithPublisherMapping } from "../../../published-contract/[publisher]/[contract_id]/utils/getPublishedContractsWithPublisherMapping";
 
 type DirectDeployPageProps = {
   params: {
@@ -20,16 +21,41 @@ export default async function PublishContractPage(
     ? decodedPublishUri
     : `ipfs://${decodedPublishUri}`;
 
-  const publishMetadata = await fetchDeployMetadata({
+  const publishMetadataFromUri = await fetchDeployMetadata({
     uri: publishUri,
     client: getThirdwebClient(),
   });
+
+  let publishMetadata = publishMetadataFromUri;
 
   const pathname = `/contracts/publish/${props.params.publish_uri}`;
 
   const address = getActiveAccountCookie();
   if (!address) {
     redirect(`/login?next=${encodeURIComponent(pathname)}`);
+  }
+
+  // Deploying the next version of a contract scenario:
+  // check if this is a pre-deployed metadata ( doesn't have a version )
+  // If that's the case:
+  // - get the publish metadata with name+publisher address
+  // - merge the two objects with publishMetadataFromUri taking higher precedence
+  if (!publishMetadataFromUri.version) {
+    const publishedContractVersions =
+      await getPublishedContractsWithPublisherMapping({
+        publisher: address,
+        contract_id: publishMetadataFromUri.name,
+      });
+
+    const publishedContract = publishedContractVersions[0];
+
+    if (publishedContract) {
+      publishMetadata = {
+        ...publishedContract,
+        ...publishMetadataFromUri,
+        version: publishedContract.version,
+      };
+    }
   }
 
   const token = getJWTCookie(address);

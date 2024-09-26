@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Stack } from "@chakra-ui/react";
+import { Box, Icon, Stack } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Text, TrackedLink } from "tw-components";
 import type { SectionItemProps, SectionProps } from "./types";
@@ -34,7 +34,7 @@ export const NavCard: React.FC<SectionItemProps | SectionProps> = ({
               mr={2}
             />
           )}
-          <Flex direction="column">
+          <div className="flex flex-col">
             <Text
               fontWeight="bold"
               color={comingSoon ? "whiteAlpha.400" : "white"}
@@ -42,7 +42,7 @@ export const NavCard: React.FC<SectionItemProps | SectionProps> = ({
               {name} {comingSoon && "(coming soon)"}
             </Text>
             <Text color="whiteAlpha.500">{description}</Text>
-          </Flex>
+          </div>
         </Stack>
       </Box>
     </TrackedLink>

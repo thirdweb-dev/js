@@ -365,7 +365,7 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
           disabledText="This contract doesn't implement Delayed Reveal"
         />
       </Flex>
-      <Flex>
+      <div className="flex flex-row">
         <Stack spacing={6}>
           <Stack spacing={3}>
             {form.watch("revealType") === "delayed" && (
@@ -505,7 +505,7 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
             )}
           </Stack>
         </Stack>
-      </Flex>
+      </div>
     </Flex>
   );
 };

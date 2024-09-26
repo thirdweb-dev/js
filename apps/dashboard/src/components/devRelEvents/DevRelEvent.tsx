@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Image } from "@chakra-ui/react";
+import { Flex, Icon, Image } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FiCalendar, FiClock } from "react-icons/fi";
 import { Card, Heading, LinkButton, Text } from "tw-components";
@@ -75,7 +75,7 @@ export const DevRelEvent: React.FC<EventProps> = ({
             </Flex>
           </Flex>
         </Flex>
-        <Box>
+        <div>
           <LinkButton
             href={link}
             onClick={() =>
@@ -92,7 +92,7 @@ export const DevRelEvent: React.FC<EventProps> = ({
           >
             Register
           </LinkButton>
-        </Box>
+        </div>
       </Flex>
     </Card>
   );

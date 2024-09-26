@@ -1,4 +1,4 @@
-import { Box, Flex, FormControl, Tooltip } from "@chakra-ui/react";
+import { Flex, FormControl, Tooltip } from "@chakra-ui/react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { FormLabel } from "tw-components";
 
@@ -23,7 +23,7 @@ export const FormItem: React.FC<{
               borderRadius="md"
               px={3}
               py={2}
-              label={<Box>{props.description}</Box>}
+              label={<div>{props.description}</div>}
             >
               <div>
                 <AiOutlineInfoCircle className="text-muted-foreground" />

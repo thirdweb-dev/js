@@ -5,6 +5,7 @@ import type { Team } from "@/api/team";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { TeamSelectionUI } from "./TeamSelectionUI";
 
@@ -12,6 +13,7 @@ type TeamSelectorMobileMenuButtonProps = {
   currentTeam: Team | undefined;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   upgradeTeamLink: string | undefined;
+  account: Pick<Account, "email" | "id"> | undefined;
 };
 
 export function TeamSelectorMobileMenuButton(
@@ -25,7 +27,7 @@ export function TeamSelectorMobileMenuButton(
       <DialogTrigger asChild>
         <Button
           size="icon"
-          className="!h-auto w-auto rounded-xl px-1 py-2"
+          className="!h-auto w-auto rounded-xl px-0.5 py-2"
           variant="ghost"
           aria-label="Select Project"
         >
@@ -43,6 +45,7 @@ export function TeamSelectorMobileMenuButton(
             setHoveredTeam={() => {}} // don't care on mobile
             teamsAndProjects={teamsAndProjects}
             upgradeTeamLink={props.upgradeTeamLink}
+            account={props.account}
           />
         </DynamicHeight>
       </DialogContent>

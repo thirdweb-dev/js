@@ -1,10 +1,11 @@
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
 import type React from "react";
 import { ResourcesDropdownButton } from "./ResourcesDropdownButton";
 import { AccountButton } from "./account-button.client";
 
 export function SecondaryNav(props: {
-  email: string | undefined;
+  account: Pick<Account, "email" | "id"> | undefined;
   logout: () => void;
   connectButton: React.ReactNode;
 }) {
@@ -27,9 +28,9 @@ export function SecondaryNav(props: {
       </Link>
 
       <AccountButton
-        email={props.email}
         logout={props.logout}
         connectButton={props.connectButton}
+        account={props.account}
       />
     </div>
   );

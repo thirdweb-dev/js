@@ -1075,7 +1075,10 @@ function InAppWalletUserInfo(props: {
   const { data: walletInfo } = useWalletInfo(activeWallet?.id);
   const isSmartWallet = hasSmartAccount(activeWallet);
   const { data: walletName } = useQuery({
-    queryKey: [activeWallet?.id, "wallet-name"],
+    queryKey: [
+      "wallet-name",
+      { walletId: activeWallet?.id, walletAddress: account?.address },
+    ],
     queryFn: async () => {
       const lastAuthProvider = await getLastAuthProvider(webLocalStorage);
       if (lastAuthProvider === "guest") {

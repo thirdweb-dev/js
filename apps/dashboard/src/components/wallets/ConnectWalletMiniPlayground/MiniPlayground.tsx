@@ -206,7 +206,7 @@ export const MiniPlayground: React.FC<{
           <Flex flexDir="column" gap={10} order={[1, 0]}>
             {/* Theme */}
             <FormItem label="Theme">
-              <Flex gap={2}>
+              <div className="flex flex-row gap-2">
                 <ThemeButton
                   trackingCategory={trackingCategory}
                   theme="dark"
@@ -226,13 +226,13 @@ export const MiniPlayground: React.FC<{
                     setSelectedBrand("default");
                   }}
                 />
-              </Flex>
+              </div>
             </FormItem>
 
             {/* modal size */}
             {!isMobile && (
               <FormItem label="Modal Size">
-                <Flex gap={2}>
+                <div className="flex flex-row gap-2">
                   <ModalSizeButton
                     trackingCategory={trackingCategory}
                     theme={selectedTheme}
@@ -252,12 +252,12 @@ export const MiniPlayground: React.FC<{
                       setModalSize("compact");
                     }}
                   />
-                </Flex>
+                </div>
               </FormItem>
             )}
 
             {/* Web3 Wallets */}
-            <Box>
+            <div>
               <FormItem label="Web3 Wallets">
                 <Flex flexWrap="wrap" gap={3}>
                   {(Object.keys(enabledWallets) as WalletIdSubset[]).map(
@@ -293,7 +293,7 @@ export const MiniPlayground: React.FC<{
                 </TrackedLink>
                 <Icon as={FiChevronRight} w={4} h={4} color="blue.500" />
               </Flex>
-            </Box>
+            </div>
 
             {/* Social Logins */}
             <FormItem label="Email & Social Logins">

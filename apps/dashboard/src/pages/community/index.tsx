@@ -1,12 +1,5 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import {
-  Box,
-  Center,
-  Container,
-  Flex,
-  Icon,
-  SimpleGrid,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { CommunityCard } from "components/community/CommunityCard";
 import { HomepageFooter } from "components/footer/Footer";
@@ -132,11 +125,7 @@ const Community: ThirdwebNextPage = () => {
               color="hsl(280deg 78% 30% / 30%)"
             />
 
-            <Center
-              py={{ base: 12, md: 24 }}
-              px={{ base: 4, md: 8 }}
-              flexDir="column"
-            >
+            <div className="flex flex-col items-center justify-center px-4 py-12 md:px-8 md:py-24">
               <Heading mt={8} textAlign="center" size="title.2xl">
                 A decentralized internet begins
                 <br /> with{" "}
@@ -197,7 +186,7 @@ const Community: ThirdwebNextPage = () => {
                   Get In Touch
                 </LinkButton>
               </Flex>
-            </Center>
+            </div>
           </Container>
 
           {communitySections.map(
@@ -319,11 +308,7 @@ const Community: ThirdwebNextPage = () => {
           </SimpleGrid>
         </Container>
 
-        <Center
-          px={{ base: 4, md: 8 }}
-          flexDir="column"
-          my={{ base: 12, md: 24 }}
-        >
+        <div className="my-12 flex flex-col items-center justify-center px-4 md:my-24 md:px-8">
           <Heading mt={8} size="display.md">
             Start{" "}
             <Box
@@ -385,7 +370,7 @@ const Community: ThirdwebNextPage = () => {
               Get In Touch
             </LinkButton>
           </Flex>
-        </Center>
+        </div>
 
         <HomepageFooter />
       </Flex>

@@ -1,10 +1,12 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
+import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { CheckIcon, CirclePlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -16,6 +18,7 @@ export function TeamSelectionUI(props: {
   currentTeam: Team | undefined;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   upgradeTeamLink: string | undefined;
+  account: Pick<Account, "email" | "id"> | undefined;
 }) {
   const { setHoveredTeam, currentTeam, teamsAndProjects } = props;
   const teamPlan = currentTeam ? getValidTeamPlan(currentTeam) : undefined;
@@ -47,8 +50,12 @@ export function TeamSelectionUI(props: {
             asChild
           >
             <Link href="/account">
-              {/* TODO account image - placeholder for now */}
-              <div className="size-4 rounded-full border bg-muted" />
+              {/* TODO set Image src */}
+              <GradientAvatar
+                src={""}
+                className="size-4"
+                id={props.account?.id}
+              />
               My Account
             </Link>
           </Button>
@@ -79,8 +86,12 @@ export function TeamSelectionUI(props: {
                   >
                     <Link href={`/team/${team.slug}`}>
                       <div className="flex items-center gap-2">
-                        {/* TODO - placeholder for now */}
-                        <div className="size-4 rounded-full border bg-muted" />
+                        {/* TODO set Image src */}
+                        <GradientAvatar
+                          src={""}
+                          className="size-4"
+                          id={team.id}
+                        />
 
                         <span className="truncate"> {team.name} </span>
                       </div>

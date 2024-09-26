@@ -1,6 +1,5 @@
 import {
   Code,
-  Flex,
   FormControl,
   Icon,
   Input,
@@ -67,7 +66,7 @@ const ChainValidation: React.FC = () => {
 
   return (
     <Card maxW="xl">
-      <Flex direction="column" gap={6}>
+      <div className="flex flex-col gap-6">
         <FormControl gap={6}>
           <FormLabel>RPC URL</FormLabel>
           <InputGroup gap={2}>
@@ -177,7 +176,7 @@ const ChainValidation: React.FC = () => {
             </Table>
           </TableContainer>
         )}
-      </Flex>
+      </div>
     </Card>
   );
 };

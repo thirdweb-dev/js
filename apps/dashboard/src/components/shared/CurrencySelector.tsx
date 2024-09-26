@@ -92,7 +92,7 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
 
   if (isAddingCurrency && !hideDefaultCurrencies) {
     return (
-      <Flex direction="column">
+      <div className="flex flex-col">
         <Flex align="center">
           <Button
             borderRadius="4px 0px 0px 4px"
@@ -118,7 +118,7 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
             Save
           </Button>
         </Flex>
-      </Flex>
+      </div>
     );
   }
 

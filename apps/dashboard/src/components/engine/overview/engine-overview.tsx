@@ -71,18 +71,18 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
               </Text>
             </Flex>
 
-            <Flex gap={2}>
+            <div className="flex flex-row gap-2">
               <ImportBackendWalletButton instanceUrl={instanceUrl} />
               <CreateBackendWalletButton instanceUrl={instanceUrl} />
-            </Flex>
+            </div>
           </Flex>
 
           <Flex flexDirection="row-reverse">
             <Flex alignItems="center" gap={2}>
               <Text>Show balance for</Text>
-              <Flex>
+              <div className="flex flex-row">
                 <NetworkSelectorButton />
-              </Flex>
+              </div>
             </Flex>
           </Flex>
         </Flex>
@@ -104,7 +104,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
             </Text>
           </Flex>
 
-          <Flex>
+          <div className="flex flex-row">
             <FormControl display="flex" alignItems="center">
               <FormLabel htmlFor="auto-update" mb="0">
                 Auto-Update
@@ -115,7 +115,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
                 id="auto-update"
               />
             </FormControl>
-          </Flex>
+          </div>
         </Flex>
         <TransactionsTable
           transactions={transactionsQuery.data?.transactions ?? []}

@@ -1,5 +1,4 @@
 import {
-  AspectRatio,
   Flex,
   GridItem,
   SimpleGrid,
@@ -74,7 +73,7 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
             _hover={{ opacity: 0.75, textDecoration: "none" }}
           >
             <Card p={0} h="full">
-              <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
+              <div className="relative aspect-square w-full overflow-hidden rounded-xl">
                 <Skeleton isLoaded={!isPending}>
                   <NFTMediaWithEmptyState
                     metadata={token.metadata}
@@ -83,7 +82,7 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
                     height="100%"
                   />
                 </Skeleton>
-              </AspectRatio>
+              </div>
               <Flex p={4} pb={3} gap={3} direction="column">
                 <Skeleton w={!isPending ? "100%" : "50%"} isLoaded={!isPending}>
                   <Heading size="label.md">{token.metadata.name}</Heading>

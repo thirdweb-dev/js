@@ -1,7 +1,8 @@
-import { Icon, Tooltip, useToast } from "@chakra-ui/react";
+import { Icon, Tooltip } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useClipboard } from "hooks/useClipboard";
 import { FiCopy } from "react-icons/fi";
+import { toast } from "sonner";
 import {
   Button,
   type ButtonProps,
@@ -47,7 +48,6 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
   const { onCopy } = useClipboard(address || "");
 
   const trackEvent = useTrack();
-  const toast = useToast();
 
   return (
     <Tooltip
@@ -70,14 +70,9 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
           e.stopPropagation();
           e.preventDefault();
           onCopy();
-          toast({
-            variant: "solid",
-            position: "bottom",
-            title: `${title.charAt(0).toUpperCase() + title.slice(1)} copied.`,
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-          });
+          toast.info(
+            `${title.charAt(0).toUpperCase() + title.slice(1)} copied.`,
+          );
           if (title === "Token ID") {
             trackEvent({
               category: "tokenid_button",

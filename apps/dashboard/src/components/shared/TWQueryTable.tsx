@@ -1,7 +1,6 @@
 import {
   Box,
   ButtonGroup,
-  Center,
   Flex,
   GridItem,
   Icon,
@@ -132,20 +131,20 @@ export function TWQueryTable<TRowData, TInputData>(
           </Tbody>
         </Table>
         {isPending && (
-          <Center>
+          <div className="flex items-center justify-center">
             <Flex py={4} direction="row" gap={4} align="center">
               <Spinner size="sm" />
               <Text>Loading {pluralize(tableProps.title, 0, false)}</Text>
             </Flex>
-          </Center>
+          </div>
         )}
 
         {!isPending && !isFetching && data.length === 0 && isFetched && (
-          <Center>
+          <div className="flex items-center justify-center">
             <Flex py={4} direction="column" gap={4} align="center">
               <Text>No {pluralize(tableProps.title, 0, false)} found.</Text>
             </Flex>
-          </Center>
+          </div>
         )}
       </TableContainer>
       {/* render pagination if pagination is enabled */}
@@ -236,7 +235,7 @@ function Pagination<TInputData>(paginationProps: PaginationProps<TInputData>) {
       {/* filler box on left side for spacing */}
       <GridItem colSpan={2} />
       <GridItem colSpan={8}>
-        <Center>
+        <div className="flex items-center justify-center">
           <ButtonGroup fontFamily="mono" variant="outline" size="sm">
             {paginationProps.isPending
               ? new Array(MAX_PAGE_BUTTONS).fill("0").map((val, i) => {
@@ -265,15 +264,9 @@ function Pagination<TInputData>(paginationProps: PaginationProps<TInputData>) {
                       <Box as="span" visibility="hidden">
                         {buttonStringTemplate}
                       </Box>
-                      <Center
-                        position="absolute"
-                        top={0}
-                        right={0}
-                        left={0}
-                        bottom={0}
-                      >
+                      <div className="absolute inset-0 flex items-center justify-center">
                         {page.page + 1}
-                      </Center>
+                      </div>
                     </Button>
                   ) : (
                     <Button
@@ -287,7 +280,7 @@ function Pagination<TInputData>(paginationProps: PaginationProps<TInputData>) {
                   ),
                 )}
           </ButtonGroup>
-        </Center>
+        </div>
       </GridItem>
 
       {/* if we let the users set the page size then show a select to do that */}

@@ -145,7 +145,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
         </Flex>
       </Flex>
 
-      <Box>
+      <div>
         <Heading size="title.md" mb={2}>
           README
         </Heading>
@@ -186,9 +186,9 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
             </TabPanels>
           </Tabs>
         </FormControl>
-      </Box>
+      </div>
       <ExternalLinksFieldset />
-      <Box>
+      <div>
         <Heading size="title.md" mb={2}>
           Version information
         </Heading>
@@ -267,8 +267,8 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
             </FormHelperText>
           </FormControl>
         </Flex>
-      </Box>
-      <Box>
+      </div>
+      <div>
         <Heading size="title.md" mb={2}>
           Deployment options
         </Heading>
@@ -294,7 +294,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
             width="full"
           />
         </Flex>
-      </Box>
+      </div>
     </Flex>
   );
 };

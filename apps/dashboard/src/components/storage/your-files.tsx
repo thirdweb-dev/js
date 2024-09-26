@@ -1,6 +1,6 @@
 import { DASHBOARD_STORAGE_URL } from "@/constants/env";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Center, Flex, Tooltip } from "@chakra-ui/react";
+import { Flex, Tooltip } from "@chakra-ui/react";
 import {
   keepPreviousData,
   useMutation,
@@ -211,11 +211,11 @@ export const YourFilesSection: React.FC = () => {
         />
       ) : (
         <Card>
-          <Center>
+          <div className="flex items-center justify-center">
             <Text>
               Please connect your wallet to see the files you have pinned.
             </Text>
-          </Center>
+          </div>
         </Card>
       )}
     </Flex>

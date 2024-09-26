@@ -1,6 +1,5 @@
 import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import {
-  Center,
   Flex,
   SimpleGrid,
   Spinner,
@@ -133,9 +132,9 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
               )}
             </Card>
             {balanceQuery.isPending ? (
-              <Center>
+              <div className="flex items-center justify-center">
                 <Spinner />
-              </Center>
+              </div>
             ) : (
               (balanceQuery?.data || [])
                 ?.filter((bl) => bl.name !== "Native Token")

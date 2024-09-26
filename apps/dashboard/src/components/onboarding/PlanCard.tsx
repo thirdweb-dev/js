@@ -1,4 +1,4 @@
-import { Box, Flex, ListItem, UnorderedList } from "@chakra-ui/react";
+import { Flex, ListItem, UnorderedList } from "@chakra-ui/react";
 import { Badge, Card, Heading, LinkButton, Text } from "tw-components";
 import type { CreditsRecord } from "./ApplyForOpCreditsModal";
 
@@ -10,7 +10,7 @@ export const PlanCard: React.FC<PlanCardProps> = ({ creditsRecord }) => {
   return (
     <Card as={Flex} justifyContent="space-between" flexDir="column" gap={2}>
       <Flex flexDir="column" gap={2}>
-        <Box>
+        <div>
           <Badge
             borderRadius="full"
             size="label.sm"
@@ -22,7 +22,7 @@ export const PlanCard: React.FC<PlanCardProps> = ({ creditsRecord }) => {
           >
             {creditsRecord.title}
           </Badge>
-        </Box>
+        </div>
         <Flex flexDir="column" gap={1}>
           <Text color="faded">{creditsRecord.upTo ? "Up to" : "\u00A0"}</Text>
           <Heading color="bgBlack" size="title.md" fontWeight="extrabold">

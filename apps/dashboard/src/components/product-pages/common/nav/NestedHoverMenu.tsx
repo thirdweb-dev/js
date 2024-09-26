@@ -119,7 +119,7 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
             borderRadius="8px"
             width={WIDTH}
           >
-            <Flex>
+            <div className="flex flex-row">
               <Flex
                 flexDir="column"
                 borderRight="1px"
@@ -152,7 +152,7 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
                   </SimpleGrid>
                 </Stack>
               </Flex>
-            </Flex>
+            </div>
           </Card>
         </Fade>
       </Box>

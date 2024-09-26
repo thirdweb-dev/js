@@ -27,7 +27,7 @@ export const ProductLearnMoreCard: React.FC<ProductLearnMoreCardProps> = ({
 }) => {
   return (
     <Flex direction="column" justify="space-between" align="flex-start" gap={4}>
-      <Flex direction="column">
+      <div className="flex flex-col">
         <Flex alignItems="center" gap={2}>
           <ChakraNextImage src={icon} placeholder="empty" alt="" w={8} />
           <Heading size="title.sm" as="h3">
@@ -37,7 +37,7 @@ export const ProductLearnMoreCard: React.FC<ProductLearnMoreCardProps> = ({
         <Text size="body.lg" mt="16px">
           {description}
         </Text>
-      </Flex>
+      </div>
       <TrackedLink
         width="auto"
         href={href}

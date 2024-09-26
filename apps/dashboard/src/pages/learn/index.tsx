@@ -1,12 +1,5 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import {
-  Box,
-  Center,
-  Flex,
-  Icon,
-  LightMode,
-  SimpleGrid,
-} from "@chakra-ui/react";
+import { Box, Flex, Icon, LightMode, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
@@ -188,8 +181,8 @@ const Learn: ThirdwebNextPage = () => {
             align="center"
             gap={{ base: 6, md: 8 }}
           >
-            <Center mb={6} pt={{ base: 8, lg: 24 }}>
-              <Center p={2} position="relative" mb={6}>
+            <div className="mb-6 flex items-center justify-center pt-8 lg:pt-24">
+              <div className="relative mb-6 flex items-center justify-center p-2">
                 <Box
                   position="absolute"
                   bgGradient="linear(to-r, #F213A4, #040BBF)"
@@ -208,8 +201,8 @@ const Learn: ThirdwebNextPage = () => {
                   placeholder="empty"
                   src={WhiteLogo}
                 />
-              </Center>
-            </Center>
+              </div>
+            </div>
             <Heading as="h2" size="display.md" textAlign="center">
               Ready to learn more?
             </Heading>

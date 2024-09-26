@@ -1,6 +1,8 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
+import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { cn } from "@/lib/utils";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
 import { SecondaryNav } from "../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../components/MobileBurgerMenuButton";
@@ -10,11 +12,11 @@ import { TeamSelectorMobileMenuButton } from "../../team/components/TeamHeader/T
 
 export type AccountHeaderCompProps = {
   className?: string;
-  email: string | undefined;
   logout: () => void;
   connectButton: React.ReactNode;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   createProject: () => void;
+  account: Pick<Account, "email" | "id"> | undefined;
 };
 
 export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
@@ -37,8 +39,12 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
             href="/account"
             className="flex flex-row items-center gap-2 font-normal text-sm"
           >
-            {/* TODO - replace with account image */}
-            <div className="size-6 rounded-full border border-border bg-muted" />
+            {/* TODO - set account Image  */}
+            <GradientAvatar
+              id={props.account?.id}
+              src={props.account ? "" : undefined}
+              className="size-6"
+            />
             <span> My Account </span>
           </Link>
 
@@ -48,12 +54,13 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
             teamsAndProjects={props.teamsAndProjects}
             focus="team-selection"
             createProject={props.createProject}
+            account={props.account}
           />
         </div>
       </div>
 
       <SecondaryNav
-        email={props.email}
+        account={props.account}
         logout={props.logout}
         connectButton={props.connectButton}
       />
@@ -77,8 +84,12 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
               "flex flex-row items-center gap-2 font-normal text-foreground text-sm",
             )}
           >
-            {/* TODO - replace with account image */}
-            <div className="size-7 rounded-full border border-border bg-muted" />
+            {/* TODO - set account image */}
+            <GradientAvatar
+              id={props.account?.id}
+              src={props.account ? "" : undefined}
+              className="size-6"
+            />
             <span> My Account </span>
           </Link>
 
@@ -86,12 +97,13 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
             currentTeam={undefined}
             teamsAndProjects={props.teamsAndProjects}
             upgradeTeamLink={undefined}
+            account={props.account}
           />
         </div>
       </div>
 
       <MobileBurgerMenuButton
-        email={props.email}
+        email={props.account?.email}
         logout={props.logout}
         connectButton={props.connectButton}
       />

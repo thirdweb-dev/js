@@ -93,7 +93,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         },
         salt: "test",
       });
-      expect(address).toBe("0x777151741260F8d4098dD492e45FdB536F442672");
+      expect(address).toBe("0x9A18AD1DdCfA00009C2db7dc78a5746d85feF759");
       const isDeployed = await isContractDeployed({
         client: TEST_CLIENT,
         chain: ANVIL_CHAIN,

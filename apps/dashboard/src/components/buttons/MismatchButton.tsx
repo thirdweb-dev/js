@@ -16,7 +16,6 @@ import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
-  Flex,
   Icon,
   Popover,
   PopoverArrow,
@@ -446,12 +445,12 @@ const MismatchNotice: React.FC<{
   }, [chain?.name, isMobile]);
 
   return (
-    <Flex direction="column" gap={4}>
+    <div className="flex flex-col gap-4">
       <Heading size="label.lg">
-        <Flex gap={2} align="center">
+        <div className="flex flex-row items-center gap-2">
           <Icon boxSize={6} as={AiOutlineWarning} />
           <span>Network Mismatch</span>
-        </Flex>
+        </div>
       </Heading>
 
       <Text>
@@ -487,7 +486,7 @@ const MismatchNotice: React.FC<{
           Please manually switch the network in your wallet.
         </Text>
       )}
-    </Flex>
+    </div>
   );
 };
 

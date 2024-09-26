@@ -136,18 +136,18 @@ const NavLinkSection: React.FC<NavLinkSectionProps> = ({
           <Flex gap={2} as="span">
             {link.title}
             {link.isBeta && (
-              <Box>
+              <div>
                 <Badge colorScheme="green" variant="subtle">
                   Beta
                 </Badge>
-              </Box>
+              </div>
             )}
             {link.isDeprecated && (
-              <Box>
+              <div>
                 <Badge colorScheme="orange" variant="subtle">
                   Deprecated
                 </Badge>
-              </Box>
+              </div>
             )}
           </Flex>
         </DetailNavLink>

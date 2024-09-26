@@ -1,4 +1,4 @@
-import { Center, Container, Flex, Icon } from "@chakra-ui/react";
+import { Container, Flex, Icon } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { ContractInteractionSection } from "components/contracts/ContractInteractionSection";
 import LandingCaseStudyStaticSection from "components/contracts/LandingCaseStudyStaticSection";
@@ -321,7 +321,7 @@ const Contracts: ThirdwebNextPage = () => {
 
         <LandingCardWithMetrics
           title={
-            <Center flexDir="column" textAlign="center">
+            <div className="flex flex-col items-center justify-center text-center">
               <Heading size="display.sm" color="white">
                 Trusted by the best
               </Heading>
@@ -330,7 +330,7 @@ const Contracts: ThirdwebNextPage = () => {
                 Powering web3 apps across verticals — from onchain games to
                 creator platforms.
               </Text>
-            </Center>
+            </div>
           }
           desktopColumns={3}
           TRACKING_CATEGORY={TRACKING_CATEGORY}
