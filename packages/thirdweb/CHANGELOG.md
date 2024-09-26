@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.59.0
+
+### Minor Changes
+
+- [#4783](https://github.com/thirdweb-dev/js/pull/4783) [`944d56f`](https://github.com/thirdweb-dev/js/commit/944d56f6d8efa1d76a5590b34e2f3a0bc2d3d552) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable ecosystem wallets in React Native
+
+- [#4755](https://github.com/thirdweb-dev/js/pull/4755) [`e02d87b`](https://github.com/thirdweb-dev/js/commit/e02d87b83155a4a77ac8ff77807ee22e7ec865b2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Refactor linkProfile and getProfile API
+
+### Patch Changes
+
+- [#4568](https://github.com/thirdweb-dev/js/pull/4568) [`3f83a37`](https://github.com/thirdweb-dev/js/commit/3f83a377bcf3db24bd1219af5ac7404a2c670254) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Handle new zksolc metadata format
+
+- [#4809](https://github.com/thirdweb-dev/js/pull/4809) [`500970e`](https://github.com/thirdweb-dev/js/commit/500970e001e60be21b00e6f5cb5b1f170165f274) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes account logout state
+
+- [#4789](https://github.com/thirdweb-dev/js/pull/4789) [`e384001`](https://github.com/thirdweb-dev/js/commit/e38400195f2644ef8dfcfbce5fa127a9a218247d) Thanks [@MananTank](https://github.com/MananTank)! - Fix whitespaces in UI components
+
+- [#4793](https://github.com/thirdweb-dev/js/pull/4793) [`c0d81dc`](https://github.com/thirdweb-dev/js/commit/c0d81dcacadfcb8522a8a85dc365637af87af8cf) Thanks [@jnsdls](https://github.com/jnsdls)! - add optional Headers param to `fetchChain`
+
 ## 5.58.5
 
 ### Patch Changes
