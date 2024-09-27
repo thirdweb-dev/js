@@ -23,7 +23,6 @@ import {
   Radio,
   RadioGroup,
   Spinner,
-  Stack,
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -537,7 +536,7 @@ const FilterSelector = ({
           Cannot resolve the contract definition. Filters are unavailable.
         </Text>
       ) : (
-        <Stack maxH={300} overflowY="auto">
+        <div className="flex max-h-[300px] flex-col gap-2 overflow-y-auto">
           <CheckboxGroup
             value={filter}
             onChange={(selected: string[]) => setFilter(selected)}
@@ -548,7 +547,7 @@ const FilterSelector = ({
               </Checkbox>
             ))}
           </CheckboxGroup>
-        </Stack>
+        </div>
       )}
     </Card>
   );

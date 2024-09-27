@@ -1,5 +1,5 @@
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
-import { Flex, Icon, Select, Spinner, Stack } from "@chakra-ui/react";
+import { Flex, Icon, Select, Spinner } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
@@ -35,14 +35,14 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
   return (
     <Card position="relative">
       <Flex direction="column" gap={3}>
-        <Stack spacing={2} mb="12px">
+        <div className="mb-3 flex flex-col gap-2">
           <div className="flex flex-row">
-            <Stack spacing={1} flexGrow={1}>
+            <div className="flex grow flex-col gap-1">
               <Heading size="subtitle.sm" textTransform="capitalize">
                 {role === "minter" ? "Minter / Creator" : role}
               </Heading>
               <Text>{description}</Text>
-            </Stack>
+            </div>
 
             {role === "transfer" && (
               <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
@@ -267,7 +267,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             isRestricted &&
             role && <PermissionEditor role={role} contract={contract} />
           )}
-        </Stack>
+        </div>
       </Flex>
     </Card>
   );

@@ -1,4 +1,4 @@
-import { Box, Stack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import type { StaticImageData } from "next/image";
 import { Text } from "tw-components";
 
@@ -24,7 +24,7 @@ export const ProductNavCard: React.FC<ProductSectionItemProps> = ({
       p={6}
       cursor="default"
     >
-      <Stack direction="row" align="center" spacing={3}>
+      <div className="flex flex-row items-center gap-3">
         <div className="flex flex-col">
           <Text
             fontWeight="bold"
@@ -34,7 +34,7 @@ export const ProductNavCard: React.FC<ProductSectionItemProps> = ({
           </Text>
           <Text color="whiteAlpha.500">{description}</Text>
         </div>
-      </Stack>
+      </div>
     </Box>
   );
 };

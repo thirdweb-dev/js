@@ -1,4 +1,4 @@
-import { ButtonGroup, Flex, Icon, Stack } from "@chakra-ui/react";
+import { ButtonGroup, Flex, Icon } from "@chakra-ui/react";
 import { JavaScriptIcon } from "components/icons/brand-icons/JavaScriptIcon";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
@@ -88,7 +88,7 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
   );
 
   return (
-    <Stack spacing={2}>
+    <div className="flex flex-col gap-2">
       {!hideTabs && (
         <Flex justify="space-between" align="flex-end">
           <Flex direction="column" gap={4}>
@@ -133,7 +133,7 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
           />
         </>
       )}
-    </Stack>
+    </div>
   );
 };
 

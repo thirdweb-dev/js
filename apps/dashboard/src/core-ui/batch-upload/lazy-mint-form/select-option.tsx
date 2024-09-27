@@ -50,7 +50,7 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
         {...stackProps}
       >
         <Flex flexDirection="row" justifyContent="space-between">
-          <Stack flexDirection="row" alignItems="start" spacing={0}>
+          <div className="flex flex-row items-start gap-0">
             <Radio
               cursor="pointer"
               size="lg"
@@ -75,7 +75,7 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
                 </Text>
               )}
             </Stack>
-          </Stack>
+          </div>
           {infoText && (
             <div className="flex flex-row">
               <Tooltip
