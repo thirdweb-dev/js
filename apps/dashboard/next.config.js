@@ -5,10 +5,10 @@ const ContentSecurityPolicy = `
   img-src * data: blob:;
   media-src * data: blob:;
   object-src 'none';
-  style-src 'self' 'unsafe-inline' https://vercel.live;
-  font-src 'self' https://vercel.live https://assets.vercel.com;
+  style-src 'self' 'unsafe-inline' vercel.live;
+  font-src 'self' vercel.live assets.vercel.com framerusercontent.com;
   frame-src * data:;
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com framerusercontent.com events.framer.com;
   connect-src * data: blob:;
   worker-src 'self' blob:;
   block-all-mixed-content;
@@ -38,6 +38,9 @@ const securityHeaders = [
 ];
 
 const redirects = require("./redirects");
+
+// add framer paths here
+const FRAMER_PATHS = ["/connect/sign-in", "/contracts/modular-contracts"];
 
 /**
  * @returns {import('next').RemotePattern[]}
@@ -128,6 +131,10 @@ const moduleExports = {
         source: "/thirdweb.eth/:path*",
         destination: "/deployer.thirdweb.eth/:path*",
       },
+      ...FRAMER_PATHS.map((path) => ({
+        source: path,
+        destination: `https://landing.thirdweb.com${path}`,
+      })),
     ];
   },
   images: {
