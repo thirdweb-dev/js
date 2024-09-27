@@ -8,7 +8,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -83,7 +82,7 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
         <ModalContent className="!bg-background rounded-lg border border-border">
           <ModalHeader>Access token</ModalHeader>
           <ModalBody as={Flex} flexDir="column" gap={4}>
-            <Stack spacing={4}>
+            <div className="flex flex-col gap-4">
               <CodeBlock code={accessToken} />
               <Text color="red.500">
                 This access token will not be shown again.
@@ -94,7 +93,7 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
               >
                 I have securely stored this access token.
               </Checkbox>
-            </Stack>
+            </div>
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>

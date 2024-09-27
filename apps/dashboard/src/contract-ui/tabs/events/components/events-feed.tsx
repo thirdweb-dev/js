@@ -315,7 +315,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
       </AccordionButton>
       <AccordionPanel>
         <Card>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <Heading size="subtitle.sm" fontWeight="bold">
               Transaction Data
             </Heading>
@@ -365,7 +365,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                 {arr.length - 1 === idx ? null : <Divider />}
               </Fragment>
             ))}
-          </Stack>
+          </div>
         </Card>
       </AccordionPanel>
     </AccordionItem>

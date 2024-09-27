@@ -85,7 +85,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
           });
         })}
       >
-        <Stack gap={3}>
+        <div className="flex flex-col gap-3">
           <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
             <FormControl isRequired isInvalid={!!form.formState.errors.to}>
               <FormLabel>To Address</FormLabel>
@@ -128,7 +128,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
           >
             Transfer
           </TransactionButton>
-        </Stack>
+        </div>
       </form>
     </Stack>
   );

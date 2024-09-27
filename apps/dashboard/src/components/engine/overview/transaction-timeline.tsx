@@ -10,7 +10,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   Step,
   StepIndicator,
   StepSeparator,
@@ -219,7 +218,7 @@ const CancelTransactionButton = ({
         <ModalContent className="!bg-background rounded-lg border border-border">
           <ModalHeader>Cancel Transaction</ModalHeader>
           <ModalBody>
-            <Stack gap={4}>
+            <div className="flex flex-col gap-4">
               <Text>Are you sure you want to cancel this transaction?</Text>
               <FormControl>
                 <FormLabel>Queue ID</FormLabel>
@@ -255,7 +254,7 @@ const CancelTransactionButton = ({
                 If this transaction is already submitted, it may complete before
                 the cancellation is submitted.
               </Text>
-            </Stack>
+            </div>
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>

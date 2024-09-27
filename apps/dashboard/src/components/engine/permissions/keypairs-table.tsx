@@ -13,7 +13,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -162,7 +161,7 @@ const RemoveModal = ({
         <ModalHeader>Remove Keypair</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <Text>Are you sure you want to remove this keypair?</Text>
             <Text>
               Access tokens signed by the private key for this keypair will no
@@ -187,7 +186,7 @@ const RemoveModal = ({
                 </Text>
               </Flex>
             </FormControl>
-          </Stack>
+          </div>
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>

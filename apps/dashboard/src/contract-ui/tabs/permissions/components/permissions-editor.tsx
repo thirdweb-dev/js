@@ -57,7 +57,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
   };
 
   return (
-    <Stack spacing={2}>
+    <div className="flex flex-col gap-2">
       {!fields?.length && (
         <DelayedDisplay delay={100}>
           <Stack
@@ -154,7 +154,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
           </FormErrorMessage>
         </FormControl>
       </AdminOnly>
-    </Stack>
+    </div>
   );
 };
 
