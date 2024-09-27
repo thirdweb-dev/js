@@ -203,7 +203,8 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
       contract.chain.id,
       installedModuleBytecodesQuery.data,
       coreContractByteCodeQuery.data,
-      selectedModule,
+      selectedModule?.contractId,
+      selectedModule?.bytecodeHash,
     ],
     queryFn: async () => {
       if (
