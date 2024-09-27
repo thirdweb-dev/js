@@ -1,11 +1,11 @@
 import { ButtonGroup, type ButtonGroupProps, Icon } from "@chakra-ui/react";
 import { SiFacebook } from "@react-icons/all-files/si/SiFacebook";
-import { SiLinkedin } from "@react-icons/all-files/si/SiLinkedin";
 import { SiMedium } from "@react-icons/all-files/si/SiMedium";
 import { SiReddit } from "@react-icons/all-files/si/SiReddit";
 import { SiTelegram } from "@react-icons/all-files/si/SiTelegram";
 import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
+import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";
 import { XIcon } from "components/icons/brand-icons/XIcon";
 import type { ProfileMetadata } from "constants/schemas";
 import { FiGlobe } from "react-icons/fi";
@@ -162,7 +162,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         }
         bg="transparent"
         aria-label="linkedin"
-        icon={<Icon as={SiLinkedin} />}
+        icon={<LinkedInIcon className="size-4" />}
         category={TRACKING_CATEGORY}
         label="linkedin"
       />

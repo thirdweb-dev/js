@@ -1,9 +1,9 @@
 import { SiInstagram } from "@react-icons/all-files/si/SiInstagram";
-import { SiLinkedin } from "@react-icons/all-files/si/SiLinkedin";
 import { SiTiktok } from "@react-icons/all-files/si/SiTiktok";
 import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
 import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
+import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";
 import { XIcon } from "components/icons/brand-icons/XIcon";
 
 interface socialLinkInfo {
@@ -37,7 +37,7 @@ export const SOCIALS: socialLinkInfo[] = [
     link: "https://www.linkedin.com/company/third-web/",
     ariaLabel: "LinkedIn",
     label: "linkedin",
-    icon: <SiLinkedin fontSize={socialIconSize} />,
+    icon: <LinkedInIcon fontSize={socialIconSize} className="size-5" />,
   },
   {
     link: "https://www.instagram.com/thirdweb/",
