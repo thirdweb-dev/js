@@ -1,10 +1,10 @@
 import { SiInstagram } from "@react-icons/all-files/si/SiInstagram";
 import { SiLinkedin } from "@react-icons/all-files/si/SiLinkedin";
 import { SiTiktok } from "@react-icons/all-files/si/SiTiktok";
-import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
 import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
+import { XIcon } from "components/icons/brand-icons/XIcon";
 
 interface socialLinkInfo {
   link: string;
@@ -18,7 +18,7 @@ const socialIconSize = "1.25rem";
 export const SOCIALS: socialLinkInfo[] = [
   {
     link: "https://twitter.com/thirdweb",
-    icon: <SiTwitter fontSize={socialIconSize} />,
+    icon: <XIcon fontSize={socialIconSize} className="size-5" />,
     ariaLabel: "Twitter",
   },
   {

@@ -4,9 +4,9 @@ import { SiLinkedin } from "@react-icons/all-files/si/SiLinkedin";
 import { SiMedium } from "@react-icons/all-files/si/SiMedium";
 import { SiReddit } from "@react-icons/all-files/si/SiReddit";
 import { SiTelegram } from "@react-icons/all-files/si/SiTelegram";
-import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
+import { XIcon } from "components/icons/brand-icons/XIcon";
 import type { ProfileMetadata } from "constants/schemas";
 import { FiGlobe } from "react-icons/fi";
 import { LinkButton, TrackedIconButton } from "tw-components";
@@ -37,7 +37,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         }
         bg="transparent"
         aria-label="twitter"
-        icon={<Icon as={SiTwitter} />}
+        icon={<XIcon className="size-4" />}
         category={TRACKING_CATEGORY}
         label="twitter"
       />
