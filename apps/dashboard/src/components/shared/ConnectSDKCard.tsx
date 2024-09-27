@@ -1,6 +1,6 @@
 import { SiReact } from "@react-icons/all-files/si/SiReact";
-import { SiTypescript } from "@react-icons/all-files/si/SiTypescript";
 import { SiUnity } from "@react-icons/all-files/si/SiUnity";
+import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import Link from "next/link";
 import { SiUnrealengine } from "react-icons/si";
 import { SiDotnet } from "react-icons/si";
@@ -21,7 +21,7 @@ export function ConnectSDKCard({
       <div className="grid max-w-[500px] grid-cols-1 gap-6 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
         <DocLink
           link="https://portal.thirdweb.com/typescript/v5/getting-started"
-          icon={SiTypescript}
+          icon={TypeScriptIcon}
           label="TypeScript SDK"
         />
         <DocLink

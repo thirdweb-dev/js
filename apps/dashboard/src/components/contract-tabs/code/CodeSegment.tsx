@@ -1,8 +1,8 @@
 import { ButtonGroup, Flex, Icon, Stack } from "@chakra-ui/react";
-import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
 import { SiReact } from "@react-icons/all-files/si/SiReact";
-import { SiTypescript } from "@react-icons/all-files/si/SiTypescript";
 import { SiUnity } from "@react-icons/all-files/si/SiUnity";
+import { JavaScriptIcon } from "components/icons/brand-icons/JavaScriptIcon";
+import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { type Dispatch, type SetStateAction, useMemo } from "react";
 import { Button, CodeBlock } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
@@ -16,13 +16,13 @@ const Environments: SupportedEnvironment[] = [
   {
     environment: "javascript",
     title: "JavaScript",
-    icon: SiJavascript,
+    icon: JavaScriptIcon,
     colorScheme: "yellow",
   },
   {
     environment: "typescript",
     title: "TypeScript",
-    icon: SiTypescript,
+    icon: TypeScriptIcon,
     colorScheme: "blue",
   },
   {
