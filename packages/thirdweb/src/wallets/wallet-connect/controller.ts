@@ -131,11 +131,7 @@ export async function connectWC(
         ? { pairingTopic: wcOptions?.pairingTopic }
         : {}),
       optionalChains: chainsToRequest,
-      chains: chainToRequest
-        ? [chainToRequest.id]
-        : chainsToRequest.length > 0
-          ? [chainsToRequest[0]]
-          : [1],
+      chains: chainToRequest ? [chainToRequest.id] : undefined,
       rpcMap: rpcMap,
     });
   }
@@ -265,12 +261,8 @@ async function initProvider(
     projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
     optionalMethods: OPTIONAL_METHODS,
     optionalEvents: OPTIONAL_EVENTS,
-    optionalChains: chainsToRequest,
-    chains: chainToRequest
-      ? [chainToRequest.id]
-      : chainsToRequest.length > 0
-        ? [chainsToRequest[0]]
-        : [1],
+    optionalChains: chainsToRequest || [1],
+    chains: chainToRequest ? [chainToRequest.id] : undefined,
     metadata: {
       name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
       description:
@@ -509,7 +501,10 @@ async function switchChainWC(
  * Set the requested chains to the storage.
  * @internal
  */
-function setRequestedChainsIds(chains: number[], storage: AsyncStorage) {
+function setRequestedChainsIds(
+  chains: number[] | undefined,
+  storage: AsyncStorage,
+) {
   storage?.setItem(storageKeys.requestedChains, JSON.stringify(chains));
 }
 
@@ -550,13 +545,9 @@ function getChainsToRequest(options: {
     });
   }
 
-  const optionalChainIds = optionalChains.map((c) => c.id) || [];
-
-  const chainsToRequest: ArrayOneOrMore<number> = options.chain
-    ? [options.chain.id, ...optionalChainIds]
-    : optionalChainIds.length > 0
-      ? (optionalChainIds as ArrayOneOrMore<number>)
-      : [1];
+  const chainsToRequest: ArrayOneOrMore<number> | undefined = options.chain
+    ? [options.chain.id]
+    : undefined;
 
   if (!options.chain && optionalChains.length === 0) {
     rpcMap[1] = getCachedChain(1).rpc;
