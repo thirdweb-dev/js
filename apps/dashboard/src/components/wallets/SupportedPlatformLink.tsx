@@ -1,8 +1,8 @@
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
-import { SiUnity } from "@react-icons/all-files/si/SiUnity";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
+import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 
 export function SupportedPlatformLink(props: {
   platform: "React" | "React Native" | "Unity" | "TypeScript";
@@ -12,7 +12,7 @@ export function SupportedPlatformLink(props: {
 }) {
   let icon = ReactIcon;
   if (props.platform === "Unity") {
-    icon = SiUnity;
+    icon = UnityIcon;
   } else if (props.platform === "TypeScript") {
     icon = TypeScriptIcon;
   }

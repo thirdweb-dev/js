@@ -1,6 +1,6 @@
-import { SiUnity } from "@react-icons/all-files/si/SiUnity";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
+import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import Link from "next/link";
 import { SiUnrealengine } from "react-icons/si";
 import { SiDotnet } from "react-icons/si";
@@ -36,7 +36,7 @@ export function ConnectSDKCard({
         />
         <DocLink
           link="https://portal.thirdweb.com/unity/v4/getting-started"
-          icon={SiUnity}
+          icon={UnityIcon}
           label="Unity SDK"
         />
         <DocLink
