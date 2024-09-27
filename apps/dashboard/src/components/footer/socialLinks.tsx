@@ -1,9 +1,9 @@
-import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import { SiInstagram } from "@react-icons/all-files/si/SiInstagram";
 import { SiLinkedin } from "@react-icons/all-files/si/SiLinkedin";
 import { SiTiktok } from "@react-icons/all-files/si/SiTiktok";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
+import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 
 interface socialLinkInfo {
@@ -22,7 +22,7 @@ export const SOCIALS: socialLinkInfo[] = [
     ariaLabel: "Twitter",
   },
   {
-    icon: <SiDiscord fontSize={socialIconSize} />,
+    icon: <DiscordIcon className="size-5" />,
     ariaLabel: "Discord",
     label: "discord",
     link: "https://discord.gg/thirdweb",

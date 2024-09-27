@@ -9,9 +9,9 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { useQueryClient } from "@tanstack/react-query";
+import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { FileInput } from "components/shared/FileInput";
 import {
@@ -253,7 +253,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           <FormControl isInvalid={!!errors.discord}>
             <FormLabel>
               <div className="flex flex-row gap-2">
-                <Icon as={SiDiscord} boxSize={4} />
+                <DiscordIcon className="size-4" />
                 Discord
               </div>
             </FormLabel>
