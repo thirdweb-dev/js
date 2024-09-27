@@ -13,11 +13,10 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
-import { AiFillEyeInvisible } from "@react-icons/all-files/ai/AiFillEyeInvisible";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
@@ -396,10 +395,17 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
                         type={show ? "text" : "password"}
                       />
                       <InputRightElement cursor="pointer">
-                        <Icon
-                          as={show ? AiFillEye : AiFillEyeInvisible}
-                          onClick={() => setShow(!show)}
-                        />
+                        {show ? (
+                          <EyeIcon
+                            onClick={() => setShow(!show)}
+                            className="size-3"
+                          />
+                        ) : (
+                          <EyeOffIcon
+                            onClick={() => setShow(!show)}
+                            className="size-3"
+                          />
+                        )}
                       </InputRightElement>
                     </InputGroup>
 

@@ -25,7 +25,6 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
 import { useQuery } from "@tanstack/react-query";
 import { FaucetButton } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
 import { GiftIcon } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
@@ -36,7 +35,7 @@ import type {
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ExternalLinkIcon } from "lucide-react";
+import { ExternalLinkIcon, TriangleAlertIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
@@ -448,7 +447,7 @@ const MismatchNotice: React.FC<{
     <div className="flex flex-col gap-4">
       <Heading size="label.lg">
         <div className="flex flex-row items-center gap-2">
-          <Icon boxSize={6} as={AiOutlineWarning} />
+          <TriangleAlertIcon className="size-6" />
           <span>Network Mismatch</span>
         </div>
       </Heading>

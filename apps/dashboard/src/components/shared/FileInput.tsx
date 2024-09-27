@@ -1,9 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
-import { AiOutlineFileAdd } from "@react-icons/all-files/ai/AiOutlineFileAdd";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { EyeIcon, FilePlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
 import {
@@ -182,14 +181,14 @@ export const FileInput: React.FC<IFileInputProps> = ({
               disabled={isDisabled}
               className="gap-2"
             >
-              <AiOutlineFileAdd className="size-4" />
-              {selectOrUpload} {helperTextOrFile}
+              <FilePlusIcon className="size-4" /> {selectOrUpload}{" "}
+              {helperTextOrFile}
             </Button>
           )}
           {noDisplay && (
             <Link href={fileUrl} target="_blank" className="no-underline">
               <Button variant="outline" className="gap-2">
-                <AiFillEye className="size-4" />
+                <EyeIcon className="size-4" />
                 View File
               </Button>
             </Link>

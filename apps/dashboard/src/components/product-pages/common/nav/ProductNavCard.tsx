@@ -1,5 +1,4 @@
 import { Box, Stack } from "@chakra-ui/react";
-import type { IconType } from "@react-icons/all-files";
 import type { StaticImageData } from "next/image";
 import { Text } from "tw-components";
 
@@ -8,7 +7,6 @@ interface ProductSectionItemProps {
   description: string;
   href?: string;
   icon?: StaticImageData;
-  iconType?: IconType;
   comingSoon?: boolean;
   selected: boolean;
 }

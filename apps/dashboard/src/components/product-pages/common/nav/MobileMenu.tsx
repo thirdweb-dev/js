@@ -1,7 +1,6 @@
 import {
   Flex,
   type FlexProps,
-  Icon,
   IconButton,
   ListItem,
   UnorderedList,
@@ -106,7 +105,7 @@ const MobileNavSection: React.FC<MobileNavSectionProps> = ({
               size="label.md"
               onClick={onItemClick}
             >
-              {link.icon ? (
+              {link.icon && (
                 <ChakraNextImage
                   alt=""
                   boxSize={5}
@@ -114,9 +113,7 @@ const MobileNavSection: React.FC<MobileNavSectionProps> = ({
                   sizes="40px"
                   w={5}
                 />
-              ) : link.iconType ? (
-                <Icon as={link.iconType} h={4} w={5} />
-              ) : null}
+              )}
               {link.name}
             </Heading>
           </ListItem>

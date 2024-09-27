@@ -1,12 +1,5 @@
-import {
-  Flex,
-  Icon,
-  Radio,
-  Stack,
-  type StackProps,
-  Tooltip,
-} from "@chakra-ui/react";
-import { AiOutlineInfoCircle } from "@react-icons/all-files/ai/AiOutlineInfoCircle";
+import { Flex, Radio, Stack, type StackProps, Tooltip } from "@chakra-ui/react";
+import { InfoIcon } from "lucide-react";
 import type { MouseEventHandler } from "react";
 import { Card, Heading, Text } from "tw-components";
 
@@ -97,7 +90,7 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
                 }
               >
                 <Flex alignItems="center">
-                  <Icon as={AiOutlineInfoCircle} boxSize={5} />
+                  <InfoIcon className="size-4" />
                 </Flex>
               </Tooltip>
             </div>

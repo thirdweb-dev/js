@@ -4,14 +4,12 @@ import {
   Box,
   Code,
   type CodeProps,
-  Icon,
   IconButton,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { useClipboard } from "hooks/useClipboard";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { Highlight, Prism, themes } from "prism-react-renderer";
-import { FiCopy } from "react-icons/fi";
 import { Text } from "./text";
 
 const darkThemeDefault = themes.vsDark;
@@ -103,10 +101,11 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
               colorScheme="gray"
               size="sm"
               icon={
-                <Icon
-                  as={hasCopied ? IoMdCheckmark : FiCopy}
-                  fill={hasCopied ? "green.500" : undefined}
-                />
+                hasCopied ? (
+                  <CheckIcon className="size-4 text-green-500" />
+                ) : (
+                  <CopyIcon className="size-4" />
+                )
               }
             />
           )}

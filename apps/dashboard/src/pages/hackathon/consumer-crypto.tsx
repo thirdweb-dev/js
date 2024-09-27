@@ -1,6 +1,5 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import { Box, Divider, Flex, Icon, ListItem } from "@chakra-ui/react";
-import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
+import { Box, Divider, Flex, ListItem } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import FAQ from "components/hackathon/FAQ";
 import { HackathonFooter } from "components/hackathon/HackathonFooter";
@@ -13,6 +12,7 @@ import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
 import { getAbsoluteUrl } from "lib/vercel-utils";
+import { WandIcon } from "lucide-react";
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import { PageId } from "page-id";
@@ -138,7 +138,7 @@ const Hackathon = () => {
               h="68px"
               w={{ base: "100%", md: 96 }}
               fontSize="20px"
-              leftIcon={<Icon as={ImMagicWand} />}
+              leftIcon={<WandIcon className="size-6" />}
               color="black"
               flexShrink={0}
               background="rgba(255,255,255,1)"
