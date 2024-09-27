@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import type { EngineTier } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex, Spacer, Stack } from "@chakra-ui/react";
+import { Flex, Spacer } from "@chakra-ui/react";
 import { CheckIcon } from "lucide-react";
 
 interface EngineTierCardConfig {
@@ -97,7 +97,7 @@ export const EngineTierCard = ({
       </Flex>
 
       {/* Features */}
-      <Stack spacing={3}>
+      <div className="flex flex-col gap-3">
         {previousTier && (
           <p>
             <span className="font-semibold"> All of {previousTier}</span>, plus:
@@ -109,7 +109,7 @@ export const EngineTierCard = ({
             <p className="text-muted-foreground text-sm">{feature}</p>
           </Flex>
         ))}
-      </Stack>
+      </div>
 
       <Spacer />
 

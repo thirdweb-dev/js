@@ -1,5 +1,4 @@
 import { useEVMContractInfo } from "@3rdweb-sdk/react";
-import { Stack } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -29,7 +28,7 @@ export const CancelTab: React.FC<CancelTabProps> = ({
   );
   const cancelQuery = useSendAndConfirmTransaction();
   return (
-    <Stack pt={3} gap={3}>
+    <div className="flex flex-col gap-3 pt-3">
       {/* maybe some text? */}
       <TransactionButton
         transactionCount={1}
@@ -67,6 +66,6 @@ export const CancelTab: React.FC<CancelTabProps> = ({
       >
         Cancel Listing
       </TransactionButton>
-    </Stack>
+    </div>
   );
 };

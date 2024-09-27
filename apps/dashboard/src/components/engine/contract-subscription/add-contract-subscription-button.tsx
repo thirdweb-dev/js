@@ -185,7 +185,7 @@ const ModalBodyInputContract = ({
   return (
     <>
       <ModalBody>
-        <Stack spacing={4}>
+        <div className="flex flex-col gap-4">
           <Text>
             Add a contract subscription to process real-time onchain data.
           </Text>
@@ -252,7 +252,7 @@ const ModalBodyInputContract = ({
               {form.getFieldState("webhookUrl", form.formState).error?.message}
             </FormErrorMessage>
           </FormControl>
-        </Stack>
+        </div>
       </ModalBody>
 
       <ModalFooter>
@@ -304,7 +304,7 @@ const ModalBodyInputData = ({
   return (
     <>
       <ModalBody>
-        <Stack spacing={4}>
+        <div className="flex flex-col gap-4">
           <Text>
             Select the data type to process.
             <br />
@@ -334,7 +334,7 @@ const ModalBodyInputData = ({
               </Checkbox>
               {/* Shows all/specific events if processing event logs */}
               <Collapse in={processEventLogsDisclosure.isOpen}>
-                <Stack px={4}>
+                <div className="flex flex-col gap-2 px-4">
                   <RadioGroup
                     defaultValue="false"
                     onChange={(val: "false" | "true") => {
@@ -370,7 +370,7 @@ const ModalBodyInputData = ({
                       </Collapse>
                     </div>
                   </RadioGroup>
-                </Stack>
+                </div>
               </Collapse>
 
               <Checkbox
@@ -390,7 +390,7 @@ const ModalBodyInputData = ({
               </Checkbox>
               {/* Shows all/specific functions if processing transaction receipts */}
               <Collapse in={processTransactionReceiptsDisclosure.isOpen}>
-                <Stack px={4}>
+                <div className="flex flex-col gap-2 px-4">
                   <RadioGroup
                     defaultValue="false"
                     onChange={(val: "false" | "true") => {
@@ -426,11 +426,11 @@ const ModalBodyInputData = ({
                       </Collapse>
                     </div>
                   </RadioGroup>
-                </Stack>
+                </div>
               </Collapse>
             </div>
           </FormControl>
-        </Stack>
+        </div>
       </ModalBody>
 
       <ModalFooter as={Flex} gap={3}>

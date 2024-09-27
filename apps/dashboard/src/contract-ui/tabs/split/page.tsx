@@ -3,7 +3,6 @@ import {
   Flex,
   SimpleGrid,
   Spinner,
-  Stack,
   Stat,
   StatLabel,
   StatNumber,
@@ -112,7 +111,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
           />
         </Flex>
       </Flex>
-      <Stack spacing={8}>
+      <div className="flex flex-col gap-8">
         <Flex gap={4} flexDir="column">
           <SimpleGrid spacing={{ base: 3, md: 6 }} columns={{ base: 2, md: 4 }}>
             <Card as={Stat}>
@@ -209,7 +208,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
             </Card>
           ))}
         </div>
-      </Stack>
+      </div>
     </Flex>
   );
 };

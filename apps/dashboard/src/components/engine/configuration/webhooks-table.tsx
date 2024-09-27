@@ -12,7 +12,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -171,7 +170,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
           <ModalCloseButton />
           <ModalBody>
             {webhookToRevoke && (
-              <Stack gap={4}>
+              <div className="flex flex-col gap-4">
                 <Text>Are you sure you want to delete this webook?</Text>
                 <FormControl>
                   <FormLabel>Name</FormLabel>
@@ -190,7 +189,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
                     )}
                   </Text>
                 </FormControl>
-              </Stack>
+              </div>
             )}
           </ModalBody>
 
