@@ -15,10 +15,7 @@ export async function uploadBatch<const TFiles extends UploadableFile[]>(
     `https://${getThirdwebDomains().storage}/ipfs/upload`,
     {
       method: "POST",
-      headers: {
-        ...headers,
-        // ...form.getHeaders(),
-      },
+      headers,
       body: form,
     },
   );
