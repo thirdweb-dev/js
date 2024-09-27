@@ -1,7 +1,7 @@
 import { Icon } from "@chakra-ui/react";
-import { SiReact } from "@react-icons/all-files/si/SiReact";
 import { SiUnity } from "@react-icons/all-files/si/SiUnity";
 import { JavaScriptIcon } from "components/icons/brand-icons/JavaScriptIcon";
+import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { useTrack } from "hooks/analytics/useTrack";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { Button } from "tw-components";
@@ -12,11 +12,11 @@ const LOGO_OPTIONS = {
     fill: "yellow",
   },
   react: {
-    icon: SiReact,
+    icon: ReactIcon,
     fill: "#61dafb",
   },
   "react-native": {
-    icon: SiReact,
+    icon: ReactIcon,
     fill: "#61dafb",
   },
   unity: {

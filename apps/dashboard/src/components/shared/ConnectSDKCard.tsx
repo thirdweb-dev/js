@@ -1,5 +1,5 @@
-import { SiReact } from "@react-icons/all-files/si/SiReact";
 import { SiUnity } from "@react-icons/all-files/si/SiUnity";
+import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import Link from "next/link";
 import { SiUnrealengine } from "react-icons/si";
@@ -26,12 +26,12 @@ export function ConnectSDKCard({
         />
         <DocLink
           link="https://portal.thirdweb.com/react/v5/getting-started"
-          icon={SiReact}
+          icon={ReactIcon}
           label="React SDK"
         />
         <DocLink
           link="https://portal.thirdweb.com/react-native/v5/getting-started"
-          icon={SiReact}
+          icon={ReactIcon}
           label="React Native SDK"
         />
         <DocLink

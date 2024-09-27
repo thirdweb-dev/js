@@ -1,7 +1,7 @@
 import { ButtonGroup, Flex, Icon, Stack } from "@chakra-ui/react";
-import { SiReact } from "@react-icons/all-files/si/SiReact";
 import { SiUnity } from "@react-icons/all-files/si/SiUnity";
 import { JavaScriptIcon } from "components/icons/brand-icons/JavaScriptIcon";
+import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { type Dispatch, type SetStateAction, useMemo } from "react";
 import { Button, CodeBlock } from "tw-components";
@@ -28,13 +28,13 @@ const Environments: SupportedEnvironment[] = [
   {
     environment: "react",
     title: "React",
-    icon: SiReact,
+    icon: ReactIcon,
     colorScheme: "purple",
   },
   {
     environment: "react-native",
     title: "React Native",
-    icon: SiReact,
+    icon: ReactIcon,
     colorScheme: "purple",
   },
   {
