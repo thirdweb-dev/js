@@ -2,12 +2,11 @@ import type { Team } from "@/api/team";
 import { Toaster } from "@/components/ui/sonner";
 import type { Meta, StoryObj } from "@storybook/react";
 import { mobileViewport } from "../../../../../../../stories/utils";
-import SettingsLayout from "../layout";
 import {
   DeleteTeamCard,
-  GeneralSettingsPage,
   LeaveTeamCard,
-} from "./GeneralSettingsPage";
+  TeamGeneralSettingsPageUI,
+} from "./TeamGeneralSettingsPageUI";
 
 const meta = {
   title: "Team/Settings/General",
@@ -47,17 +46,14 @@ const testTeam: Team = {
 
 function Story() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <SettingsLayout
-        params={{
-          team_slug: testTeam.slug,
+    <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
+      <TeamGeneralSettingsPageUI
+        team={testTeam}
+        updateTeamImage={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
-      >
-        <GeneralSettingsPage team={testTeam} />
-      </SettingsLayout>
-
+      />
       <ComponentVariantions />
-
       <Toaster richColors />
     </div>
   );

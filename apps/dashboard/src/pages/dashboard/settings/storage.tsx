@@ -88,7 +88,7 @@ const DashboardSettingsStorage: ThirdwebNextPage = () => {
               >
                 https://&lt;your-client-id&gt;.ipfscdn.io/ipfs/
               </Text>
-              <Flex>
+              <div className="flex flex-row">
                 <Tooltip
                   p={0}
                   label={
@@ -108,7 +108,7 @@ const DashboardSettingsStorage: ThirdwebNextPage = () => {
                     aria-label="Copy code"
                   />
                 </Tooltip>
-              </Flex>
+              </div>
             </Card>
             <Text>
               Gateway requests need to be authenticated using a client ID. You
@@ -141,7 +141,7 @@ const DashboardSettingsStorage: ThirdwebNextPage = () => {
                 >
                   npx thirdweb upload ./path/to/file-or-folder
                 </Text>
-                <Flex>
+                <div className="flex flex-row">
                   <Tooltip
                     p={0}
                     label={
@@ -161,7 +161,7 @@ const DashboardSettingsStorage: ThirdwebNextPage = () => {
                       aria-label="Copy code"
                     />
                   </Tooltip>
-                </Flex>
+                </div>
               </Card>
               <Text>
                 If this is the first time that you are running this command, you

@@ -3,7 +3,6 @@
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   Box,
-  Flex,
   FormControl,
   Icon,
   Input,
@@ -177,10 +176,10 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         >
           <FormControl isInvalid={!!errors.avatar}>
             <FormLabel>
-              <Flex gap={2}>
+              <div className="flex flex-row gap-2">
                 <Icon as={BiImage} boxSize={4} />
                 Avatar
-              </Flex>
+              </div>
             </FormLabel>
             <Box width={{ base: "auto", md: "250px" }}>
               <FileInput
@@ -200,10 +199,10 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           </FormControl>
           <FormControl isInvalid={!!errors.bio}>
             <FormLabel>
-              <Flex gap={2}>
+              <div className="flex flex-row gap-2">
                 <Icon as={HiPencilAlt} boxSize={4} />
                 Bio
-              </Flex>
+              </div>
             </FormLabel>
             <Textarea
               {...register("bio")}
@@ -214,10 +213,10 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           </FormControl>
           <FormControl isInvalid={!!errors.github}>
             <FormLabel>
-              <Flex gap={2}>
+              <div className="flex flex-row gap-2">
                 <Icon as={SiGithub} boxSize={4} />
                 GitHub
-              </Flex>
+              </div>
             </FormLabel>
             <Input
               {...register("github")}
@@ -227,10 +226,10 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           </FormControl>
           <FormControl isInvalid={!!errors.twitter}>
             <FormLabel>
-              <Flex gap={2}>
+              <div className="flex flex-row gap-2">
                 <Icon as={SiTwitter} boxSize={4} />
                 Twitter
-              </Flex>
+              </div>
             </FormLabel>
             <Input
               {...register("twitter")}
@@ -240,10 +239,10 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           </FormControl>
           <FormControl isInvalid={!!errors.website}>
             <FormLabel>
-              <Flex gap={2}>
+              <div className="flex flex-row gap-2">
                 <Icon as={FiGlobe} boxSize={4} />
                 Website
-              </Flex>
+              </div>
             </FormLabel>
             <Input
               {...register("website")}
@@ -253,10 +252,10 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           </FormControl>
           <FormControl isInvalid={!!errors.discord}>
             <FormLabel>
-              <Flex gap={2}>
+              <div className="flex flex-row gap-2">
                 <Icon as={SiDiscord} boxSize={4} />
                 Discord
-              </Flex>
+              </div>
             </FormLabel>
             <Input
               {...register("discord")}

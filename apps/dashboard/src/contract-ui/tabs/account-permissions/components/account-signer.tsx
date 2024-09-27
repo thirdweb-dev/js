@@ -42,7 +42,7 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
             <Heading size="label.lg">
               <WalletAddress shortenAddress={isMobile} address={signer} />
             </Heading>
-            <Flex gap={2}>
+            <div className="flex flex-row gap-2">
               {isAdmin ? (
                 <Badge borderRadius="lg" p={1.5}>
                   Admin Key
@@ -57,24 +57,24 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
                   Currently connected
                 </Badge>
               )}
-            </Flex>
+            </div>
           </Flex>
         </Flex>
 
         {isAdmin ? null : (
           <SimpleGrid columns={{ base: 2, md: 4 }} gap={2}>
-            <Flex direction="column">
+            <div className="flex flex-col">
               <Text fontWeight="bold">Maximum value per transaction</Text>
               <Text textTransform="capitalize">
                 {nativeTokenLimitPerTransaction.toString()}{" "}
                 {chain?.nativeCurrency.symbol}
               </Text>
-            </Flex>
-            <Flex direction="column">
+            </div>
+            <div className="flex flex-col">
               <Text fontWeight="bold">Approved targets</Text>
               <Text textTransform="capitalize">{approvedTargets.length}</Text>
-            </Flex>
-            <Flex direction="column">
+            </div>
+            <div className="flex flex-col">
               <Text fontWeight="bold">Expiration</Text>
               <Text>
                 {formatDistance(
@@ -85,7 +85,7 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
                   },
                 )}
               </Text>
-            </Flex>
+            </div>
           </SimpleGrid>
         )}
       </Flex>

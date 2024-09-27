@@ -1,11 +1,10 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { SocialAuthOption } from "../../../../../wallets/types.js";
-import {
-  type AuthArgsType,
-  type GetAuthenticatedUserParams,
-  type PreAuthArgsType,
-  type SocialAuthArgsType,
-  UserWalletStatus,
+import type {
+  AuthArgsType,
+  GetAuthenticatedUserParams,
+  PreAuthArgsType,
+  SocialAuthArgsType,
 } from "../../../core/authentication/types.js";
 import { getOrCreateInAppWalletConnector } from "../../../core/wallet/in-app-core.js";
 import type { Ecosystem } from "../../../core/wallet/types.js";
@@ -53,7 +52,7 @@ async function getAuthenticatedUser(options: GetAuthenticatedUserParams) {
   const connector = await getInAppWalletConnector(client, ecosystem);
   const user = await connector.getUser();
   switch (user.status) {
-    case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
+    case "Logged In, Wallet Initialized": {
       return user;
     }
   }

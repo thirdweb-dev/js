@@ -3,21 +3,23 @@ import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
 import { stringify } from "../../../../../utils/json.js";
+import type { ClientScopedStorage } from "../../../core/authentication/client-scoped-storage.js";
 import type { Ecosystem } from "../../../core/wallet/types.js";
-import { getAuthToken } from "../get-auth-token.js";
 
 export async function signTransaction({
   client,
   ecosystem,
   payload,
+  storage,
 }: {
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
   payload: Record<string, Hex | number | undefined>;
+  storage: ClientScopedStorage;
 }) {
   console.log("payload", payload);
   const clientFetch = getClientFetch(client, ecosystem);
-  const authToken = await getAuthToken(client, ecosystem); // TODO (enclave): pass storage from web/native
+  const authToken = await storage.getAuthCookie();
 
   const response = await clientFetch(
     `${getThirdwebBaseUrl("inAppWallet")}/api/v1/enclave-wallet/sign-transaction`,

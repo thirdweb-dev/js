@@ -11,19 +11,18 @@ import type {
   Account,
   SendTransactionOption,
 } from "../../../interfaces/wallet.js";
-import type { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
-import {
-  type GetUser,
-  RecoveryShareManagement,
-  UserWalletStatus,
-  type WalletAddressObjectType,
-} from "../../core/authentication/types.js";
-import type { Ecosystem } from "../../core/wallet/types.js";
-import { getUserStatus } from "./actions/get-enclave-user-status.js";
-import { signMessage as signEnclaveMessage } from "./actions/sign-message.enclave.js";
-import { signTransaction as signEnclaveTransaction } from "./actions/sign-transaction.enclave.js";
-import { signTypedData as signEnclaveTypedData } from "./actions/sign-typed-data.enclave.js";
-import type { IWebWallet, PostWalletSetup } from "./web-wallet.js";
+import { getUserStatus } from "../../web/lib/actions/get-enclave-user-status.js";
+import { signMessage as signEnclaveMessage } from "../../web/lib/actions/sign-message.enclave.js";
+import { signTransaction as signEnclaveTransaction } from "../../web/lib/actions/sign-transaction.enclave.js";
+import { signTypedData as signEnclaveTypedData } from "../../web/lib/actions/sign-typed-data.enclave.js";
+import type { ClientScopedStorage } from "../authentication/client-scoped-storage.js";
+import type {
+  AuthDetails,
+  AuthResultAndRecoveryCode,
+  GetUser,
+} from "../authentication/types.js";
+import type { Ecosystem } from "./types.js";
+import type { IWebWallet } from "./web-wallet.js";
 
 export type UserStatus = {
   linkedAccounts: {
@@ -74,12 +73,8 @@ export class EnclaveWallet implements IWebWallet {
    * @returns `{walletAddress: string }` The user's wallet details
    * @internal
    */
-  async postWalletSetUp({
-    walletAddress,
-    authToken,
-  }: PostWalletSetup): Promise<WalletAddressObjectType> {
-    await this.localStorage.saveAuthCookie(authToken);
-    return { walletAddress };
+  async postWalletSetUp(authResult: AuthResultAndRecoveryCode): Promise<void> {
+    await this.localStorage.saveAuthCookie(authResult.storedToken.cookieString);
   }
 
   /**
@@ -89,7 +84,7 @@ export class EnclaveWallet implements IWebWallet {
   async getUserWalletStatus(): Promise<GetUser> {
     const token = await this.localStorage.getAuthCookie();
     if (!token) {
-      return { status: UserWalletStatus.LOGGED_OUT };
+      return { status: "Logged Out" };
     }
 
     const userStatus = await getUserStatus({
@@ -99,11 +94,11 @@ export class EnclaveWallet implements IWebWallet {
     });
 
     if (!userStatus) {
-      return { status: UserWalletStatus.LOGGED_OUT };
+      return { status: "Logged Out" };
     }
     const wallet = userStatus.wallets[0];
 
-    const authDetails = {
+    const authDetails: AuthDetails = {
       email: userStatus.linkedAccounts.find(
         (account) => account.details.email !== undefined,
       )?.details.email,
@@ -111,18 +106,18 @@ export class EnclaveWallet implements IWebWallet {
         (account) => account.details.phone !== undefined,
       )?.details.phone,
       userWalletId: userStatus.id || "",
-      recoveryShareManagement: RecoveryShareManagement.ENCLAVE,
+      recoveryShareManagement: "ENCLAVE",
     };
 
     if (!wallet) {
       return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        status: "Logged In, Wallet Uninitialized",
         authDetails,
       };
     }
 
     return {
-      status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+      status: "Logged In, Wallet Initialized",
       walletAddress: wallet.address,
       authDetails,
       account: await this.getAccount(),
@@ -136,6 +131,7 @@ export class EnclaveWallet implements IWebWallet {
   async getAccount(): Promise<Account> {
     const client = this.client;
     const ecosystem = this.ecosystem;
+    const storage = this.localStorage;
 
     const _signTransaction = async (tx: SendTransactionOption) => {
       const rpcRequest = getRpcClient({
@@ -176,6 +172,7 @@ export class EnclaveWallet implements IWebWallet {
       return signEnclaveTransaction({
         client,
         ecosystem,
+        storage,
         payload: transaction,
       });
     };
@@ -223,6 +220,7 @@ export class EnclaveWallet implements IWebWallet {
           client,
           ecosystem,
           payload: messagePayload,
+          storage,
         });
         return signature as Hex;
       },
@@ -232,6 +230,7 @@ export class EnclaveWallet implements IWebWallet {
           client,
           ecosystem,
           payload: parsedTypedData,
+          storage,
         });
 
         return signature as Hex;

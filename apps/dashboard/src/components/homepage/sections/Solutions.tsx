@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   Image,
   LinkBox,
@@ -85,7 +84,7 @@ const SolutionCard: React.FC<SolutionCardProps> = ({
         py={{ base: 10 }}
         flexGrow={1}
       >
-        <Box>
+        <div>
           <Heading
             as="h3"
             fontSize="24px"
@@ -106,7 +105,7 @@ const SolutionCard: React.FC<SolutionCardProps> = ({
           <Text size="body.lg" lineHeight={1.7} color="whiteAlpha.700">
             {description}
           </Text>
-        </Box>
+        </div>
       </Flex>
     </Flex>
   );

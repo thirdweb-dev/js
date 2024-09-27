@@ -33,6 +33,7 @@ export function useAutoConnect(props: AutoConnectProps) {
       ...props,
       wallets,
     },
+    createWallet,
     () => {
       const specifiedWalletIds = new Set(wallets.map((x) => x.id));
 

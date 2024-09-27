@@ -1,5 +1,5 @@
 import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
-import { Box, type CardProps, Center, Flex } from "@chakra-ui/react";
+import { Box, type CardProps, Flex } from "@chakra-ui/react";
 import {
   Badge,
   Card,
@@ -60,7 +60,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     >
       <Flex flexDir="column" gap={6}>
         <Flex flexDir="column" gap={3}>
-          <Flex gap={2}>
+          <div className="flex flex-row gap-2">
             <Heading
               as="h3"
               size={size === "lg" ? "title.lg" : "title.sm"}
@@ -79,7 +79,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                 Current plan
               </Badge>
             )}
-          </Flex>
+          </div>
           <Text maxW={320} h={12}>
             {plan.description}
           </Text>
@@ -174,7 +174,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
   if (highlighted) {
     return (
-      <Center position="relative" p={2} m={-2}>
+      <div className="-m-2 relative flex items-center justify-center p-2">
         <Box
           position="absolute"
           bgGradient="linear(to-b, #4DABEE, #692AC1)"
@@ -187,7 +187,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
           filter="blur(8px)"
         />
         {content}
-      </Center>
+      </div>
     );
   }
 

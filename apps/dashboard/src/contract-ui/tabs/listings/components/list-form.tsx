@@ -4,7 +4,6 @@ import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwned
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
   Box,
-  Center,
   Flex,
   FormControl,
   Icon,
@@ -416,9 +415,9 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         (isOwnedNFTsLoading &&
           !isSupportedChain &&
           form.watch("selected.contractAddress")) ? (
-          <Center height="60px">
+          <div className="flex h-[60px] items-center justify-center">
             <Spinner />
-          </Center>
+          </div>
         ) : nfts && nfts.length !== 0 ? (
           <Flex gap={2} flexWrap="wrap">
             {nfts?.map((nft) => {

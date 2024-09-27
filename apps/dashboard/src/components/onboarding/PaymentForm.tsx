@@ -3,7 +3,6 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
-  Center,
   Flex,
   Spinner,
 } from "@chakra-ui/react";
@@ -109,9 +108,9 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
         />
 
         {loading ? (
-          <Center pb={16}>
+          <div className="flex items-center justify-center pb-16">
             <Spinner size="sm" />
-          </Center>
+          </div>
         ) : (
           <Flex flexDir="column" gap={4}>
             {paymentFailureCode ? (
@@ -128,7 +127,7 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
                 variant="left-accent"
                 bg="inputBg"
               >
-                <Flex>
+                <div className="flex flex-row">
                   <AlertIcon boxSize={4} mt={1} ml={1} />
                   <Flex flexDir="column" gap={1} pl={1}>
                     <AlertDescription as={Text} fontSize="body.md">
@@ -136,7 +135,7 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
                       on your payment method.
                     </AlertDescription>
                   </Flex>
-                </Flex>
+                </div>
               </Alert>
             )}
 

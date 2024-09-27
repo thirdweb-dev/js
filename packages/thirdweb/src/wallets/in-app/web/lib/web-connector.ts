@@ -14,27 +14,26 @@ import {
   registerPasskey,
 } from "../../core/authentication/passkeys.js";
 import { siweAuthenticate } from "../../core/authentication/siwe.js";
-import {
-  type AuthArgsType,
-  type AuthLoginReturnType,
-  type AuthStoredTokenWithCookieReturnType,
-  type GetUser,
-  type LogoutReturnType,
-  type MultiStepAuthArgsType,
-  type MultiStepAuthProviderType,
-  type SingleStepAuthArgsType,
-  UserWalletStatus,
+import type {
+  AuthArgsType,
+  AuthLoginReturnType,
+  AuthStoredTokenWithCookieReturnType,
+  GetUser,
+  LogoutReturnType,
+  MultiStepAuthArgsType,
+  MultiStepAuthProviderType,
+  SingleStepAuthArgsType,
 } from "../../core/authentication/types.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
+import { EnclaveWallet } from "../../core/wallet/enclave-wallet.js";
 import type { Ecosystem } from "../../core/wallet/types.js";
+import type { IWebWallet } from "../../core/wallet/web-wallet.js";
 import { getUserStatus } from "../lib/actions/get-enclave-user-status.js";
 import type { InAppWalletConstructorType } from "../types.js";
 import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { Auth, type AuthQuerierTypes } from "./auth/iframe-auth.js";
 import { loginWithOauth, loginWithOauthRedirect } from "./auth/oauth.js";
 import { sendOtp, verifyOtp } from "./auth/otp.js";
-import { EnclaveWallet } from "./enclave-wallet.js";
-import { getAuthToken } from "./get-auth-token.js";
 import { IFrameWallet } from "./iframe-wallet.js";
 
 /**
@@ -46,7 +45,7 @@ export class InAppWebConnector implements InAppConnector {
   private querier: InAppWalletIframeCommunicator<AuthQuerierTypes>;
   private localStorage: ClientScopedStorage;
 
-  private wallet?: EnclaveWallet | IFrameWallet;
+  private wallet?: IWebWallet;
   /**
    * Used to manage the Auth state of the user.
    */
@@ -122,10 +121,14 @@ export class InAppWebConnector implements InAppConnector {
           throw new Error("Failed to initialize wallet");
         }
 
+        const deviceShareStored =
+          "deviceShareStored" in authResult.walletDetails
+            ? authResult.walletDetails.deviceShareStored
+            : undefined;
+
         await this.wallet.postWalletSetUp({
-          ...authResult.walletDetails,
-          authToken: authResult.storedToken.cookieString,
-          walletUserId: authResult.storedToken.authDetails.userWalletId,
+          storedToken: authResult.storedToken,
+          deviceShareStored,
         });
 
         if (authResult.storedToken.authDetails.walletType !== "enclave") {
@@ -148,7 +151,7 @@ export class InAppWebConnector implements InAppConnector {
 
         return {
           user: {
-            status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+            status: "Logged In, Wallet Initialized",
             authDetails: authResult.storedToken.authDetails,
             account: await this.wallet.getAccount(),
             walletAddress: authResult.walletDetails.walletAddress,
@@ -159,7 +162,7 @@ export class InAppWebConnector implements InAppConnector {
   }
 
   async initializeWallet(authToken?: string) {
-    const storedAuthToken = await getAuthToken(this.client, this.ecosystem);
+    const storedAuthToken = await this.localStorage.getAuthCookie();
     if (!authToken && storedAuthToken === null) {
       throw new Error(
         "No auth token provided and no stored auth token found to initialize the wallet",
@@ -224,11 +227,11 @@ export class InAppWebConnector implements InAppConnector {
   async getUser(): Promise<GetUser> {
     // If we don't have a wallet yet we'll create one
     if (!this.wallet) {
-      const maybeAuthToken = await getAuthToken(this.client, this.ecosystem);
-      if (!maybeAuthToken) {
-        return { status: UserWalletStatus.LOGGED_OUT };
+      const localAuthToken = await this.localStorage.getAuthCookie();
+      if (!localAuthToken) {
+        return { status: "Logged Out" };
       }
-      await this.initializeWallet(maybeAuthToken);
+      await this.initializeWallet(localAuthToken);
     }
     if (!this.wallet) {
       throw new Error("Wallet not initialized");
@@ -409,7 +412,7 @@ export class InAppWebConnector implements InAppConnector {
   ) {
     const { PasskeyWebClient } = await import("./auth/passkeys.js");
     const passkeyClient = new PasskeyWebClient();
-    const storage = webLocalStorage;
+    const storage = this.localStorage;
     if (args.type === "sign-up") {
       return registerPasskey({
         client: this.client,

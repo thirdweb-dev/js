@@ -1,5 +1,5 @@
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { Box, ButtonGroup, Center, Flex } from "@chakra-ui/react";
+import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FiArrowRight } from "react-icons/fi";
@@ -98,7 +98,7 @@ export const ContentContainer: React.FC<SlideStateProps> = ({
       h="100%"
       justify="space-between"
     >
-      <Center flexGrow={1} position="relative">
+      <div className="relative flex grow items-center justify-center">
         <Flex gap={8} direction="column" height="100%" width="100%">
           <Box position="relative" w="full" mt="auto">
             <SlideContent
@@ -128,7 +128,7 @@ export const ContentContainer: React.FC<SlideStateProps> = ({
             )}
           </ButtonGroup>
         </Flex>
-      </Center>
+      </div>
     </Flex>
   );
 };

@@ -212,10 +212,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             }),
           }),
         ).rejects.toThrowErrorMatchingInlineSnapshot(`
-          [TransactionError: Error - !Qty
+          [TransactionError: DropClaimExceedLimit - 0,1000000000000000000
 
           contract: ${contract.address}
-          chainId: 31337]
+          chainId: ${contract.chain.id}]
         `);
       });
 
@@ -262,7 +262,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             }),
           }),
         ).rejects.toThrowErrorMatchingInlineSnapshot(`
-          [TransactionError: Error - !Qty
+          [TransactionError: DropClaimExceedLimit - 3000000000000000000,4000000000000000000
 
           contract: ${contract.address}
           chainId: ${contract.chain.id}]
@@ -421,7 +421,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           account: TEST_ACCOUNT_D,
         }),
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
-        [TransactionError: Error - !Qty
+        [TransactionError: DropClaimExceedLimit - 1,2
 
         contract: ${contract.address}
         chainId: ${contract.chain.id}]

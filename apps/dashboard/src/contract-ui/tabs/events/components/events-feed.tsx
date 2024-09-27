@@ -10,7 +10,6 @@ import {
   AccordionPanel,
   Box,
   ButtonGroup,
-  Center,
   Divider,
   Flex,
   FormControl,
@@ -23,7 +22,6 @@ import {
   Stack,
   Switch,
   Tooltip,
-  useToast,
 } from "@chakra-ui/react";
 import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
 import { AnimatePresence, motion } from "framer-motion";
@@ -32,6 +30,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { Fragment, useMemo, useState } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { stringify } from "thirdweb/utils";
 import {
@@ -110,7 +109,7 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
             ))}
           </Select>
         </Flex>
-        <Box>
+        <div>
           <FormControl display="flex" alignItems="center">
             <FormLabel htmlFor="auto-update" mb="0">
               Auto-Update
@@ -123,7 +122,7 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
               />
             </LightMode>
           </FormControl>
-        </Box>
+        </div>
       </Flex>
       <Card p={0} overflow="hidden">
         <SimpleGrid
@@ -148,14 +147,14 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
 
         <List overflow="auto">
           {filteredEvents.length === 0 && (
-            <Center py={4}>
+            <div className="flex items-center justify-center py-4">
               <Flex align="center" gap={2}>
                 {autoUpdate && <Spinner size="sm" speed="0.69s" />}
                 <Text size="body.md" fontStyle="italic">
                   {autoUpdate ? "listening for events" : "no events to show"}
                 </Text>
               </Flex>
-            </Center>
+            </div>
           )}
           <Accordion
             as={AnimatePresence}
@@ -192,7 +191,6 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
   contractAddress,
   chainSlug,
 }) => {
-  const toast = useToast();
   const { onCopy } = useClipboard(transaction.transactionHash);
 
   const router = useRouter();
@@ -258,14 +256,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                   bg="transparent"
                   onClick={() => {
                     onCopy();
-                    toast({
-                      variant: "solid",
-                      position: "bottom",
-                      title: "Transaction hash copied.",
-                      status: "success",
-                      duration: 5000,
-                      isClosable: true,
-                    });
+                    toast.info("Transaction hash copied.");
                   }}
                 >
                   <Icon as={FiCopy} boxSize={3} />
@@ -315,9 +306,9 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
               <Text fontFamily="mono" noOfLines={1}>
                 {transaction.blockNumber}
               </Text>
-              <Box>
+              <div>
                 <Icon as={FiChevronDown} />
-              </Box>
+              </div>
             </Stack>
           </Box>
         </SimpleGrid>
@@ -406,9 +397,9 @@ const TransactionData: React.FC<TransactionDataProps> = ({
               </Card>
             }
           >
-            <Center>
+            <div className="flex items-center justify-center">
               <Icon as={AiOutlineQuestionCircle} color="gray.600" />
-            </Center>
+            </div>
           </Tooltip>
 
           <Text fontWeight="bold">{name}</Text>

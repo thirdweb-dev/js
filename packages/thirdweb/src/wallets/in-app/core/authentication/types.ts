@@ -66,30 +66,25 @@ export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
 };
 
 // TODO: remove usage of enums, instead use object with as const
-export enum RecoveryShareManagement {
-  USER_MANAGED = "USER_MANAGED",
-  CLOUD_MANAGED = "AWS_MANAGED",
-  ENCLAVE = "ENCLAVE",
-}
+type RecoveryShareManagement = "USER_MANAGED" | "AWS_MANAGED" | "ENCLAVE";
 
 // TODO: remove usage of enums, instead use object with as const
-export enum AuthProvider {
-  COGNITO = "Cognito",
-  GUEST = "Guest",
-  GOOGLE = "Google",
-  EMAIL_OTP = "EmailOtp",
-  CUSTOM_JWT = "CustomJWT",
-  CUSTOM_AUTH_ENDPOINT = "CustomAuthEndpoint",
-  FACEBOOK = "Facebook",
-  APPLE = "Apple",
-  PASSKEY = "Passkey",
-  DISCORD = "Discord",
-  COINBASE = "Coinbase",
-  X = "X",
-  LINE = "Line",
-  FARCASTER = "Farcaster",
-  TELEGRAM = "Telegram",
-}
+export type AuthProvider =
+  | "Cognito"
+  | "Guest"
+  | "Google"
+  | "EmailOtp"
+  | "CustomJWT"
+  | "CustomAuthEndpoint"
+  | "Facebook"
+  | "Apple"
+  | "Passkey"
+  | "Discord"
+  | "Coinbase"
+  | "X"
+  | "Line"
+  | "Farcaster"
+  | "Telegram";
 
 export type OAuthRedirectObject = {
   strategy: OAuthOption;
@@ -134,10 +129,15 @@ export type AuthAndWalletRpcReturnType = AuthStoredTokenWithCookieReturnType & {
   walletDetails: SetUpWalletRpcReturnType | WalletAddressObjectType;
 };
 
+export type AuthResultAndRecoveryCode = AuthStoredTokenWithCookieReturnType & {
+  deviceShareStored?: string;
+  encryptionKey?: string;
+};
+
 export type AuthLoginReturnType = { user: InitializedUser };
 
 // Auth Types
-type AuthDetails = (
+export type AuthDetails = (
   | {
       email?: string;
     }
@@ -153,21 +153,15 @@ type AuthDetails = (
 };
 
 type InitializedUser = {
-  status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED;
+  status: "Logged In, Wallet Initialized";
   walletAddress: string;
   authDetails: AuthDetails;
   account: Account; // TODO (rn) this doesn't feel right here, should access it from the connector
 };
 
-// In APp Wallet Types
-export enum UserWalletStatus {
-  LOGGED_OUT = "Logged Out",
-  LOGGED_IN_WALLET_UNINITIALIZED = "Logged In, Wallet Uninitialized",
-  LOGGED_IN_NEW_DEVICE = "Logged In, New Device",
-  LOGGED_IN_WALLET_INITIALIZED = "Logged In, Wallet Initialized",
-}
+// In App Wallet Types
 
-export type WalletAddressObjectType = {
+type WalletAddressObjectType = {
   /**
    * User's wallet address
    */
@@ -199,33 +193,33 @@ export type LogoutReturnType = { success: boolean };
 // this is the return type from the InAppWallet Class getUserWalletStatus method iframe call
 export type GetUserWalletStatusRpcReturnType =
   | {
-      status: UserWalletStatus.LOGGED_OUT;
+      status: "Logged Out";
       user: undefined;
     }
   | {
-      status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED;
+      status: "Logged In, Wallet Uninitialized";
       user: { authDetails: AuthDetails };
     }
   | {
-      status: UserWalletStatus.LOGGED_IN_NEW_DEVICE;
+      status: "Logged In, New Device";
       user: { authDetails: AuthDetails; walletAddress: string };
     }
   | {
-      status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED;
+      status: "Logged In, Wallet Initialized";
       user: Omit<InitializedUser, "account" | "status">;
     };
 
 // this is the return type from the InAppWallet Class getUserWalletStatus method
 export type GetUser =
   | {
-      status: UserWalletStatus.LOGGED_OUT;
+      status: "Logged Out";
     }
   | {
-      status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED;
+      status: "Logged In, Wallet Uninitialized";
       authDetails: AuthDetails;
     }
   | {
-      status: UserWalletStatus.LOGGED_IN_NEW_DEVICE;
+      status: "Logged In, New Device";
       authDetails: AuthDetails;
       walletAddress: string;
     }

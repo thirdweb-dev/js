@@ -1,6 +1,6 @@
+import { Button } from "@/components/ui/button";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ThirdwebProvider } from "thirdweb/react";
-import { Button } from "../../../../@/components/ui/button";
 import { teamsAndProjectsStub } from "../../../../stories/stubs";
 import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
 import { TeamHeaderDesktopUI, TeamHeaderMobileUI } from "./TeamHeaderUI";
@@ -42,24 +42,27 @@ function Variants(props: {
   return (
     <ThirdwebProvider>
       <div className="flex min-h-screen flex-col gap-6 bg-gray-700 px-4 py-10">
-        <BadgeContainer label="Team, Free">
+        <BadgeContainer label="Team Free, Account Loaded">
           <Comp
             teamsAndProjects={teamsAndProjectsStub}
             currentTeam={teamsAndProjectsStub[0].team}
             currentProject={undefined}
-            email="eng@thirdweb.com"
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
             createProject={() => {}}
+            account={{
+              email: "foo@example.com",
+              id: "1",
+            }}
           />
         </BadgeContainer>
 
-        <BadgeContainer label="Team, Growth">
+        <BadgeContainer label="Team Growth, Account Loading">
           <Comp
             teamsAndProjects={teamsAndProjectsStub}
             currentTeam={teamsAndProjectsStub[1].team}
             currentProject={undefined}
-            email={undefined}
+            account={undefined}
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
             createProject={() => {}}
@@ -71,7 +74,10 @@ function Variants(props: {
             teamsAndProjects={teamsAndProjectsStub}
             currentTeam={teamsAndProjectsStub[2].team}
             currentProject={undefined}
-            email="eng@thirdweb.com"
+            account={{
+              email: "foo@example.com",
+              id: "foo",
+            }}
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
             createProject={() => {}}
@@ -83,7 +89,10 @@ function Variants(props: {
             teamsAndProjects={teamsAndProjectsStub}
             currentTeam={teamsAndProjectsStub[2].team}
             currentProject={teamsAndProjectsStub[2].projects[0]}
-            email="eng@thirdweb.com"
+            account={{
+              email: "foo@example.com",
+              id: "foo",
+            }}
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
             createProject={() => {}}

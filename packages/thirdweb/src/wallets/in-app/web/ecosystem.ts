@@ -4,7 +4,7 @@ import type {
   CreateWalletArgs,
   EcosystemWalletId,
 } from "../../wallet-types.js";
-import { createEcosystemWallet } from "../core/wallet/ecosystem-core.js";
+import { createInAppWallet } from "../core/wallet/in-app-core.js";
 
 /**
  * Creates an [Ecosystem Wallet](https://portal.thirdweb.com/connect/ecosystems/overview) based on various authentication methods.
@@ -65,18 +65,24 @@ export function ecosystemWallet(
   ...args: CreateWalletArgs<EcosystemWalletId>
 ): Wallet<EcosystemWalletId> {
   const [ecosystemId, createOptions] = args;
-  return createEcosystemWallet({
+  const ecosystem = {
     id: ecosystemId,
-    createOptions,
+    partnerId: createOptions?.partnerId,
+  };
+  return createInAppWallet({
+    ecosystem,
+    createOptions: {
+      auth: {
+        ...createOptions?.auth,
+        options: [], // controlled by ecosystem
+      },
+    },
     connectorFactory: async (client: ThirdwebClient) => {
       const { InAppWebConnector } = await import("./lib/web-connector.js");
       return new InAppWebConnector({
         client,
-        ecosystem: {
-          id: ecosystemId,
-          partnerId: createOptions?.partnerId,
-        },
+        ecosystem,
       });
     },
-  });
+  }) as Wallet<EcosystemWalletId>;
 }

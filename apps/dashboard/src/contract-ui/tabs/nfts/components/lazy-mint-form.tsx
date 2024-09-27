@@ -4,7 +4,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Box,
   Divider,
   DrawerBody,
   DrawerFooter,
@@ -197,7 +196,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
           </FormControl>
           <FormControl isInvalid={!!mediaFileError}>
             <FormLabel>Media</FormLabel>
-            <Box>
+            <div>
               <FileInput
                 previewMaxWidth="200px"
                 value={mediaFileUrl as File | string}
@@ -208,7 +207,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                 selectOrUpload="Upload"
                 helperText="Media"
               />
-            </Box>
+            </div>
             <FormHelperText>
               You can upload image, audio, video, html, text, pdf, and 3d model
               files here.

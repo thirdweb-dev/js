@@ -36,7 +36,7 @@ export const SmartWalletsBillingAlert = ({
       variant="left-accent"
       bg="backgroundCardHighlight"
     >
-      <Flex>
+      <div className="flex flex-row">
         <AlertIcon boxSize={4} mt={1} ml={1} />
         <Flex flexDir="column" gap={1} pl={1}>
           <AlertTitle>Account Abstraction on Mainnet</AlertTitle>
@@ -60,7 +60,7 @@ export const SmartWalletsBillingAlert = ({
             </TrackedLink>
           </AlertDescription>
         </Flex>
-      </Flex>
+      </div>
 
       {dismissable && (
         <IconButton

@@ -1,8 +1,7 @@
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { cn } from "@/lib/utils";
 import {
-  AspectRatio,
   Box,
-  Center,
   Code,
   Container,
   Flex,
@@ -210,12 +209,12 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
         <Flex shadow="sm">
           <Container maxW="container.page">
             <Flex align="center" justify="space-between" p={4}>
-              <Flex gap={2}>
+              <div className="flex flex-row gap-2">
                 <Logo hideWordmark />
                 <Heading size="title.md">
                   {validSnapshot.length ? "Edit" : "Upload"} Snapshot
                 </Heading>
-              </Flex>
+              </div>
             </Flex>
           </Container>
         </Flex>
@@ -226,26 +225,22 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
           <Flex flexGrow={1} align="center" overflow="auto">
             <Container maxW="container.page">
               <Flex gap={8} flexDir="column">
-                <AspectRatio ratio={21 / 9} w="100%">
-                  <Center
-                    borderRadius="md"
+                <div className="relative aspect-[21/9] w-full">
+                  <div
+                    className={cn(
+                      "flex h-full cursor-pointer rounded-md border border-border hover:border-primary",
+                      noCsv ? "bg-red-200" : "bg-card",
+                    )}
                     {...getRootProps()}
-                    cursor="pointer"
-                    bg={noCsv ? "red.200" : "inputBg"}
-                    _hover={{
-                      bg: "inputBgHover",
-                      borderColor: "primary.500",
-                    }}
-                    borderColor="inputBorder"
-                    borderWidth="1px"
                   >
                     <input {...getInputProps()} />
-                    <div className="flex flex-col p-6">
+                    <div className="!m-auto flex flex-col">
                       <Icon
                         as={BsFillCloudUploadFill}
                         boxSize={8}
                         mb={2}
                         color={noCsv ? "red.500" : "gray.600"}
+                        mx="auto"
                       />
                       {isDragActive ? (
                         <Heading as={Text} size="label.md">
@@ -263,9 +258,9 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                         </Heading>
                       )}
                     </div>
-                  </Center>
-                </AspectRatio>
-                <Flex gap={2} flexDir="column">
+                  </div>
+                </div>
+                <div className="flex flex-row gap-2">
                   <Heading size="label.md">Requirements</Heading>
                   <UnorderedList spacing={1}>
                     {dropType === "specific" ? (
@@ -356,7 +351,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                       wallet can claim, not how many they can receive in total.
                     </Text>
                   </UnorderedList>
-                </Flex>
+                </div>
               </Flex>
             </Container>
           </Flex>
@@ -433,7 +428,7 @@ const SnapshotTableColumns = [
         return address;
       }
       return (
-        <Flex>
+        <div className="flex flex-row">
           <Tooltip
             label={
               address.startsWith("0x")
@@ -448,7 +443,7 @@ const SnapshotTableColumns = [
               </Text>
             </Stack>
           </Tooltip>
-        </Flex>
+        </div>
       );
     },
   },
@@ -562,7 +557,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
         </Table>
       </TableContainer>
       <Portal containerRef={portalRef}>
-        <Center w="100%">
+        <div className="flex w-full items-center justify-center">
           <div className="flex flex-row">
             <IconButton
               isDisabled={!canPreviousPage}
@@ -606,7 +601,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
               <option value="500">500</option>
             </Select>
           </div>
-        </Center>
+        </div>
       </Portal>
     </Flex>
   );

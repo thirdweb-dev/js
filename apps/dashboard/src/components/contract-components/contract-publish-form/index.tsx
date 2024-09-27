@@ -295,7 +295,7 @@ export function ContractPublishForm(props: {
           gap={6}
         >
           {fieldsetToShow !== "landing" && (
-            <Box>
+            <div>
               <IconButton
                 w="inherit"
                 variant="ghost"
@@ -314,7 +314,7 @@ export function ContractPublishForm(props: {
               >
                 Back
               </IconButton>
-            </Box>
+            </div>
           )}
           {fieldsetToShow === "landing" && (
             <LandingFieldset

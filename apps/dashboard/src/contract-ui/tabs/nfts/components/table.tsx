@@ -1,6 +1,5 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
-  Center,
   Flex,
   Icon,
   IconButton,
@@ -321,7 +320,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
           </Tbody>
         </Table>
       </TableContainer>
-      <Center w="100%">
+      <div className="flex w-full items-center justify-center">
         <Flex gap={2} direction="row" align="center">
           <IconButton
             isDisabled={!canPreviousPage || queryLoading}
@@ -368,7 +367,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
             <option value="500">500</option>
           </Select>
         </Flex>
-      </Center>
+      </div>
     </Flex>
   );
 };

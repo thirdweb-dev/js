@@ -1,4 +1,4 @@
-import { Box, Center, Container, Flex } from "@chakra-ui/react";
+import { Box, Container, Flex } from "@chakra-ui/react";
 import { PricingEngineHomepage } from "components/homepage/sections/PricingEngine";
 import { LandingCardWithImage } from "components/landing-pages/card-with-image";
 import LandingCardWithMetrics from "components/landing-pages/card-with-metrics";
@@ -325,7 +325,7 @@ const EngineLanding: ThirdwebNextPage = () => {
 
           <LandingCardWithMetrics
             title={
-              <Center flexDir="column" textAlign="center">
+              <div className="flex flex-col items-center justify-center text-center">
                 <Heading size="display.sm" color="white">
                   Trusted by the best
                 </Heading>
@@ -334,7 +334,7 @@ const EngineLanding: ThirdwebNextPage = () => {
                   thirdweb Engine powers the best onchain apps, integrating into
                   any backend at scale.
                 </Text>
-              </Center>
+              </div>
             }
             desktopColumns={3}
             TRACKING_CATEGORY={TRACKING_CATEGORY}

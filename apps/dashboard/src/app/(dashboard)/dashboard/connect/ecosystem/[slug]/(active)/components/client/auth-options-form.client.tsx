@@ -59,7 +59,7 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
                   title: `Are you sure you want to add ${option.slice(0, 1).toUpperCase() + option.slice(1)} as an authentication option for this ecosystem?`,
                   description:
                     "Users will be able to log into your ecosystem using this option. If you later remove this option users that used it will no longer be able to log in.",
-                  authOptions: [option, ...ecosystem.authOptions],
+                  authOptions: [...ecosystem.authOptions, option],
                 });
               }
             }}

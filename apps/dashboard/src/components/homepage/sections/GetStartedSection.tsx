@@ -1,4 +1,4 @@
-import { Box, Center, Flex, LightMode } from "@chakra-ui/react";
+import { Box, Flex, LightMode } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { GeneralCta } from "components/shared/GeneralCta";
@@ -18,8 +18,8 @@ export const GetStartedSection = () => {
         align="center"
         gap={{ base: 6, md: 8 }}
       >
-        <Center mb={6} pt={{ base: 8, lg: 24 }}>
-          <Center p={2} position="relative" mb={6}>
+        <div className="mb-6 flex items-center justify-center pt-8 lg:pt-24">
+          <div className="relative mb-6 flex items-center justify-center p-2">
             <Box
               position="absolute"
               bgGradient="linear(to-r, #F213A4, #040BBF)"
@@ -38,8 +38,8 @@ export const GetStartedSection = () => {
               placeholder="empty"
               src={WhiteLogo}
             />
-          </Center>
-        </Center>
+          </div>
+        </div>
         <Heading as="h2" size="display.md" textAlign="center">
           Get started with thirdweb
         </Heading>

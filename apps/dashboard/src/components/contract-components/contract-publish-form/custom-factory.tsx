@@ -106,7 +106,7 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
             </FormControl>
           </div>
         ))}
-        <Box>
+        <div>
           <Button
             type="button"
             size="sm"
@@ -117,7 +117,7 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
           >
             Add Network
           </Button>
-        </Box>
+        </div>
       </Flex>
       <Flex flexDir="column" gap={4}>
         <Flex flexDir="column" gap={2}>

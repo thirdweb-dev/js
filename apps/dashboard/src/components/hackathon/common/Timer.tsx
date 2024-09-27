@@ -51,7 +51,7 @@ const Timer: React.FC<TimerProps> = ({ date }) => {
   ];
 
   return (
-    <Flex gap={2}>
+    <div className="flex flex-row gap-2">
       {items.map(({ label, value }) => (
         <Flex flexDir="column" key={label} align="center">
           <Text
@@ -76,7 +76,7 @@ const Timer: React.FC<TimerProps> = ({ date }) => {
           </Text>
         </Flex>
       ))}
-    </Flex>
+    </div>
   );
 };
 

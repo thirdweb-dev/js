@@ -2,7 +2,7 @@
 
 The thirdweb SDK comes built-in with an IPFS uploader and downloader.
 
-### Download from IPFS
+## Download from IPFS
 
 ```ts
 import { download } from "thirdweb/storage";
@@ -15,7 +15,27 @@ const file = await download({
 
 You can view all of the configuration options in the [full reference](/references/typescript/v5/download).
 
-### Upload to IPFS
+## Upload to IPFS
+
+### Uploading JSON objects
+
+```ts
+import { upload } from "thirdweb/storage";
+
+const uris = await upload({
+	client,
+	files: [
+		{
+			name: "something",
+			data: {
+				hello: "world",
+			},
+		},
+	],
+});
+```
+
+### Uploading files
 
 ```ts
 import { upload } from "thirdweb/storage";

@@ -8,6 +8,7 @@ import {
   detectPlatform,
 } from "./detect-platform.js";
 import { isJWT } from "./jwt/is-jwt.js";
+import { IS_DEV } from "./process.js";
 
 const DEFAULT_REQUEST_TIMEOUT = 60000;
 
@@ -112,10 +113,7 @@ export function isThirdwebUrl(url: string): boolean {
 
     try {
       // special case for localhost in development only
-      if (
-        process.env.NODE_ENV === "development" ||
-        process.env.NODE_ENV === "test"
-      ) {
+      if (IS_DEV) {
         if (hostname === "localhost") {
           IS_THIRDWEB_URL_CACHE.set(url, true);
           return true;

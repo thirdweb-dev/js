@@ -10,6 +10,7 @@ import { coinbaseWalletSDK } from "../coinbase/coinbase-wallet.js";
 import { getCoinbaseMobileProvider } from "../coinbase/coinbaseMobileSDK.js";
 import { COINBASE } from "../constants.js";
 import { isEcosystemWallet } from "../ecosystem/is-ecosystem-wallet.js";
+import { ecosystemWallet } from "../in-app/native/ecosystem.js";
 import { inAppWallet } from "../in-app/native/in-app.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { smartWallet } from "../smart/smart-wallet.js";
@@ -17,6 +18,7 @@ import type { WCConnectOptions } from "../wallet-connect/types.js";
 import { createWalletEmitter } from "../wallet-emitter.js";
 import type {
   CreateWalletArgs,
+  EcosystemWalletId,
   WalletAutoConnectionOption,
   WalletId,
 } from "../wallet-types.js";
@@ -66,9 +68,9 @@ export function createWallet<const ID extends WalletId>(
      * ECOSYSTEM WALLETS
      */
     case isEcosystemWallet(id): {
-      throw new Error(
-        "Ecosystem wallets are not yet supported in the React Native SDK",
-      );
+      return ecosystemWallet(
+        ...(args as CreateWalletArgs<EcosystemWalletId>),
+      ) as Wallet<ID>;
     }
 
     /**

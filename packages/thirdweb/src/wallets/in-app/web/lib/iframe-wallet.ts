@@ -14,13 +14,13 @@ import type {
   SendTransactionOption,
 } from "../../../interfaces/wallet.js";
 import type { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
-import {
-  type GetUser,
-  type GetUserWalletStatusRpcReturnType,
-  UserWalletStatus,
-  type WalletAddressObjectType,
+import type {
+  AuthResultAndRecoveryCode,
+  GetUser,
+  GetUserWalletStatusRpcReturnType,
 } from "../../core/authentication/types.js";
 import type { Ecosystem } from "../../core/wallet/types.js";
+import type { IWebWallet } from "../../core/wallet/web-wallet.js";
 import type {
   ClientIdWithQuerierType,
   GetAddressReturnType,
@@ -29,7 +29,6 @@ import type {
   SignedTypedDataReturnType,
 } from "../types.js";
 import type { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
-import type { IWebWallet, PostWalletSetup } from "./web-wallet.js";
 
 type WalletManagementTypes = {
   createWallet: undefined;
@@ -103,19 +102,13 @@ export class IFrameWallet implements IWebWallet {
    * @returns `{walletAddress : string }` The user's wallet details
    * @internal
    */
-  async postWalletSetUp(
-    props: PostWalletSetup,
-  ): Promise<WalletAddressObjectType> {
-    if ("isIframeStorageEnabled" in props) {
-      if (!props.isIframeStorageEnabled) {
-        await this.localStorage.saveDeviceShare(
-          props.deviceShareStored,
-          props.walletUserId,
-        );
-      }
-      return { walletAddress: props.walletAddress };
+  async postWalletSetUp(authResult: AuthResultAndRecoveryCode): Promise<void> {
+    if (authResult.deviceShareStored) {
+      await this.localStorage.saveDeviceShare(
+        authResult.deviceShareStored,
+        authResult.storedToken.authDetails.userWalletId,
+      );
     }
-    throw new Error("Invalid postWalletSetUp props");
   }
 
   /**
@@ -160,22 +153,22 @@ export class IFrameWallet implements IWebWallet {
         procedureName: "getUserStatus",
         params: undefined,
       });
-    if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED) {
+    if (userStatus.status === "Logged In, Wallet Initialized") {
       return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+        status: "Logged In, Wallet Initialized",
         ...userStatus.user,
         account: await this.getAccount(),
       };
     }
-    if (userStatus.status === UserWalletStatus.LOGGED_IN_NEW_DEVICE) {
+    if (userStatus.status === "Logged In, New Device") {
       return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        status: "Logged In, New Device",
         ...userStatus.user,
       };
     }
-    if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED) {
+    if (userStatus.status === "Logged In, Wallet Uninitialized") {
       return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        status: "Logged In, Wallet Uninitialized",
         ...userStatus.user,
       };
     }

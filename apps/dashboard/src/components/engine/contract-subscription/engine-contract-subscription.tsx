@@ -36,7 +36,7 @@ export const EngineContractSubscriptions: React.FC<
             .
           </Text>
         </Flex>
-        <Flex>
+        <div className="flex flex-row">
           <FormControl display="flex" alignItems="center">
             <FormLabel htmlFor="auto-update" mb="0">
               Auto-Update
@@ -47,7 +47,7 @@ export const EngineContractSubscriptions: React.FC<
               id="auto-update"
             />
           </FormControl>
-        </Flex>
+        </div>
       </Flex>
       <ContractSubscriptionTable
         instanceUrl={instanceUrl}

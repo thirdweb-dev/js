@@ -22,6 +22,7 @@ export { isEIP155Enforced } from "../utils/any-evm/is-eip155-enforced.js";
 export { keccakId } from "../utils/any-evm/keccak-id.js";
 export { getKeylessTransaction } from "../utils/any-evm/keyless-transaction.js";
 export type { ExtendedMetadata } from "../utils/any-evm/deploy-metadata.js";
+export { isZkSyncChain } from "../utils/any-evm/zksync/isZkSyncChain.js";
 
 //signatures
 export {

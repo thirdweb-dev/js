@@ -41,6 +41,9 @@ function Variants() {
             name: "John Doe",
             email: "johndoe@gmail.com",
           }}
+          updateAccountImage={async () => {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }}
         />
       </div>
       <Toaster richColors />

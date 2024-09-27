@@ -274,7 +274,7 @@ export function AccountAbstractionSettingsPage(
         <FormControl>
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
-              <Box>
+              <div>
                 <FormLabel pointerEvents="none">Global spend limits</FormLabel>
                 <Text>
                   Maximum gas cost (in USD) that you want to sponsor. This
@@ -282,7 +282,7 @@ export function AccountAbstractionSettingsPage(
                   this limit is reached, your users will have to fund their own
                   gas costs.
                 </Text>
-              </Box>
+              </div>
 
               <Switch
                 colorScheme="primary"
@@ -345,7 +345,7 @@ export function AccountAbstractionSettingsPage(
         >
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
-              <Box>
+              <div>
                 <FormLabel pointerEvents="none">
                   Restrict to specific chains
                 </FormLabel>
@@ -361,7 +361,7 @@ export function AccountAbstractionSettingsPage(
                     supported chains.
                   </TrackedLink>
                 </Text>
-              </Box>
+              </div>
 
               <Switch
                 colorScheme="primary"
@@ -401,14 +401,14 @@ export function AccountAbstractionSettingsPage(
         >
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
-              <Box>
+              <div>
                 <FormLabel pointerEvents="none">
                   Restrict to specific contract addresses
                 </FormLabel>
                 <Text>
                   Only sponsor transactions for the specified contracts.
                 </Text>
-              </Box>
+              </div>
 
               <Switch
                 colorScheme="primary"
@@ -444,7 +444,7 @@ export function AccountAbstractionSettingsPage(
         <FormControl>
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
-              <Box>
+              <div>
                 <FormLabel pointerEvents="none">
                   Allowlisted/Blocklisted accounts
                 </FormLabel>
@@ -452,7 +452,7 @@ export function AccountAbstractionSettingsPage(
                   Select either allowlisted or blockedlisted accounts. Disabling
                   this option will allow all accounts.
                 </Text>
-              </Box>
+              </div>
 
               <Switch
                 colorScheme="primary"
@@ -521,7 +521,7 @@ export function AccountAbstractionSettingsPage(
         <FormControl>
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
-              <Box>
+              <div>
                 <FormLabel pointerEvents="none">Server verifier</FormLabel>
                 <Text>
                   Specify your own endpoint that will verify each transaction
@@ -536,7 +536,7 @@ export function AccountAbstractionSettingsPage(
                   </TrackedLink>
                   .
                 </Text>
-              </Box>
+              </div>
 
               <GatedSwitch
                 upgradeRequired={!dashboardAccountQuery.data.advancedEnabled}
@@ -636,13 +636,13 @@ export function AccountAbstractionSettingsPage(
         >
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between">
-              <Box>
+              <div>
                 <FormLabel pointerEvents="none">Admin accounts</FormLabel>
                 <Text>
                   These accounts won&apos;t be subject to any sponsorship rules.
                   All transactions will be sponsored.
                 </Text>
-              </Box>
+              </div>
 
               <Switch
                 colorScheme="primary"

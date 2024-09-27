@@ -1,6 +1,5 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
-  AspectRatio,
   Flex,
   GridItem,
   SimpleGrid,
@@ -273,7 +272,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
           _hover={{ opacity: 0.75, textDecoration: "none" }}
         >
           <Card p={0} position="relative">
-            <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
+            <div className="relative aspect-square w-full overflow-hidden rounded-xl">
               <Skeleton isLoaded={!isPending}>
                 <NFTMediaWithEmptyState
                   metadata={listing.asset.metadata}
@@ -282,7 +281,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
                   height="100%"
                 />
               </Skeleton>
-            </AspectRatio>
+            </div>
             <Flex p={4} pb={3} gap={1} direction="column">
               <Skeleton w={!isPending ? "100%" : "50%"} isLoaded={!isPending}>
                 <Heading size="label.md">{listing.asset.metadata.name}</Heading>

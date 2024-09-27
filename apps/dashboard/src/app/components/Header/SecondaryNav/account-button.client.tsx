@@ -1,5 +1,6 @@
 "use client";
 
+import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,14 +9,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { LogOutIcon, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
 export function AccountButton(props: {
-  email: string | undefined;
   logout: () => void;
   connectButton: React.ReactNode;
+  account?: Pick<Account, "email" | "id">;
 }) {
   const { setTheme, theme } = useTheme();
 
@@ -27,15 +29,15 @@ export function AccountButton(props: {
           className="!p-0 !h-auto size-10 rounded-full hover:ring-2 hover:ring-offset-2"
           variant="ghost"
         >
-          {/* TODO - replace with account image */}
-          <div className="size-9 rounded-full border border-border bg-muted" />
+          {/* TODO - set account image */}
+          <GradientAvatar id={props.account?.id} src={""} className="size-9" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[300px] rounded-lg p-0" align="end">
         <div className="border-border border-b p-4 pb-5">
           <SkeletonContainer
             skeletonData="user@example.com"
-            loadedData={props.email}
+            loadedData={props.account?.email}
             render={(v) => <p className="text-muted-foreground text-sm">{v}</p>}
           />
 

@@ -1,4 +1,4 @@
-import { Center, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { motion } from "framer-motion";
 import { Heading } from "tw-components";
@@ -48,25 +48,25 @@ export const Titles: React.FC<SlideStateProps> = ({
 
 export const DashboardImage: React.FC = () => (
   <motion.div {...moveDown}>
-    <Center>
+    <div className="flex items-center justify-center">
       <ChakraNextImage
         priority
         w={{ base: "45%", md: "90%" }}
         src={require("../../../../public/assets/product-pages/dashboard/hero.png")}
         alt=""
       />
-    </Center>
+    </div>
   </motion.div>
 );
 
 export const ConnectWalletImage: React.FC = () => (
   <motion.div {...moveDown}>
-    <Center h="100%" w="100%">
+    <div className="flex h-full w-full items-center justify-center">
       <ChakraNextImage
         alt=""
         boxSize="75px"
         src={require("../../../../public/logos/wallet.png")}
       />
-    </Center>
+    </div>
   </motion.div>
 );

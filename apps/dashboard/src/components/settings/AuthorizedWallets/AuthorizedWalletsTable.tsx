@@ -2,12 +2,13 @@ import {
   type AuthorizedWallet,
   useRevokeAuthorizedWallet,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
+import { toast } from "sonner";
 import { isAddress } from "thirdweb/utils";
 import { Button, Text } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
@@ -25,7 +26,6 @@ const columnHelper = createColumnHelper<AuthorizedWallet>();
 export const AuthorizedWalletsTable: ComponentWithChildren<
   AuthorizedWalletsTableProps
 > = ({ authorizedWallets, isPending, isFetched }) => {
-  const toast = useToast();
   const trackEvent = useTrack();
   const { mutateAsync: revokeAccess } = useRevokeAuthorizedWallet();
   const [revokeAuthorizedWalletId, setRevokeAuthorizedWalletId] = useState<
@@ -110,13 +110,7 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
         action: "revoke-access-to-device",
         label: "success",
       });
-      toast({
-        title: "Device revoked",
-        description: "The selected device has been revoked.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
+      toast.success("The selected device has been revoked.");
     } catch (error) {
       console.error(error);
       trackEvent({
@@ -125,13 +119,9 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
         label: "error",
         error,
       });
-      toast({
-        title: "Something went wrong while revoking the device",
+      toast.error("Something went wrong while revoking the device", {
         description:
-          "Something went wrong while revoking the device. Please visit our support site: https://thirdweb.com/support",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
+          "Please visit our support site: https://thirdweb.com/support",
       });
     } finally {
       handleClose();

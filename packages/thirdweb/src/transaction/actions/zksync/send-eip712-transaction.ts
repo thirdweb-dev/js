@@ -1,4 +1,4 @@
-import { toRlp } from "viem";
+import { hexToBytes, toRlp } from "viem";
 import { eth_sendRawTransaction } from "../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../rpc/rpc.js";
 import { toBigInt } from "../../../utils/bigint.js";
@@ -87,25 +87,17 @@ export async function populateEip712Transaction(
   options: SendEip712TransactionOptions,
 ): Promise<EIP721TransactionSerializable> {
   const { account, transaction } = options;
-  let [
-    data,
-    to,
-    value,
-    gas,
-    maxFeePerGas,
-    maxPriorityFeePerGas,
-    gasPerPubdata,
-  ] = await Promise.all([
-    encode(transaction),
-    resolvePromisedValue(transaction.to),
-    resolvePromisedValue(transaction.value),
-    resolvePromisedValue(transaction.gas),
-    resolvePromisedValue(transaction.maxFeePerGas),
-    resolvePromisedValue(transaction.maxPriorityFeePerGas),
-    resolvePromisedValue(transaction.eip712).then(
-      (eip712) => eip712?.gasPerPubdata,
-    ),
-  ]);
+  let [data, to, value, gas, maxFeePerGas, maxPriorityFeePerGas, eip712] =
+    await Promise.all([
+      encode(transaction),
+      resolvePromisedValue(transaction.to),
+      resolvePromisedValue(transaction.value),
+      resolvePromisedValue(transaction.gas),
+      resolvePromisedValue(transaction.maxFeePerGas),
+      resolvePromisedValue(transaction.maxPriorityFeePerGas),
+      resolvePromisedValue(transaction.eip712),
+    ]);
+  let gasPerPubdata = eip712?.gasPerPubdata;
   if (!gas || !maxFeePerGas || !maxPriorityFeePerGas) {
     // fetch fees and gas
     const rpc = getRpcClient(transaction);
@@ -118,6 +110,15 @@ export async function populateEip712Transaction(
           to,
           data,
           value: value ? numberToHex(value) : undefined,
+          gasPerPubdata,
+          eip712Meta: {
+            ...eip712,
+            gasPerPubdata: gasPerPubdata ? toHex(gasPerPubdata) : toHex(50000n),
+            factoryDeps: eip712?.factoryDeps?.map((dep) =>
+              Array.from(hexToBytes(dep)),
+            ),
+          },
+          type: "0x71",
           // biome-ignore lint/suspicious/noExplicitAny: TODO add to RPC method types
         } as any,
       ],

@@ -1,11 +1,4 @@
-import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  Center,
-  Flex,
-  Spinner,
-} from "@chakra-ui/react";
+import { Alert, AlertIcon, AlertTitle, Flex, Spinner } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useMemo, useState } from "react";
 import { IoRefreshSharp } from "react-icons/io5";
@@ -90,15 +83,15 @@ export const PublishedContracts: React.FC<PublishedContractsProps> = ({
         hidePublisher
       >
         {publishedContractsQuery.isPending && (
-          <Center>
+          <div className="flex items-center justify-center">
             <Flex py={4} direction="row" gap={4} align="center">
               <Spinner size="sm" />
               <Text>Loading published contracts</Text>
             </Flex>
-          </Center>
+          </div>
         )}
         {publishedContractsQuery.isError && (
-          <Center>
+          <div className="flex items-center justify-center">
             <Flex mt={4} py={4} direction="column" gap={4} align="center">
               <Alert status="error" borderRadius="md">
                 <AlertIcon />
@@ -116,15 +109,15 @@ export const PublishedContracts: React.FC<PublishedContractsProps> = ({
                 </Button>
               </Alert>
             </Flex>
-          </Center>
+          </div>
         )}
         {publishedContractsQuery.isSuccess &&
           publishedContractsQuery.data.length === 0 && (
-            <Center>
+            <div className="flex items-center justify-center">
               <Flex py={4} direction="column" gap={4} align="center">
                 <Text>No published contracts found.</Text>
               </Flex>
-            </Center>
+            </div>
           )}
         {publishedContractsQuery.isSuccess &&
           publishedContractsQuery.data.length > slicedData.length && (

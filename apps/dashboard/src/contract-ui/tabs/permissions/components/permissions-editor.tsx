@@ -13,7 +13,6 @@ import {
   InputRightAddon,
   Stack,
   Tooltip,
-  useToast,
 } from "@chakra-ui/react";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
 import { useClipboard } from "hooks/useClipboard";
@@ -21,6 +20,7 @@ import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { BiPaste } from "react-icons/bi";
 import { FiCopy, FiInfo, FiPlus, FiTrash } from "react-icons/fi";
+import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS, isAddress } from "thirdweb";
 import { Button, FormErrorMessage, Text } from "tw-components";
 
@@ -172,8 +172,6 @@ const PermissionAddress: React.FC<PermissionAddressProps> = ({
   isSubmitting,
   contract,
 }) => {
-  const toast = useToast();
-
   const { onCopy } = useClipboard(member);
 
   return (
@@ -193,14 +191,7 @@ const PermissionAddress: React.FC<PermissionAddressProps> = ({
                 e.stopPropagation();
                 e.preventDefault();
                 onCopy();
-                toast({
-                  position: "bottom",
-                  variant: "solid",
-                  title: "Address copied.",
-                  status: "success",
-                  duration: 5000,
-                  isClosable: true,
-                });
+                toast.info("Address copied.");
               }}
             />
           </Tooltip>

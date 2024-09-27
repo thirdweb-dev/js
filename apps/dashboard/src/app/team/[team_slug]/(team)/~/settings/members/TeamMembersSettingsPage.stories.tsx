@@ -6,7 +6,6 @@ import {
   BadgeContainer,
   mobileViewport,
 } from "../../../../../../../stories/utils";
-import SettingsLayout from "../layout";
 import { InviteSection } from "./InviteSection";
 import { ManageMembersSection } from "./ManageMembersSection";
 import { TeamMembersSettingsPage } from "./TeamMembersSettingsPage";
@@ -88,18 +87,12 @@ const membersStub: TeamMember[] = [
 
 function Story() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <SettingsLayout
-        params={{
-          team_slug: freeTeam.slug,
-        }}
-      >
-        <TeamMembersSettingsPage
-          team={proTeam}
-          userHasEditPermission={true}
-          members={membersStub}
-        />
-      </SettingsLayout>
+    <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
+      <TeamMembersSettingsPage
+        team={proTeam}
+        userHasEditPermission={true}
+        members={membersStub}
+      />
 
       <CompVariants />
 
@@ -110,8 +103,8 @@ function Story() {
 
 function CompVariants() {
   return (
-    <div className="border-border border-t py-10">
-      <div className="mx-auto max-w-[1000px] px-4">
+    <div className="mt-20 border-border border-t py-10">
+      <div className="">
         <h2 className="py-4 font-semibold text-3xl"> Invite Variants </h2>
 
         {/* Invite */}

@@ -1,4 +1,4 @@
-import { Box, Flex, Stack } from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
 import type { IconType } from "@react-icons/all-files";
 import type { StaticImageData } from "next/image";
 import { Text } from "tw-components";
@@ -27,7 +27,7 @@ export const ProductNavCard: React.FC<ProductSectionItemProps> = ({
       cursor="default"
     >
       <Stack direction="row" align="center" spacing={3}>
-        <Flex direction="column">
+        <div className="flex flex-col">
           <Text
             fontWeight="bold"
             color={comingSoon ? "whiteAlpha.400" : "white"}
@@ -35,7 +35,7 @@ export const ProductNavCard: React.FC<ProductSectionItemProps> = ({
             {name} {comingSoon && "(coming soon)"}
           </Text>
           <Text color="whiteAlpha.500">{description}</Text>
-        </Flex>
+        </div>
       </Stack>
     </Box>
   );

@@ -42,10 +42,11 @@ type MinimalAccount = Pick<
 
 export function AccountSettingsPageUI(props: {
   account: MinimalAccount;
+  updateAccountImage: (file: File | undefined) => Promise<void>;
 }) {
   return (
     <div className="flex flex-col gap-8">
-      <AccountAvatarFormControl />
+      <AccountAvatarFormControl updateAccountImage={props.updateAccountImage} />
       <AccountNameFormControl name={props.account.name || ""} />
       <AccountEmailFormControl
         email={props.account.email || ""}
@@ -58,16 +59,14 @@ export function AccountSettingsPageUI(props: {
   );
 }
 
-function AccountAvatarFormControl() {
+function AccountAvatarFormControl(props: {
+  updateAccountImage: (file: File | undefined) => Promise<void>;
+}) {
   const [avatar, setAvatar] = useState<File>(); // TODO: prefill with account avatar
 
-  // TODO - implement
   const updateAvatarMutation = useMutation({
     mutationFn: async (_avatar: File | undefined) => {
-      // Fake loading
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      console.log("Updating account image to", _avatar);
-      throw new Error("Not implemented");
+      await props.updateAccountImage(_avatar);
     },
   });
 

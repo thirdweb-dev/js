@@ -37,6 +37,7 @@ import {
 } from "thirdweb/deploys";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
+import { isZkSyncChain } from "thirdweb/utils";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
 import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
 import { addContractToMultiChainRegistry } from "../utils";
@@ -385,6 +386,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         throw new Error("no chain");
       }
 
+      const compilerType = isZkSyncChain(walletChain) ? "zksolc" : "solc";
+
       let _contractURI = "";
 
       if (hasContractURI && params.contractMetadata) {
@@ -449,6 +452,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           deployMetadata: m,
           initializeParams: params.moduleData[m.name],
         })),
+        compilerType,
       });
     },
   });

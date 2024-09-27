@@ -26,13 +26,13 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
         >
           {/* Info */}
           <Flex as="section" direction="column" gap={4}>
-            <Flex direction="column">
+            <div className="flex flex-col">
               <Heading size="title.md">Set Claim Conditions</Heading>
               <Text size="body.md" fontStyle="italic" mt={2}>
                 Control when the {isERC20 ? "tokens" : "NFTs"} get dropped, how
                 much they cost, and more.
               </Text>
-            </Flex>
+            </div>
           </Flex>
 
           {/* Set Claim Conditions */}

@@ -1,6 +1,5 @@
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import {
-  Box,
   Flex,
   FormControl,
   Icon,
@@ -200,13 +199,13 @@ export const SettingsMetadata = ({
         direction="column"
       >
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
-          <Flex direction="column">
+          <div className="flex flex-col">
             <Heading size="title.md">Metadata</Heading>
             <Text size="body.md" fontStyle="italic">
               Settings to organize and distinguish between your different
               contracts.
             </Text>
-          </Flex>
+          </div>
           <Flex gap={4} direction={{ base: "column", md: "row" }}>
             <Flex
               flexShrink={0}
@@ -288,7 +287,7 @@ export const SettingsMetadata = ({
                       ) ||
                       "New URL"}
                   </FormLabel>
-                  <Flex gap={2}>
+                  <div className="flex flex-row gap-2">
                     <Input
                       isDisabled={
                         metadata.isPending || sendTransaction.isPending
@@ -305,11 +304,11 @@ export const SettingsMetadata = ({
                       aria-label="Remove row"
                       onClick={() => remove(index)}
                     />
-                  </Flex>
+                  </div>
                 </FormControl>
               </Flex>
             ))}
-            <Box>
+            <div>
               <Button
                 isDisabled={metadata.isPending || sendTransaction.isPending}
                 type="button"
@@ -321,7 +320,7 @@ export const SettingsMetadata = ({
               >
                 Add URL
               </Button>
-            </Box>
+            </div>
           </Flex>
         </Flex>
 

@@ -130,7 +130,7 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
           <ModalBody as={Flex} flexDir="column" gap={8}>
             <FormControl>
               <Stack>
-                <Flex gap={2}>
+                <div className="flex flex-row gap-2">
                   <Text>Create a private key using:</Text>
                   <Select
                     w="fit-content"
@@ -156,7 +156,7 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
                       </option>
                     ))}
                   </Select>
-                </Flex>
+                </div>
 
                 <CodeBlock
                   fontSize="small"

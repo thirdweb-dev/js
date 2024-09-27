@@ -11,15 +11,16 @@ import { FileInput } from "components/shared/FileInput";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function GeneralSettingsPage(props: {
+export function TeamGeneralSettingsPageUI(props: {
   team: Team;
+  updateTeamImage: (file: File | undefined) => Promise<void>;
 }) {
   const hasPermissionToDelete = false; // TODO
   return (
     <div className="flex flex-col gap-8">
       <TeamNameFormControl team={props.team} />
       <TeamSlugFormControl team={props.team} />
-      <TeamAvatarFormControl />
+      <TeamAvatarFormControl updateTeamImage={props.updateTeamImage} />
       <TeamIdCard team={props.team} />
       <LeaveTeamCard enabled={false} teamName={props.team.name} />
       <DeleteTeamCard
@@ -141,16 +142,14 @@ function TeamSlugFormControl(props: {
   );
 }
 
-function TeamAvatarFormControl() {
+function TeamAvatarFormControl(props: {
+  updateTeamImage: (file: File | undefined) => Promise<void>;
+}) {
   const [teamAvatar, setTeamAvatar] = useState<File>(); // TODO: prefill with team avatar
 
-  // TODO - implement
   const updateTeamAvatarMutation = useMutation({
     mutationFn: async (_avatar: File | undefined) => {
-      // Fake loading
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      console.log("Updating team name to", _avatar);
-      throw new Error("Not implemented");
+      await props.updateTeamImage(_avatar);
     },
   });
 

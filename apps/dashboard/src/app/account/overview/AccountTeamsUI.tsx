@@ -2,6 +2,7 @@
 
 import type { Team } from "@/api/team";
 import type { TeamAccountRole } from "@/api/team-members";
+import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -102,8 +103,8 @@ function TeamRow(props: {
     <div className="flex items-center justify-between gap-2">
       {/* start */}
       <div className="flex items-center gap-4">
-        {/* TODO - render team avatar  */}
-        <div className="size-8 rounded-full border bg-muted" />
+        {/* TODO - set image  */}
+        <GradientAvatar className="size-8" src={""} id={props.team.id} />
 
         <div>
           <div className="flex items-center gap-3">
