@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "app/components/ThirdwebMiniLogo";
+import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import Link from "next/link";
 import {
   SiDiscord,
-  SiGithub,
   SiInstagram,
   SiLinkedin,
   SiReddit,
@@ -35,7 +35,7 @@ export function AppFooter(props: AppFooterProps) {
           <div className="flex flex-row gap-3">
             <Button size="icon" variant="ghost" asChild className="size-9">
               <Link href="https://github.com/thirdweb-dev" target="_blank">
-                <SiGithub className="size-5 text-muted-foreground" />
+                <GithubIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">

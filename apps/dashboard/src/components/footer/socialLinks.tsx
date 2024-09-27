@@ -1,10 +1,10 @@
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
-import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { SiInstagram } from "@react-icons/all-files/si/SiInstagram";
 import { SiLinkedin } from "@react-icons/all-files/si/SiLinkedin";
 import { SiTiktok } from "@react-icons/all-files/si/SiTiktok";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
+import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 
 interface socialLinkInfo {
   link: string;
@@ -55,6 +55,6 @@ export const SOCIALS: socialLinkInfo[] = [
     link: "https://github.com/thirdweb-dev",
     ariaLabel: "GitHub",
     label: "gitHub",
-    icon: <SiGithub fontSize={socialIconSize} />,
+    icon: <GithubIcon fontSize={socialIconSize} className="size-5" />,
   },
 ];
