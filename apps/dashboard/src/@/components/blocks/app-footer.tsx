@@ -1,17 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "app/components/ThirdwebMiniLogo";
+import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
+import { InstagramIcon } from "components/icons/brand-icons/InstagramIcon";
+import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";
+import { RedditIcon } from "components/icons/brand-icons/RedditIcon";
+import { TiktokIcon } from "components/icons/brand-icons/TiktokIcon";
+import { XIcon } from "components/icons/brand-icons/XIcon";
+import { YoutubeIcon } from "components/icons/brand-icons/YoutubeIcon";
 import Link from "next/link";
-import {
-  SiDiscord,
-  SiInstagram,
-  SiLinkedin,
-  SiReddit,
-  SiTiktok,
-  SiX,
-  SiYoutube,
-} from "react-icons/si";
 
 type AppFooterProps = {
   className?: string;
@@ -40,12 +38,12 @@ export function AppFooter(props: AppFooterProps) {
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
               <Link href="https://www.tiktok.com/@thirdweb" target="_blank">
-                <SiTiktok className="size-5 text-muted-foreground" />
+                <TiktokIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
               <Link href="https://www.instagram.com/thirdweb/" target="_blank">
-                <SiInstagram className="size-5 text-muted-foreground" />
+                <InstagramIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
@@ -53,27 +51,27 @@ export function AppFooter(props: AppFooterProps) {
                 href="hhttps://www.linkedin.com/company/third-web/"
                 target="_blank"
               >
-                <SiLinkedin className="size-5 text-muted-foreground" />
+                <LinkedInIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
               <Link href="https://www.youtube.com/@thirdweb_" target="_blank">
-                <SiYoutube className="size-5 text-muted-foreground" />
+                <YoutubeIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
               <Link href="https://discord.gg/thirdweb" target="_blank">
-                <SiDiscord className="size-5 text-muted-foreground" />
+                <DiscordIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
               <Link href="https://www.reddit.com/r/thirdweb/" target="_blank">
-                <SiReddit className="size-5 text-muted-foreground" />
+                <RedditIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
               <Link href="https://x.com/thirdweb" target="_blank">
-                <SiX className="size-5 text-muted-foreground" />
+                <XIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
           </div>
