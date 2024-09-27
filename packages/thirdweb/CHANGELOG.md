@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.59.1
+
+### Patch Changes
+
+- [#4832](https://github.com/thirdweb-dev/js/pull/4832) [`bbe75b0`](https://github.com/thirdweb-dev/js/commit/bbe75b0bc8ef989e94066eaeaecd36c26921d60d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes WC connections with wallets that have limited chain support
+
+- [#4815](https://github.com/thirdweb-dev/js/pull/4815) [`d0616c4`](https://github.com/thirdweb-dev/js/commit/d0616c4486b62d8c39e496cb61698a1497f359d6) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add cronos zkevm to isZkSyncChain check
+
+- [#4823](https://github.com/thirdweb-dev/js/pull/4823) [`21b032d`](https://github.com/thirdweb-dev/js/commit/21b032d1b845276817c2f8ada5566f4719a41ad0) Thanks [@edwardysun](https://github.com/edwardysun)! - Remove unnecessary text in UI
+
 ## 5.59.0
 
 ### Minor Changes
