@@ -109,7 +109,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
           });
         })}
       >
-        <Stack>
+        <div className="flex flex-col gap-2">
           <Stack
             spacing={6}
             w="100%"
@@ -167,7 +167,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
           >
             Airdrop
           </TransactionButton>
-        </Stack>
+        </div>
       </form>
     </Stack>
   );

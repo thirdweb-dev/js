@@ -316,7 +316,7 @@ const ModalBodyInputData = ({
           <FormControl>
             <FormLabel>Processed Data</FormLabel>
 
-            <Stack>
+            <div className="flex flex-col gap-2">
               <Checkbox
                 {...form.register("processEventLogs")}
                 checked={form.getValues("processEventLogs")}
@@ -346,7 +346,7 @@ const ModalBodyInputData = ({
                       }
                     }}
                   >
-                    <Stack>
+                    <div className="flex flex-col gap-2">
                       <Radio value="false">
                         <Text>All events</Text>
                       </Radio>
@@ -368,7 +368,7 @@ const ModalBodyInputData = ({
                           }
                         />
                       </Collapse>
-                    </Stack>
+                    </div>
                   </RadioGroup>
                 </Stack>
               </Collapse>
@@ -402,7 +402,7 @@ const ModalBodyInputData = ({
                       }
                     }}
                   >
-                    <Stack>
+                    <div className="flex flex-col gap-2">
                       <Radio value="false">
                         <Text>All functions</Text>
                       </Radio>
@@ -424,11 +424,11 @@ const ModalBodyInputData = ({
                           }
                         />
                       </Collapse>
-                    </Stack>
+                    </div>
                   </RadioGroup>
                 </Stack>
               </Collapse>
-            </Stack>
+            </div>
           </FormControl>
         </Stack>
       </ModalBody>

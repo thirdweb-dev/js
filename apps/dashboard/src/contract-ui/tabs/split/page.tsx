@@ -188,7 +188,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
           </Text>
         </Flex>
 
-        <Stack>
+        <div className="flex flex-col gap-2">
           <Heading size="label.lg" mb="8px">
             Split Recipients
           </Heading>
@@ -208,7 +208,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
               </Text>
             </Card>
           ))}
-        </Stack>
+        </div>
       </Stack>
     </Flex>
   );

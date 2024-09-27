@@ -137,14 +137,14 @@ export const TransactionTimeline = ({
               <StepStatus complete={<FiCheck />} active={<FiCheck />} />
             </StepIndicator>
             <Flex justify="space-between" w="full" mt={-1}>
-              <Stack>
+              <div className="flex flex-col gap-2">
                 {isFilled ? (
                   <Text>{step.step}</Text>
                 ) : (
                   <Text color="gray.600">{step.step}</Text>
                 )}
                 {step.cta}
-              </Stack>
+              </div>
               {step.date && (
                 <Text fontSize="small">
                   {prettyPrintTimestamp(step.date, index === 0)}

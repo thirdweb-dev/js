@@ -49,7 +49,7 @@ export const NewsletterSection = () => {
         >
           <Stack direction="row" spacing={5} align="center">
             <Icon boxSize={8} color="white" as={MdMarkEmailRead} />
-            <Stack>
+            <div className="flex flex-col gap-2">
               <Text color="white" size="label.lg">
                 Sign up for our newsletter
               </Text>
@@ -57,7 +57,7 @@ export const NewsletterSection = () => {
                 Join 70,000+ builders and stay up to date with our latest
                 updates and news.
               </Text>
-            </Stack>
+            </div>
           </Stack>
 
           <form onSubmit={(e) => e.preventDefault()}>
