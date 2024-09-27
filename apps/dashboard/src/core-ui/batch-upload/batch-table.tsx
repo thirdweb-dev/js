@@ -1,3 +1,4 @@
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   Box,
   type BoxProps,
@@ -28,7 +29,6 @@ import {
 import { type Column, usePagination, useTable } from "react-table";
 import type { NFTInput } from "thirdweb/utils";
 import { CodeBlock, Text } from "tw-components";
-import { parseDescription } from "utils/parseDescription";
 
 const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
   const img = useImageFileOrUrl(
@@ -102,7 +102,11 @@ export const BatchTable: React.FC<BatchTableProps> = ({
       { Header: "Name", accessor: (row) => row.name },
       {
         Header: "Description",
-        accessor: (row) => parseDescription(row.description),
+        accessor: (row) => (
+          <ToolTipLabel label={row.description}>
+            <p className="whitespace-pre-wrap">{row.description}</p>
+          </ToolTipLabel>
+        ),
       },
       {
         Header: "Attributes",
