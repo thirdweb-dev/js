@@ -43,9 +43,9 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
           )}
         >
           <Checkbox
-            checked={ecosystem.authOptions.includes(option)}
+            checked={ecosystem.authOptions?.includes(option)}
             onClick={() => {
-              if (ecosystem.authOptions.includes(option)) {
+              if (ecosystem.authOptions?.includes(option)) {
                 setMessageToConfirm({
                   title: `Are you sure you want to remove ${option.slice(0, 1).toUpperCase() + option.slice(1)} as an authentication option for this ecosystem?`,
                   description:
