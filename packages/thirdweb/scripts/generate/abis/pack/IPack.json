@@ -1,0 +1,13 @@
+[
+  "event PackCreated(uint256 indexed packId, address recipient, uint256 totalPacksCreated)",
+  "event PackOpened(uint256 indexed packId, address indexed opener, uint256 numOfPacksOpened, (address assetContract, uint8 tokenType, uint256 tokenId, uint256 totalAmount)[] rewardUnitsDistributed)",
+  "event PackUpdated(uint256 indexed packId, address recipient, uint256 totalPacksCreated)",
+  "function createPack((address assetContract, uint8 tokenType, uint256 tokenId, uint256 totalAmount)[] contents, uint256[] numOfRewardUnits, string packUri, uint128 openStartTimestamp, uint128 amountDistributedPerOpen, address recipient) payable returns (uint256 packId, uint256 packTotalSupply)",
+  "function openPack(uint256 packId, uint256 amountToOpen) returns ((address assetContract, uint8 tokenType, uint256 tokenId, uint256 totalAmount)[])",
+  "function addPackContents(uint256 _packId, (address assetContract, uint8 tokenType, uint256 tokenId, uint256 totalAmount)[] _contents, uint256[] _numOfRewardUnits, address _recipient) payable returns (uint256 packTotalSupply, uint256 newSupplyAdded)",
+  "function getPackContents(uint256 _packId) view returns ((address assetContract, uint8 tokenType, uint256 tokenId, uint256 totalAmount)[] contents, uint256[] perUnitAmounts)",
+  "function getTokenCountOfBundle(uint256 _bundleId) view returns (uint256)",
+  "function getTokenOfBundle(uint256 _bundleId, uint256 index) view returns ((address assetContract, uint8 tokenType, uint256 tokenId, uint256 totalAmount))",
+  "function getUriOfBundle(uint256 _bundleId) view returns (string)",
+  "function canUpdatePack(uint256 _key) view returns (bool)"
+]

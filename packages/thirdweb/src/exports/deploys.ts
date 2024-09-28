@@ -48,3 +48,9 @@ export {
 } from "../contract/deployment/deploy-with-abi.js";
 export { computePublishedContractAddress } from "../utils/any-evm/compute-published-contract-address.js";
 export { getRequiredTransactions } from "../extensions/prebuilts/get-required-transactions.js";
+
+export {
+  type PackContractParams,
+  type DeployPackContractOptions,
+  deployPackContract,
+} from "../extensions/prebuilts/deploy-pack.js";
