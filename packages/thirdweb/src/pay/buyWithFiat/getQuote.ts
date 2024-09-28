@@ -237,6 +237,13 @@ export type BuyWithFiatQuote = {
    *
    */
   onRampLink: string;
+
+  /**
+   * If enabled, this onramp transaction is eligible for "single-step execution",
+   * in which an entire intent is executed end-to-end from the source token/chain
+   * to the desired destination token or transaction.
+   */
+  isSingleStepExecutionEnabled?: boolean;
 };
 
 /**

@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import { trackPayEvent } from "../../../../../../analytics/track.js";
 import type { Chain } from "../../../../../../chains/types.js";
+import { getCachedChain } from "../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import type { GetBuyWithCryptoQuoteParams } from "../../../../../../pay/buyWithCrypto/getQuote.js";
@@ -58,6 +59,7 @@ import { WalletSelectorButton } from "./WalletSelectorButton.js";
 import { CurrencySelection } from "./fiat/CurrencySelection.js";
 import { FiatFlow } from "./fiat/FiatFlow.js";
 import type { CurrencyMeta } from "./fiat/currencies.js";
+import { useDeploySmartWallet } from "./fiat/useDeploySmartWallet.js";
 import type { SelectedScreen } from "./main/types.js";
 import {
   type PaymentMethods,
@@ -1347,6 +1349,7 @@ function FiatScreenContent(props: {
     defaultRecipientAddress || props.payer.account.address;
   const { drawerRef, drawerOverlayRef, isOpen, setIsOpen } = useDrawer();
   const [drawerScreen, setDrawerScreen] = useState<"fees">("fees");
+  const { deploySmartWallet } = useDeploySmartWallet(props.client);
 
   const buyWithFiatOptions = props.payOptions.buyWithFiat;
 
@@ -1369,17 +1372,55 @@ function FiatScreenContent(props: {
       : undefined,
   );
 
-  function handleSubmit() {
+  const executeSmartWalletDeploy = async () => {
     if (!fiatQuoteQuery.data) {
       return;
     }
+
+    try {
+      const chain = getCachedChain(
+        fiatQuoteQuery.data.onRampToken.token.chainId,
+      );
+      const result = await deploySmartWallet({
+        chain,
+        intentId: fiatQuoteQuery.data.intentId,
+        onRampTokenMeta: {
+          tokenAddress: fiatQuoteQuery.data.onRampToken.token.tokenAddress,
+        },
+        onRampTokenAmount: fiatQuoteQuery.data.estimatedToAmountMinWei,
+      });
+      console.log("result is ", result);
+      console.log("Smart wallet deployed:", result);
+
+      return {
+        onRampLink: result.onRampLink,
+      };
+    } catch (err) {
+      console.error("Failed to deploy smart wallet:", err);
+      // Continue
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!fiatQuoteQuery.data) {
+      return;
+    }
+
+    const smartWalletDeployData = await executeSmartWalletDeploy();
+    // const smartWalletDeployData = fiatQuoteQuery.data
+    //   .isSingleStepExecutionEnabled
+    //   ? await executeSmartWalletDeploy()
+    //   : undefined;
+
+    const onRampLink =
+      smartWalletDeployData?.onRampLink || fiatQuoteQuery.data.onRampLink;
 
     const hasTwoSteps = isSwapRequiredPostOnramp(fiatQuoteQuery.data);
     let openedWindow: Window | null = null;
 
     if (!hasTwoSteps) {
       openedWindow = openOnrampPopup(
-        fiatQuoteQuery.data.onRampLink,
+        onRampLink,
         typeof props.theme === "string" ? props.theme : props.theme.type,
       );
 
@@ -1394,7 +1435,7 @@ function FiatScreenContent(props: {
       quote: fiatQuoteQuery.data,
       openedWindow,
     });
-  }
+  };
 
   function showFees() {
     if (!fiatQuoteQuery.data) {
