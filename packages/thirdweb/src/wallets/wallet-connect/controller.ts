@@ -119,7 +119,11 @@ export async function connectWC(
     }
   }
 
-  const { rpcMap, chainsToRequest } = getChainsToRequest({
+  const {
+    rpcMap,
+    requiredChain,
+    optionalChains: chainsToRequest,
+  } = getChainsToRequest({
     client: options.client,
     chain: chainToRequest,
     optionalChains: optionalChains,
@@ -131,7 +135,7 @@ export async function connectWC(
         ? { pairingTopic: wcOptions?.pairingTopic }
         : {}),
       optionalChains: chainsToRequest,
-      chains: chainToRequest ? [chainToRequest.id] : undefined,
+      chains: requiredChain ? [requiredChain.id] : undefined,
       rpcMap: rpcMap,
     });
   }
@@ -245,7 +249,11 @@ async function initProvider(
     }
   }
 
-  const { rpcMap, chainsToRequest } = getChainsToRequest({
+  const {
+    rpcMap,
+    requiredChain,
+    optionalChains: chainsToRequest,
+  } = getChainsToRequest({
     client: options.client,
     chain: chainToRequest,
     optionalChains: optionalChains,
@@ -261,8 +269,8 @@ async function initProvider(
     projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
     optionalMethods: OPTIONAL_METHODS,
     optionalEvents: OPTIONAL_EVENTS,
-    optionalChains: chainsToRequest || [1],
-    chains: chainToRequest ? [chainToRequest.id] : undefined,
+    optionalChains: chainsToRequest,
+    chains: requiredChain ? [requiredChain.id] : undefined,
     metadata: {
       name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
       description:
@@ -525,7 +533,11 @@ function getChainsToRequest(options: {
   chain?: Chain;
   optionalChains?: Chain[];
   client: ThirdwebClient;
-}) {
+}): {
+  rpcMap: Record<number, string>;
+  requiredChain: Chain | undefined;
+  optionalChains: ArrayOneOrMore<number>;
+} {
   const rpcMap: Record<number, string> = {};
 
   if (options.chain) {
@@ -545,17 +557,17 @@ function getChainsToRequest(options: {
     });
   }
 
-  const chainsToRequest: ArrayOneOrMore<number> | undefined = options.chain
-    ? [options.chain.id]
-    : undefined;
-
   if (!options.chain && optionalChains.length === 0) {
     rpcMap[1] = getCachedChain(1).rpc;
   }
 
   return {
     rpcMap,
-    chainsToRequest,
+    requiredChain: options.chain ? options.chain : undefined,
+    optionalChains:
+      optionalChains.length > 0
+        ? (optionalChains.map((x) => x.id) as ArrayOneOrMore<number>)
+        : [1],
   };
 }
 
