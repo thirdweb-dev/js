@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
+import { TEST_ACCOUNT_B } from "~test/test-wallets.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import {
   type ThirdwebContract,
@@ -15,7 +15,7 @@ import { setClaimConditions } from "../drops/write/setClaimConditions.js";
 import { lazyMint } from "../write/lazyMint.js";
 import { getTotalClaimedSupply } from "./getTotalClaimedSupply.js";
 
-const account = TEST_ACCOUNT_A;
+const account = TEST_ACCOUNT_B;
 let contract: ThirdwebContract;
 
 describe.runIf(process.env.TW_SECRET_KEY)(

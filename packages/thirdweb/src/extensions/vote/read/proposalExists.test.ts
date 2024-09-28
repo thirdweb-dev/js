@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
+import { TEST_ACCOUNT_C } from "~test/test-wallets.js";
 import { getContract } from "../../../contract/contract.js";
 import { delegate } from "../../../extensions/erc20/__generated__/IVotes/write/delegate.js";
 import { mintTo } from "../../../extensions/erc20/write/mintTo.js";
@@ -13,7 +13,7 @@ import { propose } from "../__generated__/Vote/write/propose.js";
 import { getAll } from "./getAll.js";
 import { proposalExists } from "./proposalExists.js";
 
-const account = TEST_ACCOUNT_A;
+const account = TEST_ACCOUNT_C;
 const client = TEST_CLIENT;
 const chain = ANVIL_CHAIN;
 
@@ -22,7 +22,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("proposal exists", () => {
     const tokenAddress = await deployERC20Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
-      account: TEST_ACCOUNT_A,
+      account,
       type: "TokenERC20",
       params: {
         name: "Token",
@@ -30,7 +30,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("proposal exists", () => {
       },
     });
     const address = await deployVoteContract({
-      account: TEST_ACCOUNT_A,
+      account,
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
       params: {
@@ -57,7 +57,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("proposal exists", () => {
     const tokenAddress = await deployERC20Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
-      account: TEST_ACCOUNT_A,
+      account,
       type: "TokenERC20",
       params: {
         name: "Token",
@@ -65,7 +65,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("proposal exists", () => {
       },
     });
     const address = await deployVoteContract({
-      account: TEST_ACCOUNT_A,
+      account,
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
       params: {

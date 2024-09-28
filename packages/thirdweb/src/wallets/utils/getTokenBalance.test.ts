@@ -2,17 +2,19 @@ import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
+import { TEST_ACCOUNT_D } from "~test/test-wallets.js";
 import { getContract } from "../../contract/contract.js";
 import { mintTo } from "../../extensions/erc20/write/mintTo.js";
 import { deployERC20Contract } from "../../extensions/prebuilts/deploy-erc20.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { getTokenBalance } from "./getTokenBalance.js";
 
+const account = TEST_ACCOUNT_D;
+
 describe.runIf(process.env.TW_SECRET_KEY)("getTokenBalance", () => {
   it("should work for native token", async () => {
     const result = await getTokenBalance({
-      account: TEST_ACCOUNT_A,
+      account,
       client: TEST_CLIENT,
       chain: FORKED_ETHEREUM_CHAIN,
     });
@@ -30,7 +32,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("getTokenBalance", () => {
     const erc20Address = await deployERC20Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
-      account: TEST_ACCOUNT_A,
+      account,
       type: "TokenERC20",
       params: {
         name: "",
@@ -48,18 +50,18 @@ describe.runIf(process.env.TW_SECRET_KEY)("getTokenBalance", () => {
     // Mint some tokens
     const tx = mintTo({
       contract: erc20Contract,
-      to: TEST_ACCOUNT_A.address,
+      to: account.address,
       amount,
     });
 
     await sendAndConfirmTransaction({
       transaction: tx,
-      account: TEST_ACCOUNT_A,
+      account,
     });
 
     const result = await getTokenBalance({
       client: TEST_CLIENT,
-      account: TEST_ACCOUNT_A,
+      account,
       tokenAddress: erc20Address,
       chain: ANVIL_CHAIN,
     });

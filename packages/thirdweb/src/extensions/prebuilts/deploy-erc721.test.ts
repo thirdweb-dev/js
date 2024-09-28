@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
+import { TEST_ACCOUNT_B } from "../../../test/src/test-wallets.js";
 import { getContract } from "../../contract/contract.js";
 import { name } from "../common/read/name.js";
 import { deployERC721Contract } from "./deploy-erc721.js";
+
+const account = TEST_ACCOUNT_B;
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
@@ -13,7 +15,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
     const address = await deployERC721Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
-      account: TEST_ACCOUNT_A,
+      account,
       type: "DropERC721",
       params: {
         name: "NFTDrop",
@@ -34,7 +36,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
     const address = await deployERC721Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
-      account: TEST_ACCOUNT_A,
+      account,
       type: "TokenERC721",
       params: {
         name: "NFTCollection",
@@ -55,7 +57,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
     const address = await deployERC721Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
-      account: TEST_ACCOUNT_A,
+      account,
       type: "OpenEditionERC721",
       params: {
         name: "OE",
