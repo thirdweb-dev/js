@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.59.2
+
+### Patch Changes
+
+- [#4839](https://github.com/thirdweb-dev/js/pull/4839) [`fc56142`](https://github.com/thirdweb-dev/js/commit/fc561428807899f165ac2e9bd2145beb7a218f8c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix createAndSignUserOp with multiple transactions
+
+- [#4838](https://github.com/thirdweb-dev/js/pull/4838) [`842baa0`](https://github.com/thirdweb-dev/js/commit/842baa051353ea5d4f4f70098289704856a34fa8) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Ensure optional chains are passed to wallet connect request
+
 ## 5.59.1
 
 ### Patch Changes
