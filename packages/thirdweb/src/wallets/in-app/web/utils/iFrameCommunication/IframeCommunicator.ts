@@ -1,3 +1,5 @@
+import { sleep } from "../../../../../utils/sleep.js";
+
 type IFrameCommunicatorProps = {
   link: string;
   baseUrl: string;
@@ -5,12 +7,6 @@ type IFrameCommunicatorProps = {
   container?: HTMLElement;
   onIframeInitialize?: () => void;
 };
-
-function sleep(seconds: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, seconds * 1000);
-  });
-}
 
 const iframeBaseStyle = {
   height: "100%",
@@ -152,12 +148,12 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     showIframe?: boolean;
   }) {
     while (!isIframeLoaded.get(this.iframe.src)) {
-      await sleep(this.POLLING_INTERVAL_SECONDS);
+      await sleep(this.POLLING_INTERVAL_SECONDS * 1000);
     }
     if (showIframe) {
       this.iframe.style.display = "block";
       // magic number to let the display render before performing the animation of the modal in
-      await sleep(0.005);
+      await sleep(0.005 * 1000);
     }
 
     const channel = new MessageChannel();
@@ -168,7 +164,7 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
         channel.port1.close();
         if (showIframe) {
           // magic number to let modal fade out before hiding it
-          await sleep(0.1);
+          await sleep(0.1 * 1000);
           this.iframe.style.display = "none";
         }
         if (!data.success) {

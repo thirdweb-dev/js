@@ -20,6 +20,7 @@ import { sendBatchTransaction } from "../../transaction/actions/send-batch-trans
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
 import { getAddress } from "../../utils/address.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
+import { sleep } from "../../utils/sleep.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
 import { ENTRYPOINT_ADDRESS_v0_7 } from "./lib/constants.js";
@@ -235,15 +236,17 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
           }),
           account: newSmartAccount,
         }),
-        sendAndConfirmTransaction({
-          transaction: claimTo({
-            contract,
-            quantity: 1n,
-            to: newSmartAccount.address,
-            tokenId: 0n,
+        sleep(1000).then(() =>
+          sendAndConfirmTransaction({
+            transaction: claimTo({
+              contract,
+              quantity: 1n,
+              to: newSmartAccount.address,
+              tokenId: 0n,
+            }),
+            account: newSmartAccount,
           }),
-          account: newSmartAccount,
-        }),
+        ),
       ]);
       expect(txs.length).toEqual(2);
       expect(txs.every((t) => t.transactionHash.length === 66)).toBe(true);

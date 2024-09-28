@@ -1,5 +1,6 @@
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
+import { sleep } from "../utils/sleep.js";
 import { eth_blockNumber } from "./actions/eth_blockNumber.js";
 import { getRpcClient } from "./rpc.js";
 
@@ -136,14 +137,6 @@ function createBlockNumberPoller(
       }
     };
   };
-}
-
-/**
- * TODO: document
- * @internal
- */
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 const existingPollers = new Map<
