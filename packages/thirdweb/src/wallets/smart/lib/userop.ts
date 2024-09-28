@@ -683,6 +683,7 @@ export async function createAndSignUserOp(options: {
     const tx = options.transactions[0] as PreparedTransaction;
     const serializedTx = await toSerializableTransaction({
       transaction: tx,
+      from: accountAddress,
     });
     executeTx = prepareExecute({
       accountContract,
@@ -694,6 +695,7 @@ export async function createAndSignUserOp(options: {
       options.transactions.map((tx) =>
         toSerializableTransaction({
           transaction: tx,
+          from: accountAddress,
         }),
       ),
     );
