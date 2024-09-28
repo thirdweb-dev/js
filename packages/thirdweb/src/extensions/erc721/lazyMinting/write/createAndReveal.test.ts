@@ -1,5 +1,6 @@
 import { beforeAll, describe, it } from "vitest";
 import { expect } from "vitest";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { ANVIL_CHAIN } from "../../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../../../test/src/test-wallets.js";
@@ -39,8 +40,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("createAndReveal", () => {
       type: "DropERC721",
       params: {
         name: "Test NFT",
-        description: "Test NFT Description",
-        contractURI: "",
+        contractURI: TEST_CONTRACT_URI,
       },
     });
     contract = getContract({
