@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
+import { TEST_ACCOUNT_D } from "~test/test-wallets.js";
 import { isAddress } from "../../utils/address.js";
 import { deploySplitContract } from "./deploy-split.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("deploy-split contract", () => {
   it("should deploy Split contract", async () => {
     const address = await deploySplitContract({
-      account: TEST_ACCOUNT_A,
+      account: TEST_ACCOUNT_D,
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
       params: {

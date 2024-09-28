@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
+import { TEST_ACCOUNT_C } from "~test/test-wallets.js";
 import { getContract } from "../../../contract/contract.js";
 import { deploySplitContract } from "../../../extensions/prebuilts/deploy-split.js";
 import { getAllRecipientsAddresses } from "./getAllRecipientsAddresses.js";
@@ -17,7 +17,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("getAllRecipientsAddresses", () => {
       "0xA6f11e47dE28B3dB934e945daeb6F538E9019694",
     ];
     const address = await deploySplitContract({
-      account: TEST_ACCOUNT_A,
+      account: TEST_ACCOUNT_C,
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
       params: {

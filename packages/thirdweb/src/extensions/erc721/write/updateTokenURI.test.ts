@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
+import { TEST_ACCOUNT_C } from "~test/test-wallets.js";
 import { getContract } from "../../../contract/contract.js";
 import { deployERC721Contract } from "../../../extensions/prebuilts/deploy-erc721.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
@@ -12,7 +12,7 @@ import { updateTokenURI } from "./updateTokenURI.js";
 
 const client = TEST_CLIENT;
 const chain = ANVIL_CHAIN;
-const account = TEST_ACCOUNT_A;
+const account = TEST_ACCOUNT_C;
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "NFTCollection: Update token uri",
