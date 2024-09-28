@@ -12,8 +12,8 @@ import type { SocialProfile } from "./types.js";
  *
  * @example
  * ```ts
- * import { getProfiles } from "thirdweb/social";
- * const profiles = await getProfiles({
+ * import { getSocialProfiles } from "thirdweb/social";
+ * const profiles = await getSocialProfiles({
  *   address: "0x...",
  *   client,
  * });

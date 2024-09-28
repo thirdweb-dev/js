@@ -1,9 +1,8 @@
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
-import { SiReact } from "@react-icons/all-files/si/SiReact";
-import { SiTypescript } from "@react-icons/all-files/si/SiTypescript";
-import { SiUnity } from "@react-icons/all-files/si/SiUnity";
-import type { IconType } from "react-icons/lib";
+import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
+import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
+import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 
 export function SupportedPlatformLink(props: {
   platform: "React" | "React Native" | "Unity" | "TypeScript";
@@ -11,11 +10,11 @@ export function SupportedPlatformLink(props: {
   trackingCategory: string;
   className?: string;
 }) {
-  let icon: IconType = SiReact;
+  let icon = ReactIcon;
   if (props.platform === "Unity") {
-    icon = SiUnity;
+    icon = UnityIcon;
   } else if (props.platform === "TypeScript") {
-    icon = SiTypescript;
+    icon = TypeScriptIcon;
   }
 
   return (

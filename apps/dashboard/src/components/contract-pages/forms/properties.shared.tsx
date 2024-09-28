@@ -69,7 +69,7 @@ export const PropertiesFormControl = <
   }, [fields, append]);
 
   return (
-    <Stack spacing={4}>
+    <div className="flex flex-col gap-4">
       <Flex justify="space-between" align="center" direction="row">
         <FormLabel m={0}>Attributes</FormLabel>
         <Button
@@ -93,7 +93,7 @@ export const PropertiesFormControl = <
         const isInvalid = !!(keyError || valueError);
 
         return (
-          <Stack key={field.id} align="center" direction="row">
+          <div className="flex flex-row items-center gap-2" key={field.id}>
             <FormControl
               isInvalid={isInvalid}
               as={Stack}
@@ -177,10 +177,10 @@ export const PropertiesFormControl = <
               size="xs"
               icon={<Icon as={FiX} />}
             />
-          </Stack>
+          </div>
         );
       })}
-      <Stack direction="row">
+      <div className="flex flex-row gap-2">
         <Button
           leftIcon={<Icon as={FiPlus} />}
           colorScheme="purple"
@@ -192,7 +192,7 @@ export const PropertiesFormControl = <
         >
           Add Row
         </Button>
-      </Stack>
-    </Stack>
+      </div>
+    </div>
   );
 };

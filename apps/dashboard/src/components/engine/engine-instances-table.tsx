@@ -21,7 +21,7 @@ import {
   useEngineRemoveCloudHosted,
   useEngineRemoveFromDashboard,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { FormControl, Radio, RadioGroup, Stack } from "@chakra-ui/react";
+import { FormControl, Radio, RadioGroup } from "@chakra-ui/react";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
@@ -440,7 +440,7 @@ function CancelSubscriptionModalContent(props: {
             Please share any feedback to help us improve
           </FormLabel>
           <RadioGroup>
-            <Stack>
+            <div className="flex flex-col gap-2">
               <Radio
                 value="USING_SELF_HOSTED"
                 {...form.register("reason", { required: true })}
@@ -465,7 +465,7 @@ function CancelSubscriptionModalContent(props: {
               >
                 <span className="text-sm"> Other </span>
               </Radio>
-            </Stack>
+            </div>
           </RadioGroup>
         </FormControl>
 

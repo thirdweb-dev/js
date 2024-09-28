@@ -1,6 +1,5 @@
 import {
   Skeleton,
-  Stack,
   Stat,
   StatHelpText,
   StatLabel,
@@ -25,7 +24,7 @@ export const TokenSupplyLayout: React.FC<TokenSupplyLayoutProps> = ({
   ownedBalance,
 }) => {
   return (
-    <Stack spacing={{ base: 3, md: 6 }} direction="row">
+    <div className="flex flex-row gap-3 md:gap-6">
       <Card as={Stat}>
         <StatLabel mb={{ base: 1, md: 0 }}>Total Supply</StatLabel>
         <Skeleton isLoaded={isTokenSupplySuccess}>
@@ -56,6 +55,6 @@ export const TokenSupplyLayout: React.FC<TokenSupplyLayoutProps> = ({
           <StatNumber>{tokenSupply?.decimals}</StatNumber>
         </Skeleton>
       </Card>
-    </Stack>
+    </div>
   );
 };

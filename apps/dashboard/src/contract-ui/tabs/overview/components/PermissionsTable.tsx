@@ -4,7 +4,6 @@ import {
   Icon,
   List,
   SimpleGrid,
-  Stack,
   Tag,
   Tooltip,
 } from "@chakra-ui/react";
@@ -166,7 +165,7 @@ const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
         _last={{ borderBottomWidth: 0 }}
       >
         <Box gridColumn="span 2">
-          <Stack direction="row" align="center" spacing={3}>
+          <div className="flex flex-row items-center gap-3">
             <Tooltip
               p={0}
               bg="transparent"
@@ -191,7 +190,7 @@ const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
             <Text fontFamily="mono" noOfLines={1}>
               {shortenIfAddress(data.member)}
             </Text>
-          </Stack>
+          </div>
         </Box>
 
         <Box gridColumn="span 1" />

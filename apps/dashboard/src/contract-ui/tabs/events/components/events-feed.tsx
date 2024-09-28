@@ -23,9 +23,9 @@ import {
   Switch,
   Tooltip,
 } from "@chakra-ui/react";
-import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
+import { CircleHelpIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { Fragment, useMemo, useState } from "react";
@@ -315,7 +315,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
       </AccordionButton>
       <AccordionPanel>
         <Card>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <Heading size="subtitle.sm" fontWeight="bold">
               Transaction Data
             </Heading>
@@ -365,7 +365,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                 {arr.length - 1 === idx ? null : <Divider />}
               </Fragment>
             ))}
-          </Stack>
+          </div>
         </Card>
       </AccordionPanel>
     </AccordionItem>
@@ -398,7 +398,7 @@ const TransactionData: React.FC<TransactionDataProps> = ({
             }
           >
             <div className="flex items-center justify-center">
-              <Icon as={AiOutlineQuestionCircle} color="gray.600" />
+              <CircleHelpIcon className="size-4 text-gray-600" />
             </div>
           </Tooltip>
 

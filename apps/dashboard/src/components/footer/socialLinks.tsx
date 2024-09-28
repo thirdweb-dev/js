@@ -1,10 +1,10 @@
-import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
-import { SiGithub } from "@react-icons/all-files/si/SiGithub";
-import { SiInstagram } from "@react-icons/all-files/si/SiInstagram";
-import { SiLinkedin } from "@react-icons/all-files/si/SiLinkedin";
-import { SiTiktok } from "@react-icons/all-files/si/SiTiktok";
-import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
-import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
+import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
+import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
+import { InstagramIcon } from "components/icons/brand-icons/InstagramIcon";
+import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";
+import { TiktokIcon } from "components/icons/brand-icons/TiktokIcon";
+import { XIcon } from "components/icons/brand-icons/XIcon";
+import { YoutubeIcon } from "components/icons/brand-icons/YoutubeIcon";
 
 interface socialLinkInfo {
   link: string;
@@ -13,16 +13,14 @@ interface socialLinkInfo {
   label?: string;
 }
 
-const socialIconSize = "1.25rem";
-
 export const SOCIALS: socialLinkInfo[] = [
   {
     link: "https://twitter.com/thirdweb",
-    icon: <SiTwitter fontSize={socialIconSize} />,
+    icon: <XIcon className="size-5" />,
     ariaLabel: "Twitter",
   },
   {
-    icon: <SiDiscord fontSize={socialIconSize} />,
+    icon: <DiscordIcon className="size-5" />,
     ariaLabel: "Discord",
     label: "discord",
     link: "https://discord.gg/thirdweb",
@@ -31,30 +29,30 @@ export const SOCIALS: socialLinkInfo[] = [
     link: "https://www.youtube.com/channel/UCdzMx7Zhy5va5End1-XJFbA",
     ariaLabel: "YouTube",
     label: "youtube",
-    icon: <SiYoutube fontSize={socialIconSize} />,
+    icon: <YoutubeIcon className="size-5" />,
   },
   {
     link: "https://www.linkedin.com/company/third-web/",
     ariaLabel: "LinkedIn",
     label: "linkedin",
-    icon: <SiLinkedin fontSize={socialIconSize} />,
+    icon: <LinkedInIcon className="size-5" />,
   },
   {
     link: "https://www.instagram.com/thirdweb/",
     ariaLabel: "Instagram",
     label: "instagram",
-    icon: <SiInstagram fontSize={socialIconSize} />,
+    icon: <InstagramIcon className="size-5" />,
   },
   {
     link: "https://www.tiktok.com/@thirdweb",
     ariaLabel: "TikTok",
     label: "tiktok",
-    icon: <SiTiktok fontSize={socialIconSize} />,
+    icon: <TiktokIcon className="size-5" />,
   },
   {
     link: "https://github.com/thirdweb-dev",
     ariaLabel: "GitHub",
     label: "gitHub",
-    icon: <SiGithub fontSize={socialIconSize} />,
+    icon: <GithubIcon className="size-5" />,
   },
 ];

@@ -76,7 +76,9 @@ export async function download(options: DownloadOptions) {
     keepalive: options.client.config?.storage?.fetch?.keepalive,
     headers: options.client.config?.storage?.fetch?.headers,
     requestTimeoutMs:
-      options.client.config?.storage?.fetch?.requestTimeoutMs ?? 60000,
+      options.requestTimeoutMs ??
+      options.client.config?.storage?.fetch?.requestTimeoutMs ??
+      60000,
   });
 
   if (!res.ok) {

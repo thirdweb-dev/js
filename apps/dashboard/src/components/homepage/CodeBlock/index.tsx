@@ -8,12 +8,11 @@ import {
   useColorModeValue,
   useTheme,
 } from "@chakra-ui/react";
-import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { useClipboard } from "hooks/useClipboard";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { Highlight, themes } from "prism-react-renderer";
 import { useEffect, useRef, useState } from "react";
 import { BsLightning } from "react-icons/bs";
-import { FiCopy } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
 import { Text } from "tw-components";
 
@@ -162,10 +161,11 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
               colorScheme="gray"
               size="sm"
               icon={
-                <Icon
-                  as={hasCopied ? IoMdCheckmark : FiCopy}
-                  fill={hasCopied ? "green.500" : undefined}
-                />
+                hasCopied ? (
+                  <CheckIcon className="size-4 text-green-500" />
+                ) : (
+                  <CopyIcon className="size-4" />
+                )
               }
             />
           )}

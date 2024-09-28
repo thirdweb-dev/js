@@ -259,9 +259,6 @@ async function initProvider(
     optionalChains: optionalChains,
   });
 
-  console.log("rpcMap", rpcMap);
-  console.log("chainsToRequest", chainsToRequest);
-
   const provider = await EthereumProvider.init({
     showQrModal:
       wcOptions?.showQrModal === undefined
@@ -512,7 +509,10 @@ async function switchChainWC(
  * Set the requested chains to the storage.
  * @internal
  */
-function setRequestedChainsIds(chains: number[], storage: AsyncStorage) {
+function setRequestedChainsIds(
+  chains: number[] | undefined,
+  storage: AsyncStorage,
+) {
   storage?.setItem(storageKeys.requestedChains, JSON.stringify(chains));
 }
 

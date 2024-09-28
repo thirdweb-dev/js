@@ -16,7 +16,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -178,7 +177,7 @@ const EditModal = ({
         <ModalHeader>Update Admin</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <FormControl>
               <FormLabel>Wallet Address</FormLabel>
               <Text>{admin.walletAddress}</Text>
@@ -192,7 +191,7 @@ const EditModal = ({
                 placeholder="Enter a description for this admin"
               />
             </FormControl>
-          </Stack>
+          </div>
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
@@ -261,7 +260,7 @@ const RemoveModal = ({
         <ModalHeader>Remove Admin</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <Text>Are you sure you want to remove this admin?</Text>
             <FormControl>
               <FormLabel>Wallet Address</FormLabel>
@@ -271,7 +270,7 @@ const RemoveModal = ({
               <FormLabel>Label</FormLabel>
               <Text>{admin.label ?? <em>N/A</em>}</Text>
             </FormControl>
-          </Stack>
+          </div>
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>

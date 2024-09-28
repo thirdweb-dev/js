@@ -378,7 +378,7 @@ const RemoveModal = ({
         <ModalHeader>Remove Contract Subscription</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <Text>
               This action will delete all stored data for this contract
               subscription.
@@ -429,7 +429,7 @@ const RemoveModal = ({
                 )}
               </FormControl>
             </Card>
-          </Stack>
+          </div>
         </ModalBody>
         <ModalFooter as={Flex} gap={3}>
           <Button type="button" onClick={disclosure.onClose} variant="ghost">

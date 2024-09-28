@@ -1,6 +1,6 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
+import { CopyButton } from "@/components/ui/CopyButton";
 import { Box, Flex, Image } from "@chakra-ui/react";
-import { CopyButton } from "components/homepage/AnimatedCLICommand/AnimatedCLICommand";
 import { ProductButton } from "components/product-pages/common/ProductButton";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import type { GetStaticPaths, GetStaticProps } from "next";
@@ -36,6 +36,7 @@ const CodeBlock: React.FC<{ text: string }> = (props) => {
       gap={1}
       align="center"
       alignSelf="start"
+      justifyContent="space-between"
     >
       <Text color="white" fontFamily="mono" fontSize="16px" fontWeight="500">
         <span>{props.text}</span>

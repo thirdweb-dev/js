@@ -252,10 +252,10 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
             });
           })}
         >
-          <Stack>
+          <div className="flex flex-col gap-2">
             <Heading size="subtitle.md">Metadata</Heading>
             <Divider />
-          </Stack>
+          </div>
           <FormControl isRequired isInvalid={!!errors.name}>
             <FormLabel>Name</FormLabel>
             <Input autoFocus {...register("name")} />

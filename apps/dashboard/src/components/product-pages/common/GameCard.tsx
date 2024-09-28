@@ -1,5 +1,5 @@
 import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
-import { SiGithub } from "@react-icons/all-files/si/SiGithub";
+import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { useTrack } from "hooks/analytics/useTrack";
 import NextImage, { type StaticImageData } from "next/image";
 import { IoGameControllerOutline } from "react-icons/io5";
@@ -96,7 +96,7 @@ export const GameCard: React.FC<GameCardProps> = ({
             }}
             size="sm"
             variant="ghost"
-            icon={<SiGithub />}
+            icon={<GithubIcon className="size-4" />}
             aria-label="GitHub"
             category={TRACK_CATEGORY}
             label={game.id}

@@ -9,15 +9,13 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  Stack,
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
-import { AiFillEyeInvisible } from "@react-icons/all-files/ai/AiFillEyeInvisible";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
@@ -365,146 +363,146 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
           disabledText="This contract doesn't implement Delayed Reveal"
         />
       </Flex>
-      <div className="flex flex-row">
-        <Stack spacing={6}>
-          <Stack spacing={3}>
-            {form.watch("revealType") === "delayed" && (
-              <>
-                <Heading size="title.sm">Let&apos;s set a password</Heading>
-                <Alert status="warning" borderRadius="lg">
-                  <AlertIcon />
-                  You&apos;ll need this password to reveal your NFTs. Please
-                  save it somewhere safe.
-                </Alert>
+      <div className="flex flex-col gap-3">
+        {form.watch("revealType") === "delayed" && (
+          <>
+            <Heading size="title.sm">Let&apos;s set a password</Heading>
+            <Alert status="warning" borderRadius="lg">
+              <AlertIcon />
+              You&apos;ll need this password to reveal your NFTs. Please save it
+              somewhere safe.
+            </Alert>
 
-                <Flex
-                  flexDir={{ base: "column", md: "row" }}
-                  gap={{ base: 4, md: 0 }}
-                >
-                  <FormControl
-                    isRequired
-                    isInvalid={
-                      !!form.getFieldState("password", form.formState).error
-                    }
-                    mr={4}
-                  >
-                    <FormLabel>Password</FormLabel>
-                    <InputGroup>
-                      <Input
-                        {...form.register("password")}
-                        placeholder="Choose password"
-                        type={show ? "text" : "password"}
+            <Flex
+              flexDir={{ base: "column", md: "row" }}
+              gap={{ base: 4, md: 0 }}
+            >
+              <FormControl
+                isRequired
+                isInvalid={
+                  !!form.getFieldState("password", form.formState).error
+                }
+                mr={4}
+              >
+                <FormLabel>Password</FormLabel>
+                <InputGroup>
+                  <Input
+                    {...form.register("password")}
+                    placeholder="Choose password"
+                    type={show ? "text" : "password"}
+                  />
+                  <InputRightElement cursor="pointer">
+                    {show ? (
+                      <EyeIcon
+                        onClick={() => setShow(!show)}
+                        className="size-3"
                       />
-                      <InputRightElement cursor="pointer">
-                        <Icon
-                          as={show ? AiFillEye : AiFillEyeInvisible}
-                          onClick={() => setShow(!show)}
-                        />
-                      </InputRightElement>
-                    </InputGroup>
+                    ) : (
+                      <EyeOffIcon
+                        onClick={() => setShow(!show)}
+                        className="size-3"
+                      />
+                    )}
+                  </InputRightElement>
+                </InputGroup>
 
-                    <FormErrorMessage>
-                      {
-                        form.getFieldState("password", form.formState).error
-                          ?.message
-                      }
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    isRequired
-                    isInvalid={
-                      !!form.getFieldState("confirmPassword", form.formState)
-                        .error
+                <FormErrorMessage>
+                  {
+                    form.getFieldState("password", form.formState).error
+                      ?.message
+                  }
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl
+                isRequired
+                isInvalid={
+                  !!form.getFieldState("confirmPassword", form.formState).error
+                }
+              >
+                <FormLabel>Confirm password</FormLabel>
+                <Input
+                  {...form.register("confirmPassword")}
+                  placeholder="Confirm password"
+                  type="password"
+                />
+                <FormErrorMessage>
+                  {
+                    form.getFieldState("confirmPassword", form.formState).error
+                      ?.message
+                  }
+                </FormErrorMessage>
+              </FormControl>
+            </Flex>
+            <div className="flex flex-col gap-5">
+              <Heading size="title.sm">Placeholder</Heading>
+              <FormControl
+                isInvalid={
+                  !!form.getFieldState("placeHolder.image", form.formState)
+                    .error
+                }
+              >
+                <FormLabel>Image</FormLabel>
+                <Box width={{ base: "auto", md: "350px" }}>
+                  <FileInput
+                    accept={{ "image/*": [] }}
+                    value={imageUrl}
+                    showUploadButton
+                    setValue={(file) =>
+                      form.setValue("placeHolder.image", file)
                     }
-                  >
-                    <FormLabel>Confirm password</FormLabel>
-                    <Input
-                      {...form.register("confirmPassword")}
-                      placeholder="Confirm password"
-                      type="password"
-                    />
-                    <FormErrorMessage>
-                      {
-                        form.getFieldState("confirmPassword", form.formState)
-                          .error?.message
-                      }
-                    </FormErrorMessage>
-                  </FormControl>
-                </Flex>
-                <Stack spacing={5}>
-                  <Heading size="title.sm">Placeholder</Heading>
-                  <FormControl
-                    isInvalid={
-                      !!form.getFieldState("placeHolder.image", form.formState)
-                        .error
-                    }
-                  >
-                    <FormLabel>Image</FormLabel>
-                    <Box width={{ base: "auto", md: "350px" }}>
-                      <FileInput
-                        accept={{ "image/*": [] }}
-                        value={imageUrl}
-                        showUploadButton
-                        setValue={(file) =>
-                          form.setValue("placeHolder.image", file)
-                        }
-                        className="rounded border border-border transition-all duration-200"
-                      />
-                    </Box>
-                    <FormHelperText>
-                      You can optionally upload an image as the placeholder.
-                    </FormHelperText>
-                    <FormErrorMessage>
-                      {
-                        form.getFieldState("placeHolder.image", form.formState)
-                          .error?.message
-                      }
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    isRequired
-                    isInvalid={
-                      !!form.getFieldState("placeHolder.name", form.formState)
-                        .error
-                    }
-                  >
-                    <FormLabel>Name</FormLabel>
-                    <Input
-                      {...form.register("placeHolder.name")}
-                      placeholder="eg. My NFT (Coming soon)"
-                    />
-                    <FormErrorMessage>
-                      {
-                        form.getFieldState("placeHolder.name", form.formState)
-                          .error?.message
-                      }
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    isInvalid={
-                      !!form.getFieldState("placeHolder.name", form.formState)
-                        .error
-                    }
-                  >
-                    <FormLabel>Description</FormLabel>
-                    <Textarea
-                      {...form.register("placeHolder.description")}
-                      placeholder="eg. Reveal on July 15th!"
-                    />
-                    <FormErrorMessage>
-                      {
-                        form.getFieldState(
-                          "placeHolder.description",
-                          form.formState,
-                        ).error?.message
-                      }
-                    </FormErrorMessage>
-                  </FormControl>
-                </Stack>
-              </>
-            )}
-          </Stack>
-        </Stack>
+                    className="rounded border border-border transition-all duration-200"
+                  />
+                </Box>
+                <FormHelperText>
+                  You can optionally upload an image as the placeholder.
+                </FormHelperText>
+                <FormErrorMessage>
+                  {
+                    form.getFieldState("placeHolder.image", form.formState)
+                      .error?.message
+                  }
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl
+                isRequired
+                isInvalid={
+                  !!form.getFieldState("placeHolder.name", form.formState).error
+                }
+              >
+                <FormLabel>Name</FormLabel>
+                <Input
+                  {...form.register("placeHolder.name")}
+                  placeholder="eg. My NFT (Coming soon)"
+                />
+                <FormErrorMessage>
+                  {
+                    form.getFieldState("placeHolder.name", form.formState).error
+                      ?.message
+                  }
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl
+                isInvalid={
+                  !!form.getFieldState("placeHolder.name", form.formState).error
+                }
+              >
+                <FormLabel>Description</FormLabel>
+                <Textarea
+                  {...form.register("placeHolder.description")}
+                  placeholder="eg. Reveal on July 15th!"
+                />
+                <FormErrorMessage>
+                  {
+                    form.getFieldState(
+                      "placeHolder.description",
+                      form.formState,
+                    ).error?.message
+                  }
+                </FormErrorMessage>
+              </FormControl>
+            </div>
+          </>
+        )}
       </div>
     </Flex>
   );

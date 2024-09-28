@@ -142,7 +142,7 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
                 ))}
               </Flex>
               <Flex p={4} bg="#0E0F11">
-                <Stack width="328px">
+                <div className="flex w-[328px] flex-col gap-2">
                   <SimpleGrid columns={1} gap={2}>
                     {items
                       .filter((item) => item.section === hoveredSection)
@@ -150,7 +150,7 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
                         <NavCard key={item.label} {...item} />
                       ))}
                   </SimpleGrid>
-                </Stack>
+                </div>
               </Flex>
             </div>
           </Card>

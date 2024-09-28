@@ -1,8 +1,8 @@
-import { ButtonGroup, Flex, Icon, Stack } from "@chakra-ui/react";
-import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
-import { SiReact } from "@react-icons/all-files/si/SiReact";
-import { SiTypescript } from "@react-icons/all-files/si/SiTypescript";
-import { SiUnity } from "@react-icons/all-files/si/SiUnity";
+import { ButtonGroup, Flex, Icon } from "@chakra-ui/react";
+import { JavaScriptIcon } from "components/icons/brand-icons/JavaScriptIcon";
+import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
+import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
+import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { type Dispatch, type SetStateAction, useMemo } from "react";
 import { Button, CodeBlock } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
@@ -16,31 +16,31 @@ const Environments: SupportedEnvironment[] = [
   {
     environment: "javascript",
     title: "JavaScript",
-    icon: SiJavascript,
+    icon: JavaScriptIcon,
     colorScheme: "yellow",
   },
   {
     environment: "typescript",
     title: "TypeScript",
-    icon: SiTypescript,
+    icon: TypeScriptIcon,
     colorScheme: "blue",
   },
   {
     environment: "react",
     title: "React",
-    icon: SiReact,
+    icon: ReactIcon,
     colorScheme: "purple",
   },
   {
     environment: "react-native",
     title: "React Native",
-    icon: SiReact,
+    icon: ReactIcon,
     colorScheme: "purple",
   },
   {
     environment: "unity",
     title: "Unity",
-    icon: SiUnity,
+    icon: UnityIcon,
     colorScheme: "purple",
   },
 ];
@@ -88,7 +88,7 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
   );
 
   return (
-    <Stack spacing={2}>
+    <div className="flex flex-col gap-2">
       {!hideTabs && (
         <Flex justify="space-between" align="flex-end">
           <Flex direction="column" gap={4}>
@@ -133,7 +133,7 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
           />
         </>
       )}
-    </Stack>
+    </div>
   );
 };
 

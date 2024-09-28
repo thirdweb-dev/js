@@ -17,7 +17,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Stack,
   Textarea,
   type UseDisclosureReturn,
   useDisclosure,
@@ -269,7 +268,7 @@ const EditModal = ({
         <ModalHeader>Update Relayer</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <FormControl>
               <FormLabel>Chain</FormLabel>
               <NetworkDropdown
@@ -316,7 +315,7 @@ const EditModal = ({
               />
               <FormHelperText>Allow all forwarders if omitted.</FormHelperText>
             </FormControl>
-          </Stack>
+          </div>
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
@@ -384,7 +383,7 @@ const RemoveModal = ({
         <ModalHeader>Remove Relayer</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <Text>Are you sure you want to remove this relayer?</Text>
             <FormControl>
               <FormLabel>Chain</FormLabel>
@@ -408,7 +407,7 @@ const RemoveModal = ({
               <FormLabel>Label</FormLabel>
               <Text>{relayer.name ?? <em>N/A</em>}</Text>
             </FormControl>
-          </Stack>
+          </div>
         </ModalBody>
         <ModalFooter as={Flex} gap={3}>
           <Button type="button" onClick={disclosure.onClose} variant="ghost">

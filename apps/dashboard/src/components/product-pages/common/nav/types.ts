@@ -1,4 +1,3 @@
-import type { IconType } from "@react-icons/all-files";
 import type { StaticImageData } from "next/image";
 
 export interface SectionProps {
@@ -8,7 +7,6 @@ export interface SectionProps {
   icon?: StaticImageData;
   link?: string;
   section?: "contracts-v2" | "connect-v2" | "engine-v2";
-  iconType?: IconType;
   comingSoon?: boolean;
 }
 
@@ -20,7 +18,6 @@ export interface SectionItemProps {
   link: string;
   dashboardLink?: string;
   icon?: StaticImageData;
-  iconType?: IconType;
   comingSoon?: boolean;
   inLandingPage?: boolean;
   section:

@@ -1,7 +1,7 @@
 import { Flex, Icon } from "@chakra-ui/react";
-import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
+import { WandIcon } from "lucide-react";
 import { FiSearch } from "react-icons/fi";
 import { Heading, LinkButton } from "tw-components";
 
@@ -60,7 +60,7 @@ export const HackathonEarnFooter = ({
           h="68px"
           w={{ base: "90%", md: 80 }}
           fontSize="20px"
-          leftIcon={<Icon as={ImMagicWand} />}
+          leftIcon={<WandIcon className="size-6" />}
           color="black"
           flexShrink={0}
           background="rgba(255,255,255,1)"

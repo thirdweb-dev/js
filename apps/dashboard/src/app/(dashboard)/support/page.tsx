@@ -6,11 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { BookOpenIcon, ChevronRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { SiDiscord } from "react-icons/si";
 import accountIcon from "../../../../public/assets/support/account.svg";
 import contractsIcon from "../../../../public/assets/support/contracts.png";
 import discordIllustration from "../../../../public/assets/support/discord-illustration.png";
@@ -213,7 +213,7 @@ export default function SupportPage() {
                 asChild
               >
                 <Link href="https://discord.gg/thirdweb">
-                  <SiDiscord />
+                  <DiscordIcon className="size-4" />
                   <span>Join Discord</span>
                 </Link>
               </Button>

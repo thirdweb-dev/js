@@ -1,4 +1,4 @@
-import { Box, Icon, Stack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Text, TrackedLink } from "tw-components";
 import type { SectionItemProps, SectionProps } from "./types";
@@ -9,7 +9,6 @@ export const NavCard: React.FC<SectionItemProps | SectionProps> = ({
   label,
   link,
   icon,
-  iconType,
   comingSoon,
 }) => {
   return (
@@ -22,17 +21,9 @@ export const NavCard: React.FC<SectionItemProps | SectionProps> = ({
       pointerEvents={comingSoon ? "none" : "auto"}
     >
       <Box _hover={{ bg: "whiteAlpha.50" }} p="8px" borderRadius="md">
-        <Stack direction="row" align="center" spacing={4}>
+        <div className="flex flex-row items-center gap-4">
           {icon && (
             <ChakraNextImage boxSize={7} mb="-4px" src={icon} alt="icon" />
-          )}
-          {iconType && (
-            <Icon
-              as={iconType}
-              color={comingSoon ? "whiteAlpha.400" : "white"}
-              boxSize={6}
-              mr={2}
-            />
           )}
           <div className="flex flex-col">
             <Text
@@ -43,7 +34,7 @@ export const NavCard: React.FC<SectionItemProps | SectionProps> = ({
             </Text>
             <Text color="whiteAlpha.500">{description}</Text>
           </div>
-        </Stack>
+        </div>
       </Box>
     </TrackedLink>
   );

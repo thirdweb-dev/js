@@ -17,7 +17,6 @@ import {
   IconButton,
   Input,
   Select,
-  Stack,
   Switch,
   Textarea,
 } from "@chakra-ui/react";
@@ -577,7 +576,7 @@ export function AccountAbstractionSettingsPage(
                 </FormControl>
                 <FormControl>
                   <FormLabel size="label.sm">Custom Headers</FormLabel>
-                  <Stack gap={3} alignItems="end">
+                  <div className="flex flex-col items-end gap-3">
                     {customHeaderFields.fields.map((_, customHeaderIdx) => {
                       return (
                         // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
@@ -621,7 +620,7 @@ export function AccountAbstractionSettingsPage(
                     >
                       Add header
                     </Button>
-                  </Stack>
+                  </div>
                 </FormControl>
               </div>
             )}

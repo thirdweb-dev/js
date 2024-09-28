@@ -47,7 +47,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
   const addresses = watch("addresses");
 
   return (
-    <Stack w="full">
+    <div className="flex w-full flex-col gap-2">
       <form
         onSubmit={handleSubmit(async (_data) => {
           trackEvent({
@@ -109,7 +109,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
           });
         })}
       >
-        <Stack>
+        <div className="flex flex-col gap-2">
           <Stack
             spacing={6}
             w="100%"
@@ -167,9 +167,9 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
           >
             Airdrop
           </TransactionButton>
-        </Stack>
+        </div>
       </form>
-    </Stack>
+    </div>
   );
 };
 export default AirdropTab;

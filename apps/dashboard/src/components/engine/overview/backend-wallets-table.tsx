@@ -21,7 +21,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Stack,
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -273,7 +272,7 @@ const EditModal = ({
         <ModalHeader>Update Backend Wallet</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <FormControl>
               <FormLabel>Wallet Address</FormLabel>
               <Text>{backendWallet.address}</Text>
@@ -287,7 +286,7 @@ const EditModal = ({
                 placeholder="Enter a description for this backend wallet"
               />
             </FormControl>
-          </Stack>
+          </div>
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
@@ -424,7 +423,7 @@ const SendFundsModal = ({
         <ModalHeader>Send Funds</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <FormControl>
               <FormLabel>From</FormLabel>
               <Text fontFamily="mono">{fromWallet.address}</Text>
@@ -495,7 +494,7 @@ const SendFundsModal = ({
                 <Text>{chain?.name}</Text>
               </Flex>
             </FormControl>
-          </Stack>
+          </div>
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
