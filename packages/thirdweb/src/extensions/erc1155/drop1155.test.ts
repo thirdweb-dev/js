@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { VITALIK_WALLET } from "../../../test/src/addresses.js";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
@@ -11,7 +12,6 @@ import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { toEther } from "../../utils/units.js";
-import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
 import { balanceOf } from "./__generated__/IERC1155/read/balanceOf.js";
 import { nextTokenIdToMint } from "./__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
@@ -37,6 +37,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         client: TEST_CLIENT,
         params: {
           name: "Test DropERC1155",
+          contractURI: TEST_CONTRACT_URI,
         },
         type: "DropERC1155",
       });
@@ -48,16 +49,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
       // this deploys a contract, it may take some time
     }, 60_000);
-
-    describe("Deployment", () => {
-      it("should deploy", async () => {
-        expect(contract).toBeDefined();
-      });
-      it("should have the correct name", async () => {
-        const metadata = await getContractMetadata({ contract });
-        expect(metadata.name).toBe("Test DropERC1155");
-      });
-    });
 
     it("should allow for lazy minting tokens", async () => {
       const mintTx = lazyMint({

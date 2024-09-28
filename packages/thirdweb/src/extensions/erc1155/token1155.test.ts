@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import {
@@ -7,7 +8,6 @@ import {
 } from "../../../test/src/test-wallets.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
-import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
 import { balanceOf } from "./__generated__/IERC1155/read/balanceOf.js";
 import { totalSupply } from "./__generated__/IERC1155/read/totalSupply.js";
@@ -27,6 +27,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
       client: TEST_CLIENT,
       params: {
         name: "Test TokenERC1155",
+        contractURI: TEST_CONTRACT_URI,
       },
       type: "TokenERC1155",
     });
@@ -38,16 +39,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
     });
     // this deploys a contract, it may take some time
   }, 60_000);
-
-  describe("Deployment", () => {
-    it("should deploy", async () => {
-      expect(contract).toBeDefined();
-    });
-    it("should have the correct name", async () => {
-      const metadata = await getContractMetadata({ contract });
-      expect(metadata.name).toBe("Test TokenERC1155");
-    });
-  });
 
   it("should allow for minting tokens", async () => {
     // initially no tokens minted

@@ -3,6 +3,7 @@ import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import {
   type ThirdwebContract,
   getContract,
@@ -27,6 +28,7 @@ describe.runIf(!!process.env.TW_SECRET_KEY)("erc721 mintTo extension", () => {
       type: "TokenERC721",
       params: {
         name: "NFTDrop",
+        contractURI: TEST_CONTRACT_URI,
       },
     });
     contract = getContract({
