@@ -5,7 +5,6 @@ import {
   FormControl,
   Input,
   Select,
-  Stack,
   useModalContext,
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -51,9 +50,8 @@ export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({
         <Heading>Reveal batch</Heading>
       </DrawerHeader>
       <DrawerBody>
-        <Stack
-          spacing={6}
-          as="form"
+        <form
+          className="flex flex-col gap-6"
           id={REVEAL_FORM_ID}
           onSubmit={handleSubmit((data) => {
             trackEvent({
@@ -113,7 +111,7 @@ export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({
             />
             <FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
           </FormControl>
-        </Stack>
+        </form>
       </DrawerBody>
       <DrawerFooter>
         <TransactionButton

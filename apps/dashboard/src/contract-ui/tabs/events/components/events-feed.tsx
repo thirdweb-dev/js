@@ -238,7 +238,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
           _last={{ borderBottomWidth: 0 }}
         >
           <Box gridColumn="span 3">
-            <Stack direction="row" align="center" spacing={3}>
+            <div className="flex flex-row items-center gap-3">
               <Tooltip
                 p={0}
                 bg="transparent"
@@ -265,7 +265,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
               <Text fontFamily="mono" noOfLines={1}>
                 {transaction.transactionHash.slice(0, 32)}...
               </Text>
-            </Stack>
+            </div>
           </Box>
 
           <Box gridColumn="span 1" />

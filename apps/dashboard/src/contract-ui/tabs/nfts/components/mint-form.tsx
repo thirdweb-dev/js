@@ -142,9 +142,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
         <Heading>Mint NFT</Heading>
       </DrawerHeader>
       <DrawerBody>
-        <Stack
-          spacing={6}
-          as="form"
+        <form
+          className="flex flex-col gap-6"
           id={MINT_FORM_ID}
           onSubmit={handleSubmit((data) => {
             if (!address) {
@@ -335,7 +334,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
               </AccordionPanel>
             </AccordionItem>
           </Accordion>
-        </Stack>
+        </form>
       </DrawerBody>
       <DrawerFooter>
         <Button

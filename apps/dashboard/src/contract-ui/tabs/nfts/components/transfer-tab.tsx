@@ -40,7 +40,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
   const { mutate, isPending } = useSendAndConfirmTransaction();
 
   return (
-    <Stack w="full">
+    <div className="flex w-full flex-col gap-2">
       <form
         onSubmit={form.handleSubmit((data) => {
           trackEvent({
@@ -130,7 +130,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
           </TransactionButton>
         </div>
       </form>
-    </Stack>
+    </div>
   );
 };
 

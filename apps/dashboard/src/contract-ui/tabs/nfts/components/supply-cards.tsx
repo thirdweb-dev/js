@@ -1,4 +1,4 @@
-import { Skeleton, Stack, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
+import { Skeleton, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { nextTokenIdToMint, totalSupply } from "thirdweb/extensions/erc721";
 import { useReadContract } from "thirdweb/react";
@@ -21,7 +21,7 @@ export const SupplyCards: React.FC<SupplyCardsProps> = ({ contract }) => {
   ).toString();
 
   return (
-    <Stack spacing={{ base: 3, md: 6 }} direction="row">
+    <div className="flex flex-row gap-3 md:gap-6">
       <Card as={Stat}>
         <StatLabel mb={{ base: 1, md: 0 }}>Total Supply</StatLabel>
         <Skeleton isLoaded={totalSupplyQuery.isSuccess}>
@@ -42,6 +42,6 @@ export const SupplyCards: React.FC<SupplyCardsProps> = ({ contract }) => {
           <StatNumber>{unclaimedSupply}</StatNumber>
         </Skeleton>
       </Card>
-    </Stack>
+    </div>
   );
 };

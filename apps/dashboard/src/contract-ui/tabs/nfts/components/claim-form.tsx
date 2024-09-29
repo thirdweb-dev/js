@@ -4,7 +4,6 @@ import {
   DrawerHeader,
   FormControl,
   Input,
-  Stack,
   useModalContext,
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -51,8 +50,8 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({ contract }) => {
         <Heading>Claim NFTs</Heading>
       </DrawerHeader>
       <DrawerBody>
-        <Stack gap={3} as="form">
-          <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
+        <form className="flex flex-col gap-3">
+          <div className="flex w-full flex-col gap-6 md:flex-row">
             <FormControl isRequired isInvalid={!!errors.to}>
               <FormLabel>To Address</FormLabel>
               <Input placeholder={ZERO_ADDRESS} {...register("to")} />
@@ -75,8 +74,8 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({ contract }) => {
               <FormHelperText>How many would you like to claim?</FormHelperText>
               <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
             </FormControl>
-          </Stack>
-        </Stack>
+          </div>
+        </form>
       </DrawerBody>
       <DrawerFooter>
         <TransactionButton

@@ -1,9 +1,4 @@
-import {
-  FormControl,
-  Stack,
-  Textarea,
-  useModalContext,
-} from "@chakra-ui/react";
+import { FormControl, Textarea, useModalContext } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,9 +27,8 @@ export const CreateProposalForm: React.FC<ProposalFormProps> = ({
   const modalContext = useModalContext();
 
   return (
-    <Stack
-      spacing={6}
-      as="form"
+    <form
+      className="flex flex-col gap-6"
       id={formId}
       onSubmit={handleSubmit((data) => {
         const tx = VoteExt.propose({
@@ -76,6 +70,6 @@ export const CreateProposalForm: React.FC<ProposalFormProps> = ({
         <Textarea {...register("description")} />
         <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
       </FormControl>
-    </Stack>
+    </form>
   );
 };

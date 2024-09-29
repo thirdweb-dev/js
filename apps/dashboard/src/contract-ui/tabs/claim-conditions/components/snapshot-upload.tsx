@@ -11,7 +11,6 @@ import {
   ListItem,
   Portal,
   Select,
-  Stack,
   Table,
   TableContainer,
   Tbody,
@@ -436,12 +435,12 @@ const SnapshotTableColumns = [
                 : "Address couldn't be resolved"
             }
           >
-            <Stack direction="row" align="center">
+            <div className="flex flex-row items-center gap-2">
               <Icon as={IoAlertCircleOutline} color="red.500" boxSize={5} />
               <Text fontWeight="bold" color="red.500" cursor="default">
                 {address}
               </Text>
-            </Stack>
+            </div>
           </Tooltip>
         </div>
       );

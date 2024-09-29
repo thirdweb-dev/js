@@ -180,9 +180,8 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         <Heading>Update NFT Metadata</Heading>
       </DrawerHeader>
       <DrawerBody>
-        <Stack
-          spacing={6}
-          as="form"
+        <form
+          className="flex flex-col gap-6"
           id={UPDATE_METADATA_FORM_ID}
           onSubmit={handleSubmit((data) => {
             if (!address) {
@@ -389,7 +388,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
               </AccordionPanel>
             </AccordionItem>
           </Accordion>
-        </Stack>
+        </form>
       </DrawerBody>
       <DrawerFooter>
         <Button

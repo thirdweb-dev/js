@@ -6,7 +6,6 @@ import {
   Input,
   Link,
   Select,
-  Stack,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -310,7 +309,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   return (
     <Flex gap={8} direction="column">
       <Flex gap={8} direction={{ base: "column", md: "row" }}>
-        <Stack as={Card} w={{ base: "100%", md: "50%" }}>
+        <Card className="flex w-full flex-col gap-2 md:w-1/2">
           <Heading size="title.sm" mb={4}>
             Configuration
           </Heading>
@@ -542,8 +541,8 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               </FormHelperText>
             </FormControl>
           ) : null}
-        </Stack>
-        <Stack as={Card} w={{ base: "100%", md: "50%" }}>
+        </Card>
+        <Card className="flex w-full flex-col gap-2 md:w-1/2">
           <Heading size="title.sm">Embed Code</Heading>
           <CodeBlock
             canCopy={false}
@@ -576,10 +575,10 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
           >
             {hasCopied ? "Copied!" : "Copy to clipboard"}
           </Button>
-        </Stack>
+        </Card>
       </Flex>
 
-      <Stack align="center" gap={2}>
+      <div className="flex flex-col items-center gap-2">
         <Heading size="title.sm">Preview</Heading>
         {!validApiKey ? (
           <Text>You need to create a client ID to use embeds</Text>
@@ -592,7 +591,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
             frameBorder="0"
           />
         ) : null}
-      </Stack>
+      </div>
     </Flex>
   );
 };

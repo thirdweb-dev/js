@@ -10,7 +10,6 @@ import {
   List,
   SimpleGrid,
   Spinner,
-  Stack,
   Tooltip,
 } from "@chakra-ui/react";
 import { useTabHref } from "contract-ui/utils";
@@ -151,7 +150,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
         _last={{ borderBottomWidth: 0 }}
       >
         <Box gridColumn="span 3">
-          <Stack direction="row" align="center" spacing={3}>
+          <div className="flex flex-row items-center gap-3">
             <Tooltip
               p={0}
               bg="transparent"
@@ -178,7 +177,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
             <Text fontFamily="mono" noOfLines={1}>
               {shortenString(transaction.transactionHash)}
             </Text>
-          </Stack>
+          </div>
         </Box>
 
         <ButtonGroup

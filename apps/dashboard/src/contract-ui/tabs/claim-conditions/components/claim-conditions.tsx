@@ -1,4 +1,4 @@
-import { Flex, Stack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Heading, Text } from "tw-components";
 import { ClaimConditionsForm } from "./claim-conditions-form/index";
@@ -16,7 +16,7 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   isERC20,
 }) => {
   return (
-    <Stack spacing={8}>
+    <div className="flex flex-col gap-8">
       <Flex p={0} position="relative">
         <Flex
           pt={{ base: isColumn ? 0 : 6, md: 6 }}
@@ -46,6 +46,6 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
           />
         </Flex>
       </Flex>
-    </Stack>
+    </div>
   );
 };
