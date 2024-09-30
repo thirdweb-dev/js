@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -91,6 +93,7 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
         </form>
         <SheetFooter className="mt-10">
           <TransactionButton
+            txChainID={contract.chain.id}
             transactionCount={1}
             form={CLAIM_FORM_ID}
             isLoading={form.formState.isSubmitting}

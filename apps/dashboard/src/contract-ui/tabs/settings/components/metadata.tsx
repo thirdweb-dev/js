@@ -1,3 +1,5 @@
+"use client";
+
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import {
   Flex,
@@ -326,6 +328,7 @@ export const SettingsMetadata = ({
 
         <AdminOnly contract={contract}>
           <TransactionButton
+            txChainID={contract.chain.id}
             colorScheme="primary"
             transactionCount={1}
             isDisabled={metadata.isPending || !formState.isDirty}

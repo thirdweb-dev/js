@@ -1,62 +1,23 @@
+"use client";
+
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import type { Abi } from "abitype";
 import { isEnsName, resolveEns } from "lib/ens";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { type ThirdwebContract, getContract } from "thirdweb";
-import {
-  resolveContractAbi,
-  fetchDeployMetadata as sdkFetchDeployMetadata,
-} from "thirdweb/contract";
-import {
-  getAllPublishedContracts,
-  getContractPublisher,
-  getPublishedUriFromCompilerUri,
-} from "thirdweb/extensions/thirdweb";
-import {
-  extractIPFSUri,
-  isAddress,
-  resolveImplementation,
-} from "thirdweb/utils";
-import invariant from "tiny-invariant";
+import { resolveContractAbi } from "thirdweb/contract";
+import { isAddress } from "thirdweb/utils";
 import {
   type PublishedContractWithVersion,
   fetchPublishedContractVersions,
   fetchPublisherProfile,
 } from "./fetch-contracts-with-versions";
+import { fetchDeployMetadata } from "./fetchDeployMetadata";
+import { fetchPublishedContracts } from "./fetchPublishedContracts";
+import { fetchPublishedContractsFromDeploy } from "./fetchPublishedContractsFromDeploy";
 import type { ContractId } from "./types";
-
-function isAnyObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function removeUndefinedFromObjectDeep<T extends Record<string, unknown>>(
-  obj: T,
-): T {
-  const newObj = {} as T;
-  for (const key in obj) {
-    if (obj[key] !== undefined) {
-      newObj[key] = obj[key];
-    } else if (isAnyObject(obj[key])) {
-      newObj[key] = removeUndefinedFromObjectDeep(obj[key]);
-    }
-  }
-  return newObj;
-}
-
-// metadata PRE publish, only has the compiler output info (from CLI)
-async function fetchDeployMetadata(contractId: string) {
-  const contractIdIpfsHash = toContractIdIpfsHash(contractId);
-
-  return removeUndefinedFromObjectDeep(
-    await sdkFetchDeployMetadata({
-      client: getThirdwebClient(),
-      uri: contractIdIpfsHash,
-    }),
-  );
-}
 
 export function useFetchDeployMetadata(contractId: ContractId) {
   return useQuery({
@@ -113,23 +74,11 @@ export function usePublishedContractsFromDeploy(contract: ThirdwebContract) {
       contract.chain.id,
       contract.address,
     ],
-    queryFn: async () => {
-      const { bytecode } = await resolveImplementation(contract);
-      const contractUri = extractIPFSUri(bytecode);
-      if (!contractUri) {
-        throw new Error("No IPFS URI found in bytecode");
-      }
-
-      const publishURIs = await getPublishedUriFromCompilerUri({
-        contract: getContractPublisher(client),
-        compilerMetadataUri: contractUri,
-      });
-
-      return await Promise.all(
-        publishURIs.map((uri) => fetchDeployMetadata(uri)),
-      );
-    },
-
+    queryFn: () =>
+      fetchPublishedContractsFromDeploy({
+        contract,
+        client,
+      }),
     enabled: !!contract,
     retry: false,
   });
@@ -182,27 +131,11 @@ export function useFunctionParamsFromABI(abi?: Abi, functionName?: string) {
   }, [abi, functionName]);
 }
 
-function toContractIdIpfsHash(contractId: ContractId) {
+export function toContractIdIpfsHash(contractId: ContractId) {
   if (contractId?.startsWith("ipfs://")) {
     return contractId;
   }
   return `ipfs://${contractId}`;
-}
-
-async function fetchPublishedContracts(address?: string | null) {
-  invariant(address, "address is not defined");
-  const tempResult = (
-    (await getAllPublishedContracts({
-      contract: getContractPublisher(getThirdwebClient()),
-      publisher: address,
-    })) || []
-  ).filter((c) => c.contractId);
-  return await Promise.all(
-    tempResult.map(async (c) => ({
-      ...c,
-      metadata: await fetchDeployMetadata(c.publishMetadataUri),
-    })),
-  );
 }
 
 export type PublishedContractDetails = Awaited<
@@ -217,7 +150,7 @@ export function usePublishedContractsQuery(address?: string) {
   });
 }
 
-export function ensQuery(addressOrEnsName?: string) {
+function ensQuery(addressOrEnsName?: string) {
   // if the address is `thirdweb.eth` we actually want `deployer.thirdweb.eth` here...
   if (addressOrEnsName === "thirdweb.eth") {
     // biome-ignore lint/style/noParameterAssign: FIXME
@@ -273,16 +206,6 @@ export function ensQuery(addressOrEnsName?: string) {
 
 export function useEns(addressOrEnsName?: string) {
   return useQuery(ensQuery(addressOrEnsName));
-}
-
-export function useContractFunctions(abi: Abi) {
-  return abi
-    .filter((a) => a.type === "function")
-    .map((f) => ({
-      ...f,
-      // fake "field" for the "signature"
-      signature: `${f.name}(${f.inputs.map((i) => i.type).join(",")})`,
-    }));
 }
 
 export function useContractEvents(abi: Abi) {

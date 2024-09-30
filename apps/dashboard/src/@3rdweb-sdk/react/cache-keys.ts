@@ -1,9 +1,3 @@
-export const networkKeys = {
-  all: ["network"] as const,
-  chain: (chainId?: number) => [...networkKeys.all, chainId] as const,
-  multiChainRegistry: ["multi-chain-registry"] as const,
-};
-
 export const accountKeys = {
   all: ["account"] as const,
   wallet: (walletAddress: string) =>

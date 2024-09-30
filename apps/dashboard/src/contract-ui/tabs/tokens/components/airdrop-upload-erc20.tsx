@@ -1,5 +1,6 @@
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { cn } from "@/lib/utils";
 import {
   IconButton,
   Link,
@@ -32,7 +33,7 @@ import { resolveAddress } from "thirdweb/extensions/ens";
 import { isAddress } from "thirdweb/utils";
 import { Button, Heading, Text } from "tw-components";
 import { csvMimeTypes } from "utils/batch";
-import { cn } from "../../../../@/lib/utils";
+
 export interface ERC20AirdropAddressInput {
   address: string;
   quantity: string;

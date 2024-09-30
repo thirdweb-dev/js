@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Accordion,
   AccordionButton,
@@ -325,6 +327,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
           Cancel
         </Button>
         <TransactionButton
+          txChainID={contract.chain.id}
           transactionCount={1}
           isLoading={isPending || false}
           form={LAZY_MINT_FORM_ID}

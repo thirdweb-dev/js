@@ -1,3 +1,5 @@
+"use client";
+
 import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -47,6 +49,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
                 Cancel
               </Button>
               <TransactionButton
+                txChainID={contract.chain.id}
                 isLoading={isFormLoading}
                 transactionCount={2}
                 form={LIST_FORM_ID}

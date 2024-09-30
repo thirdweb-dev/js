@@ -46,6 +46,7 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
         value={amount}
       />
       <TransactionButton
+        txChainID={v5Chain.id}
         transactionCount={1}
         isLoading={isPending}
         isDisabled={

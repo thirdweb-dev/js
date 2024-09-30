@@ -1,3 +1,4 @@
+"use client";
 import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { SettingsMetadata } from "./components/metadata";
@@ -11,7 +12,6 @@ interface ContractSettingsPageProps {
   isPrimarySaleSupported: boolean;
   isRoyaltiesSupported: boolean;
   isPlatformFeesSupported: boolean;
-  isPending: boolean;
 }
 
 export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
@@ -20,7 +20,6 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
   isPrimarySaleSupported,
   isRoyaltiesSupported,
   isPlatformFeesSupported,
-  isPending,
 }) => {
   return (
     <Flex direction="column" gap={4}>
@@ -31,11 +30,7 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
               <SettingsMetadata
                 contract={contract}
                 detectedState={
-                  isPending
-                    ? "loading"
-                    : isContractMetadataSupported
-                      ? "enabled"
-                      : "disabled"
+                  isContractMetadataSupported ? "enabled" : "disabled"
                 }
               />
             </GridItem>
@@ -44,13 +39,7 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
             <GridItem order={isPrimarySaleSupported ? 2 : 101}>
               <SettingsPrimarySale
                 contract={contract}
-                detectedState={
-                  isPending
-                    ? "loading"
-                    : isPrimarySaleSupported
-                      ? "enabled"
-                      : "disabled"
-                }
+                detectedState={isPrimarySaleSupported ? "enabled" : "disabled"}
               />
             </GridItem>
           )}
@@ -59,13 +48,7 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
             <GridItem order={isRoyaltiesSupported ? 3 : 102}>
               <SettingsRoyalties
                 contract={contract}
-                detectedState={
-                  isPending
-                    ? "loading"
-                    : isRoyaltiesSupported
-                      ? "enabled"
-                      : "disabled"
-                }
+                detectedState={isRoyaltiesSupported ? "enabled" : "disabled"}
               />
             </GridItem>
           )}
@@ -74,13 +57,7 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
             <GridItem order={isPlatformFeesSupported ? 4 : 103}>
               <SettingsPlatformFees
                 contract={contract}
-                detectedState={
-                  isPending
-                    ? "loading"
-                    : isPlatformFeesSupported
-                      ? "enabled"
-                      : "disabled"
-                }
+                detectedState={isPlatformFeesSupported ? "enabled" : "disabled"}
               />
             </GridItem>
           )}

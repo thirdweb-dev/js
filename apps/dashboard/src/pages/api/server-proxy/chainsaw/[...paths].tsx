@@ -1,3 +1,4 @@
+import { isProd } from "@/constants/env";
 import type { NextRequest } from "next/server";
 
 export const config = {
@@ -18,8 +19,9 @@ const handler = async (req: NextRequest) => {
   searchParams.delete("paths");
 
   // create a new URL object for the chainsaw service
-  // TODO: this should really point at dev vs prod based on the environment - but for now prod only will have to suffice
-  const CHAINSAW_URL = new URL("https://chainsaw.thirdweb.com");
+  const CHAINSAW_URL = new URL(
+    `https://chainsaw.${isProd ? "thirdweb" : "thirdweb-dev"}.com`,
+  );
   CHAINSAW_URL.pathname = pathname;
   searchParams.forEach((value, key) => {
     CHAINSAW_URL.searchParams.append(key, value);

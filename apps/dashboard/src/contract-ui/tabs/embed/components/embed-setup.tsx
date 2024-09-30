@@ -1,13 +1,7 @@
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
+"use client";
+
 import { useApiKeys, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  Flex,
-  FormControl,
-  Input,
-  Link,
-  Select,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Flex, FormControl, Input, Link, Select } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useClipboard } from "hooks/useClipboard";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -233,7 +227,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
       !!(apiKey.services || []).find((service) => service.name === "rpc"),
   );
 
-  const chainId = useDashboardEVMChainId();
+  const chainId = contract.chain.id;
   const { idToChain } = useAllChainsData();
 
   const chain: StoredChain = (chainId ? idToChain.get(chainId) : undefined) || {
@@ -272,14 +266,12 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
       listingId: "0",
       directListingId: "0",
       englishAuctionId: "0",
-      theme: "light",
+      theme: "dark",
       primaryColor: "purple",
       secondaryColor: "orange",
     },
     reValidateMode: "onChange",
   });
-
-  const isMobile = useBreakpointValue({ base: true, md: false });
 
   const configuredChainWithNewRpc = configureChain(chain, {
     rpc: watch("rpcUrl"),
@@ -296,8 +288,8 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
     () =>
       `<iframe
     src="${iframeSrc}"
-    width="600px"
-    height="600px"
+    width="100%"
+    height="750px"
     style="max-width:100%;"
     frameborder="0"
 ></iframe>`,
@@ -586,8 +578,8 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
           <iframe
             title="thirdweb embed"
             src={iframeSrc}
-            width={isMobile ? "100%" : "600px"}
-            height="600px"
+            width="100%"
+            height="750px"
             frameBorder="0"
           />
         ) : null}

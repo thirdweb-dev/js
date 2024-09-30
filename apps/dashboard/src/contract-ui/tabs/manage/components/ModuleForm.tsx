@@ -1,3 +1,5 @@
+"use client";
+
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { FormControl, Input, Select, Skeleton, Spacer } from "@chakra-ui/react";
@@ -380,6 +382,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         {/* Submit */}
         <div className="flex justify-end">
           <TransactionButton
+            txChainID={contract.chain.id}
             transactionCount={1}
             isLoading={installMutation.isPending}
             type="submit"

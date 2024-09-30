@@ -1,3 +1,5 @@
+"use client";
+
 import { voteTokenBalances } from "@3rdweb-sdk/react/hooks/useVote";
 import { Divider, Flex, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
 import { useMemo } from "react";

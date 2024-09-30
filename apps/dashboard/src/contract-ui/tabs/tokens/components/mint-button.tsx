@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -121,6 +123,7 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
           </form>
           <SheetFooter className="mt-10">
             <TransactionButton
+              txChainID={contract.chain.id}
               transactionCount={1}
               isLoading={sendAndConfirmTransaction.isPending}
               form={MINT_FORM_ID}

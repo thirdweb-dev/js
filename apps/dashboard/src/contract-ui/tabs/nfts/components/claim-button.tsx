@@ -1,3 +1,5 @@
+"use client";
+
 import { useDisclosure } from "@chakra-ui/react";
 import { GemIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";

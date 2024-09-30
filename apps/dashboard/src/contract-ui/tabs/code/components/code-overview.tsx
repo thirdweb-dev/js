@@ -1,4 +1,4 @@
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
+"use client";
 import {
   Alert,
   AlertDescription,
@@ -22,10 +22,8 @@ import {
   type AbiFunction,
   formatAbiItem,
 } from "abitype";
-import {
-  useContractEvents,
-  useContractFunctions,
-} from "components/contract-components/hooks";
+import { getContractFunctionsFromAbi } from "components/contract-components/getContractFunctionsFromAbi";
+import { useContractEvents } from "components/contract-components/hooks";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import type { CodeEnvironment } from "components/contract-tabs/code/types";
 import { useSearchParams } from "next/navigation";
@@ -43,7 +41,7 @@ interface CodeOverviewProps {
   abi?: Abi;
   contractAddress?: string;
   onlyInstall?: boolean;
-  chainId?: number;
+  chainId: number;
   noSidebar?: boolean;
 }
 
@@ -533,7 +531,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   contractAddress = "0x...",
   onlyInstall = false,
   noSidebar = false,
-  chainId: chainIdProp,
+  chainId,
 }) => {
   const searchParams = useSearchParams();
   const defaultEnvironment = searchParams?.get("environment") as
@@ -591,11 +589,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
     return undefined;
   }, [isERC20, isERC721, isERC1155]);
 
-  const chainId = useDashboardEVMChainId() || chainIdProp || 1;
   const { idToChain } = useAllChainsData();
   const chainInfo = chainId ? idToChain.get(chainId) : undefined;
 
-  const functions = useContractFunctions(abi || []);
+  const functions = getContractFunctionsFromAbi(abi || []);
   const events = useContractEvents(abi as Abi);
   const { readFunctions, writeFunctions } = useMemo(() => {
     return {

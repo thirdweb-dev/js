@@ -1,4 +1,7 @@
+"use client";
+
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   Flex,
   Icon,
@@ -15,7 +18,6 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
-import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import {
@@ -35,6 +37,7 @@ import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { Heading, Text } from "tw-components";
+import { useChainSlug } from "../../../../hooks/chains/chainSlug";
 
 interface ContractOverviewNFTGetAllProps {
   contract: ThirdwebContract;
@@ -47,7 +50,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   // if it's not erc721, it's erc1155
   const isErc1155 = !isErc721;
 
-  const router = useRouter();
+  const router = useDashboardRouter();
 
   const tableColumns = useMemo(() => {
     const cols: Column<NFT>[] = [
@@ -166,6 +169,8 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   const queryLoading =
     nextTokenIdToMintQuery.isPending || totalSupplyQuery.isPending;
 
+  const chainSlug = useChainSlug(contract.chain.id);
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -261,8 +266,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                       return;
                     }
                     router.push(
-                      `${router.asPath}/${tokenId.toString()}`,
-                      undefined,
+                      `/${chainSlug}/${contract.address}/nfts/${tokenId.toString()}`,
                       {
                         scroll: true,
                       },

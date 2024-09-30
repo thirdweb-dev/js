@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DrawerBody,
   DrawerFooter,
@@ -115,6 +117,7 @@ export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({
       </DrawerBody>
       <DrawerFooter>
         <TransactionButton
+          txChainID={contract.chain.id}
           transactionCount={1}
           isLoading={sendTxMutation.isPending}
           form={REVEAL_FORM_ID}

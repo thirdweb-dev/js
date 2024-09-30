@@ -1,3 +1,5 @@
+"use client";
+
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -133,6 +135,7 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
             type="submit"
             colorScheme="primary"
             alignSelf="flex-end"
+            txChainID={contract.chain.id}
           >
             Burn
           </TransactionButton>

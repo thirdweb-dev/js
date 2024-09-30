@@ -1,3 +1,5 @@
+"use client";
+
 import { Skeleton, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { nextTokenIdToMint, totalSupply } from "thirdweb/extensions/erc721";

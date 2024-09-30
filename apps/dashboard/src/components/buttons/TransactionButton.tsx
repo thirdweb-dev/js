@@ -1,3 +1,4 @@
+"use client";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   Center,
@@ -35,6 +36,7 @@ interface TransactionButtonProps extends Omit<ButtonProps, "leftIcon"> {
   isLoading: boolean;
   isGasless?: boolean;
   upsellTestnet?: boolean;
+  txChainID: number;
 }
 
 function useWalletRequiresExternalConfirmation() {
@@ -54,7 +56,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   colorScheme,
   variant,
   isGasless,
-
+  txChainID,
   ...restButtonProps
 }) => {
   const activeWallet = useActiveWallet();
@@ -92,6 +94,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     >
       <PopoverTrigger>
         <ButtonComponent
+          desiredChainId={txChainID}
           borderRadius="md"
           position="relative"
           role="group"

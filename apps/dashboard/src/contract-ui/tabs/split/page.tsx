@@ -1,3 +1,5 @@
+"use client";
+
 import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import {
   Flex,

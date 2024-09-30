@@ -1,5 +1,4 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { formatDistance } from "date-fns/formatDistance";
 import { useActiveAccount } from "thirdweb/react";
@@ -15,13 +14,16 @@ export type AccountSignerType = {
 };
 interface AccountSignerProps {
   item: AccountSignerType;
+  contractChainId: number;
 }
 
-export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
+export const AccountSigner: React.FC<AccountSignerProps> = ({
+  item,
+  contractChainId,
+}) => {
   const address = useActiveAccount()?.address;
-  const chainId = useDashboardEVMChainId();
   const { idToChain } = useAllChainsData();
-  const chain = chainId ? idToChain.get(chainId) : undefined;
+  const chain = contractChainId ? idToChain.get(contractChainId) : undefined;
   const isMobile = useBreakpointValue({ base: true, md: false });
   const {
     isAdmin,

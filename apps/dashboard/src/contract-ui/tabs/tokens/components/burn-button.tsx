@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -93,6 +95,7 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
         </form>
         <SheetFooter className="mt-10">
           <TransactionButton
+            txChainID={contract.chain.id}
             transactionCount={1}
             form={BURN_FORM_ID}
             isLoading={sendConfirmation.isPending}

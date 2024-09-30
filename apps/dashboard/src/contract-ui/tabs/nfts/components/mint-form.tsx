@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Accordion,
   AccordionButton,
@@ -346,6 +348,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
           Cancel
         </Button>
         <TransactionButton
+          txChainID={contract.chain.id}
           transactionCount={1}
           isLoading={isPending}
           form={MINT_FORM_ID}

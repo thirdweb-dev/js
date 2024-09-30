@@ -372,25 +372,3 @@ export function useTotalWalletsAnalytics(params: AnalyticsQueryParams) {
     enabled: !!params.contractAddress && !!params.chainId,
   });
 }
-
-export function useAnalyticsSupportedForChain(chainId: number | undefined) {
-  return useQuery({
-    queryKey: ["analytics-supported-chains", chainId] as const,
-    queryFn: async (): Promise<boolean> => {
-      try {
-        const res = await makeQuery(`/service/chains/${chainId}`, {});
-        if (!res.ok) {
-          // assume not supported if we get a non-200 response
-          return false;
-        }
-
-        const { data } = await res.json();
-        return data;
-      } catch (e) {
-        console.error("Error checking if analytics is supported for chain", e);
-        return false;
-      }
-    },
-    enabled: !!chainId,
-  });
-}

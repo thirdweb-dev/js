@@ -1,5 +1,4 @@
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { useDashboardEVMChainId, useEVMContractInfo } from "@3rdweb-sdk/react";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
@@ -58,6 +57,7 @@ import {
   Text,
 } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { useAllChainsData } from "../../../../hooks/chains/allChains";
 import { ListLabel } from "./list-label";
 
 type ListForm =
@@ -103,8 +103,10 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   setIsFormLoading,
 }) => {
   const trackEvent = useTrack();
-  const network = useEVMContractInfo()?.chain;
-  const chainId = useDashboardEVMChainId();
+  const chainId = contract.chain.id;
+  const { idToChain } = useAllChainsData();
+  const network = idToChain.get(chainId);
+
   const isSupportedChain =
     chainId &&
     (isSimpleHashSupported(chainId) ||
@@ -113,10 +115,10 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
   const account = useActiveAccount();
 
-  const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs(
-    account?.address,
+  const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs({
     chainId,
-  );
+    walletAddress: account?.address,
+  });
   const sendAndConfirmTx = useSendAndConfirmTransaction();
 
   const form = useForm<ListForm>({
@@ -490,6 +492,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
           Listing Currency
         </Heading>
         <CurrencySelector
+          contractChainId={chainId}
           value={form.watch("currencyContractAddress")}
           onChange={(e) =>
             form.setValue("currencyContractAddress", e.target.value)

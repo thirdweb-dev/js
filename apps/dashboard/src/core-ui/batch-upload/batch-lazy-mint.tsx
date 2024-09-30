@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Alert,
   AlertIcon,
@@ -55,6 +57,7 @@ interface BatchLazyMintEVMProps {
   nextTokenIdToMint: bigint;
   canCreateDelayedRevealBatch: boolean;
   onSubmit: (formData: SubmitType) => Promise<unknown>;
+  chainId: number;
 }
 
 type BatchLazyMintProps = BatchLazyMintEVMProps;
@@ -296,6 +299,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
                   </Checkbox>
                   <Box maxW={{ base: "100%", md: "61%" }}>
                     <TransactionButton
+                      txChainID={props.chainId}
                       mt={4}
                       colorScheme="primary"
                       transactionCount={1}

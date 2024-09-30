@@ -1,25 +1,26 @@
 import { Flex, useBreakpointValue } from "@chakra-ui/react";
-import { useTabHref } from "contract-ui/utils";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721 from "thirdweb/extensions/erc721";
 import * as ERC1155 from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
-import { Heading, TrackedLink, type TrackedLinkProps } from "tw-components";
+import { TrackedLink, type TrackedLinkProps } from "tw-components";
 import { NFTCards } from "./NFTCards";
 
 interface NFTDetailsProps {
   contract: ThirdwebContract;
   trackingCategory: TrackedLinkProps["category"];
   isErc721: boolean;
+  chainSlug: string;
 }
 
 export const NFTDetails: React.FC<NFTDetailsProps> = ({
   contract,
   trackingCategory,
   isErc721,
+  chainSlug,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const nftsHref = useTabHref("nfts");
+  const nftsHref = `/${chainSlug}/${contract.address}/nfts`;
 
   const nftQuery = useReadContract(
     isErc721 ? ERC721.getNFTs : ERC1155.getNFTs,
@@ -38,7 +39,7 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
   return displayableNFTs.length === 0 && !nftQuery.isPending ? null : (
     <Flex direction="column" gap={{ base: 3, md: 6 }}>
       <Flex align="center" justify="space-between" w="full">
-        <Heading size="title.sm">NFT Details</Heading>
+        <h2 className="font-semibold text-2xl tracking-tight">NFT Details</h2>
         <TrackedLink
           category={trackingCategory}
           label="view_all_nfts"

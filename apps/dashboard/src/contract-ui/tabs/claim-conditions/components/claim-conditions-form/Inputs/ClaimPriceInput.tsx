@@ -8,7 +8,9 @@ import { CustomFormControl } from "../common";
 /**
  * Allows the user to select how much they want to charge to claim each NFT
  */
-export const ClaimPriceInput = () => {
+export const ClaimPriceInput = (props: {
+  contractChainId: number;
+}) => {
   const {
     formDisabled,
     isErc20,
@@ -43,6 +45,7 @@ export const ClaimPriceInput = () => {
         </Box>
         <Box w={{ base: "100%", md: isColumn ? "50%" : "100%" }}>
           <CurrencySelector
+            contractChainId={props.contractChainId}
             isDisabled={formDisabled}
             value={field?.currencyAddress || NATIVE_TOKEN_ADDRESS}
             onChange={(e) =>

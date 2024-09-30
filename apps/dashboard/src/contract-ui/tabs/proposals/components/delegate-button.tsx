@@ -1,3 +1,5 @@
+"use client";
+
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   tokensDelegated,
@@ -32,6 +34,7 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {
   return (
     <ToolTipLabel label="You need to delegate tokens to this contract before you can make proposals and vote.">
       <TransactionButton
+        txChainID={contract.chain.id}
         transactionCount={1}
         onClick={() => {
           toast.promise(

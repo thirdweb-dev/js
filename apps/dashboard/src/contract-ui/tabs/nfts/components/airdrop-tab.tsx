@@ -1,3 +1,5 @@
+"use client";
+
 import { Flex, Icon, Stack, useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
@@ -157,6 +159,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
             more, please do it in multiple transactions.
           </Text>
           <TransactionButton
+            txChainID={contract.chain.id}
             transactionCount={1}
             isLoading={isPending}
             type="submit"

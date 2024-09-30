@@ -1,4 +1,3 @@
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { CURRENCIES } from "constants/currencies";
 import { Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -8,17 +7,17 @@ import { useAllChainsData } from "../../../../hooks/chains/allChains";
 interface PricePreviewProps {
   price: string | number | undefined;
   currencyAddress: string | undefined;
+  contractChainId: number;
 }
 
 export const PricePreview: React.FC<PricePreviewProps> = ({
   price,
   currencyAddress,
+  contractChainId,
 }) => {
-  const chainId = useDashboardEVMChainId();
   const { idToChain } = useAllChainsData();
-  const chain = chainId ? idToChain.get(chainId) : undefined;
-
-  const helperCurrencies = chainId ? CURRENCIES[chainId] || [] : [];
+  const chain = idToChain.get(contractChainId);
+  const helperCurrencies = CURRENCIES[contractChainId] || [];
 
   const foundCurrency = helperCurrencies.find(
     (currency) =>

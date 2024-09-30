@@ -1,3 +1,5 @@
+"use client";
+
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import { useMemo } from "react";
 import type { Chain, ChainMetadata } from "thirdweb/chains";

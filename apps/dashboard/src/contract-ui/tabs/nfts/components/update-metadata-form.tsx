@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Accordion,
   AccordionButton,
@@ -400,6 +402,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
           Cancel
         </Button>
         <TransactionButton
+          txChainID={contract.chain.id}
           transactionCount={1}
           isLoading={isPending || false}
           form={UPDATE_METADATA_FORM_ID}

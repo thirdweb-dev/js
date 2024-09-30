@@ -109,7 +109,14 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
               }
             />
           )}
-          <Box as="span" display="block" my={1} color="heading" h="full">
+          <Box
+            as="span"
+            display="block"
+            my={1}
+            color="heading"
+            h="full"
+            className="text-sm"
+          >
             {tokens.map((line, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: index IS the key here
               <Box {...getLineProps({ line, key: i })} key={i}>

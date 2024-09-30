@@ -1,3 +1,4 @@
+"use client";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";

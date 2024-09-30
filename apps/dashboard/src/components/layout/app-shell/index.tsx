@@ -1,14 +1,14 @@
 import { AppFooter } from "@/components/blocks/app-footer";
 import { TabLinks } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { Container, Flex, Grid, GridItem, Icon } from "@chakra-ui/react";
+import { Container, Flex, GridItem, Icon } from "@chakra-ui/react";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
 import { CreditsButton } from "components/settings/Account/Billing/CreditsButton";
 import { UpgradeButton } from "components/settings/Account/Billing/UpgradeButton";
 import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
-import { SIDEBAR_TUNNEL_ID, SIDEBAR_WIDTH } from "core-ui/sidebar/tunnel";
 import { useRouter } from "next/router";
 import { FiHelpCircle } from "react-icons/fi";
 import {
@@ -31,52 +31,27 @@ export interface AppShellProps {
 export const AppShell: ComponentWithChildren<AppShellProps> = ({
   children,
   layout,
-  hasSidebar,
   pageContainerClassName,
   mainClassName,
 }) => {
   return (
     <div className="bg-background">
-      <Grid
-        minH="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
-        templateColumns="auto 1fr"
-        templateRows={{ base: "auto auto 1fr auto", md: "auto 1fr auto" }}
-        backgroundColor="backgroundBody"
+      <AppHeader />
+      <main
+        className={cn("min-h-screen py-6 md:pt-10 md:pb-20", mainClassName)}
       >
-        <AppHeader />
+        <Container maxW="container.page">
+          <BillingAlerts />
+        </Container>
 
-        <GridItem
-          id={SIDEBAR_TUNNEL_ID}
-          colSpan={{ base: 2, md: 1 }}
-          rowSpan={{ base: 1, md: 2 }}
-          as="aside"
-          position="sticky"
-          zIndex="sticky"
-          w={{ md: hasSidebar ? SIDEBAR_WIDTH : "auto" }}
-          className="top-0 border-border border-b bg-background md:border-r md:border-b-0"
-        />
-        <GridItem
-          minH={{ base: "100vh", md: "unset" }}
-          pt={{ base: 6, md: 10 }}
-          pb={{ base: 6, md: 20 }}
-          as="main"
-          colSpan={{ base: 2, md: 1 }}
-          rowSpan={1}
-          className={mainClassName}
-        >
-          <Container maxW="container.page">
-            <BillingAlerts />
+        {layout === "custom-contract" ? (
+          children
+        ) : (
+          <Container maxW="container.page" className={pageContainerClassName}>
+            {children}
           </Container>
-
-          {layout === "custom-contract" ? (
-            children
-          ) : (
-            <Container maxW="container.page" className={pageContainerClassName}>
-              {children}
-            </Container>
-          )}
-        </GridItem>
-      </Grid>
+        )}
+      </main>
       <AppFooter className="col-span-2" />
     </div>
   );

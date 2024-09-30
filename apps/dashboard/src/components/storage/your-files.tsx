@@ -1,3 +1,5 @@
+"use client";
+
 import { DASHBOARD_STORAGE_URL } from "@/constants/env";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Flex, Tooltip } from "@chakra-ui/react";

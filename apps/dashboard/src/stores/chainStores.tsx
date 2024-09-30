@@ -1,8 +1,12 @@
 "use client";
 
+import { createStore } from "@/lib/reactive";
 import type { ChainMetadata } from "thirdweb/chains";
-import { createStore } from "../@/lib/reactive";
-import { SyncStoreToStorage } from "./SyncStoreToStorage";
+import { SyncStoreToCookies } from "./SyncStoreToCookies";
+import {
+  TW_LOCAL_CHAIN_STORE,
+  TW_RECENTLY_USED_CHAIN_IDS,
+} from "./storageKeys";
 
 export interface StoredChain extends ChainMetadata {
   // any of the name, logo, rpc etc is modified, testnet or not
@@ -13,15 +17,15 @@ export interface StoredChain extends ChainMetadata {
   isCustom?: boolean;
 }
 
-export const isChainOverridesLoadedStore = createStore(false);
+const isChainOverridesLoadedStore = createStore(false);
 export const chainOverridesStore = createStore<StoredChain[]>([]);
 export const recentlyUsedChainIdsStore = createStore<number[]>([]);
 
 export function SyncChainStores() {
   return (
     <>
-      <SyncStoreToStorage
-        storageKey="TW_LOCAL_CHAIN_STORE"
+      <SyncStoreToCookies
+        storageKey={TW_LOCAL_CHAIN_STORE}
         store={chainOverridesStore}
         onLoaded={() => {
           console.log("chain overrides loaded");
@@ -29,8 +33,8 @@ export function SyncChainStores() {
         }}
       />
 
-      <SyncStoreToStorage
-        storageKey="TW_RECENTLY_USED_CHAIN_IDS"
+      <SyncStoreToCookies
+        storageKey={TW_RECENTLY_USED_CHAIN_IDS}
         store={recentlyUsedChainIdsStore}
       />
     </>

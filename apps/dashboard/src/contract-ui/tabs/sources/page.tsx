@@ -1,3 +1,5 @@
+"use client";
+
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
 import {

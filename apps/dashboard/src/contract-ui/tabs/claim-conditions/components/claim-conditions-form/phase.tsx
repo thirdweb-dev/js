@@ -107,6 +107,7 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
             <PricePreview
               price={field.price}
               currencyAddress={field.currencyAddress}
+              contractChainId={contract.chain.id}
             />
             <div className="flex flex-col">
               <Text fontWeight="bold">Limit per wallet</Text>
@@ -137,7 +138,7 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
 
             <CustomFormGroup>
               <MaxClaimableSupplyInput />
-              <ClaimPriceInput />
+              <ClaimPriceInput contractChainId={contract.chain.id} />
             </CustomFormGroup>
 
             {claimConditionType === "specific" ||

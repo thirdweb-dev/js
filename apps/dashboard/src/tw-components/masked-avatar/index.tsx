@@ -1,5 +1,5 @@
-import { SkeletonContainer } from "../../@/components/ui/skeleton";
-import { cn } from "../../@/lib/utils";
+import { SkeletonContainer } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import hexagon from "./hexagon.png";
 
 export interface MaskedAvatarProps {

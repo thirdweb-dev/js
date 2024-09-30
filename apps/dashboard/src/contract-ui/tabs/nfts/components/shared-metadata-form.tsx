@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Accordion,
   AccordionButton,
@@ -280,6 +282,7 @@ export const SharedMetadataForm: React.FC<{
           Cancel
         </Button>
         <TransactionButton
+          txChainID={contract.chain.id}
           transactionCount={1}
           isLoading={isPending}
           form={SHARED_METADATA_FORM_ID}

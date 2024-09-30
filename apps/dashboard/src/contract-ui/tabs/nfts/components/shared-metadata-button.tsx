@@ -1,3 +1,5 @@
+"use client";
+
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";

@@ -1,3 +1,5 @@
+"use client";
+
 import { FormControl, Input, Stack } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -117,6 +119,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
             )}
           </Stack>
           <TransactionButton
+            txChainID={contract.chain.id}
             transactionCount={1}
             isLoading={isPending || checking1155}
             type="submit"

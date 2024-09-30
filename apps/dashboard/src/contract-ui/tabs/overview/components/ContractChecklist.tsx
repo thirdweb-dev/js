@@ -1,6 +1,6 @@
+import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { StepsCard } from "components/dashboard/StepsCard";
-import { useTabHref } from "contract-ui/utils";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
@@ -10,7 +10,6 @@ import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { getAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
 import { Link, Text } from "tw-components";
-import { AdminOnly } from "../../../../@3rdweb-sdk/react/components/roles/admin-only";
 import { useContractFunctionSelectors } from "../../../hooks/useContractFunctionSelectors";
 
 interface ContractChecklistProps {
@@ -18,6 +17,7 @@ interface ContractChecklistProps {
   isErc721: boolean;
   isErc1155: boolean;
   isErc20: boolean;
+  chainSlug: string;
 }
 
 type Step = {
@@ -44,13 +44,14 @@ function Inner({
   isErc20,
   isErc721,
   functionSelectors,
+  chainSlug,
 }: ContractChecklistProps & {
   functionSelectors: string[];
 }) {
-  const nftHref = useTabHref("nfts");
-  const tokenHref = useTabHref("tokens");
-  const accountsHref = useTabHref("accounts");
-  const claimConditionsHref = useTabHref("claim-conditions");
+  const nftHref = `/${chainSlug}/${contract.address}/nfts`;
+  const tokenHref = `/${chainSlug}/${contract.address}/tokens`;
+  const accountsHref = `/${chainSlug}/${contract.address}/accounts`;
+  const claimConditionsHref = `/${chainSlug}/${contract.address}/claim-conditions`;
 
   const erc721Claimed = useReadContract(ERC721Ext.getTotalClaimedSupply, {
     contract: contract,

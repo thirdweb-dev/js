@@ -8,7 +8,6 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { ListingStatsV3 } from "contract-ui/tabs/listings/components/listing-stats";
-import { useTabHref } from "contract-ui/utils";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import {
@@ -43,13 +42,15 @@ type ListingData =
 type ListingCardsSectionProps = {
   contract: ThirdwebContract;
   trackingCategory: string;
+  chainSlug: string;
 };
 
 const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
   trackingCategory,
   contract,
+  chainSlug,
 }) => {
-  const directListingsHref = useTabHref("direct-listings");
+  const directListingsHref = `/${chainSlug}/${contract.address}/direct-listings`;
   const countQuery = useReadContract(totalListings, { contract });
   const listingsQuery = useReadContract(getAllListings, {
     contract,
@@ -84,7 +85,9 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
   return (
     <>
       <Flex align="center" justify="space-between" w="full">
-        <Heading size="label.lg">Direct Listings</Heading>
+        <h2 className="font-semibold text-2xl tracking-tight">
+          Direct Listing
+        </h2>
         <TrackedLink
           category={trackingCategory}
           label="view_all_direct_listings"
@@ -102,6 +105,8 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
         listings={listings}
         isPending={listingsQuery.isPending}
         trackingCategory={trackingCategory}
+        chainSlug={chainSlug}
+        contractAddress={contract.address}
       />
     </>
   );
@@ -110,8 +115,9 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
 const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
   trackingCategory,
   contract,
+  chainSlug,
 }) => {
-  const englishAuctionsHref = useTabHref("english-auctions");
+  const englishAuctionsHref = `/${chainSlug}/${contract.address}/english-auctions`;
   const countQuery = useReadContract(totalAuctions, { contract });
   const auctionsQuery = useReadContract(getAllAuctions, {
     contract,
@@ -164,6 +170,8 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
         listings={auctions}
         isPending={auctionsQuery.isPending}
         trackingCategory={trackingCategory}
+        chainSlug={chainSlug}
+        contractAddress={contract.address}
       />
     </>
   );
@@ -174,6 +182,7 @@ interface MarketplaceDetailsVersionProps {
   trackingCategory: string;
   hasEnglishAuctions: boolean;
   hasDirectListings: boolean;
+  chainSlug: string;
 }
 
 export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
@@ -181,6 +190,7 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
   trackingCategory,
   hasDirectListings,
   hasEnglishAuctions,
+  chainSlug,
 }) => {
   return (
     <Flex gap={6} flexDirection="column">
@@ -194,12 +204,14 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
         <DirectListingCards
           contract={contract}
           trackingCategory={trackingCategory}
+          chainSlug={chainSlug}
         />
       )}
       {hasEnglishAuctions && contract && (
         <EnglishAuctionCards
           contract={contract}
           trackingCategory={trackingCategory}
+          chainSlug={chainSlug}
         />
       )}
     </Flex>
@@ -239,12 +251,16 @@ interface ListingCardsProps {
   isPending: boolean;
   trackingCategory: string;
   isMarketplaceV1?: boolean;
+  chainSlug: string;
+  contractAddress: string;
 }
 const ListingCards: React.FC<ListingCardsProps> = ({
   listings,
   isPending,
   isMarketplaceV1,
   trackingCategory,
+  chainSlug,
+  contractAddress,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
 
@@ -254,8 +270,8 @@ const ListingCards: React.FC<ListingCardsProps> = ({
       )
     : listings.slice(0, isMobile ? 2 : 3);
 
-  const directListingsHref = useTabHref("direct-listings");
-  const englishAuctionsHref = useTabHref("english-auctions");
+  const directListingsHref = `/${chainSlug}/${contractAddress}/direct-listings`;
+  const englishAuctionsHref = `/${chainSlug}/${contractAddress}/english-auctions`;
 
   return (
     <SimpleGrid gap={{ base: 3, md: 6 }} columns={{ base: 2, md: 3 }}>

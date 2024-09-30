@@ -1,6 +1,7 @@
 "use client";
 
 import type { SidebarLink } from "@/components/blocks/Sidebar";
+import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,6 @@ import {
 import { ArrowLeftIcon, CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import invariant from "tiny-invariant";
-import { SidebarLayout } from "../../@/components/blocks/SidebarLayout";
 import { EngineVersionBadge } from "./badges/version";
 import { useHasEnginePermission } from "./useHasEnginePermission";
 

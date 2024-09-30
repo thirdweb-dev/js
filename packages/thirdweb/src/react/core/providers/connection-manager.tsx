@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext } from "react";
 import type { ConnectionManager } from "../../../wallets/manager/index.js";
 

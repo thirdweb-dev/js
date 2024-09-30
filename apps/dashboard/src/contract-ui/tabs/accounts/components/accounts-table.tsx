@@ -1,8 +1,9 @@
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
+"use client";
+
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { Flex, Icon, IconButton, Select, Skeleton } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import {
   MdFirstPage,
@@ -14,6 +15,7 @@ import type { ThirdwebContract } from "thirdweb";
 import { getAccounts, totalAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
 import { Text, TrackedCopyButton } from "tw-components";
+import { useChainSlug } from "../../../../hooks/chains/chainSlug";
 
 const columnHelper = createColumnHelper<{ account: string }>();
 
@@ -39,8 +41,8 @@ type AccountsTableProps = {
 };
 
 export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
-  const router = useRouter();
-  const network = useDashboardEVMChainId();
+  const router = useDashboardRouter();
+  const chainSlug = useChainSlug(contract.chain.id);
 
   const [currentPage, setCurrentPage] = useState(0);
   // default page size of 25
@@ -90,7 +92,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
         isPending={accountsQuery.isPending}
         isFetched={accountsQuery.isFetched}
         onRowClick={(row) => {
-          router.push(`/${network}/${row.account}`);
+          router.push(`/${chainSlug}/${row.account}`);
         }}
       />
       {/* pagination */}

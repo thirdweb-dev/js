@@ -1,8 +1,5 @@
 import { isProd } from "@/constants/env";
-import {
-  type EVMContractInfo,
-  EVMContractInfoProvider,
-} from "@3rdweb-sdk/react";
+import type { EVMContractInfo } from "@3rdweb-sdk/react";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { SimpleGrid } from "@chakra-ui/react";
 import {
@@ -50,18 +47,16 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
       <HydrationBoundary state={props.dehydratedState}>
         <ErrorProvider>
           <SyncChainStores />
-          <EVMContractInfoProvider value={props.contractInfo}>
-            <DashboardThirdwebProvider>
-              <SanctionedAddressesChecker>
-                <PosthogIdentifier />
+          <DashboardThirdwebProvider>
+            <SanctionedAddressesChecker>
+              <PosthogIdentifier />
 
-                <OnboardingModal />
-                <OpCreditsGrantedModalWrapper />
+              <OnboardingModal />
+              <OpCreditsGrantedModalWrapper />
 
-                <AppShell {...props} />
-              </SanctionedAddressesChecker>
-            </DashboardThirdwebProvider>
-          </EVMContractInfoProvider>
+              <AppShell {...props} />
+            </SanctionedAddressesChecker>
+          </DashboardThirdwebProvider>
         </ErrorProvider>
       </HydrationBoundary>
     </QueryClientProvider>

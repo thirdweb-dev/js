@@ -1,3 +1,5 @@
+"use client";
+
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -82,6 +84,7 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
           </div>
 
           <TransactionButton
+            txChainID={contract.chain.id}
             transactionCount={1}
             isLoading={isPending}
             type="submit"

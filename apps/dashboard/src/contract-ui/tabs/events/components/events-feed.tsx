@@ -1,4 +1,6 @@
-import { useEVMContractInfo } from "@3rdweb-sdk/react";
+"use client";
+
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   type InternalTransaction,
   useActivity,
@@ -27,7 +29,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
 import { CircleHelpIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
 import { Fragment, useMemo, useState } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
 import { toast } from "sonner";
@@ -41,6 +42,7 @@ import {
   Heading,
   Text,
 } from "tw-components";
+import { useChainSlug } from "../../../../hooks/chains/chainSlug";
 
 interface EventsFeedProps {
   contract: ThirdwebContract;
@@ -52,10 +54,8 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
   const searchParams = useSearchParams();
   const event = searchParams?.get("event");
   const [selectedEvent, setSelectedEvent] = useState(event || "all");
-
-  const chainSlug = useEVMContractInfo()?.chainSlug;
-
-  const router = useRouter();
+  const chainSlug = useChainSlug(contract.chain.id);
+  const router = useDashboardRouter();
 
   const eventTypes = useMemo(
     () =>
@@ -182,7 +182,7 @@ interface EventsFeedItemProps {
   transaction: InternalTransaction;
   setSelectedEvent: React.Dispatch<React.SetStateAction<string>>;
   contractAddress: string;
-  chainSlug?: string;
+  chainSlug: string | number;
 }
 
 const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
@@ -193,7 +193,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
 }) => {
   const { onCopy } = useClipboard(transaction.transactionHash);
 
-  const router = useRouter();
+  const router = useDashboardRouter();
 
   return (
     <AccordionItem

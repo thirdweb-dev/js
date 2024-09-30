@@ -1,3 +1,5 @@
+"use client";
+
 import { useWalletNFTs } from "@3rdweb-sdk/react";
 import { NFTCards } from "contract-ui/tabs/overview/components/NFTCards";
 import type { ThirdwebContract } from "thirdweb";
@@ -8,10 +10,10 @@ interface NftsOwnedProps {
 }
 
 export const NftsOwned: React.FC<NftsOwnedProps> = ({ contract }) => {
-  const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs(
-    contract.address,
-    contract.chain.id,
-  );
+  const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs({
+    chainId: contract.chain.id,
+    walletAddress: contract.address,
+  });
 
   const nfts = walletNFTs?.result || [];
   const error = walletNFTs?.error;

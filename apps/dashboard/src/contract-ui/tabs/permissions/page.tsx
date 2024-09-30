@@ -2,7 +2,6 @@
 
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { ButtonGroup, Code, Divider, Flex } from "@chakra-ui/react";
-import { useTabHref } from "contract-ui/utils";
 import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading, Link, LinkButton, Text } from "tw-components";
 import { Permissions } from "./components";
@@ -10,16 +9,17 @@ import { Permissions } from "./components";
 interface ContractPermissionsPageProps {
   contract: ThirdwebContract;
   detectedPermissionEnumerable: boolean;
+  chainSlug: string;
 }
 
 export const ContractPermissionsPage: React.FC<
   ContractPermissionsPageProps
-> = ({ contract, detectedPermissionEnumerable }) => {
+> = ({ contract, detectedPermissionEnumerable, chainSlug }) => {
   useIsomorphicLayoutEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const explorerHref = useTabHref("explorer");
+  const explorerHref = `/${chainSlug}/${contract.address}/explorer`;
 
   if (!detectedPermissionEnumerable) {
     return (

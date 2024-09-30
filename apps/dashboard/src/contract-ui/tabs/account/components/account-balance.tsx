@@ -1,3 +1,5 @@
+"use client";
+
 import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import { SimpleGrid, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
