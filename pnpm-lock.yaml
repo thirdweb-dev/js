@@ -331,8 +331,8 @@ importers:
         specifier: 8.3.2
         version: 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       '@storybook/blocks':
-        specifier: 8.3.2
-        version: 8.3.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: 8.3.4
+        version: 8.3.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       '@storybook/nextjs':
         specifier: 8.3.2
         version: 8.3.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(esbuild@0.23.1)(next@14.2.13(@babel/core@7.25.2)(@opentelemetry/api@1.9.0)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(type-fest@4.26.1)(typescript@5.6.2)(webpack-hot-middleware@2.26.1)(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.5))(esbuild@0.23.1))
@@ -5789,6 +5789,18 @@ packages:
       react-dom:
         optional: true
 
+  '@storybook/blocks@8.3.4':
+    resolution: {integrity: sha512-1g4aCrd5CcN+pVhF2ATu9ZRVvAIgBMb2yF9KkCuTpdvqKDuDNK3sGb0CxjS7jp3LOvyjJr9laTOQsz8v8MQc5A==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
+      storybook: ^8.3.4
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
   '@storybook/builder-vite@8.3.2':
     resolution: {integrity: sha512-mq6T2J8gDiIuO8+nLBzQkMRncDb+zLiBmRrudwSNum3cFLPLDV1Y4JSzsoG/SjlQz1feUEqTO9by6i7wxKh+Cw==}
     peerDependencies:
@@ -6384,9 +6396,6 @@ packages:
 
   '@types/lodash.mergewith@4.6.7':
     resolution: {integrity: sha512-3m+lkO5CLRRYU0fhGRp7zbsGi6+BZj0uTVSwvcKU+nSlhjA9/QRNfuSGnD2mX6hQA7ZbmcCkzk5h4ZYGOtk14A==}
-
-  '@types/lodash@4.17.5':
-    resolution: {integrity: sha512-MBIOHVZqVqgfro1euRDWX7OO0fBVUUMrN6Pwm8LQsz8cWhEpihlvR70ENj3f40j58TNxZaWv2ndSkInykNBBJw==}
 
   '@types/lodash@4.17.7':
     resolution: {integrity: sha512-8wTvZawATi/lsmNu10/j2hk1KEP0IvjubqPE3cu1Xz7xfXXt5oCq3SNUz4fMIP4XGF9Ky+Ue2tBA3hcS7LSBlA==}
@@ -22542,6 +22551,27 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
+  '@storybook/blocks@8.3.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))':
+    dependencies:
+      '@storybook/csf': 0.1.11
+      '@storybook/global': 5.0.0
+      '@storybook/icons': 1.2.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/lodash': 4.17.7
+      color-convert: 2.0.1
+      dequal: 2.0.3
+      lodash: 4.17.21
+      markdown-to-jsx: 7.5.0(react@18.3.1)
+      memoizerific: 1.11.3
+      polished: 4.3.1
+      react-colorful: 5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      storybook: 8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      telejson: 7.2.0
+      ts-dedent: 2.2.0
+      util-deprecate: 1.0.2
+    optionalDependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   '@storybook/builder-vite@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))(webpack-sources@3.2.3)':
     dependencies:
       '@storybook/csf-plugin': 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(webpack-sources@3.2.3)
@@ -23559,9 +23589,7 @@ snapshots:
 
   '@types/lodash.mergewith@4.6.7':
     dependencies:
-      '@types/lodash': 4.17.5
-
-  '@types/lodash@4.17.5': {}
+      '@types/lodash': 4.17.7
 
   '@types/lodash@4.17.7': {}
 
