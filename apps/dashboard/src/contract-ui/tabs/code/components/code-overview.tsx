@@ -441,7 +441,7 @@ interface SnippetOptions {
 
 export function formatSnippet(
   // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  snippet: Record<CodeEnvironment, any>,
+  snippet: Partial<Record<CodeEnvironment, any>>,
   {
     contractAddress,
     fn,

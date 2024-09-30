@@ -47,12 +47,12 @@ interface ContractFunctionProps {
   contract: ThirdwebContract;
 }
 
-const ContractFunction: React.FC<Partial<ContractFunctionProps>> = ({
-  fn,
-  contract,
-}) => {
-  if (!fn || !contract) {
-    return null;
+const ContractFunction: React.FC<{
+  fn: AbiFunction | AbiEvent;
+  contract?: ThirdwebContract;
+}> = ({ fn, contract }) => {
+  if (!contract) {
+    return <ContractFunctionInputs fn={fn} />;
   }
 
   return <ContractFunctionInner contract={contract} fn={fn} />;
@@ -92,6 +92,20 @@ function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
     isFunction &&
     (fn.stateMutability === "view" || fn.stateMutability === "pure");
 
+  const commandsKey = isFunction
+    ? isRead
+      ? "read"
+      : "write"
+    : ("events" as const);
+
+  const codeSnippet = formatSnippet(COMMANDS[commandsKey], {
+    contractAddress: contract.address,
+    fn,
+    args: fn.inputs?.map((i) => i.name || ""),
+    chainId: contract.chain.id,
+    extensionNamespace,
+  });
+
   return (
     <Flex direction="column" gap={1.5}>
       <Flex
@@ -111,7 +125,59 @@ function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
           </Badge>
         )}
       </Flex>
-      {fn.inputs?.length && !contract ? (
+
+      {isFunction && (
+        <InteractiveAbiFunction
+          key={JSON.stringify(fn)}
+          contract={contract}
+          abiFunction={fn}
+        />
+      )}
+
+      {codeSnippet && (
+        <>
+          <Heading size="subtitle.md" mt={6}>
+            Use this function in your app
+          </Heading>
+          <Divider mb={2} />
+          <CodeSegment
+            environment={environment}
+            setEnvironment={setEnvironment}
+            snippet={codeSnippet}
+          />
+        </>
+      )}
+    </Flex>
+  );
+}
+
+function ContractFunctionInputs(props: {
+  fn: AbiFunction | AbiEvent;
+}) {
+  const { fn } = props;
+  const isFunction = "stateMutability" in fn;
+
+  return (
+    <Flex direction="column" gap={1.5}>
+      <Flex
+        alignItems={{ base: "start", md: "center" }}
+        gap={2}
+        direction={{ base: "column", md: "row" }}
+      >
+        <Flex alignItems="baseline" gap={1} flexWrap="wrap">
+          <Heading size="subtitle.md">{camelToTitle(fn.name)}</Heading>
+          <Heading size="subtitle.sm" className="text-muted-foreground">
+            ({fn.name})
+          </Heading>
+        </Flex>
+        {isFunction && (
+          <Badge size="label.sm" variant="subtle" colorScheme="green">
+            {fn.stateMutability}
+          </Badge>
+        )}
+      </Flex>
+
+      {fn.inputs?.length ? (
         <>
           <Divider my={2} />
           <Flex flexDir="column" gap={3}>
@@ -173,40 +239,6 @@ function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
           </Flex>
         </>
       ) : null}
-
-      {isFunction && contract && (
-        <InteractiveAbiFunction
-          key={JSON.stringify(fn)}
-          contract={contract}
-          abiFunction={fn}
-        />
-      )}
-
-      {contract && (
-        <>
-          <Heading size="subtitle.md" mt={6}>
-            Use this function in your app
-          </Heading>
-          <Divider mb={2} />
-          <CodeSegment
-            environment={environment}
-            setEnvironment={setEnvironment}
-            snippet={formatSnippet(
-              COMMANDS[
-                isFunction ? (isRead ? "read" : "write") : "events"
-                // biome-ignore lint/suspicious/noExplicitAny: FIXME
-              ] as any,
-              {
-                contractAddress: contract.address,
-                fn,
-                args: fn.inputs?.map((i) => i.name || ""),
-                chainId: contract.chain.id,
-                extensionNamespace,
-              },
-            )}
-          />
-        </>
-      )}
     </Flex>
   );
 }
