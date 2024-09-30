@@ -11,6 +11,7 @@ import Link from "next/link";
 import { memo } from "react";
 import { getContract } from "thirdweb";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { THIRDWEB_DEPLOYER_ADDRESS } from "../../../constants/addresses";
 import { usePublishedContractsFromDeploy } from "../hooks";
 
 interface AsyncContractNameCellProps {
@@ -75,11 +76,32 @@ export const AsyncContractTypeCell = memo(
     const publishedContractsFromDeployQuery =
       usePublishedContractsFromDeploy(contract);
 
+    const publishedContractsFromDeployOriginal =
+      publishedContractsFromDeployQuery.data || [];
+
+    const publishedContractsFromDeploySorted = [
+      ...publishedContractsFromDeployOriginal,
+    ]
+      // latest first
+      .reverse()
+      // prioritize showing the publisher === thirdweb
+      .sort((a, b) => {
+        const aIsTWPublisher = a.publisher === THIRDWEB_DEPLOYER_ADDRESS;
+        const bIsTWPublisher = b.publisher === THIRDWEB_DEPLOYER_ADDRESS;
+        if (aIsTWPublisher && !bIsTWPublisher) {
+          return -1;
+        }
+        if (!aIsTWPublisher && bIsTWPublisher) {
+          return 1;
+        }
+        return 0;
+      });
+
     const contractMetadata = useDashboardContractMetadata(contract);
 
     const contractType =
-      publishedContractsFromDeployQuery.data?.[0]?.displayName ||
-      publishedContractsFromDeployQuery.data?.[0]?.name;
+      publishedContractsFromDeploySorted[0]?.displayName ||
+      publishedContractsFromDeploySorted[0]?.name;
 
     return (
       <SkeletonContainer
