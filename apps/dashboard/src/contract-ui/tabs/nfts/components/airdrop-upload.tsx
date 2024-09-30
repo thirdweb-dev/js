@@ -1,3 +1,4 @@
+import { UnorderedList } from "@/components/ui/List/List";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import {
@@ -7,7 +8,6 @@ import {
   Icon,
   IconButton,
   Link,
-  ListItem,
   Portal,
   Select,
   Table,
@@ -18,13 +18,12 @@ import {
   Thead,
   Tooltip,
   Tr,
-  UnorderedList,
 } from "@chakra-ui/react";
 import { Logo } from "components/logo";
+import { UploadIcon } from "lucide-react";
 import Papa from "papaparse";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type DropzoneOptions, useDropzone } from "react-dropzone";
-import { BsFillCloudUploadFill } from "react-icons/bs";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import {
   MdFirstPage,
@@ -213,12 +212,11 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                   >
                     <input {...getInputProps()} />
                     <div className="flex flex-col p-6">
-                      <Icon
-                        as={BsFillCloudUploadFill}
-                        boxSize={8}
-                        mb={2}
-                        color={noCsv ? "red.500" : "gray.600"}
-                        my="auto"
+                      <UploadIcon
+                        size={16}
+                        className={cn("mx-auto mb-2 text-gray-500", {
+                          "text-red-500": noCsv,
+                        })}
                       />
                       {isDragActive ? (
                         <Heading as={Text} size="label.md">
@@ -241,18 +239,18 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                 <div className="flex flex-row gap-2">
                   <Heading size="subtitle.sm">Requirements</Heading>
                   <UnorderedList>
-                    <ListItem>
+                    <li>
                       Files <em>must</em> contain one .csv file with an address
                       and quantity column, if the quantity column is not
                       provided, it will default to 1 NFT per wallet. -{" "}
                       <Link download color="primary.500" href="/airdrop.csv">
                         Download an example CSV
                       </Link>
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       Repeated addresses will be removed and only the first
                       found will be kept.
-                    </ListItem>
+                    </li>
                   </UnorderedList>
                 </div>
               </Flex>

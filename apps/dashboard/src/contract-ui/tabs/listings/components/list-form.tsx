@@ -1,4 +1,5 @@
 import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Card } from "@/components/ui/card";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
@@ -57,8 +58,9 @@ import {
   Text,
 } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { shortenIfAddress } from "utils/usedapp-external";
+
 import { useAllChainsData } from "../../../../hooks/chains/allChains";
-import { ListLabel } from "./list-label";
 
 type ListForm =
   | (Omit<CreateListingParams, "quantity" | "currencyContractAddress"> & {
@@ -430,7 +432,25 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                   shouldWrapChildren
                   placement="left-end"
                   key={nft.contractAddress + nft.id}
-                  label={<ListLabel nft={nft} />}
+                  label={
+                    <Card className="p-4">
+                      <ul>
+                        <li>
+                          <strong>Name:</strong> {nft.metadata?.name || "N/A"}
+                        </li>
+                        <li>
+                          <strong>Contract Address:</strong>{" "}
+                          {shortenIfAddress(nft.contractAddress)}
+                        </li>
+                        <li>
+                          <strong>Token ID: </strong> {nft.id.toString()}
+                        </li>
+                        <li>
+                          <strong>Token Standard: </strong> {nft.type}
+                        </li>
+                      </ul>
+                    </Card>
+                  }
                 >
                   <Box
                     borderRadius="lg"

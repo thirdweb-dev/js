@@ -1,4 +1,4 @@
-import { Container, Flex, List, ListItem } from "@chakra-ui/react";
+import { Container, Flex } from "@chakra-ui/react";
 import { Heading, Text } from "tw-components";
 
 const EarnReasonSection = () => {
@@ -33,13 +33,11 @@ const EarnReasonSection = () => {
         </Text>
 
         <Flex fontSize={{ base: "18px", md: "20px" }}>
-          <List color="white" styleType="none" spacing={3}>
-            <ListItem>Connect with fellow creators</ListItem>
-            <ListItem>Gain insights from industry leaders</ListItem>
-            <ListItem>
-              Influence the web3 gaming future at the Pre-GDC Hackathon
-            </ListItem>
-          </List>
+          <ul className="space-y-3">
+            <li>Connect with fellow creators</li>
+            <li>Gain insights from industry leaders</li>
+            <li>Influence the web3 gaming future at the Pre-GDC Hackathon</li>
+          </ul>
         </Flex>
       </Flex>
     </Container>

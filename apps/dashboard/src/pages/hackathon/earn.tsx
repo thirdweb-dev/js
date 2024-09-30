@@ -1,5 +1,5 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import { Box, Divider, Flex, ListItem } from "@chakra-ui/react";
+import { Box, Divider, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import EarnReasonSection from "components/hackathon/EarnReasonSection";
 import FAQEarn from "components/hackathon/FAQEarn";
@@ -187,23 +187,19 @@ const HackathonEarn = () => {
                 padding="0 22px"
               >
                 <List color="white" styleType="none" spacing={3}>
-                  <ListItem>
+                  <li>
                     100,000 $ALLY tokens to the top 3 projects
                     <List paddingLeft={4} styleType="disc" ml={3}>
-                      <ListItem mt={2}>Grand Prize 50K $Ally Token</ListItem>
-                      <ListItem mt={2}>1st Place 30k $Ally Token</ListItem>
-                      <ListItem mt={2}>2nd Place 20K $Ally Token</ListItem>
+                      <li className="mt-2">Grand Prize 50K $Ally Token</li>
+                      <li className="mt-2">1st Place 30k $Ally Token</li>
+                      <li className="mt-2">2nd Place 20K $Ally Token</li>
                     </List>
-                  </ListItem>
-                  <ListItem>
-                    Featured prototypes on Earn Alliance for 30 days.
-                  </ListItem>
-                  <ListItem>
+                  </li>
+                  <li>Featured prototypes on Earn Alliance for 30 days.</li>
+                  <li>
                     3 months free access to thirdweb Engine + Growth Plan.
-                  </ListItem>
-                  <ListItem>
-                    Social media amplification to over 200K+ followers.
-                  </ListItem>
+                  </li>
+                  <li>Social media amplification to over 200K+ followers.</li>
                 </List>
               </Flex>
             </Flex>
@@ -220,21 +216,19 @@ const HackathonEarn = () => {
                 </Text>
                 <Flex fontSize={{ base: "18px", md: "20px" }}>
                   <List color="white" styleType="none" spacing={3}>
-                    <ListItem>
+                    <li>
                       Design a Unity 3D web mini-game with simple, engaging
                       tasks and crypto rewards.
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       Leverage thirdweb&apos;s developer tools for blockchain
                       tech
-                    </ListItem>
-                    <ListItem>
-                      Optionally, include NFT or crypto game rewards
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>Optionally, include NFT or crypto game rewards</li>
+                    <li>
                       Integrate at least one challenge using the Earn Alliance
                       platform&apos;s events API
-                    </ListItem>
+                    </li>
                   </List>
                 </Flex>
               </Flex>
@@ -275,19 +269,19 @@ const HackathonEarn = () => {
 
                 <Flex fontSize={{ base: "18px", md: "20px" }}>
                   <List color="white" styleType="none" maxW={807} spacing={3}>
-                    <ListItem>
+                    <li>
                       User Experience / Playability: How intuitive and easy is
                       the game?
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       Ecosystem impact: How impactful, useful, and creative does
                       the game leverage web3 technology to impact the web3 game
                       ecosystem as a whole?
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       Originality/innovation: How fun and novel is the game
                       versus existing web3 games
-                    </ListItem>
+                    </li>
                   </List>
                 </Flex>
               </Flex>
@@ -324,24 +318,22 @@ const HackathonEarn = () => {
                   padding="0 22px"
                 >
                   <List color="white" styleType="none" maxW={807} spacing={3}>
-                    <ListItem>Dates: February 27th — March 16th, 2024</ListItem>
-                    <ListItem>
+                    <li>Dates: February 27th — March 16th, 2024</li>
+                    <li>
                       Remote Hackathon + In-person presentations and awards @
                       thirdweb&apos;s San Francisco offices on March 17th
                       <List paddingLeft={4} styleType="disc" ml={3} mt={2}>
-                        <ListItem>
-                          You can present remotely via discord
-                        </ListItem>
+                        <li>You can present remotely via discord</li>
                       </List>
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       Open to all skill levels, from beginners to experienced
                       developers
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       Team size: 1 to 4 members, all must be registered to
                       participate
-                    </ListItem>
+                    </li>
                   </List>
                 </Flex>
               </Flex>
