@@ -236,7 +236,6 @@ export function TransferConfirmationScreen(
                 setStep("execute");
                 setStatus({ id: "idle" });
               } else {
-                console.log("12346");
                 const transferResponse = await getBuyWithCryptoTransfer({
                   client,
                   fromAddress: payer.account.address,
