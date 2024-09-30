@@ -985,8 +985,8 @@ importers:
         specifier: 8.3.4
         version: 8.3.4(@storybook/test@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)
       '@storybook/react-vite':
-        specifier: 8.3.2
-        version: 8.3.2(@storybook/test@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.22.4)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))(webpack-sources@3.2.3)
+        specifier: 8.3.4
+        version: 8.3.4(@storybook/test@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.22.4)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))(webpack-sources@3.2.3)
       '@storybook/test':
         specifier: 8.3.2
         version: 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
@@ -3631,8 +3631,8 @@ packages:
     resolution: {integrity: sha512-u3UPsIilWKOM3F9CXtrG8LEJmNxwoCQC/XVj4IKYXvvpx7QIi/Kg1LI5uDmDpKlac62NUtX7eLjRh+jVZcLOzw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
-  '@joshwooding/vite-plugin-react-docgen-typescript@0.3.1':
-    resolution: {integrity: sha512-pdoMZ9QaPnVlSM+SdU/wgg0nyD/8wQ7y90ttO2CMCyrrm7RxveYIJ5eNfjPaoMFqW41LZra7QO9j+xV4Y18Glw==}
+  '@joshwooding/vite-plugin-react-docgen-typescript@0.3.0':
+    resolution: {integrity: sha512-2D6y7fNvFmsLmRt6UCOFJPvFoPMJGT0Uh1Wg0RaigUp7kdQPs6yYn8Dmx6GZkOH/NW0yMTwRz/p0SRMMRo50vA==}
     peerDependencies:
       typescript: '>= 4.3.x'
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0
@@ -5801,11 +5801,11 @@ packages:
       react-dom:
         optional: true
 
-  '@storybook/builder-vite@8.3.2':
-    resolution: {integrity: sha512-mq6T2J8gDiIuO8+nLBzQkMRncDb+zLiBmRrudwSNum3cFLPLDV1Y4JSzsoG/SjlQz1feUEqTO9by6i7wxKh+Cw==}
+  '@storybook/builder-vite@8.3.4':
+    resolution: {integrity: sha512-Sa6SZ7LeHpkrnuvua8P8MR8e8a+MPKbyMmr9TqCCy8Ud/t4AM4kHY3JpJGtrgeK9l43fBnBwfdZYoRl5J6oWeA==}
     peerDependencies:
       '@preact/preset-vite': '*'
-      storybook: ^8.3.2
+      storybook: ^8.3.4
       typescript: '>= 4.3.x'
       vite: ^4.0.0 || ^5.0.0
       vite-plugin-glimmerx: '*'
@@ -5848,6 +5848,11 @@ packages:
     resolution: {integrity: sha512-9UvoBkYDLzf/0e2lQMPyBCJHrrEMxvhL7fraVX2c5OxwVUwgQnHlgNR3zxzw1Nr/AWyC5OKYlaE1eM10JVm2GA==}
     peerDependencies:
       storybook: ^8.3.2
+
+  '@storybook/csf-plugin@8.3.4':
+    resolution: {integrity: sha512-ZMFWYxeTN4GxCn8dyIH4roECyLDy29yv/QKM+pHM3AC5Ny2HWI35SohWao4fGBAFxPQFbR5hPN8xa6ofHPSSTg==}
+    peerDependencies:
+      storybook: ^8.3.4
 
   '@storybook/csf@0.0.1':
     resolution: {integrity: sha512-USTLkZze5gkel8MYCujSRBVIrUQ3YPBrLOx7GNk/0wttvVtlzWXAq9eLbQ4p/NicGxP+3T7KPEMVV//g+yubpw==}
@@ -5938,13 +5943,13 @@ packages:
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       storybook: ^8.3.4
 
-  '@storybook/react-vite@8.3.2':
-    resolution: {integrity: sha512-xxV6FJj4OnJ1lQbO7804T2xJu0aXvb02/tyLpDo0aNdi2vMZrHMroYpcOJW3RDuOIrMYq2OvXPrIHnkumidSsg==}
+  '@storybook/react-vite@8.3.4':
+    resolution: {integrity: sha512-0Xm8eTH+jQ7SV4moLkPN4G6U2IDrqXPXUqsZdXaccepIMcD4G75foQFm2LOrFJuY+IMySPspKeTqf8OLskPppw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
-      storybook: ^8.3.2
+      storybook: ^8.3.4
       vite: ^4.0.0 || ^5.0.0
 
   '@storybook/react@8.3.2':
@@ -19441,7 +19446,7 @@ snapshots:
       '@types/yargs': 17.0.32
       chalk: 4.1.2
 
-  '@joshwooding/vite-plugin-react-docgen-typescript@0.3.1(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))':
+  '@joshwooding/vite-plugin-react-docgen-typescript@0.3.0(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))':
     dependencies:
       glob: 7.2.3
       glob-promise: 4.2.2(glob@7.2.3)
@@ -22572,9 +22577,9 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@storybook/builder-vite@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))(webpack-sources@3.2.3)':
+  '@storybook/builder-vite@8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))(webpack-sources@3.2.3)':
     dependencies:
-      '@storybook/csf-plugin': 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(webpack-sources@3.2.3)
+      '@storybook/csf-plugin': 8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(webpack-sources@3.2.3)
       '@types/find-cache-dir': 3.2.1
       browser-assert: 1.2.1
       es-module-lexer: 1.5.4
@@ -22666,6 +22671,13 @@ snapshots:
       - utf-8-validate
 
   '@storybook/csf-plugin@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(webpack-sources@3.2.3)':
+    dependencies:
+      storybook: 8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      unplugin: 1.14.1(webpack-sources@3.2.3)
+    transitivePeerDependencies:
+      - webpack-sources
+
+  '@storybook/csf-plugin@8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(webpack-sources@3.2.3)':
     dependencies:
       storybook: 8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       unplugin: 1.14.1(webpack-sources@3.2.3)
@@ -22832,12 +22844,12 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       storybook: 8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 
-  '@storybook/react-vite@8.3.2(@storybook/test@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.22.4)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))(webpack-sources@3.2.3)':
+  '@storybook/react-vite@8.3.4(@storybook/test@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.22.4)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))(webpack-sources@3.2.3)':
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.3.1(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.3.0(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))
       '@rollup/pluginutils': 5.1.1(rollup@4.22.4)
-      '@storybook/builder-vite': 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))(webpack-sources@3.2.3)
-      '@storybook/react': 8.3.2(@storybook/test@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)
+      '@storybook/builder-vite': 8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)(vite@5.4.7(@types/node@22.5.5)(terser@5.33.0))(webpack-sources@3.2.3)
+      '@storybook/react': 8.3.4(@storybook/test@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)
       find-up: 5.0.0
       magic-string: 0.30.11
       react: 18.3.1
