@@ -319,8 +319,8 @@ importers:
         specifier: 8.3.2
         version: 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(webpack-sources@3.2.3)
       '@storybook/addon-interactions':
-        specifier: 8.3.2
-        version: 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: 8.3.4
+        version: 8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       '@storybook/addon-links':
         specifier: 8.3.2
         version: 8.3.2(react@18.3.1)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
@@ -973,8 +973,8 @@ importers:
         specifier: 8.3.2
         version: 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(webpack-sources@3.2.3)
       '@storybook/addon-interactions':
-        specifier: 8.3.2
-        version: 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: 8.3.4
+        version: 8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       '@storybook/addon-links':
         specifier: 8.3.2
         version: 8.3.2(react@18.3.1)(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
@@ -5738,10 +5738,10 @@ packages:
     peerDependencies:
       storybook: ^8.3.2
 
-  '@storybook/addon-interactions@8.3.2':
-    resolution: {integrity: sha512-1JeM7iErTxjMlhT1TzVpCmD6SR7QZu54paOQTCCywVpaQG/MoJ+L8MZA1YFufTzq1kpRRrde5yHj2PM0TnMdEg==}
+  '@storybook/addon-interactions@8.3.4':
+    resolution: {integrity: sha512-ORxqe35wUmF7EDHo45mdDHiju3Ryk2pZ1vO9PyvW6ZItNlHt/IxAr7T/TysGejZ/eTBg6tMZR3ExGky3lTg/CQ==}
     peerDependencies:
-      storybook: ^8.3.2
+      storybook: ^8.3.4
 
   '@storybook/addon-links@8.3.2':
     resolution: {integrity: sha512-CHp/3XSB/AWyoP9b2tNaaKNTyftLPIPWqMhqhH1V5irjXhLDpBBEkmgbvB19xJ4qCfDjjOjokSLmSBaVOnzv2g==}
@@ -5875,6 +5875,11 @@ packages:
     peerDependencies:
       storybook: ^8.3.2
 
+  '@storybook/instrumenter@8.3.4':
+    resolution: {integrity: sha512-jVhfNOPekOyJmta0BTkQl9Z6rgRbFHlc0eV4z1oSrzaawSlc9TFzAeDCtCP57vg3FuBX8ydDYAvyZ7s4xPpLyg==}
+    peerDependencies:
+      storybook: ^8.3.4
+
   '@storybook/manager-api@8.3.2':
     resolution: {integrity: sha512-8FuwE3BGsLPF0H154+1X/4krSbvmH5xu5YmaVTVDV8DRPlBeRIlNV0HDiZfBvftF4EB7fRYolzghXQplHIX8Fg==}
     peerDependencies:
@@ -5986,6 +5991,11 @@ packages:
     resolution: {integrity: sha512-pRrARctJoZQSKKhMyKkXZQK+fVtnilxTmd0AJx7UBJFUTZmMbp6uEdoyr4NyORCUO1xxxrdbD88vEUsSC1hdYw==}
     peerDependencies:
       storybook: ^8.3.2
+
+  '@storybook/test@8.3.4':
+    resolution: {integrity: sha512-HRiUenitln8QPHu6DEWUg9s9cEoiGN79lMykzXzw9shaUvdEIhWCsh82YKtmB3GJPj6qcc6dZL/Aio8srxyGAg==}
+    peerDependencies:
+      storybook: ^8.3.4
 
   '@storybook/theming@8.3.2':
     resolution: {integrity: sha512-JXAVc08Tlbu4GTTMGNmwUy69lShqSpJixAJc4bvWTnNAtPTRltiNJCg/KJ0GauEyRFk8ZR2Ha4KhN3DB1felNQ==}
@@ -22502,11 +22512,11 @@ snapshots:
       '@storybook/global': 5.0.0
       storybook: 8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 
-  '@storybook/addon-interactions@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))':
+  '@storybook/addon-interactions@8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))':
     dependencies:
       '@storybook/global': 5.0.0
-      '@storybook/instrumenter': 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
-      '@storybook/test': 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+      '@storybook/instrumenter': 8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+      '@storybook/test': 8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       polished: 4.3.1
       storybook: 8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       ts-dedent: 2.2.0
@@ -22713,6 +22723,13 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   '@storybook/instrumenter@8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))':
+    dependencies:
+      '@storybook/global': 5.0.0
+      '@vitest/utils': 2.1.1
+      storybook: 8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      util: 0.12.5
+
+  '@storybook/instrumenter@8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))':
     dependencies:
       '@storybook/global': 5.0.0
       '@vitest/utils': 2.1.1
@@ -22944,6 +22961,19 @@ snapshots:
       '@storybook/csf': 0.1.11
       '@storybook/global': 5.0.0
       '@storybook/instrumenter': 8.3.2(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+      '@testing-library/dom': 10.4.0
+      '@testing-library/jest-dom': 6.5.0
+      '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
+      '@vitest/expect': 2.0.5
+      '@vitest/spy': 2.0.5
+      storybook: 8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      util: 0.12.5
+
+  '@storybook/test@8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))':
+    dependencies:
+      '@storybook/csf': 0.1.11
+      '@storybook/global': 5.0.0
+      '@storybook/instrumenter': 8.3.4(storybook@8.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       '@testing-library/dom': 10.4.0
       '@testing-library/jest-dom': 6.5.0
       '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
