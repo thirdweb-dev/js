@@ -12,7 +12,6 @@ import {
   DrawerHeader,
   FormControl,
   Input,
-  Stack,
   Textarea,
   useModalContext,
 } from "@chakra-ui/react";
@@ -282,7 +281,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
                 <Heading size="subtitle.md">Advanced Options</Heading>
                 <AccordionIcon />
               </AccordionButton>
-              <AccordionPanel px={0} as={Stack} spacing={6}>
+              <AccordionPanel className="flex flex-col gap-6 px-0">
                 <FormControl isInvalid={!!errors.background_color}>
                   <FormLabel>
                     Background Color <OpenSeaPropertyBadge />

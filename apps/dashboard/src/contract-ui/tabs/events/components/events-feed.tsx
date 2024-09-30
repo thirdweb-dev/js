@@ -21,7 +21,6 @@ import {
   Select,
   SimpleGrid,
   Spinner,
-  Stack,
   Switch,
   Tooltip,
 } from "@chakra-ui/react";
@@ -302,14 +301,14 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
           </ButtonGroup>
 
           <Box gridColumn="span 3">
-            <Stack direction="row" justify="space-between">
+            <div className="flex flex-row justify-between gap-2">
               <Text fontFamily="mono" noOfLines={1}>
                 {transaction.blockNumber}
               </Text>
               <div>
                 <Icon as={FiChevronDown} />
               </div>
-            </Stack>
+            </div>
           </Box>
         </SimpleGrid>
       </AccordionButton>
@@ -386,7 +385,7 @@ const TransactionData: React.FC<TransactionDataProps> = ({
   return (
     <>
       <SimpleGrid columns={12} gap={2}>
-        <Stack direction="row" align="center" gridColumn="span 3">
+        <div className="col-span-3 flex flex-row items-center gap-2">
           <Tooltip
             p={0}
             bg="transparent"
@@ -403,7 +402,7 @@ const TransactionData: React.FC<TransactionDataProps> = ({
           </Tooltip>
 
           <Text fontWeight="bold">{name}</Text>
-        </Stack>
+        </div>
 
         <Text gridColumn="span 9">{value.toString()}</Text>
       </SimpleGrid>

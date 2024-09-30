@@ -10,7 +10,6 @@ import {
   Input,
   Select,
   Spinner,
-  Stack,
   Tooltip,
   useModalContext,
 } from "@chakra-ui/react";
@@ -215,9 +214,8 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   );
 
   return (
-    <Stack
-      spacing={6}
-      as="form"
+    <form
+      className="flex flex-col gap-6"
       id={formId}
       onSubmit={form.handleSubmit(async (formData) => {
         if (!formData.selected || !selectedContract) {
@@ -367,20 +365,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         </FormHelperText>
         {!isSupportedChain ? (
           <Flex flexDir="column" gap={4} mb={4}>
-            <Stack
-              direction="row"
-              bg="orange.50"
-              borderRadius="md"
-              borderWidth="1px"
-              borderColor="orange.100"
-              align="center"
-              padding="10px"
-              spacing={3}
-              _dark={{
-                bg: "orange.300",
-                borderColor: "orange.300",
-              }}
-            >
+            <div className="flex flex-row items-center gap-3 rounded-md border border-border border-orange-100 bg-orange-50 p-[10px] dark:border-orange-300 dark:bg-orange-300">
               <Icon
                 as={FiInfo}
                 color="orange.400"
@@ -391,7 +376,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                 This chain is not supported by our NFT API yet, please enter the
                 contract address of the NFT you want to list.
               </Text>
-            </Stack>
+            </div>
             <FormControl
               isInvalid={!!form.formState.errors.selected?.contractAddress}
             >
@@ -476,20 +461,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
             })}
           </Flex>
         ) : nfts && nfts.length === 0 ? (
-          <Stack
-            direction="row"
-            bg="orange.50"
-            borderRadius="md"
-            borderWidth="1px"
-            borderColor="orange.100"
-            align="center"
-            padding="10px"
-            spacing={3}
-            _dark={{
-              bg: "orange.300",
-              borderColor: "orange.300",
-            }}
-          >
+          <div className="flex flex-row items-center gap-3 rounded-md border border-border border-orange-100 bg-orange-50 p-[10px] dark:border-orange-300 dark:bg-orange-300">
             <Icon
               as={FiInfo}
               color="orange.400"
@@ -504,7 +476,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
               </Link>
               .
             </Text>
-          </Stack>
+          </div>
         ) : null}
       </FormControl>
       <FormControl isRequired isDisabled={noNfts}>
@@ -537,11 +509,11 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
       </FormControl>
       {form.watch("selected")?.type?.toLowerCase() !== "erc721" && (
         <FormControl isRequired isDisabled={noNfts}>
-          <Stack justify="space-between" direction="row">
+          <div className="flex flex-row justify-between gap-2">
             <Heading as={FormLabel} size="label.lg">
               Quantity
             </Heading>
-          </Stack>
+          </div>
           <Input {...form.register("quantity")} />
           <FormHelperText>
             The number of tokens to list for sale.
@@ -581,6 +553,6 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
           <AlertTitle>No NFT selected</AlertTitle>
         </Alert>
       )}
-    </Stack>
+    </form>
   );
 };

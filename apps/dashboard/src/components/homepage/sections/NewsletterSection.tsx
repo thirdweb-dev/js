@@ -5,7 +5,6 @@ import {
   FormControl,
   Icon,
   Input,
-  Stack,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { MdMarkEmailRead } from "react-icons/md";
@@ -40,14 +39,8 @@ export const NewsletterSection = () => {
   return (
     <Box bg="rgba(0,0,0,.6)" zIndex="100">
       <Container as="section" maxW="container.page" color="gray.500">
-        <Stack
-          spacing="8"
-          direction={{ base: "column", md: "row" }}
-          justify="space-between"
-          py={{ base: "12", md: "16" }}
-          px={12}
-        >
-          <Stack direction="row" spacing={5} align="center">
+        <div className="flex flex-col justify-between gap-8 px-12 py-12 md:flex-row md:py-16">
+          <div className="flex flex-row items-center gap-5">
             <Icon boxSize={8} color="white" as={MdMarkEmailRead} />
             <div className="flex flex-col gap-2">
               <Text color="white" size="label.lg">
@@ -58,7 +51,7 @@ export const NewsletterSection = () => {
                 updates and news.
               </Text>
             </div>
-          </Stack>
+          </div>
 
           <form onSubmit={(e) => e.preventDefault()}>
             <Flex gap={0} minW={{ base: "100%", md: "350px" }}>
@@ -97,7 +90,7 @@ export const NewsletterSection = () => {
               </Button>
             </Flex>
           </form>
-        </Stack>
+        </div>
       </Container>
     </Box>
   );

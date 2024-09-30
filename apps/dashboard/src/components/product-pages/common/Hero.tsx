@@ -1,11 +1,4 @@
-import {
-  Container,
-  Flex,
-  GridItem,
-  Icon,
-  SimpleGrid,
-  Stack,
-} from "@chakra-ui/react";
+import { Container, Flex, GridItem, Icon, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import type { StaticImageData } from "next/image";
 import type { ReactElement, ReactNode } from "react";
@@ -72,14 +65,7 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
           align={{ base: "initial", md: "start" }}
           justify={{ base: "start", md: "center" }}
         >
-          <Stack
-            display={{ base: "none", md: "flex" }}
-            direction="row"
-            align="center"
-            spacing={1}
-            opacity={0.8}
-            justify={{ base: "center", md: "flex-start" }}
-          >
+          <div className="hidden flex-row items-center justify-center gap-1 opacity-80 md:flex md:justify-start">
             <Text
               cursor="default"
               fontWeight="medium"
@@ -97,7 +83,7 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
             >
               {name}
             </Text>
-          </Stack>
+          </div>
           <Heading
             pt={{ base: "80px", md: "0px" }}
             as="h1"

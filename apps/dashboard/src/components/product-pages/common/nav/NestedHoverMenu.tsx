@@ -1,11 +1,4 @@
-import {
-  Box,
-  Fade,
-  Flex,
-  SimpleGrid,
-  Stack,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Fade, Flex, SimpleGrid, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { Card, Text } from "tw-components";
 import { NavCard } from "./NavCard";
@@ -126,7 +119,8 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
                 borderRightColor="gray.900"
               >
                 {sections.map((section) => (
-                  <Stack
+                  <div
+                    className="flex flex-col gap-2"
                     key={section.name}
                     onMouseEnter={() => handleMouseEnter(section.label)}
                     onMouseLeave={handleMouseLeave}
@@ -138,7 +132,7 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
                         {...section}
                       />
                     </SimpleGrid>
-                  </Stack>
+                  </div>
                 ))}
               </Flex>
               <Flex p={4} bg="#0E0F11">

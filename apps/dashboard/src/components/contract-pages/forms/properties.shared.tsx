@@ -6,7 +6,6 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  Stack,
   Tooltip,
 } from "@chakra-ui/react";
 import { FileInput } from "components/shared/FileInput";
@@ -96,9 +95,7 @@ export const PropertiesFormControl = <
           <div className="flex flex-row items-center gap-2" key={field.id}>
             <FormControl
               isInvalid={isInvalid}
-              as={Stack}
-              direction="row"
-              align="top"
+              className="flex flex-row items-start"
             >
               <FormControl isInvalid={!!keyError}>
                 <Input
