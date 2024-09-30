@@ -45,7 +45,7 @@
     "@changesets/cli": "2.27.8",
     "@manypkg/cli": "0.21.4",
     "@manypkg/get-packages": "2.2.2",
-    "@types/node": "20.14.9",
+    "@types/node": "22.7.4",
     "turbo": "2.1.2",
     "typescript": "5.6.2"
   },
