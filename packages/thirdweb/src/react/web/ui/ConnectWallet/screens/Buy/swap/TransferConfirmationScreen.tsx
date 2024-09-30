@@ -246,7 +246,7 @@ export function TransferConfirmationScreen(
                     ? NATIVE_TOKEN_ADDRESS
                     : token.address,
                   amount: tokenAmount,
-                  purchaseData: payOptions?.purchaseData, // TODO (pay): add purchase data
+                  purchaseData: payOptions?.purchaseData,
                 });
 
                 if (transferResponse.approval) {
