@@ -203,7 +203,7 @@
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
     "@google/model-viewer": "2.1.1",
-    "@noble/curves": "1.4.0",
+    "@noble/curves": "1.6.0",
     "@noble/hashes": "1.4.0",
     "@passwordless-id/webauthn": "^1.6.1",
     "@radix-ui/react-dialog": "1.1.1",
