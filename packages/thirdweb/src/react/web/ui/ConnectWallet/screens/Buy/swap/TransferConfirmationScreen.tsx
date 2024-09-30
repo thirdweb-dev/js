@@ -11,6 +11,7 @@ import { sendTransaction } from "../../../../../../../transaction/actions/send-t
 import { prepareTransaction } from "../../../../../../../transaction/prepare-transaction.js";
 import { toWei } from "../../../../../../../utils/units.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
+import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useChainSymbol } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -26,7 +27,7 @@ import { TokenInfoRow } from "../pay-transactions/TokenInfoRow.js";
 import type { PayerInfo } from "../types.js";
 import { ConnectorLine } from "./ConfirmationScreen.js";
 
-type TrasnferConfirmationScreenProps = {
+type TransferConfirmationScreenProps = {
   title: string;
   onBack?: () => void;
   setTransactionHash: (txHash: string) => void;
@@ -38,10 +39,11 @@ type TrasnferConfirmationScreenProps = {
   token: ERC20OrNativeToken;
   tokenAmount: string;
   transactionMode?: boolean;
+  payOptions?: PayUIOptions;
 };
 
 export function TransferConfirmationScreen(
-  props: TrasnferConfirmationScreenProps,
+  props: TransferConfirmationScreenProps,
 ) {
   const {
     title,
@@ -55,6 +57,7 @@ export function TransferConfirmationScreen(
     tokenAmount,
     transactionMode,
     setTransactionHash,
+    payOptions,
   } = props;
   const [step, setStep] = useState<"approve" | "transfer" | "execute">(
     "transfer",
@@ -233,6 +236,7 @@ export function TransferConfirmationScreen(
                 setStep("execute");
                 setStatus({ id: "idle" });
               } else {
+                console.log("12346");
                 const transferResponse = await getBuyWithCryptoTransfer({
                   client,
                   fromAddress: payer.account.address,
@@ -242,7 +246,7 @@ export function TransferConfirmationScreen(
                     ? NATIVE_TOKEN_ADDRESS
                     : token.address,
                   amount: tokenAmount,
-                  purchaseData: undefined, // TODO (pay): add purchase data
+                  purchaseData: payOptions?.purchaseData, // TODO (pay): add purchase data
                 });
 
                 if (transferResponse.approval) {
