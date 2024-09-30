@@ -1,4 +1,4 @@
-import { Box, Flex, List, ListItem, SimpleGrid } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Heading, Text } from "tw-components";
 
@@ -96,12 +96,12 @@ const ReasonWeb3Section = () => {
               <Heading size="title.sm" mt={14}>
                 {reason.title}
               </Heading>
-              <List marginTop={6} listStyleType="initial">
+              <ul className="mt-6 list-disc">
                 {reason.list.map((list, _idx) => {
                   // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                  return <ListItem key={_idx}>{list}</ListItem>;
+                  return <li key={_idx}>{list}</li>;
                 })}
-              </List>
+              </ul>
             </Flex>
           );
         })}

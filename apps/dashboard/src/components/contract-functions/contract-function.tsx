@@ -9,7 +9,6 @@ import {
   GridItem,
   Image,
   List,
-  ListItem,
   SimpleGrid,
   Tab,
   TabList,
@@ -433,7 +432,7 @@ const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
   const pathname = usePathname();
   const router = useDashboardRouter();
   return (
-    <ListItem my={1}>
+    <li className="my-1">
       <Button
         size="sm"
         className={cn(
@@ -455,6 +454,6 @@ const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
       >
         {fn.name}
       </Button>
-    </ListItem>
+    </li>
   );
 };
