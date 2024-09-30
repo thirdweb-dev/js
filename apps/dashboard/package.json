@@ -110,7 +110,7 @@
     "@next/eslint-plugin-next": "14.2.13",
     "@playwright/test": "1.47.2",
     "@storybook/addon-essentials": "8.3.2",
-    "@storybook/addon-interactions": "8.3.2",
+    "@storybook/addon-interactions": "8.3.4",
     "@storybook/addon-links": "8.3.2",
     "@storybook/addon-onboarding": "8.3.2",
     "@storybook/addon-viewport": "8.3.2",
