@@ -1,5 +1,5 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import { Box, Flex, Icon, LightMode, SimpleGrid } from "@chakra-ui/react";
+import { Box, Flex, LightMode, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
@@ -9,9 +9,9 @@ import { ProductSection } from "components/product-pages/common/ProductSection";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
+import { ZapIcon } from "lucide-react";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
-import { BsLightningCharge } from "react-icons/bs";
 import { Heading, LinkButton } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 import WhiteLogo from "../../../public/assets/landingpage/white-logo.png";
@@ -210,13 +210,7 @@ const Learn: ThirdwebNextPage = () => {
               <LinkButton
                 role="group"
                 leftIcon={
-                  <Icon
-                    as={BsLightningCharge}
-                    color="#1D64EF"
-                    transitionDuration="slow"
-                    transitionTimingFunction="easeOut"
-                    _groupHover={{ color: "#E0507A" }}
-                  />
+                  <ZapIcon className="size-5 text-[#1D64EF] transition-colors duration-300 ease-out group-hover:text-[#E0507A]" />
                 }
                 color="black"
                 px={20}

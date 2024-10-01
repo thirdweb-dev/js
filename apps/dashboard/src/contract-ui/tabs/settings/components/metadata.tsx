@@ -17,9 +17,10 @@ import { CommonContractSchema } from "constants/schemas";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { PlusIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { FiPlus, FiTrash } from "react-icons/fi";
+import { FiTrash } from "react-icons/fi";
 import type { ThirdwebContract } from "thirdweb";
 import {
   getContractMetadata,
@@ -317,7 +318,7 @@ export const SettingsMetadata = ({
                 size="sm"
                 colorScheme="primary"
                 borderRadius="md"
-                leftIcon={<Icon as={FiPlus} />}
+                leftIcon={<PlusIcon className="size-5" />}
                 onClick={() => append({ key: "", value: "" })}
               >
                 Add URL

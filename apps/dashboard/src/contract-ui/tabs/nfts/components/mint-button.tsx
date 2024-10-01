@@ -1,8 +1,8 @@
 "use client";
 
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
-import { Icon, useDisclosure } from "@chakra-ui/react";
-import { FiPlus } from "react-icons/fi";
+import { useDisclosure } from "@chakra-ui/react";
+import { PlusIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import { Button, Drawer } from "tw-components";
 import { NFTMintForm } from "./mint-form";
@@ -31,7 +31,7 @@ export const NFTMintButton: React.FC<NFTMintButtonProps> = ({
       </Drawer>
       <Button
         colorScheme="primary"
-        leftIcon={<Icon as={FiPlus} />}
+        leftIcon={<PlusIcon className="size-5" />}
         {...restButtonProps}
         onClick={onOpen}
       >

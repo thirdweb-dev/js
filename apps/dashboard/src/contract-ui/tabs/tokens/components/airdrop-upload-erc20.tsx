@@ -21,7 +21,7 @@ import {
   ChevronLeft,
   ChevronRight,
   CircleAlert,
-  Upload,
+  UploadIcon,
 } from "lucide-react";
 import Papa from "papaparse";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -231,7 +231,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
             >
               <input {...getInputProps()} />
               <div className="flex flex-col p-6">
-                <Upload
+                <UploadIcon
                   size={16}
                   className={cn("mx-auto mb-2 text-gray-500", {
                     "text-red-500": noCsv,

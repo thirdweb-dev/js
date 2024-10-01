@@ -1,7 +1,7 @@
 import { InlineCode } from "@/components/ui/inline-code";
 import { cn } from "@/lib/utils";
-import { Container, Flex, Icon, Link, UnorderedList } from "@chakra-ui/react";
-import { BsFillCloudUploadFill } from "react-icons/bs";
+import { Container, Flex, Link, UnorderedList } from "@chakra-ui/react";
+import { UploadIcon } from "lucide-react";
 import { Heading, Text } from "tw-components";
 
 interface UploadStepProps {
@@ -33,12 +33,11 @@ export const UploadStep: React.FC<UploadStepProps> = ({
             >
               <input {...getInputProps()} />
               <div className="m-auto flex flex-col p-6">
-                <Icon
-                  as={BsFillCloudUploadFill}
-                  boxSize={8}
-                  mb={2}
-                  color={hasFailed ? "red.500" : "gray.600"}
-                  mx="auto"
+                <UploadIcon
+                  className={cn(
+                    "mx-auto mb-2 size-8",
+                    hasFailed ? "text-red-500" : "text-gray-600",
+                  )}
                 />
                 {isDragActive ? (
                   <Heading

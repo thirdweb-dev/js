@@ -1,8 +1,8 @@
 "use client";
 
-import { Icon, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { FiPlus } from "react-icons/fi";
+import { PlusIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
@@ -60,7 +60,7 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({ contract }) => {
       <Button
         colorScheme="primary"
         onClick={onOpen}
-        leftIcon={<Icon as={FiPlus} />}
+        leftIcon={<PlusIcon className="size-5" />}
       >
         Create Proposal
       </Button>

@@ -6,11 +6,11 @@ import {
   AccordionItem,
   AccordionPanel,
   Flex,
-  Icon,
   LinkBox,
   SimpleGrid,
 } from "@chakra-ui/react";
 import { Aurora } from "components/homepage/Aurora";
+import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -18,7 +18,6 @@ import { getAbsoluteUrl } from "lib/vercel-utils";
 import type { GetStaticProps } from "next";
 import { PageId } from "page-id";
 import type { ReactNode } from "react";
-import { BsGithub } from "react-icons/bs";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
 import type { ThirdwebNextPage } from "utils/types";
@@ -297,7 +296,7 @@ const OSS: ThirdwebNextPage = ({ contributors }: PageProps) => {
                   px={4}
                   py={7}
                   fontSize="20px"
-                  leftIcon={<Icon as={BsGithub} color="black" />}
+                  leftIcon={<GithubIcon className="size-5 text-black" />}
                   color="black"
                   flexShrink={0}
                   background="rgba(255,255,255,1)"

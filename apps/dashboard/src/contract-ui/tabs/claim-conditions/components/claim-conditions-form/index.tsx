@@ -10,7 +10,6 @@ import {
   AlertTitle,
   Box,
   Flex,
-  Icon,
   Menu,
   MenuButton,
   MenuList,
@@ -20,7 +19,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { CircleHelpIcon } from "lucide-react";
+import { CircleHelpIcon, PlusIcon } from "lucide-react";
 import { Fragment, createContext, useContext, useMemo, useState } from "react";
 import {
   type UseFieldArrayReturn,
@@ -28,7 +27,6 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { FiPlus } from "react-icons/fi";
 import {
   NATIVE_TOKEN_ADDRESS,
   type ThirdwebContract,
@@ -567,7 +565,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                     colorScheme="primary"
                     variant={phases?.length > 0 ? "outline" : "solid"}
                     borderRadius="md"
-                    leftIcon={<Icon as={FiPlus} />}
+                    leftIcon={<PlusIcon className="size-5" />}
                     isDisabled={
                       sendTx.isPending || (!isMultiPhase && phases?.length > 0)
                     }

@@ -9,6 +9,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { FileInput } from "components/shared/FileInput";
+import { PlusIcon } from "lucide-react";
 import { useEffect } from "react";
 import {
   type ArrayPath,
@@ -23,7 +24,7 @@ import {
   type WatchObserver,
   useFieldArray,
 } from "react-hook-form";
-import { FiPlus, FiSlash, FiTrash, FiUpload, FiX } from "react-icons/fi";
+import { FiSlash, FiTrash, FiUpload, FiX } from "react-icons/fi";
 import { Button, FormErrorMessage, FormLabel } from "tw-components";
 
 type OptionalPropertiesInput = {
@@ -179,7 +180,7 @@ export const PropertiesFormControl = <
       })}
       <div className="flex flex-row gap-2">
         <Button
-          leftIcon={<Icon as={FiPlus} />}
+          leftIcon={<PlusIcon className="size-5" />}
           colorScheme="purple"
           size="sm"
           onClick={() =>

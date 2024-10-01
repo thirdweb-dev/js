@@ -1,10 +1,10 @@
 "use client";
 
 import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
-import { Icon, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
-import { FiPlus } from "react-icons/fi";
 import type { ThirdwebContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
@@ -71,7 +71,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
       </Drawer>
       <Button
         colorScheme="primary"
-        leftIcon={<Icon as={FiPlus} />}
+        leftIcon={<PlusIcon className="size-5" />}
         {...restButtonProps}
         onClick={onOpen}
         isDisabled={!address}

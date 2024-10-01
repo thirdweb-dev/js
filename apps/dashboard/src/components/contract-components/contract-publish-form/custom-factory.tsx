@@ -9,9 +9,10 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import type { Abi } from "abitype";
+import { PlusIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useEffect } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-import { FiPlus, FiTrash } from "react-icons/fi";
+import { FiTrash } from "react-icons/fi";
 import { Button, Heading, Text } from "tw-components";
 import { useCustomFactoryAbi } from "../hooks";
 import { NetworkDropdown } from "./NetworkDropdown";
@@ -112,7 +113,7 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
             size="sm"
             colorScheme="primary"
             borderRadius="md"
-            leftIcon={<Icon as={FiPlus} />}
+            leftIcon={<PlusIcon className="size-5" />}
             onClick={() => append({ key: "", value: "" })}
           >
             Add Network
