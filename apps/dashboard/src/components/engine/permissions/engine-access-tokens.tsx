@@ -1,11 +1,12 @@
 "use client";
 
+import { InlineCode } from "@/components/ui/inline-code";
 import {
   useEngineAccessTokens,
   useEngineKeypairs,
   useEngineSystemHealth,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { ButtonGroup, Code, Flex } from "@chakra-ui/react";
+import { ButtonGroup, Flex } from "@chakra-ui/react";
 import { useState } from "react";
 import { Button, CodeBlock, Heading, Link, Text } from "tw-components";
 import { AccessTokensTable } from "./access-tokens-table";
@@ -104,7 +105,7 @@ const StandardAccessTokensPanel = ({
       <Flex direction="column" gap={2} mt={16}>
         <Heading size="title.md">Authenticate with your access token</Heading>
         <Text>
-          Set the <Code>authorization</Code> header.
+          Set the <InlineCode code="authorization" /> header.
         </Text>
         <CodeBlock
           language="typescript"
@@ -155,7 +156,7 @@ const KeypairAuthenticationPanel = ({
         <Heading size="title.md">Authenticate with your access token</Heading>
 
         <Text>
-          Set the <Code>authorization</Code> header.
+          Set the <InlineCode code="authorization" /> header.
         </Text>
         <CodeBlock
           language="typescript"

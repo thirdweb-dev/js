@@ -1,7 +1,8 @@
 "use client";
 
+import { InlineCode } from "@/components/ui/inline-code";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
-import { ButtonGroup, Code, Divider, Flex } from "@chakra-ui/react";
+import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading, Link, LinkButton, Text } from "tw-components";
 import { Permissions } from "./components";
@@ -29,7 +30,8 @@ export const ContractPermissionsPage: React.FC<
           Missing PermissionsEnumerable Extension
         </Heading>
         <Text>
-          This contract does not support the <Code>PermissionsEnumerable</Code>{" "}
+          This contract does not support the{" "}
+          <InlineCode code="PermissionsEnumerable" />
           extension.
           <br />
           As a result, you can only view and manage basic permissions via the{" "}

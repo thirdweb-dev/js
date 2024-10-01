@@ -1,6 +1,5 @@
 "use client";
 
-import {} from "@chakra-ui/react";
 import { Flex, Icon, useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {

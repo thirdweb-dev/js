@@ -1,9 +1,9 @@
 "use client";
 
+import { InlineCode } from "@/components/ui/inline-code";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   ButtonGroup,
-  Code,
   Divider,
   Flex,
   FormControl,
@@ -408,21 +408,11 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
             <>
               <Divider />
               <Heading size="label.sm">Error</Heading>
-              <Text
-                borderColor="borderColor"
-                as={Code}
-                p={4}
-                w="full"
-                bgColor="backgroundHighlight"
-                borderRadius="md"
-                color="red.500"
-                whiteSpace="pre-wrap"
-                borderWidth="1px"
-                position="relative"
-              >
-                {/* biome-ignore lint/suspicious/noExplicitAny: FIXME */}
-                {formatError(error as any)}
-              </Text>
+              <InlineCode
+                //  biome-ignore lint/suspicious/noExplicitAny: FIXME
+                code={formatError(error as any)}
+                className="relative w-full whitespace-pre-wrap rounded-md border border-border p-4 text-red-500"
+              />
             </>
           ) : formattedResponseData ? (
             <>

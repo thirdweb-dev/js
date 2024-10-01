@@ -1,8 +1,8 @@
+import { InlineCode } from "@/components/ui/inline-code";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import {
   Box,
-  Code,
   Container,
   Flex,
   Icon,
@@ -266,8 +266,9 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                       <>
                         <Text as={ListItem}>
                           Files <em>must</em> contain one .csv file with a list
-                          of addresses and their <Code>maxClaimable</Code>.
-                          (amount each wallet is allowed to claim)
+                          of addresses and their{" "}
+                          <InlineCode code="maxClaimable" />. (amount each
+                          wallet is allowed to claim)
                           <br />
                           <Link
                             download
@@ -279,10 +280,10 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                           </Link>
                         </Text>
                         <Text as={ListItem}>
-                          You may optionally add <Code>price</Code> and{" "}
-                          <Code>currencyAddress</Code> overrides as well. This
-                          lets you override the currency and price you would
-                          like to charge per wallet you specified
+                          You may optionally add <InlineCode code="price" /> and
+                          <InlineCode code="currencyAddress" /> overrides as
+                          well. This lets you override the currency and price
+                          you would like to charge per wallet you specified
                           <br />
                           <Link
                             download
@@ -306,7 +307,8 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                           </Link>
                         </Text>
                         <Text as={ListItem}>
-                          You may optionally add a <Code>maxClaimable</Code>{" "}
+                          You may optionally add a{" "}
+                          <InlineCode code="maxClaimable" />
                           column override. (amount each wallet is allowed to
                           claim) If not specified, the default value is the one
                           you have set on your claim phase.
@@ -321,10 +323,10 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                           </Link>
                         </Text>
                         <Text as={ListItem}>
-                          You may optionally add <Code>price</Code> and{" "}
-                          <Code>currencyAddress</Code> overrides. This lets you
-                          override the currency and price you would like to
-                          charge per wallet you specified.{" "}
+                          You may optionally add <InlineCode code="price" /> and
+                          <InlineCode code="currencyAddress" /> overrides. This
+                          lets you override the currency and price you would
+                          like to charge per wallet you specified.{" "}
                           <strong>
                             When defining a custom currency address, you must
                             also define a price override.

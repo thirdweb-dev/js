@@ -1,8 +1,9 @@
+import { InlineCode } from "@/components/ui/inline-code";
 import {
   useEngineCorsConfiguration,
   useEngineSetCorsConfiguration,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Code, Flex, Textarea } from "@chakra-ui/react";
+import { Flex, Textarea } from "@chakra-ui/react";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import { Button, Heading, Text } from "tw-components";
@@ -55,7 +56,8 @@ export const EngineCorsConfig: React.FC<EngineCorsConfigProps> = ({
         <Heading size="title.md">Allowlisted Domains</Heading>
         <Text>
           Specify the origins that can call Engine (
-          <Code>https://example.com</Code>).
+          <InlineCode code="https://example.com" />
+          ).
           <br />
           Enter one origin per line, or leave this list empty to disallow calls
           from web clients.

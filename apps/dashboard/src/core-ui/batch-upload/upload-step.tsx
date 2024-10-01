@@ -1,6 +1,6 @@
-import { UnorderedList } from "@/components/ui/List/List";
+import { InlineCode } from "@/components/ui/inline-code";
 import { cn } from "@/lib/utils";
-import { Code, Container, Flex, Icon, Link } from "@chakra-ui/react";
+import { Container, Flex, Icon, Link, UnorderedList } from "@chakra-ui/react";
 import { BsFillCloudUploadFill } from "react-icons/bs";
 import { Heading, Text } from "tw-components";
 
@@ -81,13 +81,14 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                 .
               </li>
               <li>
-                The csv <em>must</em> have a <Code>name</Code> column, which
-                defines the name of the NFT.
+                The csv <em>must</em> have a <InlineCode code="name" /> column,
+                which defines the name of the NFT.
               </li>
               <li>
                 Asset names <em>must</em> be sequential 0,1,2,3...n.[extension].
                 It doesn&apos;t matter at what number you begin. (Example:{" "}
-                <Code>131.png</Code>, <Code>132.png</Code>).
+                <InlineCode code="131.png" />, <InlineCode code="132.png" />
+                ).
               </li>
               <li>
                 Make sure to drag and drop the CSV/JSON and the images{" "}
@@ -103,23 +104,26 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                 <br />
                 <small>
                   They both have to follow the asset naming convention above.
-                  (Example: <Code>0.png</Code> and <Code>0.mp4</Code>,{" "}
-                  <Code>1.png</Code> and <Code>1.glb</Code>, etc.)
+                  (Example: <InlineCode code="0.png" /> and{" "}
+                  <InlineCode code="0.mp4" />,<InlineCode code="1.png" /> and{" "}
+                  <InlineCode code="1.glb" />, etc.)
                 </small>
               </li>
               <li>
                 When uploading files, we will upload them and pin them to IPFS
                 automatically for you. If you already have the files uploaded,
-                you can add an <Code>image</Code> and/or{" "}
-                <Code>animation_url</Code> column and add the IPFS hashes there.{" "}
+                you can add an <InlineCode code="image" /> and/or
+                <InlineCode code="animation_url" /> column and add the IPFS
+                hashes there.
                 <Link download color="blue.500" href="/example-with-ipfs.csv">
                   Download example.csv
                 </Link>
               </li>
               <li>
                 If you want to make your media files map to your NFTs, you can
-                add add the name of your files to the <Code>image</Code> and{" "}
-                <Code>animation_url</Code> column.{" "}
+                add add the name of your files to the{" "}
+                <InlineCode code="image" /> and
+                <InlineCode code="animation_url" /> column.
                 <Link download color="blue.500" href="/example-with-maps.csv">
                   Download example.csv
                 </Link>

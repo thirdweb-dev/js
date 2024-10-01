@@ -1,5 +1,5 @@
+import { InlineCode } from "@/components/ui/inline-code";
 import {
-  Code,
   FormControl,
   Icon,
   Input,
@@ -104,7 +104,7 @@ const ChainValidation: React.FC = () => {
                   <>
                     <Tr>
                       <Td>
-                        RPC supports <Code>eth_chainId</Code> method
+                        RPC supports <InlineCode code="eth_chainId" /> method
                       </Td>
                       <Td textAlign="right">
                         <StatusCheck
@@ -118,7 +118,8 @@ const ChainValidation: React.FC = () => {
                     </Tr>
                     <Tr>
                       <Td>
-                        RPC supports <Code>eth_blockNumber</Code> method
+                        RPC supports <InlineCode code="eth_blockNumber" />{" "}
+                        method
                       </Td>
                       <Td textAlign="right">
                         <StatusCheck
@@ -135,7 +136,7 @@ const ChainValidation: React.FC = () => {
                         <Td>
                           Chain ID{" "}
                           {existingChain?.id ? (
-                            <Code mr={1}>{existingChain.id}</Code>
+                            <code className="mr-1">{existingChain.id}</code>
                           ) : (
                             ""
                           )}

@@ -1,6 +1,5 @@
 "use client";
 
-import {} from "@chakra-ui/react";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";

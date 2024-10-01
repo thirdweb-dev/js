@@ -1,9 +1,10 @@
+import { InlineCode } from "@/components/ui/inline-code";
 import {
   useEngineIpAllowlistConfiguration,
   useEngineSetIpAllowlistConfiguration,
   useEngineSystemHealth,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Code, Flex, Textarea } from "@chakra-ui/react";
+import { Flex, Textarea } from "@chakra-ui/react";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { isValid } from "ipaddr.js";
 import { useForm } from "react-hook-form";
@@ -74,7 +75,9 @@ export const EngineIpAllowlistConfig: React.FC<
       <Flex flexDir="column" gap={2}>
         <Heading size="title.md">Allowlist IPs</Heading>
         <Text>
-          Specify the IP Addresses that can call Engine (<Code>8.8.8.8</Code>).
+          Specify the IP Addresses that can call Engine (
+          <InlineCode code="8.8.8.8" />
+          ).
           <br />
           Enter a comma separated list of IPs, or one IP per line, or leave this
           list empty to allow all IPs.
