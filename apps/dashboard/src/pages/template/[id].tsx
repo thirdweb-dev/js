@@ -574,7 +574,6 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
               fontSize="14px"
               lineHeight="20px"
               fontWeight={600}
-              iconColor="blackAlpha.900"
             />
             <LinkButton
               as={TrackedLink}

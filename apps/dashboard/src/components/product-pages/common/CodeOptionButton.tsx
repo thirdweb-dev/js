@@ -1,4 +1,3 @@
-import { Icon } from "@chakra-ui/react";
 import { JavaScriptIcon } from "components/icons/brand-icons/JavaScriptIcon";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
@@ -48,7 +47,7 @@ export const CodeOptionButton: React.FC<CodeOptionButtonProps> = ({
 
   return (
     <Button
-      leftIcon={<Icon as={logo.icon} fill={logo.fill} />}
+      leftIcon={<logo.icon className="size-4" fill={logo.fill} />}
       border="1px solid transparent"
       variant="solid"
       fontWeight="normal"

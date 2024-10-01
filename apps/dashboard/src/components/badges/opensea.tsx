@@ -1,9 +1,9 @@
-import { Tooltip } from "@chakra-ui/react";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { Badge, type BadgeProps } from "tw-components";
 
 export const OpenSeaPropertyBadge: React.FC<BadgeProps> = (props) => {
   return (
-    <Tooltip label="This property is supported on OpenSea">
+    <ToolTipLabel label="This property is supported on OpenSea">
       <Badge
         {...props}
         borderRadius="full"
@@ -12,6 +12,6 @@ export const OpenSeaPropertyBadge: React.FC<BadgeProps> = (props) => {
       >
         OpenSea
       </Badge>
-    </Tooltip>
+    </ToolTipLabel>
   );
 };

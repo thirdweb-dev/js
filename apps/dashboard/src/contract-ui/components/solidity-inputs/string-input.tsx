@@ -40,7 +40,7 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
         onChange={handleChange}
       />
       {showButton && (
-        <InputRightElement mx={1} width={{ base: "75px", md: "145px" }}>
+        <InputRightElement mx={1} width={{ base: "75px", md: "160px" }}>
           <IpfsUploadButton
             onUpload={(uri) => {
               if (functionName) {

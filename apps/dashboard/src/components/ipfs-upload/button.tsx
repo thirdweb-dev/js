@@ -1,8 +1,7 @@
-import { Icon } from "@chakra-ui/react";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
 import { useErrorHandler } from "contexts/error-handler";
-import { FiUpload } from "react-icons/fi";
+import { UploadIcon } from "lucide-react";
 import { Button, type ButtonProps } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 
@@ -32,7 +31,7 @@ export const IpfsUploadButton: ComponentWithChildren<IpfsUploadButtonProps> = ({
         size="sm"
         variant="solid"
         aria-label="Upload to IPFS"
-        rightIcon={<Icon as={FiUpload} />}
+        rightIcon={<UploadIcon className="size-4" />}
         isLoading={storageUpload.isPending}
         {...buttonProps}
       >

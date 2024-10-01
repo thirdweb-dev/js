@@ -1,6 +1,5 @@
-import { Icon } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { BsFillLightningChargeFill } from "react-icons/bs";
+import { ZapIcon } from "lucide-react";
 import {
   type ButtonProps,
   LinkButton,
@@ -11,22 +10,18 @@ interface GeneralCtaProps extends Omit<LinkButtonProps, "href"> {
   title: string;
   href: string;
   size?: ButtonProps["size"];
-  iconColor?: string;
 }
 
 export const ProductButton: React.FC<GeneralCtaProps> = ({
   title,
   href,
-  iconColor = "yellow.400",
   ...props
 }) => {
   const trackEvent = useTrack();
 
   return (
     <LinkButton
-      leftIcon={
-        <Icon as={BsFillLightningChargeFill} color={iconColor} boxSize={4} />
-      }
+      leftIcon={<ZapIcon className="size-4 fill-black" />}
       w="full"
       py="24px"
       onClick={() =>
