@@ -43,6 +43,8 @@ export async function getRequiredTransactions(
     modules = [],
   } = options;
 
+  const isZkSync = await isZkSyncChain(chain);
+
   if (deployMetadata?.deployType === "autoFactory") {
     const results: (
       | DeployTransactionResult
@@ -53,7 +55,7 @@ export async function getRequiredTransactions(
         chain,
         client,
       }).then((c) =>
-        c || isZkSyncChain(chain)
+        c || isZkSync
           ? null
           : ({ type: "infra", contractId: "Create2Factory" } as const),
       ),
@@ -62,7 +64,7 @@ export async function getRequiredTransactions(
         client,
         contractId: "Forwarder",
       }).then((c) =>
-        c || isZkSyncChain(chain)
+        c || isZkSync
           ? null
           : ({ type: "infra", contractId: "Forwarder" } as const),
       ),
@@ -78,7 +80,7 @@ export async function getRequiredTransactions(
           }),
         },
       }).then((c) =>
-        c || isZkSyncChain(chain)
+        c || isZkSync
           ? null
           : ({ type: "infra", contractId: "TWCloneFactory" } as const),
       ),

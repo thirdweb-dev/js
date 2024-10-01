@@ -73,7 +73,7 @@ export async function deployViaAutoFactory(
     salt,
   } = options;
 
-  if (isZkSyncChain(chain)) {
+  if (await isZkSyncChain(chain)) {
     return zkDeployProxy({
       chain,
       client,

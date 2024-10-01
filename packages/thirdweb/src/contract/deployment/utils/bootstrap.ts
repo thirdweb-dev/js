@@ -44,7 +44,7 @@ export async function getOrDeployInfraForPublishedContract(
     compilerType,
   } = args;
 
-  if (isZkSyncChain(chain)) {
+  if (await isZkSyncChain(chain)) {
     const cloneFactoryContract = await zkDeployCreate2Factory({
       chain,
       client,

@@ -104,7 +104,7 @@ export async function connectSmartWallet(
   const sponsorGas =
     "gasless" in options ? options.gasless : options.sponsorGas;
 
-  if (isZkSyncChain(chain)) {
+  if (await isZkSyncChain(chain)) {
     return [
       createZkSyncAccount({
         creationOptions,

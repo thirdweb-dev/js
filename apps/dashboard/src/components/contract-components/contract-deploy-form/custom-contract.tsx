@@ -386,7 +386,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         throw new Error("no chain");
       }
 
-      const compilerType = isZkSyncChain(walletChain) ? "zksolc" : "solc";
+      const compilerType = (await isZkSyncChain(walletChain))
+        ? "zksolc"
+        : "solc";
 
       let _contractURI = "";
 

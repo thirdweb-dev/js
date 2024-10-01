@@ -267,7 +267,7 @@ async function directDeploy(options: {
   const { account, client, chain, compilerMetadata, contractParams, salt } =
     options;
 
-  if (isZkSyncChain(chain)) {
+  if (await isZkSyncChain(chain)) {
     return zkDeployContract({
       account,
       client,
