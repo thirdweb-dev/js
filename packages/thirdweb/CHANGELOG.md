@@ -1,5 +1,72 @@
 # thirdweb
 
+## 5.60.0
+
+### Minor Changes
+
+- [#4579](https://github.com/thirdweb-dev/js/pull/4579) [`90b5495`](https://github.com/thirdweb-dev/js/commit/90b5495efb84b8220e7ba352416601c2f239d110) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Pack extensions
+
+  ### Deploy Pack
+
+  ```ts
+  import { deployPackContract } from "thirdweb/extensions/deploy";
+
+  const packAddress = await deployPackContract({
+    account,
+    client,
+    chain,
+    params: {
+      name: "Pack contract name",
+      symbol: "PACK1155",
+    },
+  });
+  ```
+
+  ### Create a Pack
+
+  ```ts
+  import { createPack } from "thirdweb/extensions/pack";
+
+  const transaction = createPack({
+    contract: packContract,
+    client,
+    recipient: "0x...",
+    tokenOwner: "0x...",
+    packMetadata: {
+      name: "Pack #1",
+      image: "image-of-pack-1",
+    },
+    openStartTimestamp: new Date(),
+    erc20Rewards: [
+      {
+        contractAddress: "0x...",
+        quantityPerReward: 1,
+        totalRewards: 1,
+      },
+    ],
+    erc721Rewards: [
+      {
+        contractAddress: "0x...",
+        tokenId: 0n,
+      },
+    ],
+    erc1155Rewards: [
+      {
+        contractAddress: "0x...",
+        tokenId: 0n,
+        quantityPerReward: 1,
+        totalRewards: 1,
+      },
+    ],
+  });
+  ```
+
+### Patch Changes
+
+- [#4820](https://github.com/thirdweb-dev/js/pull/4820) [`80729e9`](https://github.com/thirdweb-dev/js/commit/80729e974808be1b2abd715af8e003b228d6da1b) Thanks [@MananTank](https://github.com/MananTank)! - Added "use client" directives on various client side hooks
+
+- [#4871](https://github.com/thirdweb-dev/js/pull/4871) [`5d0505c`](https://github.com/thirdweb-dev/js/commit/5d0505c43cdb484504c252f6a45cf7dfbf4a2e57) Thanks [@edwardysun](https://github.com/edwardysun)! - Add purchaseData to direct transfer pay transactions
+
 ## 5.59.2
 
 ### Patch Changes
