@@ -3,6 +3,7 @@ import type { Address } from "abitype";
 import {
   type SignTypedDataParameters,
   getTypesForEIP712Domain,
+  isHex,
   serializeTypedData,
   validateTypedData,
 } from "viem";
@@ -314,10 +315,14 @@ function createAccount(provider: ProviderInterface, _address: string) {
         return message.raw;
       })();
 
-      return await provider.request({
+      const res = await provider.request({
         method: "personal_sign",
         params: [messageToSign, account.address],
       });
+      if (!isHex(res)) {
+        throw new Error("Invalid signature returned");
+      }
+      return res;
     },
     async signTypedData(_typedData) {
       if (!account.address) {
@@ -343,10 +348,14 @@ function createAccount(provider: ProviderInterface, _address: string) {
         types,
       });
 
-      return await provider.request({
+      const res = await provider.request({
         method: "eth_signTypedData_v4",
         params: [account.address, stringifiedData],
       });
+      if (!isHex(res)) {
+        throw new Error("Invalid signed payload returned");
+      }
+      return res;
     },
     onTransactionRequested: async () => {
       // make sure to show the coinbase popup BEFORE doing any transaction preprocessing

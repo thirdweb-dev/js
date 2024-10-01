@@ -43,13 +43,13 @@
   },
   "devDependencies": {
     "@types/node": "20.14.9",
-    "@types/react": "^18.3.8",
+    "@types/react": "^18.3.10",
     "@types/react-dom": "^18",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.13",
     "eslint-plugin-react-compiler": "0.0.0-experimental-ca16900-20240916",
     "postcss": "8.4.47",
-    "tailwindcss": "3.4.12",
+    "tailwindcss": "3.4.13",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.6.2"
   }

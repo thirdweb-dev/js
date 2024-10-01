@@ -29,9 +29,9 @@
   ],
   "dependencies": {
     "@aws-sdk/client-lambda": "3.659.0",
-    "@aws-sdk/credential-providers": "3.654.0",
+    "@aws-sdk/credential-providers": "3.658.1",
     "@mobile-wallet-protocol/client": "0.0.3",
-    "@walletconnect/react-native-compat": "2.13.2"
+    "@walletconnect/react-native-compat": "2.16.3"
   },
   "devDependencies": {
     "rimraf": "6.0.1"
