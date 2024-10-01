@@ -20,6 +20,8 @@ export type ClaimToParams = {
  * @param options - The options for the transaction
  * @extension ERC20
  * @example
+ *
+ * ### Basic usage
  * ```ts
  * import { claimTo } from "thirdweb/extensions/erc20";
  * import { sendTransaction } from "thirdweb";
@@ -31,6 +33,17 @@ export type ClaimToParams = {
  * });
  *
  * await sendTransaction({ transaction, account });
+ * ```
+ *
+ * ### For Drops with allowlists
+ * You need to specify the claimer address as the `from` param to avoid any issue with the allowlist
+ * ```ts
+ * const transaction = claimTo({
+ *   contract,
+ *   to: "0x...",
+ *   quantity: 100n,
+ *   from: "0x...", // address of the one claiming
+ * });
  * ```
  * @throws If no claim condition is set
  * @returns A promise that resolves with the submitted transaction hash.
