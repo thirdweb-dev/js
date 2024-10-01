@@ -237,6 +237,18 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
+  // Superposition Mainnet
+  55244: {
+    headerImgUrl: superpositionBanner.src,
+    about:
+      "Superposition is the first blockchain that pays you to use it. It is a DeFi native Layer-3 that focuses on novel incentives and order-flow for growth and value capture for developers and users alike.\n\nSuperpositions includes a native on-chain orderbook with faster execution speeds through Stylus, providing shared and permissionless liquidity for all apps onchain, and Super Assets, which pay yield when you both hold and use them.",
+    cta: {
+      backgroundImageUrl: superpositionCTA.src,
+      title: "The Blockchain that pays you to use it",
+      buttonLink: "https://superposition.so/",
+      buttonText: "Learn more",
+    },
+  },
   // Aleph 0 Mainnet
   41455: {
     headerImgUrl: alephZeroBaner.src,
