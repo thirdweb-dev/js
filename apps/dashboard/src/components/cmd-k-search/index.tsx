@@ -290,12 +290,12 @@ export const CmdKSearch: React.FC = () => {
       </div>
 
       <Button
-        className="p-2 lg:hidden"
+        className="!h-auto !w-auto p-2 lg:hidden"
         aria-label="Search any contract"
         variant="ghost"
         onClick={() => setOpen(true)}
       >
-        <SearchIcon className="size-4" />
+        <SearchIcon className="size-5" />
       </Button>
 
       <CmdKSearchModal open={open} setOpen={setOpen} />

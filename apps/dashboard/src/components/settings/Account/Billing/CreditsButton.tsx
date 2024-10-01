@@ -1,21 +1,18 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 import { useAccount, useAccountCredits } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import {
-  Box,
-  Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
-import { Button, Card, Text } from "tw-components";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { CreditsItem } from "./CreditsItem";
 
 export const formatToDollars = (cents: number) => {
@@ -27,16 +24,11 @@ export const formatToDollars = (cents: number) => {
 };
 
 export const CreditsButton = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
   const trackEvent = useTrack();
-
-  const router = useRouter();
-  const { fromOpCredits: fromOpCreditsQuery } = router.query;
-
-  const shouldShowTooltip = useMemo(
-    () => fromOpCreditsQuery !== undefined,
-    [fromOpCreditsQuery],
-  );
+  const searchParams = useSearchParams();
+  const fromOpCreditsQuery = searchParams?.get("fromOpCredits");
+  const shouldShowTooltip = fromOpCreditsQuery !== null;
 
   const [shouldClose, setShouldClose] = useState(false);
 
@@ -56,74 +48,65 @@ export const CreditsButton = () => {
   const restCredits = credits?.filter((crd) => !crd.name.startsWith("OP -"));
 
   return (
-    <>
-      <Box position="relative">
+    <div className="relative">
+      <Button
+        onClick={() => {
+          setIsOpen(true);
+          trackEvent({
+            category: "credits",
+            action: "button",
+            label: "view-credits",
+          });
+        }}
+        variant="outline"
+        className="h-full rounded-2xl bg-background py-1 text-muted-foreground text-xs hover:text-foreground"
+        size="sm"
+      >
+        Credits: {formatToDollars(totalCreditBalance || 0)}
+      </Button>
+
+      <div
+        className={cn(
+          "absolute z-10 mt-2 w-[300px] rounded-lg border border-border bg-background p-4",
+          shouldShowTooltip && !shouldClose ? "block" : "hidden",
+        )}
+      >
+        <p className="mb-4 text-muted-foreground text-sm">
+          You can view how many credits you have here at any time.
+        </p>
+
         <Button
-          onClick={() => {
-            trackEvent({
-              category: "credits",
-              action: "button",
-              label: "view-credits",
-            });
-            onOpen();
-          }}
+          onClick={() => setShouldClose(true)}
           variant="outline"
-          colorScheme="blue"
           size="sm"
         >
-          <Text color="bgBlack" fontWeight="bold">
-            Credits: {formatToDollars(totalCreditBalance || 0)}
-          </Text>
+          Got it
         </Button>
+      </div>
 
-        <Card
-          position="absolute"
-          bg="backgroundBody"
-          display={shouldShowTooltip && !shouldClose ? "block" : "none"}
-          w="300px"
-          mt={2}
-          zIndex="popover"
-        >
-          <Text mb={4}>
-            You can view how many credits you have here at any time.
-          </Text>
+      {/* Credits Modal  */}
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent dialogOverlayClassName="z-[10000]" className="z-[10001]">
+          <DialogHeader>
+            <DialogTitle className="font-semibold text-2xl tracking-tight">
+              Credits
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-4">
+            <CreditsItem
+              credit={opCredit}
+              isOpCreditDefault={true}
+              onClickApply={() => {
+                setIsOpen(false);
+              }}
+            />
 
-          <Button
-            onClick={() => setShouldClose(true)}
-            variant="outline"
-            size="sm"
-          >
-            Got it
-          </Button>
-        </Card>
-      </Box>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
-        <ModalOverlay />
-        <ModalContent className="!bg-background rounded-lg border border-border">
-          <ModalCloseButton />
-          <ModalHeader>Credits Balance</ModalHeader>
-          <ModalBody>
-            <Flex flexDir="column" gap={4}>
-              <CreditsItem
-                credit={opCredit}
-                onCreditsButton={true}
-                isOpCreditDefault={true}
-                onClickApply={() => {
-                  onClose();
-                }}
-              />
-              {restCredits?.map((credit) => (
-                <CreditsItem
-                  key={credit.couponId}
-                  credit={credit}
-                  onCreditsButton={true}
-                />
-              ))}
-            </Flex>
-          </ModalBody>
-          <ModalFooter />
-        </ModalContent>
-      </Modal>
-    </>
+            {restCredits?.map((credit) => (
+              <CreditsItem key={credit.couponId} credit={credit} />
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };

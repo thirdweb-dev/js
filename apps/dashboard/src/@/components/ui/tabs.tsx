@@ -165,6 +165,8 @@ function useUnderline<El extends HTMLElement>() {
           block: "nearest",
           inline: "center",
         });
+      } else if (lineRef.current) {
+        lineRef.current.style.width = "0px";
       }
     }
 

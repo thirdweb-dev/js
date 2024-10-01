@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useTheme } from "next-themes";
@@ -21,15 +23,15 @@ export const ColorModeToggle: React.FC = () => {
       render={(v) => {
         return (
           <Button
-            className="fade-in-0 p-2 md:p-3"
+            className="fade-in-0 !h-auto !w-auto p-2 text-muted-foreground hover:text-foreground"
             variant="ghost"
             aria-label="toggle color"
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
           >
             {v === "dark" ? (
-              <FiMoon className="size-4 md:size-5" />
+              <FiMoon className="size-5" />
             ) : (
-              <FiSun className="size-4 md:size-5" />
+              <FiSun className="size-5" />
             )}
           </Button>
         );

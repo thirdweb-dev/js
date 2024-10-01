@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { VisuallyHidden } from "@chakra-ui/react";
 
 export const IconLogo: React.FC<{ extraClass?: string; color?: string }> = ({
   color,
@@ -95,7 +94,7 @@ export const Logo: React.FC<ILogoProps> = ({
   color = "var(--chakra-colors-wordmark)",
 }) => {
   return (
-    <h2 className="flex flex-row items-center gap-2">
+    <h2 className="flex flex-row items-center gap-2" aria-label="thirdweb">
       {hideIcon ?? <IconLogo extraClass="w-9 md:w-10 flex-shrink-0" />}
       {(hideWordmark && !forceShowWordMark) ?? (
         <div
@@ -116,7 +115,6 @@ export const Logo: React.FC<ILogoProps> = ({
           </svg>
         </div>
       )}
-      <VisuallyHidden>thirdweb</VisuallyHidden>
     </h2>
   );
 };

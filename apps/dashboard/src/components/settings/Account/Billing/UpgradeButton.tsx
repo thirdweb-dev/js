@@ -1,34 +1,43 @@
+"use client";
+
+import { NavLink } from "@/components/ui/NavLink";
+import { Button } from "@/components/ui/button";
 import { AccountPlan, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { useRouter } from "next/router";
-import { TrackedLinkButton } from "tw-components";
+import { usePathname } from "next/navigation";
 
 export const UpgradeButton = () => {
   const { isLoggedIn } = useLoggedInUser();
   const meQuery = useAccount();
-  const router = useRouter();
+  const pathname = usePathname();
 
   if (
     !isLoggedIn ||
     meQuery.isPending ||
     !meQuery.data ||
-    router.pathname.startsWith("/dashboard/settings/billing")
+    pathname?.startsWith("/dashboard/settings/billing") ||
+    meQuery.data?.plan !== AccountPlan.Free
   ) {
     return null;
   }
 
-  const { plan } = meQuery.data;
-
-  return plan === AccountPlan.Free ? (
-    <TrackedLinkButton
-      category="header"
-      label="upgrade"
-      href="/dashboard/settings/billing"
-      variant="outline"
-      colorScheme="blue"
+  return (
+    <Button
+      asChild
       size="sm"
+      variant="outline"
+      className="h-full rounded-2xl bg-background py-1 text-muted-foreground text-xs hover:text-foreground"
     >
-      Upgrade
-    </TrackedLinkButton>
-  ) : null;
+      <NavLink
+        href="/dashboard/settings/billing"
+        tracking={{
+          label: "upgrade",
+          category: "header",
+          action: "click",
+        }}
+      >
+        Upgrade
+      </NavLink>
+    </Button>
+  );
 };

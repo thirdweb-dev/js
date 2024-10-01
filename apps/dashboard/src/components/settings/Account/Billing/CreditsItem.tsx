@@ -1,23 +1,23 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { type BillingCredit, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Alert, AlertDescription, AlertIcon, Flex } from "@chakra-ui/react";
-import { ChakraNextImage } from "components/Image";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { formatDistance } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import { Card, LinkButton, Text } from "tw-components";
+import { CircleAlertIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { formatToDollars } from "./CreditsButton";
 
 interface CreditsItemProps {
   credit?: BillingCredit;
-  onCreditsButton?: true;
   isOpCreditDefault?: boolean;
   onClickApply?: () => void;
 }
 
 export const CreditsItem: React.FC<CreditsItemProps> = ({
   credit,
-  onCreditsButton,
   isOpCreditDefault,
   onClickApply,
 }) => {
@@ -43,9 +43,9 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
   }
 
   return (
-    <Card p={6} as={Flex} flexDir="column" gap={3}>
-      <Flex flexDir="column" gap={4}>
-        <div className="flex flex-row gap-2">
+    <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/50 p-4">
+      <div className="relative">
+        <div className="absolute top-0 right-0">
           {isOpCredit ? (
             <ChainIcon
               ipfsSrc=// Hard-coded here to remove @thirdweb dev/chains
@@ -53,26 +53,78 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
               size={24}
             />
           ) : isTwCredit ? (
-            <ChakraNextImage
+            <Image
               src={require("../../../../../public/brand/thirdweb-icon.svg")}
               alt="tw-credit"
-              boxSize={6}
+              className="size-6"
               objectFit="contain"
             />
           ) : isStartupCredit ? (
-            <ChakraNextImage
+            <Image
               src={require("../../../../../public/brand/thirdweb-icon.svg")}
               alt="tw-credit"
-              boxSize={6}
+              className="size-6"
               objectFit="contain"
             />
           ) : null}
-          <Text color="bgBlack">{creditTitle}</Text>
-          {!hasAppliedForOpGrant && isOpCredit && (
-            <LinkButton
+        </div>
+
+        <h3 className="text-foreground">{creditTitle}</h3>
+      </div>
+
+      <div className="flex gap-4">
+        <div>
+          <h4 className="font-medium text-muted-foreground text-sm">
+            Remaining Credits
+          </h4>
+          <p className="text-foreground text-sm">
+            {formatToDollars(credit?.remainingValueUsdCents || 0)}
+          </p>
+        </div>
+
+        {!isTwCredit && (
+          <div>
+            <h4 className="font-medium text-muted-foreground text-sm">
+              Claimed Credits (All-Time)
+            </h4>
+            <p className="text-foreground text-sm">
+              {formatToDollars(credit?.originalGrantUsdCents || 0)}
+            </p>
+          </div>
+        )}
+
+        {credit?.expiresAt && (
+          <div>
+            <h4 className="font-medium text-muted-foreground text-sm">
+              Expires
+            </h4>
+            <p className="text-foreground text-sm">
+              {credit?.expiresAt
+                ? formatDistance(new Date(credit.expiresAt), Date.now(), {
+                    addSuffix: true,
+                  })
+                : "N/A"}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {hasAppliedForOpGrant && !credit && isOpCredit && (
+        <Alert variant="info">
+          <CircleAlertIcon className="size-5" />
+          <AlertTitle>Grant application pending approval</AlertTitle>
+          <AlertDescription>
+            You will receive an email once your application&apos;s status
+            changes.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <div className="flex justify-end">
+        {!hasAppliedForOpGrant && isOpCredit && (
+          <Button asChild size="sm" variant="outline" className="bg-background">
+            <Link
               href="/dashboard/settings/gas-credits"
-              size="xs"
-              variant="outline"
               onClick={() => {
                 trackEvent({
                   category: "op-sponsorship",
@@ -85,57 +137,10 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
               }}
             >
               Apply Now
-            </LinkButton>
-          )}
-        </div>
-        <Flex gap={6}>
-          <Flex flexDir="column" gap={1}>
-            <Text>Remaining Credits</Text>
-            <Text color="bgBlack">
-              {formatToDollars(credit?.remainingValueUsdCents || 0)}
-            </Text>
-          </Flex>
-          {!isTwCredit && (
-            <Flex flexDir="column" gap={1}>
-              <Text>Claimed Credits (All-Time)</Text>
-              <Text color="bgBlack">
-                {formatToDollars(credit?.originalGrantUsdCents || 0)}
-              </Text>
-            </Flex>
-          )}
-          {credit?.expiresAt && (
-            <Flex flexDir="column" gap={1}>
-              <Text>Expires</Text>
-              <Text color="bgBlack" textTransform="capitalize">
-                {credit?.expiresAt
-                  ? formatDistance(new Date(credit.expiresAt), Date.now(), {
-                      addSuffix: true,
-                    })
-                  : "N/A"}
-              </Text>
-            </Flex>
-          )}
-        </Flex>
-        {hasAppliedForOpGrant && !credit && isOpCredit && (
-          <Alert
-            status="info"
-            borderRadius="lg"
-            backgroundColor={
-              onCreditsButton ? "backgroundBody" : "backgroundCardHighlight"
-            }
-            borderLeftColor="blue.500"
-            borderLeftWidth={4}
-            as={Flex}
-            gap={1}
-          >
-            <AlertIcon />
-            <AlertDescription>
-              Grant application pending approval. You will receive an email once
-              your application&apos;s status changes.
-            </AlertDescription>
-          </Alert>
+            </Link>
+          </Button>
         )}
-      </Flex>
-    </Card>
+      </div>
+    </div>
   );
 };
