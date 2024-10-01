@@ -45,7 +45,6 @@ export const NFTMediaWithEmptyState: React.FC<{
       }}
       className={cn(
         "flex-shrink-0 overflow-hidden rounded-xl object-contain",
-
         props.className,
       )}
     >

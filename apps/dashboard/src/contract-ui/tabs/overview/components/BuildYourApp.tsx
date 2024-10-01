@@ -7,26 +7,21 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage as Image } from "components/Image";
 import { PRODUCTS } from "components/product-pages/common/nav/data";
-import { useTabHref } from "contract-ui/utils";
-import {
-  Card,
-  Heading,
-  Text,
-  TrackedLink,
-  type TrackedLinkProps,
-} from "tw-components";
+import { Card, Text, TrackedLink, type TrackedLinkProps } from "tw-components";
 
 const RENDERED_PRODUCTS = ["sdk", "storage", "ui-components", "auth"];
 
 interface BuildYourAppProps {
   trackingCategory: TrackedLinkProps["category"];
+  contractAddress: string;
+  chainSlug: string;
 }
 
 export const BuildYourApp: React.FC<BuildYourAppProps> = ({
   trackingCategory,
+  contractAddress,
+  chainSlug,
 }) => {
-  const codeHref = useTabHref("code");
-
   return (
     <Card
       px={{ base: 4, md: 8 }}
@@ -37,13 +32,15 @@ export const BuildYourApp: React.FC<BuildYourAppProps> = ({
     >
       <SimpleGrid {...{ columns: { base: 1, md: 2 } }} gap={8}>
         <GridItem as={Flex} direction="column" gap={4}>
-          <Heading size="label.lg">Build your app</Heading>
+          <h2 className="font-semibold text-2xl tracking-tight">
+            Build your app
+          </h2>
           <Text size="body.md">
             <LinkOverlay
               as={TrackedLink}
               category={trackingCategory}
               label="build_your_app"
-              href={codeHref}
+              href={`/${chainSlug}/${contractAddress}/code`}
               color="blue.500"
             >
               Learn more

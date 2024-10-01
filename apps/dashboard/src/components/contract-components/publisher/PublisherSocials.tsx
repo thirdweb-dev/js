@@ -1,12 +1,12 @@
 import { ButtonGroup, type ButtonGroupProps, Icon } from "@chakra-ui/react";
-import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
-import { SiFacebook } from "@react-icons/all-files/si/SiFacebook";
-import { SiGithub } from "@react-icons/all-files/si/SiGithub";
-import { SiLinkedin } from "@react-icons/all-files/si/SiLinkedin";
-import { SiMedium } from "@react-icons/all-files/si/SiMedium";
-import { SiReddit } from "@react-icons/all-files/si/SiReddit";
-import { SiTelegram } from "@react-icons/all-files/si/SiTelegram";
-import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
+import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
+import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
+import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";
+import { MediumIcon } from "components/icons/brand-icons/MediumIcon";
+import { MetaIcon } from "components/icons/brand-icons/MetaIcon";
+import { RedditIcon } from "components/icons/brand-icons/RedditIcon";
+import { TelegramIcon } from "components/icons/brand-icons/TelegramIcon";
+import { XIcon } from "components/icons/brand-icons/XIcon";
 import type { ProfileMetadata } from "constants/schemas";
 import { FiGlobe } from "react-icons/fi";
 import { LinkButton, TrackedIconButton } from "tw-components";
@@ -37,7 +37,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         }
         bg="transparent"
         aria-label="twitter"
-        icon={<Icon as={SiTwitter} />}
+        icon={<XIcon className="size-4" />}
         category={TRACKING_CATEGORY}
         label="twitter"
       />
@@ -50,7 +50,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         href={publisherProfile.discord}
         bg="transparent"
         aria-label="discord"
-        icon={<Icon as={SiDiscord} />}
+        icon={<DiscordIcon className="size-4" />}
         category={TRACKING_CATEGORY}
         label="discord"
       />
@@ -67,7 +67,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         }
         bg="transparent"
         aria-label="github"
-        icon={<Icon as={SiGithub} />}
+        icon={<GithubIcon className="size-4" />}
         category={TRACKING_CATEGORY}
         label="github"
       />
@@ -98,7 +98,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         }
         bg="transparent"
         aria-label="medium"
-        icon={<Icon as={SiMedium} />}
+        icon={<MediumIcon className="size-4" />}
         category={TRACKING_CATEGORY}
         label="medium"
       />
@@ -115,7 +115,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         }
         bg="transparent"
         aria-label="telegram"
-        icon={<Icon as={SiTelegram} />}
+        icon={<TelegramIcon className="size-4" />}
         category={TRACKING_CATEGORY}
         label="telegram"
       />
@@ -128,7 +128,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         href={publisherProfile.facebook}
         bg="transparent"
         aria-label="facebook"
-        icon={<Icon as={SiFacebook} />}
+        icon={<MetaIcon className="size-4" />}
         category={TRACKING_CATEGORY}
         label="facebook"
       />
@@ -145,7 +145,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         }
         bg="transparent"
         aria-label="reddit"
-        icon={<Icon as={SiReddit} />}
+        icon={<RedditIcon className="size-4" />}
         category={TRACKING_CATEGORY}
         label="reddit"
       />
@@ -162,7 +162,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         }
         bg="transparent"
         aria-label="linkedin"
-        icon={<Icon as={SiLinkedin} />}
+        icon={<LinkedInIcon className="size-4" />}
         category={TRACKING_CATEGORY}
         label="linkedin"
       />

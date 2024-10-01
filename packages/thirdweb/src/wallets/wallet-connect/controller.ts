@@ -119,7 +119,11 @@ export async function connectWC(
     }
   }
 
-  const { rpcMap, chainsToRequest } = getChainsToRequest({
+  const {
+    rpcMap,
+    requiredChain,
+    optionalChains: chainsToRequest,
+  } = getChainsToRequest({
     client: options.client,
     chain: chainToRequest,
     optionalChains: optionalChains,
@@ -131,11 +135,7 @@ export async function connectWC(
         ? { pairingTopic: wcOptions?.pairingTopic }
         : {}),
       optionalChains: chainsToRequest,
-      chains: chainToRequest
-        ? [chainToRequest.id]
-        : chainsToRequest.length > 0
-          ? [chainsToRequest[0]]
-          : [1],
+      chains: requiredChain ? [requiredChain.id] : undefined,
       rpcMap: rpcMap,
     });
   }
@@ -249,7 +249,11 @@ async function initProvider(
     }
   }
 
-  const { rpcMap, chainsToRequest } = getChainsToRequest({
+  const {
+    rpcMap,
+    requiredChain,
+    optionalChains: chainsToRequest,
+  } = getChainsToRequest({
     client: options.client,
     chain: chainToRequest,
     optionalChains: optionalChains,
@@ -266,11 +270,7 @@ async function initProvider(
     optionalMethods: OPTIONAL_METHODS,
     optionalEvents: OPTIONAL_EVENTS,
     optionalChains: chainsToRequest,
-    chains: chainToRequest
-      ? [chainToRequest.id]
-      : chainsToRequest.length > 0
-        ? [chainsToRequest[0]]
-        : [1],
+    chains: requiredChain ? [requiredChain.id] : undefined,
     metadata: {
       name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
       description:
@@ -509,7 +509,10 @@ async function switchChainWC(
  * Set the requested chains to the storage.
  * @internal
  */
-function setRequestedChainsIds(chains: number[], storage: AsyncStorage) {
+function setRequestedChainsIds(
+  chains: number[] | undefined,
+  storage: AsyncStorage,
+) {
   storage?.setItem(storageKeys.requestedChains, JSON.stringify(chains));
 }
 
@@ -530,7 +533,11 @@ function getChainsToRequest(options: {
   chain?: Chain;
   optionalChains?: Chain[];
   client: ThirdwebClient;
-}) {
+}): {
+  rpcMap: Record<number, string>;
+  requiredChain: Chain | undefined;
+  optionalChains: ArrayOneOrMore<number>;
+} {
   const rpcMap: Record<number, string> = {};
 
   if (options.chain) {
@@ -550,21 +557,17 @@ function getChainsToRequest(options: {
     });
   }
 
-  const optionalChainIds = optionalChains.map((c) => c.id) || [];
-
-  const chainsToRequest: ArrayOneOrMore<number> = options.chain
-    ? [options.chain.id, ...optionalChainIds]
-    : optionalChainIds.length > 0
-      ? (optionalChainIds as ArrayOneOrMore<number>)
-      : [1];
-
   if (!options.chain && optionalChains.length === 0) {
     rpcMap[1] = getCachedChain(1).rpc;
   }
 
   return {
     rpcMap,
-    chainsToRequest,
+    requiredChain: options.chain ? options.chain : undefined,
+    optionalChains:
+      optionalChains.length > 0
+        ? (optionalChains.map((x) => x.id) as ArrayOneOrMore<number>)
+        : [1],
   };
 }
 

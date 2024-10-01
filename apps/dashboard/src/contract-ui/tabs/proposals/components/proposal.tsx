@@ -1,3 +1,5 @@
+"use client";
+
 import {
   tokensDelegated,
   votingTokenDecimals,
@@ -134,6 +136,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
       tokensDelegatedQuery.data ? (
         <Flex mt="24px" gap={2}>
           <TransactionButton
+            txChainID={contract.chain.id}
             size="sm"
             transactionCount={1}
             rightIcon={<Icon as={FiCheck} />}
@@ -145,6 +148,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
             Approve
           </TransactionButton>
           <TransactionButton
+            txChainID={contract.chain.id}
             size="sm"
             transactionCount={1}
             rightIcon={<Icon as={FiX} />}
@@ -156,6 +160,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
             Against
           </TransactionButton>
           <TransactionButton
+            txChainID={contract.chain.id}
             colorScheme="blackAlpha"
             size="sm"
             transactionCount={1}

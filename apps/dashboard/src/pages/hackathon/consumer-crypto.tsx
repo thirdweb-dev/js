@@ -1,6 +1,5 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import { Box, Divider, Flex, Icon, ListItem } from "@chakra-ui/react";
-import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
+import { Box, Divider, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import FAQ from "components/hackathon/FAQ";
 import { HackathonFooter } from "components/hackathon/HackathonFooter";
@@ -13,6 +12,7 @@ import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
 import { getAbsoluteUrl } from "lib/vercel-utils";
+import { WandIcon } from "lucide-react";
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import { PageId } from "page-id";
@@ -138,7 +138,7 @@ const Hackathon = () => {
               h="68px"
               w={{ base: "100%", md: 96 }}
               fontSize="20px"
-              leftIcon={<Icon as={ImMagicWand} />}
+              leftIcon={<WandIcon className="size-6" />}
               color="black"
               flexShrink={0}
               background="rgba(255,255,255,1)"
@@ -172,23 +172,21 @@ const Hackathon = () => {
               <Flex flexDir="column" gap={4} maxW={907}>
                 <Text size="body.xl">
                   <List color="white">
-                    <ListItem>
+                    <li>
                       • $10,000 in thirdweb credits — $5K for 1st place, $3K for
                       2nd place, $2K for 3rd place
-                    </ListItem>
-                    <ListItem>• 1 ETH for 1st Place</ListItem>
-                    <ListItem>
+                    </li>
+                    <li>• 1 ETH for 1st Place</li>
+                    <li>
                       • Meet & present to builders, operators, & investors in
                       crypto — from Caldera, Pantera Capital, Founders Inc, and
                       Haun Ventures
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       • Amplification to 70k+ followers on thirdweb&apos;s
                       social channels
-                    </ListItem>
-                    <ListItem>
-                      • $50 Gas Sponsorship for every hackathon builder
-                    </ListItem>
+                    </li>
+                    <li>• $50 Gas Sponsorship for every hackathon builder</li>
                   </List>
                 </Text>
               </Flex>
@@ -207,16 +205,16 @@ const Hackathon = () => {
                 </Text>
                 <Text size="body.xl">
                   <List color="white">
-                    <ListItem>
+                    <li>
                       • Built using any of the following thirdweb products:
                       Engine, In-App Wallets, and/or Account Abstraction
-                    </ListItem>
-                    <ListItem>• Code must be open-source</ListItem>
-                    <ListItem>
+                    </li>
+                    <li>• Code must be open-source</li>
+                    <li>
                       • Project must be submitted through GitHub, with a
                       descriptive README file detailing what the project is,
                       what its goals are, and how you built it
-                    </ListItem>
+                    </li>
                   </List>
                 </Text>
                 <Text size="body.xl" color="white">
@@ -261,18 +259,18 @@ const Hackathon = () => {
                 </Text>
                 <Text size="body.xl" color="white">
                   <List>
-                    <ListItem>
+                    <li>
                       <b>1. Usability:</b> How useful or valuable is the
                       product? How feasible is the idea?
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       <b>2. Ecosystem Impact:</b> How impactful and useful is
                       this app in the web3 ecosystem as a whole?
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       <b>3. Originality, Creativity, and Innovation:</b> How
                       novel is the project versus existing technologies?
-                    </ListItem>
+                    </li>
                   </List>
                 </Text>
               </Flex>

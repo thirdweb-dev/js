@@ -1,3 +1,4 @@
+"use client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -183,6 +184,7 @@ export const SettingsPlatformFees = ({
         </Flex>
         <AdminOnly contract={contract}>
           <TransactionButton
+            txChainID={contract.chain.id}
             colorScheme="primary"
             transactionCount={1}
             isDisabled={platformFeesQuery.isPending || !form.formState.isDirty}

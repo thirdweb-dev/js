@@ -8,13 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { type NFT, ZERO_ADDRESS } from "thirdweb";
-import {
-  Card,
-  Heading,
-  Text,
-  TrackedLink,
-  type TrackedLinkProps,
-} from "tw-components";
+import { Card, TrackedLink, type TrackedLinkProps } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 type NFTWithContract = NFT & { contractAddress: string; chainId: number };
@@ -83,18 +77,20 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
                   />
                 </Skeleton>
               </div>
-              <Flex p={4} pb={3} gap={3} direction="column">
+              <Flex p={4} pb={3} gap={1} direction="column">
                 <Skeleton w={!isPending ? "100%" : "50%"} isLoaded={!isPending}>
-                  <Heading size="label.md">{token.metadata.name}</Heading>
+                  <h2 className="font-semibold tracking-tight">
+                    {token.metadata.name}
+                  </h2>
                 </Skeleton>
                 <SkeletonText isLoaded={!isPending}>
-                  <Text noOfLines={3}>
+                  <p className="line-clamp-3 text-muted-foreground text-sm">
                     {token.metadata.description ? (
                       token.metadata.description
                     ) : (
                       <i>No description</i>
                     )}
-                  </Text>
+                  </p>
                 </SkeletonText>
               </Flex>
             </Card>

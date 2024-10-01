@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -100,6 +102,7 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
         </form>
         <SheetFooter className="mt-10">
           <TransactionButton
+            txChainID={contract.chain.id}
             transactionCount={1}
             form={TRANSFER_FORM_ID}
             isLoading={sendConfirmation.isPending}

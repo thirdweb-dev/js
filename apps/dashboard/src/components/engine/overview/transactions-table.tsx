@@ -9,7 +9,6 @@ import {
   DrawerHeader,
   Flex,
   FormControl,
-  Stack,
   Tooltip,
   type UseDisclosureReturn,
   useDisclosure,
@@ -373,7 +372,7 @@ const TransactionDetailsDrawer = ({
         ),
       }}
     >
-      <Stack spacing={4}>
+      <div className="flex flex-col gap-4">
         <FormControl>
           <FormLabel>Queue ID</FormLabel>
           <Text>{transaction.queueId}</Text>
@@ -524,7 +523,7 @@ const TransactionDetailsDrawer = ({
             </FormControl>
 
             <Collapse in={advancedTxDetailsDisclosure.isOpen}>
-              <Stack spacing={4}>
+              <div className="flex flex-col gap-4">
                 {transaction.nonce && (
                   <FormControl>
                     <div className="flex flex-row">
@@ -588,7 +587,7 @@ const TransactionDetailsDrawer = ({
                     </LinkButton>
                   </FormControl>
                 )}
-              </Stack>
+              </div>
             </Collapse>
 
             <Button
@@ -604,7 +603,7 @@ const TransactionDetailsDrawer = ({
             </Button>
           </>
         )}
-      </Stack>
+      </div>
     </Drawer>
   );
 };

@@ -1,3 +1,7 @@
+"use client";
+
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import {
   Box,
   Divider,
@@ -5,7 +9,6 @@ import {
   GridItem,
   Image,
   List,
-  ListItem,
   SimpleGrid,
   Tab,
   TabList,
@@ -30,7 +33,6 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { toFunctionSelector } from "thirdweb/utils";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
-import { useDashboardRouter } from "../../@/lib/DashboardRouter";
 import { useContractFunctionSelectors } from "../../contract-ui/hooks/useContractFunctionSelectors";
 import {
   COMMANDS,
@@ -45,12 +47,12 @@ interface ContractFunctionProps {
   contract: ThirdwebContract;
 }
 
-const ContractFunction: React.FC<Partial<ContractFunctionProps>> = ({
-  fn,
-  contract,
-}) => {
-  if (!fn || !contract) {
-    return null;
+const ContractFunction: React.FC<{
+  fn: AbiFunction | AbiEvent;
+  contract?: ThirdwebContract;
+}> = ({ fn, contract }) => {
+  if (!contract) {
+    return <ContractFunctionInputs fn={fn} />;
   }
 
   return <ContractFunctionInner contract={contract} fn={fn} />;
@@ -90,6 +92,20 @@ function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
     isFunction &&
     (fn.stateMutability === "view" || fn.stateMutability === "pure");
 
+  const commandsKey = isFunction
+    ? isRead
+      ? "read"
+      : "write"
+    : ("events" as const);
+
+  const codeSnippet = formatSnippet(COMMANDS[commandsKey], {
+    contractAddress: contract.address,
+    fn,
+    args: fn.inputs?.map((i) => i.name || ""),
+    chainId: contract.chain.id,
+    extensionNamespace,
+  });
+
   return (
     <Flex direction="column" gap={1.5}>
       <Flex
@@ -109,7 +125,59 @@ function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
           </Badge>
         )}
       </Flex>
-      {fn.inputs?.length && !contract ? (
+
+      {isFunction && (
+        <InteractiveAbiFunction
+          key={JSON.stringify(fn)}
+          contract={contract}
+          abiFunction={fn}
+        />
+      )}
+
+      {codeSnippet && (
+        <>
+          <Heading size="subtitle.md" mt={6}>
+            Use this function in your app
+          </Heading>
+          <Divider mb={2} />
+          <CodeSegment
+            environment={environment}
+            setEnvironment={setEnvironment}
+            snippet={codeSnippet}
+          />
+        </>
+      )}
+    </Flex>
+  );
+}
+
+function ContractFunctionInputs(props: {
+  fn: AbiFunction | AbiEvent;
+}) {
+  const { fn } = props;
+  const isFunction = "stateMutability" in fn;
+
+  return (
+    <Flex direction="column" gap={1.5}>
+      <Flex
+        alignItems={{ base: "start", md: "center" }}
+        gap={2}
+        direction={{ base: "column", md: "row" }}
+      >
+        <Flex alignItems="baseline" gap={1} flexWrap="wrap">
+          <Heading size="subtitle.md">{camelToTitle(fn.name)}</Heading>
+          <Heading size="subtitle.sm" className="text-muted-foreground">
+            ({fn.name})
+          </Heading>
+        </Flex>
+        {isFunction && (
+          <Badge size="label.sm" variant="subtle" colorScheme="green">
+            {fn.stateMutability}
+          </Badge>
+        )}
+      </Flex>
+
+      {fn.inputs?.length ? (
         <>
           <Divider my={2} />
           <Flex flexDir="column" gap={3}>
@@ -171,40 +239,6 @@ function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
           </Flex>
         </>
       ) : null}
-
-      {isFunction && contract && (
-        <InteractiveAbiFunction
-          key={JSON.stringify(fn)}
-          contract={contract}
-          abiFunction={fn}
-        />
-      )}
-
-      {contract && (
-        <>
-          <Heading size="subtitle.md" mt={6}>
-            Use this function in your app
-          </Heading>
-          <Divider mb={2} />
-          <CodeSegment
-            environment={environment}
-            setEnvironment={setEnvironment}
-            snippet={formatSnippet(
-              COMMANDS[
-                isFunction ? (isRead ? "read" : "write") : "events"
-                // biome-ignore lint/suspicious/noExplicitAny: FIXME
-              ] as any,
-              {
-                contractAddress: contract.address,
-                fn,
-                args: fn.inputs?.map((i) => i.name || ""),
-                chainId: contract.chain.id,
-                extensionNamespace,
-              },
-            )}
-          />
-        </>
-      )}
     </Flex>
   );
 }
@@ -336,7 +370,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   );
 
   return (
-    <SimpleGrid height="100%" columns={12} gap={3}>
+    <SimpleGrid height="100%" columns={12} gap={5}>
       <GridItem
         as={Card}
         px={0}
@@ -430,11 +464,15 @@ const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
   const pathname = usePathname();
   const router = useDashboardRouter();
   return (
-    <ListItem my={0.5}>
+    <li className="my-1">
       <Button
         size="sm"
-        fontWeight={isActive ? 600 : 400}
-        opacity={isActive ? 1 : 0.65}
+        className={cn(
+          "!font-medium !text-muted-foreground hover:!text-foreground font-mono",
+          {
+            "!text-foreground": isActive,
+          },
+        )}
         onClick={() => {
           setSelectedFunction(fn);
 
@@ -444,13 +482,10 @@ const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
             router.push(`${pathname}?selector=${selector}`);
           }
         }}
-        color="heading"
-        _hover={{ opacity: 1, textDecor: "underline" }}
         variant="link"
-        fontFamily="mono"
       >
         {fn.name}
       </Button>
-    </ListItem>
+    </li>
   );
 };

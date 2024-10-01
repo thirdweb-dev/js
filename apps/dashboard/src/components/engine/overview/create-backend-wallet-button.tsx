@@ -14,7 +14,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -84,7 +83,7 @@ export const CreateBackendWalletButton: React.FC<
             <ModalHeader>Create {walletType} wallet</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Stack spacing={4}>
+              <div className="flex flex-col gap-4">
                 <FormControl>
                   <FormLabel>Wallet Type</FormLabel>
                   <Text>{walletType}</Text>
@@ -97,7 +96,7 @@ export const CreateBackendWalletButton: React.FC<
                     {...form.register("label")}
                   />
                 </FormControl>
-              </Stack>
+              </div>
             </ModalBody>
 
             <ModalFooter as={Flex} gap={3}>

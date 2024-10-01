@@ -1,3 +1,5 @@
+"use client";
+
 import { Tooltip } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import type { ThirdwebContract } from "thirdweb";
@@ -69,6 +71,7 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
 
   return (
     <TransactionButton
+      txChainID={contract.chain.id}
       colorScheme="primary"
       onClick={() => {
         const tx = ERC4337Ext.createAccount({

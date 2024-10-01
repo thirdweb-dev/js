@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dialog";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
@@ -25,7 +24,6 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
 import { useQuery } from "@tanstack/react-query";
 import { FaucetButton } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
 import { GiftIcon } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
@@ -36,7 +34,7 @@ import type {
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ExternalLinkIcon } from "lucide-react";
+import { ExternalLinkIcon, TriangleAlertIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
@@ -64,208 +62,204 @@ const GAS_FREE_CHAINS = [
   75512, // Geek verse mainnet
 ];
 
-function useNetworkMismatchAdapter() {
+function useNetworkMismatchAdapter(desiredChainId: number) {
   const walletChainId = useActiveWalletChain()?.id;
-  const v4SDKChainId = useDashboardEVMChainId();
-  if (!walletChainId || !v4SDKChainId) {
+  if (!walletChainId) {
     // simply not ready yet, assume false
     return false;
   }
   // otherwise, compare the chain ids
-  return walletChainId !== v4SDKChainId;
+  return walletChainId !== desiredChainId;
 }
 
-export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, isDisabled, onClick, loadingText, type, ...props }, ref) => {
-    const account = useActiveAccount();
-    const wallet = useActiveWallet();
-    const activeWalletChain = useActiveWalletChain();
-    const [dialog, setDialog] = useState<undefined | "no-funds" | "pay">();
-    const { theme } = useTheme();
-    const client = useThirdwebClient();
-    const evmBalance = useWalletBalance({
-      address: account?.address,
-      chain: activeWalletChain,
-      client,
-    });
+export const MismatchButton = forwardRef<
+  HTMLButtonElement,
+  ButtonProps & { desiredChainId: number }
+>(({ children, isDisabled, onClick, loadingText, type, ...props }, ref) => {
+  const account = useActiveAccount();
+  const wallet = useActiveWallet();
+  const activeWalletChain = useActiveWalletChain();
+  const [dialog, setDialog] = useState<undefined | "no-funds" | "pay">();
+  const { theme } = useTheme();
+  const client = useThirdwebClient();
+  const evmBalance = useWalletBalance({
+    address: account?.address,
+    chain: activeWalletChain,
+    client,
+  });
 
-    const initialFocusRef = useRef<HTMLButtonElement>(null);
-    const networksMismatch = useNetworkMismatchAdapter();
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const trackEvent = useTrack();
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
+  const networksMismatch = useNetworkMismatchAdapter(props.desiredChainId);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const trackEvent = useTrack();
 
-    const chainId = activeWalletChain?.id;
+  const chainId = activeWalletChain?.id;
 
-    const eventRef = useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>();
-    if (!wallet || !chainId) {
-      return (
-        <CustomConnectWallet
-          borderRadius="md"
-          colorScheme="primary"
-          {...props}
-        />
-      );
-    }
-    const notEnoughBalance =
-      (evmBalance.data?.value || 0n) === 0n &&
-      !GAS_FREE_CHAINS.includes(chainId);
+  const eventRef = useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>();
+  if (!wallet || !chainId) {
     return (
-      <>
-        <Popover
-          initialFocusRef={initialFocusRef}
-          isLazy
-          isOpen={isOpen}
-          onOpen={networksMismatch ? onOpen : undefined}
-          onClose={onClose}
-        >
-          <PopoverTrigger>
-            <Button
-              isLoading={evmBalance.isPending}
-              {...props}
-              type={networksMismatch || notEnoughBalance ? "button" : type}
-              loadingText={loadingText}
-              onClick={(e) => {
-                e.stopPropagation();
-
-                if (networksMismatch) {
-                  eventRef.current = e;
-                  return;
-                }
-
-                if (notEnoughBalance) {
-                  trackEvent({
-                    category: "no-funds",
-                    action: "popover",
-                    label: "evm",
-                  });
-                  setDialog("no-funds");
-                  return;
-                }
-
-                if (onClick) {
-                  return onClick(e);
-                }
-              }}
-              ref={ref}
-              isDisabled={isDisabled}
-            >
-              {children}
-            </Button>
-          </PopoverTrigger>
-          <Card
-            maxW={{ base: "xs", md: "sm" }}
-            w="auto"
-            as={PopoverContent}
-            bg="backgroundCardHighlight"
-            mx={6}
-            boxShadow="0px 0px 2px 0px var(--popper-arrow-shadow-color)"
-          >
-            <PopoverArrow bg="backgroundCardHighlight" />
-            <PopoverBody>
-              {networksMismatch && (
-                <MismatchNotice
-                  initialFocusRef={initialFocusRef}
-                  onClose={(hasSwitched) => {
-                    onClose();
-                    if (hasSwitched && onClick) {
-                      // wait for the network switch to be finished - 100ms should be fine?
-                      setTimeout(() => {
-                        if (eventRef.current) {
-                          onClick(eventRef.current);
-                        }
-                      }, 100);
-                    }
-                  }}
-                />
-              )}
-            </PopoverBody>
-          </Card>
-        </Popover>
-
-        {/* Not Enough Funds */}
-        <Dialog
-          open={!!dialog}
-          onOpenChange={(v) => {
-            if (!v) {
-              setDialog(undefined);
-            }
-          }}
-        >
-          <DialogContent
-            className={cn(
-              "z-[10001] gap-0 p-0",
-              dialog === "no-funds" && "max-w-[480px]",
-              dialog === "pay" && "max-w-[360px] border-none bg-transparent",
-            )}
-            dialogOverlayClassName="z-[10000]"
-            dialogCloseClassName="focus:ring-0"
-          >
-            <DynamicHeight>
-              {dialog === "no-funds" && (
-                <NoFundsDialogContent
-                  chain={activeWalletChain}
-                  openPayModal={() => {
-                    trackEvent({
-                      category: "pay",
-                      action: "buy",
-                      label: "attempt",
-                    });
-                    setDialog("pay");
-                  }}
-                  onCloseModal={() => setDialog(undefined)}
-                />
-              )}
-
-              {dialog === "pay" && (
-                <PayEmbed
-                  client={client}
-                  theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
-                  className="!w-auto"
-                  payOptions={{
-                    onPurchaseSuccess(info) {
-                      if (
-                        info.type === "crypto" &&
-                        info.status.status !== "NOT_FOUND"
-                      ) {
-                        trackEvent({
-                          category: "pay",
-                          action: "buy",
-                          label: "success",
-                          type: info.type,
-                          chainId: info.status.quote.toToken.chainId,
-                          tokenAddress: info.status.quote.toToken.tokenAddress,
-                          amount: info.status.quote.toAmount,
-                        });
-                      }
-
-                      if (
-                        info.type === "fiat" &&
-                        info.status.status !== "NOT_FOUND"
-                      ) {
-                        trackEvent({
-                          category: "pay",
-                          action: "buy",
-                          label: "success",
-                          type: info.type,
-                          chainId: info.status.quote.toToken.chainId,
-                          tokenAddress: info.status.quote.toToken.tokenAddress,
-                          amount: info.status.quote.estimatedToTokenAmount,
-                        });
-                      }
-                    },
-                    prefillBuy: {
-                      chain: activeWalletChain,
-                    },
-                  }}
-                />
-              )}
-            </DynamicHeight>
-          </DialogContent>
-        </Dialog>
-      </>
+      <CustomConnectWallet borderRadius="md" colorScheme="primary" {...props} />
     );
-  },
-);
+  }
+  const notEnoughBalance =
+    (evmBalance.data?.value || 0n) === 0n && !GAS_FREE_CHAINS.includes(chainId);
+  return (
+    <>
+      <Popover
+        initialFocusRef={initialFocusRef}
+        isLazy
+        isOpen={isOpen}
+        onOpen={networksMismatch ? onOpen : undefined}
+        onClose={onClose}
+      >
+        <PopoverTrigger>
+          <Button
+            isLoading={evmBalance.isPending}
+            {...props}
+            type={networksMismatch || notEnoughBalance ? "button" : type}
+            loadingText={loadingText}
+            onClick={(e) => {
+              e.stopPropagation();
+
+              if (networksMismatch) {
+                eventRef.current = e;
+                return;
+              }
+
+              if (notEnoughBalance) {
+                trackEvent({
+                  category: "no-funds",
+                  action: "popover",
+                  label: "evm",
+                });
+                setDialog("no-funds");
+                return;
+              }
+
+              if (onClick) {
+                return onClick(e);
+              }
+            }}
+            ref={ref}
+            isDisabled={isDisabled}
+          >
+            {children}
+          </Button>
+        </PopoverTrigger>
+        <Card
+          maxW={{ base: "xs", md: "sm" }}
+          w="auto"
+          as={PopoverContent}
+          bg="backgroundCardHighlight"
+          mx={6}
+          boxShadow="0px 0px 2px 0px var(--popper-arrow-shadow-color)"
+        >
+          <PopoverArrow bg="backgroundCardHighlight" />
+          <PopoverBody>
+            {networksMismatch && (
+              <MismatchNotice
+                desiredChainId={props.desiredChainId}
+                initialFocusRef={initialFocusRef}
+                onClose={(hasSwitched) => {
+                  onClose();
+                  if (hasSwitched && onClick) {
+                    // wait for the network switch to be finished - 100ms should be fine?
+                    setTimeout(() => {
+                      if (eventRef.current) {
+                        onClick(eventRef.current);
+                      }
+                    }, 100);
+                  }
+                }}
+              />
+            )}
+          </PopoverBody>
+        </Card>
+      </Popover>
+
+      {/* Not Enough Funds */}
+      <Dialog
+        open={!!dialog}
+        onOpenChange={(v) => {
+          if (!v) {
+            setDialog(undefined);
+          }
+        }}
+      >
+        <DialogContent
+          className={cn(
+            "z-[10001] gap-0 p-0",
+            dialog === "no-funds" && "max-w-[480px]",
+            dialog === "pay" && "max-w-[360px] border-none bg-transparent",
+          )}
+          dialogOverlayClassName="z-[10000]"
+          dialogCloseClassName="focus:ring-0"
+        >
+          <DynamicHeight>
+            {dialog === "no-funds" && (
+              <NoFundsDialogContent
+                chain={activeWalletChain}
+                openPayModal={() => {
+                  trackEvent({
+                    category: "pay",
+                    action: "buy",
+                    label: "attempt",
+                  });
+                  setDialog("pay");
+                }}
+                onCloseModal={() => setDialog(undefined)}
+              />
+            )}
+
+            {dialog === "pay" && (
+              <PayEmbed
+                client={client}
+                theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
+                className="!w-auto"
+                payOptions={{
+                  onPurchaseSuccess(info) {
+                    if (
+                      info.type === "crypto" &&
+                      info.status.status !== "NOT_FOUND"
+                    ) {
+                      trackEvent({
+                        category: "pay",
+                        action: "buy",
+                        label: "success",
+                        type: info.type,
+                        chainId: info.status.quote.toToken.chainId,
+                        tokenAddress: info.status.quote.toToken.tokenAddress,
+                        amount: info.status.quote.toAmount,
+                      });
+                    }
+
+                    if (
+                      info.type === "fiat" &&
+                      info.status.status !== "NOT_FOUND"
+                    ) {
+                      trackEvent({
+                        category: "pay",
+                        action: "buy",
+                        label: "success",
+                        type: info.type,
+                        chainId: info.status.quote.toToken.chainId,
+                        tokenAddress: info.status.quote.toToken.tokenAddress,
+                        amount: info.status.quote.estimatedToTokenAmount,
+                      });
+                    }
+                  },
+                  prefillBuy: {
+                    chain: activeWalletChain,
+                  },
+                }}
+              />
+            )}
+          </DynamicHeight>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+});
 
 MismatchButton.displayName = "MismatchButton";
 
@@ -399,9 +393,9 @@ function GetFundsFromFaucet(props: {
 const MismatchNotice: React.FC<{
   initialFocusRef: React.RefObject<HTMLButtonElement>;
   onClose: (hasSwitched: boolean) => void;
-}> = ({ initialFocusRef, onClose }) => {
+  desiredChainId: number;
+}> = ({ initialFocusRef, onClose, desiredChainId }) => {
   const connectedChainId = useActiveWalletChain()?.id;
-  const desiredChainId = useDashboardEVMChainId();
   const switchNetwork = useSwitchActiveWalletChain();
   const connectionStatus = useActiveWalletConnectionStatus();
   const activeWallet = useActiveWallet();
@@ -448,7 +442,7 @@ const MismatchNotice: React.FC<{
     <div className="flex flex-col gap-4">
       <Heading size="label.lg">
         <div className="flex flex-row items-center gap-2">
-          <Icon boxSize={6} as={AiOutlineWarning} />
+          <TriangleAlertIcon className="size-6" />
           <span>Network Mismatch</span>
         </div>
       </Heading>

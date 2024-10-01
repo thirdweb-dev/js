@@ -1,5 +1,8 @@
+"use client";
+
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   Box,
   ButtonGroup,
@@ -13,7 +16,6 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useNFTDrawerTabs } from "core-ui/nft-drawer/useNftDrawerTabs";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { IoChevronBack } from "react-icons/io5";
 import type { ThirdwebContract } from "thirdweb";
@@ -55,19 +57,16 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
 }) => {
   const [tab, setTab] = useState("Details");
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const router = useRouter();
-
-  const chainId = useDashboardEVMChainId();
-
+  const router = useDashboardRouter();
+  const chainId = contract.chain.id;
   const chainSlug = useChainSlug(chainId || 1);
-  const url = `/${chainSlug}/${contract.address}/nfts`;
 
   const tabs = useNFTDrawerTabs({
     contract,
     tokenId,
   });
 
-  const { data: nft } = useReadContract(
+  const { data: nft, isPending } = useReadContract(
     isErc721 ? getErc721NFT : getErc1155NFT,
     {
       contract,
@@ -75,6 +74,14 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
       includeOwner: true,
     },
   );
+
+  if (isPending) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
 
   if (!nft) {
     return (
@@ -99,12 +106,13 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
     <Flex flexDir={{ base: "column", lg: "row" }} gap={6}>
       <Card h="full" position="relative" minH="100px">
         <Box w="50px" position="absolute" zIndex={1000} top={6} left={6}>
+          {/* TODO - replace this with breadcrumbs  */}
           <Card p={1} bgColor="backgroundCardHighlight">
             <IconButton
               w="inherit"
               variant="ghost"
               onClick={() =>
-                router.asPath !== "/" ? router.push(url) : router.back()
+                router.push(`/${chainSlug}/${contract.address}/nfts`)
               }
               aria-label="Back"
               icon={<Icon as={IoChevronBack} boxSize={6} />}

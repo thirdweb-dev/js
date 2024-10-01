@@ -1,3 +1,5 @@
+"use client";
+
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FiPlus } from "react-icons/fi";
@@ -36,6 +38,7 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({ contract }) => {
                 Cancel
               </Button>
               <TransactionButton
+                txChainID={contract.chain.id}
                 transactionCount={1}
                 isLoading={sendTx.isPending}
                 form={PROPOSAL_FORM_ID}

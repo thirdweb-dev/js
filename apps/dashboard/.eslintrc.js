@@ -60,6 +60,8 @@ module.exports = {
               "AspectRatio",
               "useToast",
               "useClipboard",
+              "Badge",
+              "Stack",
               // also the types
               "ButtonProps",
               "BadgeProps",
@@ -71,6 +73,8 @@ module.exports = {
               "MenuGroupProps",
               "MenuItemProps",
               "AspectRatioProps",
+              "BadgeProps",
+              "StackProps",
             ],
             message:
               'Use the equivalent component from "tw-components" instead.',

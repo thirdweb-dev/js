@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -6,7 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { FormControl, Input, Stack } from "@chakra-ui/react";
+import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Flame } from "lucide-react";
@@ -69,8 +71,8 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
         <SheetHeader>
           <SheetTitle>Burn tokens</SheetTitle>
         </SheetHeader>
-        <Stack gap={3} as="form" mt={10}>
-          <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
+        <form className="mt-10 flex flex-col gap-3">
+          <div className="flex w-full flex-col gap-6 md:flex-row">
             <FormControl isRequired isInvalid={!!form.formState.errors.amount}>
               <FormLabel>Amount</FormLabel>
               <Input
@@ -83,16 +85,17 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
                 {form.formState.errors.amount?.message}
               </FormErrorMessage>
             </FormControl>
-          </Stack>
+          </div>
           <Text>
             Burning these{" "}
             {`${Number.parseInt(form.watch("amount")) > 1 ? form.watch("amount") : ""} `}
             tokens will remove them from the total circulating supply. This
             action is irreversible.
           </Text>
-        </Stack>
+        </form>
         <SheetFooter className="mt-10">
           <TransactionButton
+            txChainID={contract.chain.id}
             transactionCount={1}
             form={BURN_FORM_ID}
             isLoading={sendConfirmation.isPending}

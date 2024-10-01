@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Flex, Icon, Input, Spinner } from "@chakra-ui/react";
 import { useEns } from "components/contract-components/hooks";
 import { useEffect, useMemo, useState } from "react";

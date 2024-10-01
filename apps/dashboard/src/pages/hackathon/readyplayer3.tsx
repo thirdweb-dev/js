@@ -1,5 +1,5 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import { Box, Flex, Image, List, ListItem } from "@chakra-ui/react";
+import { Box, Flex, Image } from "@chakra-ui/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
@@ -418,13 +418,13 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
                   opportunity to receive:
                 </Text>
                 <Box fontSize="body.lg" color="white">
-                  <List spacing={4}>
-                    <ListItem>
+                  <ul className="space-y-4">
+                    <li>
                       Top 3 teams of {`"`}Main Build Track{`"`} will receive Pro
                       Tickets ($1,700 value each) to Consensus 2023 Presented by
                       CoinDesk
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       Top 3 teams receive a complimentary 1-Year Subscription to{" "}
                       <Link
                         href="https://www.scenario.gg/"
@@ -439,17 +439,17 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
                       >
                         Scenario.gg
                       </Link>
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       All participating teams with a submitted project are
                       eligible for up to $5,000 in AWS credits (as long as
                       they&apos;ve not previously been an AWS credit recipient)
-                    </ListItem>
-                    <ListItem>
+                    </li>
+                    <li>
                       All participating teams with a project submitted will
                       receive 1-month free of Scenario.gg
-                    </ListItem>
-                  </List>
+                    </li>
+                  </ul>
                 </Box>
               </Flex>
             </Flex>

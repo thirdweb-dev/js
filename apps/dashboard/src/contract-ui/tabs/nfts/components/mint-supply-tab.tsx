@@ -1,4 +1,6 @@
-import { FormControl, Input, Stack } from "@chakra-ui/react";
+"use client";
+
+import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -33,7 +35,7 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
   );
 
   return (
-    <Stack w="full">
+    <div className="flex w-full flex-col gap-2">
       <form
         onSubmit={handleSubmit((data) => {
           if (address) {
@@ -71,17 +73,18 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
           }
         })}
       >
-        <Stack gap={3}>
-          <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
+        <div className="flex flex-col gap-3">
+          <div className="flex w-full flex-col gap-6 md:flex-row">
             <FormControl isRequired isInvalid={!!errors.to}>
               <FormLabel>Amount</FormLabel>
               <Input placeholder="1" {...register("amount")} />
               <FormHelperText>How many would you like to mint?</FormHelperText>
               <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
             </FormControl>
-          </Stack>
+          </div>
 
           <TransactionButton
+            txChainID={contract.chain.id}
             transactionCount={1}
             isLoading={isPending}
             type="submit"
@@ -90,9 +93,9 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
           >
             Mint
           </TransactionButton>
-        </Stack>
+        </div>
       </form>
-    </Stack>
+    </div>
   );
 };
 

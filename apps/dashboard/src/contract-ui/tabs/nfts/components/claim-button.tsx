@@ -1,5 +1,7 @@
-import { Icon, useDisclosure } from "@chakra-ui/react";
-import { GiDiamondHard } from "@react-icons/all-files/gi/GiDiamondHard";
+"use client";
+
+import { useDisclosure } from "@chakra-ui/react";
+import { GemIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import { Button, Drawer } from "tw-components";
 import { NFTClaimForm } from "./claim-form";
@@ -28,7 +30,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({ contract }) => {
       </Drawer>
       <Button
         colorScheme="primary"
-        leftIcon={<Icon as={GiDiamondHard} />}
+        leftIcon={<GemIcon className="size-4" />}
         onClick={onOpen}
       >
         Claim

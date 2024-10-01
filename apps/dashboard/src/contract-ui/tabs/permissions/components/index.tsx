@@ -1,3 +1,5 @@
+"use client";
+
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { ROLE_DESCRIPTION_MAP } from "constants/mappings";
@@ -122,6 +124,7 @@ export function Permissions({
             Reset
           </Button>
           <TransactionButton
+            txChainID={contract.chain.id}
             colorScheme="primary"
             transactionCount={1}
             isDisabled={!form.formState.isDirty}

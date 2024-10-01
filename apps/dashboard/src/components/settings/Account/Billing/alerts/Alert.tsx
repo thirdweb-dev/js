@@ -11,7 +11,6 @@ import {
   AlertTitle,
   Flex,
   IconButton,
-  Stack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { OnboardingModal } from "components/onboarding/Modal";
@@ -283,7 +282,7 @@ export const BillingAlerts = () => {
   if (alerts.length === 0) {
     return null;
   }
-  return <Stack className="py-6">{alerts}</Stack>;
+  return <div className="flex flex-col gap-2 py-6">{alerts}</div>;
 };
 
 type BillingAlertNotificationProps = {

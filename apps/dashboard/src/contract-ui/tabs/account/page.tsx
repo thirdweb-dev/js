@@ -1,20 +1,22 @@
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
+"use client";
+
 import type { ThirdwebContract } from "thirdweb";
+import type { ChainMetadata } from "thirdweb/chains";
 import { Heading } from "tw-components";
-import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { AccountBalance } from "./components/account-balance";
 import { DepositNative } from "./components/deposit-native";
 import { NftsOwned } from "./components/nfts-owned";
 
 interface AccountPageProps {
   contract: ThirdwebContract;
+  chainMetadata: ChainMetadata;
 }
 
-export const AccountPage: React.FC<AccountPageProps> = ({ contract }) => {
-  const { idToChain } = useAllChainsData();
-  const chainId = useDashboardEVMChainId();
-  const chain = chainId ? idToChain.get(chainId) : undefined;
-  const symbol = chain?.nativeCurrency.symbol || "Native Token";
+export const AccountPage: React.FC<AccountPageProps> = ({
+  contract,
+  chainMetadata,
+}) => {
+  const symbol = chainMetadata.nativeCurrency.symbol || "Native Token";
 
   return (
     <div className="flex flex-col gap-6">
@@ -26,11 +28,11 @@ export const AccountPage: React.FC<AccountPageProps> = ({ contract }) => {
         <Heading size="title.sm">Deposit {symbol}</Heading>
       </div>
 
-      {chain && (
+      {chainMetadata && (
         <DepositNative
           address={contract.address}
           symbol={symbol}
-          chain={chain}
+          chain={chainMetadata}
         />
       )}
 

@@ -281,7 +281,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
             description="Users will directly deploy the full contract."
             onClick={() => form.setValue("deployType", "standard")}
             isActive={form.watch("deployType") === "standard"}
-            width="full"
+            className="w-full"
           />
           <SelectOption
             name="Deploy via factory"
@@ -291,7 +291,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
               form.watch("deployType") === "autoFactory" ||
               form.watch("deployType") === "customFactory"
             }
-            width="full"
+            className="w-full"
           />
         </Flex>
       </div>

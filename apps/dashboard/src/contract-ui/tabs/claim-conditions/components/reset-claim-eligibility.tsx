@@ -1,3 +1,5 @@
+"use client";
+
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -93,6 +95,7 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
         onClick={handleResetClaimEligibility}
         loadingText="Resetting..."
         size="sm"
+        txChainID={contract.chain.id}
       >
         Reset Eligibility
         <ToolTipLabel

@@ -1,3 +1,5 @@
+"use client";
+
 import { MarketplaceTable } from "contract-ui/tabs/shared-components/marketplace-table";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";

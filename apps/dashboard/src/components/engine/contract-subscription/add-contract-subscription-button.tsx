@@ -23,7 +23,6 @@ import {
   Radio,
   RadioGroup,
   Spinner,
-  Stack,
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -185,7 +184,7 @@ const ModalBodyInputContract = ({
   return (
     <>
       <ModalBody>
-        <Stack spacing={4}>
+        <div className="flex flex-col gap-4">
           <Text>
             Add a contract subscription to process real-time onchain data.
           </Text>
@@ -252,7 +251,7 @@ const ModalBodyInputContract = ({
               {form.getFieldState("webhookUrl", form.formState).error?.message}
             </FormErrorMessage>
           </FormControl>
-        </Stack>
+        </div>
       </ModalBody>
 
       <ModalFooter>
@@ -304,7 +303,7 @@ const ModalBodyInputData = ({
   return (
     <>
       <ModalBody>
-        <Stack spacing={4}>
+        <div className="flex flex-col gap-4">
           <Text>
             Select the data type to process.
             <br />
@@ -316,7 +315,7 @@ const ModalBodyInputData = ({
           <FormControl>
             <FormLabel>Processed Data</FormLabel>
 
-            <Stack>
+            <div className="flex flex-col gap-2">
               <Checkbox
                 {...form.register("processEventLogs")}
                 checked={form.getValues("processEventLogs")}
@@ -334,7 +333,7 @@ const ModalBodyInputData = ({
               </Checkbox>
               {/* Shows all/specific events if processing event logs */}
               <Collapse in={processEventLogsDisclosure.isOpen}>
-                <Stack px={4}>
+                <div className="flex flex-col gap-2 px-4">
                   <RadioGroup
                     defaultValue="false"
                     onChange={(val: "false" | "true") => {
@@ -346,7 +345,7 @@ const ModalBodyInputData = ({
                       }
                     }}
                   >
-                    <Stack>
+                    <div className="flex flex-col gap-2">
                       <Radio value="false">
                         <Text>All events</Text>
                       </Radio>
@@ -368,9 +367,9 @@ const ModalBodyInputData = ({
                           }
                         />
                       </Collapse>
-                    </Stack>
+                    </div>
                   </RadioGroup>
-                </Stack>
+                </div>
               </Collapse>
 
               <Checkbox
@@ -390,7 +389,7 @@ const ModalBodyInputData = ({
               </Checkbox>
               {/* Shows all/specific functions if processing transaction receipts */}
               <Collapse in={processTransactionReceiptsDisclosure.isOpen}>
-                <Stack px={4}>
+                <div className="flex flex-col gap-2 px-4">
                   <RadioGroup
                     defaultValue="false"
                     onChange={(val: "false" | "true") => {
@@ -402,7 +401,7 @@ const ModalBodyInputData = ({
                       }
                     }}
                   >
-                    <Stack>
+                    <div className="flex flex-col gap-2">
                       <Radio value="false">
                         <Text>All functions</Text>
                       </Radio>
@@ -424,13 +423,13 @@ const ModalBodyInputData = ({
                           }
                         />
                       </Collapse>
-                    </Stack>
+                    </div>
                   </RadioGroup>
-                </Stack>
+                </div>
               </Collapse>
-            </Stack>
+            </div>
           </FormControl>
-        </Stack>
+        </div>
       </ModalBody>
 
       <ModalFooter as={Flex} gap={3}>
@@ -537,7 +536,7 @@ const FilterSelector = ({
           Cannot resolve the contract definition. Filters are unavailable.
         </Text>
       ) : (
-        <Stack maxH={300} overflowY="auto">
+        <div className="flex max-h-[300px] flex-col gap-2 overflow-y-auto">
           <CheckboxGroup
             value={filter}
             onChange={(selected: string[]) => setFilter(selected)}
@@ -548,7 +547,7 @@ const FilterSelector = ({
               </Checkbox>
             ))}
           </CheckboxGroup>
-        </Stack>
+        </div>
       )}
     </Card>
   );

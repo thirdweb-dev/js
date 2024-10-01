@@ -9,10 +9,10 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
-import { SiGithub } from "@react-icons/all-files/si/SiGithub";
-import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { useQueryClient } from "@tanstack/react-query";
+import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
+import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
+import { XIcon } from "components/icons/brand-icons/XIcon";
 import { FileInput } from "components/shared/FileInput";
 import {
   DASHBOARD_ENGINE_RELAYER_URL,
@@ -214,7 +214,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           <FormControl isInvalid={!!errors.github}>
             <FormLabel>
               <div className="flex flex-row gap-2">
-                <Icon as={SiGithub} boxSize={4} />
+                <GithubIcon className="size-4" />
                 GitHub
               </div>
             </FormLabel>
@@ -227,7 +227,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           <FormControl isInvalid={!!errors.twitter}>
             <FormLabel>
               <div className="flex flex-row gap-2">
-                <Icon as={SiTwitter} boxSize={4} />
+                <XIcon className="size-4" />
                 Twitter
               </div>
             </FormLabel>
@@ -253,7 +253,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           <FormControl isInvalid={!!errors.discord}>
             <FormLabel>
               <div className="flex flex-row gap-2">
-                <Icon as={SiDiscord} boxSize={4} />
+                <DiscordIcon className="size-4" />
                 Discord
               </div>
             </FormLabel>

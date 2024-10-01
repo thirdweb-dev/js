@@ -1,15 +1,18 @@
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useStore } from "@/lib/reactive";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { getDashboardChainRpc } from "lib/rpc";
-import { CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon, Trash2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 import {
   type StoredChain,
+  chainOverridesStore,
   removeChainOverrides,
 } from "../../stores/chainStores";
 import { ChainIdInput } from "./Form/ChainIdInput";
@@ -43,6 +46,8 @@ interface NetworkConfigFormProps {
   onSubmit: (chain: StoredChain) => void;
 }
 
+const maxAllowedChainOverrides = 10;
+
 export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
   editingChain,
   onSubmit,
@@ -50,10 +55,11 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
   prefillChainId,
 }) => {
   const { idToChain, nameToChain } = useAllChainsData();
+  const chainOverrides = useStore(chainOverridesStore);
 
   const form = useForm<NetworkConfigFormData>({
     values: {
-      name: editingChain?.name || "",
+      name: editingChain?.name || prefillSlug || "",
       rpcUrl:
         editingChain && editingChain?.status !== "deprecated"
           ? getDashboardChainRpc(editingChain.chainId, editingChain)
@@ -64,10 +70,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       currencySymbol: editingChain?.nativeCurrency.symbol || "",
       type: editingChain?.testnet ? "testnet" : "mainnet",
       icon: editingChain?.icon?.url || "",
-      slug: editingChain?.slug || "",
-    },
-    defaultValues: {
-      slug: prefillSlug,
+      slug: prefillSlug || editingChain?.slug || "",
     },
     mode: "onChange",
   });
@@ -76,7 +79,14 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
 
   const chainId = Number(form.watch("chainId"));
   const isChainIdDirty = form.formState.dirtyFields.chainId;
-  const overwritingChain = isChainIdDirty && idToChain.get(chainId);
+  const existingChain = idToChain.get(chainId);
+
+  const isOverwriting =
+    isChainIdDirty &&
+    // if adding a custom chain, (editingChain === undefined)
+    !editingChain &&
+    // found a chain with same chainId
+    existingChain;
 
   const editedFrom = editingChain?.isModified
     ? idToChain.get(editingChain.chainId)
@@ -100,14 +110,14 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
           return true;
         }
 
-        // invalid if chain found, and is not autoconfigured
+        // invalid if chain found, and is not auto configured
         return false;
       },
     },
   });
 
   const handleSubmit = form.handleSubmit((data) => {
-    if (overwritingChain) {
+    if (isOverwriting) {
       return;
     }
 
@@ -180,6 +190,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       configuredNetwork.isModified = false;
     }
     onSubmit(configuredNetwork);
+    form.reset();
   });
 
   const networkNameErrorMessage =
@@ -188,7 +199,45 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       ? "Network already exists"
       : "Network name is required");
 
-  const disableSubmit = !form.formState.isDirty || !!overwritingChain;
+  const disableSubmit = !form.formState.isDirty || !!isOverwriting;
+
+  // This is just a temporary UI while we store the chain overrides in cookies
+  // TODO - delete this once we have the chain overrides in API
+  if (chainOverrides.length >= maxAllowedChainOverrides) {
+    return (
+      <div className="mt-2 flex flex-col px-6 pb-6">
+        <p className="mb-3 text-muted-foreground">
+          <span className="block">Too many chain overrides configured.</span>
+          You can only configure up to{" "}
+          <span className="font-bold">{maxAllowedChainOverrides}</span> chain
+          overrides. Remove existing overrides to add more.
+        </p>
+        <ScrollShadow scrollableClassName="max-h-[400px]">
+          <div className="flex flex-col gap-3">
+            {chainOverrides.map((c) => {
+              return (
+                <div
+                  className="flex items-center justify-between gap-2 rounded-lg border border-border px-4 py-2"
+                  key={c.chainId}
+                >
+                  <div>
+                    <p>{c.name}</p>
+                  </div>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => removeChainOverrides(c.chainId)}
+                  >
+                    <Trash2Icon className="size-4 text-destructive-text" />
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        </ScrollShadow>
+      </div>
+    );
+  }
 
   return (
     <form
@@ -329,11 +378,11 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         {/* RPC URL */}
         <RpcInput form={form} />
 
-        {overwritingChain && (
+        {isOverwriting && existingChain && (
           <div className="flex items-center gap-2 rounded-lg border border-border p-3 text-destructive-text text-sm">
             <CircleAlertIcon className="size-4" />
             <p>
-              Chain ID {chainId} is taken by {`${overwritingChain.name}`}
+              Chain ID {chainId} is taken by {`${existingChain.name}`}
             </p>
           </div>
         )}

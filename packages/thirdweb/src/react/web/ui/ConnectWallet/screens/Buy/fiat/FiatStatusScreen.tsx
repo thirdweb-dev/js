@@ -122,7 +122,6 @@ export function OnrampStatusScreen(props: {
           </Text>
         </>
       )}
-      packages/thirdweb/src/react/web/ui/ConnectWallet/screens/Buy/TransactionModeScreen.tsx
       <OnrampStatusScreenUI
         uiStatus={uiStatus}
         onDone={props.onDone}

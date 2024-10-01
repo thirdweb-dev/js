@@ -1,8 +1,6 @@
-import { useRouter } from "next/router";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
-import { useContractFunctionSelectors } from "../../hooks/useContractFunctionSelectors";
 import { BatchLazyMintButton } from "./components/batch-lazy-mint-button";
 import { NFTClaimButton } from "./components/claim-button";
 import { NFTLazyMintButton } from "./components/lazy-mint-button";
@@ -11,66 +9,47 @@ import { NFTRevealButton } from "./components/reveal-button";
 import { NFTSharedMetadataButton } from "./components/shared-metadata-button";
 import { SupplyCards } from "./components/supply-cards";
 import { NFTGetAllTable } from "./components/table";
-import { TokenIdPage } from "./components/token-id";
 
 interface NftOverviewPageProps {
   contract: ThirdwebContract;
   isErc721: boolean;
-}
-
-function isOnlyNumbers(str: string) {
-  return /^\d+$/.test(str);
+  tokenId?: string;
+  functionSelectors: string[];
 }
 
 export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   contract,
   isErc721,
+  functionSelectors,
 }) => {
-  const router = useRouter();
-  const tokenId = router.query?.paths?.[2];
-  const functionSelectorQuery = useContractFunctionSelectors(contract);
-
-  if (tokenId && isOnlyNumbers(tokenId)) {
-    return (
-      <TokenIdPage contract={contract} tokenId={tokenId} isErc721={isErc721} />
-    );
-  }
-
-  if (functionSelectorQuery.isPending || !functionSelectorQuery.data) {
-    // TODO build a skeleton for this
-    return <div>Loading...</div>;
-  }
-
-  const isERC721ClaimToSupported = ERC721Ext.isClaimToSupported(
-    functionSelectorQuery.data,
-  );
+  const isERC721ClaimToSupported =
+    ERC721Ext.isClaimToSupported(functionSelectors);
   const canShowSupplyCards =
-    ERC721Ext.isTotalSupplySupported(functionSelectorQuery.data) &&
-    ERC721Ext.isNextTokenIdToMintSupported(functionSelectorQuery.data);
+    ERC721Ext.isTotalSupplySupported(functionSelectors) &&
+    ERC721Ext.isNextTokenIdToMintSupported(functionSelectors);
 
   const isLazyMintable = isErc721
-    ? ERC721Ext.isLazyMintSupported(functionSelectorQuery.data)
-    : ERC1155Ext.isLazyMintSupported(functionSelectorQuery.data);
+    ? ERC721Ext.isLazyMintSupported(functionSelectors)
+    : ERC1155Ext.isLazyMintSupported(functionSelectors);
 
   const isMintToSupported = isErc721
-    ? ERC721Ext.isMintToSupported(functionSelectorQuery.data)
-    : ERC1155Ext.isMintToSupported(functionSelectorQuery.data);
+    ? ERC721Ext.isMintToSupported(functionSelectors)
+    : ERC1155Ext.isMintToSupported(functionSelectors);
 
-  const isSetSharedMetadataSupported = ERC721Ext.isSetSharedMetadataSupported(
-    functionSelectorQuery.data,
-  );
+  const isSetSharedMetadataSupported =
+    ERC721Ext.isSetSharedMetadataSupported(functionSelectors);
 
   const canRenderNFTTable = (() => {
     if (isErc721) {
-      return ERC721Ext.isGetNFTsSupported(functionSelectorQuery.data);
+      return ERC721Ext.isGetNFTsSupported(functionSelectors);
     }
     // otherwise erc1155
-    return ERC1155Ext.isGetNFTsSupported(functionSelectorQuery.data);
+    return ERC1155Ext.isGetNFTsSupported(functionSelectors);
   })();
 
-  const isRevealable = ERC721Ext.isRevealSupported(functionSelectorQuery.data);
+  const isRevealable = ERC721Ext.isRevealSupported(functionSelectors);
   const canCreateDelayedRevealBatch =
-    ERC721Ext.isCreateDelayedRevealBatchSupported(functionSelectorQuery.data);
+    ERC721Ext.isCreateDelayedRevealBatchSupported(functionSelectors);
 
   return (
     <div className="flex flex-col gap-6">

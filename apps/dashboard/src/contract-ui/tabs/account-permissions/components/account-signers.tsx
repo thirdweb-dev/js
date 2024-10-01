@@ -1,3 +1,5 @@
+"use client";
+
 import type { ThirdwebContract } from "thirdweb";
 import { getAllActiveSigners, getAllAdmins } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
@@ -31,7 +33,11 @@ export const AccountSigners: React.FC<AccountSignersProps> = ({ contract }) => {
   return (
     <div className="flex flex-col gap-6">
       {data.map((item) => (
-        <AccountSigner key={item.signer} item={item} />
+        <AccountSigner
+          key={item.signer}
+          item={item}
+          contractChainId={contract.chain.id}
+        />
       ))}
     </div>
   );

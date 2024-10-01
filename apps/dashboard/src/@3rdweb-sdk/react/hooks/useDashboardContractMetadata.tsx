@@ -14,41 +14,52 @@ import { getContractMetadata, name, symbol } from "thirdweb/extensions/common";
 export function useDashboardContractMetadata(contract: ThirdwebContract) {
   return useQuery({
     queryKey: ["contract-metadata-header", contract.chain.id, contract.address],
-    queryFn: async () => {
-      const [contractMetadata, _name, _symbol, compilerMetadata] =
-        await Promise.all([
-          getContractMetadata({ contract }).catch(() => ({
-            image: "",
-            name: "",
-            symbol: "",
-          })),
-          name({ contract }).catch(() => ""),
-          symbol({ contract }).catch(() => ""),
-          getCompilerMetadata(contract).catch(() => undefined),
-        ]);
-
-      /**
-       * Handle the case where the contract.thirdweb.com endpoint returns a very long name
-       * example url: https://contract.thirdweb.com/metadata/324/0x66E298335c5992d599132582De8eaAF75348e6e6
-       * In that case, we split the solidity name on ":" and take the second part
-       */
-      if (compilerMetadata?.name.includes(":")) {
-        const _name = compilerMetadata.name.split(":")[1];
-        if (_name) {
-          compilerMetadata.name = compilerMetadata.name.split(":")[1];
-        }
-      }
-
-      const contractName =
-        contractMetadata?.name || _name || compilerMetadata?.name || "";
-      const contractSymbol = contractMetadata?.symbol || _symbol || "";
-
-      return {
-        name: contractName,
-        symbol: contractSymbol,
-        image: contractMetadata.image || "",
-        contractType: compilerMetadata?.name || "",
-      };
-    },
+    queryFn: () => fetchDashboardContractMetadata(contract),
   });
+}
+
+type DashboardContractMetadata = {
+  name: string;
+  symbol: string;
+  image: string;
+  contractType: string;
+};
+
+export async function fetchDashboardContractMetadata(
+  contract: ThirdwebContract,
+): Promise<DashboardContractMetadata> {
+  const [contractMetadata, _name, _symbol, compilerMetadata] =
+    await Promise.all([
+      getContractMetadata({ contract }).catch(() => ({
+        image: "",
+        name: "",
+        symbol: "",
+      })),
+      name({ contract }).catch(() => ""),
+      symbol({ contract }).catch(() => ""),
+      getCompilerMetadata(contract).catch(() => undefined),
+    ]);
+
+  /**
+   * Handle the case where the contract.thirdweb.com endpoint returns a very long name
+   * example url: https://contract.thirdweb.com/metadata/324/0x66E298335c5992d599132582De8eaAF75348e6e6
+   * In that case, we split the solidity name on ":" and take the second part
+   */
+  if (compilerMetadata?.name.includes(":")) {
+    const _name = compilerMetadata.name.split(":")[1];
+    if (_name) {
+      compilerMetadata.name = compilerMetadata.name.split(":")[1];
+    }
+  }
+
+  const contractName =
+    contractMetadata?.name || _name || compilerMetadata?.name || "";
+  const contractSymbol = contractMetadata?.symbol || _symbol || "";
+
+  return {
+    name: contractName,
+    symbol: contractSymbol,
+    image: contractMetadata.image || "",
+    contractType: compilerMetadata?.name || "",
+  };
 }

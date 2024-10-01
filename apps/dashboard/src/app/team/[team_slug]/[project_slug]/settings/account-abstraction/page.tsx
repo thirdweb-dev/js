@@ -1,6 +1,6 @@
 import { getProject } from "@/api/projects";
+import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { notFound } from "next/navigation";
-import { ChakraProviderSetup } from "../../../../../../@/components/ChakraProviderSetup";
 import { AccountAbstractionSettingsPage } from "../../../../../../components/smart-wallets/SponsorshipPolicies";
 import { getAPIKey } from "../../../../../api/lib/getAPIKeys";
 

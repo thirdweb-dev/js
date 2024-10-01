@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useState } from "react";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { ConnectManagerOptions } from "../../../../wallets/manager/index.js";

@@ -1,4 +1,4 @@
-import { Skeleton, Stack, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
+import { Skeleton, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { totalAuctions, totalListings } from "thirdweb/extensions/marketplace";
@@ -79,12 +79,12 @@ export const ListingStatsV3: React.FC<ListingStatsV3Props> = ({
   hasEnglishAuctions,
 }) => {
   return (
-    <Stack spacing={{ base: 3, md: 6 }} direction="row">
+    <div className="flex flex-row gap-3 md:gap-6">
       {hasDirectListings && hasEnglishAuctions && contract && (
         <TotalListingsStat contract={contract} />
       )}
       {hasDirectListings && <DirectListingsStat contract={contract} />}
       {hasEnglishAuctions && <EnglishAuctionsStat contract={contract} />}
-    </Stack>
+    </div>
   );
 };

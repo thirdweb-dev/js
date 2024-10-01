@@ -4,7 +4,7 @@ import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { MAX_UINT256 } from "~test/test-consts.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
+import { TEST_ACCOUNT_B } from "~test/test-wallets.js";
 import { DROP1155_CONTRACT } from "../../../../../test/src/test-contracts.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { getContract } from "../../../../contract/contract.js";
@@ -14,6 +14,8 @@ import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-
 import { lazyMint } from "../../write/lazyMint.js";
 import { setClaimConditions } from "../write/setClaimConditions.js";
 import { getActiveClaimCondition } from "./getActiveClaimCondition.js";
+
+const account = TEST_ACCOUNT_B;
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc1155.getClaimConditions", () => {
   it("should return the correct claim conditions", async () => {
@@ -39,7 +41,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc1155.getClaimConditions", () => {
     const address = await deployERC1155Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
-      account: TEST_ACCOUNT_A,
+      account,
       type: "DropERC1155",
       params: {
         name: "EditionDrop",
@@ -56,7 +58,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc1155.getClaimConditions", () => {
     const lzMint = lazyMint({ contract, nfts: [{ name: "token #0" }] });
     await sendAndConfirmTransaction({
       transaction: lzMint,
-      account: TEST_ACCOUNT_A,
+      account,
     });
 
     // Create a public allowlist claim phase
@@ -97,7 +99,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc1155.getClaimConditions", () => {
 
     await sendAndConfirmTransaction({
       transaction: setCC,
-      account: TEST_ACCOUNT_A,
+      account,
     });
 
     const activeCC = await getActiveClaimCondition({ contract, tokenId: 0n });

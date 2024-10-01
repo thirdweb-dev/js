@@ -1,4 +1,4 @@
-import { SidebarLayout } from "../../@/components/blocks/SidebarLayout";
+import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 
 export function EngineGeneralPageLayout(props: {
   children: React.ReactNode;

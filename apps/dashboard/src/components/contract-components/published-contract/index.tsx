@@ -29,7 +29,6 @@ import {
   usePublishedContractFunctions,
 } from "../hooks";
 import { PublisherHeader } from "../publisher/publisher-header";
-import { AddressesModal } from "./addresses-modal";
 import { MarkdownRenderer } from "./markdown-renderer";
 
 interface ExtendedPublishedContract extends PublishedContractWithVersion {
@@ -235,23 +234,6 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                             : "Proxy"}{" "}
                           Enabled
                         </Heading>
-                        {implementationAddresses &&
-                        hasImplementationAddresses ? (
-                          <AddressesModal
-                            chainAddressRecord={implementationAddresses}
-                            buttonTitle="Implementations"
-                            modalTitle="Implementation Addresses"
-                          />
-                        ) : null}
-                        {factoryAddresses &&
-                        hasFactoryAddresses &&
-                        publishedContract?.isDeployableViaFactory ? (
-                          <AddressesModal
-                            chainAddressRecord={factoryAddresses}
-                            buttonTitle="Factories"
-                            modalTitle="Factory Addresses"
-                          />
-                        ) : null}
                       </Flex>
                     </Flex>
                   </ListItem>

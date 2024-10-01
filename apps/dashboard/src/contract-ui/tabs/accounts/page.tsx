@@ -1,3 +1,5 @@
+"use client";
+
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Heading, TrackedLinkButton } from "tw-components";

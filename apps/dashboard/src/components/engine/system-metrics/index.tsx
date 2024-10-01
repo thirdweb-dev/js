@@ -6,7 +6,7 @@ import {
   useEngineQueueMetrics,
   useEngineSystemMetrics,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex, Icon, Stack } from "@chakra-ui/react";
+import { Flex, Icon } from "@chakra-ui/react";
 import { FaChartArea } from "react-icons/fa";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
@@ -28,7 +28,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
   if (!systemMetricsQuery.data || systemMetricsQuery.isError) {
     systemMetricsPanel = (
       <Card p={8}>
-        <Stack spacing={4}>
+        <div className="flex flex-col gap-4">
           <Flex gap={2} align="center">
             <Icon as={IoIosInformationCircleOutline} />
             <Heading size="title.xs">
@@ -48,13 +48,13 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
             </TrackedLink>{" "}
             to view these metrics.
           </Text>
-        </Stack>
+        </div>
       </Card>
     );
   } else {
     systemMetricsPanel = (
       <Card p={16}>
-        <Stack spacing={4}>
+        <div className="flex flex-col gap-4">
           <Flex gap={2} align="center" pb={-2}>
             <Icon as={FaChartArea} />
             <Heading size="title.md">System Metrics</Heading>
@@ -65,7 +65,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
           </div>
           <StatusCodes datapoints={systemMetricsQuery.data.data.statusCodes} />
           <ErrorRate datapoints={systemMetricsQuery.data.data.errorRate} />
-        </Stack>
+        </div>
       </Card>
     );
   }
@@ -93,7 +93,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
 
     queueMetricsPanel = (
       <Card p={8}>
-        <Stack spacing={6}>
+        <div className="flex flex-col gap-6">
           <Flex gap={2} align="center">
             <Heading size="title.md">Queue Metrics</Heading>
           </Flex>
@@ -127,7 +127,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
               </div>
             )}
           </div>
-        </Stack>
+        </div>
       </Card>
     );
   }

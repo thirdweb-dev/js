@@ -1,17 +1,18 @@
+import { useQuery } from "@tanstack/react-query";
 import type { WalletNFTApiReturn } from "pages/api/wallet/nfts/[chainId]";
-import { useQueryWithNetwork } from "./query/useQueryWithNetwork";
 
-export function useWalletNFTs(walletAddress?: string, chainId?: number) {
-  return useQueryWithNetwork(
-    ["walletNfts", walletAddress],
-    async () => {
+export function useWalletNFTs(params: {
+  chainId: number;
+  walletAddress?: string;
+}) {
+  return useQuery({
+    queryKey: ["walletNfts", params.chainId, params.walletAddress],
+    queryFn: async () => {
       const response = await fetch(
-        `/api/wallet/nfts/${chainId}?owner=${walletAddress}`,
+        `/api/wallet/nfts/${params.chainId}?owner=${params.walletAddress}`,
       );
       return (await response.json()) as WalletNFTApiReturn;
     },
-    {
-      enabled: !!walletAddress && !!chainId,
-    },
-  );
+    enabled: !!params.walletAddress,
+  });
 }

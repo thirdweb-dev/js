@@ -4,11 +4,9 @@ import {
   Icon,
   List,
   SimpleGrid,
-  Stack,
   Tag,
   Tooltip,
 } from "@chakra-ui/react";
-import { useTabHref } from "contract-ui/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
 import { useMemo } from "react";
@@ -30,17 +28,18 @@ import { getAllRoleMembers } from "../../../hooks/permissions";
 interface PermissionsTableProps {
   contract: ThirdwebContract;
   trackingCategory: TrackedLinkProps["category"];
+  chainSlug: string;
 }
 
 export const PermissionsTable: React.FC<PermissionsTableProps> = ({
   contract,
   trackingCategory,
+  chainSlug,
 }) => {
   const allRoleMembers = useReadContract(getAllRoleMembers, {
     contract,
   });
-  const permissionsHref = useTabHref("permissions");
-
+  const permissionsHref = `/${chainSlug}/${contract.address}/permissions`;
   const members = useMemo(() => {
     return (
       Object.entries(allRoleMembers.data || {}).reduce(
@@ -62,9 +61,7 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
   return (
     <Flex gap={6} flexDirection="column">
       <Flex align="center" justify="space-between" w="full">
-        <Heading flexShrink={0} size="title.sm">
-          Permissions
-        </Heading>
+        <h2 className="font-semibold text-2xl tracking-tight">Permissions</h2>
         <TrackedLink
           category={trackingCategory}
           label="view_all_permissions"
@@ -166,7 +163,7 @@ const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
         _last={{ borderBottomWidth: 0 }}
       >
         <Box gridColumn="span 2">
-          <Stack direction="row" align="center" spacing={3}>
+          <div className="flex flex-row items-center gap-3">
             <Tooltip
               p={0}
               bg="transparent"
@@ -191,7 +188,7 @@ const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
             <Text fontFamily="mono" noOfLines={1}>
               {shortenIfAddress(data.member)}
             </Text>
-          </Stack>
+          </div>
         </Box>
 
         <Box gridColumn="span 1" />

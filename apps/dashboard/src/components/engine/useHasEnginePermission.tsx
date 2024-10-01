@@ -1,5 +1,5 @@
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useQuery } from "@tanstack/react-query";
-import { useLoggedInUser } from "../../@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 // If it fails to fetch, the server is unreachable.
 // If it returns a 401, the user is not a valid admin.

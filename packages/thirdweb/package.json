@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.59.0",
+  "version": "5.60.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -212,7 +212,7 @@
     "@radix-ui/react-tooltip": "1.1.2",
     "@tanstack/react-query": "5.56.2",
     "@walletconnect/ethereum-provider": "2.16.2",
-    "@walletconnect/sign-client": "2.16.2",
+    "@walletconnect/sign-client": "2.16.3",
     "abitype": "1.0.5",
     "fuse.js": "7.0.0",
     "input-otp": "^1.2.4",
@@ -315,7 +315,7 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@aws-sdk/client-lambda": "3.656.0",
+    "@aws-sdk/client-lambda": "3.659.0",
     "@aws-sdk/credential-providers": "3.654.0",
     "@biomejs/biome": "1.9.2",
     "@chromatic-com/storybook": "2.0.2",
@@ -325,11 +325,11 @@
     "@react-native-async-storage/async-storage": "1.24.0",
     "@size-limit/preset-big-lib": "11.1.5",
     "@storybook/addon-essentials": "8.3.2",
-    "@storybook/addon-interactions": "8.3.2",
+    "@storybook/addon-interactions": "8.3.4",
     "@storybook/addon-links": "8.3.2",
     "@storybook/addon-onboarding": "8.3.2",
-    "@storybook/react": "8.3.2",
-    "@storybook/react-vite": "8.3.2",
+    "@storybook/react": "8.3.4",
+    "@storybook/react-vite": "8.3.4",
     "@storybook/test": "8.3.2",
     "@testing-library/jest-dom": "^6.4.7",
     "@testing-library/react": "^16.0.0",
@@ -348,6 +348,7 @@
     "expo-web-browser": "13.0.3",
     "happy-dom": "^15.7.4",
     "knip": "^5.30.5",
+    "msw": "^2.4.9",
     "prettier": "^3.3.2",
     "react": "18.3.1",
     "react-native": "0.75.3",

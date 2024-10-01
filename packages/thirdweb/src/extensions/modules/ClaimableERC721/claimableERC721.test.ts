@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
 import {
@@ -27,7 +28,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularClaimableERC721", () => {
       core: "ERC721",
       params: {
         name: "TestDropERC721",
-        symbol: "TT",
+        contractURI: TEST_CONTRACT_URI,
       },
       modules: [
         ClaimableERC721.module({

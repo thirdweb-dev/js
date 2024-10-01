@@ -3,7 +3,7 @@ import type React from "react";
 import { cn } from "../../lib/utils";
 import { NavLink } from "../ui/NavLink";
 
-export type SidebarLink = {
+export type SidebarBaseLink = {
   href: string;
   label: React.ReactNode;
   exactMatch?: boolean;
@@ -13,6 +13,13 @@ export type SidebarLink = {
     label: string;
   };
 };
+
+export type SidebarLink =
+  | SidebarBaseLink
+  | {
+      group: string;
+      links: SidebarBaseLink[];
+    };
 
 type SidebarContentProps = {
   header?: React.ReactNode;
@@ -31,23 +38,42 @@ export function Sidebar(props: SidebarContentProps) {
       <div className="pt-7">
         {props.header}
         <div className="flex flex-col gap-1">
-          {props.links?.map((link) => {
-            const isExternal = link.href.startsWith("http");
-            return (
-              <NavLink
-                key={link.href}
-                href={link.href}
-                className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-muted"
-                activeClassName="text-foreground"
-                exactMatch={link.exactMatch}
-              >
-                {link.label}
-                {isExternal && <ExternalLinkIcon className="size-3" />}
-              </NavLink>
-            );
-          })}
+          <RenderSidebarLinks links={props.links} />
         </div>
       </div>
     </aside>
+  );
+}
+
+export function RenderSidebarLinks(props: { links: SidebarLink[] }) {
+  return (
+    <div className="flex flex-col gap-1">
+      {props.links.map((link, i) => {
+        if ("group" in link) {
+          return (
+            <div className={cn({ "mt-6": i !== 0 })}>
+              <p className={cn("px-3 py-2 font-medium text-foreground")}>
+                {link.group}
+              </p>
+              <RenderSidebarLinks links={link.links} />
+            </div>
+          );
+        }
+
+        const isExternal = link.href.startsWith("http");
+        return (
+          <NavLink
+            key={link.href}
+            href={link.href}
+            className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-muted"
+            activeClassName="text-foreground"
+            exactMatch={link.exactMatch}
+          >
+            {link.label}
+            {isExternal && <ExternalLinkIcon className="size-3" />}
+          </NavLink>
+        );
+      })}
+    </div>
   );
 }

@@ -10,10 +10,8 @@ import {
   List,
   SimpleGrid,
   Spinner,
-  Stack,
   Tooltip,
 } from "@chakra-ui/react";
-import { useTabHref } from "contract-ui/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
 import { useState } from "react";
@@ -34,23 +32,22 @@ import { shortenString } from "utils/usedapp-external";
 interface LatestEventsProps {
   trackingCategory: TrackedLinkProps["category"];
   contract: ThirdwebContract;
+  chainSlug: string;
 }
 
 export const LatestEvents: React.FC<LatestEventsProps> = ({
   contract,
   trackingCategory,
+  chainSlug,
 }) => {
   const [autoUpdate] = useState(true);
-  const eventsHref = useTabHref("events");
-
+  const eventsHref = `/${chainSlug}/${contract.address}/events`;
   const allEvents = useActivity(contract, autoUpdate);
 
   return (
     <Flex gap={6} flexDirection="column">
       <Flex align="center" justify="space-between" w="full">
-        <Heading flexShrink={0} size="title.sm">
-          Latest Events
-        </Heading>
+        <h2 className="font-semibold text-2xl tracking-tight">Latest Events</h2>
         <TrackedLink
           category={trackingCategory}
           label="view_all_events"
@@ -95,7 +92,12 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
           ) : null}
           <AnimatePresence initial={false}>
             {allEvents?.slice(0, 3).map((e) => (
-              <EventsFeedItem key={e.transactionHash} transaction={e} />
+              <EventsFeedItem
+                key={e.transactionHash}
+                transaction={e}
+                contractAddress={contract.address}
+                chainSlug={chainSlug}
+              />
             ))}
           </AnimatePresence>
         </List>
@@ -106,12 +108,17 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
 
 interface EventsFeedItemProps {
   transaction: InternalTransaction;
+  contractAddress: string;
+  chainSlug: string;
 }
 
-const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
+const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
+  transaction,
+  contractAddress,
+  chainSlug,
+}) => {
   const { onCopy } = useClipboard(transaction.transactionHash);
-
-  const href = useTabHref("events");
+  const eventsHref = `/${chainSlug}/${contractAddress}/events`;
 
   return (
     <div>
@@ -151,7 +158,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
         _last={{ borderBottomWidth: 0 }}
       >
         <Box gridColumn="span 3">
-          <Stack direction="row" align="center" spacing={3}>
+          <div className="flex flex-row items-center gap-3">
             <Tooltip
               p={0}
               bg="transparent"
@@ -178,7 +185,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
             <Text fontFamily="mono" noOfLines={1}>
               {shortenString(transaction.transactionHash)}
             </Text>
-          </Stack>
+          </div>
         </Box>
 
         <ButtonGroup
@@ -191,7 +198,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
         >
           {transaction.events.slice(0, 2).map((e, idx) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-            <LinkButton key={idx} href={`${href}?event=${e.eventName}`}>
+            <LinkButton key={idx} href={`${eventsHref}?event=${e.eventName}`}>
               <Text color="whiteBg" fontWeight="600" isTruncated>
                 {e.eventName}
               </Text>

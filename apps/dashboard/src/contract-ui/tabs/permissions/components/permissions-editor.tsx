@@ -11,7 +11,6 @@ import {
   InputGroup,
   InputLeftAddon,
   InputRightAddon,
-  Stack,
   Tooltip,
 } from "@chakra-ui/react";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
@@ -57,26 +56,17 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
   };
 
   return (
-    <Stack spacing={2}>
+    <div className="flex flex-col gap-2">
       {!fields?.length && (
         <DelayedDisplay delay={100}>
-          <Stack
-            direction="row"
-            bg="orange.50"
-            borderRadius="md"
-            borderWidth="1px"
-            borderColor="orange.100"
-            align="center"
-            padding="10px"
-            spacing={3}
-          >
+          <div className="flex flex-row items-center gap-3 rounded-md border border-border border-orange-100 bg-orange-50 p-[10px]">
             <Icon as={FiInfo} color="orange.400" boxSize={6} />
             <Text color="orange.800">
               {role === "asset"
                 ? "No asset contracts are permitted to be listed on this marketplace."
                 : "Nobody has this permission for this contract."}
             </Text>
-          </Stack>
+          </div>
         </DelayedDisplay>
       )}
       {fields?.map((field, index) => (
@@ -154,7 +144,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
           </FormErrorMessage>
         </FormControl>
       </AdminOnly>
-    </Stack>
+    </div>
   );
 };
 

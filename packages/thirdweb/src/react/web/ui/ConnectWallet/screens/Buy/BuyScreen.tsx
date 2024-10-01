@@ -357,6 +357,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         tokenAmount={tokenAmount}
         receiverAddress={receiverAddress}
         transactionMode={props.payOptions.mode === "transaction"}
+        payOptions={payOptions}
         isEmbed={props.isEmbed}
         onDone={onDone}
         onTryAgain={() => {

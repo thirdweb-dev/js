@@ -15,7 +15,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Stack,
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -129,7 +128,7 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
           <ModalHeader>Add Public Key</ModalHeader>
           <ModalBody as={Flex} flexDir="column" gap={8}>
             <FormControl>
-              <Stack>
+              <div className="flex flex-col gap-2">
                 <div className="flex flex-row gap-2">
                   <Text>Create a private key using:</Text>
                   <Select
@@ -179,7 +178,7 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
                   code="cat public.key"
                   language="solidity"
                 />
-              </Stack>
+              </div>
             </FormControl>
 
             <FormControl isRequired>
@@ -206,14 +205,14 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
             </FormControl>
 
             <Alert variant="left-accent">
-              <Stack>
+              <div className="flex flex-col gap-2">
                 <Text>
                   <strong>Keep your private key secure!</strong>
                   <br />
                   Your backend will sign access tokens with this private key
                   which Engine verifies with this public key.
                 </Text>
-              </Stack>
+              </div>
             </Alert>
           </ModalBody>
 

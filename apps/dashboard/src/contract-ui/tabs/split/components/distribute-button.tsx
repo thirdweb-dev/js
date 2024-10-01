@@ -1,3 +1,5 @@
+"use client";
+
 import { useSplitDistributeFunds } from "@3rdweb-sdk/react/hooks/useSplit";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -78,6 +80,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
         isLoading={mutation.isPending}
         colorScheme="primary"
         onClick={distributeFunds}
+        desiredChainId={contract.chain.id}
         {...restButtonProps}
       >
         Distribute Funds
@@ -100,6 +103,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
       colorScheme="primary"
       onClick={distributeFunds}
       {...restButtonProps}
+      txChainID={contract.chain.id}
     >
       Distribute Funds
     </TransactionButton>

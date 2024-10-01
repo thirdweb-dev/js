@@ -174,7 +174,6 @@ export enum PageId {
 
   // thirdweb.com/:network/:contractAddress (evm)
   // example: thirdweb.com/goerli/0x2eaDAa60dBB74Ead3E20b23E4C5A0Dd789932846
-  DeployedContract = "deployed-contract",
 
   // ---------------------------------------------------------------------------
   //  community pages

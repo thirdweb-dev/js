@@ -28,3 +28,4 @@ packages/*/typedoc/*
 
 *storybook.log
 storybook-static
+.aider*

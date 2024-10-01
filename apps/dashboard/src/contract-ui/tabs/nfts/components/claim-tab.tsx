@@ -1,3 +1,5 @@
+"use client";
+
 import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -120,6 +122,7 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
         </Flex>
 
         <TransactionButton
+          txChainID={contract.chain.id}
           transactionCount={1}
           isLoading={form.formState.isSubmitting}
           type="submit"

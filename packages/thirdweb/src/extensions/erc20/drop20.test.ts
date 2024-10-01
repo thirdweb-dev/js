@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { VITALIK_WALLET } from "../../../test/src/addresses.js";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
@@ -12,7 +13,6 @@ import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { toEther } from "../../utils/units.js";
-import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { getClaimConditions } from "./drops/read/getClaimConditions.js";
 import { claimTo } from "./drops/write/claimTo.js";
@@ -35,6 +35,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         client: TEST_CLIENT,
         params: {
           name: "Test DropERC20",
+          contractURI: TEST_CONTRACT_URI,
         },
         type: "DropERC20",
       });
@@ -46,16 +47,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
       // this deploys a contract, it may take some time
     }, 60_000);
-
-    describe("Deployment", () => {
-      it("should deploy", async () => {
-        expect(contract).toBeDefined();
-      });
-      it("should have the correct name", async () => {
-        const metadata = await getContractMetadata({ contract });
-        expect(metadata.name).toBe("Test DropERC20");
-      });
-    });
 
     it("should allow to claim tokens", async () => {
       await expect(

@@ -7,7 +7,6 @@ import {
 import { THIRDWEB_ANALYTICS_API_HOST, THIRDWEB_API_HOST } from "constants/urls";
 import invariant from "tiny-invariant";
 import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
-import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useLoggedInUser } from "./useLoggedInUser";
 
 // FIXME: We keep repeating types, API server should provide them
@@ -479,8 +478,8 @@ export function useUpdateAccountPlan(waitForWebhook?: boolean) {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: { plan: string; feedback?: string }) => {
+  return useMutation({
+    mutationFn: async (input: { plan: string; feedback?: string }) => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/plan`, {
@@ -506,27 +505,26 @@ export function useUpdateAccountPlan(waitForWebhook?: boolean) {
 
       return json.data;
     },
-    {
-      onSuccess: async () => {
+    onSuccess: async () => {
+      return Promise.all([
         // invalidate usage data as limits are different
-        await queryClient.invalidateQueries({
+        queryClient.invalidateQueries({
           queryKey: accountKeys.me(user?.address as string),
-        });
-
-        return queryClient.invalidateQueries({
+        }),
+        queryClient.invalidateQueries({
           queryKey: accountKeys.usage(user?.address as string),
-        });
-      },
+        }),
+      ]);
     },
-  );
+  });
 }
 
 export function useUpdateNotifications() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: UpdateAccountNotificationsInput) => {
+  return useMutation({
+    mutationFn: async (input: UpdateAccountNotificationsInput) => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/notifications`, {
@@ -545,14 +543,12 @@ export function useUpdateNotifications() {
 
       return json.data;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: accountKeys.me(user?.address as string),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: accountKeys.me(user?.address as string),
+      });
     },
-  );
+  });
 }
 
 export function useCreateBillingSession(enabled = false) {
@@ -589,8 +585,8 @@ export function useConfirmEmail() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: ConfirmEmailInput) => {
+  return useMutation({
+    mutationFn: async (input: ConfirmEmailInput) => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/confirmEmail`, {
@@ -609,31 +605,29 @@ export function useConfirmEmail() {
 
       return json.data;
     },
-    {
-      onSuccess: async () => {
-        // invalidate related cache, since could be relinking account
-        return Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: apiKeys.keys(user?.address as string),
-          }),
-          queryClient.invalidateQueries({
-            queryKey: accountKeys.usage(user?.address as string),
-          }),
-          queryClient.invalidateQueries({
-            queryKey: accountKeys.me(user?.address as string),
-          }),
-        ]);
-      },
+    onSuccess: async () => {
+      // invalidate related cache, since could be relinking account
+      return Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: apiKeys.keys(user?.address as string),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: accountKeys.usage(user?.address as string),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: accountKeys.me(user?.address as string),
+        }),
+      ]);
     },
-  );
+  });
 }
 
 export function useResendEmailConfirmation() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async () => {
+  return useMutation({
+    mutationFn: async () => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(
@@ -655,22 +649,20 @@ export function useResendEmailConfirmation() {
 
       return json.data;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: accountKeys.me(user?.address as string),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: accountKeys.me(user?.address as string),
+      });
     },
-  );
+  });
 }
 
 export function useCreatePaymentMethod() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (paymentMethodId: string) => {
+  return useMutation({
+    mutationFn: async (paymentMethodId: string) => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/paymentMethod`, {
@@ -691,14 +683,12 @@ export function useCreatePaymentMethod() {
 
       return json.data;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: accountKeys.me(user?.address as string),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: accountKeys.me(user?.address as string),
+      });
     },
-  );
+  });
 }
 
 export function useApiKeys() {
@@ -761,8 +751,8 @@ export function useUpdateApiKey() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: UpdateKeyInput) => {
+  return useMutation({
+    mutationFn: async (input: UpdateKeyInput) => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys/${input.id}`, {
@@ -782,22 +772,20 @@ export function useUpdateApiKey() {
 
       return json.data;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: apiKeys.keys(user?.address as string),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: apiKeys.keys(user?.address as string),
+      });
     },
-  );
+  });
 }
 
 export function useRevokeApiKey() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (id: string) => {
+  return useMutation({
+    mutationFn: async (id: string) => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys/${id}/revoke`, {
@@ -816,14 +804,12 @@ export function useRevokeApiKey() {
 
       return json.data;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: apiKeys.keys(user?.address as string),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: apiKeys.keys(user?.address as string),
+      });
     },
-  );
+  });
 }
 
 export const usePolicies = (serviceId?: string) => {
@@ -852,8 +838,11 @@ export const usePolicies = (serviceId?: string) => {
 
 export const useUpdatePolicies = () => {
   const queryClient = useQueryClient();
-  return useMutationWithInvalidate(
-    async (input: { serviceId: string; data: ApiKeyServicePolicy }) => {
+  return useMutation({
+    mutationFn: async (input: {
+      serviceId: string;
+      data: ApiKeyServicePolicy;
+    }) => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/policies`, {
         method: "POST",
 
@@ -871,22 +860,20 @@ export const useUpdatePolicies = () => {
       }
       return json.data as ApiKeyServicePolicy;
     },
-    {
-      onSuccess: (_, variables) => {
-        return queryClient.invalidateQueries({
-          queryKey: ["policies", variables.serviceId],
-        });
-      },
+    onSuccess: (_, variables) => {
+      return queryClient.invalidateQueries({
+        queryKey: ["policies", variables.serviceId],
+      });
     },
-  );
+  });
 };
 
 export function useRevokeAuthorizedWallet() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (variables: { authorizedWalletId: string }) => {
+  return useMutation({
+    mutationFn: async (variables: { authorizedWalletId: string }) => {
       invariant(user?.address, "walletAddress is required");
 
       const { authorizedWalletId } = variables;
@@ -910,16 +897,12 @@ export function useRevokeAuthorizedWallet() {
 
       return json.data;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: authorizedWallets.authorizedWallets(
-            user?.address as string,
-          ),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: authorizedWallets.authorizedWallets(user?.address as string),
+      });
     },
-  );
+  });
 }
 
 export function useAuthorizedWallets() {

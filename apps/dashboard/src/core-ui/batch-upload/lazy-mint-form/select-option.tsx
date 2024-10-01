@@ -1,16 +1,10 @@
-import {
-  Flex,
-  Icon,
-  Radio,
-  Stack,
-  type StackProps,
-  Tooltip,
-} from "@chakra-ui/react";
-import { AiOutlineInfoCircle } from "@react-icons/all-files/ai/AiOutlineInfoCircle";
+import { cn } from "@/lib/utils";
+import { Flex, Radio, Tooltip } from "@chakra-ui/react";
+import { InfoIcon } from "lucide-react";
 import type { MouseEventHandler } from "react";
 import { Card, Heading, Text } from "tw-components";
 
-interface SelectOptionProps extends StackProps {
+interface SelectOptionProps {
   name: string;
   description?: string;
   isActive?: boolean;
@@ -18,6 +12,7 @@ interface SelectOptionProps extends StackProps {
   disabled?: boolean;
   disabledText?: string;
   infoText?: string | JSX.Element;
+  className?: string;
 }
 
 export const SelectOption: React.FC<SelectOptionProps> = ({
@@ -28,6 +23,7 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
   disabled,
   disabledText,
   infoText,
+  className,
   ...stackProps
 }) => {
   return (
@@ -44,20 +40,22 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
       p={0}
       shouldWrapChildren
     >
-      <Stack
-        as={Card}
-        padding={5}
+      <Card
+        className={cn(
+          "flex flex-col gap-2 rounded-md p-5",
+          disabled
+            ? "pointer-events-none cursor-not-allowed"
+            : "cursor-pointer",
+          className,
+        )}
         width={{ base: "inherit", md: "350px" }}
-        borderRadius="md"
         borderColor={isActive ? "primary.500" : undefined}
-        onClick={onClick}
-        cursor={disabled ? "not-allowed" : "pointer"}
-        pointerEvents={disabled ? "none" : undefined}
         bgColor={disabled ? "backgroundHighlight" : undefined}
         {...stackProps}
+        onClick={onClick}
       >
         <Flex flexDirection="row" justifyContent="space-between">
-          <Stack flexDirection="row" alignItems="start" spacing={0}>
+          <div className="flex flex-row items-start gap-0">
             <Radio
               cursor="pointer"
               size="lg"
@@ -67,7 +65,7 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
               isChecked={isActive}
               isDisabled={disabled}
             />
-            <Stack ml={4} flexDirection="column" alignSelf="start">
+            <div className="ml-4 flex flex-col gap-2 self-start">
               <Heading
                 size="subtitle.sm"
                 fontWeight="700"
@@ -81,8 +79,8 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
                   {description}
                 </Text>
               )}
-            </Stack>
-          </Stack>
+            </div>
+          </div>
           {infoText && (
             <div className="flex flex-row">
               <Tooltip
@@ -97,13 +95,13 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
                 }
               >
                 <Flex alignItems="center">
-                  <Icon as={AiOutlineInfoCircle} boxSize={5} />
+                  <InfoIcon className="size-4" />
                 </Flex>
               </Tooltip>
             </div>
           )}
         </Flex>
-      </Stack>
+      </Card>
     </Tooltip>
   );
 };

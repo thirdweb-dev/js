@@ -1,4 +1,4 @@
-import { Flex, Stack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { TrackedLink, TrackedLinkButton } from "tw-components";
 import { HoverMenu } from "./HoverMenu";
 import { NestedHoverMenu } from "./NestedHoverMenu";
@@ -13,15 +13,7 @@ import {
 export const DesktopMenu: React.FC = () => {
   return (
     <Flex gap={8} display={{ base: "none", xl: "flex" }}>
-      <Stack
-        display="flex"
-        direction="row"
-        alignItems="center"
-        color="gray.50"
-        fontWeight="bold"
-        spacing={10}
-        as="nav"
-      >
+      <nav className="flex flex-row items-center gap-10 font-bold text-gray-50">
         <HoverMenu title="Products" items={PRODUCT_SECTIONS} />
         <HoverMenu title="Solutions" items={SOLUTIONS} />
 
@@ -59,7 +51,7 @@ export const DesktopMenu: React.FC = () => {
         >
           Contact Us
         </TrackedLinkButton>
-      </Stack>
+      </nav>
     </Flex>
   );
 };

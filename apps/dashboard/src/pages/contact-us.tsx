@@ -8,7 +8,6 @@ import {
   Image,
   Input,
   List,
-  ListItem,
   Select,
   SimpleGrid,
 } from "@chakra-ui/react";
@@ -87,45 +86,39 @@ const ContactUs: ThirdwebNextPage = () => {
               learn how we can get you shipping faster.
             </Text>
             <List as={Flex} flexDir="column" gap={3}>
-              <ListItem>
-                <Flex gap={2} alignItems="center">
-                  <Image
-                    src="/assets/dashboard/extension-check.svg"
-                    alt=""
-                    objectFit="contain"
-                    mb="2px"
-                  />
-                  <Text size="body.lg">
-                    Technical support from real Web3 developers
-                  </Text>
-                </Flex>
-              </ListItem>
-              <ListItem>
-                <Flex gap={2} alignItems="center">
-                  <Image
-                    src="/assets/dashboard/extension-check.svg"
-                    alt=""
-                    objectFit="contain"
-                    mb="2px"
-                  />
-                  <Text size="body.lg">
-                    Help figuring out the solution you need
-                  </Text>
-                </Flex>
-              </ListItem>
-              <ListItem>
-                <Flex gap={2} alignItems="center">
-                  <Image
-                    src="/assets/dashboard/extension-check.svg"
-                    alt=""
-                    objectFit="contain"
-                    mb="2px"
-                  />
-                  <Text size="body.lg">
-                    Personalized demos of our products and solutions
-                  </Text>
-                </Flex>
-              </ListItem>
+              <Flex gap={2} alignItems="center">
+                <Image
+                  src="/assets/dashboard/extension-check.svg"
+                  alt=""
+                  objectFit="contain"
+                  mb="2px"
+                />
+                <Text size="body.lg">
+                  Technical support from real Web3 developers
+                </Text>
+              </Flex>
+              <Flex gap={2} alignItems="center">
+                <Image
+                  src="/assets/dashboard/extension-check.svg"
+                  alt=""
+                  objectFit="contain"
+                  mb="2px"
+                />
+                <Text size="body.lg">
+                  Help figuring out the solution you need
+                </Text>
+              </Flex>
+              <Flex gap={2} alignItems="center">
+                <Image
+                  src="/assets/dashboard/extension-check.svg"
+                  alt=""
+                  objectFit="contain"
+                  mb="2px"
+                />
+                <Text size="body.lg">
+                  Personalized demos of our products and solutions
+                </Text>
+              </Flex>
             </List>
             <TrustedBy display={{ base: "none", lg: "flex" }} />
           </Flex>

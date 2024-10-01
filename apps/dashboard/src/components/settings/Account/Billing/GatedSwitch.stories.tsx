@@ -1,5 +1,5 @@
+import { Separator } from "@/components/ui/separator";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Separator } from "../../../../@/components/ui/separator";
 import { BadgeContainer } from "../../../../stories/utils";
 import { GatedSwitch } from "./GatedSwitch";
 

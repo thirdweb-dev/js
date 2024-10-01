@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Accordion,
   AccordionButton,
@@ -10,7 +12,6 @@ import {
   DrawerHeader,
   FormControl,
   Input,
-  Stack,
   Textarea,
   useModalContext,
 } from "@chakra-ui/react";
@@ -128,9 +129,8 @@ export const SharedMetadataForm: React.FC<{
         <Heading>Set NFT Metadata</Heading>
       </DrawerHeader>
       <DrawerBody>
-        <Stack
-          spacing={6}
-          as="form"
+        <form
+          className="flex flex-col gap-6"
           id={SHARED_METADATA_FORM_ID}
           onSubmit={handleSubmit((data) => {
             if (!address) {
@@ -176,10 +176,10 @@ export const SharedMetadataForm: React.FC<{
             });
           })}
         >
-          <Stack>
+          <div className="flex flex-col gap-2">
             <Heading size="subtitle.md">Metadata</Heading>
             <Divider />
-          </Stack>
+          </div>
           <FormControl isRequired isInvalid={!!errors.name}>
             <FormLabel>Name</FormLabel>
             <Input autoFocus {...register("name")} />
@@ -242,7 +242,7 @@ export const SharedMetadataForm: React.FC<{
                 <Heading size="subtitle.md">Advanced Options</Heading>
                 <AccordionIcon />
               </AccordionButton>
-              <AccordionPanel px={0} as={Stack} spacing={6}>
+              <AccordionPanel className="flex flex-col gap-6 px-0">
                 <FormControl isInvalid={!!errors.customImage}>
                   <FormLabel>Image URL</FormLabel>
                   <Input max="6" {...register("customImage")} />
@@ -268,7 +268,7 @@ export const SharedMetadataForm: React.FC<{
               </AccordionPanel>
             </AccordionItem>
           </Accordion>
-        </Stack>
+        </form>
       </DrawerBody>
       <DrawerFooter>
         <Button
@@ -280,6 +280,7 @@ export const SharedMetadataForm: React.FC<{
           Cancel
         </Button>
         <TransactionButton
+          txChainID={contract.chain.id}
           transactionCount={1}
           isLoading={isPending}
           form={SHARED_METADATA_FORM_ID}

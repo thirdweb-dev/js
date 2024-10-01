@@ -1,4 +1,6 @@
-import { FormControl, Input, Stack } from "@chakra-ui/react";
+"use client";
+
+import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -52,7 +54,7 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
   const { mutate, isPending } = useSendAndConfirmTransaction();
 
   return (
-    <Stack w="full">
+    <div className="flex w-full flex-col gap-2">
       <form
         onSubmit={handleSubmit((data) => {
           trackEvent({
@@ -96,13 +98,9 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
           });
         })}
       >
-        <Stack gap={3}>
+        <div className="flex flex-col gap-3">
           {isErc1155 && (
-            <Stack
-              spacing={6}
-              w="100%"
-              direction={{ base: "column", md: "row" }}
-            >
+            <div className="flex w-full flex-col gap-6 md:flex-row">
               <FormControl isRequired={isErc1155} isInvalid={!!errors.amount}>
                 <FormLabel>Amount</FormLabel>
                 <Input placeholder="1" {...register("amount")} />
@@ -111,7 +109,7 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
                 </FormHelperText>
                 <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
               </FormControl>
-            </Stack>
+            </div>
           )}
           {isErc721 && (
             <Text>
@@ -137,12 +135,13 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
             type="submit"
             colorScheme="primary"
             alignSelf="flex-end"
+            txChainID={contract.chain.id}
           >
             Burn
           </TransactionButton>
-        </Stack>
+        </div>
       </form>
-    </Stack>
+    </div>
   );
 };
 

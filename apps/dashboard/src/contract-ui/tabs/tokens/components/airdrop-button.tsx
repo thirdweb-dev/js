@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -29,7 +31,7 @@ export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
   const [open, setOpen] = useState(false);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger>
+      <SheetTrigger asChild>
         <Button
           colorScheme="primary"
           leftIcon={<Droplet size={16} />}

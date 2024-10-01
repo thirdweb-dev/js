@@ -27,13 +27,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import {
   type EngineAlertRule,
   EngineNotificationChannelTypeConfig,
-} from "../../../@3rdweb-sdk/react/hooks/useEngine";
+} from "@3rdweb-sdk/react/hooks/useEngine";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const alertFormSchema = z.object({
   subscriptionRoutes: z.array(z.string()),

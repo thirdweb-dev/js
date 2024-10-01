@@ -2,17 +2,19 @@ import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
+import { TEST_ACCOUNT_B } from "~test/test-wallets.js";
 import { isAddress } from "../../utils/address.js";
 import { deployERC20Contract } from "./deploy-erc20.js";
 import { deployVoteContract } from "./deploy-vote.js";
+
+const account = TEST_ACCOUNT_B;
 
 describe.runIf(process.env.TW_SECRET_KEY)("deploy-voteERC20 contract", () => {
   it("should deploy Vote contract", async () => {
     const tokenAddress = await deployERC20Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
-      account: TEST_ACCOUNT_A,
+      account,
       type: "TokenERC20",
       params: {
         name: "Token",
@@ -20,7 +22,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deploy-voteERC20 contract", () => {
       },
     });
     const address = await deployVoteContract({
-      account: TEST_ACCOUNT_A,
+      account,
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
       params: {
@@ -45,7 +47,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deploy-voteERC20 contract", () => {
     const tokenAddress = await deployERC20Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
-      account: TEST_ACCOUNT_A,
+      account,
       type: "TokenERC20",
       params: {
         name: "Token",
@@ -54,7 +56,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deploy-voteERC20 contract", () => {
     });
     await expect(() =>
       deployVoteContract({
-        account: TEST_ACCOUNT_A,
+        account,
         client: TEST_CLIENT,
         chain: ANVIL_CHAIN,
         params: {

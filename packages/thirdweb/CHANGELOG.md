@@ -1,5 +1,90 @@
 # thirdweb
 
+## 5.60.0
+
+### Minor Changes
+
+- [#4579](https://github.com/thirdweb-dev/js/pull/4579) [`90b5495`](https://github.com/thirdweb-dev/js/commit/90b5495efb84b8220e7ba352416601c2f239d110) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Pack extensions
+
+  ### Deploy Pack
+
+  ```ts
+  import { deployPackContract } from "thirdweb/extensions/deploy";
+
+  const packAddress = await deployPackContract({
+    account,
+    client,
+    chain,
+    params: {
+      name: "Pack contract name",
+      symbol: "PACK1155",
+    },
+  });
+  ```
+
+  ### Create a Pack
+
+  ```ts
+  import { createPack } from "thirdweb/extensions/pack";
+
+  const transaction = createPack({
+    contract: packContract,
+    client,
+    recipient: "0x...",
+    tokenOwner: "0x...",
+    packMetadata: {
+      name: "Pack #1",
+      image: "image-of-pack-1",
+    },
+    openStartTimestamp: new Date(),
+    erc20Rewards: [
+      {
+        contractAddress: "0x...",
+        quantityPerReward: 1,
+        totalRewards: 1,
+      },
+    ],
+    erc721Rewards: [
+      {
+        contractAddress: "0x...",
+        tokenId: 0n,
+      },
+    ],
+    erc1155Rewards: [
+      {
+        contractAddress: "0x...",
+        tokenId: 0n,
+        quantityPerReward: 1,
+        totalRewards: 1,
+      },
+    ],
+  });
+  ```
+
+### Patch Changes
+
+- [#4820](https://github.com/thirdweb-dev/js/pull/4820) [`80729e9`](https://github.com/thirdweb-dev/js/commit/80729e974808be1b2abd715af8e003b228d6da1b) Thanks [@MananTank](https://github.com/MananTank)! - Added "use client" directives on various client side hooks
+
+- [#4871](https://github.com/thirdweb-dev/js/pull/4871) [`5d0505c`](https://github.com/thirdweb-dev/js/commit/5d0505c43cdb484504c252f6a45cf7dfbf4a2e57) Thanks [@edwardysun](https://github.com/edwardysun)! - Add purchaseData to direct transfer pay transactions
+
+## 5.59.2
+
+### Patch Changes
+
+- [#4839](https://github.com/thirdweb-dev/js/pull/4839) [`fc56142`](https://github.com/thirdweb-dev/js/commit/fc561428807899f165ac2e9bd2145beb7a218f8c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix createAndSignUserOp with multiple transactions
+
+- [#4838](https://github.com/thirdweb-dev/js/pull/4838) [`842baa0`](https://github.com/thirdweb-dev/js/commit/842baa051353ea5d4f4f70098289704856a34fa8) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Ensure optional chains are passed to wallet connect request
+
+## 5.59.1
+
+### Patch Changes
+
+- [#4832](https://github.com/thirdweb-dev/js/pull/4832) [`bbe75b0`](https://github.com/thirdweb-dev/js/commit/bbe75b0bc8ef989e94066eaeaecd36c26921d60d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes WC connections with wallets that have limited chain support
+
+- [#4815](https://github.com/thirdweb-dev/js/pull/4815) [`d0616c4`](https://github.com/thirdweb-dev/js/commit/d0616c4486b62d8c39e496cb61698a1497f359d6) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add cronos zkevm to isZkSyncChain check
+
+- [#4823](https://github.com/thirdweb-dev/js/pull/4823) [`21b032d`](https://github.com/thirdweb-dev/js/commit/21b032d1b845276817c2f8ada5566f4719a41ad0) Thanks [@edwardysun](https://github.com/edwardysun)! - Remove unnecessary text in UI
+
 ## 5.59.0
 
 ### Minor Changes

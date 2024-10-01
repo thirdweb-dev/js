@@ -1,3 +1,5 @@
+"use client";
+
 import { useSyncExternalStore } from "react";
 import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 

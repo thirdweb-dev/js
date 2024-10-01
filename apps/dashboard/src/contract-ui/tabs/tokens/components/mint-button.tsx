@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -7,7 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
-import { FormControl, Input, Stack } from "@chakra-ui/react";
+import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Plus } from "lucide-react";
@@ -60,10 +62,8 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
           <SheetHeader>
             <SheetTitle>Mint additional tokens</SheetTitle>
           </SheetHeader>
-          <Stack
-            mt={10}
-            spacing={6}
-            as="form"
+          <form
+            className="mt-10 flex flex-col gap-6"
             id={MINT_FORM_ID}
             onSubmit={form.handleSubmit((d) => {
               if (!address) {
@@ -120,9 +120,10 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
                 {form.formState.errors?.amount?.message}
               </FormErrorMessage>
             </FormControl>
-          </Stack>
+          </form>
           <SheetFooter className="mt-10">
             <TransactionButton
+              txChainID={contract.chain.id}
               transactionCount={1}
               isLoading={sendAndConfirmTransaction.isPending}
               form={MINT_FORM_ID}

@@ -1,6 +1,7 @@
-import { Flex, Stack } from "@chakra-ui/react";
+"use client";
+
+import { Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
-import { Heading, Text } from "tw-components";
 import { ClaimConditionsForm } from "./claim-conditions-form/index";
 
 interface ClaimConditionsProps {
@@ -16,7 +17,7 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   isERC20,
 }) => {
   return (
-    <Stack spacing={8}>
+    <div className="flex flex-col gap-8">
       <Flex p={0} position="relative">
         <Flex
           pt={{ base: isColumn ? 0 : 6, md: 6 }}
@@ -25,15 +26,15 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
           w="full"
         >
           {/* Info */}
-          <Flex as="section" direction="column" gap={4}>
-            <div className="flex flex-col">
-              <Heading size="title.md">Set Claim Conditions</Heading>
-              <Text size="body.md" fontStyle="italic" mt={2}>
-                Control when the {isERC20 ? "tokens" : "NFTs"} get dropped, how
-                much they cost, and more.
-              </Text>
-            </div>
-          </Flex>
+          <section>
+            <h2 className="mb-1 font-semibold text-xl tracking-tight">
+              Set Claim Conditions
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Control when the {isERC20 ? "tokens" : "NFTs"} get dropped, how
+              much they cost, and more.
+            </p>
+          </section>
 
           {/* Set Claim Conditions */}
           <ClaimConditionsForm
@@ -46,6 +47,6 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
           />
         </Flex>
       </Flex>
-    </Stack>
+    </div>
   );
 };

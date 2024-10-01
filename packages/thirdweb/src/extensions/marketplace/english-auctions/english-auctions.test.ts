@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
 import {
@@ -37,6 +38,7 @@ describe.skip("Marketplace: English Auctions", () => {
       client: TEST_CLIENT,
       params: {
         name: "TestMarketPlace",
+        contractURI: TEST_CONTRACT_URI,
       },
     });
     marketplaceContract = getContract({
@@ -53,6 +55,7 @@ describe.skip("Marketplace: English Auctions", () => {
       client: TEST_CLIENT,
       params: {
         name: "TestERC721",
+        contractURI: TEST_CONTRACT_URI,
       },
     });
 

@@ -1,3 +1,5 @@
+"use client";
+
 import type { ThirdwebContract } from "thirdweb";
 import { Heading } from "tw-components";
 import { CreateListingButton } from "../shared-components/list-button";

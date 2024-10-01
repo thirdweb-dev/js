@@ -1,3 +1,5 @@
+"use client";
+
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   ButtonGroup,
@@ -487,6 +489,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 isLoading={mutationLoading}
                 form={formId}
                 onClick={handleContractWrite}
+                txChainID={contract.chain.id}
               >
                 Execute
               </TransactionButton>

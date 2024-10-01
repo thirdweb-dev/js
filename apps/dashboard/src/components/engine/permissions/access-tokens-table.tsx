@@ -15,7 +15,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -190,7 +189,7 @@ const EditModal = ({
         <ModalHeader>Update Access Token</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <FormControl>
               <FormLabel>Access Token</FormLabel>
               <Text>{accessToken.tokenMask}</Text>
@@ -204,7 +203,7 @@ const EditModal = ({
                 placeholder="Enter a description for this access token"
               />
             </FormControl>
-          </Stack>
+          </div>
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
@@ -273,7 +272,7 @@ const RemoveModal = ({
         <ModalHeader>Delete Access Token</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <Text>Are you sure you want to delete this access token?</Text>
             <FormControl>
               <FormLabel>Access Token</FormLabel>
@@ -283,7 +282,7 @@ const RemoveModal = ({
               <FormLabel>Label</FormLabel>
               <Text>{accessToken.label ?? <em>N/A</em>}</Text>
             </FormControl>
-          </Stack>
+          </div>
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>

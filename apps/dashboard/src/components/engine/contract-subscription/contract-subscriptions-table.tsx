@@ -16,7 +16,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   Tooltip,
   type UseDisclosureReturn,
   useDisclosure,
@@ -148,11 +147,11 @@ export const ContractSubscriptionTable: React.FC<
                   <Tooltip
                     p={0}
                     label={
-                      <Stack p={2} fontSize="small" color="white">
+                      <div className="flex flex-col gap-2 p-2 text-sm">
                         {filterEvents.map((name) => (
                           <Text key={name}>{name}</Text>
                         ))}
-                      </Stack>
+                      </div>
                     }
                     bgColor="backgroundCardHighlight"
                     borderRadius="lg"
@@ -176,11 +175,11 @@ export const ContractSubscriptionTable: React.FC<
                   <Tooltip
                     p={0}
                     label={
-                      <Stack p={2} fontSize="small" color="white">
+                      <div className="flex flex-col gap-2 p-2 text-sm">
                         {filterFunctions.map((name) => (
                           <Text key={name}>{name}</Text>
                         ))}
-                      </Stack>
+                      </div>
                     }
                     bgColor="backgroundCardHighlight"
                     borderRadius="lg"
@@ -378,7 +377,7 @@ const RemoveModal = ({
         <ModalHeader>Remove Contract Subscription</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <Text>
               This action will delete all stored data for this contract
               subscription.
@@ -429,7 +428,7 @@ const RemoveModal = ({
                 )}
               </FormControl>
             </Card>
-          </Stack>
+          </div>
         </ModalBody>
         <ModalFooter as={Flex} gap={3}>
           <Button type="button" onClick={disclosure.onClose} variant="ghost">

@@ -25,6 +25,13 @@ export async function generateMetadata({ params }: { params: Params }) {
 
   const publishedContract = publishedContracts[0];
 
+  if (!publishedContract) {
+    return {
+      title: `${contract_id} | Published Smart Contract`,
+      description: `Deploy ${contract_id} Smart Contract in one click with thirdweb.`,
+    };
+  }
+
   const publishedContractName =
     publishedContract?.displayName || publishedContract?.name;
 

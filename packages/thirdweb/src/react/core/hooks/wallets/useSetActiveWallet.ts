@@ -1,3 +1,5 @@
+"use client";
+
 import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 
 /**

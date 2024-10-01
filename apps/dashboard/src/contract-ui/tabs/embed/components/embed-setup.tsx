@@ -1,21 +1,13 @@
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
+"use client";
+
 import { useApiKeys, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  Flex,
-  FormControl,
-  Input,
-  Link,
-  Select,
-  Stack,
-  useBreakpointValue,
-} from "@chakra-ui/react";
-import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
+import { Flex, FormControl, Input, Link, Select } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useClipboard } from "hooks/useClipboard";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { FiCopy } from "react-icons/fi";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import {
@@ -235,7 +227,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
       !!(apiKey.services || []).find((service) => service.name === "rpc"),
   );
 
-  const chainId = useDashboardEVMChainId();
+  const chainId = contract.chain.id;
   const { idToChain } = useAllChainsData();
 
   const chain: StoredChain = (chainId ? idToChain.get(chainId) : undefined) || {
@@ -274,14 +266,12 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
       listingId: "0",
       directListingId: "0",
       englishAuctionId: "0",
-      theme: "light",
+      theme: "dark",
       primaryColor: "purple",
       secondaryColor: "orange",
     },
     reValidateMode: "onChange",
   });
-
-  const isMobile = useBreakpointValue({ base: true, md: false });
 
   const configuredChainWithNewRpc = configureChain(chain, {
     rpc: watch("rpcUrl"),
@@ -298,8 +288,8 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
     () =>
       `<iframe
     src="${iframeSrc}"
-    width="600px"
-    height="600px"
+    width="100%"
+    height="750px"
     style="max-width:100%;"
     frameborder="0"
 ></iframe>`,
@@ -311,7 +301,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   return (
     <Flex gap={8} direction="column">
       <Flex gap={8} direction={{ base: "column", md: "row" }}>
-        <Stack as={Card} w={{ base: "100%", md: "50%" }}>
+        <Card className="flex w-full flex-col gap-2 md:w-1/2">
           <Heading size="title.sm" mb={4}>
             Configuration
           </Heading>
@@ -543,8 +533,8 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               </FormHelperText>
             </FormControl>
           ) : null}
-        </Stack>
-        <Stack as={Card} w={{ base: "100%", md: "50%" }}>
+        </Card>
+        <Card className="flex w-full flex-col gap-2 md:w-1/2">
           <Heading size="title.sm">Embed Code</Heading>
           <CodeBlock
             canCopy={false}
@@ -567,14 +557,20 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
                 chainId,
               });
             }}
-            leftIcon={hasCopied ? <IoMdCheckmark /> : <FiCopy />}
+            leftIcon={
+              hasCopied ? (
+                <CheckIcon className="size-4" />
+              ) : (
+                <CopyIcon className="size-4" />
+              )
+            }
           >
             {hasCopied ? "Copied!" : "Copy to clipboard"}
           </Button>
-        </Stack>
+        </Card>
       </Flex>
 
-      <Stack align="center" gap={2}>
+      <div className="flex flex-col items-center gap-2">
         <Heading size="title.sm">Preview</Heading>
         {!validApiKey ? (
           <Text>You need to create a client ID to use embeds</Text>
@@ -582,12 +578,12 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
           <iframe
             title="thirdweb embed"
             src={iframeSrc}
-            width={isMobile ? "100%" : "600px"}
-            height="600px"
+            width="100%"
+            height="750px"
             frameBorder="0"
           />
         ) : null}
-      </Stack>
+      </div>
     </Flex>
   );
 };

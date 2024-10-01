@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Flex,
   Tab,
@@ -94,7 +96,11 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
           {abi && (
             <TabPanel>
               <div className="flex flex-col gap-6">
-                <CodeOverview abi={abi} noSidebar />
+                <CodeOverview
+                  abi={abi}
+                  noSidebar
+                  chainId={contract?.chain.id || 1}
+                />
               </div>
             </TabPanel>
           )}

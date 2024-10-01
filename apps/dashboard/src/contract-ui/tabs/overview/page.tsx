@@ -1,4 +1,5 @@
-import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
+"use client";
+
 import { PublishedBy } from "components/contract-components/shared/published-by";
 import type { ThirdwebContract } from "thirdweb";
 import { AnalyticsOverview } from "./components/Analytics";
@@ -18,6 +19,8 @@ interface ContractOverviewPageProps {
   isErc1155: boolean;
   isErc20: boolean;
   isPermissionsEnumerable: boolean;
+  chainSlug: string;
+  isAnalyticsSupported: boolean;
 }
 
 const TRACKING_CATEGORY = "contract_overview";
@@ -30,22 +33,28 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
   hasEnglishAuctions,
   hasDirectListings,
   isPermissionsEnumerable,
+  chainSlug,
+  isAnalyticsSupported,
 }) => {
   return (
-    <SimpleGrid columns={{ base: 1, xl: 10 }} gap={20}>
-      <GridItem as={Flex} colSpan={{ xl: 7 }} direction="column" gap={16}>
+    <div className="flex flex-col gap-8 lg:flex-row">
+      <div className="flex flex-col gap-16">
         <ContractChecklist
           isErc721={isErc721}
           isErc1155={isErc1155}
           isErc20={isErc20}
           contract={contract}
+          chainSlug={chainSlug}
         />
 
-        <AnalyticsOverview
-          contractAddress={contract.address}
-          chainId={contract.chain.id}
-          trackingCategory={TRACKING_CATEGORY}
-        />
+        {isAnalyticsSupported && (
+          <AnalyticsOverview
+            contractAddress={contract.address}
+            chainId={contract.chain.id}
+            trackingCategory={TRACKING_CATEGORY}
+            chainSlug={chainSlug}
+          />
+        )}
 
         {(hasEnglishAuctions || hasDirectListings) && (
           <MarketplaceDetails
@@ -53,31 +62,44 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
             trackingCategory={TRACKING_CATEGORY}
             hasEnglishAuctions={hasEnglishAuctions}
             hasDirectListings={hasDirectListings}
+            chainSlug={chainSlug}
           />
         )}
+
         {(isErc1155 || isErc721) && (
           <NFTDetails
             contract={contract}
             trackingCategory={TRACKING_CATEGORY}
             isErc721={isErc721}
+            chainSlug={chainSlug}
           />
         )}
+
         {isErc20 && <TokenDetails contract={contract} />}
+
         <LatestEvents
           contract={contract}
           trackingCategory={TRACKING_CATEGORY}
+          chainSlug={chainSlug}
         />
+
         {isPermissionsEnumerable && (
           <PermissionsTable
             contract={contract}
             trackingCategory={TRACKING_CATEGORY}
+            chainSlug={chainSlug}
           />
         )}
-        <BuildYourApp trackingCategory={TRACKING_CATEGORY} />
-      </GridItem>
-      <GridItem colSpan={{ xl: 3 }} as={Flex} direction="column" gap={6}>
+
+        <BuildYourApp
+          trackingCategory={TRACKING_CATEGORY}
+          chainSlug={chainSlug}
+          contractAddress={contract.address}
+        />
+      </div>
+      <div className="shrink-0 lg:w-[300px]">
         <PublishedBy contract={contract} />
-      </GridItem>
-    </SimpleGrid>
+      </div>
+    </div>
   );
 };

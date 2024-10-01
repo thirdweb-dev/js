@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {

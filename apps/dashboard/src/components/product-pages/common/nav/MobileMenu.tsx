@@ -1,10 +1,7 @@
 import {
   Flex,
   type FlexProps,
-  Icon,
   IconButton,
-  ListItem,
-  UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
@@ -88,9 +85,9 @@ const MobileNavSection: React.FC<MobileNavSectionProps> = ({
       <Heading size="label.sm" as="label" textTransform="uppercase">
         {title}
       </Heading>
-      <UnorderedList listStyleType="none" ml={1.5} spacing={1.5}>
+      <ul className="ml-1.5 list-none gap-1.5">
         {links.map((link) => (
-          <ListItem key={link.label} minH={5}>
+          <li className="min-h-5" key={link.label}>
             <Heading
               as={TrackedLink}
               display="flex"
@@ -106,7 +103,7 @@ const MobileNavSection: React.FC<MobileNavSectionProps> = ({
               size="label.md"
               onClick={onItemClick}
             >
-              {link.icon ? (
+              {link.icon && (
                 <ChakraNextImage
                   alt=""
                   boxSize={5}
@@ -114,14 +111,12 @@ const MobileNavSection: React.FC<MobileNavSectionProps> = ({
                   sizes="40px"
                   w={5}
                 />
-              ) : link.iconType ? (
-                <Icon as={link.iconType} h={4} w={5} />
-              ) : null}
+              )}
               {link.name}
             </Heading>
-          </ListItem>
+          </li>
         ))}
-      </UnorderedList>
+      </ul>
     </Flex>
   );
 };

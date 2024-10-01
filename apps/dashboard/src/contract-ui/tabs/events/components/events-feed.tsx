@@ -1,4 +1,6 @@
-import { useEVMContractInfo } from "@3rdweb-sdk/react";
+"use client";
+
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   type InternalTransaction,
   useActivity,
@@ -19,15 +21,13 @@ import {
   Select,
   SimpleGrid,
   Spinner,
-  Stack,
   Switch,
   Tooltip,
 } from "@chakra-ui/react";
-import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
+import { CircleHelpIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
 import { Fragment, useMemo, useState } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
 import { toast } from "sonner";
@@ -41,6 +41,7 @@ import {
   Heading,
   Text,
 } from "tw-components";
+import { useChainSlug } from "../../../../hooks/chains/chainSlug";
 
 interface EventsFeedProps {
   contract: ThirdwebContract;
@@ -52,10 +53,8 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
   const searchParams = useSearchParams();
   const event = searchParams?.get("event");
   const [selectedEvent, setSelectedEvent] = useState(event || "all");
-
-  const chainSlug = useEVMContractInfo()?.chainSlug;
-
-  const router = useRouter();
+  const chainSlug = useChainSlug(contract.chain.id);
+  const router = useDashboardRouter();
 
   const eventTypes = useMemo(
     () =>
@@ -182,7 +181,7 @@ interface EventsFeedItemProps {
   transaction: InternalTransaction;
   setSelectedEvent: React.Dispatch<React.SetStateAction<string>>;
   contractAddress: string;
-  chainSlug?: string;
+  chainSlug: string | number;
 }
 
 const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
@@ -193,7 +192,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
 }) => {
   const { onCopy } = useClipboard(transaction.transactionHash);
 
-  const router = useRouter();
+  const router = useDashboardRouter();
 
   return (
     <AccordionItem
@@ -238,7 +237,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
           _last={{ borderBottomWidth: 0 }}
         >
           <Box gridColumn="span 3">
-            <Stack direction="row" align="center" spacing={3}>
+            <div className="flex flex-row items-center gap-3">
               <Tooltip
                 p={0}
                 bg="transparent"
@@ -265,7 +264,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
               <Text fontFamily="mono" noOfLines={1}>
                 {transaction.transactionHash.slice(0, 32)}...
               </Text>
-            </Stack>
+            </div>
           </Box>
 
           <Box gridColumn="span 1" />
@@ -302,20 +301,20 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
           </ButtonGroup>
 
           <Box gridColumn="span 3">
-            <Stack direction="row" justify="space-between">
+            <div className="flex flex-row justify-between gap-2">
               <Text fontFamily="mono" noOfLines={1}>
                 {transaction.blockNumber}
               </Text>
               <div>
                 <Icon as={FiChevronDown} />
               </div>
-            </Stack>
+            </div>
           </Box>
         </SimpleGrid>
       </AccordionButton>
       <AccordionPanel>
         <Card>
-          <Stack spacing={4}>
+          <div className="flex flex-col gap-4">
             <Heading size="subtitle.sm" fontWeight="bold">
               Transaction Data
             </Heading>
@@ -365,7 +364,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                 {arr.length - 1 === idx ? null : <Divider />}
               </Fragment>
             ))}
-          </Stack>
+          </div>
         </Card>
       </AccordionPanel>
     </AccordionItem>
@@ -386,7 +385,7 @@ const TransactionData: React.FC<TransactionDataProps> = ({
   return (
     <>
       <SimpleGrid columns={12} gap={2}>
-        <Stack direction="row" align="center" gridColumn="span 3">
+        <div className="col-span-3 flex flex-row items-center gap-2">
           <Tooltip
             p={0}
             bg="transparent"
@@ -398,12 +397,12 @@ const TransactionData: React.FC<TransactionDataProps> = ({
             }
           >
             <div className="flex items-center justify-center">
-              <Icon as={AiOutlineQuestionCircle} color="gray.600" />
+              <CircleHelpIcon className="size-4 text-gray-600" />
             </div>
           </Tooltip>
 
           <Text fontWeight="bold">{name}</Text>
-        </Stack>
+        </div>
 
         <Text gridColumn="span 9">{value.toString()}</Text>
       </SimpleGrid>

@@ -1,3 +1,5 @@
+"use client";
+
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
@@ -631,6 +633,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                   !isMultiPhase ? (
                     <TransactionButton
                       colorScheme="primary"
+                      txChainID={contract.chain.id}
                       transactionCount={1}
                       isDisabled={claimConditionsQuery.isPending}
                       type="submit"

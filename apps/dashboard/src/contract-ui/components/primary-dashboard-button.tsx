@@ -1,32 +1,39 @@
-import { useEVMContractInfo } from "@3rdweb-sdk/react/hooks/useActiveChainId";
+"use client";
+
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
+import type { EVMContractInfo } from "@3rdweb-sdk/react";
 import {
   useAddContractMutation,
   useAllContractList,
 } from "@3rdweb-sdk/react/hooks/useRegistry";
-import { Icon } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useRouter } from "next/router";
-import { FiPlus } from "react-icons/fi";
+import { CodeIcon, PlusIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { Chain } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
-import { Button } from "tw-components";
-import { BuildAppsButton } from "./build-apps-button";
 
 const TRACKING_CATEGORY = "add_to_dashboard_upsell";
 
 type AddToDashboardCardProps = {
-  contractAddress?: string;
+  contractAddress: string;
+  chain: Chain;
+  contractInfo: EVMContractInfo;
+  hideCodePageLink?: boolean;
 };
 
 export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
   contractAddress,
+  chain,
+  contractInfo,
+  hideCodePageLink,
 }) => {
-  const chain = useEVMContractInfo()?.chain;
   const addContract = useAddContractMutation();
   const trackEvent = useTrack();
   const walletAddress = useActiveAccount()?.address;
-  const router = useRouter();
-
+  const pathname = usePathname();
   const registry = useAllContractList(walletAddress);
 
   const { onSuccess: onAddSuccess, onError: onAddError } = useTxNotifications(
@@ -42,7 +49,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
         // compare address...
         c.address.toLowerCase() === contractAddress.toLowerCase() &&
         // ... and chainId
-        c.chainId === chain?.chainId,
+        c.chainId === chain.id,
     ) &&
     registry.isSuccess;
 
@@ -50,28 +57,36 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
     !walletAddress ||
     !contractAddress ||
     !chain ||
-    router.asPath.includes("payments")
+    pathname?.includes("payments")
   ) {
     return null;
   }
 
-  return isInRegistry ? (
-    <BuildAppsButton>Code Snippets</BuildAppsButton>
-  ) : (
+  if (isInRegistry) {
+    if (hideCodePageLink) {
+      return null;
+    }
+
+    if (!pathname?.endsWith("/code")) {
+      return (
+        <Button variant="outline" asChild className="gap-2">
+          <Link
+            href={`/${contractInfo.chainSlug}/${contractInfo.contractAddress}/code`}
+          >
+            <CodeIcon className="size-4" />
+            Code Snippets
+          </Link>
+        </Button>
+      );
+    }
+
+    return null;
+  }
+
+  return (
     <Button
-      minW="inherit"
-      variant="solid"
-      bg="bgBlack"
-      color="bgWhite"
-      _hover={{
-        opacity: 0.85,
-      }}
-      _active={{
-        opacity: 0.75,
-      }}
-      leftIcon={<Icon as={FiPlus} />}
-      isLoading={addContract.isPending}
-      isDisabled={!chain?.chainId}
+      className="gap-2"
+      variant="outline"
       onClick={() => {
         if (!chain) {
           return;
@@ -85,7 +100,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
         addContract.mutate(
           {
             contractAddress,
-            chainId: chain.chainId,
+            chainId: chain.id,
           },
           {
             onSuccess: () => {
@@ -111,6 +126,11 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
         );
       }}
     >
+      {addContract.isPending ? (
+        <Spinner className="size-4" />
+      ) : (
+        <PlusIcon className="size-4" />
+      )}
       Import contract
     </Button>
   );

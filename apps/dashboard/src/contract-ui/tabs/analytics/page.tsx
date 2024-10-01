@@ -17,7 +17,6 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import {
   type AnalyticsQueryParams,
   type TotalQueryResult,
-  useAnalyticsSupportedForChain,
   useEventsAnalytics,
   useFunctionsAnalytics,
   useLogsAnalytics,
@@ -50,26 +49,6 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
   useIsomorphicLayoutEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-
-  const analyticsSupported = useAnalyticsSupportedForChain(contract.chain.id);
-
-  if (analyticsSupported.isPending) {
-    // TODO build a skeleton for this
-    return <div>Loading...</div>;
-  }
-
-  if (!analyticsSupported.data) {
-    return (
-      <Alert status="warning" borderRadius="md" mb={4}>
-        <AlertIcon />
-        <AlertTitle>Analytics is not supported for this chain.</AlertTitle>
-        <AlertDescription>
-          Analytics support is rolling out to additional chains. Please check
-          back later.
-        </AlertDescription>
-      </Alert>
-    );
-  }
 
   return (
     <Flex direction="column" gap={6}>

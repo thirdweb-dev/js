@@ -273,6 +273,7 @@ function ModuleRow(props: {
               </Button>
 
               <TransactionButton
+                txChainID={contract.chain.id}
                 transactionCount={1}
                 isLoading={uninstallMutation.isPending}
                 type="submit"

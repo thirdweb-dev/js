@@ -1,4 +1,6 @@
-import { ButtonGroup, Flex } from "@chakra-ui/react";
+"use client";
+
+import { Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 import { TokenAirdropButton } from "./components/airdrop-button";
@@ -45,23 +47,16 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
 
   return (
     <Flex direction="column" gap={6}>
-      <Flex direction="row" justify="space-between" align="center">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <Heading size="title.sm">Contract Tokens</Heading>
-        <ButtonGroup
-          flexDirection={{ base: "column", md: "row" }}
-          gap={2}
-          w="inherit"
-        >
+        <div className="flex flex-col gap-3 md:flex-row">
           {isClaimToSupported && <TokenClaimButton contract={contract} />}
           <TokenBurnButton contract={contract} />
-
           <TokenAirdropButton contract={contract} />
-
           <TokenTransferButton contract={contract} />
-          {/* TODO: show skeleton or disabled while loading? */}
           {isMintToSupported && <TokenMintButton contract={contract} />}
-        </ButtonGroup>
-      </Flex>
+        </div>
+      </div>
 
       <TokenSupply contract={contract} />
     </Flex>

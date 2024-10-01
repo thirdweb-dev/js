@@ -1,3 +1,5 @@
+"use client";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ResultItem } from "components/engine/system-metrics/components/StatusCodes";
 import { THIRDWEB_API_HOST } from "constants/urls";
@@ -5,7 +7,6 @@ import { useState } from "react";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { engineKeys } from "../cache-keys";
-import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useLoggedInUser } from "./useLoggedInUser";
 
 export type EngineTier = "STARTER" | "PREMIUM" | "ENTERPRISE";
@@ -570,8 +571,8 @@ export function useEngineAddKeypair(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: AddKeypairInput) => {
+  return useMutation({
+    mutationFn: async (input: AddKeypairInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}auth/keypair/add`, {
@@ -587,14 +588,12 @@ export function useEngineAddKeypair(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.keypairs(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.keypairs(instance),
+      });
     },
-  );
+  });
 }
 
 type RemoveKeypairInput = {
@@ -605,8 +604,8 @@ export function useEngineRemoveKeypair(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: RemoveKeypairInput) => {
+  return useMutation({
+    mutationFn: async (input: RemoveKeypairInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}auth/keypair/remove`, {
@@ -622,14 +621,12 @@ export function useEngineRemoveKeypair(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.keypairs(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.keypairs(instance),
+      });
     },
-  );
+  });
 }
 
 export type EngineRelayer = {
@@ -672,8 +669,8 @@ export function useEngineCreateRelayer(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: CreateRelayerInput) => {
+  return useMutation({
+    mutationFn: async (input: CreateRelayerInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}relayer/create`, {
@@ -689,14 +686,12 @@ export function useEngineCreateRelayer(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.relayers(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.relayers(instance),
+      });
     },
-  );
+  });
 }
 
 type RevokeRelayerInput = {
@@ -707,8 +702,8 @@ export function useEngineRevokeRelayer(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: RevokeRelayerInput) => {
+  return useMutation({
+    mutationFn: async (input: RevokeRelayerInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}relayer/revoke`, {
@@ -724,14 +719,12 @@ export function useEngineRevokeRelayer(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.relayers(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.relayers(instance),
+      });
     },
-  );
+  });
 }
 
 export type UpdateRelayerInput = {
@@ -747,8 +740,8 @@ export function useEngineUpdateRelayer(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: UpdateRelayerInput) => {
+  return useMutation({
+    mutationFn: async (input: UpdateRelayerInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}relayer/update`, {
@@ -764,14 +757,12 @@ export function useEngineUpdateRelayer(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.relayers(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.relayers(instance),
+      });
     },
-  );
+  });
 }
 
 export interface EngineWebhook {
@@ -827,8 +818,8 @@ export function useEngineSetWalletConfig(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: SetWalletConfigInput) => {
+  return useMutation({
+    mutationFn: async (input: SetWalletConfigInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}configuration/wallets`, {
@@ -844,14 +835,12 @@ export function useEngineSetWalletConfig(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.walletConfig(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.walletConfig(instance),
+      });
     },
-  );
+  });
 }
 
 export type CreateBackendWalletInput = {
@@ -862,8 +851,8 @@ export function useEngineCreateBackendWallet(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: CreateBackendWalletInput) => {
+  return useMutation({
+    mutationFn: async (input: CreateBackendWalletInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}backend-wallet/create`, {
@@ -879,14 +868,12 @@ export function useEngineCreateBackendWallet(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.backendWallets(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.backendWallets(instance),
+      });
     },
-  );
+  });
 }
 
 interface UpdateBackendWalletInput {
@@ -898,8 +885,8 @@ export function useEngineUpdateBackendWallet(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: UpdateBackendWalletInput) => {
+  return useMutation({
+    mutationFn: async (input: UpdateBackendWalletInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}backend-wallet/update`, {
@@ -915,14 +902,12 @@ export function useEngineUpdateBackendWallet(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.backendWallets(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.backendWallets(instance),
+      });
     },
-  );
+  });
 }
 
 export type ImportBackendWalletInput =
@@ -949,8 +934,8 @@ export function useEngineImportBackendWallet(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: ImportBackendWalletInput) => {
+  return useMutation({
+    mutationFn: async (input: ImportBackendWalletInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}backend-wallet/import`, {
@@ -966,22 +951,20 @@ export function useEngineImportBackendWallet(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.backendWallets(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.backendWallets(instance),
+      });
     },
-  );
+  });
 }
 
 export function useEngineGrantPermissions(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: EngineAdmin) => {
+  return useMutation({
+    mutationFn: async (input: EngineAdmin) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}auth/permissions/grant`, {
@@ -997,14 +980,12 @@ export function useEngineGrantPermissions(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.permissions(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.permissions(instance),
+      });
     },
-  );
+  });
 }
 
 type RevokePermissionsInput = {
@@ -1015,8 +996,8 @@ export function useEngineRevokePermissions(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: RevokePermissionsInput) => {
+  return useMutation({
+    mutationFn: async (input: RevokePermissionsInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}auth/permissions/revoke`, {
@@ -1032,14 +1013,12 @@ export function useEngineRevokePermissions(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.permissions(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.permissions(instance),
+      });
     },
-  );
+  });
 }
 
 type CreateAccessTokenResponse = AccessToken & {
@@ -1050,8 +1029,8 @@ export function useEngineCreateAccessToken(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async () => {
+  return useMutation({
+    mutationFn: async () => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}auth/access-tokens/create`, {
@@ -1067,14 +1046,12 @@ export function useEngineCreateAccessToken(instance: string) {
 
       return json.result as CreateAccessTokenResponse;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.accessTokens(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.accessTokens(instance),
+      });
     },
-  );
+  });
 }
 
 type RevokeAccessTokenInput = {
@@ -1085,8 +1062,8 @@ export function useEngineRevokeAccessToken(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: RevokeAccessTokenInput) => {
+  return useMutation({
+    mutationFn: async (input: RevokeAccessTokenInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}auth/access-tokens/revoke`, {
@@ -1102,14 +1079,12 @@ export function useEngineRevokeAccessToken(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.accessTokens(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.accessTokens(instance),
+      });
     },
-  );
+  });
 }
 
 type UpdateAccessTokenInput = {
@@ -1121,8 +1096,8 @@ export function useEngineUpdateAccessToken(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: UpdateAccessTokenInput) => {
+  return useMutation({
+    mutationFn: async (input: UpdateAccessTokenInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}auth/access-tokens/update`, {
@@ -1138,14 +1113,12 @@ export function useEngineUpdateAccessToken(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.accessTokens(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.accessTokens(instance),
+      });
     },
-  );
+  });
 }
 
 export type CreateWebhookInput = {
@@ -1158,8 +1131,8 @@ export function useEngineCreateWebhook(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: CreateWebhookInput) => {
+  return useMutation({
+    mutationFn: async (input: CreateWebhookInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}webhooks/create`, {
@@ -1175,14 +1148,12 @@ export function useEngineCreateWebhook(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.webhooks(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.webhooks(instance),
+      });
     },
-  );
+  });
 }
 
 type RevokeWebhookInput = {
@@ -1193,8 +1164,8 @@ export function useEngineRevokeWebhook(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: RevokeWebhookInput) => {
+  return useMutation({
+    mutationFn: async (input: RevokeWebhookInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}webhooks/revoke`, {
@@ -1210,14 +1181,12 @@ export function useEngineRevokeWebhook(instance: string) {
 
       return json.result;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.webhooks(instance),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.webhooks(instance),
+      });
     },
-  );
+  });
 }
 
 type SendTokensInput = {
@@ -1659,8 +1628,8 @@ export function useEngineCreateNotificationChannel(engineId: string) {
   const { isLoggedIn } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (input: CreateNotificationChannelInput) => {
+  return useMutation({
+    mutationFn: async (input: CreateNotificationChannelInput) => {
       invariant(isLoggedIn, "Must be logged in.");
 
       const res = await fetch(
@@ -1677,22 +1646,20 @@ export function useEngineCreateNotificationChannel(engineId: string) {
       const json = await res.json();
       return json.data as EngineNotificationChannel;
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.notificationChannels(engineId),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.notificationChannels(engineId),
+      });
     },
-  );
+  });
 }
 
 export function useEngineDeleteNotificationChannel(engineId: string) {
   const { isLoggedIn } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  return useMutationWithInvalidate(
-    async (notificationChannelId: string) => {
+  return useMutation({
+    mutationFn: async (notificationChannelId: string) => {
       invariant(isLoggedIn, "Must be logged in.");
 
       const res = await fetch(
@@ -1704,12 +1671,10 @@ export function useEngineDeleteNotificationChannel(engineId: string) {
       }
       res.body?.cancel();
     },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries({
-          queryKey: engineKeys.notificationChannels(engineId),
-        });
-      },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.notificationChannels(engineId),
+      });
     },
-  );
+  });
 }

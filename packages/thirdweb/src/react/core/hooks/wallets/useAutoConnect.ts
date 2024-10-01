@@ -1,3 +1,5 @@
+"use client";
+
 import { useQuery } from "@tanstack/react-query";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import { getUrlToken } from "../../../../wallets/in-app/web/lib/get-url-token.js";

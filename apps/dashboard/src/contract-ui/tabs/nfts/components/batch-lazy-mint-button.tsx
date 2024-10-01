@@ -1,3 +1,5 @@
+"use client";
+
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
@@ -51,6 +53,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
         isOpen={isOpen}
       >
         <BatchLazyMint
+          chainId={contract.chain.id}
           onSubmit={async ({ revealType, data }) => {
             // nice, we can set up everything the same for both the only thing that changes is the action string
             const action = `batch-upload-${revealType}` as const;

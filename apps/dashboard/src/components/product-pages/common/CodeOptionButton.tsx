@@ -1,7 +1,7 @@
 import { Icon } from "@chakra-ui/react";
-import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
-import { SiReact } from "@react-icons/all-files/si/SiReact";
-import { SiUnity } from "@react-icons/all-files/si/SiUnity";
+import { JavaScriptIcon } from "components/icons/brand-icons/JavaScriptIcon";
+import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
+import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { useTrack } from "hooks/analytics/useTrack";
 import type { Dispatch, SetStateAction } from "react";
 import { flushSync } from "react-dom";
@@ -9,19 +9,19 @@ import { Button, type ButtonProps } from "tw-components";
 
 export const LOGO_OPTIONS = {
   javascript: {
-    icon: SiJavascript,
+    icon: JavaScriptIcon,
     fill: "yellow",
   },
   react: {
-    icon: SiReact,
+    icon: ReactIcon,
     fill: "#61dafb",
   },
   "react-native": {
-    icon: SiReact,
+    icon: ReactIcon,
     fill: "#61dafb",
   },
   unity: {
-    icon: SiUnity,
+    icon: UnityIcon,
     fill: "#ffffff",
   },
 } as const;

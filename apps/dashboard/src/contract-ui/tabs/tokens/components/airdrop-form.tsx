@@ -1,3 +1,5 @@
+"use client";
+
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { CircleCheck, Upload } from "lucide-react";
@@ -131,6 +133,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                 type="submit"
                 colorScheme="primary"
                 alignSelf="flex-end"
+                txChainID={contract.chain.id}
               >
                 Airdrop
               </TransactionButton>

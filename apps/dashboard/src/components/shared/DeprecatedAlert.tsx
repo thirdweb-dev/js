@@ -1,10 +1,6 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Flex,
-} from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CircleAlertIcon } from "lucide-react";
+import Link from "next/link";
 import {
   type Chain,
   type ChainMetadata,
@@ -15,7 +11,6 @@ import {
   polygonAmoy,
   sepolia,
 } from "thirdweb/chains";
-import { Link, Text } from "tw-components";
 
 interface DeprecatedAlertProps {
   chain: ChainMetadata | undefined;
@@ -65,35 +60,28 @@ export const DeprecatedAlert: React.FC<DeprecatedAlertProps> = ({ chain }) => {
   const cleanedChainName = chain?.name?.replace("Mainnet", "").trim();
 
   return (
-    <Alert
-      status="error"
-      borderRadius="lg"
-      backgroundColor="backgroundCardHighlight"
-      borderLeftColor="red.500"
-      borderLeftWidth={4}
-      as={Flex}
-      gap={1}
-    >
-      <AlertIcon />
-      <Flex flexDir="column">
-        <AlertTitle>
-          {cleanedChainName}
-          {isDeprecatedSoon ? " will be deprecated soon" : " is deprecated"}
-        </AlertTitle>
-        <AlertDescription as={Text}>
-          {message}{" "}
-          {recommendedChain && (
-            <>
-              <br />
-              We recommend switching to{" "}
-              <Link href={`/${recommendedChain.id}`} color="primary.500">
-                {recommendedChain.name}
-              </Link>{" "}
-              to continue testing your smart contracts.
-            </>
-          )}
-        </AlertDescription>
-      </Flex>
+    <Alert variant="destructive">
+      <CircleAlertIcon className="size-5" />
+      <AlertTitle>
+        {cleanedChainName}
+        {isDeprecatedSoon ? " will be deprecated soon" : " is deprecated"}
+      </AlertTitle>
+      <AlertDescription>
+        {message}{" "}
+        {recommendedChain && (
+          <>
+            <br />
+            We recommend switching to{" "}
+            <Link
+              href={`/${recommendedChain.id}`}
+              className="text-link-foreground hover:text-foreground"
+            >
+              {recommendedChain.name}
+            </Link>{" "}
+            to continue testing your smart contracts.
+          </>
+        )}
+      </AlertDescription>
     </Alert>
   );
 };
