@@ -2,12 +2,13 @@ import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
+import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import type { PayerInfo } from "../types.js";
 import { SwapStatusScreen } from "./SwapStatusScreen.js";
 import { TransferConfirmationScreen } from "./TransferConfirmationScreen.js";
 
-type TrasnferFlowProps = {
+type TransferFlowProps = {
   title: string;
   onBack?: () => void;
   payer: PayerInfo;
@@ -21,9 +22,10 @@ type TrasnferFlowProps = {
   token: ERC20OrNativeToken;
   tokenAmount: string;
   transactionMode?: boolean;
+  payOptions?: PayUIOptions;
 };
 
-export function TransferFlow(props: TrasnferFlowProps) {
+export function TransferFlow(props: TransferFlowProps) {
   const [transferTxHash, setTransferTxHash] = useState<string | undefined>();
 
   if (transferTxHash) {
