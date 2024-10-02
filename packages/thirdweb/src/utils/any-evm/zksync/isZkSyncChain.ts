@@ -6,23 +6,26 @@ export async function isZkSyncChain(chain: Chain) {
     return false;
   }
 
-  const stack = await getChainStack(chain.id).catch(() => {
-    // fall back to checking against these zksync chain-ids
-    if (
-      chain.id === 324 ||
-      chain.id === 300 ||
-      chain.id === 302 ||
-      chain.id === 11124 ||
-      chain.id === 282 || // cronos zkevm testnet
-      chain.id === 388 // cronos zkevm mainnet
-    ) {
-      return "zksync-stack";
-    }
+  // check known zksync chain-ids first
+  if (
+    chain.id === 324 ||
+    chain.id === 300 ||
+    chain.id === 302 ||
+    chain.id === 11124 ||
+    chain.id === 282 || // cronos zkevm testnet
+    chain.id === 388 // cronos zkevm mainnet
+  ) {
+    return true;
+  }
 
-    return "";
-  });
-
-  return stack === "zksync-stack";
+  // fallback to checking the stack on rpc
+  try {
+    const stack = await getChainStack(chain.id);
+    return stack === "zksync-stack";
+  } catch {
+    // If the network check fails, assume it's not a ZkSync chain
+    return false;
+  }
 }
 
 async function getChainStack(chainId: number): Promise<string> {

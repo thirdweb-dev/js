@@ -1,5 +1,8 @@
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
-import type { FetchDeployMetadataResult } from "../../../utils/any-evm/deploy-metadata.js";
+import {
+  type FetchDeployMetadataResult,
+  fetchBytecodeFromCompilerMetadata,
+} from "../../../utils/any-evm/deploy-metadata.js";
 import { isZkSyncChain } from "../../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
 import { type ThirdwebContract, getContract } from "../../contract.js";
@@ -27,7 +30,6 @@ export async function getOrDeployInfraForPublishedContract(
     constructorParams?: Record<string, unknown>;
     publisher?: string;
     version?: string;
-    compilerType?: "solc" | "zksolc";
   },
 ): Promise<{
   cloneFactoryContract: ThirdwebContract;
@@ -41,7 +43,6 @@ export async function getOrDeployInfraForPublishedContract(
     constructorParams,
     publisher,
     version,
-    compilerType,
   } = args;
 
   if (await isZkSyncChain(chain)) {
@@ -55,14 +56,17 @@ export async function getOrDeployInfraForPublishedContract(
       contractId,
       publisher,
       version,
-      compilerType,
     });
     const implementationContract = await zkDeployContractDeterministic({
       chain,
       client,
       account,
       abi: compilerMetadata.abi,
-      bytecode: compilerMetadata.bytecode,
+      bytecode: await fetchBytecodeFromCompilerMetadata({
+        compilerMetadata,
+        client,
+        chain,
+      }),
       params: constructorParams,
     });
     return {

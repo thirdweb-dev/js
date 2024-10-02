@@ -24,7 +24,6 @@ export async function fetchPublishedContractMetadata(options: {
   contractId: string;
   publisher?: string;
   version?: string;
-  compilerType?: "solc" | "zksolc";
 }): Promise<FetchDeployMetadataResult> {
   const cacheKey = `${options.contractId}-${options.publisher}-${options.version}`;
   return withCache(
@@ -34,7 +33,6 @@ export async function fetchPublishedContractMetadata(options: {
         publisherAddress: options.publisher || THIRDWEB_DEPLOYER,
         contractId: options.contractId,
         version: options.version,
-        compilerType: options.compilerType,
       });
       if (!publishedContract.publishMetadataUri) {
         throw new Error(
@@ -44,7 +42,6 @@ export async function fetchPublishedContractMetadata(options: {
       const data = await fetchDeployMetadata({
         client: options.client,
         uri: publishedContract.publishMetadataUri,
-        compilerType: options.compilerType,
       });
       return data;
     },
@@ -214,7 +211,6 @@ type FetchPublishedContractOptions = {
   contractId: string;
   version?: string;
   client: ThirdwebClient;
-  compilerType?: "solc" | "zksolc";
 };
 
 /**

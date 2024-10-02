@@ -13,7 +13,10 @@ import { resolveMethod } from "../../transaction/resolve-method.js";
 import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
 import { normalizeFunctionParams } from "../../utils/abi/normalizeFunctionParams.js";
 import { getAddress } from "../../utils/address.js";
-import type { CompilerMetadata } from "../../utils/any-evm/deploy-metadata.js";
+import {
+  type CompilerMetadata,
+  fetchBytecodeFromCompilerMetadata,
+} from "../../utils/any-evm/deploy-metadata.js";
 import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { Hex } from "../../utils/encoding/hex.js";
@@ -33,7 +36,6 @@ export type DeployPublishedContractOptions = {
   version?: string;
   implementationConstructorParams?: Record<string, unknown>;
   salt?: string;
-  compilerType?: "solc" | "zksolc";
 };
 
 /**
@@ -93,14 +95,12 @@ export async function deployPublishedContract(
     version,
     implementationConstructorParams,
     salt,
-    compilerType,
   } = options;
   const deployMetadata = await fetchPublishedContractMetadata({
     client,
     contractId,
     publisher,
     version,
-    compilerType,
   });
 
   return deployContractfromDeployMetadata({
@@ -111,7 +111,6 @@ export async function deployPublishedContract(
     initializeParams: contractParams,
     implementationConstructorParams,
     salt,
-    compilerType,
   });
 }
 
@@ -130,7 +129,6 @@ export type DeployContractfromDeployMetadataOptions = {
     initializeParams?: Record<string, unknown>;
   }[];
   salt?: string;
-  compilerType?: "solc" | "zksolc";
 };
 
 /**
@@ -148,7 +146,6 @@ export async function deployContractfromDeployMetadata(
     implementationConstructorParams,
     modules,
     salt,
-    compilerType,
   } = options;
   switch (deployMetadata?.deployType) {
     case "standard": {
@@ -182,7 +179,6 @@ export async function deployContractfromDeployMetadata(
               client,
             })),
           publisher: deployMetadata.publisher,
-          compilerType,
         });
 
       const initializeTransaction = await getInitializeTransaction({
@@ -272,7 +268,11 @@ async function directDeploy(options: {
       account,
       client,
       chain,
-      bytecode: compilerMetadata.bytecode,
+      bytecode: await fetchBytecodeFromCompilerMetadata({
+        compilerMetadata,
+        client,
+        chain,
+      }),
       abi: compilerMetadata.abi,
       params: contractParams,
       salt,
@@ -286,7 +286,11 @@ async function directDeploy(options: {
     account,
     client,
     chain,
-    bytecode: compilerMetadata.bytecode,
+    bytecode: await fetchBytecodeFromCompilerMetadata({
+      compilerMetadata,
+      client,
+      chain,
+    }),
     abi: compilerMetadata.abi,
     constructorParams: contractParams,
     salt,

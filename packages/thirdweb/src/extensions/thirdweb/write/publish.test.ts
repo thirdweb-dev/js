@@ -85,7 +85,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("publishContract", () => {
       uri: logs?.[0]?.args.publishedContract.publishMetadataUri ?? "",
     });
     expect(publishedData.abi).toBeDefined();
-    expect(publishedData.bytecode).toBeDefined();
     expect(publishedData.version).toBe("0.0.1");
     expect(publishedData.changelog).toBe("Initial release");
     expect(publishedData.name).toBe("CatAttackNFT");

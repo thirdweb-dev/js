@@ -7,7 +7,10 @@ import { encodeAbiParameters } from "../abi/encodeAbiParameters.js";
 import { normalizeFunctionParams } from "../abi/normalizeFunctionParams.js";
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
 import type { Hex } from "../encoding/hex.js";
-import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
+import {
+  type FetchDeployMetadataResult,
+  fetchBytecodeFromCompilerMetadata,
+} from "./deploy-metadata.js";
 import { getInitBytecodeWithSalt } from "./get-init-bytecode-with-salt.js";
 
 /**
@@ -52,7 +55,11 @@ export async function computeDeploymentInfoFromMetadata(args: {
     client: args.client,
     chain: args.chain,
     abi: args.contractMetadata.abi,
-    bytecode: args.contractMetadata.bytecode,
+    bytecode: await fetchBytecodeFromCompilerMetadata({
+      compilerMetadata: args.contractMetadata,
+      client: args.client,
+      chain: args.chain,
+    }),
     constructorParams: args.constructorParams,
     salt: args.salt,
   });

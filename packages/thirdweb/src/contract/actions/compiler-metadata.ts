@@ -30,11 +30,10 @@ export type CompilerMetadata = {
 export function formatCompilerMetadata(
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   metadata: any,
-  compilerType?: "solc" | "zksolc",
 ): CompilerMetadata {
   let meta = metadata;
-  if (compilerType === "zksolc") {
-    meta = metadata.source_metadata || meta;
+  if ("source_metadata" in metadata) {
+    meta = metadata.source_metadata;
   }
   const compilationTarget = meta.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);

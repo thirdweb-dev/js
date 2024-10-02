@@ -27,7 +27,8 @@ const contract = getContract({
   client,
 });
 
-describe.runIf(process.env.TW_SECRET_KEY).skip(
+// TODO run this on every CI run, needs proper zk fork setup
+describe.runIf(process.env.TW_SECRET_KEY).todo(
   "SmartWallet zksync tests",
   {
     retry: 0,
@@ -110,6 +111,29 @@ describe.runIf(process.env.TW_SECRET_KEY).skip(
         }),
         account: account,
       });
+      expect(tx.transactionHash.length).toBe(66);
+    });
+
+    it("should send a transaction on Creator Testnet", async () => {
+      const abstractSmartWallet = smartWallet({
+        chain: defineChain(4654),
+        gasless: true,
+      });
+      const account = await abstractSmartWallet.connect({
+        client: TEST_CLIENT,
+        personalAccount,
+      });
+      const tx = await sendTransaction({
+        transaction: prepareTransaction({
+          chain: defineChain(4654),
+          client: TEST_CLIENT,
+          to: account.address,
+          value: BigInt(0),
+          data: "0x",
+        }),
+        account: account,
+      });
+      console.log(tx.transactionHash);
       expect(tx.transactionHash.length).toBe(66);
     });
   },

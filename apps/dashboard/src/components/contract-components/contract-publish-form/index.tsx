@@ -92,7 +92,9 @@ export function ContractPublishForm(props: {
           customFactoryAddresses:
             props.publishMetadata.factoryDeploymentData?.customFactoryInput
               ?.customFactoryAddresses || {},
-          params: props.publishMetadata.customFactoryInput?.params || [],
+          params:
+            props.publishMetadata.factoryDeploymentData?.customFactoryInput
+              ?.params || [],
         },
       },
       constructorParams: props.publishMetadata.constructorParams || {},

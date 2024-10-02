@@ -18,9 +18,7 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
 }) => {
   const deployMetadataResultQuery = useFetchDeployMetadata(contractId);
 
-  const logo =
-    deployMetadataResultQuery.data?.latestPublishedContractMetadata
-      ?.publishedMetadata.logo;
+  const logo = deployMetadataResultQuery.data?.logo;
 
   const img =
     deployMetadataResultQuery.data?.image !== "custom"

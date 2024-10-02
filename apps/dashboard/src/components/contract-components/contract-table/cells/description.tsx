@@ -17,8 +17,7 @@ export const ContractDescriptionCell: React.FC<
       }
     >
       <Text size="body.md" noOfLines={1}>
-        {deployMetadataResultQuery.data?.latestPublishedContractMetadata
-          ?.publishedMetadata.description ||
+        {deployMetadataResultQuery.data?.description ||
           (!deployMetadataResultQuery.isFetching ? "First Version" : "None")}
       </Text>
     </Skeleton>

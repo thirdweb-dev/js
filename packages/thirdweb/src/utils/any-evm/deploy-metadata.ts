@@ -1,14 +1,16 @@
 import type { Abi } from "abitype";
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { formatCompilerMetadata } from "../../contract/actions/compiler-metadata.js";
 import { download } from "../../storage/download.js";
 import type { Hex } from "../encoding/hex.js";
+import { withCache } from "../promise/withCache.js";
 import type { Prettify } from "../type-utils.js";
+import { isZkSyncChain } from "./zksync/isZkSyncChain.js";
 
 type FetchDeployMetadataOptions = {
   uri: string;
   client: ThirdwebClient;
-  compilerType?: "solc" | "zksolc";
 };
 
 export type FetchDeployMetadataResult = Partial<ExtendedMetadata> &
@@ -23,41 +25,21 @@ export type FetchDeployMetadataResult = Partial<ExtendedMetadata> &
 export async function fetchDeployMetadata(
   options: FetchDeployMetadataOptions,
 ): Promise<FetchDeployMetadataResult> {
-  const isZksolc = options.compilerType === "zksolc";
   const rawMeta: RawCompilerMetadata = await download({
     uri: options.uri,
     client: options.client,
   }).then((r) => r.json());
 
-  if (
-    isZksolc &&
-    (!rawMeta.compilers?.zksolc || rawMeta.compilers?.zksolc.length === 0)
-  ) {
-    throw new Error(`No zksolc metadata found for contract: ${rawMeta.name}`);
-  }
-
-  const metadataUri = isZksolc
-    ? rawMeta.compilers.zksolc[0].metadataUri
-    : rawMeta.metadataUri;
-  const bytecodeUri = isZksolc
-    ? rawMeta.compilers.zksolc[0].bytecodeUri
-    : rawMeta.bytecodeUri;
-  const [deployBytecode, parsedMeta] = await Promise.all([
-    download({ uri: bytecodeUri, client: options.client }).then(
-      (res) => res.text() as Promise<Hex>,
-    ),
-    fetchAndParseCompilerMetadata({
-      client: options.client,
-      uri: metadataUri,
-      compilerType: options.compilerType,
-    }),
-  ]);
+  const metadataUri = rawMeta.metadataUri;
+  const parsedMeta = await fetchAndParseCompilerMetadata({
+    client: options.client,
+    uri: metadataUri,
+  });
 
   return {
     ...rawMeta,
     ...parsedMeta,
     version: rawMeta.version,
-    bytecode: deployBytecode,
     name: rawMeta.name,
   };
 }
@@ -84,8 +66,40 @@ async function fetchAndParseCompilerMetadata(
   }
   return {
     ...metadata,
-    ...formatCompilerMetadata(metadata, options.compilerType),
+    ...formatCompilerMetadata(metadata),
   };
+}
+
+export async function fetchBytecodeFromCompilerMetadata(options: {
+  compilerMetadata: FetchDeployMetadataResult;
+  client: ThirdwebClient;
+  chain: Chain;
+}) {
+  const { compilerMetadata, client, chain } = options;
+  return withCache(
+    async () => {
+      const isZksolc = await isZkSyncChain(chain);
+      const bytecodeUri = isZksolc
+        ? compilerMetadata.compilers?.zksolc[0]?.bytecodeUri
+        : compilerMetadata.bytecodeUri;
+
+      if (!bytecodeUri) {
+        throw new Error(
+          `No bytecode URI found in compiler metadata for ${compilerMetadata.name} on chain ${chain.name}`,
+        );
+      }
+      const deployBytecode = await download({
+        uri: bytecodeUri,
+        client,
+      }).then((res) => res.text() as Promise<Hex>);
+
+      return deployBytecode;
+    },
+    {
+      cacheKey: `bytecode:${compilerMetadata.name}:${chain.id}`,
+      cacheTime: 24 * 60 * 60 * 1000,
+    },
+  );
 }
 
 // types
@@ -96,8 +110,8 @@ type RawCompilerMetadata = {
   bytecodeUri: string;
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   analytics?: any;
-  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-  [key: string]: any;
+  version?: string;
+  [key: string]: unknown;
 };
 
 type ParsedCompilerMetadata = {
@@ -146,10 +160,7 @@ type ParsedCompilerMetadata = {
 };
 
 export type CompilerMetadata = Prettify<
-  RawCompilerMetadata &
-    ParsedCompilerMetadata & {
-      bytecode: Hex;
-    }
+  RawCompilerMetadata & ParsedCompilerMetadata
 >;
 
 export type ExtendedMetadata = {
