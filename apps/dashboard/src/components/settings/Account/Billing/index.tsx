@@ -248,10 +248,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
         <>
           <StepsCard title="Get started with billing" steps={steps} />
 
-          <OnboardingModal
-            isOpen={isPaymentMethodOpen}
-            onClose={onPaymentMethodClose}
-          >
+          <OnboardingModal isOpen={isPaymentMethodOpen}>
             <LazyOnboardingBilling
               onSave={handlePaymentAdded}
               onCancel={onPaymentMethodClose}

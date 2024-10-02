@@ -1,12 +1,7 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Flex,
-} from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { getBillingPaymentMethodVerificationFailureResponse } from "lib/billing";
-import { Heading, Text, TrackedLinkButton } from "tw-components";
+import { ExternalLinkIcon } from "lucide-react";
 
 type PaymentVerificationFailureAlertProps = {
   onDismiss?: () => void;
@@ -20,44 +15,25 @@ export const PaymentVerificationFailureAlert: React.FC<
     getBillingPaymentMethodVerificationFailureResponse({ paymentFailureCode });
 
   return (
-    <Alert
-      status="error"
-      borderRadius="md"
-      as={Flex}
-      alignItems="start"
-      justifyContent="space-between"
-      variant="left-accent"
-      bg="inputBg"
-    >
-      <div className="flex flex-row">
-        <AlertIcon boxSize={4} mt={1} ml={1} />
-        <Flex flexDir="column" pl={1}>
-          <AlertTitle>
-            <Heading as="span" size="subtitle.sm">
-              ERROR: {title}
-            </Heading>
-          </AlertTitle>
-          <AlertDescription mb={2} as={Flex} direction="column">
-            <Text>
-              {reason ? `${reason}. ` : ""}
-              {resolution ? `${resolution}.` : ""}
-            </Text>
-            <Flex mt="4">
-              <TrackedLinkButton
-                variant="link"
-                href="/support"
-                category="billing"
-                label="support"
-                color="blue.500"
-                fontSize="small"
-                isExternal
-              >
-                Contact Support
-              </TrackedLinkButton>
-            </Flex>
-          </AlertDescription>
-        </Flex>
-      </div>
+    <Alert variant="destructive">
+      <AlertTitle>{title}</AlertTitle>
+      <AlertDescription>
+        <p>
+          {reason ? `${reason}. ` : ""}
+          {resolution ? `${resolution}.` : ""}
+        </p>
+
+        <TrackedLinkTW
+          className="mt-3 flex items-center gap-2 text-muted-foreground hover:text-foreground"
+          href="/support"
+          category="billing"
+          label="support"
+          target="_blank"
+        >
+          Contact Support
+          <ExternalLinkIcon className="size-4" />
+        </TrackedLinkTW>
+      </AlertDescription>
     </Alert>
   );
 };

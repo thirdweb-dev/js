@@ -216,10 +216,7 @@ export const ApplyForOpCreditsModal: React.FC = () => {
         />
       )}
       {/* // Add Payment Method Modal */}
-      <OnboardingModal
-        isOpen={paymentMethodModalState.isOpen}
-        onClose={paymentMethodModalState.onClose}
-      >
+      <OnboardingModal isOpen={paymentMethodModalState.isOpen}>
         <LazyOnboardingBilling
           onSave={() => {
             setHasAddedPaymentMethod(true);

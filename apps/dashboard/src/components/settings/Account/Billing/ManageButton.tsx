@@ -1,29 +1,29 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   type Account,
   AccountStatus,
   useCreateBillingSession,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { type MouseEvent, useMemo } from "react";
-import { TrackedLinkButton } from "tw-components";
+import { useMemo } from "react";
+import { useTrack } from "../../../../hooks/analytics/useTrack";
 
 interface ManageBillingButtonProps {
   account: Account;
   loading?: boolean;
   loadingText?: string;
   onClick?: () => void;
-  buttonProps?: {
-    variant?: "outline" | "solid";
-    colorScheme?: "primary";
-  };
 }
 
 export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
   account,
   loading,
   loadingText,
-  buttonProps = { variant: "outline", color: loading ? "gray" : "blue.500" },
   onClick,
 }) => {
+  const trackEvent = useTrack();
+
   const [buttonLabel, buttonText] = useMemo(() => {
     switch (account.status) {
       case AccountStatus.InvalidPayment:
@@ -52,31 +52,40 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
     }
   }, [query.data, buttonLabel, account.stripePaymentActionUrl]);
 
-  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-    if (loading) {
-      e.preventDefault();
-      return;
-    }
-
-    if (!["verifyPaymentMethod", "manage"].includes(buttonLabel)) {
-      e.preventDefault();
-      onClick?.();
-    }
-  };
+  if (url) {
+    return (
+      <Button asChild>
+        <TrackedLinkTW href={url} category="billingAccount" label={buttonLabel}>
+          {buttonText}
+        </TrackedLinkTW>
+      </Button>
+    );
+  }
 
   return (
-    <TrackedLinkButton
-      {...buttonProps}
-      isDisabled={loading || (!onClick && !url)}
-      href={url ?? ""}
-      isLoading={loading}
-      category="billingAccount"
-      label={buttonLabel}
-      loadingText={loadingText}
-      onClick={handleClick}
-      fontSize="small"
+    <Button
+      disabled={loading || !onClick}
+      onClick={(e) => {
+        trackEvent({
+          category: "billingAccount",
+          label: buttonLabel,
+          action: "click",
+        });
+
+        if (loading) {
+          e.preventDefault();
+          return;
+        }
+
+        if (!["verifyPaymentMethod", "manage"].includes(buttonLabel)) {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
+      className="gap-2"
     >
-      {buttonText}
-    </TrackedLinkButton>
+      {loading && <Spinner className="size-4" />}
+      {loading ? loadingText : buttonText}
+    </Button>
   );
 };

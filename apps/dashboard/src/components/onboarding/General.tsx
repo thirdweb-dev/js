@@ -4,7 +4,7 @@ import { AccountForm } from "components/settings/Account/AccountForm";
 import { useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { Button } from "tw-components";
-import { OnboardingTitle } from "./Title";
+import { TitleAndDescription } from "./Title";
 
 type OnboardingGeneralProps = {
   account: Account;
@@ -34,7 +34,7 @@ const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
 
   return (
     <FocusLock>
-      <OnboardingTitle
+      <TitleAndDescription
         heading={
           !existing
             ? "Create your thirdweb account"

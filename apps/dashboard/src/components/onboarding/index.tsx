@@ -202,11 +202,7 @@ export const Onboarding: React.FC = () => {
   }
 
   return (
-    <OnboardingModal
-      isOpen={!!state}
-      onClose={() => setState("skipped")}
-      wide={state === "plan"}
-    >
+    <OnboardingModal isOpen={!!state} wide={state === "plan"}>
       {state === "onboarding" && (
         <Suspense fallback={<Loading />}>
           <OnboardingGeneral

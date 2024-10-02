@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import OtpInput from "react-otp-input";
 import { Button, Text } from "tw-components";
 import { shortenString } from "utils/usedapp-external";
-import { OnboardingTitle } from "./Title";
+import { TitleAndDescription } from "./Title";
 
 interface OnboardingConfirmEmailProps {
   email: string;
@@ -158,7 +158,7 @@ const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
 
   return (
     <>
-      <OnboardingTitle
+      <TitleAndDescription
         heading={
           !linking
             ? "You're almost done! Verify your email."

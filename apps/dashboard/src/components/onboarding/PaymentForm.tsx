@@ -1,11 +1,7 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { useCreatePaymentMethod } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Flex,
-  Spinner,
-} from "@chakra-ui/react";
 import {
   PaymentElement,
   useElements,
@@ -15,7 +11,6 @@ import { PaymentVerificationFailureAlert } from "components/settings/Account/Bil
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
 import { type FormEvent, useState } from "react";
-import { Button, Text } from "tw-components";
 
 interface OnboardingPaymentForm {
   onSave: () => void;
@@ -101,69 +96,44 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
-      <Flex flexDir="column" gap={8}>
+      <div className="flex flex-col gap-6">
         <PaymentElement
           onLoaderStart={() => setLoading(false)}
           options={{ terms: { card: "never" } }}
         />
 
         {loading ? (
-          <div className="flex items-center justify-center pb-16">
-            <Spinner size="sm" />
+          <div className="flex min-h-[100px] items-center justify-center">
+            <Spinner className="size-5" />
           </div>
         ) : (
-          <Flex flexDir="column" gap={4}>
+          <div className="flex flex-col gap-6">
             {paymentFailureCode ? (
               <PaymentVerificationFailureAlert
                 paymentFailureCode={paymentFailureCode}
               />
             ) : (
-              <Alert
-                status="info"
-                borderRadius="md"
-                as={Flex}
-                alignItems="start"
-                justifyContent="space-between"
-                variant="left-accent"
-                bg="inputBg"
-              >
-                <div className="flex flex-row">
-                  <AlertIcon boxSize={4} mt={1} ml={1} />
-                  <Flex flexDir="column" gap={1} pl={1}>
-                    <AlertDescription as={Text} fontSize="body.md">
-                      A temporary hold will be placed and immediately released
-                      on your payment method.
-                    </AlertDescription>
-                  </Flex>
-                </div>
+              <Alert variant="info">
+                <AlertTitle className="text-sm">
+                  A temporary hold will be placed and immediately released on
+                  your payment method.
+                </AlertTitle>
               </Alert>
             )}
 
-            <Button
-              w="full"
-              size="lg"
-              fontSize="md"
-              colorScheme="blue"
-              type="submit"
-              isDisabled={!stripe}
-              isLoading={saving}
-            >
-              Add payment
-            </Button>
-            <Button
-              size="lg"
-              fontSize="sm"
-              variant="link"
-              mt="4"
-              onClick={onCancel}
-              isDisabled={saving}
-              colorScheme="blue"
-            >
-              <Text color="blue.500">I&apos;ll do this later</Text>
-            </Button>
-          </Flex>
+            <div className="flex justify-end gap-4">
+              <Button variant="outline" onClick={onCancel} disabled={saving}>
+                I'll do this later
+              </Button>
+
+              <Button className="gap-2" type="submit" disabled={!stripe}>
+                {loading && <Spinner className="size-4" />}
+                Add payment
+              </Button>
+            </div>
+          </div>
         )}
-      </Flex>
+      </div>
     </form>
   );
 };

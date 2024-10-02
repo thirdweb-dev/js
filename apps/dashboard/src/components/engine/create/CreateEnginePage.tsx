@@ -93,10 +93,7 @@ export const CreateEnginePage = () => {
         />
       )}
 
-      <OnboardingModal
-        isOpen={isBillingModalOpen}
-        onClose={() => setIsBillingModalOpen(false)}
-      >
+      <OnboardingModal isOpen={isBillingModalOpen}>
         <LazyOnboardingBilling
           onSave={async () => {
             if (!selectedTier) {

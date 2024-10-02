@@ -1,19 +1,12 @@
-import { AccountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Flex,
-  IconButton,
-  UnorderedList,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { type Account, AccountStatus } from "@3rdweb-sdk/react/hooks/useApi";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { getRecurringPaymentFailureResponse } from "lib/billing";
+import { ExternalLinkIcon, XIcon } from "lucide-react";
 import { useState } from "react";
-import { FiX } from "react-icons/fi";
-import { Heading, Text, TrackedLinkButton } from "tw-components";
+import { Text } from "tw-components";
 import { LazyOnboardingBilling } from "../../../../onboarding/LazyOnboardingBilling";
 import { ManageBillingButton } from "../ManageButton";
 
@@ -22,11 +15,13 @@ type RecurringPaymentFailureAlertProps = {
   onDismiss?: () => void;
   affectedServices?: string[];
   paymentFailureCode: string;
+  dashboardAccount: Account;
 };
 
 export const RecurringPaymentFailureAlert: React.FC<
   RecurringPaymentFailureAlertProps
 > = ({
+  dashboardAccount,
   isServiceCutoff = false,
   onDismiss,
   affectedServices = [],
@@ -35,18 +30,11 @@ export const RecurringPaymentFailureAlert: React.FC<
   // TODO: We should find a way to move this deeper into the
   // TODO: ManageBillingButton component and set an optional field to override
   const [paymentMethodSaving, setPaymentMethodSaving] = useState(false);
-  const meQuery = useAccount();
-  const { data: account } = meQuery;
-
-  const {
-    onOpen: onPaymentMethodOpen,
-    onClose: onPaymentMethodClose,
-    isOpen: isPaymentMethodOpen,
-  } = useDisclosure();
+  const [isPaymentMethodOpen, setIsPaymentMethodOpen] = useState(false);
 
   const handlePaymentAdded = () => {
     setPaymentMethodSaving(true);
-    onPaymentMethodClose();
+    setIsPaymentMethodOpen(false);
   };
 
   const { title, reason, resolution } = getRecurringPaymentFailureResponse({
@@ -58,100 +46,77 @@ export const RecurringPaymentFailureAlert: React.FC<
     : title;
 
   return (
-    <Alert
-      status="error"
-      borderRadius="md"
-      as={Flex}
-      alignItems="start"
-      justifyContent="space-between"
-      variant="left-accent"
-      bg="backgroundCardHighlight"
-    >
-      <OnboardingModal
-        isOpen={isPaymentMethodOpen}
-        onClose={onPaymentMethodClose}
-      >
+    <Alert variant="destructive" className="py-6">
+      <OnboardingModal isOpen={isPaymentMethodOpen}>
         <LazyOnboardingBilling
           onSave={handlePaymentAdded}
-          onCancel={onPaymentMethodClose}
+          onCancel={() => setIsPaymentMethodOpen(false)}
         />
       </OnboardingModal>
 
-      <div className="flex flex-row">
-        <AlertIcon boxSize={4} mt={1} ml={1} />
-        <Flex flexDir="column" pl={1}>
-          <AlertTitle>
-            <Heading as="span" size="subtitle.sm">
-              {header}
-            </Heading>
-          </AlertTitle>
-          <AlertDescription mt={4} mb={2}>
-            <Flex direction="column" gap={4}>
-              <Text>
-                {reason ? `${reason}. ` : ""}
-                {resolution ? `${resolution}. ` : ""}
-                {isServiceCutoff
-                  ? ""
-                  : "We will retry several times over the next 10 days after your invoice date, after which you will lose access to your services."}
-              </Text>
-              {affectedServices.length > 0 && (
-                <div className="flex flex-col">
-                  <Text>Affected services:</Text>
-                  <UnorderedList mb={4}>
-                    {affectedServices.map((service) => (
-                      <li key={service}>
-                        <Text>{service}</Text>
-                      </li>
-                    ))}
-                  </UnorderedList>
-                </div>
-              )}
-              <div className="flex flex-row">
-                {account && (
-                  <ManageBillingButton
-                    account={account}
-                    loading={paymentMethodSaving}
-                    loadingText="Verifying payment method"
-                    buttonProps={{ colorScheme: "primary" }}
-                    onClick={
-                      [
-                        AccountStatus.ValidPayment,
-                        AccountStatus.InvalidPayment,
-                      ].includes(account.status)
-                        ? undefined
-                        : onPaymentMethodOpen
-                    }
-                  />
-                )}
-                <TrackedLinkButton
-                  ml="4"
-                  variant="outline"
-                  href="/support"
-                  category="billing"
-                  label="support"
-                  color="blue.500"
-                  fontSize="small"
-                  isExternal
-                >
-                  Contact Support
-                </TrackedLinkButton>
-              </div>
-            </Flex>
-          </AlertDescription>
-        </Flex>
+      <AlertTitle>{header}</AlertTitle>
+      <AlertDescription>
+        {reason ? `${reason}. ` : ""}
+        {resolution ? `${resolution}. ` : ""}
+        {isServiceCutoff
+          ? ""
+          : "We will retry several times over the next 10 days after your invoice date, after which you will lose access to your services."}
+      </AlertDescription>
+
+      <div className="mt-4 flex flex-col gap-4 text-muted-foreground text-sm">
+        {affectedServices.length > 0 && (
+          <div className="flex flex-col">
+            <p className="mb-1"> Affected services: </p>
+            <ul className="list-disc pl-3.5">
+              {affectedServices.map((service) => (
+                <li key={service}>
+                  <Text>{service}</Text>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="flex gap-2">
+          <ManageBillingButton
+            account={dashboardAccount}
+            loading={paymentMethodSaving}
+            loadingText="Verifying payment method"
+            onClick={
+              [
+                AccountStatus.ValidPayment,
+                AccountStatus.InvalidPayment,
+              ].includes(dashboardAccount.status)
+                ? undefined
+                : () => setIsPaymentMethodOpen(true)
+            }
+          />
+
+          <Button variant="outline" asChild>
+            <TrackedLinkTW
+              href="/support"
+              category="billing"
+              label="support"
+              target="_blank"
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+            >
+              Contact Support
+              <ExternalLinkIcon className="size-4" />
+            </TrackedLinkTW>
+          </Button>
+        </div>
       </div>
 
       {onDismiss && (
-        <IconButton
-          size="xs"
-          aria-label="Close announcement"
-          icon={<FiX />}
-          color="bgBlack"
+        <Button
+          size="icon"
+          aria-label="Close"
           variant="ghost"
-          opacity={0.6}
-          _hover={{ opacity: 1 }}
           onClick={onDismiss}
-        />
+          className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
+        >
+          <XIcon className="size-5" />
+        </Button>
       )}
     </Alert>
   );

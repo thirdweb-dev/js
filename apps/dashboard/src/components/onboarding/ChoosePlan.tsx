@@ -2,10 +2,9 @@ import {
   AccountPlan,
   useUpdateAccountPlan,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { SimpleGrid } from "@chakra-ui/react";
 import { PricingCard } from "components/homepage/sections/PricingCard";
 import { useTrack } from "hooks/analytics/useTrack";
-import { OnboardingTitle } from "./Title";
+import { TitleAndDescription } from "./Title";
 
 interface OnboardingChoosePlanProps {
   onSave: () => void;
@@ -70,11 +69,11 @@ const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
 
   return (
     <>
-      <OnboardingTitle
+      <TitleAndDescription
         heading="Choose your plan"
         description="Get started for free with our Starter plan or subscribe to Growth plan to unlock higher rate limits and advanced features."
       />
-      <SimpleGrid columns={{ base: 1, md: 2 }} gap={8}>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <PricingCard
           size="sm"
           name={AccountPlan.Free}
@@ -110,7 +109,7 @@ const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
           }}
           onDashboard
         />
-      </SimpleGrid>
+      </div>
     </>
   );
 };

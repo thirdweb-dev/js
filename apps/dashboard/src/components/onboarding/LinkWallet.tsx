@@ -3,7 +3,7 @@ import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Button, TrackedLink } from "tw-components";
 import { shortenString } from "utils/usedapp-external";
-import { OnboardingTitle } from "./Title";
+import { TitleAndDescription } from "./Title";
 
 interface OnboardingLinkWalletProps {
   email: string;
@@ -64,7 +64,7 @@ const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
 
   return (
     <>
-      <OnboardingTitle
+      <TitleAndDescription
         heading="Linking Wallets"
         description={
           <>

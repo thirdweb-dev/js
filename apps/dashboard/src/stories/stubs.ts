@@ -1,11 +1,19 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
-import type { ApiKey, ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  type Account,
+  AccountPlan,
+  AccountStatus,
+  type ApiKey,
+  type ApiKeyService,
+  type UsageBillableByService,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import type {
   EngineAlert,
   EngineAlertRule,
   EngineNotificationChannel,
 } from "@3rdweb-sdk/react/hooks/useEngine";
+import { ZERO_ADDRESS } from "thirdweb";
 
 function projectStub(id: string, teamId: string) {
   const project: Project = {
@@ -153,6 +161,58 @@ export function createEngineAlertStub(
     id: Math.random().toString(),
     startsAt: new Date(),
     status: "pending",
+    ...overrides,
+  };
+}
+
+export function createDashboardAccountStub(
+  id: string,
+  overrides: Partial<Account> = {},
+): Account {
+  return {
+    id: id,
+    name: `Name ${id}`,
+    email: `email-${id}@example.com`,
+    status: AccountStatus.NoPayment,
+    plan: AccountPlan.Free,
+    advancedEnabled: false,
+    currentBillingPeriodStartsAt: new Date().toISOString(),
+    currentBillingPeriodEndsAt: new Date().toISOString(),
+    emailConfirmedAt: new Date().toISOString(),
+    creatorWalletAddress: ZERO_ADDRESS,
+    isStaff: false,
+    recurringPaymentFailures: [],
+    ...overrides,
+  };
+}
+
+export function createBillableServiceUsageDataStub(
+  overrides: Partial<UsageBillableByService> = {},
+): UsageBillableByService {
+  return {
+    usage: {
+      bundler: [],
+      storage: {
+        sumFileSizeBytes: 0,
+      },
+      embeddedWallets: {
+        countWalletAddresses: 0,
+      },
+    },
+    billableUsd: {
+      bundler: 0,
+      storage: 0,
+      embeddedWallets: 0,
+    },
+    limits: {
+      storage: 0,
+      embeddedWallets: 0,
+    },
+    rateLimits: {
+      storage: 0,
+      rpc: 0,
+    },
+    rateLimitedAt: {},
     ...overrides,
   };
 }

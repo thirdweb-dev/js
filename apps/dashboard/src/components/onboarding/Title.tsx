@@ -1,22 +1,20 @@
-import { Heading, Text } from "tw-components";
-
-interface OnboardingTitleProps {
+type TitleAndDescriptionProps = {
   heading: string | JSX.Element;
-  description?: string | JSX.Element;
-}
+  description: string | JSX.Element;
+};
 
-export const OnboardingTitle: React.FC<OnboardingTitleProps> = ({
+export const TitleAndDescription: React.FC<TitleAndDescriptionProps> = ({
   heading,
   description,
 }) => {
   return (
-    <div className="flex flex-col items-start gap-3">
-      <Heading size="title.sm">{heading}</Heading>
+    <div className="flex flex-col items-start gap-1">
+      <h3 className="font-semibold text-foreground text-xl tracking-tight">
+        {heading}
+      </h3>
 
       {description && (
-        <Text size="body.md" fontWeight="medium">
-          {description}
-        </Text>
+        <div className="text-muted-foreground">{description}</div>
       )}
     </div>
   );
