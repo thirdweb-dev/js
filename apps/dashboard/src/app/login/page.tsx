@@ -78,6 +78,8 @@ function CustomConnectEmmbed() {
       modalSize={isLG ? "wide" : "compact"}
       theme={getSDKTheme(theme === "light" ? "light" : "dark")}
       className="shadow-lg"
+      privacyPolicyUrl="/privacy"
+      termsOfServiceUrl="/tos"
     />
   );
 }
