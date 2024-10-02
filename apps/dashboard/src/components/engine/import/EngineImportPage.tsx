@@ -114,7 +114,7 @@ export const EngineImportPage = () => {
             <div className="mt-2 flex items-center gap-2">
               <CircleAlertIcon className="!static size-3 text-warning-foreground" />
               <p className="text-muted-foreground text-sm">
-                Do not import a URL you do not recognize
+                Do not import a URL you do not recognize.
               </p>
             </div>
           </FormControl>

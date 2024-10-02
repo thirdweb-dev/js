@@ -18,7 +18,6 @@ export type EngineInstance = {
   name: string;
   url: string;
   lastAccessedAt: string;
-  cloudDeployedAt?: string;
   status:
     | "active"
     | "pending"
@@ -26,6 +25,7 @@ export type EngineInstance = {
     | "deploying"
     | "paymentFailed"
     | "deploymentFailed";
+  deploymentId?: string;
 };
 
 // Not checking for null token because the token is required the tanstack useQuery hook
@@ -189,23 +189,26 @@ export function useEngineLatestVersion() {
 
 interface UpdateVersionInput {
   engineId: string;
+  serverVersion: string;
 }
 
-export function useEngineUpdateVersion() {
+export function useEngineUpdateServerVersion() {
   return useMutation({
     mutationFn: async (input: UpdateVersionInput) => {
       invariant(input.engineId, "engineId is required");
 
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/update-version`, {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v2/engine/${input.engineId}/infrastructure`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            serverVersion: input.serverVersion,
+          }),
         },
-        body: JSON.stringify({
-          engineId: input.engineId,
-        }),
-      });
+      );
       // we never use the response body
       res.body?.cancel();
       if (!res.ok) {

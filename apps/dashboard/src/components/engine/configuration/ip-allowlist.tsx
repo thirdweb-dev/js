@@ -87,7 +87,7 @@ export const EngineIpAllowlistConfig: React.FC<
       </Flex>
 
       <Textarea
-        placeholder="8.8.8.8\nff06:0:0:0:0:0:0:c3"
+        placeholder={"8.8.8.8\nff06:0:0:0:0:0:0:c3"}
         rows={4}
         {...form.register("raw")}
       />

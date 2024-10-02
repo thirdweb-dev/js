@@ -112,7 +112,7 @@ export const CreateEnginePage = () => {
       </h1>
 
       <p className="mb-7 text-muted-foreground">
-        Host Engine on thirdweb with no setup or maintenance required
+        Host Engine on thirdweb with no setup or maintenance required.
       </p>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

@@ -266,11 +266,7 @@ const EditModal = (props: {
               className="gap-2"
               disabled={!form.formState.isDirty}
             >
-              {editInstance.isPending ? (
-                <Spinner className="size-4" />
-              ) : (
-                <SendIcon className="size-4" />
-              )}
+              {editInstance.isPending && <Spinner className="size-4" />}
               Update
             </Button>
           </DialogFooter>
@@ -292,7 +288,7 @@ const RemoveModal = (props: {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
         {instance.status === "paymentFailed" ||
-        (instance.status === "active" && !instance.cloudDeployedAt) ? (
+        (instance.status === "active" && !instance.deploymentId) ? (
           <RemoveFromDashboardModalContent
             refetch={refetch}
             instance={instance}

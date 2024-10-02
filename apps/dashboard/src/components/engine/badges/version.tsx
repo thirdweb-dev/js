@@ -4,7 +4,7 @@ import {
   type EngineInstance,
   useEngineLatestVersion,
   useEngineSystemHealth,
-  useEngineUpdateVersion,
+  useEngineUpdateServerVersion,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { CircleArrowDownIcon, CloudDownloadIcon } from "lucide-react";
 import { useState } from "react";
@@ -30,15 +30,15 @@ export const EngineVersionBadge = ({
   const latestVersionQuery = useEngineLatestVersion();
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const current = healthQuery.data?.engineVersion ?? "...";
-  const latest = latestVersionQuery.data ?? "...";
-  const isStale = current !== latest;
+  const currentVersion = healthQuery.data?.engineVersion ?? "...";
+  const latestVersion = latestVersionQuery.data;
+  const isStale = latestVersion && currentVersion !== latestVersion;
 
   if (!isStale) {
     return (
       <ToolTipLabel label="Latest Version">
         <Button variant="outline" asChild className="hover:bg-transparent">
-          <div>{current}</div>
+          <div>{currentVersion}</div>
         </Button>
       </ToolTipLabel>
     );
@@ -57,7 +57,7 @@ export const EngineVersionBadge = ({
           className="relative"
           onClick={() => setModalOpen(true)}
         >
-          {current}
+          {currentVersion}
 
           {/* Notification Dot */}
           <span className="-top-1 -right-1 absolute">
@@ -66,12 +66,14 @@ export const EngineVersionBadge = ({
         </Button>
       </ToolTipLabel>
 
-      <UpdateVersionModal
-        open={isModalOpen}
-        onOpenChange={setModalOpen}
-        latest={latest ?? ""}
-        instance={instance}
-      />
+      {latestVersion && (
+        <UpdateVersionModal
+          open={isModalOpen}
+          onOpenChange={setModalOpen}
+          latestVersion={latestVersion}
+          instance={instance}
+        />
+      )}
     </>
   );
 };
@@ -79,13 +81,13 @@ export const EngineVersionBadge = ({
 const UpdateVersionModal = (props: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  latest: string;
+  latestVersion: string;
   instance: EngineInstance;
 }) => {
-  const { open, onOpenChange, latest, instance } = props;
-  const updateEngine = useEngineUpdateVersion();
+  const { open, onOpenChange, latestVersion, instance } = props;
+  const updateEngineServerMutation = useEngineUpdateServerVersion();
 
-  if (!instance.cloudDeployedAt) {
+  if (!instance.deploymentId) {
     // For self-hosted, show a prompt to the Github release page.
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -95,10 +97,10 @@ const UpdateVersionModal = (props: {
         >
           <DialogHeader>
             <DialogTitle className="mb-6 pr-4 font-semibold text-2xl tracking-tight">
-              Update your self-hosted Engine to {latest}
+              Update your self-hosted Engine to {latestVersion}
             </DialogTitle>
             <DialogDescription>
-              View the changelog in the
+              View the{" "}
               <TrackedLinkTW
                 href="https://github.com/thirdweb-dev/engine/releases"
                 category="engine"
@@ -106,8 +108,9 @@ const UpdateVersionModal = (props: {
                 target="_blank"
                 className="text-link-foreground hover:text-foreground"
               >
-                Engine Github repository
+                latest changelog
               </TrackedLinkTW>
+              .
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
@@ -117,11 +120,13 @@ const UpdateVersionModal = (props: {
 
   const onClick = async () => {
     try {
-      const promise = updateEngine.mutateAsync({ engineId: instance.id });
+      const promise = updateEngineServerMutation.mutateAsync({
+        engineId: instance.id,
+        serverVersion: latestVersion,
+      });
       toast.promise(promise, {
-        success:
-          "Submitted a request to update your Engine instance. Please allow 1-2 business days for this process.",
-        error: "Unexpected error updating your Engine instance.",
+        success: `Upgrading your Engine to ${latestVersion}. Please confirm after a few minutes.`,
+        error: "Unexpected error updating your Engine.",
       });
       await promise;
     } finally {
@@ -136,7 +141,12 @@ const UpdateVersionModal = (props: {
         dialogOverlayClassName="z-[10000]"
       >
         <DialogHeader>
-          <DialogTitle>Update Engine to {latest}?</DialogTitle>
+          <DialogTitle>Update Engine to {latestVersion}?</DialogTitle>
+
+          <DialogDescription>
+            It is recommended to pause traffic to Engine before performing this
+            upgrade. There is &lt; 1 minute of expected downtime.
+          </DialogDescription>
         </DialogHeader>
 
         <DialogFooter className="mt-5">
@@ -153,7 +163,7 @@ const UpdateVersionModal = (props: {
             variant="primary"
             className="gap-2"
           >
-            {updateEngine.isPending ? (
+            {updateEngineServerMutation.isPending ? (
               <Spinner className="size-4" />
             ) : (
               <CloudDownloadIcon className="size-4" />
