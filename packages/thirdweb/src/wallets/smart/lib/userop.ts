@@ -218,12 +218,7 @@ async function getGasFees(args: {
   const { executeTx, bundlerOptions, chain, client } = args;
   let { maxFeePerGas, maxPriorityFeePerGas } = executeTx;
 
-  const entrypointVersion = getEntryPointVersion(
-    bundlerOptions.entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
-  );
-  const bundlerVersion = entrypointVersion === "v0.6" ? "v1" : "v2";
-  const bundlerUrl =
-    bundlerOptions?.bundlerUrl ?? getDefaultBundlerUrl(chain, bundlerVersion);
+  const bundlerUrl = bundlerOptions?.bundlerUrl ?? getDefaultBundlerUrl(chain);
 
   if (isThirdwebUrl(bundlerUrl)) {
     // get gas prices from bundler

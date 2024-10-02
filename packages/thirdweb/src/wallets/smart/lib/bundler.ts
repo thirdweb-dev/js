@@ -21,7 +21,6 @@ import {
   ENTRYPOINT_ADDRESS_v0_6,
   MANAGED_ACCOUNT_GAS_BUFFER,
   getDefaultBundlerUrl,
-  getEntryPointVersion,
 } from "./constants.js";
 import { hexlifyUserOp } from "./utils.js";
 
@@ -269,12 +268,7 @@ async function sendBundlerRequest(args: {
     console.debug(`>>> sending ${operation} with payload:`, params);
   }
 
-  const entryPointVersion = getEntryPointVersion(
-    options.entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
-  );
-  const bundlerVersion = entryPointVersion === "v0.6" ? "v1" : "v2";
-  const bundlerUrl =
-    options.bundlerUrl ?? getDefaultBundlerUrl(options.chain, bundlerVersion);
+  const bundlerUrl = options.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
   const fetchWithHeaders = getClientFetch(options.client);
   const response = await fetchWithHeaders(bundlerUrl, {
     method: "POST",

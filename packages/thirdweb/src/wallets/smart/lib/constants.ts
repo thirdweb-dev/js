@@ -36,12 +36,12 @@ export const getDefaultAccountFactory = (entryPointAddress?: string) => {
 /**
  * @internal
  */
-export const getDefaultBundlerUrl = (chain: Chain, version: "v1" | "v2") => {
+export const getDefaultBundlerUrl = (chain: Chain) => {
   const domain = getThirdwebDomains().bundler;
   if (domain.startsWith("localhost:")) {
-    return `http://${domain}/${version ?? "v1"}?chain=${chain.id}`;
+    return `http://${domain}/v2?chain=${chain.id}`;
   }
-  return `https://${chain.id}.${domain}/${version ?? "v1"}`;
+  return `https://${chain.id}.${domain}/v2`;
 };
 
 export const getEntryPointVersion = (address: string): "v0.6" | "v0.7" => {
