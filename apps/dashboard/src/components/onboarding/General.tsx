@@ -1,5 +1,4 @@
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, FocusLock } from "@chakra-ui/react";
 import { AccountForm } from "components/settings/Account/AccountForm";
 import { useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
@@ -33,7 +32,7 @@ const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
   }
 
   return (
-    <FocusLock>
+    <div>
       <TitleAndDescription
         heading={
           !existing
@@ -43,7 +42,9 @@ const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
         description="Start building web3 apps and games, faster."
       />
 
-      <Flex flexDir="column" gap={4}>
+      <div className="h-6" />
+
+      <div className="flex flex-col gap-4">
         <AccountForm
           showSubscription={!existing}
           hideName={existing}
@@ -95,8 +96,8 @@ const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
             </Button>
           )}
         </div>
-      </Flex>
-    </FocusLock>
+      </div>
+    </div>
   );
 };
 

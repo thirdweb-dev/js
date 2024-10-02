@@ -1,6 +1,7 @@
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { type Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, FormControl, Input } from "@chakra-ui/react";
+import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -132,15 +133,13 @@ export const AccountForm: React.FC<AccountFormProps> = ({
     <form onSubmit={handleSubmit}>
       <div
         className={cn(
-          "w-full items-start rounded-xl bg-background",
+          "flex w-full flex-col items-start rounded-xl bg-background",
           horizontal ? "gap-6" : "gap-8",
           padded ? "border border-border p-6" : "p-0",
         )}
       >
-        <Flex
-          gap={horizontal ? 4 : 8}
-          flexDir={horizontal ? "row" : "column"}
-          w="full"
+        <div
+          className={cn("flex w-full", horizontal ? "gap-4" : "flex-col gap-6")}
         >
           <FormControl
             isRequired
@@ -217,7 +216,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
               <Text>Subscribe to new features and key product updates</Text>
             </Checkbox>
           )}
-        </Flex>
+        </div>
 
         <div
           className={cn(
