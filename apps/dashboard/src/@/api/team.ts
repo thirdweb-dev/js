@@ -1,9 +1,7 @@
 import "server-only";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { API_SERVER_URL } from "@/constants/env";
 import { cookies } from "next/headers";
-
-const THIRDWEB_API_HOST =
-  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
 export type Team = {
   id: string;
@@ -35,7 +33,7 @@ export async function getTeamBySlug(slug: string) {
     return null;
   }
 
-  const teamRes = await fetch(`${THIRDWEB_API_HOST}/v1/teams/${slug}`, {
+  const teamRes = await fetch(`${API_SERVER_URL}/v1/teams/${slug}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -57,7 +55,7 @@ export async function getTeams() {
     return [];
   }
 
-  const teamsRes = await fetch(`${THIRDWEB_API_HOST}/v1/teams`, {
+  const teamsRes = await fetch(`${API_SERVER_URL}/v1/teams`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

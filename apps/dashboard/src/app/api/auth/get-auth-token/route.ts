@@ -1,10 +1,8 @@
 import { COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { API_SERVER_URL } from "@/constants/env";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb/utils";
-
-const THIRDWEB_API_HOST =
-  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
 export type GetAuthTokenResponse = {
   jwt: string | null;
@@ -43,7 +41,7 @@ export const GET = async (req: NextRequest) => {
   }
 
   // check token validity
-  const accountRes = await fetch(`${THIRDWEB_API_HOST}/v1/account/me`, {
+  const accountRes = await fetch(`${API_SERVER_URL}/v1/account/me`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,

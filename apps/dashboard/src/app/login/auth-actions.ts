@@ -2,6 +2,7 @@
 import "server-only";
 
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { API_SERVER_URL } from "@/constants/env";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
 import type {
@@ -9,9 +10,6 @@ import type {
   LoginPayload,
   VerifyLoginPayloadParams,
 } from "thirdweb/auth";
-
-const THIRDWEB_API_HOST =
-  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
 const THIRDWEB_API_SECRET = process.env.API_SERVER_SECRET || "";
 
@@ -21,7 +19,7 @@ export async function getLoginPayload(
   if (!THIRDWEB_API_SECRET) {
     throw new Error("API_SERVER_SECRET is not set");
   }
-  const res = await fetch(`${THIRDWEB_API_HOST}/v2/siwe/payload`, {
+  const res = await fetch(`${API_SERVER_URL}/v2/siwe/payload`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +46,7 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
   const cookieStore = cookies();
 
   // forward the request to the API server
-  const res = await fetch(`${THIRDWEB_API_HOST}/v2/siwe/login`, {
+  const res = await fetch(`${API_SERVER_URL}/v2/siwe/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -144,7 +142,7 @@ export async function isLoggedIn(address: string) {
     return false;
   }
 
-  const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/me`, {
+  const res = await fetch(`${API_SERVER_URL}/v1/account/me`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -37,6 +37,7 @@ import zytronCTA from "./temp-assets/zytronCTA.jpg";
 
 // END TEMPORARY
 
+import { API_SERVER_URL } from "@/constants/env";
 import type { ChainMetadata } from "thirdweb/chains";
 import type {
   ChainMetadataWithServices,
@@ -44,18 +45,15 @@ import type {
   ChainServices,
 } from "./types/chain";
 
-const THIRDWEB_API_HOST =
-  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
-
 export async function getChains() {
   const [chains, chainServices] = await Promise.all([
     fetch(
-      `${THIRDWEB_API_HOST}/v1/chains`,
+      `${API_SERVER_URL}/v1/chains`,
       // revalidate every 60 minutes
       { next: { revalidate: 60 * 60 } },
     ).then((res) => res.json()) as Promise<{ data: ChainMetadata[] }>,
     fetch(
-      `${THIRDWEB_API_HOST}/v1/chains/services`,
+      `${API_SERVER_URL}/v1/chains/services`,
       // revalidate every 60 minutes
       { next: { revalidate: 60 * 60 } },
     ).then((res) => res.json()) as Promise<{
@@ -77,12 +75,12 @@ export async function getChain(
 ): Promise<ChainMetadataWithServices> {
   const [chain, chainServices] = await Promise.all([
     fetch(
-      `${THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}`,
+      `${API_SERVER_URL}/v1/chains/${chainIdOrSlug}`,
       // revalidate every 15 minutes
       { next: { revalidate: 15 * 60 } },
     ).then((res) => res.json()) as Promise<{ data: ChainMetadata }>,
     fetch(
-      `${THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}/services`,
+      `${API_SERVER_URL}/v1/chains/${chainIdOrSlug}/services`,
       // revalidate every 15 minutes
       { next: { revalidate: 15 * 60 } },
     ).then((res) => res.json()) as Promise<{ data: ChainServices }>,

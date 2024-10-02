@@ -1,4 +1,5 @@
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { API_SERVER_URL } from "@/constants/env";
 import type { NextRequest } from "next/server";
 import { getAddress } from "thirdweb";
 
@@ -21,15 +22,13 @@ const handler = async (req: NextRequest) => {
   searchParams.delete("paths");
 
   // create a new URL object for the API server
-  const API_SERVER_URL = new URL(
-    process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com",
-  );
-  API_SERVER_URL.pathname = pathname;
+  const url = new URL(API_SERVER_URL);
+  url.pathname = pathname;
   searchParams.forEach((value, key) => {
-    API_SERVER_URL.searchParams.append(key, value);
+    url.searchParams.append(key, value);
   });
 
-  return fetch(API_SERVER_URL, {
+  return fetch(url, {
     method: req.method,
     headers: {
       "content-type": "application/json",

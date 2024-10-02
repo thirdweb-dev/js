@@ -1,14 +1,12 @@
+import { API_SERVER_URL } from "@/constants/env";
 import type { Ecosystem } from "../types";
 
 export async function fetchEcosystemList(authToken: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com"}/v1/ecosystem-wallet/list`,
-    {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
+  const res = await fetch(`${API_SERVER_URL}/v1/ecosystem-wallet/list`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
     },
-  );
+  });
 
   if (!res.ok) {
     const data = await res.json();

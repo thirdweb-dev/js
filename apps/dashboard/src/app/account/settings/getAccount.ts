@@ -1,11 +1,10 @@
+import { API_SERVER_URL } from "@/constants/env";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { getAuthToken } from "../../api/lib/getAuthToken";
 
 export async function getAccount() {
   const authToken = getAuthToken();
-  const apiServerURL = new URL(
-    process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com",
-  );
+  const apiServerURL = new URL(API_SERVER_URL);
 
   apiServerURL.pathname = "/v1/account/me";
 

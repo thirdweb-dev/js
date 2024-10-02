@@ -2,6 +2,7 @@
 import "server-only";
 
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { API_SERVER_URL } from "@/constants/env";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -11,8 +12,6 @@ type State = {
 };
 
 const UNTHREAD_API_KEY = process.env.UNTHREAD_API_KEY || "";
-const THIRDWEB_API_HOST =
-  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
 const planToCustomerId = {
   free: process.env.UNTHREAD_FREE_TIER_ID as string,
@@ -77,7 +76,7 @@ export async function createTicketAction(
     // user is not logged in, make them log in
     redirect(`/login?next=${encodeURIComponent("/support")}`);
   }
-  const accountRes = await fetch(`${THIRDWEB_API_HOST}/v1/account/me`, {
+  const accountRes = await fetch(`${API_SERVER_URL}/v1/account/me`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,

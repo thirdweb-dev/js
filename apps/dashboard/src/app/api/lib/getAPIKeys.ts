@@ -1,3 +1,4 @@
+import { API_SERVER_URL } from "@/constants/env";
 import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { getAuthToken } from "./getAuthToken";
 
@@ -36,17 +37,14 @@ export async function getAPIKey(apiKeyId: string) {
 
 export async function getApiKeys() {
   const authToken = getAuthToken();
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com"}/v1/keys`,
-    {
-      method: "GET",
+  const res = await fetch(`${API_SERVER_URL}/v1/keys`, {
+    method: "GET",
 
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
     },
-  );
+  });
   const json = await res.json();
 
   if (json.error) {

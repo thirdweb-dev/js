@@ -1,9 +1,7 @@
 import "server-only";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { API_SERVER_URL } from "@/constants/env";
 import { cookies } from "next/headers";
-
-const THIRDWEB_API_HOST =
-  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
 const TeamAccountRole = {
   OWNER: "OWNER",
@@ -39,7 +37,7 @@ export async function getMembers(teamSlug: string) {
   }
 
   const teamsRes = await fetch(
-    `${THIRDWEB_API_HOST}/v1/teams/${teamSlug}/members`,
+    `${API_SERVER_URL}/v1/teams/${teamSlug}/members`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
