@@ -26,7 +26,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
         className={cn("min-h-screen py-6 md:pt-10 md:pb-20", mainClassName)}
       >
         <Container maxW="container.page">
-          <BillingAlerts />
+          <BillingAlerts className="py-6" />
         </Container>
 
         {layout === "custom-contract" ? (

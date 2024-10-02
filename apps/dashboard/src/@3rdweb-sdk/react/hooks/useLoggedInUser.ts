@@ -1,3 +1,5 @@
+"use client";
+
 import { isLoginRequired } from "@/constants/auth";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useQuery } from "@tanstack/react-query";

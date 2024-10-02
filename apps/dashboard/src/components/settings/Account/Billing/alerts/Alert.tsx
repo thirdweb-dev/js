@@ -3,6 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { cn } from "@/lib/utils";
 import {
   type Account,
   AccountStatus,
@@ -36,7 +37,9 @@ type AlertConditionType = {
     | "usage";
 };
 
-export const BillingAlerts = () => {
+export const BillingAlerts = (props: {
+  className?: string;
+}) => {
   const pathname = usePathname();
   const { isLoggedIn } = useLoggedInUser();
   const usageQuery = useAccountUsage();
@@ -64,6 +67,7 @@ export const BillingAlerts = () => {
     <BillingAlertsUI
       usageData={usageQuery.data}
       dashboardAccount={meQuery.data}
+      className={props.className}
     />
   );
 };
@@ -71,6 +75,7 @@ export const BillingAlerts = () => {
 export function BillingAlertsUI(props: {
   usageData: UsageBillableByService;
   dashboardAccount: Account;
+  className?: string;
 }) {
   const { usageData, dashboardAccount } = props;
   const trackEvent = useTrack();
@@ -295,7 +300,9 @@ export function BillingAlertsUI(props: {
     return null;
   }
 
-  return <div className="flex flex-col gap-4 py-6">{alerts}</div>;
+  return (
+    <div className={cn("flex flex-col gap-4", props.className)}>{alerts}</div>
+  );
 }
 
 type AddPaymentNotificationProps = {
