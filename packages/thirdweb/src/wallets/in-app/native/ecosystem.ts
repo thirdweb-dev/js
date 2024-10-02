@@ -76,6 +76,7 @@ export function ecosystemWallet(
         ...createOptions?.auth,
         options: [], // controlled by ecosystem
       },
+      partnerId: createOptions?.partnerId,
     },
     connectorFactory: async (client: ThirdwebClient) => {
       const { InAppNativeConnector } = await import("./native-connector.js");
