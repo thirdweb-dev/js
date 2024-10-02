@@ -18,6 +18,7 @@ import { FiExternalLink } from "react-icons/fi";
 import { Button, Heading, Text, TrackedLink } from "tw-components";
 import { PLANS } from "utils/pricing";
 import { LazyOnboardingBilling } from "../../../onboarding/LazyOnboardingBilling";
+import { CouponCard } from "./CouponCard";
 import { BillingDowngradeDialog } from "./DowngradeDialog";
 import { BillingHeader } from "./Header";
 import { BillingPlanCard } from "./PlanCard";
@@ -25,9 +26,10 @@ import { BillingPricing } from "./Pricing";
 
 interface BillingProps {
   account: Account;
+  teamId: string | undefined;
 }
 
-export const Billing: React.FC<BillingProps> = ({ account }) => {
+export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
   const updatePlanMutation = useUpdateAccountPlan(
     account?.plan === AccountPlan.Free,
   );
@@ -301,6 +303,8 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
           loading={updatePlanMutation.isPending}
         />
       )}
+
+      <CouponCard teamId={teamId} />
     </Flex>
   );
 };

@@ -5,7 +5,7 @@ import type { ThirdwebNextPage } from "utils/types";
 import { SettingsBillingPage } from "../../../app/team/[team_slug]/(team)/~/settings/billing/BillingSettingsPage";
 
 const Page: ThirdwebNextPage = () => {
-  return <SettingsBillingPage />;
+  return <SettingsBillingPage teamId={undefined} />;
 };
 
 Page.pageId = PageId.SettingsUsage;

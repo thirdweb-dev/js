@@ -4,7 +4,9 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { AccountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Billing } from "components/settings/Account/Billing";
 
-export const SettingsBillingPage = () => {
+export const SettingsBillingPage = (props: {
+  teamId: string | undefined;
+}) => {
   const meQuery = useAccount({
     refetchInterval: (query) =>
       [
@@ -25,5 +27,5 @@ export const SettingsBillingPage = () => {
     );
   }
 
-  return <Billing account={account} />;
+  return <Billing account={account} teamId={props.teamId} />;
 };
