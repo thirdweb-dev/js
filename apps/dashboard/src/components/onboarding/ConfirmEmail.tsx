@@ -1,9 +1,15 @@
 import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { cn } from "@/lib/utils";
+import {
   useConfirmEmail,
   useResendEmailConfirmation,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Flex, Input } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type EmailConfirmationValidationSchema,
@@ -12,9 +18,9 @@ import {
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { type ClipboardEvent, useState } from "react";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import OtpInput from "react-otp-input";
 import { Button, Text } from "tw-components";
 import { shortenString } from "utils/usedapp-external";
 import { TitleAndDescription } from "./Title";
@@ -148,14 +154,6 @@ const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
     });
   };
 
-  const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
-    const data = e.clipboardData.getData("text");
-    if (data?.match(/^[A-Z]{6}$/)) {
-      form.setValue("confirmationToken", data);
-      handleSubmit();
-    }
-  };
-
   return (
     <>
       <TitleAndDescription
@@ -197,36 +195,29 @@ const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
       {!completed && (
         <form onSubmit={handleSubmit}>
           <Flex gap={8} flexDir="column" w="full">
-            <OtpInput
-              shouldAutoFocus
+            <InputOTP
+              maxLength={6}
+              pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
               value={token}
               onChange={handleChange}
-              onPaste={handlePaste}
-              skipDefaultStyles
-              numInputs={6}
-              containerStyle={{
-                display: "flex",
-                flexDirection: "row",
-                gap: "12px",
-              }}
-              renderInput={(props) => (
-                <Input
-                  {...props}
-                  w={20}
-                  h={16}
-                  rounded="md"
-                  textAlign="center"
-                  fontSize="larger"
-                  isDisabled={saving}
-                  borderColor={
-                    form.getFieldState("confirmationToken", form.formState)
-                      .error
-                      ? "red.500"
-                      : "borderColor"
-                  }
-                />
-              )}
-            />
+              disabled={saving}
+            >
+              <InputOTPGroup className="w-full">
+                {new Array(6).fill(0).map((_, idx) => (
+                  <InputOTPSlot
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    key={idx}
+                    index={idx}
+                    className={cn("h-12 grow text-lg", {
+                      "border-red-500": form.getFieldState(
+                        "confirmationToken",
+                        form.formState,
+                      ).error,
+                    })}
+                  />
+                ))}
+              </InputOTPGroup>
+            </InputOTP>
 
             <Flex flexDir="column" gap={3}>
               <Button
