@@ -30,7 +30,7 @@ describe("sendEip712Transaction", () => {
     expect(res.transactionHash.length).toBe(66);
   });
 
-  it.skip("should deploy a published autofactory contract on zksync", async () => {
+  it("should deploy a published autofactory contract on zksync", async () => {
     const address = await deployPublishedContract({
       client: TEST_CLIENT,
       chain: zkSyncSepolia, // TODO make zksync fork chain work
