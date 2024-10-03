@@ -106,6 +106,7 @@ export {
   getProfiles,
   linkProfile,
 } from "../wallets/in-app/web/lib/auth/index.js";
+export type { Profile } from "../wallets/in-app/core/authentication/types.js";
 
 export {
   getUser,

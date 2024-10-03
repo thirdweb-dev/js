@@ -96,8 +96,8 @@ export const sidebar: SideBar = {
           links: [
             "inAppWallet",
             "preAuthenticate",
-            "getUserEmail",
-            "getUserPhoneNumber",
+            "linkProfile",
+            "getProfiles",
             "hasStoredPasskey",
           ].map((name) => ({
             name,
@@ -110,8 +110,8 @@ export const sidebar: SideBar = {
           links: [
             "ecosystemWallet",
             "preAuthenticate",
-            "getUserEmail",
-            "getUserPhoneNumber",
+            "linkProfile",
+            "getProfiles",
             "hasStoredPasskey",
           ].map((name) => ({
             name,

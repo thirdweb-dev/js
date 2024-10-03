@@ -1,5 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { BundledLanguage } from "shiki";
+import { LoadingDots } from "../ui/LoadingDots";
 import { RenderCode } from "./RenderCode";
 import { getCodeHtml } from "./getCodeHtml";
 
@@ -13,6 +14,14 @@ export type CodeProps = {
   className?: string;
   scrollableClassName?: string;
 };
+
+export function CodeLoading() {
+  return (
+    <div className="flex h-[300px] items-center justify-center xl:h-[calc(100vh-100px)]">
+      <LoadingDots />
+    </div>
+  );
+}
 
 export const CodeClient: React.FC<CodeProps> = ({
   code,

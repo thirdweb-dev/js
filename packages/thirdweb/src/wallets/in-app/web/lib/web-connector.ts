@@ -444,6 +444,7 @@ export class InAppWebConnector implements InAppConnector {
       client: args.client,
       tokenToLink: storedToken.cookieString,
       storage: this.localStorage,
+      ecosystem: args.ecosystem || this.ecosystem,
     });
   }
 
