@@ -39,13 +39,13 @@ export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
 
   return (
     <Flex direction="column" gap={6}>
-      <Flex direction="row" justify="space-between" align="center">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <Heading size="title.sm">Proposals</Heading>
-        <Flex gap={4}>
+        <div className="flex flex-col flex-wrap gap-3 md:flex-row">
           <DelegateButton contract={contract} />
           <ProposalButton contract={contract} />
-        </Flex>
-      </Flex>
+        </div>
+      </div>
       <div className="flex flex-col gap-4">
         {proposals.map((proposal) => (
           <Proposal
