@@ -34,7 +34,7 @@ export const EngineIpAllowlistConfig: React.FC<
   const { data: engineHealthInfo } = useEngineSystemHealth(instanceUrl);
 
   const form = useForm<IpForm>({
-    defaultValues: { raw: existingIpAllowlist?.join("\n") ?? "" },
+    values: { raw: existingIpAllowlist?.join("\n") ?? "" },
   });
 
   const onSubmit = async (data: IpForm) => {

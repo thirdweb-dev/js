@@ -29,7 +29,7 @@ export const EngineCorsConfig: React.FC<EngineCorsConfigProps> = ({
   );
 
   const form = useForm<CorsForm>({
-    defaultValues: { raw: existingUrls?.join("\n") ?? "" },
+    values: { raw: existingUrls?.join("\n") ?? "" },
   });
 
   const onSubmit = async (data: CorsForm) => {
