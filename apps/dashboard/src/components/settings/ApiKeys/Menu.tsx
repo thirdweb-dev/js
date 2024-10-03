@@ -8,22 +8,21 @@ import {
 import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { shortenString } from "utils/usedapp-external";
 
-interface ApiKeysMenuProps {
-  apiKeys: ApiKey[];
-  selectedKey: ApiKey | undefined;
-  onSelect: (apiKey: ApiKey) => void;
-}
+type ApiKeysMenuProps<T extends Pick<ApiKey, "name" | "key">> = {
+  apiKeys: T[];
+  selectedKey: T | undefined;
+  onSelect: (apiKey: T) => void;
+};
 
-export const ApiKeysMenu: React.FC<ApiKeysMenuProps> = ({
-  apiKeys,
-  selectedKey,
-  onSelect,
-}) => {
+export function ApiKeysMenu<T extends Pick<ApiKey, "name" | "key">>(
+  props: ApiKeysMenuProps<T>,
+) {
+  const { apiKeys, selectedKey, onSelect } = props;
   return (
     <Select
-      value={selectedKey?.id}
-      onValueChange={(keyId) => {
-        const selectedKey = apiKeys.find((apiKey) => apiKey.id === keyId);
+      value={selectedKey?.key}
+      onValueChange={(key) => {
+        const selectedKey = apiKeys.find((apiKey) => apiKey.key === key);
         if (selectedKey) {
           onSelect(selectedKey);
         }
@@ -34,11 +33,11 @@ export const ApiKeysMenu: React.FC<ApiKeysMenuProps> = ({
       </SelectTrigger>
       <SelectContent>
         {apiKeys.map((apiKey) => (
-          <SelectItem key={apiKey.id} value={apiKey.id}>
+          <SelectItem key={apiKey.key} value={apiKey.key}>
             {apiKey.name} ({shortenString(apiKey.key)})
           </SelectItem>
         ))}
       </SelectContent>
     </Select>
   );
-};
+}

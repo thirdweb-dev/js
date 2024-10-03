@@ -100,8 +100,6 @@ export enum PageId {
   DashboardConnectAccountAbstraction = "dashboard-wallets-smart-wallet",
   // thirdweb.com/dashboard/connect/embedded
   DashboardConnectEmbeddedWallets = "dashboard-wallets-embedded",
-  // thirdweb.com/dashboard/connect/analytics
-  DashboardConnectAnalytics = "dashboard-wallets-analytics",
   // thirdweb.com/dashboard/contracts/build
   DashboardContractsBuild = "dashboard-contracts-build",
 
