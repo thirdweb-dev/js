@@ -96,8 +96,6 @@ export enum PageId {
   // thirdweb.com/dashboard/infrastructure/storage
   DashboardSettingsStorage = "dashboard-storage",
 
-  // thirdweb.com/dashboard/connect/smart-wallet
-  DashboardConnectAccountAbstraction = "dashboard-wallets-smart-wallet",
   // thirdweb.com/dashboard/contracts/build
   DashboardContractsBuild = "dashboard-contracts-build",
 
