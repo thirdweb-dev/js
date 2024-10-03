@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.60.1
+
+### Patch Changes
+
+- [#4884](https://github.com/thirdweb-dev/js/pull/4884) [`e548675`](https://github.com/thirdweb-dev/js/commit/e54867550eac5519272d9361a0db0c49f5bea4f4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Switch to v2 bundler for all user operations for better performance
+
+- [#4886](https://github.com/thirdweb-dev/js/pull/4886) [`985c4b0`](https://github.com/thirdweb-dev/js/commit/985c4b08048c3676dc9be0c2069fefc73a742a3a) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - fix missing partner id when creating ecosystem wallet
+
+- [#4883](https://github.com/thirdweb-dev/js/pull/4883) [`454f063`](https://github.com/thirdweb-dev/js/commit/454f063f98ce177951501612e916665c63825baa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Auto resolve zksync bytecode
+
+- [#4874](https://github.com/thirdweb-dev/js/pull/4874) [`783d844`](https://github.com/thirdweb-dev/js/commit/783d84467d81db856a1f0b3509036bbc612ba7e5) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
 ## 5.60.0
 
 ### Minor Changes
