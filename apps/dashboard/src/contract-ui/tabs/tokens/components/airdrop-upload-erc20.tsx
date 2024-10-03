@@ -20,7 +20,7 @@ import {
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  CircleAlert,
+  CircleAlertIcon,
   UploadIcon,
 } from "lucide-react";
 import Papa from "papaparse";
@@ -302,7 +302,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
               }
             >
               <div className="flex flex-row items-center gap-2">
-                <CircleAlert size={16} className="text-red-500" />
+                <CircleAlertIcon className="size-4 text-red-500" />
                 <div className="cursor-default font-bold text-red-500">
                   {address}
                 </div>

@@ -7,7 +7,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import { FiX } from "react-icons/fi";
+import { XIcon } from "lucide-react";
 import { Text, TrackedLink } from "tw-components";
 
 export const SmartWalletsBillingAlert = ({
@@ -66,7 +66,7 @@ export const SmartWalletsBillingAlert = ({
         <IconButton
           size="xs"
           aria-label="Close notice"
-          icon={<FiX />}
+          icon={<XIcon className="size-4" />}
           colorScheme="blackAlpha"
           color="white"
           variant="ghost"

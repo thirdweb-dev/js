@@ -1,14 +1,14 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import { Box, Container, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
+import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { CommunityCard } from "components/community/CommunityCard";
 import { HomepageFooter } from "components/footer/Footer";
 import { Aurora } from "components/homepage/Aurora";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { useTrack } from "hooks/analytics/useTrack";
+import { ZapIcon } from "lucide-react";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
-import { BsLightningCharge } from "react-icons/bs";
 import { Heading, LinkButton, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
@@ -162,7 +162,7 @@ const Community: ThirdwebNextPage = () => {
                   }}
                   color="#000"
                   fontSize="larger"
-                  leftIcon={<Icon as={BsLightningCharge} />}
+                  leftIcon={<ZapIcon className="size-4" />}
                   isExternal
                   noIcon
                 >
@@ -346,7 +346,7 @@ const Community: ThirdwebNextPage = () => {
               }}
               color="#000"
               fontSize="larger"
-              leftIcon={<Icon as={BsLightningCharge} />}
+              leftIcon={<ZapIcon className="size-4" />}
               isExternal
               noIcon
             >

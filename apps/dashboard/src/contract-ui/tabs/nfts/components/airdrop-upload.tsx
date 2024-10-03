@@ -5,7 +5,6 @@ import {
   Box,
   Container,
   Flex,
-  Icon,
   IconButton,
   Link,
   Portal,
@@ -20,17 +19,17 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { Logo } from "components/logo";
-import { UploadIcon } from "lucide-react";
+import {
+  ChevronFirstIcon,
+  ChevronLastIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CircleAlertIcon,
+  UploadIcon,
+} from "lucide-react";
 import Papa from "papaparse";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type DropzoneOptions, useDropzone } from "react-dropzone";
-import { IoAlertCircleOutline } from "react-icons/io5";
-import {
-  MdFirstPage,
-  MdLastPage,
-  MdNavigateBefore,
-  MdNavigateNext,
-} from "react-icons/md";
 import { type Column, usePagination, useTable } from "react-table";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import { isAddress } from "thirdweb/utils";
@@ -340,7 +339,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
                 }
               >
                 <div className="flex flex-row items-center gap-2">
-                  <Icon as={IoAlertCircleOutline} color="red.500" boxSize={5} />
+                  <CircleAlertIcon className="size-5 text-red-500" />
                   <Text fontWeight="bold" color="red.500" cursor="default">
                     {address}
                   </Text>
@@ -444,13 +443,13 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="first page"
-              icon={<Icon as={MdFirstPage} />}
+              icon={<ChevronFirstIcon className="size-4" />}
               onClick={() => gotoPage(0)}
             />
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="previous page"
-              icon={<Icon as={MdNavigateBefore} />}
+              icon={<ChevronLeftIcon className="size-4" />}
               onClick={() => previousPage()}
             />
             <Text whiteSpace="nowrap">
@@ -460,13 +459,13 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
             <IconButton
               isDisabled={!canNextPage}
               aria-label="next page"
-              icon={<Icon as={MdNavigateNext} />}
+              icon={<ChevronRightIcon className="size-4" />}
               onClick={() => nextPage()}
             />
             <IconButton
               isDisabled={!canNextPage}
               aria-label="last page"
-              icon={<Icon as={MdLastPage} />}
+              icon={<ChevronLastIcon className="size-4" />}
               onClick={() => gotoPage(pageCount - 1)}
             />
 

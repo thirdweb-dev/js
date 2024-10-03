@@ -4,7 +4,7 @@ import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardS
 import { useQueryClient } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
-import { FiUpload } from "react-icons/fi";
+import { UploadIcon } from "lucide-react";
 import { toast } from "sonner";
 
 export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
@@ -50,7 +50,7 @@ export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
         {storageUpload.isPending ? (
           <Spinner className="size-3" />
         ) : (
-          <FiUpload className="size-3" />
+          <UploadIcon className="size-3" />
         )}
       </Button>
     </FileInput>
