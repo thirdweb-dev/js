@@ -5,7 +5,6 @@ import {
   Box,
   Container,
   Flex,
-  Icon,
   IconButton,
   Link,
   ListItem,
@@ -22,18 +21,18 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { Logo } from "components/logo";
+import {
+  ChevronFirstIcon,
+  ChevronLastIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CircleAlertIcon,
+  DownloadIcon,
+  UploadIcon,
+} from "lucide-react";
 import Papa from "papaparse";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { type DropzoneOptions, useDropzone } from "react-dropzone";
-import { BsFillCloudUploadFill } from "react-icons/bs";
-import { FiDownload } from "react-icons/fi";
-import { IoAlertCircleOutline } from "react-icons/io5";
-import {
-  MdFirstPage,
-  MdLastPage,
-  MdNavigateBefore,
-  MdNavigateNext,
-} from "react-icons/md";
 import { type Column, usePagination, useTable } from "react-table";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
@@ -234,12 +233,11 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                   >
                     <input {...getInputProps()} />
                     <div className="!m-auto flex flex-col">
-                      <Icon
-                        as={BsFillCloudUploadFill}
-                        boxSize={8}
-                        mb={2}
-                        color={noCsv ? "red.500" : "gray.600"}
-                        mx="auto"
+                      <UploadIcon
+                        className={cn(
+                          "mx-auto mb-2 size-8",
+                          noCsv ? "text-red-500" : "text-gray-600",
+                        )}
                       />
                       {isDragActive ? (
                         <Heading as={Text} size="label.md">
@@ -259,7 +257,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-col gap-2">
                   <Heading size="label.md">Requirements</Heading>
                   <UnorderedList spacing={1}>
                     {dropType === "specific" ? (
@@ -275,7 +273,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                             color="blue.500"
                             href="/snapshot-with-maxclaimable.csv"
                           >
-                            <Icon boxSize="1em" as={FiDownload} /> Example
+                            <DownloadIcon className="inline size-3" /> Example
                             snapshot
                           </Link>
                         </Text>
@@ -290,7 +288,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                             color="blue.500"
                             href="/snapshot-with-overrides.csv"
                           >
-                            <Icon boxSize="1em" as={FiDownload} /> Example
+                            <DownloadIcon className="inline size-3" /> Example
                             snapshot
                           </Link>
                         </Text>
@@ -302,7 +300,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                           of addresses.
                           <br />
                           <Link download color="blue.500" href="/snapshot.csv">
-                            <Icon boxSize="1em" as={FiDownload} /> Example
+                            <DownloadIcon className="inline size-3" /> Example
                             snapshot
                           </Link>
                         </Text>
@@ -318,7 +316,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                             color="blue.500"
                             href="/snapshot-with-maxclaimable.csv"
                           >
-                            <Icon boxSize="1em" as={FiDownload} /> Example
+                            <DownloadIcon className="inline size-3" /> Example
                             snapshot
                           </Link>
                         </Text>
@@ -337,7 +335,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                             color="blue.500"
                             href="/snapshot-with-overrides.csv"
                           >
-                            <Icon boxSize="1em" as={FiDownload} /> Example
+                            <DownloadIcon className="inline size-3" /> Example
                             snapshot
                           </Link>
                         </Text>
@@ -438,7 +436,7 @@ const SnapshotTableColumns = [
             }
           >
             <div className="flex flex-row items-center gap-2">
-              <Icon as={IoAlertCircleOutline} color="red.500" boxSize={5} />
+              <CircleAlertIcon className="size-4 text-red-500" />
               <Text fontWeight="bold" color="red.500" cursor="default">
                 {address}
               </Text>
@@ -559,33 +557,33 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
       </TableContainer>
       <Portal containerRef={portalRef}>
         <div className="flex w-full items-center justify-center">
-          <div className="flex flex-row">
+          <div className="flex flex-row gap-1">
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="first page"
-              icon={<Icon as={MdFirstPage} />}
+              icon={<ChevronFirstIcon className="size-4" />}
               onClick={() => gotoPage(0)}
             />
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="previous page"
-              icon={<Icon as={MdNavigateBefore} />}
+              icon={<ChevronLeftIcon className="size-4" />}
               onClick={() => previousPage()}
             />
-            <Text whiteSpace="nowrap">
+            <p className="my-auto whitespace-nowrap">
               Page <strong>{pageIndex + 1}</strong> of{" "}
               <strong>{pageOptions.length}</strong>
-            </Text>
+            </p>
             <IconButton
               isDisabled={!canNextPage}
               aria-label="next page"
-              icon={<Icon as={MdNavigateNext} />}
+              icon={<ChevronRightIcon className="size-4" />}
               onClick={() => nextPage()}
             />
             <IconButton
               isDisabled={!canNextPage}
               aria-label="last page"
-              icon={<Icon as={MdLastPage} />}
+              icon={<ChevronLastIcon className="size-4" />}
               onClick={() => gotoPage(pageCount - 1)}
             />
 

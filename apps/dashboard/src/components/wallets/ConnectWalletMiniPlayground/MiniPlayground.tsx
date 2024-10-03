@@ -8,7 +8,6 @@ import {
   Box,
   Flex,
   Grid,
-  Icon,
   Image,
   Spacer,
   Tooltip,
@@ -16,9 +15,9 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
+import { ChevronRightIcon } from "lucide-react";
 import { Londrina_Solid, Source_Serif_4 } from "next/font/google";
 import { useEffect, useMemo, useState } from "react";
-import { FiChevronRight } from "react-icons/fi";
 import {
   ConnectEmbed,
   ThirdwebProvider,
@@ -291,7 +290,7 @@ export const MiniPlayground: React.FC<{
                 >
                   See all wallets
                 </TrackedLink>
-                <Icon as={FiChevronRight} w={4} h={4} color="blue.500" />
+                <ChevronRightIcon className="size-4 text-blue-500" />
               </Flex>
             </div>
 
