@@ -1,3 +1,5 @@
+import { Callout } from "@doc";
+
 # FAQ
 
 ## About Engine
@@ -44,6 +46,66 @@ Here are three ways to determine when the job is mined:
   	console.log("Received data:", JSON.parse(res.result));
   };
   ```
+
+### How do I send native currency with my transaction?
+
+To send native tokens (e.g. ETH on Ethereum), set `txOverrides.value`.
+This may be required when calling a `payable` contract method.
+
+Here's an example of sending 0.2 ETH:
+
+```json
+{
+  // ...other arguments in the write transaction
+
+  "txOverrides": {
+    "value": "200000000000000000"
+  }
+}
+```
+
+### How do I override gas settings?
+
+To override the gas settings, set relevant `txOverrides` gas fields.
+Each field is optional and will be estimated by Engine if omitted.
+
+Here's an example of setting a gas limit of 210,000 gas units, 1 gwei max fee, and 1 gwei max priority fee:
+
+```json
+{
+  // ...other arguments in the write transaction
+
+  "txOverrides": {
+    "gas": "210000",
+    "maxFeePerGas": "1000000000",
+    "maxPriorityFeePerGas": "1000000000"
+  }
+}
+```
+
+<Callout variant='warning' title="It is highly recommended to set a timeout when setting a maxFeePerGas.">
+
+Otherwise if gas prices don't fall, transactions may be in your queue indefinitely.
+
+</Callout>
+
+### How do I set a timeout on transactions?
+
+To specify a transaction timeout, set `txOverrides.timeoutSeconds`.
+Engine flags transactions as `errored` if they are not sent before the timeout. An `errored` webhook will be sent.
+
+Note: A transaction sent before the timeout may be mined after the timeout.
+
+Here's an example of a 2-hour timeout:
+```json
+{
+  // ...other arguments in the write transaction
+
+  "txOverrides": {
+    "timeoutSeconds": 7200
+  }
+}
+```
 
 ### How do I customize my RPC?
 
