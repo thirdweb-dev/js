@@ -1,12 +1,7 @@
-import { maxUint256 } from "viem";
-import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
-import type { SetClaimConditionsParams as GeneratedParams } from "../../../extensions/erc1155/__generated__/IDrop1155/write/setClaimConditions.js";
 import { upload } from "../../../storage/upload.js";
-import { dateToSeconds } from "../../date.js";
-import { type Hex, toHex } from "../../encoding/hex.js";
-import { convertErc20Amount } from "../convert-erc20-amount.js";
-import { processOverrideList } from "./process-override-list.js";
+import type { Hex } from "../../encoding/hex.js";
+import { getSetClaimConditionPhases } from "./get-set-claim-condition-phases.js";
 import type { ClaimConditionsInput } from "./types.js";
 
 export async function getMulticallSetClaimConditionTransactions(options: {
@@ -16,48 +11,7 @@ export async function getMulticallSetClaimConditionTransactions(options: {
   tokenId?: bigint;
   resetClaimEligibility?: boolean;
 }): Promise<Hex[]> {
-  const merkleInfos: Record<string, string> = {};
-  const phases = await Promise.all(
-    options.phases.map(async (phase) => {
-      // allowlist
-      let merkleRoot: string = phase.merkleRootHash || toHex("", { size: 32 });
-      if (phase.overrideList) {
-        const { shardedMerkleInfo, uri } = await processOverrideList({
-          overrides: phase.overrideList,
-          client: options.contract.client,
-          chain: options.contract.chain,
-          tokenDecimals: options.tokenDecimals,
-        });
-        merkleInfos[shardedMerkleInfo.merkleRoot] = uri;
-        merkleRoot = shardedMerkleInfo.merkleRoot;
-      }
-      // metadata
-      let metadata = "";
-      if (phase.metadata && typeof phase.metadata === "string") {
-        metadata = phase.metadata;
-      } else if (phase.metadata && typeof phase.metadata === "object") {
-        metadata = await upload({
-          client: options.contract.client,
-          files: [phase.metadata],
-        });
-      }
-      return {
-        startTimestamp: dateToSeconds(phase.startTime ?? new Date(0)),
-        currency: phase.currencyAddress || NATIVE_TOKEN_ADDRESS,
-        pricePerToken: await convertErc20Amount({
-          chain: options.contract.chain,
-          client: options.contract.client,
-          erc20Address: phase.currencyAddress || NATIVE_TOKEN_ADDRESS,
-          amount: phase.price?.toString() ?? "0",
-        }),
-        maxClaimableSupply: phase.maxClaimableSupply ?? maxUint256,
-        quantityLimitPerWallet: phase.maxClaimablePerWallet ?? maxUint256,
-        merkleRoot,
-        metadata,
-        supplyClaimed: 0n,
-      } as GeneratedParams["phases"][number];
-    }),
-  );
+  const { merkleInfos, phases } = await getSetClaimConditionPhases(options);
   const encodedTransactions: Hex[] = [];
   // if we have new merkle roots, we need to upload them to the contract metadata
   if (Object.keys(merkleInfos).length > 0) {
@@ -88,9 +42,6 @@ export async function getMulticallSetClaimConditionTransactions(options: {
     });
     encodedTransactions.push(encodedSetContractURI);
   }
-  const sortedPhases = phases.sort((a, b) =>
-    Number(a.startTimestamp - b.startTimestamp),
-  );
   let encodedSetClaimConditions: Hex;
   if (options.tokenId !== undefined) {
     // 1155
@@ -99,7 +50,7 @@ export async function getMulticallSetClaimConditionTransactions(options: {
     );
     encodedSetClaimConditions = encodeSetClaimConditions({
       tokenId: options.tokenId,
-      phases: sortedPhases,
+      phases,
       resetClaimEligibility: options.resetClaimEligibility || false,
     });
   } else {
@@ -108,7 +59,7 @@ export async function getMulticallSetClaimConditionTransactions(options: {
       "../../../extensions/erc721/__generated__/IDrop/write/setClaimConditions.js"
     );
     encodedSetClaimConditions = encodeSetClaimConditions({
-      phases: sortedPhases,
+      phases,
       resetClaimEligibility: options.resetClaimEligibility || false,
     });
   }
