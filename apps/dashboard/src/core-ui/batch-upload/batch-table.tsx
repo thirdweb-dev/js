@@ -3,7 +3,6 @@ import {
   Box,
   type BoxProps,
   Flex,
-  Icon,
   IconButton,
   Image,
   type ImageProps,
@@ -19,13 +18,13 @@ import {
 } from "@chakra-ui/react";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { replaceIpfsUrl } from "lib/sdk";
-import { useMemo } from "react";
 import {
-  MdFirstPage,
-  MdLastPage,
-  MdNavigateBefore,
-  MdNavigateNext,
-} from "react-icons/md";
+  ChevronFirstIcon,
+  ChevronLastIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "lucide-react";
+import { useMemo } from "react";
 import { type Column, usePagination, useTable } from "react-table";
 import type { NFTInput } from "thirdweb/utils";
 import { CodeBlock, Text } from "tw-components";
@@ -219,13 +218,13 @@ export const BatchTable: React.FC<BatchTableProps> = ({
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="first page"
-              icon={<Icon as={MdFirstPage} />}
+              icon={<ChevronFirstIcon className="size-4" />}
               onClick={() => gotoPage(0)}
             />
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="previous page"
-              icon={<Icon as={MdNavigateBefore} />}
+              icon={<ChevronLeftIcon className="size-4" />}
               onClick={() => previousPage()}
             />
             <Text whiteSpace="nowrap">
@@ -235,13 +234,13 @@ export const BatchTable: React.FC<BatchTableProps> = ({
             <IconButton
               isDisabled={!canNextPage}
               aria-label="next page"
-              icon={<Icon as={MdNavigateNext} />}
+              icon={<ChevronRightIcon className="size-4" />}
               onClick={() => nextPage()}
             />
             <IconButton
               isDisabled={!canNextPage}
               aria-label="last page"
-              icon={<Icon as={MdLastPage} />}
+              icon={<ChevronLastIcon className="size-4" />}
               onClick={() => gotoPage(pageCount - 1)}
             />
 

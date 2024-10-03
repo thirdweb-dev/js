@@ -4,7 +4,6 @@ import {
   Flex,
   type FlexProps,
   FormControl,
-  Icon,
   Image,
   Input,
   List,
@@ -16,10 +15,10 @@ import { PartnerLogo } from "components/partners/partner-logo";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
+import { ZapIcon } from "lucide-react";
 import { PageId } from "page-id";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { BsFillLightningChargeFill } from "react-icons/bs";
 import { Button, Card, Heading, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 import type { ContactFormPayload } from "../app/api/contact-us/types";
@@ -336,7 +335,7 @@ const ContactUs: ThirdwebNextPage = () => {
                   _hover={{ bg: "black", opacity: 0.8 }}
                   px={8}
                   py={6}
-                  leftIcon={<Icon as={BsFillLightningChargeFill} />}
+                  leftIcon={<ZapIcon className="size-5" />}
                   isDisabled={formStatus === "submitting"}
                 >
                   <Text color="white" size="label.lg">

@@ -2,7 +2,6 @@ import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   ButtonGroup,
   Flex,
-  Icon,
   IconButton,
   Select,
   Skeleton,
@@ -20,19 +19,19 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { ListingDrawer } from "contract-ui/tabs/shared-components/listing-drawer";
 import {
+  ChevronFirstIcon,
+  ChevronLastIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  MoveRightIcon,
+} from "lucide-react";
+import {
   type Dispatch,
   type SetStateAction,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import { FiArrowRight } from "react-icons/fi";
-import {
-  MdFirstPage,
-  MdLastPage,
-  MdNavigateBefore,
-  MdNavigateNext,
-} from "react-icons/md";
 import { type Cell, type Column, usePagination, useTable } from "react-table";
 import type { ThirdwebContract } from "thirdweb";
 import type {
@@ -268,7 +267,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
                     </Td>
                   ))}
                   <Td borderBottomWidth="inherit" borderColor="borderColor">
-                    <Icon as={FiArrowRight} />
+                    <MoveRightIcon className="size-3" />
                   </Td>
                 </Tr>
               );
@@ -281,13 +280,13 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
           <IconButton
             isDisabled={!canPreviousPage || totalCountQuery.isPending}
             aria-label="first page"
-            icon={<Icon as={MdFirstPage} />}
+            icon={<ChevronFirstIcon className="size-4" />}
             onClick={() => gotoPage(0)}
           />
           <IconButton
             isDisabled={!canPreviousPage || totalCountQuery.isPending}
             aria-label="previous page"
-            icon={<Icon as={MdNavigateBefore} />}
+            icon={<ChevronLeftIcon className="size-4" />}
             onClick={() => previousPage()}
           />
           <Text whiteSpace="nowrap">
@@ -303,13 +302,13 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
           <IconButton
             isDisabled={!canNextPage || totalCountQuery.isPending}
             aria-label="next page"
-            icon={<Icon as={MdNavigateNext} />}
+            icon={<ChevronRightIcon className="size-4" />}
             onClick={() => nextPage()}
           />
           <IconButton
             isDisabled={!canNextPage || totalCountQuery.isPending}
             aria-label="last page"
-            icon={<Icon as={MdLastPage} />}
+            icon={<ChevronLastIcon className="size-4" />}
             onClick={() => gotoPage(pageCount - 1)}
           />
 

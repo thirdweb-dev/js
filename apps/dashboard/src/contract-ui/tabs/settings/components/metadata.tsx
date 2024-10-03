@@ -4,7 +4,6 @@ import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import {
   Flex,
   FormControl,
-  Icon,
   IconButton,
   Input,
   Textarea,
@@ -17,10 +16,9 @@ import { CommonContractSchema } from "constants/schemas";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { FiTrash } from "react-icons/fi";
 import type { ThirdwebContract } from "thirdweb";
 import {
   getContractMetadata,
@@ -303,7 +301,7 @@ export const SettingsMetadata = ({
                       isDisabled={
                         metadata.isPending || sendTransaction.isPending
                       }
-                      icon={<Icon as={FiTrash} boxSize={5} />}
+                      icon={<Trash2Icon className="size-5" />}
                       aria-label="Remove row"
                       onClick={() => remove(index)}
                     />

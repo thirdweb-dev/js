@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { SkeletonContainer } from "@/components/ui/skeleton";
+import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { FiMoon, FiSun } from "react-icons/fi";
 import { useIsClientMounted } from "../ClientOnly/ClientOnly";
 
 export const ColorModeToggle: React.FC = () => {
@@ -29,9 +29,9 @@ export const ColorModeToggle: React.FC = () => {
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
           >
             {v === "dark" ? (
-              <FiMoon className="size-5" />
+              <MoonIcon className="size-5" />
             ) : (
-              <FiSun className="size-5" />
+              <SunIcon className="size-5" />
             )}
           </Button>
         );

@@ -12,10 +12,9 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import type { Abi, AbiFunction } from "abitype";
 import { useV5DashboardChain } from "lib/v5-adapter";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import {
   getContract,
   prepareContractCall,
@@ -201,7 +200,7 @@ ${Object.keys(populatedTransaction)
                   size="icon"
                   onClick={() => form.setValue("from", activeAccount.address)}
                 >
-                  <MdOutlineAccountBalanceWallet />
+                  <WalletIcon className="size-4" />
                 </Button>
               </ToolTipLabel>
             )}

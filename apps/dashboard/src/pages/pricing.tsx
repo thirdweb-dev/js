@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button";
 import {
-  Box,
   Container,
   Flex,
   GridItem,
-  Icon,
   SimpleGrid,
   Tooltip,
   useBreakpointValue,
@@ -15,14 +13,17 @@ import { LandingFAQ } from "components/landing-pages/faq";
 import { LandingLayout } from "components/landing-pages/layout";
 import { useTrack } from "hooks/analytics/useTrack";
 import { getAbsoluteUrl } from "lib/vercel-utils";
-import { ArrowRightIcon, ChevronRight } from "lucide-react";
+import {
+  ArrowRightIcon,
+  ChevronRight,
+  CircleCheckIcon,
+  CircleDollarSignIcon,
+  InfoIcon,
+  MoveUpRightIcon,
+} from "lucide-react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import { AiOutlineDollarCircle } from "react-icons/ai";
-import { FiExternalLink } from "react-icons/fi";
-import { IoIosInformationCircleOutline } from "react-icons/io";
-import { IoCheckmarkCircle } from "react-icons/io5";
 import {
   Card,
   Heading,
@@ -134,7 +135,7 @@ const Pricing: ThirdwebNextPage = () => {
                                 trackingProps={{
                                   title: item.title,
                                 }}
-                                icon={<Icon as={FiExternalLink} />}
+                                icon={<MoveUpRightIcon className="size-5" />}
                                 variant="ghost"
                                 aria-label="Learn More"
                               >
@@ -164,13 +165,7 @@ const Pricing: ThirdwebNextPage = () => {
                                   bg="transparent"
                                   boxShadow="none"
                                 >
-                                  <Box pt={0.5}>
-                                    <Icon
-                                      as={IoIosInformationCircleOutline}
-                                      boxSize={4}
-                                      color="blue.500"
-                                    />
-                                  </Box>
+                                  <InfoIcon className="size-5 text-blue-500" />
                                 </Tooltip>
                               ))}
                           </Flex>
@@ -259,7 +254,7 @@ const Item = ({
       textAlign={{ base: "right", lg: "center" }}
     >
       {titleStr === "checkmark" ? (
-        <Icon as={IoCheckmarkCircle} boxSize={4} color="blue.500" />
+        <CircleCheckIcon className="inline-block size-5 fill-blue-500 align-middle text-black" />
       ) : (
         titleStr
       )}
@@ -317,13 +312,7 @@ const Item = ({
                 bg="transparent"
                 boxShadow="none"
               >
-                <Box pt={1}>
-                  <Icon
-                    as={AiOutlineDollarCircle}
-                    boxSize={4}
-                    color="blue.500"
-                  />
-                </Box>
+                <CircleDollarSignIcon className="size-5 text-blue-400" />
               </Tooltip>
             )}
           </Flex>

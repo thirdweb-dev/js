@@ -1,4 +1,4 @@
-import { Container, Flex, Icon } from "@chakra-ui/react";
+import { Container, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { ContractInteractionSection } from "components/contracts/ContractInteractionSection";
 import LandingCaseStudyStaticSection from "components/contracts/LandingCaseStudyStaticSection";
@@ -10,8 +10,8 @@ import { LandingGridSection } from "components/landing-pages/grid-section";
 import { LandingHeroWithSideImage } from "components/landing-pages/hero-with-side-image";
 import { LandingLayout } from "components/landing-pages/layout";
 import { getAbsoluteUrl } from "lib/vercel-utils";
+import { ZapIcon } from "lucide-react";
 import { PageId } from "page-id";
-import { BsFillLightningChargeFill } from "react-icons/bs";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
@@ -217,7 +217,7 @@ const Contracts: ThirdwebNextPage = () => {
           </Flex>
 
           <TrackedLinkButton
-            leftIcon={<Icon as={BsFillLightningChargeFill} boxSize={4} />}
+            leftIcon={<ZapIcon className="size-4" />}
             py={6}
             px={8}
             bgColor="white"

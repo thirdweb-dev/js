@@ -4,7 +4,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
+import { Box, Divider, Flex, IconButton } from "@chakra-ui/react";
 import type { Abi } from "abitype";
 import {
   DASHBOARD_ENGINE_RELAYER_URL,
@@ -12,9 +12,9 @@ import {
 } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { ChevronFirstIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { IoChevronBack } from "react-icons/io5";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import {
   getContractPublisher,
@@ -312,7 +312,7 @@ export function ContractPublishForm(props: {
                       : setFieldsetToShow("landing")
                 }
                 aria-label="Back"
-                icon={<Icon as={IoChevronBack} boxSize={6} />}
+                icon={<ChevronFirstIcon className="size-6" />}
               >
                 Back
               </IconButton>

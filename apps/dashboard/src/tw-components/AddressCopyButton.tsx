@@ -1,7 +1,7 @@
-import { Icon, Tooltip } from "@chakra-ui/react";
+import { Tooltip } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useClipboard } from "hooks/useClipboard";
-import { FiCopy } from "react-icons/fi";
+import { CopyIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
   Button,
@@ -87,7 +87,7 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
             });
           }
         }}
-        leftIcon={noIcon ? undefined : <Icon boxSize={3} as={FiCopy} />}
+        leftIcon={noIcon ? undefined : <CopyIcon className="size-3" />}
         fontFamily="mono"
       >
         <Text color="inherit" size={`label.${buttonSizesMap[size]}`}>

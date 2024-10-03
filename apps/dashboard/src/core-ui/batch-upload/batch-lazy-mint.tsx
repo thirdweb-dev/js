@@ -7,7 +7,6 @@ import {
   Container,
   Flex,
   FormControl,
-  Icon,
   Input,
   InputGroup,
   InputRightElement,
@@ -17,11 +16,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { ChevronLeftIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
-import { IoChevronBack } from "react-icons/io5";
 import type { CreateDelayedRevealBatchParams } from "thirdweb/extensions/erc721";
 import type { NFTInput } from "thirdweb/utils";
 import {
@@ -269,14 +267,14 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
                 mb={2}
               >
                 <div className="flex flex-row">
-                  <Icon
-                    boxSize={5}
-                    as={IoChevronBack}
-                    color="gray.600"
+                  <Button
+                    className="text-muted-foreground"
+                    variant="ghost"
                     onClick={() => setStep(0)}
-                    cursor="pointer"
-                  />
-                  <Heading size="title.md">
+                  >
+                    <ChevronLeftIcon className="size-5 cursor-pointer" />
+                  </Button>
+                  <Heading size="title.md" className="my-auto">
                     When will you reveal your NFTs?
                   </Heading>
                 </div>

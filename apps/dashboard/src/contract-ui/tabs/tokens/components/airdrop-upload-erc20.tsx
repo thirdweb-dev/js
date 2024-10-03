@@ -16,10 +16,10 @@ import {
 } from "@chakra-ui/react";
 import { useQueries } from "@tanstack/react-query";
 import {
-  ChevronFirst,
-  ChevronLast,
-  ChevronLeft,
-  ChevronRight,
+  ChevronFirstIcon,
+  ChevronLastIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
   CircleAlert,
   UploadIcon,
 } from "lucide-react";
@@ -395,36 +395,36 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
         </Tbody>
       </Table>
       {/* Only need to show the Pagination components if we have more than 25 records */}
-      {data.length > 25 && (
+      {data.length > 0 && (
         <Portal containerRef={portalRef}>
           <div className="flex w-full items-center justify-center">
-            <div className="flex flex-row">
+            <div className="flex flex-row gap-1">
               <IconButton
                 isDisabled={!canPreviousPage}
                 aria-label="first page"
-                icon={<ChevronFirst size={16} />}
+                icon={<ChevronFirstIcon className="size-4" />}
                 onClick={() => gotoPage(0)}
               />
               <IconButton
                 isDisabled={!canPreviousPage}
                 aria-label="previous page"
-                icon={<ChevronLeft size={16} />}
+                icon={<ChevronLeftIcon className="size-4" />}
                 onClick={() => previousPage()}
               />
-              <Text whiteSpace="nowrap">
+              <p className="my-auto whitespace-nowrap">
                 Page <strong>{pageIndex + 1}</strong> of{" "}
                 <strong>{pageOptions.length}</strong>
-              </Text>
+              </p>
               <IconButton
                 isDisabled={!canNextPage}
                 aria-label="next page"
-                icon={<ChevronRight size={16} />}
+                icon={<ChevronRightIcon className="size-4" />}
                 onClick={() => nextPage()}
               />
               <IconButton
                 isDisabled={!canNextPage}
                 aria-label="last page"
-                icon={<ChevronLast size={16} />}
+                icon={<ChevronLastIcon className="size-4" />}
                 onClick={() => gotoPage(pageCount - 1)}
               />
               <Select

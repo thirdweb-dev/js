@@ -15,10 +15,11 @@ import {
 } from "@chakra-ui/react";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
 import { useClipboard } from "hooks/useClipboard";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { BiPaste } from "react-icons/bi";
-import { FiCopy, FiInfo, FiPlus, FiTrash } from "react-icons/fi";
+import { FiCopy, FiInfo, FiTrash } from "react-icons/fi";
 import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS, isAddress } from "thirdweb";
 import { Button, FormErrorMessage, Text } from "tw-components";
@@ -119,7 +120,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
             />
             <InputRightAddon p={0} border="none">
               <Button
-                leftIcon={<Icon as={FiPlus} boxSize={4} />}
+                leftIcon={<PlusIcon className="size-4" />}
                 size="sm"
                 borderLeftRadius="none"
                 borderRightRadius="md"
