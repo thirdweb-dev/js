@@ -243,6 +243,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
     shortName: "unknown",
     slug: "unknown",
     testnet: false,
+    stackType: "",
   };
 
   const { register, watch } = useForm<{

@@ -82,6 +82,7 @@ export type ChainMetadata = {
     type: string;
     bridges?: Readonly<Array<{ url: string }>>;
   };
+  stackType: string;
 };
 
 /**

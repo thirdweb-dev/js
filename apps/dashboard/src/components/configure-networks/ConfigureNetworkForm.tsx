@@ -28,6 +28,7 @@ export type NetworkConfigFormData = {
   type: "testnet" | "mainnet";
   icon: string;
   slug: string;
+  stackType?: string;
 };
 
 // lowercase it, replace all spaces with hyphens, and then strip all non-alphanumeric characters
@@ -71,6 +72,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       type: editingChain?.testnet ? "testnet" : "mainnet",
       icon: editingChain?.icon?.url || "",
       slug: prefillSlug || editingChain?.slug || "",
+      stackType: "",
     },
     mode: "onChange",
   });
@@ -146,6 +148,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               format: "",
             },
         testnet: data.type === "testnet",
+        stackType: data.stackType || "",
       };
     } else {
       configuredNetwork = {
@@ -170,6 +173,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               format: "",
             }
           : undefined,
+        stackType: data.stackType || "",
       };
     }
 

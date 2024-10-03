@@ -365,5 +365,6 @@ function createChainMetadata(
         url: e.url,
         standard: "EIP3091",
       })) || data?.explorers,
+    stackType: data?.stackType || "",
   };
 }
