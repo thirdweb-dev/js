@@ -1,11 +1,11 @@
 "use client";
 
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
-import { Icon, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
+import { FileStackIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
@@ -120,7 +120,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
       </Drawer>
       <Button
         colorScheme="primary"
-        leftIcon={<Icon as={RiCheckboxMultipleBlankLine} />}
+        leftIcon={<FileStackIcon className="size-4" />}
         onClick={onOpen}
       >
         Batch Upload

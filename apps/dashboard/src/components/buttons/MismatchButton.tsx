@@ -15,7 +15,6 @@ import { cn } from "@/lib/utils";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
-  Icon,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -34,11 +33,10 @@ import type {
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ExternalLinkIcon, TriangleAlertIcon } from "lucide-react";
+import { ExternalLinkIcon, TriangleAlertIcon, UnplugIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
-import { VscDebugDisconnect } from "react-icons/vsc";
 import { toast } from "sonner";
 import { prepareTransaction, sendTransaction, toWei } from "thirdweb";
 import { type Chain, type ChainMetadata, localhost } from "thirdweb/chains";
@@ -461,7 +459,7 @@ const MismatchNotice: React.FC<{
 
       <Button
         ref={actuallyCanAttemptSwitch ? initialFocusRef : undefined}
-        leftIcon={<Icon as={VscDebugDisconnect} />}
+        leftIcon={<UnplugIcon className="size-4" />}
         size="sm"
         onClick={onSwitchWallet}
         isLoading={connectionStatus === "connecting"}

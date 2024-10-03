@@ -204,13 +204,13 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                 <div className="relative aspect-[21/9] w-full">
                   <div
                     className={cn(
-                      "h-full cursor-pointer rounded-md border border-border hover:border-primary",
+                      "flex h-full cursor-pointer rounded-md border border-border hover:border-primary",
                       noCsv ? "bg-red-200" : "bg-card",
                     )}
                     {...getRootProps()}
                   >
                     <input {...getInputProps()} />
-                    <div className="flex flex-col p-6">
+                    <div className="m-auto flex flex-col p-6">
                       <UploadIcon
                         size={16}
                         className={cn("mx-auto mb-2 text-gray-500", {
@@ -218,7 +218,11 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                         })}
                       />
                       {isDragActive ? (
-                        <Heading as={Text} size="label.md">
+                        <Heading
+                          as={Text}
+                          size="label.md"
+                          className="text-center"
+                        >
                           Drop the files here
                         </Heading>
                       ) : (
@@ -226,6 +230,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                           as={Text}
                           size="label.md"
                           color={noCsv ? "red.500" : "gray.600"}
+                          className="text-center"
                         >
                           {noCsv
                             ? `No valid CSV file found, make sure your CSV includes the "address" column.`
@@ -439,7 +444,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
       </TableContainer>
       <Portal containerRef={portalRef}>
         <div className="flex w-full items-center justify-center">
-          <div className="flex flex-row">
+          <div className="flex flex-row gap-1">
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="first page"
@@ -452,10 +457,10 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
               icon={<ChevronLeftIcon className="size-4" />}
               onClick={() => previousPage()}
             />
-            <Text whiteSpace="nowrap">
+            <p className="my-auto whitespace-nowrap">
               Page <strong>{pageIndex + 1}</strong> of{" "}
               <strong>{pageOptions.length}</strong>
-            </Text>
+            </p>
             <IconButton
               isDisabled={!canNextPage}
               aria-label="next page"

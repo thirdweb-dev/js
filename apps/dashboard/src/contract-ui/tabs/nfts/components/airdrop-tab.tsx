@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, Icon, useDisclosure } from "@chakra-ui/react";
+import { Flex, useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   type AirdropAddressInput,
@@ -8,9 +8,8 @@ import {
 } from "contract-ui/tabs/nfts/components/airdrop-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { UploadIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { BsCircleFill } from "react-icons/bs";
-import { FiUpload } from "react-icons/fi";
 import type { ThirdwebContract } from "thirdweb";
 import { multicall } from "thirdweb/extensions/common";
 import { balanceOf, encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
@@ -125,7 +124,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
                 colorScheme="primary"
                 borderRadius="md"
                 onClick={onOpen}
-                rightIcon={<Icon as={FiUpload} />}
+                rightIcon={<UploadIcon className="size-5" />}
               >
                 Upload addresses
               </Button>
@@ -138,13 +137,10 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
                 color={addresses.length === 0 ? "orange.500" : "green.500"}
               >
                 {addresses.length > 0 && (
-                  <>
-                    <Icon as={BsCircleFill} boxSize={2} />
-                    <Text size="body.sm" color="inherit">
-                      <strong>{addresses.length} addresses</strong> ready to be
-                      airdropped
-                    </Text>
-                  </>
+                  <Text size="body.sm" color="inherit">
+                    ● <strong>{addresses.length} addresses</strong> ready to be
+                    airdropped
+                  </Text>
                 )}
               </Flex>
             </Flex>

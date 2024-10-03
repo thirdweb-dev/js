@@ -4,7 +4,6 @@ import { WalletAddress } from "@/components/blocks/wallet-address";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   Flex,
-  Icon,
   IconButton,
   Select,
   Skeleton,
@@ -18,14 +17,14 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
-import { useEffect, useMemo, useState } from "react";
-import { FiArrowRight } from "react-icons/fi";
 import {
-  MdFirstPage,
-  MdLastPage,
-  MdNavigateBefore,
-  MdNavigateNext,
-} from "react-icons/md";
+  ArrowRightIcon,
+  ChevronFirstIcon,
+  ChevronLastIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import {
   type CellProps,
   type Column,
@@ -294,7 +293,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                     </Td>
                   ))}
                   <Td borderBottomWidth="inherit" borderColor="borderColor">
-                    {!failedToLoad && <Icon as={FiArrowRight} />}
+                    {!failedToLoad && <ArrowRightIcon className="size-4" />}
                   </Td>
                 </Tr>
               );
@@ -325,17 +324,17 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
         </Table>
       </TableContainer>
       <div className="flex w-full items-center justify-center">
-        <Flex gap={2} direction="row" align="center">
+        <div className="flex flex-row items-center gap-1">
           <IconButton
             isDisabled={!canPreviousPage || queryLoading}
             aria-label="first page"
-            icon={<Icon as={MdFirstPage} />}
+            icon={<ChevronFirstIcon className="size-4" />}
             onClick={() => gotoPage(0)}
           />
           <IconButton
             isDisabled={!canPreviousPage || queryLoading}
             aria-label="previous page"
-            icon={<Icon as={MdNavigateBefore} />}
+            icon={<ChevronLeftIcon className="size-4" />}
             onClick={() => previousPage()}
           />
           <Text whiteSpace="nowrap">
@@ -347,13 +346,13 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
           <IconButton
             isDisabled={!canNextPage || queryLoading}
             aria-label="next page"
-            icon={<Icon as={MdNavigateNext} />}
+            icon={<ChevronRightIcon className="size-4" />}
             onClick={() => nextPage()}
           />
           <IconButton
             isDisabled={!canNextPage || queryLoading}
             aria-label="last page"
-            icon={<Icon as={MdLastPage} />}
+            icon={<ChevronLastIcon className="size-4" />}
             onClick={() => gotoPage(pageCount - 1)}
           />
 
@@ -370,7 +369,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
             <option value="250">250</option>
             <option value="500">500</option>
           </Select>
-        </Flex>
+        </div>
       </div>
     </Flex>
   );

@@ -5,7 +5,6 @@ import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContrac
 import {
   Divider,
   Flex,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -18,8 +17,8 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
+import { CircleCheckIcon, CircleXIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { Badge, Button, Card, Heading } from "tw-components";
@@ -109,8 +108,7 @@ const VerifyContractModal: React.FC<
             )}
             {veryifyQuery?.error ? (
               <Flex gap={2} align="center">
-                <Icon as={FiXCircle} color="red.600" />
-
+                <CircleXIcon className="size-4 text-red-600" />
                 <Heading size="label.md">
                   {veryifyQuery?.error.toString()}
                 </Heading>
@@ -124,7 +122,7 @@ const VerifyContractModal: React.FC<
                     <Flex key={index} gap={2} align="center" mb={4}>
                       {result.success && (
                         <>
-                          <Icon as={FiCheckCircle} color="green.600" />
+                          <CircleCheckIcon className="size-4 text-green-600" />
                           {result.alreadyVerified && (
                             <Heading size="label.md">
                               {result.explorerUrl}: Already verified
@@ -139,7 +137,7 @@ const VerifyContractModal: React.FC<
                       )}
                       {!result.success && (
                         <>
-                          <Icon as={FiXCircle} color="red.600" />
+                          <CircleXIcon className="size-4 text-red-600" />
                           <Heading size="label.md">
                             {`${result.explorerUrl}: Verification failed`}
                           </Heading>

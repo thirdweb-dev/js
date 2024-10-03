@@ -1,3 +1,4 @@
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   AdminOnly,
   AdminOrSelfOnly,
@@ -5,21 +6,23 @@ import {
 import {
   Flex,
   FormControl,
-  Icon,
   IconButton,
   Input,
   InputGroup,
   InputLeftAddon,
   InputRightAddon,
-  Tooltip,
 } from "@chakra-ui/react";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
 import { useClipboard } from "hooks/useClipboard";
-import { PlusIcon } from "lucide-react";
+import {
+  ClipboardPasteIcon,
+  CopyIcon,
+  InfoIcon,
+  PlusIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { BiPaste } from "react-icons/bi";
-import { FiCopy, FiInfo, FiTrash } from "react-icons/fi";
 import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS, isAddress } from "thirdweb";
 import { Button, FormErrorMessage, Text } from "tw-components";
@@ -61,7 +64,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
       {!fields?.length && (
         <DelayedDisplay delay={100}>
           <div className="flex flex-row items-center gap-3 rounded-md border border-border border-orange-100 bg-orange-50 p-[10px]">
-            <Icon as={FiInfo} color="orange.400" boxSize={6} />
+            <InfoIcon className="size-6 text-orange-400" />
             <Text color="orange.800">
               {role === "asset"
                 ? "No asset contracts are permitted to be listed on this marketplace."
@@ -87,13 +90,12 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
         >
           <InputGroup>
             <InputLeftAddon p={0} border="none">
-              <Tooltip label="Paste address from clipboard">
+              <ToolTipLabel label="Paste address from clipboard">
                 <IconButton
                   borderRadius="sm"
                   borderLeftRadius="md"
                   aria-label="paste address"
-                  icon={<BiPaste />}
-                  _hover={{ bgColor: "gray.300" }}
+                  icon={<ClipboardPasteIcon className="size-4" />}
                   width="100%"
                   height="100%"
                   onClick={() => {
@@ -103,12 +105,13 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
                         setAddress(text);
                         return void 0;
                       })
-                      .catch((err) => {
-                        console.error("failed to paste from clipboard", err);
+                      .catch((error) => {
+                        console.error(error);
+                        toast.error("Failed to paste from clipboard");
                       });
                   }}
                 />
-              </Tooltip>
+              </ToolTipLabel>
             </InputLeftAddon>
             <Input
               variant="filled"
@@ -169,13 +172,12 @@ const PermissionAddress: React.FC<PermissionAddressProps> = ({
     <Flex gap={0} align="center">
       <InputGroup>
         <InputLeftAddon p={0} border="none">
-          <Tooltip label="Copy address to clipboard">
+          <ToolTipLabel label="Copy address to clipboard">
             <IconButton
               borderRadius="sm"
               borderLeftRadius="md"
               aria-label="copy address"
-              icon={<FiCopy />}
-              _hover={{ bgColor: "gray.300" }}
+              icon={<CopyIcon className="size-4" />}
               width="100%"
               height="100%"
               onClick={(e) => {
@@ -185,7 +187,7 @@ const PermissionAddress: React.FC<PermissionAddressProps> = ({
                 toast.info("Address copied.");
               }}
             />
-          </Tooltip>
+          </ToolTipLabel>
         </InputLeftAddon>
         <Input
           variant="filled"
@@ -196,7 +198,7 @@ const PermissionAddress: React.FC<PermissionAddressProps> = ({
         <AdminOrSelfOnly contract={contract} self={member}>
           <InputRightAddon p={0} border="none">
             <Button
-              leftIcon={<Icon as={FiTrash} boxSize={3} />}
+              leftIcon={<TrashIcon className="size-3" />}
               size="sm"
               borderLeftRadius="none"
               borderRightRadius="md"

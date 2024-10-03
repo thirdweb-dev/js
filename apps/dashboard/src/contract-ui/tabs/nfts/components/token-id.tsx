@@ -9,15 +9,14 @@ import {
   Divider,
   Flex,
   GridItem,
-  Icon,
   IconButton,
   SimpleGrid,
   Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useNFTDrawerTabs } from "core-ui/nft-drawer/useNftDrawerTabs";
+import { ChevronLeftIcon } from "lucide-react";
 import { useState } from "react";
-import { IoChevronBack } from "react-icons/io5";
 import type { ThirdwebContract } from "thirdweb";
 import { getNFT as getErc721NFT } from "thirdweb/extensions/erc721";
 import { getNFT as getErc1155NFT } from "thirdweb/extensions/erc1155";
@@ -115,7 +114,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                 router.push(`/${chainSlug}/${contract.address}/nfts`)
               }
               aria-label="Back"
-              icon={<Icon as={IoChevronBack} boxSize={6} />}
+              icon={<ChevronLeftIcon className="size-6" />}
             >
               Back
             </IconButton>

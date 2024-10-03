@@ -12,8 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
+import { ArrowLeftRightIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BiTransferAlt } from "react-icons/bi";
 import { FiInfo } from "react-icons/fi";
 import {
   useActiveAccount,
@@ -154,7 +154,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
                 <Text color="inherit" size="label.md" fontFamily="mono">
                   {transactionCount}
                 </Text>
-                <BiTransferAlt />
+                <ArrowLeftRightIcon className="size-3" />
               </Flex>
             </Center>
           </ToolTipLabel>

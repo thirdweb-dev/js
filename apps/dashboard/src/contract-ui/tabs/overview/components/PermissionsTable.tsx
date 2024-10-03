@@ -1,16 +1,9 @@
-import {
-  Box,
-  Flex,
-  Icon,
-  List,
-  SimpleGrid,
-  Tag,
-  Tooltip,
-} from "@chakra-ui/react";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { Box, Flex, List, SimpleGrid, Tag } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
+import { CopyIcon } from "lucide-react";
 import { useMemo } from "react";
-import { FiCopy } from "react-icons/fi";
 import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { useReadContract } from "thirdweb/react";
@@ -164,16 +157,7 @@ const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
       >
         <Box gridColumn="span 2">
           <div className="flex flex-row items-center gap-3">
-            <Tooltip
-              p={0}
-              bg="transparent"
-              boxShadow="none"
-              label={
-                <Card py={2} px={4} bgColor="backgroundHighlight">
-                  <Text size="label.sm">Copy address to clipboard</Text>
-                </Card>
-              }
-            >
+            <ToolTipLabel label="Copy address to clipboard">
               <Button
                 size="sm"
                 bg="transparent"
@@ -182,9 +166,9 @@ const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
                   toast.info("Address copied.");
                 }}
               >
-                <Icon as={FiCopy} boxSize={3} />
+                <CopyIcon className="size-3" />
               </Button>
-            </Tooltip>
+            </ToolTipLabel>
             <Text fontFamily="mono" noOfLines={1}>
               {shortenIfAddress(data.member)}
             </Text>
