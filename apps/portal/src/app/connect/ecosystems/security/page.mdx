@@ -12,14 +12,14 @@ export const metadata = createMetadata({
 
 # Ecosystem Wallet Security
 
-## **Wallet Creation**
+## Wallet Creation
 
 When a user signs into an application using their email or social logins for the first time, a wallet is generated within a secure enclave on the server after verifying the user's legitimacy. The enclave provides a trusted execution environment, ensuring the wallet creation process is isolated and protected from external interference.
 
 - The wallet and its corresponding private key are generated entirely within the enclave, never leaving its secure confines.
 - User authentication data is verified within the enclave, ensuring that only legitimate, authenticated users can initiate wallet creation.
 
-## **Security Measures**
+## Security Measures
 
 - The enclave's cryptographic properties ensure that even the server operators cannot access the contents or operations within the enclave.
 - The enclave provides a verifiable hash of the image of the code that is being run on the device, allowing anyone to verify the contents of the code for malicious intent.
@@ -40,9 +40,13 @@ When a user signs into an application using their email or social logins for the
   - We replaced the SSS model tricky with Encalves because a malicious developer could reverse engineer and extract the private key from the client and exploit users who might’ve assets from other developers within the ecosystem.
   - With enclave and partner policies, this is mitigated. Ecosystem owners are able to place restrictions on what individual partners are able to do. Moreover, since the private key is never re-constructed on the client, the ecosystem partner must submit the request to the enclave which would be able to verify the request and block requests that are out of scope or denied by the ecosystem owner.
 
-# **Recoverability**
+## Recoverability
 
-1. Users can export their private key at any time.
-2. Thirdweb wallets support three categories of authentication: socials, custom authentication, and email / phone authentication.
-   If a user ever loses access to their authentication method: 1. For socials and email / phone authentication, users can utilize the recovery flow of their providers to regain access to their account. 2. In the case of custom authentication, the developer managing their authentication flow will be able to re-instate the users account upon successful verification. 3. The application providers do not have direct access to user accounts or private keys, as these remain secured within the enclave. The enclave's design ensures that only verified user requests can trigger wallet operations.
-3. Users are able to link their authentication methods which will provide them multiple ways to access their account if they ever lose access to any one of their authentication method.
+- Users can export their private key at any time.
+- Thirdweb wallets support three categories of authentication: socials, custom authentication, and email / phone authentication. If a user ever loses access to their authentication method:
+
+  1.  **For socials and email / phone authentication,** users can utilize the recovery flow of their providers to regain access to their account.
+  2.  **In the case of custom authentication,** the developer managing their authentication flow will be able to re-instate the users account upon successful verification.
+  3.  If application providers **do not have direct access** to user accounts or private keys, as these remain secured within the enclave. The enclave's design ensures that only verified user requests can trigger wallet operations.
+
+- Users are able to link their authentication methods which will provide them multiple ways to access their account if they ever lose access to any one of their authentication method.
