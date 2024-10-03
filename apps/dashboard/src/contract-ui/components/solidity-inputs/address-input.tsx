@@ -1,9 +1,9 @@
 "use client";
 
-import { Box, Flex, Icon, Input, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Input, Spinner } from "@chakra-ui/react";
 import { useEns } from "components/contract-components/hooks";
+import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { FiCheck } from "react-icons/fi";
 import { useActiveAccount } from "thirdweb/react";
 import { isAddress } from "thirdweb/utils";
 import { FormHelperText } from "tw-components";
@@ -105,7 +105,7 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   const helperTextLeft = resolvingEns ? (
     <Spinner boxSize={3} mr={1} size="xs" speed="0.6s" />
   ) : resolvedAddress || ensFound ? (
-    <Icon boxSize={3} as={FiCheck} color="green.500" />
+    <CheckIcon className="size-3 text-green-500" />
   ) : null;
 
   const helperTextRight = resolvingEns ? (

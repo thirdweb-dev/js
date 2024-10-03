@@ -6,7 +6,6 @@ import {
   AccordionPanel,
   Box,
   Flex,
-  Icon,
   Modal,
   ModalBody,
   ModalContent,
@@ -16,10 +15,10 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { OpenseaIcon } from "components/icons/brand-icons/OpenseaIcon";
+import { XIcon } from "components/icons/brand-icons/XIcon";
 import { formatToDollars } from "components/settings/Account/Billing/CreditsButton";
 import { useMemo } from "react";
-import { FaXTwitter } from "react-icons/fa6";
-import { SiOpensea } from "react-icons/si";
 import { Card, Heading, Text, TrackedLinkButton } from "tw-components";
 
 interface OpCreditsGrantedModalProps {
@@ -130,7 +129,7 @@ Apply here!`,
                   category="op-sponsorship"
                   label="share-on-x"
                 >
-                  <Icon as={FaXTwitter} boxSize={6} mr={2} />
+                  <XIcon className="mr-2 size-6" />
                   Post
                 </TrackedLinkButton>
                 <TrackedLinkButton
@@ -141,7 +140,7 @@ Apply here!`,
                   category="op-sponsorship"
                   label="view-nft"
                 >
-                  <Icon as={SiOpensea} boxSize={6} mr={2} />
+                  <OpenseaIcon className="mr-2 size-6" />
                   View NFT
                 </TrackedLinkButton>
               </SimpleGrid>

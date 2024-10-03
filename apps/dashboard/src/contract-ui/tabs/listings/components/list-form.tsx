@@ -6,7 +6,6 @@ import {
   Box,
   Flex,
   FormControl,
-  Icon,
   Input,
   Select,
   Spinner,
@@ -21,10 +20,9 @@ import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
 import { isMoralisSupported } from "lib/wallet/nfts/moralis";
 import { isSimpleHashSupported } from "lib/wallet/nfts/simpleHash";
 import type { WalletNFT } from "lib/wallet/nfts/types";
-import { CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon, InfoIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { FiInfo } from "react-icons/fi";
 import { toast } from "sonner";
 import {
   NATIVE_TOKEN_ADDRESS,
@@ -366,12 +364,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         {!isSupportedChain ? (
           <Flex flexDir="column" gap={4} mb={4}>
             <div className="flex flex-row items-center gap-3 rounded-md border border-border border-orange-100 bg-orange-50 p-[10px] dark:border-orange-300 dark:bg-orange-300">
-              <Icon
-                as={FiInfo}
-                color="orange.400"
-                _dark={{ color: "orange.900" }}
-                boxSize={6}
-              />
+              <InfoIcon className="size-6 text-orange-400 dark:text-orange-900" />
               <Text color="orange.800" _dark={{ color: "orange.900" }}>
                 This chain is not supported by our NFT API yet, please enter the
                 contract address of the NFT you want to list.
@@ -462,12 +455,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
           </Flex>
         ) : nfts && nfts.length === 0 ? (
           <div className="flex flex-row items-center gap-3 rounded-md border border-border border-orange-100 bg-orange-50 p-[10px] dark:border-orange-300 dark:bg-orange-300">
-            <Icon
-              as={FiInfo}
-              color="orange.400"
-              _dark={{ color: "orange.900" }}
-              boxSize={6}
-            />
+            <InfoIcon className="size-6 text-orange-400 dark:text-orange-900" />
             <Text color="orange.800" _dark={{ color: "orange.900" }}>
               There are no NFTs owned by this wallet. You need NFTs to create a
               listing. You can create NFTs with thirdweb.{" "}

@@ -1,8 +1,8 @@
 "use client";
 
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
-import { Icon, useDisclosure } from "@chakra-ui/react";
-import { FiEye } from "react-icons/fi";
+import { useDisclosure } from "@chakra-ui/react";
+import { EyeIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import { getBatchesToReveal } from "thirdweb/extensions/erc721";
 import { useReadContract } from "thirdweb/react";
@@ -36,7 +36,7 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
       </Drawer>
       <Button
         colorScheme="primary"
-        leftIcon={<Icon as={FiEye} />}
+        leftIcon={<EyeIcon className="size-4" />}
         onClick={onOpen}
       >
         Reveal NFTs

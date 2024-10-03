@@ -1,6 +1,5 @@
-import { Box, Icon } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { BsLightningCharge } from "react-icons/bs";
+import { ZapIcon } from "lucide-react";
 import {
   type ButtonProps,
   LinkButton,
@@ -25,13 +24,7 @@ export const GeneralCta: React.FC<GeneralCtaProps> = ({
     <LinkButton
       role="group"
       leftIcon={
-        <Icon
-          as={BsLightningCharge}
-          color="#1D64EF"
-          transitionDuration="slow"
-          transitionTimingFunction="easeOut"
-          _groupHover={{ color: "#E0507A" }}
-        />
+        <ZapIcon className="size-5 text-[#1D64EF] duration-150 ease-out group-hover:text-[#E0507A]" />
       }
       color="black"
       px={size === "lg" ? 20 : 8}
@@ -53,9 +46,7 @@ export const GeneralCta: React.FC<GeneralCtaProps> = ({
       href={href}
       {...props}
     >
-      <Box as="span" py={0.5}>
-        {title}
-      </Box>
+      <span className="py-0.5">{title}</span>
     </LinkButton>
   );
 };

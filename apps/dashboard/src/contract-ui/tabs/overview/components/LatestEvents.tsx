@@ -6,7 +6,6 @@ import {
   Box,
   ButtonGroup,
   Flex,
-  Icon,
   List,
   SimpleGrid,
   Spinner,
@@ -14,8 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
+import { CopyIcon } from "lucide-react";
 import { useState } from "react";
-import { FiCopy } from "react-icons/fi";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import {
@@ -179,7 +178,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                   toast.info("Transaction hash copied.");
                 }}
               >
-                <Icon as={FiCopy} boxSize={3} />
+                <CopyIcon className="size-3" />
               </Button>
             </Tooltip>
             <Text fontFamily="mono" noOfLines={1}>

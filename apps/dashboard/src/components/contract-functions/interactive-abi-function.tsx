@@ -7,7 +7,6 @@ import {
   Divider,
   Flex,
   FormControl,
-  Icon,
   Input,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
@@ -16,10 +15,9 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { replaceIpfsUrl } from "lib/sdk";
+import { InfoIcon, PlayIcon } from "lucide-react";
 import { useEffect, useId, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import { FaCircleInfo } from "react-icons/fa6";
-import { FiPlay } from "react-icons/fi";
 import { toast } from "sonner";
 import {
   type ThirdwebContract,
@@ -446,7 +444,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
           {isView ? (
             <Button
               isDisabled={!abiFunction}
-              rightIcon={<Icon as={FiPlay} />}
+              rightIcon={<PlayIcon className="size-4" />}
               colorScheme="primary"
               isLoading={readLoading}
               onClick={handleContractRead}
@@ -465,7 +463,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               >
                 <ToolTipLabel label="Simulate the transaction to see its potential outcome without actually sending it to the network. This action doesn't cost gas.">
                   <span className="mr-3">
-                    <FaCircleInfo size={20} />
+                    <InfoIcon className="size-5" />
                   </span>
                 </ToolTipLabel>
                 Simulate
