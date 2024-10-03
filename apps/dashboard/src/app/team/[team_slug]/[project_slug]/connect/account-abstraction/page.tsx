@@ -1,7 +1,7 @@
 import { getProject } from "@/api/projects";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { notFound } from "next/navigation";
-import { getAPIKey } from "../../../../../api/lib/getAPIKeys";
+import { getAPIKeyForProjectId } from "../../../../../api/lib/getAPIKeys";
 import { AccountAbstractionPage } from "./AccountAbstractionPage";
 
 export default async function Page(props: {
@@ -14,8 +14,7 @@ export default async function Page(props: {
     notFound();
   }
 
-  // THIS IS A WORKAROUND - project does not have `services` info - so we fetch APIKey object.
-  const apiKey = await getAPIKey(project.id);
+  const apiKey = await getAPIKeyForProjectId(project.id);
 
   if (!apiKey) {
     notFound();

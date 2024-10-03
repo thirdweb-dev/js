@@ -37,9 +37,9 @@ export async function getAPIKey(apiKeyId: string) {
 
 export async function getApiKeys() {
   const authToken = getAuthToken();
+
   const res = await fetch(`${API_SERVER_URL}/v1/keys`, {
     method: "GET",
-
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${authToken}`,
@@ -52,4 +52,12 @@ export async function getApiKeys() {
   }
 
   return json.data as ApiKey[];
+}
+
+export function getAPIKeyForProjectId(projectId: string) {
+  if (projectId.startsWith("prj_")) {
+    return getAPIKey(projectId.slice("prj_".length));
+  }
+
+  return getAPIKey(projectId);
 }

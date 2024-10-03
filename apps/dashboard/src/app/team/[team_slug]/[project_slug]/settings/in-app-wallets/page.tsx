@@ -1,7 +1,7 @@
 import { getProject } from "@/api/projects";
 import { notFound } from "next/navigation";
 import { InAppWalletSettingsPage } from "../../../../../../components/embedded-wallets/Configure";
-import { getAPIKey } from "../../../../../api/lib/getAPIKeys";
+import { getAPIKeyForProjectId } from "../../../../../api/lib/getAPIKeys";
 
 export default async function Page(props: {
   params: { team_slug: string; project_slug: string };
@@ -13,8 +13,7 @@ export default async function Page(props: {
     notFound();
   }
 
-  // THIS IS A WORKAROUND - project does not have `services` info - so we fetch APIKey object.
-  const apiKey = await getAPIKey(project.id);
+  const apiKey = await getAPIKeyForProjectId(project.id);
 
   if (!apiKey) {
     notFound();
