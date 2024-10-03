@@ -1,0 +1,5 @@
+[
+  "function reverseNameOf(address addr) view returns (string reverseUri)",
+  "function getMany(string[] keys, uint256 tokenId) view returns (string[] values)",
+  "function namehash(string[] labels) pure returns (uint256 hash)"
+]
