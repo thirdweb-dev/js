@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native-adapter",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
