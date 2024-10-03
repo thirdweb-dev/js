@@ -80,7 +80,7 @@ export async function fetchBytecodeFromCompilerMetadata(options: {
     async () => {
       const isZksolc = await isZkSyncChain(chain);
       const bytecodeUri = isZksolc
-        ? compilerMetadata.compilers?.zksolc[0]?.bytecodeUri
+        ? compilerMetadata.compilers?.zksolc?.[0]?.bytecodeUri
         : compilerMetadata.bytecodeUri;
 
       if (!bytecodeUri) {

@@ -210,6 +210,11 @@ export async function getAllDefaultConstructorParamsForImplementation(args: {
   client: ThirdwebClient;
 }) {
   const { chain, client } = args;
+  const isZkSync = await isZkSyncChain(chain);
+  if (isZkSync) {
+    // zksync contracts dont need these implementation constructor params
+    return {};
+  }
   const [forwarder, weth] = await Promise.all([
     computePublishedContractAddress({
       chain,
