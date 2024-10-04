@@ -1,5 +1,4 @@
 import { getTeamBySlug } from "@/api/team";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { TeamGeneralSettingsPage } from "./general/TeamGeneralSettingsPage";
@@ -15,7 +14,5 @@ export default async function Page(props: {
     notFound();
   }
 
-  return (
-    <TeamGeneralSettingsPage team={team} client={getThirdwebClient(token)} />
-  );
+  return <TeamGeneralSettingsPage team={team} authToken={token} />;
 }

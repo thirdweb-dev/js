@@ -9,12 +9,12 @@ export type Team = {
   slug: string;
   createdAt: string;
   updatedAt: string;
-  deletedAt: string | null;
-  bannedAt: string | null;
-  // image: string; // -> TODO
+  deletedAt?: string;
+  bannedAt?: string;
+  image?: string;
   billingPlan: "pro" | "growth" | "free";
   billingStatus: "validPayment" | (string & {}); // what's the other value?
-  // billingEmail: string;
+  billingEmail: string;
   // billingExternalId: string;
   // billingType: "STRIPE" | ??
   // billingCustomerPayload: ?? | null

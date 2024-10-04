@@ -38,10 +38,9 @@ const testTeam: Team = {
   slug: "team-slug-foo-bar",
   createdAt: "2023-07-07T19:21:33.604Z",
   updatedAt: "2024-07-11T00:01:02.241Z",
-  deletedAt: null,
-  bannedAt: null,
   billingStatus: "validPayment",
   billingPlan: "free",
+  billingEmail: "foo@example.com",
 };
 
 function Story() {
@@ -50,6 +49,10 @@ function Story() {
       <TeamGeneralSettingsPageUI
         team={testTeam}
         updateTeamImage={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }}
+        updateTeamField={async (value) => {
+          console.log(value);
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
       />
