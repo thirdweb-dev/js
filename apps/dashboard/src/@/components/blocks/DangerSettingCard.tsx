@@ -11,9 +11,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { cn } from "../../lib/utils";
 
 export function DangerSettingCard(props: {
   title: string;
+  className?: string;
+  footerClassName?: string;
   description: string;
   buttonLabel: string;
   buttonOnClick: () => void;
@@ -22,18 +25,31 @@ export function DangerSettingCard(props: {
     title: string;
     description: string;
   };
+  children?: React.ReactNode;
 }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-red-500/70">
-      <div className="bg-muted/50 px-4 py-6 lg:px-6">
+    <div
+      className={cn(
+        "overflow-hidden rounded-lg border border-red-500/70",
+        props.className,
+      )}
+    >
+      <div className="px-4 py-6 lg:px-6">
         <h3 className="font-semibold text-xl tracking-tight">{props.title}</h3>
 
         <p className="mt-1.5 mb-4 text-foreground text-sm">
           {props.description}
         </p>
+
+        {props.children}
       </div>
 
-      <div className="flex justify-end border-red-500/70 border-t bg-red-100 px-4 py-4 lg:px-6 dark:bg-red-500/20">
+      <div
+        className={cn(
+          "flex justify-end border-red-500/70 border-t bg-red-100 px-4 py-4 lg:px-6 dark:bg-red-500/20",
+          props.footerClassName,
+        )}
+      >
         <Dialog>
           <DialogTrigger asChild>
             <Button
@@ -46,7 +62,10 @@ export function DangerSettingCard(props: {
             </Button>
           </DialogTrigger>
 
-          <DialogContent>
+          <DialogContent
+            className="z-[10001]"
+            dialogOverlayClassName="z-[10000]"
+          >
             <DialogHeader className="pr-10">
               <DialogTitle className="leading-snug">
                 {props.confirmationDialog.title}

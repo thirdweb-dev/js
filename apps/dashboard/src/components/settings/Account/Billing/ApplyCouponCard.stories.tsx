@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Toaster } from "sonner";
 import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
-import { CouponCardUI } from "./CouponCard";
+import { type ActiveCouponResponse, ApplyCouponCardUI } from "./CouponCard";
 
 const meta = {
-  title: "billing/CouponCard",
+  title: "billing/Coupons/ApplyCoupon",
   component: Story,
   parameters: {
     nextjs: {
@@ -30,7 +30,24 @@ export const Mobile: Story = {
 function statusStub(status: number) {
   return async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    return status;
+    const data: ActiveCouponResponse | null =
+      status === 200
+        ? {
+            id: "xyz",
+            start: 1727992716,
+            end: 1759528716,
+            coupon: {
+              id: "XYZTEST",
+              name: "TEST COUPON",
+              duration: "repeating",
+              duration_in_months: 12,
+            },
+          }
+        : null;
+    return {
+      status,
+      data,
+    };
   };
 }
 
@@ -38,27 +55,45 @@ function Story() {
   return (
     <div className="container flex max-w-[1100px] flex-col gap-10 py-10">
       <BadgeContainer label="Success - 200">
-        <CouponCardUI submit={statusStub(200)} />
+        <ApplyCouponCardUI
+          submit={statusStub(200)}
+          onCouponApplied={undefined}
+        />
       </BadgeContainer>
 
       <BadgeContainer label="Invalid - 400">
-        <CouponCardUI submit={statusStub(400)} />
+        <ApplyCouponCardUI
+          submit={statusStub(400)}
+          onCouponApplied={undefined}
+        />
       </BadgeContainer>
 
       <BadgeContainer label="Not Authorized - 401">
-        <CouponCardUI submit={statusStub(401)} />
+        <ApplyCouponCardUI
+          submit={statusStub(401)}
+          onCouponApplied={undefined}
+        />
       </BadgeContainer>
 
       <BadgeContainer label="Already applied - 409">
-        <CouponCardUI submit={statusStub(409)} />
+        <ApplyCouponCardUI
+          submit={statusStub(409)}
+          onCouponApplied={undefined}
+        />
       </BadgeContainer>
 
       <BadgeContainer label="Rate Limited - 429">
-        <CouponCardUI submit={statusStub(429)} />
+        <ApplyCouponCardUI
+          submit={statusStub(429)}
+          onCouponApplied={undefined}
+        />
       </BadgeContainer>
 
       <BadgeContainer label="Other - 500">
-        <CouponCardUI submit={statusStub(500)} />
+        <ApplyCouponCardUI
+          submit={statusStub(500)}
+          onCouponApplied={undefined}
+        />
       </BadgeContainer>
       <Toaster richColors />
     </div>
