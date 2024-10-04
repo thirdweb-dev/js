@@ -225,10 +225,6 @@ export const sidebar: SideBar = {
                   name: "Retrieving Linked Profiles",
                   href: `${inAppSlug}/guides/retrieve-linked-profiles`,
                 },
-                {
-                  name: "Retrieving User Info",
-                  href: `${inAppSlug}/guides/get-user-details`,
-                },
               ],
             },
             {
@@ -262,6 +258,10 @@ export const sidebar: SideBar = {
               ],
             },
             {
+              name: "Backend APIs",
+              href: `${inAppSlug}/guides/get-user-details`,
+            },
+            {
               name: "FAQs",
               href: `${inAppSlug}/faqs`,
             },
@@ -275,6 +275,10 @@ export const sidebar: SideBar = {
             {
               name: "Overview",
               href: `${ecosystemSlug}/overview`,
+            },
+            {
+              name: "Security",
+              href: `${ecosystemSlug}/security`,
             },
             {
               name: "Get Started",
