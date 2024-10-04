@@ -38,7 +38,7 @@ When a user signs into an application using their email or social logins for the
 
 - Ecosystem wallets are controlled by the ecosystem owner.
   - We moved away from the shamir secret sharing model and replaced it with Encalves. This ensures no-one can extract the private key from the client, including other developers in the ecosystem.
-  - With enclave and partner policies, this is mitigated. Ecosystem owners are able to place restrictions on what individual partners are able to do. Moreover, since the private key is never re-constructed on the client, the ecosystem partner must submit the request to the enclave which would be able to verify the request and block requests that are out of scope or denied by the ecosystem owner.
+  - With enclave and partner policies, ecosystem owners are able to place restrictions on what individual partners are able to do. Since the private key is never re-constructed on the client, the ecosystem partner must submit the request to the enclave which would be able to verify the request and block requests that are out of scope or denied by the ecosystem owner.
 
 ## Recoverability
 
