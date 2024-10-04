@@ -124,8 +124,8 @@ export async function getContractEvents<
 
     // Make sure the inputs were properly defined
     if (
-      fromBlock &&
-      toBlock &&
+      fromBlock !== undefined &&
+      toBlock !== undefined &&
       BigInt(toBlock) - BigInt(fromBlock) !== BigInt(blockRange)
     ) {
       throw new Error(
@@ -133,9 +133,9 @@ export async function getContractEvents<
       );
     }
 
-    if (fromBlock) {
+    if (fromBlock !== undefined) {
       restParams.toBlock = BigInt(fromBlock) + BigInt(blockRange) - 1n; // Subtract one because toBlock is inclusive
-    } else if (toBlock) {
+    } else if (toBlock !== undefined) {
       restParams.fromBlock = BigInt(toBlock) - BigInt(blockRange) + 1n; // Add one because fromBlock is inclusive
     } else {
       // If no from or to block specified, use the latest block as the to block
