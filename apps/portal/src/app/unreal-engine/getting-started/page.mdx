@@ -1,0 +1,60 @@
+import {
+	Callout,
+	Steps,
+	Step,
+	DocImage,
+} from "@doc";
+import unrealSettings from "../assets/unreal-engine-settings.png";
+import unrealLevel from "../assets/unreal-engine-level.png";
+import { createUnrealEngineMetadata } from "../util";
+
+export const metadata = createUnrealEngineMetadata({
+	title: "Plugin Getting Started",
+	description: "Learn how to integrate Thirdweb's Unreal Engine SDK into your Engine.",
+});
+
+# Getting Started
+
+<Callout variant='info' title="API Key Required">
+To get started with the Unreal SDK, you will need to have a [thirdweb API Key][api-key] created. Make sure you
+allowlist a bundle ID to use within Unreal native applications.
+</Callout>
+
+## Integration Steps
+
+<Steps>
+
+<Step title="Plugin Download" >
+Download and install the Thirdweb Unreal Plugin from the [Unreal Marketplace][marketplace].
+</Step>
+
+<Step title="Runtime Settings" >
+Once you import the plugin into your project, you will need to set up the plugin settings with your Client ID and
+Bundle ID.
+
+You can do so by clicking the thirdweb icon on your engine action bar, or by navigating to
+`Edit > Project Settings > Engine > Thirdweb` and filling in the required fields.
+
+<DocImage src={unrealSettings} className="w-[800px]" />
+
+Alternatively, you can head to your root `Config` folder and open the `DefaultEngine.ini` file to set up the plugin
+settings.
+
+```ini
+[/Script/Thirdweb.ThirdwebRuntimeSettings]
+ClientID=
+BundleID=
+```
+
+</Step>
+
+<Step title="Test it!" >
+Try out our prebuilt example `Level_Thirdweb` to create and login to wallets seamlessly, using all kinds of
+authentication, and explore advanced Account Abstraction use cases.
+<DocImage src={unrealLevel} className="w-[800px]" />
+</Step>
+
+</Steps>
+
+[api-key]: https://thirdweb.com/create-api-key
+[marketplace]: https://www.unrealengine.com/marketplace/en-US/product/f21200c2610146f3888172994448e50d

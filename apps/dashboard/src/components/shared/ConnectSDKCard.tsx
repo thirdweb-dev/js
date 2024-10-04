@@ -40,9 +40,9 @@ export function ConnectSDKCard({
           label="Unity SDK"
         />
         <DocLink
-          link="https://portal.thirdweb.com/unreal/getting-started"
+          link="https://portal.thirdweb.com/unreal-engine/getting-started"
           icon={UnrealIcon}
-          label="Unreal SDK"
+          label="Unreal Engine SDK"
         />
         <DocLink
           link="https://portal.thirdweb.com/dotnet/getting-started"

@@ -1,0 +1,100 @@
+import { Details, Callout, createMetadata } from "@doc";
+import { GraduationCap } from "lucide-react";
+import { createUnrealEngineMetadata } from "../../util";
+
+export const metadata = createUnrealEngineMetadata({
+    title: "Thirdweb Wallet Handles",
+    description: "Manage wallet handles and operations.",
+});
+
+# WalletHandle
+
+`FWalletHandle` is the base struct that provides a unique handle for distinguishing different types of wallets in the
+Thirdweb SDK. It supports a variety of shared operations and is not used directly, but rather inherited.
+
+## Enums
+
+### EWalletHandleType
+Wallet handle type identifier.
+- `InvalidHandle`: Represents an uninitialized or invalid handle.
+- `InApp`: Represents an in-app wallet.
+- `Smart`: Represents a smart contract wallet.
+
+## Member Functions
+
+- **`IsValid()`**: Checks if the wallet handle is valid.
+- **`Invalidate()`**: Invalidates the wallet handle, setting its ID to zero and marking its type as invalid.
+- **`ToAddress()`**: Retrieves the wallet address associated with this handle.
+- **`Sign(Message)`**: Sign a message using the wallet handle.
+- **`GetType()`**: Get the type of wallet handle.
+- **`GetID()`**: Gets the ID of the wallet handle.
+- **`GetDisplayName()`**: Retrieves the debug display name of the wallet handle.
+- **`GetTypeString()`**: Retrieves the type of the wallet handle as a string.
+
+## Operators
+
+- **`operator==`**: Compares two wallet handles for equality.
+- **`operator!=`**: Compares two wallet handles for inequality.
+
+# InAppWalletHandle
+
+`FInAppWalletHandle` provides a unique handle for InApp wallets. It supports a variety of operations for authentication.
+
+## Enums
+
+### EInAppSource
+Source that created the InApp wallet
+- `InvalidSource`: Represents an uninitialized or invalid source.
+- `OAuthProvider`: Represents an OAuth provider source.
+- `Email`: Represents an email source.
+- `Phone`: Represents a phone source.
+- `Jwt`: Represents a JWT source.
+- `AuthEndpoint`: Represents an auth endpoint source.
+- `Guest`: Represents a guest source.
+
+## Member Functions
+
+- **`CreateEmailWallet(Email, Wallet, Error)`**: Creates an in-app email wallet.
+- **`CreateEcosystemEmailWallet(PartnerId, Email, Wallet, Error)`**: Creates an ecosystem email wallet.
+- **`CreateOAuthWallet(Provider, Wallet, Error)`**: Creates an in-app OAuth wallet using the specified provider.
+- **`CreateEcosystemOAuthWallet(PartnerId, Provider, Wallet, Error)`**: Creates an ecosystem OAuth wallet using the
+specified provider.
+- **`CreatePhoneWallet(Phone, Wallet, Error)`**: Creates an in-app phone wallet.
+- **`CreateEcosystemPhoneWallet(PartnerId, Phone, Wallet, Error)`**: Creates an ecosystem phone wallet.
+- **`CreateJwtWallet(Wallet, Error)`**: Creates an in-app JWT wallet.
+- **`CreateEcosystemJwtWallet(PartnerId, Wallet, Error)`**: Creates an ecosystem JWT wallet.
+- **`CreateAuthEndpointWallet(Wallet, Error)`**: Creates an in-app wallet using an authentication endpoint.
+- **`CreateEcosystemAuthEndpointWallet(PartnerId, Wallet, Error)`**: Creates an ecosystem wallet using an
+authentication endpoint.
+- **`CreateGuestWallet(Email, Wallet, Error)`**: Creates an in-app guest wallet.
+- **`CreateEcosystemGuestWallet(PartnerId, Email, Wallet, Error)`**: Creates an ecosystem guest wallet.
+- **`IsConnected()`**: Checks if the wallet is connected to a session.
+- **`Disconnect()`**: Disconnects a wallet from a session.
+- **`VerifyOTP(Method, OTP, Error)`**: Verifies an OTP for in-app wallets.
+- **`SendOTP(Method, Error)`**: Sends an OTP for in-app wallets.
+- **`FetchOAuthLoginURL(RedirectUrl, LoginLink, Error)`**: Fetches the OAuth login URL for in-app wallets.
+- **`SignInWithOAuth(AuthResult, Error)`**: Signs in using OAuth authentication details.
+- **`SignInWithJwt(Jwt, Error)`**: Signs in using a JSON Web Token (JWT).
+- **`SignInWithAuthEndpoint(Jwt, Error)`**: Signs in using any payload.
+- **`SignInWithGuest(Error)`**: Signs in as an anonymous guest user using a semi-reproducible device fingerprint.
+Fingerprints can change from update to update and should not be relied upon for long term use.
+- **`GetSourceString()`**: Retrieves the source as an `FString`.
+- **`GetSourceString(Source)`**: Retrieves the specified source as an `FString`.
+- **`GetOAuthProvider()`**: Retrieves the configured OAuth provider.
+
+# SmartWalletHandle
+
+`FSmartWalletHandle` provides a unique handle for smart wallets. It supports a variety of operations for handling
+sessions, and interacting with smart contract wallets.
+
+## Member Functions
+
+- **`Create(InInAppWallet, ChainID, bGasless, Factory, AccountOverride, bSuccess, Error)`**: Creates a smart wallet.
+- **`IsDeployed(bDeployed, Error)`**: Checks if the smart wallet is deployed.
+- **`CreateSessionKey(Signer, ApprovedTargets, NativeTokenLimitPerTransactionInWei, PermissionStart, PermissionEnd,
+RequestValidityStart, RequestValidityEnd, TransactionHash, Error)`**: Creates a session key for a smart wallet.
+- **`RevokeSessionKey(Signer, Error)`**: Revokes a session key for a smart wallet.
+- **`GetAdmins(Admins, Error)`**: Retrieves the admins of a smart wallet.
+- **`AddAdmin(Signer, Error)`**: Adds an admin to a smart wallet.
+- **`RemoveAdmin(Signer, Error)`**: Removes an admin from a smart wallet.
+- **`GetActiveSigners(Signers, Error)`**: Retrieves the active signers of a smart wallet.

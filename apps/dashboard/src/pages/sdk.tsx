@@ -172,9 +172,9 @@ const Web3SDK: ThirdwebNextPage = () => {
             href="/ui-components"
           />
           <ProductLearnMoreCard
-            title="Game Engine SDK"
+            title="Game Engine SDKs"
             category={TRACKING_CATEGORY}
-            description="Unity SDK includes all supported platforms: Native (Windows, Mac, Linux), Mobile (iOS, Android), Console (PS, Xbox), Browser (WebGL). Unreal SDK coming soon."
+            description="Unity and Unreal Engine SDKs include all supported platforms: Native (Windows, Mac, Linux), Mobile (iOS, Android), Console (PS, Xbox), Browser (WebGL)."
             icon={require("../../public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="https://portal.thirdweb.com/unity"
           />

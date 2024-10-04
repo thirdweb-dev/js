@@ -12,7 +12,7 @@ import {
   WalletsSmartIcon,
 } from "@/icons";
 import { CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
-import { UnrealIcon } from "../../icons/sdks/UnrealIcon";
+import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 
 const connectSlug = "/connect/sign-in";
 const inAppSlug = "/connect/in-app-wallet";
@@ -79,9 +79,9 @@ export const sidebar: SideBar = {
           icon: <UnityIcon />,
         },
         {
-          name: "Unreal",
-          href: "/unreal",
-          icon: <UnrealIcon />,
+          name: "Unreal Engine",
+          href: "/unreal-engine",
+          icon: <UnrealEngineIcon />,
         },
       ],
     },
@@ -558,9 +558,9 @@ export const sidebar: SideBar = {
               icon: <UnityIcon />,
             },
             {
-              name: "Unreal",
-              href: "/unreal",
-              icon: <UnrealIcon />,
+              name: "Unreal Engine",
+              href: "/unreal-engine",
+              icon: <UnrealEngineIcon />,
             },
           ],
         },

@@ -92,8 +92,8 @@ export const connectLinks = [
   },
   {
     name: "Unreal Engine",
-    href: "/unreal",
-    icon: "/icons/navbar/nav-icon-unreal.svg",
+    href: "/unreal-engine",
+    icon: "/icons/navbar/nav-icon-unreal-engine.svg",
   },
 ] as const;
 

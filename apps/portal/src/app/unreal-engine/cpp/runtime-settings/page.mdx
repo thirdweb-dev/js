@@ -1,0 +1,46 @@
+import { createUnrealEngineMetadata } from "../../util";
+
+export const metadata = createUnrealEngineMetadata({
+    title: "ThirdwebRuntimeSettings",
+    description: "Overview and configuration of the ThirdwebRuntimeSettings in the Thirdweb Unreal Engine SDK.",
+});
+
+# Runtime Settings
+
+`ThirdwebRuntimeSettings` provides configuration settings for the Thirdweb SDK within Unreal Engine. These settings are
+used by the SDK to manage essential information like client credentials and storage paths.
+
+The runtime settings are located in `Edit > Project Settings > Engine > Thirdweb`. You can also access the settings
+by clicking the thirdweb logo on your Editor action bar, or manually in `DefaultEngine.ini`.
+
+## **Properties**
+
+- `ClientID`: The client ID used to authenticate with Thirdweb services.
+- `BundleID`: The bundle ID associated with the application.
+- `EncryptionKey`: Required if using custom auth methods via standard InApp wallets (Non-Ecosystem).
+- `EngineSigners`: Optional array of engine signers stored globally for convenience
+- `EcosystemId`: Ecosystem Wallet Identifier tied to your Thirdweb Ecosystem account.
+Only relevant when using Ecosystem Wallets. e.g. `ecosystem.my-cool-game`
+- `bSendAnalytics`: Opt in or out of connect analytics.
+- `bOverrideOAuthBrowserProviderBackends`: Edit Condition for overriding OAuth browser Provider backends
+- `OAuthBrowserProviderBackendOverrides`: Array of OAuth provider backend methods that can be overridden
+
+### Configuration Requirements
+
+`ClientID` + `BundleID` are required for authentication with Thirdweb services.
+`EcosystemId` is required if using ecosystem wallets
+
+### Class Functions
+
+- **`Get()`**: Retrieve the current `UThirdwebRuntimeSettings` instance.
+- **`GetThirdwebGlobalEngineSigners()`**: Retrieve the `EngineSigners` array.
+- **`GetThirdwebGlobalEngineSigner(bFound)`**: Retrieve the first Engine Signer from the `EngineSigners` array, if any.
+- **`GetEncryptionKey()`**: Static accessor to get `EncryptionKey`
+- **`GetStorageDirectory()`**: Static accessor to retrieve the absolute path of the thirdweb InAppWallet platform
+save directory
+- **`IsExternalOAuthBackend(Provider)`**: Static accessor to get the resolved backend of an OAuth provider
+- **`GetEcosystemId()`**: Static accessor to get `EcosystemId`
+- **`IsEcosystem()`**: Static accessor to check `EcosystemId` validity
+- **`GetClientId()`**: Static accessor to get `ClientID`
+- **`GetBundleId()`**: Static accessor to get `BundleId`
+- **`AnalyticsEnabled()`**: Static accessor to check Analytics Opt-In status

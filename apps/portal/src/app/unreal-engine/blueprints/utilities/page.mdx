@@ -1,0 +1,59 @@
+import { createUnrealEngineMetadata } from "../../util";
+import {
+	equalityNode,
+	isValidNode,
+	signMessageNode,
+	toChecksummedAddressNode,
+	isChecksummedAddressNode,
+	isValidAddressNode,
+	isValidPrivateKeyNode,
+	toTextStringNode, zeroAddressNode, oAuthProviderToStringText, stringTextToOAuthProvider,
+} from "./nodes";
+import { Blueprint } from "../blueprint";
+
+export const metadata = createUnrealEngineMetadata({
+    title: "Utilities",
+    description: "Utility & Helper functions",
+});
+
+# Utilities
+
+### Sign Message
+Signs a message with the specified wallet handle.
+<Blueprint code={signMessageNode} className='w-full h-32' />
+
+### To Text/String
+Signs a message with the specified wallet handle.
+<Blueprint code={toTextStringNode} className='w-full h-40' />
+
+### Is Valid Address
+Checks the validity of the address
+<Blueprint code={isValidAddressNode} className='w-full h-32' />
+
+### Is Checksummed Address
+Signs a message with the specified wallet handle.
+<Blueprint code={isChecksummedAddressNode} className='w-full h-32' />
+
+### To Checksummed Address
+Signs a message with the specified wallet handle.
+<Blueprint code={toChecksummedAddressNode} className='w-full h-32' />
+
+### Is Valid
+Signs a message with the specified wallet handle.
+<Blueprint code={isValidNode} className='w-full h-48' />
+
+### Equality
+Native equality/inequality operators
+<Blueprint code={equalityNode} className='w-full h-60' />
+
+### Zero Address
+Constant zero address
+<Blueprint code={zeroAddressNode} className='w-full h-28' />
+
+### OAuth Provider to String/Text
+Convert an EThirdwebOAuthProvider to string/text
+<Blueprint code={oAuthProviderToStringText} className="w-full h-32" />
+
+### String/Text to OAuth Provider
+Convert string/text to an EThirdwebOAuthProvider
+<Blueprint code={stringTextToOAuthProvider} className="w-full h-32" />

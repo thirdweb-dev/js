@@ -1,0 +1,61 @@
+import { createUnrealEngineMetadata } from "../../util";
+
+export const metadata = createUnrealEngineMetadata({ title: "ThirdwebCommon", description: "Common enums." });
+
+# Common
+
+`ThirdwebCommon` defines several common enums and structs that are used across the Thirdweb Unreal Engine SDK. They
+represent various states and outcomes for operations related to wallets, smart contracts, and authentication providers.
+
+## Enums
+
+### **EFunctionResult**
+Represents the result of a generic function call.
+- `Success`: The operation completed successfully.
+- `Failed`: The operation failed.
+
+### **ESmartWalletDeployedFunctionResult**
+Represents the deployment status of a smart wallet.
+- `Deployed`: The smart wallet is deployed.
+- `NotDeployed`: The smart wallet is not deployed.
+- `Failed`: The check for deployment status failed.
+
+### **EOTPVerificationFunctionResult**
+Represents the result of an OTP (One-Time Password) verification.
+- `Verified`: The OTP was successfully verified.
+- `Retry`: The OTP verification failed, but can be retried.
+- `Failed`: The OTP verification failed with no retry available.
+
+### **EThirdwebOAuthProvider**
+- Represents the supported OAuth providers.
+- `Google`: Represents Google as an OAuth provider.
+- `Apple`: Represents Apple as an OAuth provider.
+- `Facebook`: Represents Facebook as an OAuth provider.
+- `Discord`: Represents Discord as an OAuth Provider.
+- `Farcaster`: Represents Farcaster as an OAuth Provider.
+- `Telegram`: Represents Telegram as an OAuth Provider.
+- `Line`: Represents Line as an OAuth Provider.
+- `X`: Represents X as an OAuth Provider.
+- `Coinbase`: Represents Coinbase as an OAuth Provider.
+
+### **EThirdwebOTPMethod**
+- Represents the supported OTP authentication methods.
+- `Email`: Email authentication.
+- `Phone`: Phone Authentication.
+
+## Structs
+
+### FSigner
+
+`FSigner` represents a signer in the context of a smart wallet within the Thirdweb SDK. The signer is responsible for
+signing transactions and managing the approval of targets and limits on native tokens.
+
+#### Properties
+- `Address`: The Ethereum address of the signer.
+- `ApprovedTargets`: An array of approved contract addresses that the signer is allowed to interact with.
+- `NativeTokenLimitPerTransaction`: The limit of native tokens (e.g. ETH) that can be spent per transaction.
+- `StartTime`: The start time for the signer's permissions, specified as a `FDateTime`.
+- `EndTime`: The end time for the signer's permissions, specified as a `FDateTime`.
+
+#### Class Functions
+- `FromJson(JsonObject)`: create an `FSigner` instance from a JSON object.

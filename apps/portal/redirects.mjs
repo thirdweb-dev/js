@@ -1,5 +1,7 @@
 // @ts-check
 
+import { unrealEngineRedirects } from "./src/app/unreal-engine/redirects.mjs";
+
 const reactRedirects = {
 	"/react": "/react/v4",
 	"/react/connecting-wallets": "/react/v4/connecting-wallets",
@@ -941,6 +943,7 @@ export const redirects = async () => {
 		...createRedirects(contractRedirects),
 		...createRedirects(otherRedirects),
 		...createRedirects(v5RestructuredRedirects),
+		...createRedirects(unrealEngineRedirects),
 		// references docs
 		latestReference("react", "v4"),
 		latestReference("react-native", "v0"),

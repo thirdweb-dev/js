@@ -248,7 +248,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
               TRACKING_CATEGORY={TRACKING_CATEGORY}
               href="https://portal.thirdweb.com/solutions/gaming/unreal-engine/quickstart"
               linkTitle="Read the Unreal Engine docs"
-              label="unreal"
+              label="unreal-engine"
             />
             <ImageCard
               title="Mobile"
@@ -303,16 +303,16 @@ const SolutionsGaming: ThirdwebNextPage = () => {
             </ImageCard>
 
             <ImageCard
-              title="Play Speed Racer"
-              image={require("../../../public/assets/solutions-pages/gaming/gaming-speed-racer.png")}
+              title="Play TappyFowl"
+              image={require("../../../public/assets/solutions-pages/gaming/gaming-tappyfowl.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
-              href="https://engine-express.thirdweb-preview.com/"
+              href="https://tappyfowl.thirdweb.com/"
               category="Unreal Engine"
-              linkTitle="Play Speed Racer"
-              label="speed-racer"
+              linkTitle="Play TappyFowl"
+              label="tappyfowl"
             >
-              An Onchain Survival Game. Escape the dungeon by battling
-              terrifying bosses.
+              Guide your fowl through a fantastical landscape that requires
+              quick reflexes and precise timing.
             </ImageCard>
           </SimpleGrid>
         </Flex>
@@ -339,7 +339,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
         >
           <SolutionsGamingCard
             p={8}
-            label="unreal"
+            label="unreal-engine"
             href="https://portal.thirdweb.com/gaming"
           >
             <LandingIconSectionItem
