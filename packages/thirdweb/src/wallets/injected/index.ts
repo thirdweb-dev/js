@@ -271,7 +271,8 @@ async function switchChain(provider: Ethereum, chain: Chain) {
             chainName: apiChain.name,
             nativeCurrency: apiChain.nativeCurrency,
             rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
-            blockExplorerUrls: apiChain.explorers?.map((x) => x.url),
+            // @ts-expect-error - fixes firefox, needs to be null not undefined
+            blockExplorerUrls: apiChain.explorers?.map((x) => x.url) ?? null,
           },
         ],
       });
