@@ -212,19 +212,32 @@ export function useContractEvents(abi: Abi) {
   return abi.filter((a) => a.type === "event");
 }
 
-export function useCustomFactoryAbi(contractAddress: string, chainId: number) {
+export function useCustomFactoryAbi(
+  contractAddress: string,
+  chainId: number | undefined,
+) {
   const chain = useV5DashboardChain(chainId);
   const client = useThirdwebClient();
   const contract = useMemo(() => {
+    if (!chain) {
+      return undefined;
+    }
+
     return getContract({
       client,
       address: contractAddress,
       chain,
     });
   }, [contractAddress, chain, client]);
+
   return useQuery({
     queryKey: ["custom-factory-abi", contract],
-    queryFn: () => resolveContractAbi<Abi>(contract),
+    queryFn: () => {
+      if (!contract) {
+        throw new Error("Contract not found");
+      }
+      return resolveContractAbi<Abi>(contract);
+    },
     enabled: !!contract,
   });
 }

@@ -145,7 +145,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const customFactoryAbi = useCustomFactoryAbi(
     customFactoryAddress,
-    Number(customFactoryNetwork),
+    customFactoryNetwork ? Number(customFactoryNetwork) : undefined,
   );
 
   const isTWPublisher = checkTwPublisher(metadata?.publisher);
