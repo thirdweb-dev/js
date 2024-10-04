@@ -9,6 +9,7 @@ import { prepareTransaction } from "../../../transaction/prepare-transaction.js"
 import { isEIP155Enforced } from "../../../utils/any-evm/is-eip155-enforced.js";
 import { getKeylessTransaction } from "../../../utils/any-evm/keyless-transaction.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
+import { withCache } from "../../../utils/promise/withCache.js";
 import type {
   ClientAndChain,
   ClientAndChainAndAccount,
@@ -42,73 +43,85 @@ export async function computeCreate2FactoryAddress(
 ): Promise<string> {
   const chainId = options.chain.id;
 
-  // special handling for chains with hardcoded gasPrice and gasLimit
-  if (CUSTOM_GAS_FOR_CHAIN[chainId]) {
-    const enforceEip155 = await isEIP155Enforced(options);
-    const eipChain = enforceEip155 ? chainId : 0;
-    const gasPrice = CUSTOM_GAS_FOR_CHAIN[chainId.toString()]?.gasPrice;
-    const gasLimit = CUSTOM_GAS_FOR_CHAIN[chainId.toString()]?.gasLimit;
+  return withCache(
+    async () => {
+      // special handling for chains with hardcoded gasPrice and gasLimit
+      if (CUSTOM_GAS_FOR_CHAIN[chainId]) {
+        const enforceEip155 = await isEIP155Enforced(options);
+        const eipChain = enforceEip155 ? chainId : 0;
+        const gasPrice = CUSTOM_GAS_FOR_CHAIN[chainId.toString()]?.gasPrice;
+        const gasLimit = CUSTOM_GAS_FOR_CHAIN[chainId.toString()]?.gasLimit;
 
-    const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
-      gasPrice,
-      gasLimit,
-    });
+        const deploymentInfo = await _getCreate2FactoryDeploymentInfo(
+          eipChain,
+          {
+            gasPrice,
+            gasLimit,
+          },
+        );
 
-    return deploymentInfo.predictedAddress;
-  }
+        return deploymentInfo.predictedAddress;
+      }
 
-  // default flow
-  const allBinsInfo = await Promise.all([
-    // to generate EIP-155 transaction
-    ...CUSTOM_GAS_BINS.map((b) => {
-      return _getCreate2FactoryDeploymentInfo(chainId, { gasPrice: b });
-    }),
+      // default flow
+      const allBinsInfo = await Promise.all([
+        // to generate EIP-155 transaction
+        ...CUSTOM_GAS_BINS.map((b) => {
+          return _getCreate2FactoryDeploymentInfo(chainId, { gasPrice: b });
+        }),
 
-    // to generate pre EIP-155 transaction, hence chainId 0
-    ...CUSTOM_GAS_BINS.map((b) => {
-      return _getCreate2FactoryDeploymentInfo(0, { gasPrice: b });
-    }),
-  ]);
+        // to generate pre EIP-155 transaction, hence chainId 0
+        ...CUSTOM_GAS_BINS.map((b) => {
+          return _getCreate2FactoryDeploymentInfo(0, { gasPrice: b });
+        }),
+      ]);
 
-  const allFactories = await Promise.all(
-    allBinsInfo.map((b) => {
-      const tempFactory = getContract({
-        ...options,
-        address: b.predictedAddress,
+      const allFactories = await Promise.all(
+        allBinsInfo.map((b) => {
+          const tempFactory = getContract({
+            ...options,
+            address: b.predictedAddress,
+          });
+          return isContractDeployed(tempFactory);
+        }),
+      );
+
+      const indexOfCommonFactory = allBinsInfo.findIndex(
+        (b) => b.predictedAddress === COMMON_FACTORY_ADDRESS,
+      );
+      if (indexOfCommonFactory && allFactories[indexOfCommonFactory]) {
+        return COMMON_FACTORY_ADDRESS;
+      }
+
+      const indexOfExistingDeployment = allFactories.findIndex((b) => b);
+      if (
+        indexOfExistingDeployment &&
+        allBinsInfo &&
+        allBinsInfo[indexOfExistingDeployment]?.predictedAddress
+      ) {
+        // TODO: cleanup
+        return allBinsInfo[indexOfExistingDeployment]
+          ?.predictedAddress as string;
+      }
+
+      const [enforceEip155, gasPriceFetched] = await Promise.all([
+        isEIP155Enforced(options),
+        getGasPrice(options),
+      ]);
+      const eipChain = enforceEip155 ? chainId : 0;
+      const bin = _getNearestGasPriceBin(gasPriceFetched);
+
+      const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
+        gasPrice: bin,
       });
-      return isContractDeployed(tempFactory);
-    }),
+
+      return deploymentInfo.predictedAddress;
+    },
+    {
+      cacheKey: `create2factory:${chainId}`,
+      cacheTime: 24 * 60 * 60 * 1000, // 1 day
+    },
   );
-
-  const indexOfCommonFactory = allBinsInfo.findIndex(
-    (b) => b.predictedAddress === COMMON_FACTORY_ADDRESS,
-  );
-  if (indexOfCommonFactory && allFactories[indexOfCommonFactory]) {
-    return COMMON_FACTORY_ADDRESS;
-  }
-
-  const indexOfExistingDeployment = allFactories.findIndex((b) => b);
-  if (
-    indexOfExistingDeployment &&
-    allBinsInfo &&
-    allBinsInfo[indexOfExistingDeployment]?.predictedAddress
-  ) {
-    // TODO: cleanup
-    return allBinsInfo[indexOfExistingDeployment]?.predictedAddress as string;
-  }
-
-  const [enforceEip155, gasPriceFetched] = await Promise.all([
-    isEIP155Enforced(options),
-    getGasPrice(options),
-  ]);
-  const eipChain = enforceEip155 ? chainId : 0;
-  const bin = _getNearestGasPriceBin(gasPriceFetched);
-
-  const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
-    gasPrice: bin,
-  });
-
-  return deploymentInfo.predictedAddress;
 }
 
 /**
