@@ -132,10 +132,6 @@ export const sidebar: SideBar = {
                   name: "External Wallets",
                   href: `${connectSlug}/methods/external-wallets`,
                 },
-                {
-                  name: "Guest Mode",
-                  href: `${connectSlug}/methods/guest-mode`,
-                },
               ],
             },
             {
