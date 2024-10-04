@@ -1,5 +1,7 @@
+export const dynamic = "force-dynamic";
 import { CodeExample } from "@/components/code/code-example";
 import { InAppConnectEmbed } from "../../../components/in-app-wallet/connect-button";
+import { Profiles } from "../../../components/in-app-wallet/profile-sections";
 import ThirdwebProvider from "../../../components/thirdweb-provider";
 
 export default function Page() {
@@ -7,6 +9,9 @@ export default function Page() {
     <ThirdwebProvider>
       <section className="space-y-8">
         <AnyAuth />
+      </section>
+      <section className="mt-8 space-y-8">
+        <Profiles />
       </section>
     </ThirdwebProvider>
   );

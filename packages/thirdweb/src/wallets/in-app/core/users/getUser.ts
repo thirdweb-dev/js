@@ -3,6 +3,7 @@ import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
 import type { OneOf, Prettify } from "../../../../utils/type-utils.js";
 import type { Profile } from "../authentication/types.js";
+import type { Ecosystem } from "../wallet/types.js";
 
 export type GetUserResult = {
   userId: string;
@@ -44,6 +45,7 @@ export async function getUser({
   email,
   phone,
   id,
+  ecosystem,
 }: Prettify<
   {
     client: ThirdwebClient;
@@ -52,6 +54,7 @@ export async function getUser({
     email?: string;
     phone?: string;
     id?: string;
+    ecosystem?: Ecosystem;
   }>
 >): Promise<GetUserResult | null> {
   if (!client.secretKey) {
@@ -82,7 +85,7 @@ export async function getUser({
     );
   }
 
-  const clientFetch = getClientFetch(client);
+  const clientFetch = getClientFetch(client, ecosystem);
 
   const res = await clientFetch(url.toString());
 

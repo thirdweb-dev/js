@@ -26,6 +26,7 @@ export { useSwitchActiveWalletChain } from "../react/core/hooks/wallets/useSwitc
 export { useCallsStatus } from "../react/core/hooks/wallets/useCallsStatus.js";
 export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
 export { useProfiles } from "../react/native/hooks/wallets/useProfiles.js";
+export { useLinkProfile } from "../react/native/hooks/wallets/useLinkProfile.js";
 
 // contract
 export { useReadContract } from "../react/core/hooks/contract/useReadContract.js";

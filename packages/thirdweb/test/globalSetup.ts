@@ -64,13 +64,17 @@ export default async function globalSetup() {
     port: 8648,
   });
 
+  // TODO re-enable thirdweb RPC for this fork
+  // forkUrl: SECRET_KEY
+  //       ? `https://137.rpc.thirdweb.com/${clientId}`
+  //       : "https://polygon-rpc.com",
+  //     forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
   const shutdownPolygon = await startProxy({
     port: 8649,
     options: {
       chainId: 137,
-      forkUrl: SECRET_KEY
-        ? `https://137.rpc.thirdweb.com/${clientId}`
-        : "https://polygon-rpc.com",
+      // using public rpc for now
+      forkUrl: "https://polygon-rpc.com",
       forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
       forkChainId: 137,
       forkBlockNumber: POLYGON_FORK_BLOCK_NUMBER,

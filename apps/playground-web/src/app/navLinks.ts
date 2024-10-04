@@ -42,11 +42,11 @@ export const navLinks: SidebarLink[] = [
     expanded: true,
     links: [
       {
-        name: "Any auth method",
+        name: "Any Auth",
         href: "/connect/in-app-wallet",
       },
       {
-        name: "Your own Ecosystem",
+        name: "Ecosystems",
         href: "/connect/in-app-wallet/ecosystem",
       },
       {

@@ -1,0 +1,72 @@
+import {
+	Tabs,
+	TabsList,
+	TabsTrigger,
+	TabsContent,
+	DocImage,
+	createMetadata,
+} from "@doc";
+
+export const metadata = createMetadata({
+	title: "Connect users with Ecosystem Wallets",
+	description:
+		"use the prebuilt connect UI components to authenticate users and connect ecosystem wallets",
+	image: {
+		title: "Connect users with Ecosystem Wallets",
+		icon: "wallets",
+	},
+});
+
+# Connect Users to your Ecosystem
+
+## Using the Connect UI components
+
+If you're building a [React website](/typescript/react/v5/ConnectButton), [React Native app](/react-native/v5/), or [Unity game](/unity/ConnectWallet) you can use the prebuilt connect UI components to authenticate users and connect their wallets accross your ecosystem.
+
+```jsx
+import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
+import { inAppWallet } from "thirdweb/wallets";
+
+const client = createThirdwebClient({ clientId });
+const wallets = [ecosystemWallet("ecosystem.your-ecosystem-id")];
+
+export default function App() {
+	return (
+		<ThirdwebProvider>
+			<ConnectButton client={client} wallets={wallets} />
+		</ThirdwebProvider>
+	);
+}
+```
+
+## Using your own UI
+
+You can also build your own UI using the low-level hooks and functions. Remember to wrap your app in a `ThirdwebProvider` to ensure that the wallet is available to all components in your app.
+
+```tsx
+import { ecosystemWallet } from "thirdweb/wallets";
+
+const wallet = ecosystemWallet("ecosystem.your-ecosystem-id");
+
+const LoginComponent = () => {
+	const { connect, isLoading } = useConnect();
+
+	return <button onClick={() => connect(async () => {
+		await wallet.connect({
+			client,
+			strategy: "discord", // or any supported auth strategy
+		})
+		return wallet;
+	})}>Connect</button>;
+};
+```
+
+## Passing a partner ID
+
+For closed ecosystems, you can pass a valid `partnerId` to the `ecosystemWallet` provided by the ecosystem owner.
+
+```tsx
+const wallet = ecosystemWallet("ecosystem.your-ecosystem-id", {
+	partnerId: "your-partner-id",
+});
+```
