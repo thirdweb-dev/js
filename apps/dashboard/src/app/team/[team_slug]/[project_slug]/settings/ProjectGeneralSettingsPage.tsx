@@ -52,6 +52,10 @@ export function ProjectGeneralSettingsPage(props: {
   paths: EditProjectUIPaths;
   onKeyUpdated: (() => void) | undefined;
   wording: "project" | "api-key";
+  // TODO: remove this when this component is not used in the project settings page
+  hideFields?: {
+    name: boolean;
+  };
 }) {
   const updateMutation = useUpdateApiKey();
   const deleteMutation = useRevokeApiKey();
@@ -64,6 +68,7 @@ export function ProjectGeneralSettingsPage(props: {
       deleteMutation={deleteMutation}
       paths={props.paths}
       onKeyUpdated={props.onKeyUpdated}
+      hideFields={props.hideFields}
     />
   );
 }
@@ -84,6 +89,9 @@ interface EditApiKeyProps {
   deleteMutation: DeleteMutation;
   paths: EditProjectUIPaths;
   onKeyUpdated: (() => void) | undefined;
+  hideFields?: {
+    name: boolean;
+  };
 }
 
 type UpdateAPIForm = UseFormReturn<ApiKeyValidationSchema>;
@@ -214,12 +222,14 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
         autoComplete="off"
       >
         <div className="flex flex-col gap-8">
-          <ProjectNameSetting
-            form={form}
-            updateMutation={updateMutation}
-            handleSubmit={handleSubmit}
-            wording={wording}
-          />
+          {!props.hideFields?.name && (
+            <ProjectNameSetting
+              form={form}
+              updateMutation={updateMutation}
+              handleSubmit={handleSubmit}
+              wording={wording}
+            />
+          )}
 
           <APIKeyDetails apiKey={apiKey} />
 
