@@ -259,7 +259,7 @@ export const sidebar: SideBar = {
             },
             {
               name: "Backend APIs",
-              href: `${inAppSlug}/guides/get-in-app-wallet-details-on-server`,
+              href: `${inAppSlug}/guides/get-user-details`,
             },
             {
               name: "FAQs",
@@ -292,7 +292,10 @@ export const sidebar: SideBar = {
               name: "Integrating with Partners",
               href: `${ecosystemSlug}/integrating-partners`,
             },
-
+            {
+              name: "Pregenerate Wallets",
+              href: `${ecosystemSlug}/pregenerate-wallets`,
+            },
             {
               name: "Ecosystem Wallet Explorer Page",
               href: `${ecosystemSlug}/wallet-explorer`,
