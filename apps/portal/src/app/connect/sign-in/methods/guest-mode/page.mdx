@@ -46,7 +46,7 @@ import { inAppWallet } from "thirdweb/wallets";
 
 <ConnectButton
 	wallets={[
-		createWallet("inApp", {
+		inAppWallet({
 			auth: {
 				options: ["google", "discord", "telegram", "email", "phone", "guest"],
 			},
