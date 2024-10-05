@@ -15,7 +15,105 @@ Useful for passing the zero address to various functions.
 
 A `string` representing the native token address `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`.
 
-Useful for passing the native token address to various functions.
+Useful for passing the native token address (ETH or equivalent) to various functions.
+
+## Constants.DECIMALS_18
+
+A `double` representing the value `1000000000000000000`.
+
+Useful for converting values between different decimal places.
+
+## Constants.ENTRYPOINT_ADDRESS_V06
+
+A `string` representing the entrypoint address for Account Abstraction 0.7.0 `0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789`.
+
+## Constants.ENTRYPOINT_ADDRESS_V07
+
+A `string` representing the entrypoint address for Account Abstraction 0.7.0 `0x0000000071727De22E5E9d8BAf0edAc6f37da032`.
+
+## GetSocialProfiles
+
+Fetches the social profiles for the given address or ENS using a Thirdweb client.
+
+```csharp
+var socialProfiles = await Utils.GetSocialProfiles(client, addressOrEns);
+```
+
+<Details summary="Parameters">
+
+### client
+
+A `ThirdwebClient` object representing the client to use for fetching social profiles.
+
+### addressOrEns
+
+A `string` representing the wallet address or ENS to fetch social profiles for.
+
+</Details>
+
+<Details summary="Return Value">
+
+### socialProfiles
+
+A `SocialProfiles` object containing the fetched social profiles.
+
+</Details>
+
+## GetENSFromAddress
+
+Fetches the ENS name for the given address using a Thirdweb client.
+
+```csharp
+var ensName = await Utils.GetENSFromAddress(client, address);
+```
+
+<Details summary="Parameters">
+
+### client
+
+A `ThirdwebClient` object representing the client to use for fetching the ENS name.
+
+### address
+
+A `string` representing the wallet address to fetch the ENS name for.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ensName
+
+A `string` representing the fetched ENS name.
+
+</Details>
+
+## GetAddressFromENS
+
+Fetches the address for the given ENS name using a Thirdweb client.
+
+```csharp
+var address = await Utils.GetAddressFromENS(client, ensName);
+```
+
+<Details summary="Parameters">
+
+### client
+
+A `ThirdwebClient` object representing the client to use for fetching the address.
+
+### ensName
+
+A `string` representing the ENS name to fetch the address for.
+
+</Details>
+
+<Details summary="Return Value">
+
+### address
+
+A `string` representing the fetched address.
+
+</Details>
 
 ## GetChainMetadata 
 

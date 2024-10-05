@@ -79,6 +79,15 @@ export const sidebar: SideBar = {
           name: "Interacting with Contracts",
           href: `${sdkSlug}/contracts`,
         },
+        { separator: true },
+        {
+          name: ".NET SDK Portal",
+          href: "/dotnet",
+        },
+        {
+          name: "Full Reference",
+          href: "https://thirdweb-dev.github.io/dotnet/index.html",
+        },
       ],
     },
   ],
