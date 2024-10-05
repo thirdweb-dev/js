@@ -111,7 +111,7 @@ export type ReadContractOptions<
  *
  * const { data, isLoading } = useReadContract({
  *   contract,
- *   method: "function tokenURI(uint256 tokenId) returns (string)"}),
+ *   method: "function tokenURI(uint256 tokenId) returns (string)",
  *   params: [1n],
  * });
  * ```
