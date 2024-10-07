@@ -3,7 +3,7 @@
 
 export const wallet = {
   id: "net.gateweb3",
-  name: "GateWeb3",
+  name: "GateWallet",
   homepage: "https://www.gateweb3.net/web3",
   image_id: "6e528abf-7a7d-47bd-d84d-481f169b1200",
   app: {

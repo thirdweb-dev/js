@@ -2,7 +2,7 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.hashpack",
+  id: "com.hashpack.wallet",
   name: "HashPack",
   homepage: "https://hashpack.app",
   image_id: "8d55dd5a-7c9f-4929-d2d1-00564e41ac00",
@@ -21,7 +21,7 @@ export const wallet = {
     edge: null,
     opera: null,
   },
-  rdns: null,
+  rdns: "com.hashpack.wallet",
   mobile: {
     native: "hashpack://",
     universal: "https://link.hashpack.app",

@@ -127,7 +127,11 @@ const allSupportedWallets = walletConnectSupportedWallets
   );
 
 const walletInfos = allSupportedWallets.map((wallet) => {
-  return { id: wallet.id, name: wallet.name };
+  return {
+    id: wallet.id,
+    name: wallet.name,
+    hasMobileSupport: !!wallet.mobile.universal || !!wallet.mobile.native,
+  };
 });
 
 const customWalletInfos = [
@@ -202,6 +206,7 @@ await writeFile(
 export type MinimalWalletInfo = {
   id: string;
   name: string;
+  hasMobileSupport: boolean;
 };
 
 /**
@@ -320,7 +325,13 @@ const walletImports = allSupportedWallets
   )
   .join("\n");
 
-const customWalletImports = ["smart", "inApp", "walletConnect", "embedded", "adapter"]
+const customWalletImports = [
+  "smart",
+  "inApp",
+  "walletConnect",
+  "embedded",
+  "adapter",
+]
   .map(
     (walletId) =>
       `case "${walletId}": {
