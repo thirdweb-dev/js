@@ -2,14 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.savl",
-  name: "Savl",
-  homepage: "https://savl.com",
-  image_id: "067b2a53-e8d0-4256-9c64-4e404db11800",
+  id: "app.nicegram",
+  name: "Nicegram Wallet",
+  homepage: "https://nicegram.app",
+  image_id: "929745a4-5830-480b-f6ab-bb3a854bc700",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/savl-wallet-bitcoin-solana/id1369912925",
-    android: "https://play.google.com/store/apps/details?id=com.savl",
+    ios: "https://apps.apple.com/app/apple-store/id1608870673",
+    android: "https://play.google.com/store/apps/details?id=app.nicegram",
     mac: null,
     windows: null,
     linux: null,
@@ -21,8 +21,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "savl://",
-    universal: null,
+    native: "ncg://wallet/home",
+    universal: "https://nicegram.app/",
   },
   desktop: {
     native: null,

@@ -2,14 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "foundation.klaytn",
-  name: "Kaikas",
-  homepage: "https://klaytn.foundation",
-  image_id: "48651c11-ea5b-4879-176f-673427dc9000",
+  id: "com.tastycrypto",
+  name: "tastycrypto",
+  homepage: "https://www.tastycrypto.com/",
+  image_id: "357878c9-a195-4102-8f69-55eb2c578700",
   app: {
     browser: null,
-    ios: null,
-    android: "https://appdistribution.firebase.dev/i/5a91cf33f0b3aa59",
+    ios: "https://apps.apple.com/us/app/tastycrypto-crypto-wallet/id1670102186",
+    android:
+      "https://play.google.com/store/apps/details?id=com.tastycrypto&hl=en",
     mac: null,
     windows: null,
     linux: null,
@@ -21,7 +22,7 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "kaikas://walletconnect",
+    native: "tastycrypto://",
     universal: null,
   },
   desktop: {
