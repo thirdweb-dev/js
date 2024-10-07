@@ -214,10 +214,17 @@ export class InAppNativeConnector implements InAppConnector {
   private async passkeyAuth(args: {
     type: "sign-up" | "sign-in";
     passkeyName?: string;
+    storeLastUsedPasskey?: boolean;
     client: ThirdwebClient;
     ecosystem?: Ecosystem;
   }): Promise<AuthStoredTokenWithCookieReturnType> {
-    const { type, passkeyName, client, ecosystem } = args;
+    const {
+      type,
+      passkeyName,
+      client,
+      ecosystem,
+      storeLastUsedPasskey = true,
+    } = args;
     const domain = this.passkeyDomain;
     const storage = this.localStorage;
     if (!domain) {
@@ -236,7 +243,7 @@ export class InAppNativeConnector implements InAppConnector {
           ecosystem,
           username: passkeyName,
           passkeyClient,
-          storage,
+          storage: storeLastUsedPasskey ? storage : undefined,
           rp: {
             id: domain,
             name: domain,
@@ -247,7 +254,7 @@ export class InAppNativeConnector implements InAppConnector {
           client,
           ecosystem,
           passkeyClient,
-          storage,
+          storage: storeLastUsedPasskey ? storage : undefined,
           rp: {
             id: domain,
             name: domain,

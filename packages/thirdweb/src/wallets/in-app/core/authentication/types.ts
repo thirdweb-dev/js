@@ -49,6 +49,12 @@ export type SingleStepAuthArgsType =
        * Optional name of the passkey to create, defaults to a generated name
        */
       passkeyName?: string;
+      /**
+       * Whether to store the last used passkey from local storage.
+       * This is useful if you want to automatically log in the user with their last used passkey.
+       * Defaults to true.
+       */
+      storeLastUsedPasskey?: boolean;
     }
   | {
       strategy: "wallet";
