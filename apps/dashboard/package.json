@@ -46,7 +46,7 @@
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tooltip": "1.1.2",
     "@sentry/nextjs": "8.32.0",
-    "@shazow/whatsabi": "^0.14.1",
+    "@shazow/whatsabi": "^0.15.2",
     "@stripe/react-stripe-js": "^2.7.3",
     "@stripe/stripe-js": "^3.5.0",
     "@tanstack/react-query": "5.56.2",
