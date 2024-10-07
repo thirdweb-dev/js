@@ -577,7 +577,7 @@ const Ambassadors: ThirdwebNextPage = () => {
             align={{ base: "initial", md: "center" }}
           >
             <Heading as="h2" size="display.md" mb={4} textAlign="center">
-              Meet the
+              Meet the{" "}
               <Heading
                 size="display.md"
                 as="span"
