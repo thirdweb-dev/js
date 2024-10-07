@@ -1,3 +1,4 @@
+import { DashboardTypeCookieSetter } from "@/components/DashboardTypeCookieSetter";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { cn } from "@/lib/utils";
 import { Container } from "@chakra-ui/react";
@@ -21,6 +22,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
 }) => {
   return (
     <div className="bg-background">
+      <DashboardTypeCookieSetter type="old" />
       <DashboardHeader />
       <main
         className={cn("min-h-screen py-6 md:pt-10 md:pb-20", mainClassName)}
