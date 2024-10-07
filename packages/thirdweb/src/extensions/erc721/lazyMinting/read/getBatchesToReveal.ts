@@ -86,8 +86,6 @@ export async function getBatchesToReveal(
     }),
   );
 
-  console.log({ tokenMetadatas });
-
   const encryptedUriData = await Promise.all(
     Array.from([...uriIndices]).map((i) =>
       EncryptedData.encryptedData({
