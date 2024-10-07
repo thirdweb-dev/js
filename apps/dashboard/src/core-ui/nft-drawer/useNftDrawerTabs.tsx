@@ -36,7 +36,10 @@ const ClaimTabERC1155 = dynamic(
 const UpdateMetadataTab = dynamic(
   () => import("contract-ui/tabs/nfts/components/update-metadata-tab"),
 );
-
+const BatchMintAdditionalSupplyTab = dynamic(
+  () =>
+    import("contract-ui/tabs/nfts/components/batch-mint-additional-supply-tab"),
+);
 export function useNFTDrawerTabs({
   contract,
   tokenId,
@@ -180,6 +183,17 @@ export function useNFTDrawerTabs({
           isDisabled: false,
           disabledText: "You don't have minter permissions",
           children: <MintSupplyTab contract={contract} tokenId={tokenId} />,
+        },
+        {
+          title: "Batch Mint Supply",
+          isDisabled: false,
+          disabledText: "You don't have minter permission",
+          children: (
+            <BatchMintAdditionalSupplyTab
+              contract={contract}
+              tokenId={tokenId}
+            />
+          ),
         },
       ]);
     }
