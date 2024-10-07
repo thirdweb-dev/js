@@ -11,9 +11,7 @@ import {
 } from "react-native";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import walletInfos, {
-  type MinimalWalletInfo,
-} from "../../../../wallets/__generated__/wallet-infos.js";
+import walletInfos from "../../../../wallets/__generated__/wallet-infos.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { createWallet } from "../../../../wallets/native/create-wallet.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
@@ -98,7 +96,7 @@ export function AllWalletsList(
   const [searchQuery, setSearchQuery] = useState("");
 
   const walletsToShow = useMemo(() => {
-    const filteredWallets = (walletInfos as MinimalWalletInfo[])
+    const filteredWallets = walletInfos
       .filter(
         (info) => !externalWallets.find((wallet) => wallet.id === info.id),
       )
@@ -232,6 +230,7 @@ function ShowAllWalletsRow(props: {
       >
         {[...Array(4)].map((_, index) => (
           <View
+            // biome-ignore lint/suspicious/noArrayIndexKey: only have index as key
             key={index}
             style={{
               width: 14,

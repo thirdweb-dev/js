@@ -121,7 +121,7 @@ export function createWallet<const ID extends WalletId>(
       const sessionHandler = async (uri: string) => {
         try {
           await Linking.openURL(uri);
-        } catch (error) {
+        } catch {
           console.error(`Failed to open URI: ${uri} - is the app installed?`);
           // TODO: figure out how to propage this error to the UI
           throw new Error(`Failed to open URI: ${uri} - is the app installed?`);

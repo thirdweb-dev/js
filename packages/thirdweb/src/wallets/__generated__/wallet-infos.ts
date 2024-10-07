@@ -1877,18 +1877,22 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "smart",
     name: "Smart Wallet",
+    hasMobileSupport: true,
   },
   {
     id: "inApp",
     name: "In-App Wallet",
+    hasMobileSupport: true,
   },
   {
     id: "embedded",
     name: "In-App Wallet",
+    hasMobileSupport: true,
   },
   {
     id: "walletConnect",
     name: "WalletConnect",
+    hasMobileSupport: false,
   },
 ]) satisfies MinimalWalletInfo[];
 
