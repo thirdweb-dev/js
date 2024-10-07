@@ -82,9 +82,11 @@ export async function getBatchesToReveal(
         tokenId: BigInt(i),
         tokenUri: uri,
         client: options.contract.client,
-      });
+      }).catch(() => undefined);
     }),
   );
+
+  console.log({ tokenMetadatas });
 
   const encryptedUriData = await Promise.all(
     Array.from([...uriIndices]).map((i) =>
@@ -111,12 +113,18 @@ export async function getBatchesToReveal(
   });
 
   return tokenMetadatas
-    .map((metadata, i) => ({
-      batchId: BigInt(i),
-      batchUri: encryptedBaseUris[i] as Hex,
-      placeholderMetadata: metadata,
-    }))
-    .filter((_, index) => (encryptedBaseUris[index]?.length || 0) > 0);
+    .map((metadata, i) => {
+      if (metadata === undefined) {
+        return;
+      }
+      return {
+        batchId: BigInt(i),
+        batchUri: encryptedBaseUris[i] as Hex,
+        placeholderMetadata: metadata,
+      };
+    })
+    .filter((_, index) => (encryptedBaseUris[index]?.length || 0) > 0)
+    .filter((item) => item !== undefined);
 }
 
 /**
