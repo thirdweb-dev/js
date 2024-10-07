@@ -325,7 +325,7 @@
     "@react-native-async-storage/async-storage": "1.24.0",
     "@size-limit/preset-big-lib": "11.1.6",
     "@storybook/addon-essentials": "8.3.4",
-    "@storybook/addon-interactions": "8.3.4",
+    "@storybook/addon-interactions": "8.3.5",
     "@storybook/addon-links": "8.3.4",
     "@storybook/addon-onboarding": "8.3.4",
     "@storybook/react": "8.3.4",
