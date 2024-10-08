@@ -225,14 +225,12 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         client,
       });
       expect(isValidV1).toEqual(true);
-      const isValidV2 = await checkContractWalletSignature({
+      const isValidV2 = await verifySignature({
         message,
         signature,
-        contract: getContract({
-          address: newAccount.address,
-          chain,
-          client,
-        }),
+        address: newAccount.address,
+        chain,
+        client,
       });
       expect(isValidV2).toEqual(true);
 
