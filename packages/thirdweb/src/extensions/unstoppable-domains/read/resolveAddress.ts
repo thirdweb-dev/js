@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../../contract/contract.js";
 import { getAddress, isAddress } from "../../../utils/address.js";
 import { withCache } from "../../../utils/promise/withCache.js";
+import { exists } from "../__generated__/UnstoppableDomains/read/exists.js";
 import { getMany } from "../__generated__/UnstoppableDomains/read/getMany.js";
 import { namehash } from "../__generated__/UnstoppableDomains/read/namehash.js";
 import { UD_POLYGON_MAINNET } from "../consts.js";
@@ -70,6 +71,14 @@ export async function resolveAddress(
         contract,
         labels: name.split("."),
       });
+
+      // `namehash` always return a value, we should use `exists` to make sure it's valid
+      const _exists = await exists({ contract, tokenId: possibleTokenId });
+      if (!_exists) {
+        throw new Error(
+          `Could not resolve a valid tokenId from the domain: ${name}. Make sure it exists.`,
+        );
+      }
 
       // Resolve ETH address from the tokenId
       const resolved = await getMany({
