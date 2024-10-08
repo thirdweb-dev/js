@@ -4,8 +4,8 @@
 export const wallet = {
   id: "app.onto",
   name: "ONTO",
-  homepage: "https://onto.app/",
-  image_id: "d22b2a4b-5562-49ba-506b-6d5986914600",
+  homepage: "https://onto.app",
+  image_id: "14934596-632e-4b29-d45f-61109e959000",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/onto-an-ontology-dapp/id1436009823",

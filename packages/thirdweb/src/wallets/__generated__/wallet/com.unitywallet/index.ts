@@ -2,14 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.uptn",
-  name: "UPTN",
-  homepage: "https://uptn.io",
-  image_id: "5e656c3e-96ae-484f-c0c6-37bc908daa00",
+  id: "com.unitywallet",
+  name: "Unity Wallet",
+  homepage: "https://unitywallet.com",
+  image_id: "09b4aad3-c007-40e7-ec8f-6a62585e6900",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/kr/app/id6444606758",
-    android: "https://play.google.com/store/apps/details?id=io.uptn.wallet",
+    ios: "https://apps.apple.com/us/app/savl-wallet-bitcoin-solana/id1369912925",
+    android: "https://play.google.com/store/apps/details?id=com.savl",
     mac: null,
     windows: null,
     linux: null,
@@ -21,11 +21,11 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "uptn://",
+    native: "savl://",
     universal: null,
   },
   desktop: {
-    native: "uptn://",
+    native: null,
     universal: null,
   },
 } as const;
