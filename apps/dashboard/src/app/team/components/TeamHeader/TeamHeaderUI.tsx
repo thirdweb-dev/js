@@ -48,9 +48,11 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             href={`/team/${currentTeam.slug}`}
             className="flex flex-row items-center gap-2 font-normal text-sm"
           >
-            {/* TODO - set team image */}
-            <GradientAvatar id={currentTeam.id} src={""} className="size-6" />
-
+            <GradientAvatar
+              id={currentTeam.id}
+              src={currentTeam.image || ""}
+              className="size-6"
+            />
             <span> {currentTeam.name} </span>
             <TeamPlanBadge plan={teamPlan} />
           </Link>
@@ -125,8 +127,11 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
               "flex flex-row items-center gap-2 font-normal text-foreground text-sm",
             )}
           >
-            {/* TODO - set team image */}
-            <GradientAvatar id={currentTeam.id} src={""} className="size-6" />
+            <GradientAvatar
+              id={currentTeam.id}
+              src={currentTeam.image || ""}
+              className="size-6"
+            />
 
             {!props.currentProject && (
               <span className="font-semibold">{currentTeam.name}</span>

@@ -86,9 +86,8 @@ export function TeamSelectionUI(props: {
                   >
                     <Link href={`/team/${team.slug}`}>
                       <div className="flex items-center gap-2">
-                        {/* TODO set Image src */}
                         <GradientAvatar
-                          src={""}
+                          src={team.image || ""}
                           className="size-4"
                           id={team.id}
                         />
