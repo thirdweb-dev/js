@@ -20,11 +20,6 @@ export type CoreServiceConfig = {
   serviceApiKey: string;
   serviceAction?: string;
   useWalletAuth?: boolean;
-  checkPolicy?: boolean;
-  policyMetadata?: {
-    chainId: number;
-    userOp: UserOpData;
-  };
 };
 
 type Usage = {
@@ -90,15 +85,8 @@ export async function fetchKeyMetadataFromApi(
   clientId: string,
   config: CoreServiceConfig,
 ): Promise<ApiResponse> {
-  const { apiUrl, serviceScope, serviceApiKey, checkPolicy, policyMetadata } =
-    config;
-  const policyQuery =
-    checkPolicy && policyMetadata
-      ? `&checkPolicy=true&policyMetadata=${encodeURIComponent(
-          JSON.stringify(policyMetadata),
-        )}`
-      : "";
-  const url = `${apiUrl}/v1/keys/use?clientId=${clientId}&scope=${serviceScope}&includeUsage=true${policyQuery}`;
+  const { apiUrl, serviceScope, serviceApiKey } = config;
+  const url = `${apiUrl}/v1/keys/use?clientId=${clientId}&scope=${serviceScope}&includeUsage=true`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
