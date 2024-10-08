@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.41
+
+### Patch Changes
+
+- [#4946](https://github.com/thirdweb-dev/js/pull/4946) [`7b7226f`](https://github.com/thirdweb-dev/js/commit/7b7226f9c6668834a66dec839b049905716626c9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export types
+
 ## 0.4.40
 
 ### Patch Changes

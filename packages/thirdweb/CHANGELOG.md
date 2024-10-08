@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.61.1
+
+### Patch Changes
+
+- [#4933](https://github.com/thirdweb-dev/js/pull/4933) [`506764d`](https://github.com/thirdweb-dev/js/commit/506764dabdbfa4910416e7a1347a92f0ef0d5e8e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support show all wallets option in React Native Connect UI
+
+- [#4944](https://github.com/thirdweb-dev/js/pull/4944) [`822ece4`](https://github.com/thirdweb-dev/js/commit/822ece45ece94329c5da2b070da6e7ded09f34c2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Option to disable storing last stored passkey credentials
+
 ## 5.61.0
 
 ### Minor Changes
