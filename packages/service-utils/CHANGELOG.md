@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.42
+
+### Patch Changes
+
+- [#4955](https://github.com/thirdweb-dev/js/pull/4955) [`eff129a`](https://github.com/thirdweb-dev/js/commit/eff129ab9aa990378bae88e28b045c3333c77996) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export fetchKeyMetadataFromApi, remove checkPolicy options
+
 ## 0.4.41
 
 ### Patch Changes

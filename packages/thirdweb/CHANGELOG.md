@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.61.2
+
+### Patch Changes
+
+- [#4948](https://github.com/thirdweb-dev/js/pull/4948) [`ea36c54`](https://github.com/thirdweb-dev/js/commit/ea36c541185a4a333b0689bf7de6b9ae92f85cac) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow overriding callGasLimit for userops
+
 ## 5.61.1
 
 ### Patch Changes
