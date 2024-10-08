@@ -21,7 +21,6 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -39,6 +38,7 @@ import {
 import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
+import { MultiNetworkSelector } from "../../contract-components/contract-publish-form/NetworkDropdown";
 
 type AccountAbstractionSettingsPageProps = {
   apiKeyServices: ApiKeyService[];
@@ -375,11 +375,11 @@ export function AccountAbstractionSettingsPage(
             </div>
             {form.watch("allowedChainIds") && (
               <Flex flexDir="column">
-                <NetworkDropdown
-                  onMultiChange={(networksEnabled) =>
-                    form.setValue("allowedChainIds", networksEnabled)
+                <MultiNetworkSelector
+                  selectedChainIds={form.watch("allowedChainIds") || []}
+                  onChange={(chainIds) =>
+                    form.setValue("allowedChainIds", chainIds)
                   }
-                  value={form.watch("allowedChainIds")}
                 />
                 <FormErrorMessage>
                   {

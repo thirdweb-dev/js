@@ -1,7 +1,7 @@
 import { Flex, FormControl, Select } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { Heading, Text } from "tw-components";
-import { NetworkDropdown } from "./NetworkDropdown";
+import { MultiNetworkSelector } from "./NetworkDropdown";
 
 interface NetworksFieldsetProps {
   fromStandard?: boolean;
@@ -37,14 +37,13 @@ export const NetworksFieldset: React.FC<NetworksFieldsetProps> = ({
       {!form.watch("networksForDeployment.allNetworks") && (
         <Flex flexDir="column" gap={2}>
           <Text>Please select the networks you want to enable:</Text>
-          <NetworkDropdown
-            onMultiChange={(networksEnabled) =>
-              form.setValue(
-                "networksForDeployment.networksEnabled",
-                networksEnabled,
-              )
+          <MultiNetworkSelector
+            onChange={(chainIds) =>
+              form.setValue("networksForDeployment.networksEnabled", chainIds)
             }
-            value={form.watch("networksForDeployment.networksEnabled")}
+            selectedChainIds={
+              form.watch("networksForDeployment.networksEnabled") || []
+            }
           />
         </Flex>
       )}
