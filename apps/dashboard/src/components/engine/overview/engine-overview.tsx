@@ -1,32 +1,27 @@
 "use client";
-
-import { Badge } from "@/components/ui/badge";
-import { ToolTipLabel } from "@/components/ui/tooltip";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
+  type EngineInstance,
   useEngineBackendWallets,
   useEngineTransactions,
-  useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, FormControl, Switch } from "@chakra-ui/react";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { useState } from "react";
-import { FormLabel, Heading, Link, Text } from "tw-components";
+import { FormLabel, Heading, Text } from "tw-components";
 import { BackendWalletsTable } from "./backend-wallets-table";
 import { CreateBackendWalletButton } from "./create-backend-wallet-button";
 import { ImportBackendWalletButton } from "./import-backend-wallet-button";
 import { TransactionsTable } from "./transactions-table";
 
 interface EngineOverviewProps {
-  instanceUrl: string;
+  instance: EngineInstance;
 }
 
-export const EngineOverview: React.FC<EngineOverviewProps> = ({
-  instanceUrl,
-}) => {
-  const backendWallets = useEngineBackendWallets(instanceUrl);
-  const { data: walletConfig } = useEngineWalletConfig(instanceUrl);
+export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
+  const backendWallets = useEngineBackendWallets(instance.url);
   const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
-  const transactionsQuery = useEngineTransactions(instanceUrl, autoUpdate);
+  const transactionsQuery = useEngineTransactions(instance.url, autoUpdate);
 
   return (
     <Flex flexDir="column" gap={12}>
@@ -34,46 +29,29 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
         <Flex flexDir="column" gap={4} justifyItems="flex-end">
           <Flex justify="space-between" alignItems="center">
             <Flex flexDir="column" gap={2}>
-              <Flex gap={3}>
-                <Heading size="title.sm">Backend Wallets</Heading>
-                {walletConfig?.type && (
-                  <ToolTipLabel
-                    label={
-                      <>
-                        This engine is configured to use{" "}
-                        {walletConfig.type === "aws-kms"
-                          ? "backend wallets secured by AWS KMS"
-                          : walletConfig.type === "gcp-kms"
-                            ? "backend wallets secured by GCP KMS"
-                            : "local backend wallets"}
-                        . You can change this in the Configuration tab.
-                      </>
-                    }
-                  >
-                    <div>
-                      <Badge variant="outline">
-                        {walletConfig.type.replace("-", " ")}
-                      </Badge>
-                    </div>
-                  </ToolTipLabel>
-                )}
-              </Flex>
-              <Text>
-                Engine performs blockchain actions using backend wallets you own
-                and manage.{" "}
-                <Link
+              <Heading size="title.sm">Backend Wallets</Heading>
+              <p className="text-sm">
+                Engine sends blockchain transactions from backend wallets you
+                own and manage.{" "}
+                <TrackedLinkTW
+                  target="_blank"
                   href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
-                  color="primary.500"
-                  isExternal
+                  label="learn-more"
+                  category="engine"
+                  className="text-link-foreground hover:text-foreground"
                 >
-                  Learn more
-                </Link>
-              </Text>
+                  Learn more about backend wallets.
+                </TrackedLinkTW>
+              </p>
+              <p className="text-sm">
+                Set up other wallet types from the{" "}
+                <strong>Configuration</strong> tab.
+              </p>
             </Flex>
 
             <div className="flex flex-row gap-2">
-              <ImportBackendWalletButton instanceUrl={instanceUrl} />
-              <CreateBackendWalletButton instanceUrl={instanceUrl} />
+              <ImportBackendWalletButton instance={instance} />
+              <CreateBackendWalletButton instance={instance} />
             </div>
           </Flex>
 
@@ -88,7 +66,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
         </Flex>
 
         <BackendWalletsTable
-          instanceUrl={instanceUrl}
+          instanceUrl={instance.url}
           wallets={backendWallets.data ?? []}
           isPending={backendWallets.isPending}
           isFetched={backendWallets.isFetched}
@@ -121,7 +99,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
           transactions={transactionsQuery.data?.transactions ?? []}
           isPending={transactionsQuery.isPending}
           isFetched={transactionsQuery.isFetched}
-          instanceUrl={instanceUrl}
+          instanceUrl={instance.url}
         />
       </Flex>
     </Flex>

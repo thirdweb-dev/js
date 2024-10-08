@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import {
   type EngineAlertRule,
+  type EngineInstance,
   EngineNotificationChannelTypeConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,6 +37,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const alertFormSchema = z.object({
+  deploymentId: z.string(),
   subscriptionRoutes: z.array(z.string()),
   type: z.enum(
     Object.keys(EngineNotificationChannelTypeConfig) as [
@@ -48,6 +50,7 @@ const alertFormSchema = z.object({
 type EngineAlertFormValues = z.infer<typeof alertFormSchema>;
 
 export function EngineAlertDialogForm(props: {
+  instance: EngineInstance;
   alertRules: EngineAlertRule[];
   title: string;
   values: EngineAlertFormValues | null;
@@ -62,6 +65,7 @@ export function EngineAlertDialogForm(props: {
   const form = useForm<z.infer<typeof alertFormSchema>>({
     resolver: zodResolver(alertFormSchema),
     defaultValues: {
+      deploymentId: props.instance.deploymentId,
       subscriptionRoutes: ["alert.*"],
       type: "slack",
     },

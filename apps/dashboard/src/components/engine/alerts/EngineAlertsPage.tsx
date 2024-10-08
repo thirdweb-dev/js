@@ -14,14 +14,14 @@ export function EngineAlertsPage(props: {
   return (
     <div>
       <ManageEngineAlertsSection
+        instance={props.instance}
         alertRules={alertRules}
-        engineId={props.instance.id}
         alertRulesIsLoading={alertRulesQuery.isLoading}
       />
       <div className="h-8" />
       <RecentEngineAlertsSection
+        instance={props.instance}
         alertRules={alertRules}
-        engineId={props.instance.id}
         alertRulesIsLoading={alertRulesQuery.isLoading}
       />
     </div>
