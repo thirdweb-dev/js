@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.43
+
+### Patch Changes
+
+- [#4958](https://github.com/thirdweb-dev/js/pull/4958) [`4170c60`](https://github.com/thirdweb-dev/js/commit/4170c60ca6c42863b5e268f73b2fc332f48aebaf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix fetchMetadataFromApi export
+
 ## 0.4.42
 
 ### Patch Changes
