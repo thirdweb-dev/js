@@ -7,7 +7,7 @@ export function FormFieldSetup(props: {
   label: string;
   errorMessage: React.ReactNode | undefined;
   children: React.ReactNode;
-  tooltip: React.ReactNode | undefined;
+  tooltip?: React.ReactNode;
   isRequired: boolean;
 }) {
   return (

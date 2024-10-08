@@ -1,41 +1,33 @@
+"use client";
+
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   type ImportBackendWalletInput,
   useEngineImportBackendWallet,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import {
-  Flex,
-  FormControl,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, FormLabel } from "tw-components";
+import { toast } from "sonner";
 
-interface ImportBackendWalletButtonProps {
+export function ImportBackendWalletButton(props: {
   instanceUrl: string;
-}
-
-export const ImportBackendWalletButton: React.FC<
-  ImportBackendWalletButtonProps
-> = ({ instanceUrl }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+}) {
+  const { instanceUrl } = props;
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: walletConfig } = useEngineWalletConfig(instanceUrl);
-  const { mutate: importBackendWallet } =
-    useEngineImportBackendWallet(instanceUrl);
-  const { onSuccess, onError } = useTxNotifications(
-    "Wallet imported successfully.",
-    "Failed to import wallet.",
-  );
+  const importWallet = useEngineImportBackendWallet(instanceUrl);
   const trackEvent = useTrack();
   const form = useForm<ImportBackendWalletInput>();
 
@@ -48,111 +40,174 @@ export const ImportBackendWalletButton: React.FC<
 
   return (
     <>
-      <Button onClick={onOpen} colorScheme="primary" variant="outline">
+      <Button onClick={() => setIsModalOpen(true)} variant="outline">
         Import
       </Button>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent
-          className="!bg-background rounded-lg border border-border"
-          as="form"
-          onSubmit={form.handleSubmit((data) => {
-            importBackendWallet(data, {
-              onSuccess: () => {
-                onSuccess();
-                onClose();
-                trackEvent({
-                  category: "engine",
-                  action: "import-backend-wallet",
-                  label: "success",
-                  type: walletConfig?.type,
-                  instance: instanceUrl,
-                });
-              },
-              onError: (error) => {
-                onError(error);
-                trackEvent({
-                  category: "engine",
-                  action: "import-backend-wallet",
-                  label: "error",
-                  type: walletConfig?.type,
-                  instance: instanceUrl,
-                  error,
-                });
-              },
-            });
-          })}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent
+          className="z-[10001] p-0"
+          dialogOverlayClassName="z-[10000]"
         >
-          <ModalHeader>Import {walletType} wallet</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {walletConfig?.type === "local" && (
-              <FormControl isRequired>
-                <FormLabel>Private key</FormLabel>
-                <Input
-                  placeholder="Your wallet private key"
-                  autoComplete="off"
-                  type="text"
-                  {...form.register("privateKey", { required: true })}
-                />
-              </FormControl>
-            )}
-            {walletConfig?.type === "aws-kms" && (
-              <Flex flexDir="column" gap={4}>
-                <FormControl isRequired>
-                  <FormLabel>AWS KMS Key ID</FormLabel>
-                  <Input
-                    placeholder=""
-                    autoComplete="off"
-                    type="text"
-                    {...form.register("awsKmsKeyId", { required: true })}
-                  />
-                </FormControl>
-                <FormControl isRequired>
-                  <FormLabel>AWS KMS ARN</FormLabel>
-                  <Input
-                    placeholder=""
-                    autoComplete="off"
-                    type="text"
-                    {...form.register("awsKmsArn", { required: true })}
-                  />
-                </FormControl>
-              </Flex>
-            )}
-            {walletConfig?.type === "gcp-kms" && (
-              <Flex flexDir="column" gap={4}>
-                <FormControl isRequired>
-                  <FormLabel>GCP KMS Key ID</FormLabel>
-                  <Input
-                    placeholder=""
-                    autoComplete="off"
-                    type="text"
-                    {...form.register("gcpKmsKeyId", { required: true })}
-                  />
-                </FormControl>
-                <FormControl isRequired>
-                  <FormLabel>GCP KMS Version ID</FormLabel>
-                  <Input
-                    placeholder=""
-                    autoComplete="off"
-                    type="text"
-                    {...form.register("gcpKmsKeyVersionId", { required: true })}
-                  />
-                </FormControl>
-              </Flex>
-            )}
-          </ModalBody>
+          <form
+            onSubmit={form.handleSubmit((data) => {
+              const promise = importWallet.mutateAsync(data, {
+                onSuccess: () => {
+                  setIsModalOpen(false);
+                  trackEvent({
+                    category: "engine",
+                    action: "import-backend-wallet",
+                    label: "success",
+                    type: walletConfig?.type,
+                    instance: instanceUrl,
+                  });
+                },
+                onError: (error) => {
+                  trackEvent({
+                    category: "engine",
+                    action: "import-backend-wallet",
+                    label: "error",
+                    type: walletConfig?.type,
+                    instance: instanceUrl,
+                    error,
+                  });
+                },
+              });
 
-          <ModalFooter as={Flex} gap={3}>
-            <Button type="button" onClick={onClose} variant="ghost">
-              Cancel
-            </Button>
-            <Button type="submit" colorScheme="primary">
-              Import
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+              toast.promise(promise, {
+                success: "Wallet imported successfully",
+                error: "Failed to import wallet",
+              });
+            })}
+          >
+            <div className="p-6">
+              <DialogHeader className="mb-5">
+                <DialogTitle className="font-semibold text-2xl tracking-tight">
+                  Import {walletType} wallet
+                </DialogTitle>
+              </DialogHeader>
+
+              {walletConfig?.type === "local" && (
+                <FormFieldSetup
+                  htmlFor="privateKey"
+                  label="Private key"
+                  errorMessage={
+                    form.getFieldState("privateKey", form.formState).error
+                      ?.message
+                  }
+                  isRequired
+                >
+                  <Input
+                    id="privateKey"
+                    placeholder="Your wallet private key"
+                    autoComplete="off"
+                    type="text"
+                    {...form.register("privateKey", {
+                      required: true,
+                      // TODO: add private key validation here
+                    })}
+                  />
+                </FormFieldSetup>
+              )}
+
+              {walletConfig?.type === "aws-kms" && (
+                <div className="flex flex-col gap-4">
+                  <FormFieldSetup
+                    label="AWS KMS Key ID"
+                    isRequired
+                    errorMessage={
+                      form.getFieldState("awsKmsKeyId", form.formState).error
+                        ?.message
+                    }
+                    htmlFor="awsKmsKeyId"
+                  >
+                    <Input
+                      id="awsKmsKeyId"
+                      placeholder=""
+                      autoComplete="off"
+                      type="text"
+                      {...form.register("awsKmsKeyId", { required: true })}
+                    />
+                  </FormFieldSetup>
+
+                  <FormFieldSetup
+                    isRequired
+                    label="AWS KMS ARN"
+                    errorMessage={
+                      form.getFieldState("awsKmsArn", form.formState).error
+                        ?.message
+                    }
+                    htmlFor="awsKmsArn"
+                  >
+                    <Input
+                      id="awsKmsArn"
+                      placeholder=""
+                      autoComplete="off"
+                      type="text"
+                      {...form.register("awsKmsArn", { required: true })}
+                    />
+                  </FormFieldSetup>
+                </div>
+              )}
+
+              {walletConfig?.type === "gcp-kms" && (
+                <div className="flex flex-col gap-4">
+                  <FormFieldSetup
+                    htmlFor="gcpKmsKeyId"
+                    errorMessage={
+                      form.getFieldState("gcpKmsKeyId", form.formState).error
+                        ?.message
+                    }
+                    label="GCP KMS Key ID"
+                    isRequired
+                  >
+                    <Input
+                      id="gcpKmsKeyId"
+                      placeholder=""
+                      autoComplete="off"
+                      type="text"
+                      {...form.register("gcpKmsKeyId", { required: true })}
+                    />
+                  </FormFieldSetup>
+
+                  <FormFieldSetup
+                    label="GCP KMS Version ID"
+                    errorMessage={
+                      form.getFieldState("gcpKmsKeyVersionId", form.formState)
+                        .error?.message
+                    }
+                    htmlFor="gcpKmsKeyVersionId"
+                    isRequired
+                  >
+                    <Input
+                      id="gcpKmsKeyVersionId"
+                      placeholder=""
+                      autoComplete="off"
+                      type="text"
+                      {...form.register("gcpKmsKeyVersionId", {
+                        required: true,
+                      })}
+                    />
+                  </FormFieldSetup>
+                </div>
+              )}
+            </div>
+
+            <DialogFooter className="!flex-row !justify-end mt-4 gap-3 border-border border-t bg-muted/50 p-6">
+              <Button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                variant="outline"
+              >
+                Cancel
+              </Button>
+              <Button type="submit" className="min-w-28 gap-2">
+                {importWallet.isPending && <Spinner className="size-4" />}
+                Import
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
-};
+}
