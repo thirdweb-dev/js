@@ -1,8 +1,10 @@
 import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
+import { useEffect, useState } from "react";
 import { BsFillLightningChargeFill } from "react-icons/bs";
 import { Heading, Text, TrackedLink, TrackedLinkButton } from "tw-components";
+import { getCookie } from "../../../stores/SyncStoreToCookies";
 import { Aurora } from "../Aurora";
 import styles from "../category/categories.module.css";
 import { OpenSource } from "../open-source/OpenSource";
@@ -49,25 +51,7 @@ export const HeroSection = ({ TRACKING_CATEGORY }: HeroSectionProps) => {
             flexDirection={{ base: "column", sm: "row" }}
             gap={{ base: 4, md: 6 }}
           >
-            <TrackedLinkButton
-              leftIcon={<Icon as={BsFillLightningChargeFill} boxSize={4} />}
-              py={6}
-              px={8}
-              w="full"
-              bgColor="white"
-              _hover={{
-                bgColor: "white",
-                opacity: 0.8,
-              }}
-              color="black"
-              href="/dashboard"
-              category={TRACKING_CATEGORY}
-              label="get-started"
-              fontWeight="bold"
-              maxW={{ base: "full", sm: "fit-content" }}
-            >
-              Get started
-            </TrackedLinkButton>
+            <GetStartedButtonLink trackingCategory={TRACKING_CATEGORY} />
 
             <TrackedLinkButton
               variant="outline"
@@ -153,3 +137,39 @@ export const HeroSection = ({ TRACKING_CATEGORY }: HeroSectionProps) => {
     </HomepageSection>
   );
 };
+
+function GetStartedButtonLink(props: {
+  trackingCategory: string;
+  showTeamLayout?: boolean;
+}) {
+  // using state+effect here to avoid hydration errors
+  const [showTeamLayout, setShowTeamLayout] = useState(false);
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (getCookie("x-dashboard-type") === "team") {
+      setShowTeamLayout(true);
+    }
+  }, []);
+
+  return (
+    <TrackedLinkButton
+      leftIcon={<Icon as={BsFillLightningChargeFill} boxSize={4} />}
+      py={6}
+      px={8}
+      w="full"
+      bgColor="white"
+      _hover={{
+        bgColor: "white",
+        opacity: 0.8,
+      }}
+      color="black"
+      href={showTeamLayout ? "/team" : "/dashboard"}
+      category={props.trackingCategory}
+      label="get-started"
+      fontWeight="bold"
+      maxW={{ base: "full", sm: "fit-content" }}
+    >
+      Get started
+    </TrackedLinkButton>
+  );
+}
