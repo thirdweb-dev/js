@@ -69,6 +69,40 @@ import { getDefaultAccountFactory } from "./lib/constants.js";
  * });
  * ```
  *
+ * ## Using a custom account factory
+ *
+ * You can pass a custom account factory to the `smartWallet` function to use a your own account factory.
+ *
+ * ```ts
+ * import { smartWallet } from "thirdweb/wallets";
+ * import { sepolia } from "thirdweb/chains";
+ *
+ * const wallet = smartWallet({
+ *  chain: sepolia,
+ *  sponsorGas: true, // enable sponsored transactions
+ *  factoryAddress: "0x...", // custom factory address
+ * });
+ *
+ * ## Using v0.7 Entrypoint
+ *
+ * Both v0.6 (default) and v0.7 ERC4337 Entrypoints are supported. To use the v0.7 Entrypoint, you can pass the `entrypointAddress` option to the `smartWallet` function, as well as a compatible account factory.
+ *
+ * You can use the predeployed `DEFAULT_ACCOUNT_FACTORY_V0_7` or deploy your own [AccountFactory  v0.7](https://thirdweb.com/thirdweb.eth/AccountFactory_0_7).
+ *
+ * ```ts
+ * import { smartWallet, DEFAULT_ACCOUNT_FACTORY_V0_7, ENTRYPOINT_ADDRESS_v0_7 } from "thirdweb/wallets/smart";
+ * import { sepolia } from "thirdweb/chains";
+ *
+ * const wallet = smartWallet({
+ *  chain: sepolia,
+ *  sponsorGas: true, // enable sponsored transactions
+ *  factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
+ *  overrides: {
+ *    entrypointAddress: ENTRYPOINT_ADDRESS_v0_7
+ *  }
+ * });
+ * ```
+ *
  * ## Configuring the smart wallet
  *
  * You can pass options to the `smartWallet` function to configure the smart wallet.
