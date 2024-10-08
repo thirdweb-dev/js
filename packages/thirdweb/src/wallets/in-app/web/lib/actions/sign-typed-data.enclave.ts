@@ -24,6 +24,10 @@ export async function signTypedData<
   const clientFetch = getClientFetch(client, ecosystem);
   const authToken = await storage.getAuthCookie();
 
+  if (!authToken) {
+    throw new Error("No auth token found when signing typed data");
+  }
+
   const response = await clientFetch(
     `${getThirdwebBaseUrl("inAppWallet")}/api/v1/enclave-wallet/sign-typed-data`,
     {
