@@ -1,3 +1,4 @@
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import {
   type CreateRelayerInput,
   useEngineBackendWallets,
@@ -20,7 +21,6 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -136,9 +136,9 @@ const AddModal = ({
           <Flex flexDir="column" gap={4}>
             <FormControl isRequired>
               <FormLabel>Chain</FormLabel>
-              <NetworkDropdown
-                value={form.watch("chainId")}
-                onSingleChange={(val) => form.setValue("chainId", val)}
+              <SingleNetworkSelector
+                chainId={form.watch("chainId")}
+                onChange={(val) => form.setValue("chainId", val)}
               />
             </FormControl>
             <FormControl isRequired>

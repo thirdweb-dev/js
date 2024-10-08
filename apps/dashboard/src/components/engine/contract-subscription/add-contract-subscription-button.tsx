@@ -1,5 +1,6 @@
 "use client";
 
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type AddContractSubscriptionInput,
@@ -26,7 +27,6 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useV5DashboardChain } from "lib/v5-adapter";
@@ -191,9 +191,9 @@ const ModalBodyInputContract = ({
 
           <FormControl isRequired>
             <FormLabel>Chain</FormLabel>
-            <NetworkDropdown
-              value={form.watch("chainId")}
-              onSingleChange={(val) => form.setValue("chainId", val)}
+            <SingleNetworkSelector
+              chainId={form.watch("chainId")}
+              onChange={(val) => form.setValue("chainId", val)}
             />
           </FormControl>
 

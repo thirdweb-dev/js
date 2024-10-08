@@ -1,7 +1,7 @@
+import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Flex, FormControl, Select } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { Heading, Text } from "tw-components";
-import { MultiNetworkSelector } from "./NetworkDropdown";
 
 interface NetworksFieldsetProps {
   fromStandard?: boolean;

@@ -1,5 +1,6 @@
 "use client";
 
+import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type ApiKeyService,
@@ -38,7 +39,6 @@ import {
 import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
-import { MultiNetworkSelector } from "../../contract-components/contract-publish-form/NetworkDropdown";
 
 type AccountAbstractionSettingsPageProps = {
   apiKeyServices: ApiKeyService[];
