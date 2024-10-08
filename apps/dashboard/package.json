@@ -117,7 +117,7 @@
     "@storybook/blocks": "8.3.4",
     "@storybook/nextjs": "8.3.4",
     "@storybook/react": "8.3.4",
-    "@storybook/test": "8.3.4",
+    "@storybook/test": "8.3.5",
     "@types/color": "^3.0.6",
     "@types/node": "20.14.9",
     "@types/papaparse": "^5.3.14",
