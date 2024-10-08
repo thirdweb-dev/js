@@ -21,7 +21,7 @@ interface EngineWalletConfigProps {
 export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
   instance,
 }) => {
-  const { data } = useEngineWalletConfig(instance.url);
+  const { data: walletConfig } = useEngineWalletConfig(instance.url);
 
   const tabOptions: {
     key: EngineBackendWalletType;
@@ -46,8 +46,8 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
   ] as const;
   const [activeTab, setActiveTab] = useState<EngineBackendWalletType>("local");
 
-  const isAwsKmsConfigured = data && "awsAccessKeyId" in data;
-  const isGcpKmsConfigured = data && "gcpKmsKeyRingId" in data;
+  const isAwsKmsConfigured = !!walletConfig?.awsAccessKeyId;
+  const isGcpKmsConfigured = !!walletConfig?.gcpKmsKeyRingId;
 
   return (
     <Flex flexDir="column" gap={4}>
@@ -67,8 +67,8 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
           isEnabled: true,
           onClick: () => setActiveTab(key),
           icon:
-            (key === "aws-kms" && isAwsKmsConfigured) ||
-            (key === "gcp-kms" && isGcpKmsConfigured)
+            (key === "aws-kms" && !isAwsKmsConfigured) ||
+            (key === "gcp-kms" && !isGcpKmsConfigured)
               ? ({ className }) => (
                   <ToolTipLabel label="Not configured">
                     <CircleAlertIcon className={className} />

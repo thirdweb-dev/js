@@ -26,28 +26,36 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  type EngineBackendWalletType,
   type EngineInstance,
   type ImportBackendWalletInput,
+  type WalletConfigResponse,
   useEngineImportBackendWallet,
-  useEngineWalletConfig,
+  useHasEngineFeature,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import {
+  EngineBackendWalletOptions,
+  type EngineBackendWalletType,
+} from "lib/engine";
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { walletTypeOptions } from "./create-backend-wallet-button";
+import invariant from "tiny-invariant";
 
 interface ImportBackendWalletButtonProps {
   instance: EngineInstance;
+  walletConfig: WalletConfigResponse;
 }
 
 export const ImportBackendWalletButton: React.FC<
   ImportBackendWalletButtonProps
-> = ({ instance }) => {
-  const { data: walletConfig } = useEngineWalletConfig(instance.url);
+> = ({ instance, walletConfig }) => {
+  const supportsMultipleWalletTypes = useHasEngineFeature(
+    instance.url,
+    "HETEROGENEOUS_WALLET_TYPES",
+  );
   const { mutate: importBackendWallet, isPending } =
     useEngineImportBackendWallet(instance.url);
   const { onSuccess, onError } = useTxNotifications(
@@ -56,8 +64,9 @@ export const ImportBackendWalletButton: React.FC<
   );
   const trackEvent = useTrack();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [walletType, setWalletType] =
-    useState<EngineBackendWalletType>("local");
+  const [walletType, setWalletType] = useState<EngineBackendWalletType>(
+    walletConfig.type,
+  );
   const form = useForm<ImportBackendWalletInput>();
 
   const onSubmit = (data: ImportBackendWalletInput) => {
@@ -87,15 +96,18 @@ export const ImportBackendWalletButton: React.FC<
     });
   };
 
-  const selected = walletTypeOptions.find((opt) => opt.key === walletType);
-  const isAwsKmsConfigured =
-    !!walletConfig &&
-    "awsAccessKeyId" in walletConfig &&
-    !!walletConfig.awsAccessKeyId;
-  const isGcpKmsConfigured =
-    !!walletConfig &&
-    "gcpKmsKeyRingId" in walletConfig &&
-    !!walletConfig.gcpKmsKeyRingId;
+  const selectedOption = EngineBackendWalletOptions.find(
+    (opt) => opt.key === walletType,
+  );
+  invariant(selectedOption, "Selected a valid backend wallet type.");
+
+  // List all wallet types only if Engine is updated to support it.
+  const walletTypeOptions = supportsMultipleWalletTypes
+    ? EngineBackendWalletOptions
+    : [selectedOption];
+
+  const isAwsKmsConfigured = !!walletConfig.awsAccessKeyId;
+  const isGcpKmsConfigured = !!walletConfig.gcpKmsKeyRingId;
 
   // Custom validation logic because required fields depend on the wallet type.
   const values = form.getValues();
@@ -159,7 +171,7 @@ export const ImportBackendWalletButton: React.FC<
                     <Alert variant="warning">
                       <CircleAlertIcon className="size-5" />
                       <AlertTitle>
-                        {selected?.name} is not yet configured
+                        {selectedOption?.name} is not yet configured
                       </AlertTitle>
                       <AlertDescription>
                         Provide your credentials on the{" "}
@@ -169,8 +181,8 @@ export const ImportBackendWalletButton: React.FC<
                         >
                           Configuration
                         </Link>{" "}
-                        tab to enable backend wallets stored on {selected?.name}
-                        .
+                        tab to enable backend wallets stored on{" "}
+                        {selectedOption?.name}.
                       </AlertDescription>
                     </Alert>
                   ) : (

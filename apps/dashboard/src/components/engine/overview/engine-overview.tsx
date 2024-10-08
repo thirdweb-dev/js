@@ -4,9 +4,11 @@ import {
   type EngineInstance,
   useEngineBackendWallets,
   useEngineTransactions,
+  useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, FormControl, Switch } from "@chakra-ui/react";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
+import Link from "next/link";
 import { useState } from "react";
 import { FormLabel, Heading, Text } from "tw-components";
 import { BackendWalletsTable } from "./backend-wallets-table";
@@ -19,6 +21,7 @@ interface EngineOverviewProps {
 }
 
 export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
+  const { data: walletConfig } = useEngineWalletConfig(instance.url);
   const backendWallets = useEngineBackendWallets(instance.url);
   const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
   const transactionsQuery = useEngineTransactions(instance.url, autoUpdate);
@@ -32,7 +35,17 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
               <Heading size="title.sm">Backend Wallets</Heading>
               <p className="text-sm">
                 Engine sends blockchain transactions from backend wallets you
-                own and manage.{" "}
+                own and manage.
+              </p>
+              <p className="text-sm">
+                Set up other wallet types from the{" "}
+                <Link
+                  href={`/dashboard/engine/${instance.id}/configuration`}
+                  className="text-link-foreground hover:text-foreground"
+                >
+                  Configuration
+                </Link>{" "}
+                tab, or{" "}
                 <TrackedLinkTW
                   target="_blank"
                   href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
@@ -40,19 +53,23 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
                   category="engine"
                   className="text-link-foreground hover:text-foreground"
                 >
-                  Learn more about backend wallets.
+                  learn more about backend wallets.
                 </TrackedLinkTW>
-              </p>
-              <p className="text-sm">
-                Set up other wallet types from the{" "}
-                <strong>Configuration</strong> tab.
               </p>
             </Flex>
 
-            <div className="flex flex-row gap-2">
-              <ImportBackendWalletButton instance={instance} />
-              <CreateBackendWalletButton instance={instance} />
-            </div>
+            {walletConfig && (
+              <div className="flex flex-row gap-2">
+                <ImportBackendWalletButton
+                  instance={instance}
+                  walletConfig={walletConfig}
+                />
+                <CreateBackendWalletButton
+                  instance={instance}
+                  walletConfig={walletConfig}
+                />
+              </div>
+            )}
           </Flex>
 
           <Flex flexDirection="row-reverse">

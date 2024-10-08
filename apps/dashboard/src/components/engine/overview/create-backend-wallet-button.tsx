@@ -26,36 +26,33 @@ import {
 } from "@/components/ui/select";
 import {
   type CreateBackendWalletInput,
-  type EngineBackendWalletType,
   type EngineInstance,
+  type WalletConfigResponse,
   useEngineCreateBackendWallet,
-  useEngineWalletConfig,
+  useHasEngineFeature,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Dialog } from "@radix-ui/react-dialog";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { EngineBackendWalletOptions } from "lib/engine";
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
-export const walletTypeOptions: {
-  key: EngineBackendWalletType;
-  name: string;
-}[] = [
-  { key: "local", name: "Local" },
-  { key: "aws-kms", name: "AWS KMS" },
-  { key: "gcp-kms", name: "Google Cloud KMS" },
-] as const;
+import invariant from "tiny-invariant";
 
 interface CreateBackendWalletButtonProps {
   instance: EngineInstance;
+  walletConfig: WalletConfigResponse;
 }
 
 export const CreateBackendWalletButton: React.FC<
   CreateBackendWalletButtonProps
-> = ({ instance }) => {
-  const { data: walletConfig } = useEngineWalletConfig(instance.url);
+> = ({ instance, walletConfig }) => {
+  const supportsMultipleWalletTypes = useHasEngineFeature(
+    instance.url,
+    "HETEROGENEOUS_WALLET_TYPES",
+  );
   const { mutate: createBackendWallet, isPending } =
     useEngineCreateBackendWallet(instance.url);
   const { onSuccess, onError } = useTxNotifications(
@@ -66,9 +63,7 @@ export const CreateBackendWalletButton: React.FC<
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const form = useForm<CreateBackendWalletInput>({
-    defaultValues: {
-      type: walletConfig?.type ?? "local",
-    },
+    defaultValues: { type: walletConfig.type },
   });
 
   const onSubmit = async (data: CreateBackendWalletInput) => {
@@ -96,17 +91,19 @@ export const CreateBackendWalletButton: React.FC<
     });
   };
 
-  const isAwsKmsConfigured =
-    !!walletConfig &&
-    "awsAccessKeyId" in walletConfig &&
-    !!walletConfig.awsAccessKeyId;
-  const isGcpKmsConfigured =
-    !!walletConfig &&
-    "gcpKmsKeyRingId" in walletConfig &&
-    !!walletConfig.gcpKmsKeyRingId;
-
   const walletType = form.watch("type");
-  const selected = walletTypeOptions.find((opt) => opt.key === walletType);
+  const selectedOption = EngineBackendWalletOptions.find(
+    (opt) => opt.key === walletType,
+  );
+  invariant(selectedOption, "Selected a valid backend wallet type.");
+
+  // List all wallet types only if Engine is updated to support it.
+  const walletTypeOptions = supportsMultipleWalletTypes
+    ? EngineBackendWalletOptions
+    : [selectedOption];
+
+  const isAwsKmsConfigured = !!walletConfig.awsAccessKeyId;
+  const isGcpKmsConfigured = !!walletConfig.gcpKmsKeyRingId;
 
   const isFormValid =
     walletType === "local" ||
@@ -127,7 +124,7 @@ export const CreateBackendWalletButton: React.FC<
               <div className="p-6">
                 <DialogHeader className="mb-4">
                   <DialogTitle className="font-semibold text-2xl tracking-tight">
-                    Create wallet
+                    Create Wallet
                   </DialogTitle>
                 </DialogHeader>
 
@@ -171,7 +168,7 @@ export const CreateBackendWalletButton: React.FC<
                     <Alert variant="warning">
                       <CircleAlertIcon className="size-5" />
                       <AlertTitle>
-                        {selected?.name} is not yet configured
+                        {selectedOption?.name} is not yet configured
                       </AlertTitle>
                       <AlertDescription>
                         Provide your credentials on the{" "}
@@ -181,8 +178,8 @@ export const CreateBackendWalletButton: React.FC<
                         >
                           Configuration
                         </Link>{" "}
-                        tab to enable backend wallets stored on {selected?.name}
-                        .
+                        tab to enable backend wallets stored on{" "}
+                        {selectedOption?.name}.
                       </AlertDescription>
                     </Alert>
                   ) : (
@@ -217,7 +214,7 @@ export const CreateBackendWalletButton: React.FC<
                   disabled={!isFormValid || isPending}
                 >
                   {isPending && <Spinner className="size-4" />}
-                  Import
+                  Create
                 </Button>
               </DialogFooter>
             </form>

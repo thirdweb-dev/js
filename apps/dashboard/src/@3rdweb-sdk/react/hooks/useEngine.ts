@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ResultItem } from "components/engine/system-metrics/components/StatusCodes";
 import { THIRDWEB_API_HOST } from "constants/urls";
+import type { EngineBackendWalletType } from "lib/engine";
 import { useState } from "react";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import invariant from "tiny-invariant";
@@ -111,10 +112,16 @@ export function useEngineBackendWallets(instance: string) {
   });
 }
 
+type EngineFeature =
+  | "KEYPAIR_AUTH"
+  | "CONTRACT_SUBSCRIPTIONS"
+  | "IP_ALLOWLIST"
+  | "HETEROGENEOUS_WALLET_TYPES";
+
 interface EngineSystemHealth {
   status: string;
   engineVersion?: string;
-  features?: string[];
+  features?: EngineFeature[];
 }
 
 export function useEngineSystemHealth(
@@ -136,6 +143,15 @@ export function useEngineSystemHealth(
     enabled: !!instanceUrl,
     refetchInterval: pollInterval,
   });
+}
+
+// Helper function to check if a feature is supported.
+export function useHasEngineFeature(
+  instanceUrl: string,
+  feature: EngineFeature,
+) {
+  const { data } = useEngineSystemHealth(instanceUrl);
+  return !!data?.features?.includes(feature);
 }
 
 interface EngineSystemQueueMetrics {
@@ -399,9 +415,7 @@ export function useEngineTransactions(instance: string, autoUpdate: boolean) {
   });
 }
 
-export type EngineBackendWalletType = "local" | "aws-kms" | "gcp-kms";
-
-interface WalletConfigResponse {
+export interface WalletConfigResponse {
   type: EngineBackendWalletType;
 
   awsAccessKeyId?: string | null;
@@ -1658,44 +1672,6 @@ export function useEngineDeleteNotificationChannel(engineId: string) {
         `${THIRDWEB_API_HOST}/v1/engine/${engineId}/notification-channels/${notificationChannelId}`,
         {
           method: "DELETE",
-        },
-      );
-      if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
-      }
-      res.body?.cancel();
-    },
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: engineKeys.notificationChannels(engineId),
-      });
-    },
-  });
-}
-
-export interface TestNotificationChannelInput {
-  notificationChannelId: string;
-  status: "firing" | "resolved";
-}
-
-export function useEngineTestNotificationChannel(engineId: string) {
-  const { isLoggedIn } = useLoggedInUser();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (input: TestNotificationChannelInput) => {
-      invariant(isLoggedIn, "Must be logged in.");
-
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v2/engine/notification-channels/${input.notificationChannelId}/test-trigger`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            status: input.status,
-          }),
         },
       );
       if (!res.ok) {
