@@ -8,6 +8,7 @@ export type {
   CoreServiceConfig,
   PolicyResult,
   UserOpData,
+  fetchKeyMetadataFromApi,
 } from "./core/api.js";
 
 export {
