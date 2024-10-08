@@ -393,7 +393,6 @@ export function PasskeyView(props: InAppWalletFormUIProps) {
       <View
         style={{
           flexDirection: "column",
-          flex: 1,
           alignItems: "center",
           justifyContent: "center",
           padding: spacing.xl,

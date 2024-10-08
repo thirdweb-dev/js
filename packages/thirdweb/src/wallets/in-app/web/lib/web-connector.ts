@@ -411,15 +411,16 @@ export class InAppWebConnector implements InAppConnector {
     args: Extract<SingleStepAuthArgsType, { strategy: "passkey" }>,
   ) {
     const { PasskeyWebClient } = await import("./auth/passkeys.js");
+    const { passkeyName, storeLastUsedPasskey = true } = args;
     const passkeyClient = new PasskeyWebClient();
     const storage = this.localStorage;
     if (args.type === "sign-up") {
       return registerPasskey({
         client: this.client,
         ecosystem: this.ecosystem,
-        username: args.passkeyName,
+        username: passkeyName,
         passkeyClient,
-        storage,
+        storage: storeLastUsedPasskey ? storage : undefined,
         rp: {
           id: this.passkeyDomain ?? window.location.hostname,
           name: this.passkeyDomain ?? window.document.title,
@@ -430,7 +431,7 @@ export class InAppWebConnector implements InAppConnector {
       client: this.client,
       ecosystem: this.ecosystem,
       passkeyClient,
-      storage,
+      storage: storeLastUsedPasskey ? storage : undefined,
       rp: {
         id: this.passkeyDomain ?? window.location.hostname,
         name: this.passkeyDomain ?? window.document.title,

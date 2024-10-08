@@ -118,7 +118,15 @@ export function createWallet<const ID extends WalletId>(
         throw new Error("Not implemented yet");
       };
 
-      const sessionHandler = (uri: string) => Linking.openURL(uri);
+      const sessionHandler = async (uri: string) => {
+        try {
+          await Linking.openURL(uri);
+        } catch {
+          console.error(`Failed to open URI: ${uri} - is the app installed?`);
+          // TODO: figure out how to propage this error to the UI
+          throw new Error(`Failed to open URI: ${uri} - is the app installed?`);
+        }
+      };
 
       const wallet: Wallet<ID> = {
         id,

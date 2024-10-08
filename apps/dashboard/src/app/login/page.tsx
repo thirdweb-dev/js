@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { ConnectEmbed } from "thirdweb/react";
+import { getCookie } from "../../stores/SyncStoreToCookies";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
@@ -48,7 +49,12 @@ function CustomConnectEmmbed() {
     if (nextSearchParam && isValidRedirectPath(nextSearchParam)) {
       router.replace(nextSearchParam);
     } else {
-      router.replace("/dashboard");
+      const dashboardType = getCookie("x-dashboard-type");
+      if (dashboardType === "team") {
+        router.replace("/team");
+      } else {
+        router.replace("/dashboard");
+      }
     }
   }
 

@@ -23,7 +23,7 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "swopapp://",
-    universal: null,
+    universal: "https://swopme.app",
   },
   desktop: {
     native: null,
