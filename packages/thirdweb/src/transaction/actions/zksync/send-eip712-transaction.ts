@@ -128,7 +128,7 @@ export async function populateEip712Transaction(
       max_priority_fee_per_gas: string;
       gas_per_pubdata_limit: string;
     };
-    gas = toBigInt(result.gas_limit);
+    gas = toBigInt(result.gas_limit) * 2n; // overestimating to avoid issues when not accounting for paymaster extra gas ( we should really pass the paymaster input above for better accuracy )
     const baseFee = toBigInt(result.max_fee_per_gas);
     maxFeePerGas = baseFee * 2n; // bumping the base fee per gas to ensure fast inclusion
     maxPriorityFeePerGas = toBigInt(result.max_priority_fee_per_gas) || 1n;
