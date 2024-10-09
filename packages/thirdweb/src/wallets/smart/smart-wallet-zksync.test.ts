@@ -64,6 +64,18 @@ describe.runIf(process.env.TW_SECRET_KEY).todo(
       expect(tx.transactionHash.length).toBe(66);
     });
 
+    it("should send dummy a transactions", async () => {
+      const tx = await sendAndConfirmTransaction({
+        transaction: prepareTransaction({
+          chain,
+          client,
+          to: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7",
+        }),
+        account: smartAccount,
+      });
+      expect(tx.transactionHash.length).toBe(66);
+    });
+
     it.skip("should send a transaction on zkcandy", async () => {
       const zkCandy = defineChain(302);
       const zkCandySmartWallet = smartWallet({
