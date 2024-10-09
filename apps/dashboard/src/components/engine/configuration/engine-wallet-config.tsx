@@ -1,17 +1,19 @@
 import { TabButtons } from "@/components/ui/tabs";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
-  type EngineBackendWalletType,
   type EngineInstance,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex } from "@chakra-ui/react";
-import { EngineBackendWalletOptions } from "lib/engine";
+import {
+  EngineBackendWalletOptions,
+  type EngineBackendWalletType,
+} from "lib/engine";
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import {} from "react-icons/md";
-import { Heading, Text } from "tw-components";
+import { Heading } from "tw-components";
 import { KmsAwsConfig } from "./kms-aws-config";
 import { KmsGcpConfig } from "./kms-gcp-config";
 import { LocalConfig } from "./local-config";
@@ -40,7 +42,7 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
     <Flex flexDir="column" gap={4}>
       <Flex flexDir="column" gap={2}>
         <Heading size="title.md">Backend Wallets</Heading>
-        <Text>
+        <p className="text-muted-foreground">
           Create backend wallets on the{" "}
           <Link
             href={`/dashboard/engine/${instance.id}`}
@@ -49,7 +51,7 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
             Overview
           </Link>{" "}
           tab. To use other wallet types, configure them below.
-        </Text>
+        </p>
       </Flex>
 
       <TabButtons

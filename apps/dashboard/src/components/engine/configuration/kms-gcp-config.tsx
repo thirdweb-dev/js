@@ -9,6 +9,7 @@ import {
   type SetWalletConfigInput,
   useEngineSetWalletConfig,
   useEngineWalletConfig,
+  useHasEngineFeature,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -21,6 +22,10 @@ interface KmsGcpConfigProps {
 export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instance }) => {
   const { mutate: setGcpKmsConfig } = useEngineSetWalletConfig(instance.url);
   const { data: gcpConfig } = useEngineWalletConfig(instance.url);
+  const supportsMultipleWalletTypes = useHasEngineFeature(
+    instance.url,
+    "HETEROGENEOUS_WALLET_TYPES",
+  );
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Configuration set successfully.",
@@ -76,12 +81,12 @@ export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instance }) => {
         className="flex flex-col gap-4"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <p className="text-sm">
+        <p className="text-muted-foreground">
           GCP KMS wallets require credentials from your Google Cloud Platform
           account with sufficient permissions to manage KMS keys. Wallets are
           stored in KMS keys on your GCP account.
         </p>
-        <p className="text-sm">
+        <p className="text-muted-foreground">
           For help and more advanced use cases,{" "}
           <TrackedLinkTW
             target="_blank"
@@ -200,6 +205,11 @@ export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instance }) => {
         </FormFieldSetup>
 
         <div className="flex items-center justify-end gap-4">
+          {!supportsMultipleWalletTypes && (
+            <p className="text-destructive-text text-sm">
+              This will clear other credentials.
+            </p>
+          )}
           <Button disabled={!form.formState.isDirty} type="submit">
             {form.formState.isSubmitting ? "Saving..." : "Save"}
           </Button>

@@ -49,7 +49,7 @@ function BackendWalletsSection(props: {
             Engine sends blockchain transactions from backend wallets you own
             and manage.
           </p>
-          <p className="text-sm">
+          <p className="text-muted-foreground">
             Set up other wallet types from the{" "}
             <Link
               href={`/dashboard/engine/${instance.id}/configuration`}

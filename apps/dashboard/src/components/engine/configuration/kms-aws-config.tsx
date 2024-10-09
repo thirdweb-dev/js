@@ -8,6 +8,7 @@ import {
   type SetWalletConfigInput,
   useEngineSetWalletConfig,
   useEngineWalletConfig,
+  useHasEngineFeature,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -20,6 +21,10 @@ interface KmsAwsConfigProps {
 export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({ instance }) => {
   const { mutate: setAwsKmsConfig } = useEngineSetWalletConfig(instance.url);
   const { data: awsConfig } = useEngineWalletConfig(instance.url);
+  const supportsMultipleWalletTypes = useHasEngineFeature(
+    instance.url,
+    "HETEROGENEOUS_WALLET_TYPES",
+  );
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Configuration set successfully.",
@@ -72,12 +77,12 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({ instance }) => {
         className="flex flex-col gap-4"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <p className="text-sm">
+        <p className="text-muted-foreground">
           AWS KMS wallets require credentials from your Amazon Web Services
           account with sufficient permissions to manage KMS keys. Wallets are
           stored in KMS keys on your AWS account.
         </p>
-        <p className="text-sm">
+        <p className="text-muted-foreground">
           For help and more advanced use cases,{" "}
           <TrackedLinkTW
             target="_blank"
@@ -91,7 +96,25 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({ instance }) => {
           .
         </p>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormFieldSetup
+            label="Region"
+            errorMessage={
+              form.getFieldState("awsRegion", form.formState).error?.message
+            }
+            htmlFor="aws-region"
+            isRequired={false}
+            tooltip={null}
+          >
+            <Input
+              id="aws-region"
+              placeholder="AKIA..."
+              autoComplete="off"
+              type="text"
+              {...form.register("awsRegion")}
+            />
+          </FormFieldSetup>
+
           <FormFieldSetup
             label="Access Key"
             errorMessage={
@@ -132,27 +155,14 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({ instance }) => {
               This will not be shown again.
             </FormDescription>
           </FormFieldSetup>
-
-          <FormFieldSetup
-            label="Region"
-            errorMessage={
-              form.getFieldState("awsRegion", form.formState).error?.message
-            }
-            htmlFor="aws-region"
-            isRequired={false}
-            tooltip={null}
-          >
-            <Input
-              id="aws-region"
-              placeholder="AKIA..."
-              autoComplete="off"
-              type="text"
-              {...form.register("awsRegion")}
-            />
-          </FormFieldSetup>
         </div>
 
         <div className="flex items-center justify-end gap-4">
+          {!supportsMultipleWalletTypes && (
+            <p className="text-destructive-text text-sm">
+              This will clear other credentials.
+            </p>
+          )}
           <Button disabled={!form.formState.isDirty} type="submit">
             {form.formState.isSubmitting ? "Saving..." : "Save"}
           </Button>
