@@ -47,7 +47,7 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
 
       // if we have an auth token set, use that (thirdweb.com/dashboard sets this for the user)
       // pay urls should never send the auth token, because we always want the "developer" to be the one making the request, not the "end user"
-      if (authToken && !isPayUrl(url)) {
+      if (authToken && !isPayUrl(url) && !isInAppWalletUrl(url)) {
         headers.set("authorization", `Bearer ${authToken}`);
       } else if (secretKey) {
         headers.set("x-secret-key", secretKey);
@@ -135,6 +135,19 @@ function isPayUrl(url: string): boolean {
     const { hostname } = new URL(url);
     // pay service hostname always starts with "pay."
     return hostname.startsWith("pay.");
+  } catch {
+    return false;
+  }
+}
+
+function isInAppWalletUrl(url: string): boolean {
+  try {
+    const { hostname } = new URL(url);
+    // in app wallet service hostname always starts with "in-app-wallet." or "embedded-wallet."
+    return (
+      hostname.startsWith("in-app-wallet.") ||
+      hostname.startsWith("embedded-wallet.")
+    );
   } catch {
     return false;
   }
