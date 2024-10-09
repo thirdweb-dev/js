@@ -23,7 +23,7 @@ export const SupplyCards: React.FC<SupplyCardsProps> = ({ contract }) => {
   ).toString();
 
   return (
-    <div className="flex flex-row gap-3 md:gap-6">
+    <div className="flex flex-col gap-3 md:flex-row md:gap-6">
       <Card as={Stat}>
         <StatLabel mb={{ base: 1, md: 0 }}>Total Supply</StatLabel>
         <Skeleton isLoaded={totalSupplyQuery.isSuccess}>
