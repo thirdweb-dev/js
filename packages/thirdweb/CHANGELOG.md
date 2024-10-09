@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.61.4
+
+### Patch Changes
+
+- [#4969](https://github.com/thirdweb-dev/js/pull/4969) [`3446b4c`](https://github.com/thirdweb-dev/js/commit/3446b4cabf0a8b877c344d810f97fd571753df2e) Thanks [@MananTank](https://github.com/MananTank)! - Remove extra text shown in Error Message in Pay UI
+
 ## 5.61.3
 
 ### Patch Changes
