@@ -64,7 +64,20 @@ export const ImportBackendWalletButton: React.FC<
   );
   const form = useForm<ImportBackendWalletInput>();
 
-  const onSubmit = (data: ImportBackendWalletInput) => {
+  const onSubmit = (raw: ImportBackendWalletInput) => {
+    // Submit only relevant fields.
+    let data: ImportBackendWalletInput = {};
+    if (walletType === "local") {
+      data = { privateKey: raw.privateKey };
+    } else if (walletType === "aws-kms") {
+      data = { awsKmsArn: raw.awsKmsArn };
+    } else if (walletType === "gcp-kms") {
+      data = {
+        gcpKmsKeyId: raw.gcpKmsKeyId,
+        gcpKmsKeyVersionId: raw.gcpKmsKeyVersionId,
+      };
+    }
+
     importBackendWallet(data, {
       onSuccess: () => {
         onSuccess();
@@ -140,10 +153,9 @@ export const ImportBackendWalletButton: React.FC<
                     <FormLabel>Wallet Type</FormLabel>
                     <FormControl>
                       <Select
-                        onValueChange={(value) => {
-                          setWalletType(value as EngineBackendWalletType);
-                          form.reset({ label: form.getValues("label") });
-                        }}
+                        onValueChange={(value) =>
+                          setWalletType(value as EngineBackendWalletType)
+                        }
                         value={walletType}
                       >
                         <SelectTrigger>
@@ -206,6 +218,7 @@ export const ImportBackendWalletButton: React.FC<
                       {/* Local */}
                       {walletType === "local" ? (
                         <FormFieldSetup
+                          key="privateKey"
                           htmlFor="privateKey"
                           label="Private key"
                           errorMessage={
@@ -238,6 +251,7 @@ export const ImportBackendWalletButton: React.FC<
                           tooltip={null}
                         >
                           <Input
+                            key="awsKmsArn"
                             id="awsKmsArn"
                             placeholder="arn:aws:kms:us-west-2:123456789012:key/2b7d8e0c-..."
                             autoComplete="off"
@@ -258,6 +272,7 @@ export const ImportBackendWalletButton: React.FC<
                             tooltip={null}
                           >
                             <Input
+                              key="gcpKmsKeyId"
                               id="gcpKmsKeyId"
                               placeholder="projects/my-project/locations/us-central1/keyRings/my-key-ring/cryptoKeys/my-key"
                               autoComplete="off"
@@ -281,6 +296,7 @@ export const ImportBackendWalletButton: React.FC<
                             tooltip={null}
                           >
                             <Input
+                              key="gcpKmsKeyVersionId"
                               id="gcpKmsKeyVersionId"
                               placeholder="1"
                               autoComplete="off"
