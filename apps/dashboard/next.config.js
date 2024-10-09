@@ -40,7 +40,11 @@ const securityHeaders = [
 const redirects = require("./redirects");
 
 // add framer paths here
-const FRAMER_PATHS = ["/connect/sign-in", "/contracts/modular-contracts"];
+const FRAMER_PATHS = [
+  "/connect/sign-in",
+  "/contracts/modular-contracts",
+  "/unlimited-wallets",
+];
 
 /**
  * @returns {import('next').RemotePattern[]}

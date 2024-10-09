@@ -32,11 +32,13 @@ export async function middleware(request: NextRequest) {
     // check if the user is logged in (has a valid auth cookie)
 
     if (!authCookie) {
+      const searchParamsString = request.nextUrl.searchParams.toString();
+
       // if not logged in, rewrite to login page
       return redirect(
         request,
         "/login",
-        `next=${encodeURIComponent(pathname)}`,
+        `next=${encodeURIComponent(`${pathname}${searchParamsString ? `?${searchParamsString}` : ""}`)}`,
         false,
       );
     }

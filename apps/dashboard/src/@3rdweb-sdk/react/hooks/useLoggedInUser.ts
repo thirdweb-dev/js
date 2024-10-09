@@ -56,9 +56,7 @@ export function useLoggedInUser(): {
     retry: false,
     queryFn: async () => {
       const searchParams = new URLSearchParams();
-      if (pathname) {
-        searchParams.set("pathname", pathname);
-      }
+
       if (connectedAddress) {
         searchParams.set("address", connectedAddress);
       }
@@ -76,10 +74,18 @@ export function useLoggedInUser(): {
   // legit use-case for now
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (query.data?.redirectTo) {
-      router.replace(query.data.redirectTo);
+    if (query.data?.isLoggedIn === false) {
+      // not using useSearchParams hook here to avoid adding Suspense boundaries everywhere this hook is being used
+      const currentHref = new URL(window.location.href);
+      const currentPathname = currentHref.pathname;
+      const currentSearchParams = currentHref.searchParams.toString();
+      router.replace(
+        buildLoginPath(
+          `${currentPathname}${currentSearchParams ? `?${currentSearchParams}` : ""}`,
+        ),
+      );
     }
-  }, [query.data?.redirectTo, router]);
+  }, [query.data?.isLoggedIn, router]);
 
   // if we are "disconnected" we are not logged in
   if (connectionStatus === "disconnected") {
@@ -134,4 +140,8 @@ export function useLoggedInUser(): {
       ? { address: connectedAddress, jwt: query.data.jwt }
       : null,
   };
+}
+
+function buildLoginPath(pathname: string | undefined): string {
+  return `/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`;
 }

@@ -48,7 +48,7 @@ export async function getNFT(
       : null,
   ]);
 
-  if (!uri) {
+  if (!uri?.trim()) {
     return parseNFT(
       {
         id: options.tokenId,

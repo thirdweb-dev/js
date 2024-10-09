@@ -3,7 +3,7 @@
  *
  */
 async function fetchChainsFromApi() {
-  const res = await fetch(`https://api.thirdweb.com/v1/chains`, {
+  const res = await fetch("https://api.thirdweb.com/v1/chains", {
     headers: {
       "Content-Type": "application/json",
     },
@@ -55,7 +55,9 @@ module.exports = {
     ],
   },
   exclude: ["/chain/validate"],
-  transform: async (config, path) => {
+  transform: async (config, _path) => {
+    let path = _path;
+
     // ignore og image paths
     if (path.includes("_og")) {
       return null;

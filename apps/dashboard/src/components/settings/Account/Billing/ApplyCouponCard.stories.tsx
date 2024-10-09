@@ -54,6 +54,14 @@ function statusStub(status: number) {
 function Story() {
   return (
     <div className="container flex max-w-[1100px] flex-col gap-10 py-10">
+      <BadgeContainer label="Prefill code - XYZ, Success - 200">
+        <ApplyCouponCardUI
+          submit={statusStub(200)}
+          onCouponApplied={undefined}
+          prefillPromoCode="XYZ"
+        />
+      </BadgeContainer>
+
       <BadgeContainer label="Success - 200">
         <ApplyCouponCardUI
           submit={statusStub(200)}
