@@ -10,7 +10,7 @@ import invariant from "tiny-invariant";
 import { engineKeys } from "../cache-keys";
 import { useLoggedInUser } from "./useLoggedInUser";
 
-export type EngineTier = "STARTER" | "PREMIUM";
+export type EngineTier = "STARTER" | "PREMIUM" | "ENTERPRISE";
 
 // Engine instances
 export type EngineInstance = {
