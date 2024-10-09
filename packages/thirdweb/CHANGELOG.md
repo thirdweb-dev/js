@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.61.3
+
+### Patch Changes
+
+- [#4965](https://github.com/thirdweb-dev/js/pull/4965) [`24981a7`](https://github.com/thirdweb-dev/js/commit/24981a7f60c2a45976c748826339822d81154ce3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect raw accountSalt passed as hex
+
 ## 5.61.2
 
 ### Patch Changes
