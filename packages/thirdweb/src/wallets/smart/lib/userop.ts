@@ -131,6 +131,7 @@ export async function createUnsignedUserOp(args: {
   accountContract: ThirdwebContract;
   adminAddress: string;
   sponsorGas: boolean;
+  waitForDeployment?: boolean;
   overrides?: SmartWalletOptions["overrides"];
 }): Promise<UserOperationV06 | UserOperationV07> {
   const {
@@ -140,6 +141,7 @@ export async function createUnsignedUserOp(args: {
     adminAddress,
     overrides,
     sponsorGas,
+    waitForDeployment = true,
   } = args;
   const chain = executeTx.chain;
   const client = executeTx.client;
@@ -154,23 +156,25 @@ export async function createUnsignedUserOp(args: {
     args.overrides?.entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
   );
 
-  const [isDeployed, callData, gasFees, nonce] = await Promise.all([
-    isContractDeployed(accountContract),
-    encode(executeTx),
-    getGasFees({
-      executeTx,
-      bundlerOptions,
-      chain,
-      client,
-    }),
-    getAccountNonce({
-      accountContract,
-      chain,
-      client,
-      entrypointAddress: overrides?.entrypointAddress,
-      getNonceOverride: overrides?.getAccountNonce,
-    }),
-  ]);
+  const [isDeployed, callData, callGasLimit, gasFees, nonce] =
+    await Promise.all([
+      isContractDeployed(accountContract),
+      encode(executeTx),
+      resolvePromisedValue(executeTx.gas),
+      getGasFees({
+        executeTx,
+        bundlerOptions,
+        chain,
+        client,
+      }),
+      getAccountNonce({
+        accountContract,
+        chain,
+        client,
+        entrypointAddress: overrides?.entrypointAddress,
+        getNonceOverride: overrides?.getAccountNonce,
+      }),
+    ]);
 
   const { maxFeePerGas, maxPriorityFeePerGas } = gasFees;
 
@@ -185,8 +189,10 @@ export async function createUnsignedUserOp(args: {
       isDeployed,
       nonce,
       callData,
+      callGasLimit,
       maxFeePerGas,
       maxPriorityFeePerGas,
+      waitForDeployment,
     });
   }
 
@@ -201,8 +207,10 @@ export async function createUnsignedUserOp(args: {
     isDeployed,
     nonce,
     callData,
+    callGasLimit,
     maxFeePerGas,
     maxPriorityFeePerGas,
+    waitForDeployment,
   });
 }
 
@@ -262,8 +270,10 @@ async function populateUserOp_v0_7(args: {
   isDeployed: boolean;
   nonce: bigint;
   callData: Hex;
+  callGasLimit?: bigint;
   maxFeePerGas: bigint;
   maxPriorityFeePerGas: bigint;
+  waitForDeployment: boolean;
 }): Promise<UserOperationV07> {
   const {
     bundlerOptions,
@@ -275,17 +285,21 @@ async function populateUserOp_v0_7(args: {
     overrides,
     nonce,
     callData,
+    callGasLimit,
     maxFeePerGas,
     maxPriorityFeePerGas,
+    waitForDeployment,
   } = args;
   const { chain, client } = bundlerOptions;
 
   let factory: string | undefined;
   let factoryData: Hex;
-  // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
   if (isDeployed || isAccountDeploying(accountContract)) {
     factoryData = "0x";
-    await waitForAccountDeployed(accountContract);
+    if (waitForDeployment) {
+      // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
+      await waitForAccountDeployed(accountContract);
+    }
   } else {
     factory = factoryContract.address;
     factoryData = await encode(
@@ -305,7 +319,7 @@ async function populateUserOp_v0_7(args: {
     callData,
     maxFeePerGas,
     maxPriorityFeePerGas,
-    callGasLimit: 0n,
+    callGasLimit: callGasLimit ?? 0n,
     verificationGasLimit: 0n,
     preVerificationGas: 0n,
     factory,
@@ -399,8 +413,10 @@ async function populateUserOp_v0_6(args: {
   isDeployed: boolean;
   nonce: bigint;
   callData: Hex;
+  callGasLimit?: bigint;
   maxFeePerGas: bigint;
   maxPriorityFeePerGas: bigint;
+  waitForDeployment: boolean;
 }): Promise<UserOperationV06> {
   const {
     bundlerOptions,
@@ -412,16 +428,20 @@ async function populateUserOp_v0_6(args: {
     overrides,
     nonce,
     callData,
+    callGasLimit,
     maxFeePerGas,
     maxPriorityFeePerGas,
+    waitForDeployment,
   } = args;
   const { chain, client } = bundlerOptions;
   let initCode: Hex;
 
-  // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
   if (isDeployed || isAccountDeploying(accountContract)) {
     initCode = "0x";
-    await waitForAccountDeployed(accountContract);
+    if (waitForDeployment) {
+      // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
+      await waitForAccountDeployed(accountContract);
+    }
   } else {
     initCode = await getAccountInitCode({
       factoryContract: factoryContract,
@@ -439,7 +459,7 @@ async function populateUserOp_v0_6(args: {
     callData,
     maxFeePerGas,
     maxPriorityFeePerGas,
-    callGasLimit: 0n,
+    callGasLimit: callGasLimit ?? 0n,
     verificationGasLimit: 0n,
     preVerificationGas: 0n,
     paymasterAndData: "0x",
@@ -651,6 +671,7 @@ export async function createAndSignUserOp(options: {
   adminAccount: Account;
   client: ThirdwebClient;
   smartWalletOptions: SmartWalletOptions;
+  waitForDeployment?: boolean;
 }) {
   const config = options.smartWalletOptions;
   const factoryContract = getContract({
@@ -708,6 +729,7 @@ export async function createAndSignUserOp(options: {
     adminAddress: options.adminAccount.address,
     sponsorGas: "sponsorGas" in config ? config.sponsorGas : config.gasless,
     overrides: config.overrides,
+    waitForDeployment: options.waitForDeployment,
   });
   const signedUserOp = await signUserOp({
     client: options.client,
@@ -723,6 +745,7 @@ async function waitForAccountDeployed(accountContract: ThirdwebContract) {
   const startTime = Date.now();
   while (isAccountDeploying(accountContract)) {
     if (Date.now() - startTime > 60000) {
+      clearAccountDeploying(accountContract); // clear the flag so it doesnt stay stuck in this state
       throw new Error(
         "Account deployment is taking too long (over 1 minute). Please try again.",
       );

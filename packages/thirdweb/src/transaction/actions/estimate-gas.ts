@@ -49,6 +49,7 @@ const cache = new WeakMap<
  * import { estimateGas } from "thirdweb";
  * const gas = await estimateGas({
  *  transaction,
+ *  from: "0x...",
  * });
  * ```
  */

@@ -5,22 +5,37 @@ import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useMutation } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
 import { useState } from "react";
 import { toast } from "sonner";
+import { resolveScheme } from "thirdweb/storage";
+
+type UpdateTeamField = (team: Partial<Team>) => Promise<void>;
 
 export function TeamGeneralSettingsPageUI(props: {
   team: Team;
   updateTeamImage: (file: File | undefined) => Promise<void>;
+  updateTeamField: UpdateTeamField;
 }) {
   const hasPermissionToDelete = false; // TODO
   return (
     <div className="flex flex-col gap-8">
-      <TeamNameFormControl team={props.team} />
-      <TeamSlugFormControl team={props.team} />
-      <TeamAvatarFormControl updateTeamImage={props.updateTeamImage} />
+      <TeamNameFormControl
+        team={props.team}
+        updateTeamField={props.updateTeamField}
+      />
+      <TeamSlugFormControl
+        team={props.team}
+        updateTeamField={props.updateTeamField}
+      />
+      {/* THIS IS NOT WORKING - CAN"T UPDATE IMAGE */}
+      <TeamAvatarFormControl
+        updateTeamImage={props.updateTeamImage}
+        avatar={props.team.image}
+      />
       <TeamIdCard team={props.team} />
       <LeaveTeamCard enabled={false} teamName={props.team.name} />
       <DeleteTeamCard
@@ -33,17 +48,13 @@ export function TeamGeneralSettingsPageUI(props: {
 
 function TeamNameFormControl(props: {
   team: Team;
+  updateTeamField: UpdateTeamField;
 }) {
   const [teamName, setTeamName] = useState(props.team.name);
   const maxTeamNameLength = 32;
 
-  // TODO - implement
   const updateTeamMutation = useMutation({
-    mutationFn: async (teamName: string) => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      console.log("Updating team name to", teamName);
-      throw new Error("Not implemented");
-    },
+    mutationFn: (name: string) => props.updateTeamField({ name }),
   });
 
   function handleSave() {
@@ -82,20 +93,14 @@ function TeamNameFormControl(props: {
 
 function TeamSlugFormControl(props: {
   team: Team;
+  updateTeamField: (team: Partial<Team>) => Promise<void>;
 }) {
   const [teamSlug, setTeamSlug] = useState(props.team.slug);
   const [isTeamTaken] = useState(false);
   const maxTeamURLLength = 48;
 
-  // TODO - implement
   const updateTeamMutation = useMutation({
-    mutationFn: async (_slug: string) => {
-      // set isTeamTaken to true if team URL is taken
-      // Fake loading
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      console.log("Updating team slug to", _slug);
-      throw new Error("Not implemented");
-    },
+    mutationFn: (slug: string) => props.updateTeamField({ slug: slug }),
   });
 
   function handleSave() {
@@ -144,8 +149,17 @@ function TeamSlugFormControl(props: {
 
 function TeamAvatarFormControl(props: {
   updateTeamImage: (file: File | undefined) => Promise<void>;
+  avatar: string | undefined;
 }) {
-  const [teamAvatar, setTeamAvatar] = useState<File>(); // TODO: prefill with team avatar
+  const client = useThirdwebClient();
+  const teamUrl = props.avatar
+    ? resolveScheme({
+        client: client,
+        uri: props.avatar,
+      })
+    : undefined;
+
+  const [teamAvatar, setTeamAvatar] = useState<File | undefined>();
 
   const updateTeamAvatarMutation = useMutation({
     mutationFn: async (_avatar: File | undefined) => {
@@ -186,6 +200,7 @@ function TeamAvatarFormControl(props: {
           setValue={setTeamAvatar}
           className="w-20 rounded-full lg:w-28"
           disableHelperText
+          fileUrl={teamUrl}
         />
       </div>
     </SettingsCard>

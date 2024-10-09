@@ -3,7 +3,7 @@
 
 export const wallet = {
   id: "xyz.bonuz",
-  name: "Bonuz - Social ID",
+  name: "Bonuz Social Smart Wallet",
   homepage: "https://bonuz.xyz",
   image_id: "eb376138-c5b9-4d82-c610-c98c9c218a00",
   app: {

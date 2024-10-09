@@ -8,7 +8,7 @@ export const wallet = {
   image_id: "1c0cd352-ce8e-4bcc-f91d-8763eab60b00",
   app: {
     browser: "https://www.coinsdo.com/wallet_coinsdo.html",
-    ios: "https://apps.apple.com/us/app/coinsdo-wallet/id1631258517",
+    ios: "https://apps.apple.com/us/app/coinsdo-wallet-btc-eth-wallet/id6479635869",
     android: "https://play.google.com/store/apps/details?id=com.coinsdo.wallet",
     mac: null,
     windows: null,

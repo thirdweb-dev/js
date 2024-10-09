@@ -1,18 +1,10 @@
 import { Suspense, lazy } from "react";
-import { LoadingDots } from "../../../../components/ui/LoadingDots";
+import { CodeLoading } from "../../../../components/code/code.client";
 import type { ConnectPlaygroundOptions } from "./types";
 
 const CodeClient = lazy(
   () => import("../../../../components/code/code.client"),
 );
-
-function CodeLoading() {
-  return (
-    <div className="flex h-[300px] items-center justify-center xl:h-[calc(100vh-100px)]">
-      <LoadingDots />
-    </div>
-  );
-}
 
 export function CodeGen(props: {
   connectOptions: ConnectPlaygroundOptions;

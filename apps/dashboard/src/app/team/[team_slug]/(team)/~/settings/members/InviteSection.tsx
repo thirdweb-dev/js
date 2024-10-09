@@ -31,7 +31,7 @@ export function InviteSection(props: {
     bottomSection = (
       <div className="lg:px6 flex items-center justify-between gap-4 border-border border-t px-4 py-4">
         <p className="text-muted-foreground text-sm">
-          This feature is only available on the
+          This feature is only available on the{" "}
           <Link
             href="https://thirdweb.com/pricing"
             target="_blank"
@@ -41,9 +41,13 @@ export function InviteSection(props: {
           </Link>
         </p>
 
-        {/* TODO - link to billing settings page */}
-        <Button variant="outline" size="sm">
-          Upgrade
+        <Button variant="outline" size="sm" asChild>
+          <Link
+            href={`/team/${props.team.slug}/~/settings/billing`}
+            className="gap-2"
+          >
+            Upgrade
+          </Link>
         </Button>
       </div>
     );

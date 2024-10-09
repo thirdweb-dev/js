@@ -1,7 +1,6 @@
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
-import { FiX } from "react-icons/fi";
-import { RxCaretDown, RxCaretUp } from "react-icons/rx";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
+import { ChevronDownIcon, ChevronUpIcon, XIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 import { ClaimConditionTypeData, useClaimConditionsFormContext } from ".";
@@ -57,10 +56,11 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
             onClick={toggleEditing}
             size="sm"
             rightIcon={
-              <Icon
-                as={field.isEditing ? RxCaretUp : RxCaretDown}
-                boxSize={5}
-              />
+              field.isEditing ? (
+                <ChevronUpIcon className="size-4" />
+              ) : (
+                <ChevronDownIcon className="size-4" />
+              )
             }
           >
             {field.isEditing ? "Collapse" : isAdmin ? "Edit" : "See Phase"}
@@ -72,7 +72,7 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
               isDisabled={isPending}
               colorScheme="red"
               size="sm"
-              rightIcon={<Icon as={FiX} />}
+              rightIcon={<XIcon className="size-4" />}
             >
               Remove
             </Button>

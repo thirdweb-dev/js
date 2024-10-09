@@ -8,8 +8,9 @@ export const wallet = {
   image_id: "71ca9daf-a31e-4d2a-fd01-f5dc2dc66900",
   app: {
     browser: null,
-    ios: null,
-    android: null,
+    ios: "https://apps.apple.com/us/app/backpack-wallet-exchange/id6445964121",
+    android:
+      "https://play.google.com/store/apps/details?id=app.backpack.mobile",
     mac: null,
     windows: null,
     linux: null,
@@ -22,8 +23,8 @@ export const wallet = {
   },
   rdns: "app.backpack",
   mobile: {
-    native: null,
-    universal: null,
+    native: "backpack://",
+    universal: "https://backpack.app/ul/v1",
   },
   desktop: {
     native: null,

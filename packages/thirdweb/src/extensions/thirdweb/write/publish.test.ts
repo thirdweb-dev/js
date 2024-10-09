@@ -7,21 +7,25 @@ import { CONTRACT_PUBLISHER_ADDRESS } from "../../../contract/deployment/publish
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { download } from "../../../storage/download.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
-import { fetchDeployMetadata } from "../../../utils/any-evm/deploy-metadata.js";
+import {
+  type FetchDeployMetadataResult,
+  fetchDeployMetadata,
+} from "../../../utils/any-evm/deploy-metadata.js";
 import { contractPublishedEvent } from "../__generated__/IContractPublisher/events/ContractPublished.js";
 import { getAllPublishedContracts } from "../__generated__/IContractPublisher/read/getAllPublishedContracts.js";
 import { getPublishedContractVersions } from "../__generated__/IContractPublisher/read/getPublishedContractVersions.js";
 import { publishContract } from "./publish.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("publishContract", () => {
-  it("should publish a contract successfully", async () => {
-    const publisherContract = getContract({
-      client: TEST_CLIENT,
-      chain: FORKED_POLYGON_CHAIN,
-      address: CONTRACT_PUBLISHER_ADDRESS,
-    });
+describe.runIf(process.env.TW_SECRET_KEY).sequential("publishContract", () => {
+  const publisherContract = getContract({
+    client: TEST_CLIENT,
+    chain: FORKED_POLYGON_CHAIN,
+    address: CONTRACT_PUBLISHER_ADDRESS,
+  });
+  let publishedData: FetchDeployMetadataResult;
 
-    let publishedContracts = await getAllPublishedContracts({
+  it("should publish a contract successfully", async () => {
+    const publishedContracts = await getAllPublishedContracts({
       contract: publisherContract,
       publisher: TEST_ACCOUNT_D.address,
     });
@@ -80,7 +84,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("publishContract", () => {
         "version": "0.0.1",
       }
     `);
-    const publishedData = await fetchDeployMetadata({
+    publishedData = await fetchDeployMetadata({
       client: TEST_CLIENT,
       uri: logs?.[0]?.args.publishedContract.publishMetadataUri ?? "",
     });
@@ -91,8 +95,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("publishContract", () => {
     expect(publishedData.description).toBe("Cat Attack NFT");
     expect(publishedData.publisher).toBe(TEST_ACCOUNT_D.address);
     expect(publishedData.routerType).toBe("none");
+  }, 120000);
 
-    publishedContracts = await getAllPublishedContracts({
+  it("should throw if publishing the same version", async () => {
+    const publishedContracts = await getAllPublishedContracts({
       contract: publisherContract,
       publisher: TEST_ACCOUNT_D.address,
     });
@@ -114,7 +120,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("publishContract", () => {
         }),
       }),
     ).rejects.toThrow("Version 0.0.1 is not greater than 0.0.1");
+  });
 
+  it("should publish a new version", async () => {
     const tx2 = publishContract({
       contract: publisherContract,
       account: TEST_ACCOUNT_D,
@@ -143,7 +151,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("publishContract", () => {
     });
     expect(publishedData2.version).toBe("0.0.2");
 
-    publishedContracts = await getAllPublishedContracts({
+    const publishedContracts = await getAllPublishedContracts({
       contract: publisherContract,
       publisher: TEST_ACCOUNT_D.address,
     });

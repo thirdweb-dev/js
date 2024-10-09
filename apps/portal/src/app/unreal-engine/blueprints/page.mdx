@@ -1,0 +1,19 @@
+import { createUnrealEngineMetadata } from "../util";
+
+export const metadata = createUnrealEngineMetadata({
+    title: "Blueprint Overview",
+    description: "Overview of the Thirdweb Unreal Engine SDK Blueprint system.",
+});
+
+# Blueprint Overview
+
+All blueprint facing nodes are contained within the `UThirdwebFunctionLibrary` class. It provides a comprehensive set of
+Blueprint functions to interact with Thirdweb's wallet functionalities within Unreal Engine. This includes utilities
+for wallet creation, session management, signing messages, and more.
+
+## Internal Implementation Notes
+
+- The `BP_` function prefix is an unreal engine standard designed to ensure c++ developers do not use functions intended
+  for blueprint use
+- The `Conv_` function prefix is an unreal engine required convention to detect autocast nodes
+- All operator function prefixes are an unreal engine convention required to detect standard operator node wildcards

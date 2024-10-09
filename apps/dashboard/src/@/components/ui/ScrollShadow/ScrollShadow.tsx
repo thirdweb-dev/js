@@ -125,6 +125,7 @@ export function ScrollShadow(props: {
       <div
         className={cn("no-scrollbar overflow-auto", props.scrollableClassName)}
         ref={scrollableEl}
+        data-scrollable
       >
         {props.children}
       </div>

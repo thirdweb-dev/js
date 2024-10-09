@@ -1,3 +1,4 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -8,14 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { FormControl, RequiredFormLabel } from "@/components/ui/form";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormControl } from "@/components/ui/form";
+import { Form, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -74,6 +69,7 @@ export const ImportBackendWalletButton: React.FC<
       onSuccess: () => {
         onSuccess();
         setIsModalOpen(false);
+        form.reset();
         trackEvent({
           category: "engine",
           action: "import-backend-wallet",
@@ -144,9 +140,10 @@ export const ImportBackendWalletButton: React.FC<
                     <FormLabel>Wallet Type</FormLabel>
                     <FormControl>
                       <Select
-                        onValueChange={(value) =>
-                          setWalletType(value as EngineBackendWalletType)
-                        }
+                        onValueChange={(value) => {
+                          setWalletType(value as EngineBackendWalletType);
+                          form.reset({ label: form.getValues("label") });
+                        }}
                         value={walletType}
                       >
                         <SelectTrigger>
@@ -188,102 +185,111 @@ export const ImportBackendWalletButton: React.FC<
                   ) : (
                     <>
                       {/* Label */}
-                      <FormField
-                        control={form.control}
-                        name="label"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Label</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="A description to identify this backend wallet"
-                                type="text"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      <FormFieldSetup
+                        label="Label"
+                        errorMessage={
+                          form.getFieldState("label", form.formState).error
+                            ?.message
+                        }
+                        htmlFor="wallet-label"
+                        isRequired={false}
+                        tooltip={null}
+                      >
+                        <Input
+                          id="wallet-label"
+                          type="text"
+                          placeholder="A description to identify this backend wallet"
+                          {...form.register("label")}
+                        />
+                      </FormFieldSetup>
 
                       {/* Local */}
                       {walletType === "local" ? (
-                        <FormField
-                          control={form.control}
-                          name="privateKey"
-                          render={({ field }) => (
-                            <FormItem>
-                              <RequiredFormLabel>Private Key</RequiredFormLabel>
-                              <FormControl>
-                                <Input
-                                  placeholder="64-character hex, e.g. 5a3d7..."
-                                  type="text"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                        <FormFieldSetup
+                          htmlFor="privateKey"
+                          label="Private key"
+                          errorMessage={
+                            form.getFieldState("privateKey", form.formState)
+                              .error?.message
+                          }
+                          isRequired
+                          tooltip={null}
+                        >
+                          <Input
+                            id="privateKey"
+                            placeholder="Your wallet private key"
+                            autoComplete="off"
+                            type="text"
+                            {...form.register("privateKey", {
+                              required: true,
+                              // TODO: add private key validation here
+                            })}
+                          />
+                        </FormFieldSetup>
                       ) : walletType === "aws-kms" ? (
-                        <FormField
-                          control={form.control}
-                          name="awsKmsArn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <RequiredFormLabel>KMS ARN</RequiredFormLabel>
-                              <FormControl>
-                                <Input
-                                  placeholder="arn:aws:kms:us-west-2:123456789012:key/2b7d8e0c-..."
-                                  type="text"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                        <FormFieldSetup
+                          isRequired
+                          label="AWS KMS ARN"
+                          errorMessage={
+                            form.getFieldState("awsKmsArn", form.formState)
+                              .error?.message
+                          }
+                          htmlFor="awsKmsArn"
+                          tooltip={null}
+                        >
+                          <Input
+                            id="awsKmsArn"
+                            placeholder="arn:aws:kms:us-west-2:123456789012:key/2b7d8e0c-..."
+                            autoComplete="off"
+                            type="text"
+                            {...form.register("awsKmsArn", { required: true })}
+                          />
+                        </FormFieldSetup>
                       ) : walletType === "gcp-kms" ? (
                         <>
-                          <FormField
-                            control={form.control}
-                            name="gcpKmsKeyId"
-                            render={({ field }) => (
-                              <FormItem>
-                                <RequiredFormLabel>
-                                  KMS Key ID
-                                </RequiredFormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="projects/my-project/locations/us-central1/keyRings/my-key-ring/cryptoKeys/my-key"
-                                    type="text"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          <FormFieldSetup
+                            htmlFor="gcpKmsKeyId"
+                            errorMessage={
+                              form.getFieldState("gcpKmsKeyId", form.formState)
+                                .error?.message
+                            }
+                            label="GCP KMS Key ID"
+                            isRequired
+                            tooltip={null}
+                          >
+                            <Input
+                              id="gcpKmsKeyId"
+                              placeholder="projects/my-project/locations/us-central1/keyRings/my-key-ring/cryptoKeys/my-key"
+                              autoComplete="off"
+                              type="text"
+                              {...form.register("gcpKmsKeyId", {
+                                required: true,
+                              })}
+                            />
+                          </FormFieldSetup>
 
-                          <FormField
-                            control={form.control}
-                            name="gcpKmsKeyVersionId"
-                            render={({ field }) => (
-                              <FormItem>
-                                <RequiredFormLabel>
-                                  Key Version ID
-                                </RequiredFormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="1"
-                                    type="text"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          <FormFieldSetup
+                            label="GCP KMS Version ID"
+                            errorMessage={
+                              form.getFieldState(
+                                "gcpKmsKeyVersionId",
+                                form.formState,
+                              ).error?.message
+                            }
+                            htmlFor="gcpKmsKeyVersionId"
+                            isRequired
+                            tooltip={null}
+                          >
+                            <Input
+                              id="gcpKmsKeyVersionId"
+                              placeholder="1"
+                              autoComplete="off"
+                              type="text"
+                              {...form.register("gcpKmsKeyVersionId", {
+                                required: true,
+                              })}
+                            />
+                          </FormFieldSetup>
                         </>
                       ) : null}
                     </>

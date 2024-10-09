@@ -28,6 +28,7 @@ interface IFileInputProps {
   children?: React.ReactNode;
   className?: string;
   disableHelperText?: boolean;
+  fileUrl?: string;
 }
 
 export const FileInput: React.FC<IFileInputProps> = ({
@@ -45,6 +46,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
   className,
   previewMaxWidth,
   disableHelperText,
+  fileUrl: fileUrlFallback,
 }) => {
   const onDrop = useCallback<
     <T extends File>(
@@ -67,7 +69,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
 
   const file: File | null =
     typeof window !== "undefined" && value instanceof File ? value : null;
-  const fileUrl = useImageFileOrUrl(value);
+  const fileUrl = useImageFileOrUrl(value) || fileUrlFallback || "";
 
   const helperTextOrFile = helperText
     ? helperText

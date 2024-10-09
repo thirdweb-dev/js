@@ -29,7 +29,7 @@ import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
 import { TW_ICON, WALLET_ICON } from "../icons/svgs.js";
 import { ErrorView } from "./ErrorView.js";
-import { ExternalWalletsList } from "./ExternalWalletsList.js";
+import { AllWalletsList, ExternalWalletsList } from "./ExternalWalletsList.js";
 import { InAppWalletUI, OtpLogin, PasskeyView } from "./InAppWalletUI.js";
 import WalletLoadingThumbnail from "./WalletLoadingThumbnail.js";
 
@@ -40,6 +40,7 @@ export type ModalState =
   | { screen: "otp"; auth: MultiStepAuthProviderType; wallet: Wallet<"inApp"> }
   | { screen: "passkey"; wallet: Wallet<"inApp"> }
   | { screen: "external_wallets" }
+  | { screen: "all_wallets" }
   | { screen: "auth" };
 
 /**
@@ -212,6 +213,34 @@ export function ConnectModal(
           />
           <Spacer size="lg" />
           <ExternalWalletsList
+            theme={theme}
+            externalWallets={externalWallets}
+            client={client}
+            connector={connector}
+            containerType={containerType}
+            showAllWalletsButton={props.showAllWallets !== false}
+            onShowAllWallets={() => setModalState({ screen: "all_wallets" })}
+          />
+        </>
+      );
+      break;
+    }
+    case "all_wallets": {
+      content = (
+        <>
+          <Header
+            theme={theme}
+            onClose={props.onClose}
+            containerType={containerType}
+            onBack={() =>
+              inAppWallet
+                ? setModalState({ screen: "external_wallets" })
+                : setModalState({ screen: "base" })
+            }
+            title={props.connectModal?.title || "Select Wallet"}
+          />
+          <Spacer size="lg" />
+          <AllWalletsList
             theme={theme}
             externalWallets={externalWallets}
             client={client}
@@ -402,6 +431,10 @@ export function ConnectModal(
                   client={client}
                   connector={connector}
                   containerType={containerType}
+                  showAllWalletsButton={props.showAllWallets !== false}
+                  onShowAllWallets={() =>
+                    setModalState({ screen: "all_wallets" })
+                  }
                 />
               </View>
             </>

@@ -259,7 +259,6 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
             htmlFor="name"
             label="Name"
             errorMessage={networkNameErrorMessage}
-            tooltip={undefined}
             isRequired
           >
             <Input
@@ -301,7 +300,6 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
             isRequired
             label="Currency Symbol"
             errorMessage={form.formState.errors.currencySymbol?.message}
-            tooltip={undefined}
             htmlFor="currency-symbol"
           >
             <Input
@@ -366,7 +364,6 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
             errorMessage={form.formState.errors.icon?.message}
             htmlFor="network-icon"
             label="Icon"
-            tooltip={undefined}
           >
             <div className="flex items-center gap-1">
               <ChainIcon size={20} ipfsSrc={form.watch("icon")} />

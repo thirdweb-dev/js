@@ -253,6 +253,10 @@ export const sidebar: SideBar = {
       href: "/unity/v5",
     },
     {
+      name: "MAUI Integration",
+      href: "/dotnet/maui",
+    },
+    {
       name: "Core",
       isCollapsible: false,
       links: [
@@ -287,7 +291,7 @@ export const sidebar: SideBar = {
     { separator: true },
     {
       name: "Full Reference",
-      href: "https://thirdweb-dev.github.io/thirdweb-dotnet/index.html",
+      href: "https://thirdweb-dev.github.io/dotnet/index.html",
     },
   ],
 };

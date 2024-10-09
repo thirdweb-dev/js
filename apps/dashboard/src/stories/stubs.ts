@@ -45,10 +45,9 @@ export function teamStub(
     billingStatus: "validPayment",
     name: `Team ${id}`,
     slug: `team-${id}`,
-    bannedAt: null,
     createdAt: new Date().toISOString(),
-    deletedAt: null,
     updatedAt: new Date().toISOString(),
+    billingEmail: "foo@example.com",
   };
 
   return team;

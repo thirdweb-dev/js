@@ -272,6 +272,8 @@ const SMART_WALLET = {
   contracts: [
     "thirdweb.eth/AccountFactory",
     "thirdweb.eth/ManagedAccountFactory",
+    "thirdweb.eth/AccountFactory_0_7",
+    "thirdweb.eth/ManagedAccountFactory_0_7",
   ],
   showInExplore: true,
 } satisfies ExploreCategory;

@@ -1,3 +1,4 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -7,14 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -33,12 +27,15 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Dialog } from "@radix-ui/react-dialog";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { EngineBackendWalletOptions } from "lib/engine";
+import {
+  EngineBackendWalletOptions,
+  type EngineBackendWalletType,
+} from "lib/engine";
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import invariant from "tiny-invariant";
 
 interface CreateBackendWalletButtonProps {
@@ -53,24 +50,18 @@ export const CreateBackendWalletButton: React.FC<
     instance.url,
     "HETEROGENEOUS_WALLET_TYPES",
   );
-  const { mutate: createBackendWallet, isPending } =
-    useEngineCreateBackendWallet(instance.url);
-  const { onSuccess, onError } = useTxNotifications(
-    "Wallet created successfully.",
-    "Failed to create wallet.",
-  );
+  const [isOpen, setIsOpen] = useState(false);
+  const createWallet = useEngineCreateBackendWallet(instance.url);
   const trackEvent = useTrack();
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const form = useForm<CreateBackendWalletInput>({
     defaultValues: { type: walletConfig.type },
   });
 
   const onSubmit = async (data: CreateBackendWalletInput) => {
-    createBackendWallet(data, {
+    const promise = createWallet.mutateAsync(data, {
       onSuccess: () => {
-        onSuccess();
-        setIsModalOpen(false);
+        setIsOpen(false);
         trackEvent({
           category: "engine",
           action: "create-backend-wallet",
@@ -79,7 +70,6 @@ export const CreateBackendWalletButton: React.FC<
         });
       },
       onError: (error) => {
-        onError(error);
         trackEvent({
           category: "engine",
           action: "create-backend-wallet",
@@ -88,6 +78,11 @@ export const CreateBackendWalletButton: React.FC<
           error,
         });
       },
+    });
+
+    toast.promise(promise, {
+      success: "Wallet created successfully",
+      error: "Failed to create wallet",
     });
   };
 
@@ -112,9 +107,9 @@ export const CreateBackendWalletButton: React.FC<
 
   return (
     <>
-      <Button onClick={() => setIsModalOpen(true)}>Create</Button>
+      <Button onClick={() => setIsOpen(true)}>Create</Button>
 
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
           className="z-[10001] p-0"
           dialogOverlayClassName="z-[10000]"
@@ -130,7 +125,7 @@ export const CreateBackendWalletButton: React.FC<
 
                 <div className="flex flex-col gap-5">
                   {/* Wallet type */}
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="type"
                     render={({ field }) => (
@@ -161,7 +156,37 @@ export const CreateBackendWalletButton: React.FC<
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                  />*/}
+
+                  <FormFieldSetup
+                    label="Wallet Type"
+                    errorMessage={
+                      form.getFieldState("type", form.formState).error?.message
+                    }
+                    htmlFor="wallet-label"
+                    isRequired
+                    tooltip={null}
+                  >
+                    <Select
+                      onValueChange={(value) =>
+                        form.setValue("type", value as EngineBackendWalletType)
+                      }
+                      value={form.watch("type")}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="z-[10001]">
+                        <SelectGroup>
+                          {walletTypeOptions.map((option) => (
+                            <SelectItem key={option.key} value={option.key}>
+                              {option.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormFieldSetup>
 
                   {(walletType === "aws-kms" && !isAwsKmsConfigured) ||
                   (walletType === "gcp-kms" && !isGcpKmsConfigured) ? (
@@ -183,37 +208,37 @@ export const CreateBackendWalletButton: React.FC<
                       </AlertDescription>
                     </Alert>
                   ) : (
-                    <FormField
-                      control={form.control}
-                      name="label"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Label</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="A description to identify this backend wallet"
-                              type="text"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <FormFieldSetup
+                      label="Label"
+                      errorMessage={
+                        form.getFieldState("label", form.formState).error
+                          ?.message
+                      }
+                      htmlFor="wallet-label"
+                      isRequired={false}
+                      tooltip={null}
+                    >
+                      <Input
+                        id="wallet-label"
+                        type="text"
+                        placeholder="A description to identify this backend wallet"
+                        {...form.register("label")}
+                      />
+                    </FormFieldSetup>
                   )}
                 </div>
               </div>
 
               <DialogFooter className="mt-4 gap-4 border-border border-t bg-muted/50 p-6 lg:gap-2 ">
-                <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                <Button variant="outline" onClick={() => setIsOpen(false)}>
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   className="min-w-28 gap-2"
-                  disabled={!isFormValid || isPending}
+                  disabled={!isFormValid || createWallet.isPending}
                 >
-                  {isPending && <Spinner className="size-4" />}
+                  {createWallet.isPending && <Spinner className="size-4" />}
                   Create
                 </Button>
               </DialogFooter>

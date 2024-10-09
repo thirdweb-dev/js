@@ -14,7 +14,6 @@ export const MaskedAvatar: React.FC<MaskedAvatarProps> = ({
   src,
   alt,
   boxSize = 12,
-  isPending,
   className,
 }) => {
   return (
@@ -26,11 +25,11 @@ export const MaskedAvatar: React.FC<MaskedAvatarProps> = ({
         mask: `url("${hexagon.src}")`,
         maskSize: "cover",
       }}
-      skeletonData={false}
-      loadedData={isPending}
-      render={() => (
+      skeletonData={undefined}
+      loadedData={src}
+      render={(v) => (
         // eslint-disable-next-line @next/next/no-img-element
-        <img className="object-cover" src={src} alt={alt || ""} />
+        <img className="object-cover" src={v} alt={alt || ""} />
       )}
     />
   );

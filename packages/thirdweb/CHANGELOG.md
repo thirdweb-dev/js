@@ -1,5 +1,58 @@
 # thirdweb
 
+## 5.61.2
+
+### Patch Changes
+
+- [#4948](https://github.com/thirdweb-dev/js/pull/4948) [`ea36c54`](https://github.com/thirdweb-dev/js/commit/ea36c541185a4a333b0689bf7de6b9ae92f85cac) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow overriding callGasLimit for userops
+
+## 5.61.1
+
+### Patch Changes
+
+- [#4933](https://github.com/thirdweb-dev/js/pull/4933) [`506764d`](https://github.com/thirdweb-dev/js/commit/506764dabdbfa4910416e7a1347a92f0ef0d5e8e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support show all wallets option in React Native Connect UI
+
+- [#4944](https://github.com/thirdweb-dev/js/pull/4944) [`822ece4`](https://github.com/thirdweb-dev/js/commit/822ece45ece94329c5da2b070da6e7ded09f34c2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Option to disable storing last stored passkey credentials
+
+## 5.61.0
+
+### Minor Changes
+
+- [#4906](https://github.com/thirdweb-dev/js/pull/4906) [`63d0777`](https://github.com/thirdweb-dev/js/commit/63d0777e6f8effbf02cd773a3f7f03f42b85c781) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New `useLinkProfile()` hook to link profiles to inapp and ecosystem accounts
+
+- [#4905](https://github.com/thirdweb-dev/js/pull/4905) [`a453d96`](https://github.com/thirdweb-dev/js/commit/a453d96aed12e53561a239f361be1d59a53172db) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add name & address resolvers for Unstoppable Domains
+
+### Patch Changes
+
+- [#4919](https://github.com/thirdweb-dev/js/pull/4919) [`d4c423c`](https://github.com/thirdweb-dev/js/commit/d4c423cd971f8d79843f3bf0ac461ad88da611e5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix passing 0n as from/to blocks in getContractEvents
+
+- [#4918](https://github.com/thirdweb-dev/js/pull/4918) [`0f6b881`](https://github.com/thirdweb-dev/js/commit/0f6b881bcaf45c08d1aa7b7c117960e688e1ac42) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Add querying for in app wallet user details via externally linked wallet address:
+
+  ```ts
+  import { getUser } from "thirdweb";
+
+  // this is the wallet address that the user used to connect via SIWE to their in app wallet
+  const user = await getUser({
+    client,
+    externalWalletAddress: "0x123...",
+  });
+  ```
+
+  Add querying for ecosystem wallet user details:
+
+  ```ts
+  import { getUser } from "thirdweb";
+
+  const user = await getUser({
+    client,
+    ecosystem: {
+      id: "ecosystem.YOUR_ID",
+      partnerId: "OPTIONAL_PARTNER_ID"
+    }
+    email: "user@example.com",
+  });
+  ```
+
 ## 5.60.1
 
 ### Patch Changes

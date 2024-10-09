@@ -120,6 +120,7 @@ function createAccount(provider: Ethereum, _address: string) {
             accessList: tx.accessList,
             value: tx.value ? numberToHex(tx.value) : undefined,
             gas: tx.gas ? numberToHex(tx.gas) : undefined,
+            gasPrice: tx.gasPrice ? numberToHex(tx.gasPrice) : undefined,
             from: this.address,
             to: tx.to as Address,
             data: tx.data,

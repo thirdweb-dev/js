@@ -1,9 +1,9 @@
+import { DotNetIcon } from "components/icons/brand-icons/DotNetIcon";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
+import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import Link from "next/link";
-import { SiUnrealengine } from "react-icons/si";
-import { SiDotnet } from "react-icons/si";
 
 export function ConnectSDKCard({
   title,
@@ -40,13 +40,13 @@ export function ConnectSDKCard({
           label="Unity SDK"
         />
         <DocLink
-          link="https://portal.thirdweb.com/unreal/getting-started"
-          icon={SiUnrealengine}
-          label="Unreal SDK"
+          link="https://portal.thirdweb.com/unreal-engine/getting-started"
+          icon={UnrealIcon}
+          label="Unreal Engine SDK"
         />
         <DocLink
           link="https://portal.thirdweb.com/dotnet/getting-started"
-          icon={SiDotnet}
+          icon={DotNetIcon}
           label=".NET SDK"
         />
       </div>

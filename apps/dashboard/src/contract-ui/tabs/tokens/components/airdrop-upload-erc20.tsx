@@ -232,8 +232,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
               <input {...getInputProps()} />
               <div className="flex flex-col p-6">
                 <UploadIcon
-                  size={16}
-                  className={cn("mx-auto mb-2 text-gray-500", {
+                  className={cn("mx-auto mb-2 size-4 text-gray-500", {
                     "text-red-500": noCsv,
                   })}
                 />

@@ -1,5 +1,4 @@
 "use client";
-
 import {
   type Account,
   AccountPlan,
@@ -18,7 +17,7 @@ import { FiExternalLink } from "react-icons/fi";
 import { Button, Heading, Text, TrackedLink } from "tw-components";
 import { PLANS } from "utils/pricing";
 import { LazyOnboardingBilling } from "../../../onboarding/LazyOnboardingBilling";
-import { CouponCard } from "./CouponCard";
+import { CouponSection } from "./CouponCard";
 import { BillingDowngradeDialog } from "./DowngradeDialog";
 import { BillingHeader } from "./Header";
 import { BillingPlanCard } from "./PlanCard";
@@ -304,7 +303,7 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
         />
       )}
 
-      <CouponCard teamId={teamId} />
+      <CouponSection teamId={teamId} />
     </Flex>
   );
 };

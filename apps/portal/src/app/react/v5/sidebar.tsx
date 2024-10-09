@@ -149,6 +149,11 @@ export const sidebar: SideBar = {
           name: "In-App Wallets",
           links: [
             {
+              name: "Playground",
+              href: "https://playground.thirdweb.com/connect/in-app-wallet",
+              icon: <ExternalLink />,
+            },
+            {
               name: "Get Started",
               href: `${slug}/in-app-wallet/get-started`,
               icon: <ZapIcon />,
@@ -171,8 +176,34 @@ export const sidebar: SideBar = {
             ...[
               "inAppWallet",
               "preAuthenticate",
-              "getUserEmail",
-              "getUserPhoneNumber",
+              "useLinkProfile",
+              "useProfiles",
+              "hasStoredPasskey",
+            ].map((name) => ({
+              name,
+              href: `${slug}/${name}`,
+              icon: <CodeIcon />,
+            })),
+          ],
+        },
+        {
+          name: "Ecosystem Wallets",
+          links: [
+            {
+              name: "Playground",
+              href: "https://playground.thirdweb.com/connect/ecosystem",
+              icon: <ExternalLink />,
+            },
+            {
+              name: "Get Started",
+              href: `${slug}/ecosystem-wallet/get-started`,
+              icon: <ZapIcon />,
+            },
+            ...[
+              "ecosystemWallet",
+              "preAuthenticate",
+              "useLinkProfile",
+              "useProfiles",
               "hasStoredPasskey",
             ].map((name) => ({
               name,
@@ -184,6 +215,11 @@ export const sidebar: SideBar = {
         {
           name: "Account Abstraction",
           links: [
+            {
+              name: "Playground",
+              href: "https://playground.thirdweb.com/connect/account-abstraction",
+              icon: <ExternalLink />,
+            },
             {
               name: "Get Started",
               href: `${slug}/account-abstraction/get-started`,

@@ -1,16 +1,15 @@
 "use client";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   type EngineInstance,
   useEngineBackendWallets,
   useEngineTransactions,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex, FormControl, Switch } from "@chakra-ui/react";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import Link from "next/link";
 import { useState } from "react";
-import { FormLabel, Heading, Text } from "tw-components";
 import { BackendWalletsTable } from "./backend-wallets-table";
 import { CreateBackendWalletButton } from "./create-backend-wallet-button";
 import { ImportBackendWalletButton } from "./import-backend-wallet-button";
@@ -21,104 +20,132 @@ interface EngineOverviewProps {
 }
 
 export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
-  const { data: walletConfig } = useEngineWalletConfig(instance.url);
-  const backendWallets = useEngineBackendWallets(instance.url);
-  const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
-  const transactionsQuery = useEngineTransactions(instance.url, autoUpdate);
-
   return (
-    <Flex flexDir="column" gap={12}>
-      <Flex flexDir="column" gap={4}>
-        <Flex flexDir="column" gap={4} justifyItems="flex-end">
-          <Flex justify="space-between" alignItems="center">
-            <Flex flexDir="column" gap={2}>
-              <Heading size="title.sm">Backend Wallets</Heading>
-              <p className="text-sm">
-                Engine sends blockchain transactions from backend wallets you
-                own and manage.
-              </p>
-              <p className="text-sm">
-                Set up other wallet types from the{" "}
-                <Link
-                  href={`/dashboard/engine/${instance.id}/configuration`}
-                  className="text-link-foreground hover:text-foreground"
-                >
-                  Configuration
-                </Link>{" "}
-                tab, or{" "}
-                <TrackedLinkTW
-                  target="_blank"
-                  href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
-                  label="learn-more"
-                  category="engine"
-                  className="text-link-foreground hover:text-foreground"
-                >
-                  learn more about backend wallets.
-                </TrackedLinkTW>
-              </p>
-            </Flex>
-
-            {walletConfig && (
-              <div className="flex flex-row gap-2">
-                <ImportBackendWalletButton
-                  instance={instance}
-                  walletConfig={walletConfig}
-                />
-                <CreateBackendWalletButton
-                  instance={instance}
-                  walletConfig={walletConfig}
-                />
-              </div>
-            )}
-          </Flex>
-
-          <Flex flexDirection="row-reverse">
-            <Flex alignItems="center" gap={2}>
-              <Text>Show balance for</Text>
-              <div className="flex flex-row">
-                <NetworkSelectorButton />
-              </div>
-            </Flex>
-          </Flex>
-        </Flex>
-
-        <BackendWalletsTable
-          instanceUrl={instance.url}
-          wallets={backendWallets.data ?? []}
-          isPending={backendWallets.isPending}
-          isFetched={backendWallets.isFetched}
-        />
-      </Flex>
-      <Flex flexDir="column" gap={4}>
-        <Flex flexDir="row" gap={2} justify="space-between">
-          <Flex flexDir="column" gap={2}>
-            <Heading size="title.sm">Transactions</Heading>
-            <Text>
-              View transactions sent from your backend wallets in the past 24
-              hours.
-            </Text>
-          </Flex>
-
-          <div className="flex flex-row">
-            <FormControl display="flex" alignItems="center">
-              <FormLabel htmlFor="auto-update" mb="0">
-                Auto-Update
-              </FormLabel>
-              <Switch
-                isChecked={autoUpdate}
-                onChange={() => setAutoUpdate((val) => !val)}
-                id="auto-update"
-              />
-            </FormControl>
-          </div>
-        </Flex>
-        <TransactionsTable
-          transactions={transactionsQuery.data?.transactions ?? []}
-          isPending={transactionsQuery.isPending}
-          isFetched={transactionsQuery.isFetched}
-          instanceUrl={instance.url}
-        />
-      </Flex>
-    </Flex>
+    <div>
+      <BackendWalletsSection instance={instance} />
+      <div className="h-14" />
+      <TransactionsSection instanceUrl={instance.url} />
+    </div>
   );
 };
+
+function BackendWalletsSection(props: {
+  instance: EngineInstance;
+}) {
+  const { instance } = props;
+  const backendWallets = useEngineBackendWallets(instance.url);
+  const { data: walletConfig } = useEngineWalletConfig(instance.url);
+
+  return (
+    <section>
+      <div className="flex flex-col items-start justify-between gap-5 lg:flex-row">
+        <div>
+          <div className="mb-0.5 flex items-center gap-3">
+            <h2 className="font-semibold text-2xl tracking-tight">
+              Backend Wallets
+            </h2>
+          </div>
+          <p className="text-muted-foreground">
+            Engine sends blockchain transactions from backend wallets you own
+            and manage.
+          </p>
+          <p className="text-sm">
+            Set up other wallet types from the{" "}
+            <Link
+              href={`/dashboard/engine/${instance.id}/configuration`}
+              className="text-link-foreground hover:text-foreground"
+            >
+              Configuration
+            </Link>{" "}
+            tab, or{" "}
+            <Link
+              href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
+              target="_blank"
+              className="text-link-foreground hover:text-foreground"
+            >
+              learn more about backend wallets.
+            </Link>
+          </p>
+        </div>
+
+        {walletConfig && (
+          <div className="flex flex-row gap-2 max-sm:w-full [&>*]:grow">
+            <ImportBackendWalletButton
+              instance={instance}
+              walletConfig={walletConfig}
+            />
+            <CreateBackendWalletButton
+              instance={instance}
+              walletConfig={walletConfig}
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="h-4" />
+
+      <div className="flex justify-end">
+        <div className="flex items-center gap-2">
+          <span className="text-sm">Show balance for</span>
+          {/* TODO - Replace with simple network selector - there's no need for user to switch chain  */}
+          <div className="flex flex-row">
+            <NetworkSelectorButton />
+          </div>
+        </div>
+      </div>
+
+      <div className="h-4" />
+
+      <BackendWalletsTable
+        instanceUrl={instance.url}
+        wallets={backendWallets.data ?? []}
+        isPending={backendWallets.isPending}
+        isFetched={backendWallets.isFetched}
+      />
+    </section>
+  );
+}
+
+function TransactionsSection(props: {
+  instanceUrl: string;
+}) {
+  const { instanceUrl } = props;
+  const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
+  const transactionsQuery = useEngineTransactions(instanceUrl, autoUpdate);
+
+  return (
+    <section>
+      <div className="flex flex-col gap-4 lg:flex-row lg:justify-between">
+        <div>
+          <h2 className="mb-0.5 font-semibold text-2xl tracking-tight">
+            Transactions
+          </h2>
+          <p className="text-muted-foreground">
+            View transactions sent from your backend wallets in the past 24
+            hours.
+          </p>
+        </div>
+
+        <div className="flex justify-end">
+          <div className="flex items-center gap-2">
+            <Label htmlFor="auto-update">Auto-Update</Label>
+            <Switch
+              checked={autoUpdate}
+              onCheckedChange={(v) => setAutoUpdate(!!v)}
+              id="auto-update"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="h-4" />
+
+      <TransactionsTable
+        transactions={transactionsQuery.data?.transactions ?? []}
+        isPending={transactionsQuery.isPending}
+        isFetched={transactionsQuery.isFetched}
+        instanceUrl={instanceUrl}
+      />
+    </section>
+  );
+}

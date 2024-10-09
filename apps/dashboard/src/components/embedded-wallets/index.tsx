@@ -2,7 +2,6 @@
 
 import { TabButtons } from "@/components/ui/tabs";
 import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { InAppWalletSettingsPage } from "./Configure";
 import { InAppWalletUsersPageContent } from "./Users";
@@ -19,16 +18,16 @@ interface EmbeddedWalletsProps {
     | "key"
   >;
   trackingCategory: string;
+  defaultTab: 0 | 1;
 }
 
 export const EmbeddedWallets: React.FC<EmbeddedWalletsProps> = ({
   apiKey,
   trackingCategory,
+  defaultTab,
 }) => {
-  const searchParams = useSearchParams();
-  const defaultTabIndex = searchParams?.get("tab") === "1" ? 1 : 0;
   const [selectedTab, setSelectedTab] = useState<"users" | "config">(
-    defaultTabIndex === 0 ? "users" : "config",
+    defaultTab === 0 ? "users" : "config",
   );
 
   function updateSearchParams(value: string) {

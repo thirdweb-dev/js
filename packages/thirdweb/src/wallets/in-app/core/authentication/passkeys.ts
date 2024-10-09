@@ -55,8 +55,8 @@ export interface PasskeyClient {
 
 export async function registerPasskey(options: {
   client: ThirdwebClient;
-  storage: ClientScopedStorage;
   passkeyClient: PasskeyClient;
+  storage?: ClientScopedStorage;
   ecosystem?: Ecosystem;
   username?: string;
   rp: RpInfo;
@@ -119,7 +119,7 @@ export async function registerPasskey(options: {
     );
   }
   // 4. store the credentialId in local storage
-  await options.storage.savePasskeyCredentialId(registration.credentialId);
+  await options.storage?.savePasskeyCredentialId(registration.credentialId);
 
   // 5. returns back the IAW authentication token
   return verifData;
@@ -127,9 +127,9 @@ export async function registerPasskey(options: {
 
 export async function loginWithPasskey(options: {
   client: ThirdwebClient;
-  storage: ClientScopedStorage;
   passkeyClient: PasskeyClient;
   rp: RpInfo;
+  storage?: ClientScopedStorage;
   ecosystem?: Ecosystem;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   if (!options.passkeyClient.isAvailable()) {
@@ -145,7 +145,8 @@ export async function loginWithPasskey(options: {
   const challenge = challengeData.challenge;
   // 1.2. find the user's credentialId in local storage
   const credentialId =
-    (await options.storage.getPasskeyCredentialId()) ?? undefined;
+    (await options.storage?.getPasskeyCredentialId()) ?? undefined;
+
   // 2. initiate login
   const authentication = await options.passkeyClient.authenticate({
     credentialId,
@@ -188,7 +189,7 @@ export async function loginWithPasskey(options: {
   }
 
   // 5. store the credentialId in local storage
-  await options.storage.savePasskeyCredentialId(authentication.credentialId);
+  await options.storage?.savePasskeyCredentialId(authentication.credentialId);
 
   // 6. return the auth'd user type
   return verifData;

@@ -1,3 +1,4 @@
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import {
   Box,
   Flex,
@@ -15,7 +16,6 @@ import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { FiTrash } from "react-icons/fi";
 import { Button, Heading, Text } from "tw-components";
 import { useCustomFactoryAbi } from "../hooks";
-import { NetworkDropdown } from "./NetworkDropdown";
 import { AbiSelector } from "./abi-selector";
 
 interface CustomFactoryProps {
@@ -76,19 +76,20 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
         {fields.map((field, index) => (
           <div key={field.id}>
             <FormControl isRequired as={Flex} gap={4}>
-              <Box w={{ base: "full", md: "30%" }}>
+              <Box w={{ base: "full", md: "40%" }}>
                 <Controller
                   name={`customFactoryAddresses[${index}].key`}
                   control={form.control}
-                  render={({ field: _field }) => (
-                    <NetworkDropdown
-                      {..._field}
-                      onSingleChange={(value) => {
-                        _field.onChange(value);
-                      }}
-                      value={_field.value}
-                    />
-                  )}
+                  render={({ field: _field }) => {
+                    return (
+                      <SingleNetworkSelector
+                        chainId={_field.value}
+                        onChange={(value) => {
+                          _field.onChange(value);
+                        }}
+                      />
+                    );
+                  }}
                 />
               </Box>
               <Box w="full">

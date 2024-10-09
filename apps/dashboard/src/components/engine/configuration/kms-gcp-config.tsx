@@ -1,5 +1,6 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Button } from "@/components/ui/button";
-import { Form, FormItem, RequiredFormLabel } from "@/components/ui/form";
+import { Form, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
@@ -95,61 +96,108 @@ export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instance }) => {
         </p>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <FormItem>
-            <RequiredFormLabel>Location ID</RequiredFormLabel>
+          <FormFieldSetup
+            label="Location ID"
+            errorMessage={
+              form.getFieldState("gcpKmsLocationId", form.formState).error
+                ?.message
+            }
+            htmlFor="gcp-location-id"
+            isRequired={false}
+            tooltip={null}
+          >
             <Input
+              id="gcp-location-id"
               placeholder="us-west2"
               type="text"
-              {...form.register("gcpKmsLocationId", {
-                required: true,
-              })}
+              {...form.register("gcpKmsLocationId")}
             />
-          </FormItem>
-          <FormItem>
-            <RequiredFormLabel>Key Ring ID</RequiredFormLabel>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            label="Key Ring ID"
+            errorMessage={
+              form.getFieldState("gcpKmsKeyRingId", form.formState).error
+                ?.message
+            }
+            htmlFor="gcp-key-ring-id"
+            isRequired={false}
+            tooltip={null}
+          >
             <Input
+              id="gcp-key-ring-id"
               placeholder="my-key-ring"
               autoComplete="off"
               type="text"
-              {...form.register("gcpKmsKeyRingId", {
-                required: true,
-              })}
+              {...form.register("gcpKmsKeyRingId")}
             />
-          </FormItem>
-          <FormItem>
-            <RequiredFormLabel>Project ID</RequiredFormLabel>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            label="Project ID"
+            errorMessage={
+              form.getFieldState("gcpApplicationProjectId", form.formState)
+                .error?.message
+            }
+            htmlFor="gcp-project-id"
+            isRequired={false}
+            tooltip={null}
+          >
             <Input
+              id="gcp-project-id"
+              type="text"
               placeholder="my-gcp-project-id-123"
               autoComplete="off"
-              type="text"
-              {...form.register("gcpApplicationProjectId", { required: true })}
+              {...form.register("gcpApplicationProjectId")}
             />
-          </FormItem>
-          <FormItem>
-            <RequiredFormLabel>Credential Email</RequiredFormLabel>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            label="Credential Email"
+            errorMessage={
+              form.getFieldState(
+                "gcpApplicationCredentialEmail",
+                form.formState,
+              ).error?.message
+            }
+            htmlFor="gcp-credential-email"
+            isRequired={false}
+            tooltip={null}
+          >
             <Input
+              id="gcp-credential-email"
+              type="text"
               placeholder="service-account@my-gcp-project.iam.gserviceaccount.com"
               autoComplete="off"
-              type="text"
-              {...form.register("gcpApplicationCredentialEmail", {
-                required: true,
-              })}
+              {...form.register("gcpApplicationCredentialEmail")}
             />
-          </FormItem>
+          </FormFieldSetup>
         </div>
 
-        <FormItem>
-          <RequiredFormLabel>Private Key</RequiredFormLabel>
+        <FormFieldSetup
+          label="Private Key"
+          errorMessage={
+            form.getFieldState(
+              "gcpApplicationCredentialPrivateKey",
+              form.formState,
+            ).error?.message
+          }
+          htmlFor="gcp-private-key"
+          isRequired={false}
+          tooltip={null}
+        >
           <Textarea
+            id="gcp-private-key"
             placeholder={
               "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
             }
             autoComplete="off"
-            {...form.register("gcpApplicationCredentialPrivateKey", {
-              required: true,
-            })}
+            {...form.register("gcpApplicationCredentialPrivateKey")}
           />
-        </FormItem>
+          <FormDescription className="pt-2">
+            This will not be shown again.
+          </FormDescription>
+        </FormFieldSetup>
 
         <div className="flex items-center justify-end gap-4">
           <Button disabled={!form.formState.isDirty} type="submit">

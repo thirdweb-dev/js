@@ -1,5 +1,6 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Button } from "@/components/ui/button";
-import { Form, FormItem, RequiredFormLabel } from "@/components/ui/form";
+import { Form, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
@@ -91,32 +92,64 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({ instance }) => {
         </p>
 
         <div className="grid gap-4 md:grid-cols-3">
-          <FormItem>
-            <RequiredFormLabel>Access Key</RequiredFormLabel>
+          <FormFieldSetup
+            label="Access Key"
+            errorMessage={
+              form.getFieldState("awsAccessKeyId", form.formState).error
+                ?.message
+            }
+            htmlFor="aws-access-key"
+            isRequired={false}
+            tooltip={null}
+          >
             <Input
+              id="aws-access-key"
               placeholder="AKIA..."
               autoComplete="off"
               type="text"
-              {...form.register("awsAccessKeyId", { required: true })}
+              {...form.register("awsAccessKeyId")}
             />
-          </FormItem>
-          <FormItem>
-            <RequiredFormLabel>Secret Key</RequiredFormLabel>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            label="Secret Key"
+            errorMessage={
+              form.getFieldState("awsSecretAccessKey", form.formState).error
+                ?.message
+            }
+            htmlFor="aws-secret-key"
+            isRequired={false}
+            tooltip={null}
+          >
             <Input
+              id="aws-secret-key"
               placeholder="UW7A..."
               autoComplete="off"
               type="text"
-              {...form.register("awsSecretAccessKey", { required: true })}
+              {...form.register("awsSecretAccessKey")}
             />
-          </FormItem>
-          <FormItem>
-            <RequiredFormLabel>Region</RequiredFormLabel>
+            <FormDescription className="pt-2">
+              This will not be shown again.
+            </FormDescription>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            label="Region"
+            errorMessage={
+              form.getFieldState("awsRegion", form.formState).error?.message
+            }
+            htmlFor="aws-region"
+            isRequired={false}
+            tooltip={null}
+          >
             <Input
-              placeholder="us-west-2"
+              id="aws-region"
+              placeholder="AKIA..."
+              autoComplete="off"
               type="text"
-              {...form.register("awsRegion", { required: true })}
+              {...form.register("awsRegion")}
             />
-          </FormItem>
+          </FormFieldSetup>
         </div>
 
         <div className="flex items-center justify-end gap-4">

@@ -108,7 +108,7 @@ const DeployOptions = () => {
       />
 
       <button
-        className="mt-3 flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-muted/50 p-4 hover:bg-muted"
+        className="mt-3 flex w-full cursor-pointer items-center gap-2 rounded-lg border border-border bg-muted/50 p-4 hover:bg-muted"
         type="button"
         onClick={() => {
           activeTabContent.onClick?.();
@@ -136,7 +136,9 @@ const DeployOptions = () => {
           }`}
         />
         <div>
-          <h4 className="font-semibold text-lg">{activeTabContent.title}</h4>
+          <h4 className="text-start font-semibold text-lg">
+            {activeTabContent.title}
+          </h4>
           <p className="text-muted-foreground text-sm">
             {activeTabContent.description}
           </p>

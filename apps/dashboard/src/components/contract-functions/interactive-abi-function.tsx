@@ -7,7 +7,6 @@ import {
   Divider,
   Flex,
   FormControl,
-  Icon,
   Input,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
@@ -16,10 +15,10 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { replaceIpfsUrl } from "lib/sdk";
+import { ExternalLinkIcon, InfoIcon, PlayIcon } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useId, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import { FaCircleInfo } from "react-icons/fa6";
-import { FiPlay } from "react-icons/fi";
 import { toast } from "sonner";
 import {
   type ThirdwebContract,
@@ -421,22 +420,39 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               <CodeBlock
                 w="full"
                 position="relative"
-                language="json"
+                language={
+                  formattedResponseData.startsWith("http") ||
+                  formattedResponseData.startsWith("ipfs")
+                    ? "text"
+                    : "json"
+                }
                 code={formattedResponseData}
               />
-              {typeof formattedResponseData === "string" &&
-                formattedResponseData.startsWith("ipfs://") && (
-                  <Text size="label.sm">
-                    <TrackedLink
-                      href={replaceIpfsUrl(formattedResponseData)}
-                      isExternal
-                      category="contract-explorer"
-                      label="open-in-gateway"
-                    >
-                      Open in gateway
-                    </TrackedLink>
-                  </Text>
-                )}
+              {/* If the result is an IPFS URI, show a handy link so that users can open it in a new tab */}
+              {formattedResponseData.startsWith("ipfs://") && (
+                <Text size="label.sm">
+                  <TrackedLink
+                    href={replaceIpfsUrl(formattedResponseData)}
+                    isExternal
+                    category="contract-explorer"
+                    label="open-in-gateway"
+                  >
+                    Open in gateway
+                  </TrackedLink>
+                </Text>
+              )}
+              {/* Same with the logic above but this time it's applied to traditional urls */}
+              {(formattedResponseData.startsWith("https://") ||
+                formattedResponseData.startsWith("http://")) && (
+                <Link
+                  href={formattedResponseData}
+                  target="_blank"
+                  className="mt-1 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
+                >
+                  Open link
+                  <ExternalLinkIcon className="size-4" />
+                </Link>
+              )}
             </>
           ) : null}
         </Flex>
@@ -446,7 +462,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
           {isView ? (
             <Button
               isDisabled={!abiFunction}
-              rightIcon={<Icon as={FiPlay} />}
+              rightIcon={<PlayIcon className="size-4" />}
               colorScheme="primary"
               isLoading={readLoading}
               onClick={handleContractRead}
@@ -465,7 +481,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               >
                 <ToolTipLabel label="Simulate the transaction to see its potential outcome without actually sending it to the network. This action doesn't cost gas.">
                   <span className="mr-3">
-                    <FaCircleInfo size={20} />
+                    <InfoIcon className="size-5" />
                   </span>
                 </ToolTipLabel>
                 Simulate

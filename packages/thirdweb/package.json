@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.60.1",
+  "version": "5.61.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -325,12 +325,12 @@
     "@react-native-async-storage/async-storage": "1.24.0",
     "@size-limit/preset-big-lib": "11.1.6",
     "@storybook/addon-essentials": "8.3.4",
-    "@storybook/addon-interactions": "8.3.4",
+    "@storybook/addon-interactions": "8.3.5",
     "@storybook/addon-links": "8.3.4",
     "@storybook/addon-onboarding": "8.3.4",
     "@storybook/react": "8.3.4",
     "@storybook/react-vite": "8.3.4",
-    "@storybook/test": "8.3.4",
+    "@storybook/test": "8.3.5",
     "@testing-library/jest-dom": "^6.4.7",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",

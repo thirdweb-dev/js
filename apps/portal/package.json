@@ -17,7 +17,7 @@
     "postextract-search-data": "next-sitemap"
   },
   "dependencies": {
-    "@dirtycajunrice/klee": "^1.0.0",
+    "@dirtycajunrice/klee": "^1.0.1",
     "@mdx-js/loader": "^2.3.0",
     "@mdx-js/react": "^2.3.0",
     "@next/mdx": "^13.5.6",

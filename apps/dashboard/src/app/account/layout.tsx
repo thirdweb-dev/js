@@ -1,8 +1,10 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
+import { DashboardTypeCookieSetter } from "@/components/DashboardTypeCookieSetter";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import { AppFooter } from "@/components/blocks/app-footer";
 import type React from "react";
+import { TeamsUIBanner } from "../components/DashboardTypeBanner";
 import { TWAutoConnect } from "../components/autoconnect";
 import { AccountHeader } from "./components/AccountHeader";
 
@@ -11,6 +13,7 @@ export default async function AccountLayout(props: {
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <TeamsUIBanner />
       <div className="flex grow flex-col">
         <HeaderAndNav />
         <div className="border-border border-b py-10">
@@ -42,6 +45,7 @@ export default async function AccountLayout(props: {
         </SidebarLayout>
       </div>
       <TWAutoConnect />
+      <DashboardTypeCookieSetter type="team" />
       <AppFooter />
     </div>
   );

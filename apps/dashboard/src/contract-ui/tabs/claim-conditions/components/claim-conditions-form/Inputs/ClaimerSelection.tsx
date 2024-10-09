@@ -1,6 +1,5 @@
-import { Box, Flex, Icon, Select } from "@chakra-ui/react";
-import { BsCircleFill } from "react-icons/bs";
-import { FiUpload } from "react-icons/fi";
+import { Box, Flex, Select } from "@chakra-ui/react";
+import { UploadIcon } from "lucide-react";
 import { Button, Text } from "tw-components";
 import { useClaimConditionsFormContext } from "..";
 import { CustomFormControl } from "../common";
@@ -120,7 +119,7 @@ export const ClaimerSelection = () => {
               isDisabled={disabledSnapshotButton}
               borderRadius="md"
               onClick={() => setOpenIndex(phaseIndex)}
-              rightIcon={<Icon as={FiUpload} />}
+              rightIcon={<UploadIcon className="size-4" />}
             >
               {isAdmin ? "Edit" : "See"} Claimer Snapshot
             </Button>
@@ -137,8 +136,8 @@ export const ClaimerSelection = () => {
               }}
               ml={2}
             >
-              <Icon as={BsCircleFill} boxSize={2} />
               <Text size="body.sm" color="inherit">
+                ●{" "}
                 <strong>
                   {field.snapshot?.length} address
                   {field.snapshot?.length === 1 ? "" : "es"}

@@ -1,0 +1,20 @@
+import { createUnrealEngineMetadata } from "../../util";
+
+export const metadata = createUnrealEngineMetadata({ title: "ThirdwebUtils Namespace", description: "Utility functions" });
+
+# ThirdwebUtils
+
+The `ThirdwebUtils` namespace provides a set of utility functions for class-agnostic use.
+
+## Validation Functions
+- `IsChecksummedAddress(Address)`: Checks if the provided Ethereum address is checksummed.
+- `IsValidAddress(Address)`: Checks if the provided Ethereum address is valid.
+- `IsValidPrivateKey(PrivateKey)`: Determines if the provided string is a valid private key.
+- `ToChecksummedAddress(Address)`: Converts the provided Ethereum address to a checksummed address.
+
+## Conversion Functions
+- `ToText(Provider)`: Converts an [EThirdwebOAuthProvider][provider-enum] enum value to its corresponding FText
+  representation.
+- `ToString(Provider)`: Converts an [EThirdwebOAuthProvider][provider-enum] enum value to its string representation.
+
+[provider-enum]: /unreal/cpp/common#ethirdweboauthprovider

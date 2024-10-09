@@ -122,6 +122,16 @@ export const sidebar: SideBar = {
           ],
         },
         {
+          name: "Ecosystem Wallets",
+          links: [
+            {
+              name: "React API",
+              href: "/react/v5/ecosystem-wallet/get-started",
+              icon: <ReactIcon />,
+            },
+          ],
+        },
+        {
           name: "Account Abstraction",
           links: [
             {

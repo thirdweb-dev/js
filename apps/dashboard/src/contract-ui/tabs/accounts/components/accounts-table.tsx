@@ -1,16 +1,16 @@
 "use client";
 
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { Flex, Icon, IconButton, Select, Skeleton } from "@chakra-ui/react";
+import { Flex, IconButton, Select, Skeleton } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { useMemo, useState } from "react";
 import {
-  MdFirstPage,
-  MdLastPage,
-  MdNavigateBefore,
-  MdNavigateNext,
-} from "react-icons/md";
+  ChevronFirstIcon,
+  ChevronLastIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "lucide-react";
+import { useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { getAccounts, totalAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
@@ -101,13 +101,13 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
           <IconButton
             isDisabled={totalAccountsQuery.isPending}
             aria-label="first page"
-            icon={<Icon as={MdFirstPage} />}
+            icon={<ChevronFirstIcon className="size-4" />}
             onClick={() => setCurrentPage(0)}
           />
           <IconButton
             isDisabled={totalAccountsQuery.isPending || !canPreviousPage}
             aria-label="previous page"
-            icon={<Icon as={MdNavigateBefore} />}
+            icon={<ChevronLeftIcon className="size-4" />}
             onClick={() => {
               setCurrentPage((curr) => {
                 if (curr > 0) {
@@ -130,7 +130,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
           <IconButton
             isDisabled={totalAccountsQuery.isPending || !canNextPage}
             aria-label="next page"
-            icon={<Icon as={MdNavigateNext} />}
+            icon={<ChevronRightIcon className="size-4" />}
             onClick={() =>
               setCurrentPage((curr) => {
                 if (curr < totalPages - 1) {
@@ -143,7 +143,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
           <IconButton
             isDisabled={totalAccountsQuery.isPending || !canNextPage}
             aria-label="last page"
-            icon={<Icon as={MdLastPage} />}
+            icon={<ChevronLastIcon className="size-4" />}
             onClick={() => setCurrentPage(totalPages - 1)}
           />
 

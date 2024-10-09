@@ -12,7 +12,7 @@ import {
   WalletsSmartIcon,
 } from "@/icons";
 import { CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
-import { UnrealIcon } from "../../icons/sdks/UnrealIcon";
+import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 
 const connectSlug = "/connect/sign-in";
 const inAppSlug = "/connect/in-app-wallet";
@@ -79,9 +79,9 @@ export const sidebar: SideBar = {
           icon: <UnityIcon />,
         },
         {
-          name: "Unreal",
-          href: "/unreal",
-          icon: <UnrealIcon />,
+          name: "Unreal Engine",
+          href: "/unreal-engine",
+          icon: <UnrealEngineIcon />,
         },
       ],
     },
@@ -131,6 +131,10 @@ export const sidebar: SideBar = {
                 {
                   name: "External Wallets",
                   href: `${connectSlug}/methods/external-wallets`,
+                },
+                {
+                  name: "Guest Mode",
+                  href: `${connectSlug}/methods/guest-mode`,
                 },
               ],
             },
@@ -221,10 +225,6 @@ export const sidebar: SideBar = {
                   name: "Retrieving Linked Profiles",
                   href: `${inAppSlug}/guides/retrieve-linked-profiles`,
                 },
-                {
-                  name: "Retrieving User Info",
-                  href: `${inAppSlug}/guides/get-user-details`,
-                },
               ],
             },
             {
@@ -258,6 +258,10 @@ export const sidebar: SideBar = {
               ],
             },
             {
+              name: "Backend APIs",
+              href: `${inAppSlug}/guides/get-user-details`,
+            },
+            {
               name: "FAQs",
               href: `${inAppSlug}/faqs`,
             },
@@ -271,6 +275,10 @@ export const sidebar: SideBar = {
             {
               name: "Overview",
               href: `${ecosystemSlug}/overview`,
+            },
+            {
+              name: "Security",
+              href: `${ecosystemSlug}/security`,
             },
             {
               name: "Get Started",
@@ -550,9 +558,9 @@ export const sidebar: SideBar = {
               icon: <UnityIcon />,
             },
             {
-              name: "Unreal",
-              href: "/unreal",
-              icon: <UnrealIcon />,
+              name: "Unreal Engine",
+              href: "/unreal-engine",
+              icon: <UnrealEngineIcon />,
             },
           ],
         },

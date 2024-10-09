@@ -229,7 +229,7 @@ export async function autoConnectWC(
 async function initProvider(
   options: WCConnectOptions,
   walletId: WCSupportedWalletIds | "walletConnect",
-  sessionRequestHandler?: (uri: string) => void,
+  sessionRequestHandler?: (uri: string) => void | Promise<void>,
   isAutoConnect = false,
 ) {
   const walletInfo = await getWalletInfo(walletId);
@@ -298,14 +298,15 @@ async function initProvider(
   }
 
   if (walletId !== "walletConnect") {
-    function handleSessionRequest() {
+    async function handleSessionRequest() {
       const walletLinkToOpen =
         provider.session?.peer?.metadata?.redirect?.native ||
         walletInfo.mobile.native ||
         walletInfo.mobile.universal;
 
       if (sessionRequestHandler && walletLinkToOpen) {
-        sessionRequestHandler(walletLinkToOpen);
+        // TODO: propagate error when this fails
+        await sessionRequestHandler(walletLinkToOpen);
       }
     }
 

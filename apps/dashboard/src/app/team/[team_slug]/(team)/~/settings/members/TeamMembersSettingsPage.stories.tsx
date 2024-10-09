@@ -40,10 +40,9 @@ const freeTeam: Team = {
   slug: "team-slug-foo-bar",
   createdAt: "2023-07-07T19:21:33.604Z",
   updatedAt: "2024-07-11T00:01:02.241Z",
-  deletedAt: null,
-  bannedAt: null,
   billingStatus: "validPayment",
   billingPlan: "free",
+  billingEmail: "foo@example.com",
 };
 
 const proTeam: Team = {
@@ -52,10 +51,9 @@ const proTeam: Team = {
   slug: "team-slug-foo-bar",
   createdAt: "2023-07-07T19:21:33.604Z",
   updatedAt: "2024-07-11T00:01:02.241Z",
-  deletedAt: null,
-  bannedAt: null,
   billingStatus: "validPayment",
   billingPlan: "pro",
+  billingEmail: "foo@example.com",
 };
 
 function createMemberStub(id: string, role: TeamAccountRole): TeamMember {

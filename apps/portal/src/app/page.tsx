@@ -5,6 +5,7 @@ import Link from "next/link";
 import DocsHero from "./_images/docs-hero.svg";
 
 import {
+  ConnectOverviewIcon,
   ContractDeployIcon,
   ContractExploreIcon,
   ContractInteractIcon,
@@ -33,7 +34,7 @@ import {
 // 	User,
 // } from "lucide-react";
 import { CodeIcon } from "lucide-react";
-import { UnrealIcon } from "../icons/sdks/UnrealIcon";
+import { UnrealEngineIcon } from "../icons/sdks/UnrealEngineIcon";
 // import { LandingPageCTAs } from "./landing-page/CTAs";
 
 export default function Page() {
@@ -239,11 +240,21 @@ function WalletsSection() {
         />
         <SDKCardIndex href="/dotnet" title=".NET" icon={DotNetIcon} />
         <SDKCardIndex href="/unity" title="Unity" icon={UnityIcon} />
-        <SDKCardIndex href="/unreal" title="Unreal Engine" icon={UnrealIcon} />
+        <SDKCardIndex
+          href="/unreal-engine"
+          title="Unreal Engine"
+          icon={UnrealEngineIcon}
+        />
       </Grid>
       <SectionTitle id="connect-learn" title="Learn" level={5} />
 
       <Grid>
+        <ArticleCardIndex
+          href="/connect"
+          title="Overview"
+          description="Everything you need to know about thirdweb Connect"
+          icon={ConnectOverviewIcon}
+        />
         <ArticleCardIndex
           href="/connect/sign-in/overview"
           title="Sign-In"

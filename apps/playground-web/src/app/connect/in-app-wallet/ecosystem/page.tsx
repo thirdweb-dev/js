@@ -1,12 +1,17 @@
+export const dynamic = "force-dynamic";
 import { CodeExample } from "@/components/code/code-example";
 import { EcosystemConnectEmbed } from "../../../../components/in-app-wallet/ecosystem";
+import { Profiles } from "../../../../components/in-app-wallet/profile-sections";
 import ThirdwebProvider from "../../../../components/thirdweb-provider";
 
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <section className="space-y-8">
+      <section className="space-y-6">
         <AnyAuth />
+      </section>
+      <section className="space-y-8">
+        <Profiles />
       </section>
     </ThirdwebProvider>
   );
@@ -17,7 +22,7 @@ function AnyAuth() {
     <>
       <div className="space-y-2">
         <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Your own Ecosystem
+          Build your own Ecosystem
         </h2>
         <p className="max-w-[600px]">
           Build a public or permissioned ecosystem by allowing third party apps

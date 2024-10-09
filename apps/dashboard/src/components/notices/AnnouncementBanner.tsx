@@ -1,70 +1,51 @@
-import { Box, Container, Flex, Icon, IconButton } from "@chakra-ui/react";
+"use client";
+import { Button } from "@/components/ui/button";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import { FiArrowRight, FiX } from "react-icons/fi";
-import { Heading, TrackedLink } from "tw-components";
+import { ChevronRightIcon, XIcon } from "lucide-react";
 
-export const AnnouncementBanner = () => {
+export function AnnouncementBanner(props: {
+  href: string;
+  label: string;
+  trackingLabel: string;
+}) {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-modular-contracts-announcement", false, true);
+    useLocalStorage(`dismissed-${props.trackingLabel}`, false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
   }
 
   return (
-    <Box
-      position="sticky"
-      zIndex="10"
-      py={3}
-      bgImage="linear-gradient(145.96deg, #410AB6 5.07%, #7bdefe 100%)"
+    <div
+      className="fade-in-0 relative w-full animate-in bg-background py-2.5 pr-14 duration-400"
+      style={{
+        backgroundImage:
+          "linear-gradient(145deg, hsl(290deg 85% 50%), hsl(220deg 85% 50%))",
+      }}
     >
-      <Flex
-        w="full"
-        justifyContent="space-between"
-        alignItems="center"
-        gap={{ base: 1, md: 2 }}
-        px={4}
+      <TrackedLinkTW
+        href={props.href}
+        category="announcement"
+        label={props.trackingLabel}
+        target={props.href.startsWith("http") ? "_blank" : undefined}
+        className="container flex cursor-pointer items-center gap-2 lg:justify-center"
       >
-        <Box display={{ base: "none", md: "block" }} />
-        <TrackedLink
-          href="https://thirdweb.com/explore/modular-contracts"
-          category="announcement"
-          label="onchain-olympics"
-          isExternal
-        >
-          <Container maxW="container.page" display="flex" px={0}>
-            <Flex
-              cursor="pointer"
-              mx="auto"
-              align="center"
-              gap={{ base: 0.5, md: 2 }}
-              color="white"
-            >
-              <Heading
-                size="label.lg"
-                as="p"
-                lineHeight={{ base: 1.5, md: undefined }}
-                color="white"
-                fontWeight={500}
-              >
-                Modular Contracts Beta: Secure, Customizable, and Easy to
-                Integrate contracts
-              </Heading>
-              <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
-            </Flex>
-          </Container>
-        </TrackedLink>
+        <span className="inline-block font-semibold text-white leading-normal hover:underline">
+          {props.label}
+        </span>
+        <ChevronRightIcon className="hidden size-5 opacity-80 lg:block" />
+      </TrackedLinkTW>
 
-        <IconButton
-          size="xs"
-          aria-label="Close announcement"
-          icon={<FiX />}
-          colorScheme="blackAlpha"
-          color={{ base: "white", md: "black" }}
-          variant="ghost"
-          onClick={() => setHasDismissedAnnouncement(true)}
-        />
-      </Flex>
-    </Box>
+      <Button
+        size="icon"
+        variant="ghost"
+        onClick={() => setHasDismissedAnnouncement(true)}
+        aria-label="Close announcement"
+        className="-translate-y-1/2 !text-white absolute top-1/2 right-2 h-auto w-auto p-2 hover:bg-white/15"
+      >
+        <XIcon className="size-5" />
+      </Button>
+    </div>
   );
-};
+}

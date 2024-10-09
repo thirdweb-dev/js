@@ -17,6 +17,15 @@ export function SettingsCard(
       disabled: boolean;
       isPending: boolean;
       type?: "submit";
+      variant?:
+        | "ghost"
+        | "default"
+        | "primary"
+        | "destructive"
+        | "outline"
+        | "secondary";
+      className?: string;
+      label?: string;
     };
   }>,
 ) {
@@ -58,14 +67,15 @@ export function SettingsCard(
         {props.saveButton && !props.noPermissionText && (
           <Button
             size="sm"
-            className="gap-2"
+            className={cn("gap-2", props.saveButton.className)}
             onClick={props.saveButton.onClick}
             disabled={props.saveButton.disabled || props.saveButton.isPending}
-            variant="outline"
+            variant={props.saveButton.variant || "outline"}
             type={props.saveButton.type}
           >
             {props.saveButton.isPending && <Spinner className="size-3" />}
-            {props.saveButton.isPending ? "Saving" : "Save"}
+            {props.saveButton.label ||
+              (props.saveButton.isPending ? "Saving" : "Save")}
           </Button>
         )}
       </div>

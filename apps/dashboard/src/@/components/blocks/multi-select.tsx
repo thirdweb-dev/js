@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,14 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { CheckIcon, ChevronDown, SearchIcon, XIcon } from "lucide-react";
-import * as React from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useShowMore } from "../../lib/useShowMore";
 import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow";
 import { Input } from "../ui/input";
@@ -24,6 +32,7 @@ interface MultiSelectProps
   selectedValues: string[];
   onSelectedValuesChange: (value: string[]) => void;
   placeholder: string;
+  searchPlaceholder?: string;
 
   /**
    * Maximum number of items to display. Extra selected items will be summarized.
@@ -32,12 +41,16 @@ interface MultiSelectProps
   maxCount?: number;
 
   className?: string;
+
+  overrideSearchFn?: (
+    option: { value: string; label: string },
+    searchTerm: string,
+  ) => boolean;
+
+  renderOption?: (option: { value: string; label: string }) => React.ReactNode;
 }
 
-export const MultiSelect = React.forwardRef<
-  HTMLButtonElement,
-  MultiSelectProps
->(
+export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
   (
     {
       options,
@@ -50,10 +63,10 @@ export const MultiSelect = React.forwardRef<
     },
     ref,
   ) => {
-    const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-    const [searchValue, setSearchValue] = React.useState("");
+    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
 
-    const handleInputKeyDown = React.useCallback(
+    const handleInputKeyDown = useCallback(
       (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
           setIsPopoverOpen(true);
@@ -66,7 +79,7 @@ export const MultiSelect = React.forwardRef<
       [selectedValues, onSelectedValuesChange],
     );
 
-    const toggleOption = React.useCallback(
+    const toggleOption = useCallback(
       (option: string) => {
         const newSelectedValues = selectedValues.includes(option)
           ? selectedValues.filter((value) => value !== option)
@@ -76,7 +89,7 @@ export const MultiSelect = React.forwardRef<
       [selectedValues, onSelectedValuesChange],
     );
 
-    const handleClear = React.useCallback(() => {
+    const handleClear = useCallback(() => {
       onSelectedValuesChange([]);
     }, [onSelectedValuesChange]);
 
@@ -84,7 +97,7 @@ export const MultiSelect = React.forwardRef<
       setIsPopoverOpen((prev) => !prev);
     };
 
-    const clearExtraOptions = React.useCallback(() => {
+    const clearExtraOptions = useCallback(() => {
       const newSelectedValues = selectedValues.slice(0, maxCount);
       onSelectedValuesChange(newSelectedValues);
     }, [selectedValues, onSelectedValuesChange, maxCount]);
@@ -92,14 +105,46 @@ export const MultiSelect = React.forwardRef<
     // show 50 initially and then 20 more when reaching the end
     const { itemsToShow, lastItemRef } = useShowMore<HTMLButtonElement>(50, 20);
 
-    const optionsToShow = React.useMemo(() => {
-      const searchValLowercase = searchValue.toLowerCase();
-      const filteredOptions = options.filter((option) => {
-        return option.label.toLowerCase().includes(searchValLowercase);
-      });
+    const { overrideSearchFn } = props;
 
-      return filteredOptions.slice(0, itemsToShow);
-    }, [options, searchValue, itemsToShow]);
+    const optionsToShow = useMemo(() => {
+      const filteredOptions: {
+        label: string;
+        value: string;
+      }[] = [];
+
+      const searchValLowercase = searchValue.toLowerCase();
+
+      for (let i = 0; i <= options.length - 1; i++) {
+        if (filteredOptions.length >= itemsToShow) {
+          break;
+        }
+        if (overrideSearchFn) {
+          if (overrideSearchFn(options[i], searchValLowercase)) {
+            filteredOptions.push(options[i]);
+          }
+        } else {
+          if (options[i].label.toLowerCase().includes(searchValLowercase)) {
+            filteredOptions.push(options[i]);
+          }
+        }
+      }
+
+      return filteredOptions;
+    }, [options, searchValue, itemsToShow, overrideSearchFn]);
+
+    // scroll to top when options change
+    const popoverElRef = useRef<HTMLDivElement>(null);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+      const scrollContainer =
+        popoverElRef.current?.querySelector("[data-scrollable]");
+      if (scrollContainer) {
+        scrollContainer.scrollTo({
+          top: 0,
+        });
+      }
+    }, [searchValue]);
 
     return (
       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
@@ -109,7 +154,7 @@ export const MultiSelect = React.forwardRef<
             {...props}
             onClick={handleTogglePopover}
             className={cn(
-              "flex h-auto min-h-10 w-full items-center justify-between rounded-md border bg-inherit p-3 hover:bg-inherit",
+              "flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-border bg-inherit p-3 hover:bg-inherit",
               className,
             )}
           >
@@ -119,10 +164,14 @@ export const MultiSelect = React.forwardRef<
                 <div className="flex flex-wrap items-center gap-1.5">
                   {selectedValues.slice(0, maxCount).map((value) => {
                     const option = options.find((o) => o.value === value);
+                    if (!option) {
+                      return null;
+                    }
+
                     return (
                       <ClosableBadge
                         key={value}
-                        label={option?.label || ""}
+                        label={option.label}
                         onClose={() => toggleOption(value)}
                       />
                     );
@@ -170,7 +219,7 @@ export const MultiSelect = React.forwardRef<
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="p-0"
+          className="z-[10001] p-0"
           align="center"
           sideOffset={10}
           onEscapeKeyDown={() => setIsPopoverOpen(false)}
@@ -178,12 +227,13 @@ export const MultiSelect = React.forwardRef<
             width: "var(--radix-popover-trigger-width)",
             maxHeight: "var(--radix-popover-content-available-height)",
           }}
+          ref={popoverElRef}
         >
           <div>
             {/* Search */}
             <div className="relative">
               <Input
-                placeholder="Search"
+                placeholder={props.searchPlaceholder || "Search"}
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 className="!h-auto rounded-b-none border-0 border-border border-b py-4 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -193,7 +243,7 @@ export const MultiSelect = React.forwardRef<
             </div>
 
             <ScrollShadow
-              scrollableClassName="max-h-[350px] p-1"
+              scrollableClassName="max-h-[min(calc(var(--radix-popover-content-available-height)-60px),350px)] p-1"
               className="rounded"
             >
               {/* List */}
@@ -213,7 +263,7 @@ export const MultiSelect = React.forwardRef<
                       aria-selected={isSelected}
                       onClick={() => toggleOption(option.value)}
                       variant="ghost"
-                      className="flex w-full cursor-pointer justify-start gap-3 rounded-sm px-3 py-2"
+                      className="flex w-full cursor-pointer justify-start gap-3 rounded-sm px-3 py-2 text-left"
                       ref={
                         i === optionsToShow.length - 1 ? lastItemRef : undefined
                       }
@@ -229,7 +279,11 @@ export const MultiSelect = React.forwardRef<
                         <CheckIcon className="size-4" />
                       </div>
 
-                      <span>{option.label}</span>
+                      <div className="min-w-0 grow">
+                        {props.renderOption
+                          ? props.renderOption(option)
+                          : option.label}
+                      </div>
                     </Button>
                   );
                 })}

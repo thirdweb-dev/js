@@ -25,7 +25,6 @@ export const RpcInput: React.FC<{
       isRequired
       errorMessage={form.formState.errors.rpcUrl?.message}
       htmlFor="rpc-url"
-      tooltip={undefined}
       label="RPC URL"
     >
       <Input

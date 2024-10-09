@@ -106,6 +106,10 @@ export function prepareExecute(args: {
       transaction.value || 0n,
       transaction.data || "0x",
     ],
+    // if gas is specified for the inner tx, use that and add 21k for the execute call on the account contract
+    // this avoids another estimateGas call when bundling the userOp
+    // and also allows for passing custom gas limits for the inner tx
+    gas: transaction.gas ? transaction.gas + 21000n : undefined,
   });
 }
 

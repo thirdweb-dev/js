@@ -11,7 +11,7 @@ export const wallet = {
     ios: "https://apps.apple.com/us/app/blockchain-bitcoin-wallet/id493253309",
     android:
       "https://play.google.com/store/apps/details?id=piuk.blockchain.android",
-    mac: "",
+    mac: null,
     windows: null,
     linux: null,
     chrome: null,
