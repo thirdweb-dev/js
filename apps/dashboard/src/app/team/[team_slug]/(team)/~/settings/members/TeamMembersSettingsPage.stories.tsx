@@ -1,7 +1,7 @@
-import type { Team } from "@/api/team";
 import type { TeamAccountRole, TeamMember } from "@/api/team-members";
 import { Toaster } from "@/components/ui/sonner";
 import type { Meta, StoryObj } from "@storybook/react";
+import { teamStub } from "../../../../../../../stories/stubs";
 import {
   BadgeContainer,
   mobileViewport,
@@ -34,37 +34,22 @@ export const Mobile: Story = {
   },
 };
 
-const freeTeam: Team = {
-  id: "team-id-foo-bar",
-  name: "Team XYZ",
-  slug: "team-slug-foo-bar",
-  createdAt: "2023-07-07T19:21:33.604Z",
-  updatedAt: "2024-07-11T00:01:02.241Z",
-  billingStatus: "validPayment",
-  billingPlan: "free",
-  billingEmail: "foo@example.com",
-};
+const freeTeam = teamStub("foo", "free");
+const proTeam = teamStub("bar", "pro");
+const growthTeam = teamStub("bazz", "growth");
 
-const proTeam: Team = {
-  id: "team-id-foo-bar",
-  name: "Team XYZ",
-  slug: "team-slug-foo-bar",
-  createdAt: "2023-07-07T19:21:33.604Z",
-  updatedAt: "2024-07-11T00:01:02.241Z",
-  billingStatus: "validPayment",
-  billingPlan: "pro",
-  billingEmail: "foo@example.com",
-};
-
-function createMemberStub(id: string, role: TeamAccountRole): TeamMember {
+function createMemberStub(
+  id: string,
+  role: TeamAccountRole,
+  createdHours: number,
+): TeamMember {
   const date = new Date();
-  // add random time to the date
-  date.setHours(Math.floor(Math.random() * 24));
+  date.setHours(createdHours);
 
   const member: TeamMember = {
     account: {
       email: `user-${id}@foo.com`,
-      name: `username-${id}`,
+      name: id,
     },
     accountId: `account-id-${id}`,
     createdAt: date,
@@ -78,9 +63,9 @@ function createMemberStub(id: string, role: TeamAccountRole): TeamMember {
 }
 
 const membersStub: TeamMember[] = [
-  createMemberStub("1", "OWNER"),
-  createMemberStub("2", "MEMBER"),
-  createMemberStub("3", "OWNER"),
+  createMemberStub("first-member", "OWNER", 1),
+  createMemberStub("third-member", "MEMBER", 3),
+  createMemberStub("second-member", "OWNER", 2),
 ];
 
 function Story() {
@@ -107,7 +92,7 @@ function CompVariants() {
 
         {/* Invite */}
         <div className="flex flex-col gap-10">
-          <BadgeContainer label="Not a Pro Team">
+          <BadgeContainer label="Free Team">
             <InviteSection team={freeTeam} userHasEditPermission={false} />
           </BadgeContainer>
 
@@ -118,31 +103,28 @@ function CompVariants() {
           <BadgeContainer label="Pro, User has permission">
             <InviteSection team={proTeam} userHasEditPermission={true} />
           </BadgeContainer>
+
+          <BadgeContainer label="Growth, User has permission">
+            <InviteSection team={growthTeam} userHasEditPermission={true} />
+          </BadgeContainer>
         </div>
 
         <div className="my-10" />
 
-        {/* Invite */}
+        <h2 className="py-4 font-semibold text-3xl">Team Members Variants</h2>
+
         <div className="flex flex-col gap-10">
-          <BadgeContainer label="Pro Team, has permission">
+          <BadgeContainer label="Has permission">
             <ManageMembersSection
-              team={proTeam}
+              team={freeTeam}
               userHasEditPermission={true}
               members={membersStub}
             />
           </BadgeContainer>
 
-          <BadgeContainer label="Not a Pro Team, No permission">
+          <BadgeContainer label="No permission">
             <ManageMembersSection
               team={freeTeam}
-              userHasEditPermission={false}
-              members={membersStub}
-            />
-          </BadgeContainer>
-
-          <BadgeContainer label="Pro Team, No permission">
-            <ManageMembersSection
-              team={proTeam}
               userHasEditPermission={false}
               members={membersStub}
             />

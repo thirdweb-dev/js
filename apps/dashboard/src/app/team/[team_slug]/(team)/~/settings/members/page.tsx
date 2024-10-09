@@ -1,6 +1,7 @@
 import { getTeamBySlug } from "@/api/team";
 import { getMembers } from "@/api/team-members";
 import { notFound } from "next/navigation";
+import { getAccount } from "../../../../../../account/settings/getAccount";
 import { TeamMembersSettingsPage } from "./TeamMembersSettingsPage";
 
 export default async function Page(props: {
@@ -8,12 +9,19 @@ export default async function Page(props: {
     team_slug: string;
   };
 }) {
-  const [team, members] = await Promise.all([
+  const [account, team, members] = await Promise.all([
+    getAccount(),
     getTeamBySlug(props.params.team_slug),
     getMembers(props.params.team_slug),
   ]);
 
-  if (!team) {
+  if (!team || !account || !members) {
+    notFound();
+  }
+
+  const accountMemberInfo = members.find((m) => m.accountId === account.id);
+
+  if (!accountMemberInfo) {
     notFound();
   }
 
@@ -21,8 +29,7 @@ export default async function Page(props: {
     <TeamMembersSettingsPage
       team={team}
       members={members}
-      // TODO
-      userHasEditPermission={true}
+      userHasEditPermission={accountMemberInfo.role === "OWNER"}
     />
   );
 }

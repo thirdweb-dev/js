@@ -14,7 +14,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { EllipsisIcon, SearchIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
+type RoleFilterValue = "ALL ROLES" | TeamAccountRole;
 
 export function ManageMembersSection(props: {
   team: Team;
@@ -22,6 +24,36 @@ export function ManageMembersSection(props: {
   members: TeamMember[];
 }) {
   let topSection: React.ReactNode = null;
+
+  const [role, setRole] = useState<RoleFilterValue>("ALL ROLES");
+  const [sortBy, setSortBy] = useState<MemberSortId>("date");
+
+  const membersToShow = useMemo(() => {
+    let value = props.members;
+    if (role !== "ALL ROLES") {
+      value = value.filter((m) => m.role === role);
+    }
+
+    switch (sortBy) {
+      case "date":
+        value = value.sort(
+          (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+        );
+        break;
+      case "a-z":
+        value = value.sort((a, b) =>
+          a.account.name.localeCompare(b.account.name),
+        );
+        break;
+      case "z-a":
+        value = value.sort((a, b) =>
+          b.account.name.localeCompare(a.account.name),
+        );
+        break;
+    }
+
+    return value;
+  }, [role, props.members, sortBy]);
 
   if (!props.userHasEditPermission) {
     topSection = (
@@ -39,14 +71,14 @@ export function ManageMembersSection(props: {
             id="select-all"
             className="border-muted-foreground data-[state=checked]:border-inverted"
             disabled={
-              !props.userHasEditPermission || props.members.length === 0
+              !props.userHasEditPermission || membersToShow.length === 0
             }
           />
           <Label
             htmlFor="select-all"
             className="cursor-pointer text-muted-foreground"
           >
-            Select All ({props.members.length})
+            Select All ({membersToShow.length})
           </Label>
         </div>
 
@@ -54,7 +86,7 @@ export function ManageMembersSection(props: {
           size="icon"
           variant="ghost"
           className="!h-auto !w-auto p-1.5"
-          disabled={!props.userHasEditPermission || props.members.length === 0}
+          disabled={!props.userHasEditPermission || membersToShow.length === 0}
         >
           <EllipsisIcon className="size-4 text-muted-foreground" />
         </Button>
@@ -68,7 +100,14 @@ export function ManageMembersSection(props: {
 
       <div className="h-3" />
 
-      <FiltersSection disabled={props.members.length === 0} />
+      <FiltersSection
+        // don't use membersToShow here
+        disabled={props.members.length === 0}
+        role={role}
+        setRole={setRole}
+        setSortBy={setSortBy}
+        sortBy={sortBy}
+      />
 
       <div className="h-4" />
 
@@ -77,11 +116,14 @@ export function ManageMembersSection(props: {
         {/* Top section */}
         {topSection}
 
-        {props.members.length > 0 && (
+        {membersToShow.length > 0 && (
           <ul>
-            {props.members.map((member) => {
+            {membersToShow.map((member) => {
               return (
-                <li key={member.accountId}>
+                <li
+                  key={member.accountId}
+                  className="border-border border-b last:border-b-0"
+                >
                   <MemberRow
                     member={member}
                     userHasEditPermission={props.userHasEditPermission}
@@ -93,7 +135,7 @@ export function ManageMembersSection(props: {
         )}
 
         {/* Empty state */}
-        {props.members.length === 0 && (
+        {membersToShow.length === 0 && (
           <div className="flex justify-center px-4 py-10">
             <p className="text-muted-foreground text-sm">No Members Found</p>
           </div>
@@ -108,7 +150,7 @@ function MemberRow(props: {
   userHasEditPermission: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between border-border border-b px-4 py-4">
+    <div className="flex items-center justify-between px-4 py-4">
       <div className="flex items-center gap-3 lg:gap-4">
         {/* Checkbox */}
         <Checkbox
@@ -150,7 +192,12 @@ function MemberRow(props: {
 
 function FiltersSection(props: {
   disabled: boolean;
+  role: RoleFilterValue;
+  setRole: (role: RoleFilterValue) => void;
+  setSortBy: (sortBy: MemberSortId) => void;
+  sortBy: MemberSortId;
 }) {
+  const { role, setRole, setSortBy, sortBy } = props;
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
       {/* Search  */}
@@ -164,8 +211,12 @@ function FiltersSection(props: {
       </div>
 
       <div className="grid grid-cols-2 items-center gap-3 lg:flex">
-        <RoleSelector disabled={props.disabled} />
-        <SortMembersBy disabled={props.disabled} />
+        <RoleSelector disabled={props.disabled} role={role} setRole={setRole} />
+        <SortMembersBy
+          disabled={props.disabled}
+          setSortBy={setSortBy}
+          sortBy={sortBy}
+        />
       </div>
     </div>
   );
@@ -175,8 +226,10 @@ type MemberSortId = "date" | "a-z" | "z-a";
 
 function SortMembersBy(props: {
   disabled?: boolean;
+  setSortBy: (sortBy: MemberSortId) => void;
+  sortBy: MemberSortId;
 }) {
-  const [sortBy, setSortBy] = useState<MemberSortId>("date");
+  const { sortBy, setSortBy } = props;
   const valueToLabel: Record<MemberSortId, string> = {
     date: "Date",
     "a-z": "Name (A-Z)",
@@ -211,19 +264,17 @@ function SortMembersBy(props: {
 
 function RoleSelector(props: {
   disabled?: boolean;
+  role: RoleFilterValue;
+  setRole: (role: RoleFilterValue) => void;
 }) {
-  const roles: (TeamAccountRole | "ALL ROLES")[] = [
-    "OWNER",
-    "MEMBER",
-    "ALL ROLES",
-  ];
-  const [role, setRole] = useState<TeamAccountRole | "ALL ROLES">("ALL ROLES");
+  const { role, setRole } = props;
+  const roles: RoleFilterValue[] = ["OWNER", "MEMBER", "ALL ROLES"];
 
   return (
     <Select
       value={role}
       onValueChange={(v) => {
-        setRole(v as TeamAccountRole);
+        setRole(v as RoleFilterValue);
       }}
     >
       <SelectTrigger

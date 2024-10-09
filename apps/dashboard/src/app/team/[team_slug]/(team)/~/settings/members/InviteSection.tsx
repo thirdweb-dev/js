@@ -25,19 +25,19 @@ export function InviteSection(props: {
 }) {
   const teamPlan = getValidTeamPlan(props.team);
   let bottomSection: React.ReactNode = null;
-  const inviteEnabled = teamPlan === "pro" && props.userHasEditPermission;
+  const inviteEnabled = teamPlan !== "free" && props.userHasEditPermission;
 
-  if (teamPlan !== "pro") {
+  if (teamPlan === "free") {
     bottomSection = (
       <div className="lg:px6 flex items-center justify-between gap-4 border-border border-t px-4 py-4">
         <p className="text-muted-foreground text-sm">
-          This feature is only available on the{" "}
+          This feature is not available on the Free Plan.{" "}
           <Link
             href="https://thirdweb.com/pricing"
             target="_blank"
             className="text-link-foreground hover:text-foreground"
           >
-            Pro plan <ExternalLinkIcon className="inline size-3" />
+            View plans <ExternalLinkIcon className="inline size-3" />
           </Link>
         </p>
 
