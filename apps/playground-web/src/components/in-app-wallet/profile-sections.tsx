@@ -55,19 +55,34 @@ export function Profiles() {
   
           function App() {
             const { mutate: linkProfile, isPending, error } = useLinkProfile();
+
+            const linkMetamask = () => {
+              // link any external wallet
+              linkProfile({
+                client: THIRDWEB_CLIENT,
+                strategy: "wallet",
+                wallet: createWallet("io.metamask"), // or any other wallet
+                chain: baseSepolia,
+              });
+            };
+
+            const linkPasskey = () => {
+              // link any web2 identity provider
+              linkProfile({
+                client: THIRDWEB_CLIENT,
+                strategy: "passkey", // or "email", "phone", etc.
+                type: "sign-up",
+              });
+            };
   
             return (
   <div>
-    <button
-      onClick={() => linkProfile({
-        client: THIRDWEB_CLIENT,
-        strategy: "wallet",
-        wallet: createWallet("com.coinbase.wallet"),
-        chain: baseSepolia,
-      })}
-      >
-      Link Coinbase Wallet
-    </button>
+      <button onClick={linkMetamask}>
+        Link Metamask
+      </button>
+      <button onClick={linkPasskey}>
+        Link Passkey
+      </button>
   </div>
   );
   };`}
