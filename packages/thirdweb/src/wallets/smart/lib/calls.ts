@@ -2,7 +2,7 @@ import type { ThirdwebContract } from "../../../contract/contract.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { readContract } from "../../../transaction/read-contract.js";
-import { stringToHex } from "../../../utils/encoding/hex.js";
+import { isHex, stringToHex } from "../../../utils/encoding/hex.js";
 import type { SendTransactionOption } from "../../interfaces/wallet.js";
 
 /**
@@ -48,11 +48,14 @@ export async function predictAddress(args: {
       "Account address is required to predict the smart wallet address.",
     );
   }
-  const extraData = stringToHex(accountSalt ?? "");
+  const saltHex =
+    accountSalt && isHex(accountSalt)
+      ? accountSalt
+      : stringToHex(accountSalt ?? "");
   return readContract({
     contract: factoryContract,
     method: "function getAddress(address, bytes) returns (address)",
-    params: [adminAddress, extraData],
+    params: [adminAddress, saltHex],
   });
 }
 
@@ -76,10 +79,14 @@ export function prepareCreateAccount(args: {
   if (createAccount) {
     return createAccount(factoryContract);
   }
+  const saltHex =
+    accountSalt && isHex(accountSalt)
+      ? accountSalt
+      : stringToHex(accountSalt ?? "");
   return prepareContractCall({
     contract: factoryContract,
     method: "function createAccount(address, bytes) returns (address)",
-    params: [adminAddress, stringToHex(accountSalt ?? "")],
+    params: [adminAddress, saltHex],
   });
 }
 
