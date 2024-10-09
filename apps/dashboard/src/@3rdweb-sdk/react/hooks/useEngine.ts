@@ -1621,9 +1621,8 @@ export function useEngineNotificationChannels(engineId: string) {
 }
 
 export interface CreateNotificationChannelInput {
-  deploymentId: string;
   subscriptionRoutes: string[];
-  type: "slack" | "email" | "webhook";
+  type: "slack" | "email"; // TODO: Add others when implemented.
   value: string;
 }
 

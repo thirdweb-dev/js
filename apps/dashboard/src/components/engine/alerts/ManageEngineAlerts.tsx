@@ -22,7 +22,6 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   type CreateNotificationChannelInput,
   type EngineAlertRule,
-  type EngineInstance,
   type EngineNotificationChannel,
   useEngineCreateNotificationChannel,
   useEngineDeleteNotificationChannel,
@@ -44,19 +43,19 @@ type CreateAlertMutation = UseMutationResult<
 >;
 
 export function ManageEngineAlertsSection(props: {
-  instance: EngineInstance;
   alertRules: EngineAlertRule[];
   alertRulesIsLoading: boolean;
+  engineId: string;
 }) {
   const notificationChannelsQuery = useEngineNotificationChannels(
-    props.instance.id,
+    props.engineId,
   );
   const deleteAlertMutation = useEngineDeleteNotificationChannel(
-    props.instance.id,
+    props.engineId,
   );
 
   const createAlertMutation = useEngineCreateNotificationChannel(
-    props.instance.id,
+    props.engineId,
   );
 
   // not passing the mutation to avoid multiple rows sharing the same mutation state, we create the new mutation for each row instead in each component instead
@@ -66,8 +65,8 @@ export function ManageEngineAlertsSection(props: {
 
   return (
     <ManageEngineAlertsSectionUI
-      instance={props.instance}
       alertRules={props.alertRules}
+      engineId={props.engineId}
       notificationChannels={notificationChannelsQuery.data ?? []}
       isLoading={
         notificationChannelsQuery.isLoading || props.alertRulesIsLoading
@@ -82,8 +81,8 @@ export function ManageEngineAlertsSection(props: {
 }
 
 export function ManageEngineAlertsSectionUI(props: {
-  instance: EngineInstance;
   alertRules: EngineAlertRule[];
+  engineId: string;
   notificationChannels: EngineNotificationChannel[];
   isLoading: boolean;
   onAlertsUpdated: () => void;
@@ -91,8 +90,7 @@ export function ManageEngineAlertsSectionUI(props: {
   deleteAlert: (notificationChannelId: string) => Promise<void>;
 }) {
   const {
-    instance,
-    alertRules,
+    engineId,
     notificationChannels,
     isLoading,
     onAlertsUpdated,
@@ -113,8 +111,8 @@ export function ManageEngineAlertsSectionUI(props: {
         </div>
 
         <CreateAlertButton
-          instance={instance}
-          alertRules={alertRules}
+          engineId={engineId}
+          alertRules={props.alertRules}
           onSuccess={onAlertsUpdated}
           createAlertMutation={createAlertMutation}
         />
@@ -224,7 +222,7 @@ function EngineAlertsTableUI(props: {
 }
 
 function CreateAlertButton(props: {
-  instance: EngineInstance;
+  engineId: string;
   alertRules: EngineAlertRule[];
   onSuccess: () => void;
   createAlertMutation: CreateAlertMutation;
@@ -254,7 +252,6 @@ function CreateAlertButton(props: {
       </ToolTipLabel>
 
       <EngineAlertDialogForm
-        instance={props.instance}
         alertRules={props.alertRules}
         open={isModalOpen}
         onOpenChange={setIsModalOpen}

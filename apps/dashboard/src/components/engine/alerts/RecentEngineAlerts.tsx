@@ -14,20 +14,19 @@ import {
 import {
   type EngineAlert,
   type EngineAlertRule,
-  type EngineInstance,
   useEngineAlerts,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { formatDistance } from "date-fns";
 import { useMemo } from "react";
 
 export function RecentEngineAlertsSection(props: {
-  instance: EngineInstance;
   alertRules: EngineAlertRule[];
   alertRulesIsLoading: boolean;
+  engineId: string;
 }) {
   // TODO - pagination
   // required : return the total number of alerts in response from API
-  const alertsQuery = useEngineAlerts(props.instance.id, 100, 0);
+  const alertsQuery = useEngineAlerts(props.engineId, 100, 0);
   const alerts = alertsQuery.data ?? [];
 
   return (

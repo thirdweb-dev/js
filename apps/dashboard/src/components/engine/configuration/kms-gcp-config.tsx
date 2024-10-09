@@ -89,7 +89,7 @@ export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instance }) => {
             category="engine"
             className="text-link-foreground hover:text-foreground"
           >
-            learn more about using GCP KMS wallets
+            learn more about using Google Cloud KMS wallets
           </TrackedLinkTW>
           .
         </p>

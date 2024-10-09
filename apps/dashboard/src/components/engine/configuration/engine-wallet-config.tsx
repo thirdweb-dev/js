@@ -6,7 +6,9 @@ import {
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex } from "@chakra-ui/react";
+import { EngineBackendWalletOptions } from "lib/engine";
 import { CircleAlertIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import {} from "react-icons/md";
 import { Heading, Text } from "tw-components";
@@ -23,27 +25,12 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
 }) => {
   const { data: walletConfig } = useEngineWalletConfig(instance.url);
 
-  const tabOptions: {
-    key: EngineBackendWalletType;
-    name: string;
-    content: React.ReactNode;
-  }[] = [
-    {
-      key: "local",
-      name: "Local",
-      content: <LocalConfig />,
-    },
-    {
-      key: "aws-kms",
-      name: "AWS KMS",
-      content: <KmsAwsConfig instance={instance} />,
-    },
-    {
-      key: "gcp-kms",
-      name: "Google Cloud KMS",
-      content: <KmsGcpConfig instance={instance} />,
-    },
-  ] as const;
+  const tabContent: Record<EngineBackendWalletType, React.ReactNode> = {
+    local: <LocalConfig />,
+    "aws-kms": <KmsAwsConfig instance={instance} />,
+    "gcp-kms": <KmsGcpConfig instance={instance} />,
+  } as const;
+
   const [activeTab, setActiveTab] = useState<EngineBackendWalletType>("local");
 
   const isAwsKmsConfigured = !!walletConfig?.awsAccessKeyId;
@@ -54,13 +41,19 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
       <Flex flexDir="column" gap={2}>
         <Heading size="title.md">Backend Wallets</Heading>
         <Text>
-          Create backend wallets on the <strong>Overview</strong> tab. To use
-          other wallet types, configure them first.
+          Create backend wallets on the{" "}
+          <Link
+            href={`/dashboard/engine/${instance.id}`}
+            className="text-link-foreground hover:text-foreground"
+          >
+            Overview
+          </Link>{" "}
+          tab. To use other wallet types, configure them below.
         </Text>
       </Flex>
 
       <TabButtons
-        tabs={tabOptions.map(({ key, name }) => ({
+        tabs={EngineBackendWalletOptions.map(({ key, name }) => ({
           key,
           name,
           isActive: activeTab === key,
@@ -79,7 +72,7 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
         tabClassName="font-medium !text-sm"
       />
 
-      {tabOptions.find((opt) => opt.key === activeTab)?.content}
+      {tabContent[activeTab]}
     </Flex>
   );
 };
