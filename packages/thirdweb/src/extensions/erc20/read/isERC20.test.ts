@@ -8,7 +8,7 @@ import {
 import { resolveContractAbi } from "../../../contract/actions/resolve-abi.js";
 import { isERC20 } from "./isERC20.js";
 
-describe("isERC20", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("isERC20", () => {
   it("should detect USDT as a valid erc20 contract", async () => {
     const abi = await resolveContractAbi<Abi>(USDT_CONTRACT);
     const selectors = abi
