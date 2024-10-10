@@ -50,7 +50,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
             });
           }}
         >
-          <Link href={`${chainSlug}/${contractAddress}/analytics`}>
+          <Link href={`/${chainSlug}/${contractAddress}/analytics`}>
             <span>View All</span>
             <ArrowRightIcon className="size-4" />
           </Link>
