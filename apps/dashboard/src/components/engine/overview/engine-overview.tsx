@@ -1,10 +1,8 @@
 "use client";
-
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
+  type EngineInstance,
   useEngineBackendWallets,
   useEngineTransactions,
   useEngineWalletConfig,
@@ -18,27 +16,25 @@ import { ImportBackendWalletButton } from "./import-backend-wallet-button";
 import { TransactionsTable } from "./transactions-table";
 
 interface EngineOverviewProps {
-  instanceUrl: string;
+  instance: EngineInstance;
 }
 
-export const EngineOverview: React.FC<EngineOverviewProps> = ({
-  instanceUrl,
-}) => {
+export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
   return (
     <div>
-      <BackendWalletsSection instanceUrl={instanceUrl} />
+      <BackendWalletsSection instance={instance} />
       <div className="h-14" />
-      <TransactionsSection instanceUrl={instanceUrl} />
+      <TransactionsSection instanceUrl={instance.url} />
     </div>
   );
 };
 
 function BackendWalletsSection(props: {
-  instanceUrl: string;
+  instance: EngineInstance;
 }) {
-  const { instanceUrl } = props;
-  const backendWallets = useEngineBackendWallets(instanceUrl);
-  const { data: walletConfig } = useEngineWalletConfig(instanceUrl);
+  const { instance } = props;
+  const backendWallets = useEngineBackendWallets(instance.url);
+  const { data: walletConfig } = useEngineWalletConfig(instance.url);
 
   return (
     <section>
@@ -48,45 +44,42 @@ function BackendWalletsSection(props: {
             <h2 className="font-semibold text-2xl tracking-tight">
               Backend Wallets
             </h2>
-            {walletConfig?.type && (
-              <ToolTipLabel
-                label={
-                  <>
-                    This engine is configured to use{" "}
-                    {walletConfig.type === "aws-kms"
-                      ? "backend wallets secured by AWS KMS"
-                      : walletConfig.type === "gcp-kms"
-                        ? "backend wallets secured by GCP KMS"
-                        : "local backend wallets"}
-                    . You can change this in the Configuration tab.
-                  </>
-                }
-              >
-                <div>
-                  <Badge variant="outline" className="text-base">
-                    {walletConfig.type.replace("-", " ")}
-                  </Badge>
-                </div>
-              </ToolTipLabel>
-            )}
           </div>
           <p className="text-muted-foreground">
-            Engine performs blockchain actions using backend wallets you own and
-            manage.{" "}
+            Engine sends blockchain transactions from backend wallets you own
+            and manage.
+          </p>
+          <p className="text-muted-foreground">
+            Set up other wallet types from the{" "}
+            <Link
+              href={`/dashboard/engine/${instance.id}/configuration`}
+              className="text-link-foreground hover:text-foreground"
+            >
+              Configuration
+            </Link>{" "}
+            tab, or{" "}
             <Link
               href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
-              className="text-link-foreground hover:text-foreground"
               target="_blank"
+              className="text-link-foreground hover:text-foreground"
             >
-              Learn more
+              learn more about backend wallets.
             </Link>
           </p>
         </div>
 
-        <div className="flex flex-row gap-2 max-sm:w-full [&>*]:grow">
-          <ImportBackendWalletButton instanceUrl={instanceUrl} />
-          <CreateBackendWalletButton instanceUrl={instanceUrl} />
-        </div>
+        {walletConfig && (
+          <div className="flex flex-row gap-2 max-sm:w-full [&>*]:grow">
+            <ImportBackendWalletButton
+              instance={instance}
+              walletConfig={walletConfig}
+            />
+            <CreateBackendWalletButton
+              instance={instance}
+              walletConfig={walletConfig}
+            />
+          </div>
+        )}
       </div>
 
       <div className="h-4" />
@@ -104,7 +97,7 @@ function BackendWalletsSection(props: {
       <div className="h-4" />
 
       <BackendWalletsTable
-        instanceUrl={instanceUrl}
+        instanceUrl={instance.url}
         wallets={backendWallets.data ?? []}
         isPending={backendWallets.isPending}
         isFetched={backendWallets.isFetched}

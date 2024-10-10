@@ -4,7 +4,7 @@ import { InlineCode } from "@/components/ui/inline-code";
 import {
   useEngineAccessTokens,
   useEngineKeypairs,
-  useEngineSystemHealth,
+  useHasEngineFeature,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import { useState } from "react";
@@ -24,10 +24,10 @@ export const EngineAccessTokens: React.FC<EngineAccessTokensProps> = ({
   instanceUrl,
 }) => {
   const [selected, setSelected] = useState<AccessTokenType>("standard");
-  const health = useEngineSystemHealth(instanceUrl);
-
-  const hasFeatureKeypairAuthentication =
-    health.data?.features?.includes("KEYPAIR_AUTH");
+  const hasFeatureKeypairAuthentication = useHasEngineFeature(
+    instanceUrl,
+    "KEYPAIR_AUTH",
+  );
 
   return (
     <Flex flexDir="column" gap={4}>

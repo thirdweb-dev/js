@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { toast } from "sonner";
+import invariant from "tiny-invariant";
 
 export const EngineVersionBadge = ({
   instance,
@@ -119,9 +120,11 @@ const UpdateVersionModal = (props: {
   }
 
   const onClick = async () => {
+    invariant(instance.deploymentId, "Engine is missing deploymentId.");
+
     try {
       const promise = updateEngineServerMutation.mutateAsync({
-        engineId: instance.id,
+        deploymentId: instance.deploymentId,
         serverVersion: latestVersion,
       });
       toast.promise(promise, {
