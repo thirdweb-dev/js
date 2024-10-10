@@ -86,7 +86,7 @@ export async function getChain(
     ).then((res) => res.json()) as Promise<{ data: ChainServices }>,
   ]);
 
-  if (!chain.data) {
+  if (!chain.data || !chainServices.data) {
     notFound();
   }
   return {
