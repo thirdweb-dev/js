@@ -142,7 +142,7 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
     return [
       {
         title: (
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-row items-center justify-between gap-2">
             <Heading
               size="label.md"
               opacity={!stepsCompleted.account ? 1 : 0.6}

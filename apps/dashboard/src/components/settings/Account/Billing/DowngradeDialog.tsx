@@ -65,7 +65,7 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
                 <Flex flexDir="column" gap={2}>
                   {oldPlanFeatures.map((feat) => (
                     <div
-                      className="flex flex-row"
+                      className="flex flex-row items-center gap-2"
                       key={Array.isArray(feat) ? feat[0] : feat}
                     >
                       <Icon as={FiX} boxSize={4} color="red.500" />

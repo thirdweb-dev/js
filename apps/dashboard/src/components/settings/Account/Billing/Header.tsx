@@ -17,7 +17,7 @@ export const BillingHeader: React.FC<BillingHeaderProps> = ({
         Billing Info
       </Heading>
 
-      <div className="flex flex-row">
+      <div className="flex flex-row items-center gap-2">
         <Text size="body.md">
           Manage your payment methods, billing information and invoices.
         </Text>
@@ -29,7 +29,7 @@ export const BillingHeader: React.FC<BillingHeaderProps> = ({
           py={1.5}
           textTransform="capitalize"
         >
-          <span className="flex flex-row">
+          <span className="flex flex-row items-center gap-2">
             <Icon
               as={
                 validPayment

@@ -17,7 +17,7 @@ export const BillingPlanCard = () => {
 
   return (
     <Card as={Flex} flexDir="column" gap={2}>
-      <div className="flex flex-row">
+      <div className="flex flex-row items-center gap-2">
         <Heading size="title.xs">Your current plan is</Heading>
         <Badge
           borderRadius="md"

@@ -283,7 +283,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
       >
         <Heading size="title.sm">{title}</Heading>
         <Text>{description}</Text>
-        <div className="mt-4 flex flex-row items-center">
+        <div className="mt-4 flex flex-row items-center gap-2">
           {isLoggedIn ? (
             <Button
               size="sm"
