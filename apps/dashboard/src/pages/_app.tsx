@@ -22,7 +22,7 @@ import type { ThirdwebNextPage } from "utils/types";
 import chakraTheme from "../theme";
 import "@/styles/globals.css";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
-import { TryTeamsUIBanner } from "../app/components/DashboardTypeBanner";
+import { UnlimitedWalletsBanner } from "../components/notices/AnnouncementBanner";
 
 const inter = interConstructor({
   subsets: ["latin"],
@@ -260,8 +260,7 @@ const ConsoleApp = memo(function ConsoleApp({
       />
 
       <DashboardRouterTopProgressBar />
-
-      <TryTeamsUIBanner />
+      <UnlimitedWalletsBanner />
 
       <TailwindTheme>
         <ChakraProvider theme={chakraThemeWithFonts}>

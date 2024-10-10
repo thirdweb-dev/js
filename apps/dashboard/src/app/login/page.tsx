@@ -15,7 +15,7 @@ import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
 export default function LoginPage() {
   return (
     <div className="relative grid h-screen place-items-center bg-muted/30">
-      <nav className="fixed top-0 z-20 flex w-full flex-row items-center justify-between px-6 py-4">
+      <nav className="absolute top-0 z-20 flex w-full flex-row items-center justify-between px-6 py-4">
         <ThirdwebMiniLogo className="max-h-7" />
         <ColorModeToggle />
       </nav>

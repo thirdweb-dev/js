@@ -7,6 +7,7 @@ import PlausibleProvider from "next-plausible";
 import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
+import { UnlimitedWalletsBanner } from "../components/notices/AnnouncementBanner";
 import { PostHogProvider } from "./components/root-providers";
 import { AppRouterProviders } from "./providers";
 
@@ -70,6 +71,7 @@ export default function RootLayout({
           )}
         >
           <PostHogPageView />
+          <UnlimitedWalletsBanner />
           <AppRouterProviders>{children}</AppRouterProviders>
           <Toaster richColors />
           <DashboardRouterTopProgressBar />
