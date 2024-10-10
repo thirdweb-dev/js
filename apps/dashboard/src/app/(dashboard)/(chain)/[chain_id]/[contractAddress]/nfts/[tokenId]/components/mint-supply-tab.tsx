@@ -18,24 +18,26 @@ interface MintSupplyTabProps {
 // Intended for Edition contracts (not Edition Drop)
 const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
   const trackEvent = useTrack();
+  const address = useActiveAccount()?.address;
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm<{ to: string; amount: string }>({
-    defaultValues: { amount: "1" },
+    defaultValues: { amount: "1", to: address },
   });
 
-  const address = useActiveAccount()?.address;
   const { mutateAsync, isPending } = useSendAndConfirmTransaction();
 
   return (
     <form
       className="flex w-full flex-col gap-2"
       onSubmit={handleSubmit((data) => {
-        if (!address) {
-          return toast.error("No wallet connected.");
+        if (!data.to) {
+          return toast.error(
+            "Please enter the wallet address of the recipient.",
+          );
         }
         trackEvent({
           category: "nft",
@@ -44,7 +46,7 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
         });
         const transaction = mintAdditionalSupplyTo({
           contract,
-          to: address,
+          to: data.to,
           tokenId: BigInt(tokenId),
           supply: BigInt(data.amount),
         });
@@ -74,36 +76,34 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
         });
       })}
     >
-      <div className="flex flex-col gap-3">
-        <div className="flex w-full flex-col gap-6 md:flex-row">
-          <FormControl isRequired isInvalid={!!errors.to}>
-            <FormLabel>Amount</FormLabel>
-            <Input placeholder="1" {...register("amount")} min={1} />
-            <FormHelperText>How many would you like to mint?</FormHelperText>
-            <FormLabel className="mt-3">Recipient</FormLabel>
-            <Input
-              placeholder="0x..."
-              defaultValue={address || ""}
-              {...register("to")}
-            />
-            <FormHelperText>
-              Address to receive the NFT(s) - Defaults to your own wallet
-            </FormHelperText>
-            <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
-          </FormControl>
-        </div>
-
-        <TransactionButton
-          txChainID={contract.chain.id}
-          transactionCount={1}
-          isLoading={isPending}
-          type="submit"
-          colorScheme="primary"
-          alignSelf="flex-end"
-        >
-          Mint
-        </TransactionButton>
+      <div className="flex w-full flex-col gap-6 md:flex-row">
+        <FormControl isRequired isInvalid={!!errors.to}>
+          <FormLabel>Amount</FormLabel>
+          <Input placeholder="1" {...register("amount")} min={1} />
+          <FormHelperText>How many would you like to mint?</FormHelperText>
+          <FormLabel className="mt-3">Recipient</FormLabel>
+          <Input
+            placeholder="0x..."
+            defaultValue={address || ""}
+            {...register("to")}
+          />
+          <FormHelperText>
+            Address to receive the NFT(s) - Defaults to your own wallet
+          </FormHelperText>
+          <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
+        </FormControl>
       </div>
+
+      <TransactionButton
+        txChainID={contract.chain.id}
+        transactionCount={1}
+        isLoading={isPending}
+        type="submit"
+        colorScheme="primary"
+        alignSelf="flex-end"
+      >
+        Mint
+      </TransactionButton>
     </form>
   );
 };
