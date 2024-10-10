@@ -27,10 +27,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { EllipsisVerticalIcon, MoveRightIcon } from "lucide-react";
 import pluralize from "pluralize";
 import { type SetStateAction, useMemo, useState } from "react";
-import { FaEllipsisVertical } from "react-icons/fa6";
-import { FiArrowRight } from "react-icons/fi";
 import type { IconType } from "react-icons/lib";
 
 type CtaMenuItem<TRowData> = {
@@ -191,7 +190,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                 {/* Show a ... menu or individual CTA buttons. */}
                 {tableProps.onRowClick ? (
                   <TableCell className="text-end">
-                    <FiArrowRight className="size-4" />
+                    <MoveRightIcon className="size-4" />
                   </TableCell>
                 ) : tableProps.onMenuClick ? (
                   <TableCell className="text-end">
@@ -202,7 +201,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                           aria-label="Actions"
                           className="!h-auto relative z-10 p-2.5"
                         >
-                          <FaEllipsisVertical className="size-4" />
+                          <EllipsisVerticalIcon className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>

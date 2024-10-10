@@ -5,7 +5,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { FiMenu } from "react-icons/fi";
+import { MenuIcon } from "lucide-react";
 import { Drawer, Heading, TrackedLink, TrackedLinkButton } from "tw-components";
 import {
   DEVELOPER_RESOURCES,
@@ -35,7 +35,7 @@ export const MobileMenu: React.FC<FlexProps> = (props) => {
       </TrackedLinkButton>
       <IconButton
         aria-label="Homepage Menu"
-        icon={<FiMenu />}
+        icon={<MenuIcon className="size-4" />}
         variant="ghost"
         onClick={disclosure.onOpen}
       />

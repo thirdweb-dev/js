@@ -14,9 +14,9 @@ import { ContractFunctionsOverview } from "components/contract-functions/contrac
 import { format } from "date-fns/format";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { replaceIpfsUrl } from "lib/sdk";
+import { ShieldCheckIcon } from "lucide-react";
 import { useMemo } from "react";
 import { BiPencil } from "react-icons/bi";
-import { BsShieldCheck } from "react-icons/bs";
 import { VscBook, VscCalendar, VscServer } from "react-icons/vsc";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
@@ -181,7 +181,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                 {publishedContract?.audit && (
                   <ListItem>
                     <Flex gap={2} alignItems="flex-start">
-                      <Icon as={BsShieldCheck} boxSize={5} color="green" />
+                      <ShieldCheckIcon className="size-5 text-green-500" />
                       <Flex direction="column" gap={1}>
                         <Heading as="h5" size="label.sm">
                           Audit Report
