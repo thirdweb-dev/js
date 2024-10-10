@@ -15,7 +15,6 @@ import {
   Divider,
   Flex,
   FormControl,
-  Icon,
   LightMode,
   List,
   Select,
@@ -26,10 +25,9 @@ import {
 } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
-import { CircleHelpIcon } from "lucide-react";
+import { ChevronDownIcon, CircleHelpIcon, CopyIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Fragment, useMemo, useState } from "react";
-import { FiChevronDown, FiCopy } from "react-icons/fi";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { stringify } from "thirdweb/utils";
@@ -258,7 +256,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                     toast.info("Transaction hash copied.");
                   }}
                 >
-                  <Icon as={FiCopy} boxSize={3} />
+                  <CopyIcon className="size-4" />
                 </Button>
               </Tooltip>
               <Text fontFamily="mono" noOfLines={1}>
@@ -306,7 +304,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                 {transaction.blockNumber}
               </Text>
               <div>
-                <Icon as={FiChevronDown} />
+                <ChevronDownIcon className="size-4" />
               </div>
             </div>
           </Box>

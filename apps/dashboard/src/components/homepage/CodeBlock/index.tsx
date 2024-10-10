@@ -3,16 +3,14 @@ import {
   Code,
   type CodeProps,
   Flex,
-  Icon,
   IconButton,
   useColorModeValue,
   useTheme,
 } from "@chakra-ui/react";
 import { useClipboard } from "hooks/useClipboard";
-import { CheckIcon, CopyIcon } from "lucide-react";
+import { CheckIcon, CopyIcon, ZapIcon } from "lucide-react";
 import { Highlight, themes } from "prism-react-renderer";
 import { useEffect, useRef, useState } from "react";
-import { BsLightning } from "react-icons/bs";
 import { useInView } from "react-intersection-observer";
 import { Text } from "tw-components";
 
@@ -133,7 +131,7 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
               variant="ghost"
               colorScheme="gray"
               size="sm"
-              icon={<Icon as={BsLightning} />}
+              icon={<ZapIcon className="size-4" />}
             />
           ) : (
             <Box w="32px" />

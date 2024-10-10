@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { EyeIcon, FilePlusIcon } from "lucide-react";
+import { EyeIcon, FilePlusIcon, ImageIcon, UploadIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
 import {
@@ -11,7 +11,6 @@ import {
   type FileRejection,
   useDropzone,
 } from "react-dropzone";
-import { FiImage, FiUpload } from "react-icons/fi";
 
 interface IFileInputProps {
   accept?: Accept;
@@ -127,7 +126,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
             )}
           >
             <div className="flex flex-col items-center gap-2 text-muted-foreground">
-              <FiUpload className="size-6" />
+              <UploadIcon className="size-6" />
               <p className="text-center text-sm">{isDisabledText}</p>
             </div>
           </div>
@@ -146,7 +145,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
           >
             {noDisplay ? (
               <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                <FiImage className="size-6" />
+                <ImageIcon className="size-6" />
                 <p className="text-sm">{fileType} uploaded</p>
               </div>
             ) : fileUrl ? (
@@ -162,7 +161,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
             ) : (
               <div className="flex flex-col items-center gap-2.5 text-muted-foreground">
                 <div className="flex items-center justify-center rounded-full border border-border bg-background p-3">
-                  <FiUpload className="size-5" />
+                  <UploadIcon className="size-5" />
                 </div>
                 {!disableHelperText && (
                   <p className="text-center text-sm">

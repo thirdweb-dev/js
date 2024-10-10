@@ -23,11 +23,10 @@ import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceTemplateValues } from "lib/deployment/template-values";
-import { CircleAlertIcon, ExternalLinkIcon } from "lucide-react";
+import { CircleAlertIcon, ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
-import { FiHelpCircle } from "react-icons/fi";
 import { ZERO_ADDRESS } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import {
@@ -856,7 +855,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                           <span className="tex-sm">
                             Deploy at a deterministic address
                           </span>
-                          <FiHelpCircle className="size-4" />
+                          <InfoIcon className="size-4" />
                         </div>
                       </ToolTipLabel>
                     </CheckboxWithLabel>
