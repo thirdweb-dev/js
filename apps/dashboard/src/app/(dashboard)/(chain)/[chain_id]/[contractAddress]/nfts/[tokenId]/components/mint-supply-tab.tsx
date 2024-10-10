@@ -3,8 +3,8 @@
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { mintAdditionalSupplyTo } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
@@ -15,6 +15,7 @@ interface MintSupplyTabProps {
   tokenId: string;
 }
 
+// Intended for Edition contracts (not Edition Drop)
 const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
   const trackEvent = useTrack();
   const {
@@ -27,75 +28,83 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
   });
 
   const address = useActiveAccount()?.address;
-  const { mutate, isPending } = useSendAndConfirmTransaction();
-  const { onSuccess, onError } = useTxNotifications(
-    "Mint successful",
-    "Error minting additional supply",
-    contract,
-  );
+  const { mutateAsync, isPending } = useSendAndConfirmTransaction();
 
   return (
-    <div className="flex w-full flex-col gap-2">
-      <form
-        onSubmit={handleSubmit((data) => {
-          if (address) {
+    <form
+      className="flex w-full flex-col gap-2"
+      onSubmit={handleSubmit((data) => {
+        if (!address) {
+          return toast.error("No wallet connected.");
+        }
+        trackEvent({
+          category: "nft",
+          action: "mint-supply",
+          label: "attempt",
+        });
+        const transaction = mintAdditionalSupplyTo({
+          contract,
+          to: address,
+          tokenId: BigInt(tokenId),
+          supply: BigInt(data.amount),
+        });
+        const promise = mutateAsync(transaction, {
+          onSuccess: () => {
             trackEvent({
               category: "nft",
               action: "mint-supply",
-              label: "attempt",
+              label: "success",
             });
-            const transaction = mintAdditionalSupplyTo({
-              contract,
-              to: address,
-              tokenId: BigInt(tokenId),
-              supply: BigInt(data.amount),
+            reset();
+          },
+          onError: (error) => {
+            trackEvent({
+              category: "nft",
+              action: "mint-supply",
+              label: "error",
+              error,
             });
-            mutate(transaction, {
-              onSuccess: () => {
-                trackEvent({
-                  category: "nft",
-                  action: "mint-supply",
-                  label: "success",
-                });
-                onSuccess();
-                reset();
-              },
-              onError: (error) => {
-                trackEvent({
-                  category: "nft",
-                  action: "mint-supply",
-                  label: "error",
-                  error,
-                });
-                onError(error);
-              },
-            });
-          }
-        })}
-      >
-        <div className="flex flex-col gap-3">
-          <div className="flex w-full flex-col gap-6 md:flex-row">
-            <FormControl isRequired isInvalid={!!errors.to}>
-              <FormLabel>Amount</FormLabel>
-              <Input placeholder="1" {...register("amount")} />
-              <FormHelperText>How many would you like to mint?</FormHelperText>
-              <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
-            </FormControl>
-          </div>
-
-          <TransactionButton
-            txChainID={contract.chain.id}
-            transactionCount={1}
-            isLoading={isPending}
-            type="submit"
-            colorScheme="primary"
-            alignSelf="flex-end"
-          >
-            Mint
-          </TransactionButton>
+            console.error(error);
+          },
+        });
+        toast.promise(promise, {
+          loading: "Minting additional supply",
+          success: "NFT(s) minted successfully",
+          error: "Failed to mint NFT(s)",
+        });
+      })}
+    >
+      <div className="flex flex-col gap-3">
+        <div className="flex w-full flex-col gap-6 md:flex-row">
+          <FormControl isRequired isInvalid={!!errors.to}>
+            <FormLabel>Amount</FormLabel>
+            <Input placeholder="1" {...register("amount")} min={1} />
+            <FormHelperText>How many would you like to mint?</FormHelperText>
+            <FormLabel className="mt-3">Recipient</FormLabel>
+            <Input
+              placeholder="0x..."
+              defaultValue={address || ""}
+              {...register("to")}
+            />
+            <FormHelperText>
+              Address to receive the NFT(s) - Defaults to your own wallet
+            </FormHelperText>
+            <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
+          </FormControl>
         </div>
-      </form>
-    </div>
+
+        <TransactionButton
+          txChainID={contract.chain.id}
+          transactionCount={1}
+          isLoading={isPending}
+          type="submit"
+          colorScheme="primary"
+          alignSelf="flex-end"
+        >
+          Mint
+        </TransactionButton>
+      </div>
+    </form>
   );
 };
 
