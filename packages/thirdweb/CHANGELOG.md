@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.61.5
+
+### Patch Changes
+
+- [#4979](https://github.com/thirdweb-dev/js/pull/4979) [`ccd4cd6`](https://github.com/thirdweb-dev/js/commit/ccd4cd6f59423d417757e86bf04a5a07b061e2f9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Overestimate zksync gas limit to account for paymaster extra gas
+
+- [#4974](https://github.com/thirdweb-dev/js/pull/4974) [`6a4b776`](https://github.com/thirdweb-dev/js/commit/6a4b776eccc16203795786d44c4b80c011c2af37) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - fix: allow account linking on thirdweb dashboard
+
+- [#4977](https://github.com/thirdweb-dev/js/pull/4977) [`7c10343`](https://github.com/thirdweb-dev/js/commit/7c103431c4e4788277086db1f21e32833b6dfd2b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add soneiumMinato chain definition
+
 ## 5.61.4
 
 ### Patch Changes
