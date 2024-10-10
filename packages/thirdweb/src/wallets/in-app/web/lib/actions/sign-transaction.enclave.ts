@@ -17,9 +17,12 @@ export async function signTransaction({
   payload: Record<string, Hex | number | undefined>;
   storage: ClientScopedStorage;
 }) {
-  console.log("payload", payload);
   const clientFetch = getClientFetch(client, ecosystem);
   const authToken = await storage.getAuthCookie();
+
+  if (!authToken) {
+    throw new Error("No auth token found when signing transaction");
+  }
 
   const response = await clientFetch(
     `${getThirdwebBaseUrl("inAppWallet")}/api/v1/enclave-wallet/sign-transaction`,
