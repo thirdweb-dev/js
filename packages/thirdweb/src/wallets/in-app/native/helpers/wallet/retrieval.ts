@@ -11,9 +11,10 @@ import type { SetUpWalletRpcReturnType } from "../../../core/authentication/type
 import { getUserShares } from "../api/fetchers.js";
 import {
   DEVICE_SHARE_MISSING_MESSAGE,
+  INVALID_DEVICE_SHARE_MESSAGE,
   ROUTE_GET_USER_SHARES,
 } from "../constants.js";
-import { getDeviceShare } from "../storage/local.js";
+import { getDeviceShare, removeDeviceShare } from "../storage/local.js";
 import { storeShares } from "./creation.js";
 import { decryptShareWeb } from "./encryption.js";
 
@@ -47,7 +48,7 @@ async function getWalletPrivateKeyFromShares(shares: string[]) {
   }
   const prefixPrivateKey = hexToString(privateKeyHex as Hex);
   if (!prefixPrivateKey.startsWith("thirdweb_")) {
-    throw new Error("Invalid private key reconstructed from shares");
+    throw new Error(INVALID_DEVICE_SHARE_MESSAGE);
   }
   const privateKey = prefixPrivateKey.replace("thirdweb_", "");
   return privateKey;
@@ -58,9 +59,24 @@ async function getAccountFromShares(args: {
   shares: string[];
 }): Promise<Account> {
   const { client, shares } = args;
+  const privateKey = await (async () => {
+    try {
+      return await getWalletPrivateKeyFromShares(shares);
+    } catch (e) {
+      // If the private key reconstruction fails, try to reset the device share and prompt the user to try again
+      // This can happen if a user's account has been migrated or otherwise modified in the backend to use a new wallet. In that case, we need to reset their device state to get a new share
+      if (e instanceof Error && e.message === INVALID_DEVICE_SHARE_MESSAGE) {
+        await removeDeviceShare({ clientId: client.clientId });
+        throw new Error("Invalid device state, please try again.");
+      }
+      // Otherwise this is a legitimate error, throw it
+      throw e;
+    }
+  })();
+
   return privateKeyToAccount({
     client,
-    privateKey: await getWalletPrivateKeyFromShares(shares),
+    privateKey,
   });
 }
 

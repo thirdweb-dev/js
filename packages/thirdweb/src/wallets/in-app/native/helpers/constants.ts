@@ -6,6 +6,8 @@ export const AUTH_SHARE_INDEX = AUTH_SHARE_ID - 1;
 const DEVICE_SHARE_ID = 1;
 export const DEVICE_SHARE_INDEX = DEVICE_SHARE_ID - 1;
 export const DEVICE_SHARE_MISSING_MESSAGE = "Missing device share.";
+export const INVALID_DEVICE_SHARE_MESSAGE =
+  "Invalid private key reconstructed from shares";
 
 const RECOVERY_SHARE_ID = 2;
 export const RECOVERY_SHARE_INDEX = RECOVERY_SHARE_ID - 1;
