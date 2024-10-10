@@ -87,7 +87,7 @@ export const sidebar: SideBar = {
     },
     {
       name: "API Reference",
-      href: "https://redocly.github.io/redoc/?url=https://demo.web3api.thirdweb.com/json",
+      href: "https://thirdweb-engine.apidocumentation.com/",
     },
     {
       name: "Typescript SDK",
