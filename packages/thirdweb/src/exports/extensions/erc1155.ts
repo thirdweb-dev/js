@@ -83,6 +83,10 @@ export {
   isMintAdditionalSupplyToSupported,
 } from "../../extensions/erc1155/write/mintAdditionalSupplyTo.js";
 export {
+  batchMintAdditionalSupplyTo,
+  type BatchMintAdditionalSupplyToParams,
+} from "../../extensions/erc1155/write/batchMintAdditionalSupplyTo.js";
+export {
   setTokenURI,
   type SetTokenURIParams,
 } from "../../extensions/erc1155/__generated__/INFTMetadata/write/setTokenURI.js";
