@@ -42,7 +42,7 @@ async function fetchBuySupportedDestinations(
     async () => {
       const fetchWithHeaders = getClientFetch(client);
       const res = await fetchWithHeaders(
-        `${getPaySupportedDestinations()}?isTestMode=${isTestMode}`,
+        `${getPaySupportedDestinations()}${isTestMode ? "?isTestMode=true" : ""}`,
       );
       const data = (await res.json()) as Response;
       return data.result.map((item) => ({

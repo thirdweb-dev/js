@@ -1,0 +1,79 @@
+# Troubleshooting
+
+## Expo Go
+
+Due to required native dependencies, you cannot use Expo Go for running your app. You must use a development build.
+
+You can create ios/android development builds using the following command:
+
+```shell
+npx expo prebuild
+```
+
+You can then run the development build using the following command:
+
+```shell
+npx expo:run ios
+```
+
+```shell
+npx expo:run android
+```
+
+## OpenSSL iOS build error
+
+If you see a build error that mentions OpenSSL, you may need to update `app.json` to pin a version of OpenSSL that is compatible with your Xcode version.
+
+Here's how to pin the OpenSSL version in `app.json`:
+
+```json
+{
+  "expo": {
+    "plugins": [
+      "expo-build-properties",
+      {
+        "ios": {
+          "extraPods": [
+            {
+              "name": "OpenSSL-Universal",
+              "configurations": ["Release", "Debug"],
+              "modular_headers": true,
+              "version": "<OPENSSL_VERSION>"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+Replace `<OPENSSL_VERSION>` with the correct version of OpenSSL for your Xcode version:
+
+- Xcode 16: `3.3.2000`
+- Xcode 15: `3.1.5004`
+
+Make sure you have `expo-build-properties` added to your `package.json` dependencies.
+
+## Android minSdkVersion error
+
+If you see an Android error mentioning `minSdkVersion`, you may need to update your `app.json` to set the `minSdkVersion` to a higher version.
+
+Here's how to update the `minSdkVersion` in `app.json`:
+
+```json
+{
+  "expo": {
+    "plugins": [
+      "expo-build-properties",
+      {
+        "android": {
+            "minSdkVersion": 26
+        }
+      }
+    ]
+  }
+}
+```
+
+Make sure you have `expo-build-properties` added to your `package.json` dependencies.
