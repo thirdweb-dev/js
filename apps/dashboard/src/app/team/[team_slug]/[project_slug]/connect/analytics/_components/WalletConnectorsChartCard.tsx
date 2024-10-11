@@ -36,6 +36,8 @@ export function WalletConnectorsChartCard(props: {
   walletStats: WalletStats[];
   isPending: boolean;
 }) {
+  // show top 10 wallets as distinct, and combine the rest as "Others"
+  const topWalletsToShow = 10;
   const { walletStats } = props;
   const [chartToShow, setChartToShow] = useState<ChartToShow>(
     "uniqueWalletsConnected",
@@ -48,40 +50,59 @@ export function WalletConnectorsChartCard(props: {
   const { chartConfig, chartData } = useMemo(() => {
     const _chartConfig: ChartConfig = {};
     const _chartDataMap: Map<string, ChartData> = new Map();
-
-    for (const data of walletStats) {
-      const chartData = _chartDataMap.get(data.date);
-      const dataKey = data.walletType;
+    const walletTypeToValueMap: Map<string, number> = new Map();
+    // for each stat, add it in _chartDataMap
+    for (const stat of walletStats) {
+      const chartData = _chartDataMap.get(stat.date);
+      const { walletType } = stat;
 
       // if no data for current day - create new entry
       if (!chartData) {
-        _chartDataMap.set(data.date, {
-          time: format(new Date(data.date), "MMM dd"),
-          [data.walletType]: data[chartToShow],
+        _chartDataMap.set(stat.date, {
+          time: format(new Date(stat.date), "MMM dd"),
+          [walletType]: stat[chartToShow],
         } as ChartData);
       } else {
-        if (dataKey in chartData) {
-          chartData[dataKey] += data[chartToShow];
-        } else {
-          chartData[dataKey] = data[chartToShow];
+        chartData[walletType] =
+          (chartData[walletType] || 0) + stat[chartToShow];
+      }
+
+      walletTypeToValueMap.set(
+        walletType,
+        stat[chartToShow] + (walletTypeToValueMap.get(walletType) || 0),
+      );
+    }
+
+    const walletTypesSorted = Array.from(walletTypeToValueMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map((w) => w[0]);
+
+    const walletTypesToShow = walletTypesSorted.slice(0, topWalletsToShow);
+    const walletTypesToTagAsOthers = walletTypesSorted.slice(topWalletsToShow);
+
+    // replace walletTypesToTagAsOthers walletType with "other"
+    for (const data of _chartDataMap.values()) {
+      for (const walletType in data) {
+        if (walletTypesToTagAsOthers.includes(walletType)) {
+          data.others = (data.others || 0) + (data[walletType] || 0);
+          delete data[walletType];
         }
       }
     }
 
-    // create chart config for each wallet type and assign a unique color, start from 0hue to 360hue
-    const uniqueWalletTypes = Array.from(
-      new Set(walletStats.map((data) => data.walletType)),
-    );
-    const hueIncrement = 360 / uniqueWalletTypes.length;
-
-    for (let i = 0; i < uniqueWalletTypes.length; i++) {
-      const walletType = uniqueWalletTypes[i];
-
+    walletTypesToShow.forEach((walletType, i) => {
       _chartConfig[walletType] = {
-        label: uniqueWalletTypes[i],
-        color: `hsl(${i + hueIncrement * i}deg, var(--chart-saturation), var(--chart-lightness))`,
+        label: walletTypesToShow[i],
+        color: `hsl(var(--chart-${(i % 10) + 1}))`,
       };
-    }
+    });
+
+    // Add Other
+    walletTypesToShow.push("others");
+    _chartConfig.others = {
+      label: "Others",
+      color: "hsl(var(--muted-foreground))",
+    };
 
     return {
       chartData: Array.from(_chartDataMap.values()),

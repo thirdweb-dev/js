@@ -30,7 +30,7 @@ export const Mobile: Story = {
 
 function Component() {
   return (
-    <div className="container flex flex-col gap-10 py-10">
+    <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
       <BadgeContainer label="30 days">
         <WalletDistributionChartCard
           walletStats={createWalletStatsStub(30)}

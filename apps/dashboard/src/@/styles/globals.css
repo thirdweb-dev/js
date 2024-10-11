@@ -40,8 +40,6 @@
 
     /* Others */
     --radius: 0.5rem;
-    --chart-lightness: 50%;
-    --chart-saturation: 50%;
   }
 
   .dark,
@@ -78,9 +76,6 @@
     --border: 0 0% 15%;
     --ring: 0 0% 30%;
     --input: 0 0% 15%;
-
-    --chart-lightness: 50%;
-    --chart-saturation: 50%;
   }
 }
 
