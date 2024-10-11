@@ -1,6 +1,12 @@
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { Wallet } from "../../interfaces/wallet.js";
+import { handleSendRawTransactionRequest } from "./request-handlers/send-raw-transaction.js";
+import { handleSendTransactionRequest } from "./request-handlers/send-transaction.js";
+import { handleSignTransactionRequest } from "./request-handlers/sign-transaction.js";
+import { handleSignTypedDataRequest } from "./request-handlers/sign-typed-data.js";
+// Due to some edge cases, we can't import these handlers dynamically
+import { handleSignRequest } from "./request-handlers/sign.js";
 import type {
   WalletConnectAddEthereumChainRequestParams,
   WalletConnectClient,
@@ -48,15 +54,13 @@ export async function fulfillRequest(options: {
   try {
     switch (request.method) {
       case "personal_sign": {
+        console.log("personal_sign", request.params, handlers?.personal_sign);
         if (handlers?.personal_sign) {
           result = await handlers.personal_sign({
             account,
             params: request.params as WalletConnectSignRequestPrams,
           });
         } else {
-          const { handleSignRequest } = await import(
-            "./request-handlers/sign.js"
-          );
           result = await handleSignRequest({
             account,
             params: request.params as WalletConnectSignRequestPrams,
@@ -71,9 +75,6 @@ export async function fulfillRequest(options: {
             params: request.params as WalletConnectSignRequestPrams,
           });
         } else {
-          const { handleSignRequest } = await import(
-            "./request-handlers/sign.js"
-          );
           result = await handleSignRequest({
             account,
             params: request.params as WalletConnectSignRequestPrams,
@@ -88,9 +89,6 @@ export async function fulfillRequest(options: {
             params: request.params as WalletConnectSignTypedDataRequestParams,
           });
         } else {
-          const { handleSignTypedDataRequest } = await import(
-            "./request-handlers/sign-typed-data.js"
-          );
           result = await handleSignTypedDataRequest({
             account,
             params: request.params as WalletConnectSignTypedDataRequestParams,
@@ -105,9 +103,6 @@ export async function fulfillRequest(options: {
             params: request.params as WalletConnectSignTypedDataRequestParams,
           });
         } else {
-          const { handleSignTypedDataRequest } = await import(
-            "./request-handlers/sign-typed-data.js"
-          );
           result = await handleSignTypedDataRequest({
             account,
             params: request.params as WalletConnectSignTypedDataRequestParams,
@@ -122,9 +117,6 @@ export async function fulfillRequest(options: {
             params: request.params as WalletConnectTransactionRequestParams,
           });
         } else {
-          const { handleSignTransactionRequest } = await import(
-            "./request-handlers/sign-transaction.js"
-          );
           result = await handleSignTransactionRequest({
             account,
             params: request.params as WalletConnectTransactionRequestParams,
@@ -141,10 +133,6 @@ export async function fulfillRequest(options: {
             params: request.params as WalletConnectTransactionRequestParams,
           });
         } else {
-          const { handleSendTransactionRequest } = await import(
-            "./request-handlers/send-transaction.js"
-          );
-
           result = await handleSendTransactionRequest({
             account,
             chainId,
@@ -163,10 +151,6 @@ export async function fulfillRequest(options: {
             params: request.params as WalletConnectRawTransactionRequestParams,
           });
         } else {
-          const { handleSendRawTransactionRequest } = await import(
-            "./request-handlers/send-raw-transaction.js"
-          );
-
           result = await handleSendRawTransactionRequest({
             account,
             chainId,

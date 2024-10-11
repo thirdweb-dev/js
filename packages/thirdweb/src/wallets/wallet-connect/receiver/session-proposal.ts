@@ -107,6 +107,7 @@ export async function acceptSessionProposal({
       ...(sessionProposal.params.optionalNamespaces?.eip155?.events ?? []),
     ],
   };
+  console.log("namespaces", namespaces);
   const approval = await walletConnectClient.approve({
     id: sessionProposal.id,
     namespaces: {
@@ -118,7 +119,10 @@ export async function acceptSessionProposal({
     },
   });
 
+  console.log("approval", approval);
+
   const session = await approval.acknowledged();
+  console.log("session acknowledged", session);
   return {
     topic: session.topic,
     origin: sessionProposal.verifyContext?.verified?.origin || "Unknown origin",

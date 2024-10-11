@@ -1,11 +1,9 @@
 import { ChainCombobox } from "@/components/ChainCombobox";
-import { getCurrentUser } from "@/lib/auth";
 import { getChains } from "@/lib/chains";
 import { client } from "@/lib/client";
 import { getEcosystemInfo } from "@/lib/ecosystems";
 import { SIMPLEHASH_NFT_SUPPORTED_CHAIN_IDS } from "@/util/simplehash";
 import type { Metadata, ResolvingMetadata } from "next";
-import { redirect } from "next/navigation";
 import { resolveName } from "thirdweb/extensions/ens";
 import { shortenAddress } from "thirdweb/utils";
 
@@ -34,22 +32,16 @@ export default async function Layout({
   children: React.ReactNode;
   params: { ecosystem: string; address: string };
 }) {
-  const userAddressPromise = getCurrentUser();
   const ensPromise = resolveName({
     client,
     address: params.address,
   });
   const thirdwebChainsPromise = getChains();
 
-  const [userAddress, ens, thirdwebChains] = await Promise.all([
-    userAddressPromise,
+  const [ens, thirdwebChains] = await Promise.all([
     ensPromise,
     thirdwebChainsPromise,
   ]);
-
-  if (userAddress !== params.address) {
-    redirect(`/wallet/${userAddress}`);
-  }
 
   const simpleHashChains = thirdwebChains.filter((chain) =>
     SIMPLEHASH_NFT_SUPPORTED_CHAIN_IDS.includes(chain.chainId),
