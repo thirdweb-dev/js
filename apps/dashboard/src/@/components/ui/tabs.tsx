@@ -159,12 +159,6 @@ function useUnderline<El extends HTMLElement>() {
         setTimeout(() => {
           lineEl.style.transition = "transform 0.3s, width 0.3s";
         }, 0);
-
-        activeTabEl.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "center",
-        });
       } else if (lineRef.current) {
         lineRef.current.style.width = "0px";
       }
