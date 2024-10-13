@@ -5,6 +5,7 @@ import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
 import { normalizeFunctionParams } from "../../utils/abi/normalizeFunctionParams.js";
 import { computeDeploymentAddress } from "../../utils/any-evm/compute-deployment-address.js";
 import { computeDeploymentInfoFromBytecode } from "../../utils/any-evm/compute-published-contract-deploy-info.js";
+import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
 import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
@@ -13,6 +14,7 @@ import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChain } from "../../utils/types.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { getContract } from "../contract.js";
+import { zkDeployContract } from "./zksync/zkDeployContract.js";
 
 /**
  * @extension DEPLOY
@@ -121,6 +123,18 @@ export async function deployContract(
     salt?: string;
   },
 ) {
+  if (await isZkSyncChain(options.chain)) {
+    return zkDeployContract({
+      account: options.account,
+      client: options.client,
+      chain: options.chain,
+      bytecode: options.bytecode,
+      abi: options.abi,
+      params: options.constructorParams,
+      salt: options.salt,
+    });
+  }
+
   if (options.salt !== undefined) {
     // Deploy with CREATE2 if salt is provided
     const info = await computeDeploymentInfoFromBytecode(options);

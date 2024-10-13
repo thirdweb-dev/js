@@ -1,6 +1,6 @@
 [
-  "function encodeBytesOnInstall() pure returns (bytes)",
+  "function encodeBytesOnInstall(uint256 startTokenId) pure returns (bytes)",
+  "function getModuleConfig() pure returns ((bool registerInstallationCallback, bytes4[] requiredInterfaces, bytes4[] supportedInterfaces, (bytes4 selector)[] callbackFunctions, (bytes4 selector, uint256 permissionBits)[] fallbackFunctions) config)",
   "function getNextTokenId() view returns (uint256)",
-  "error SequentialTokenIdInvalidTokenId()",
-  "error UpdateTokenIdCallbackERC1155NotImplemented()"
+  "function updateTokenIdERC1155(uint256 _tokenId) payable returns (uint256)"
 ]
