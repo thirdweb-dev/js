@@ -15,4 +15,15 @@ describe("Unstoppable Domain: resolve address", () => {
       ).toLowerCase(),
     ).toBe("0x12345674b599ce99958242b3D3741e7b01841DF3".toLowerCase());
   });
+
+  it("should throw an error with a non-existent domain name", async () => {
+    await expect(() =>
+      resolveAddress({
+        name: "thirdwebsdk.thissuredoesnotexist",
+        client: TEST_CLIENT,
+      }),
+    ).rejects.toThrowError(
+      "Could not resolve a valid tokenId from the domain: thirdwebsdk.thissuredoesnotexist. Make sure it exists.",
+    );
+  });
 });
