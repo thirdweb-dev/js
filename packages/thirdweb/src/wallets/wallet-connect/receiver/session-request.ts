@@ -54,7 +54,6 @@ export async function fulfillRequest(options: {
   try {
     switch (request.method) {
       case "personal_sign": {
-        console.log("personal_sign", request.params, handlers?.personal_sign);
         if (handlers?.personal_sign) {
           result = await handlers.personal_sign({
             account,

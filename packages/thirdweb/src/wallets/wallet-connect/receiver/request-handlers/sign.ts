@@ -12,7 +12,6 @@ export async function handleSignRequest(options: {
 }): Promise<Hex> {
   const { account, params } = options;
 
-  console.log("handleSignRequest", account, params);
   validateAccountAddress(account, params[1]);
   return account.signMessage({ message: { raw: params[0] as Hex } });
 }
