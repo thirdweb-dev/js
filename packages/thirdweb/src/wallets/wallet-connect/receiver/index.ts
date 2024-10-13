@@ -284,7 +284,7 @@ export async function createWalletConnectClient(
  *   client: client,
  * });
  *
- * const session = await createWalletConnectSession({
+ * const session = createWalletConnectSession({
  *   walletConnectClient: client,
  *   uri: "wc:...",
  * });
