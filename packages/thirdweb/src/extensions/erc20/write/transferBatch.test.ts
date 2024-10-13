@@ -19,7 +19,7 @@ const chain = ANVIL_CHAIN;
 const client = TEST_CLIENT;
 const account = TEST_ACCOUNT_A;
 
-describe("erc20: transferBatch", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("erc20: transferBatch", () => {
   it("should transfer tokens to multiple recipients", async () => {
     const address = await deployERC20Contract({
       type: "TokenERC20",
