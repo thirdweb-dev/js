@@ -32,13 +32,11 @@ export async function getUserStatus({
   );
 
   if (!response.ok) {
-    console.log("response", response.status);
     if (response.status === 401) {
       // 401 response indicates there is no user logged in, so we return undefined
       return undefined;
     }
     const result = await response.json();
-    console.log("result", result);
     throw new Error(`Failed to get user status: ${result.error}`);
   }
 
