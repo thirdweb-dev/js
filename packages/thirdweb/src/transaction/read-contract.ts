@@ -72,31 +72,16 @@ export type ReadContractOptions<
 /**
  * ### Reads state from a deployed smart contract.
  *
- * You can use raw read calls or read [extensions](https://portal.thirdweb.com/typescript/v5/extensions/use) to read from a contract.
+ * Use this for raw read calls from a contract, but you can also use read [extensions](https://portal.thirdweb.com/typescript/v5/extensions/use) for predefined methods for common standards.
  *
  * @param options - The transaction options.
  * @returns A promise that resolves with the result of the read call.
  * @transaction
  * @example
  *
- * ### Using a contract read extension
+ * ### Raw contract call (recommended)
  *
- * ```ts
- * import { getContract } from "thirdweb";
- * import { sepolia } from "thirdweb/chains";
- * import { useReadContract } from "thirdweb/react";
- * import { getOwnedNFTs } form "thirdweb/extensions/erc721";
- *
- * const contract = getContract({
- *   client,
- *   address: "0x...",
- *   chain: sepolia,
- * });
- *
- * const { data, isLoading } = useReadContract(getOwnedNFTs, { contract, owner: address });
- * ```
- *
- * ### Using a raw contract call
+ * You can read from any contract by using the solidity signature of the function you want to call.
  *
  * ```ts
  * import { getContract } from "thirdweb";
@@ -116,7 +101,14 @@ export type ReadContractOptions<
  * });
  * ```
  *
- * ### Using `resolveMethod`
+ * Note that this is type safe, the params types will be enforced based on the signature.
+ *
+ * ### Raw contract call with `resolveMethod`
+ *
+ * If you don't have the solidity signature of the function you want to call, you can use the `resolveMethod` helper to resolve the method from any deployed contract.
+ *
+ * Note that this is not type safe, and will also have a 1 time overhead of resolving the contract ABI.
+ *
  * ```ts
  * import { getContract, resolveMethod } from "thirdweb";
  * import { sepolia } from "thirdweb/chains";

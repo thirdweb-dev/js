@@ -40,7 +40,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularTokenERC1155", () => {
           primarySaleRecipient: TEST_ACCOUNT_A.address,
         }),
         BatchMetadataERC1155.module(),
-        SequentialTokenIdERC1155.module(),
+        SequentialTokenIdERC1155.module({
+          startTokenId: 0n,
+        }),
       ],
     });
     contract = getContract({
