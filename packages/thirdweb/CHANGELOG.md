@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.61.6
+
+### Patch Changes
+
+- [#4962](https://github.com/thirdweb-dev/js/pull/4962) [`9685a85`](https://github.com/thirdweb-dev/js/commit/9685a85274ac3ac1f999e8f552eff78fe2027b45) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose UnstoppableDomains extensions: namehash and reverseNameOf
+
+- [#5004](https://github.com/thirdweb-dev/js/pull/5004) [`df0388d`](https://github.com/thirdweb-dev/js/commit/df0388d83b9c413b593f64ed5fe6c3c707a634d6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose auth options on `useConnectModal`
+
+- [#4961](https://github.com/thirdweb-dev/js/pull/4961) [`98f358d`](https://github.com/thirdweb-dev/js/commit/98f358d63a5c33a72cfe52bcbd910ea39fb2f33e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Throw an error if an expected auth token is missing
+
+- [#5002](https://github.com/thirdweb-dev/js/pull/5002) [`cd2c0f3`](https://github.com/thirdweb-dev/js/commit/cd2c0f3868bc9d0509130cc7664e6825759e9e78) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle zk sync direct deploys in `deployContract`
+
 ## 5.61.5
 
 ### Patch Changes
