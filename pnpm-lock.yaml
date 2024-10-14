@@ -1078,8 +1078,8 @@ importers:
         specifier: 8.3.4
         version: 8.3.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       typedoc:
-        specifier: 0.26.7
-        version: 0.26.7(typescript@5.6.2)
+        specifier: 0.26.9
+        version: 0.26.9(typescript@5.6.2)
       typescript:
         specifier: 5.6.2
         version: 5.6.2
@@ -14192,8 +14192,8 @@ packages:
     peerDependencies:
       typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x
 
-  typedoc@0.26.7:
-    resolution: {integrity: sha512-gUeI/Wk99vjXXMi8kanwzyhmeFEGv1LTdTQsiyIsmSYsBebvFxhbcyAx7Zjo4cMbpLGxM4Uz3jVIjksu/I2v6Q==}
+  typedoc@0.26.9:
+    resolution: {integrity: sha512-Rc7QpWL7EtmrT8yxV0GmhOR6xHgFnnhphbD9Suti3fz3um7ZOrou6q/g9d6+zC5PssTLZmjaW4Upmzv8T1rCcQ==}
     engines: {node: '>= 18'}
     hasBin: true
     peerDependencies:
@@ -32450,7 +32450,7 @@ snapshots:
       shiki: 0.14.7
       typescript: 5.6.2
 
-  typedoc@0.26.7(typescript@5.6.2):
+  typedoc@0.26.9(typescript@5.6.2):
     dependencies:
       lunr: 2.3.9
       markdown-it: 14.1.0
