@@ -104,7 +104,7 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@chakra-ui/cli": "^2.4.1",
+    "@chakra-ui/cli": "^2.5.5",
     "@chromatic-com/storybook": "2.0.2",
     "@next/bundle-analyzer": "14.2.13",
     "@next/eslint-plugin-next": "14.2.13",
