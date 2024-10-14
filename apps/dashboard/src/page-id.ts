@@ -90,8 +90,6 @@ export enum PageId {
   // ---------------------------------------------------------------------------
   //  general product pages
   // ---------------------------------------------------------------------------
-  // thirdweb.com/dashboard
-  Dashboard = "dashboard",
 
   // thirdweb.com/dashboard/infrastructure/storage
   DashboardSettingsStorage = "dashboard-storage",
