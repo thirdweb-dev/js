@@ -37,6 +37,8 @@ export type ActiveCouponResponse = {
 function ApplyCouponCard(props: {
   teamId: string | undefined;
   onCouponApplied: (data: ActiveCouponResponse) => void;
+  isPaymentSetup: boolean;
+  onAddPayment: () => void;
 }) {
   const searchParams = useSearchParams();
   const couponCode = searchParams?.get("coupon");
@@ -45,6 +47,8 @@ function ApplyCouponCard(props: {
       onCouponApplied={props.onCouponApplied}
       prefillPromoCode={couponCode || undefined}
       scrollIntoView={!!couponCode}
+      isPaymentSetup={props.isPaymentSetup}
+      onAddPayment={props.onAddPayment}
       submit={async (promoCode: string) => {
         const res = await fetch("/api/server-proxy/api/v1/coupons/redeem", {
           method: "POST",
@@ -86,6 +90,8 @@ export function ApplyCouponCardUI(props: {
   onCouponApplied: ((data: ActiveCouponResponse) => void) | undefined;
   prefillPromoCode?: string;
   scrollIntoView?: boolean;
+  isPaymentSetup: boolean;
+  onAddPayment: () => void;
 }) {
   const containerRef = useRef<HTMLFormElement | null>(null);
   const form = useForm<z.infer<typeof couponFormSchema>>({
@@ -113,6 +119,11 @@ export function ApplyCouponCardUI(props: {
   });
 
   async function onSubmit(values: z.infer<typeof couponFormSchema>) {
+    if (!props.isPaymentSetup) {
+      props.onAddPayment();
+      return;
+    }
+
     try {
       const res = await applyCoupon.mutateAsync(values.promoCode);
       switch (res.status) {
@@ -161,7 +172,11 @@ export function ApplyCouponCardUI(props: {
             description:
               "Enter your coupon code to apply discounts or free trials on thirdweb products",
           }}
-          bottomText=""
+          bottomText={
+            props.isPaymentSetup
+              ? ""
+              : "A valid payment method must be added to apply a coupon"
+          }
           saveButton={{
             variant: "default",
             disabled: false,
@@ -238,7 +253,11 @@ export function CouponDetailsCardUI(props: {
   );
 }
 
-export function CouponSection(props: { teamId: string | undefined }) {
+export function CouponSection(props: {
+  teamId: string | undefined;
+  isPaymentSetup: boolean;
+  onAddPayment: () => void;
+}) {
   const loggedInUser = useLoggedInUser();
   const [optimisticCouponData, setOptimisticCouponData] = useState<
     | {
@@ -325,6 +344,8 @@ export function CouponSection(props: { teamId: string | undefined }) {
             setOptimisticCouponData(undefined);
           });
         }}
+        isPaymentSetup={props.isPaymentSetup}
+        onAddPayment={props.onAddPayment}
       />
     </Suspense>
   );
