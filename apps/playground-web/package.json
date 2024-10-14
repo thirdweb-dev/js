@@ -39,7 +39,7 @@
     "shiki": "1.16.2",
     "tailwind-merge": "^2.5.2",
     "thirdweb": "workspace:*",
-    "use-debounce": "^10.0.1"
+    "use-debounce": "^10.0.4"
   },
   "devDependencies": {
     "@types/node": "20.14.9",
