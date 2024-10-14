@@ -360,7 +360,7 @@
     "sharp": "^0.33.5",
     "size-limit": "11.1.6",
     "storybook": "8.3.4",
-    "typedoc": "0.26.7",
+    "typedoc": "0.26.9",
     "typescript": "5.6.2",
     "vite": "5.4.8",
     "vitest": "2.1.1"
