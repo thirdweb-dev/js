@@ -64,14 +64,13 @@ export function ColorFormGroup(props: {
                 <div className="flex flex-col gap-2 pb-4">
                   {colorSection.colors.map((color) => {
                     return (
+                      // biome-ignore lint/a11y/noLabelWithoutControl: input is inside the label, so no need to add id
                       <label
                         className="flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors hover:bg-secondary"
                         key={color.colorId}
-                        htmlFor="color-input"
                       >
                         <div className="rounded-full border">
                           <ColorInput
-                            id="color-input"
                             className="size-10"
                             value={themeObj.colors[color.colorId]}
                             onChange={(value) => {
