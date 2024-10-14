@@ -1,165 +1,224 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
+import { Form, FormDescription } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
+  type EngineInstance,
   type SetWalletConfigInput,
   useEngineSetWalletConfig,
   useEngineWalletConfig,
+  useHasEngineFeature,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { Button, Card, FormLabel, Text } from "tw-components";
 
 interface KmsGcpConfigProps {
-  instanceUrl: string;
+  instance: EngineInstance;
 }
 
-export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instanceUrl }) => {
-  const { mutate: setGcpKmsConfig } = useEngineSetWalletConfig(instanceUrl);
-  const { data: gcpConfig } = useEngineWalletConfig(instanceUrl);
+export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instance }) => {
+  const { mutate: setGcpKmsConfig, isPending } = useEngineSetWalletConfig(
+    instance.url,
+  );
+  const { data: gcpConfig } = useEngineWalletConfig(instance.url);
+  const { isSupported: supportsMultipleWalletTypes } = useHasEngineFeature(
+    instance.url,
+    "HETEROGENEOUS_WALLET_TYPES",
+  );
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Configuration set successfully.",
     "Failed to set configuration.",
   );
 
-  const transformedQueryData: SetWalletConfigInput = {
+  const defaultValues: SetWalletConfigInput = {
     type: "gcp-kms" as const,
-    gcpApplicationProjectId:
-      gcpConfig?.type === "gcp-kms"
-        ? (gcpConfig?.gcpApplicationProjectId ?? "")
-        : "",
-    gcpKmsLocationId:
-      gcpConfig?.type === "gcp-kms" ? (gcpConfig?.gcpKmsLocationId ?? "") : "",
-    gcpKmsKeyRingId:
-      gcpConfig?.type === "gcp-kms" ? (gcpConfig?.gcpKmsKeyRingId ?? "") : "",
+    gcpApplicationProjectId: gcpConfig?.gcpApplicationProjectId ?? "",
+    gcpKmsLocationId: gcpConfig?.gcpKmsLocationId ?? "",
+    gcpKmsKeyRingId: gcpConfig?.gcpKmsKeyRingId ?? "",
     gcpApplicationCredentialEmail:
-      gcpConfig?.type === "gcp-kms"
-        ? (gcpConfig?.gcpApplicationCredentialEmail ?? "")
-        : "",
-    gcpApplicationCredentialPrivateKey:
-      gcpConfig?.type === "gcp-kms"
-        ? (gcpConfig?.gcpApplicationCredentialPrivateKey ?? "")
-        : "",
+      gcpConfig?.gcpApplicationCredentialEmail ?? "",
+    gcpApplicationCredentialPrivateKey: "",
   };
 
   const form = useForm<SetWalletConfigInput>({
-    defaultValues: transformedQueryData,
-    values: transformedQueryData,
+    defaultValues,
+    values: defaultValues,
     resetOptions: {
       keepDirty: true,
       keepDirtyValues: true,
     },
   });
 
-  return (
-    <Flex
-      as="form"
-      flexDir="column"
-      gap={4}
-      onSubmit={form.handleSubmit((data) => {
-        setGcpKmsConfig(data, {
-          onSuccess: () => {
-            onSuccess();
-            trackEvent({
-              category: "engine",
-              action: "set-wallet-config",
-              type: "gcp-kms",
-              label: "success",
-            });
-          },
-          onError: (error) => {
-            onError(error);
-            trackEvent({
-              category: "engine",
-              action: "set-wallet-config",
-              type: "gcp-kms",
-              label: "error",
-              error,
-            });
-          },
+  const onSubmit = (data: SetWalletConfigInput) => {
+    setGcpKmsConfig(data, {
+      onSuccess: () => {
+        onSuccess();
+        trackEvent({
+          category: "engine",
+          action: "set-wallet-config",
+          type: "gcp-kms",
+          label: "success",
         });
-      })}
-    >
-      <Card as={Flex} flexDir="column" gap={4}>
-        <Text>
-          Engine supports Google KMS for signing & sending transactions over any
-          EVM chain.
-        </Text>
-        <Flex flexDir={{ base: "column", md: "row" }} gap={4}>
-          <FormControl isRequired>
-            <FormLabel>Location ID</FormLabel>
+      },
+      onError: (error) => {
+        onError(error);
+        trackEvent({
+          category: "engine",
+          action: "set-wallet-config",
+          type: "gcp-kms",
+          label: "error",
+          error,
+        });
+      },
+    });
+  };
+
+  return (
+    <Form {...form}>
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <p className="text-muted-foreground">
+          GCP KMS wallets require credentials from your Google Cloud Platform
+          account with sufficient permissions to manage KMS keys. Wallets are
+          stored in KMS keys on your GCP account.
+        </p>
+        <p className="text-muted-foreground">
+          For help and more advanced use cases,{" "}
+          <TrackedLinkTW
+            target="_blank"
+            href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
+            label="learn-more"
+            category="engine"
+            className="text-link-foreground hover:text-foreground"
+          >
+            learn more about using Google Cloud KMS wallets
+          </TrackedLinkTW>
+          .
+        </p>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormFieldSetup
+            label="Location ID"
+            errorMessage={
+              form.getFieldState("gcpKmsLocationId", form.formState).error
+                ?.message
+            }
+            htmlFor="gcp-location-id"
+            isRequired
+            tooltip={null}
+          >
             <Input
-              placeholder="Your Google Location ID"
+              id="gcp-location-id"
+              placeholder="us-west2"
+              type="text"
+              {...form.register("gcpKmsLocationId")}
+            />
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            label="Key Ring ID"
+            errorMessage={
+              form.getFieldState("gcpKmsKeyRingId", form.formState).error
+                ?.message
+            }
+            htmlFor="gcp-key-ring-id"
+            isRequired
+            tooltip={null}
+          >
+            <Input
+              id="gcp-key-ring-id"
+              placeholder="my-key-ring"
               autoComplete="off"
               type="text"
-              {...form.register("gcpKmsLocationId", {
-                required: true,
-              })}
+              {...form.register("gcpKmsKeyRingId")}
             />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Key Ring ID</FormLabel>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            label="Project ID"
+            errorMessage={
+              form.getFieldState("gcpApplicationProjectId", form.formState)
+                .error?.message
+            }
+            htmlFor="gcp-project-id"
+            isRequired
+            tooltip={null}
+          >
             <Input
-              placeholder="Your Google Key Ring ID"
-              autoComplete="off"
+              id="gcp-project-id"
               type="text"
-              {...form.register("gcpKmsKeyRingId", {
-                required: true,
-              })}
+              placeholder="my-gcp-project-id-123"
+              autoComplete="off"
+              {...form.register("gcpApplicationProjectId")}
             />
-          </FormControl>
-        </Flex>
-        <Flex flexDir={{ base: "column", md: "row" }} gap={4}>
-          <FormControl isRequired>
-            <FormLabel>Project ID</FormLabel>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            label="Credential Email"
+            errorMessage={
+              form.getFieldState(
+                "gcpApplicationCredentialEmail",
+                form.formState,
+              ).error?.message
+            }
+            htmlFor="gcp-credential-email"
+            isRequired
+            tooltip={null}
+          >
             <Input
-              placeholder="Your Google App Project ID"
-              autoComplete="off"
+              id="gcp-credential-email"
               type="text"
-              {...form.register("gcpApplicationProjectId", { required: true })}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Credential Email</FormLabel>
-            <Input
-              placeholder="Your Google App Credential Email"
+              placeholder="service-account@my-gcp-project.iam.gserviceaccount.com"
               autoComplete="off"
-              type="text"
-              {...form.register("gcpApplicationCredentialEmail", {
-                required: true,
-              })}
+              {...form.register("gcpApplicationCredentialEmail")}
             />
-          </FormControl>
-        </Flex>
-        <FormControl isRequired>
-          <FormLabel>Private Key</FormLabel>
-          <Input
-            w={{ base: "full", md: "49%" }}
-            placeholder="Your Google App Private Key"
-            autoComplete="off"
-            type="text"
-            {...form.register("gcpApplicationCredentialPrivateKey", {
-              required: true,
-            })}
-          />
-        </FormControl>
-      </Card>
-      <Flex justifyContent="end" gap={4} alignItems="center">
-        {form.formState.isDirty && (
-          <Text color="red.500">
-            This will reset your other backend wallet configurations
-          </Text>
-        )}
-        <Button
-          isDisabled={!form.formState.isDirty}
-          w={{ base: "full", md: "inherit" }}
-          colorScheme="primary"
-          px={12}
-          type="submit"
+          </FormFieldSetup>
+        </div>
+
+        <FormFieldSetup
+          label="Private Key"
+          errorMessage={
+            form.getFieldState(
+              "gcpApplicationCredentialPrivateKey",
+              form.formState,
+            ).error?.message
+          }
+          htmlFor="gcp-private-key"
+          isRequired
+          tooltip={null}
         >
-          {form.formState.isSubmitting ? "Saving..." : "Save"}
-        </Button>
-      </Flex>
-    </Flex>
+          <Textarea
+            id="gcp-private-key"
+            placeholder={
+              "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
+            }
+            autoComplete="off"
+            {...form.register("gcpApplicationCredentialPrivateKey")}
+          />
+          <FormDescription className="pt-2">
+            This will not be shown again.
+          </FormDescription>
+        </FormFieldSetup>
+
+        <div className="flex items-center justify-end gap-4">
+          {!supportsMultipleWalletTypes && (
+            <p className="text-destructive-text text-sm">
+              This will clear other credentials.
+            </p>
+          )}
+          <Button type="submit" className="min-w-28 gap-2" disabled={isPending}>
+            {isPending && <Spinner className="size-4" />}
+            Save
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };

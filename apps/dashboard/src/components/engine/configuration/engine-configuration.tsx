@@ -15,7 +15,7 @@ export const EngineConfiguration: React.FC<EngineConfigurationProps> = ({
 }) => {
   return (
     <div className="flex flex-col gap-12">
-      <EngineWalletConfig instanceUrl={instance.url} />
+      <EngineWalletConfig instance={instance} />
       <EngineCorsConfig instanceUrl={instance.url} />
       <EngineIpAllowlistConfig instanceUrl={instance.url} />
       <EngineSystem instance={instance} />

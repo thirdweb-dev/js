@@ -2,7 +2,7 @@ import { InlineCode } from "@/components/ui/inline-code";
 import {
   useEngineIpAllowlistConfiguration,
   useEngineSetIpAllowlistConfiguration,
-  useEngineSystemHealth,
+  useHasEngineFeature,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, Textarea } from "@chakra-ui/react";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -30,8 +30,7 @@ export const EngineIpAllowlistConfig: React.FC<
     "IP Allowlist updated successfully.",
     "Failed to update IP Allowlist",
   );
-
-  const { data: engineHealthInfo } = useEngineSystemHealth(instanceUrl);
+  const { isSupported } = useHasEngineFeature(instanceUrl, "IP_ALLOWLIST");
 
   const form = useForm<IpForm>({
     values: { raw: existingIpAllowlist?.join("\n") ?? "" },
@@ -61,7 +60,7 @@ export const EngineIpAllowlistConfig: React.FC<
     }
   };
 
-  if (!engineHealthInfo?.features?.includes("IP_ALLOWLIST")) {
+  if (!isSupported) {
     return null;
   }
 

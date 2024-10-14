@@ -1,102 +1,81 @@
-import { useEngineWalletConfig } from "@3rdweb-sdk/react/hooks/useEngine";
-import { ButtonGroup, Flex, Icon } from "@chakra-ui/react";
+import { TabButtons } from "@/components/ui/tabs";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import {
+  type EngineInstance,
+  useEngineWalletConfig,
+} from "@3rdweb-sdk/react/hooks/useEngine";
+import { Flex } from "@chakra-ui/react";
+import {
+  EngineBackendWalletOptions,
+  type EngineBackendWalletType,
+} from "lib/engine";
+import { CircleAlertIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
-import { MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
-import { Button, Heading, Link, Text } from "tw-components";
+import {} from "react-icons/md";
+import { Heading } from "tw-components";
 import { KmsAwsConfig } from "./kms-aws-config";
 import { KmsGcpConfig } from "./kms-gcp-config";
-import { LocalConfig } from "./local-config.tsx";
+import { LocalConfig } from "./local-config";
 
 interface EngineWalletConfigProps {
-  instanceUrl: string;
+  instance: EngineInstance;
 }
 
 export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
-  instanceUrl,
+  instance,
 }) => {
-  const { data: localConfig } = useEngineWalletConfig(instanceUrl);
-  const [selected, setSelected] = useState<"aws-kms" | "gcp-kms" | "local">(
-    localConfig?.type || "local",
-  );
+  const { data: walletConfig } = useEngineWalletConfig(instance.url);
+
+  const tabContent: Record<EngineBackendWalletType, React.ReactNode> = {
+    local: <LocalConfig />,
+    "aws-kms": <KmsAwsConfig instance={instance} />,
+    "gcp-kms": <KmsGcpConfig instance={instance} />,
+  } as const;
+
+  const [activeTab, setActiveTab] = useState<EngineBackendWalletType>("local");
+
+  const isAwsKmsConfigured = !!walletConfig?.awsAccessKeyId;
+  const isGcpKmsConfigured = !!walletConfig?.gcpKmsKeyRingId;
 
   return (
     <Flex flexDir="column" gap={4}>
       <Flex flexDir="column" gap={2}>
         <Heading size="title.md">Backend Wallets</Heading>
-        <Text>
-          Select the type of backend wallets to use.{" "}
+        <p className="text-muted-foreground">
+          Create backend wallets on the{" "}
           <Link
-            href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
-            color="primary.500"
-            isExternal
+            href={`/dashboard/engine/${instance.id}`}
+            className="text-link-foreground hover:text-foreground"
           >
-            Learn more about backend wallets
-          </Link>
-          .
-        </Text>
+            Overview
+          </Link>{" "}
+          tab. To use other wallet types, configure them below.
+        </p>
       </Flex>
-      <Flex flexDir="column" gap={4}>
-        <ButtonGroup size="sm" variant="outline" spacing={2}>
-          <Button
-            type="button"
-            leftIcon={
-              <Icon
-                as={
-                  selected === "local"
-                    ? MdRadioButtonChecked
-                    : MdRadioButtonUnchecked
-                }
-                boxSize={6}
-              />
-            }
-            borderColor={selected === "local" ? "unset" : undefined}
-            colorScheme={selected === "local" ? "blue" : undefined}
-            py={6}
-            rounded="lg"
-            onClick={() => setSelected("local")}
-          >
-            Local Wallet
-          </Button>
-          <Button
-            type="button"
-            leftIcon={
-              selected === "aws-kms" ? (
-                <MdRadioButtonChecked />
-              ) : (
-                <MdRadioButtonUnchecked />
-              )
-            }
-            borderColor={selected === "aws-kms" ? "unset" : undefined}
-            colorScheme={selected === "aws-kms" ? "blue" : undefined}
-            py={6}
-            rounded="lg"
-            onClick={() => setSelected("aws-kms")}
-          >
-            AWS KMS
-          </Button>
-          <Button
-            type="button"
-            leftIcon={
-              selected === "gcp-kms" ? (
-                <MdRadioButtonChecked />
-              ) : (
-                <MdRadioButtonUnchecked />
-              )
-            }
-            borderColor={selected === "gcp-kms" ? "unset" : undefined}
-            colorScheme={selected === "gcp-kms" ? "blue" : undefined}
-            py={6}
-            rounded="lg"
-            onClick={() => setSelected("gcp-kms")}
-          >
-            Google KMS
-          </Button>
-        </ButtonGroup>
 
-        {selected === "local" && <LocalConfig instanceUrl={instanceUrl} />}
-        {selected === "aws-kms" && <KmsAwsConfig instanceUrl={instanceUrl} />}
-        {selected === "gcp-kms" && <KmsGcpConfig instanceUrl={instanceUrl} />}
-      </Flex>
+      <TabButtons
+        tabs={EngineBackendWalletOptions.map(({ key, name }) => ({
+          key,
+          name,
+          isActive: activeTab === key,
+          isEnabled: true,
+          onClick: () => setActiveTab(key),
+          icon:
+            (key === "aws-kms" && !isAwsKmsConfigured) ||
+            (key === "gcp-kms" && !isGcpKmsConfigured)
+              ? ({ className }) => (
+                  <ToolTipLabel label="Not configured">
+                    <CircleAlertIcon className={cn(className, "size-4")} />
+                  </ToolTipLabel>
+                )
+              : undefined,
+        }))}
+        tabClassName="font-medium !text-sm"
+      />
+
+      {tabContent[activeTab]}
     </Flex>
   );
 };
