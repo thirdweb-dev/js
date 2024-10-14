@@ -177,8 +177,8 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
           </Flex>
           {ens.data?.address && (
             <DeployedContracts
-              noHeader
-              contractListQuery={mainnetsContractList}
+              contractList={mainnetsContractList.data}
+              isPending={mainnetsContractList.isPending}
             />
           )}
         </Flex>

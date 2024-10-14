@@ -7,7 +7,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
     <ErrorProvider>
       <div className="flex min-h-screen flex-col bg-background">
         <DashboardHeader />
-        <main className="grow">{props.children}</main>
+        <div className="flex grow flex-col">{props.children}</div>
         <AppFooter />
       </div>
     </ErrorProvider>
