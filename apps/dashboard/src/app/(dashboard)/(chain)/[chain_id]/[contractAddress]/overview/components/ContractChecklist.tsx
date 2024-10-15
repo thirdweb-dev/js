@@ -2,6 +2,7 @@ import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { useContractFunctionSelectors } from "contract-ui/hooks/useContractFunctionSelectors";
+import Link from "next/link";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
@@ -10,7 +11,6 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { getAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
-import { Link, Text } from "tw-components";
 
 interface ContractChecklistProps {
   contract: ThirdwebContract;
@@ -177,13 +177,16 @@ function Inner({
       steps.push({
         title: "First NFT uploaded",
         children: (
-          <Text size="body.sm">
+          <p className="text-muted-foreground text-sm">
             Head to the{" "}
-            <Link href={nftHref} color="blue.500">
+            <Link
+              href={nftHref}
+              className="text-link-foreground hover:text-foreground"
+            >
               NFTs tab
             </Link>{" "}
             to upload your NFT metadata.
-          </Text>
+          </p>
         ),
         // can be either 721 or 1155
         completed: (nftsQuery.data?.length || 0) > 0,
@@ -194,13 +197,16 @@ function Inner({
       steps.push({
         title: "Set NFT Metadata",
         children: (
-          <Text size="label.sm">
+          <p className="text-muted-foreground text-sm">
             Head to the{" "}
-            <Link href={nftHref} color="blue.500">
+            <Link
+              href={nftHref}
+              className="text-link-foreground hover:text-foreground"
+            >
               NFTs tab
             </Link>{" "}
             to set your NFT metadata.
-          </Text>
+          </p>
         ),
         completed: !!sharedMetadataQuery?.data,
       });
@@ -210,14 +216,17 @@ function Inner({
       steps.push({
         title: "Set Claim Conditions",
         children: (
-          <Text size="label.sm">
+          <p className="text-muted-foreground text-sm">
             Head to the{" "}
-            <Link href={claimConditionsHref} color="blue.500">
+            <Link
+              href={claimConditionsHref}
+              className="text-link-foreground hover:text-foreground"
+            >
               Claim Conditions tab
             </Link>{" "}
             to set your claim conditions. Users will be able to claim your drop
             only if a claim phase is active.
-          </Text>
+          </p>
         ),
         completed:
           (claimConditions.data?.length || 0) > 0 ||
@@ -229,7 +238,9 @@ function Inner({
       steps.push({
         title: "First NFT claimed",
         children: (
-          <Text size="label.sm">No NFTs have been claimed so far.</Text>
+          <p className="text-muted-foreground text-sm">
+            No NFTs have been claimed so far.
+          </p>
         ),
         completed: (erc721Claimed.data || 0n) > 0n,
       });
@@ -239,7 +250,9 @@ function Inner({
       steps.push({
         title: "First token claimed",
         children: (
-          <Text size="label.sm">No tokens have been claimed so far.</Text>
+          <p className="text-muted-foreground text-sm">
+            No tokens have been claimed so far.
+          </p>
         ),
         completed: (erc20Supply.data || 0n) > 0n,
       });
@@ -249,13 +262,16 @@ function Inner({
       steps.push({
         title: "First token minted",
         children: (
-          <Text size="label.sm">
+          <p className="text-muted-foreground text-sm">
             Head to the{" "}
-            <Link href={tokenHref} color="blue.500">
+            <Link
+              href={tokenHref}
+              className="text-link-foreground hover:text-foreground"
+            >
               token tab
             </Link>{" "}
             to mint your first token.
-          </Text>
+          </p>
         ),
         completed: (erc20Supply.data || 0n) > 0n,
       });
@@ -265,13 +281,16 @@ function Inner({
       steps.push({
         title: "First NFT minted",
         children: (
-          <Text size="label.sm">
+          <p className="text-muted-foreground text-sm">
             Head to the{" "}
-            <Link href={nftHref} color="blue.500">
+            <Link
+              href={nftHref}
+              className="text-link-foreground hover:text-foreground"
+            >
               NFTs tab
             </Link>{" "}
             to mint your first token.
-          </Text>
+          </p>
         ),
         // can be either 721 or 1155
         completed: (nftsQuery.data?.length || 0) > 0,
@@ -282,13 +301,16 @@ function Inner({
       steps.push({
         title: "First account created",
         children: (
-          <Text size="label.sm">
+          <p className="text-muted-foreground text-sm">
             Head to the{" "}
-            <Link href={accountsHref} color="blue.500">
+            <Link
+              href={accountsHref}
+              className="text-link-foreground hover:text-foreground"
+            >
               Accounts tab
             </Link>{" "}
             to create your first account.
-          </Text>
+          </p>
         ),
         completed: (accounts.data?.length || 0) > 0,
       });
@@ -298,13 +320,16 @@ function Inner({
       steps.push({
         title: "NFTs revealed",
         children: (
-          <Text size="label.sm">
+          <p className="text-muted-foreground text-sm">
             Head to the{" "}
-            <Link href={nftHref} color="blue.500">
+            <Link
+              href={nftHref}
+              className="text-link-foreground hover:text-foreground"
+            >
               NFTs tab
             </Link>{" "}
             to reveal your NFTs.
-          </Text>
+          </p>
         ),
         // This is always false because if there are batches to reveal, the step doesn't show.
         completed: false,
