@@ -12,7 +12,6 @@ import {
   Collapse,
   Flex,
   FormControl,
-  Icon,
   Input,
   Modal,
   ModalBody,
@@ -30,9 +29,9 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useV5DashboardChain } from "lib/v5-adapter";
+import { CirclePlusIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
-import { AiOutlinePlusCircle } from "react-icons/ai";
 import { getContract, isAddress } from "thirdweb";
 import {
   Button,
@@ -59,7 +58,7 @@ export const AddContractSubscriptionButton: React.FC<
         onClick={disclosure.onOpen}
         variant="ghost"
         size="sm"
-        leftIcon={<Icon as={AiOutlinePlusCircle} boxSize={6} />}
+        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
         w="fit-content"
       >

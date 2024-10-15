@@ -1,23 +1,20 @@
 "use client";
 
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import {
-  Divider,
-  Flex,
-  GridItem,
-  Icon,
-  List,
-  ListItem,
-} from "@chakra-ui/react";
+import { Divider, Flex, GridItem, List, ListItem } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import { format } from "date-fns/format";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { replaceIpfsUrl } from "lib/sdk";
-import { ShieldCheckIcon } from "lucide-react";
+import {
+  BookOpenTextIcon,
+  CalendarDaysIcon,
+  PencilIcon,
+  ServerIcon,
+  ShieldCheckIcon,
+} from "lucide-react";
 import { useMemo } from "react";
-import { BiPencil } from "react-icons/bi";
-import { VscBook, VscCalendar, VscServer } from "react-icons/vsc";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { download } from "thirdweb/storage";
@@ -112,7 +109,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
               ml="auto"
               size="sm"
               variant="outline"
-              leftIcon={<Icon as={BiPencil} />}
+              leftIcon={<PencilIcon className="size-3" />}
               href={`/contracts/publish/${encodeURIComponent(
                 publishedContract.publishMetadataUri.replace("ipfs://", ""),
               )}`}
@@ -166,7 +163,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                 {publishedContract.publishTimestamp && (
                   <ListItem>
                     <Flex gap={2} alignItems="flex-start">
-                      <Icon color="paragraph" as={VscCalendar} boxSize={5} />
+                      <CalendarDaysIcon className="size-5 text-muted-foreground" />
                       <Flex direction="column" gap={1}>
                         <Heading as="h5" size="label.sm">
                           Publish Date
@@ -208,7 +205,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                 )}
                 <ListItem>
                   <Flex gap={2} alignItems="flex-start">
-                    <Icon color="paragraph" as={VscBook} boxSize={5} />
+                    <BookOpenTextIcon className="size-5 text-muted-foreground" />
                     <Flex direction="column" gap={1}>
                       <Heading as="h5" size="label.sm">
                         License
@@ -226,7 +223,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                   hasFactoryAddresses) ? (
                   <ListItem>
                     <Flex gap={2} alignItems="flex-start">
-                      <Icon color="paragraph" as={VscServer} boxSize={5} />
+                      <ServerIcon className="size-5 text-muted-foreground" />
                       <Flex direction="column" gap={1}>
                         <Heading as="h5" size="label.sm">
                           {publishedContract?.isDeployableViaFactory

@@ -1,7 +1,6 @@
 import { useEngineCreateAccessToken } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
-  Icon,
   Modal,
   ModalBody,
   ModalContent,
@@ -12,8 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { CirclePlusIcon } from "lucide-react";
 import { useState } from "react";
-import { AiOutlinePlusCircle } from "react-icons/ai";
 import { Button, Checkbox, CodeBlock, Text } from "tw-components";
 
 interface AddAccessTokenButtonProps {
@@ -64,7 +63,7 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
         }}
         variant="ghost"
         size="sm"
-        leftIcon={<Icon as={AiOutlinePlusCircle} boxSize={6} />}
+        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
         w="fit-content"
       >

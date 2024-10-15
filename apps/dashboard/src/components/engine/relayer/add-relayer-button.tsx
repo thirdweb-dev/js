@@ -7,7 +7,6 @@ import {
 import {
   Flex,
   FormControl,
-  Icon,
   Input,
   Modal,
   ModalBody,
@@ -24,8 +23,8 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { AiOutlinePlusCircle } from "react-icons/ai";
 import { isAddress, shortenAddress } from "thirdweb/utils";
 import { Button, FormHelperText, FormLabel } from "tw-components";
 
@@ -44,7 +43,7 @@ export const AddRelayerButton: React.FC<AddRelayerButtonProps> = ({
         onClick={disclosure.onOpen}
         variant="ghost"
         size="sm"
-        leftIcon={<Icon as={AiOutlinePlusCircle} boxSize={6} />}
+        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
         w="fit-content"
       >

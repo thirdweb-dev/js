@@ -1,7 +1,6 @@
-import { Flex, Icon, SimpleGrid, Spinner } from "@chakra-ui/react";
+import { Flex, SimpleGrid, Spinner } from "@chakra-ui/react";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
-import { FiExternalLink } from "react-icons/fi";
-import { VscExtensions } from "react-icons/vsc";
+import { ExternalLinkIcon, Grid2x2XIcon } from "lucide-react";
 import { Heading, Text, TrackedLink } from "tw-components";
 
 const settingTypeMap = {
@@ -60,7 +59,7 @@ export const SettingDetectedState: React.FC<SettingDetectedStateProps> = ({
       ) : (
         <Flex flexDir="column" gap={3}>
           <Flex align="center" gap={2}>
-            <Icon as={VscExtensions} color="red.500" />
+            <Grid2x2XIcon className="size-4 text-red-500" />
             <Heading size="subtitle.md">Missing extension</Heading>
           </Flex>
           <Text>
@@ -78,7 +77,7 @@ export const SettingDetectedState: React.FC<SettingDetectedStateProps> = ({
             gap={2}
           >
             Learn how to enable this extension
-            <Icon as={FiExternalLink} size="sm" />
+            <ExternalLinkIcon className="size-4" />
           </TrackedLink>
         </Flex>
       )}
