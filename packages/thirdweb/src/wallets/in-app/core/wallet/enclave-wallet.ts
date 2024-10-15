@@ -11,10 +11,10 @@ import type {
   Account,
   SendTransactionOption,
 } from "../../../interfaces/wallet.js";
-import { getUserStatus } from "../../web/lib/actions/get-enclave-user-status.js";
-import { signMessage as signEnclaveMessage } from "../../web/lib/actions/sign-message.enclave.js";
-import { signTransaction as signEnclaveTransaction } from "../../web/lib/actions/sign-transaction.enclave.js";
-import { signTypedData as signEnclaveTypedData } from "../../web/lib/actions/sign-typed-data.enclave.js";
+import { getUserStatus } from "../actions/get-enclave-user-status.js";
+import { signMessage as signEnclaveMessage } from "../actions/sign-message.enclave.js";
+import { signTransaction as signEnclaveTransaction } from "../actions/sign-transaction.enclave.js";
+import { signTypedData as signEnclaveTypedData } from "../actions/sign-typed-data.enclave.js";
 import type { ClientScopedStorage } from "../authentication/client-scoped-storage.js";
 import type {
   AuthDetails,
@@ -33,16 +33,14 @@ export type UserStatus = {
       | { address: string; [key: string]: string }
       | { id: string; [key: string]: string };
   }[];
-  wallets:
-    | [
-        {
-          address: string;
-          createdAt: string;
-          type: "sharded" | "enclave";
-        },
-      ]
-    | [];
+  wallets: UserWallet[];
   id: string;
+};
+
+export type UserWallet = {
+  address: string;
+  createdAt: string;
+  type: "sharded" | "enclave";
 };
 
 export class EnclaveWallet implements IWebWallet {
@@ -130,7 +128,6 @@ export class EnclaveWallet implements IWebWallet {
    */
   async getAccount(): Promise<Account> {
     const client = this.client;
-    const ecosystem = this.ecosystem;
     const storage = this.localStorage;
 
     const _signTransaction = async (tx: SendTransactionOption) => {
@@ -171,7 +168,6 @@ export class EnclaveWallet implements IWebWallet {
 
       return signEnclaveTransaction({
         client,
-        ecosystem,
         storage,
         payload: transaction,
       });
@@ -218,7 +214,6 @@ export class EnclaveWallet implements IWebWallet {
 
         const { signature } = await signEnclaveMessage({
           client,
-          ecosystem,
           payload: messagePayload,
           storage,
         });
@@ -228,7 +223,6 @@ export class EnclaveWallet implements IWebWallet {
         const parsedTypedData = parseTypedData(_typedData);
         const { signature } = await signEnclaveTypedData({
           client,
-          ecosystem,
           payload: parsedTypedData,
           storage,
         });

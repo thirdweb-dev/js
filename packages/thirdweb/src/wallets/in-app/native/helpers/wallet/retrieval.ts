@@ -40,7 +40,7 @@ export async function getExistingUserAccount(args: {
   });
 }
 
-async function getWalletPrivateKeyFromShares(shares: string[]) {
+export async function getWalletPrivateKeyFromShares(shares: string[]) {
   const { secrets } = await import("./sss.js");
   let privateKeyHex = secrets.combine(shares, 0);
   if (!isHex(privateKeyHex)) {
@@ -86,7 +86,7 @@ async function getAccountFromShares(args: {
  * @returns The requested shares
  * @throws if attempting to get deviceShare when it's not present
  */
-async function getShares<
+export async function getShares<
   A extends boolean,
   D extends boolean,
   R extends boolean,

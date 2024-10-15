@@ -1,7 +1,8 @@
-import type { ThirdwebClient } from "../../../../../client/client.js";
-import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
-import { getClientFetch } from "../../../../../utils/fetch.js";
-import type { Ecosystem } from "../../../core/wallet/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
+import { getClientFetch } from "../../../../utils/fetch.js";
+import type { UserWallet } from "../wallet/enclave-wallet.js";
+import type { Ecosystem } from "../wallet/types.js";
 
 /**
  * Generate a new enclave wallet using an auth token
@@ -34,10 +35,7 @@ export async function generateWallet({
   }
 
   const { wallet } = (await response.json()) as {
-    wallet: {
-      address: string;
-      type: "enclave";
-    };
+    wallet: UserWallet;
   };
 
   return wallet;

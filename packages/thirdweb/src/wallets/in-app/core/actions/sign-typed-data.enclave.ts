@@ -1,28 +1,26 @@
 import type { TypedData } from "abitype";
 import type { TypedDataDefinition } from "viem";
-import type { ThirdwebClient } from "../../../../../client/client.js";
-import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
-import { getClientFetch } from "../../../../../utils/fetch.js";
-import { stringify } from "../../../../../utils/json.js";
-import type { ClientScopedStorage } from "../../../core/authentication/client-scoped-storage.js";
-import type { Ecosystem } from "../../../core/wallet/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
+import { getClientFetch } from "../../../../utils/fetch.js";
+import { stringify } from "../../../../utils/json.js";
+import type { ClientScopedStorage } from "../authentication/client-scoped-storage.js";
 
 export async function signTypedData<
   const typedData extends TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
 >({
   client,
-  ecosystem,
   payload,
   storage,
 }: {
   client: ThirdwebClient;
-  ecosystem?: Ecosystem;
   payload: TypedDataDefinition<typedData, primaryType>;
   storage: ClientScopedStorage;
 }) {
-  const clientFetch = getClientFetch(client, ecosystem);
   const authToken = await storage.getAuthCookie();
+  const ecosystem = storage.ecosystem;
+  const clientFetch = getClientFetch(client, ecosystem);
 
   if (!authToken) {
     throw new Error("No auth token found when signing typed data");

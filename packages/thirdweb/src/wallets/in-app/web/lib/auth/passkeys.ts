@@ -86,7 +86,7 @@ export async function hasStoredPasskey(
   const storage = new ClientScopedStorage({
     storage: webLocalStorage, // TODO (passkey) react native variant of this fn
     clientId: client.clientId,
-    ecosystemId: ecosystemId,
+    ecosystem: ecosystemId ? { id: ecosystemId } : undefined,
   });
   const credId = await storage.getPasskeyCredentialId();
   return !!credId;

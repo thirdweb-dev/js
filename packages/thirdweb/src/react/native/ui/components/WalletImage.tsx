@@ -1,4 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import { resolveScheme } from "../../../../utils/ipfs.js";
 import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import { getWalletInfo } from "../../../../wallets/__generated__/getWalletInfo.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -25,10 +27,11 @@ import { RNImage } from "./RNImage.js";
 export const WalletImage = (props: {
   theme: Theme;
   wallet: Wallet;
+  client: ThirdwebClient;
   size: number;
   avatar?: string | null;
 }) => {
-  const { wallet, avatar, size } = props;
+  const { wallet, avatar, size, client } = props;
 
   const { data: imageData } = useQuery({
     queryKey: ["wallet-image", wallet.id, wallet.getAccount()?.address],
@@ -55,7 +58,7 @@ export const WalletImage = (props: {
       try {
         const externalWalletImage = await getWalletInfo(activeEOAId, true);
         if (externalWalletImage) {
-          return externalWalletImage;
+          return resolveScheme({ client, uri: externalWalletImage });
         }
       } catch {}
 

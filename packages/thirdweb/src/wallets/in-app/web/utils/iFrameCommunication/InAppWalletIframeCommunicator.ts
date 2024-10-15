@@ -47,7 +47,7 @@ export class InAppWalletIframeCommunicator<
     const localStorage = new ClientScopedStorage({
       storage: webLocalStorage,
       clientId: this.clientId,
-      ecosystemId: this.ecosystem?.id,
+      ecosystem: this.ecosystem,
     });
 
     return {

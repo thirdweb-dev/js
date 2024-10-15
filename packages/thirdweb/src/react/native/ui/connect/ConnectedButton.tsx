@@ -20,7 +20,7 @@ export function ConnectedButton(
   },
 ) {
   const theme = parseTheme(props.theme);
-  const { account, wallet } = props;
+  const { account, wallet, client } = props;
   const walletChain = useActiveWalletChain();
   const { pfp, name, balanceQuery } = useConnectedWalletDetails(
     props.client,
@@ -40,7 +40,13 @@ export function ConnectedButton(
       }}
     >
       <View style={styles.row}>
-        <WalletImage theme={theme} size={40} wallet={wallet} avatar={pfp} />
+        <WalletImage
+          theme={theme}
+          size={40}
+          wallet={wallet}
+          avatar={pfp}
+          client={client}
+        />
         <View style={styles.col}>
           <ThemedText
             theme={theme}

@@ -1,8 +1,8 @@
-import type { ThirdwebClient } from "../../../../../client/client.js";
-import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
-import { getClientFetch } from "../../../../../utils/fetch.js";
-import type { UserStatus } from "../../../core/wallet/enclave-wallet.js";
-import type { Ecosystem } from "../../../core/wallet/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
+import { getClientFetch } from "../../../../utils/fetch.js";
+import type { UserStatus } from "../wallet/enclave-wallet.js";
+import type { Ecosystem } from "../wallet/types.js";
 
 /**
  * Gets the user's status from the backend.

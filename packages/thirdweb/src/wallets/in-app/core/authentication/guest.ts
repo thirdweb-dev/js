@@ -19,7 +19,7 @@ export async function guestAuthenticate(args: {
   const storage = new ClientScopedStorage({
     storage: args.storage,
     clientId: args.client.clientId,
-    ecosystemId: args.ecosystem?.id,
+    ecosystem: args.ecosystem,
   });
 
   let sessionId = await storage.getGuestSessionId();

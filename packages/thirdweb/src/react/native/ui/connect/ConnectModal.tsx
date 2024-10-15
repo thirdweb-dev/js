@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/authentication/types.js";
 import type { InAppWalletAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -269,6 +270,7 @@ export function ConnectModal(
           <WalletLoadingView
             theme={theme}
             wallet={modalState.wallet}
+            client={client}
             authProvider={modalState.authMethod}
           />
           {containerType === "modal" ? (
@@ -328,6 +330,7 @@ export function ConnectModal(
           )}
           <SignInView
             theme={theme}
+            client={client}
             siweAuth={siweAuth}
             onSignIn={() => props.onClose?.()}
             onError={(error) => setModalState({ screen: "error", error })}
@@ -462,10 +465,12 @@ export function ConnectModal(
 function WalletLoadingView({
   theme,
   wallet,
+  client,
   authProvider,
 }: {
   theme: Theme;
   wallet: Wallet;
+  client: ThirdwebClient;
   authProvider?: InAppWalletAuth;
 }) {
   const walletInfo = useWalletInfo(wallet.id);
@@ -500,7 +505,12 @@ function WalletLoadingView({
             />
           </View>
         ) : (
-          <WalletImage theme={theme} size={90} wallet={wallet} />
+          <WalletImage
+            theme={theme}
+            size={90}
+            wallet={wallet}
+            client={client}
+          />
         )}
       </WalletLoadingThumbnail>
       <Spacer size="xl" />
@@ -522,12 +532,14 @@ function WalletLoadingView({
 function SignInView({
   theme,
   siweAuth,
+  client,
   onSignIn,
   onError,
   onDisconnect,
 }: {
   theme: Theme;
   siweAuth: ReturnType<typeof useSiweAuth>;
+  client: ThirdwebClient;
   onSignIn: () => void;
   onError: (error: string) => void;
   onDisconnect: () => void;
@@ -552,7 +564,12 @@ function SignInView({
           imageSize={100}
           animate={isSigningIn}
         >
-          <WalletImage theme={theme} size={90} wallet={wallet} />
+          <WalletImage
+            theme={theme}
+            size={90}
+            wallet={wallet}
+            client={client}
+          />
         </WalletLoadingThumbnail>
         <Spacer size="xl" />
         <ThemedText theme={theme} type="subtitle">

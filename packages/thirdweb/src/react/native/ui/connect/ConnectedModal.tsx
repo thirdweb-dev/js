@@ -85,6 +85,7 @@ export function ConnectedModal(props: ConnectedModalProps) {
         <ReceiveScreen
           account={props.account}
           wallet={props.wallet}
+          client={props.client}
           theme={theme}
           containerType={props.containerType}
           onBack={() => setModalState({ screen: "account" })}
@@ -161,7 +162,7 @@ export function ConnectedModal(props: ConnectedModalProps) {
 }
 
 const AccountHeader = (props: ConnectedModalProps) => {
-  const { account, wallet, theme } = props;
+  const { account, wallet, theme, client } = props;
   const walletChain = useActiveWalletChain();
   const { pfp, name, balanceQuery } = useConnectedWalletDetails(
     props.client,
@@ -171,7 +172,13 @@ const AccountHeader = (props: ConnectedModalProps) => {
   );
   return (
     <View style={styles.accountHeaderContainer}>
-      <WalletImage theme={theme} size={70} wallet={wallet} avatar={pfp} />
+      <WalletImage
+        theme={theme}
+        size={70}
+        wallet={wallet}
+        avatar={pfp}
+        client={client}
+      />
       <SmartAccountBadge client={props.client} theme={theme} />
       <Spacer size="smd" />
       <Address account={account} theme={theme} addressOrENS={name} />
