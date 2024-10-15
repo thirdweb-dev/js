@@ -18,8 +18,8 @@ import { ChainIcon } from "components/icons/ChainIcon";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
 import { useAllChainsData } from "hooks/chains/allChains";
+import { InfoIcon, MoveLeftIcon, MoveRightIcon } from "lucide-react";
 import { useState } from "react";
-import { FiArrowLeft, FiArrowRight, FiInfo } from "react-icons/fi";
 import { toTokens } from "thirdweb";
 import {
   Button,
@@ -175,7 +175,9 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
                 <Badge variant={statusDetails[status].type}>
                   <Flex gap={1} align="center">
                     {statusDetails[status].name}
-                    {statusDetails[status].showTooltipIcon && <FiInfo />}
+                    {statusDetails[status].showTooltipIcon && (
+                      <InfoIcon className="size-4" />
+                    )}
                   </Flex>
                 </Badge>
               </div>
@@ -356,7 +358,7 @@ const TransactionDetailsDrawer = ({
               isDisabled={!onClickPrevious}
               onClick={onClickPrevious}
               variant="outline"
-              leftIcon={<FiArrowLeft />}
+              leftIcon={<MoveLeftIcon className="size-4" />}
             >
               Previous
             </Button>
@@ -364,7 +366,7 @@ const TransactionDetailsDrawer = ({
               isDisabled={!onClickNext}
               onClick={onClickNext}
               variant="outline"
-              rightIcon={<FiArrowRight />}
+              rightIcon={<MoveRightIcon className="size-4" />}
             >
               Next
             </Button>
@@ -485,7 +487,7 @@ const TransactionDetailsDrawer = ({
               label={`The amount of ${symbol} sent to the "To" .`}
               shouldWrapChildren
             >
-              <FiInfo />
+              <InfoIcon className="size-4" />
             </Tooltip>
           </div>
           <Text>
@@ -532,7 +534,7 @@ const TransactionDetailsDrawer = ({
                         label="The nonce value this transaction was submitted to mempool."
                         shouldWrapChildren
                       >
-                        <FiInfo />
+                        <InfoIcon className="size-4" />
                       </Tooltip>
                     </div>
                     <Text>{transaction.nonce ?? "N/A"}</Text>
@@ -547,7 +549,7 @@ const TransactionDetailsDrawer = ({
                         label="The gas units spent for this transaction."
                         shouldWrapChildren
                       >
-                        <FiInfo />
+                        <InfoIcon className="size-4" />
                       </Tooltip>
                     </div>
                     <Text>{Number(transaction.gasLimit).toLocaleString()}</Text>
@@ -562,7 +564,7 @@ const TransactionDetailsDrawer = ({
                         label="The price in wei spent for each gas unit."
                         shouldWrapChildren
                       >
-                        <FiInfo />
+                        <InfoIcon className="size-4" />
                       </Tooltip>
                     </div>
                     <Text>{Number(transaction.gasPrice).toLocaleString()}</Text>

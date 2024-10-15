@@ -19,8 +19,8 @@ import {
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { CheckIcon } from "lucide-react";
 import { useRef } from "react";
-import { FiCheck } from "react-icons/fi";
 import { Button, FormLabel, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
@@ -133,7 +133,10 @@ export const TransactionTimeline = ({
           // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
           <Step key={index} as={Flex} w="full">
             <StepIndicator>
-              <StepStatus complete={<FiCheck />} active={<FiCheck />} />
+              <StepStatus
+                complete={<CheckIcon className="size-4" />}
+                active={<CheckIcon className="size-4" />}
+              />
             </StepIndicator>
             <Flex justify="space-between" w="full" mt={-1}>
               <div className="flex flex-col gap-2">

@@ -1,5 +1,5 @@
-import { Flex, Icon } from "@chakra-ui/react";
-import { BsFillLightningChargeFill } from "react-icons/bs";
+import { Flex } from "@chakra-ui/react";
+import { ZapIcon } from "lucide-react";
 import { TrackedLinkButton, type TrackedLinkProps } from "tw-components";
 
 interface LandingCTAButtonsProps {
@@ -33,7 +33,7 @@ export const LandingCTAButtons: React.FC<LandingCTAButtonsProps> = ({
     <Flex gap={{ base: 4, md: 6 }} mx={alignLeft ? "inherit" : "auto"}>
       {!noCta && (
         <TrackedLinkButton
-          leftIcon={<Icon as={BsFillLightningChargeFill} boxSize={4} />}
+          leftIcon={<ZapIcon className="size-4 fill-inherit" />}
           py={6}
           px={8}
           bgColor="white"

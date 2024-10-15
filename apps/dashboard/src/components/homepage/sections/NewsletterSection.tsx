@@ -1,13 +1,6 @@
-import {
-  Box,
-  Container,
-  Flex,
-  FormControl,
-  Icon,
-  Input,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, FormControl, Input } from "@chakra-ui/react";
+import { MailCheckIcon } from "lucide-react";
 import { useState } from "react";
-import { MdMarkEmailRead } from "react-icons/md";
 import { Button, Text } from "tw-components";
 
 export const NewsletterSection = () => {
@@ -41,7 +34,7 @@ export const NewsletterSection = () => {
       <Container as="section" maxW="container.page" color="gray.500">
         <div className="flex flex-col justify-between gap-8 px-12 py-12 md:flex-row md:py-16">
           <div className="flex flex-row items-center gap-5">
-            <Icon boxSize={8} color="white" as={MdMarkEmailRead} />
+            <MailCheckIcon className="size-8 text-white" />
             <div className="flex flex-col gap-2">
               <Text color="white" size="label.lg">
                 Sign up for our newsletter
