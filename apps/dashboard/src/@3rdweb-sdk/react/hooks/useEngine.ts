@@ -261,27 +261,26 @@ export function useEngineRemoveFromDashboard() {
   });
 }
 
-export interface RemoveCloudHostedInput {
-  instanceId: string;
+export interface DeleteCloudHostedInput {
+  deploymentId: string;
   reason: "USING_SELF_HOSTED" | "TOO_EXPENSIVE" | "MISSING_FEATURES" | "OTHER";
   feedback: string;
 }
 
-export function useEngineRemoveCloudHosted() {
+export function useEngineDeleteCloudHosted() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
-      instanceId,
+      deploymentId,
       reason,
       feedback,
-    }: RemoveCloudHostedInput) => {
+    }: DeleteCloudHostedInput) => {
       const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/engine/${instanceId}/remove-cloud-hosted`,
+        `${THIRDWEB_API_HOST}/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
         {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json",
           },
