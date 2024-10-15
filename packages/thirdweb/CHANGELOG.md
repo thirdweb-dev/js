@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.62.0
+
+### Minor Changes
+
+- [#5032](https://github.com/thirdweb-dev/js/pull/5032) [`3fe33a6`](https://github.com/thirdweb-dev/js/commit/3fe33a6ca062acf08e3590619ebfe9748cdd79f6) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add ERC1155 extension: mintToBatch
+
+- [#4992](https://github.com/thirdweb-dev/js/pull/4992) [`1994d9e`](https://github.com/thirdweb-dev/js/commit/1994d9e52d3a3874e6111ff7bc688f95618fbc25) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support for enclave wallet migration in React Native
+
+  this change requires the latest version of the `@thirdweb-dev/react-native-adapter` package to be installed.
+
+### Patch Changes
+
+- [#5045](https://github.com/thirdweb-dev/js/pull/5045) [`ec10e81`](https://github.com/thirdweb-dev/js/commit/ec10e81624bb4389e5efc6570133f19d3df5368a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix linking wallets for ecosystems
+
+- [#5029](https://github.com/thirdweb-dev/js/pull/5029) [`da9f196`](https://github.com/thirdweb-dev/js/commit/da9f1964e4ae74ed5d33666788e2d16e4d56614d) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#5009](https://github.com/thirdweb-dev/js/pull/5009) [`6faf63f`](https://github.com/thirdweb-dev/js/commit/6faf63ff9597926f855263008014acfd4c349e5e) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix upload logic for delayed reveal batch
+
 ## 5.61.6
 
 ### Patch Changes
