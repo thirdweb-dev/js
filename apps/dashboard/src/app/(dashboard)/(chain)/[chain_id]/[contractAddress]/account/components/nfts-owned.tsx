@@ -3,7 +3,7 @@
 import { useWalletNFTs } from "@3rdweb-sdk/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Text } from "tw-components";
-import { NFTCards } from "../../../../app/(dashboard)/(chain)/[chain_id]/[contractAddress]/_components/NFTCards";
+import { NFTCards } from "../../_components/NFTCards";
 
 interface NftsOwnedProps {
   contract: ThirdwebContract;
