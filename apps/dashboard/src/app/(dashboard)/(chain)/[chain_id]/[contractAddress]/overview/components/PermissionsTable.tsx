@@ -1,5 +1,6 @@
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { Box, Flex, List, SimpleGrid, Tag } from "@chakra-ui/react";
+import { getAllRoleMembers } from "contract-ui/hooks/permissions";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
 import { CopyIcon } from "lucide-react";
@@ -16,7 +17,6 @@ import {
   type TrackedLinkProps,
 } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { getAllRoleMembers } from "../../../hooks/permissions";
 
 interface PermissionsTableProps {
   contract: ThirdwebContract;

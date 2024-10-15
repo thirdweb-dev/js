@@ -1,6 +1,7 @@
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { StepsCard } from "components/dashboard/StepsCard";
+import { useContractFunctionSelectors } from "contract-ui/hooks/useContractFunctionSelectors";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
@@ -10,7 +11,6 @@ import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { getAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
 import { Link, Text } from "tw-components";
-import { useContractFunctionSelectors } from "../../../hooks/useContractFunctionSelectors";
 
 interface ContractChecklistProps {
   contract: ThirdwebContract;

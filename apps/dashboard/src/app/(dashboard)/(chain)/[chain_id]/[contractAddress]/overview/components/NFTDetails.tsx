@@ -4,7 +4,7 @@ import * as ERC721 from "thirdweb/extensions/erc721";
 import * as ERC1155 from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { TrackedLink, type TrackedLinkProps } from "tw-components";
-import { NFTCards } from "./NFTCards";
+import { NFTCards } from "../../_components/NFTCards";
 
 interface NFTDetailsProps {
   contract: ThirdwebContract;
