@@ -1,6 +1,5 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
-  Flex,
   GridItem,
   SimpleGrid,
   Skeleton,
@@ -84,7 +83,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
 
   return (
     <>
-      <Flex align="center" justify="space-between" w="full">
+      <div className="flex w-full items-center justify-between">
         <h2 className="font-semibold text-2xl tracking-tight">
           Direct Listing
         </h2>
@@ -100,7 +99,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
         >
           View all -&gt;
         </TrackedLink>
-      </Flex>
+      </div>
       <ListingCards
         listings={listings}
         isPending={listingsQuery.isPending}
@@ -151,7 +150,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
 
   return (
     <>
-      <Flex align="center" justify="space-between" w="full">
+      <div className="flex w-full items-center justify-between">
         <Heading size="label.lg">English Auctions</Heading>
         <TrackedLink
           category={trackingCategory}
@@ -165,7 +164,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
         >
           View all -&gt;
         </TrackedLink>
-      </Flex>
+      </div>
       <ListingCards
         listings={auctions}
         isPending={auctionsQuery.isPending}
@@ -193,13 +192,14 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
   chainSlug,
 }) => {
   return (
-    <Flex gap={6} flexDirection="column">
-      <Heading size="title.sm">Listings</Heading>
+    <div className="flex flex-col gap-6">
+      <h2 className="font-semibold text-2xl tracking-tight">Listings</h2>
       <ListingStatsV3
         contract={contract}
         hasDirectListings={hasDirectListings}
         hasEnglishAuctions={hasEnglishAuctions}
       />
+
       {hasDirectListings && contract && (
         <DirectListingCards
           contract={contract}
@@ -207,6 +207,7 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
           chainSlug={chainSlug}
         />
       )}
+
       {hasEnglishAuctions && contract && (
         <EnglishAuctionCards
           contract={contract}
@@ -214,7 +215,7 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
           chainSlug={chainSlug}
         />
       )}
-    </Flex>
+    </div>
   );
 };
 
@@ -298,7 +299,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
                 />
               </Skeleton>
             </div>
-            <Flex p={4} pb={3} gap={1} direction="column">
+            <div className="flex flex-col gap-1 p-4 pb-3">
               <Skeleton w={!isPending ? "100%" : "50%"} isLoaded={!isPending}>
                 <Heading size="label.md">{listing.asset.metadata.name}</Heading>
               </Skeleton>
@@ -334,7 +335,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
                 <b>{listing.currencyValue.displayValue}</b>{" "}
                 {listing.currencyValue.symbol}
               </SkeletonText>
-            </Flex>
+            </div>
           </Card>
         </GridItem>
       ))}
