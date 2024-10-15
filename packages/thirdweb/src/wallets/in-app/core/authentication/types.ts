@@ -100,6 +100,7 @@ export type AuthProvider =
   | "Coinbase"
   | "X"
   | "Line"
+  | "Twitch"
   | "Farcaster"
   | "Telegram";
 

@@ -19,6 +19,7 @@ import {
   PASSKEY_ICON,
   PHONE_ICON,
   TELEGRAM_ICON,
+  TWITCH_ICON,
   WALLET_ICON,
   X_ICON,
 } from "../icons/svgs.js";
@@ -102,6 +103,8 @@ export function getAuthProviderImage(authProvider: string | null): string {
       return FARCASTER_ICON;
     case "telegram":
       return TELEGRAM_ICON;
+    case "twitch":
+      return TWITCH_ICON;
     case "guest":
       return GUEST_ICON;
     default:

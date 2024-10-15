@@ -5,6 +5,7 @@ export const authOptions = [
   "discord",
   "farcaster",
   "telegram",
+  "twitch",
   "phone",
   "email",
   "guest",

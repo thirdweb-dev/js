@@ -37,6 +37,7 @@ import {
   GOOGLE_ICON,
   LINE_ICON,
   TELEGRAM_ICON,
+  TWITCH_ICON,
   X_ICON,
 } from "../icons/svgs.js";
 import type { ModalState } from "./ConnectModal.js";
@@ -61,6 +62,7 @@ const socialIcons = {
   x: X_ICON,
   farcaster: FARCASTER_ICON,
   telegram: TELEGRAM_ICON,
+  twitch: TWITCH_ICON,
 };
 
 type InAppWalletFormUIProps = {

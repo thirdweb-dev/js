@@ -71,6 +71,26 @@ export const TELEGRAM_ICON = `<svg width={width} height={height} viewBox="0 0 10
     </g>
 </svg>`;
 
+export const TWITCH_ICON = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 2400 2800" style="enable-background:new 0 0 2400 2800;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:#9146FF;}
+</style>
+<title>Asset 2</title>
+<g>
+	<polygon class="st0" points="2200,1300 1800,1700 1400,1700 1050,2050 1050,1700 600,1700 600,200 2200,200 	"/>
+	<g>
+		<g id="Layer_1-2">
+			<path class="st1" d="M500,0L0,500v1800h600v500l500-500h400l900-900V0H500z M2200,1300l-400,400h-400l-350,350v-350H600V200h1600
+				V1300z"/>
+			<rect x="1700" y="550" class="st1" width="200" height="600"/>
+			<rect x="1150" y="550" class="st1" width="200" height="600"/>
+		</g>
+	</g>
+</g>
+</svg>`;
+
 export const EMAIL_ICON = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M13.3335 2.6665H2.66683C1.93045 2.6665 1.3335 3.26346 1.3335 3.99984V11.9998C1.3335 12.7362 1.93045 13.3332 2.66683 13.3332H13.3335C14.0699 13.3332 14.6668 12.7362 14.6668 11.9998V3.99984C14.6668 3.26346 14.0699 2.6665 13.3335 2.6665Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M14.6668 4.6665L8.68683 8.4665C8.48101 8.59545 8.24304 8.66384 8.00016 8.66384C7.75728 8.66384 7.51931 8.59545 7.3135 8.4665L1.3335 4.6665" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>

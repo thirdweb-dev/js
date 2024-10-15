@@ -69,6 +69,7 @@ function usePlaygroundWallets() {
     google: true,
     discord: true,
     telegram: true,
+    twitch: false,
     farcaster: true,
     facebook: false,
     apple: false,

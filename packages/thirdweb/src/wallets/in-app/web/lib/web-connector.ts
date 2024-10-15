@@ -318,6 +318,7 @@ export class InAppWebConnector implements InAppConnector {
       case "facebook":
       case "google":
       case "telegram":
+      case "twitch":
       case "farcaster":
       case "line":
       case "x":
@@ -393,6 +394,7 @@ export class InAppWebConnector implements InAppConnector {
       case "x":
       case "guest":
       case "coinbase":
+      case "twitch":
       case "discord": {
         const authToken = await this.authenticate(args);
         return await this.auth.loginWithAuthToken(authToken);
