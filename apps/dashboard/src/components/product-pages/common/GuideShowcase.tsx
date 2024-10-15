@@ -1,5 +1,5 @@
-import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
-import { FiArrowRight } from "react-icons/fi";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
+import { ArrowRightIcon } from "lucide-react";
 import { Heading, TrackedLink, type TrackedLinkProps } from "tw-components";
 import { GuideCard } from "./GuideCard";
 import { ProductSection } from "./ProductSection";
@@ -105,7 +105,7 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
                 See all of our {solution.replace("-", " ")}{" "}
                 {caseStudies ? "case studies" : "guides"}
               </Heading>
-              <Icon as={FiArrowRight} />
+              <ArrowRightIcon className="size-4" />
             </Flex>
           </TrackedLink>
         )}

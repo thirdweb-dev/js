@@ -3,17 +3,15 @@ import {
   Box,
   Flex,
   FormControl,
-  Icon,
   IconButton,
   Input,
   ListItem,
   UnorderedList,
 } from "@chakra-ui/react";
 import type { Abi } from "abitype";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, TrashIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useEffect } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-import { FiTrash } from "react-icons/fi";
 import { Button, Heading, Text } from "tw-components";
 import { useCustomFactoryAbi } from "../hooks";
 import { AbiSelector } from "./abi-selector";
@@ -101,7 +99,7 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
               </Box>
               <IconButton
                 isDisabled={fields.length === 1 || form.formState.isSubmitting}
-                icon={<Icon as={FiTrash} boxSize={5} />}
+                icon={<TrashIcon className="size-5" />}
                 aria-label="Remove row"
                 onClick={() => remove(index)}
               />

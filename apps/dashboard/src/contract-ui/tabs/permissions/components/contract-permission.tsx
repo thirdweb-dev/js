@@ -1,7 +1,7 @@
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
-import { Flex, Icon, Select, Spinner } from "@chakra-ui/react";
+import { Flex, Select, Spinner } from "@chakra-ui/react";
+import { InfoIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { FiInfo } from "react-icons/fi";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { Card, Heading, Text } from "tw-components";
 import { PermissionEditor } from "./permissions-editor";
@@ -165,12 +165,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               padding="10px"
               gap={3}
             >
-              <Icon
-                as={FiInfo}
-                color="primary.800"
-                _dark={{ color: "primary.100" }}
-                boxSize={6}
-              />
+              <InfoIcon className="size-6 text-primary-foreground hover:opacity-10" />
               <Text color="primary.800" _dark={{ color: "primary.100" }}>
                 {isRestricted ? (
                   <>
@@ -205,12 +200,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               padding="10px"
               gap={3}
             >
-              <Icon
-                as={FiInfo}
-                color="primary.800"
-                _dark={{ color: "primary.100" }}
-                boxSize={6}
-              />
+              <InfoIcon className="size-6 text-primary-foreground hover:opacity-10" />
               <Text color="primary.800" _dark={{ color: "primary.100" }}>
                 {isRestricted ? (
                   <>
@@ -239,12 +229,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               padding="10px"
               gap={3}
             >
-              <Icon
-                as={FiInfo}
-                color="primary.800"
-                _dark={{ color: "primary.100" }}
-                boxSize={6}
-              />
+              <InfoIcon className="size-6 text-primary-foreground hover:opacity-10" />
               <Text color="primary.800" _dark={{ color: "primary.100" }}>
                 {isRestricted ? (
                   <>

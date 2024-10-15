@@ -1,7 +1,6 @@
 import {
   Button as ChakraButton,
   type ButtonProps as ChakraButtonProps,
-  Icon,
   IconButton,
   type IconButtonProps,
   LightMode,
@@ -11,8 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useClipboard } from "hooks/useClipboard";
+import { CheckIcon, CopyIcon, ExternalLinkIcon } from "lucide-react";
 import { forwardRef as reactForwardRef } from "react";
-import { FiCheck, FiCopy, FiExternalLink } from "react-icons/fi";
 import { fontWeights, letterSpacings, lineHeights } from "theme/typography";
 import { ChakraNextLink } from "./link";
 import { convertFontSizeToCSSVar } from "./utils/typography";
@@ -96,7 +95,9 @@ export const LinkButton = reactForwardRef<HTMLButtonElement, LinkButtonProps>(
           isExternal
           ref={ref}
           textDecoration="none!important"
-          rightIcon={noIcon ? undefined : <Icon as={FiExternalLink} />}
+          rightIcon={
+            noIcon ? undefined : <ExternalLinkIcon className="size-4" />
+          }
           {...restButtonProps}
         >
           {children}
@@ -198,15 +199,7 @@ export const TrackedCopyButton = forwardRef<TrackedCopyButtonProps, "button">(
         size="sm"
         onClick={copy}
         icon={
-          hasCopied ? (
-            <Icon
-              color="green.400"
-              _light={{ color: "green.600" }}
-              as={FiCheck}
-            />
-          ) : (
-            <Icon as={FiCopy} />
-          )
+          hasCopied ? <CheckIcon className="text-success-text" /> : <CopyIcon />
         }
         {...restButtonProps}
       />

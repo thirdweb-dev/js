@@ -25,9 +25,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { TrashIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { LuTrash2 } from "react-icons/lu";
 import { isAddress } from "thirdweb/utils";
 import {
   Button,
@@ -598,7 +598,7 @@ export function AccountAbstractionSettingsPage(
                           />
                           <IconButton
                             aria-label="Remove header"
-                            icon={<LuTrash2 />}
+                            icon={<TrashIcon />}
                             onClick={() => {
                               customHeaderFields.remove(customHeaderIdx);
                             }}

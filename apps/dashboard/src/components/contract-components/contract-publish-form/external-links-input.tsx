@@ -2,12 +2,11 @@ import {
   Divider,
   Flex,
   FormControl,
-  Icon,
   IconButton,
   Input,
 } from "@chakra-ui/react";
+import { TrashIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { FiTrash } from "react-icons/fi";
 import { FormErrorMessage, FormLabel } from "tw-components";
 
 interface ExternalLinksInputProps {
@@ -73,7 +72,7 @@ export const ExternalLinksInput: React.FC<ExternalLinksInputProps> = ({
           </FormErrorMessage>
         </FormControl>
         <IconButton
-          icon={<Icon as={FiTrash} boxSize={5} />}
+          icon={<TrashIcon className="size-5" />}
           aria-label="Remove row"
           onClick={() => remove(index)}
           alignSelf="end"

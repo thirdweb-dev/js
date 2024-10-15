@@ -1,7 +1,6 @@
 import { InlineCode } from "@/components/ui/inline-code";
 import {
   FormControl,
-  Icon,
   Input,
   InputGroup,
   Table,
@@ -13,28 +12,22 @@ import {
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRpcValidation } from "hooks/chains/useRpcValidation";
-import { type ChangeEvent, useMemo, useState } from "react";
-import type { IconType } from "react-icons";
-import { BiCheckCircle, BiErrorCircle } from "react-icons/bi";
-import { RiErrorWarningLine } from "react-icons/ri";
+import { AlertCircleIcon, CheckCircleIcon } from "lucide-react";
+import { type ChangeEvent, useState } from "react";
+
 import { Button, Card, FormLabel, Link, TableContainer } from "tw-components";
 
-const StatusCheck = ({
-  status,
-}: {
+const StatusCheck = (props: {
   status: "success" | "error" | "warning";
 }) => {
-  const values: [string, IconType] = useMemo(() => {
-    if (status === "error") {
-      return ["red.500", BiErrorCircle];
-    }
-    if (status === "warning") {
-      return ["yellow.500", RiErrorWarningLine];
-    }
-    return ["green.500", BiCheckCircle];
-  }, [status]);
-
-  return <Icon fontSize={16} color={values[0]} as={values[1]} />;
+  switch (props.status) {
+    case "error":
+      return <AlertCircleIcon className="size-4 text-destructive-text" />;
+    case "warning":
+      return <AlertCircleIcon className="size-4 text-warning-text" />;
+    case "success":
+      return <CheckCircleIcon className="size-4 text-success-text" />;
+  }
 };
 
 const ChainValidation: React.FC = () => {

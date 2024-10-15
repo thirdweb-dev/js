@@ -4,7 +4,6 @@ import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   Box,
   FormControl,
-  Icon,
   Input,
   Textarea,
   useDisclosure,
@@ -22,11 +21,9 @@ import type { ProfileMetadata, ProfileMetadataInput } from "constants/schemas";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { EditIcon, GlobeIcon, ImageIcon, PencilIcon } from "lucide-react";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
-import { BiImage } from "react-icons/bi";
-import { FiEdit, FiGlobe } from "react-icons/fi";
-import { HiPencilAlt } from "react-icons/hi";
 import {
   getContractPublisher,
   setPublisherProfileUri,
@@ -90,7 +87,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         onClick={onOpen}
         size="sm"
         variant="outline"
-        leftIcon={<Icon as={FiEdit} />}
+        leftIcon={<EditIcon />}
       >
         Edit Profile
       </Button>
@@ -177,7 +174,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           <FormControl isInvalid={!!errors.avatar}>
             <FormLabel>
               <div className="flex flex-row gap-2">
-                <Icon as={BiImage} boxSize={4} />
+                <ImageIcon className="size-4" />
                 Avatar
               </div>
             </FormLabel>
@@ -200,7 +197,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           <FormControl isInvalid={!!errors.bio}>
             <FormLabel>
               <div className="flex flex-row gap-2">
-                <Icon as={HiPencilAlt} boxSize={4} />
+                <PencilIcon className="size-4" />
                 Bio
               </div>
             </FormLabel>
@@ -240,7 +237,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           <FormControl isInvalid={!!errors.website}>
             <FormLabel>
               <div className="flex flex-row gap-2">
-                <Icon as={FiGlobe} boxSize={4} />
+                <GlobeIcon className="size-4" />
                 Website
               </div>
             </FormLabel>

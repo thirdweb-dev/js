@@ -5,15 +5,15 @@ import {
   AccountStatus,
   useUpdateAccountPlan,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, Icon } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { AccountForm } from "components/settings/Account/AccountForm";
 import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { ExternalLinkIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FiExternalLink } from "react-icons/fi";
 import { Button, Heading, Text, TrackedLink } from "tw-components";
 import { PLANS } from "utils/pricing";
 import { LazyOnboardingBilling } from "../../../onboarding/LazyOnboardingBilling";
@@ -284,7 +284,7 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
       >
         <div className="flex flex-row items-center gap-2">
           <Text color="blue.500">Learn more about thirdweb&apos;s pricing</Text>
-          <Icon as={FiExternalLink} />
+          <ExternalLinkIcon className="size-4" />
         </div>
       </TrackedLink>
 

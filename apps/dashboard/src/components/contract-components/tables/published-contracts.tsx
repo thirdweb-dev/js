@@ -1,7 +1,7 @@
 import { Alert, AlertIcon, AlertTitle, Flex, Spinner } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
+import { RefreshCcwIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { IoRefreshSharp } from "react-icons/io5";
 import { Button, Heading, LinkButton, Text } from "tw-components";
 import { PublishedContractTable } from "../contract-table-v2";
 import { usePublishedContractsQuery } from "../hooks";
@@ -100,7 +100,7 @@ export const PublishedContracts: React.FC<PublishedContractsProps> = ({
                 </AlertTitle>
                 <Button
                   onClick={() => publishedContractsQuery.refetch()}
-                  leftIcon={<IoRefreshSharp />}
+                  leftIcon={<RefreshCcwIcon className="size-4" />}
                   ml="auto"
                   size="sm"
                   colorScheme="red"

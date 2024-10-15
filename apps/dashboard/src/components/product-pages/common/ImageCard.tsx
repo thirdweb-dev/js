@@ -1,6 +1,6 @@
-import { Box, Flex, Icon } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
+import { ArrowRightIcon } from "lucide-react";
 import NextImage, { type StaticImageData } from "next/image";
-import { FiArrowRight } from "react-icons/fi";
 import { Card, Heading, TrackedLink } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 
@@ -75,15 +75,7 @@ export const ImageCard: ComponentWithChildren<ImageCardProps> = ({
           {href && (
             <Flex alignItems="center">
               {linkTitle || <span>Visit website</span>}
-              <Icon
-                as={FiArrowRight}
-                transform="rotate(-45deg)"
-                transition="transform 0.2s"
-                _groupHover={{
-                  transform: "rotate(-45deg) translateX(2px)",
-                }}
-                ml={2}
-              />
+              <ArrowRightIcon className="-rotate-45 ml-2 size-4 transition-transform group-hover:translate-x-1 group-hover:rotate-45" />
             </Flex>
           )}
         </Flex>

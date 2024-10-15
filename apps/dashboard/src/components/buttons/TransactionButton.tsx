@@ -3,7 +3,6 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   Center,
   Flex,
-  Icon,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -12,9 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
-import { ArrowLeftRightIcon } from "lucide-react";
+import { ArrowLeftRightIcon, InfoIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FiInfo } from "react-icons/fi";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -209,7 +207,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
       <div className="flex flex-col gap-4">
         <Heading size="label.lg">
           <div className="flex flex-row items-center gap-2">
-            <Icon color="primary.500" boxSize={6} as={FiInfo} />
+            <InfoIcon className="size-6 text-primary-foreground" />
             <span>Execute Transaction</span>
           </div>
         </Heading>
@@ -244,7 +242,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
       <div className="flex flex-col gap-4">
         <Heading size="label.lg">
           <div className="flex flex-row items-center gap-2">
-            <Icon color="primary.500" boxSize={6} as={FiInfo} />
+            <InfoIcon className="size-6 text-primary-foreground" />
             <span>Approve Transaction</span>
           </div>
         </Heading>

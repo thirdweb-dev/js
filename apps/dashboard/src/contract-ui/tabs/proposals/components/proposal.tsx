@@ -4,10 +4,10 @@ import {
   tokensDelegated,
   votingTokenDecimals,
 } from "@3rdweb-sdk/react/hooks/useVote";
-import { Flex, Icon } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { CheckIcon, MinusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
-import { FiCheck, FiMinus, FiX } from "react-icons/fi";
 import { toast } from "sonner";
 import { type ThirdwebContract, toTokens } from "thirdweb";
 import * as VoteExt from "thirdweb/extensions/vote";
@@ -139,7 +139,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
             txChainID={contract.chain.id}
             size="sm"
             transactionCount={1}
-            rightIcon={<Icon as={FiCheck} />}
+            rightIcon={<CheckIcon />}
             onClick={() => castVote(1)}
             colorScheme="green"
             isDisabled={sendTx.isPending && voteType !== 1}
@@ -151,7 +151,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
             txChainID={contract.chain.id}
             size="sm"
             transactionCount={1}
-            rightIcon={<Icon as={FiX} />}
+            rightIcon={<XIcon />}
             onClick={() => castVote(0)}
             colorScheme="red"
             isDisabled={sendTx.isPending && voteType !== 0}
@@ -164,7 +164,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
             colorScheme="blackAlpha"
             size="sm"
             transactionCount={1}
-            rightIcon={<Icon as={FiMinus} />}
+            rightIcon={<MinusIcon />}
             onClick={() => castVote(2)}
             isDisabled={sendTx.isPending && voteType !== 2}
             isLoading={sendTx.isPending && voteType === 2}
@@ -177,7 +177,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
           <Button
             colorScheme="primary"
             size="sm"
-            leftIcon={<Icon as={FiCheck} />}
+            leftIcon={<CheckIcon />}
             onClick={() => {
               const executeTx = VoteExt.executeProposal({
                 contract,

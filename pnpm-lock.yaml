@@ -252,9 +252,6 @@ importers:
       react-hook-form:
         specifier: 7.52.0
         version: 7.52.0(react@18.3.1)
-      react-icons:
-        specifier: ^5.2.1
-        version: 5.3.0(react@18.3.1)
       react-intersection-observer:
         specifier: ^9.10.3
         version: 9.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -611,9 +608,6 @@ importers:
       react-html-parser:
         specifier: 2.0.2
         version: 2.0.2(react@18.3.1)
-      react-icons:
-        specifier: ^5.2.1
-        version: 5.3.0(react@18.3.1)
       remark-gfm:
         specifier: 3.0.1
         version: 3.0.1
@@ -12855,11 +12849,6 @@ packages:
     resolution: {integrity: sha512-XeerLwCVjTs3njZcgCOeDUqLgNIt/t+6Jgi5/qPsO/krUWl76kWKXMeVs2LhY2gwM6X378DkhLjur0zUQdpz0g==}
     peerDependencies:
       react: ^0.14.0 || ^15.0.0 || ^16.0.0-0
-
-  react-icons@5.3.0:
-    resolution: {integrity: sha512-DnUk8aFbTyQPSkCfF8dbX6kQjXA9DktMeJqfjrg6cK9vwQVMxmcA3BfP4QoiztVmEHtwlTgLFsPuH2NskKT6eg==}
-    peerDependencies:
-      react: '*'
 
   react-immutable-proptypes@2.2.0:
     resolution: {integrity: sha512-Vf4gBsePlwdGvSZoLSBfd4HAP93HDauMY4fDjXhreg/vg6F3Fj/MXDNyTbltPC/xZKmZc+cjLu3598DdYK6sgQ==}
@@ -32471,10 +32460,6 @@ snapshots:
   react-html-parser@2.0.2(react@18.3.1):
     dependencies:
       htmlparser2: 3.10.1
-      react: 18.3.1
-
-  react-icons@5.3.0(react@18.3.1):
-    dependencies:
       react: 18.3.1
 
   react-immutable-proptypes@2.2.0(immutable@3.8.2):

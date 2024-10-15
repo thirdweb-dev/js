@@ -1,5 +1,5 @@
-import { Flex, Icon } from "@chakra-ui/react";
-import { FiAlertCircle, FiCheckCircle, FiInfo } from "react-icons/fi";
+import { Flex } from "@chakra-ui/react";
+import { AlertCircleIcon, CheckCircleIcon, InfoIcon } from "lucide-react";
 import { Badge, Text } from "tw-components";
 
 interface BillingHeaderProps {
@@ -29,20 +29,8 @@ export const BillingHeader: React.FC<BillingHeaderProps> = ({
         >
           <span className="flex flex-row items-center gap-2">
             <Icon
-              as={
-                validPayment
-                  ? FiCheckCircle
-                  : paymentVerification
-                    ? FiInfo
-                    : FiAlertCircle
-              }
-              color={
-                validPayment
-                  ? "green.500"
-                  : paymentVerification
-                    ? "orange.500"
-                    : "red.500"
-              }
+              validPayment={validPayment}
+              paymentVerification={paymentVerification}
             />
             <Text size="label.sm" as="span">
               {validPayment
@@ -57,3 +45,16 @@ export const BillingHeader: React.FC<BillingHeaderProps> = ({
     </Flex>
   );
 };
+
+function Icon(props: {
+  validPayment: boolean;
+  paymentVerification: boolean;
+}) {
+  if (props.validPayment) {
+    return <CheckCircleIcon className="size-4 text-success-text" />;
+  }
+  if (props.paymentVerification) {
+    return <InfoIcon className="size-4 text-warning-text" />;
+  }
+  return <AlertCircleIcon className="size-4 text-error-text" />;
+}

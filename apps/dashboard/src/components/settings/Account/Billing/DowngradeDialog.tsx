@@ -6,14 +6,13 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Flex,
-  Icon,
   Menu,
   MenuButton,
   MenuList,
   Textarea,
 } from "@chakra-ui/react";
+import { ChevronDownIcon, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
-import { FiChevronDown, FiX } from "react-icons/fi";
 import { Button, MenuItem, Text } from "tw-components";
 
 const DOWNGRADE_OPTIONS = {
@@ -68,7 +67,7 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
                       className="flex flex-row items-center gap-2"
                       key={Array.isArray(feat) ? feat[0] : feat}
                     >
-                      <Icon as={FiX} boxSize={4} color="red.500" />
+                      <XIcon className="size-4 text-destructive-text" />
                       <Text>{Array.isArray(feat) ? feat[0] : feat}</Text>
                     </div>
                   ))}
@@ -87,7 +86,7 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
                         w="full"
                         fontSize="small"
                         textAlign="left"
-                        rightIcon={<FiChevronDown />}
+                        rightIcon={<ChevronDownIcon className="size-4" />}
                       >
                         {feedback
                           ? DOWNGRADE_OPTIONS[

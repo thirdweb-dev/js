@@ -1,8 +1,8 @@
-import { Flex, Icon } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { ArrowRightIcon } from "lucide-react";
 import type { StaticImageData } from "next/image";
 import type { ReactNode } from "react";
-import { FiArrowRight } from "react-icons/fi";
 import {
   Heading,
   Text,
@@ -51,12 +51,7 @@ export const ProductLearnMoreCard: React.FC<ProductLearnMoreCardProps> = ({
         role="group"
       >
         <span>Learn more</span>
-        <Icon
-          as={FiArrowRight}
-          transform="rotate(-45deg)"
-          transition="transform 0.2s"
-          _groupHover={{ transform: "rotate(-45deg) translateX(2px)" }}
-        />
+        <ArrowRightIcon className="-rotate-45 ml-2 size-4 transition-transform group-hover:translate-x-1 group-hover:rotate-45" />
       </TrackedLink>
     </Flex>
   );
