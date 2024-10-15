@@ -14,6 +14,7 @@ import {
   encryptDecrypt,
   isEncryptDecryptSupported,
 } from "../../__generated__/IDelayedReveal/read/encryptDecrypt.js";
+import { nextTokenIdToMint } from "../../__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
 import {
   lazyMint as generatedLazyMint,
   isLazyMintSupported,
@@ -80,16 +81,29 @@ export function createDelayedRevealBatch(
   return generatedLazyMint({
     contract: options.contract,
     asyncParams: async () => {
-      const placeholderUris = await upload({
-        client: options.contract.client,
-        files: Array(options.metadata.length).fill(options.placeholderMetadata),
-      });
+      const [placeholderUris, startFileNumber] = await Promise.all([
+        upload({
+          client: options.contract.client,
+          files: Array(options.metadata.length).fill(
+            options.placeholderMetadata,
+          ),
+        }),
+        nextTokenIdToMint({
+          contract: options.contract,
+        }),
+      ]);
       const placeholderUri = getBaseUriFromBatch(placeholderUris);
 
       const uris = await upload({
         client: options.contract.client,
         files: options.metadata,
+        // IMPORTANT: File number has to be calculated properly otherwise the whole batch will break
+        // e.g: If you are uploading a second batch, the file name should never start from `0`
+        rewriteFileNames: {
+          fileStartNumber: Number(startFileNumber),
+        },
       });
+
       const baseUri = getBaseUriFromBatch(uris);
       const baseUriId = await getBaseURICount({
         contract: options.contract,

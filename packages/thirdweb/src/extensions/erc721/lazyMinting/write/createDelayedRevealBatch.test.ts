@@ -1,97 +1,92 @@
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
+import { TEST_ACCOUNT_D } from "~test/test-wallets.js";
 import { ANVIL_CHAIN } from "../../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../../test/src/test-clients.js";
-import {
-  type ThirdwebContract,
-  getContract,
-} from "../../../../contract/contract.js";
-import type { Hex } from "../../../../utils/encoding/hex.js";
+import { getContract } from "../../../../contract/contract.js";
+import { deployERC721Contract } from "../../../../extensions/prebuilts/deploy-erc721.js";
+import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-and-confirm-transaction.js";
+import { getNFT } from "../../read/getNFT.js";
 import { createDelayedRevealBatch } from "./createDelayedRevealBatch.js";
+import { reveal } from "./reveal.js";
 
-const mocks = vi.hoisted(() => ({
-  getBaseUriFromBatch: vi.fn(),
-  getBaseURICount: vi.fn(),
-  encryptDecrypt: vi.fn(),
-  lazyMint: vi.fn(),
-  upload: vi.fn(),
-}));
-
-vi.mock("../../../../utils/ipfs.js", () => ({
-  getBaseUriFromBatch: mocks.getBaseUriFromBatch,
-}));
-
-vi.mock(
-  "../../__generated__/IBatchMintMetadata/read/getBaseURICount.js",
-  () => ({
-    getBaseURICount: mocks.getBaseURICount,
-  }),
-);
-
-vi.mock("../../__generated__/IDelayedReveal/read/encryptDecrypt.js", () => ({
-  encryptDecrypt: mocks.encryptDecrypt,
-}));
-
-vi.mock("../../../../storage/upload.js", () => ({
-  upload: mocks.upload,
-}));
-
-const placeholderNFT = {
+const placeholderMetadata = {
   name: "Hidden NFT",
   description: "Will be revealed next week!",
 };
+const account = TEST_ACCOUNT_D;
+const chain = ANVIL_CHAIN;
+const client = TEST_CLIENT;
+const password = "1234";
 
-const realNFTs = [
-  {
-    name: "Common NFT #1",
-    description: "Common NFT, one of many.",
-  },
-  {
-    name: "Super Rare NFT #2",
-    description: "You got a Super Rare NFT!",
-  },
-];
-
-describe("createDelayedRevealedBatch", () => {
-  let contract: ThirdwebContract;
-  beforeAll(() => {
-    vi.clearAllMocks();
-    contract = getContract({
-      chain: ANVIL_CHAIN,
-      address: "0x708781BAE850faA490cB5b5b16b4687Ec0A8D65D",
-      client: TEST_CLIENT,
-    });
-  });
-
-  it("should generate the proper calldata", async () => {
-    mocks.getBaseUriFromBatch
-      .mockReturnValueOnce(
-        "ipfs://QmQbqDu4aT7sMJHNUk76s4F6DgGk2hVYXYSqpsTRoRM5G8/",
-      )
-      .mockReturnValueOnce(
-        "ipfs://QmRhASFGXNRE3NXNTfakz82j4Tmv5A9rBezTKGZ5DL6uip/",
-      );
-    mocks.getBaseURICount.mockResolvedValue(0n);
-    mocks.encryptDecrypt.mockResolvedValue(
-      "0x8967ae24bd1c6439791bc1c8ca3b3499537283b71af366693792a707eb99e80bc0058c90c1f92f18ec716e4760fdf9279241d442b5b5",
-    );
-
-    const tx = createDelayedRevealBatch({
-      contract,
-      placeholderMetadata: placeholderNFT,
-      metadata: realNFTs,
-      password: "password123",
+describe.runIf(process.env.TW_SECRET_KEY)("createDelayedRevealedBatch", () => {
+  it("should create delayed-reveal batches properly", async () => {
+    const contract = getContract({
+      address: await deployERC721Contract({
+        account,
+        chain,
+        client,
+        type: "DropERC721",
+        params: {
+          name: "nftdrop",
+          contractURI: TEST_CONTRACT_URI,
+        },
+      }),
+      chain,
+      client,
     });
 
-    let data: Hex;
-    if (typeof tx.data === "string") {
-      data = tx.data;
-    } else {
-      data = (await tx.data?.()) || "0x";
-    }
+    // Create batch #0
+    await sendAndConfirmTransaction({
+      account,
+      transaction: createDelayedRevealBatch({
+        contract,
+        placeholderMetadata,
+        password: "1234",
+        metadata: [{ name: "token 0" }, { name: "token 1" }],
+      }),
+    });
 
-    expect(data).toEqual(
-      "0xd37c353b0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000036697066733a2f2f516d516271447534615437734d4a484e556b3736733446364467476b3268565958595371707354526f524d3547382f0000000000000000000000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000040963325533d81f66ae93aff4f562735814e51020ea8bf2bd48eb983ae88cbc40b00000000000000000000000000000000000000000000000000000000000000368967ae24bd1c6439791bc1c8ca3b3499537283b71af366693792a707eb99e80bc0058c90c1f92f18ec716e4760fdf9279241d442b5b500000000000000000000",
-    );
-    expect(mocks.upload).toHaveBeenCalledTimes(2);
+    // Create batch #1
+    await sendAndConfirmTransaction({
+      account,
+      transaction: createDelayedRevealBatch({
+        contract,
+        placeholderMetadata,
+        password,
+        metadata: [{ name: "token 2" }, { name: "token 3" }],
+      }),
+    });
+
+    // Reveal batch #0
+    await sendAndConfirmTransaction({
+      account,
+      transaction: reveal({ contract, batchId: 0n, password }),
+    });
+    // Reveal batch #1
+    await sendAndConfirmTransaction({
+      account,
+      transaction: reveal({ contract, batchId: 1n, password }),
+    });
+
+    /**
+     * The token URIs of batch 0 should end with "/0" and "/1"
+     * while the token URIs of batch 1 should end with "/2" and "/3"
+     */
+    const [token0, token1, token2, token3] = await Promise.all([
+      getNFT({ contract, tokenId: 0n }),
+      getNFT({ contract, tokenId: 1n }),
+      getNFT({ contract, tokenId: 2n }),
+      getNFT({ contract, tokenId: 3n }),
+    ]);
+
+    expect(token0.tokenURI.endsWith("/0")).toBe(true);
+    expect(token0.metadata.name).toBe("token 0");
+    expect(token1.tokenURI.endsWith("/1")).toBe(true);
+    expect(token1.metadata.name).toBe("token 1");
+    expect(token2.tokenURI.endsWith("/2")).toBe(true);
+    expect(token2.metadata.name).toBe("token 2");
+    expect(token3.tokenURI.endsWith("/3")).toBe(true);
+    expect(token3.metadata.name).toBe("token 3");
   });
 });
