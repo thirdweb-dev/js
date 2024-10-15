@@ -51,7 +51,7 @@ export const HomepageTopNav: React.FC = () => {
           <Logo forceShowWordMark color="#fff" />
         </TrackedLink>
         <DesktopMenu />
-        <MobileMenu display={{ base: "inherit", xl: "none" }} />
+        <MobileMenu />
       </Container>
     </Box>
   );

@@ -1,12 +1,9 @@
-import {
-  Flex,
-  type FlexProps,
-  IconButton,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Flex, IconButton } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { MenuIcon } from "lucide-react";
-import { Drawer, Heading, TrackedLink, TrackedLinkButton } from "tw-components";
+import { useState } from "react";
+import { Heading, TrackedLink, TrackedLinkButton } from "tw-components";
 import {
   DEVELOPER_RESOURCES,
   MOBILE_PRODUCTS_SECTIONS,
@@ -14,11 +11,11 @@ import {
 } from "./data";
 import type { SectionItemProps } from "./types";
 
-export const MobileMenu: React.FC<FlexProps> = (props) => {
-  const disclosure = useDisclosure();
+export const MobileMenu: React.FC = () => {
+  const [open, setOpen] = useState(false);
 
   return (
-    <Flex gap={2} {...props} alignItems="center">
+    <Flex gap={2} display={{ base: "inherit", xl: "none" }} alignItems="center">
       <TrackedLinkButton
         bgColor="white"
         _hover={{
@@ -33,38 +30,33 @@ export const MobileMenu: React.FC<FlexProps> = (props) => {
       >
         Contact Us
       </TrackedLinkButton>
-      <IconButton
-        aria-label="Homepage Menu"
-        icon={<MenuIcon className="size-4" />}
-        variant="ghost"
-        onClick={disclosure.onOpen}
-      />
-      <Drawer
-        drawerBodyProps={{ bg: "#111315" }}
-        isOpen={disclosure.isOpen}
-        onClose={disclosure.onClose}
-        customPlacement="right"
-        closeOnOverlayClick={true}
-        noTopBorderRadius={true}
-      >
-        <Flex gap={6} direction="column">
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <IconButton
+            aria-label="Homepage Menu"
+            icon={<MenuIcon className="size-6" />}
+            variant="ghost"
+          />
+        </SheetTrigger>
+
+        <SheetContent className="z-[1300] flex max-w-[320px] flex-col gap-6 overflow-y-auto bg-[#111315]">
           <MobileNavSection
             title="Products"
             links={MOBILE_PRODUCTS_SECTIONS}
-            onItemClick={disclosure.onClose}
+            onItemClick={() => setOpen(false)}
           />
           <MobileNavSection
             title="Solutions"
             links={SOLUTIONS}
-            onItemClick={disclosure.onClose}
+            onItemClick={() => setOpen(false)}
           />
           <MobileNavSection
             title="Developer"
             links={DEVELOPER_RESOURCES}
-            onItemClick={disclosure.onClose}
+            onItemClick={() => setOpen(false)}
           />
-        </Flex>
-      </Drawer>
+        </SheetContent>
+      </Sheet>
     </Flex>
   );
 };
@@ -87,7 +79,7 @@ const MobileNavSection: React.FC<MobileNavSectionProps> = ({
       </Heading>
       <ul className="ml-1.5 list-none gap-1.5">
         {links.map((link) => (
-          <li className="min-h-5" key={link.label}>
+          <li className="min-h-5 py-2" key={link.label}>
             <Heading
               as={TrackedLink}
               display="flex"
