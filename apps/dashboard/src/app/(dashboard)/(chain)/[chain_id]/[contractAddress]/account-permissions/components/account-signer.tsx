@@ -1,9 +1,9 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { formatDistance } from "date-fns/formatDistance";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useActiveAccount } from "thirdweb/react";
 import { Badge, Card, Heading, Text } from "tw-components";
-import { useAllChainsData } from "../../../../hooks/chains/allChains";
 
 export type AccountSignerType = {
   signer: string;
