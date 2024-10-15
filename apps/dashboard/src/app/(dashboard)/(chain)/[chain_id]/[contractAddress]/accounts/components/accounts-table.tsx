@@ -4,6 +4,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { Flex, IconButton, Select, Skeleton } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
+import { useChainSlug } from "hooks/chains/chainSlug";
 import {
   ChevronFirstIcon,
   ChevronLastIcon,
@@ -15,7 +16,6 @@ import type { ThirdwebContract } from "thirdweb";
 import { getAccounts, totalAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
 import { Text, TrackedCopyButton } from "tw-components";
-import { useChainSlug } from "../../../../hooks/chains/chainSlug";
 
 const columnHelper = createColumnHelper<{ account: string }>();
 
