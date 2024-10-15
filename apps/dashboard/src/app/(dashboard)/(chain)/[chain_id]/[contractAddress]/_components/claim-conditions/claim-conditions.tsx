@@ -17,7 +17,7 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   isERC20,
 }) => {
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex w-full flex-col gap-8">
       <Flex p={0} position="relative">
         <Flex
           pt={{ base: isColumn ? 0 : 6, md: 6 }}

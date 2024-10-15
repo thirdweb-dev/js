@@ -16,7 +16,6 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleHelpIcon, PlusIcon } from "lucide-react";
@@ -46,8 +45,9 @@ import {
   type ClaimConditionInput,
   ClaimConditionInputSchema,
   type SnapshotEntry,
-} from "../../legacy-zod-schema";
+} from "../legacy-zod-schema";
 import { ResetClaimEligibility } from "../reset-claim-eligibility";
+import { SnapshotUpload } from "../snapshot-upload";
 import { getClaimPhasesInLegacyFormat, setClaimPhasesTx } from "./hooks";
 import { ClaimConditionsPhase } from "./phase";
 

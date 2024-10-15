@@ -1,8 +1,8 @@
 import { CURRENCIES } from "constants/currencies";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { isAddressZero } from "utils/zeroAddress";
-import { useAllChainsData } from "../../../../hooks/chains/allChains";
 
 interface PricePreviewProps {
   price: string | number | undefined;

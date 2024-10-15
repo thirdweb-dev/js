@@ -15,7 +15,7 @@ import type { z } from "zod";
 import type {
   ClaimCondition as LegacyClaimCondition,
   ClaimConditionInputSchema as LegacyClaimConditionInputSchema,
-} from "../../legacy-zod-schema";
+} from "../legacy-zod-schema";
 
 type SnapshotEntry = {
   address: string;

@@ -18,7 +18,7 @@ const AirdropTab = dynamic(() => import("./components/airdrop-tab"));
 const BurnTab = dynamic(() => import("./components/burn-tab"));
 const MintSupplyTab = dynamic(() => import("./components/mint-supply-tab"));
 const ClaimConditionTab = dynamic(() =>
-  import("contract-ui/tabs/claim-conditions/components/claim-conditions").then(
+  import("../../_components/claim-conditions/claim-conditions").then(
     ({ ClaimConditions }) => ClaimConditions,
   ),
 );

@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { ClaimConditions } from "../../../../../../contract-ui/tabs/claim-conditions/components/claim-conditions";
+import { ClaimConditions } from "../_components/claim-conditions/claim-conditions";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 
