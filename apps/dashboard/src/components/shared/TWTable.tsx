@@ -29,11 +29,10 @@ import {
 } from "@tanstack/react-table";
 import { EllipsisVerticalIcon, MoveRightIcon } from "lucide-react";
 import pluralize from "pluralize";
-import { type SetStateAction, useMemo, useState } from "react";
-import type { IconType } from "react-icons/lib";
+import { type ReactNode, type SetStateAction, useMemo, useState } from "react";
 
 type CtaMenuItem<TRowData> = {
-  icon?: IconType;
+  icon?: ReactNode;
   text: string;
   onClick: (row: TRowData) => void;
   isDestructive?: boolean;
@@ -216,7 +215,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                                   isDestructive && "!text-destructive-text",
                                 )}
                               >
-                                {icon?.({ className: "size-4" })}
+                                {icon}
                                 {text}
                               </DropdownMenuItem>
                             );

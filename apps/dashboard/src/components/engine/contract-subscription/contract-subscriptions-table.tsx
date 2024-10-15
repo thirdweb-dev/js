@@ -29,8 +29,9 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useV5DashboardChain } from "lib/v5-adapter";
+import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
-import { FiInfo, FiTrash } from "react-icons/fi";
+import { FiInfo } from "react-icons/fi";
 import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
 import { shortenAddress as shortenAddresThrows } from "thirdweb/utils";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
@@ -221,7 +222,7 @@ export const ContractSubscriptionTable: React.FC<
         isFetched={isFetched}
         onMenuClick={[
           {
-            icon: FiTrash,
+            icon: <Trash2Icon className="size-4" />,
             text: "Remove",
             onClick: (contractSub) => {
               setSelectedContractSub(contractSub);

@@ -20,8 +20,8 @@ import { TWTable } from "components/shared/TWTable";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
-import { FiTrash } from "react-icons/fi";
 import { Button, Card, FormLabel, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
@@ -212,7 +212,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
         isFetched={isFetched}
         onMenuClick={[
           {
-            icon: FiTrash,
+            icon: <Trash2Icon className="size-4" />,
             text: "Delete",
             onClick: onDelete,
             isDestructive: true,

@@ -22,9 +22,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
-import { BiPencil } from "react-icons/bi";
-import { FiTrash } from "react-icons/fi";
 import { Button, FormLabel, Text } from "tw-components";
 import { toDateTimeLocal } from "utils/date-utils";
 
@@ -96,7 +95,7 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
         isFetched={isFetched}
         onMenuClick={[
           {
-            icon: BiPencil,
+            icon: <PencilIcon className="size-4" />,
             text: "Edit",
             onClick: (accessToken) => {
               setSelectedAccessToken(accessToken);
@@ -104,7 +103,7 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
             },
           },
           {
-            icon: FiTrash,
+            icon: <Trash2Icon className="size-4" />,
             text: "Delete",
             onClick: (accessToken) => {
               setSelectedAccessToken(accessToken);

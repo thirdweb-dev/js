@@ -23,9 +23,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
-import { BiPencil } from "react-icons/bi";
-import { FiTrash } from "react-icons/fi";
 import { Button, FormLabel, Text } from "tw-components";
 
 interface AdminsTableProps {
@@ -83,7 +82,7 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
         isFetched={isFetched}
         onMenuClick={[
           {
-            icon: BiPencil,
+            icon: <PencilIcon className="size-4" />,
             text: "Edit",
             onClick: (admin) => {
               setSelectedAdmin(admin);
@@ -91,7 +90,7 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
             },
           },
           {
-            icon: FiTrash,
+            icon: <Trash2Icon className="size-4" />,
             text: "Remove",
             onClick: (admin) => {
               setSelectedAdmin(admin);
