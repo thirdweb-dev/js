@@ -17,6 +17,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
+import { useChainSlug } from "hooks/chains/chainSlug";
 import {
   ArrowRightIcon,
   ChevronFirstIcon,
@@ -36,7 +37,6 @@ import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { Heading, Text } from "tw-components";
-import { useChainSlug } from "../../../../hooks/chains/chainSlug";
 
 interface ContractOverviewNFTGetAllProps {
   contract: ThirdwebContract;

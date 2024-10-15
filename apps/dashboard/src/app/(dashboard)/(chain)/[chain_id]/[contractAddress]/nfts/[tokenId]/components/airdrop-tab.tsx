@@ -2,10 +2,6 @@
 
 import { Flex, useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import {
-  type AirdropAddressInput,
-  AirdropUpload,
-} from "contract-ui/tabs/nfts/components/airdrop-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { UploadIcon } from "lucide-react";
@@ -15,6 +11,7 @@ import { multicall } from "thirdweb/extensions/common";
 import { balanceOf, encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Text } from "tw-components";
+import { type AirdropAddressInput, AirdropUpload } from "./airdrop-upload";
 
 interface AirdropTabProps {
   contract: ThirdwebContract;

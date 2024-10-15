@@ -1,11 +1,11 @@
 import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
+import { useContractFunctionSelectors } from "contract-ui/hooks/useContractFunctionSelectors";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { useContractFunctionSelectors } from "../../contract-ui/hooks/useContractFunctionSelectors";
 import type { NFTDrawerTab } from "./types";
 
 type UseNFTDrawerTabsParams = {
@@ -13,28 +13,18 @@ type UseNFTDrawerTabsParams = {
   tokenId: string;
 };
 
-const TransferTab = dynamic(
-  () => import("contract-ui/tabs/nfts/components/transfer-tab"),
-);
-const AirdropTab = dynamic(
-  () => import("contract-ui/tabs/nfts/components/airdrop-tab"),
-);
-const BurnTab = dynamic(
-  () => import("contract-ui/tabs/nfts/components/burn-tab"),
-);
-const MintSupplyTab = dynamic(
-  () => import("contract-ui/tabs/nfts/components/mint-supply-tab"),
-);
+const TransferTab = dynamic(() => import("./components/transfer-tab"));
+const AirdropTab = dynamic(() => import("./components/airdrop-tab"));
+const BurnTab = dynamic(() => import("./components/burn-tab"));
+const MintSupplyTab = dynamic(() => import("./components/mint-supply-tab"));
 const ClaimConditionTab = dynamic(() =>
   import("contract-ui/tabs/claim-conditions/components/claim-conditions").then(
     ({ ClaimConditions }) => ClaimConditions,
   ),
 );
-const ClaimTabERC1155 = dynamic(
-  () => import("contract-ui/tabs/nfts/components/claim-tab"),
-);
+const ClaimTabERC1155 = dynamic(() => import("./components/claim-tab"));
 const UpdateMetadataTab = dynamic(
-  () => import("contract-ui/tabs/nfts/components/update-metadata-tab"),
+  () => import("./components/update-metadata-tab"),
 );
 
 export function useNFTDrawerTabs({

@@ -14,7 +14,7 @@ import {
   Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { useNFTDrawerTabs } from "core-ui/nft-drawer/useNftDrawerTabs";
+import { useChainSlug } from "hooks/chains/chainSlug";
 import { ChevronLeftIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -24,8 +24,8 @@ import { useReadContract } from "thirdweb/react";
 import { Badge, Button, Card, CodeBlock, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
-import { useChainSlug } from "../../../../hooks/chains/chainSlug";
-import { NftProperty } from "./nft-property";
+import { NftProperty } from "../components/nft-property";
+import { useNFTDrawerTabs } from "./useNftDrawerTabs";
 
 function isValidUrl(possibleUrl?: string | null) {
   if (!possibleUrl) {
