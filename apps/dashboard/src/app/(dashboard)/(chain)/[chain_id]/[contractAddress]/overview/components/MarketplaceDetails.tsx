@@ -1,11 +1,7 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import {
-  GridItem,
-  SimpleGrid,
-  Skeleton,
-  SkeletonText,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Badge } from "@/components/ui/badge";
+import { SkeletonContainer } from "@/components/ui/skeleton";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ListingStatsV3 } from "contract-ui/tabs/listings/components/listing-stats";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -19,7 +15,6 @@ import {
 } from "thirdweb/extensions/marketplace";
 import { useReadContract } from "thirdweb/react";
 import { min } from "thirdweb/utils";
-import { Badge, Card, Heading, Text, TrackedLink } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 type ListingData =
@@ -87,18 +82,14 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
         <h2 className="font-semibold text-2xl tracking-tight">
           Direct Listing
         </h2>
-        <TrackedLink
+        <TrackedLinkTW
           category={trackingCategory}
           label="view_all_direct_listings"
-          color="blue.400"
-          _light={{
-            color: "blue.600",
-          }}
-          gap={4}
+          className="text-link-foreground hover:text-foreground"
           href={directListingsHref}
         >
           View all -&gt;
-        </TrackedLink>
+        </TrackedLinkTW>
       </div>
       <ListingCards
         listings={listings}
@@ -151,19 +142,17 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
   return (
     <>
       <div className="flex w-full items-center justify-between">
-        <Heading size="label.lg">English Auctions</Heading>
-        <TrackedLink
+        <h2 className="font-semibold text-2xl tracking-tight">
+          English Auctions
+        </h2>
+        <TrackedLinkTW
           category={trackingCategory}
           label="view_all_english_auctions"
-          color="blue.400"
-          _light={{
-            color: "blue.600",
-          }}
-          gap={4}
+          className="text-link-foreground hover:text-foreground"
           href={englishAuctionsHref}
         >
           View all -&gt;
-        </TrackedLink>
+        </TrackedLinkTW>
       </div>
       <ListingCards
         listings={auctions}
@@ -200,7 +189,7 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
         hasEnglishAuctions={hasEnglishAuctions}
       />
 
-      {hasDirectListings && contract && (
+      {hasDirectListings && (
         <DirectListingCards
           contract={contract}
           trackingCategory={trackingCategory}
@@ -208,7 +197,7 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
         />
       )}
 
-      {hasEnglishAuctions && contract && (
+      {hasEnglishAuctions && (
         <EnglishAuctionCards
           contract={contract}
           trackingCategory={trackingCategory}
@@ -263,82 +252,105 @@ const ListingCards: React.FC<ListingCardsProps> = ({
   chainSlug,
   contractAddress,
 }) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
   listings = isPending
-    ? Array.from({ length: isMobile ? 2 : 3 }).map((_, idx) =>
-        dummyMetadata(idx),
-      )
-    : listings.slice(0, isMobile ? 2 : 3);
+    ? Array.from({ length: 3 }).map((_, idx) => dummyMetadata(idx))
+    : listings.slice(0, 3);
 
   const directListingsHref = `/${chainSlug}/${contractAddress}/direct-listings`;
   const englishAuctionsHref = `/${chainSlug}/${contractAddress}/english-auctions`;
 
   return (
-    <SimpleGrid gap={{ base: 3, md: 6 }} columns={{ base: 2, md: 3 }}>
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 max-sm:[&>*:nth-child(n+3)]:hidden">
       {listings.map((listing, index) => (
-        <GridItem
+        <div
+          className="relative rounded-lg border border-border bg-muted/50 hover:border-foreground hover:bg-muted"
           key={`${listing.creatorAddress}-${index}`}
-          as={TrackedLink}
-          category={trackingCategory}
-          href={
-            listing.type === "direct-listing"
-              ? directListingsHref
-              : englishAuctionsHref
-          }
-          _hover={{ opacity: 0.75, textDecoration: "none" }}
         >
-          <Card p={0} position="relative">
-            <div className="relative aspect-square w-full overflow-hidden rounded-xl">
-              <Skeleton isLoaded={!isPending}>
-                <NFTMediaWithEmptyState
-                  metadata={listing.asset.metadata}
-                  requireInteraction
-                  width="100%"
-                  height="100%"
-                />
-              </Skeleton>
-            </div>
-            <div className="flex flex-col gap-1 p-4 pb-3">
-              <Skeleton w={!isPending ? "100%" : "50%"} isLoaded={!isPending}>
-                <Heading size="label.md">{listing.asset.metadata.name}</Heading>
-              </Skeleton>
-              {isMarketplaceV1 && (
-                <SkeletonText isLoaded={!isPending}>
-                  <Text size="body.sm">
-                    {listing.type === "direct-listing"
-                      ? "Direct Listing"
-                      : "English Auction"}
-                  </Text>
-                </SkeletonText>
-              )}
+          <div className="relative aspect-square w-full overflow-hidden rounded-lg">
+            {/* Image */}
+            <SkeletonContainer
+              loadedData={isPending ? undefined : listing.asset.metadata}
+              skeletonData={listing.asset.metadata}
+              className="block h-full w-full"
+              render={(v) => {
+                return (
+                  <NFTMediaWithEmptyState
+                    metadata={v}
+                    requireInteraction
+                    width="100%"
+                    height="100%"
+                  />
+                );
+              }}
+            />
+          </div>
 
-              <Text size="body.sm" mt={4}>
-                Seller
-              </Text>
-              <SkeletonText isLoaded={!isPending}>
-                <WalletAddress address={listing.creatorAddress} />
-              </SkeletonText>
-              <SkeletonText
-                as={Badge}
-                background="backgroundHighlight"
-                isLoaded={!isPending}
-                skeletonHeight={3.5}
-                noOfLines={1}
-                position="absolute"
-                rounded="lg"
-                size="body.xs"
-                p={2}
-                top={2}
-                right={2}
+          <div className="flex flex-col gap-1 p-4 pb-3">
+            {/* Card Link + Title */}
+            <SkeletonContainer
+              loadedData={isPending ? undefined : listing.asset.metadata.name}
+              skeletonData="Listing Title"
+              render={(v) => (
+                <TrackedLinkTW
+                  category={trackingCategory}
+                  className="before:absolute before:inset-0"
+                  href={
+                    listing.type === "direct-listing"
+                      ? directListingsHref
+                      : englishAuctionsHref
+                  }
+                >
+                  {v}
+                </TrackedLinkTW>
+              )}
+            />
+
+            {isMarketplaceV1 && (
+              <SkeletonContainer
+                className="self-start"
+                loadedData={
+                  isPending
+                    ? undefined
+                    : listing.type === "direct-listing"
+                      ? "Direct Listing"
+                      : "English Auction"
+                }
+                skeletonData={listing.type}
+                render={(v) => (
+                  <p className="text-muted-foreground text-sm">{v}</p>
+                )}
+              />
+            )}
+
+            <SkeletonContainer
+              loadedData={isPending ? undefined : listing.creatorAddress}
+              skeletonData={listing.creatorAddress}
+              className="mt-4"
+              render={(v) => (
+                <div>
+                  <p className="text-muted-foreground text-sm">Seller</p>
+                  <WalletAddress
+                    className="relative z-[1] self-start"
+                    address={v}
+                  />
+                </div>
+              )}
+            />
+
+            {!isPending && (
+              <Badge
+                variant="outline"
+                className="absolute top-2 right-2 bg-background py-1.5"
               >
-                <b>{listing.currencyValue.displayValue}</b>{" "}
-                {listing.currencyValue.symbol}
-              </SkeletonText>
-            </div>
-          </Card>
-        </GridItem>
+                <p className="line-clamp-1">
+                  <b>{listing.currencyValue.displayValue}</b>{" "}
+                  {listing.currencyValue.symbol}
+                </p>
+              </Badge>
+            )}
+          </div>
+        </div>
       ))}
-    </SimpleGrid>
+    </div>
   );
 };
