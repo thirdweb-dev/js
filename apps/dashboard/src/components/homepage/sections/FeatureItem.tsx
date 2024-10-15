@@ -1,6 +1,5 @@
-import { Flex, Icon, Tooltip } from "@chakra-ui/react";
-import { AiOutlineDollarCircle } from "react-icons/ai";
-import { IoCheckmarkCircle } from "react-icons/io5";
+import { Flex, Tooltip } from "@chakra-ui/react";
+import { CircleCheckIcon, CircleDollarSignIcon } from "lucide-react";
 import { Card, Text } from "tw-components";
 
 interface FeatureItemProps {
@@ -12,7 +11,7 @@ export const FeatureItem: React.FC<FeatureItemProps> = ({ text }) => {
 
   return (
     <Flex gap={2} alignItems="flex-start">
-      <Icon as={IoCheckmarkCircle} boxSize={5} mt={0.5} />
+      <CircleCheckIcon className="size-6 fill-white text-black" />
       {Array.isArray(text) ? (
         <Flex alignItems="center" justifyItems="center" gap={2}>
           <Text>{titleStr}</Text>
@@ -34,13 +33,7 @@ export const FeatureItem: React.FC<FeatureItemProps> = ({ text }) => {
             boxShadow="none"
           >
             <Flex display={{ base: "none", md: "block" }} mb={-0.5}>
-              <Icon
-                position="relative"
-                top={0.5}
-                as={AiOutlineDollarCircle}
-                boxSize={4}
-                color="blue.500"
-              />
+              <CircleDollarSignIcon className="relative size-4 text-blue-500" />
             </Flex>
           </Tooltip>
           <Text

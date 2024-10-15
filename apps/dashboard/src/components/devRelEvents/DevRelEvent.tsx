@@ -1,6 +1,6 @@
-import { Flex, Icon, Image } from "@chakra-ui/react";
+import { Flex, Image } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { FiCalendar, FiClock } from "react-icons/fi";
+import { CalendarIcon, ClockIcon } from "lucide-react";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 
 interface EventProps {
@@ -53,7 +53,7 @@ export const DevRelEvent: React.FC<EventProps> = ({
             }}
           >
             <Flex align="center" gap={1} wrap="wrap">
-              <Icon as={FiCalendar} color="gray.300" />
+              <CalendarIcon className="size-4 text-gray-300" />
               <Text color="gray.300">
                 {new Date(timestamp).toLocaleDateString("en-US", {
                   weekday: "long",
@@ -64,7 +64,7 @@ export const DevRelEvent: React.FC<EventProps> = ({
               </Text>
             </Flex>
             <Flex align="center" gap={1}>
-              <Icon as={FiClock} color="gray.300" />
+              <ClockIcon className="size-4 text-gray-300" />
               <Text color="gray.300">
                 {new Date(timestamp).toLocaleTimeString("en-US", {
                   hour: "numeric",
