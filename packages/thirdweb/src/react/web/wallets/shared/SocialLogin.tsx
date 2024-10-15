@@ -39,6 +39,12 @@ export function SocialLogin(props: {
   const ewLocale = props.locale;
   const locale = ewLocale.socialLoginScreen;
   const themeObj = useCustomTheme();
+  const ecosystem = isEcosystemWallet(props.wallet)
+    ? {
+        id: props.wallet.id,
+        partnerId: props.wallet.getConfig()?.partnerId,
+      }
+    : undefined;
 
   const [authError, setAuthError] = useState<string | undefined>(undefined);
   const { done, wallet } = props;
@@ -62,12 +68,7 @@ export function SocialLogin(props: {
       return loginWithOauthRedirect({
         authOption: props.socialAuth,
         client: props.client,
-        ecosystem: isEcosystemWallet(wallet)
-          ? {
-              id: wallet.id,
-              partnerId: wallet.getConfig()?.partnerId,
-            }
-          : undefined,
+        ecosystem,
         redirectUrl: walletConfig?.auth?.redirectUrl,
         mode: walletConfig?.auth?.mode,
       });
@@ -78,12 +79,7 @@ export function SocialLogin(props: {
         authOption: props.socialAuth,
         themeObj,
         client: props.client,
-        ecosystem: isEcosystemWallet(wallet)
-          ? {
-              id: wallet.id,
-              partnerId: wallet.getConfig()?.partnerId,
-            }
-          : undefined,
+        ecosystem,
       });
 
       if (!socialWindow) {
@@ -99,6 +95,7 @@ export function SocialLogin(props: {
           closeOpenedWindow: (openedWindow) => {
             openedWindow.close();
           },
+          ecosystem,
         }).catch((e) => {
           setAuthError(e.message);
           throw e;

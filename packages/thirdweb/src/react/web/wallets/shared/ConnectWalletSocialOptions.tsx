@@ -262,6 +262,7 @@ export const ConnectWalletSocialOptions = (
         closeOpenedWindow: (openedWindow: Window) => {
           openedWindow.close();
         },
+        ecosystem: ecosystemInfo,
       };
 
       const connectPromise = (() => {
