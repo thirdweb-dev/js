@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
-import { ContractAnalyticsPage } from "../../../../../../contract-ui/tabs/analytics/page";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
+import { ContractAnalyticsPage } from "./ContractAnalyticsPage";
 
 export default async function Page(props: {
   params: {
