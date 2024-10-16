@@ -40,7 +40,7 @@ function useFactories() {
 
       return factories.filter((f) => f !== null);
     },
-    enabled: !!user?.address && isLoggedIn && !!contractListQuery.data?.length,
+    enabled: !!user?.address && isLoggedIn && !!contractListQuery.data,
   });
 }
 
