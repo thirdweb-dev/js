@@ -167,7 +167,6 @@ const moduleExports = {
 };
 
 const { withSentryConfig } = require("@sentry/nextjs");
-
 const { withPlausibleProxy } = require("next-plausible");
 
 // we only want sentry on production environments
@@ -183,48 +182,45 @@ module.exports = withBundleAnalyzer(
     customDomain: "https://pl.thirdweb.com",
     scriptName: "pl",
   })(
-    wSentry(
-      moduleExports,
-      {
-        // For all available options, see:
-        // https://github.com/getsentry/sentry-webpack-plugin#options
+    wSentry(moduleExports, {
+      // For all available options, see:
+      // https://github.com/getsentry/sentry-webpack-plugin#options
 
-        // Suppresses source map uploading logs during build
-        silent: true,
-        org: "thirdweb-dev",
-        project: "dashboard",
-      },
-      {
-        // For all available options, see:
-        // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+      org: "thirdweb-dev",
+      project: "dashboard",
+      // An auth token is required for uploading source maps.
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      // Suppresses source map uploading logs during build
+      silent: false,
+      // For all available options, see:
+      // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-        // Upload a larger set of source maps for prettier stack traces (increases build time)
-        widenClientFileUpload: true,
+      // Upload a larger set of source maps for prettier stack traces (increases build time)
+      widenClientFileUpload: true,
 
-        // Transpiles SDK to be compatible with IE11 (increases bundle size)
-        transpileClientSDK: false,
+      // Transpiles SDK to be compatible with IE11 (increases bundle size)
+      transpileClientSDK: false,
 
-        // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-        tunnelRoute: "/err",
+      // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
+      tunnelRoute: "/err",
 
-        // Hides source maps from generated client bundles
-        hideSourceMaps: true,
+      // Hides source maps from generated client bundles
+      hideSourceMaps: true,
 
-        // Automatically tree-shake Sentry logger statements to reduce bundle size
-        disableLogger: true,
+      // Automatically tree-shake Sentry logger statements to reduce bundle size
+      disableLogger: true,
 
-        // Enables automatic instrumentation of Vercel Cron Monitors.
-        // See the following for more information:
-        // https://docs.sentry.io/product/crons/
-        // https://vercel.com/docs/cron-jobs
-        automaticVercelMonitors: false,
+      // Enables automatic instrumentation of Vercel Cron Monitors.
+      // See the following for more information:
+      // https://docs.sentry.io/product/crons/
+      // https://vercel.com/docs/cron-jobs
+      automaticVercelMonitors: false,
 
-        /**
-         * Disables the Sentry Webpack plugin on the server.
-         * See: https://github.com/getsentry/sentry-javascript/issues/10468#issuecomment-2004710692
-         */
-        disableServerWebpackPlugin: true,
-      },
-    ),
+      /**
+       * Disables the Sentry Webpack plugin on the server.
+       * See: https://github.com/getsentry/sentry-javascript/issues/10468#issuecomment-2004710692
+       */
+      disableServerWebpackPlugin: true,
+    }),
   ),
 );

@@ -15,6 +15,7 @@
       "dependsOn": ["^build"]
     },
     "thirdweb-dashboard#build": {
+      "env": ["SENTRY_AUTH_TOKEN"],
       "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]
     },
