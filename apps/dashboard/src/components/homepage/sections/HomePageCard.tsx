@@ -1,9 +1,9 @@
-import { Container, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
+import { Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { LandingDesktopMobileImage } from "components/landing-pages/desktop-mobile-image";
+import { ZapIcon } from "lucide-react";
 import type { StaticImageData } from "next/image";
 import type { ReactNode } from "react";
-import { BsFillLightningChargeFill } from "react-icons/bs";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
 
 interface HomePageCardProps {
@@ -96,7 +96,7 @@ const HomePageCard = ({
               label={label}
               fontWeight="bold"
               maxW="190px"
-              leftIcon={<Icon as={BsFillLightningChargeFill} boxSize={4} />}
+              leftIcon={<ZapIcon className="size-4 fill-black" />}
             >
               {ctaText}
             </TrackedLinkButton>

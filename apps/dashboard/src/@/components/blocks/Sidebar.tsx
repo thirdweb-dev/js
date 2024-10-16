@@ -35,7 +35,7 @@ export function Sidebar(props: SidebarContentProps) {
         props.className,
       )}
     >
-      <div className="pt-7">
+      <div className="py-7">
         {props.header}
         <div className="flex flex-col gap-1">
           <RenderSidebarLinks links={props.links} />

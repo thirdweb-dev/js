@@ -1,5 +1,7 @@
 "use client";
-import { cn } from "@/lib/utils";
+
+import { Button } from "@/components/ui/button";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   AccountStatus,
@@ -8,27 +10,28 @@ import {
   useApiKeys,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Flex, useBreakpointValue } from "@chakra-ui/react";
-import { ChakraNextImage } from "components/Image";
 import { OPSponsoredChains } from "constants/chains";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
+import { ExternalLinkIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import type { StaticImageData } from "next/image";
-import { useRouter } from "next/router";
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
-import { Button, Card, Heading, Link, LinkButton, Text } from "tw-components";
 
-enum Step {
-  Keys = "keys",
-  Docs = "docs",
-  OptimismCredits = "optimismCredits",
-  Payment = "payment",
-}
+const Step = {
+  keys: "keys",
+  docs: "docs",
+  optimismCredits: "optimismCredits",
+  payment: "payment",
+} as const;
+
+type StepId = keyof typeof Step;
 
 type StepData = {
-  key: Step;
+  key: StepId;
   title: string;
   description: string | JSX.Element;
   cta: string;
@@ -47,11 +50,10 @@ interface OnboardingStepsProps {
 export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   onlyOptimism,
 }) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
   const { isLoggedIn } = useLoggedInUser();
   const meQuery = useAccount();
   const apiKeysQuery = useApiKeys();
-  const router = useRouter();
+  const router = useDashboardRouter();
   const trackEvent = useTrack();
   const { theme } = useTheme();
   const { data: credits } = useAccountCredits();
@@ -89,9 +91,9 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
     }
   }, [chainId]);
 
-  const currentStep = useMemo(() => {
+  const currentStep: StepId | null = useMemo(() => {
     if (onlyOptimism && (!hasAppliedForOpGrant || !opCredit)) {
-      return Step.OptimismCredits;
+      return Step.optimismCredits;
     }
 
     if (!isLoggedIn) {
@@ -99,16 +101,16 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
     }
 
     if (isSponsoredChain && (!hasAppliedForOpGrant || !opCredit)) {
-      return Step.OptimismCredits;
+      return Step.optimismCredits;
     }
     if (!onboardingKeys && !hasApiKeys) {
-      return Step.Keys;
+      return Step.keys;
     }
     if (!hasValidPayment && !onboardingPaymentMethod) {
-      return Step.Payment;
+      return Step.payment;
     }
     if (!onboardingDocs) {
-      return Step.Docs;
+      return Step.docs;
     }
     return null;
   }, [
@@ -131,7 +133,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
     onClick,
   }: {
     isSkip?: true;
-    step: Step;
+    step: StepId;
     href?: string;
     onClick?: () => void;
   }) => {
@@ -151,15 +153,15 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
       onClick();
     }
 
-    if (step === Step.Keys) {
+    if (step === Step.keys) {
       setOnboardingKeys(true);
     }
 
-    if (step === Step.Docs) {
+    if (step === Step.docs) {
       setOnboardingDocs(true);
     }
 
-    if (step === Step.Payment) {
+    if (step === Step.payment) {
       setOnboardingPaymentMethod(true);
     }
 
@@ -185,7 +187,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   const STEPS: StepData[] = useMemo(
     () => [
       {
-        key: Step.Keys,
+        key: Step.keys,
         title: "Create an API Key",
         description:
           "An API key is required to use thirdweb's services through the SDK and CLI.",
@@ -194,7 +196,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         canSkip: true,
       },
       {
-        key: Step.Payment,
+        key: Step.payment,
         title: "Add Payment Method",
         description:
           "Add your payment method to ensure no disruption to thirdweb services when you exceed free monthly limits.",
@@ -203,31 +205,29 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         canSkip: true,
       },
       {
-        key: Step.OptimismCredits,
+        key: Step.optimismCredits,
         title: "Apply to join the Optimism Superchain App Accelerator!",
         description: (
-          <Flex flexDir="column" gap={4}>
-            <Text>
-              Successful applicants will receive gas grants which can be used
-              across all supported{" "}
-              <Link
-                href="https://blog.thirdweb.com/accelerating-the-superchain-with-optimism"
-                isExternal
-                color="blue.500"
-              >
-                Optimism Superchain networks
-              </Link>
-              . These can be used with our Account Abstraction tools to sponsor
-              gas fees for any on-chain activity.
-            </Text>
-          </Flex>
+          <p>
+            Successful applicants will receive gas grants which can be used
+            across all supported{" "}
+            <Link
+              href="https://blog.thirdweb.com/accelerating-the-superchain-with-optimism"
+              target="_blank"
+              className="text-link-foreground hover:text-foreground"
+            >
+              Optimism Superchain networks
+            </Link>
+            . These can be used with our Account Abstraction tools to sponsor
+            gas fees for any on-chain activity.
+          </p>
         ),
         cta: "Apply now",
         onClick: () => {
           trackEvent({
             category: "onboardingChecklist",
             action: "clicked",
-            data: { step: Step.OptimismCredits },
+            data: { step: Step.optimismCredits },
           });
         },
         href: "/dashboard/settings/gas-credits",
@@ -237,7 +237,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         rightImageLight: require("../../../public/assets/dashboard/optimism-credits-light.png"),
       },
       {
-        key: Step.Docs,
+        key: Step.docs,
         title: "Explore Docs",
         description:
           "Read our documentation to learn what you can build with contracts, payments, wallets, and infrastructure.",
@@ -266,28 +266,15 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   } = STEPS.find((s) => s.key === currentStep) as StepData;
 
   return (
-    <Card
-      w="full"
-      as={Flex}
-      p={0}
-      gap={8}
-      justifyContent="space-between"
-      overflow="hidden"
-      className="bg-muted/50"
-    >
-      <div
-        className={cn(
-          "flex flex-col items-start gap-2 p-6",
-          rightImageDark && !isMobile ? "w-[60%]" : "w-full",
-        )}
-      >
-        <Heading size="title.sm">{title}</Heading>
-        <Text>{description}</Text>
-        <div className="mt-4 flex flex-row items-center">
+    <div className="flex w-full justify-between gap-8 overflow-hidden rounded-xl border border-border bg-muted/50">
+      <div className="flex flex-col p-4 lg:p-6">
+        <h4 className="mb-1.5 font-semibold text-xl tracking-tight">{title}</h4>
+        <p className="text-muted-foreground">{description}</p>
+        <div className="h-6" />
+
+        <div className="mt-auto flex flex-row items-center gap-3">
           {isLoggedIn ? (
             <Button
-              size="sm"
-              colorScheme="primary"
               onClick={() => handleStep({ step: currentStep, href, onClick })}
             >
               {cta}
@@ -295,15 +282,23 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
           ) : (
             <CustomConnectWallet />
           )}
+
           {learnMore && (
-            <LinkButton isExternal href={learnMore} size="sm" variant="outline">
-              Learn more
-            </LinkButton>
+            <Button variant="outline" asChild>
+              <Link
+                target="_blank"
+                href={learnMore}
+                className="gap-2 bg-background"
+              >
+                Learn more
+                <ExternalLinkIcon className="size-3" />
+              </Link>
+            </Button>
           )}
+
           {canSkip && (
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
               onClick={() => handleStep({ isSkip: true, step: currentStep })}
             >
               Skip
@@ -311,12 +306,24 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
           )}
         </div>
       </div>
-      {rightImageDark && !isMobile && theme === "dark" && (
-        <ChakraNextImage src={rightImageDark} alt="" w="50%" priority />
+
+      {rightImageDark && theme === "dark" && (
+        <Image
+          src={rightImageDark}
+          alt=""
+          priority
+          className="w-1/3 max-sm:hidden"
+        />
       )}
-      {rightImageLight && !isMobile && theme === "light" && (
-        <ChakraNextImage src={rightImageLight} alt="" w="50%" priority />
+
+      {rightImageLight && theme === "light" && (
+        <Image
+          src={rightImageLight}
+          alt=""
+          priority
+          className="w-1/3 max-sm:hidden"
+        />
       )}
-    </Card>
+    </div>
   );
 };

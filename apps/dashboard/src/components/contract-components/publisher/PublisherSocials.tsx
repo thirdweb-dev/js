@@ -1,4 +1,4 @@
-import { ButtonGroup, type ButtonGroupProps, Icon } from "@chakra-ui/react";
+import { ButtonGroup, type ButtonGroupProps } from "@chakra-ui/react";
 import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";
@@ -8,7 +8,7 @@ import { RedditIcon } from "components/icons/brand-icons/RedditIcon";
 import { TelegramIcon } from "components/icons/brand-icons/TelegramIcon";
 import { XIcon } from "components/icons/brand-icons/XIcon";
 import type { ProfileMetadata } from "constants/schemas";
-import { FiGlobe } from "react-icons/fi";
+import { GlobeIcon } from "lucide-react";
 import { LinkButton, TrackedIconButton } from "tw-components";
 import { hostnameEndsWith } from "../../../utils/url";
 
@@ -80,7 +80,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         href={publisherProfile.website}
         bg="transparent"
         aria-label="website"
-        icon={<Icon as={FiGlobe} />}
+        icon={<GlobeIcon className="size-4" />}
         category={TRACKING_CATEGORY}
         label="website"
       />

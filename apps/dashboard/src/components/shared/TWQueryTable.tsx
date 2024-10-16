@@ -3,7 +3,6 @@ import {
   ButtonGroup,
   Flex,
   GridItem,
-  Icon,
   Select,
   SimpleGrid,
   Skeleton,
@@ -22,9 +21,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { MoveRightIcon } from "lucide-react";
 import pluralize from "pluralize";
 import { type SetStateAction, useMemo } from "react";
-import { FiArrowRight } from "react-icons/fi";
 import { Button, TableContainer, Text } from "tw-components";
 
 type TWQueryTableProps<TRowData, TInputData> = {
@@ -122,7 +121,7 @@ export function TWQueryTable<TRowData, TInputData>(
                       borderBottomWidth="inherit"
                       borderBottomColor="hsl(var(--border))"
                     >
-                      <Icon as={FiArrowRight} />
+                      <MoveRightIcon className="size-4" />
                     </Td>
                   )}
                 </Tr>

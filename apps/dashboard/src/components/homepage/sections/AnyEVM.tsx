@@ -1,6 +1,6 @@
-import { Box, Flex, Icon, Image } from "@chakra-ui/react";
+import { Box, Flex, Image } from "@chakra-ui/react";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
-import { BsLightningCharge } from "react-icons/bs";
+import { ZapIcon } from "lucide-react";
 import { Heading, LinkButton, Text } from "tw-components";
 
 export const AnyEVMSection = () => {
@@ -48,7 +48,7 @@ export const AnyEVMSection = () => {
             py={7}
             // h={{ base: "48px", md: "68px" }}
             fontSize="20px"
-            leftIcon={<Icon as={BsLightningCharge} color="black" />}
+            leftIcon={<ZapIcon className="size-5" />}
             color="black"
             flexShrink={0}
             background="rgba(255,255,255,1)"

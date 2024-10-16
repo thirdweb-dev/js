@@ -1,26 +1,15 @@
 "use client";
 import { TabButtons } from "@/components/ui/tabs";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { useActiveAccount } from "thirdweb/react";
 import { ImportModal } from "../../../../../../components/contract-components/import-contract/modal";
 import { StepsCard } from "../../../../../../components/dashboard/StepsCard";
 import { useTrack } from "../../../../../../hooks/analytics/useTrack";
 
 export function GetStartedWithContractsDeploy() {
-  const address = useActiveAccount()?.address;
   const steps = useMemo(
     () => [
-      {
-        title: "Connect your wallet to get started",
-        description:
-          "In order to interact with your contracts you need to connect an EVM compatible wallet.",
-        children: <CustomConnectWallet />,
-        completed: !!address,
-      },
-
       {
         title: "Build, deploy or import a contract",
         description:
@@ -29,7 +18,7 @@ export function GetStartedWithContractsDeploy() {
         completed: false, // because we only show this component if the user does not have any contracts
       },
     ],
-    [address],
+    [],
   );
 
   return (
@@ -139,7 +128,7 @@ const DeployOptions = () => {
           <h4 className="text-start font-semibold text-lg">
             {activeTabContent.title}
           </h4>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-start text-muted-foreground text-sm">
             {activeTabContent.description}
           </p>
         </div>

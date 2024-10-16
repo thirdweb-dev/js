@@ -9,7 +9,7 @@ export function ProjectAvatar(props: {
   return (
     <Img
       src={props.src}
-      className={cn("rounded-lg border", props.className)}
+      className={cn("rounded-lg border border-border", props.className)}
       alt={""}
       fallback={
         <div className="flex items-center justify-center bg-muted/50">

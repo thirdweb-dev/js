@@ -6,6 +6,8 @@ export const AUTH_SHARE_INDEX = AUTH_SHARE_ID - 1;
 const DEVICE_SHARE_ID = 1;
 export const DEVICE_SHARE_INDEX = DEVICE_SHARE_ID - 1;
 export const DEVICE_SHARE_MISSING_MESSAGE = "Missing device share.";
+export const INVALID_DEVICE_SHARE_MESSAGE =
+  "Invalid private key reconstructed from shares";
 
 const RECOVERY_SHARE_ID = 2;
 export const RECOVERY_SHARE_INDEX = RECOVERY_SHARE_ID - 1;
@@ -20,6 +22,8 @@ export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION_V1 =
   "arn:aws:lambda:us-west-2:324457261097:function:recovery-share-password-GenerateRecoverySharePassw-bbE5ZbVAToil";
 export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION_V2 =
   "arn:aws:lambda:us-west-2:324457261097:function:lambda-thirdweb-auth-enc-key-prod-ThirdwebAuthEncKeyFunction";
+export const ENCLAVE_KMS_KEY_ARN =
+  "arn:aws:kms:us-west-2:324457261097:key/8b2a8cd5-9b22-4ea0-a6bc-463824a78f20";
 
 // TODO allow overriding domain
 const DOMAIN_URL_2023 = getThirdwebBaseUrl("inAppWallet");

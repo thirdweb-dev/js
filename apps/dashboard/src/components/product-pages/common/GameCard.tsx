@@ -1,8 +1,8 @@
 import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { useTrack } from "hooks/analytics/useTrack";
+import { GamepadIcon } from "lucide-react";
 import NextImage, { type StaticImageData } from "next/image";
-import { IoGameControllerOutline } from "react-icons/io5";
 import {
   Button,
   Card,
@@ -72,7 +72,7 @@ export const GameCard: React.FC<GameCardProps> = ({
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <Button
-            leftIcon={<IoGameControllerOutline />}
+            leftIcon={<GamepadIcon className="size-4" />}
             color="white"
             bg="rgba(0,0,0,.5)"
             _groupHover={{ bg: "rgba(0,0,0,.9)" }}

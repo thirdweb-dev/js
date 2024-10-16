@@ -1,6 +1,10 @@
 [
   "function encodeBytesOnInstall() pure returns (bytes)",
   "function getAllMetadataBatches() view returns ((uint256 startTokenIdInclusive, uint256 endTokenIdInclusive, string baseURI)[])",
+  "function getBatchIndex(uint256 _tokenId) view returns (uint256)",
+  "function getMetadataBatch(uint256 _batchIndex) view returns ((uint256 startTokenIdInclusive, uint256 endTokenIdInclusive, string baseURI))",
+  "function getModuleConfig() pure returns ((bool registerInstallationCallback, bytes4[] requiredInterfaces, bytes4[] supportedInterfaces, (bytes4 selector)[] callbackFunctions, (bytes4 selector, uint256 permissionBits)[] fallbackFunctions) config)",
+  "function setBaseURI(uint256 _batchIndex, string _baseURI)",
   "function uploadMetadata(uint256 _amount, string _baseURI)",
-  "event BatchMetadataUpdate(uint256 _fromTokenId, uint256 _toTokenId)"
+  "event BatchMetadataUpdate(uint256 startTokenIdIncluside, uint256 endTokenIdInclusive, string baseURI)"
 ]

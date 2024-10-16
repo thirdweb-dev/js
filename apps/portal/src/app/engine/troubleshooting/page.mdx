@@ -60,9 +60,9 @@ Engine automatically manages nonces so this error typically should not occur.
 
 It's possible the transactions are not being accepted by the mempool. To remediate this issue, you can retry a transaction, cancel it, or reset all backend wallet nonces.
 
-To retry a transaction, use [`POST /transaction/sync-retry`](https://redocly.github.io/redoc/?url=https://demo.web3api.thirdweb.com/json#tag/Transaction/operation/syncRetry) and provide the `queueId`. You may also provide a higher gas value to increase the likelihood of the transaction being mined.
+To retry a transaction, use [`POST /transaction/sync-retry`](https://thirdweb-engine.apidocumentation.com/reference#tag/transaction/POST/transaction/sync-retry) and provide the `queueId`. You may also provide a higher gas value to increase the likelihood of the transaction being mined.
 
-To cancel a transaction, use [`POST /transaction/cancel`](https://redocly.github.io/redoc/?url=https://demo.web3api.thirdweb.com/json#tag/Transaction/operation/cancel) and provide the `queueId`.
+To cancel a transaction, use [`POST /transaction/cancel`](https://thirdweb-engine.apidocumentation.com/reference#tag/transaction/POST/transaction/cancel) and provide the `queueId`.
 
 
 <Callout
@@ -72,7 +72,7 @@ To cancel a transaction, use [`POST /transaction/cancel`](https://redocly.github
     Transactions that were sent but not yet mined may fail because new transactions will use the same nonce values as previously sent transactions.
 </Callout>
 
-To reset the nonce, use [`POST /backend-wallet/reset-nonce`](https://redocly.github.io/redoc/?url=https://demo.web3api.thirdweb.com/json#tag/Backend-Wallet/operation/resetNonces) to sync the Engine nonce with the onchain value. This step resets all nonce values tracked in Engine, and the next sent transaction will use the next available onchain nonce.
+To reset the nonce for all backend wallets, use [`POST /backend-wallet/reset-nonce`](https://thirdweb-engine.apidocumentation.com/reference#tag/backend-wallet/POST/backend-wallet/reset-nonces) to force-sync the Engine nonces with the onchain values.
 
 ### Received "Insufficient funds for gas * price + value" error
 
@@ -94,3 +94,30 @@ Even though the transaction is expected to consume less gas, the transaction wil
 **How to resolve**
 
 Add more funds to your backend wallet. Or wait until the gas fees on the chain are lower and try again.
+
+## Sending UserOps
+
+UserOps are **User Op**erations sent by a backend wallet on behalf of smart accounts, used in the Account Abstraction pattern.
+
+### Received "Invalid UserOperation signature or paymaster signature" error
+
+*Also known as: code -32507*
+
+**What it means**
+
+The backend wallet you are sending the transaction with does not have sufficient permissions to send a userOp for this account address.
+
+**How to resolve**
+
+Confirm if the backend wallet is a valid admin for this account.
+If you are using Session Keys, confirm they are not close to or already expired.
+
+### Received "AA21 didn’t pay prefund" error
+
+**What it means**
+
+Your thirdweb API key used by Engine is not properly configured to use Account Abstraction, or you have a [sponsorship rule](https://portal.thirdweb.com/connect/account-abstraction/sponsorship-rules) that has been exceeded. 
+
+**How to resolve**
+
+Confirm if the API key is tied to an account with valid payment. Also confirm if there are any sponsorship rule for the Engine API key.

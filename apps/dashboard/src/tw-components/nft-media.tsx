@@ -26,7 +26,7 @@ export const NFTMediaWithEmptyState: React.FC<{
           height: props.height,
         }}
         className={cn(
-          "grid flex-shrink-0 place-items-center overflow-hidden rounded-xl border border-border object-contain",
+          "grid flex-shrink-0 place-items-center overflow-hidden rounded-lg border border-border object-contain",
           props.className,
         )}
       >
@@ -44,7 +44,7 @@ export const NFTMediaWithEmptyState: React.FC<{
         height: props.height,
       }}
       className={cn(
-        "flex-shrink-0 overflow-hidden rounded-xl object-contain",
+        "flex-shrink-0 overflow-hidden rounded-lg object-contain",
         props.className,
       )}
     >

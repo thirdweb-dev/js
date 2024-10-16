@@ -1,4 +1,6 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { generateWallet } from "../../../core/actions/generate-wallet.enclave.js";
+import { getUserStatus } from "../../../core/actions/get-enclave-user-status.js";
 import type { ClientScopedStorage } from "../../../core/authentication/client-scoped-storage.js";
 import type {
   AuthAndWalletRpcReturnType,
@@ -10,8 +12,6 @@ import type {
 import type { Ecosystem } from "../../../core/wallet/types.js";
 import type { ClientIdWithQuerierType } from "../../types.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
-import { generateWallet } from "../actions/generate-wallet.enclave.js";
-import { getUserStatus } from "../actions/get-enclave-user-status.js";
 import { BaseLogin } from "./base-login.js";
 
 export type AuthQuerierTypes = {

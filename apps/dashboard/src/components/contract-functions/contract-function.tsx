@@ -1,5 +1,6 @@
 "use client";
 
+import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import {
@@ -24,6 +25,7 @@ import {
 } from "@chakra-ui/react";
 import type { AbiEvent, AbiFunction } from "abitype";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
+import { SearchIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -33,6 +35,7 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { toFunctionSelector } from "thirdweb/utils";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
+import { useDebounce } from "use-debounce";
 import { useContractFunctionSelectors } from "../../contract-ui/hooks/useContractFunctionSelectors";
 import {
   COMMANDS,
@@ -331,43 +334,53 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
       ? 1
       : 0;
 
-  const functionSection = (e: ExtensionFunctions) => (
-    <Flex key={e.extension} flexDir="column" mb={6}>
-      {e.extension ? (
-        <>
-          <Flex alignItems="center" alignContent="center" gap={2}>
-            <Image
-              src="/assets/dashboard/extension-check.svg"
-              alt="Extension detected"
-              objectFit="contain"
-              mb="2px"
-            />
-            <Heading as="label" size="label.md">
-              {e.extension}
-            </Heading>
-          </Flex>
-          <Divider my={2} />
-        </>
-      ) : (
-        <>
-          <Flex alignItems="center" alignContent="center" gap={2}>
-            <Heading as="label" size="label.md">
-              Other Functions
-            </Heading>
-          </Flex>
-          <Divider my={2} />
-        </>
-      )}
-      {e.functions.map((fn) => (
-        <FunctionsOrEventsListItem
-          key={`${fn.name}_${fn.type}_${fn.inputs.length}`}
-          fn={fn}
-          selectedFunction={selectedFunction}
-          setSelectedFunction={setSelectedFunction}
-        />
-      ))}
-    </Flex>
-  );
+  const [_keywordSearch, setKeywordSearch] = useState<string>("");
+  const [keywordSearch] = useDebounce(_keywordSearch, 150);
+
+  const functionSection = (e: ExtensionFunctions) => {
+    const filteredFunctions = keywordSearch
+      ? e.functions.filter((o) =>
+          o.name.toLowerCase().includes(keywordSearch.toLowerCase()),
+        )
+      : e.functions;
+    return (
+      <Flex key={e.extension} flexDir="column" mb={6}>
+        {e.extension ? (
+          <>
+            <Flex alignItems="center" alignContent="center" gap={2}>
+              <Image
+                src="/assets/dashboard/extension-check.svg"
+                alt="Extension detected"
+                objectFit="contain"
+                mb="2px"
+              />
+              <Heading as="label" size="label.md">
+                {e.extension}
+              </Heading>
+            </Flex>
+            <Divider my={2} />
+          </>
+        ) : (
+          <>
+            <Flex alignItems="center" alignContent="center" gap={2}>
+              <Heading as="label" size="label.md">
+                Other Functions
+              </Heading>
+            </Flex>
+            <Divider my={2} />
+          </>
+        )}
+        {filteredFunctions.map((fn) => (
+          <FunctionsOrEventsListItem
+            key={`${fn.name}_${fn.type}_${fn.inputs.length}`}
+            fn={fn}
+            selectedFunction={selectedFunction}
+            setSelectedFunction={setSelectedFunction}
+          />
+        ))}
+      </Flex>
+    );
+  };
 
   return (
     <SimpleGrid height="100%" columns={12} gap={5}>
@@ -406,6 +419,19 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
                   </Tab>
                 )}
               </TabList>
+
+              <div className="sticky top-0 z-[1]">
+                <div className="relative w-full">
+                  <SearchIcon className="-translate-y-1/2 absolute top-[50%] left-3 size-4 text-muted-foreground" />
+                  <Input
+                    value={_keywordSearch}
+                    placeholder="Search"
+                    className="h-auto rounded-none border-x-0 py-3 pl-9 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    onChange={(e) => setKeywordSearch(e.target.value)}
+                  />
+                </div>
+              </div>
+
               <TabPanels h="auto" overflow="auto">
                 {writeFunctions.length > 0 && (
                   <TabPanel>

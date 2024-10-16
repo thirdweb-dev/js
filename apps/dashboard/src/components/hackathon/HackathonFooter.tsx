@@ -1,8 +1,7 @@
-import { Flex, Icon } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
-import { WandIcon } from "lucide-react";
-import { FiSearch } from "react-icons/fi";
+import { SearchIcon, WandIcon } from "lucide-react";
 import { Heading, LinkButton } from "tw-components";
 
 interface HackathonFooterProps {
@@ -81,7 +80,7 @@ export const HackathonFooter = ({
           h="68px"
           w={{ base: "90%", md: 80 }}
           fontSize="20px"
-          leftIcon={<Icon as={FiSearch} />}
+          leftIcon={<SearchIcon className="size-5" />}
           color="black"
           flexShrink={0}
           background="rgba(255,255,255,1)"

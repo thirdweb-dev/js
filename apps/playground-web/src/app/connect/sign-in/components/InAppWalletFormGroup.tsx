@@ -10,6 +10,7 @@ const allInAppWalletLoginMethods: InAppWalletAuth[] = [
   "google",
   "discord",
   "telegram",
+  "twitch",
   "farcaster",
   "email",
   "passkey",

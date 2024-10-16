@@ -4,20 +4,13 @@ import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb/utils";
 
-export type EnsureLoginPayload = {
-  pathname: string;
-  address?: string;
-};
-
 export type EnsureLoginResponse = {
   isLoggedIn: boolean;
   jwt?: string;
-  redirectTo?: string;
 };
 
 export const GET = async (req: NextRequest) => {
   const address = req.nextUrl.searchParams.get("address");
-  const pathname = req.nextUrl.searchParams.get("pathname");
 
   const cookieStore = cookies();
   // if we are "disconnected" we are not logged in, clear the cookie and redirect to login
@@ -34,7 +27,6 @@ export const GET = async (req: NextRequest) => {
     cookieStore.delete(COOKIE_ACTIVE_ACCOUNT);
     return NextResponse.json({
       isLoggedIn: false,
-      redirectTo: buildLoginPath(pathname),
     });
   }
 
@@ -49,7 +41,6 @@ export const GET = async (req: NextRequest) => {
     cookieStore.delete(COOKIE_ACTIVE_ACCOUNT);
     return NextResponse.json({
       isLoggedIn: false,
-      redirectTo: buildLoginPath(pathname),
     });
   }
 
@@ -65,7 +56,6 @@ export const GET = async (req: NextRequest) => {
     cookieStore.delete(authCookieName);
     return NextResponse.json({
       isLoggedIn: false,
-      redirectTo: buildLoginPath(pathname),
     });
   }
 
@@ -87,7 +77,3 @@ export const GET = async (req: NextRequest) => {
   // if everything is good simply return true
   return NextResponse.json({ isLoggedIn: true, jwt: token });
 };
-
-function buildLoginPath(pathname?: string | null): string {
-  return `/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`;
-}

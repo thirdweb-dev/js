@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
-import { TokenIdPage } from "../../../../../../../contract-ui/tabs/nfts/components/token-id";
 import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
+import { TokenIdPage } from "./token-id";
 
 export default async function Page(props: {
   params: {

@@ -9,6 +9,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -26,13 +27,7 @@ import {
 import { ChainIcon } from "components/icons/ChainIcon";
 import { NetworkSelectDropdown } from "components/selects/NetworkSelectDropdown";
 import type { BasicContract } from "contract-ui/types/types";
-import {
-  DownloadIcon,
-  EllipsisVerticalIcon,
-  PlusIcon,
-  XIcon,
-} from "lucide-react";
-import Link from "next/link";
+import { EllipsisVerticalIcon, XIcon } from "lucide-react";
 import { memo, useEffect, useMemo, useState } from "react";
 import {
   type Column,
@@ -44,80 +39,42 @@ import {
 } from "react-table";
 import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { useChainSlug } from "../../../hooks/chains/chainSlug";
-import { ImportModal } from "../import-contract/modal";
 import { AsyncContractNameCell, AsyncContractTypeCell } from "./cells";
 import { ShowMoreButton } from "./show-more-button";
 
 interface DeployedContractsProps {
-  noHeader?: boolean;
-  contractListQuery: ReturnType<typeof useAllContractList>;
+  contractList: ReturnType<typeof useAllContractList>["data"];
+  isPending: boolean;
   limit?: number;
+  onContractRemoved?: () => void;
 }
 
 export const DeployedContracts: React.FC<DeployedContractsProps> = ({
-  noHeader,
-  contractListQuery,
+  contractList,
   limit = 10,
+  isPending,
+  onContractRemoved,
 }) => {
-  const [importModalOpen, setImportModalOpen] = useState(false);
-
   const chainIdsWithDeployments = useMemo(() => {
     const set = new Set<number>();
     // biome-ignore lint/complexity/noForEach: FIXME
-    contractListQuery.data.forEach((contract) => {
+    contractList.forEach((contract) => {
       set.add(contract.chainId);
     });
     return [...set];
-  }, [contractListQuery.data]);
+  }, [contractList]);
 
   return (
     <div className="flex flex-col gap-8">
-      {!noHeader && (
-        <>
-          <ImportModal
-            isOpen={importModalOpen}
-            onClose={() => {
-              setImportModalOpen(false);
-            }}
-          />
-          <div className="flex flex-col gap-4 md:pb-4 lg:flex-row lg:justify-between">
-            <div>
-              <h1 className="mb-1.5 font-semibold text-3xl tracking-tight lg:text-4xl">
-                Your contracts
-              </h1>
-              <p className="text-muted-foreground text-sm">
-                The list of contract instances that you have deployed or
-                imported with thirdweb across all networks
-              </p>
-            </div>
-            <div className="flex gap-2 [&>*]:grow">
-              <Button
-                className="gap-2"
-                variant="outline"
-                onClick={() => setImportModalOpen(true)}
-              >
-                <DownloadIcon className="size-4" />
-                Import contract
-              </Button>
-              <Button asChild className="gap-2">
-                <Link href="/explore">
-                  <PlusIcon className="size-4" />
-                  Deploy contract
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </>
-      )}
-
       <ContractTable
-        combinedList={contractListQuery.data}
+        combinedList={contractList}
         limit={limit}
         chainIdsWithDeployments={chainIdsWithDeployments}
-        loading={contractListQuery.isPending}
+        loading={isPending}
+        onContractRemoved={onContractRemoved}
       />
 
-      {contractListQuery.data.length === 0 && contractListQuery.isFetched && (
+      {contractList.length === 0 && !isPending && (
         <div className="flex h-[100px] items-center justify-center text-muted-foreground">
           No contracts found
         </div>
@@ -129,11 +86,13 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
 type RemoveFromDashboardButtonProps = {
   chainId: number;
   contractAddress: string;
+  onContractRemoved?: () => void;
 };
 
 const RemoveFromDashboardButton: React.FC<RemoveFromDashboardButtonProps> = ({
   chainId,
   contractAddress,
+  onContractRemoved,
 }) => {
   const mutation = useRemoveContractMutation();
 
@@ -142,7 +101,14 @@ const RemoveFromDashboardButton: React.FC<RemoveFromDashboardButtonProps> = ({
       variant="ghost"
       onClick={(e) => {
         e.stopPropagation();
-        mutation.mutate({ chainId, contractAddress });
+        mutation.mutateAsync(
+          { chainId, contractAddress },
+          {
+            onSuccess: () => {
+              onContractRemoved?.();
+            },
+          },
+        );
       }}
       disabled={mutation.isPending}
       className="!bg-background hover:!bg-accent gap-2"
@@ -188,6 +154,7 @@ interface ContractTableProps {
   limit: number;
   chainIdsWithDeployments: number[];
   loading: boolean;
+  onContractRemoved?: () => void;
 }
 
 const ContractTable: React.FC<ContractTableProps> = ({
@@ -196,6 +163,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
   limit,
   chainIdsWithDeployments,
   loading,
+  onContractRemoved,
 }) => {
   const { idToChain } = useAllChainsData();
 
@@ -236,9 +204,14 @@ const ContractTable: React.FC<ContractTableProps> = ({
           return (
             <div className="flex items-center gap-2">
               <ChainIcon size={24} ipfsSrc={data?.icon?.url} />
-              <p className="text-muted-foreground text-sm">
-                {cleanedChainName}
-              </p>
+              <SkeletonContainer
+                loadedData={data ? cleanedChainName : undefined}
+                skeletonData={`Chain ID ${cell.row.original.chainId}`}
+                render={(v) => {
+                  return <p className="text-muted-foreground text-sm">{v}</p>;
+                }}
+              />
+
               {data?.testnet && (
                 <Badge variant="outline" className="text-muted-foreground">
                   Testnet
@@ -285,6 +258,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
                 <RemoveFromDashboardButton
                   contractAddress={cell.cell.row.original.address}
                   chainId={cell.cell.row.original.chainId}
+                  onContractRemoved={onContractRemoved}
                 />
               </DropdownMenuContent>
             </DropdownMenu>
@@ -292,7 +266,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
         },
       },
     ],
-    [chainIdsWithDeployments, idToChain],
+    [chainIdsWithDeployments, idToChain, onContractRemoved],
   );
 
   const defaultColumn = useMemo(
@@ -395,10 +369,12 @@ const ContractTable: React.FC<ContractTableProps> = ({
 const ContractTableRow = memo(({ row }: { row: Row<BasicContract> }) => {
   const chainSlug = useChainSlug(row.original.chainId);
   const router = useDashboardRouter();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { key, ...rowProps } = row.getRowProps();
 
   return (
     <TableRow
-      {...row.getRowProps()}
+      {...rowProps}
       role="group"
       className="cursor-pointer hover:bg-muted/50"
       // TODO - replace this with before:absolute thing

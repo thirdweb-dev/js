@@ -1,5 +1,5 @@
 import { Flex, FormControl, Tooltip } from "@chakra-ui/react";
-import { AiOutlineInfoCircle } from "react-icons/ai";
+import { CirclePlusIcon } from "lucide-react";
 import { FormLabel } from "tw-components";
 
 export const FormItem: React.FC<{
@@ -26,7 +26,7 @@ export const FormItem: React.FC<{
               label={<div>{props.description}</div>}
             >
               <div>
-                <AiOutlineInfoCircle className="text-muted-foreground" />
+                <CirclePlusIcon className="size-5 text-muted-foreground" />
               </div>
             </Tooltip>
           )}

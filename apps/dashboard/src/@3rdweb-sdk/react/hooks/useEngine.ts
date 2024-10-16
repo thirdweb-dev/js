@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ResultItem } from "components/engine/system-metrics/components/StatusCodes";
 import { THIRDWEB_API_HOST } from "constants/urls";
+import type { EngineBackendWalletType } from "lib/engine";
 import { useState } from "react";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import invariant from "tiny-invariant";
@@ -111,10 +112,16 @@ export function useEngineBackendWallets(instance: string) {
   });
 }
 
+type EngineFeature =
+  | "KEYPAIR_AUTH"
+  | "CONTRACT_SUBSCRIPTIONS"
+  | "IP_ALLOWLIST"
+  | "HETEROGENEOUS_WALLET_TYPES";
+
 interface EngineSystemHealth {
   status: string;
   engineVersion?: string;
-  features?: string[];
+  features?: EngineFeature[];
 }
 
 export function useEngineSystemHealth(
@@ -136,6 +143,18 @@ export function useEngineSystemHealth(
     enabled: !!instanceUrl,
     refetchInterval: pollInterval,
   });
+}
+
+// Helper function to check if a feature is supported.
+export function useHasEngineFeature(
+  instanceUrl: string,
+  feature: EngineFeature,
+) {
+  const query = useEngineSystemHealth(instanceUrl);
+  return {
+    query,
+    isSupported: !!query.data?.features?.includes(feature),
+  };
 }
 
 interface EngineSystemQueueMetrics {
@@ -188,17 +207,15 @@ export function useEngineLatestVersion() {
 }
 
 interface UpdateVersionInput {
-  engineId: string;
+  deploymentId: string;
   serverVersion: string;
 }
 
 export function useEngineUpdateServerVersion() {
   return useMutation({
     mutationFn: async (input: UpdateVersionInput) => {
-      invariant(input.engineId, "engineId is required");
-
       const res = await fetch(
-        `${THIRDWEB_API_HOST}/v2/engine/${input.engineId}/infrastructure`,
+        `${THIRDWEB_API_HOST}/v2/engine/deployments/${input.deploymentId}/infrastructure`,
         {
           method: "PUT",
           headers: {
@@ -244,27 +261,26 @@ export function useEngineRemoveFromDashboard() {
   });
 }
 
-export interface RemoveCloudHostedInput {
-  instanceId: string;
+export interface DeleteCloudHostedInput {
+  deploymentId: string;
   reason: "USING_SELF_HOSTED" | "TOO_EXPENSIVE" | "MISSING_FEATURES" | "OTHER";
   feedback: string;
 }
 
-export function useEngineRemoveCloudHosted() {
+export function useEngineDeleteCloudHosted() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
-      instanceId,
+      deploymentId,
       reason,
       feedback,
-    }: RemoveCloudHostedInput) => {
+    }: DeleteCloudHostedInput) => {
       const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/engine/${instanceId}/remove-cloud-hosted`,
+        `${THIRDWEB_API_HOST}/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
         {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json",
           },
@@ -401,29 +417,22 @@ export function useEngineTransactions(instance: string, autoUpdate: boolean) {
   });
 }
 
-type WalletConfig =
-  | {
-      type: "local";
-    }
-  | {
-      type: "aws-kms";
-      awsAccessKeyId: string;
-      awsSecretAccessKey: string;
-      awsRegion: string;
-    }
-  | {
-      type: "gcp-kms";
-      gcpApplicationProjectId: string;
-      gcpKmsLocationId: string;
-      gcpKmsKeyRingId: string;
-      gcpApplicationCredentialEmail: string;
-      gcpApplicationCredentialPrivateKey: string;
-    };
+export interface WalletConfigResponse {
+  type: EngineBackendWalletType;
+
+  awsAccessKeyId?: string | null;
+  awsRegion?: string | null;
+
+  gcpApplicationProjectId?: string | null;
+  gcpKmsLocationId?: string | null;
+  gcpKmsKeyRingId?: string | null;
+  gcpApplicationCredentialEmail?: string | null;
+}
 
 export function useEngineWalletConfig(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useQuery({
+  return useQuery<WalletConfigResponse>({
     queryKey: engineKeys.walletConfig(instance),
     queryFn: async () => {
       const res = await fetch(`${instance}configuration/wallets`, {
@@ -432,8 +441,7 @@ export function useEngineWalletConfig(instance: string) {
       });
 
       const json = await res.json();
-
-      return (json.result as WalletConfig) || {};
+      return json.result;
     },
     enabled: !!instance && !!token,
   });
@@ -800,9 +808,6 @@ export function useEngineWebhooks(instance: string) {
 // POST REQUESTS
 export type SetWalletConfigInput =
   | {
-      type: "local";
-    }
-  | {
       type: "aws-kms";
       awsAccessKeyId: string;
       awsSecretAccessKey: string;
@@ -821,8 +826,8 @@ export function useEngineSetWalletConfig(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (input: SetWalletConfigInput) => {
+  return useMutation<WalletConfigResponse, void, SetWalletConfigInput>({
+    mutationFn: async (input) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}configuration/wallets`, {
@@ -847,6 +852,7 @@ export function useEngineSetWalletConfig(instance: string) {
 }
 
 export type CreateBackendWalletInput = {
+  type: EngineBackendWalletType;
   label?: string;
 };
 
@@ -913,25 +919,20 @@ export function useEngineUpdateBackendWallet(instance: string) {
   });
 }
 
-export type ImportBackendWalletInput =
-  | {
-      awsKmsKeyId: string;
-      awsKmsArn: string;
-    }
-  | {
-      gcpKmsKeyId: string;
-      gcpKmsKeyVersionId: string;
-    }
-  | {
-      privateKey?: string;
-    }
-  | {
-      mnemonic?: string;
-    }
-  | {
-      encryptedJson?: string;
-      password?: string;
-    };
+// The backend determines the wallet imported based on the provided fields.
+export type ImportBackendWalletInput = {
+  label?: string;
+
+  awsKmsArn?: string;
+
+  gcpKmsKeyId?: string;
+  gcpKmsKeyVersionId?: string;
+
+  privateKey?: string;
+  mnemonic?: string;
+  encryptedJson?: string;
+  password?: string;
+};
 
 export function useEngineImportBackendWallet(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
@@ -1639,6 +1640,9 @@ export function useEngineCreateNotificationChannel(engineId: string) {
         `${THIRDWEB_API_HOST}/v1/engine/${engineId}/notification-channels`,
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(input),
         },
       );
@@ -1667,7 +1671,9 @@ export function useEngineDeleteNotificationChannel(engineId: string) {
 
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/engine/${engineId}/notification-channels/${notificationChannelId}`,
-        { method: "DELETE" },
+        {
+          method: "DELETE",
+        },
       );
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);

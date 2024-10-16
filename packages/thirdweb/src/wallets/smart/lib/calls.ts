@@ -2,7 +2,7 @@ import type { ThirdwebContract } from "../../../contract/contract.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { readContract } from "../../../transaction/read-contract.js";
-import { stringToHex } from "../../../utils/encoding/hex.js";
+import { isHex, stringToHex } from "../../../utils/encoding/hex.js";
 import type { SendTransactionOption } from "../../interfaces/wallet.js";
 
 /**
@@ -48,11 +48,14 @@ export async function predictAddress(args: {
       "Account address is required to predict the smart wallet address.",
     );
   }
-  const extraData = stringToHex(accountSalt ?? "");
+  const saltHex =
+    accountSalt && isHex(accountSalt)
+      ? accountSalt
+      : stringToHex(accountSalt ?? "");
   return readContract({
     contract: factoryContract,
     method: "function getAddress(address, bytes) returns (address)",
-    params: [adminAddress, extraData],
+    params: [adminAddress, saltHex],
   });
 }
 
@@ -76,10 +79,14 @@ export function prepareCreateAccount(args: {
   if (createAccount) {
     return createAccount(factoryContract);
   }
+  const saltHex =
+    accountSalt && isHex(accountSalt)
+      ? accountSalt
+      : stringToHex(accountSalt ?? "");
   return prepareContractCall({
     contract: factoryContract,
     method: "function createAccount(address, bytes) returns (address)",
-    params: [adminAddress, stringToHex(accountSalt ?? "")],
+    params: [adminAddress, saltHex],
   });
 }
 
@@ -106,6 +113,10 @@ export function prepareExecute(args: {
       transaction.value || 0n,
       transaction.data || "0x",
     ],
+    // if gas is specified for the inner tx, use that and add 21k for the execute call on the account contract
+    // this avoids another estimateGas call when bundling the userOp
+    // and also allows for passing custom gas limits for the inner tx
+    gas: transaction.gas ? transaction.gas + 21000n : undefined,
   });
 }
 

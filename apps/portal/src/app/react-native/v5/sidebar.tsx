@@ -1,4 +1,4 @@
-import { Book, CodeIcon, ZapIcon } from "lucide-react";
+import { Book, BugIcon, CodeIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "../../../components/Layouts/DocLayout";
 import { ReactIcon, TypeScriptIcon } from "../../../icons";
 import { fetchTypeScriptDoc } from "../../references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
@@ -21,6 +21,11 @@ export const sidebar: SideBar = {
       name: "Getting Started",
       href: `${slug}/getting-started`,
       icon: <ZapIcon />,
+    },
+    {
+      name: "Troubleshooting",
+      href: `${slug}/troubleshooting`,
+      icon: <BugIcon />,
     },
     { separator: true },
     {

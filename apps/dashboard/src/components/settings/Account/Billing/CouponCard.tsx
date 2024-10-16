@@ -16,7 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, fromUnixTime } from "date-fns";
 import { TagIcon } from "lucide-react";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -36,10 +37,18 @@ export type ActiveCouponResponse = {
 function ApplyCouponCard(props: {
   teamId: string | undefined;
   onCouponApplied: (data: ActiveCouponResponse) => void;
+  isPaymentSetup: boolean;
+  onAddPayment: () => void;
 }) {
+  const searchParams = useSearchParams();
+  const couponCode = searchParams?.get("coupon");
   return (
     <ApplyCouponCardUI
       onCouponApplied={props.onCouponApplied}
+      prefillPromoCode={couponCode || undefined}
+      scrollIntoView={!!couponCode}
+      isPaymentSetup={props.isPaymentSetup}
+      onAddPayment={props.onAddPayment}
       submit={async (promoCode: string) => {
         const res = await fetch("/api/server-proxy/api/v1/coupons/redeem", {
           method: "POST",
@@ -79,19 +88,42 @@ export function ApplyCouponCardUI(props: {
     data: null | ActiveCouponResponse;
   }>;
   onCouponApplied: ((data: ActiveCouponResponse) => void) | undefined;
+  prefillPromoCode?: string;
+  scrollIntoView?: boolean;
+  isPaymentSetup: boolean;
+  onAddPayment: () => void;
 }) {
+  const containerRef = useRef<HTMLFormElement | null>(null);
   const form = useForm<z.infer<typeof couponFormSchema>>({
     resolver: zodResolver(couponFormSchema),
     defaultValues: {
-      promoCode: "",
+      promoCode: props.prefillPromoCode,
     },
   });
+
+  const scrolled = useRef(false);
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (props.scrollIntoView && !scrolled.current) {
+      const el = containerRef.current;
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        el.querySelector("input")?.focus();
+        scrolled.current = true;
+      }
+    }
+  }, [props.scrollIntoView]);
 
   const applyCoupon = useMutation({
     mutationFn: (promoCode: string) => props.submit(promoCode),
   });
 
   async function onSubmit(values: z.infer<typeof couponFormSchema>) {
+    if (!props.isPaymentSetup) {
+      props.onAddPayment();
+      return;
+    }
+
     try {
       const res = await applyCoupon.mutateAsync(values.promoCode);
       switch (res.status) {
@@ -133,14 +165,18 @@ export function ApplyCouponCardUI(props: {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} ref={containerRef}>
         <SettingsCard
           header={{
             title: "Apply Coupon",
             description:
               "Enter your coupon code to apply discounts or free trials on thirdweb products",
           }}
-          bottomText=""
+          bottomText={
+            props.isPaymentSetup
+              ? ""
+              : "A valid payment method must be added to apply a coupon"
+          }
           saveButton={{
             variant: "default",
             disabled: false,
@@ -217,7 +253,11 @@ export function CouponDetailsCardUI(props: {
   );
 }
 
-export function CouponSection(props: { teamId: string | undefined }) {
+export function CouponSection(props: {
+  teamId: string | undefined;
+  isPaymentSetup: boolean;
+  onAddPayment: () => void;
+}) {
   const loggedInUser = useLoggedInUser();
   const [optimisticCouponData, setOptimisticCouponData] = useState<
     | {
@@ -272,11 +312,7 @@ export function CouponSection(props: { teamId: string | undefined }) {
   });
 
   if (activeCoupon.isPending) {
-    return (
-      <div className="flex h-[300px] items-center justify-center rounded-lg border border-border bg-muted/50">
-        <Spinner className="size-6" />
-      </div>
-    );
+    return <LoadingCouponSection />;
   }
 
   const couponData = optimisticCouponData
@@ -296,17 +332,29 @@ export function CouponSection(props: { teamId: string | undefined }) {
   }
 
   return (
-    <ApplyCouponCard
-      teamId={props.teamId}
-      onCouponApplied={(coupon) => {
-        setOptimisticCouponData({
-          type: "added",
-          data: coupon,
-        });
-        activeCoupon.refetch().then(() => {
-          setOptimisticCouponData(undefined);
-        });
-      }}
-    />
+    <Suspense fallback={<LoadingCouponSection />}>
+      <ApplyCouponCard
+        teamId={props.teamId}
+        onCouponApplied={(coupon) => {
+          setOptimisticCouponData({
+            type: "added",
+            data: coupon,
+          });
+          activeCoupon.refetch().then(() => {
+            setOptimisticCouponData(undefined);
+          });
+        }}
+        isPaymentSetup={props.isPaymentSetup}
+        onAddPayment={props.onAddPayment}
+      />
+    </Suspense>
+  );
+}
+
+function LoadingCouponSection() {
+  return (
+    <div className="flex h-[300px] items-center justify-center rounded-lg border border-border bg-muted/50">
+      <Spinner className="size-6" />
+    </div>
   );
 }

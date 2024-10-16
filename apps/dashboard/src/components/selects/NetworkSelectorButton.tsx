@@ -6,9 +6,9 @@ import { useStore } from "@/lib/reactive";
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
+import { ChevronDownIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BiChevronDown } from "react-icons/bi";
 import { useActiveWallet } from "thirdweb/react";
 import { useNetworkSwitcherModal } from "thirdweb/react";
 import { useFavoriteChainIds } from "../../app/(dashboard)/(chain)/components/client/star-button";
@@ -199,7 +199,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
         <ChainIcon ipfsSrc={chain?.icon?.url} size={20} />
         {chain?.name || "Select Network"}
 
-        <BiChevronDown className="ml-auto size-4" />
+        <ChevronDownIcon className="ml-auto size-4" />
       </Button>
 
       <LazyConfigureNetworkModal

@@ -1,8 +1,8 @@
-import { Flex, LinkBox, LinkOverlay } from "@chakra-ui/react";
-import { ChakraNextImage } from "components/Image";
+"use client";
 import type { SectionItemProps } from "components/product-pages/common/nav/types";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Card, Text } from "tw-components";
+import Image from "next/image";
+import Link from "next/link";
 
 interface HomeProductCardProps {
   product: SectionItemProps;
@@ -17,43 +17,35 @@ export const HomeProductCard: React.FC<HomeProductCardProps> = ({
 }) => {
   const trackEvent = useTrack();
   return (
-    <LinkBox
-      onClick={() => {
-        trackEvent({
-          category: TRACKING_CATEGORY,
-          action: "click",
-          label: "select-product",
-          product: product.name,
-        });
-      }}
-    >
-      <Card
-        p={4}
-        overflow="hidden"
-        className="bg-muted/50 hover:bg-muted"
-        h="full"
-        minHeight={{ base: "full", md: 28 }}
-      >
-        <Flex flexDir="column">
-          <Flex gap={2} alignItems="center">
-            {product.icon && (
-              <ChakraNextImage alt="" boxSize={6} src={product.icon} />
-            )}
-            <LinkOverlay
-              href={isFromLandingPage ? product.link : product.dashboardLink}
-            >
-              <Text size="label.md" m={0} color="bgBlack">
-                {isFromLandingPage
-                  ? product.name
-                  : product?.dashboardName || product.name}
-              </Text>
-            </LinkOverlay>
-          </Flex>
-          <Text mt={3} color="faded">
-            {product.description}
-          </Text>
-        </Flex>
-      </Card>
-    </LinkBox>
+    <div className="relative flex h-full items-center gap-3.5 overflow-hidden rounded-lg border border-border bg-muted/50 p-4 hover:bg-muted md:min-h-24">
+      {product.icon && (
+        <div className="shrink-0 rounded-full border border-border p-2">
+          <Image alt="" className="size-5" src={product.icon} />
+        </div>
+      )}
+      <div>
+        <Link
+          href={
+            (isFromLandingPage ? product.link : product.dashboardLink) || ""
+          }
+          className="font-semibold tracking-tight before:absolute before:inset-0"
+          onClick={() => {
+            trackEvent({
+              category: TRACKING_CATEGORY,
+              action: "click",
+              label: "select-product",
+              product: product.name,
+            });
+          }}
+        >
+          {isFromLandingPage
+            ? product.name
+            : product?.dashboardName || product.name}
+        </Link>
+        <p className="mt-0.5 text-muted-foreground text-sm">
+          {product.description}
+        </p>
+      </div>
+    </div>
   );
 };

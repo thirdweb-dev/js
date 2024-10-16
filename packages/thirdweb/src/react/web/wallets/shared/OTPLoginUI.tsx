@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
@@ -9,7 +9,6 @@ import {
   preAuthenticate,
 } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { fontSize } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
@@ -54,7 +53,12 @@ export function OTPLoginUI(props: {
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
   const [error, setError] = useState<string | undefined>();
   const [accountStatus, setAccountStatus] = useState<AccountStatus>("sending");
-  const isEcosystem = useMemo(() => isEcosystemWallet(wallet.id), [wallet.id]);
+  const ecosystem = isEcosystemWallet(wallet)
+    ? {
+        id: wallet.id,
+        partnerId: wallet.getConfig()?.partnerId,
+      }
+    : undefined;
 
   const [screen] = useState<ScreenToShow>("base");
 
@@ -66,13 +70,7 @@ export function OTPLoginUI(props: {
     try {
       if ("email" in userInfo) {
         await preAuthenticate({
-          ecosystem: isEcosystem
-            ? {
-                id: wallet.id as EcosystemWalletId,
-                partnerId: (wallet as Wallet<EcosystemWalletId>).getConfig()
-                  ?.partnerId,
-              }
-            : undefined,
+          ecosystem,
           email: userInfo.email,
           strategy: "email",
           client: props.client,
@@ -80,13 +78,7 @@ export function OTPLoginUI(props: {
         setAccountStatus("sent");
       } else if ("phone" in userInfo) {
         await preAuthenticate({
-          ecosystem: isEcosystem
-            ? {
-                id: wallet.id as EcosystemWalletId,
-                partnerId: (wallet as Wallet<EcosystemWalletId>).getConfig()
-                  ?.partnerId,
-              }
-            : undefined,
+          ecosystem,
           phoneNumber: userInfo.phone,
           strategy: "phone",
           client: props.client,
@@ -100,7 +92,7 @@ export function OTPLoginUI(props: {
       setVerifyStatus("idle");
       setAccountStatus("error");
     }
-  }, [props.client, userInfo, wallet, isEcosystem]);
+  }, [props.client, userInfo, ecosystem]);
 
   async function connect(otp: string) {
     if ("email" in userInfo) {
@@ -133,6 +125,7 @@ export function OTPLoginUI(props: {
         strategy: "email",
         email: userInfo.email,
         verificationCode: otp,
+        ecosystem,
       });
     } else if ("phone" in userInfo) {
       await linkProfile({
@@ -140,6 +133,7 @@ export function OTPLoginUI(props: {
         strategy: "phone",
         phoneNumber: userInfo.phone,
         verificationCode: otp,
+        ecosystem,
       });
     }
   }

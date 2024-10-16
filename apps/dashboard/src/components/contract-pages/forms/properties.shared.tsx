@@ -1,7 +1,6 @@
 import {
   Flex,
   FormControl,
-  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -9,7 +8,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { FileInput } from "components/shared/FileInput";
-import { PlusIcon } from "lucide-react";
+import { BanIcon, PlusIcon, TrashIcon, UploadIcon, XIcon } from "lucide-react";
 import { useEffect } from "react";
 import {
   type ArrayPath,
@@ -24,7 +23,6 @@ import {
   type WatchObserver,
   useFieldArray,
 } from "react-hook-form";
-import { FiSlash, FiTrash, FiUpload, FiX } from "react-icons/fi";
 import { Button, FormErrorMessage, FormLabel } from "tw-components";
 
 type OptionalPropertiesInput = {
@@ -73,7 +71,7 @@ export const PropertiesFormControl = <
       <Flex justify="space-between" align="center" direction="row">
         <FormLabel m={0}>Attributes</FormLabel>
         <Button
-          rightIcon={<Icon as={FiSlash} />}
+          rightIcon={<BanIcon className="size-4" />}
           variant="outline"
           colorScheme="red"
           size="xs"
@@ -120,11 +118,8 @@ export const PropertiesFormControl = <
                       }
                     />
                     <InputRightElement>
-                      <Icon
-                        as={FiTrash}
-                        cursor="pointer"
-                        color="red.300"
-                        _hover={{ color: "red.200" }}
+                      <TrashIcon
+                        className="size-4 cursor-pointer text-red-300 hover:text-red-200"
                         onClick={() =>
                           setValue(
                             `attributes.${index}.value` as Path<TFieldValues>,
@@ -155,10 +150,7 @@ export const PropertiesFormControl = <
                             );
                           }}
                         >
-                          <Icon
-                            as={FiUpload}
-                            className="text-muted-foreground"
-                          />
+                          <UploadIcon className="size-4 text-muted-foreground" />
                         </FileInput>
                       </Tooltip>
                     </InputRightElement>
@@ -173,7 +165,7 @@ export const PropertiesFormControl = <
               variant="ghost"
               aria-label="remove key value pair"
               size="xs"
-              icon={<Icon as={FiX} />}
+              icon={<XIcon />}
             />
           </div>
         );

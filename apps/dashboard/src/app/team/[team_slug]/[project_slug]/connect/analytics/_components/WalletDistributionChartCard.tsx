@@ -21,90 +21,104 @@ import { useMemo, useState } from "react";
 import { Pie, PieChart } from "recharts";
 import { EmptyChartState, LoadingChartState } from "./EmptyChartState";
 
-type ChartToShow = "unique" | "total";
+type ChartToShow = "totalConnections" | "uniqueWalletsConnected";
 
 type ChartData = {
   walletType: string;
-  totalWallets: number;
-  uniqueWallets: number;
+  value: number;
   fill: string;
 };
 
 const chartLabelToShow: Record<ChartToShow, string> = {
-  unique: "Unique Wallets",
-  total: "Total Wallets",
+  uniqueWalletsConnected: "Unique Wallets",
+  totalConnections: "Total Wallets",
 };
 
 export function WalletDistributionChartCard(props: {
   walletStats: WalletStats[];
   isPending: boolean;
 }) {
+  // show these many top wallets as distinct, and combine the rest as "Others"
+  const topWalletsToShow = 10;
   const { walletStats } = props;
-  const [chartToShow, setChartToShow] = useState<ChartToShow>("total");
-  const chartToShowOptions: ChartToShow[] = ["total", "unique"];
+  const [chartToShow, setChartToShow] =
+    useState<ChartToShow>("totalConnections");
+  const chartToShowOptions: ChartToShow[] = [
+    "totalConnections",
+    "uniqueWalletsConnected",
+  ];
 
   const { chartConfig, chartData, totalConnections, uniqueConnections } =
     useMemo(() => {
-      const _chartConfig: ChartConfig = {};
-      const _chartDataMap: Map<
-        string,
-        {
-          total: number;
-          unique: number;
-        }
-      > = new Map();
+      const _chartDataMap: Map<string, number> = new Map();
+      const walletTypeToValueMap: Map<string, number> = new Map();
 
       let _totalConnections = 0;
       let _uniqueConnections = 0;
 
-      for (const data of walletStats) {
-        const chartData = _chartDataMap.get(data.walletType);
+      for (const stat of walletStats) {
+        const { walletType } = stat;
+        const chartData = _chartDataMap.get(walletType);
 
-        _totalConnections += data.totalConnections;
-        _uniqueConnections += data.uniqueWalletsConnected;
-
-        // if no data for current day - create new entry
-        if (!chartData) {
-          _chartDataMap.set(data.walletType, {
-            total: data.totalConnections,
-            unique: data.uniqueWalletsConnected,
-          });
-        } else {
-          _chartDataMap.set(data.walletType, {
-            total: chartData.total + data.totalConnections,
-            unique: chartData.unique + data.uniqueWalletsConnected,
-          });
-        }
+        _totalConnections += stat.totalConnections;
+        _uniqueConnections += stat.uniqueWalletsConnected;
+        _chartDataMap.set(walletType, (chartData || 0) + stat[chartToShow]);
+        walletTypeToValueMap.set(
+          walletType,
+          (walletTypeToValueMap.get(walletType) || 0) + stat[chartToShow],
+        );
       }
 
-      // create chart config for each wallet type and assign a unique color, start from 0hue to 360hue
-      const uniqueWalletTypes = Array.from(
-        new Set(walletStats.map((data) => data.walletType)),
+      const walletTypesSortedByValue = Array.from(
+        walletTypeToValueMap.entries(),
+      )
+        .sort((a, b) => b[1] - a[1])
+        .map((w) => w[0]);
+
+      const walletTypesToShow = walletTypesSortedByValue.slice(
+        0,
+        topWalletsToShow,
       );
 
-      const hueIncrement = 360 / uniqueWalletTypes.length;
+      const walletTypesToTagAsOthers =
+        walletTypesSortedByValue.slice(topWalletsToShow);
 
-      for (let i = 0; i < uniqueWalletTypes.length; i++) {
-        const walletType = uniqueWalletTypes[i];
-        _chartConfig[walletType] = {
-          label: uniqueWalletTypes[i],
-          color: `hsl(${i + hueIncrement * i}deg, var(--chart-saturation), var(--chart-lightness))`,
-        };
+      for (const walletType of walletTypesToTagAsOthers) {
+        const val = _chartDataMap.get(walletType);
+        if (val) {
+          const othersVal = _chartDataMap.get("others");
+          _chartDataMap.set("others", othersVal ? othersVal + val : val);
+        }
+
+        _chartDataMap.delete(walletType);
       }
+
+      const _chartConfig: ChartConfig = {};
+      walletTypesToShow.forEach((walletType, i) => {
+        _chartConfig[walletType] = {
+          label: walletTypesToShow[i],
+          color: `hsl(var(--chart-${(i % 10) + 1}))`,
+        };
+      });
+
+      // Add Others
+      _chartConfig.others = {
+        label: "Others",
+        color: "hsl(var(--muted-foreground))",
+      };
 
       const _chartData: ChartData[] = Array.from(_chartDataMap).map(
         ([walletType, data]) => {
           return {
             walletType,
-            totalWallets: data.total,
-            uniqueWallets: data.unique,
+            value: data,
             fill: _chartConfig[walletType].color || "transparent",
           };
         },
       );
 
       //  sort the data
-      _chartData.sort((a, b) => b.totalWallets - a.totalWallets);
+      _chartData.sort((a, b) => b.value - a.value);
 
       return {
         chartData: _chartData,
@@ -112,7 +126,7 @@ export function WalletDistributionChartCard(props: {
         totalConnections: _totalConnections,
         uniqueConnections: _uniqueConnections,
       };
-    }, [walletStats]);
+    }, [walletStats, chartToShow]);
 
   const disableActions = props.isPending || chartData.length === 0;
   return (
@@ -152,23 +166,14 @@ export function WalletDistributionChartCard(props: {
           getData={async () => {
             const header = [
               "Wallet",
-              "Total Connections",
-              "Unique Connections",
-              "Percentage of Total connections",
-              "Percentage of Unique connections",
+              `${chartToShow === "totalConnections" ? "Total" : "Unique"} Connections`,
+              `Percentage of ${chartToShow === "totalConnections" ? "Total" : "Unique"} Connections`,
             ];
             const rows = chartData.map((d) => {
               return [
-                // name
                 d.walletType,
-                // total connections
-                d.totalWallets.toString(),
-                // unique connections
-                d.uniqueWallets.toString(),
-                // percentage of total connections
-                `${((d.totalWallets / totalConnections) * 100).toFixed(2)}%`,
-                // percentage of unique connections
-                `${((d.uniqueWallets / uniqueConnections) * 100).toFixed(2)}%`,
+                d.value.toString(),
+                `${((d.value / (chartToShow === "totalConnections" ? totalConnections : uniqueConnections)) * 100).toFixed(2)}%`,
               ];
             });
             return {
@@ -197,7 +202,7 @@ export function WalletDistributionChartCard(props: {
                   valueFormatter={(v) => {
                     if (typeof v === "number") {
                       const sumValue =
-                        chartToShow === "unique"
+                        chartToShow === "uniqueWalletsConnected"
                           ? uniqueConnections
                           : totalConnections;
                       const percentageValue = ((v / sumValue) * 100).toFixed(2);
@@ -210,9 +215,7 @@ export function WalletDistributionChartCard(props: {
             <ChartLegend content={<ChartLegendContent />} className="" />
             <Pie
               data={chartData}
-              dataKey={
-                chartToShow === "unique" ? "uniqueWallets" : "totalWallets"
-              }
+              dataKey="value"
               nameKey="walletType"
               innerRadius={60}
               strokeWidth={2}

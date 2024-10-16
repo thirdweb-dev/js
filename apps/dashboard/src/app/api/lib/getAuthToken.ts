@@ -10,3 +10,19 @@ export function getAuthToken() {
 
   return token;
 }
+
+export function getAuthTokenWalletAddress() {
+  const cookiesManager = cookies();
+  const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
+  if (!activeAccount) {
+    return null;
+  }
+
+  const token = cookiesManager.get(COOKIE_PREFIX_TOKEN + activeAccount)?.value;
+
+  if (token) {
+    return activeAccount;
+  }
+
+  return null;
+}

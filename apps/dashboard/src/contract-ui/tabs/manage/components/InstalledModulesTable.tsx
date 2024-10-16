@@ -18,9 +18,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { CircleSlash } from "lucide-react";
+import { CircleSlash, TrashIcon } from "lucide-react";
 import { useState } from "react";
-import { FaRegTrashAlt } from "react-icons/fa";
 import { toast } from "sonner";
 import {
   type ContractOptions,
@@ -233,7 +232,7 @@ function ModuleRow(props: {
                 {uninstallMutation.isPending ? (
                   <Spinner className="size-4" />
                 ) : (
-                  <FaRegTrashAlt className="size-4" />
+                  <TrashIcon className="size-4" />
                 )}
               </Button>
             </ToolTipLabel>

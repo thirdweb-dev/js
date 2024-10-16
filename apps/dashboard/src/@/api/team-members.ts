@@ -1,7 +1,6 @@
 import "server-only";
-import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { API_SERVER_URL } from "@/constants/env";
-import { cookies } from "next/headers";
+import { getAuthToken } from "../../app/api/lib/getAuthToken";
 
 const TeamAccountRole = {
   OWNER: "OWNER",
@@ -26,14 +25,10 @@ export type TeamMember = {
 };
 
 export async function getMembers(teamSlug: string) {
-  const cookiesManager = cookies();
-  const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
-  const token = activeAccount
-    ? cookiesManager.get(COOKIE_PREFIX_TOKEN + activeAccount)?.value
-    : null;
+  const token = getAuthToken();
 
   if (!token) {
-    return [];
+    return undefined;
   }
 
   const teamsRes = await fetch(
@@ -44,8 +39,10 @@ export async function getMembers(teamSlug: string) {
       },
     },
   );
+
   if (teamsRes.ok) {
     return (await teamsRes.json())?.result as TeamMember[];
   }
-  return [];
+
+  return undefined;
 }

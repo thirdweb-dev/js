@@ -1,5 +1,4 @@
 "use client";
-import { generatePayload, isLoggedIn, login, logout } from "@/lib/auth";
 import { client } from "@/lib/client";
 import { useTheme } from "next-themes";
 import {
@@ -24,14 +23,6 @@ export default function ConnectButton({
       wallets={[ecosystemWallet(ecosystem)]}
       client={client}
       theme={theme === "light" ? "light" : "dark"}
-      auth={{
-        getLoginPayload: generatePayload,
-        doLogin: async (p) => {
-          login(p);
-        },
-        isLoggedIn,
-        doLogout: logout,
-      }}
     />
   );
 }

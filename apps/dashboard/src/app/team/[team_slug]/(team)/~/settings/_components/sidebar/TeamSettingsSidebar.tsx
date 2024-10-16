@@ -22,7 +22,7 @@ export function TeamSettingsSidebar(props: {
         team={props.team}
         titleAvatarIcon={{
           id: props.team.id,
-          src: "", // TODO - set team image
+          src: props.team.image || "",
         }}
       />
       <RenderLinkGroup
@@ -31,7 +31,7 @@ export function TeamSettingsSidebar(props: {
         team={props.team}
         titleAvatarIcon={{
           id: props.account?.id,
-          src: "", // TODO - set team image
+          src: props.team.image || "",
         }}
       />
     </aside>

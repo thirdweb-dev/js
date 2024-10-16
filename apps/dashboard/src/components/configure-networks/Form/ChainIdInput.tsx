@@ -17,7 +17,6 @@ export const ChainIdInput: React.FC<{
           ? form.formState.errors.chainId?.message
           : undefined
       }
-      tooltip={undefined}
     >
       <Input
         disabled={disabled}

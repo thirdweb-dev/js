@@ -1,3 +1,4 @@
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import {
   type EngineRelayer,
   type UpdateRelayerInput,
@@ -22,16 +23,14 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { BiPencil } from "react-icons/bi";
-import { FiTrash } from "react-icons/fi";
 import { shortenAddress } from "thirdweb/utils";
 import {
   Button,
@@ -159,7 +158,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
         isFetched={isFetched}
         onMenuClick={[
           {
-            icon: BiPencil,
+            icon: <PencilIcon className="size-4" />,
             text: "Edit",
             onClick: (relayer) => {
               setSelectedRelayer(relayer);
@@ -167,7 +166,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
             },
           },
           {
-            icon: FiTrash,
+            icon: <Trash2Icon className="size-4" />,
             text: "Remove",
             onClick: (relayer) => {
               setSelectedRelayer(relayer);
@@ -271,9 +270,9 @@ const EditModal = ({
           <div className="flex flex-col gap-4">
             <FormControl>
               <FormLabel>Chain</FormLabel>
-              <NetworkDropdown
-                value={form.watch("chainId")}
-                onSingleChange={(val) => form.setValue("chainId", val)}
+              <SingleNetworkSelector
+                chainId={form.watch("chainId")}
+                onChange={(val) => form.setValue("chainId", val)}
               />
             </FormControl>
             <FormControl>

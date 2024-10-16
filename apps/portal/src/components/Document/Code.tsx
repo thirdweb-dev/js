@@ -12,6 +12,7 @@ import {
   type SpecialLanguage,
   type ThemedToken,
   codeToTokens,
+  stringifyTokenStyle,
 } from "shiki";
 
 import { CopyButton } from "../others/CopyButton";
@@ -102,7 +103,13 @@ async function RenderCode(props: {
   });
 
   const getThemeColors = (token: ThemedToken) => {
-    const styleStr = token.htmlStyle;
+    if (!token.htmlStyle) {
+      return {
+        lightColor: undefined,
+        darkColor: undefined,
+      };
+    }
+    const styleStr = stringifyTokenStyle(token.htmlStyle);
     const [lightStyle, darkStyle] = styleStr?.split(";") || [];
     const lightColor = lightStyle?.split(":")[1];
     const darkColor = darkStyle?.split(":")[1];

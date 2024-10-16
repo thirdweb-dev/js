@@ -125,7 +125,7 @@ export async function hasStoredPasskey(
   const storage = new ClientScopedStorage({
     storage: nativeLocalStorage,
     clientId: client.clientId,
-    ecosystemId: ecosystemId,
+    ecosystem: ecosystemId ? { id: ecosystemId } : undefined,
   });
   const credId = await storage.getPasskeyCredentialId();
   return !!credId;

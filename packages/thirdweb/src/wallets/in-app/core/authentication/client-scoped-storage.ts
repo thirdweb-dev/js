@@ -1,5 +1,4 @@
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
-import type { EcosystemWalletId } from "../../../wallet-types.js";
 import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
@@ -8,6 +7,7 @@ import {
   WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME,
   WALLET_USER_ID_LOCAL_STORAGE_NAME,
 } from "../constants/settings.js";
+import type { Ecosystem } from "../wallet/types.js";
 
 const data = new Map<string, string>();
 
@@ -17,20 +17,22 @@ const data = new Map<string, string>();
 export class ClientScopedStorage {
   protected key: string;
   protected storage: AsyncStorage | null;
+  public ecosystem?: Ecosystem;
   /**
    * @internal
    */
   constructor({
     storage,
     clientId,
-    ecosystemId,
+    ecosystem,
   }: {
     storage: AsyncStorage | null;
     clientId: string;
-    ecosystemId?: EcosystemWalletId;
+    ecosystem?: Ecosystem;
   }) {
     this.storage = storage;
-    this.key = getLocalStorageKey(clientId, ecosystemId);
+    this.key = getLocalStorageKey(clientId, ecosystem?.id);
+    this.ecosystem = ecosystem;
   }
 
   protected async getItem(key: string): Promise<string | null> {

@@ -31,10 +31,10 @@ import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
+import { DownloadIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import QRCode from "qrcode";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { BiExport, BiImport, BiPencil } from "react-icons/bi";
 import { getAddress } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
 import {
@@ -164,7 +164,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
         isFetched={isFetched}
         onMenuClick={[
           {
-            icon: BiPencil,
+            icon: <Trash2Icon className="size-4" />,
             text: "Edit",
             onClick: (wallet) => {
               setSelectedBackendWallet(wallet);
@@ -172,7 +172,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
             },
           },
           {
-            icon: BiImport,
+            icon: <DownloadIcon className="size-4" />,
             text: "Receive funds",
             onClick: (wallet) => {
               setSelectedBackendWallet(wallet);
@@ -180,7 +180,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
             },
           },
           {
-            icon: BiExport,
+            icon: <UploadIcon className="size-4" />,
             text: "Send funds",
             onClick: (wallet) => {
               setSelectedBackendWallet(wallet);

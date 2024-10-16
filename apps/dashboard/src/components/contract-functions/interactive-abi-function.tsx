@@ -15,7 +15,8 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { replaceIpfsUrl } from "lib/sdk";
-import { InfoIcon, PlayIcon } from "lucide-react";
+import { ExternalLinkIcon, InfoIcon, PlayIcon } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useId, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -419,22 +420,39 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               <CodeBlock
                 w="full"
                 position="relative"
-                language="json"
+                language={
+                  formattedResponseData.startsWith("http") ||
+                  formattedResponseData.startsWith("ipfs")
+                    ? "text"
+                    : "json"
+                }
                 code={formattedResponseData}
               />
-              {typeof formattedResponseData === "string" &&
-                formattedResponseData.startsWith("ipfs://") && (
-                  <Text size="label.sm">
-                    <TrackedLink
-                      href={replaceIpfsUrl(formattedResponseData)}
-                      isExternal
-                      category="contract-explorer"
-                      label="open-in-gateway"
-                    >
-                      Open in gateway
-                    </TrackedLink>
-                  </Text>
-                )}
+              {/* If the result is an IPFS URI, show a handy link so that users can open it in a new tab */}
+              {formattedResponseData.startsWith("ipfs://") && (
+                <Text size="label.sm">
+                  <TrackedLink
+                    href={replaceIpfsUrl(formattedResponseData)}
+                    isExternal
+                    category="contract-explorer"
+                    label="open-in-gateway"
+                  >
+                    Open in gateway
+                  </TrackedLink>
+                </Text>
+              )}
+              {/* Same with the logic above but this time it's applied to traditional urls */}
+              {(formattedResponseData.startsWith("https://") ||
+                formattedResponseData.startsWith("http://")) && (
+                <Link
+                  href={formattedResponseData}
+                  target="_blank"
+                  className="mt-1 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
+                >
+                  Open link
+                  <ExternalLinkIcon className="size-4" />
+                </Link>
+              )}
             </>
           ) : null}
         </Flex>

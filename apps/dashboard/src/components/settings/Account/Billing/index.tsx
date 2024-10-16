@@ -5,15 +5,15 @@ import {
   AccountStatus,
   useUpdateAccountPlan,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, Icon, useDisclosure } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { AccountForm } from "components/settings/Account/AccountForm";
 import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { ExternalLinkIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FiExternalLink } from "react-icons/fi";
 import { Button, Heading, Text, TrackedLink } from "tw-components";
 import { PLANS } from "utils/pricing";
 import { LazyOnboardingBilling } from "../../../onboarding/LazyOnboardingBilling";
@@ -32,11 +32,7 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
   const updatePlanMutation = useUpdateAccountPlan(
     account?.plan === AccountPlan.Free,
   );
-  const {
-    isOpen: isPaymentMethodOpen,
-    onOpen: onPaymentMethodOpen,
-    onClose: onPaymentMethodClose,
-  } = useDisclosure();
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [paymentMethodSaving, setPaymentMethodSaving] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<AccountPlan | undefined>();
   const trackEvent = useTrack();
@@ -114,7 +110,7 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
 
     if (!validPayment) {
       setSelectedPlan(plan);
-      onPaymentMethodOpen();
+      setIsPaymentModalOpen(true);
       return;
     }
     // downgrade from Growth to Free
@@ -127,7 +123,7 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
 
   const handlePaymentAdded = () => {
     setPaymentMethodSaving(true);
-    onPaymentMethodClose();
+    setIsPaymentModalOpen(false);
   };
 
   const handleDowngradeAlertClose = () => {
@@ -142,7 +138,7 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
     return [
       {
         title: (
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-row items-center justify-between gap-2">
             <Heading
               size="label.md"
               opacity={!stepsCompleted.account ? 1 : 0.6}
@@ -186,12 +182,12 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
             account={account}
             loading={paymentMethodSaving}
             loadingText="Verifying payment method"
-            onClick={onPaymentMethodOpen}
+            onClick={() => setIsPaymentModalOpen(true)}
           />
         ),
       },
     ];
-  }, [account, onPaymentMethodOpen, paymentMethodSaving, stepsCompleted]);
+  }, [account, paymentMethodSaving, stepsCompleted]);
 
   // FIXME: this entire flow needs to be re-worked
   // eslint-disable-next-line no-restricted-syntax
@@ -245,16 +241,16 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
 
   return (
     <Flex flexDir="column" gap={8}>
+      <OnboardingModal isOpen={isPaymentModalOpen}>
+        <LazyOnboardingBilling
+          onSave={handlePaymentAdded}
+          onCancel={() => setIsPaymentModalOpen(false)}
+        />
+      </OnboardingModal>
+
       {showSteps ? (
         <>
           <StepsCard title="Get started with billing" steps={steps} />
-
-          <OnboardingModal isOpen={isPaymentMethodOpen}>
-            <LazyOnboardingBilling
-              onSave={handlePaymentAdded}
-              onCancel={onPaymentMethodClose}
-            />
-          </OnboardingModal>
         </>
       ) : (
         <>
@@ -288,7 +284,7 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
       >
         <div className="flex flex-row items-center gap-2">
           <Text color="blue.500">Learn more about thirdweb&apos;s pricing</Text>
-          <Icon as={FiExternalLink} />
+          <ExternalLinkIcon className="size-4" />
         </div>
       </TrackedLink>
 
@@ -303,7 +299,13 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
         />
       )}
 
-      <CouponSection teamId={teamId} />
+      <CouponSection
+        teamId={teamId}
+        onAddPayment={() => {
+          setIsPaymentModalOpen(true);
+        }}
+        isPaymentSetup={validPayment}
+      />
     </Flex>
   );
 };

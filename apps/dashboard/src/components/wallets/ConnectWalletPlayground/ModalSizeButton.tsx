@@ -1,7 +1,7 @@
-import { Icon, IconButton, Tooltip } from "@chakra-ui/react";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { IconButton } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { FaRectangleList } from "react-icons/fa6";
-import { RiFileListFill } from "react-icons/ri";
+import { ListIcon, Rows3Icon } from "lucide-react";
 
 export function ModalSizeButton(props: {
   modalSize: "compact" | "wide";
@@ -12,7 +12,7 @@ export function ModalSizeButton(props: {
 }) {
   const trackEvent = useTrack();
   return (
-    <Tooltip label={props.modalSize === "wide" ? "Wide" : "Compact"}>
+    <ToolTipLabel label={props.modalSize === "wide" ? "Wide" : "Compact"}>
       <IconButton
         w={10}
         h={10}
@@ -26,11 +26,11 @@ export function ModalSizeButton(props: {
         color={props.isSelected ? "blue.500" : "heading"}
         borderColor={props.isSelected ? "blue.500" : "gray.800"}
         icon={
-          <Icon
-            as={props.modalSize === "wide" ? FaRectangleList : RiFileListFill}
-            width={5}
-            height={5}
-          />
+          props.modalSize === "wide" ? (
+            <ListIcon className="size-5" />
+          ) : (
+            <Rows3Icon className="size-5" />
+          )
         }
         onClick={() => {
           props.onClick();
@@ -43,6 +43,6 @@ export function ModalSizeButton(props: {
           });
         }}
       />
-    </Tooltip>
+    </ToolTipLabel>
   );
 }

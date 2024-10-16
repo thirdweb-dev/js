@@ -8,7 +8,7 @@ export default function Page(props: EngineInstancePageProps) {
   return (
     <WithEngineInstance
       engineId={props.params.engineId}
-      content={(res) => <EngineOverview instanceUrl={res.instance.url} />}
+      content={(res) => <EngineOverview instance={res.instance} />}
       rootPath={`/team/${props.params.team_slug}/${props.params.project_slug}/engine`}
     />
   );

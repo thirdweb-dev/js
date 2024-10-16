@@ -363,8 +363,8 @@ export const metadata = createMetadata({
            override
            returns (ModuleConfig memory config)
        {
-           config.callbackFunctions = new CallbackFunction ;
-           config.fallbackFunctions = new FallbackFunction ;
+           config.callbackFunctions = new CallbackFunction[](1);
+           config.fallbackFunctions = new FallbackFunction[](2);
 
            config.callbackFunctions[0] = CallbackFunction(
                this.beforeIncrement.selector

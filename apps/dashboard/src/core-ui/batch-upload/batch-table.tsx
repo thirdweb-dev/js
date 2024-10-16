@@ -214,7 +214,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
       </TableContainer>
       <Portal containerRef={portalRef}>
         <div className="flex w-full items-center justify-center">
-          <div className="flex flex-row">
+          <div className="flex flex-row items-center gap-2">
             <IconButton
               isDisabled={!canPreviousPage}
               aria-label="first page"

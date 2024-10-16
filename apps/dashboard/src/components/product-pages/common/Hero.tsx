@@ -1,8 +1,8 @@
-import { Container, Flex, GridItem, Icon, SimpleGrid } from "@chakra-ui/react";
+import { Container, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { ChevronRightIcon } from "lucide-react";
 import type { StaticImageData } from "next/image";
 import type { ReactElement, ReactNode } from "react";
-import { FiChevronRight } from "react-icons/fi";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { ProductButton } from "./ProductButton";
@@ -74,7 +74,7 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
             >
               {type}
             </Text>
-            <Icon as={FiChevronRight} color="whiteAlpha.800" />
+            <ChevronRightIcon className="size-4 text-white opacity-80" />
             <Text
               cursor="default"
               fontWeight="medium"

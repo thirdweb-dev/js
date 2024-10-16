@@ -1,5 +1,6 @@
 "use client";
 
+import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type ApiKeyService,
@@ -21,13 +22,12 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { TrashIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { LuTrash2 } from "react-icons/lu";
 import { isAddress } from "thirdweb/utils";
 import {
   Button,
@@ -272,14 +272,14 @@ export function AccountAbstractionSettingsPage(
       >
         <FormControl>
           <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
               <div>
                 <FormLabel pointerEvents="none">Global spend limits</FormLabel>
                 <Text>
-                  Maximum gas cost (in USD) that you want to sponsor. This
-                  applies for the duration of the billing period (monthly). Once
-                  this limit is reached, your users will have to fund their own
-                  gas costs.
+                  Maximum gas cost (in USD) that you want to sponsor. <br />{" "}
+                  This applies for the duration of the billing period (monthly).
+                  Once this limit is reached, your users will have to fund their
+                  own gas costs.
                 </Text>
               </div>
 
@@ -308,7 +308,7 @@ export function AccountAbstractionSettingsPage(
                   }
                 >
                   <FormLabel>Spend limit</FormLabel>
-                  <div className="flex flex-row items-center">
+                  <div className="flex flex-row items-center gap-2">
                     <Input
                       w="xs"
                       placeholder="Enter an amount"
@@ -343,14 +343,14 @@ export function AccountAbstractionSettingsPage(
           }
         >
           <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
               <div>
                 <FormLabel pointerEvents="none">
                   Restrict to specific chains
                 </FormLabel>
                 <Text>
-                  Only sponsor transactions on the specified chains. By default,
-                  transactions can be sponsored on any of the{" "}
+                  Only sponsor transactions on the specified chains. <br /> By
+                  default, transactions can be sponsored on any of the{" "}
                   <TrackedLink
                     color="primary.500"
                     isExternal
@@ -375,11 +375,11 @@ export function AccountAbstractionSettingsPage(
             </div>
             {form.watch("allowedChainIds") && (
               <Flex flexDir="column">
-                <NetworkDropdown
-                  onMultiChange={(networksEnabled) =>
-                    form.setValue("allowedChainIds", networksEnabled)
+                <MultiNetworkSelector
+                  selectedChainIds={form.watch("allowedChainIds") || []}
+                  onChange={(chainIds) =>
+                    form.setValue("allowedChainIds", chainIds)
                   }
-                  value={form.watch("allowedChainIds")}
                 />
                 <FormErrorMessage>
                   {
@@ -399,7 +399,7 @@ export function AccountAbstractionSettingsPage(
           }
         >
           <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
               <div>
                 <FormLabel pointerEvents="none">
                   Restrict to specific contract addresses
@@ -442,7 +442,7 @@ export function AccountAbstractionSettingsPage(
         <Divider />
         <FormControl>
           <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
               <div>
                 <FormLabel pointerEvents="none">
                   Allowlisted/Blocklisted accounts
@@ -519,13 +519,14 @@ export function AccountAbstractionSettingsPage(
         <Divider />
         <FormControl>
           <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
               <div>
                 <FormLabel pointerEvents="none">Server verifier</FormLabel>
                 <Text>
                   Specify your own endpoint that will verify each transaction
-                  and decide whether it should be sponsored or not. This gives
-                  you fine grained control and lets you build your own rules.{" "}
+                  and decide whether it should be sponsored or not. <br /> This
+                  gives you fine grained control and lets you build your own
+                  rules.{" "}
                   <TrackedLink
                     category={trackingCategory}
                     href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules#setting-up-a-server-verifier"
@@ -597,7 +598,7 @@ export function AccountAbstractionSettingsPage(
                           />
                           <IconButton
                             aria-label="Remove header"
-                            icon={<LuTrash2 />}
+                            icon={<TrashIcon />}
                             onClick={() => {
                               customHeaderFields.remove(customHeaderIdx);
                             }}
@@ -634,7 +635,7 @@ export function AccountAbstractionSettingsPage(
           }
         >
           <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
               <div>
                 <FormLabel pointerEvents="none">Admin accounts</FormLabel>
                 <Text>

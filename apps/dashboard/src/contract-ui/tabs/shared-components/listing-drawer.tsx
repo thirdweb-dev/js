@@ -1,4 +1,5 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
   Flex,
   GridItem,
@@ -17,7 +18,7 @@ import type {
   EnglishAuction,
 } from "thirdweb/extensions/marketplace";
 import { useActiveAccount } from "thirdweb/react";
-import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
+import { Badge, Card, CodeBlock, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { CancelDirectListing } from "../direct-listings/components/cancel";
@@ -200,14 +201,8 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
   }
 
   return (
-    <Drawer
-      allowPinchZoom
-      preserveScrollBarGap
-      size="xl"
-      onClose={onClose}
-      isOpen={isOpen}
-    >
-      <Flex py={6} px={2} flexDir="column" gap={6}>
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent className="flex w-full flex-col gap-6 py-6 md:min-w-[600px]">
         <Flex gap={6}>
           <NFTMediaWithEmptyState
             metadata={renderData.asset.metadata}
@@ -246,7 +241,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
             })}
           </TabPanels>
         </Tabs>
-      </Flex>
-    </Drawer>
+      </SheetContent>
+    </Sheet>
   );
 };

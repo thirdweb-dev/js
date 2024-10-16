@@ -13,6 +13,14 @@ const walletsToPickFrom: WalletId[] = [
   "com.exodus",
   "app.phantom",
   "com.okex.wallet",
+  "io.clingon",
+  "com.broearn",
+  "com.coinomi",
+  "com.ripio",
+  "com.sabay.wallet",
+  "io.tokoin",
+  "world.fncy",
+  "io.copiosa",
 ];
 
 const pickRandomWallet = () => {

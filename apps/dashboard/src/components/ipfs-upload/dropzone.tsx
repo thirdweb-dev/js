@@ -10,7 +10,6 @@ import {
   Divider,
   Flex,
   GridItem,
-  Icon,
   Input,
   Progress,
   SimpleGrid,
@@ -22,10 +21,9 @@ import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
+import { ExternalLinkIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { BsFillCloudUploadFill } from "react-icons/bs";
-import { FiExternalLink, FiTrash2, FiUploadCloud } from "react-icons/fi";
 import { toast } from "sonner";
 import { MediaRenderer } from "thirdweb/react";
 import { useActiveAccount } from "thirdweb/react";
@@ -92,7 +90,7 @@ export const IpfsUploadDropzone: React.FC = () => {
         ) : (
           <div
             className={cn(
-              "flex items-center justify-center rounded-xl border-2 border-border border-solid bg-transparent hover:border-blue-600 dark:border-blue-400",
+              "flex h-full items-center justify-center rounded-xl border-2 border-border border-solid bg-transparent hover:border-blue-600 dark:border-blue-400",
               address ? "cursor-pointer" : "cursor-default",
             )}
             {...getRootProps()}
@@ -101,29 +99,13 @@ export const IpfsUploadDropzone: React.FC = () => {
 
             {
               <Flex direction="column" gap={2} p={6} align="center">
+                <UploadIcon className="mb-2 size-8 text-gray-600" />
                 {isDragActive ? (
-                  <>
-                    <Icon
-                      as={BsFillCloudUploadFill}
-                      boxSize={8}
-                      mb={2}
-                      color="gray.600"
-                    />
-                    <Text size="label.lg">Drop the files here</Text>
-                  </>
+                  <Text size="label.lg">Drop the files here</Text>
                 ) : (
-                  <>
-                    <Icon
-                      as={BsFillCloudUploadFill}
-                      boxSize={8}
-                      mb={2}
-                      color="gray.600"
-                    />
-                    <Text size="label.lg" textAlign="center" lineHeight="150%">
-                      Drag and drop your file or folder here to upload it to
-                      IPFS
-                    </Text>
-                  </>
+                  <Text size="label.lg" textAlign="center" lineHeight="150%">
+                    Drag and drop your file or folder here to upload it to IPFS
+                  </Text>
                 )}
               </Flex>
             }
@@ -260,7 +242,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                         category={TRACKING_CATEGORY}
                         label="open-in-gateway"
                         aria-label="Open in gateway"
-                        icon={<Icon as={FiExternalLink} />}
+                        icon={<ExternalLinkIcon className="size-4" />}
                         variant="ghost"
                         isExternal
                         size="sm"
@@ -285,7 +267,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                         aria-label="Remove File"
                         category={TRACKING_CATEGORY}
                         label="remove-file"
-                        icon={<Icon as={FiTrash2} />}
+                        icon={<Trash2Icon className="size-4" />}
                         variant="ghost"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -465,7 +447,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                 category={TRACKING_CATEGORY}
                 href={mainIpfsUri}
                 textDecor="none!important"
-                rightIcon={<Icon as={FiExternalLink} />}
+                rightIcon={<ExternalLinkIcon className="size-4" />}
                 colorScheme="green"
                 isExternal
                 onClick={() => {
@@ -483,7 +465,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                 isLoading={storageUpload.isPending}
                 loadingText="Uploading..."
                 colorScheme="green"
-                leftIcon={<Icon as={FiUploadCloud} />}
+                leftIcon={<UploadIcon className="size-4" />}
                 onClick={() => {
                   setIpfsHashes([]);
                   trackEvent({

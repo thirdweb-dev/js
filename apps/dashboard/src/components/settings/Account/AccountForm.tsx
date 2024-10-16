@@ -220,7 +220,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
 
         <div
           className={cn(
-            "flex w-full flex-row",
+            "flex w-full flex-row items-center gap-2",
             showBillingButton ? "justify-between" : "justify-end",
           )}
         >

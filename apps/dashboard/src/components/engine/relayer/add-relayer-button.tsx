@@ -1,3 +1,4 @@
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import {
   type CreateRelayerInput,
   useEngineBackendWallets,
@@ -6,7 +7,6 @@ import {
 import {
   Flex,
   FormControl,
-  Icon,
   Input,
   Modal,
   ModalBody,
@@ -20,12 +20,11 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { AiOutlinePlusCircle } from "react-icons/ai";
 import { isAddress, shortenAddress } from "thirdweb/utils";
 import { Button, FormHelperText, FormLabel } from "tw-components";
 
@@ -44,7 +43,7 @@ export const AddRelayerButton: React.FC<AddRelayerButtonProps> = ({
         onClick={disclosure.onOpen}
         variant="ghost"
         size="sm"
-        leftIcon={<Icon as={AiOutlinePlusCircle} boxSize={6} />}
+        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
         w="fit-content"
       >
@@ -136,9 +135,9 @@ const AddModal = ({
           <Flex flexDir="column" gap={4}>
             <FormControl isRequired>
               <FormLabel>Chain</FormLabel>
-              <NetworkDropdown
-                value={form.watch("chainId")}
-                onSingleChange={(val) => form.setValue("chainId", val)}
+              <SingleNetworkSelector
+                chainId={form.watch("chainId")}
+                onChange={(val) => form.setValue("chainId", val)}
               />
             </FormControl>
             <FormControl isRequired>

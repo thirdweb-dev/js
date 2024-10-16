@@ -5,7 +5,6 @@ import {
 import {
   Flex,
   FormControl,
-  Icon,
   Input,
   Modal,
   ModalBody,
@@ -19,8 +18,8 @@ import {
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { AiOutlinePlusCircle } from "react-icons/ai";
 import { Button, FormLabel } from "tw-components";
 import { beautifyString } from "./webhooks-table";
 
@@ -57,7 +56,7 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
         onClick={onOpen}
         variant="ghost"
         size="sm"
-        leftIcon={<Icon as={AiOutlinePlusCircle} boxSize={6} />}
+        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
         w="fit-content"
       >

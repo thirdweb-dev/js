@@ -114,6 +114,7 @@ export const ConnectWalletSocialOptions = (
     coinbase: "Coinbase",
     farcaster: "Farcaster",
     telegram: "Telegram",
+    twitch: "Twitch",
   };
 
   const { data: ecosystemAuthOptions, isLoading } = useQuery({
@@ -262,6 +263,7 @@ export const ConnectWalletSocialOptions = (
         closeOpenedWindow: (openedWindow: Window) => {
           openedWindow.close();
         },
+        ecosystem: ecosystemInfo,
       };
 
       const connectPromise = (() => {

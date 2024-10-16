@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
 import { useState } from "react";
 import { PayCustomersTable } from "./components/PayCustomersTable";
 import { PayNewCustomers } from "./components/PayNewCustomers";
@@ -125,19 +125,15 @@ export function PayAnalytics(props: { clientId: string }) {
 }
 
 function getLastNDaysRange(id: DurationId) {
-  const todayDate = new Date();
-  const pastDate = new Date(todayDate);
-
   const durationInfo = durationPresets.find((preset) => preset.id === id);
   if (!durationInfo) {
     throw new Error("Invalid duration id");
   }
 
-  pastDate.setDate(todayDate.getDate() - durationInfo.days);
-
+  const todayDate = new Date();
   const value: Range = {
     type: id,
-    from: pastDate,
+    from: subDays(todayDate, durationInfo.days),
     to: todayDate,
     label: durationInfo.name,
   };
@@ -147,35 +143,6 @@ function getLastNDaysRange(id: DurationId) {
 
 function Filters(props: { range: Range; setRange: (range: Range) => void }) {
   const { range, setRange } = props;
-
-  const presets = (
-    <div className="mb-2 border-border border-b p-4">
-      <Select
-        value={range.type}
-        onValueChange={(id: DurationId) => {
-          setRange(getLastNDaysRange(id));
-        }}
-      >
-        <SelectTrigger className="flex bg-transparent">
-          <SelectValue placeholder="Select" />
-        </SelectTrigger>
-        <SelectContent position="popper">
-          {durationPresets.map((preset) => (
-            <SelectItem key={preset.id} value={preset.id}>
-              {preset.name}
-            </SelectItem>
-          ))}
-
-          {range.type === "custom" && (
-            <SelectItem value="custom">
-              {format(range.from, "LLL dd, y")} -{" "}
-              {format(range.to, "LLL dd, y")}
-            </SelectItem>
-          )}
-        </SelectContent>
-      </Select>
-    </div>
-  );
 
   return (
     <div className="flex gap-2">
@@ -196,7 +163,34 @@ function Filters(props: { range: Range; setRange: (range: Range) => void }) {
             type: "custom",
           })
         }
-        header={presets}
+        header={
+          <div className="mb-2 border-border border-b p-4">
+            <Select
+              value={range.type}
+              onValueChange={(id: DurationId) => {
+                setRange(getLastNDaysRange(id));
+              }}
+            >
+              <SelectTrigger className="flex bg-transparent">
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                {durationPresets.map((preset) => (
+                  <SelectItem key={preset.id} value={preset.id}>
+                    {preset.name}
+                  </SelectItem>
+                ))}
+
+                {range.type === "custom" && (
+                  <SelectItem value="custom">
+                    {format(range.from, "LLL dd, y")} -{" "}
+                    {format(range.to, "LLL dd, y")}
+                  </SelectItem>
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+        }
         labelOverride={range.label}
         className="w-auto border-none p-0"
       />

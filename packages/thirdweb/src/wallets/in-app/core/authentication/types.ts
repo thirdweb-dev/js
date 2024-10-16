@@ -36,8 +36,19 @@ export type SingleStepAuthArgsType =
   | SocialAuthArgsType
   | { strategy: "jwt"; jwt: string; encryptionKey: string }
   | { strategy: "auth_endpoint"; payload: string; encryptionKey: string }
-  | { strategy: "iframe_email_verification"; email: string }
-  | { strategy: "iframe" }
+  | {
+      /**
+       * @deprecated
+       */
+      strategy: "iframe_email_verification";
+      email: string;
+    }
+  | {
+      /**
+       * @deprecated
+       */
+      strategy: "iframe";
+    }
   | {
       strategy: "passkey";
       /**
@@ -89,6 +100,7 @@ export type AuthProvider =
   | "Coinbase"
   | "X"
   | "Line"
+  | "Twitch"
   | "Farcaster"
   | "Telegram";
 

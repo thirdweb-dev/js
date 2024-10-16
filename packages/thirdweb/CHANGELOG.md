@@ -1,5 +1,71 @@
 # thirdweb
 
+## 5.62.0
+
+### Minor Changes
+
+- [#5032](https://github.com/thirdweb-dev/js/pull/5032) [`3fe33a6`](https://github.com/thirdweb-dev/js/commit/3fe33a6ca062acf08e3590619ebfe9748cdd79f6) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add ERC1155 extension: mintToBatch
+
+- [#4992](https://github.com/thirdweb-dev/js/pull/4992) [`1994d9e`](https://github.com/thirdweb-dev/js/commit/1994d9e52d3a3874e6111ff7bc688f95618fbc25) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support for enclave wallet migration in React Native
+
+  this change requires the latest version of the `@thirdweb-dev/react-native-adapter` package to be installed.
+
+### Patch Changes
+
+- [#5045](https://github.com/thirdweb-dev/js/pull/5045) [`ec10e81`](https://github.com/thirdweb-dev/js/commit/ec10e81624bb4389e5efc6570133f19d3df5368a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix linking wallets for ecosystems
+
+- [#5029](https://github.com/thirdweb-dev/js/pull/5029) [`da9f196`](https://github.com/thirdweb-dev/js/commit/da9f1964e4ae74ed5d33666788e2d16e4d56614d) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#5009](https://github.com/thirdweb-dev/js/pull/5009) [`6faf63f`](https://github.com/thirdweb-dev/js/commit/6faf63ff9597926f855263008014acfd4c349e5e) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix upload logic for delayed reveal batch
+
+## 5.61.6
+
+### Patch Changes
+
+- [#4962](https://github.com/thirdweb-dev/js/pull/4962) [`9685a85`](https://github.com/thirdweb-dev/js/commit/9685a85274ac3ac1f999e8f552eff78fe2027b45) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose UnstoppableDomains extensions: namehash and reverseNameOf
+
+- [#5004](https://github.com/thirdweb-dev/js/pull/5004) [`df0388d`](https://github.com/thirdweb-dev/js/commit/df0388d83b9c413b593f64ed5fe6c3c707a634d6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose auth options on `useConnectModal`
+
+- [#4961](https://github.com/thirdweb-dev/js/pull/4961) [`98f358d`](https://github.com/thirdweb-dev/js/commit/98f358d63a5c33a72cfe52bcbd910ea39fb2f33e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Throw an error if an expected auth token is missing
+
+- [#5002](https://github.com/thirdweb-dev/js/pull/5002) [`cd2c0f3`](https://github.com/thirdweb-dev/js/commit/cd2c0f3868bc9d0509130cc7664e6825759e9e78) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle zk sync direct deploys in `deployContract`
+
+## 5.61.5
+
+### Patch Changes
+
+- [#4979](https://github.com/thirdweb-dev/js/pull/4979) [`ccd4cd6`](https://github.com/thirdweb-dev/js/commit/ccd4cd6f59423d417757e86bf04a5a07b061e2f9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Overestimate zksync gas limit to account for paymaster extra gas
+
+- [#4974](https://github.com/thirdweb-dev/js/pull/4974) [`6a4b776`](https://github.com/thirdweb-dev/js/commit/6a4b776eccc16203795786d44c4b80c011c2af37) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - fix: allow account linking on thirdweb dashboard
+
+- [#4977](https://github.com/thirdweb-dev/js/pull/4977) [`7c10343`](https://github.com/thirdweb-dev/js/commit/7c103431c4e4788277086db1f21e32833b6dfd2b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add soneiumMinato chain definition
+
+## 5.61.4
+
+### Patch Changes
+
+- [#4969](https://github.com/thirdweb-dev/js/pull/4969) [`3446b4c`](https://github.com/thirdweb-dev/js/commit/3446b4cabf0a8b877c344d810f97fd571753df2e) Thanks [@MananTank](https://github.com/MananTank)! - Remove extra text shown in Error Message in Pay UI
+
+## 5.61.3
+
+### Patch Changes
+
+- [#4965](https://github.com/thirdweb-dev/js/pull/4965) [`24981a7`](https://github.com/thirdweb-dev/js/commit/24981a7f60c2a45976c748826339822d81154ce3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect raw accountSalt passed as hex
+
+## 5.61.2
+
+### Patch Changes
+
+- [#4948](https://github.com/thirdweb-dev/js/pull/4948) [`ea36c54`](https://github.com/thirdweb-dev/js/commit/ea36c541185a4a333b0689bf7de6b9ae92f85cac) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow overriding callGasLimit for userops
+
+## 5.61.1
+
+### Patch Changes
+
+- [#4933](https://github.com/thirdweb-dev/js/pull/4933) [`506764d`](https://github.com/thirdweb-dev/js/commit/506764dabdbfa4910416e7a1347a92f0ef0d5e8e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support show all wallets option in React Native Connect UI
+
+- [#4944](https://github.com/thirdweb-dev/js/pull/4944) [`822ece4`](https://github.com/thirdweb-dev/js/commit/822ece45ece94329c5da2b070da6e7ded09f34c2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Option to disable storing last stored passkey credentials
+
 ## 5.61.0
 
 ### Minor Changes

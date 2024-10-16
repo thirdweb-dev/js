@@ -266,7 +266,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
                 w="100%"
                 mb={2}
               >
-                <div className="flex flex-row">
+                <div className="flex flex-row items-center gap-2">
                   <Button
                     className="text-muted-foreground"
                     variant="ghost"

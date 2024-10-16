@@ -40,14 +40,14 @@
     "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.2",
+    "@biomejs/biome": "1.9.3",
     "@changesets/changelog-github": "0.5.0",
-    "@changesets/cli": "2.27.8",
+    "@changesets/cli": "2.27.9",
     "@manypkg/cli": "0.21.4",
     "@manypkg/get-packages": "2.2.2",
     "@types/node": "20.14.9",
     "turbo": "2.1.3",
-    "typescript": "5.6.2"
+    "typescript": "5.6.3"
   },
   "manypkg": {
     "defaultBranch": "main"
@@ -75,7 +75,11 @@
       "ws@>=7.0.0 <7.5.10": "7.5.10",
       "ws@>=6.0.0 <6.2.3": "6.2.3",
       "eslint": "8.57.0",
-      "@typescript-eslint/typescript-estree": "^7.14.1"
+      "@typescript-eslint/typescript-estree": "^7.14.1",
+      "axios@<1.7.4": "^1.7.4",
+      "send@<0.19.0": "^0.19.0",
+      "elliptic@<6.5.7": "^6.5.7",
+      "cookie@<0.7.0": "^0.7.0"
     }
   },
   "packageManager": "pnpm@9.11.0"

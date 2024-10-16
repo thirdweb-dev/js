@@ -20,7 +20,7 @@ export const BillingPlan: React.FC<BillingPlanProps> = ({
 }) => {
   return (
     <Flex direction={direction} gap={3}>
-      <div className="flex flex-row">
+      <div className="flex flex-row items-center gap-2">
         <Text color={titleColor} size={titleSize}>
           Your current plan is
         </Text>
@@ -35,7 +35,7 @@ export const BillingPlan: React.FC<BillingPlanProps> = ({
         </Badge>
       </div>
 
-      <div className="flex flex-row">
+      <div className="flex flex-row items-center gap-2">
         {description && <Text>{description}</Text>}
 
         <TrackedLink

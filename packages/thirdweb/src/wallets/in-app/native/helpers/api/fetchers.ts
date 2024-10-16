@@ -14,6 +14,8 @@ import { createErrorMessage } from "../errors.js";
 
 const EMBEDDED_WALLET_TOKEN_HEADER = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
+const ECOSYSTEM_ID_HEADER = "x-ecosystem-id";
+const ECOSYSTEM_PARTNER_ID_HEADER = "x-ecosystem-partner-id";
 
 let sessionNonce: Hex | undefined = undefined;
 
@@ -63,6 +65,12 @@ export async function authFetchEmbeddedWalletUser(args: {
           authTokenClient || ""
         }`,
         [PAPER_CLIENT_ID_HEADER]: client.clientId,
+        ...(storage.ecosystem
+          ? {
+              [ECOSYSTEM_ID_HEADER]: storage.ecosystem.id,
+              [ECOSYSTEM_PARTNER_ID_HEADER]: storage.ecosystem?.partnerId,
+            }
+          : {}),
         ...getSessionHeaders(),
       }
     : {
@@ -70,6 +78,12 @@ export async function authFetchEmbeddedWalletUser(args: {
           authTokenClient || ""
         }`,
         [PAPER_CLIENT_ID_HEADER]: client.clientId,
+        ...(storage.ecosystem
+          ? {
+              [ECOSYSTEM_ID_HEADER]: storage.ecosystem.id,
+              [ECOSYSTEM_PARTNER_ID_HEADER]: storage.ecosystem?.partnerId,
+            }
+          : {}),
         ...getSessionHeaders(),
       };
 

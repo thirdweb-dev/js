@@ -1,8 +1,8 @@
-import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
+import { ZapIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { BsFillLightningChargeFill } from "react-icons/bs";
 import { Heading, Text, TrackedLink, TrackedLinkButton } from "tw-components";
 import { getCookie } from "../../../stores/SyncStoreToCookies";
 import { Aurora } from "../Aurora";
@@ -153,7 +153,7 @@ function GetStartedButtonLink(props: {
 
   return (
     <TrackedLinkButton
-      leftIcon={<Icon as={BsFillLightningChargeFill} boxSize={4} />}
+      leftIcon={<ZapIcon className="size-4 fill-black" />}
       py={6}
       px={8}
       w="full"

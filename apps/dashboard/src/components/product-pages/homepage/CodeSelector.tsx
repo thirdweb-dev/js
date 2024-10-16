@@ -1,9 +1,8 @@
-import { Flex, Icon } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
+import { FileTextIcon, SquareTerminalIcon } from "lucide-react";
 import { themes } from "prism-react-renderer";
 import { useState } from "react";
-import { AiOutlineCode } from "react-icons/ai";
-import { CgFileDocument } from "react-icons/cg";
 import {
   Card,
   CodeBlock,
@@ -155,12 +154,12 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
         />
 
         {/* Links for Replit and Docs  */}
-        <Flex justify="end" gap={6} position="absolute" bottom={0} right={2}>
+        <Flex justify="end" gap={4} position="absolute" bottom={0} right={2}>
           <CustomLinkButton
             px={4}
             text="Docs"
             href={docs}
-            icon={<Icon color="white" as={CgFileDocument} />}
+            icon={<FileTextIcon className="size-4 text-white" />}
             onClick={() =>
               trackEvent({
                 category: "code-selector",
@@ -173,7 +172,7 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
           <CustomLinkButton
             text="Run"
             href={`https://replit.com/@thirdweb/${activeLanguage}-sdk`}
-            icon={<Icon color="white" as={AiOutlineCode} />}
+            icon={<SquareTerminalIcon className="size-4 text-white" />}
             onClick={() =>
               trackEvent({
                 category: "code-selector",

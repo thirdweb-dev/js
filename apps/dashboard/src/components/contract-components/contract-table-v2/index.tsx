@@ -1,7 +1,6 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   Flex,
-  Icon,
   Image,
   Spinner,
   Table,
@@ -17,10 +16,9 @@ import { ChakraNextImage } from "components/Image";
 import { replaceDeployerAddress } from "components/explore/publisher";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
+import { MoveRightIcon, ShieldCheckIcon } from "lucide-react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import { BsShieldFillCheck } from "react-icons/bs";
-import { FiArrowRight } from "react-icons/fi";
 import { type Column, type Row, useTable } from "react-table";
 import {
   Card,
@@ -139,7 +137,7 @@ export const PublishedContractTable: ComponentWithChildren<
                   aria-label="Audited contract"
                   colorScheme="green"
                   variant="ghost"
-                  icon={<Icon as={BsShieldFillCheck} boxSize={4} />}
+                  icon={<ShieldCheckIcon className="size-4" />}
                   onClick={(e) => {
                     e.stopPropagation();
                     trackEvent({
@@ -255,7 +253,7 @@ const ContractTableRow: React.FC<ContractTableRowProps> = ({ row }) => {
           </Td>
         ))}
         <Td borderBottomColor="borderColor" borderBottomWidth="inherit">
-          <Icon color="var(--rowIconColor)" as={FiArrowRight} />
+          <MoveRightIcon className="size-4" />
         </Td>
       </Tr>
     </>

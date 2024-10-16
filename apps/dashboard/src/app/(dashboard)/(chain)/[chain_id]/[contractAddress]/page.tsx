@@ -1,7 +1,7 @@
-import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
 import { notFound } from "next/navigation";
 import { getContractPageParamsInfo } from "./_utils/getContractFromParams";
 import { getContractPageMetadata } from "./_utils/getContractPageMetadata";
+import { ContractOverviewPage } from "./overview/ContractOverviewPage";
 
 export default async function Page(props: {
   params: {

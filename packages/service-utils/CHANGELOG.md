@@ -1,5 +1,29 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.44
+
+### Patch Changes
+
+- [#5029](https://github.com/thirdweb-dev/js/pull/5029) [`da9f196`](https://github.com/thirdweb-dev/js/commit/da9f1964e4ae74ed5d33666788e2d16e4d56614d) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+## 0.4.43
+
+### Patch Changes
+
+- [#4958](https://github.com/thirdweb-dev/js/pull/4958) [`4170c60`](https://github.com/thirdweb-dev/js/commit/4170c60ca6c42863b5e268f73b2fc332f48aebaf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix fetchMetadataFromApi export
+
+## 0.4.42
+
+### Patch Changes
+
+- [#4955](https://github.com/thirdweb-dev/js/pull/4955) [`eff129a`](https://github.com/thirdweb-dev/js/commit/eff129ab9aa990378bae88e28b045c3333c77996) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export fetchKeyMetadataFromApi, remove checkPolicy options
+
+## 0.4.41
+
+### Patch Changes
+
+- [#4946](https://github.com/thirdweb-dev/js/pull/4946) [`7b7226f`](https://github.com/thirdweb-dev/js/commit/7b7226f9c6668834a66dec839b049905716626c9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export types
+
 ## 0.4.40
 
 ### Patch Changes

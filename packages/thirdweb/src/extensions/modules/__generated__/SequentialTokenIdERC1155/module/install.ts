@@ -4,7 +4,10 @@ import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import type { PreparedTransaction } from "../../../../../transaction/prepare-transaction.js";
 import type { Address } from "../../../../../utils/address.js";
 import type { Account } from "../../../../../wallets/interfaces/wallet.js";
-
+import {
+  type EncodeBytesOnInstallParams,
+  encodeBytesOnInstallParams,
+} from "../encode/encodeBytesOnInstall.js";
 import { getOrDeployModule } from "../../../common/getOrDeployModule.js";
 import { installPublishedModule } from "../../../common/installPublishedModule.js";
 
@@ -27,13 +30,17 @@ const contractId = "SequentialTokenIdERC1155";
  *     name: "My Modular Contract",
  *   },
  *   modules: [
- *     SequentialTokenIdERC1155.module(),
+ *     SequentialTokenIdERC1155.module({
+ *        startTokenId: ...,
+ *     }),
  *   ],
  * });
  * ```
  * @modules SequentialTokenIdERC1155
  */
-export function module(params?: { publisher?: string }) {
+export function module(
+  params: EncodeBytesOnInstallParams & { publisher?: string },
+) {
   return async (args: {
     client: ThirdwebClient;
     chain: Chain;
@@ -49,7 +56,7 @@ export function module(params?: { publisher?: string }) {
     });
     return {
       module: moduleContract.address as Address,
-      data: "0x" as const,
+      data: encodeInstall(params),
     };
   };
 }
@@ -65,7 +72,9 @@ export function module(params?: { publisher?: string }) {
  * const transaction  = SequentialTokenIdERC1155.install({
  *  contract: coreContract,
  *  account: account,
- 
+ *  params: {
+ *     startTokenId: ...,
+ *  },
  * });
  *
  * await sendTransaction({
@@ -78,13 +87,13 @@ export function module(params?: { publisher?: string }) {
 export function install(options: {
   contract: ThirdwebContract;
   account: Account;
-  params?: { publisher?: string };
+  params: EncodeBytesOnInstallParams & { publisher?: string };
 }): PreparedTransaction {
   return installPublishedModule({
     account: options.account,
     contract: options.contract,
     moduleName: contractId,
-    moduleData: "0x" as const,
+    moduleData: encodeInstall(options.params),
     publisher: options.params?.publisher,
   });
 }
@@ -95,6 +104,6 @@ export function install(options: {
  * @returns - The encoded data.
  * @modules SequentialTokenIdERC1155
  */
-export function encodeInstall() {
-  return "0x";
+export function encodeInstall(params: EncodeBytesOnInstallParams) {
+  return encodeBytesOnInstallParams(params);
 }

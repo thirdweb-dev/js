@@ -23,7 +23,7 @@ export const SettingsUsagePage = () => {
     <div className="flex flex-col gap-8">
       <div className="flex flex-col">
         <h1 className="mb-2 font-semibold text-3xl tracking-tight">Usage</h1>
-        <div className="flex flex-col items-start justify-between lg:flex-row lg:items-center">
+        <div className="flex flex-col items-start justify-between gap-2 lg:flex-row lg:items-center">
           <BillingPlan account={account} />
           <BillingPeriod account={account} usage={usageQuery.data} />
         </div>

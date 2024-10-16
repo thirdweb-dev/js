@@ -6,9 +6,8 @@ import {
   useEngineQueueMetrics,
   useEngineSystemMetrics,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex, Icon } from "@chakra-ui/react";
-import { FaChartArea } from "react-icons/fa";
-import { IoIosInformationCircleOutline } from "react-icons/io";
+import { Flex } from "@chakra-ui/react";
+import { ChartAreaIcon, InfoIcon } from "lucide-react";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
 import { ErrorRate } from "./components/ErrorRate";
 import { Healthcheck } from "./components/Healthcheck";
@@ -30,7 +29,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
       <Card p={8}>
         <div className="flex flex-col gap-4">
           <Flex gap={2} align="center">
-            <Icon as={IoIosInformationCircleOutline} />
+            <InfoIcon className="size-4" />
             <Heading size="title.xs">
               System metrics are unavailable for self-hosted Engine.
             </Heading>
@@ -56,7 +55,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
       <Card p={16}>
         <div className="flex flex-col gap-4">
           <Flex gap={2} align="center" pb={-2}>
-            <Icon as={FaChartArea} />
+            <ChartAreaIcon className="size-4" />
             <Heading size="title.md">System Metrics</Heading>
           </Flex>
 

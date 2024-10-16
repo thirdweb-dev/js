@@ -1,4 +1,5 @@
 import { NavLink } from "@/components/ui/NavLink";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { CmdKSearch } from "components/cmd-k-search";
@@ -25,6 +26,19 @@ export const DashboardHeader: React.FC = () => {
 
         {/* Right */}
         <div className="flex items-center gap-2">
+          <NavLink
+            href="/team"
+            tracking={{
+              category: "header",
+              action: "click",
+              label: "team-dashboard",
+            }}
+            className="hidden items-center gap-1.5 px-2.5 text-muted-foreground text-sm hover:text-foreground md:inline-flex"
+            activeClassName="text-foreground"
+          >
+            Team Dashboard <Badge className="px-1.5"> BETA </Badge>
+          </NavLink>
+
           <div className="hidden gap-2 md:flex">
             <Suspense fallback={null}>
               <CreditsButton />

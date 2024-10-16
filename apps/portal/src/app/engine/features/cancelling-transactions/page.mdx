@@ -24,8 +24,6 @@ When Engine receives a cancellation request:
 
 **When canceled, the transaction will not be re-attempted.** Your backend may safely re-attempt this transaction.
 
-_Note: Use [Retry Transaction](https://redocly.github.io/redoc/?url=https://demo.web3api.thirdweb.com/json#tag/Transaction/operation/retry) instead to increase the gas settings for a queued transaction._
-
 ## Cancel a transaction from the API
 
 ```typescript
@@ -44,7 +42,7 @@ if (resp.status === 200) {
 }
 ```
 
-Reference: [`Cancel Transaction`](https://redocly.github.io/redoc/?url=https://demo.web3api.thirdweb.com/json#tag/Transaction/operation/cancel)
+Reference: [`Cancel Transaction`](https://thirdweb-engine.apidocumentation.com/reference#tag/transaction/POST/transaction/cancel)
 
 ## Cancel a transaction from the dashboard
 

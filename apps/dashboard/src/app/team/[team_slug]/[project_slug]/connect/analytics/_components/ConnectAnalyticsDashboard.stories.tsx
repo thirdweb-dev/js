@@ -27,7 +27,7 @@ export const Mobile: Story = {
 
 function Component() {
   return (
-    <div className="container py-8">
+    <div className="container max-w-[1150px] py-8">
       <ConnectAnalyticsDashboardUI
         walletUsage={createWalletStatsStub(30)}
         aggregateWalletUsage={createWalletStatsStub(30)}

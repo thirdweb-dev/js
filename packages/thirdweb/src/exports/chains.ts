@@ -77,3 +77,4 @@ export { celoAlfajoresTestnet } from "../chains/chain-definitions/celo-alfajores
 export { fraxtalTestnet } from "../chains/chain-definitions/fraxtal-testnet.js";
 export { metalL2Testnet } from "../chains/chain-definitions/metal-l2-testnet.js";
 export { modeTestnet } from "../chains/chain-definitions/mode-testnet.js";
+export { soneiumMinato } from "../chains/chain-definitions/soneium-minato.js";

@@ -102,10 +102,11 @@ async function getRecoveryCode(args: {
     }
     try {
       return await getCognitoRecoveryPasswordV2({ client, storage });
-    } catch {
+    } catch (err) {
+      console.error("Error recovering wallet", err);
       return await getCognitoRecoveryPasswordV1({ client, storage }).catch(
         () => {
-          throw new Error("Something went wrong getting cognito recovery code");
+          throw new Error("Something went wrong while recovering wallet");
         },
       );
     }

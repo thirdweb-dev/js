@@ -4,8 +4,6 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
 import { getOrDeployInfraContractFromMetadata } from "../../contract/deployment/utils/bootstrap.js";
-import {} from "../../contract/deployment/utils/infra.js";
-import { zkDeployContract } from "../../contract/deployment/zksync/zkDeployContract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { simulateTransaction } from "../../transaction/actions/simulate.js";
 import { prepareContractCall } from "../../transaction/prepare-contract-call.js";
@@ -18,7 +16,6 @@ import {
   fetchBytecodeFromCompilerMetadata,
 } from "../../utils/any-evm/deploy-metadata.js";
 import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
-import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { getAllDefaultConstructorParamsForImplementation } from "./get-required-transactions.js";
@@ -262,22 +259,6 @@ async function directDeploy(options: {
 }): Promise<string> {
   const { account, client, chain, compilerMetadata, contractParams, salt } =
     options;
-
-  if (await isZkSyncChain(chain)) {
-    return zkDeployContract({
-      account,
-      client,
-      chain,
-      bytecode: await fetchBytecodeFromCompilerMetadata({
-        compilerMetadata,
-        client,
-        chain,
-      }),
-      abi: compilerMetadata.abi,
-      params: contractParams,
-      salt,
-    });
-  }
 
   const { deployContract } = await import(
     "../../contract/deployment/deploy-with-abi.js"

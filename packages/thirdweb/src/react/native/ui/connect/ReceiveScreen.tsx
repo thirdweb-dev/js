@@ -1,4 +1,5 @@
 import { StyleSheet, View } from "react-native";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { shortenAddress } from "../../../../utils/address.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
@@ -16,10 +17,12 @@ type ReceiveScreenProps = {
   onClose?: () => void;
   onBack?: () => void;
   containerType: ContainerType;
+  client: ThirdwebClient;
 };
 
 export const ReceiveScreen = (props: ReceiveScreenProps) => {
-  const { wallet, account, theme, onClose, onBack, containerType } = props;
+  const { wallet, account, theme, onClose, onBack, containerType, client } =
+    props;
 
   return (
     <>
@@ -32,7 +35,7 @@ export const ReceiveScreen = (props: ReceiveScreenProps) => {
       />
       <View style={styles.container}>
         {/* TODO (rn) QR code scanning */}
-        <WalletImage theme={theme} wallet={wallet} size={80} />
+        <WalletImage theme={theme} wallet={wallet} size={80} client={client} />
         <Spacer size="lg" />
         <View
           style={[

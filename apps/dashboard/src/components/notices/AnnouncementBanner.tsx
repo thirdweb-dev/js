@@ -4,7 +4,7 @@ import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { ChevronRightIcon, XIcon } from "lucide-react";
 
-export function AnnouncementBanner(props: {
+function AnnouncementBanner(props: {
   href: string;
   label: string;
   trackingLabel: string;
@@ -29,9 +29,9 @@ export function AnnouncementBanner(props: {
         category="announcement"
         label={props.trackingLabel}
         target={props.href.startsWith("http") ? "_blank" : undefined}
-        className="container flex cursor-pointer items-center gap-2 lg:justify-center"
+        className="!text-white container flex cursor-pointer items-center gap-2 lg:justify-center "
       >
-        <span className="inline-block font-semibold text-white leading-normal hover:underline">
+        <span className="inline-block font-semibold leading-normal hover:underline">
           {props.label}
         </span>
         <ChevronRightIcon className="hidden size-5 opacity-80 lg:block" />
@@ -47,5 +47,15 @@ export function AnnouncementBanner(props: {
         <XIcon className="size-5" />
       </Button>
     </div>
+  );
+}
+
+export function UnlimitedWalletsBanner() {
+  return (
+    <AnnouncementBanner
+      href="/dashboard/settings/billing?coupon=FREEWALLETS"
+      label='Claim 12 months of free in-app wallets. Use code "FREEWALLETS". Redeem offer by October 31st!'
+      trackingLabel="unlimited-wallets"
+    />
   );
 }

@@ -112,6 +112,22 @@ export async function setDeviceShare({
   return deviceShare;
 }
 
+export async function removeDeviceShare({
+  clientId,
+}: {
+  clientId: string;
+}): Promise<void> {
+  const userDetails = await getWalletUserDetails(clientId);
+
+  if (!userDetails) {
+    throw new Error("Missing wallet user ID");
+  }
+
+  const name = DEVICE_SHARE_LOCAL_STORAGE_NAME(clientId, userDetails.userId);
+  await removeItemInAsyncStorage(name);
+  return;
+}
+
 export async function getDeviceShare(clientId: string) {
   const cachedWalletUserId = await getWalletUserDetails(clientId);
   if (!cachedWalletUserId) {

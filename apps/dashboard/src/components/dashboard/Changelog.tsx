@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistance } from "date-fns/formatDistance";
 import { ArrowRightIcon } from "lucide-react";
-import { Link } from "tw-components";
+import Link from "next/link";
 import { ClientOnly } from "../ClientOnly/ClientOnly";
 
 export interface ChangelogItem {
@@ -23,7 +23,7 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
 
           <div className="flex flex-col">
             <Link
-              isExternal
+              target="_blank"
               href={`${item.url}?utm_source=thirdweb&utm_campaign=changelog`}
               role="group"
               className="!text-muted-foreground hover:!text-foreground hover:!no-underline line-clamp-2 text-sm"
@@ -31,7 +31,7 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
               {item.title}
             </Link>
             <div className="mt-1 text-muted-foreground text-xs opacity-70">
-              <ClientOnly ssr={<Skeleton className="h-2" />}>
+              <ClientOnly ssr={<Skeleton className="h-2 w-28" />}>
                 {formatDistance(new Date(item.published_at), Date.now(), {
                   addSuffix: true,
                 })}
@@ -42,7 +42,7 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
       ))}
       <Link
         href="https://blog.thirdweb.com/changelog?utm_source=thirdweb&utm_campaign=changelog"
-        isExternal
+        target="_blank"
         className="!text-foreground flex items-center gap-2 pl-7 text-sm"
       >
         View More <ArrowRightIcon className="size-4" />

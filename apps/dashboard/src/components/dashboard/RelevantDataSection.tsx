@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
+import { MoveRightIcon } from "lucide-react";
 import { useState } from "react";
-import { BsArrowRight } from "react-icons/bs";
 import { Heading, Text, TrackedLink } from "tw-components";
 
 interface RelevantDataSectionProps {
@@ -56,7 +56,7 @@ export const RelevantDataSection: React.FC<RelevantDataSectionProps> = ({
             alignItems="center"
             gap="0.5em"
           >
-            View more <BsArrowRight />
+            View more <MoveRightIcon className="size-4" />
           </Text>
         ) : null}
       </Flex>

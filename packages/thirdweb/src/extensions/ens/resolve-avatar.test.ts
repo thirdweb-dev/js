@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { resolveAvatar } from "./resolve-avatar.js";
 
@@ -22,9 +21,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("ENS:resolve-avatar", () => {
       client: TEST_CLIENT,
       name: "vitalik.eth",
     });
-    expect(avatarUri?.split("/ipfs/")[1]).toMatchInlineSnapshot(
-      `"QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif"`,
-    );
+    expect(avatarUri).toMatchInlineSnapshot(`"https://euc.li/vitalik.eth"`);
   });
 
   it("resolves name without avatar record to null", async () => {

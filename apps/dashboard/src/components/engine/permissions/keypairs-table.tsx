@@ -20,8 +20,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
-import { FiTrash } from "react-icons/fi";
 import { Button, CodeBlock, FormLabel, Text } from "tw-components";
 import { toDateTimeLocal } from "utils/date-utils";
 
@@ -88,7 +88,7 @@ export const KeypairsTable: React.FC<KeypairsTableProps> = ({
         isFetched={isFetched}
         onMenuClick={[
           {
-            icon: FiTrash,
+            icon: <Trash2Icon className="size-4" />,
             text: "Remove",
             onClick: (keypair) => {
               setSelectedKeypair(keypair);
