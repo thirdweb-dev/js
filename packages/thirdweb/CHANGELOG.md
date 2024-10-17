@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.63.0
+
+### Minor Changes
+
+- [#5047](https://github.com/thirdweb-dev/js/pull/5047) [`3a141e7`](https://github.com/thirdweb-dev/js/commit/3a141e742c19eeeecf031a3014cb476ee69d4c0c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds twitch auth strategy
+
+### Patch Changes
+
+- [#5059](https://github.com/thirdweb-dev/js/pull/5059) [`cb6a053`](https://github.com/thirdweb-dev/js/commit/cb6a0537d8fbec5d8e07a530caf501f94d30ae0e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update default zk chains
+
+- [#5053](https://github.com/thirdweb-dev/js/pull/5053) [`772604e`](https://github.com/thirdweb-dev/js/commit/772604eee2bb20265826846f3953a2add99f35b3) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix flaky auth state in PWAs
+
 ## 5.62.0
 
 ### Minor Changes
