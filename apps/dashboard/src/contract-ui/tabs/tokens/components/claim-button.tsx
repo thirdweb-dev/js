@@ -101,78 +101,89 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
             colorScheme="primary"
             isDisabled={!form.formState.isDirty || isPending}
             onClick={form.handleSubmit(async (d) => {
-              if (!d.to) {
-                return toast.error(
-                  "Need to speficy an address to receive tokens",
-                );
-              }
-              trackEvent({
-                category: "token",
-                action: "claim",
-                label: "attempt",
-              });
-              if (!account) {
-                return toast.error("No account detected");
-              }
-              const transaction = ERC20Ext.claimTo({
-                contract,
-                to: d.to,
-                quantity: d.amount,
-                from: account.address,
-              });
+              try {
+                if (!d.to) {
+                  return toast.error(
+                    "Need to specify an address to receive tokens",
+                  );
+                }
+                trackEvent({
+                  category: "token",
+                  action: "claim",
+                  label: "attempt",
+                });
+                if (!account) {
+                  return toast.error("No account detected");
+                }
+                const transaction = ERC20Ext.claimTo({
+                  contract,
+                  to: d.to,
+                  quantity: d.amount,
+                  from: account.address,
+                });
 
-              const approveTx = await ERC20Ext.getApprovalForTransaction({
-                transaction,
-                account,
-              });
+                const approveTx = await ERC20Ext.getApprovalForTransaction({
+                  transaction,
+                  account,
+                });
 
-              if (approveTx) {
+                if (approveTx) {
+                  const promise = sendAndConfirmTransaction.mutateAsync(
+                    approveTx,
+                    {
+                      onError: (error) => {
+                        console.error(error);
+                      },
+                    },
+                  );
+                  toast.promise(promise, {
+                    loading: "Approving ERC20 tokens for this claim",
+                    success: "Tokens approved successfully",
+                    error: "Failed to approve token",
+                  });
+
+                  await promise;
+                }
+
                 const promise = sendAndConfirmTransaction.mutateAsync(
-                  approveTx,
+                  transaction,
                   {
+                    onSuccess: () => {
+                      trackEvent({
+                        category: "token",
+                        action: "claim",
+                        label: "success",
+                      });
+                      form.reset({ amount: "0", to: account?.address });
+                      setOpen(false);
+                    },
                     onError: (error) => {
+                      trackEvent({
+                        category: "token",
+                        action: "claim",
+                        label: "error",
+                        error,
+                      });
                       console.error(error);
                     },
                   },
                 );
+
                 toast.promise(promise, {
-                  loading: "Approving ERC20 tokens for this claim",
-                  success: "Tokens approved successfully",
-                  error: "Failed to approve token",
+                  loading: "Claiming tokens",
+                  success: "Token claimed successfully",
+                  error: "Failed to claim tokens",
                 });
-
-                await promise;
+              } catch (error) {
+                console.error(error);
+                toast.error("Failed to claim tokens");
+                trackEvent({
+                  category: "token",
+                  action: "claim",
+                  label: "error",
+                  error,
+                });
               }
-
-              const promise = sendAndConfirmTransaction.mutateAsync(
-                transaction,
-                {
-                  onSuccess: () => {
-                    trackEvent({
-                      category: "token",
-                      action: "claim",
-                      label: "success",
-                    });
-                    form.reset({ amount: "0", to: account?.address });
-                    setOpen(false);
-                  },
-                  onError: (error) => {
-                    trackEvent({
-                      category: "token",
-                      action: "claim",
-                      label: "error",
-                      error,
-                    });
-                    console.error(error);
-                  },
-                },
-              );
-
-              toast.promise(promise, {
-                loading: "Claiming tokens",
-                success: "Token claimed successfully",
-                error: "Failed to claim tokens",
-              });
             })}
           >
             Claim Tokens
