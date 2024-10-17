@@ -8,7 +8,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { Button } from "tw-components";
-import type { Balance } from "../page";
+import type { Balance } from "../ContractSplitPage";
 
 interface DistributeButtonProps {
   contract: ThirdwebContract;

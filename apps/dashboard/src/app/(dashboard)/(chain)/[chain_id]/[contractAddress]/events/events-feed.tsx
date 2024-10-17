@@ -24,6 +24,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useChainSlug } from "hooks/chains/chainSlug";
 import { useClipboard } from "hooks/useClipboard";
 import { ChevronDownIcon, CircleHelpIcon, CopyIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -39,7 +40,6 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import { useChainSlug } from "../../../../hooks/chains/chainSlug";
 
 interface EventsFeedProps {
   contract: ThirdwebContract;

@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import * as CommonExt from "thirdweb/extensions/common";
-import { ContractSettingsPage } from "../../../../../../contract-ui/tabs/settings/page";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
+import { ContractSettingsPage } from "./ContractSettingsPage";
 
 export default async function Page(props: {
   params: {

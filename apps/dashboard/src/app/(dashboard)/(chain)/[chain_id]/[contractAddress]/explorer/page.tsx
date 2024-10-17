@@ -2,8 +2,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CircleAlertIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { resolveContractAbi } from "thirdweb/contract";
-import { ContractExplorerPage } from "../../../../../../contract-ui/tabs/explorer/page";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
+import { ContractExplorerPage } from "./ContractExplorerPage";
 
 export default async function Page(props: {
   params: {

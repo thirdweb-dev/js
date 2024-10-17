@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { EventsFeed } from "../../../../../../contract-ui/tabs/events/components/events-feed";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
+import { EventsFeed } from "./events-feed";
 
 export default async function Page(props: {
   params: {

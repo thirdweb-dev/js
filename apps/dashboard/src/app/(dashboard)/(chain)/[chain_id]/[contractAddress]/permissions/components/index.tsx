@@ -3,6 +3,10 @@
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { ROLE_DESCRIPTION_MAP } from "constants/mappings";
+import {
+  createSetAllRoleMembersTx,
+  getAllRoleMembers,
+} from "contract-ui/hooks/permissions";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
@@ -14,10 +18,6 @@ import {
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import { Button } from "tw-components";
-import {
-  createSetAllRoleMembersTx,
-  getAllRoleMembers,
-} from "../../../hooks/permissions";
 import { ContractPermission } from "./contract-permission";
 
 type PermissionFormContext = {
