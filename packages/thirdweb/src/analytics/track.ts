@@ -63,5 +63,5 @@ function track(client: ThirdwebClient, data: object) {
       }
       return value;
     }),
-  });
+  }).catch(() => {});
 }
