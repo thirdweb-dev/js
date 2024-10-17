@@ -6,7 +6,10 @@ import type {
 } from "node:http";
 import type { CoreServiceConfig } from "../core/api.js";
 import { authorize } from "../core/authorize/index.js";
-import type { AuthorizationInput } from "../core/authorize/index.js";
+import type {
+  AuthorizationInput,
+  CacheOptions,
+} from "../core/authorize/index.js";
 import type { AuthorizationResult } from "../core/authorize/types.js";
 import type { CoreAuthInput } from "../core/types.js";
 export * from "../core/usage.js";
@@ -39,6 +42,7 @@ export type AuthInput = CoreAuthInput & {
 export async function authorizeNode(
   authInput: AuthInput,
   serviceConfig: NodeServiceConfig,
+  cacheOptions?: CacheOptions,
 ): Promise<AuthorizationResult> {
   let authData: AuthorizationInput;
   try {
@@ -60,7 +64,7 @@ export async function authorizeNode(
     };
   }
 
-  return await authorize(authData, serviceConfig);
+  return await authorize(authData, serviceConfig, cacheOptions);
 }
 
 function getHeader(
