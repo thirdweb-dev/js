@@ -1,101 +1,144 @@
 "use client";
 
-import { FormControl, Input } from "@chakra-ui/react";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {} from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import type { ThirdwebContract } from "thirdweb";
+import { toast } from "sonner";
+import { type ThirdwebContract, isAddress } from "thirdweb";
 import { mintAdditionalSupplyTo } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
+import {} from "tw-components";
+import { z } from "zod";
 
 interface MintSupplyTabProps {
   contract: ThirdwebContract;
   tokenId: string;
 }
 
+const mintAdditionalSupplyFormSchema = z.object({
+  to: z
+    .string()
+    .refine((value) => isAddress(value), {
+      message: "Invalid Ethereum address",
+    })
+    // otherwise the type is casted as "Hex"
+    .transform((value) => value as string),
+  amount: z.number().int().min(1, "Amount must be at least 1"),
+});
+
 const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
   const trackEvent = useTrack();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<{ to: string; amount: string }>({
-    defaultValues: { amount: "1" },
+  const address = useActiveAccount()?.address;
+
+  const form = useForm<z.infer<typeof mintAdditionalSupplyFormSchema>>({
+    resolver: zodResolver(mintAdditionalSupplyFormSchema),
+    defaultValues: {
+      amount: 1,
+      to: address || "",
+    },
   });
 
-  const address = useActiveAccount()?.address;
-  const { mutate, isPending } = useSendAndConfirmTransaction();
-  const { onSuccess, onError } = useTxNotifications(
-    "Mint successful",
-    "Error minting additional supply",
-    contract,
-  );
+  const sendAndConfirmTx = useSendAndConfirmTransaction();
+
+  function onSubmit(values: z.infer<typeof mintAdditionalSupplyFormSchema>) {
+    trackEvent({
+      category: "nft",
+      action: "mint-supply",
+      label: "attempt",
+    });
+    const transaction = mintAdditionalSupplyTo({
+      contract,
+      to: values.to,
+      tokenId: BigInt(tokenId),
+      supply: BigInt(values.amount),
+    });
+    const promise = sendAndConfirmTx.mutateAsync(transaction, {
+      onSuccess: () => {
+        trackEvent({
+          category: "nft",
+          action: "mint-supply",
+          label: "success",
+        });
+        form.reset();
+      },
+      onError: (error) => {
+        trackEvent({
+          category: "nft",
+          action: "mint-supply",
+          label: "error",
+          error,
+        });
+        console.error(error);
+      },
+    });
+    toast.promise(promise, {
+      loading: "Minting NFT",
+      success: "Minted successfully",
+      error: "Failed to mint",
+    });
+  }
 
   return (
-    <div className="flex w-full flex-col gap-2">
+    <Form {...form}>
       <form
-        onSubmit={handleSubmit((data) => {
-          if (address) {
-            trackEvent({
-              category: "nft",
-              action: "mint-supply",
-              label: "attempt",
-            });
-            const transaction = mintAdditionalSupplyTo({
-              contract,
-              to: address,
-              tokenId: BigInt(tokenId),
-              supply: BigInt(data.amount),
-            });
-            mutate(transaction, {
-              onSuccess: () => {
-                trackEvent({
-                  category: "nft",
-                  action: "mint-supply",
-                  label: "success",
-                });
-                onSuccess();
-                reset();
-              },
-              onError: (error) => {
-                trackEvent({
-                  category: "nft",
-                  action: "mint-supply",
-                  label: "error",
-                  error,
-                });
-                onError(error);
-              },
-            });
-          }
-        })}
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex w-full flex-col gap-2"
       >
-        <div className="flex flex-col gap-3">
-          <div className="flex w-full flex-col gap-6 md:flex-row">
-            <FormControl isRequired isInvalid={!!errors.to}>
+        <FormField
+          control={form.control}
+          name="amount"
+          render={({ field }) => (
+            <FormItem>
               <FormLabel>Amount</FormLabel>
-              <Input placeholder="1" {...register("amount")} />
-              <FormHelperText>How many would you like to mint?</FormHelperText>
-              <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
-            </FormControl>
-          </div>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>
+                How many would you like to mint?
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <TransactionButton
-            txChainID={contract.chain.id}
-            transactionCount={1}
-            isLoading={isPending}
-            type="submit"
-            colorScheme="primary"
-            alignSelf="flex-end"
-          >
-            Mint
-          </TransactionButton>
-        </div>
+        <FormField
+          control={form.control}
+          name="to"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Recipient</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <TransactionButton
+          txChainID={contract.chain.id}
+          transactionCount={1}
+          isLoading={sendAndConfirmTx.isPending}
+          type="submit"
+          colorScheme="primary"
+          alignSelf="flex-end"
+        >
+          Mint
+        </TransactionButton>
       </form>
-    </div>
+    </Form>
   );
 };
 
