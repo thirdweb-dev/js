@@ -67,7 +67,7 @@ export function SponsoredTxZksyncPreview() {
           {smartAccount ? (
             <div className="flex flex-col justify-center p-2">
               <p className="mb-2 text-center font-semibold">
-                You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}
+                You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
                 Kittens
               </p>
               <TransactionButton
