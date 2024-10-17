@@ -18,8 +18,13 @@ Install Forge from Foundry and add the modular contract framework:
 
 ```bash
 forge init
-forge install https://github.com/thirdweb-dev/modular-contracts.git
-forge remappings > remappings.txt
+forge install thirdweb-dev/modular-contracts --no-commit
+```
+
+Add the Thirdweb modular contracts to `foundry.toml` under `remappings`:
+
+```toml
+remappings = ['@thirdweb-dev=lib/modular-contracts/']
 ```
 
 ### Setup Core Contract
@@ -29,152 +34,196 @@ forge remappings > remappings.txt
 <Step title="Create a Core Contract">
    Create a new file in the `src` folder called `CounterCore.sol`, and inherit the `Core` contract.
 
-   ```solidity
-   // SPDX-License-Identifier: UNLICENSED
-   pragma solidity ^0.8.20;
+```solidity
+ // SPDX-License-Identifier: MIT
+ pragma solidity ^0.8.20;
 
-   import {Core} from "modular-contracts/src/Core.sol";
+ import {Core} from "@thirdweb-dev/src/Core.sol";
+ import {BeforeIncrementCallback} from "./interface/BeforeIncrementCallback.sol";
 
-   contract CounterCore is Core {
+ contract CounterCore is Core {
+     constructor(address owner) {
+         _initializeOwner(owner);
+     }
+ }
 
-        constructor(address owner) {
-            _initializeOwner(owner);
+```
+
+> **Note**  
+> The `Core` contract is the base contract that needs to be inherited for this contract to be recognized as a core contract.
+
+</Step>
+
+<Step title="Set Get Supported Callback Function">
+Implement the `getSupportedCallbackFunctions` function. The Core contract is abstract because this function is not implemented. To avoid compilation errors, declare the function with an empty body for now.
+
+    ```solidity
+        // SPDX-License-Identifier: MIT
+        pragma solidity ^0.8.20;
+
+        import {Core} from "@thirdweb-dev/src/Core.sol";
+
+        contract CounterCore is Core {
+            constructor(address owner) {
+                _initializeOwner(owner);
+            }
+
+            function getSupportedCallbackFunctions()
+                public
+                pure
+                override
+                returns (SupportedCallbackFunction[] memory supportedCallbackFunctions)
+            {}
         }
-
-   }
-   ```
-
-   > **Note**  
-   > The `Core` contract is the base contract that needs to be inherited for this contract to be recognized as a core contract.
+    ```
 
 </Step>
 
 <Step title="Set Up Increment Function">
    Define a function to increment a counter.
 
-   ```solidity
-   // SPDX-License-Identifier: UNLICENSED
-   pragma solidity ^0.8.20;
+```solidity
+ // SPDX-License-Identifier: MIT
+ pragma solidity ^0.8.20;
 
-   import {Core} from "modular-contracts/src/Core.sol";
+ import {Core} from "@thirdweb-dev/src/Core.sol";
 
-   contract CounterCore is Core {
-       uint256 public count;
+ contract CounterCore is Core {
+     int256 public count;
 
-        constructor(address owner) {
-            _initializeOwner(owner);
-        }
+     constructor(address owner) {
+         _initializeOwner(owner);
+     }
 
-       function increment() public {
-           count += 1;
-       }
-   }
-   ```
+     function getSupportedCallbackFunctions()
+         public
+         pure
+         override
+         returns (SupportedCallbackFunction[] memory supportedCallbackFunctions)
+     {}
+
+     // 👇👇👇👇👇👇👇👇👇
+     function increment() public {
+         count += 1;
+     }
+ }
+```
 
 </Step>
 
 <Step title="Add a Callback Function">
-   Introduce the `_beforeIncrement` function to use the `beforeIncrement` callback from a module.
+   Introduce the `_beforeIncrement` function to use the `beforeIncrement` callback from a module, to achieve this we are going to create a new interface.
 
-   > **Note**  
-   > Callback functions are hook-like functionalities that can be used before or after the main functionality of a core contract.  
-   > In this example, the `beforeIncrement` callback is executed before the main increment functionality.
+> **Note**  
+> Callback functions are hook-like functionalities that can be used before or after the main functionality of a core contract.  
+> In this example, the `beforeIncrement` callback is executed before the main increment functionality.
 
-   ```solidity
-   // SPDX-License-Identifier: UNLICENSED
-   pragma solidity ^0.8.20;
+```solidity
+ // SPDX-License-Identifier: MIT
+ pragma solidity ^0.8.20;
 
-   import {Core} from "modular-contracts/src/Core.sol";
+ import {Core} from "@thirdweb-dev/src/Core.sol";
 
-   interface BeforeIncrementCallback {
-       function beforeIncrement(uint256 count) external returns (uint256);
-   }
+ // 👇👇👇👇👇👇👇👇👇
 
-   contract CounterCore is Core {
-       uint256 public count;
+ interface BeforeIncrementCallback {
+     function beforeIncrement(uint256 count) external returns (uint256);
+ }
 
-        constructor(address owner) {
-            _initializeOwner(owner);
-        }
+ contract CounterCore is Core {
+     uint256 public count;
 
-       function increment() public {
-           uint256 newCount = _beforeIncrement(count);
-           count = newCount;
-       }
+     constructor(address owner) {
+         _initializeOwner(owner);
+     }
 
-       function _beforeIncrement(
-           uint256 count
-       ) internal returns (uint256 newCount) {
-           (, bytes memory returndata) = _executeCallbackFunction(
-               BeforeIncrementCallback.beforeIncrement.selector,
-               abi.encodeCall(BeforeIncrementCallback.beforeIncrement, (count))
-           );
-           newCount = abi.decode(returndata, (uint256));
-       }
-   }
-   ```
+     function getSupportedCallbackFunctions()
+         public
+         pure
+         override
+         returns (SupportedCallbackFunction[] memory supportedCallbackFunctions)
+     {}
+
+     function increment() public {
+         count += 1;
+     }
+
+     // 👇👇👇👇👇👇👇👇👇
+
+     function _beforeIncrement(
+         uint256 _count
+     ) internal returns (uint256 newCount) {
+         (, bytes memory returnData) = _executeCallbackFunction(
+             BeforeIncrementCallback.beforeIncrement.selector,
+             abi.encodeCall(BeforeIncrementCallback.beforeIncrement, (_count))
+         );
+
+         newCount = abi.decode(returnData, (uint256));
+     }
+ }
+
+```
 
 </Step>
 
 <Step title="Implement Supported Functions">
    Implement the `getSupportedCallbackFunctions` and `supportsInterface` functions to expose which callback functions and interfaces this core contract supports.
 
-   ```solidity
-   // SPDX-License-Identifier: UNLICENSED
-   pragma solidity ^0.8.20;
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
 
-   import {Core} from "modular-contracts/src/Core.sol";
+import {Core} from "@thirdweb-dev/src/Core.sol";
 
-   interface BeforeIncrementCallback {
-       function beforeIncrement(uint256 count) external returns (uint256);
-   }
+interface BeforeIncrementCallback {
+    function beforeIncrement(uint256 count) external returns (uint256);
+}
 
-   contract CounterCore is Core {
-       uint256 public count;
+contract CounterCore is Core {
+    uint256 public count;
 
-        constructor(address owner) {
-            _initializeOwner(owner);
-        }
+    constructor(address owner) {
+        _initializeOwner(owner);
+    }
 
-       function increment() public {
-           uint256 newCount = _beforeIncrement(count);
-           count = newCount;
-       }
+     // 👇👇👇👇👇👇👇👇👇
+    function getSupportedCallbackFunctions()
+        public
+        pure
+        override
+        returns (SupportedCallbackFunction[] memory supportedCallbackFunctions)
+    {
+        supportedCallbackFunctions = new SupportedCallbackFunction[](1);
+        supportedCallbackFunctions[0] = SupportedCallbackFunction({
+            selector: BeforeIncrementCallback.beforeIncrement.selector,
+            mode: CallbackMode.OPTIONAL
+        });
+    }
 
-       function getSupportedCallbackFunctions()
-           public
-           pure
-           override
-           returns (SupportedCallbackFunction[] memory supportedCallbackFunctions)
-       {
-           supportedCallbackFunctions = new SupportedCallbackFunction ;
-           supportedCallbackFunctions[0] = SupportedCallbackFunction({
-               selector: BeforeIncrementCallback.beforeIncrement.selector,
-               mode: CallbackMode.REQUIRED
-           });
-       }
+    function increment() public {
+        count += 1;
+    }
 
-       function supportsInterface(bytes4 interfaceId)
-           public
-           view
-           override
-           returns (bool)
-       {
-           return
-               interfaceId == 0x00000001 || super.supportsInterface(interfaceId);
-       }
+    function _beforeIncrement(
+        uint256 _count
+    ) internal returns (uint256 newCount) {
+        (, bytes memory returnData) = _executeCallbackFunction(
+            BeforeIncrementCallback.beforeIncrement.selector,
+            abi.encodeCall(BeforeIncrementCallback.beforeIncrement, (_count))
+        );
 
-       function _beforeIncrement(
-           uint256 count
-       ) internal returns (uint256 newCount) {
-           (bool success, bytes memory returndata) = _executeCallbackFunction(
-               BeforeIncrementCallback.beforeIncrement.selector,
-               abi.encodeCall(BeforeIncrementCallback.beforeIncrement, (count))
-           );
-           newCount = abi.decode(returndata, (uint256));
-       }
-   }
-   ```
+        newCount = abi.decode(returnData, (uint256));
+    }
+
+     // 👇👇👇👇👇👇👇👇👇
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view override returns (bool) {
+        interfaceId == 0x00000001 || super.supportsInterface(interfaceId);
+    }
+}
+
+```
 
 </Step>
 
@@ -183,5 +232,3 @@ forge remappings > remappings.txt
 ---
 
 This guide will help you create a core contract that can increment a counter with optional callback functions for additional modular functionality.
-
-
