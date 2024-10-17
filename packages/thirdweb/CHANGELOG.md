@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.63.1
+
+### Patch Changes
+
+- [#5065](https://github.com/thirdweb-dev/js/pull/5065) [`b01faac`](https://github.com/thirdweb-dev/js/commit/b01faacd999a6b5d88d273531cea67c97c84d5ae) Thanks [@MananTank](https://github.com/MananTank)! - Catch failed to post tracking errors to avoid exposing them to error report services
+
+- [#5063](https://github.com/thirdweb-dev/js/pull/5063) [`ef6b4f4`](https://github.com/thirdweb-dev/js/commit/ef6b4f48ef94f1196912906a2adfdc8a997ff2af) Thanks [@MananTank](https://github.com/MananTank)! - Add reason string on abort controller's `abort` method to avoid `AbortError: signal is aborted without reason` errors
+
 ## 5.63.0
 
 ### Minor Changes
