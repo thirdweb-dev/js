@@ -139,9 +139,15 @@ export const sidebar: SideBar = {
             },
             ...[
               "smartWallet",
+              "predictAddress",
+              "createAndSignUserOp",
+              "createUnsignedUserOp",
               "signUserOp",
               "bundleUserOp",
+              "getUserOpReceipt",
               "waitForUserOpReceipt",
+              "getUserOpGasFees",
+              "estimateUserOpGas",
             ].map((name) => ({
               name,
               href: `${slug}/${name}`,
@@ -155,7 +161,6 @@ export const sidebar: SideBar = {
               "getAccountsOfSigner",
               "getAllActiveSigners",
               "getPermissionsForSigner",
-              "createUnsignedUserOp",
             ].map((name) => ({
               name,
               href: `${slug}/erc4337/${name}`,
