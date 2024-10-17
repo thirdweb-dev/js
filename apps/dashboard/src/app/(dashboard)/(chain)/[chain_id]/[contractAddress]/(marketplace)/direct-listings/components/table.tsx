@@ -1,36 +1,36 @@
 "use client";
 
-import { MarketplaceTable } from "contract-ui/tabs/shared-components/marketplace-table";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import {
-  getAllAuctions,
-  getAllValidAuctions,
-  totalAuctions,
+  getAllListings,
+  getAllValidListings,
+  totalListings,
 } from "thirdweb/extensions/marketplace";
 import { useReadContract } from "thirdweb/react";
+import { MarketplaceTable } from "../../components/marketplace-table";
 
-interface EnglishAuctionsTableProps {
+interface DirectListingsTableProps {
   contract: ThirdwebContract;
 }
 
 const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
 
-export const EnglishAuctionsTable: React.FC<EnglishAuctionsTableProps> = ({
+export const DirectListingsTable: React.FC<DirectListingsTableProps> = ({
   contract,
 }) => {
   const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_STATE);
-  const getAllQueryResult = useReadContract(getAllAuctions, {
+  const getAllQueryResult = useReadContract(getAllListings, {
     contract,
     count: BigInt(queryParams.count),
     start: queryParams.start,
   });
-  const getValidQueryResult = useReadContract(getAllValidAuctions, {
+  const getValidQueryResult = useReadContract(getAllValidListings, {
     contract,
     count: BigInt(queryParams.count),
     start: queryParams.start,
   });
-  const totalCountQuery = useReadContract(totalAuctions, { contract });
+  const totalCountQuery = useReadContract(totalListings, { contract });
 
   return (
     <MarketplaceTable
@@ -40,7 +40,7 @@ export const EnglishAuctionsTable: React.FC<EnglishAuctionsTableProps> = ({
       totalCountQuery={totalCountQuery}
       queryParams={queryParams}
       setQueryParams={setQueryParams}
-      type="english-auctions"
+      type="direct-listings"
     />
   );
 };

@@ -15,6 +15,7 @@ import {
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
 import { isMoralisSupported } from "lib/wallet/nfts/moralis";
@@ -56,8 +57,6 @@ import {
 } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { shortenIfAddress } from "utils/usedapp-external";
-
-import { useAllChainsData } from "../../../../hooks/chains/allChains";
 
 type ListForm =
   | (Omit<CreateListingParams, "quantity" | "currencyContractAddress"> & {

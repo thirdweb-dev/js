@@ -21,8 +21,8 @@ import { useActiveAccount } from "thirdweb/react";
 import { Badge, Card, CodeBlock, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
-import { CancelDirectListing } from "../direct-listings/components/cancel";
-import { CancelEnglishAuction } from "../english-auctions/components/cancel";
+import { CancelDirectListing } from "./CancelDirectListing";
+import { CancelEnglishAuction } from "./CancelEnglishAuction";
 import { LISTING_STATUS } from "./types";
 
 interface NFTDrawerProps {

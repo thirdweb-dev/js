@@ -17,7 +17,6 @@ import {
 } from "@chakra-ui/react";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
-import { ListingDrawer } from "contract-ui/tabs/shared-components/listing-drawer";
 import {
   ChevronFirstIcon,
   ChevronLastIcon,
@@ -40,6 +39,7 @@ import type {
 } from "thirdweb/extensions/marketplace";
 import { min } from "thirdweb/utils";
 import { Button, Text } from "tw-components";
+import { ListingDrawer } from "./listing-drawer";
 import { LISTING_STATUS } from "./types";
 
 const tableColumns: Column<DirectListing | EnglishAuction>[] = [

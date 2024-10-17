@@ -3,11 +3,13 @@
 import { useApiKeys, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl, Input, Link, Select } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useClipboard } from "hooks/useClipboard";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import type { StoredChain } from "stores/chainStores";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import {
@@ -19,8 +21,6 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import { useAllChainsData } from "../../../../hooks/chains/allChains";
-import type { StoredChain } from "../../../../stores/chainStores";
 
 interface EmbedSetupProps {
   contract: ThirdwebContract;

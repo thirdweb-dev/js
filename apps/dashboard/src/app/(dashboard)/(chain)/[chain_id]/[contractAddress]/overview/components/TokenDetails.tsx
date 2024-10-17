@@ -1,5 +1,5 @@
-import { TokenSupply } from "contract-ui/tabs/tokens/components/supply";
 import type { ThirdwebContract } from "thirdweb";
+import { TokenSupply } from "../../tokens/components/supply";
 
 interface TokenDetailsProps {
   contract: ThirdwebContract;

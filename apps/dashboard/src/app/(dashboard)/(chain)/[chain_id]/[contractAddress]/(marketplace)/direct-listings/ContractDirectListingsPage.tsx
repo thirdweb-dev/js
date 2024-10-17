@@ -2,30 +2,30 @@
 
 import type { ThirdwebContract } from "thirdweb";
 import { Heading } from "tw-components";
-import { CreateListingButton } from "../shared-components/list-button";
-import { EnglishAuctionsTable } from "./components/table";
+import { CreateListingButton } from "../components/list-button";
+import { DirectListingsTable } from "./components/table";
 
-interface ContractEnglishAuctionsProps {
+interface ContractDirectListingsPageProps {
   contract: ThirdwebContract;
 }
 
-export const ContractEnglishAuctionsPage: React.FC<
-  ContractEnglishAuctionsProps
+export const ContractDirectListingsPage: React.FC<
+  ContractDirectListingsPageProps
 > = ({ contract }) => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row items-center justify-between">
-        <Heading size="title.sm">Contract Auctions</Heading>
+        <Heading size="title.sm">Contract Listings</Heading>
         <div className="flex flex-row gap-4">
           <CreateListingButton
             contract={contract}
-            type="english-auctions"
-            createText="Create English Auction"
+            type="direct-listings"
+            createText="Create Direct Listing"
           />
         </div>
       </div>
 
-      <EnglishAuctionsTable contract={contract} />
+      <DirectListingsTable contract={contract} />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
-import { EmbedSetup } from "../../../../../../contract-ui/tabs/embed/components/embed-setup";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
+import { EmbedSetup } from "./embed-setup";
 
 export default async function Page(props: {
   params: {

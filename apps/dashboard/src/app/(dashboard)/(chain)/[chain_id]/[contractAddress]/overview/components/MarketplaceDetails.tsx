@@ -2,7 +2,6 @@ import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { ListingStatsV3 } from "contract-ui/tabs/listings/components/listing-stats";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import {
@@ -16,6 +15,7 @@ import {
 import { useReadContract } from "thirdweb/react";
 import { min } from "thirdweb/utils";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { ListingStatsV3 } from "./listing-stats";
 
 type ListingData =
   | (Pick<

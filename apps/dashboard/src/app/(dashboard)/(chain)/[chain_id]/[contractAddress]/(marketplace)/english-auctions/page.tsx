@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
-import { ContractEnglishAuctionsPage } from "../../../../../../contract-ui/tabs/english-auctions/page";
-import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
-import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
+import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
+import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
+import { ContractEnglishAuctionsPage } from "./ContractEnglishAuctionsPage";
 
 export default async function Page(props: {
   params: {

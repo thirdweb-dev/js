@@ -2,11 +2,11 @@
 
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import type { ThirdwebContract } from "thirdweb";
 import { cancelAuction, cancelListing } from "thirdweb/extensions/marketplace";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
-import { useAllChainsData } from "../../../hooks/chains/allChains";
 
 interface CancelTabProps {
   id: string;

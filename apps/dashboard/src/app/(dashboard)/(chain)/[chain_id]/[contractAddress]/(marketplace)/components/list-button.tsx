@@ -8,7 +8,7 @@ import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
-import { CreateListingsForm } from "../listings/components/list-form";
+import { CreateListingsForm } from "./list-form";
 
 const LIST_FORM_ID = "marketplace-list-form";
 

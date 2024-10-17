@@ -3,9 +3,9 @@ import {
   isClaimToSupported,
   isMintToSupported,
 } from "thirdweb/extensions/erc20";
-import { ContractTokensPage } from "../../../../../../contract-ui/tabs/tokens/page";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
+import { ContractTokensPage } from "./ContractTokensPage";
 
 export default async function Page(props: {
   params: {

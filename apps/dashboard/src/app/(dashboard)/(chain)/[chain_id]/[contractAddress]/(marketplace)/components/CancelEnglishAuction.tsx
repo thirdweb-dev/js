@@ -1,5 +1,5 @@
-import { CancelTab } from "contract-ui/tabs/shared-components/cancel-tab";
 import type { ThirdwebContract } from "thirdweb";
+import { CancelTab } from "./cancel-tab";
 
 interface CancelEnglishAuctionProps {
   contract: ThirdwebContract;

@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
-import { ContractDirectListingsPage } from "../../../../../../contract-ui/tabs/direct-listings/page";
-import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
-import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
+import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
+import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
+import { ContractDirectListingsPage } from "./ContractDirectListingsPage";
 
 export default async function Page(props: {
   params: {
