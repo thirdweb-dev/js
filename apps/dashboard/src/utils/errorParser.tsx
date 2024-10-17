@@ -123,7 +123,7 @@ function parseErrorCode(
       }
 
       return (
-        error?.data.message ||
+        error?.data?.message ||
         error?.message ||
         "An internal error occurred with your transaction."
       );
