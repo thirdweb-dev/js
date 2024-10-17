@@ -72,7 +72,7 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
     if (requestTimeoutMs) {
       controller = new AbortController();
       abortTimeout = setTimeout(() => {
-        controller?.abort();
+        controller?.abort("timeout");
       }, requestTimeoutMs);
     }
 

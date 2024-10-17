@@ -106,7 +106,7 @@ describe("download", () => {
         uri: "ipfs://QmTest1234567890TestHash/file.txt",
         requestTimeoutMs: 500,
       }),
-    ).rejects.toThrow("This operation was aborted");
+    ).rejects.toThrow("timeout");
   });
 
   it("should respect custom client timeout", async () => {
@@ -125,6 +125,6 @@ describe("download", () => {
         },
         uri: "ipfs://QmTest1234567890TestHash/file.txt",
       }),
-    ).rejects.toThrow("This operation was aborted");
+    ).rejects.toThrow("timeout");
   });
 });
