@@ -8,6 +8,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  useUserOpUsageAggregate,
+  useUserOpUsagePeriod,
   useWalletUsageAggregate,
   useWalletUsagePeriod,
 } from "@3rdweb-sdk/react/hooks/useApi";
@@ -42,6 +44,19 @@ export function ConnectAnalyticsDashboard(props: {
     to: range.to,
   });
 
+  const userOpUsageQuery = useUserOpUsagePeriod({
+    clientId: props.clientId,
+    from: range.from,
+    to: range.to,
+    period: intervalType,
+  });
+
+  const userOpUsageAggregateQuery = useUserOpUsageAggregate({
+    clientId: props.clientId,
+    from: range.from,
+    to: range.to,
+  });
+
   return (
     <div>
       <div className="flex gap-3">
@@ -62,6 +77,8 @@ export function ConnectAnalyticsDashboard(props: {
       <ConnectAnalyticsDashboardUI
         walletUsage={walletUsageQuery.data || []}
         aggregateWalletUsage={walletUsageAggregateQuery.data || []}
+        userOpUsage={userOpUsageQuery.data || []}
+        aggregateUserOpUsage={userOpUsageAggregateQuery.data || []}
         isPending={
           walletUsageQuery.isPending || walletUsageAggregateQuery.isPending
         }

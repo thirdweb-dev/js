@@ -21,6 +21,21 @@ export const accountKeys = {
       to,
       period,
     ] as const,
+  userOpStats: (
+    walletAddress: string,
+    clientId: string,
+    from: string,
+    to: string,
+    period: string,
+  ) =>
+    [
+      ...accountKeys.wallet(walletAddress),
+      "userOps",
+      clientId,
+      from,
+      to,
+      period,
+    ] as const,
   credits: (walletAddress: string) =>
     [...accountKeys.wallet(walletAddress), "credits"] as const,
   billingSession: (walletAddress: string) =>

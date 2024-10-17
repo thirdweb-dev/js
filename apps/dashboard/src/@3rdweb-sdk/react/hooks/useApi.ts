@@ -234,6 +234,13 @@ export interface WalletStats {
   walletType: string;
 }
 
+export interface UserOpStats {
+  date: string;
+  successful: number;
+  failed: number;
+  sponsoredUsd: number;
+}
+
 interface BillingProduct {
   name: string;
   id: string;
@@ -381,6 +388,100 @@ async function getWalletUsage(args: {
   }
 
   return json.data;
+}
+
+async function getUserOpUsage(args: {
+  clientId: string;
+  from?: Date;
+  to?: Date;
+  period?: "day" | "week" | "month" | "year" | "all";
+}) {
+  const { clientId, from, to, period } = args;
+
+  const searchParams = new URLSearchParams();
+  searchParams.append("clientId", clientId);
+  if (from) {
+    searchParams.append("from", from.toISOString());
+  }
+  if (to) {
+    searchParams.append("to", to.toISOString());
+  }
+  if (period) {
+    searchParams.append("period", period);
+  }
+  const res = await fetch(
+    `${THIRDWEB_ANALYTICS_API_HOST}/v1/user-ops?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  const json = await res.json();
+
+  if (res.status !== 200) {
+    throw new Error(json.message);
+  }
+
+  return json.data;
+}
+
+export function useUserOpUsageAggregate(args: {
+  clientId: string;
+  from?: Date;
+  to?: Date;
+}) {
+  const { clientId, from, to } = args;
+  const { user, isLoggedIn } = useLoggedInUser();
+
+  return useQuery({
+    queryKey: accountKeys.userOpStats(
+      user?.address as string,
+      clientId as string,
+      from?.toISOString() || "",
+      to?.toISOString() || "",
+      "all",
+    ),
+    queryFn: async () => {
+      return getUserOpUsage({
+        clientId,
+        from,
+        to,
+        period: "all",
+      });
+    },
+    enabled: !!clientId && !!user?.address && isLoggedIn,
+  });
+}
+
+export function useUserOpUsagePeriod(args: {
+  clientId: string;
+  from?: Date;
+  to?: Date;
+  period: "day" | "week" | "month" | "year";
+}) {
+  const { clientId, from, to, period } = args;
+  const { user, isLoggedIn } = useLoggedInUser();
+
+  return useQuery({
+    queryKey: accountKeys.userOpStats(
+      user?.address as string,
+      clientId as string,
+      from?.toISOString() || "",
+      to?.toISOString() || "",
+      period,
+    ),
+    queryFn: async () => {
+      return getUserOpUsage({
+        clientId,
+        from,
+        to,
+        period,
+      });
+    },
+    enabled: !!clientId && !!user?.address && isLoggedIn,
+  });
 }
 
 export function useWalletUsageAggregate(args: {

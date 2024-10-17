@@ -3,11 +3,11 @@ import {
   BadgeContainer,
   mobileViewport,
 } from "../../../../../../../stories/utils";
-import { DailyConnectionsChartCard } from "./DailyConnectionsChartCard";
-import { createWalletStatsStub } from "./storyUtils";
+import { SponsoredTransactionsChartCard } from "./SponsoredTransactionsChartCard";
+import { createUserOpStatsStub } from "./storyUtils";
 
 const meta = {
-  title: "Charts/Connect/Daily Connections",
+  title: "Charts/Connect/Sponsored Transactions",
   component: Component,
   parameters: {
     layout: "centered",
@@ -30,38 +30,38 @@ export const Mobile: Story = {
 
 function Component() {
   return (
-    <div className="container flex max-w-[1150px] flex-col gap-6 py-8">
+    <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
       <BadgeContainer label="30 days">
-        <DailyConnectionsChartCard
-          walletStats={createWalletStatsStub(30)}
+        <SponsoredTransactionsChartCard
+          userOpStats={createUserOpStatsStub(30)}
           isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="60 days">
-        <DailyConnectionsChartCard
-          walletStats={createWalletStatsStub(60)}
+        <SponsoredTransactionsChartCard
+          userOpStats={createUserOpStatsStub(60)}
           isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="10 days">
-        <DailyConnectionsChartCard
-          walletStats={createWalletStatsStub(10)}
+        <SponsoredTransactionsChartCard
+          userOpStats={createUserOpStatsStub(10)}
           isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="0 days">
-        <DailyConnectionsChartCard
-          walletStats={createWalletStatsStub(0)}
+        <SponsoredTransactionsChartCard
+          userOpStats={createUserOpStatsStub(0)}
           isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Loading">
-        <DailyConnectionsChartCard
-          walletStats={createWalletStatsStub(0)}
+        <SponsoredTransactionsChartCard
+          userOpStats={createUserOpStatsStub(0)}
           isPending={true}
         />
       </BadgeContainer>

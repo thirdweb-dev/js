@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { mobileViewport } from "../../../../../../../stories/utils";
 import { ConnectAnalyticsDashboardUI } from "../ConnectAnalyticsDashboardUI";
-import { createWalletStatsStub } from "./storyUtils";
+import { createUserOpStatsStub, createWalletStatsStub } from "./storyUtils";
 
 const meta = {
   title: "Charts/Connect/Analytics Dashboard",
@@ -31,6 +31,8 @@ function Component() {
       <ConnectAnalyticsDashboardUI
         walletUsage={createWalletStatsStub(30)}
         aggregateWalletUsage={createWalletStatsStub(30)}
+        userOpUsage={createUserOpStatsStub(30)}
+        aggregateUserOpUsage={createUserOpStatsStub(1)}
         isPending={false}
       />
     </div>

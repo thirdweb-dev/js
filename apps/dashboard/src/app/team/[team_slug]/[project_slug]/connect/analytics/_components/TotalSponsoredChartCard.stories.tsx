@@ -3,11 +3,11 @@ import {
   BadgeContainer,
   mobileViewport,
 } from "../../../../../../../stories/utils";
-import { DailyConnectionsChartCard } from "./DailyConnectionsChartCard";
-import { createWalletStatsStub } from "./storyUtils";
+import { TotalSponsoredChartCard } from "./TotalSponsoredChartCard";
+import { createUserOpStatsStub } from "./storyUtils";
 
 const meta = {
-  title: "Charts/Connect/Daily Connections",
+  title: "Charts/Connect/Total Sponsored",
   component: Component,
   parameters: {
     layout: "centered",
@@ -32,36 +32,36 @@ function Component() {
   return (
     <div className="container flex max-w-[1150px] flex-col gap-6 py-8">
       <BadgeContainer label="30 days">
-        <DailyConnectionsChartCard
-          walletStats={createWalletStatsStub(30)}
+        <TotalSponsoredChartCard
+          userOpStats={createUserOpStatsStub(30)}
           isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="60 days">
-        <DailyConnectionsChartCard
-          walletStats={createWalletStatsStub(60)}
+        <TotalSponsoredChartCard
+          userOpStats={createUserOpStatsStub(60)}
           isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="10 days">
-        <DailyConnectionsChartCard
-          walletStats={createWalletStatsStub(10)}
+        <TotalSponsoredChartCard
+          userOpStats={createUserOpStatsStub(10)}
           isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="0 days">
-        <DailyConnectionsChartCard
-          walletStats={createWalletStatsStub(0)}
+        <TotalSponsoredChartCard
+          userOpStats={createUserOpStatsStub(0)}
           isPending={false}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Loading">
-        <DailyConnectionsChartCard
-          walletStats={createWalletStatsStub(0)}
+        <TotalSponsoredChartCard
+          userOpStats={createUserOpStatsStub(0)}
           isPending={true}
         />
       </BadgeContainer>
