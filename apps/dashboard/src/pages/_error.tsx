@@ -23,6 +23,20 @@ CustomErrorComponent.getInitialProps = async (contextData) => {
   // time to send the error before the lambda exits
   await Sentry.captureUnderscoreErrorException(contextData);
 
+  if (contextData.err instanceof Error) {
+    Sentry.withScope((scope) => {
+      scope.setTag("page-crashed", "true");
+      scope.setLevel("fatal");
+      Sentry.captureException(contextData.err, {
+        extra: {
+          crashedPage: true,
+          boundary: "global",
+          router: "pages",
+        },
+      });
+    });
+  }
+
   // This will contain the status code of the response
   return NextErrorComponent.getInitialProps(contextData);
 };

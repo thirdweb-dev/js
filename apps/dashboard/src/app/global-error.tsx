@@ -13,7 +13,17 @@ export default function GlobalError({
   // legitimate usecase
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    Sentry.captureException(error);
+    Sentry.withScope((scope) => {
+      scope.setTag("page-crashed", "true");
+      scope.setLevel("fatal");
+      Sentry.captureException(error, {
+        extra: {
+          crashedPage: true,
+          boundary: "global",
+          router: "app",
+        },
+      });
+    });
   }, [error]);
 
   return (
