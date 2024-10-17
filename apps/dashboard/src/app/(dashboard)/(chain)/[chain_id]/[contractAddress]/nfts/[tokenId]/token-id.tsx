@@ -1,7 +1,9 @@
 "use client";
 
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   Box,
@@ -15,15 +17,18 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useChainSlug } from "hooks/chains/chainSlug";
-import { ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon, ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { getNFT as getErc721NFT } from "thirdweb/extensions/erc721";
 import { getNFT as getErc1155NFT } from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
+import { resolveScheme } from "thirdweb/storage";
 import { Badge, Button, Card, CodeBlock, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { shortenString } from "utils/usedapp-external";
 import { NftProperty } from "../components/nft-property";
 import { useNFTDrawerTabs } from "./useNftDrawerTabs";
 
@@ -64,6 +69,8 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
     contract,
     tokenId,
   });
+
+  const client = useThirdwebClient();
 
   const { data: nft, isPending } = useReadContract(
     isErc721 ? getErc721NFT : getErc1155NFT,
@@ -240,6 +247,28 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                     </GridItem>
                   </>
                 )}
+                <GridItem colSpan={4}>
+                  <Heading size="label.md">Token URI</Heading>
+                </GridItem>
+                <GridItem
+                  colSpan={8}
+                  className="flex flex-row items-center gap-2"
+                >
+                  <CopyTextButton
+                    textToCopy={nft.tokenURI}
+                    textToShow={shortenString(nft.tokenURI)}
+                    tooltip="The URI of this NFT"
+                    copyIconPosition="right"
+                  />
+                  <Button>
+                    <Link
+                      href={resolveScheme({ client, uri: nft.tokenURI })}
+                      target="_blank"
+                    >
+                      <ExternalLinkIcon className="size-4" />
+                    </Link>
+                  </Button>
+                </GridItem>
               </SimpleGrid>
             </Card>
             {properties ? (

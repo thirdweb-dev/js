@@ -30,7 +30,7 @@ describe("ERC1155 Edition: mintToBatch", () => {
       }),
     });
 
-    await sendAndConfirmTransaction({
+    const tx = await sendAndConfirmTransaction({
       account,
       transaction: mintToBatch({
         contract,
@@ -42,6 +42,8 @@ describe("ERC1155 Edition: mintToBatch", () => {
         ],
       }),
     });
+
+    console.log(tx);
 
     const nfts = await getNFTs({ contract });
     expect(nfts).toStrictEqual([
