@@ -36,8 +36,10 @@ import {
   getBuyWithFiatStatusMeta,
 } from "../pay-transactions/statusMeta.js";
 import { getCurrencyMeta } from "./currencies.js";
+import { useDeploySmartWallet } from "./useDeploySmartWallet.js";
 
 export type BuyWithFiatPartialQuote = {
+  intentId: string;
   fromCurrencySymbol: string;
   fromCurrencyAmount: string;
   onRampTokenAmount: string;
@@ -77,6 +79,7 @@ export function fiatQuoteToPartialQuote(
       name: quote.toToken.name,
       symbol: quote.toToken.symbol,
     },
+    intentId: quote.intentId,
   };
 
   return data;
@@ -90,6 +93,7 @@ export function FiatSteps(props: {
   client: ThirdwebClient;
   step: number;
   onContinue: () => void;
+  setOnRampLinkOverride?: (link: string) => void;
 }) {
   const statusMeta = props.status
     ? getBuyWithFiatStatusMeta(props.status)
@@ -102,8 +106,27 @@ export function FiatSteps(props: {
     fromCurrencySymbol,
     fromCurrencyAmount,
     toTokenAmount,
+    intentId,
   } = props.partialQuote;
 
+  const { deploySmartWallet, isLoading, error } = useDeploySmartWallet(
+    props.client,
+  );
+
+  const handleDeploySmartWallet = async ({ chain }) => {
+    try {
+      const result = await deploySmartWallet({
+        chain,
+        intentId: props.partialQuote.intentId,
+        onRampTokenMeta: props.partialQuote.onRampToken,
+        onRampTokenAmount: props.partialQuote.onRampTokenAmount,
+        setOnRampLinkOverride: props.setOnRampLinkOverride,
+      });
+      console.log("Smart wallet deployed:", result);
+    } catch (err) {
+      console.error("Failed to deploy smart wallet:", err);
+    }
+  };
   const currency = getCurrencyMeta(fromCurrencySymbol);
   const isPartialSuccess = statusMeta?.progressStatus === "partialSuccess";
 
@@ -313,6 +336,10 @@ export function FiatSteps(props: {
       <Spacer y="lg" />
 
       {/* Step 1 */}
+      <button onClick={() => handleDeploySmartWallet({ chain: onRampChain })}>
+        Deploy smart wallet with session key
+      </button>
+
       <PaymentStep
         title={
           <Text color="primaryText" size="md">

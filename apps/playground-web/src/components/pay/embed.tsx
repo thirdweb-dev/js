@@ -10,6 +10,11 @@ export function StyledPayEmbedPreview() {
   return (
     <PayEmbed
       client={THIRDWEB_CLIENT}
+      payOptions={{
+        buyWithFiat: {
+          preferredProvider: "STRIPE",
+        },
+      }}
       theme={theme === "light" ? "light" : "dark"}
     />
   );
