@@ -117,7 +117,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
             <BadgeLink
               key={validBlockExplorer.url}
               name={validBlockExplorer.name}
-              href={`${validBlockExplorer.url}/address/${address}`}
+              href={`${validBlockExplorer.url.endsWith("/") ? validBlockExplorer.url : `${validBlockExplorer.url}/`}address/${address}`}
             />
           ))}
 
