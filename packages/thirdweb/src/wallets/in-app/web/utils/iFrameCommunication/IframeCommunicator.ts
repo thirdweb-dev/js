@@ -1,4 +1,6 @@
 import { sleep } from "../../../../../utils/sleep.js";
+import type { ClientScopedStorage } from "../../../../../wallets/in-app/core/authentication/client-scoped-storage.js";
+import type { Ecosystem } from "../../../../../wallets/in-app/core/wallet/types.js";
 
 type IFrameCommunicatorProps = {
   link: string;
@@ -6,6 +8,9 @@ type IFrameCommunicatorProps = {
   iframeId: string;
   container?: HTMLElement;
   onIframeInitialize?: () => void;
+  localStorage: ClientScopedStorage;
+  clientId: string;
+  ecosystem?: Ecosystem;
 };
 
 const iframeBaseStyle = {
@@ -32,8 +37,11 @@ const isIframeLoaded = new Map<string, boolean>();
 export class IframeCommunicator<T extends { [key: string]: any }> {
   private iframe: HTMLIFrameElement;
   private POLLING_INTERVAL_SECONDS = 1.4;
-
   private iframeBaseUrl;
+  protected localStorage: ClientScopedStorage;
+  protected clientId: string;
+  protected ecosystem?: Ecosystem;
+
   /**
    * @internal
    */
@@ -43,7 +51,13 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     iframeId,
     container = document.body,
     onIframeInitialize,
+    localStorage,
+    clientId,
+    ecosystem,
   }: IFrameCommunicatorProps) {
+    this.localStorage = localStorage;
+    this.clientId = clientId;
+    this.ecosystem = ecosystem;
     this.iframeBaseUrl = baseUrl;
 
     // Creating the IFrame element for communication
@@ -89,7 +103,14 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
 
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   protected async onIframeLoadedInitVariables(): Promise<Record<string, any>> {
-    return {};
+    return {
+      authCookie: await this.localStorage.getAuthCookie(),
+      deviceShareStored: await this.localStorage.getDeviceShare(),
+      walletUserId: await this.localStorage.getWalletUserId(),
+      clientId: this.clientId,
+      partnerId: this.ecosystem?.partnerId,
+      ecosystemId: this.ecosystem?.id,
+    };
   }
 
   /**
@@ -118,13 +139,9 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
         };
       });
 
-      const INIT_IFRAME_EVENT = "initIframe";
       iframe?.contentWindow?.postMessage(
-        // ? We initialise the iframe with a bunch
-        // of useful information so that we don't have to pass it
-        // through in each of the future call. This would be where we do it.
         {
-          eventType: INIT_IFRAME_EVENT,
+          eventType: "initIframe",
           data: await this.onIframeLoadedInitVariables(),
         },
         this.iframeBaseUrl,
@@ -176,7 +193,14 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     });
 
     this.iframe.contentWindow?.postMessage(
-      { eventType: procedureName, data: params },
+      {
+        eventType: procedureName,
+        // Pass the initialization data on every request in case the iframe storage was reset (can happen in some environments such as iOS PWAs)
+        data: {
+          ...params,
+          ...(await this.onIframeLoadedInitVariables()),
+        },
+      },
       this.iframeBaseUrl,
       [channel.port2],
     );

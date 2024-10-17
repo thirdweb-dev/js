@@ -11,8 +11,6 @@ export class InAppWalletIframeCommunicator<
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   T extends { [key: string]: any },
 > extends IframeCommunicator<T> {
-  clientId: string;
-  ecosystem?: Ecosystem;
   /**
    * @internal
    */
@@ -35,29 +33,16 @@ export class InAppWalletIframeCommunicator<
       }).href,
       baseUrl,
       container: document.body,
+      localStorage: new ClientScopedStorage({
+        storage: webLocalStorage,
+        clientId,
+        ecosystem,
+      }),
+      clientId,
+      ecosystem,
     });
     this.clientId = clientId;
     this.ecosystem = ecosystem;
-  }
-
-  /**
-   * @internal
-   */
-  override async onIframeLoadedInitVariables() {
-    const localStorage = new ClientScopedStorage({
-      storage: webLocalStorage,
-      clientId: this.clientId,
-      ecosystem: this.ecosystem,
-    });
-
-    return {
-      authCookie: await localStorage.getAuthCookie(),
-      deviceShareStored: await localStorage.getDeviceShare(),
-      walletUserId: await localStorage.getWalletUserId(),
-      clientId: this.clientId,
-      partnerId: this.ecosystem?.partnerId,
-      ecosystemId: this.ecosystem?.id,
-    };
   }
 }
 
