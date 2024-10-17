@@ -198,7 +198,6 @@ export default function Component() {
     javascript: `import { prepareEvent, getContractEvents } from "thirdweb";
 
 const preparedEvent = prepareEvent({
-  contract,
   signature: "{{function}}"
 });
 const events = await getContractEvents({
@@ -209,7 +208,6 @@ const events = await getContractEvents({
 import { useContractEvents } from "thirdweb/react";
 
 const preparedEvent = prepareEvent({
-  contract,
   signature: "{{function}}"
 });
 
@@ -223,7 +221,6 @@ export default function Component() {
 import { useContractEvents } from "thirdweb/react";
 
 const preparedEvent = prepareEvent({
-  contract,
   signature: "{{function}}"
 });
 
