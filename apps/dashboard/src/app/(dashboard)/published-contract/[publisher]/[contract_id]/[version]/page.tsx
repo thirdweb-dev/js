@@ -4,6 +4,7 @@ import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { SimpleGrid } from "@chakra-ui/react";
 import { fetchPublishedContractVersions } from "components/contract-components/fetch-contracts-with-versions";
 import { PublishedContract } from "components/contract-components/published-contract";
+import { notFound } from "next/navigation";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import { PublishedActions } from "../../../components/contract-actions-published.client";
@@ -45,6 +46,10 @@ export default async function PublishedContractPage(
   const publishedContract =
     publishedContractVersions.find((v) => v.version === props.params.version) ||
     publishedContractVersions[0];
+
+  if (!publishedContract) {
+    return notFound();
+  }
 
   return (
     <>

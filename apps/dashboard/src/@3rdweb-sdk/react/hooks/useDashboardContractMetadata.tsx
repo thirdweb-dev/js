@@ -48,7 +48,7 @@ export async function fetchDashboardContractMetadata(
   if (compilerMetadata?.name.includes(":")) {
     const _name = compilerMetadata.name.split(":")[1];
     if (_name) {
-      compilerMetadata.name = compilerMetadata.name.split(":")[1];
+      compilerMetadata.name = _name;
     }
   }
 

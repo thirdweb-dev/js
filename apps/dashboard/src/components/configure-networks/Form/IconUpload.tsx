@@ -22,7 +22,11 @@ export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
 
     storageUpload.mutate([file], {
       onSuccess([uri]) {
-        onUpload(uri);
+        if (uri) {
+          onUpload(uri);
+        } else {
+          toast.error("Something went wrong uploading icon");
+        }
         // also refetch the files list
         queryClient.invalidateQueries({
           queryKey: [PINNED_FILES_QUERY_KEY_ROOT],
@@ -30,7 +34,7 @@ export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
       },
       onError(error) {
         console.error(error);
-        toast.error("Failed to upload file");
+        toast.error("Failed to upload icon");
       },
     });
   };

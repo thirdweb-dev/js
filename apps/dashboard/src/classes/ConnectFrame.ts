@@ -72,7 +72,7 @@ export class ConnectFrame {
           action: "post_redirect",
         },
       ],
-      image: connectFrames["7"].imageUrl,
+      image: connectFrames[7].imageUrl,
       // hardcode to "7"
       post_url: `${getAbsoluteUrl()}/api/frame/connect?step=7`,
     });
@@ -81,7 +81,8 @@ export class ConnectFrame {
   static getFrameHtmlResponse = (step: Step, direction: "next" | "back") => {
     const readyStepNum =
       direction === "next" ? Number(step) + 1 : Number(step) - 1;
-    const frameImg = connectFrames[readyStepNum]?.imageUrl;
+    const frameImg =
+      connectFrames[readyStepNum as keyof typeof connectFrames]?.imageUrl;
 
     if (!frameImg) {
       throw new Error(`Image frame not found for step: ${step}`);

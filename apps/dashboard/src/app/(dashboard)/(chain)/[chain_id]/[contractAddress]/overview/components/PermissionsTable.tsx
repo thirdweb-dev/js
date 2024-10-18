@@ -41,7 +41,9 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
           roleMembers.forEach((member) => {
             return !acc.find((m) => m.member === member)
               ? acc.push({ member, roles: [role] })
-              : acc[acc.findIndex((m) => m.member === member)].roles.push(role);
+              : acc[acc.findIndex((m) => m.member === member)]?.roles.push(
+                  role,
+                );
           });
 
           return acc;

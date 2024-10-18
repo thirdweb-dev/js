@@ -48,6 +48,9 @@ export function createSetAllRoleMembersTx(options: {
       const sortedRoles = roles.sort((role) => (role === "admin" ? 1 : -1));
       for (let i = 0; i < sortedRoles.length; i++) {
         const role = sortedRoles[i];
+        if (!role) {
+          continue;
+        }
         const [addresses, currentAddresses] = await Promise.all([
           Promise.all(
             options.roleMemberMap[role]?.map((addressOrEns) =>

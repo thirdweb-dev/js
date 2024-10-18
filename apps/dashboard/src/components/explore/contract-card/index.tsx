@@ -11,6 +11,7 @@ import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { resolveScheme } from "thirdweb/storage";
+import invariant from "tiny-invariant";
 import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
@@ -255,8 +256,11 @@ function usePublishedContract(publishedContractId: PublishedContractId) {
   const [publisher, contractId, version] = publishedContractId.split("/");
   return useQuery({
     queryKey: ["published-contract", { publishedContractId }],
-    queryFn: () =>
-      fetchPublishedContractVersion(publisher, contractId, version),
+    queryFn: () => {
+      invariant(publisher, "publisher is required");
+      invariant(contractId, "contractId is required");
+      return fetchPublishedContractVersion(publisher, contractId, version);
+    },
     enabled: !!publisher || !!contractId,
   });
 }

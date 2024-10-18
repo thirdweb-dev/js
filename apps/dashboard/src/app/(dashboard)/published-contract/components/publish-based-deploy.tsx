@@ -48,8 +48,12 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
     publishedContractVersions.find((v) => v.version === props.version) ||
     publishedContractVersions[0];
 
+  if (!publishedContract) {
+    return null;
+  }
+
   const moduleUris = modules
-    .filter((m) => m !== null)
+    .filter((m) => m !== null && m !== undefined)
     .map((m) => m.publishMetadataUri);
   const [contractMetadata, ...fetchedModules] = await Promise.all([
     fetchDeployMetadata({

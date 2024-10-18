@@ -44,13 +44,12 @@ export function useActivity(contract: ThirdwebContract, autoUpdate?: boolean) {
     }
     const obj = eventsQuery.data.slice(0, 100).reduce(
       (acc, curr) => {
-        if (acc[curr.transactionHash]) {
-          acc[curr.transactionHash].events.push(curr);
-          acc[curr.transactionHash].events.sort(
-            (a, b) => b.logIndex - a.logIndex,
-          );
-          if (acc[curr.transactionHash].blockNumber > curr.blockNumber) {
-            acc[curr.transactionHash].blockNumber = curr.blockNumber;
+        const internalTx = acc[curr.transactionHash];
+        if (internalTx) {
+          internalTx.events.push(curr);
+          internalTx.events.sort((a, b) => b.logIndex - a.logIndex);
+          if (internalTx.blockNumber > curr.blockNumber) {
+            internalTx.blockNumber = curr.blockNumber;
           }
         } else {
           acc[curr.transactionHash] = {

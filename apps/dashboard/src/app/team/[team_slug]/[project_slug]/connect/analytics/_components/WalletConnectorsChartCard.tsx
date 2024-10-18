@@ -191,7 +191,7 @@ export function WalletConnectorsChartCard(props: {
                 <Bar
                   key={walletType}
                   dataKey={walletType}
-                  fill={chartConfig[walletType].color}
+                  fill={chartConfig[walletType]?.color}
                   radius={4}
                   stackId="a"
                   strokeWidth={1.5}
