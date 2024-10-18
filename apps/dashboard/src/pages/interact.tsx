@@ -106,7 +106,7 @@ const InteractLanding: ThirdwebNextPage = () => {
             <LandingIconSectionItem
               icon={require("../../public/assets/product-pages-icons/contracts/icon-marketplace-1.svg")}
               title="Read & write to contracts"
-              description="Integrate smart contracts into your app, call any & all functions, and have code snippets auto-generated based on your contract's supported extensions — for React, React Native, TypeScript, Python, Unity, and Go — on any chain."
+              description="Integrate smart contracts into your app, call any & all functions, and have code snippets auto-generated based on your contract's supported extensions — for React, React Native, TypeScript, Python, Unity, Unreal Engine and Go — on any chain."
             />
           </Card>
           <Card p={8}>

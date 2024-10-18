@@ -573,8 +573,8 @@ function NativeAppsFieldset(props: {
               Enter redirect URIs separated by commas or new lines. This is
               often your application's deep link.
               <br className="max-sm:hidden" />
-              Currently only used in Unity and React Native platform when users
-              authenticate through social logins.
+              Currently only used in Unity, Unreal Engine and React Native
+              platform when users authenticate through social logins.
             </FormDescription>
             <FormMessage />
           </FormItem>
