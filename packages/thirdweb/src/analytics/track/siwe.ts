@@ -22,8 +22,8 @@ type SiweSuccessEvent = SiweEvent & {
 /**
  * @internal
  */
-export function trackLogin(event: SiweSuccessEvent) {
-  trackSiweEvent({
+export async function trackLogin(event: SiweSuccessEvent) {
+  return trackSiweEvent({
     ...event,
     type: "login:success",
   });
@@ -39,8 +39,8 @@ type SiweErrorEvent = SiweEvent & {
 /**
  * @internal
  */
-export function trackLoginError(event: SiweErrorEvent) {
-  trackSiweEvent({
+export async function trackLoginError(event: SiweErrorEvent) {
+  return trackSiweEvent({
     ...event,
     type: "login:error",
   });
@@ -49,12 +49,12 @@ export function trackLoginError(event: SiweErrorEvent) {
 /**
  * @internal
  */
-function trackSiweEvent(
+async function trackSiweEvent(
   event: SiweEvent & {
     type: "login:success" | "login:error";
   },
 ) {
-  track({
+  return track({
     client: event.client,
     ecosystem: event.ecosystem,
     data: {
