@@ -26,7 +26,6 @@ import { getNFT as getErc1155NFT } from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { resolveScheme } from "thirdweb/storage";
 import { Badge, Button, Card, CodeBlock, Heading, Text } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { shortenString } from "utils/usedapp-external";
 import { NftProperty } from "../components/nft-property";
@@ -210,10 +209,11 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                   <Heading size="label.md">Token ID</Heading>
                 </GridItem>
                 <GridItem colSpan={8}>
-                  <AddressCopyButton
-                    size="xs"
-                    address={nft.id?.toString()}
-                    title="Token ID"
+                  <CopyTextButton
+                    textToCopy={nft.id?.toString()}
+                    textToShow={nft.id?.toString()}
+                    tooltip="Token ID"
+                    copyIconPosition="right"
                   />
                 </GridItem>
 

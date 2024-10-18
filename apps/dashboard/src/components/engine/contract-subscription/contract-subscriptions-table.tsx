@@ -1,5 +1,6 @@
 "use client";
 
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type EngineContractSubscription,
@@ -34,7 +35,6 @@ import { useState } from "react";
 import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
 import { shortenAddress as shortenAddresThrows } from "thirdweb/utils";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
-import { AddressCopyButton } from "../../../tw-components/AddressCopyButton";
 
 function shortenAddress(address: string) {
   if (!address) {
@@ -93,9 +93,9 @@ export const ContractSubscriptionTable: React.FC<
         const explorer = chain?.explorers?.[0];
         if (!explorer) {
           return (
-            <AddressCopyButton
+            <CopyAddressButton
               address={cell.getValue()}
-              title="Contract address"
+              copyIconPosition="right"
             />
           );
         }

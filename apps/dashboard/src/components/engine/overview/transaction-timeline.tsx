@@ -1,4 +1,5 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
@@ -22,7 +23,6 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { CheckIcon } from "lucide-react";
 import { useRef } from "react";
 import { Button, FormLabel, Text } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface TimelineStep {
   step: string;
@@ -242,10 +242,9 @@ const CancelTransactionButton = ({
               </FormControl>
               <FormControl>
                 <FormLabel>To</FormLabel>
-                <AddressCopyButton
+                <CopyAddressButton
                   address={transaction.toAddress ?? ""}
-                  size="xs"
-                  shortenAddress={false}
+                  copyIconPosition="right"
                 />
               </FormControl>
               <FormControl>
