@@ -22,6 +22,21 @@ export type Ecosystem = {
   slug: string;
   permission: "PARTNER_WHITELIST" | "ANYONE";
   authOptions: (typeof authOptions)[number][];
+  customAuthOptions?: {
+    authEndpoint?: {
+      url: string;
+      headers?: { key: string; value: string }[];
+    };
+    jwt?: {
+      jwksUri: string;
+      aud: string;
+    };
+  };
+  smartAccountOptions?: {
+    chainIds: number[];
+    sponsorGas: boolean;
+    accountFactoryAddress: string;
+  };
   url: string;
   status: "active" | "requested" | "paymentFailed";
   createdAt: string;

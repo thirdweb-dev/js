@@ -89,7 +89,7 @@ export function IntegrationPermissionsToggle({
         onSubmit={() => {
           invariant(messageToConfirm, "Must have message for modal to be open");
           updateEcosystem({
-            ecosystem,
+            ...ecosystem,
             permission: messageToConfirm.permission,
           });
         }}
