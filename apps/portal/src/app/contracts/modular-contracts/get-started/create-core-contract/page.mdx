@@ -89,7 +89,7 @@ Implement the `getSupportedCallbackFunctions` function. The Core contract is abs
  import {Core} from "@thirdweb-dev/src/Core.sol";
 
  contract CounterCore is Core {
-     int256 public count;
+     uint256 public count;
 
      constructor(address owner) {
          _initializeOwner(owner);
@@ -112,7 +112,7 @@ Implement the `getSupportedCallbackFunctions` function. The Core contract is abs
 </Step>
 
 <Step title="Add a Callback Function">
-   Introduce the `_beforeIncrement` function to use the `beforeIncrement` callback from a module, to achieve this we are going to create a new interface.
+   Introduce the `_beforeIncrement` function to use the `beforeIncrement` callback from a module to achieve this, we'll introduce the interface `BeforeIncrementCallback`
 
 > **Note**  
 > Callback functions are hook-like functionalities that can be used before or after the main functionality of a core contract.  
@@ -219,7 +219,7 @@ contract CounterCore is Core {
     function supportsInterface(
         bytes4 interfaceId
     ) public view override returns (bool) {
-        interfaceId == 0x00000001 || super.supportsInterface(interfaceId);
+        return interfaceId == 0x00000001 || super.supportsInterface(interfaceId);
     }
 }
 
