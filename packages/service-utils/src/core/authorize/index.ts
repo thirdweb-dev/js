@@ -12,6 +12,8 @@ import type { AuthorizationResult } from "./types.js";
 export type AuthorizationInput = {
   secretKey: string | null;
   clientId: string | null;
+  ecosystemId: string | null;
+  ecosystemPartnerId: string | null;
   origin: string | null;
   bundleId: string | null;
   secretKeyHash: string | null;
