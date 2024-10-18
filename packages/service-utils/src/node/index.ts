@@ -107,12 +107,23 @@ export function extractAuthorizationData(
   if (!clientId) {
     clientId = requestUrl.searchParams.get("clientId");
   }
+
   // bundle id from header is first preference
   let bundleId = getHeader(headers, "x-bundle-id");
 
   // next preference is search param
   if (!bundleId) {
     bundleId = requestUrl.searchParams.get("bundleId");
+  }
+
+  let ecosystemId = getHeader(headers, "x-ecosystem-id");
+  if (!ecosystemId) {
+    ecosystemId = requestUrl.searchParams.get("ecosystemId");
+  }
+
+  let ecosystemPartnerId = getHeader(headers, "x-ecosystem-partner-id");
+  if (!ecosystemPartnerId) {
+    ecosystemPartnerId = requestUrl.searchParams.get("ecosystemPartnerId");
   }
 
   let origin = getHeader(headers, "origin");
@@ -166,6 +177,8 @@ export function extractAuthorizationData(
     secretKeyHash,
     secretKey,
     clientId,
+    ecosystemId,
+    ecosystemPartnerId,
     origin,
     bundleId,
     targetAddress: authInput.targetAddress,
