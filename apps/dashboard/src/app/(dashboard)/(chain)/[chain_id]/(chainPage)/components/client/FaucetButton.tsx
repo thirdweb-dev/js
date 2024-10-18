@@ -2,17 +2,24 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { THIRDWEB_ENGINE_FAUCET_WALLET } from "@/constants/env";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  THIRDWEB_ENGINE_FAUCET_WALLET,
+  TURNSTILE_SITE_KEY,
+} from "@/constants/env";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CanClaimResponseType } from "app/api/testnet-faucet/can-claim/CanClaimResponseType";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { toUnits } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { useActiveAccount, useWalletBalance } from "thirdweb/react";
+import { z } from "zod";
 
 function formatTime(seconds: number) {
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
@@ -28,6 +35,12 @@ function formatTime(seconds: number) {
 
   return rtf.format(+seconds, "second");
 }
+
+const claimFaucetSchema = z.object({
+  turnstileToken: z.string().min(1, {
+    message: "Captcha validation is required.",
+  }),
+});
 
 export function FaucetButton({
   chain,
@@ -52,7 +65,7 @@ export function FaucetButton({
   const queryClient = useQueryClient();
 
   const claimMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (turnstileToken: string) => {
       trackEvent({
         category: "faucet",
         action: "claim",
@@ -67,6 +80,7 @@ export function FaucetButton({
         body: JSON.stringify({
           chainId: chainId,
           toAddress: address,
+          turnstileToken,
         }),
       });
 
@@ -117,6 +131,8 @@ export function FaucetButton({
     faucetWalletBalanceQuery.data !== undefined &&
     faucetWalletBalanceQuery.data.value < toUnits("1", 17);
 
+  const form = useForm<z.infer<typeof claimFaucetSchema>>();
+
   // loading state
   if (faucetWalletBalanceQuery.isPending || canClaimFaucetQuery.isPending) {
     return (
@@ -161,28 +177,46 @@ export function FaucetButton({
     );
   }
 
+  const claimFunds = (values: z.infer<typeof claimFaucetSchema>) => {
+    // Instead of having a dedicated endpoint (/api/verify-token),
+    // we can just attach the token in the payload and send it to the claim-faucet endpoint, to avoid a round-trip request
+    const claimPromise = claimMutation.mutateAsync(values.turnstileToken);
+    toast.promise(claimPromise, {
+      success: `${amount} ${chain.nativeCurrency.symbol} sent successfully`,
+      error: `Failed to claim ${amount} ${chain.nativeCurrency.symbol}`,
+    });
+  };
+
   // eligible to claim and faucet has balance
   return (
     <div className="flex w-full flex-col text-center">
-      <Button
-        variant="primary"
-        className="w-full gap-2"
-        onClick={() => {
-          const claimPromise = claimMutation.mutateAsync();
-          toast.promise(claimPromise, {
-            success: `${amount} ${chain.nativeCurrency.symbol} sent successfully`,
-            error: `Failed to claim ${amount} ${chain.nativeCurrency.symbol}`,
-          });
-        }}
-      >
-        {claimMutation.isPending ? (
-          <>
-            Claiming <Spinner className="size-3" />
-          </>
-        ) : (
-          `Get ${amount} ${chain.nativeCurrency.symbol}`
-        )}
-      </Button>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(claimFunds)}>
+          <Button variant="primary" className="w-full gap-2" type="submit">
+            {claimMutation.isPending ? (
+              <>
+                Claiming <Spinner className="size-3" />
+              </>
+            ) : (
+              `Get ${amount} ${chain.nativeCurrency.symbol}`
+            )}
+          </Button>
+          <FormField
+            control={form.control}
+            name="turnstileToken"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Turnstile
+                    siteKey={TURNSTILE_SITE_KEY}
+                    onSuccess={(token) => field.onChange(token)}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
 
       {faucetWalletBalanceQuery.data && (
         <p className="mt-3 text-muted-foreground text-xs">
