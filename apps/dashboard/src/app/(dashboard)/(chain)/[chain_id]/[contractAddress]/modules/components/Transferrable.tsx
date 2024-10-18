@@ -94,7 +94,7 @@ export function TransferrableModuleUI(props: {
         >
           <div className="p-4 lg:p-6">
             {/* Title */}
-            <h3 className="font-semibold text-xl tracking-tight">
+            <h3 className="text-xl font-semibold tracking-tight">
               Transferrable
             </h3>
 
@@ -234,7 +234,7 @@ export function TransferrableModuleUI(props: {
           </div>
 
           {/* Footer */}
-          <div className="flex flex-col items-end border-border border-t px-4 py-4 lg:px-6">
+          <div className="flex flex-col items-end border-t border-border px-4 py-4 lg:px-6">
             <Button
               type="submit"
               size="sm"
