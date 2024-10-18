@@ -40,7 +40,6 @@ export const EnglishAuctionsTable: React.FC<EnglishAuctionsTableProps> = ({
       totalCountQuery={totalCountQuery}
       queryParams={queryParams}
       setQueryParams={setQueryParams}
-      type="english-auctions"
     />
   );
 };

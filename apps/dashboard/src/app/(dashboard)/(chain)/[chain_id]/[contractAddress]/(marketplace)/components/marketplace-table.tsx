@@ -100,7 +100,6 @@ interface MarketplaceTableProps {
       start: number;
     }>
   >;
-  type: "direct-listings" | "english-auctions";
 }
 
 const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
@@ -112,7 +111,6 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
   totalCountQuery,
   queryParams,
   setQueryParams,
-  type,
 }) => {
   const [listingsToShow, setListingsToShow_] = useState<"all" | "valid">("all");
 
@@ -215,7 +213,6 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
           data={tokenRow}
           isOpen={!!tokenRow}
           onClose={() => setTokenRow(null)}
-          type={type}
         />
         <Table {...getTableProps()}>
           <Thead>
