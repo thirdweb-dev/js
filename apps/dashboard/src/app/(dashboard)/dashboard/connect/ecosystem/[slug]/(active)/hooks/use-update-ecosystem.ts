@@ -4,19 +4,10 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import type { AuthOption, Ecosystem } from "../../../types";
-
-type UpdateEcosystemParams = {
-  ecosystem: Ecosystem;
-  permission?: "PARTNER_WHITELIST" | "ANYONE";
-  authOptions?: AuthOption[];
-};
+import type { Ecosystem } from "../../../types";
 
 export function useUpdateEcosystem(
-  options?: Omit<
-    UseMutationOptions<boolean, unknown, UpdateEcosystemParams>,
-    "mutationFn"
-  >,
+  options?: Omit<UseMutationOptions<boolean, unknown, Ecosystem>, "mutationFn">,
 ) {
   const { onSuccess, ...queryOptions } = options || {};
   const { isLoggedIn, user } = useLoggedInUser();
@@ -24,25 +15,19 @@ export function useUpdateEcosystem(
 
   return useMutation({
     // Returns true if the update was successful
-    mutationFn: async (params: UpdateEcosystemParams): Promise<boolean> => {
+    mutationFn: async (params: Ecosystem): Promise<boolean> => {
       if (!isLoggedIn || !user?.jwt) {
         throw new Error("Please login to update this ecosystem");
       }
 
-      const res = await fetch(
-        `${params.ecosystem.url}/${params.ecosystem.id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.jwt}`,
-          },
-          body: JSON.stringify({
-            permission: params.permission,
-            authOptions: params.authOptions,
-          }),
+      const res = await fetch(`${params.url}/${params.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.jwt}`,
         },
-      );
+        body: JSON.stringify(params),
+      });
 
       if (!res.ok) {
         const body = await res.json();
