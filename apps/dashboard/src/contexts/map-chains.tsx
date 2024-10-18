@@ -1,10 +1,11 @@
-import type { Chain } from "thirdweb";
+import { type Chain, defineChain } from "thirdweb";
 import type { StoredChain } from "../stores/chainStores";
 
 export function mapV4ChainToV5Chain(v4Chain: StoredChain) {
   const chain: Chain = {
     id: v4Chain.chainId,
-    rpc: v4Chain.rpc[0],
+    // eslint-disable-next-line no-restricted-syntax
+    rpc: v4Chain.rpc[0] || defineChain(v4Chain.chainId).rpc,
     // TypeScript shenanigans, just avoiding as string assertion here
     blockExplorers: v4Chain.explorers?.map((x) => x),
     // TypeScript shenanigans, just avoiding as string assertion here

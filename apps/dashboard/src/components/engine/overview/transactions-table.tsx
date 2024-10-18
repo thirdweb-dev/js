@@ -279,12 +279,12 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           disclosure={transactionDisclosure}
           onClickPrevious={
             idx > 0
-              ? () => setSelectedTransaction(transactions[idx - 1])
+              ? () => setSelectedTransaction(transactions[idx - 1] || null)
               : undefined
           }
           onClickNext={
             idx < transactions.length - 1
-              ? () => setSelectedTransaction(transactions[idx + 1])
+              ? () => setSelectedTransaction(transactions[idx + 1] || null)
               : undefined
           }
         />

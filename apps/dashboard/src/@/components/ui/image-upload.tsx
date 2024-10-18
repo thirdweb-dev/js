@@ -16,7 +16,9 @@ const ImageUpload = React.forwardRef<HTMLInputElement, ImageUploadProps>(
     const [activeFile, setActiveFile] = React.useState<File | null>(null);
     const onDrop = React.useCallback(
       (acceptedFiles: File[]) => {
-        setActiveFile(acceptedFiles[0]);
+        if (acceptedFiles[0]) {
+          setActiveFile(acceptedFiles[0]);
+        }
         onUpload?.(acceptedFiles);
       },
       [onUpload],

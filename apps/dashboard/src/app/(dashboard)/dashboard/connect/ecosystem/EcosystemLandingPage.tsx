@@ -25,7 +25,7 @@ export async function EcosystemLandingPage(props: {
       console.error("failed to fetch ecosystems", err);
       return [];
     });
-    if (ecosystems.length > 0) {
+    if (ecosystems[0]) {
       redirect(`${props.ecosystemLayoutPath}/${ecosystems[0].slug}`);
     }
   }

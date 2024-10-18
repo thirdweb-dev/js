@@ -37,12 +37,14 @@ type ContentItem = {
   onClick?: () => void;
 };
 
+type TabId = "explore" | "import" | "build" | "deploy";
+
 const DeployOptions = () => {
   const [showImportModal, setShowImportModal] = useState(false);
   const router = useDashboardRouter();
   const trackEvent = useTrack();
 
-  const content: Record<string, ContentItem> = useMemo(
+  const content: Record<TabId, ContentItem> = useMemo(
     () => ({
       explore: {
         title: "Ready-to-deploy",
@@ -72,8 +74,7 @@ const DeployOptions = () => {
     [],
   );
 
-  const contentKeys = Object.keys(content);
-  const [activeTab, setActiveTab] = useState(contentKeys[0]);
+  const [activeTab, setActiveTab] = useState<TabId>("explore");
   const activeTabContent = content[activeTab];
 
   return (
@@ -91,7 +92,7 @@ const DeployOptions = () => {
           name: value.title,
           isActive: activeTab === key,
           isEnabled: true,
-          onClick: () => setActiveTab(key),
+          onClick: () => setActiveTab(key as TabId),
         }))}
         tabClassName="font-medium !text-sm"
       />

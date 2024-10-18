@@ -180,7 +180,7 @@ async function fetchContractName(chainId: number, contractAddress: string) {
   }
   const compilationTarget = json.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
-  const name = compilationTarget[targets[0]];
+  const name = targets[0] ? compilationTarget[targets[0]] : "";
   return name;
 }
 

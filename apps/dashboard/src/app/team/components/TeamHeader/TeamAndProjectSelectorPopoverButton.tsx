@@ -29,7 +29,12 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
   const { currentTeam, teamsAndProjects } = props;
   const [hoveredTeam, setHoveredTeam] = useState<Team>();
   const projectsToShowOfTeam =
-    hoveredTeam || currentTeam || teamsAndProjects[0].team;
+    hoveredTeam || currentTeam || teamsAndProjects[0]?.team;
+
+  // if we can't find a single team associated with this user - something is really wrong
+  if (!projectsToShowOfTeam) {
+    return null;
+  }
 
   const projectsToShow = teamsAndProjects.find(
     (x) => x.team.slug === projectsToShowOfTeam.slug,

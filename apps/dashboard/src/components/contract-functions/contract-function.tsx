@@ -324,7 +324,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
     : undefined;
 
   const [selectedFunction, setSelectedFunction] = useState<
-    AbiFunction | AbiEvent
+    AbiFunction | AbiEvent | undefined
   >(_item ?? fnsOrEvents[0]);
   // Set the active tab to Write or Read depends on the `_item`
   const _defaultTabIndex =
@@ -370,14 +370,15 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
             <Divider my={2} />
           </>
         )}
-        {filteredFunctions.map((fn) => (
-          <FunctionsOrEventsListItem
-            key={`${fn.name}_${fn.type}_${fn.inputs.length}`}
-            fn={fn}
-            selectedFunction={selectedFunction}
-            setSelectedFunction={setSelectedFunction}
-          />
-        ))}
+        {selectedFunction &&
+          filteredFunctions.map((fn) => (
+            <FunctionsOrEventsListItem
+              key={`${fn.name}_${fn.type}_${fn.inputs.length}`}
+              fn={fn}
+              selectedFunction={selectedFunction}
+              setSelectedFunction={setSelectedFunction}
+            />
+          ))}
       </Flex>
     );
   };
@@ -447,7 +448,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
             </Tabs>
           )}
 
-          {events.length > 0 && (
+          {events.length > 0 && selectedFunction && (
             <Box px={4} pt={2} overflowX="hidden">
               {events.map((fn) => (
                 <FunctionsOrEventsListItem
@@ -467,7 +468,9 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
         overflow="auto"
         colSpan={{ base: 12, md: 8 }}
       >
-        <ContractFunction fn={selectedFunction} contract={contract} />
+        {selectedFunction && (
+          <ContractFunction fn={selectedFunction} contract={contract} />
+        )}
       </GridItem>
     </SimpleGrid>
   );
@@ -476,7 +479,9 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
 interface FunctionsOrEventsListItemProps {
   fn: AbiFunction | AbiEvent;
   selectedFunction: AbiFunction | AbiEvent;
-  setSelectedFunction: Dispatch<SetStateAction<AbiFunction | AbiEvent>>;
+  setSelectedFunction: Dispatch<
+    SetStateAction<AbiFunction | AbiEvent | undefined>
+  >;
 }
 
 const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({

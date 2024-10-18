@@ -416,9 +416,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             defaultAdmin: params.deployParams._defaultAdmin,
             platformFeeBps: Number(params.deployParams._platformFeeBps),
             platformFeeRecipient: params.deployParams._platformFeeRecipient,
-            trustedForwarders: JSON.parse(
-              params.deployParams._trustedForwarders,
-            ),
+            trustedForwarders: params.deployParams._trustedForwarders
+              ? JSON.parse(params.deployParams._trustedForwarders)
+              : undefined,
           },
         });
       }

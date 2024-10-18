@@ -63,14 +63,18 @@ export const SelectWithSearch = React.forwardRef<
         if (filteredOptions.length >= itemsToShow) {
           break;
         }
+        const option = options[i];
+        if (!option) {
+          continue;
+        }
 
         if (overrideSearchFn) {
-          if (overrideSearchFn(options[i], searchValLowercase)) {
-            filteredOptions.push(options[i]);
+          if (overrideSearchFn(option, searchValLowercase)) {
+            filteredOptions.push(option);
           }
         } else {
-          if (options[i].label.toLowerCase().includes(searchValLowercase)) {
-            filteredOptions.push(options[i]);
+          if (option.label.toLowerCase().includes(searchValLowercase)) {
+            filteredOptions.push(option);
           }
         }
       }

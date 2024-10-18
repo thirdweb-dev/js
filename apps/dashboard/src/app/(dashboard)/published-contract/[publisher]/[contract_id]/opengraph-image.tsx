@@ -29,6 +29,10 @@ export default async function Image(props: {
 
   const publishedContract = publishedContracts[0];
 
+  if (!publishedContract) {
+    return null;
+  }
+
   const publishedContractName =
     publishedContract?.displayName || publishedContract?.name;
 

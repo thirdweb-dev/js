@@ -8,11 +8,8 @@ import {
   ethereum,
   fantom,
   fantomTestnet,
-  hardhat,
-  localhost,
   optimism,
   polygon,
-  sepolia,
 } from "thirdweb/chains";
 
 export interface CurrencyMetadata {
@@ -21,160 +18,126 @@ export interface CurrencyMetadata {
   symbol: string;
 }
 
-const NATIVE_TOKENS: Record<
-  number,
-  {
-    name: string;
-    symbol: string;
-    decimals: number;
-    wrapped: CurrencyMetadata;
-  }
-> = /* @__PURE__ */ {
-  [ethereum.id]: {
-    name: "Ether",
-    symbol: "ETH",
-    decimals: 18,
-    wrapped: {
-      address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
+type NativeTokenInfo = {
+  name: string;
+  symbol: string;
+  decimals: number;
+  wrapped: CurrencyMetadata;
+};
+
+const ethereumNativeToken: NativeTokenInfo = {
+  name: "Ether",
+  symbol: "ETH",
+  decimals: 18,
+  wrapped: {
+    address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    name: "Wrapped Ether",
+    symbol: "WETH",
   },
-  [sepolia.id]: {
-    name: "Sepolia Ether",
-    symbol: "SEP",
-    decimals: 18,
-    wrapped: {
-      address: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
+};
+
+const polygonNativeToken: NativeTokenInfo = {
+  name: "Matic",
+  symbol: "MATIC",
+  decimals: 18,
+  wrapped: {
+    address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+    name: "Wrapped Matic",
+    symbol: "WMATIC",
   },
-  [polygon.id]: {
-    name: "Matic",
-    symbol: "MATIC",
-    decimals: 18,
-    wrapped: {
-      address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
-      name: "Wrapped Matic",
-      symbol: "WMATIC",
-    },
+};
+
+const avalancheNativeToken: NativeTokenInfo = {
+  name: "Avalanche",
+  symbol: "AVAX",
+  decimals: 18,
+  wrapped: {
+    address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+    name: "Wrapped AVAX",
+    symbol: "WAVAX",
   },
-  [avalanche.id]: {
-    name: "Avalanche",
-    symbol: "AVAX",
-    decimals: 18,
-    wrapped: {
-      address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
-      name: "Wrapped AVAX",
-      symbol: "WAVAX",
-    },
+};
+
+const avalancheFujiNativeToken: NativeTokenInfo = {
+  name: "Avalanche",
+  symbol: "AVAX",
+  decimals: 18,
+  wrapped: {
+    address: "0xd00ae08403B9bbb9124bB305C09058E32C39A48c",
+    name: "Wrapped AVAX",
+    symbol: "WAVAX",
   },
-  [avalancheFuji.id]: {
-    name: "Avalanche",
-    symbol: "AVAX",
-    decimals: 18,
-    wrapped: {
-      address: "0xd00ae08403B9bbb9124bB305C09058E32C39A48c",
-      name: "Wrapped AVAX",
-      symbol: "WAVAX",
-    },
+};
+
+const fantomNativeToken: NativeTokenInfo = {
+  name: "Fantom",
+  symbol: "FTM",
+  decimals: 18,
+  wrapped: {
+    address: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
+    name: "Wrapped Fantom",
+    symbol: "WFTM",
   },
-  [fantom.id]: {
-    name: "Fantom",
-    symbol: "FTM",
-    decimals: 18,
-    wrapped: {
-      address: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
-      name: "Wrapped Fantom",
-      symbol: "WFTM",
-    },
+};
+
+const fantomTestnetNativeToken: NativeTokenInfo = {
+  name: "Fantom",
+  symbol: "FTM",
+  decimals: 18,
+  wrapped: {
+    address: "0xf1277d1Ed8AD466beddF92ef448A132661956621",
+    name: "Wrapped Fantom",
+    symbol: "WFTM",
   },
-  [fantomTestnet.id]: {
-    name: "Fantom",
-    symbol: "FTM",
-    decimals: 18,
-    wrapped: {
-      address: "0xf1277d1Ed8AD466beddF92ef448A132661956621",
-      name: "Wrapped Fantom",
-      symbol: "WFTM",
-    },
+};
+
+const arbitrumNativeToken: NativeTokenInfo = {
+  name: "Ether",
+  symbol: "ETH",
+  decimals: 18,
+  wrapped: {
+    address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+    name: "Wrapped Ether",
+    symbol: "WETH",
   },
-  [arbitrum.id]: {
-    name: "Ether",
-    symbol: "ETH",
-    decimals: 18,
-    wrapped: {
-      address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
+};
+
+const optimismNativeToken: NativeTokenInfo = {
+  name: "Ether",
+  symbol: "ETH",
+  decimals: 18,
+  wrapped: {
+    address: "0x4200000000000000000000000000000000000006",
+    name: "Wrapped Ether",
+    symbol: "WETH",
   },
-  [optimism.id]: {
-    name: "Ether",
-    symbol: "ETH",
-    decimals: 18,
-    wrapped: {
-      address: "0x4200000000000000000000000000000000000006",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
+};
+
+const bscNativeToken: NativeTokenInfo = {
+  name: "Binance Chain Native Token",
+  symbol: "BNB",
+  decimals: 18,
+  wrapped: {
+    address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+    name: "Wrapped Binance Chain Token",
+    symbol: "WBNB",
   },
-  [bsc.id]: {
-    name: "Binance Chain Native Token",
-    symbol: "BNB",
-    decimals: 18,
-    wrapped: {
-      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-      name: "Wrapped Binance Chain Token",
-      symbol: "WBNB",
-    },
-  },
-  [bscTestnet.id]: {
-    name: "Binance Chain Native Token",
-    symbol: "TBNB",
-    decimals: 18,
-    wrapped: {
-      address: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
-      name: "Wrapped Binance Chain Testnet Token",
-      symbol: "WBNB",
-    },
-  },
-  [hardhat.id]: {
-    name: "Ether",
-    symbol: "ETH",
-    decimals: 18,
-    wrapped: {
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
-  },
-  [localhost.id]: {
-    name: "Ether",
-    symbol: "ETH",
-    decimals: 18,
-    wrapped: {
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
-  },
-  [280]: {
-    name: "zkSync Era Testnet",
-    symbol: "ETH",
-    decimals: 18,
-    wrapped: {
-      address: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
+};
+
+const bscTestnetNativeToken: NativeTokenInfo = {
+  name: "Binance Chain Native Token",
+  symbol: "TBNB",
+  decimals: 18,
+  wrapped: {
+    address: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
+    name: "Wrapped Binance Chain Testnet Token",
+    symbol: "WBNB",
   },
 };
 
 const Ethereum: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[ethereum.id].wrapped,
+    ...ethereumNativeToken.wrapped,
   },
   {
     address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
@@ -200,7 +163,7 @@ const Ethereum: CurrencyMetadata[] = [
 
 const Polygon: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[polygon.id].wrapped,
+    ...polygonNativeToken.wrapped,
   },
   {
     address: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
@@ -233,7 +196,7 @@ const Polygon: CurrencyMetadata[] = [
 
 const Fantom: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[fantom.id].wrapped,
+    ...fantomNativeToken.wrapped,
   },
   {
     name: "Wrapped Ether",
@@ -254,13 +217,13 @@ const Fantom: CurrencyMetadata[] = [
 
 const FantomTestnet: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[fantomTestnet.id].wrapped,
+    ...fantomTestnetNativeToken.wrapped,
   },
 ];
 
 const Avalanche: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[avalanche.id].wrapped,
+    ...avalancheNativeToken.wrapped,
   },
   {
     address: "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
@@ -291,7 +254,7 @@ const Avalanche: CurrencyMetadata[] = [
 
 const AvalancheFujiTestnet: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[avalancheFuji.id].wrapped,
+    ...avalancheFujiNativeToken.wrapped,
   },
   // Source: https://developers.circle.com/stablecoins/docs/usdc-on-testing-networks#usdc-on-avalanche-testnet
   {
@@ -303,7 +266,7 @@ const AvalancheFujiTestnet: CurrencyMetadata[] = [
 
 const Optimism: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[optimism.id].wrapped,
+    ...optimismNativeToken.wrapped,
   },
   // Source: https://www.circle.com/blog/now-available-usdc-on-op-mainnet
   {
@@ -321,7 +284,7 @@ const Optimism: CurrencyMetadata[] = [
 
 const Arbitrum: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[arbitrum.id].wrapped,
+    ...arbitrumNativeToken.wrapped,
   },
   // Source: https://www.circle.com/blog/arbitrum-usdc-now-available
   {
@@ -339,7 +302,7 @@ const Arbitrum: CurrencyMetadata[] = [
 
 const BinanceMainnet: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[bsc.id].wrapped,
+    ...bscNativeToken.wrapped,
   },
   {
     address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
@@ -360,7 +323,7 @@ const BinanceMainnet: CurrencyMetadata[] = [
 
 const BinanceTestnet: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[bscTestnet.id].wrapped,
+    ...bscTestnetNativeToken.wrapped,
   },
   {
     address: "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee",

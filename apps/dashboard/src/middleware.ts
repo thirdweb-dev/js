@@ -73,7 +73,7 @@ export async function middleware(request: NextRequest) {
   // DIFFERENT DYNAMIC ROUTING CASES
 
   // /<address>/... case
-  if (isPossibleEVMAddress(paths[0])) {
+  if (paths[0] && isPossibleEVMAddress(paths[0])) {
     // special case for "deployer.thirdweb.eth"
     // we want to always redirect this to "thirdweb.eth/..."
     if (paths[0] === "deployer.thirdweb.eth") {

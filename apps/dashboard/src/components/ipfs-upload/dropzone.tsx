@@ -151,14 +151,15 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
   // const progressPercent = (progress.progress / progress.total) * 100;
 
   const mainIpfsUri = useMemo(() => {
-    if (ipfsHashes.length === 0) {
+    const firstHash = ipfsHashes[0];
+    if (firstHash === undefined) {
       return "";
     }
     if (ipfsHashes.length === 1) {
-      return replaceIpfsUrl(ipfsHashes[0]);
+      return replaceIpfsUrl(firstHash);
     }
     // get the folder
-    const uri = ipfsHashes[0].split("ipfs://")[1];
+    const uri = firstHash.split("ipfs://")[1] || "";
     const folderPath = uri.split("/")[0]; // "Qma.../image.png" -> "Qma..."
     return `https://ipfs.io/ipfs/${folderPath}`;
   }, [ipfsHashes]);
@@ -183,6 +184,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
       >
         {filesToShow.map((file, index) => {
           const ipfsHash = ipfsHashes[index];
+          if (!ipfsHash) {
+            return null;
+          }
           return (
             <GridItem colSpan={1} key={`${file.name}_${index}`}>
               <SimpleGrid
@@ -492,7 +496,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                         uri:
                           uris.length === 1
                             ? uris[0]
-                            : uris[0].split("/").slice(0, -1).join("/"),
+                            : (uris[0] || "").split("/").slice(0, -1).join("/"),
                       });
                       setIpfsHashes(uris);
                       // also refetch the files list

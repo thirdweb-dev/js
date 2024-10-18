@@ -97,7 +97,7 @@ export const InAppWalletUsersPageContent = (props: {
     }
     const csv = Papa.unparse(
       theWalletsWeWant.map((row) => ({
-        email: row.ews_authed_user[0].email,
+        email: row.ews_authed_user[0]?.email,
         address: row.embedded_wallet?.[0]?.address || "",
         created: format(new Date(row.created_at), "MMM dd, yyyy"),
         last_login: format(new Date(row.last_accessed_at), "MMM dd, yyyy"),

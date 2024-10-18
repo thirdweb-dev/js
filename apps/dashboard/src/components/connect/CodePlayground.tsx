@@ -193,12 +193,12 @@ const CodePlayground = ({
                     <Button
                       size="sm"
                       fontWeight={
-                        tab === "write" && write.signature === fn.signature
+                        tab === "write" && write?.signature === fn.signature
                           ? 600
                           : 400
                       }
                       opacity={
-                        tab === "write" && write.signature === fn.signature
+                        tab === "write" && write?.signature === fn.signature
                           ? 1
                           : 0.65
                       }
@@ -225,12 +225,12 @@ const CodePlayground = ({
                     <Button
                       size="sm"
                       fontWeight={
-                        tab === "read" && read.signature === fn.signature
+                        tab === "read" && read?.signature === fn.signature
                           ? 600
                           : 400
                       }
                       opacity={
-                        tab === "read" && read.signature === fn.signature
+                        tab === "read" && read?.signature === fn.signature
                           ? 1
                           : 0.65
                       }
@@ -257,10 +257,10 @@ const CodePlayground = ({
                     <Button
                       size="sm"
                       fontWeight={
-                        tab === "events" && event.name === ev.name ? 600 : 400
+                        tab === "events" && event?.name === ev.name ? 600 : 400
                       }
                       opacity={
-                        tab === "events" && event.name === ev.name ? 1 : 0.65
+                        tab === "events" && event?.name === ev.name ? 1 : 0.65
                       }
                       onClick={() => {
                         setTab("events");

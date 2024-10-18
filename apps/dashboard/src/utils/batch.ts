@@ -214,8 +214,9 @@ export async function processInputData(
         };
         for (let i = 0; i < results.data.length; i++) {
           if (!results.errors.find((e) => e.row === i)) {
-            if (results.data[i].name) {
-              validResults.data.push(results.data[i]);
+            const result = results.data[i];
+            if (result?.name) {
+              validResults.data.push(result);
             }
           }
         }

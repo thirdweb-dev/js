@@ -59,7 +59,7 @@ export function getCookie(name: string) {
 
     for (const c of cookies) {
       const [_name, _val] = c.trim().split("=");
-      if (_name === name) {
+      if (_name === name && _val) {
         return decodeURIComponent(_val);
       }
     }

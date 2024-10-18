@@ -105,8 +105,10 @@ export function CreateEcosystemForm(props: {
                     <ImageUpload
                       accept="image/png, image/jpeg"
                       onUpload={(files) => {
-                        form.setValue("logo", files[0]);
-                        form.clearErrors("logo");
+                        if (files[0]) {
+                          form.setValue("logo", files[0]);
+                          form.clearErrors("logo");
+                        }
                       }}
                     />
                   </FormControl>

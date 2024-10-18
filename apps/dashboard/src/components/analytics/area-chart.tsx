@@ -58,6 +58,10 @@ const AreaChart = <
   }
 
   const indexType = index.type || "date";
+  const firstData = data[0];
+  const lastData = data[data.length - 1];
+  const firstDataAtIndexId = firstData?.[index.id];
+  const lastDataAtIndexId = lastData?.[index.id];
 
   return (
     <div className={cn("h-full w-full", className)}>
@@ -149,8 +153,8 @@ const AreaChart = <
             type="number"
             tick={{ transform: "translate(0, 6)" }}
             ticks={
-              startEndOnly
-                ? [data[0][index.id], data[data.length - 1][index.id]]
+              startEndOnly && firstDataAtIndexId && lastDataAtIndexId
+                ? [firstDataAtIndexId, lastDataAtIndexId]
                 : undefined
             }
           />

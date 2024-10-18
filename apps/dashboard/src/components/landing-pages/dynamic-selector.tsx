@@ -35,11 +35,16 @@ export const LandingDynamicSelector: React.FC<LandingDynamicSelectorProps> = ({
   lineHeight,
   margin = "",
 }) => {
-  const [selectedItemTitle, setSelectedItemTitle] = useState(items[0].title);
+  const firstItem = items[0];
+  const [selectedItemTitle, setSelectedItemTitle] = useState(firstItem?.title);
   const trackEvent = useTrack();
 
+  if (!firstItem) {
+    return null;
+  }
+
   const selectedItem =
-    items.find((item) => item.title === selectedItemTitle) || items[0];
+    items.find((item) => item.title === selectedItemTitle) || firstItem;
 
   return (
     <Flex flexDir="column" gap={8}>

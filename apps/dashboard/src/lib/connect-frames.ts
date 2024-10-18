@@ -4,7 +4,7 @@ interface Frame {
   imageUrl: string;
 }
 
-export const connectFrames: Record<number, Frame> = {
+export const connectFrames: Record<1 | 2 | 3 | 4 | 5 | 6 | 7, Frame> = {
   1: {
     imageUrl: `${getAbsoluteUrl()}/assets/connect/frames/frame-1.png`,
   },
