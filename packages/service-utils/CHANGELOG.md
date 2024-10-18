@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.45
+
+### Patch Changes
+
+- [#5072](https://github.com/thirdweb-dev/js/pull/5072) [`9da5cd7`](https://github.com/thirdweb-dev/js/commit/9da5cd7d49aa331ccb88cdcbdf13da4f992c189b) Thanks [@iuwqyir](https://github.com/iuwqyir)! - Adds insight scope to api key and exposes cacheOptions for node auth
+
 ## 0.4.44
 
 ### Patch Changes
