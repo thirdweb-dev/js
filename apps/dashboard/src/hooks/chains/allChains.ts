@@ -53,6 +53,9 @@ function createAllChainsStore() {
 
     for (let i = 0; i < originalAllChains.length; i++) {
       let _chain = originalAllChains[i];
+      if (!_chain) {
+        continue;
+      }
 
       // for dev env, replace the rpc urls to dev domain
       if (!isProd) {

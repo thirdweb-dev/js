@@ -1,5 +1,6 @@
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Separator } from "@/components/ui/separator";
+import { notFound } from "next/navigation";
 import { PublishedContract } from "../../../../../components/contract-components/published-contract";
 import { PublishedActions } from "../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../components/contract-header";
@@ -22,6 +23,10 @@ export default async function PublishedContractPage(
     });
 
   const publishedContract = publishedContractVersions[0];
+
+  if (!publishedContract) {
+    notFound();
+  }
 
   return (
     <>

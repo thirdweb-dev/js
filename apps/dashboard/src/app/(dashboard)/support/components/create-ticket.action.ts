@@ -116,7 +116,7 @@ export async function createTicketAction(
 
   const markdown = prepareEmailBody({
     product,
-    markdownInput: keyVal.markdown,
+    markdownInput: keyVal.markdown || "",
     email: account.data.email,
     name: account.data.name,
     extraInfoInput: keyVal,

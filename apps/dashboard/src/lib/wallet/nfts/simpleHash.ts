@@ -16,7 +16,9 @@ export function generateSimpleHashUrl({ chainId, owner }: GenerateURLParams) {
   const url = new URL("https://api.simplehash.com/api/v0/nfts/owners");
 
   url.searchParams.append("wallet_addresses", owner);
-  url.searchParams.append("chains", simpleHashSupportedChainIdsMap[chainId]);
+  if (simpleHashSupportedChainIdsMap[chainId]) {
+    url.searchParams.append("chains", simpleHashSupportedChainIdsMap[chainId]);
+  }
 
   return url.toString();
 }

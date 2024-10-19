@@ -182,13 +182,16 @@ export const InAppWalletSettingsUI: React.FC<
     // FIXME: This must match components/settings/ApiKeys/Edit/index.tsx
     //        Make it more generic w/o me thinking of values
     const newServices = [...services];
-    newServices[serviceIdx] = {
-      ...services[serviceIdx],
-      customAuthentication,
-      customAuthEndpoint,
-      applicationImageUrl: branding?.applicationImageUrl,
-      applicationName: branding?.applicationName || apiKey.name,
-    };
+
+    if (services[serviceIdx]) {
+      newServices[serviceIdx] = {
+        ...services[serviceIdx],
+        customAuthentication,
+        customAuthEndpoint,
+        applicationImageUrl: branding?.applicationImageUrl,
+        applicationName: branding?.applicationName || apiKey.name,
+      };
+    }
 
     props.updateApiKey(
       {

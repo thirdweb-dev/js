@@ -2,6 +2,7 @@ import type { UseMutationResult } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
 import { useErrorHandler } from "contexts/error-handler";
 import { UploadIcon } from "lucide-react";
+import { toast } from "sonner";
 import { Button, type ButtonProps } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 
@@ -20,7 +21,13 @@ export const IpfsUploadButton: ComponentWithChildren<IpfsUploadButtonProps> = ({
   const { onError } = useErrorHandler();
   const handleUpload = (file: File) => {
     storageUpload.mutate([file], {
-      onSuccess: ([uri]) => onUpload(uri),
+      onSuccess: ([uri]) => {
+        if (uri) {
+          onUpload(uri);
+        } else {
+          toast.error("File Upload but no URI returned");
+        }
+      },
       onError: (error) => onError(error, "Failed to upload file"),
     });
   };

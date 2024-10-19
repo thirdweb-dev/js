@@ -146,7 +146,7 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                                 bgColor="backgroundHighlight"
                               >
                                 <Text>
-                                  {paramTemplateValues[0].helperText} Click to
+                                  {paramTemplateValues[0]?.helperText} Click to
                                   apply.
                                 </Text>
                               </Card>
@@ -161,14 +161,14 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                                   `constructorParams.${
                                     param.name ? param.name : "*"
                                   }.defaultValue`,
-                                  paramTemplateValues[0].value,
+                                  paramTemplateValues[0]?.value,
                                   {
                                     shouldDirty: true,
                                   },
                                 );
                               }}
                             >
-                              {paramTemplateValues[0].value}
+                              {paramTemplateValues[0]?.value}
                             </Button>
                           </Tooltip>
                         </InputRightElement>
