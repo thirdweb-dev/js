@@ -1,4 +1,3 @@
-import {} from "abitype";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { eth_call } from "../../../rpc/actions/eth_call.js";

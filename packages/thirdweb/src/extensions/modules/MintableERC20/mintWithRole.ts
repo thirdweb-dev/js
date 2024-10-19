@@ -1,6 +1,5 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getAddress } from "../../../utils/address.js";
-import {} from "../../../utils/date.js";
 import { mint as generatedMint } from "../__generated__/ERC20Core/write/mint.js";
 
 // TODO (modular) - this should be its own module

@@ -1,5 +1,4 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import {} from "../../../utils/ipfs.js";
 import {
   type UploadMetadataParams as CommonUploadMetadataParams,
   uploadMetadata as commonUploadMetadata,
