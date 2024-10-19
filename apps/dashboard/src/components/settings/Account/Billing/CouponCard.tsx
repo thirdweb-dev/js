@@ -16,11 +16,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, fromUnixTime } from "date-fns";
 import { TagIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+const LazyShareFreeWalletsModal = dynamic(
+  () =>
+    import("./share-free-wallets-modal.client").then(
+      (mod) => mod.ShareFreeWalletsModal,
+    ),
+  {
+    ssr: false,
+    loading: () => null,
+  },
+);
 
 export type ActiveCouponResponse = {
   id: string;
@@ -36,7 +48,10 @@ export type ActiveCouponResponse = {
 
 function ApplyCouponCard(props: {
   teamId: string | undefined;
-  onCouponApplied: (data: ActiveCouponResponse) => void;
+  onCouponApplied: (
+    data: ActiveCouponResponse,
+    isFreeWalletsCoupon: boolean,
+  ) => void;
   isPaymentSetup: boolean;
   onAddPayment: () => void;
 }) {
@@ -87,7 +102,9 @@ export function ApplyCouponCardUI(props: {
     status: number;
     data: null | ActiveCouponResponse;
   }>;
-  onCouponApplied: ((data: ActiveCouponResponse) => void) | undefined;
+  onCouponApplied:
+    | ((data: ActiveCouponResponse, isFreeWalletsCoupon: boolean) => void)
+    | undefined;
   prefillPromoCode?: string;
   scrollIntoView?: boolean;
   isPaymentSetup: boolean;
@@ -130,7 +147,12 @@ export function ApplyCouponCardUI(props: {
         case 200: {
           toast.success("Coupon applied successfully");
           if (res.data) {
-            props.onCouponApplied?.(res.data);
+            props.onCouponApplied?.(
+              res.data,
+              // prod & dev
+              values.promoCode === "FREEWALLETS" ||
+                values.promoCode === "TESTFREEWALLETS",
+            );
           }
           break;
         }
@@ -258,6 +280,7 @@ export function CouponSection(props: {
   isPaymentSetup: boolean;
   onAddPayment: () => void;
 }) {
+  const [showShareModal, setShowShareModal] = useState(false);
   const loggedInUser = useLoggedInUser();
   const [optimisticCouponData, setOptimisticCouponData] = useState<
     | {
@@ -319,35 +342,46 @@ export function CouponSection(props: {
     ? optimisticCouponData.data
     : activeCoupon.data;
 
-  if (couponData) {
-    return (
-      <CouponDetailsCardUI
-        activeCoupon={couponData}
-        deleteCoupon={{
-          mutateAsync: deleteActiveCoupon.mutateAsync,
-          isPending: deleteActiveCoupon.isPending,
-        }}
-      />
-    );
-  }
-
   return (
-    <Suspense fallback={<LoadingCouponSection />}>
-      <ApplyCouponCard
-        teamId={props.teamId}
-        onCouponApplied={(coupon) => {
-          setOptimisticCouponData({
-            type: "added",
-            data: coupon,
-          });
-          activeCoupon.refetch().then(() => {
-            setOptimisticCouponData(undefined);
-          });
-        }}
-        isPaymentSetup={props.isPaymentSetup}
-        onAddPayment={props.onAddPayment}
-      />
-    </Suspense>
+    <>
+      {couponData ? (
+        <CouponDetailsCardUI
+          activeCoupon={couponData}
+          deleteCoupon={{
+            mutateAsync: deleteActiveCoupon.mutateAsync,
+            isPending: deleteActiveCoupon.isPending,
+          }}
+        />
+      ) : (
+        <Suspense fallback={<LoadingCouponSection />}>
+          <ApplyCouponCard
+            teamId={props.teamId}
+            onCouponApplied={(coupon, isFreeWalletsCoupon) => {
+              setOptimisticCouponData({
+                type: "added",
+                data: coupon,
+              });
+
+              if (isFreeWalletsCoupon) {
+                setShowShareModal(true);
+              }
+              activeCoupon.refetch().then(() => {
+                setOptimisticCouponData(undefined);
+              });
+            }}
+            isPaymentSetup={props.isPaymentSetup}
+            onAddPayment={props.onAddPayment}
+          />
+        </Suspense>
+      )}
+
+      {showShareModal && (
+        <LazyShareFreeWalletsModal
+          isOpen={showShareModal}
+          onOpenChange={setShowShareModal}
+        />
+      )}
+    </>
   );
 }
 
