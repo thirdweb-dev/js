@@ -3,7 +3,7 @@ import { getActiveAccountCookie, getJWTCookie } from "@/constants/cookie";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ContractPublishForm } from "components/contract-components/contract-publish-form";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { getPublishedContractsWithPublisherMapping } from "../../../published-contract/[publisher]/[contract_id]/utils/getPublishedContractsWithPublisherMapping";
 
@@ -46,6 +46,10 @@ export default async function PublishContractPage(
         publisher: address,
         contract_id: publishMetadataFromUri.name,
       });
+
+    if (!publishedContractVersions) {
+      notFound();
+    }
 
     const publishedContract = publishedContractVersions[0];
 

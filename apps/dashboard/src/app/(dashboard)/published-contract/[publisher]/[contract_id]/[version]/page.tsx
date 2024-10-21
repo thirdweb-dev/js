@@ -29,12 +29,24 @@ export default async function PublishedContractPage(
   props: PublishedContractDeployPageProps,
 ) {
   // resolve ENS if required
-  const publisherAddress = isAddress(props.params.publisher)
-    ? props.params.publisher
-    : await resolveAddress({
+  let publisherAddress: string | undefined = undefined;
+
+  if (isAddress(props.params.publisher)) {
+    publisherAddress = props.params.publisher;
+  } else {
+    try {
+      publisherAddress = await resolveAddress({
         client: getThirdwebClient(),
         name: mapThirdwebPublisher(props.params.publisher),
       });
+    } catch {
+      // ignore
+    }
+  }
+
+  if (!publisherAddress) {
+    notFound();
+  }
 
   // get all the published versions of the contract
   const publishedContractVersions = await fetchPublishedContractVersions(

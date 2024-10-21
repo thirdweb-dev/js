@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { PublishedContractBreadcrumbs } from "./components/breadcrumbs.client";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 
@@ -22,6 +23,10 @@ export async function generateMetadata({ params }: { params: Params }) {
     publisher: publisher,
     contract_id: contract_id,
   });
+
+  if (!publishedContracts) {
+    notFound();
+  }
 
   const publishedContract = publishedContracts[0];
 

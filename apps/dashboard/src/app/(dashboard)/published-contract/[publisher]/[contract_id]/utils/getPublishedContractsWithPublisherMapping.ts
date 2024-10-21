@@ -16,19 +16,23 @@ export async function getPublishedContractsWithPublisherMapping(options: {
 }) {
   const { publisher, contract_id } = options;
 
-  // resolve ENS
-  const publisherAddress = isAddress(publisher)
-    ? publisher
-    : await resolveAddress({
-        client: getThirdwebClient(),
-        name: mapThirdwebPublisher(publisher),
-      });
+  try {
+    // resolve ENS
+    const publisherAddress = isAddress(publisher)
+      ? publisher
+      : await resolveAddress({
+          client: getThirdwebClient(),
+          name: mapThirdwebPublisher(publisher),
+        });
 
-  // get all the published versions of the contract
-  const publishedContractVersions = await fetchPublishedContractVersions(
-    publisherAddress,
-    contract_id,
-  );
+    // get all the published versions of the contract
+    const publishedContractVersions = await fetchPublishedContractVersions(
+      publisherAddress,
+      contract_id,
+    );
 
-  return publishedContractVersions;
+    return publishedContractVersions;
+  } catch {
+    return undefined;
+  }
 }

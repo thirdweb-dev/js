@@ -22,6 +22,10 @@ export default async function PublishedContractPage(
       contract_id: props.params.contract_id,
     });
 
+  if (!publishedContractVersions) {
+    notFound();
+  }
+
   const publishedContract = publishedContractVersions[0];
 
   if (!publishedContract) {

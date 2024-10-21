@@ -27,6 +27,10 @@ export default async function Image(props: {
     fetchPublisherProfile(publisher),
   ]);
 
+  if (!publishedContracts) {
+    return null;
+  }
+
   const publishedContract = publishedContracts[0];
 
   if (!publishedContract) {
