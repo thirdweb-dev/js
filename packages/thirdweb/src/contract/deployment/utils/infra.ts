@@ -17,7 +17,7 @@ export type InfraContractId =
   | "ForwarderEOAOnly"
   | "TWCloneFactory"
   | "MintFeeManagerCore"
-  | "Multisig"
+  | "MultiSig"
   | (string & {});
 
 type GetDeployedInfraParams = Prettify<

@@ -9,7 +9,7 @@ export async function getDeployedMintFeeManagerContract(args: ClientAndChain) {
   // check if Multisig is deployed
   const multisig = await getDeployedInfraContract({
     ...args,
-    contractId: "Multisig",
+    contractId: "MultiSig",
     constructorParams: { _signers: [TW_SIGNER_1, TW_SIGNER_2, TW_SIGNER_3], _requiredApprovals: MULTISIG_REQUIRED_APPROVALS },
     publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936", // TODO: remove before merging
   });
@@ -37,7 +37,7 @@ export async function getPredictedMintFeeManagerAddress(args: ClientAndChain) {
   // compute multisig address
   const multisig = await getPredictedInfraContractAddress({
     ...args,
-    contractId: "Multisig",
+    contractId: "MultiSig",
     constructorParams: { _signers: [TW_SIGNER_1, TW_SIGNER_2, TW_SIGNER_3], _requiredApprovals: MULTISIG_REQUIRED_APPROVALS },
     publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936", // TODO: remove before merging
   });
@@ -60,7 +60,7 @@ export async function getPredictedMultisigAddress(args: ClientAndChain) {
   // compute multisig address
   const multisig = await getPredictedInfraContractAddress({
     ...args,
-    contractId: "Multisig",
+    contractId: "MultiSig",
     constructorParams: { _signers: [TW_SIGNER_1, TW_SIGNER_2, TW_SIGNER_3], _requiredApprovals: MULTISIG_REQUIRED_APPROVALS },
     publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936", // TODO: remove before merging
   });

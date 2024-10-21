@@ -190,7 +190,7 @@ export async function deployMultisig(options: ClientAndChainAndAccount) {
 
   return getOrDeployInfraContract({
     ...options,
-    contractId: "Multisig",
+    contractId: "MultiSig",
     constructorParams: { _signers: [TW_SIGNER_1, TW_SIGNER_2, TW_SIGNER_3], _requiredApprovals: MULTISIG_REQUIRED_APPROVALS },
   });
 }
