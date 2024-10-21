@@ -256,6 +256,11 @@ async function createSmartAccount(
           account,
           accountContract,
         });
+        // the bundler and rpc might not be in sync, so while the bundler has a transaction hash for the deployment,
+        // the rpc might not have it yet, so we wait until the rpc confirms the contract is deployed
+        await confirmContractDeployment({
+          accountContract,
+        });
       }
 
       const originalMsgHash = hashMessage(message);
@@ -342,6 +347,11 @@ async function createSmartAccount(
         await _deployAccount({
           options,
           account,
+          accountContract,
+        });
+        // the bundler and rpc might not be in sync, so while the bundler has a transaction hash for the deployment,
+        // the rpc might not have it yet, so we wait until the rpc confirms the contract is deployed
+        await confirmContractDeployment({
           accountContract,
         });
       }
@@ -606,4 +616,25 @@ async function _sendUserOp(args: {
     chain: options.chain,
     transactionHash: receipt.transactionHash,
   };
+}
+
+async function confirmContractDeployment(args: {
+  accountContract: ThirdwebContract;
+}) {
+  const { accountContract } = args;
+  const startTime = Date.now();
+  const timeout = 60000; // wait 1 minute max
+  const { isContractDeployed } = await import(
+    "../../utils/bytecode/is-contract-deployed.js"
+  );
+  let isDeployed = await isContractDeployed(accountContract);
+  while (!isDeployed) {
+    if (Date.now() - startTime > timeout) {
+      throw new Error(
+        "Timeout: Smart account deployment not confirmed after 1 minute",
+      );
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    isDeployed = await isContractDeployed(accountContract);
+  }
 }
