@@ -260,7 +260,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                     tooltip="The URI of this NFT"
                     copyIconPosition="right"
                   />
-                  <Button variant="ghost">
+                  <Button variant="ghost" size="sm">
                     <Link
                       href={resolveScheme({ client, uri: nft.tokenURI })}
                       target="_blank"
@@ -269,6 +269,35 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                     </Link>
                   </Button>
                 </GridItem>
+                {nft.metadata.image && (
+                  <>
+                    <GridItem colSpan={4}>
+                      <Heading size="label.md">Media URI</Heading>
+                    </GridItem>
+                    <GridItem
+                      colSpan={8}
+                      className="flex flex-row items-center gap-1"
+                    >
+                      <CopyTextButton
+                        textToCopy={nft.metadata.image}
+                        textToShow={shortenString(nft.metadata.image)}
+                        tooltip="The media URI of this NFT"
+                        copyIconPosition="right"
+                      />
+                      <Button variant="ghost" size="sm">
+                        <Link
+                          href={resolveScheme({
+                            client,
+                            uri: nft.metadata.image,
+                          })}
+                          target="_blank"
+                        >
+                          <ExternalLinkIcon className="size-4" />
+                        </Link>
+                      </Button>
+                    </GridItem>
+                  </>
+                )}
               </SimpleGrid>
             </Card>
             {properties ? (
