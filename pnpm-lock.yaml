@@ -881,7 +881,7 @@ importers:
         version: 5.6.3
       vitest:
         specifier: 2.1.3
-        version: 2.1.3(@types/node@20.14.9)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.34.1)
+        version: 2.1.3(@types/node@20.14.9)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.12(typescript@5.6.3))(terser@5.34.1)
 
   packages/thirdweb:
     dependencies:
@@ -966,7 +966,7 @@ importers:
         version: 2.0.2(react@18.3.1)
       '@codspeed/vitest-plugin':
         specifier: 3.1.1
-        version: 3.1.1(vite@5.4.9(@types/node@22.7.5)(terser@5.34.1))(vitest@2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.34.1))
+        version: 3.1.1(vite@5.4.9(@types/node@22.7.5)(terser@5.34.1))(vitest@2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.12(typescript@5.6.3))(terser@5.34.1))
       '@coinbase/wallet-mobile-sdk':
         specifier: 1.1.2
         version: 1.1.2(expo@51.0.37(@babel/core@7.25.2)(@babel/preset-env@7.25.8(@babel/core@7.25.2))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.3(@babel/core@7.25.2)(@babel/preset-env@7.25.8(@babel/core@7.25.2))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10))(react@18.3.1)
@@ -1023,7 +1023,7 @@ importers:
         version: 4.3.2(vite@5.4.9(@types/node@22.7.5)(terser@5.34.1))
       '@vitest/coverage-v8':
         specifier: 2.1.3
-        version: 2.1.3(vitest@2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.34.1))
+        version: 2.1.3(vitest@2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.12(typescript@5.6.3))(terser@5.34.1))
       '@vitest/ui':
         specifier: 2.1.3
         version: 2.1.3(vitest@2.1.3)
@@ -1052,8 +1052,8 @@ importers:
         specifier: ^5.33.3
         version: 5.33.3(@types/node@22.7.5)(typescript@5.6.3)
       msw:
-        specifier: ^2.4.11
-        version: 2.4.11(typescript@5.6.3)
+        specifier: ^2.4.12
+        version: 2.4.12(typescript@5.6.3)
       prettier:
         specifier: ^3.3.2
         version: 3.3.3
@@ -1098,7 +1098,7 @@ importers:
         version: 5.4.9(@types/node@22.7.5)(terser@5.34.1)
       vitest:
         specifier: 2.1.3
-        version: 2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.34.1)
+        version: 2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.12(typescript@5.6.3))(terser@5.34.1)
 
 packages:
 
@@ -3954,8 +3954,8 @@ packages:
     resolution: {integrity: sha512-z10PF9JV6SbjFq+/rYabM+8CVlMokgl8RFGvieSGNTmrkQanfHn+15XBrhG3BgUfvmTeSeyShfOHpG0i9zEdcg==}
     deprecated: Motion One for Vue is deprecated. Use Oku Motion instead https://oku-ui.com/motion
 
-  '@mswjs/interceptors@0.35.9':
-    resolution: {integrity: sha512-SSnyl/4ni/2ViHKkiZb8eajA/eN1DNFaHjhGiLUdZvDz6PKF4COSf/17xqSz64nOo2Ia29SA6B2KNCsyCbVmaQ==}
+  '@mswjs/interceptors@0.36.5':
+    resolution: {integrity: sha512-aQ8WF5zQwOdcxLsxSEk9Jd01GgGb80xxqCaiDDlewhtwqpSm8MOvUHslwPydVirasdW09++NxDNNftm1vLY8yA==}
     engines: {node: '>=18'}
 
   '@n8tb1t/use-scroll-position@2.0.3':
@@ -11627,8 +11627,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  msw@2.4.11:
-    resolution: {integrity: sha512-TVEw9NOPTc6ufOQLJ53234S9NBRxQbu7xFMxs+OCP43JQcNEIOKiZHxEm2nDzYIrwccoIhUxUf8wr99SukD76A==}
+  msw@2.4.12:
+    resolution: {integrity: sha512-upQMKZt0fYIB0Gj6gKc5i/PK4JrICTu3ItfXiju3FTdgQLaqARv7+jugPCsOkrWpTzzjo5iLW+4F6L/mGNukbA==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -18974,11 +18974,11 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@codspeed/vitest-plugin@3.1.1(vite@5.4.9(@types/node@22.7.5)(terser@5.34.1))(vitest@2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.34.1))':
+  '@codspeed/vitest-plugin@3.1.1(vite@5.4.9(@types/node@22.7.5)(terser@5.34.1))(vitest@2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.12(typescript@5.6.3))(terser@5.34.1))':
     dependencies:
       '@codspeed/core': 3.1.1
       vite: 5.4.9(@types/node@22.7.5)(terser@5.34.1)
-      vitest: 2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.34.1)
+      vitest: 2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.12(typescript@5.6.3))(terser@5.34.1)
     transitivePeerDependencies:
       - debug
 
@@ -20396,7 +20396,7 @@ snapshots:
       '@motionone/dom': 10.18.0
       tslib: 2.7.0
 
-  '@mswjs/interceptors@0.35.9':
+  '@mswjs/interceptors@0.36.5':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/logger': 0.3.0
@@ -24844,7 +24844,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@2.1.3(vitest@2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.34.1))':
+  '@vitest/coverage-v8@2.1.3(vitest@2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.12(typescript@5.6.3))(terser@5.34.1))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -24858,7 +24858,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.34.1)
+      vitest: 2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.12(typescript@5.6.3))(terser@5.34.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -24876,22 +24876,22 @@ snapshots:
       chai: 5.1.1
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.3(@vitest/spy@2.1.3)(msw@2.4.11(typescript@5.6.3))(vite@5.4.9(@types/node@20.14.9)(terser@5.34.1))':
+  '@vitest/mocker@2.1.3(@vitest/spy@2.1.3)(msw@2.4.12(typescript@5.6.3))(vite@5.4.9(@types/node@20.14.9)(terser@5.34.1))':
     dependencies:
       '@vitest/spy': 2.1.3
       estree-walker: 3.0.3
       magic-string: 0.30.12
     optionalDependencies:
-      msw: 2.4.11(typescript@5.6.3)
+      msw: 2.4.12(typescript@5.6.3)
       vite: 5.4.9(@types/node@20.14.9)(terser@5.34.1)
 
-  '@vitest/mocker@2.1.3(@vitest/spy@2.1.3)(msw@2.4.11(typescript@5.6.3))(vite@5.4.9(@types/node@22.7.5)(terser@5.34.1))':
+  '@vitest/mocker@2.1.3(@vitest/spy@2.1.3)(msw@2.4.12(typescript@5.6.3))(vite@5.4.9(@types/node@22.7.5)(terser@5.34.1))':
     dependencies:
       '@vitest/spy': 2.1.3
       estree-walker: 3.0.3
       magic-string: 0.30.12
     optionalDependencies:
-      msw: 2.4.11(typescript@5.6.3)
+      msw: 2.4.12(typescript@5.6.3)
       vite: 5.4.9(@types/node@22.7.5)(terser@5.34.1)
 
   '@vitest/pretty-format@2.0.5':
@@ -24934,7 +24934,7 @@ snapshots:
       sirv: 2.0.4
       tinyglobby: 0.2.9
       tinyrainbow: 1.2.0
-      vitest: 2.1.3(@types/node@20.14.9)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.34.1)
+      vitest: 2.1.3(@types/node@20.14.9)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.12(typescript@5.6.3))(terser@5.34.1)
 
   '@vitest/utils@2.0.5':
     dependencies:
@@ -31235,13 +31235,13 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msw@2.4.11(typescript@5.6.3):
+  msw@2.4.12(typescript@5.6.3):
     dependencies:
       '@bundled-es-modules/cookie': 2.0.0
       '@bundled-es-modules/statuses': 1.0.1
       '@bundled-es-modules/tough-cookie': 0.1.6
       '@inquirer/confirm': 3.2.0
-      '@mswjs/interceptors': 0.35.9
+      '@mswjs/interceptors': 0.36.5
       '@open-draft/until': 2.1.0
       '@types/cookie': 0.6.0
       '@types/statuses': 2.0.5
@@ -35078,10 +35078,10 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.34.1
 
-  vitest@2.1.3(@types/node@20.14.9)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.34.1):
+  vitest@2.1.3(@types/node@20.14.9)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.12(typescript@5.6.3))(terser@5.34.1):
     dependencies:
       '@vitest/expect': 2.1.3
-      '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(msw@2.4.11(typescript@5.6.3))(vite@5.4.9(@types/node@20.14.9)(terser@5.34.1))
+      '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(msw@2.4.12(typescript@5.6.3))(vite@5.4.9(@types/node@20.14.9)(terser@5.34.1))
       '@vitest/pretty-format': 2.1.3
       '@vitest/runner': 2.1.3
       '@vitest/snapshot': 2.1.3
@@ -35114,10 +35114,10 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.11(typescript@5.6.3))(terser@5.34.1):
+  vitest@2.1.3(@types/node@22.7.5)(@vitest/ui@2.1.3)(happy-dom@15.7.4)(msw@2.4.12(typescript@5.6.3))(terser@5.34.1):
     dependencies:
       '@vitest/expect': 2.1.3
-      '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(msw@2.4.11(typescript@5.6.3))(vite@5.4.9(@types/node@22.7.5)(terser@5.34.1))
+      '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(msw@2.4.12(typescript@5.6.3))(vite@5.4.9(@types/node@22.7.5)(terser@5.34.1))
       '@vitest/pretty-format': 2.1.3
       '@vitest/runner': 2.1.3
       '@vitest/snapshot': 2.1.3
