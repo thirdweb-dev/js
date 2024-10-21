@@ -3,6 +3,8 @@ import type { SolidityType } from "lib/solidity-types";
 interface ReplacementProps {
   connectedWallet?: string;
   chainId?: number;
+  mintFeeManager?: string;
+  multisig?: string;
 }
 
 interface TemplateValue {
@@ -22,6 +24,26 @@ const ADDRESS_TEMPLATE_VALUES: TemplateValue[] = [
       return searchValue.replaceAll(
         "{{connected_wallet}}",
         replacers.connectedWallet || "",
+      );
+    },
+  },
+  {
+    value: "{{tw_mintfee_manager}}",
+    helperText: "Replaced with the address of the thirdweb mint fee manager.",
+    replacerFunction: (searchValue, replacers) => {
+      return searchValue.replaceAll(
+        "{{tw_mintfee_manager}}",
+        replacers.mintFeeManager || "",
+      );
+    },
+  },
+  {
+    value: "{{tw_multisig}}",
+    helperText: "Replaced with the address of the thirdweb multisig.",
+    replacerFunction: (searchValue, replacers) => {
+      return searchValue.replaceAll(
+        "{{tw_multisig}}",
+        replacers.multisig || "",
       );
     },
   },
