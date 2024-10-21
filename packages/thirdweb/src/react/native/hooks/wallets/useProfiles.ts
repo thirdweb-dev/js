@@ -31,7 +31,7 @@ export function useProfiles(args: {
 }): UseQueryResult<Profile[]> {
   const wallet = useAdminWallet();
   return useQuery({
-    queryKey: ["profiles", wallet?.id],
+    queryKey: ["profiles", wallet?.id, wallet?.getAccount()?.address],
     enabled: !!wallet && (wallet.id === "inApp" || isEcosystemWallet(wallet)),
     queryFn: async () => {
       const ecosystem: Ecosystem | undefined =
