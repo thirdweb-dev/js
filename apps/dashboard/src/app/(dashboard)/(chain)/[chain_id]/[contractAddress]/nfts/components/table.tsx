@@ -1,7 +1,10 @@
 "use client";
 
+import { UnexpectedValueErrorMessage } from "@/components/blocks/error-fallbacks/unexpect-value-error-message";
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import {
   Flex,
   IconButton,
@@ -16,6 +19,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import * as Sentry from "@sentry/nextjs";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import {
@@ -26,6 +30,7 @@ import {
   ChevronRightIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import {
   type CellProps,
   type Column,
@@ -72,24 +77,51 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       {
         Header: "Name",
         accessor: (row) => row.metadata.name,
-        Cell: (cell: CellProps<NFT, string>) => (
-          <Text noOfLines={1} size="label.md">
-            {cell.value}
-          </Text>
-        ),
+        Cell: (cell: CellProps<NFT, string>) => {
+          if (typeof cell.value !== "string") {
+            return (
+              <UnexpectedValueErrorMessage
+                title="Invalid Name"
+                description="Name is not a string"
+                value={cell.value}
+                className="w-[300px] py-3"
+              />
+            );
+          }
+
+          return (
+            <p className="line-clamp-1 text-muted-foreground text-sm">
+              {cell.value}
+            </p>
+          );
+        },
       },
       {
         Header: "Description",
         accessor: (row) => row.metadata.description,
-        Cell: (cell: CellProps<NFT, string>) => (
-          <Text
-            noOfLines={4}
-            size="body.md"
-            fontStyle={!cell.value ? "italic" : "normal"}
-          >
-            {cell.value || "No description"}
-          </Text>
-        ),
+        Cell: (cell: CellProps<NFT, string>) => {
+          if (typeof cell.value !== "string") {
+            return (
+              <UnexpectedValueErrorMessage
+                title="Invalid description"
+                description="Description is not a string"
+                value={cell.value}
+                className="w-[300px] py-3"
+              />
+            );
+          }
+
+          return (
+            <p
+              className={cn(
+                "line-clamp-4 max-w-[200px] whitespace-normal text-muted-foreground text-sm",
+                { italic: !cell.value },
+              )}
+            >
+              {cell.value || "No description"}
+            </p>
+          );
+        },
       },
     ];
     if (isErc721) {
@@ -280,18 +312,22 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                   // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   key={rowIndex}
                 >
-                  {row.cells.map((cell, cellIndex) => (
-                    <Td
-                      {...cell.getCellProps()}
-                      borderBottomWidth="inherit"
-                      borderColor="borderColor"
-                      maxW="sm"
-                      // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                      key={cellIndex}
-                    >
-                      {cell.render("Cell")}
-                    </Td>
-                  ))}
+                  {row.cells.map((cell, cellIndex) => {
+                    return (
+                      <Td
+                        {...cell.getCellProps()}
+                        borderBottomWidth="inherit"
+                        borderColor="borderColor"
+                        maxW="sm"
+                        // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+                        key={cellIndex}
+                      >
+                        <ErrorBoundary FallbackComponent={NFTCellErrorBoundary}>
+                          {cell.render("Cell")}
+                        </ErrorBoundary>
+                      </Td>
+                    );
+                  })}
                   <Td borderBottomWidth="inherit" borderColor="borderColor">
                     {!failedToLoad && <ArrowRightIcon className="size-4" />}
                   </Td>
@@ -374,3 +410,25 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
     </Flex>
   );
 };
+
+function NFTCellErrorBoundary(errorProps: FallbackProps) {
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    Sentry.withScope((scope) => {
+      scope.setTag("component-crashed", "true");
+      scope.setTag("component-crashed-boundary", "NFTCellErrorBoundary");
+      scope.setLevel("fatal");
+      Sentry.captureException(errorProps.error);
+    });
+  }, [errorProps.error]);
+
+  return (
+    <CopyTextButton
+      textToShow={errorProps.error.message}
+      textToCopy={errorProps.error.message}
+      copyIconPosition="left"
+      tooltip={errorProps.error.message}
+      className="max-w-[250px] truncate text-destructive-text"
+    />
+  );
+}
