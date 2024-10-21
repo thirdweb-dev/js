@@ -36,13 +36,16 @@ function prepareEmailTitle(
   return title;
 }
 
-function prepareEmailBody(
-  product: string,
-  markdownInput: string,
-  email: string,
-  address: string,
-  extraInfoInput: Record<string, string>,
-) {
+function prepareEmailBody(props: {
+  product: string;
+  markdownInput: string;
+  email: string;
+  name: string;
+  extraInfoInput: Record<string, string>;
+  walletAddress: string;
+}) {
+  const { extraInfoInput, email, walletAddress, product, name, markdownInput } =
+    props;
   // Update `markdown` to include the infos from the form
   const extraInfo = Object.keys(extraInfoInput)
     .filter((key) => key.startsWith("extraInfo_"))
@@ -54,7 +57,8 @@ function prepareEmailBody(
     })
     .join("");
   const markdown = `# Email: ${email}
-  # Address: ${address}
+  # Name: ${name}
+  # Wallet address: ${walletAddress}
   # Product: ${product}
   ${extraInfo}
   # Message:
@@ -110,13 +114,14 @@ export async function createTicketAction(
     keyVal[key] = formData.get(key)?.toString() || "";
   }
 
-  const markdown = prepareEmailBody(
+  const markdown = prepareEmailBody({
     product,
-    keyVal.markdown,
-    account.data.email,
-    account.data.name,
-    keyVal,
-  );
+    markdownInput: keyVal.markdown || "",
+    email: account.data.email,
+    name: account.data.name,
+    extraInfoInput: keyVal,
+    walletAddress: activeAccount,
+  });
 
   const content = {
     type: "email",

@@ -1,6 +1,5 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getAddress } from "../../../utils/address.js";
-import {} from "../../../utils/date.js";
 import {
   getBaseUriFromBatch,
   uploadOrExtractURIs,

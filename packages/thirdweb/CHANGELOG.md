@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.63.2
+
+### Patch Changes
+
+- [#5092](https://github.com/thirdweb-dev/js/pull/5092) [`223c497`](https://github.com/thirdweb-dev/js/commit/223c497f491de83078b455090d0e191bec255169) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Ensure smart accounts are deployed before validating signatures
+
+- [#5089](https://github.com/thirdweb-dev/js/pull/5089) [`541bee5`](https://github.com/thirdweb-dev/js/commit/541bee5b34d36a6abc7edab9c143dc93fa71d558) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix useProfiles not updating when connecting to a different account
+
+## 5.63.1
+
+### Patch Changes
+
+- [#5065](https://github.com/thirdweb-dev/js/pull/5065) [`b01faac`](https://github.com/thirdweb-dev/js/commit/b01faacd999a6b5d88d273531cea67c97c84d5ae) Thanks [@MananTank](https://github.com/MananTank)! - Catch failed to post tracking errors to avoid exposing them to error report services
+
+- [#5063](https://github.com/thirdweb-dev/js/pull/5063) [`ef6b4f4`](https://github.com/thirdweb-dev/js/commit/ef6b4f48ef94f1196912906a2adfdc8a997ff2af) Thanks [@MananTank](https://github.com/MananTank)! - Add reason string on abort controller's `abort` method to avoid `AbortError: signal is aborted without reason` errors
+
+- [#5080](https://github.com/thirdweb-dev/js/pull/5080) [`67a363f`](https://github.com/thirdweb-dev/js/commit/67a363f624b935e02718e6cb205856e8b568477b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix revalidation with siwe auth in ConnectEmbed
+
 ## 5.63.0
 
 ### Minor Changes

@@ -10,9 +10,3 @@ export * from "./link";
 export * from "./menu";
 export * from "./table-container";
 export * from "./text";
-
-/**
- * ❗️❗️❗️ @DANGER
- * Do not export `AddressCopyButton` from here
- * It will result in a HUGE bundle size
- */

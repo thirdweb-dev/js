@@ -16,6 +16,7 @@
     "jsx": "preserve",
     "incremental": true,
     "downlevelIteration": true,
+    "noUncheckedIndexedAccess": true,
     "paths": {
       "tw-components": ["tw-components"],
       "tw-components/*": ["tw-components/*"]

@@ -3,7 +3,7 @@
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { cancelAuction, cancelListing } from "thirdweb/extensions/marketplace";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
@@ -25,14 +25,9 @@ export const CancelTab: React.FC<CancelTabProps> = ({
   const transaction = isAuction
     ? cancelAuction({ contract, auctionId: BigInt(id) })
     : cancelListing({ contract, listingId: BigInt(id) });
-  const { onSuccess, onError } = useTxNotifications(
-    "Listing cancelled",
-    "Error cancelling listing",
-  );
   const cancelQuery = useSendAndConfirmTransaction();
   return (
     <div className="flex flex-col gap-3 pt-3">
-      {/* maybe some text? */}
       <TransactionButton
         txChainID={contract.chain.id}
         transactionCount={1}
@@ -43,7 +38,7 @@ export const CancelTab: React.FC<CancelTabProps> = ({
             action: "cancel-listing",
             label: "attempt",
           });
-          cancelQuery.mutate(transaction, {
+          const promise = cancelQuery.mutateAsync(transaction, {
             onSuccess: () => {
               trackEvent({
                 category: "marketplace",
@@ -51,7 +46,6 @@ export const CancelTab: React.FC<CancelTabProps> = ({
                 label: "success",
                 network,
               });
-              onSuccess();
             },
             onError: (error) => {
               trackEvent({
@@ -61,14 +55,19 @@ export const CancelTab: React.FC<CancelTabProps> = ({
                 network,
                 error,
               });
-              onError(error);
+              console.error(error);
             },
+          });
+          toast.promise(promise, {
+            loading: `Cancelling ${isAuction ? "auction" : "listing"}`,
+            success: "Item cancelled successfully",
+            error: "Failed to cancel",
           });
         }}
         colorScheme="primary"
         alignSelf="flex-end"
       >
-        Cancel Listing
+        Cancel {isAuction ? "Auction" : "Listing"}
       </TransactionButton>
     </div>
   );

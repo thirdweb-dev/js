@@ -182,13 +182,16 @@ export const InAppWalletSettingsUI: React.FC<
     // FIXME: This must match components/settings/ApiKeys/Edit/index.tsx
     //        Make it more generic w/o me thinking of values
     const newServices = [...services];
-    newServices[serviceIdx] = {
-      ...services[serviceIdx],
-      customAuthentication,
-      customAuthEndpoint,
-      applicationImageUrl: branding?.applicationImageUrl,
-      applicationName: branding?.applicationName || apiKey.name,
-    };
+
+    if (services[serviceIdx]) {
+      newServices[serviceIdx] = {
+        ...services[serviceIdx],
+        customAuthentication,
+        customAuthEndpoint,
+        applicationImageUrl: branding?.applicationImageUrl,
+        applicationName: branding?.applicationName || apiKey.name,
+      };
+    }
 
     props.updateApiKey(
       {
@@ -573,8 +576,8 @@ function NativeAppsFieldset(props: {
               Enter redirect URIs separated by commas or new lines. This is
               often your application's deep link.
               <br className="max-sm:hidden" />
-              Currently only used in Unity and React Native platform when users
-              authenticate through social logins.
+              Currently only used in Unity, Unreal Engine and React Native
+              platform when users authenticate through social logins.
             </FormDescription>
             <FormMessage />
           </FormItem>

@@ -171,7 +171,7 @@ function minimizeChain(
   return {
     name: chain.name,
     chain: chain.chain,
-    rpc: [firstRpc],
+    rpc: [firstRpc || ""],
     nativeCurrency: chain.nativeCurrency,
     shortName: chain.shortName,
     chainId: chain.chainId,
@@ -509,7 +509,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               )}
               {colorOptions.map((color) => (
                 <option key={color} value={color}>
-                  {color[0].toUpperCase() + color.substring(1)}
+                  {color[0]?.toUpperCase() + color.substring(1)}
                 </option>
               ))}
             </Select>
@@ -524,7 +524,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               <Select {...register("secondaryColor")}>
                 {colorOptions.map((color) => (
                   <option key={color} value={color}>
-                    {color[0].toUpperCase() + color.substring(1)}
+                    {color[0]?.toUpperCase() + color.substring(1)}
                   </option>
                 ))}
               </Select>

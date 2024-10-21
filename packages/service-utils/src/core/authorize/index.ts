@@ -22,7 +22,7 @@ export type AuthorizationInput = {
   useWalletAuth?: string | null;
 };
 
-type CacheOptions = {
+export type CacheOptions = {
   get: (clientId: string) => Promise<string | null>;
   put: (
     clientId: string,

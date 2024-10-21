@@ -112,7 +112,7 @@ export function WalletDistributionChartCard(props: {
           return {
             walletType,
             value: data,
-            fill: _chartConfig[walletType].color || "transparent",
+            fill: _chartConfig[walletType]?.color || "transparent",
           };
         },
       );

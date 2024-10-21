@@ -11,12 +11,15 @@ const THIRDWEB_ACCESS_TOKEN = process.env.THIRDWEB_ACCESS_TOKEN;
 interface RequestTestnetFundsPayload {
   chainId: number;
   toAddress: string;
+
+  // Cloudflare Turnstile token received from the client-side
+  turnstileToken: string;
 }
 
 // Note: This handler cannot use "edge" runtime because of Redis usage.
 export const POST = async (req: NextRequest) => {
   const requestBody = (await req.json()) as RequestTestnetFundsPayload;
-  const { chainId, toAddress } = requestBody;
+  const { chainId, toAddress, turnstileToken } = requestBody;
   if (Number.isNaN(chainId)) {
     throw new Error("Invalid chain ID.");
   }
@@ -41,6 +44,42 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json(
       {
         error: "Could not validate elligibility.",
+      },
+      { status: 400 },
+    );
+  }
+
+  if (!turnstileToken) {
+    return NextResponse.json(
+      {
+        error: "Missing Turnstile token.",
+      },
+      { status: 400 },
+    );
+  }
+
+  // https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
+  // Validate the token by calling the "/siteverify" API endpoint.
+  const result = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    {
+      body: JSON.stringify({
+        secret: process.env.TURNSTILE_SECRET_KEY,
+        response: turnstileToken,
+        remoteip: ipAddress,
+      }),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  const outcome = await result.json();
+  if (!outcome.success) {
+    return NextResponse.json(
+      {
+        error: "Could not validate captcha.",
       },
       { status: 400 },
     );

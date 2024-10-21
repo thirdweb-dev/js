@@ -24,9 +24,10 @@ const walletsToPickFrom: WalletId[] = [
 ];
 
 const pickRandomWallet = () => {
-  return walletsToPickFrom[
-    Math.floor(Math.random() * walletsToPickFrom.length)
-  ];
+  return (
+    walletsToPickFrom[Math.floor(Math.random() * walletsToPickFrom.length)] ||
+    "io.metamask"
+  );
 };
 
 export function createWalletStatsStub(days: number): WalletStats[] {

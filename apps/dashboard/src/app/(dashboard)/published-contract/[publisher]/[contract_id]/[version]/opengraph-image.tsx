@@ -32,6 +32,10 @@ export default async function Image(props: {
     publishedContracts.find((p) => p.version === props.params.version) ||
     publishedContracts[0];
 
+  if (!publishedContract) {
+    return null;
+  }
+
   const publishedContractName =
     publishedContract?.displayName || publishedContract?.name;
 

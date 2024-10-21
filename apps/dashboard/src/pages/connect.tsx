@@ -132,7 +132,10 @@ const ConnectLanding: ThirdwebNextPage = () => {
       {/* Farcaster frames headers */}
       <Head>
         <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:image" content={connectFrames["1"].imageUrl} />
+        <meta
+          property="fc:frame:image"
+          content={connectFrames["1"]?.imageUrl}
+        />
         <meta
           property="fc:frame:post_url"
           content={`${getAbsoluteUrl()}/api/frame/connect?step=1`}

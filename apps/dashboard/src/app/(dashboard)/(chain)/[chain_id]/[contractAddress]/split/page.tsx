@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
-import { ContractSplitPage } from "../../../../../../contract-ui/tabs/split/page";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
+import { ContractSplitPage } from "./ContractSplitPage";
 
 export default async function Page(props: {
   params: {

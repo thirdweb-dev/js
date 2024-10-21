@@ -8,7 +8,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { Button } from "tw-components";
-import type { Balance } from "../page";
+import type { Balance } from "../ContractSplitPage";
 
 interface DistributeButtonProps {
   contract: ThirdwebContract;
@@ -31,7 +31,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
   const numTransactions = useMemo(() => {
     if (
       validBalances.length === 1 &&
-      validBalances[0].name === "Native Token"
+      validBalances[0]?.name === "Native Token"
     ) {
       return 1;
     }

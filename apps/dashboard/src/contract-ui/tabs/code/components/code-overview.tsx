@@ -469,10 +469,16 @@ export function formatSnippet(
       fn?.name &&
       extensionNamespace &&
       extensionNamespace in EXTENSION_NAMESPACE_FUNCTION_MAPPING &&
+      EXTENSION_NAMESPACE_FUNCTION_MAPPING[extensionNamespace] &&
       fn.name in EXTENSION_NAMESPACE_FUNCTION_MAPPING[extensionNamespace]
     ) {
       const extensionConfig =
         EXTENSION_NAMESPACE_FUNCTION_MAPPING[extensionNamespace][fn.name];
+
+      if (!extensionConfig) {
+        continue;
+      }
+
       switch (env) {
         case "javascript":
           codeForEnv = buildJavascriptSnippet({

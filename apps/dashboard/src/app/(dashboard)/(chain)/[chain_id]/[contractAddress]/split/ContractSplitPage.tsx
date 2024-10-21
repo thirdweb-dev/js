@@ -9,6 +9,7 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useMemo } from "react";
 import {
   type ThirdwebContract,
@@ -24,7 +25,6 @@ import {
 } from "thirdweb/react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { DistributeButton } from "./components/distribute-button";
 
 export type Balance = {

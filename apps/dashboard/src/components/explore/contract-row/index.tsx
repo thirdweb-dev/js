@@ -48,10 +48,14 @@ export function ContractRow({ category }: ContractRowProps) {
 
       <div className="relative z-0 grid grid-cols-1 gap-4 md:grid-cols-3">
         {category.contracts.slice(0, 6).map((publishedContractId, idx) => {
-          const publisher: string = Array.isArray(publishedContractId)
+          const publisher: string | undefined = Array.isArray(
+            publishedContractId,
+          )
             ? publishedContractId[0].split("/")[0]
             : publishedContractId.split("/")[0];
-          const contractId: string = Array.isArray(publishedContractId)
+          const contractId: string | undefined = Array.isArray(
+            publishedContractId,
+          )
             ? publishedContractId[0].split("/")[1]
             : publishedContractId.split("/")[1];
           const modules = Array.isArray(publishedContractId)
@@ -60,6 +64,10 @@ export function ContractRow({ category }: ContractRowProps) {
           const overrides = Array.isArray(publishedContractId)
             ? publishedContractId[2]
             : undefined;
+
+          if (!publisher || !contractId) {
+            return null;
+          }
           return (
             <ContractCard
               key={publisher + contractId + overrides?.title}
@@ -75,8 +83,8 @@ export function ContractRow({ category }: ContractRowProps) {
               modules={
                 modules?.length
                   ? modules.map((m) => ({
-                      publisher: m.split("/")[0],
-                      moduleId: m.split("/")[1],
+                      publisher: m.split("/")[0] || "",
+                      moduleId: m.split("/")[1] || "",
                     }))
                   : undefined
               }

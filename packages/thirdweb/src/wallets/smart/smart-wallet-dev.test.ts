@@ -2,7 +2,6 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
-
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
@@ -60,6 +59,12 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
 
     it("can connect", async () => {
       expect(smartWalletAddress).toHaveLength(42);
+    });
+
+    it("can sign a msg", async () => {
+      await smartAccount.signMessage({ message: "hello world" });
+      const isDeployed = await isContractDeployed(accountContract);
+      expect(isDeployed).toEqual(true);
     });
 
     it("can execute a tx", async () => {
