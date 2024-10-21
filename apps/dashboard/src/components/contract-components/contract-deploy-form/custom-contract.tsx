@@ -37,7 +37,12 @@ import {
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
-import { useCustomFactoryAbi, useFunctionParamsFromABI, useMintfeeManager, useMultisig } from "../hooks";
+import {
+  useCustomFactoryAbi,
+  useFunctionParamsFromABI,
+  useMintfeeManager,
+  useMultisig,
+} from "../hooks";
 import { addContractToMultiChainRegistry } from "../utils";
 import { Fieldset } from "./common";
 import { ContractMetadataFieldset } from "./contract-metadata-fieldset";
@@ -197,7 +202,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               connectedWallet: activeAccount?.address,
               chainId: walletChain?.id,
               multisig: multisig.data?.multisig,
-              mintFeeManager: mintfeeManager.data?.mintfeeManager
+              mintFeeManager: mintfeeManager.data?.mintfeeManager,
             },
           );
 
@@ -217,7 +222,14 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         {} as Record<string, string>,
       ),
     }),
-    [deployParams, metadata?.constructorParams, activeAccount, walletChain?.id],
+    [
+      deployParams,
+      metadata?.constructorParams,
+      activeAccount,
+      walletChain?.id,
+      mintfeeManager,
+      multisig,
+    ],
   );
 
   const transformedQueryData = useMemo(

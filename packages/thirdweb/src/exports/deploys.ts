@@ -55,7 +55,6 @@ export {
   deployPackContract,
 } from "../extensions/prebuilts/deploy-pack.js";
 export {
-  getDeployedMintFeeManagerContract,
   getPredictedMintFeeManagerAddress,
   getPredictedMultisigAddress
 } from "../contract/deployment/utils/mintfee-manager.js";

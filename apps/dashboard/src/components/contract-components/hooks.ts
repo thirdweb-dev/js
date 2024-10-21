@@ -8,6 +8,10 @@ import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { type ThirdwebContract, ZERO_ADDRESS, getContract } from "thirdweb";
 import { resolveContractAbi } from "thirdweb/contract";
+import {
+  getPredictedMintFeeManagerAddress,
+  getPredictedMultisigAddress,
+} from "thirdweb/deploys";
 import { isAddress } from "thirdweb/utils";
 import {
   type PublishedContractWithVersion,
@@ -18,7 +22,6 @@ import { fetchDeployMetadata } from "./fetchDeployMetadata";
 import { fetchPublishedContracts } from "./fetchPublishedContracts";
 import { fetchPublishedContractsFromDeploy } from "./fetchPublishedContractsFromDeploy";
 import type { ContractId } from "./types";
-import { getPredictedMintFeeManagerAddress, getPredictedMultisigAddress } from "thirdweb/deploys";
 
 export function useFetchDeployMetadata(contractId: ContractId) {
   return useQuery({
@@ -152,25 +155,24 @@ export function usePublishedContractsQuery(address?: string) {
 }
 
 function multisigQuery(chainId: number | undefined) {
-  if(!chainId) {
-    chainId = 1;
+  let chainIdFinal = chainId;
+  if (!chainIdFinal) {
+    chainIdFinal = 1;
   }
-  
+
   return queryOptions({
-    queryKey: ["multisig", chainId],
-    queryFn: async() => {
-      const chain = useV5DashboardChain(chainId);
+    queryKey: ["multisig", chainIdFinal],
+    queryFn: async () => {
+      const chain = useV5DashboardChain(chainIdFinal);
       const client = useThirdwebClient();
 
-      const multisig = await getPredictedMultisigAddress({client, chain});
+      const multisig = await getPredictedMultisigAddress({ client, chain });
 
       return {
-        multisig
-      }
-
+        multisig,
+      };
     },
-    enabled:
-      !!chainId,
+    enabled: !!chainId,
     // 24h
     gcTime: 60 * 60 * 24 * 1000,
     // 1h
@@ -178,29 +180,32 @@ function multisigQuery(chainId: number | undefined) {
     // default to zero address
     placeholderData: { multisig: ZERO_ADDRESS },
     retry: false,
-  })
+  });
 }
 
 function mintfeeManagerQuery(chainId: number | undefined) {
-  if(!chainId) {
-    chainId = 1;
+  let chainIdFinal = chainId;
+
+  if (!chainIdFinal) {
+    chainIdFinal = 1;
   }
 
   return queryOptions({
-    queryKey: ["mintfee-manager", chainId],
-    queryFn: async() => {
-      const chain = useV5DashboardChain(chainId);
+    queryKey: ["mintfee-manager", chainIdFinal],
+    queryFn: async () => {
+      const chain = useV5DashboardChain(chainIdFinal);
       const client = useThirdwebClient();
 
-      const mintfeeManager = await getPredictedMintFeeManagerAddress({client, chain});
+      const mintfeeManager = await getPredictedMintFeeManagerAddress({
+        client,
+        chain,
+      });
 
       return {
-        mintfeeManager
-      }
-
+        mintfeeManager,
+      };
     },
-    enabled:
-      !!chainId,
+    enabled: !!chainId,
     // 24h
     gcTime: 60 * 60 * 24 * 1000,
     // 1h
@@ -208,7 +213,7 @@ function mintfeeManagerQuery(chainId: number | undefined) {
     // default to zero address
     placeholderData: { mintfeeManager: ZERO_ADDRESS },
     retry: false,
-  })
+  });
 }
 
 function ensQuery(addressOrEnsName?: string) {
