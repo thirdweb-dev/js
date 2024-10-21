@@ -2,15 +2,26 @@ import { getThirdwebBaseUrl } from "../../utils/domains.js";
 import type { AuthOption } from "../types.js";
 import type { EcosystemWalletId } from "../wallet-types.js";
 
+export type EcosystemOptions = {
+  authOptions: AuthOption[];
+  smartAccountOptions: SmartAccountOptions;
+};
+
+type SmartAccountOptions = {
+  chainIds: number[];
+  sponsorGas: boolean;
+  accountFactoryAddress: string;
+};
+
 /**
  * Retrieves the specified auth options for a given ecosystem wallet, if any.
  * @param walletId The ecosystem wallet ID.
  * @returns {AuthOption[] | undefined} The auth options for the ecosystem wallet.
  * @internal
  */
-export async function getEcosystemWalletAuthOptions(
+export async function getEcosystemOptions(
   walletId: EcosystemWalletId,
-): Promise<AuthOption[] | undefined> {
+): Promise<EcosystemOptions | null> {
   const res = await fetch(
     `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/ecosystem-wallet`,
     {
@@ -29,5 +40,5 @@ export async function getEcosystemWalletAuthOptions(
     );
   }
 
-  return data.authOptions ?? undefined;
+  return data ?? null;
 }
