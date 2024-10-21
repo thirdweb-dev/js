@@ -34,6 +34,11 @@ module.exports = {
         message:
           "Use useV5DashboardChain instead if you are using it inside a component",
       },
+      {
+        selector: "CallExpression[callee.name='resolveScheme']",
+        message:
+          "resolveScheme can throw error if resolution fails. Either catch the error and ignore the lint warning or Use `resolveSchemeWithErrorHandler` / `replaceIpfsUrl` utility in dashboard instead",
+      },
     ],
     "no-restricted-imports": [
       "error",

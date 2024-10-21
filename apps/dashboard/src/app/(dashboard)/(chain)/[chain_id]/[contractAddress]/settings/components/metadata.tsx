@@ -89,7 +89,8 @@ export const SettingsMetadata = ({
     let image: string | undefined = metadata.data?.image;
     try {
       image = image
-        ? resolveScheme({
+        ? // eslint-disable-next-line no-restricted-syntax
+          resolveScheme({
             client: contract.client,
             uri: image,
           })

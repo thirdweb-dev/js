@@ -1,5 +1,5 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { resolveScheme } from "thirdweb/storage";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 
 export function DeployContractInfo(props: {
   name: string;
@@ -9,20 +9,18 @@ export function DeployContractInfo(props: {
 }) {
   const contractNameDisplay = props.displayName || props.name;
 
+  const contractImageLink = resolveSchemeWithErrorHandler({
+    client: getThirdwebClient(),
+    uri: props.logo,
+  });
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-1 items-center gap-4">
-        {props.logo && (
+        {contractImageLink && (
           <div className="hidden shrink-0 items-center justify-center rounded-xl border border-border p-2 md:flex">
             {/*eslint-disable-next-line @next/next/no-img-element*/}
-            <img
-              className="size-12"
-              alt={props.name}
-              src={resolveScheme({
-                client: getThirdwebClient(),
-                uri: props.logo,
-              })}
-            />
+            <img className="size-12" alt={props.name} src={contractImageLink} />
           </div>
         )}
 

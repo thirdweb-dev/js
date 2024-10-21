@@ -7,11 +7,11 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { useMutation } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
 import { useState } from "react";
 import { toast } from "sonner";
-import { resolveScheme } from "thirdweb/storage";
 
 type UpdateTeamField = (team: Partial<Team>) => Promise<void>;
 
@@ -152,12 +152,10 @@ function TeamAvatarFormControl(props: {
   avatar: string | undefined;
 }) {
   const client = useThirdwebClient();
-  const teamUrl = props.avatar
-    ? resolveScheme({
-        client: client,
-        uri: props.avatar,
-      })
-    : undefined;
+  const teamAvatarUrl = resolveSchemeWithErrorHandler({
+    client: client,
+    uri: props.avatar,
+  });
 
   const [teamAvatar, setTeamAvatar] = useState<File | undefined>();
 
@@ -200,7 +198,7 @@ function TeamAvatarFormControl(props: {
           setValue={setTeamAvatar}
           className="w-20 rounded-full lg:w-28"
           disableHelperText
-          fileUrl={teamUrl}
+          fileUrl={teamAvatarUrl}
         />
       </div>
     </SettingsCard>

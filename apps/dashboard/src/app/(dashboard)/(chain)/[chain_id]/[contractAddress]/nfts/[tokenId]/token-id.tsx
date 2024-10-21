@@ -6,6 +6,7 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import {
   Box,
   ButtonGroup,
@@ -25,7 +26,6 @@ import type { ThirdwebContract } from "thirdweb";
 import { getNFT as getErc721NFT } from "thirdweb/extensions/erc721";
 import { getNFT as getErc1155NFT } from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
-import { resolveScheme } from "thirdweb/storage";
 import { Badge, Button, Card, CodeBlock, Heading, Text } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { shortenString } from "utils/usedapp-external";
@@ -82,6 +82,15 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
       includeOwner: true,
     },
   );
+
+  const tokenURIHttpLink = resolveSchemeWithErrorHandler({
+    client,
+    uri: nft?.tokenURI,
+  });
+  const nftImageLink = resolveSchemeWithErrorHandler({
+    client,
+    uri: nft?.metadata.image,
+  });
 
   if (isPending) {
     return (
@@ -263,14 +272,13 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                     tooltip="The URI of this NFT"
                     copyIconPosition="right"
                   />
-                  <Button variant="ghost" size="sm">
-                    <Link
-                      href={resolveScheme({ client, uri: nft.tokenURI })}
-                      target="_blank"
-                    >
-                      <ExternalLinkIcon className="size-4" />
-                    </Link>
-                  </Button>
+                  {tokenURIHttpLink && (
+                    <Button variant="ghost" size="sm">
+                      <Link href={tokenURIHttpLink} target="_blank">
+                        <ExternalLinkIcon className="size-4" />
+                      </Link>
+                    </Button>
+                  )}
                 </GridItem>
                 {nft.metadata.image && (
                   <>
@@ -287,17 +295,13 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                         tooltip="The media URI of this NFT"
                         copyIconPosition="right"
                       />
-                      <Button variant="ghost" size="sm">
-                        <Link
-                          href={resolveScheme({
-                            client,
-                            uri: nft.metadata.image,
-                          })}
-                          target="_blank"
-                        >
-                          <ExternalLinkIcon className="size-4" />
-                        </Link>
-                      </Button>
+                      {nftImageLink && (
+                        <Button variant="ghost" size="sm">
+                          <Link href={nftImageLink} target="_blank">
+                            <ExternalLinkIcon className="size-4" />
+                          </Link>
+                        </Button>
+                      )}
                     </GridItem>
                   </>
                 )}
