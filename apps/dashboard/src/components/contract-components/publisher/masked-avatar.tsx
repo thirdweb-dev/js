@@ -1,7 +1,7 @@
 "use client";
 
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { resolveScheme } from "thirdweb/storage";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import {
   MaskedAvatar,
   type MaskedAvatarProps,
@@ -22,17 +22,16 @@ export const PublisherAvatar: React.FC<PublisherAvatarProps> = ({
   const publisherProfile = usePublisherProfile(
     ensQuery.data?.address || undefined,
   );
+
+  const publisherImageUrl = resolveSchemeWithErrorHandler({
+    uri: publisherProfile.data?.avatar,
+    client,
+  });
+
   return (
     <MaskedAvatar
       isPending={isPending || ensQuery.isPending || publisherProfile.isPending}
-      src={
-        publisherProfile.data?.avatar
-          ? resolveScheme({
-              uri: publisherProfile.data.avatar,
-              client,
-            })
-          : ""
-      }
+      src={publisherImageUrl || ""}
       {...restProps}
     />
   );
