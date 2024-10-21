@@ -139,8 +139,8 @@ importers:
         specifier: 8.34.0
         version: 8.34.0(@opentelemetry/api@1.9.0)(@opentelemetry/core@1.26.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.53.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.26.0(@opentelemetry/api@1.9.0))(next@14.2.15(@babel/core@7.25.8)(@opentelemetry/api@1.9.0)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.95.0(@swc/core@1.7.35(@swc/helpers@0.5.5))(esbuild@0.23.1))
       '@shazow/whatsabi':
-        specifier: ^0.15.3
-        version: 0.15.3(@noble/hashes@1.5.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+        specifier: ^0.15.4
+        version: 0.15.4(@noble/hashes@1.5.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@stripe/react-stripe-js':
         specifier: ^2.8.1
         version: 2.8.1(@stripe/stripe-js@3.5.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -5701,8 +5701,8 @@ packages:
     peerDependencies:
       webpack: '>=4.40.0'
 
-  '@shazow/whatsabi@0.15.3':
-    resolution: {integrity: sha512-PwuKLApsL3K0xwGs9JvPj9x8sA+yaZxa9wWMVSkB3MP90+c66nUrkbjaO2VMR+zdXTO/ROw57ezZoXJ8JExGgw==}
+  '@shazow/whatsabi@0.15.4':
+    resolution: {integrity: sha512-XLGYfJC+AaIC0qDQu8l2gqUAv0k/27jG1bUdSa5NDX2Y6sIaHyPFd2Dzrd6InxRDWuYXmJeYspo1cFINYul54g==}
     peerDependencies:
       '@noble/hashes': ^1
 
@@ -22814,7 +22814,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@shazow/whatsabi@0.15.3(@noble/hashes@1.5.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@shazow/whatsabi@0.15.4(@noble/hashes@1.5.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
       '@noble/hashes': 1.5.0
       ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
