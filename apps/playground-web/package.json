@@ -45,7 +45,7 @@
     "@types/node": "20.14.9",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
-    "eslint": "8.57.0",
+    "eslint": "9.13.0",
     "eslint-config-next": "14.2.15",
     "eslint-plugin-react-compiler": "0.0.0-experimental-fa06e2c-20241014",
     "postcss": "8.4.47",
