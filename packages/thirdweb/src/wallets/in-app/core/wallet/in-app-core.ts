@@ -70,6 +70,7 @@ export function createInAppWallet(args: {
         options,
         createOptions,
         connector,
+        ecosystem,
       );
 
       // set the states
@@ -96,6 +97,7 @@ export function createInAppWallet(args: {
         options,
         createOptions,
         connector,
+        ecosystem,
       );
       // set the states
       client = options.client;
@@ -142,6 +144,7 @@ export function createInAppWallet(args: {
           },
           createOptions,
           connector,
+          ecosystem,
         );
         account = connectedAccount;
         chain = connectedChain;
