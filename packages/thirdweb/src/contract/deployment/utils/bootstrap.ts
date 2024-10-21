@@ -21,7 +21,12 @@ import {
   getDeployedInfraContractFromMetadata,
   prepareInfraContractDeployTransactionFromMetadata,
 } from "./infra.js";
-import { getDeployedMintFeeManagerContract } from "./mintfee-manager.js";
+import { getDeployedMintFeeManagerContract, getDeployedMultisigContract } from "./mintfee-manager.js";
+
+export interface ReplacementValues {
+  mintFeeManager?: string;
+  multisig?: string;
+}
 
 /**
  * @internal
@@ -86,8 +91,12 @@ export async function getOrDeployInfraForPublishedContract(
     };
   }
 
-  let [cloneFactoryContract, mintfeeManagerContract, implementationContract] = await Promise.all([
+  let [cloneFactoryContract, mintfeeManagerContract, multisig, implementationContract] = await Promise.all([
     getDeployedCloneFactoryContract({
+      chain,
+      client,
+    }),
+    getDeployedMultisigContract({
       chain,
       client,
     }),
@@ -105,9 +114,14 @@ export async function getOrDeployInfraForPublishedContract(
     }),
   ]);
 
-  if (!implementationContract || !cloneFactoryContract || !mintfeeManagerContract) {
+  if (!implementationContract || !cloneFactoryContract || !multisig || !mintfeeManagerContract) {
     // deploy the infra and implementation contracts if not found
     cloneFactoryContract = await deployCloneFactory({
+      client,
+      chain,
+      account,
+    });
+    multisig = await deployMultisig({
       client,
       chain,
       account,
@@ -125,6 +139,10 @@ export async function getOrDeployInfraForPublishedContract(
       constructorParams,
       publisher,
       version,
+      replacementValues: {
+        mintFeeManager: mintfeeManagerContract.address,
+        multisig: multisig.address
+      }
     });
   }
   return { cloneFactoryContract, mintfeeManagerContract, implementationContract };
@@ -212,6 +230,7 @@ export async function deployImplementation(
     constructorParams?: Record<string, unknown>;
     publisher?: string;
     version?: string;
+    replacementValues?: ReplacementValues
   },
 ) {
   return getOrDeployInfraContract({
@@ -220,6 +239,7 @@ export async function deployImplementation(
     constructorParams: options.constructorParams,
     publisher: options.publisher,
     version: options.version,
+    replacementValues: options.replacementValues
   });
 }
 
@@ -233,6 +253,7 @@ export async function getOrDeployInfraContract(
     constructorParams?: Record<string, unknown>;
     publisher?: string;
     version?: string;
+    replacementValues?: ReplacementValues
   },
 ) {
   const contractMetadata = await fetchPublishedContractMetadata({
@@ -254,6 +275,7 @@ export async function getOrDeployInfraContractFromMetadata(
   options: ClientAndChainAndAccount & {
     contractMetadata: FetchDeployMetadataResult;
     constructorParams?: Record<string, unknown>;
+    replacementValues?: ReplacementValues
   },
 ) {
   const infraContract = await getDeployedInfraContractFromMetadata(options);
