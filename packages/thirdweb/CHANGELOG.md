@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.63.2
+
+### Patch Changes
+
+- [#5092](https://github.com/thirdweb-dev/js/pull/5092) [`223c497`](https://github.com/thirdweb-dev/js/commit/223c497f491de83078b455090d0e191bec255169) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Ensure smart accounts are deployed before validating signatures
+
+- [#5089](https://github.com/thirdweb-dev/js/pull/5089) [`541bee5`](https://github.com/thirdweb-dev/js/commit/541bee5b34d36a6abc7edab9c143dc93fa71d558) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix useProfiles not updating when connecting to a different account
+
 ## 5.63.1
 
 ### Patch Changes
