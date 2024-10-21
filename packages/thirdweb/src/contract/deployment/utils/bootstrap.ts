@@ -192,6 +192,7 @@ export async function deployMultisig(options: ClientAndChainAndAccount) {
     ...options,
     contractId: "MultiSig",
     constructorParams: { _signers: [TW_SIGNER_1, TW_SIGNER_2, TW_SIGNER_3], _requiredApprovals: MULTISIG_REQUIRED_APPROVALS },
+    publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936", // TODO: remove before merging
   });
 }
 
