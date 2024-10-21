@@ -203,3 +203,8 @@ export {
   mintToBatch,
   type MintToBatchParams,
 } from "../../extensions/erc1155/write/mintToBatch.js";
+
+export {
+  mintAdditionalSupplyToBatch,
+  type MintAdditionalSupplyToBatchParams,
+} from "../../extensions/erc1155/write/mintAdditionalSupplyToBatch.js";
