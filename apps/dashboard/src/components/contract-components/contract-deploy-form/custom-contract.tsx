@@ -18,6 +18,7 @@ import {
   FormControl,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { verifyContract } from "app/(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/ContractSourcesPage";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -536,6 +537,13 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             try {
               // do the actual deployment
               const contractAddr = await deployMutation.mutateAsync(formData);
+
+              // send verification request - no need to await
+              verifyContract({
+                address: contractAddr,
+                chain: walletChain,
+                client: thirdwebClient,
+              });
 
               trackEvent({
                 category: "custom-contract",
