@@ -40,7 +40,7 @@
     "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.3",
+    "@biomejs/biome": "1.9.4",
     "@changesets/changelog-github": "0.5.0",
     "@changesets/cli": "2.27.9",
     "@manypkg/cli": "0.21.4",

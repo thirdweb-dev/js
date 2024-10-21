@@ -321,7 +321,7 @@
     "@aws-sdk/client-kms": "3.670.0",
     "@aws-sdk/client-lambda": "3.670.0",
     "@aws-sdk/credential-providers": "3.670.0",
-    "@biomejs/biome": "1.9.3",
+    "@biomejs/biome": "1.9.4",
     "@chromatic-com/storybook": "2.0.2",
     "@codspeed/vitest-plugin": "3.1.1",
     "@coinbase/wallet-mobile-sdk": "1.1.2",
