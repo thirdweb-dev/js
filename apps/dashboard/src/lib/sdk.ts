@@ -3,6 +3,7 @@ import { resolveScheme } from "thirdweb/storage";
 
 export function replaceIpfsUrl(uri: string) {
   try {
+    // eslint-disable-next-line no-restricted-syntax
     return resolveScheme({
       uri,
       client: getThirdwebClient(),

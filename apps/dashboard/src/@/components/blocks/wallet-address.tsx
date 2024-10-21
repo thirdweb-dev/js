@@ -1,5 +1,4 @@
 "use client";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   HoverCard,
@@ -7,6 +6,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { useClipboard } from "hooks/useClipboard";
 import { Check, Copy, ExternalLinkIcon } from "lucide-react";
 import { useMemo } from "react";
@@ -18,7 +18,6 @@ import {
   type SocialProfile,
   useSocialProfiles,
 } from "thirdweb/react";
-import { resolveScheme } from "thirdweb/storage";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -113,22 +112,20 @@ export function WalletAddress(props: {
           ) : !profiles.data?.length ? (
             <p className="text-muted-foreground text-sm">No profiles found</p>
           ) : (
-            profiles.data?.map((profile) => (
-              <div
-                className="flex flex-row items-center gap-2"
-                key={profile.type + profile.name}
-              >
-                {profile.avatar &&
-                  (profile.avatar.startsWith("http") ||
-                    profile.avatar?.startsWith("ipfs")) && (
+            profiles.data?.map((profile) => {
+              const walletAvatarLink = resolveSchemeWithErrorHandler({
+                client: thirdwebClient,
+                uri: profile.avatar,
+              });
+
+              return (
+                <div
+                  className="flex flex-row items-center gap-2"
+                  key={profile.type + profile.name}
+                >
+                  {walletAvatarLink && (
                     <Avatar>
-                      <AvatarImage
-                        src={resolveScheme({
-                          client: thirdwebClient,
-                          uri: profile.avatar,
-                        })}
-                        alt={profile.name}
-                      />
+                      <AvatarImage src={walletAvatarLink} alt={profile.name} />
                       {profile.name && (
                         <AvatarFallback>
                           {profile.name.slice(0, 2)}
@@ -136,19 +133,20 @@ export function WalletAddress(props: {
                       )}
                     </Avatar>
                   )}
-                <div className="flex w-full flex-col gap-1">
-                  <div className="flex w-full flex-row items-center justify-between gap-4">
-                    <h4 className="font-semibold text-md">{profile.name}</h4>
-                    <Badge variant="outline">{profile.type}</Badge>
+                  <div className="flex w-full flex-col gap-1">
+                    <div className="flex w-full flex-row items-center justify-between gap-4">
+                      <h4 className="font-semibold text-md">{profile.name}</h4>
+                      <Badge variant="outline">{profile.type}</Badge>
+                    </div>
+                    {profile.bio && (
+                      <p className="line-clamp-1 whitespace-normal text-muted-foreground text-sm">
+                        {profile.bio}
+                      </p>
+                    )}
                   </div>
-                  {profile.bio && (
-                    <p className="line-clamp-1 whitespace-normal text-muted-foreground text-sm">
-                      {profile.bio}
-                    </p>
-                  )}
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
           <Button
             asChild

@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-base-64";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
-import { resolveScheme } from "thirdweb/storage";
 import invariant from "tiny-invariant";
 import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
@@ -97,6 +97,11 @@ export const ContractCard: React.FC<ContractCardProps> = ({
 
   const showSkeleton = publishedContractResult.isPending;
 
+  const auditLink = resolveSchemeWithErrorHandler({
+    uri: publishedContractResult.data?.audit,
+    client,
+  });
+
   return (
     <article
       className={cn(
@@ -127,15 +132,12 @@ export const ContractCard: React.FC<ContractCardProps> = ({
       <div className="flex justify-between">
         <div className="flex items-center gap-1.5">
           {/* Audited */}
-          {publishedContractResult.data?.audit && (
+          {auditLink && (
             <>
               <Link
                 target="_blank"
                 className="relative z-1 flex items-center gap-1 font-medium text-sm text-success-text hover:underline"
-                href={resolveScheme({
-                  uri: publishedContractResult.data.audit,
-                  client,
-                })}
+                href={auditLink}
               >
                 <ShieldCheckIcon className="size-4" />
                 Audited

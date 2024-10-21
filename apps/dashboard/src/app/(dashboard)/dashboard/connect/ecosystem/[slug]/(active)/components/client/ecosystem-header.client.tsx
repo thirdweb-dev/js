@@ -14,6 +14,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { TabLinks } from "@/components/ui/tabs";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import {
   AlertTriangleIcon,
   CheckIcon,
@@ -23,7 +24,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { resolveScheme } from "thirdweb/storage";
 import { useEcosystemList } from "../../../../hooks/use-ecosystem-list";
 import type { Ecosystem } from "../../../../types";
 import { useEcosystem } from "../../hooks/use-ecosystem";
@@ -127,6 +127,11 @@ export function EcosystemHeader(props: {
 
   const ecosystem = fetchedEcosystem ?? props.ecosystem;
 
+  const ecosystemImageLink = resolveSchemeWithErrorHandler({
+    uri: ecosystem.imageUrl,
+    client,
+  });
+
   return (
     <div className="flex flex-col gap-8">
       <EcosystemAlertBanner ecosystem={ecosystem} />
@@ -136,13 +141,10 @@ export function EcosystemHeader(props: {
             {!ecosystem.imageUrl ? (
               <Skeleton className="size-24" />
             ) : (
-              ecosystem.imageUrl && (
+              ecosystemImageLink && (
                 <div className="relative size-24 overflow-hidden rounded-md">
                   <Image
-                    src={resolveScheme({
-                      uri: ecosystem.imageUrl,
-                      client,
-                    })}
+                    src={ecosystemImageLink}
                     sizes="100px"
                     alt={ecosystem.name}
                     fill
