@@ -34,6 +34,7 @@ import {
   DISCORD_ICON,
   FACEBOOK_ICON,
   FARCASTER_ICON,
+  GITHUB_ICON,
   GOOGLE_ICON,
   LINE_ICON,
   TELEGRAM_ICON,
@@ -62,6 +63,7 @@ const socialIcons = {
   x: X_ICON,
   farcaster: FARCASTER_ICON,
   telegram: TELEGRAM_ICON,
+  github: GITHUB_ICON,
   twitch: TWITCH_ICON,
 };
 

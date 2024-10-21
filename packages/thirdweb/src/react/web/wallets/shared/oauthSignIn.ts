@@ -38,6 +38,7 @@ function getOauthLoginPath(
     case "google":
     case "farcaster":
     case "telegram":
+    case "github":
     case "twitch":
     case "line":
     case "x":
