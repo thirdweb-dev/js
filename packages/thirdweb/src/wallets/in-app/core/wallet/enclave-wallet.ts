@@ -1,8 +1,13 @@
 import { bytesToHex } from "viem";
+import {
+  trackTransaction,
+  trackTransactionError,
+} from "../../../../analytics/track/transaction.js";
 import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
+import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { getAddress } from "../../../../utils/address.js";
 import { type Hex, toHex } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
@@ -129,6 +134,7 @@ export class EnclaveWallet implements IWebWallet {
   async getAccount(): Promise<Account> {
     const client = this.client;
     const storage = this.localStorage;
+    const address = this.address;
 
     const _signTransaction = async (tx: SendTransactionOption) => {
       const rpcRequest = getRpcClient({
@@ -173,7 +179,7 @@ export class EnclaveWallet implements IWebWallet {
       });
     };
     return {
-      address: getAddress(this.address),
+      address: getAddress(address),
       async signTransaction(tx) {
         if (!tx.chainId) {
           throw new Error("chainId required in tx to sign");
@@ -190,13 +196,44 @@ export class EnclaveWallet implements IWebWallet {
           chain: getCachedChain(tx.chainId),
         });
         const signedTx = await _signTransaction(tx);
+
         const transactionHash = await eth_sendRawTransaction(
           rpcRequest,
           signedTx,
         );
-        return {
+
+        // Non-blocking wait for receipt to track transaction
+        waitForReceipt({
           transactionHash,
-        };
+          client,
+          chain: getCachedChain(tx.chainId),
+        })
+          .then((_receipt) => {
+            trackTransaction({
+              client,
+              walletAddress: address,
+              walletType: "inApp",
+              transactionHash,
+              contractAddress: tx.to ?? undefined,
+              gasPrice: tx.gasPrice,
+            });
+          })
+          .catch((e) => {
+            trackTransactionError({
+              client,
+              walletAddress: address,
+              walletType: "inApp",
+              transactionHash: transactionHash,
+              contractAddress: tx.to ?? undefined,
+              gasPrice: tx.gasPrice,
+              error: {
+                message: e instanceof Error ? e.message : String(e),
+                code: "500",
+              },
+            });
+          });
+
+        return { transactionHash };
       },
       async signMessage({ message }) {
         const messagePayload = (() => {

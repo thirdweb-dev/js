@@ -1,9 +1,14 @@
 import type * as ethers5 from "ethers5";
 import type { TypedDataDefinition } from "viem";
+import {
+  trackTransaction,
+  trackTransactionError,
+} from "../../../../analytics/track/transaction.js";
 import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
+import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { getAddress } from "../../../../utils/address.js";
 import { getThirdwebDomains } from "../../../../utils/domains.js";
 import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
@@ -242,13 +247,43 @@ export class IFrameWallet implements IWebWallet {
           chain: getCachedChain(tx.chainId),
         });
         const signedTx = await _signTransaction(tx);
+
         const transactionHash = await eth_sendRawTransaction(
           rpcRequest,
           signedTx,
         );
-        return {
+
+        waitForReceipt({
           transactionHash,
-        };
+          client,
+          chain: getCachedChain(tx.chainId),
+        })
+          .then((_receipt) => {
+            trackTransaction({
+              client,
+              walletAddress: address,
+              walletType: "inApp",
+              transactionHash,
+              contractAddress: tx.to ?? undefined,
+              gasPrice: tx.gasPrice,
+            });
+          })
+          .catch((e) => {
+            trackTransactionError({
+              client,
+              walletAddress: address,
+              walletType: "inApp",
+              transactionHash: transactionHash,
+              contractAddress: tx.to ?? undefined,
+              gasPrice: tx.gasPrice,
+              error: {
+                message: e instanceof Error ? e.message : String(e),
+                code: "500",
+              },
+            });
+          });
+
+        return { transactionHash };
       },
       async signMessage({ message }) {
         // in-app wallets use ethers to sign messages, which always expects a string (or bytes maybe but string is safest)

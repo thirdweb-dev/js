@@ -1,4 +1,4 @@
-import { trackConnect } from "../../../../analytics/track.js";
+import { trackConnect } from "../../../../analytics/track/connect.js";
 import type { Chain } from "../../../../chains/types.js";
 import { getCachedChainIfExists } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
@@ -78,6 +78,7 @@ export function createInAppWallet(args: {
       chain = connectedChain;
       trackConnect({
         client: options.client,
+        ecosystem,
         walletType: walletId,
         walletAddress: account.address,
       });
@@ -103,6 +104,7 @@ export function createInAppWallet(args: {
       chain = connectedChain;
       trackConnect({
         client: options.client,
+        ecosystem,
         walletType: walletId,
         walletAddress: account.address,
       });

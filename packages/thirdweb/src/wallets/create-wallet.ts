@@ -12,7 +12,7 @@ import type {
   WalletId,
 } from "./wallet-types.js";
 
-import { trackConnect } from "../analytics/track.js";
+import { trackConnect } from "../analytics/track/connect.js";
 import { getCachedChainIfExists } from "../chains/utils.js";
 import { webLocalStorage } from "../utils/storage/webStorage.js";
 import { isMobile } from "../utils/web/isMobile.js";
@@ -184,7 +184,7 @@ export function createWallet<const ID extends WalletId>(
         chain = undefined;
       }
 
-      let handleDisconnect = async () => {};
+      let handleDisconnect = async () => { };
 
       const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
         reset();
@@ -235,11 +235,12 @@ export function createWallet<const ID extends WalletId>(
               connectedChain,
               doDisconnect,
               doSwitchChain,
-            ] = await autoConnectInjectedWallet(
-              id as InjectedSupportedWalletIds,
+            ] = await autoConnectInjectedWallet({
+              id: id as InjectedSupportedWalletIds,
               emitter,
-              options.chain,
-            );
+              chain: options.chain,
+              client: options.client,
+            });
             // set the states
             account = connectedAccount;
             chain = connectedChain;

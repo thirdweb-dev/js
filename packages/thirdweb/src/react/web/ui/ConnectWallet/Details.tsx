@@ -10,7 +10,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
-import { trackPayEvent } from "../../../../analytics/track.js";
+import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
@@ -200,9 +200,7 @@ export const ConnectedWalletDetails: React.FC<{
 
   const avatarSrc = props.detailsButton?.connectedAccountAvatarUrl || pfp;
 
-  const combinedClassName = `${TW_CONNECTED_WALLET} ${
-    props.detailsButton?.className || ""
-  }`;
+  const combinedClassName = `${TW_CONNECTED_WALLET} ${props.detailsButton?.className || ""}`;
 
   return (
     <WalletInfoButton
@@ -775,7 +773,7 @@ function DetailsModal(props: {
         // add currently connected chain to the list of chains if it's not already in the list
         chains={
           walletChain &&
-          props.chains.find((c) => c.id === walletChain.id) === undefined
+            props.chains.find((c) => c.id === walletChain.id) === undefined
             ? [walletChain, ...props.chains]
             : props.chains
         }
@@ -997,7 +995,7 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
 });
 
 const StyledChevronRightIcon = /* @__PURE__ */ styled(
-  /* @__PURE__ */ ChevronRightIcon,
+	/* @__PURE__ */ ChevronRightIcon,
 )(() => {
   const theme = useCustomTheme();
   return {

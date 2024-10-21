@@ -1,7 +1,7 @@
 import { IdCardIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
-import { trackPayEvent } from "../../../../../../analytics/track.js";
+import { trackPayEvent } from "../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
@@ -417,11 +417,11 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           // hide chain selection if it's disabled
           allowEdits?.chain !== false
             ? {
-                chains: chains,
-                select: (c) => {
-                  setToChain(c);
-                },
-              }
+              chains: chains,
+              select: (c) => {
+                setToChain(c);
+              },
+            }
             : undefined
         }
         connectLocale={connectLocale}
@@ -469,11 +469,11 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         chainSelection={
           // hide chain selection if it's disabled
           payOptions.buyWithCrypto !== false &&
-          payOptions.buyWithCrypto?.prefillSource?.allowEdits?.chain !== false
+            payOptions.buyWithCrypto?.prefillSource?.allowEdits?.chain !== false
             ? {
-                chains: supportedSourcesQuery.data.map((x) => x.chain),
-                select: (c) => setFromChain(c),
-              }
+              chains: supportedSourcesQuery.data.map((x) => x.chain),
+              select: (c) => setFromChain(c),
+            }
             : undefined
         }
         connectLocale={connectLocale}
@@ -1053,23 +1053,23 @@ function SwapScreenContent(props: {
     !(fromChain.id === toChain.id && fromTokenId === toTokenId);
   const quoteParams: GetBuyWithCryptoQuoteParams | undefined = swapRequired
     ? {
-        // wallets
-        fromAddress: payer.account.address,
-        toAddress: receiverAddress,
-        // from
-        fromChainId: fromChain.id,
-        fromTokenAddress: isNativeToken(fromToken)
-          ? NATIVE_TOKEN_ADDRESS
-          : fromToken.address,
-        // to
-        toChainId: toChain.id,
-        toTokenAddress: isNativeToken(toToken)
-          ? NATIVE_TOKEN_ADDRESS
-          : toToken.address,
-        toAmount: tokenAmount,
-        client,
-        purchaseData: payOptions.purchaseData,
-      }
+      // wallets
+      fromAddress: payer.account.address,
+      toAddress: receiverAddress,
+      // from
+      fromChainId: fromChain.id,
+      fromTokenAddress: isNativeToken(fromToken)
+        ? NATIVE_TOKEN_ADDRESS
+        : fromToken.address,
+      // to
+      toChainId: toChain.id,
+      toTokenAddress: isNativeToken(toToken)
+        ? NATIVE_TOKEN_ADDRESS
+        : toToken.address,
+      toAmount: tokenAmount,
+      client,
+      purchaseData: payOptions.purchaseData,
+    }
     : undefined;
 
   const quoteQuery = useBuyWithCryptoQuote(quoteParams, {
@@ -1113,7 +1113,7 @@ function SwapScreenContent(props: {
           minAmount: formatNumber(Number(minAmountToken), 6),
         };
       }
-    } catch {}
+    } catch { }
 
     return {
       msg: [defaultMessage],
@@ -1354,19 +1354,19 @@ function FiatScreenContent(props: {
   const fiatQuoteQuery = useBuyWithFiatQuote(
     buyWithFiatOptions !== false && tokenAmount
       ? {
-          fromCurrencySymbol: selectedCurrency.shorthand,
-          toChainId: toChain.id,
-          toAddress: receiverAddress,
-          toTokenAddress: isNativeToken(toToken)
-            ? NATIVE_TOKEN_ADDRESS
-            : toToken.address,
-          toAmount: tokenAmount,
-          client,
-          isTestMode: buyWithFiatOptions?.testMode,
-          purchaseData: props.payOptions.purchaseData,
-          fromAddress: payer.account.address,
-          preferredProvider: buyWithFiatOptions?.preferredProvider,
-        }
+        fromCurrencySymbol: selectedCurrency.shorthand,
+        toChainId: toChain.id,
+        toAddress: receiverAddress,
+        toTokenAddress: isNativeToken(toToken)
+          ? NATIVE_TOKEN_ADDRESS
+          : toToken.address,
+        toAmount: tokenAmount,
+        client,
+        isTestMode: buyWithFiatOptions?.testMode,
+        purchaseData: props.payOptions.purchaseData,
+        fromAddress: payer.account.address,
+        preferredProvider: buyWithFiatOptions?.preferredProvider,
+      }
       : undefined,
   );
 
@@ -1427,7 +1427,7 @@ function FiatScreenContent(props: {
           minAmount: formatNumber(Number(minAmountToken), 6),
         };
       }
-    } catch {}
+    } catch { }
 
     return {
       msg: [defaultMessage],

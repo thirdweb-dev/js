@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { trackPayEvent } from "../../../../../../analytics/track.js";
+import { trackPayEvent } from "../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
@@ -89,23 +89,23 @@ export function DirectPaymentModeScreen(props: {
 
   const token: TokenInfo = paymentInfo.token
     ? {
-        ...paymentInfo.token,
-        icon:
-          paymentInfo.token?.icon ||
-          supportedDestinations
-            .find((c) => c.chain.id === paymentInfo.chain.id)
-            ?.tokens.find(
-              (t) =>
-                t.address.toLowerCase() ===
-                paymentInfo.token?.address.toLowerCase(),
-            )?.icon,
-      }
+      ...paymentInfo.token,
+      icon:
+        paymentInfo.token?.icon ||
+        supportedDestinations
+          .find((c) => c.chain.id === paymentInfo.chain.id)
+          ?.tokens.find(
+            (t) =>
+              t.address.toLowerCase() ===
+              paymentInfo.token?.address.toLowerCase(),
+          )?.icon,
+    }
     : {
-        address: NATIVE_TOKEN_ADDRESS,
-        name: chainData.nativeCurrency.name,
-        symbol: chainData.nativeCurrency.symbol,
-        icon: chainData.icon?.url,
-      };
+      address: NATIVE_TOKEN_ADDRESS,
+      name: chainData.nativeCurrency.name,
+      symbol: chainData.nativeCurrency.symbol,
+      icon: chainData.icon?.url,
+    };
 
   return (
     <Container p="lg">

@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { trackPayEvent } from "../../../../../../../analytics/track.js";
+import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import {
@@ -27,18 +27,18 @@ import { PostOnRampSwapFlow } from "./PostOnRampSwapFlow.js";
 
 type Screen =
   | {
-      id: "step-1";
-    }
+    id: "step-1";
+  }
   | {
-      id: "onramp-status";
-    }
+    id: "onramp-status";
+  }
   | {
-      id: "postonramp-swap";
-      data: BuyWithFiatStatus;
-    }
+    id: "postonramp-swap";
+    data: BuyWithFiatStatus;
+  }
   | {
-      id: "step-2";
-    };
+    id: "step-2";
+  };
 
 export function FiatFlow(props: {
   title: string;
@@ -58,11 +58,11 @@ export function FiatFlow(props: {
   const [screen, setScreen] = useState<Screen>(
     hasTwoSteps
       ? {
-          id: "step-1",
-        }
+        id: "step-1",
+      }
       : {
-          id: "onramp-status",
-        },
+        id: "onramp-status",
+      },
   );
 
   const [popupWindow, setPopupWindow] = useState<Window | null>(

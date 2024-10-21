@@ -9,6 +9,10 @@ import {
   serializeTypedData,
   validateTypedData,
 } from "viem";
+import {
+  trackTransaction,
+  trackTransactionError,
+} from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
 import {
   getCachedChain,
@@ -16,6 +20,7 @@ import {
   getRpcUrlForChain,
 } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
 import { getAddress } from "../../utils/address.js";
 import {
   type Hex,
@@ -171,7 +176,7 @@ export async function connectWC(
     provider.events.removeListener("display_uri", wcOptions.onDisplayUri);
   }
 
-  return onConnect(address, chain, provider, emitter, storage);
+  return onConnect(address, chain, provider, emitter, storage, options.client);
 }
 
 /**
@@ -221,7 +226,7 @@ export async function autoConnectWC(
       ? options.chain
       : getCachedChain(providerChainId);
 
-  return onConnect(address, chain, provider, emitter, storage);
+  return onConnect(address, chain, provider, emitter, storage, options.client);
 }
 
 // Connection utils -----------------------------------------------------------------------------------------------
@@ -319,8 +324,15 @@ async function initProvider(
   return provider;
 }
 
-function createAccount(provider: WCProvider, _address: string) {
-  const address = getAddress(_address);
+function createAccount({
+  provider,
+  address,
+  client,
+}: {
+  provider: WCProvider;
+  address: string;
+  client: ThirdwebClient;
+}) {
   const account: Account = {
     address: address,
     async sendTransaction(tx: SendTransactionOption) {
@@ -330,12 +342,42 @@ function createAccount(provider: WCProvider, _address: string) {
           {
             gas: tx.gas ? numberToHex(tx.gas) : undefined,
             value: tx.value ? numberToHex(tx.value) : undefined,
-            from: this.address,
+            from: getAddress(address),
             to: tx.to as Address,
             data: tx.data,
           },
         ],
       })) as Hex;
+
+      waitForReceipt({
+        transactionHash,
+        client: client,
+        chain: getCachedChain(tx.chainId),
+      })
+        .then((_receipt) => {
+          trackTransaction({
+            client: client,
+            walletAddress: getAddress(address),
+            walletType: "walletConnect",
+            transactionHash,
+            contractAddress: tx.to ?? undefined,
+            gasPrice: tx.gasPrice,
+          });
+        })
+        .catch((e) => {
+          trackTransactionError({
+            client,
+            walletAddress: getAddress(address),
+            walletType: "walletConnect",
+            transactionHash,
+            contractAddress: tx.to ?? undefined,
+            gasPrice: tx.gasPrice,
+            error: {
+              message: e instanceof Error ? e.message : String(e),
+              code: "500",
+            },
+          });
+        });
 
       return {
         transactionHash,
@@ -393,8 +435,9 @@ function onConnect(
   provider: WCProvider,
   emitter: WalletEmitter<WCSupportedWalletIds>,
   storage: AsyncStorage,
+  client: ThirdwebClient,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
-  const account = createAccount(provider, address);
+  const account = createAccount({ provider, address, client });
 
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
@@ -412,7 +455,11 @@ function onConnect(
 
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
-      const newAccount = createAccount(provider, getAddress(accounts[0]));
+      const newAccount = createAccount({
+        provider,
+        address: getAddress(accounts[0]),
+        client,
+      });
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);
     } else {
