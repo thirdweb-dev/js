@@ -5,8 +5,8 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Select,
   Textarea,
-  Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import type { AbiParameter } from "abitype";
@@ -15,8 +15,6 @@ import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { getTemplateValuesForType } from "lib/deployment/template-values";
 import { useFormContext } from "react-hook-form";
 import {
-  Button,
-  Card,
   Checkbox,
   FormErrorMessage,
   FormHelperText,
@@ -133,44 +131,27 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                         />
                       </Flex>
                       {paramTemplateValues.length > 0 && (
-                        <InputRightElement width="10.5rem">
-                          <Tooltip
-                            bg="transparent"
-                            boxShadow="none"
-                            shouldWrapChildren
-                            label={
-                              <Card
-                                as={Flex}
-                                flexDir="column"
-                                gap={2}
-                                bgColor="backgroundHighlight"
-                              >
-                                <Text>
-                                  {paramTemplateValues[0]?.helperText} Click to
-                                  apply.
-                                </Text>
-                              </Card>
-                            }
+                        <InputRightElement width="12rem">
+                          <Select
+                            size="xs"
+                            placeholder="Select value"
+                            onChange={(e) => {
+                              form.setValue(
+                                `constructorParams.${param.name ? param.name : "*"}.defaultValue`,
+                                e.target.value,
+                                { shouldDirty: true },
+                              );
+                            }}
                           >
-                            <Button
-                              size="xs"
-                              padding="3"
-                              paddingY="3.5"
-                              onClick={() => {
-                                form.setValue(
-                                  `constructorParams.${
-                                    param.name ? param.name : "*"
-                                  }.defaultValue`,
-                                  paramTemplateValues[0]?.value,
-                                  {
-                                    shouldDirty: true,
-                                  },
-                                );
-                              }}
-                            >
-                              {paramTemplateValues[0]?.value}
-                            </Button>
-                          </Tooltip>
+                            {paramTemplateValues.map((paramTemplate) => (
+                              <option
+                                key={paramTemplate.value}
+                                value={paramTemplate?.value}
+                              >
+                                {paramTemplate?.value}
+                              </option>
+                            ))}
+                          </Select>
                         </InputRightElement>
                       )}
                     </InputGroup>
