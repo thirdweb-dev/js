@@ -6,7 +6,7 @@ import type { Abi } from "abitype";
 import { isEnsName, resolveEns } from "lib/ens";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
-import { type ThirdwebContract, getContract } from "thirdweb";
+import { type ThirdwebContract, ZERO_ADDRESS, getContract } from "thirdweb";
 import { resolveContractAbi } from "thirdweb/contract";
 import { isAddress } from "thirdweb/utils";
 import {
@@ -18,6 +18,7 @@ import { fetchDeployMetadata } from "./fetchDeployMetadata";
 import { fetchPublishedContracts } from "./fetchPublishedContracts";
 import { fetchPublishedContractsFromDeploy } from "./fetchPublishedContractsFromDeploy";
 import type { ContractId } from "./types";
+import { getPredictedMintFeeManagerAddress, getPredictedMultisigAddress } from "thirdweb/deploys";
 
 export function useFetchDeployMetadata(contractId: ContractId) {
   return useQuery({
@@ -150,6 +151,66 @@ export function usePublishedContractsQuery(address?: string) {
   });
 }
 
+function multisigQuery(chainId: number | undefined) {
+  if(!chainId) {
+    chainId = 1;
+  }
+  
+  return queryOptions({
+    queryKey: ["multisig", chainId],
+    queryFn: async() => {
+      const chain = useV5DashboardChain(chainId);
+      const client = useThirdwebClient();
+
+      const multisig = await getPredictedMultisigAddress({client, chain});
+
+      return {
+        multisig
+      }
+
+    },
+    enabled:
+      !!chainId,
+    // 24h
+    gcTime: 60 * 60 * 24 * 1000,
+    // 1h
+    staleTime: 60 * 60 * 1000,
+    // default to zero address
+    placeholderData: { multisig: ZERO_ADDRESS },
+    retry: false,
+  })
+}
+
+function mintfeeManagerQuery(chainId: number | undefined) {
+  if(!chainId) {
+    chainId = 1;
+  }
+
+  return queryOptions({
+    queryKey: ["mintfee-manager", chainId],
+    queryFn: async() => {
+      const chain = useV5DashboardChain(chainId);
+      const client = useThirdwebClient();
+
+      const mintfeeManager = await getPredictedMintFeeManagerAddress({client, chain});
+
+      return {
+        mintfeeManager
+      }
+
+    },
+    enabled:
+      !!chainId,
+    // 24h
+    gcTime: 60 * 60 * 24 * 1000,
+    // 1h
+    staleTime: 60 * 60 * 1000,
+    // default to zero address
+    placeholderData: { mintfeeManager: ZERO_ADDRESS },
+    retry: false,
+  })
+}
+
 function ensQuery(addressOrEnsName?: string) {
   // if the address is `thirdweb.eth` we actually want `deployer.thirdweb.eth` here...
   if (addressOrEnsName === "thirdweb.eth") {
@@ -206,6 +267,14 @@ function ensQuery(addressOrEnsName?: string) {
 
 export function useEns(addressOrEnsName?: string) {
   return useQuery(ensQuery(addressOrEnsName));
+}
+
+export function useMultisig(chainId: number | undefined) {
+  return useQuery(multisigQuery(chainId));
+}
+
+export function useMintfeeManager(chainId: number | undefined) {
+  return useQuery(mintfeeManagerQuery(chainId));
 }
 
 export function useContractEvents(abi: Abi) {

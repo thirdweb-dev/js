@@ -16,6 +16,8 @@ export type InfraContractId =
   | "Forwarder"
   | "ForwarderEOAOnly"
   | "TWCloneFactory"
+  | "MintFeeManagerCore"
+  | "Multisig"
   | (string & {});
 
 type GetDeployedInfraParams = Prettify<
@@ -26,6 +28,26 @@ type GetDeployedInfraParams = Prettify<
     version?: string;
   }
 >;
+
+/**
+ * @internal
+ */
+export async function getPredictedInfraContractAddress(
+  options: GetDeployedInfraParams,
+): Promise<string> {
+  const contractMetadata = await fetchPublishedContractMetadata({
+    client: options.client,
+    contractId: options.contractId,
+    publisher: options.publisher,
+    version: options.version,
+  });
+  return await computeContractAddress({
+    client: options.client,
+    chain: options.chain,
+    contractMetadata,
+    constructorParams: options.constructorParams,
+  })
+}
 
 /**
  * @internal

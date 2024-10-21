@@ -1,3 +1,4 @@
+import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import {
   type FetchDeployMetadataResult,
@@ -20,6 +21,7 @@ import {
   getDeployedInfraContractFromMetadata,
   prepareInfraContractDeployTransactionFromMetadata,
 } from "./infra.js";
+import { getDeployedMintFeeManagerContract } from "./mintfee-manager.js";
 
 /**
  * @internal
@@ -34,6 +36,7 @@ export async function getOrDeployInfraForPublishedContract(
 ): Promise<{
   cloneFactoryContract: ThirdwebContract;
   implementationContract: ThirdwebContract;
+  mintfeeManagerContract?: ThirdwebContract;
 }> {
   const {
     chain,
@@ -83,8 +86,12 @@ export async function getOrDeployInfraForPublishedContract(
     };
   }
 
-  let [cloneFactoryContract, implementationContract] = await Promise.all([
+  let [cloneFactoryContract, mintfeeManagerContract, implementationContract] = await Promise.all([
     getDeployedCloneFactoryContract({
+      chain,
+      client,
+    }),
+    getDeployedMintFeeManagerContract({
       chain,
       client,
     }),
@@ -98,9 +105,14 @@ export async function getOrDeployInfraForPublishedContract(
     }),
   ]);
 
-  if (!implementationContract || !cloneFactoryContract) {
+  if (!implementationContract || !cloneFactoryContract || !mintfeeManagerContract) {
     // deploy the infra and implementation contracts if not found
     cloneFactoryContract = await deployCloneFactory({
+      client,
+      chain,
+      account,
+    });
+    mintfeeManagerContract = await deployMintFeeManager({
       client,
       chain,
       account,
@@ -115,7 +127,7 @@ export async function getOrDeployInfraForPublishedContract(
       version,
     });
   }
-  return { cloneFactoryContract, implementationContract };
+  return { cloneFactoryContract, mintfeeManagerContract, implementationContract };
 }
 
 /**
@@ -142,6 +154,52 @@ export async function deployCloneFactory(options: ClientAndChainAndAccount) {
     constructorParams: { _trustedForwarder: forwarder.address },
   });
 }
+
+/**
+ * @internal
+ * @returns the deployed mint fee manager contract
+ */
+export async function deployMintFeeManager(options: ClientAndChainAndAccount) {
+  // create2 factory
+  const create2Factory = await getDeployedCreate2Factory(options);
+  if (!create2Factory) {
+    await deployCreate2Factory(options);
+  }
+
+  // Multisig
+  const multisig = await deployMultisig(options);
+
+  // clone factory
+  return getOrDeployInfraContract({
+    ...options,
+    contractId: "MintFeeManagerCore",
+    constructorParams: { _owner: multisig, _modules: [], _moduleInstallData: [] },
+  });
+}
+
+/**
+ * @internal
+ * @returns the deployed multisig contract
+ */
+export async function deployMultisig(options: ClientAndChainAndAccount) {
+  // create2 factory
+  const create2Factory = await getDeployedCreate2Factory(options);
+  if (!create2Factory) {
+    await deployCreate2Factory(options);
+  }
+
+  return getOrDeployInfraContract({
+    ...options,
+    contractId: "Multisig",
+    constructorParams: { _signers: [TW_SIGNER_1, TW_SIGNER_2, TW_SIGNER_3], _requiredApprovals: MULTISIG_REQUIRED_APPROVALS },
+  });
+}
+
+export const TW_SIGNER_1 = ZERO_ADDRESS;
+export const TW_SIGNER_2 = ZERO_ADDRESS;
+export const TW_SIGNER_3 = ZERO_ADDRESS;
+
+export const MULTISIG_REQUIRED_APPROVALS = 2;
 
 /**
  * @internal

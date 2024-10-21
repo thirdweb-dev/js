@@ -37,7 +37,7 @@ import {
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
-import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
+import { useCustomFactoryAbi, useFunctionParamsFromABI, useMintfeeManager, useMultisig } from "../hooks";
 import { addContractToMultiChainRegistry } from "../utils";
 import { Fieldset } from "./common";
 import { ContractMetadataFieldset } from "./contract-metadata-fieldset";
@@ -149,6 +149,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const isTWPublisher = checkTwPublisher(metadata?.publisher);
 
+  const multisig = useMultisig(walletChain?.id);
+  const mintfeeManager = useMintfeeManager(walletChain?.id);
+
   const initializerParams = useFunctionParamsFromABI(
     metadata?.deployType === "customFactory" && customFactoryAbi?.data
       ? customFactoryAbi.data
@@ -193,6 +196,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             {
               connectedWallet: activeAccount?.address,
               chainId: walletChain?.id,
+              multisig: multisig.data?.multisig,
+              mintFeeManager: mintfeeManager.data?.mintfeeManager
             },
           );
 
