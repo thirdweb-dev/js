@@ -287,7 +287,7 @@ function NoFundsDialogContent(props: {
   });
 
   return (
-    <div className="flex flex-col gap-0 p-0">
+    (<div className="flex flex-col gap-0 p-0">
       <div className="flex flex-col gap-6 p-6 ">
         {/* Header */}
         <DialogHeader>
@@ -311,21 +311,20 @@ function NoFundsDialogContent(props: {
           <div>
             {props.chain.id === localhost.id ? (
               // localhost case
-              <GetLocalHostTestnetFunds />
+              (<GetLocalHostTestnetFunds />)
             ) : chainWithServiceInfoQuery.data.testnet ? (
               // faucet case
-              <GetFundsFromFaucet chain={chainWithServiceInfoQuery.data} />
+              (<GetFundsFromFaucet chain={chainWithServiceInfoQuery.data} />)
             ) : chainWithServiceInfoQuery.data.services.find(
                 (x) => x.enabled && x.service === "pay",
               ) ? (
               // pay case
-              <ButtonShadcn
+              (<ButtonShadcn
                 variant="primary"
                 className="w-full"
                 onClick={props.openPayModal}
-              >
-                Buy Funds
-              </ButtonShadcn>
+              >Buy Funds
+                              </ButtonShadcn>)
             ) : // no funds options available
             null}
           </div>
@@ -347,7 +346,7 @@ function NoFundsDialogContent(props: {
           </Link>
         </ButtonShadcn>
       </div>
-    </div>
+    </div>)
   );
 }
 

@@ -309,13 +309,13 @@ const ContractTable: React.FC<ContractTableProps> = ({
   }, [numRowsOnPage, setPageSize]);
 
   return (
-    <TableContainer>
+    (<TableContainer>
       {isFetching && <Spinner className="absolute top-2 right-4 size-3" />}
       <Table {...getTableProps()}>
         <TableHeader>
           {headerGroups.map((headerGroup, index) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-            <TableRow {...headerGroup.getHeaderGroupProps()} key={index}>
+            (<TableRow {...headerGroup.getHeaderGroupProps()} key={index}>
               {headerGroup.headers.map((column, i) => (
                 <TableHead
                   {...column.getHeaderProps()}
@@ -331,7 +331,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
                   </p>
                 </TableHead>
               ))}
-            </TableRow>
+            </TableRow>)
           ))}
         </TableHeader>
 
@@ -362,7 +362,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
           </div>
         </div>
       )}
-    </TableContainer>
+    </TableContainer>)
   );
 };
 

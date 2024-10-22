@@ -31,7 +31,7 @@ export function TeamSelectionUI(props: {
     : teams;
 
   return (
-    <div className="flex flex-col">
+    (<div className="flex flex-col">
       <SearchInput
         placeholder="Search Teams"
         value={searchTeamTerm}
@@ -69,7 +69,7 @@ export function TeamSelectionUI(props: {
               const isSelected = team.slug === currentTeam?.slug;
               return (
                 // biome-ignore lint/a11y/useKeyWithMouseEvents: <explanation>
-                <li
+                (<li
                   key={team.slug}
                   className="py-0.5"
                   onMouseOver={() => {
@@ -99,7 +99,7 @@ export function TeamSelectionUI(props: {
                       )}
                     </Link>
                   </Button>
-                </li>
+                </li>)
               );
             })}
 
@@ -119,7 +119,6 @@ export function TeamSelectionUI(props: {
           </ul>
         </div>
       </ScrollShadow>
-
       {/* Bottom */}
       {teamPlan && teamPlan !== "pro" && props.upgradeTeamLink && (
         <div className="border-border border-t p-2">
@@ -133,6 +132,6 @@ export function TeamSelectionUI(props: {
           </Button>
         </div>
       )}
-    </div>
+    </div>)
   );
 }

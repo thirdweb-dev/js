@@ -1,11 +1,13 @@
 import { redirect } from "next/navigation";
 
-export default function ProjectOverviewPage(props: {
-  params: { team_slug: string; project_slug: string };
-}) {
+export default async function ProjectOverviewPage(
+  props: {
+    params: Promise<{ team_slug: string; project_slug: string }>;
+  }
+) {
   // TODO: implement overview page for project
   // redirect to connect for now
   redirect(
-    `/team/${props.params.team_slug}/${props.params.project_slug}/connect`,
+    `/team/${(await props.params).team_slug}/${(await props.params).project_slug}/connect`,
   );
 }

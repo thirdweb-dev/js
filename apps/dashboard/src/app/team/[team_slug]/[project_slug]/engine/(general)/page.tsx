@@ -1,15 +1,17 @@
 import { EngineInstancesList } from "../../../../../../components/engine/engine-list";
 
-export default function Page(props: {
-  params: {
-    team_slug: string;
-    project_slug: string;
-    engineId: string;
-  };
-}) {
+export default async function Page(
+  props: {
+    params: Promise<{
+      team_slug: string;
+      project_slug: string;
+      engineId: string;
+    }>;
+  }
+) {
   return (
-    <EngineInstancesList
-      engineLinkPrefix={`/team/${props.params.team_slug}/${props.params.project_slug}/engine`}
-    />
+    (<EngineInstancesList
+      engineLinkPrefix={`/team/${(await props.params).team_slug}/${(await props.params).project_slug}/engine`}
+    />)
   );
 }

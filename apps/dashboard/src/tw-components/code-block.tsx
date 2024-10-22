@@ -62,7 +62,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   }
 
   return (
-    <Highlight
+    (<Highlight
       code={prefix ? `${prefix} ${code}` : code}
       language={language}
       theme={{
@@ -119,16 +119,16 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
           >
             {tokens.map((line, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: index IS the key here
-              <Box {...getLineProps({ line, key: i })} key={i}>
+              (<Box {...getLineProps({ line, key: i })} key={i}>
                 {line.map((token, key) => (
                   // biome-ignore lint/suspicious/noArrayIndexKey: index IS the key here
-                  <span {...getTokenProps({ token, key })} key={key} />
+                  (<span {...getTokenProps({ token, key })} key={key} />)
                 ))}
-              </Box>
+              </Box>)
             ))}
           </Box>
         </Text>
       )}
-    </Highlight>
+    </Highlight>)
   );
 };

@@ -3,6 +3,6 @@
 
 import { redirect } from "next/navigation";
 
-export default function Page(props: { params: { chain_id: string } }) {
-  redirect(`/${props.params.chain_id}`);
+export default async function Page(props: { params: Promise<{ chain_id: string }> }) {
+  redirect(`/${(await props.params).chain_id}`);
 }

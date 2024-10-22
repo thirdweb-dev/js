@@ -1,13 +1,15 @@
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 
-export default function Layout(props: {
-  params: {
-    team_slug: string;
-    project_slug: string;
-  };
-  children: React.ReactNode;
-}) {
-  const { team_slug, project_slug } = props.params;
+export default async function Layout(
+  props: {
+    params: Promise<{
+      team_slug: string;
+      project_slug: string;
+    }>;
+    children: React.ReactNode;
+  }
+) {
+  const { team_slug, project_slug } = (await props.params);
 
   const links: { label: string; href: string }[] = [
     {

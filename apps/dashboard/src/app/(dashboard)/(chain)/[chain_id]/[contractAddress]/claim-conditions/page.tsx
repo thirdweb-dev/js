@@ -4,12 +4,12 @@ import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     contractAddress: string;
     chain_id: string;
-  };
+  }>;
 }) {
-  const info = await getContractPageParamsInfo(props.params);
+  const info = await getContractPageParamsInfo((await props.params));
 
   if (!info) {
     notFound();
@@ -23,7 +23,7 @@ export default async function Page(props: {
   } = await getContractPageMetadata(contract);
 
   if (!isERC20ClaimConditionsSupported && !isERC721ClaimConditionsSupported) {
-    redirect(`/${props.params.chain_id}/${props.params.contractAddress}`);
+    redirect(`/${(await props.params).chain_id}/${(await props.params).contractAddress}`);
   }
 
   return (

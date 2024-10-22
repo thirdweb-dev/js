@@ -4,20 +4,20 @@ import { DeployContractInfo } from "../../../published-contract/components/contr
 import { DeployFormForUri } from "../../../published-contract/components/uri-based-deploy";
 
 type DirectDeployPageProps = {
-  params: {
+  params: Promise<{
     compiler_uri: string;
-  };
+  }>;
 };
 
 export default async function DirectDeployPage(props: DirectDeployPageProps) {
-  const parsedUri = decodeURIComponent(props.params.compiler_uri);
+  const parsedUri = decodeURIComponent((await props.params).compiler_uri);
   const metadata = await fetchDeployMetadata({
     client: getThirdwebClient(),
     // force `ipfs://` prefix
     uri: parsedUri.startsWith("ipfs://") ? parsedUri : `ipfs://${parsedUri}`,
   });
   return (
-    <div className="container flex flex-col gap-4 py-8">
+    (<div className="container flex flex-col gap-4 py-8">
       <DeployContractInfo
         name={metadata.name}
         displayName={metadata.displayName}
@@ -27,8 +27,8 @@ export default async function DirectDeployPage(props: DirectDeployPageProps) {
       <DeployFormForUri
         contractMetadata={metadata}
         modules={null}
-        pathname={`/contracts/deploy/${props.params.compiler_uri}`}
+        pathname={`/contracts/deploy/${(await props.params).compiler_uri}`}
       />
-    </div>
+    </div>)
   );
 }

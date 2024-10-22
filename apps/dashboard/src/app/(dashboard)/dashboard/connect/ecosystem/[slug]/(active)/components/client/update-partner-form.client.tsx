@@ -49,7 +49,7 @@ export function UpdatePartnerForm({
   });
 
   return (
-    <Form {...form}>
+    (<Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
           updatePartner({
@@ -152,6 +152,6 @@ export function UpdatePartnerForm({
           Update
         </Button>
       </form>
-    </Form>
+    </Form>)
   );
 }

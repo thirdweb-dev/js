@@ -3,11 +3,11 @@ import { redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
 
 export default async function Page(props: {
-  searchParams: {
+  searchParams: Promise<{
     uri?: string;
-  };
+  }>;
 }) {
-  if (!props.searchParams?.uri) {
+  if (!(await props.searchParams)?.uri) {
     // redirect back out if we do not have a uri
     return redirect("/dashboard");
   }
@@ -15,9 +15,9 @@ export default async function Page(props: {
   const contractMetadata = await fetchDeployMetadata({
     client: getThirdwebClient(),
     // force `ipfs://` prefix
-    uri: props.searchParams.uri.startsWith("ipfs://")
-      ? props.searchParams.uri
-      : `ipfs://${props.searchParams.uri}`,
+    uri: (await props.searchParams).uri.startsWith("ipfs://")
+      ? (await props.searchParams).uri
+      : `ipfs://${(await props.searchParams).uri}`,
   }).catch(() => null);
 
   return (

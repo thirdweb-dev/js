@@ -40,7 +40,7 @@ const CardWithMetric = ({
   hoverBackground,
 }: CardWithMetricsProps) => {
   return (
-    <TrackedLink
+    (<TrackedLink
       href={href}
       category={TRACKING_CATEGORY}
       label="cards-with-images"
@@ -86,7 +86,7 @@ const CardWithMetric = ({
           >
             {items.map((item, index) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-              <GridItem colSpan={item.colSpan ? item.colSpan : 1} key={index}>
+              (<GridItem colSpan={item.colSpan ? item.colSpan : 1} key={index}>
                 <Flex flex={1} flexDir="column">
                   <Heading size="title.xs" color="white">
                     {item.title}
@@ -95,12 +95,12 @@ const CardWithMetric = ({
                     {item.description}
                   </Text>
                 </Flex>
-              </GridItem>
+              </GridItem>)
             ))}
           </SimpleGrid>
         )}
       </Flex>
-    </TrackedLink>
+    </TrackedLink>)
   );
 };
 

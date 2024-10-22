@@ -21,7 +21,7 @@ export const ExternalLinksInput: React.FC<ExternalLinksInputProps> = ({
   const form = useFormContext();
 
   return (
-    <Flex flexDir="column" gap={2}>
+    (<Flex flexDir="column" gap={2}>
       <Flex
         w="full"
         gap={{ base: 4, md: 2 }}
@@ -79,6 +79,6 @@ export const ExternalLinksInput: React.FC<ExternalLinksInputProps> = ({
         />
       </Flex>
       <Divider />
-    </Flex>
+    </Flex>)
   );
 };

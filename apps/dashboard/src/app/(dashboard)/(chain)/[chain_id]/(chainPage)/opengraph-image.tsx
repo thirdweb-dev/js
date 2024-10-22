@@ -18,7 +18,7 @@ export const contentType = "image/png";
 
 const TWLogo: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
-  <svg
+  (<svg
     width="255"
     height="37"
     viewBox="0 0 255 37"
@@ -55,7 +55,7 @@ const TWLogo: React.FC = () => (
         <rect width="59.9096" height="37" fill="white" />
       </clipPath>
     </defs>
-  </svg>
+  </svg>)
 );
 
 // Image generation

@@ -21,21 +21,21 @@ export const metadata: Metadata = {
 // so this page needs to be forced as dynamic
 export const dynamic = "force-dynamic";
 
-export default function ChainListPage(props: { searchParams: SearchParams }) {
-  const headersList = headers();
+export default async function ChainListPage(props: { searchParams: Promise<SearchParams> }) {
+  const headersList = await headers();
   const viewportWithHint = Number(
     headersList.get("Sec-Ch-Viewport-Width") || 0,
   );
 
   // default is driven by viewport hint
-  const activeView = props.searchParams.view
-    ? props.searchParams.view
+  const activeView = (await props.searchParams).view
+    ? (await props.searchParams).view
     : viewportWithHint > 1000
       ? "table"
       : "grid";
 
   return (
-    <section className="container mx-auto flex h-full flex-col px-4 py-10">
+    (<section className="container mx-auto flex h-full flex-col px-4 py-10">
       <header className="flex flex-col gap-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-row items-center justify-between gap-4 lg:flex-col lg:justify-start">
@@ -64,7 +64,7 @@ export default function ChainListPage(props: { searchParams: SearchParams }) {
       </header>
       <div className="h-10" />
       {/* we used to have suspense + spinner here, that feels more jarring than the page loading _minutely_ slower */}
-      <ChainsData searchParams={props.searchParams} activeView={activeView} />
-    </section>
+      <ChainsData searchParams={(await props.searchParams)} activeView={activeView} />
+    </section>)
   );
 }

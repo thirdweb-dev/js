@@ -6,12 +6,12 @@ import { CodeOverview } from "../../../../../../contract-ui/tabs/code/components
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     contractAddress: string;
     chain_id: string;
-  };
+  }>;
 }) {
-  const info = await getContractPageParamsInfo(props.params);
+  const info = await getContractPageParamsInfo((await props.params));
 
   if (!info) {
     notFound();

@@ -63,7 +63,7 @@ const Arrow = () => {
 
 const ReasonWeb3Section = () => {
   return (
-    <Flex flexDir="column" alignItems="center" px={6}>
+    (<Flex flexDir="column" alignItems="center" px={6}>
       <Heading textAlign="center" size="title.lg">
         Why web3?
       </Heading>
@@ -86,7 +86,7 @@ const ReasonWeb3Section = () => {
 
           return (
             // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-            <Flex key={idx} flexDir="column">
+            (<Flex key={idx} flexDir="column">
               <ChakraNextImage
                 w="full"
                 src={reason.src}
@@ -102,11 +102,11 @@ const ReasonWeb3Section = () => {
                   return <li key={_idx}>{list}</li>;
                 })}
               </ul>
-            </Flex>
+            </Flex>)
           );
         })}
       </SimpleGrid>
-    </Flex>
+    </Flex>)
   );
 };
 

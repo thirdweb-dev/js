@@ -17,7 +17,7 @@ type ChainHeaderProps = {
 export function ChainHeader(props: ChainHeaderProps) {
   return (
     // force the banner image to be 4:1 aspect ratio and full-width on mobile devices
-    <div className="flex flex-col">
+    (<div className="flex flex-col">
       {!props.headerImageUrl && <div className="h-8 md:hidden" />}
       <div
         className={cn(
@@ -27,11 +27,11 @@ export function ChainHeader(props: ChainHeaderProps) {
       >
         {props.headerImageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
+          (<img
             src={props.headerImageUrl}
             alt=""
             className="h-full w-full object-cover object-center"
-          />
+          />)
         )}
       </div>
       {/* below header */}
@@ -65,6 +65,6 @@ export function ChainHeader(props: ChainHeaderProps) {
           </div>
         </div>
       </div>
-    </div>
+    </div>)
   );
 }

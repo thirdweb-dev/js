@@ -4,10 +4,10 @@ import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import PlausibleProvider from "next-plausible";
-import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { UnlimitedWalletsBanner } from "../components/notices/AnnouncementBanner";
+import PostHogPageView from "./components/posthog-pageview";
 import { PostHogProvider } from "./components/root-providers";
 import { AppRouterProviders } from "./providers";
 
@@ -44,10 +44,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
   },
 };
-
-const PostHogPageView = dynamic(() => import("./components/posthog-pageview"), {
-  ssr: false,
-});
 
 export default function RootLayout({
   children,

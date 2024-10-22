@@ -241,7 +241,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   }, [pageIndex, pageSize]);
 
   return (
-    <Flex gap={4} direction="column">
+    (<Flex gap={4} direction="column">
       <TableContainer
         maxW="100%"
         className="relative rounded-lg border border-border"
@@ -259,7 +259,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
           <Thead className="!bg-muted/50">
             {headerGroups.map((headerGroup, headerGroupIndex) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-              <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+              (<Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
                 {headerGroup.headers.map((column, columnIndex) => (
                   <Th
                     {...column.getHeaderProps()}
@@ -274,7 +274,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                 ))}
                 {/* Need to add an empty header for the drawer button */}
                 <Th border="none" />
-              </Tr>
+              </Tr>)
             ))}
           </Thead>
           <Tbody
@@ -407,7 +407,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
           </Select>
         </div>
       </div>
-    </Flex>
+    </Flex>)
   );
 };
 

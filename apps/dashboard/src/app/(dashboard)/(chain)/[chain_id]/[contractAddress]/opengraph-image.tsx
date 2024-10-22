@@ -58,7 +58,7 @@ function shortenString(str: string) {
 
 const OgBrandIcon: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
-  <svg
+  (<svg
     xmlns="http://www.w3.org/2000/svg"
     width="147"
     height="21"
@@ -90,7 +90,7 @@ const OgBrandIcon: React.FC = () => (
         <stop offset="1" stop-color="#5204BF" />
       </linearGradient>
     </defs>
-  </svg>
+  </svg>)
 );
 
 function textShortener(text: string) {

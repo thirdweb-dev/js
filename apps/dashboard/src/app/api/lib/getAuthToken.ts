@@ -1,8 +1,8 @@
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
-import { cookies } from "next/headers";
+import { cookies, type UnsafeUnwrappedCookies } from "next/headers";
 
 export function getAuthToken() {
-  const cookiesManager = cookies();
+  const cookiesManager = (cookies() as unknown as UnsafeUnwrappedCookies);
   const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const token = activeAccount
     ? cookiesManager.get(COOKIE_PREFIX_TOKEN + activeAccount)?.value
@@ -12,7 +12,7 @@ export function getAuthToken() {
 }
 
 export function getAuthTokenWalletAddress() {
-  const cookiesManager = cookies();
+  const cookiesManager = (cookies() as unknown as UnsafeUnwrappedCookies);
   const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   if (!activeAccount) {
     return null;

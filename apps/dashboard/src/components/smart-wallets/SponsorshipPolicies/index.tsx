@@ -169,7 +169,7 @@ export function AccountAbstractionSettingsPage(
   }
 
   return (
-    <Flex flexDir="column" gap={8}>
+    (<Flex flexDir="column" gap={8}>
       <Flex
         flexDir={{ base: "column", lg: "row" }}
         gap={8}
@@ -581,7 +581,7 @@ export function AccountAbstractionSettingsPage(
                     {customHeaderFields.fields.map((_, customHeaderIdx) => {
                       return (
                         // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                        <Flex key={customHeaderIdx} gap={2} w="full">
+                        (<Flex key={customHeaderIdx} gap={2} w="full">
                           <Input
                             placeholder="Key"
                             type="text"
@@ -603,7 +603,7 @@ export function AccountAbstractionSettingsPage(
                               customHeaderFields.remove(customHeaderIdx);
                             }}
                           />
-                        </Flex>
+                        </Flex>)
                       );
                     })}
                     <Button
@@ -684,6 +684,6 @@ export function AccountAbstractionSettingsPage(
           </Button>
         </Box>
       </Flex>
-    </Flex>
+    </Flex>)
   );
 }

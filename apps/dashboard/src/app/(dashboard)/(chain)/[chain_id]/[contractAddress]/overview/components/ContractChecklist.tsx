@@ -31,9 +31,9 @@ type Step = {
 export const ContractChecklist: React.FC<ContractChecklistProps> = (props) => {
   return (
     // if no permissions, simply return null (do not fail open)
-    <AdminOnly contract={props.contract} failOpen={false}>
+    (<AdminOnly contract={props.contract} failOpen={false}>
       <Inner {...props} />
-    </AdminOnly>
+    </AdminOnly>)
   );
 };
 

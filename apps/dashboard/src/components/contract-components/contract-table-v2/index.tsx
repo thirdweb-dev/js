@@ -165,7 +165,7 @@ export const PublishedContractTable: ComponentWithChildren<
     data: rows,
   });
   return (
-    <TableContainer className="relative">
+    (<TableContainer className="relative">
       {isFetching && (
         <Spinner
           color="primary"
@@ -179,7 +179,7 @@ export const PublishedContractTable: ComponentWithChildren<
         <Thead>
           {tableInstance.headerGroups.map((headerGroup, headerGroupIndex) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-            <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+            (<Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
               {headerGroup.headers.map((column, columnIndex) => (
                 <Th
                   {...column.getHeaderProps()}
@@ -194,7 +194,7 @@ export const PublishedContractTable: ComponentWithChildren<
               ))}
               {/* Need to add an empty header for the icon button */}
               <Th border="none" />
-            </Tr>
+            </Tr>)
           ))}
         </Thead>
         <Tbody {...tableInstance.getTableBodyProps()} position="relative">
@@ -205,7 +205,7 @@ export const PublishedContractTable: ComponentWithChildren<
         </Tbody>
       </Table>
       {children}
-    </TableContainer>
+    </TableContainer>)
   );
 };
 

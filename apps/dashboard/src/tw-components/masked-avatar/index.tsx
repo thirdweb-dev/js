@@ -17,7 +17,7 @@ export const MaskedAvatar: React.FC<MaskedAvatarProps> = ({
   className,
 }) => {
   return (
-    <SkeletonContainer
+    (<SkeletonContainer
       className={cn(className, `size-${boxSize}`)}
       style={{
         WebkitMaskImage: `url("${hexagon.src}")`,
@@ -29,8 +29,8 @@ export const MaskedAvatar: React.FC<MaskedAvatarProps> = ({
       loadedData={src}
       render={(v) => (
         // eslint-disable-next-line @next/next/no-img-element
-        <img className="object-cover" src={v} alt={alt || ""} />
+        (<img className="object-cover" src={v} alt={alt || ""} />)
       )}
-    />
+    />)
   );
 };

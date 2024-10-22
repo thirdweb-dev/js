@@ -124,7 +124,7 @@ function RenderData(props: {
   setPage: (page: number) => void;
 }) {
   return (
-    <div>
+    (<div>
       <ScrollShadow>
         <table className="w-full selection:bg-inverted selection:text-inverted-foreground ">
           <thead>
@@ -150,7 +150,7 @@ function RenderData(props: {
               ) : (
                 new Array(pageSize).fill(0).map((_, i) => (
                   // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                  <SkeletonTableRow key={i} />
+                  (<SkeletonTableRow key={i} />)
                 ))
               ))}
           </tbody>
@@ -168,7 +168,7 @@ function RenderData(props: {
           onPageClick={props.setPage}
         />
       )}
-    </div>
+    </div>)
   );
 }
 

@@ -513,22 +513,22 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
 
   // Render the UI for your table
   return (
-    <Flex flexGrow={1}>
+    (<Flex flexGrow={1}>
       <TableContainer>
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup, headerGroupIndex) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-              <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+              (<Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
                 {headerGroup.headers.map((column, columnIndex) => (
                   // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                  <Th {...column.getHeaderProps()} key={columnIndex}>
+                  (<Th {...column.getHeaderProps()} key={columnIndex}>
                     <Text as="label" size="label.sm" color="faded">
                       {column.render("Header")}
                     </Text>
-                  </Th>
+                  </Th>)
                 ))}
-              </Tr>
+              </Tr>)
             ))}
           </Thead>
           <Tbody {...getTableBodyProps()}>
@@ -536,7 +536,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
               prepareRow(row);
               return (
                 // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                <Tr {...row.getRowProps()} key={rowIndex}>
+                (<Tr {...row.getRowProps()} key={rowIndex}>
                   {row.cells.map((cell, cellIndex) => {
                     return (
                       <Td
@@ -549,7 +549,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
                       </Td>
                     );
                   })}
-                </Tr>
+                </Tr>)
               );
             })}
           </Tbody>
@@ -602,6 +602,6 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
           </div>
         </div>
       </Portal>
-    </Flex>
+    </Flex>)
   );
 };

@@ -350,98 +350,96 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
     usePagination,
   );
   // Render the UI for your table
-  return (
-    <>
-      <Table {...getTableProps()}>
-        <Thead>
-          {headerGroups.map((headerGroup, headerGroupIndex) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-            <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
-              {headerGroup.headers.map((column, columnIndex) => (
-                <Th
-                  {...column.getHeaderProps()}
-                  border="none"
-                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                  key={columnIndex}
-                >
-                  <Text as="label" size="label.sm" color="faded">
-                    {column.render("Header")}
-                  </Text>
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody {...getTableBodyProps()}>
-          {page.map((row, rowIndex) => {
-            prepareRow(row);
-            return (
-              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-              <Tr {...row.getRowProps()} key={rowIndex}>
-                {row.cells.map((cell, cellIndex) => (
-                  <Td
-                    {...cell.getCellProps()}
-                    borderColor="borderColor"
-                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                    key={cellIndex}
-                  >
-                    {cell.render("Cell")}
-                  </Td>
-                ))}
-              </Tr>
-            );
-          })}
-        </Tbody>
-      </Table>
-      {/* Only need to show the Pagination components if we have more than 25 records */}
-      {data.length > 0 && (
-        <Portal containerRef={portalRef}>
-          <div className="flex w-full items-center justify-center">
-            <div className="flex flex-row gap-1">
-              <IconButton
-                isDisabled={!canPreviousPage}
-                aria-label="first page"
-                icon={<ChevronFirstIcon className="size-4" />}
-                onClick={() => gotoPage(0)}
-              />
-              <IconButton
-                isDisabled={!canPreviousPage}
-                aria-label="previous page"
-                icon={<ChevronLeftIcon className="size-4" />}
-                onClick={() => previousPage()}
-              />
-              <p className="my-auto whitespace-nowrap">
-                Page <strong>{pageIndex + 1}</strong> of{" "}
-                <strong>{pageOptions.length}</strong>
-              </p>
-              <IconButton
-                isDisabled={!canNextPage}
-                aria-label="next page"
-                icon={<ChevronRightIcon className="size-4" />}
-                onClick={() => nextPage()}
-              />
-              <IconButton
-                isDisabled={!canNextPage}
-                aria-label="last page"
-                icon={<ChevronLastIcon className="size-4" />}
-                onClick={() => gotoPage(pageCount - 1)}
-              />
-              <Select
-                onChange={(e) => {
-                  setPageSize(Number.parseInt(e.target.value as string, 10));
-                }}
-                value={pageSize}
+  return (<>
+    <Table {...getTableProps()}>
+      <Thead>
+        {headerGroups.map((headerGroup, headerGroupIndex) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+          (<Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+            {headerGroup.headers.map((column, columnIndex) => (
+              <Th
+                {...column.getHeaderProps()}
+                border="none"
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+                key={columnIndex}
               >
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="250">250</option>
-                <option value="500">500</option>
-              </Select>
-            </div>
+                <Text as="label" size="label.sm" color="faded">
+                  {column.render("Header")}
+                </Text>
+              </Th>
+            ))}
+          </Tr>)
+        ))}
+      </Thead>
+      <Tbody {...getTableBodyProps()}>
+        {page.map((row, rowIndex) => {
+          prepareRow(row);
+          return (
+            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+            (<Tr {...row.getRowProps()} key={rowIndex}>
+              {row.cells.map((cell, cellIndex) => (
+                <Td
+                  {...cell.getCellProps()}
+                  borderColor="borderColor"
+                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+                  key={cellIndex}
+                >
+                  {cell.render("Cell")}
+                </Td>
+              ))}
+            </Tr>)
+          );
+        })}
+      </Tbody>
+    </Table>
+    {/* Only need to show the Pagination components if we have more than 25 records */}
+    {data.length > 0 && (
+      <Portal containerRef={portalRef}>
+        <div className="flex w-full items-center justify-center">
+          <div className="flex flex-row gap-1">
+            <IconButton
+              isDisabled={!canPreviousPage}
+              aria-label="first page"
+              icon={<ChevronFirstIcon className="size-4" />}
+              onClick={() => gotoPage(0)}
+            />
+            <IconButton
+              isDisabled={!canPreviousPage}
+              aria-label="previous page"
+              icon={<ChevronLeftIcon className="size-4" />}
+              onClick={() => previousPage()}
+            />
+            <p className="my-auto whitespace-nowrap">
+              Page <strong>{pageIndex + 1}</strong> of{" "}
+              <strong>{pageOptions.length}</strong>
+            </p>
+            <IconButton
+              isDisabled={!canNextPage}
+              aria-label="next page"
+              icon={<ChevronRightIcon className="size-4" />}
+              onClick={() => nextPage()}
+            />
+            <IconButton
+              isDisabled={!canNextPage}
+              aria-label="last page"
+              icon={<ChevronLastIcon className="size-4" />}
+              onClick={() => gotoPage(pageCount - 1)}
+            />
+            <Select
+              onChange={(e) => {
+                setPageSize(Number.parseInt(e.target.value as string, 10));
+              }}
+              value={pageSize}
+            >
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="250">250</option>
+              <option value="500">500</option>
+            </Select>
           </div>
-        </Portal>
-      )}
-    </>
-  );
+        </div>
+      </Portal>
+    )}
+  </>);
 };

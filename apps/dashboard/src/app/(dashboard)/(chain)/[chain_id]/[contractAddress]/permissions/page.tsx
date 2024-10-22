@@ -4,12 +4,12 @@ import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { ContractPermissionsPage } from "./ContractPermissionsPage";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     contractAddress: string;
     chain_id: string;
-  };
+  }>;
 }) {
-  const info = await getContractPageParamsInfo(props.params);
+  const info = await getContractPageParamsInfo((await props.params));
 
   if (!info) {
     notFound();

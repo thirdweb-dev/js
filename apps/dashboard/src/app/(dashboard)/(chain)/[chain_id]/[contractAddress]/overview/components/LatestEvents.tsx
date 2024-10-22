@@ -122,7 +122,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
   const eventsHref = `/${chainSlug}/${contractAddress}/events`;
 
   return (
-    <div>
+    (<div>
       <SimpleGrid
         columns={9}
         gap={2}
@@ -199,11 +199,11 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
         >
           {transaction.events.slice(0, 2).map((e, idx) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-            <LinkButton key={idx} href={`${eventsHref}?event=${e.eventName}`}>
+            (<LinkButton key={idx} href={`${eventsHref}?event=${e.eventName}`}>
               <Text color="whiteBg" fontWeight="600" isTruncated>
                 {e.eventName}
               </Text>
-            </LinkButton>
+            </LinkButton>)
           ))}
           {transaction.events.length > 2 && (
             <Button as="span" pointerEvents="none">
@@ -212,6 +212,6 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
           )}
         </ButtonGroup>
       </SimpleGrid>
-    </div>
+    </div>)
   );
 };

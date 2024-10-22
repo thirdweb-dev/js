@@ -110,7 +110,7 @@ function RenderData(props: { query: ProcessedQuery }) {
     : skeletonData;
 
   return (
-    <div className="flex flex-col justify-center gap-6 lg:flex-row">
+    (<div className="flex flex-col justify-center gap-6 lg:flex-row">
       {/* Left */}
       <div className="relative flex justify-center">
         <PieChart width={250} height={chartHeight}>
@@ -131,7 +131,7 @@ function RenderData(props: { query: ProcessedQuery }) {
           >
             {volumeData.map((entry, index) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: ok
-              <Cell key={index} fill={entry.color} />
+              (<Cell key={index} fill={entry.color} />)
             ))}
           </Pie>
         </PieChart>
@@ -184,7 +184,7 @@ function RenderData(props: { query: ProcessedQuery }) {
           ))}
         </div>
       </div>
-    </div>
+    </div>)
   );
 }
 

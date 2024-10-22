@@ -18,9 +18,9 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 type ExploreCategoryPageProps = {
-  params: {
+  params: Promise<{
     category: string;
-  };
+  }>;
 };
 
 export const metadata: Metadata = {
@@ -48,7 +48,7 @@ export async function generateMetadatra(
 export default async function ExploreCategoryPage(
   props: ExploreCategoryPageProps,
 ) {
-  const category = getCategory(props.params.category);
+  const category = getCategory((await props.params).category);
   if (!category) {
     notFound();
   }

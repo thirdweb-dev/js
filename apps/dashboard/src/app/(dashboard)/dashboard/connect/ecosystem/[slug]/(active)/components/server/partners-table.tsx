@@ -26,12 +26,12 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
 
   if (isPending) {
     return (
-      <div className="flex flex-col gap-2">
+      (<div className="flex flex-col gap-2">
         {Array.from({ length: 3 }).map((_, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: static list with index as key
-          <Skeleton key={i} className="h-10 w-full rounded-md" />
+          (<Skeleton key={i} className="h-10 w-full rounded-md" />)
         ))}
-      </div>
+      </div>)
     );
   }
 

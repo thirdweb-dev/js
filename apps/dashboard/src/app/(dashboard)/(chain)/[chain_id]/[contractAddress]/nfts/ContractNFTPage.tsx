@@ -52,7 +52,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     ERC721Ext.isCreateDelayedRevealBatchSupported(functionSelectors);
 
   return (
-    <div className="flex flex-col gap-6">
+    (<div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <h2 className="font-semibold text-2xl tracking-tight">Contract NFTs</h2>
         <div className="grid grid-cols-2 gap-2 md:flex">
@@ -62,7 +62,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
              * This button is used for claiming NFT Drop contract (erc721) only!
              * For Edition Drop we have a dedicated ClaimTabERC1155 inside each Edition's page
              */
-            <NFTClaimButton contract={contract} />
+            (<NFTClaimButton contract={contract} />)
           )}
           {isMintToSupported && (
             <NFTMintButton contract={contract} isErc721={isErc721} />
@@ -86,6 +86,6 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
       {canRenderNFTTable && (
         <NFTGetAllTable contract={contract} isErc721={isErc721} />
       )}
-    </div>
+    </div>)
   );
 };

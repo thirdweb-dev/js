@@ -44,7 +44,7 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
   }, [stringValue]);
 
   return (
-    <InputGroup {...restInputProps}>
+    (<InputGroup {...restInputProps}>
       <Input
         value={stringValue}
         onChange={(e) => setStringValue(e.target.value)}
@@ -62,6 +62,6 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
         maxLength={5}
       />
       <InputRightAddon>%</InputRightAddon>
-    </InputGroup>
+    </InputGroup>)
   );
 };

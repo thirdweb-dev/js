@@ -141,7 +141,7 @@ export function PayCustomersTable(props: {
 
 function RenderData(props: { query: ProcessedQuery; loadMore: () => void }) {
   return (
-    <ScrollShadow scrollableClassName="h-[250px]" disableTopShadow={true}>
+    (<ScrollShadow scrollableClassName="h-[250px]" disableTopShadow={true}>
       <table className="w-full">
         <thead>
           <TableHeadingRow>
@@ -154,7 +154,7 @@ function RenderData(props: { query: ProcessedQuery; loadMore: () => void }) {
             <>
               {new Array(5).fill(0).map((_, i) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                <CustomerTableRow rowIndex={i} key={i} />
+                (<CustomerTableRow rowIndex={i} key={i} />)
               ))}
             </>
           ) : (
@@ -188,7 +188,7 @@ function RenderData(props: { query: ProcessedQuery; loadMore: () => void }) {
           </Button>
         </div>
       )}
-    </ScrollShadow>
+    </ScrollShadow>)
   );
 }
 

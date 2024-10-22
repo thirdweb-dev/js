@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { ipAddress as ipAddress1 } from "@vercel/functions";
 import invariant from "tiny-invariant";
 import { cacheGet, cacheSet } from "../../../lib/redis";
 import type { ContactFormPayload } from "./types";
@@ -48,7 +49,7 @@ async function rateLimiter(req: NextRequest) {
 
   const ipAddress =
     req.headers.get("CF-Connecting-IP") ||
-    req.ip ||
+    ipAddress1(req) ||
     req.headers.get("X-Forwarded-For");
 
   if (!ipAddress) {

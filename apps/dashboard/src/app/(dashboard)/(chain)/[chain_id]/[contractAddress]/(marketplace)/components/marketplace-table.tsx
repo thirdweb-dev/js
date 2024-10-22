@@ -182,7 +182,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
   >(null);
 
   return (
-    <Flex gap={4} direction="column">
+    (<Flex gap={4} direction="column">
       <ButtonGroup size="sm" variant="outline" isAttached>
         <Button
           onClick={() => setListingsToShow("all")}
@@ -218,7 +218,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
           <Thead>
             {headerGroups.map((headerGroup, headerGroupIndex) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-              <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+              (<Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
                 {headerGroup.headers.map((column, columnIndex) => (
                   <Th
                     {...column.getHeaderProps()}
@@ -233,7 +233,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
                 ))}
                 {/* // Need to add an empty header for the drawer button */}
                 <Th border="none" />
-              </Tr>
+              </Tr>)
             ))}
           </Thead>
           <Tbody {...getTableBodyProps()} position="relative">
@@ -324,6 +324,6 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
           </Select>
         </Flex>
       </div>
-    </Flex>
+    </Flex>)
   );
 };

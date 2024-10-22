@@ -398,13 +398,13 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
 
   // Render the UI for your table
   return (
-    <Flex flexGrow={1}>
+    (<Flex flexGrow={1}>
       <TableContainer>
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup, headerGroupIndex) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-              <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+              (<Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
                 {headerGroup.headers.map((column, columnIndex) => (
                   <Th
                     {...column.getHeaderProps()}
@@ -417,7 +417,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
                     </Text>
                   </Th>
                 ))}
-              </Tr>
+              </Tr>)
             ))}
           </Thead>
           <Tbody {...getTableBodyProps()}>
@@ -425,7 +425,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
               prepareRow(row);
               return (
                 // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                <Tr {...row.getRowProps()} key={rowIndex}>
+                (<Tr {...row.getRowProps()} key={rowIndex}>
                   {row.cells.map((cell, cellIndex) => (
                     <Td
                       {...cell.getCellProps()}
@@ -436,7 +436,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
                       {cell.render("Cell")}
                     </Td>
                   ))}
-                </Tr>
+                </Tr>)
               );
             })}
           </Tbody>
@@ -489,6 +489,6 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
           </div>
         </div>
       </Portal>
-    </Flex>
+    </Flex>)
   );
 };

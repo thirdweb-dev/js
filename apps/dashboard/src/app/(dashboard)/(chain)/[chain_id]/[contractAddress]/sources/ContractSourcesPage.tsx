@@ -81,7 +81,7 @@ const VerifyContractModal: React.FC<
   });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    (<Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent
         className="!bg-background rounded-lg border border-border"
@@ -119,7 +119,7 @@ const VerifyContractModal: React.FC<
               ? veryifyQuery.data?.results.map(
                   (result: VerificationResult, index: number) => (
                     // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                    <Flex key={index} gap={2} align="center" mb={4}>
+                    (<Flex key={index} gap={2} align="center" mb={4}>
                       {result.success && (
                         <>
                           <CircleCheckIcon className="size-4 text-green-600" />
@@ -143,14 +143,14 @@ const VerifyContractModal: React.FC<
                           </Heading>
                         </>
                       )}
-                    </Flex>
+                    </Flex>)
                   ),
                 )
               : null}
           </Flex>
         </ModalBody>
       </ModalContent>
-    </Modal>
+    </Modal>)
   );
 };
 

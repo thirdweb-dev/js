@@ -42,7 +42,7 @@ export function AddPartnerForm({
   });
 
   return (
-    <Form {...form}>
+    (<Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
           addPartner({
@@ -130,6 +130,6 @@ export function AddPartnerForm({
           Add
         </Button>
       </form>
-    </Form>
+    </Form>)
   );
 }

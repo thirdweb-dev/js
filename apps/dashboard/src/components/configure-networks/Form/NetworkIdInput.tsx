@@ -13,7 +13,7 @@ export const NetworkIDInput: React.FC<{
   const existingChain = slugToChain.get(slug);
 
   return (
-    <FormFieldSetup
+    (<FormFieldSetup
       htmlFor="slug"
       isRequired
       label="Slug"
@@ -64,6 +64,6 @@ export const NetworkIDInput: React.FC<{
           },
         })}
       />
-    </FormFieldSetup>
+    </FormFieldSetup>)
   );
 };

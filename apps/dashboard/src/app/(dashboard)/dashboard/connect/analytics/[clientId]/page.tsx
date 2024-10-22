@@ -6,12 +6,12 @@ import { ConnectAnalyticsDashboard } from "../../../../../team/[team_slug]/[proj
 import { AnalyticsPageAPIKeysMenu } from "./AnalyticsPageAPIKeysMenu";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     clientId: string;
-  };
+  }>;
 }) {
   const authToken = getAuthToken();
-  const { clientId } = props.params;
+  const { clientId } = (await props.params);
 
   if (!authToken) {
     redirect(

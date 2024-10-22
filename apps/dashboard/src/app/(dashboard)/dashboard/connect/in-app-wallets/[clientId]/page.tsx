@@ -6,15 +6,15 @@ import { getInAppWalletSupportedAPIKeys } from "../getInAppWalletSupportedAPIKey
 import { InAppWalletsAPIKeysMenu } from "../inAppWalletsAPIKeysMenu";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     clientId: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     tab?: string;
-  };
+  }>;
 }) {
   const authToken = getAuthToken();
-  const { clientId } = props.params;
+  const { clientId } = (await props.params);
 
   if (!authToken) {
     redirect(
@@ -30,7 +30,7 @@ export default async function Page(props: {
   }
 
   return (
-    <div>
+    (<div>
       {/* header */}
       <div className="flex flex-col gap-4 lg:flex-row lg:justify-between">
         <PageHeader />
@@ -44,13 +44,12 @@ export default async function Page(props: {
           />
         </div>
       </div>
-
       <div className="h-8" />
       <EmbeddedWallets
         apiKey={apiKey}
         trackingCategory="embedded-wallet"
-        defaultTab={props.searchParams.tab === "1" ? 1 : 0}
+        defaultTab={(await props.searchParams).tab === "1" ? 1 : 0}
       />
-    </div>
+    </div>)
   );
 }

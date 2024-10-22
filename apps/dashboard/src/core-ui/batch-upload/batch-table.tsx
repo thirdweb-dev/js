@@ -164,22 +164,22 @@ export const BatchTable: React.FC<BatchTableProps> = ({
 
   // Render the UI for your table
   return (
-    <Flex flexGrow={1} overflow="auto">
+    (<Flex flexGrow={1} overflow="auto">
       <TableContainer maxW="100%">
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup, index) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-              <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
+              (<Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                 {headerGroup.headers.map((column, i) => (
                   // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                  <Th {...column.getHeaderProps()} border="none" key={i}>
+                  (<Th {...column.getHeaderProps()} border="none" key={i}>
                     <Text as="label" size="label.sm" color="faded">
                       {column.render("Header")}
                     </Text>
-                  </Th>
+                  </Th>)
                 ))}
-              </Tr>
+              </Tr>)
             ))}
           </Thead>
           <Tbody {...getTableBodyProps()}>
@@ -259,6 +259,6 @@ export const BatchTable: React.FC<BatchTableProps> = ({
           </div>
         </div>
       </Portal>
-    </Flex>
+    </Flex>)
   );
 };

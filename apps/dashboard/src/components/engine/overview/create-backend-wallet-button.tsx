@@ -105,118 +105,115 @@ export const CreateBackendWalletButton: React.FC<
     (walletType === "aws-kms" && isAwsKmsConfigured) ||
     (walletType === "gcp-kms" && isGcpKmsConfigured);
 
-  return (
-    <>
-      <Button onClick={() => setIsOpen(true)}>Create</Button>
+  return (<>
+    <Button onClick={() => setIsOpen(true)}>Create</Button>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent
+        className="z-[10001] p-0"
+        dialogOverlayClassName="z-[10000]"
+      >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="p-6">
+              <DialogHeader className="mb-4">
+                <DialogTitle className="font-semibold text-2xl tracking-tight">
+                  Create Wallet
+                </DialogTitle>
+              </DialogHeader>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent
-          className="z-[10001] p-0"
-          dialogOverlayClassName="z-[10000]"
-        >
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="p-6">
-                <DialogHeader className="mb-4">
-                  <DialogTitle className="font-semibold text-2xl tracking-tight">
-                    Create Wallet
-                  </DialogTitle>
-                </DialogHeader>
+              <div className="flex flex-col gap-5">
+                {/* Wallet type */}
+                <FormFieldSetup
+                  label="Wallet Type"
+                  errorMessage={
+                    form.getFieldState("type", form.formState).error?.message
+                  }
+                  htmlFor="wallet-label"
+                  isRequired
+                  tooltip={null}
+                >
+                  <Select
+                    onValueChange={(value) => {
+                      form.reset();
+                      form.setValue("type", value as EngineBackendWalletType);
+                    }}
+                    value={form.watch("type")}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="z-[10001]">
+                      <SelectGroup>
+                        {walletTypeOptions.map((option) => (
+                          <SelectItem key={option.key} value={option.key}>
+                            {option.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormFieldSetup>
 
-                <div className="flex flex-col gap-5">
-                  {/* Wallet type */}
-                  <FormFieldSetup
-                    label="Wallet Type"
+                {(walletType === "aws-kms" && !isAwsKmsConfigured) ||
+                (walletType === "gcp-kms" && !isGcpKmsConfigured) ? (
+                  // Warning if not configured
+                  (<Alert variant="warning">
+                    <CircleAlertIcon className="size-5" />
+                    <AlertTitle>
+                      {selectedOption?.name} is not yet configured
+                    </AlertTitle>
+                    <AlertDescription>
+                      Provide your credentials on the{" "}
+                      <Link
+                        href={`/dashboard/engine/${instance.id}/configuration`}
+                        className="text-link-foreground hover:text-foreground"
+                      >
+                        Configuration
+                      </Link>{" "}
+                      tab to enable backend wallets stored on{" "}
+                      {selectedOption?.name}.
+                    </AlertDescription>
+                  </Alert>)
+                ) : (
+                  // Label
+                  (<FormFieldSetup
+                    key="label"
+                    label="Label"
                     errorMessage={
-                      form.getFieldState("type", form.formState).error?.message
+                      form.getFieldState("label", form.formState).error
+                        ?.message
                     }
                     htmlFor="wallet-label"
-                    isRequired
+                    isRequired={false}
                     tooltip={null}
                   >
-                    <Select
-                      onValueChange={(value) => {
-                        form.reset();
-                        form.setValue("type", value as EngineBackendWalletType);
-                      }}
-                      value={form.watch("type")}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="z-[10001]">
-                        <SelectGroup>
-                          {walletTypeOptions.map((option) => (
-                            <SelectItem key={option.key} value={option.key}>
-                              {option.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormFieldSetup>
-
-                  {(walletType === "aws-kms" && !isAwsKmsConfigured) ||
-                  (walletType === "gcp-kms" && !isGcpKmsConfigured) ? (
-                    // Warning if not configured
-                    <Alert variant="warning">
-                      <CircleAlertIcon className="size-5" />
-                      <AlertTitle>
-                        {selectedOption?.name} is not yet configured
-                      </AlertTitle>
-                      <AlertDescription>
-                        Provide your credentials on the{" "}
-                        <Link
-                          href={`/dashboard/engine/${instance.id}/configuration`}
-                          className="text-link-foreground hover:text-foreground"
-                        >
-                          Configuration
-                        </Link>{" "}
-                        tab to enable backend wallets stored on{" "}
-                        {selectedOption?.name}.
-                      </AlertDescription>
-                    </Alert>
-                  ) : (
-                    // Label
-                    <FormFieldSetup
-                      key="label"
-                      label="Label"
-                      errorMessage={
-                        form.getFieldState("label", form.formState).error
-                          ?.message
-                      }
-                      htmlFor="wallet-label"
-                      isRequired={false}
-                      tooltip={null}
-                    >
-                      <Input
-                        id="wallet-label"
-                        type="text"
-                        placeholder="A description to identify this backend wallet"
-                        {...form.register("label")}
-                      />
-                    </FormFieldSetup>
-                  )}
-                </div>
+                    <Input
+                      id="wallet-label"
+                      type="text"
+                      placeholder="A description to identify this backend wallet"
+                      {...form.register("label")}
+                    />
+                  </FormFieldSetup>)
+                )}
               </div>
+            </div>
 
-              <DialogFooter className="mt-4 gap-4 border-border border-t bg-muted/50 p-6 lg:gap-2 ">
-                <Button variant="outline" onClick={() => setIsOpen(false)}>
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  className="min-w-28 gap-2"
-                  disabled={!isFormValid || createWallet.isPending}
-                >
-                  {createWallet.isPending && <Spinner className="size-4" />}
-                  Create
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
+            <DialogFooter className="mt-4 gap-4 border-border border-t bg-muted/50 p-6 lg:gap-2 ">
+              <Button variant="outline" onClick={() => setIsOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="min-w-28 gap-2"
+                disabled={!isFormValid || createWallet.isPending}
+              >
+                {createWallet.isPending && <Spinner className="size-4" />}
+                Create
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  </>);
 };

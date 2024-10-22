@@ -120,7 +120,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   const properties = nft.metadata.attributes || nft.metadata.properties;
 
   return (
-    <Flex flexDir={{ base: "column", lg: "row" }} gap={6}>
+    (<Flex flexDir={{ base: "column", lg: "row" }} gap={6}>
       <Card h="full" position="relative" minH="100px">
         <Box w="50px" position="absolute" zIndex={1000} top={6} left={6}>
           {/* TODO - replace this with breadcrumbs  */}
@@ -144,7 +144,6 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
           height={isMobile ? "100%" : "300px"}
         />
       </Card>
-
       <Flex flexDir="column" gap={6} w="full" px={2}>
         <Flex flexDir="column" gap={1.5}>
           <NFTName value={nft.metadata.name} />
@@ -316,7 +315,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                     {/* biome-ignore lint/suspicious/noExplicitAny: FIXME */}
                     {properties.map((property: any, idx) => (
                       // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                      <NftProperty key={idx} property={property} />
+                      (<NftProperty key={idx} property={property} />)
                     ))}
                   </SimpleGrid>
                 ) : (
@@ -342,7 +341,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
           );
         })}
       </Flex>
-    </Flex>
+    </Flex>)
   );
 };
 

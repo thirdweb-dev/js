@@ -5,12 +5,12 @@ import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { ContractNFTPage } from "./ContractNFTPage";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     contractAddress: string;
     chain_id: string;
-  };
+  }>;
 }) {
-  const info = await getContractPageParamsInfo(props.params);
+  const info = await getContractPageParamsInfo((await props.params));
 
   if (!info) {
     notFound();
@@ -20,7 +20,7 @@ export default async function Page(props: {
   const { supportedERCs } = await getContractPageMetadata(contract);
 
   if (!supportedERCs.isERC721 && !supportedERCs.isERC1155) {
-    redirect(`/${props.params.chain_id}/${props.params.contractAddress}`);
+    redirect(`/${(await props.params).chain_id}/${(await props.params).contractAddress}`);
   }
 
   const functionSelectors = await resolveFunctionSelectors(contract);

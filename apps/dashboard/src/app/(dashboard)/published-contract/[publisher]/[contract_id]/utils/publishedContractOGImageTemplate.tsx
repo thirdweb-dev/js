@@ -5,7 +5,7 @@ import { download } from "thirdweb/storage";
 
 const OgBrandIcon: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
-  <svg
+  (<svg
     xmlns="http://www.w3.org/2000/svg"
     width="59"
     height="36"
@@ -19,12 +19,12 @@ const OgBrandIcon: React.FC = () => (
       fill="white"
       fillOpacity="0.5"
     />
-  </svg>
+  </svg>)
 );
 
 const PackageIcon: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
-  <svg
+  (<svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
@@ -39,12 +39,12 @@ const PackageIcon: React.FC = () => (
     <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
     <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
     <line x1="12" y1="22.08" x2="12" y2="12" />
-  </svg>
+  </svg>)
 );
 
 const FileTextIcon: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
-  <svg
+  (<svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
@@ -60,12 +60,12 @@ const FileTextIcon: React.FC = () => (
     <line x1="16" y1="13" x2="8" y2="13" />
     <line x1="16" y1="17" x2="8" y2="17" />
     <polyline points="10 9 9 9 8 9" />
-  </svg>
+  </svg>)
 );
 
 const CalendarIcon: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
-  <svg
+  (<svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
@@ -80,12 +80,12 @@ const CalendarIcon: React.FC = () => (
     <line x1="16" y1="2" x2="16" y2="6" />
     <line x1="8" y1="2" x2="8" y2="6" />
     <line x1="3" y1="10" x2="21" y2="10" />
-  </svg>
+  </svg>)
 );
 
 const VersionIcon: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
-  <svg
+  (<svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
@@ -100,7 +100,7 @@ const VersionIcon: React.FC = () => (
     <circle cx="18" cy="6" r="3" />
     <circle cx="6" cy="18" r="3" />
     <path d="M18 9a9 9 0 0 1-9 9" />
-  </svg>
+  </svg>)
 );
 
 const MAX_LENGTH = 190;

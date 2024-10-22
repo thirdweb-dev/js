@@ -8,15 +8,15 @@ import { fetchDeployMetadata } from "thirdweb/contract";
 import { getPublishedContractsWithPublisherMapping } from "../../../published-contract/[publisher]/[contract_id]/utils/getPublishedContractsWithPublisherMapping";
 
 type DirectDeployPageProps = {
-  params: {
+  params: Promise<{
     publish_uri: string;
-  };
+  }>;
 };
 
 export default async function PublishContractPage(
   props: DirectDeployPageProps,
 ) {
-  const decodedPublishUri = decodeURIComponent(props.params.publish_uri);
+  const decodedPublishUri = decodeURIComponent((await props.params).publish_uri);
   const publishUri = decodedPublishUri.startsWith("ipfs://")
     ? decodedPublishUri
     : `ipfs://${decodedPublishUri}`;
@@ -28,7 +28,7 @@ export default async function PublishContractPage(
 
   let publishMetadata = publishMetadataFromUri;
 
-  const pathname = `/contracts/publish/${props.params.publish_uri}`;
+  const pathname = `/contracts/publish/${(await props.params).publish_uri}`;
 
   const address = getActiveAccountCookie();
   if (!address) {

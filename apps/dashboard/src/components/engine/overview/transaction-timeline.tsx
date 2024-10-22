@@ -120,7 +120,7 @@ export const TransactionTimeline = ({
   const activeIdx = timeline.findIndex((s) => !!s.isLatest);
 
   return (
-    <Stepper
+    (<Stepper
       index={activeIdx}
       orientation="vertical"
       height={12 * timeline.length}
@@ -131,7 +131,7 @@ export const TransactionTimeline = ({
         const isFilled = index <= activeIdx;
         return (
           // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-          <Step key={index} as={Flex} w="full">
+          (<Step key={index} as={Flex} w="full">
             <StepIndicator>
               <StepStatus
                 complete={<CheckIcon className="size-4" />}
@@ -154,10 +154,10 @@ export const TransactionTimeline = ({
               )}
             </Flex>
             <StepSeparator />
-          </Step>
+          </Step>)
         );
       })}
-    </Stepper>
+    </Stepper>)
   );
 };
 
