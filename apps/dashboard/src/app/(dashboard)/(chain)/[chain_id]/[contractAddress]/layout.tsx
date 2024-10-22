@@ -3,7 +3,9 @@ import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import { ContractMetadata } from "components/custom-contract/contract-header/contract-metadata";
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getContractMetadata } from "thirdweb/extensions/common";
+import { isContractDeployed } from "thirdweb/utils";
 import { resolveFunctionSelectors } from "../../../../../lib/selectors";
 import { shortenIfAddress } from "../../../../../utils/usedapp-external";
 import { ConfigureCustomChain } from "./ConfigureCustomChain";
@@ -24,6 +26,13 @@ export default async function Layout(props: {
 
   if (!info) {
     return <ConfigureCustomChain chainSlug={props.params.chain_id} />;
+  }
+
+  // check if the contract exists
+  const isValidContract = await isContractDeployed(info.contract);
+  if (!isValidContract) {
+    // TODO - replace 404 with a better page to upsale deploy or other thirdweb products
+    notFound();
   }
 
   const { contract, chainMetadata } = info;

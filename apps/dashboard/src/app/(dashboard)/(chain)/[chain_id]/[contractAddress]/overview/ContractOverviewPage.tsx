@@ -1,4 +1,5 @@
 import { PublishedBy } from "components/contract-components/shared/published-by";
+import { ErrorBoundary } from "react-error-boundary";
 import type { ThirdwebContract } from "thirdweb";
 import { AnalyticsOverview } from "./components/Analytics";
 import { BuildYourApp } from "./components/BuildYourApp";
@@ -99,7 +100,9 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
         />
       </div>
       <div className="shrink-0 lg:w-[300px]">
-        <PublishedBy contract={contract} />
+        <ErrorBoundary fallback={null}>
+          <PublishedBy contract={contract} />
+        </ErrorBoundary>
       </div>
     </div>
   );
