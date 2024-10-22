@@ -1,7 +1,8 @@
+"use client";
+
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { StepsCard } from "components/dashboard/StepsCard";
-import { useContractFunctionSelectors } from "contract-ui/hooks/useContractFunctionSelectors";
 import Link from "next/link";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -18,6 +19,7 @@ interface ContractChecklistProps {
   isErc1155: boolean;
   isErc20: boolean;
   chainSlug: string;
+  functionSelectors: string[];
 }
 
 type Step = {
@@ -27,13 +29,10 @@ type Step = {
 };
 
 export const ContractChecklist: React.FC<ContractChecklistProps> = (props) => {
-  const functionSelectorQuery = useContractFunctionSelectors(props.contract);
   return (
     // if no permissions, simply return null (do not fail open)
     <AdminOnly contract={props.contract} failOpen={false}>
-      {!!functionSelectorQuery.data?.length && (
-        <Inner functionSelectors={functionSelectorQuery.data} {...props} />
-      )}
+      <Inner {...props} />
     </AdminOnly>
   );
 };

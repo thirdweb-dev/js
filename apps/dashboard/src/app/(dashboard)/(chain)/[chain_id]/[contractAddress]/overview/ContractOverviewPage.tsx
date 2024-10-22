@@ -1,5 +1,3 @@
-"use client";
-
 import { PublishedBy } from "components/contract-components/shared/published-by";
 import type { ThirdwebContract } from "thirdweb";
 import { AnalyticsOverview } from "./components/Analytics";
@@ -21,6 +19,7 @@ interface ContractOverviewPageProps {
   isPermissionsEnumerable: boolean;
   chainSlug: string;
   isAnalyticsSupported: boolean;
+  functionSelectors: string[];
 }
 
 const TRACKING_CATEGORY = "contract_overview";
@@ -35,6 +34,7 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
   isPermissionsEnumerable,
   chainSlug,
   isAnalyticsSupported,
+  functionSelectors,
 }) => {
   return (
     <div className="flex flex-col gap-8 lg:flex-row">
@@ -45,6 +45,7 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
           isErc20={isErc20}
           contract={contract}
           chainSlug={chainSlug}
+          functionSelectors={functionSelectors}
         />
 
         {isAnalyticsSupported && (

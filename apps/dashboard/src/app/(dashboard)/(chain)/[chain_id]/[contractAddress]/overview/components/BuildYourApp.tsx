@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Flex,
   GridItem,
@@ -7,7 +9,9 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage as Image } from "components/Image";
 import { PRODUCTS } from "components/product-pages/common/nav/data";
-import { Card, Text, TrackedLink, type TrackedLinkProps } from "tw-components";
+import { Card } from "tw-components/card";
+import { TrackedLink, type TrackedLinkProps } from "tw-components/link";
+import { Text } from "tw-components/text";
 
 const RENDERED_PRODUCTS = ["sdk", "storage", "ui-components", "auth"];
 

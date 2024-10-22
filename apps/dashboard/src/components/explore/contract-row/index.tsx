@@ -1,7 +1,8 @@
 import type { ExploreCategory } from "data/explore";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { ContractCard } from "../contract-card";
+import { Suspense } from "react";
+import { ContractCard, ContractCardSkeleton } from "../contract-card";
 
 interface ContractRowProps {
   category: ExploreCategory;
@@ -69,26 +70,30 @@ export function ContractRow({ category }: ContractRowProps) {
             return null;
           }
           return (
-            <ContractCard
+            <Suspense
               key={publisher + contractId + overrides?.title}
-              publisher={publisher}
-              contractId={contractId}
-              titleOverride={overrides?.title}
-              descriptionOverride={overrides?.description}
-              tracking={{
-                source: category.id,
-                itemIndex: `${idx}`,
-              }}
-              isBeta={category.isBeta}
-              modules={
-                modules?.length
-                  ? modules.map((m) => ({
-                      publisher: m.split("/")[0] || "",
-                      moduleId: m.split("/")[1] || "",
-                    }))
-                  : undefined
-              }
-            />
+              fallback={<ContractCardSkeleton />}
+            >
+              <ContractCard
+                publisher={publisher}
+                contractId={contractId}
+                titleOverride={overrides?.title}
+                descriptionOverride={overrides?.description}
+                tracking={{
+                  source: category.id,
+                  itemIndex: `${idx}`,
+                }}
+                isBeta={category.isBeta}
+                modules={
+                  modules?.length
+                    ? modules.map((m) => ({
+                        publisher: m.split("/")[0] || "",
+                        moduleId: m.split("/")[1] || "",
+                      }))
+                    : undefined
+                }
+              />
+            </Suspense>
           );
         })}
       </div>

@@ -1,41 +1,40 @@
-import { SkeletonContainer } from "@/components/ui/skeleton";
-import { useEns } from "components/contract-components/hooks";
 import { PublisherAvatar } from "components/contract-components/publisher/masked-avatar";
 import Link from "next/link";
-import type { RequiredParam } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { isEnsName, resolveEns } from "../../../lib/ens";
 
 interface ContractPublisherProps {
-  addressOrEns: RequiredParam<string>;
-  showSkeleton?: boolean;
+  addressOrEns: string;
 }
 
-export const ContractPublisher: React.FC<ContractPublisherProps> = ({
+export const ContractPublisher: React.FC<ContractPublisherProps> = async ({
   addressOrEns,
-  showSkeleton,
 }) => {
-  const ensQuery = useEns(addressOrEns || undefined);
+  let ensOrAddressToShow = addressOrEns;
+
+  if (!isEnsName(addressOrEns)) {
+    try {
+      const res = await resolveEns(addressOrEns);
+      if (res.ensName) {
+        ensOrAddressToShow = res.ensName;
+      }
+    } catch {
+      // ignore
+    }
+  }
 
   return (
     <Link
       className="flex shrink-0 items-center gap-1.5 hover:underline"
-      href={replaceDeployerAddress(
-        `/${ensQuery.data?.ensName || ensQuery.data?.address || addressOrEns}`,
-      )}
+      href={replaceDeployerAddress(`/${ensOrAddressToShow}`)}
     >
       <PublisherAvatar
-        isPending={showSkeleton}
+        isPending={false}
         boxSize={5}
         address={addressOrEns || ""}
       />
 
-      <SkeletonContainer
-        loadedData={
-          ensQuery.data?.ensName || ensQuery.data?.address || addressOrEns || ""
-        }
-        skeletonData=""
-        render={(v) => <p className="text-xs"> {treatAddress(v)} </p>}
-      />
+      <p className="text-xs"> {treatAddress(ensOrAddressToShow)} </p>
     </Link>
   );
 };
