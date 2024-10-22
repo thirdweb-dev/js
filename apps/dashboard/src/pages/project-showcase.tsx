@@ -1,27 +1,49 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
-import { ArrowRight } from "lucide-react"
-import Image from "next/image"
-import { PROJECT_SHOWCASE_DATA, PROJECT_SHOWCASE_INDUSTRIES, PROJECT_SHOWCASE_ITEMS_PER_PAGE } from "../lib/project-showcase-constants"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import {
+  PROJECT_SHOWCASE_DATA,
+  PROJECT_SHOWCASE_INDUSTRIES,
+  PROJECT_SHOWCASE_ITEMS_PER_PAGE,
+} from "../lib/project-showcase-constants";
 
 export default function ProjectShowcase() {
-  const [selectedIndustry, setSelectedIndustry] = useState("All")
-  const [currentPage, setCurrentPage] = useState(1)
+  const [selectedIndustry, setSelectedIndustry] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredProjects = selectedIndustry === "All"
-    ? PROJECT_SHOWCASE_DATA
-    : PROJECT_SHOWCASE_DATA.filter(project => project.industry === selectedIndustry)
+  const filteredProjects =
+    selectedIndustry === "All"
+      ? PROJECT_SHOWCASE_DATA
+      : PROJECT_SHOWCASE_DATA.filter(
+          (project) => project.industry === selectedIndustry,
+        );
 
-  const totalPages = Math.ceil(filteredProjects.length / PROJECT_SHOWCASE_ITEMS_PER_PAGE)
+  const totalPages = Math.ceil(
+    filteredProjects.length / PROJECT_SHOWCASE_ITEMS_PER_PAGE,
+  );
   const paginatedProjects = filteredProjects.slice(
     (currentPage - 1) * PROJECT_SHOWCASE_ITEMS_PER_PAGE,
-    currentPage * PROJECT_SHOWCASE_ITEMS_PER_PAGE
-  )
+    currentPage * PROJECT_SHOWCASE_ITEMS_PER_PAGE,
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,13 +66,15 @@ export default function ProjectShowcase() {
         <section>
           <div className="mb-8">
             <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {PROJECT_SHOWCASE_INDUSTRIES.map(industry => (
+              {PROJECT_SHOWCASE_INDUSTRIES.map((industry) => (
                 <Button
                   key={industry}
-                  variant={selectedIndustry === industry ? "default" : "outline"}
+                  variant={
+                    selectedIndustry === industry ? "default" : "outline"
+                  }
                   onClick={() => {
-                    setSelectedIndustry(industry)
-                    setCurrentPage(1)
+                    setSelectedIndustry(industry);
+                    setCurrentPage(1);
                   }}
                 >
                   {industry}
@@ -60,7 +84,10 @@ export default function ProjectShowcase() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {paginatedProjects.map((project) => (
-              <Card key={project.id} className="flex flex-col overflow-hidden transition-shadow hover:shadow-lg">
+              <Card
+                key={project.id}
+                className="flex flex-col overflow-hidden transition-shadow hover:shadow-lg"
+              >
                 <Image
                   src={project.image}
                   alt={project.title}
@@ -80,27 +107,29 @@ export default function ProjectShowcase() {
           </div>
           <div className="mt-8 flex flex-col items-center">
             <div className="text-sm text-muted-foreground mb-4">
-              Showing {paginatedProjects.length} of {filteredProjects.length} projects in {selectedIndustry === "All" ? "all categories" : selectedIndustry}
+              Showing {paginatedProjects.length} of {filteredProjects.length}{" "}
+              projects in{" "}
+              {selectedIndustry === "All" ? "all categories" : selectedIndustry}
             </div>
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
-                    href="#"
                     onClick={(e) => {
-                      e.preventDefault()
-                      setCurrentPage(prev => Math.max(prev - 1, 1))
+                      e.preventDefault();
+                      setCurrentPage((prev) => Math.max(prev - 1, 1));
                     }}
-                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                    className={
+                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                    }
                   />
                 </PaginationItem>
                 {[...Array(totalPages)].map((_, i) => (
                   <PaginationItem key={i}>
                     <PaginationLink
-                      href="#"
                       onClick={(e) => {
-                        e.preventDefault()
-                        setCurrentPage(i + 1)
+                        e.preventDefault();
+                        setCurrentPage(i + 1);
                       }}
                       isActive={currentPage === i + 1}
                     >
@@ -110,12 +139,15 @@ export default function ProjectShowcase() {
                 ))}
                 <PaginationItem>
                   <PaginationNext
-                    href="#"
                     onClick={(e) => {
-                      e.preventDefault()
-                      setCurrentPage(prev => Math.min(prev + 1, totalPages))
+                      e.preventDefault();
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
                     }}
-                    className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
+                    className={
+                      currentPage === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
                   />
                 </PaginationItem>
               </PaginationContent>
@@ -124,5 +156,5 @@ export default function ProjectShowcase() {
         </section>
       </main>
     </div>
-  )
+  );
 }
