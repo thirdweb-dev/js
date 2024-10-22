@@ -1,6 +1,8 @@
 import ConnectButton from "@/components/ConnectButton";
 import { authedOnly } from "@/lib/auth";
 import { getEcosystemInfo } from "@/lib/ecosystems";
+import { resolveScheme } from "thirdweb/storage";
+import { client } from "../../../lib/client";
 
 export default async function Layout({
   children,
@@ -18,7 +20,7 @@ export default async function Layout({
           <div className="flex items-center gap-2">
             <img
               className="h-8 w-8"
-              src={ecosystem.imageUrl}
+              src={resolveScheme({ uri: ecosystem.imageUrl, client })}
               alt={ecosystem.name}
               width={100}
               height={100}
