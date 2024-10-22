@@ -14,74 +14,77 @@ const chain = ANVIL_CHAIN;
 const client = TEST_CLIENT;
 const account = TEST_ACCOUNT_C;
 
-describe("ERC1155 Edition: mintToBatch", () => {
-  it("should mint multiple tokens in one tx", async () => {
-    const contract = getContract({
-      chain,
-      client,
-      address: await deployERC1155Contract({
+describe.runIf(process.env.TW_SECRET_KEY)(
+  "ERC1155 Edition: mintToBatch",
+  () => {
+    it("should mint multiple tokens in one tx", async () => {
+      const contract = getContract({
         chain,
         client,
+        address: await deployERC1155Contract({
+          chain,
+          client,
+          account,
+          type: "TokenERC1155",
+          params: {
+            name: "edition",
+            contractURI: TEST_CONTRACT_URI,
+          },
+        }),
+      });
+
+      await sendAndConfirmTransaction({
         account,
-        type: "TokenERC1155",
-        params: {
-          name: "edition",
-          contractURI: TEST_CONTRACT_URI,
+        transaction: mintToBatch({
+          contract,
+          to: account.address,
+          nfts: [
+            { metadata: { name: "token 0" }, supply: 1n },
+            { metadata: { name: "token 1" }, supply: 2n },
+            { metadata: { name: "token 2" }, supply: 3n },
+          ],
+        }),
+      });
+
+      await sendAndConfirmTransaction({
+        account,
+        transaction: mintAdditionalSupplyToBatch({
+          contract,
+          nfts: [
+            { tokenId: 0n, supply: 99n, to: account.address },
+            { tokenId: 1n, supply: 98n, to: account.address },
+            { tokenId: 2n, supply: 97n, to: account.address },
+          ],
+        }),
+      });
+
+      const nfts = await getNFTs({ contract });
+      expect(nfts).toStrictEqual([
+        {
+          metadata: { name: "token 0" },
+          owner: null,
+          id: 0n,
+          tokenURI: "ipfs://QmPZ6LpGqMuFbHKTXrNW1NRNLHf1nrxS4dtoFqdZZTKvPX/0",
+          type: "ERC1155",
+          supply: 100n,
         },
-      }),
+        {
+          metadata: { name: "token 1" },
+          owner: null,
+          id: 1n,
+          tokenURI: "ipfs://QmRFPyc3yEYxR4pQxwyTQWTine51TxWCoD6nzJWR3eX45b/0",
+          type: "ERC1155",
+          supply: 100n,
+        },
+        {
+          metadata: { name: "token 2" },
+          owner: null,
+          id: 2n,
+          tokenURI: "ipfs://QmesQiRLHCgqWZM2GFCs7Nb7rr2S72hU1BVQc7xiTyKZtT/0",
+          type: "ERC1155",
+          supply: 100n,
+        },
+      ]);
     });
-
-    await sendAndConfirmTransaction({
-      account,
-      transaction: mintToBatch({
-        contract,
-        to: account.address,
-        nfts: [
-          { metadata: { name: "token 0" }, supply: 1n },
-          { metadata: { name: "token 1" }, supply: 2n },
-          { metadata: { name: "token 2" }, supply: 3n },
-        ],
-      }),
-    });
-
-    await sendAndConfirmTransaction({
-      account,
-      transaction: mintAdditionalSupplyToBatch({
-        contract,
-        nfts: [
-          { tokenId: 0n, supply: 99n, to: account.address },
-          { tokenId: 1n, supply: 98n, to: account.address },
-          { tokenId: 2n, supply: 97n, to: account.address },
-        ],
-      }),
-    });
-
-    const nfts = await getNFTs({ contract });
-    expect(nfts).toStrictEqual([
-      {
-        metadata: { name: "token 0" },
-        owner: null,
-        id: 0n,
-        tokenURI: "ipfs://QmPZ6LpGqMuFbHKTXrNW1NRNLHf1nrxS4dtoFqdZZTKvPX/0",
-        type: "ERC1155",
-        supply: 100n,
-      },
-      {
-        metadata: { name: "token 1" },
-        owner: null,
-        id: 1n,
-        tokenURI: "ipfs://QmRFPyc3yEYxR4pQxwyTQWTine51TxWCoD6nzJWR3eX45b/0",
-        type: "ERC1155",
-        supply: 100n,
-      },
-      {
-        metadata: { name: "token 2" },
-        owner: null,
-        id: 2n,
-        tokenURI: "ipfs://QmesQiRLHCgqWZM2GFCs7Nb7rr2S72hU1BVQc7xiTyKZtT/0",
-        type: "ERC1155",
-        supply: 100n,
-      },
-    ]);
-  });
-});
+  },
+);
