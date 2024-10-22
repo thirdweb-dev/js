@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
+import { TEST_ACCOUNT_D } from "~test/test-wallets.js";
 import { resolveName } from "./resolveName.js";
 
 // Double check: https://unstoppabledomains.com/d/thirdwebsdk.unstoppable
@@ -12,5 +13,13 @@ describe("Unstoppable Domain: resolve name", () => {
         client: TEST_CLIENT,
       }),
     ).toBe("thirdwebsdk.unstoppable");
+  });
+
+  it("should throw error on addresses that dont own any UD", async () => {
+    await expect(() =>
+      resolveName({ client: TEST_CLIENT, address: TEST_ACCOUNT_D.address }),
+    ).rejects.toThrowError(
+      `Failed to retrieve domain for address: ${TEST_ACCOUNT_D.address}. Make sure you have set the Reverse Resolution address for your domain at https://unstoppabledomains.com/manage?page=reverseResolution&domain=your-domain`,
+    );
   });
 });
