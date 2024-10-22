@@ -144,6 +144,3 @@ export async function generateStaticParams() {
     params: { category },
   }));
 }
-
-// TODO - figure out why this page is not building if we let it be static
-export const dynamic = "force-dynamic";

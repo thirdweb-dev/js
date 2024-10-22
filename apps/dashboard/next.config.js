@@ -164,6 +164,7 @@ const moduleExports = {
     emotion: true,
   },
   productionBrowserSourceMaps: false,
+  staticPageGenerationTimeout: 500,
 };
 
 const { withSentryConfig } = require("@sentry/nextjs");
