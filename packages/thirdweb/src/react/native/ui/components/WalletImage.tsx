@@ -13,6 +13,7 @@ import {
   EMAIL_ICON,
   FACEBOOK_ICON,
   FARCASTER_ICON,
+  GITHUB_ICON,
   GOOGLE_ICON,
   GUEST_ICON,
   LINE_ICON,
@@ -103,6 +104,8 @@ export function getAuthProviderImage(authProvider: string | null): string {
       return FARCASTER_ICON;
     case "telegram":
       return TELEGRAM_ICON;
+    case "github":
+      return GITHUB_ICON;
     case "twitch":
       return TWITCH_ICON;
     case "guest":
