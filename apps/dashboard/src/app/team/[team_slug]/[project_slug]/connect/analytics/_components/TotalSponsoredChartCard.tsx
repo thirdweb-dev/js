@@ -8,6 +8,12 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import type { UserOpStats } from "@3rdweb-sdk/react/hooks/useApi";
+import { DotNetIcon } from "components/icons/brand-icons/DotNetIcon";
+import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
+import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
+import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
+import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
+import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
@@ -35,12 +41,12 @@ export function TotalSponsoredChartCard(props: {
 
     for (const data of userOpStats) {
       const chartData = chartDataMap.get(data.date);
-      if (!chartData) {
+      if (!chartData && data.sponsoredUsd > 0) {
         chartDataMap.set(data.date, {
           time: format(new Date(data.date), "MMM dd"),
           sponsoredUsd: data.sponsoredUsd,
         });
-      } else {
+      } else if (chartData && data.sponsoredUsd > 0) {
         chartData.sponsoredUsd += data.sponsoredUsd;
       }
     }
@@ -83,7 +89,43 @@ export function TotalSponsoredChartCard(props: {
         {props.isPending ? (
           <LoadingChartState />
         ) : barChartData.length === 0 ? (
-          <EmptyChartState />
+          <EmptyChartState>
+            <div className="flex flex-col items-center justify-center">
+              <span className="mb-6 text-lg">Sponsor gas for your users</span>
+              <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
+                <DocLink
+                  link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
+                  label="TypeScript"
+                  icon={TypeScriptIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/react/v5/account-abstraction/get-started"
+                  label="React"
+                  icon={ReactIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/react/v5/account-abstraction/get-started"
+                  label="React Native"
+                  icon={ReactIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/unity/v5/wallets/account-abstraction"
+                  label="Unity"
+                  icon={UnityIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/unreal-engine/blueprints/smart-wallet"
+                  label="Unreal Engine"
+                  icon={UnrealIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/dotnet/wallets/providers/account-abstraction"
+                  label=".NET"
+                  icon={DotNetIcon}
+                />
+              </div>
+            </div>
+          </EmptyChartState>
         ) : (
           <BarChart
             accessibilityLayer

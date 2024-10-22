@@ -17,6 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { WalletStats } from "@3rdweb-sdk/react/hooks/useApi";
+import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
+import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
+import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
@@ -166,7 +169,30 @@ export function WalletConnectorsChartCard(props: {
         {props.isPending ? (
           <LoadingChartState />
         ) : chartData.length === 0 ? (
-          <EmptyChartState />
+          <EmptyChartState>
+            <div className="flex flex-col items-center justify-center">
+              <span className="mb-6 text-lg">
+                Connect any wallet to your app
+              </span>
+              <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
+                <DocLink
+                  link="https://portal.thirdweb.com/typescript/v5/supported-wallets"
+                  label="TypeScript"
+                  icon={TypeScriptIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/typescript/v5/supported-wallets"
+                  label="React"
+                  icon={ReactIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/typescript/v5/supported-wallets"
+                  label="React Native"
+                  icon={ReactIcon}
+                />
+              </div>
+            </div>
+          </EmptyChartState>
         ) : (
           <BarChart
             accessibilityLayer

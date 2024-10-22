@@ -22,14 +22,14 @@ const skeletonChartConfig = {
   },
 } satisfies ChartConfig;
 
-export function EmptyChartState() {
+export function EmptyChartState({ children }: { children?: React.ReactNode }) {
   const barChartData = useMemo(() => generateRandomData(), []);
 
   return (
     <div className="relative z-0 h-full w-full">
-      <span className="absolute inset-0 z-[1] flex items-center justify-center font-semibold text-base text-muted-foreground">
-        No data available
-      </span>
+      <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center font-semibold text-base text-muted-foreground">
+        {children ?? "No data available"}
+      </div>
       <SkeletonBarChart data={barChartData} />
     </div>
   );
