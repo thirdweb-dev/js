@@ -1,3 +1,4 @@
+import { type Abi, toFunctionSelector } from "viem";
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { VITALIK_WALLET } from "../../../test/src/addresses.js";
@@ -8,6 +9,7 @@ import {
   TEST_ACCOUNT_B,
   TEST_ACCOUNT_D,
 } from "../../../test/src/test-wallets.js";
+import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
@@ -20,6 +22,7 @@ import { claimTo } from "./drops/write/claimTo.js";
 import { resetClaimEligibility } from "./drops/write/resetClaimEligibility.js";
 import { setClaimConditions } from "./drops/write/setClaimConditions.js";
 import { getNFT } from "./read/getNFT.js";
+import { isGetNFTsSupported } from "./read/getNFTs.js";
 import { lazyMint } from "./write/lazyMint.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
@@ -397,6 +400,14 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       await expect(
         balanceOf({ tokenId: 6n, contract, owner: TEST_ACCOUNT_D.address }),
       ).resolves.toBe(2n);
+    });
+
+    it("isGetNFTsSupported should work with our Edition Drop contracts", async () => {
+      const abi = await resolveContractAbi<Abi>(contract);
+      const selectors = abi
+        .filter((f) => f.type === "function")
+        .map((f) => toFunctionSelector(f));
+      expect(isGetNFTsSupported(selectors)).toBe(true);
     });
   },
 );
