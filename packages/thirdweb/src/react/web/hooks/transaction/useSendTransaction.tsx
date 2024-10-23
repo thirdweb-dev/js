@@ -36,10 +36,9 @@ import { TransactionModal } from "../../ui/TransactionButton/TransactionModal.js
  *
  * const onClick = () => {
  *   const transaction = prepareContractCall({
- *       contract,
- *       method: "function transfer(address to, uint256 value)",
- *       params: [to, value],
- *     }),
+ *     contract,
+ *     method: "function transfer(address to, uint256 value)",
+ *     params: [to, value],
  *   });
  *   sendTx(transaction);
  * };

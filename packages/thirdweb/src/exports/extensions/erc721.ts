@@ -213,3 +213,7 @@ export {
   type UpdateTokenURIParams,
   isUpdateTokenURISupported,
 } from "../../extensions/erc721/write/updateTokenURI.js";
+export {
+  claimToBatch,
+  type ClaimToBatchParams,
+} from "../../extensions/erc721/drops/write/claimToBatch.js";

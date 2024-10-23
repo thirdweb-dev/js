@@ -5,7 +5,7 @@ export const wallet = {
   id: "io.miraiapp",
   name: "Mirai App",
   homepage: "https://miraiapp.io",
-  image_id: "f18751e8-6e0c-471d-e2b3-0ce2dddc1f00",
+  image_id: "0c8022b0-d5a3-4561-64d5-a3e60d1ed500",
   app: {
     browser: "https://miraiapp.io",
     ios: "https://apps.apple.com/vn/app/mirai-app-mpc-powered-wallet/id6472134236",

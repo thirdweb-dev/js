@@ -1,5 +1,8 @@
 import { multicall } from "../../../extensions/common/__generated__/IMulticall/write/multicall.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../transaction/types.js";
 import { uri } from "../__generated__/IERC1155/read/uri.js";
 import { encodeMintTo } from "../__generated__/IMintableERC1155/write/mintTo.js";
 import type { MintAdditionalSupplyToParams } from "./mintAdditionalSupplyTo.js";
@@ -7,9 +10,9 @@ import type { MintAdditionalSupplyToParams } from "./mintAdditionalSupplyTo.js";
 /**
  * @extension ERC1155
  */
-export type MintAdditionalSupplyToBatchParams = {
+export type MintAdditionalSupplyToBatchParams = WithOverrides<{
   nfts: MintAdditionalSupplyToParams[];
-};
+}>;
 
 /**
  * This extension batches multiple `mintAdditionalSupplyToBatch` extensions into one single multicall.
@@ -38,8 +41,9 @@ export function mintAdditionalSupplyToBatch(
   return multicall({
     contract: options.contract,
     asyncParams: async () => {
+      const nfts = optimizeMintBatchContent(options.nfts);
       const data = await Promise.all(
-        options.nfts.map(async (nft) => {
+        nfts.map(async (nft) => {
           const tokenUri = await uri({
             contract: options.contract,
             tokenId: nft.tokenId,
@@ -54,5 +58,48 @@ export function mintAdditionalSupplyToBatch(
       );
       return { data };
     },
+    overrides: options.overrides,
   });
+}
+
+/**
+ * Optimization
+ *
+ * We can batch the records that share the same "to" & "tokenId" into 1 transaction
+ *
+ * For example, this struct:
+ * [
+ *   { tokenId: 0n, supply: 99n, to: account.address },
+ *   { tokenId: 1n, supply: 49n, to: account.address },
+ *   { tokenId: 1n, supply: 51n, to: account.address },
+ * ]
+ *
+ * ...can be packed into:
+ * [
+ *   { tokenId: 0n, supply: 99n, to: account.address },
+ *   { tokenId: 1n, supply: 100n, to: account.address },
+ * ]
+ * @internal
+ */
+export function optimizeMintBatchContent(
+  nfts: MintAdditionalSupplyToParams[],
+): MintAdditionalSupplyToParams[] {
+  const results: MintAdditionalSupplyToParams[] = [];
+  for (const item of nfts) {
+    const matchingIndex = results.findIndex(
+      (o) =>
+        o.tokenId === item.tokenId &&
+        o.to.toLowerCase() === item.to.toLowerCase(),
+    );
+    if (matchingIndex !== -1) {
+      results[matchingIndex] = {
+        to: item.to,
+        tokenId: item.tokenId,
+        supply: item.supply + (results[matchingIndex]?.supply || 0n),
+      };
+    } else {
+      results.push(item);
+    }
+  }
+  return results;
 }

@@ -1,4 +1,5 @@
 import { bytesToHex } from "viem";
+import { trackTransaction } from "../../../../analytics/track/transaction.js";
 import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
@@ -129,6 +130,8 @@ export class EnclaveWallet implements IWebWallet {
   async getAccount(): Promise<Account> {
     const client = this.client;
     const storage = this.localStorage;
+    const address = this.address;
+    const ecosystem = this.ecosystem;
 
     const _signTransaction = async (tx: SendTransactionOption) => {
       const rpcRequest = getRpcClient({
@@ -173,7 +176,7 @@ export class EnclaveWallet implements IWebWallet {
       });
     };
     return {
-      address: getAddress(this.address),
+      address: getAddress(address),
       async signTransaction(tx) {
         if (!tx.chainId) {
           throw new Error("chainId required in tx to sign");
@@ -190,13 +193,23 @@ export class EnclaveWallet implements IWebWallet {
           chain: getCachedChain(tx.chainId),
         });
         const signedTx = await _signTransaction(tx);
+
         const transactionHash = await eth_sendRawTransaction(
           rpcRequest,
           signedTx,
         );
-        return {
+
+        trackTransaction({
+          client,
+          ecosystem,
+          walletAddress: address,
+          walletType: "inApp",
           transactionHash,
-        };
+          contractAddress: tx.to ?? undefined,
+          gasPrice: tx.gasPrice,
+        });
+
+        return { transactionHash };
       },
       async signMessage({ message }) {
         const messagePayload = (() => {

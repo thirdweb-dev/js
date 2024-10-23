@@ -22,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: null,
-    universal: "https://mobile.openwallet.finance",
+    native: "x-app-open-wallet://",
+    universal: null,
   },
   desktop: {
     native: null,

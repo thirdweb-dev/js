@@ -5,7 +5,7 @@ export const wallet = {
   id: "app.status",
   name: "Status",
   homepage: "https://status.app/",
-  image_id: "eaab184a-f3fe-4f20-3768-091bf7216f00",
+  image_id: "1e5fb93a-3a0a-40b9-8a86-b14a775aae00",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/status-gateway-to-ethereum/id1178893006",

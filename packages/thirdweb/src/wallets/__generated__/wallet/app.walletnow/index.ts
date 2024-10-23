@@ -11,7 +11,7 @@ export const wallet = {
     ios: "https://apps.apple.com/app/now-wallet-bitcoin-crypto/id1591216386",
     android: "https://play.google.com/store/apps/details?id=com.nowwallet",
     mac: "https://apps.apple.com/app/now-wallet-bitcoin-crypto/id1591216386",
-    windows: null,
+    windows: "https://apps.microsoft.com/detail/xpdc4v0j3zkvhh",
     linux: null,
     chrome: null,
     firefox: null,

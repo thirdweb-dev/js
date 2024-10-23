@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.coin98",
   name: "Coin98 Super Wallet",
   homepage: "https://coin98.com/wallet",
-  image_id: "fc460647-ea95-447a-99f0-1bff8fa4be00",
+  image_id: "e7c6d5d0-b986-4348-de22-fc940e1aee00",
   app: {
     browser: null,
     ios: "https://apps.apple.com/vn/app/coin98-wallet/id1561969966",

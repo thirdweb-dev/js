@@ -1,7 +1,7 @@
 // TODO: figure out how to define the type without tuple args type and using function overloads
 
 import { Linking } from "react-native";
-import { trackConnect } from "../../analytics/track.js";
+import { trackConnect } from "../../analytics/track/connect.js";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChainIfExists } from "../../chains/utils.js";
 import { nativeLocalStorage } from "../../utils/storage/nativeStorage.js";

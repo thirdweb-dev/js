@@ -1,5 +1,6 @@
 import type * as ethers5 from "ethers5";
 import type { TypedDataDefinition } from "viem";
+import { trackTransaction } from "../../../../analytics/track/transaction.js";
 import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
@@ -242,13 +243,22 @@ export class IFrameWallet implements IWebWallet {
           chain: getCachedChain(tx.chainId),
         });
         const signedTx = await _signTransaction(tx);
+
         const transactionHash = await eth_sendRawTransaction(
           rpcRequest,
           signedTx,
         );
-        return {
+
+        trackTransaction({
+          client,
+          walletAddress: address,
+          walletType: "inApp",
           transactionHash,
-        };
+          contractAddress: tx.to ?? undefined,
+          gasPrice: tx.gasPrice,
+        });
+
+        return { transactionHash };
       },
       async signMessage({ message }) {
         // in-app wallets use ethers to sign messages, which always expects a string (or bytes maybe but string is safest)
