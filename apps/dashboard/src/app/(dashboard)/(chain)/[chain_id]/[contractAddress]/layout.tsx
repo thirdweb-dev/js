@@ -5,7 +5,7 @@ import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getContractMetadata } from "thirdweb/extensions/common";
-import { isContractDeployed } from "thirdweb/utils";
+import { isAddress, isContractDeployed } from "thirdweb/utils";
 import { resolveFunctionSelectors } from "../../../../../lib/selectors";
 import { shortenIfAddress } from "../../../../../utils/usedapp-external";
 import { ConfigureCustomChain } from "./ConfigureCustomChain";
@@ -22,20 +22,29 @@ export default async function Layout(props: {
   };
   children: React.ReactNode;
 }) {
+  if (!isAddress(props.params.contractAddress)) {
+    return notFound();
+  }
+
   const info = await getContractPageParamsInfo(props.params);
 
   if (!info) {
     return <ConfigureCustomChain chainSlug={props.params.chain_id} />;
   }
 
+  const { contract, chainMetadata } = info;
+
+  if (chainMetadata.status === "deprecated") {
+    notFound();
+  }
+
   // check if the contract exists
-  const isValidContract = await isContractDeployed(info.contract);
+  const isValidContract = await isContractDeployed(contract);
   if (!isValidContract) {
     // TODO - replace 404 with a better page to upsale deploy or other thirdweb products
     notFound();
   }
 
-  const { contract, chainMetadata } = info;
   const contractPageMetadata = await getContractPageMetadata(contract);
   const sidebarLinks = getContractPageSidebarLinks({
     chainSlug: chainMetadata.slug,

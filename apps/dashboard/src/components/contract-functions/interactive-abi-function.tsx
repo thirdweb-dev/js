@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { InlineCode } from "@/components/ui/inline-code";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
@@ -416,7 +417,15 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
           ) : formattedResponseData ? (
             <>
               <Divider />
-              <Heading size="label.sm">Output</Heading>
+              <div className="flex flex-row items-center gap-2">
+                <Heading size="label.sm">Output</Heading>
+                {/* Show the Solidity type of the function's output */}
+                {abiFunction.outputs.length > 0 && (
+                  <Badge variant="default">
+                    {abiFunction.outputs[0]?.type}
+                  </Badge>
+                )}
+              </div>
               <CodeBlock
                 w="full"
                 position="relative"
