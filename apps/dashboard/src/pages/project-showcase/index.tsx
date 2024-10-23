@@ -94,7 +94,7 @@ export default function ProjectShowcase() {
               >
                 <Card className="flex h-full cursor-pointer flex-col overflow-hidden transition-shadow hover:shadow-lg">
                   <Image
-                    src={project.image}
+                    src={project.image || ""}
                     alt={project.title}
                     width={300}
                     height={200}
