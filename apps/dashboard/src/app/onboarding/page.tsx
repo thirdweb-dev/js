@@ -76,6 +76,7 @@ export default function OnboardingPage() {
     handleSubmit,
     formState: { errors },
     trigger,
+    setValue,
   } = useForm<FormData>({
     defaultValues: {
       interests: [],
@@ -94,14 +95,20 @@ export default function OnboardingPage() {
           ? ["userType", "name", "role", "industry"]
           : ["interests"];
     const isStepValid = await trigger(fields as Array<keyof FormData>);
-    if (isStepValid) setStep(step + 1);
+    if (isStepValid) {
+      setStep(step + 1);
+      fields.map((field) => {
+        register(field as keyof FormData);
+      });
+    }
   };
 
   const Step1: React.FC<StepProps> = ({ register, errors }) => (
     <div>
-      <FormControl className="flex flex-col space-y-2">
+      <FormControl className="box-border flex-col space-y-2">
         <FormLabel>What's your email?</FormLabel>
         <Input
+          className="w-1/2"
           id="email"
           type="email"
           placeholder="user@example.com"
@@ -145,6 +152,7 @@ export default function OnboardingPage() {
       <FormControl className="flex flex-col space-y-2">
         <FormLabel>What's the name of your company?</FormLabel>
         <Input
+          className="w-1/2"
           id="name"
           type="text"
           placeholder="Hooli, Inc."
@@ -153,8 +161,13 @@ export default function OnboardingPage() {
       </FormControl>
       <FormControl className="flex flex-col space-y-2">
         <FormLabel>What's your role?</FormLabel>
-        <Select {...register("role")}>
-          <SelectTrigger className="w-[180px]">
+        <Select
+          onValueChange={(value) => {
+            setValue("role", value);
+            console.log(value);
+          }}
+        >
+          <SelectTrigger className="w-1/2">
             <SelectValue placeholder={"Select Role"} />
           </SelectTrigger>
           <SelectContent>
@@ -181,8 +194,12 @@ export default function OnboardingPage() {
       </FormControl>
       <FormControl className="flex flex-col space-y-2">
         <FormLabel>What industry is your company in?</FormLabel>
-        <Select {...register("industry")}>
-          <SelectTrigger className="w-[180px]">
+        <Select
+          onValueChange={(value) => {
+            setValue("industry", value);
+          }}
+        >
+          <SelectTrigger className="w-1/2">
             <SelectValue placeholder={"Select Industry"} />
           </SelectTrigger>
           <SelectContent>
@@ -331,7 +348,7 @@ export default function OnboardingPage() {
     <div className="relative flex h-screen place-items-center bg-muted/30 md:flex-row">
       <main className="z-10 flex w-full gap-6">
         {/* Left Panel */}
-        <div className="items-between relative flex h-screen w-1/2 flex-col p-12">
+        <div className="items-between relative box-border flex h-screen w-1/2 flex-col p-12">
           <div className="flex flex-col space-y-2">
             <h1 className="font-semibold text-xl tracking-tight">
               {step === 3 ? "Tell us what you need." : "Tell us about you."}
@@ -345,7 +362,7 @@ export default function OnboardingPage() {
             {step === 2 && <Step2 register={register} errors={errors} />}
             {step === 3 && <Step3 register={register} errors={errors} />}
           </form>
-          <div className="absolute bottom-12 box-border flex w-full items-center justify-between">
+          <div className="absolute right-0 bottom-0 left-0 box-border flex w-full items-center justify-between overflow-auto p-12">
             {/* Stepper */}
             <div className="flex space-x-4">
               <div
