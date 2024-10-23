@@ -4,6 +4,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 1,
     title: "Artifact",
+    slug: "artifact",
     description:
       "Blockchain-based platform for creating and trading digital art NFTs.",
     image: "/placeholder.svg?height=200&width=300",
@@ -14,6 +15,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 2,
     title: "Bankless Academy",
+    slug: "bankless-academy",
     description: "No description available",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Education"],
@@ -23,6 +25,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 3,
     title: "Blue Social",
+    slug: "blue-social",
     description:
       "Social app that connects users through nearby Bluetooth technology.",
     image: "/placeholder.svg?height=200&width=300",
@@ -33,6 +36,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 4,
     title: "bonfire",
+    slug: "bonfire",
     description:
       "A platform enabling creators and communities to build, manage, and monetize their digital content and experiences using Web3 tools.",
     image: "/placeholder.svg?height=200&width=300",
@@ -43,6 +47,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 5,
     title: "Cityverse Tycoon",
+    slug: "cityverse-tycoon",
     description:
       "City-building simulation game in the metaverse with strategic and economic elements.",
     image: "/placeholder.svg?height=200&width=300",
@@ -54,39 +59,43 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 6,
     title: "Coinbase",
+    slug: "coinbase",
     description:
       "Leading cryptocurrency exchange platform for buying, selling, and managing digital currencies.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Tools"],
-    link: "coinbase.com",
+    link: "https://coinbase.com",
     case_study:
       "https://blog.thirdweb.com/case-studies/coinbase-brings-onchain-experiences-to-life/",
   },
   {
     id: 7,
     title: "Courtyard",
+    slug: "courtyard",
     description:
       "Platform for digitizing physical collectibles and trading them as NFTs.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Art", "Mints"],
-    link: "courtyard.io",
+    link: "https://courtyard.io",
     case_study:
       "https://blog.thirdweb.com/case-studies/courtyard-brings-collectors-onchain-with-fiat-payments/",
   },
   {
     id: 8,
     title: "Decent",
+    slug: "decent",
     description:
       "Decentralized publishing platform empowering creators through blockchain-based content distribution.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Education", "Mints"],
-    link: "decent.xyz",
+    link: "https://decent.xyz",
     case_study:
       "https://blog.thirdweb.com/case-studies/decent-launches-nft-activation-with-uniswap-arbitrum-disco/",
   },
   {
     id: 9,
     title: "Developer DAO Academy",
+    slug: "developer-dao-academy",
     description:
       "An educational platform by Developer DAO that offers Web3 and blockchain development courses for developers of all skill levels.",
     image: "/placeholder.svg?height=200&width=300",
@@ -97,6 +106,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 10,
     title: "Donatuz",
+    slug: "donatuz",
     description:
       "A donation platform that leverages blockchain technology to create transparent and efficient ways to support charitable causes and nonprofits.",
     image: "/placeholder.svg?height=200&width=300",
@@ -107,6 +117,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 11,
     title: "dtravel",
+    slug: "dtravel",
     description:
       "A decentralized travel booking platform allowing users to book vacation rentals using cryptocurrencies, powered by blockchain technology.",
     image: "/placeholder.svg?height=200&width=300",
@@ -117,6 +128,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 12,
     title: "EVEN",
+    slug: "even",
     description:
       "Music distribution platform that allows artists to sell music directly to fans via blockchain.",
     image: "/placeholder.svg?height=200&width=300",
@@ -128,6 +140,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 13,
     title: "Forest Knight",
+    slug: "forest-knight",
     description:
       "Tactical, turn-based blockchain game set in a fantasy universe.",
     image: "/placeholder.svg?height=200&width=300",
@@ -139,6 +152,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 14,
     title: "fr3n",
+    slug: "fr3n",
     description:
       "A Web3 platform that helps developers and creators build decentralized apps (dApps) and Web3 projects with integrated community features.",
     image: "/placeholder.svg?height=200&width=300",
@@ -149,6 +163,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 15,
     title: "Fractal",
+    slug: "fractal",
     description:
       "Fractal provides game studios with a set of tools to build web3 games easily, ranging from blockchain infrastructure to community-building solutions.",
     image: "/placeholder.svg?height=200&width=300",
@@ -160,6 +175,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 16,
     title: "frens",
+    slug: "frens",
     description:
       "A community-driven platform that brings friends together to share in decentralized autonomous organizations (DAOs) and collaborate on Web3 projects.",
     image: "/placeholder.svg?height=200&width=300",
@@ -170,6 +186,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 17,
     title: "Furrend",
+    slug: "furrend",
     description:
       "A decentralized platform designed to connect pet owners with pet services through blockchain-powered transactions and community engagement.",
     image: "/placeholder.svg?height=200&width=300",
@@ -180,6 +197,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 18,
     title: "Genesis Blockchain",
+    slug: "genesis-blockchain",
     description:
       "A blockchain infrastructure provider offering scalable, secure solutions for building decentralized applications on the Genesis Blockchain network.",
     image: "/placeholder.svg?height=200&width=300",
@@ -190,6 +208,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 19,
     title: "Goat Gaming",
+    slug: "goat-gaming",
     description:
       "Gaming community and platform for connecting gamers across various titles and events.",
     image: "/placeholder.svg?height=200&width=300",
@@ -201,6 +220,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 20,
     title: "Hall of Goats",
+    slug: "hall-of-goats",
     description:
       "An NFT-based platform that celebrates and immortalizes legendary sports figures, offering unique collectible experiences to fans.",
     image: "/placeholder.svg?height=200&width=300",
@@ -211,6 +231,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 21,
     title: "Heroric Story / Fortunata",
+    slug: "heroric-story-fortunata",
     description: "No description available",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Games"],
@@ -221,6 +242,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 22,
     title: "Icebreaker",
+    slug: "icebreaker",
     description:
       "A decentralized social networking platform that connects people by facilitating meaningful interactions through Web3 features.",
     image: "/placeholder.svg?height=200&width=300",
@@ -231,17 +253,19 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 23,
     title: "InfiniGods / King Of Destiny",
+    slug: "infinigods-king-of-destiny",
     description:
       "Blockchain-based game inspired by ancient mythology, focused on strategy and role-playing elements.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Games"],
-    link: "infinigods.com",
+    link: "https://infinigods.com",
     case_study:
       "https://blog.thirdweb.com/case-studies/king-of-destiny-launches-avatar-nfts-thirdweb-engine/",
   },
   {
     id: 24,
     title: "Intract",
+    slug: "intract",
     description:
       "A Web3 marketing platform that provides user acquisition and engagement tools to help blockchain projects grow their community and reach.",
     image: "/placeholder.svg?height=200&width=300",
@@ -252,17 +276,19 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 25,
     title: "KPRVERSE",
+    slug: "kprverse",
     description:
       "Immersive metaverse platform that combines gaming, art, and virtual reality experiences.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Art", "Games"],
-    link: "kprverse.com",
+    link: "https://kprverse.com",
     case_study:
       "https://blog.thirdweb.com/case-studies/kprverse-boon-ramen-launch-ramen-wars/",
   },
   {
     id: 26,
     title: "Laguna Games / Crypto Unicorns",
+    slug: "laguna-games-crypto-unicorns",
     description:
       "Blockchain gaming studio known for developing decentralized, player-driven ecosystems.",
     image: "/placeholder.svg?height=200&width=300",
@@ -273,6 +299,7 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 27,
     title: "Last Memories",
+    slug: "last-memories",
     description:
       "Story-driven blockchain game featuring digital collectible memories and a mystery narrative.",
     image: "/placeholder.svg?height=200&width=300",
@@ -284,50 +311,55 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 28,
     title: "Layer3",
+    slug: "layer3",
     description:
       "Web3 platform that incentivizes learning and interaction with decentralized apps through rewards.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Social", "Tools"],
-    link: "layer3.xyz",
+    link: "https://layer3.xyz",
     case_study:
       "https://blog.thirdweb.com/case-studies/layer3-powers-web3-adoption-through-gamified-experiences-nft-rewards/",
   },
   {
     id: 29,
     title: "Makeswift",
+    slug: "makeswift",
     description:
       "No-code website builder for quickly creating and managing modern, responsive sites.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Tools"],
-    link: "makeswift.com",
+    link: "https://makeswift.com",
     case_study:
       "https://blog.thirdweb.com/case-studies/makeswift-empowers-teams-to-build-web3-experiences-on-nextjs-websites-without-code/",
   },
   {
     id: 30,
     title: "Meka Legends",
+    slug: "meka-legends",
     description:
       "Mech-themed blockchain-based game where players collect and battle with customizable robots.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Games"],
-    link: "mekalegends.com",
+    link: "https://mekalegends.com",
     case_study:
       "https://blog.thirdweb.com/case-studies/meka-legends-seamless-gameplay-with-thirdwebs-account-abstraction/",
   },
   {
     id: 31,
     title: "Mirror",
+    slug: "mirror",
     description:
       "Decentralized publishing platform that allows creators to write, fund, and share content via blockchain.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Social", "Tools"],
-    link: "mirror.xyz",
+    link: "https://mirror.xyz",
     case_study:
       "https://blog.thirdweb.com/case-studies/mirror-creators-build-loyal-audiences-with-subscriber-nfts/",
   },
   {
     id: 32,
     title: "Phaver",
+    slug: "phaver",
     description:
       "A decentralized social media platform where users can share and discover content, earn tokens, and interact with Web3 features, giving users ownership of their online presence.",
     image: "/placeholder.svg?height=200&width=300",
@@ -338,27 +370,30 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 33,
     title: "Pixels",
+    slug: "pixels",
     description:
       "Pixelated blockchain-based farming game with metaverse elements and play-to-earn mechanics.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Games"],
-    link: "pixels.xyz",
+    link: "https://pixels.xyz",
     case_study:
       "https://blog.thirdweb.com/case-studies/pixels-builds-an-onchain-ecosystem-for-its-web3-game/",
   },
   {
     id: 34,
     title: "Stand With Crypto",
+    slug: "stand-with-crypto",
     description:
       "Movement advocating for the widespread adoption and defense of blockchain technology.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Education", "Social"],
-    link: "standwithcrypto.org",
+    link: "https://standwithcrypto.org",
     case_study: "https://blog.thirdweb.com/case-studies/untitled-2/",
   },
   {
     id: 35,
     title: "Story Match",
+    slug: "story-match",
     description:
       "A gamified social app that enhances communication through interactive storytelling and role-playing games, designed to foster engaging conversations.",
     image: "/placeholder.svg?height=200&width=300",
@@ -369,71 +404,78 @@ export const PROJECT_SHOWCASE_DATA = [
   {
     id: 36,
     title: "StoryChain",
+    slug: "storychain",
     description:
       "Collaborative storytelling platform that uses blockchain to create, share, and own narrative content.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Social"],
-    link: "storychain.io",
+    link: "https://storychain.io",
     case_study:
       "https://blog.thirdweb.com/case-studies/storychain-bridging-web2-and-web3-through-ai-powered-storytelling/",
   },
   {
     id: 37,
     title: "SuperVol",
+    slug: "supervol",
     description:
       "Trading platform that gamifies options trading with Web3 integration and decentralized finance.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Decentralized Finance"],
-    link: "supervol.io",
+    link: "https://supervol.io",
     case_study:
       "https://blog.thirdweb.com/case-studies/supervol-pioneering-retail-crypto-options-trading-on-soneium/",
   },
   {
     id: 38,
     title: "Tally",
+    slug: "tally",
     description:
       "Decentralized governance tool for DAOs, helping users vote and manage blockchain organizations.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Tools"],
-    link: "tally.xyz",
+    link: "https://tally.xyz",
     case_study:
       "https://blog.thirdweb.com/case-studies/tally-expands-the-decentralized-web-with-dao-tools/",
   },
   {
     id: 39,
     title: "Torque Drift 2",
+    slug: "torque-drift-2",
     description:
       "Blockchain-powered motorsport game focused on drifting and vehicle customization.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Games"],
-    link: "torquedrift.io",
+    link: "https://torquedrift.io",
     case_study:
       "https://blog.thirdweb.com/case-studies/torque-drift-2-digital-ownership-racing-games/",
   },
   {
     id: 40,
     title: "Whal3s",
+    slug: "whal3s",
     description:
       "Community-driven NFT platform that offers exclusive digital content and benefits to NFT holders",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Art"],
-    link: "whal3s.xyz",
+    link: "https://whal3s.xyz",
     case_study:
       "https://blog.thirdweb.com/case-studies/whal3s-shapes-events-and-experiences-with-nfts/",
   },
   {
     id: 41,
     title: "Xai",
+    slug: "xai",
     description:
       "Blockchain gaming platform focused on building decentralized, player-driven game economies.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Decentralized Finance", "Games", "Tools"],
-    link: "xaigames.io",
+    link: "https://xaigames.io",
     case_study: "No case study available",
   },
   {
     id: 42,
     title: "nan",
+    slug: "nan",
     description: "No description available",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["nan"],
