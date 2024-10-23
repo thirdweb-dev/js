@@ -4,9 +4,22 @@ import { join } from "node:path";
 import { format } from "prettier";
 import sharp from "sharp";
 
-const walletConnectWalletsJson = await fetch(
+const walletConnectWallets = await fetch(
   "https://explorer-api.walletconnect.com/w3m/v1/getAllListings?projectId=145769e410f16970a79ff77b2d89a1e0",
-).then((res) => res.json());
+).then(async (res) => {
+  const wallets: { listings: Record<string, Wallet> } = await res.json();
+
+  // Remove duplicated wallets by wallet RDNS
+  const filteredWallets: Wallet[] = [];
+  for (const _w of Object.values(wallets.listings)) {
+    if (_w.rdns && filteredWallets.find((w) => w.rdns === _w.rdns)) {
+      continue;
+    }
+    filteredWallets.push(_w);
+  }
+
+  return filteredWallets;
+});
 
 const extraWalletsJson = JSON.parse(
   await readFile(join(__dirname, "./extra-wallets.json"), "utf-8"),
@@ -61,10 +74,10 @@ type Wallet = {
   };
 };
 
-const allWalletsArray = Object.values(walletConnectWalletsJson.listings)
+const allWalletsArray = Object.values(walletConnectWallets)
   .map((w) => ({ ...(w as Omit<Wallet, "type">), _type: "wc" }))
   .concat(
-    extraWalletsJson.map((w) => ({
+    extraWalletsJson.map((w: Wallet) => ({
       ...(w as Omit<Wallet, "type">),
       _type: "extra",
     })),

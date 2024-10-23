@@ -2,26 +2,26 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.brave.wallet",
-  name: "Brave Wallet",
-  homepage: "https://brave.com/wallet/",
-  image_id: "8cecad66-73e3-46ee-f45f-01503c032f00",
+  id: "com.daffione",
+  name: "DaffiOne",
+  homepage: "https://www.daffione.com/",
+  image_id: "1e87bcb9-452c-4ad7-471c-130ae0115000",
   app: {
     browser: null,
     ios: null,
-    android: null,
+    android: "https://play.google.com/store/apps/details?id=com.me.daffione",
     mac: null,
     windows: null,
     linux: null,
-    chrome: "https://brave.com/wallet/",
+    chrome: null,
     firefox: null,
     safari: null,
     edge: null,
     opera: null,
   },
-  rdns: "com.brave.wallet",
+  rdns: null,
   mobile: {
-    native: null,
+    native: "DaffiOne:// wc://",
     universal: null,
   },
   desktop: {

@@ -2,15 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "org.nitrogen",
-  name: "Nitrogen Wallet",
-  homepage: "https://nitrogen.org/",
-  image_id: "af185895-cda5-4eaf-e31b-28b6fe4b0800",
+  id: "com.webauth",
+  name: "WebAuth",
+  homepage: "https://webauth.com",
+  image_id: "93fcd24e-431d-421f-32c2-9563d725c800",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/nitrogen-wallet/id1595123469",
+    ios: "https://apps.apple.com/us/app/webauth/id1594500069",
     android:
-      "https://play.google.com/store/apps/details?id=org.nitrogen.mobile_wallet",
+      "https://play.google.com/store/apps/details?id=com.metallicus.webauth&hl=en_US",
     mac: null,
     windows: null,
     linux: null,
@@ -22,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: null,
-    universal: "https://nitrogen.org/wc",
+    native: "proton://",
+    universal: null,
   },
   desktop: {
     native: null,

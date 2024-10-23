@@ -2,18 +2,19 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.tradestrike",
-  name: "StrikeX Wallet",
-  homepage: "https://tradestrike.io/",
-  image_id: "f81642e4-2355-454a-25f5-72e27f2c6f00",
+  id: "io.owallet",
+  name: "OWallet",
+  homepage: "https://owallet.io",
+  image_id: "68489978-9f79-47f4-fd59-86a29df9bf00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/strikex-wallet/id6443517613",
-    android: "https://play.google.com/store/apps/details?id=com.tradestrike",
+    ios: "https://apps.apple.com/app/owallet/id1626035069",
+    android: "https://play.google.com/store/apps/details?id=com.io.owallet",
     mac: null,
     windows: null,
     linux: null,
-    chrome: null,
+    chrome:
+      "https://chrome.google.com/webstore/detail/owallet/hhejbopdnpbjgomhpmegemnjogflenga",
     firefox: null,
     safari: null,
     edge: null,
@@ -21,7 +22,7 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "strikex://",
+    native: "owallet://",
     universal: null,
   },
   desktop: {

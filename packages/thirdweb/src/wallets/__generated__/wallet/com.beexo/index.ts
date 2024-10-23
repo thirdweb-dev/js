@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.brave.wallet",
-  name: "Brave Wallet",
-  homepage: "https://brave.com/wallet/",
-  image_id: "8cecad66-73e3-46ee-f45f-01503c032f00",
+  id: "com.beexo",
+  name: "Beexo",
+  homepage: "https://beexo.com/",
+  image_id: "7074bf0c-d0f7-4d86-2dc4-28430d629d00",
   app: {
     browser: null,
-    ios: null,
-    android: null,
+    ios: "https://apps.apple.com/ar/app/beexo-wallet/id1533311061",
+    android: "https://play.google.com/store/apps/details?id=com.beexo",
     mac: null,
     windows: null,
     linux: null,
-    chrome: "https://brave.com/wallet/",
+    chrome: null,
     firefox: null,
     safari: null,
     edge: null,
     opera: null,
   },
-  rdns: "com.brave.wallet",
+  rdns: null,
   mobile: {
-    native: null,
+    native: "beexo://",
     universal: null,
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://app.beexo.com/",
   },
 } as const;

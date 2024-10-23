@@ -21,7 +21,7 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: null,
+    native: "com.plena://auth,org.plenafinance.app://auth",
     universal: "https://plena.page.link/JNPe",
   },
   desktop: {
