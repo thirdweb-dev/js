@@ -33,8 +33,8 @@ export default function ProjectShowcase() {
   const filteredProjects =
     selectedIndustry === "All"
       ? PROJECT_SHOWCASE_DATA
-      : PROJECT_SHOWCASE_DATA.filter(
-          (project) => project.industry === selectedIndustry,
+      : PROJECT_SHOWCASE_DATA.filter((project) =>
+          project.industries?.includes(selectedIndustry),
         );
 
   const totalPages = Math.ceil(
@@ -100,7 +100,13 @@ export default function ProjectShowcase() {
                   <CardDescription>{project.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <Badge variant="secondary">{project.industry}</Badge>
+                  <div className="flex flex-wrap gap-2">
+                    {project.industries?.map((industry) => (
+                      <Badge key={industry} variant="secondary">
+                        {industry}
+                      </Badge>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             ))}
