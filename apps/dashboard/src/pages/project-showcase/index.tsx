@@ -147,16 +147,16 @@ export function ProjectShowcaseUI() {
                     }
                   />
                 </PaginationItem>
-                {[...Array(totalPages)].map((_, i) => (
-                  <PaginationItem key={i}>
+                {[...Array(totalPages)].map((_, index) => (
+                  <PaginationItem key={`page-${index + 1}`}>
                     <PaginationLink
                       onClick={(e) => {
                         e.preventDefault();
-                        setCurrentPage(i + 1);
+                        setCurrentPage(index + 1);
                       }}
-                      isActive={currentPage === i + 1}
+                      isActive={currentPage === index + 1}
                     >
-                      {i + 1}
+                      {index + 1}
                     </PaginationLink>
                   </PaginationItem>
                 ))}

@@ -10,7 +10,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/assets/showcase/gotartifact.png",
     industries: ["Art", "Games"],
     link: "https://www.gotartifact.com/",
-    case_study: "No case study available",
   },
   {
     id: 2,
@@ -20,7 +19,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/assets/showcase/bankless_academy.png",
     industries: ["Education"],
     link: "https://app.banklessacademy.com/",
-    case_study: "No case study available",
   },
   {
     id: 3,
@@ -42,7 +40,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/assets/showcase/bonfire.png",
     industries: ["Social"],
     link: "https://www.bonfire.xyz/",
-    case_study: "No case study available",
   },
   {
     id: 5,
@@ -470,7 +467,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Decentralized Finance", "Games", "Tools"],
     link: "https://xaigames.io",
-    case_study: "No case study available",
   },
 ];
 
