@@ -51,6 +51,7 @@ import {
 } from "thirdweb/react";
 import { privateKeyToAccount } from "thirdweb/wallets";
 import { Button, type ButtonProps, Card, Heading, Text } from "tw-components";
+import { getFaucetClaimAmount } from "../../app/api/testnet-faucet/claim/claim-amount";
 import { THIRDWEB_API_HOST } from "../../constants/urls";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
@@ -354,8 +355,7 @@ function NoFundsDialogContent(props: {
 function GetFundsFromFaucet(props: {
   chain: ChainMetadata;
 }) {
-  // TODO - improvement for later -> estimate gas required for transaction, and use that as the amount to give
-  const amountToGive = "0.01";
+  const amountToGive = getFaucetClaimAmount(props.chain.chainId);
 
   return (
     <div className="flex justify-center rounded-lg border border-border px-4 py-6">

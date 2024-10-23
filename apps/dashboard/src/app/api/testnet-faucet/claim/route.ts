@@ -2,6 +2,7 @@ import { startOfToday } from "date-fns";
 import { cacheGet, cacheSet } from "lib/redis";
 import { type NextRequest, NextResponse } from "next/server";
 import { ZERO_ADDRESS } from "thirdweb";
+import { getFaucetClaimAmount } from "./claim-amount";
 
 const THIRDWEB_ENGINE_URL = process.env.THIRDWEB_ENGINE_URL;
 const NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET =
@@ -109,6 +110,7 @@ export const POST = async (req: NextRequest) => {
   );
   const todayUTCSeconds = Math.floor(todayUTC.getTime() / 1000);
   const idempotencyKey = `${ipCacheKey}:${todayUTCSeconds}`;
+  const amountToClaim = getFaucetClaimAmount(chainId).toString();
 
   try {
     // Store the claim request for 24 hours.
@@ -129,7 +131,7 @@ export const POST = async (req: NextRequest) => {
       body: JSON.stringify({
         to: toAddress,
         currencyAddress: ZERO_ADDRESS,
-        amount: "0.01",
+        amount: amountToClaim,
       }),
     });
 
@@ -144,5 +146,5 @@ export const POST = async (req: NextRequest) => {
     );
   }
 
-  return NextResponse.json({ amount: "0.01" }, { status: 200 });
+  return NextResponse.json({ amount: amountToClaim }, { status: 200 });
 };

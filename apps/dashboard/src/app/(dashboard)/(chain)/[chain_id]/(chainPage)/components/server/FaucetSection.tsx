@@ -1,16 +1,16 @@
 import type { ChainMetadata } from "thirdweb/chains";
+import { getFaucetClaimAmount } from "../../../../../../api/testnet-faucet/claim/claim-amount";
 import { ChainIcon } from "../../../../components/server/chain-icon";
 import { FaucetButton } from "../client/FaucetButton";
 import { GiftIcon } from "../icons/GiftIcon";
 import { SectionTitle } from "./SectionTitle";
-
-const amountToGive = "0.01";
 
 export async function FaucetSection(props: { chain: ChainMetadata }) {
   const { chain } = props;
 
   // Check eligibilty.
   const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
+  const amountToGive = getFaucetClaimAmount(props.chain.chainId);
 
   return (
     <section>
