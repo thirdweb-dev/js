@@ -371,7 +371,7 @@ export default function OnboardingPage() {
               >
                 <Card
                   className={cn(
-                    "flex aspect-[4/2] flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted md:aspect-[3/1] lg:aspect-[3/1] xl:aspect-[16/9]",
+                    "flex aspect-square flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted",
                     isChecked && "border-primary bg-muted",
                   )}
                 >
@@ -409,10 +409,10 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="relative flex h-screen place-items-center bg-muted/30 md:flex-row">
+    <div className="relative flex h-screen flex-col place-items-center bg-muted/30 md:flex-row">
       <main className="z-10 flex w-full gap-6">
         {/* Left Panel */}
-        <div className="items-between relative box-border flex h-screen w-1/2 flex-col overflow-hidden p-12">
+        <div className="items-between relative box-border flex h-screen w-full flex-col overflow-hidden p-12 lg:w-1/2">
           <div className="flex flex-col space-y-2">
             <h1 className="font-semibold text-xl tracking-tight">
               {step === 3 ? "Tell us what you need." : "Tell us about you."}
