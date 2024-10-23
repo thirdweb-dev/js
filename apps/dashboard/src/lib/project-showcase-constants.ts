@@ -7,7 +7,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "artifact",
     description:
       "Blockchain-based platform for creating and trading digital art NFTs.",
-    // image: "ipfs://QmQJrpMvLApCnoQaoXVd8Rb5Wyjn8u6c8Ei2rG6KawCwWS",
+    image: "ipfs://QmQJrpMvLApCnoQaoXVd8Rb5Wyjn8u6c8Ei2rG6KawCwWS",
     industries: ["Art", "Games"],
     link: "https://www.gotartifact.com/",
     case_study: "No case study available",

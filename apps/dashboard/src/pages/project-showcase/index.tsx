@@ -17,17 +17,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { ThirdwebProvider } from "thirdweb/react";
 import {
   PROJECT_SHOWCASE_DATA,
   PROJECT_SHOWCASE_INDUSTRIES,
   PROJECT_SHOWCASE_ITEMS_PER_PAGE,
 } from "../../lib/project-showcase-constants";
 
-export default function ProjectShowcase() {
+export function ProjectShowcaseUI() {
+  const thirdwebClient = useThirdwebClient();
   const [selectedIndustry, setSelectedIndustry] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -94,7 +98,14 @@ export default function ProjectShowcase() {
               >
                 <Card className="flex h-full cursor-pointer flex-col overflow-hidden transition-shadow hover:shadow-lg">
                   <Image
-                    src={project.image || ""}
+                    src={
+                      project.image?.startsWith("ipfs://")
+                        ? (resolveSchemeWithErrorHandler({
+                            client: thirdwebClient,
+                            uri: project.image,
+                          }) ?? "")
+                        : ""
+                    }
                     alt={project.title}
                     width={300}
                     height={200}
@@ -168,5 +179,13 @@ export default function ProjectShowcase() {
         </section>
       </main>
     </div>
+  );
+}
+
+export default function ProjectShowcasePage() {
+  return (
+    <ThirdwebProvider>
+      <ProjectShowcaseUI />
+    </ThirdwebProvider>
   );
 }

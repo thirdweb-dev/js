@@ -7,13 +7,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { ExternalLink, FileText } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { ThirdwebProvider } from "thirdweb/react";
 import { PROJECT_SHOWCASE_DATA } from "../../lib/project-showcase-constants";
 
-export default function DetailPage() {
+export function DetailPageUI() {
+  const thirdwebClient = useThirdwebClient();
   const router = useRouter();
   const { slug } = router.query;
 
@@ -69,9 +73,16 @@ export default function DetailPage() {
             </CardFooter>
           </div>
           <div className="md:w-1/2">
-            <div className="relative aspect-video md:aspect-square w-full h-full">
+            <div className="relative aspect-video h-full w-full md:aspect-square">
               <Image
-                src={project.image}
+                src={
+                  project.image?.startsWith("ipfs://")
+                    ? (resolveSchemeWithErrorHandler({
+                        client: thirdwebClient,
+                        uri: project.image,
+                      }) ?? "")
+                    : ""
+                }
                 alt={`${project.title} Thumbnail`}
                 layout="fill"
                 objectFit="cover"
@@ -82,5 +93,13 @@ export default function DetailPage() {
         </div>
       </Card>
     </div>
+  );
+}
+
+export default function DetailPage() {
+  return (
+    <ThirdwebProvider>
+      <DetailPageUI />
+    </ThirdwebProvider>
   );
 }
