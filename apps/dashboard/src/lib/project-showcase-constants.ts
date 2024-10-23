@@ -98,7 +98,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/assets/showcase/D_D_Academy.png",
     industries: ["Education"],
     link: "https://academy.developerdao.com/",
-    case_study: "No case study available",
   },
   {
     id: 10,
@@ -109,7 +108,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/assets/showcase/donatuz.png",
     industries: ["Social"],
     link: "https://www.donatuz.com/",
-    case_study: "No case study available",
   },
   {
     id: 11,
@@ -120,7 +118,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Real World Assets"],
     link: "https://www.dtravel.com/",
-    case_study: "No case study available",
   },
   {
     id: 12,
@@ -155,7 +152,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Social"],
     link: "https://fr3n.tech/",
-    case_study: "No case study available",
   },
   {
     id: 15,
@@ -178,7 +174,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Social"],
     link: "https://www.frens.lol/",
-    case_study: "No case study available",
   },
   {
     id: 17,
@@ -188,8 +183,7 @@ export const PROJECT_SHOWCASE_DATA = [
       "A decentralized platform designed to connect pet owners with pet services through blockchain-powered transactions and community engagement.",
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Social"],
-    link: "https://furrend.xyz/ ",
-    case_study: "No case study available",
+    link: "https://furrend.xyz/",
   },
   {
     id: 18,
@@ -200,7 +194,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Decentralized Finance"],
     link: "https://www.genesisblockchain.io/",
-    case_study: "No case study available",
   },
   {
     id: 19,
@@ -223,7 +216,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Fitness"],
     link: "https://www.hallofgoats.com/",
-    case_study: "No case study available",
   },
   {
     id: 21,
@@ -245,7 +237,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Social", "Tools"],
     link: "https://www.icebreaker.xyz/",
-    case_study: "No case study available",
   },
   {
     id: 23,
@@ -268,7 +259,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Social", "Tools"],
     link: "https://www.intract.io/",
-    case_study: "No case study available",
   },
   {
     id: 25,
@@ -291,7 +281,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Games"],
     link: "https://laguna.games/",
-    case_study: "No case study available",
   },
   {
     id: 27,
@@ -362,7 +351,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Social"],
     link: "https://phaver.com/",
-    case_study: "No case study available",
   },
   {
     id: 33,
@@ -396,7 +384,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Social"],
     link: "https://rooit.me/",
-    case_study: "No case study available",
   },
   {
     id: 36,
