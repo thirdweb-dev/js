@@ -26,7 +26,7 @@ import {
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import {
   emailIcon,
-  getWalletIcon,
+  getSocialIcon,
   passkeyIcon,
   phoneIcon,
   socialIcons,
@@ -471,7 +471,7 @@ export const ConnectWalletSocialOptions = (
       {guestEnabled && (
         <WalletTypeRowButton
           client={props.client}
-          icon={getWalletIcon("guest")}
+          icon={getSocialIcon("guest")}
           onClick={() => {
             handleGuestLogin();
           }}
@@ -483,7 +483,7 @@ export const ConnectWalletSocialOptions = (
       {props.isLinking && (
         <WalletTypeRowButton
           client={props.client}
-          icon={getWalletIcon("")}
+          icon={getSocialIcon("")}
           onClick={() => {
             handleWalletLogin();
           }}

@@ -21,4 +21,7 @@ export type {
 
 export { hasStoredPasskey } from "../../wallets/in-app/web/lib/auth/passkeys.js";
 
-export { socialIcons } from "../../react/core/utils/walletIcon.js";
+export {
+  socialIcons,
+  getSocialIcon,
+} from "../../react/core/utils/walletIcon.js";

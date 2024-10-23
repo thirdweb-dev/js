@@ -4,7 +4,7 @@ import { shortenAddress } from "../../../../../utils/address.js";
 import type { Profile } from "../../../../../wallets/in-app/core/authentication/types.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
 import { useSocialProfiles } from "../../../../core/social/useSocialProfiles.js";
-import { getWalletIcon } from "../../../../core/utils/walletIcon.js";
+import { getSocialIcon } from "../../../../core/utils/walletIcon.js";
 import { useProfiles } from "../../../hooks/wallets/useProfiles.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { Img } from "../../components/Img.js";
@@ -149,7 +149,7 @@ function LinkedProfile({
         </Container>
       ) : (
         <Img
-          src={getWalletIcon(profile.type)}
+          src={getSocialIcon(profile.type)}
           width={iconSize.lg}
           height={iconSize.lg}
           loading="eager"
