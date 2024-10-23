@@ -11,7 +11,7 @@ import { getLastAuthProvider } from "../../../core/utils/storage.js";
 import { useWalletImage } from "../../../core/utils/wallet.js";
 import {
   genericWalletIcon,
-  getWalletIcon,
+  getSocialIcon,
 } from "../../../core/utils/walletIcon.js";
 import { Img } from "./Img.js";
 
@@ -43,7 +43,7 @@ export function WalletImage(props: {
         // when showing an active wallet icon - check last auth provider and override the IAW icon
         const lastAuthProvider = await getLastAuthProvider(storage);
         image = lastAuthProvider
-          ? getWalletIcon(lastAuthProvider)
+          ? getSocialIcon(lastAuthProvider)
           : genericWalletIcon;
       } else {
         const mipdImage = getInstalledWalletProviders().find(

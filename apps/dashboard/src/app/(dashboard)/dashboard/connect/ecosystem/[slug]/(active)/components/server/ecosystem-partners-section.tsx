@@ -6,24 +6,24 @@ export function EcosystemPartnersSection({
   ecosystem,
 }: { ecosystem: Ecosystem }) {
   return (
-    <section className="flex flex-col gap-8 lg:gap-6">
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-        <div className="flex flex-col gap-1">
-          <h4 className="font-semibold text-2xl text-foreground">
+    <div className="rounded-lg border border-border bg-muted/50 px-4 py-6 lg:px-6">
+      <div className="flex flex-col items-start justify-between max-sm:mb-5 lg:flex-row">
+        <div>
+          <h3 className="font-semibold text-xl tracking-tight">
             Ecosystem partners
-          </h4>
-          <p className="text-muted-foreground text-sm leading-normal">
+          </h3>
+
+          <p className="mt-1.5 mb-5 text-foreground text-sm">
             Configure apps that can use your wallet. Creating a partner will
             generate a unique partner ID that can access your ecosystem. <br />{" "}
             You will need to generate at least one partner ID for use in your
             own app.
           </p>
         </div>
-
         <AddPartnerDialogButton ecosystem={ecosystem} />
       </div>
 
       <PartnersTable ecosystem={ecosystem} />
-    </section>
+    </div>
   );
 }

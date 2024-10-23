@@ -83,32 +83,32 @@ function PartnerRow(props: {
         isDeleting && "animate-pulse",
       )}
     >
-      <TableCell className="max-w-32 truncate align-top">
+      <TableCell className="max-w-32 truncate align-center">
         {props.partner.name}
       </TableCell>
-      <TableCell className="hidden max-w-32 text-wrap align-top md:table-cell">
+      <TableCell className="hidden max-w-32 text-wrap align-center md:table-cell">
         {props.partner.allowlistedDomains.map((domain) => (
           <div key={domain}>{domain}</div>
         ))}
       </TableCell>
-      <TableCell className="hidden max-w-32 align-top md:table-cell">
+      <TableCell className="hidden max-w-32 align-center md:table-cell">
         {props.partner.allowlistedBundleIds.map((domain) => (
           <div key={domain} className="truncate">
             {domain}
           </div>
         ))}
       </TableCell>
-      <TableCell className="hidden max-w-32 align-top sm:table-cell">
+      <TableCell className="hidden max-w-32 align-center sm:table-cell">
         <ToolTipLabel label={props.partner.id}>
-          <div className="truncate">
+          <div className="flex items-center ">
             <CopyButton text={props.partner.id} className="mr-1" />
-            {props.partner.id}
+            <span className="truncate">{props.partner.id}</span>
           </div>
         </ToolTipLabel>
       </TableCell>
 
-      <td className="table-cell py-1 align-middle">
-        <div className="flex justify-end gap-1.5 pr-1.5">
+      <td className="table-cell py-3 align-middle">
+        <div className="flex justify-end gap-3 pr-3">
           <UpdatePartnerModal
             partner={props.partner}
             ecosystem={props.ecosystem}
