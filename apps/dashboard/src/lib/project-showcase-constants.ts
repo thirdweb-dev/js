@@ -7,7 +7,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "artifact",
     description:
       "Blockchain-based platform for creating and trading digital art NFTs.",
-    image: "/placeholder.svg?height=200&width=300",
+    // image: "ipfs://QmQJrpMvLApCnoQaoXVd8Rb5Wyjn8u6c8Ei2rG6KawCwWS",
     industries: ["Art", "Games"],
     link: "https://www.gotartifact.com/",
     case_study: "No case study available",
@@ -470,16 +470,6 @@ export const PROJECT_SHOWCASE_DATA = [
     image: "/placeholder.svg?height=200&width=300",
     industries: ["Decentralized Finance", "Games", "Tools"],
     link: "https://xaigames.io",
-    case_study: "No case study available",
-  },
-  {
-    id: 42,
-    title: "nan",
-    slug: "nan",
-    description: "No description available",
-    image: "/placeholder.svg?height=200&width=300",
-    industries: ["nan"],
-    link: "No link available",
     case_study: "No case study available",
   },
 ];
