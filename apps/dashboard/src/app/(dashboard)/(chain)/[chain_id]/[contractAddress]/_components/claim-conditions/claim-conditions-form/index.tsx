@@ -1,5 +1,6 @@
 "use client";
 
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
@@ -13,7 +14,6 @@ import {
   Menu,
   MenuButton,
   MenuList,
-  Spinner,
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -445,19 +445,16 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
     };
   }, [claimConditionsQuery.data, controlledFields, isMultiPhase]);
 
+  if (isFetchingData) {
+    return (
+      <div className="flex h-[400px] w-full items-center justify-center rounded-lg border border-border">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
+
   return (
     <>
-      {/* spinner */}
-      {isFetchingData && (
-        <Spinner
-          color="primary"
-          size="xs"
-          position="absolute"
-          top={2}
-          right={4}
-        />
-      )}
-
       <Flex onSubmit={handleFormSubmit} direction="column" as="form" gap={10}>
         <Flex direction="column" gap={6}>
           {/* Show the reason why the form is disabled */}
@@ -553,7 +550,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
 
           <Flex
             justifyContent="space-between"
-            flexDir={{ base: "column", md: isColumn ? "column" : "row" }}
+            flexDir={{ base: "column", md: "row" }}
             gap={2}
           >
             <div className="flex flex-row gap-2">
