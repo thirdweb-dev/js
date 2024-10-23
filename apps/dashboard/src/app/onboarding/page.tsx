@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -9,8 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@chakra-ui/react";
+import { Checkbox, Radio, RadioGroup } from "@chakra-ui/react";
 import { FormControl } from "@chakra-ui/react";
+import { Users2 } from "lucide-react";
+import { Building } from "lucide-react";
 import { useState } from "react";
 import {
   type FieldErrors,
@@ -34,6 +37,37 @@ interface StepProps {
   errors: FieldErrors<FormData>;
 }
 
+interface RadioCardType {
+  register: UseFormRegister<FormData>;
+  value: string;
+  label: string;
+  description: string;
+  icon: React.ReactNode;
+  className: string;
+}
+
+function RadioCard({
+  register,
+  value,
+  label,
+  description,
+  icon,
+  className,
+}: RadioCardType) {
+  return (
+    <Radio
+      className={className}
+      key={value}
+      value={value}
+      {...register("userType")}
+    >
+      {icon}
+      <h5 className="font-semibold text-lg tracking-tight">{label}</h5>
+      <p className="font-regular text-sm tracking-tight">{description}</p>
+    </Radio>
+  );
+}
+
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
 
@@ -42,14 +76,11 @@ export default function OnboardingPage() {
     handleSubmit,
     formState: { errors },
     trigger,
-    watch,
   } = useForm<FormData>({
     defaultValues: {
       interests: [],
     },
   });
-
-  const watchInterests = watch("interests");
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     console.log(data);
@@ -87,29 +118,24 @@ export default function OnboardingPage() {
     <div className="flex flex-col space-y-8">
       {/* User Type */}
       <FormControl>
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder={"Select User Type"} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem
-                key={"developer"}
-                value={"developer"}
-                {...register("userType")}
-              >
-                Developer
-              </SelectItem>
-              <SelectItem
-                key={"studio"}
-                value={"studio"}
-                {...register("userType")}
-              >
-                Studio
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <RadioGroup>
+          <RadioCard
+            className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center data-[state=checked]:border-blue"
+            value="developer"
+            label="Developer"
+            description="I am building an application or game"
+            register={register}
+            icon={<Users2 className="size-8" />}
+          />
+          <RadioCard
+            className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center data-[state=checked]:border-blue"
+            value="studio"
+            label="Studio"
+            description="I am building multiple applications or games"
+            register={register}
+            icon={<Building className="size-8" />}
+          />
+        </RadioGroup>
 
         <FormErrorMessage>
           {errors.userType && <span>{errors.userType.message}</span>}
@@ -185,80 +211,119 @@ export default function OnboardingPage() {
   const Step3: React.FC<StepProps> = ({ register }) => (
     <div className="flex flex-col space-y-4">
       <FormControl>
-        <div className="flex flex-col gap-2">
-          <Checkbox
-            key="SOCIAL_LOGIN"
-            value="SOCIAL_LOGIN"
-            {...register("interests")}
-          >
-            <span className="text-sm">Social Login</span>
-          </Checkbox>
-          <Checkbox
-            key="WALLET_CONECTORS"
-            value="WALLET_CONECTORS"
-            {...register("interests")}
-          >
-            <span className="text-sm">Wallet Connectors</span>
-          </Checkbox>
-          <Checkbox
-            key="SPONSOR_TRANSACTIONS"
-            value="SPONSOR_TRANSACTIONS"
-            {...register("interests")}
-          >
-            <span className="text-sm">Sponsor Transactions</span>
-          </Checkbox>
-          <Checkbox
-            key="UNIFIED_IDENTITY"
-            value="UNIFIED_IDENTITY"
-            {...register("interests")}
-          >
-            <span className="text-sm">Unified Identity</span>
-          </Checkbox>
-          <Checkbox
-            key="CUSTOM_AUTH"
-            value="CUSTOM_AUTH"
-            {...register("interests")}
-          >
-            <span className="text-sm">Custom Auth</span>
-          </Checkbox>
-          <Checkbox
-            key="QUERY_BLOCKCHAIN_DATA"
-            value="QUERY_BLOCKCHAIN_DATA"
-            {...register("interests")}
-          >
-            <span className="text-sm">Query Blockchain Data</span>
-          </Checkbox>
-          <Checkbox
-            key="AUTO_TXN_MGMT"
-            value="AUTO_TXN_MGMT"
-            {...register("interests")}
-          >
-            <span className="text-sm">Automated Transaction Management</span>
-          </Checkbox>
-          <Checkbox
-            key="GAMING_TOOLS"
-            value="GAMING_TOOLS"
-            {...register("interests")}
-          >
-            <span className="text-sm">Gaming Tools</span>
-          </Checkbox>
-          <Checkbox
-            key="TOKEN_SWAPS"
-            value="TOKEN_SWAPS"
-            {...register("interests")}
-          >
-            <span className="text-sm">Token Swaps</span>
-          </Checkbox>
-          <Checkbox
-            key="FIAT_ONRAMPS"
-            value="FIAT_ONRAMPS"
-            {...register("interests")}
-          >
-            <span className="text-sm">Fiat Onramps</span>
-          </Checkbox>
+        <div className="grid w-full grid-cols-3 items-center justify-center gap-1">
+          <Card className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center">
+            <Checkbox
+              key="SOCIAL_LOGIN"
+              value="SOCIAL_LOGIN"
+              {...register("interests")}
+            >
+              <h5 className="font-semibold text-lg tracking-tight">
+                Social Login
+              </h5>
+            </Checkbox>
+          </Card>
+          <Card className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center">
+            <Checkbox
+              key="WALLET_CONECTORS"
+              value="WALLET_CONECTORS"
+              {...register("interests")}
+            >
+              <h5 className="font-semibold text-lg tracking-tight">
+                Wallet Connectors
+              </h5>
+            </Checkbox>
+          </Card>
+          <Card className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center">
+            <Checkbox
+              key="SPONSOR_TRANSACTIONS"
+              value="SPONSOR_TRANSACTIONS"
+              {...register("interests")}
+            >
+              <h5 className="font-semibold text-lg tracking-tight">
+                Sponsor Transactions
+              </h5>
+            </Checkbox>
+          </Card>
+          <Card className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center">
+            <Checkbox
+              key="UNIFIED_IDENTITY"
+              value="UNIFIED_IDENTITY"
+              {...register("interests")}
+            >
+              <h5 className="font-semibold text-lg tracking-tight">
+                Unified Identity
+              </h5>
+            </Checkbox>
+          </Card>
+          <Card className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center">
+            <Checkbox
+              key="CUSTOM_AUTH"
+              value="CUSTOM_AUTH"
+              {...register("interests")}
+            >
+              <h5 className="font-semibold text-lg tracking-tight">
+                Custom Auth
+              </h5>
+            </Checkbox>
+          </Card>
+          <Card className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center">
+            <Checkbox
+              key="QUERY_BLOCKCHAIN_DATA"
+              value="QUERY_BLOCKCHAIN_DATA"
+              {...register("interests")}
+            >
+              <h5 className="font-semibold text-lg tracking-tight">
+                Query Blockchain Data
+              </h5>
+            </Checkbox>
+          </Card>
+          <Card className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center">
+            <Checkbox
+              key="AUTO_TXN_MGMT"
+              value="AUTO_TXN_MGMT"
+              {...register("interests")}
+            >
+              <h5 className="font-semibold text-lg tracking-tight">
+                Automated Transaction Management
+              </h5>
+            </Checkbox>
+          </Card>
+          <Card className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center">
+            <Checkbox
+              key="GAMING_TOOLS"
+              value="GAMING_TOOLS"
+              {...register("interests")}
+            >
+              <h5 className="font-semibold text-lg tracking-tight">
+                Gaming Tools
+              </h5>
+            </Checkbox>
+          </Card>
+          <Card className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center">
+            <Checkbox
+              key="TOKEN_SWAPS"
+              value="TOKEN_SWAPS"
+              {...register("interests")}
+            >
+              <h5 className="font-semibold text-lg tracking-tight">
+                Token Swaps
+              </h5>
+            </Checkbox>
+          </Card>
+          <Card className="flex h-40 w-40 flex-col items-center justify-center space-y-2 text-center">
+            <Checkbox
+              key="FIAT_ONRAMPS"
+              value="FIAT_ONRAMPS"
+              {...register("interests")}
+            >
+              <h5 className="font-semibold text-lg tracking-tight">
+                Fiat Onramps
+              </h5>
+            </Checkbox>
+          </Card>
         </div>
       </FormControl>
-      <h1>Selected: {watchInterests.join(", ")}</h1>
     </div>
   );
 
@@ -280,28 +345,28 @@ export default function OnboardingPage() {
             {step === 2 && <Step2 register={register} errors={errors} />}
             {step === 3 && <Step3 register={register} errors={errors} />}
           </form>
-          <div className="absolute bottom-12 flex w-full items-center justify-between">
+          <div className="absolute bottom-12 box-border flex w-full items-center justify-between">
             {/* Stepper */}
             <div className="flex space-x-4">
               <div
                 className={
                   step === 1
-                    ? "h-3 w-12 rounded-md bg-white"
-                    : "h-3 w-12 rounded-md bg-secondary"
+                    ? "h-3 w-12 rounded-md bg-white transition ease-in-out"
+                    : "h-3 w-12 rounded-md bg-secondary transition ease-in-out"
                 }
               />
               <div
                 className={
                   step === 2
-                    ? "h-3 w-12 rounded-md bg-white"
-                    : "h-3 w-12 rounded-md bg-secondary"
+                    ? "h-3 w-12 rounded-md bg-white transition ease-in-out"
+                    : "h-3 w-12 rounded-md bg-secondary transition ease-in-out"
                 }
               />
               <div
                 className={
                   step === 3
-                    ? "h-3 w-12 rounded-md bg-white"
-                    : "h-3 w-12 rounded-md bg-secondary"
+                    ? "h-3 w-12 rounded-md bg-white transition ease-in-out"
+                    : "h-3 w-12 rounded-md bg-secondary transition ease-in-out"
                 }
               />
             </div>
@@ -316,18 +381,23 @@ export default function OnboardingPage() {
                 </Button>
               )}
               {step < 3 && (
-                <Button type="button" onClick={nextStep}>
+                <Button type="button" variant="primary" onClick={nextStep}>
                   Next
                 </Button>
               )}
               {step === 3 && (
-                <Button type="submit" onClick={handleSubmit(onSubmit)}>
-                  Submit
+                <Button
+                  type="submit"
+                  variant="primary"
+                  onClick={handleSubmit(onSubmit)}
+                >
+                  Finish
                 </Button>
               )}
             </div>
           </div>
         </div>
+        <div className="h-screen w-1/2 bg-gradient-to-r from-purple-500 to-pink-500" />
       </main>
     </div>
   );
