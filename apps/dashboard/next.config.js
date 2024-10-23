@@ -6,7 +6,7 @@ const ContentSecurityPolicy = `
   media-src * data: blob:;
   object-src 'none';
   style-src 'self' 'unsafe-inline' vercel.live;
-  font-src 'self' vercel.live assets.vercel.com framerusercontent.com;
+  font-src 'self' vercel.live assets.vercel.com framerusercontent.com fonts.gstatic.com;
   frame-src * data:;
   script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com framerusercontent.com events.framer.com challenges.cloudflare.com;
   connect-src * data: blob:;
@@ -38,13 +38,7 @@ const securityHeaders = [
 ];
 
 const redirects = require("./redirects");
-
-// add framer paths here
-const FRAMER_PATHS = [
-  "/connect/sign-in",
-  "/contracts/modular-contracts",
-  "/unlimited-wallets",
-];
+const FRAMER_PATHS = require("./framer-rewrites");
 
 /**
  * @returns {import('next').RemotePattern[]}
@@ -135,6 +129,11 @@ const moduleExports = {
         source: "/thirdweb.eth/:path*",
         destination: "/deployer.thirdweb.eth/:path*",
       },
+      // re-write /home to / (this is so that logged in users will be able to go to /home and NOT be redirected to the logged in app)
+      {
+        source: "/home",
+        destination: "/",
+      },
       ...FRAMER_PATHS.map((path) => ({
         source: path,
         destination: `https://landing.thirdweb.com${path}`,
@@ -191,7 +190,7 @@ module.exports = withBundleAnalyzer(
       // An auth token is required for uploading source maps.
       authToken: process.env.SENTRY_AUTH_TOKEN,
       // Suppresses source map uploading logs during build
-      silent: false,
+      silent: true,
       // For all available options, see:
       // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
