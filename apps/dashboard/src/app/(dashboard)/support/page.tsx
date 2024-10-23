@@ -17,7 +17,6 @@ import discordIllustration from "../../../../public/assets/support/discord-illus
 import engineIcon from "../../../../public/assets/support/engine.png";
 import miscIcon from "../../../../public/assets/support/misc.svg";
 import connectIcon from "../../../../public/assets/support/wallets.png";
-import { CreateTicket } from "./components/create-ticket.client";
 
 export const metadata: Metadata = {
   title: "thirdweb Support",
@@ -139,7 +138,9 @@ export default function SupportPage() {
               Our dedicated support team is here to help you with any questions
               or issues you may have. Contact us today and let us assist you.
             </p>
-            <CreateTicket />
+            <Button variant="default" className="mt-6" size="lg" asChild>
+              <Link href="/support/create-ticket">Get Support</Link>
+            </Button>
           </div>
         </header>
       </div>

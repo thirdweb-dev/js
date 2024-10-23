@@ -5,7 +5,6 @@ const LOGGED_IN_ONLY_PATHS = [
   "/team",
   // anything that _starts_ with /cli is logged in only
   "/cli",
-  "/support",
   // publish page
   "/contracts/publish",
 ];
