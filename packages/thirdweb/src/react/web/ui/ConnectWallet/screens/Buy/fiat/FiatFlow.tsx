@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { trackPayEvent } from "../../../../../../../analytics/track.js";
+import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import {

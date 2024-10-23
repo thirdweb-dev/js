@@ -5,8 +5,10 @@ import {
   serializeTypedData,
   validateTypedData,
 } from "viem";
+import { trackTransaction } from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain, getChainMetadata } from "../../chains/utils.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import { getAddress } from "../../utils/address.js";
 import {
   type Hex,
@@ -72,17 +74,30 @@ export async function connectInjectedWallet(
     connectedChain = options.chain;
   }
 
-  return onConnect(provider, address, connectedChain, emitter);
+  return onConnect({
+    provider,
+    address,
+    chain: connectedChain,
+    emitter,
+    client: options.client,
+    id,
+  });
 }
 
 /**
  * @internal
  */
-export async function autoConnectInjectedWallet(
-  id: InjectedSupportedWalletIds,
-  emitter: WalletEmitter<InjectedSupportedWalletIds>,
-  chain?: Chain,
-): Promise<ReturnType<typeof onConnect>> {
+export async function autoConnectInjectedWallet({
+  id,
+  emitter,
+  client,
+  chain,
+}: {
+  id: InjectedSupportedWalletIds;
+  emitter: WalletEmitter<InjectedSupportedWalletIds>;
+  client: ThirdwebClient;
+  chain?: Chain;
+}): Promise<ReturnType<typeof onConnect>> {
   const provider = getInjectedProvider(id);
 
   // connected accounts
@@ -106,12 +121,29 @@ export async function autoConnectInjectedWallet(
   const connectedChain =
     chain && chain.id === chainId ? chain : getCachedChain(chainId);
 
-  return onConnect(provider, address, connectedChain, emitter);
+  return onConnect({
+    provider,
+    address,
+    chain: connectedChain,
+    emitter,
+    client,
+    id,
+  });
 }
 
-function createAccount(provider: Ethereum, _address: string) {
+function createAccount({
+  provider,
+  address,
+  client,
+  id,
+}: {
+  provider: Ethereum;
+  address: string;
+  client: ThirdwebClient;
+  id: WalletId;
+}) {
   const account: Account = {
-    address: getAddress(_address),
+    address: getAddress(address),
     async sendTransaction(tx: SendTransactionOption) {
       const transactionHash = (await provider.request({
         method: "eth_sendTransaction",
@@ -127,6 +159,15 @@ function createAccount(provider: Ethereum, _address: string) {
           },
         ],
       })) as Hex;
+
+      trackTransaction({
+        client,
+        walletAddress: getAddress(address),
+        walletType: id,
+        transactionHash,
+        contractAddress: tx.to ?? undefined,
+        gasPrice: tx.gasPrice,
+      });
 
       return {
         transactionHash,
@@ -201,13 +242,22 @@ function createAccount(provider: Ethereum, _address: string) {
  * Call this method when the wallet provider is connected or auto connected
  * @internal
  */
-async function onConnect(
-  provider: Ethereum,
-  address: string,
-  chain: Chain,
-  emitter: WalletEmitter<InjectedSupportedWalletIds>,
-): Promise<[Account, Chain, DisconnectFn, SwitchChainFn]> {
-  const account = createAccount(provider, address);
+async function onConnect({
+  provider,
+  address,
+  chain,
+  emitter,
+  client,
+  id,
+}: {
+  provider: Ethereum;
+  address: string;
+  chain: Chain;
+  emitter: WalletEmitter<InjectedSupportedWalletIds>;
+  client: ThirdwebClient;
+  id: WalletId;
+}): Promise<[Account, Chain, DisconnectFn, SwitchChainFn]> {
+  const account = createAccount({ provider, address, client, id });
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
@@ -221,7 +271,12 @@ async function onConnect(
 
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
-      const newAccount = createAccount(provider, getAddress(accounts[0]));
+      const newAccount = createAccount({
+        provider,
+        address: getAddress(accounts[0]),
+        client,
+        id,
+      });
 
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);

@@ -1,4 +1,4 @@
-import { trackPayEvent } from "../../../../../../analytics/track.js";
+import { trackPayEvent } from "../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
