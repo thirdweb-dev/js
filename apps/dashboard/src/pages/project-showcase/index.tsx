@@ -104,7 +104,7 @@ export function ProjectShowcaseUI() {
                             client: thirdwebClient,
                             uri: project.image,
                           }) ?? "")
-                        : ""
+                        : project.image
                     }
                     alt={project.title}
                     width={300}

@@ -7,7 +7,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "artifact",
     description:
       "Blockchain-based platform for creating and trading digital art NFTs.",
-    image: "ipfs://QmQJrpMvLApCnoQaoXVd8Rb5Wyjn8u6c8Ei2rG6KawCwWS",
+    image: "/assets/showcase/gotartifact.png",
     industries: ["Art", "Games"],
     link: "https://www.gotartifact.com/",
     case_study: "No case study available",
@@ -17,7 +17,7 @@ export const PROJECT_SHOWCASE_DATA = [
     title: "Bankless Academy",
     slug: "bankless-academy",
     description: "No description available",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/assets/showcase/bankless_academy.png",
     industries: ["Education"],
     link: "https://app.banklessacademy.com/",
     case_study: "No case study available",
@@ -28,7 +28,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "blue-social",
     description:
       "Social app that connects users through nearby Bluetooth technology.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/assets/showcase/blue_social.png",
     industries: ["Social"],
     link: "https://blue.social/",
     case_study: "https://blog.thirdweb.com/case-studies/blue-social-base/",
@@ -39,7 +39,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "bonfire",
     description:
       "A platform enabling creators and communities to build, manage, and monetize their digital content and experiences using Web3 tools.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/assets/showcase/bonfire.png",
     industries: ["Social"],
     link: "https://www.bonfire.xyz/",
     case_study: "No case study available",
@@ -50,7 +50,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "cityverse-tycoon",
     description:
       "City-building simulation game in the metaverse with strategic and economic elements.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/assets/showcase/cityverse_tycoon.png",
     industries: ["Games"],
     link: "https://cityversetycoon.com/",
     case_study:
@@ -74,7 +74,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "courtyard",
     description:
       "Platform for digitizing physical collectibles and trading them as NFTs.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/assets/showcase/courtyard.png",
     industries: ["Art", "Mints"],
     link: "https://courtyard.io",
     case_study:
@@ -86,7 +86,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "decent",
     description:
       "Decentralized publishing platform empowering creators through blockchain-based content distribution.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/assets/showcase/decent.png",
     industries: ["Education", "Mints"],
     link: "https://decent.xyz",
     case_study:
@@ -98,7 +98,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "developer-dao-academy",
     description:
       "An educational platform by Developer DAO that offers Web3 and blockchain development courses for developers of all skill levels.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/assets/showcase/D_D_Academy.png",
     industries: ["Education"],
     link: "https://academy.developerdao.com/",
     case_study: "No case study available",
@@ -109,7 +109,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "donatuz",
     description:
       "A donation platform that leverages blockchain technology to create transparent and efficient ways to support charitable causes and nonprofits.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/assets/showcase/donatuz.png",
     industries: ["Social"],
     link: "https://www.donatuz.com/",
     case_study: "No case study available",
