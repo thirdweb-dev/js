@@ -98,8 +98,12 @@ export const connectLinks = [
 
 const supportLinks = [
   {
-    name: "Support Site",
+    name: "Get thirdweb support",
     href: "https://thirdweb.com/support",
+  },
+  {
+    name: "Knowledge Base",
+    href: "https://support.thirdweb.com",
   },
   {
     name: "Contact Sales",
