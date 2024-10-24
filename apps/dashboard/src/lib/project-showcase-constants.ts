@@ -469,4 +469,4 @@ export const PROJECT_SHOWCASE_INDUSTRIES = [
   "Real World Assets",
 ];
 
-export const PROJECT_SHOWCASE_ITEMS_PER_PAGE = 6;
+export const PROJECT_SHOWCASE_ITEMS_PER_PAGE = 12;
