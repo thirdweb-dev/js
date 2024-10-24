@@ -6,6 +6,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Checkbox } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { RadioGroup } from "@radix-ui/react-radio-group";
 import { THIRDWEB_ANALYTICS_API_HOST } from "constants/urls";
@@ -38,7 +40,79 @@ import {
 import { getCookie } from "stores/SyncStoreToCookies";
 import { Blobbie } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
-import { FormLabel } from "tw-components";
+import { z } from "zod";
+
+const interestValues = [
+  {
+    key: "SOCIAL_LOGIN",
+    label: "Social Login",
+    description:
+      "Let users login to your app with Email, Phone, Telegram, and more",
+  },
+  {
+    key: "WALLET_CONECTORS",
+    label: "Wallet Connectors",
+    description: "Allow users to connect to over 350 web3 wallets",
+  },
+  {
+    key: "SPONSOR_TRANSACTIONS",
+    label: "Sponsor Transactions",
+    description:
+      "Abstract away signatures & gas using Account Abstraction and set up sponsorship rules",
+  },
+  {
+    key: "UNIFIED_IDENTITY",
+    label: "Unified Identity",
+    description:
+      "Enable your users to link multiple onchain and offchain identities to a single ID",
+  },
+  {
+    key: "CUSTOM_AUTH",
+    label: "Custom Auth",
+    description: "Authenticate with your backend using SIWE or JWT",
+  },
+  {
+    key: "QUERY_BLOCKCHAIN_DATA",
+    label: "Query Blockchain Data",
+    description: "All your data are belong to us",
+  },
+  {
+    key: "AUTO_TXN_MGMT",
+    label: "Automated Transaction Management",
+    description: "Scale transaction throughput with nonce management",
+  },
+  {
+    key: "GAMING_TOOLS",
+    label: "Gaming Tools",
+    description: "Everything you need to build a game",
+  },
+  {
+    key: "TOKEN_SWAPS",
+    label: "Token Swaps",
+    description:
+      "Bridge to and from tokens on any EVM, directly in your application",
+  },
+  {
+    key: "FIAT_ONRAMPS",
+    label: "Fiat Onramps",
+    description:
+      "Allow users to purchase with a credit card within your application.",
+  },
+];
+
+const formSchema = z.object({
+  email: z.string().email("Email is not valid").optional(),
+  userType: z.string().optional(),
+  name: z
+    .string()
+    .refine((name) => /^[a-zA-Z0-9 ]*$/.test(name), {
+      message: "Name can only contain letters, numbers and spaces",
+    })
+    .optional(),
+  role: z.string().optional(),
+  industry: z.string().optional(),
+  interests: z.array(z.string()).optional(),
+});
 
 interface FormData {
   email: string;
@@ -72,15 +146,29 @@ const RadioGroupItemButton = React.forwardRef<
   );
 });
 
+function isValidRedirectPath(encodedPath: string): boolean {
+  try {
+    // Decode the URI component
+    const decodedPath = decodeURIComponent(encodedPath);
+    // ensure the path always starts with a _single_ slash
+    // dobule slash could be interpreted as `//example.com` which is not allowed
+    return decodedPath.startsWith("/") && !decodedPath.startsWith("//");
+  } catch {
+    // If decoding fails, return false
+    return false;
+  }
+}
+
 export default function OnboardingPage({
   searchParams,
-}: { searchParams: { address: string; email: string | undefined } }) {
+}: { searchParams: { email: string | undefined; next: string | undefined } }) {
   const accountQuery = useAccount();
   const [step, setStep] = useState(searchParams.email ? 2 : 1);
   const [direction, setDirection] = useState(1);
   const router = useRouter();
 
   const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       interests: [],
       email: searchParams.email ?? "",
@@ -88,6 +176,7 @@ export default function OnboardingPage({
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    console.log(data);
     const res = await fetch(
       `${THIRDWEB_ANALYTICS_API_HOST}/v1/preferences/account`,
       {
@@ -112,11 +201,15 @@ export default function OnboardingPage({
       throw new Error(json.message);
     }
 
-    const dashboardType = getCookie("x-dashboard-type");
-    if (dashboardType === "team") {
-      router.push("/team");
+    if (searchParams.next && isValidRedirectPath(searchParams.next)) {
+      router.replace(searchParams.next);
     } else {
-      router.push("/dashboard");
+      const dashboardType = getCookie("x-dashboard-type");
+      if (dashboardType === "team") {
+        router.push("/team");
+      } else {
+        router.push("/dashboard");
+      }
     }
   };
 
@@ -192,13 +285,11 @@ export default function OnboardingPage({
   };
 
   const Step1: React.FC = () => (
-    // className="box-border flex-col space-y-2"
-
     <FormField
       control={form.control}
       name="email"
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="box-border flex-col space-y-2">
           <FormLabel>What's your email?</FormLabel>
           <FormControl>
             <Input
@@ -355,7 +446,7 @@ export default function OnboardingPage({
                     Social
                   </SelectItem>
                   <SelectItem key={"other"} value={"other"}>
-                    Social
+                    Other
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -365,64 +456,6 @@ export default function OnboardingPage({
       />
     </div>
   );
-
-  const interestValues = [
-    {
-      key: "SOCIAL_LOGIN",
-      label: "Social Login",
-      description:
-        "Let users login to your app with Email, Phone, Telegram, and more",
-    },
-    {
-      key: "WALLET_CONECTORS",
-      label: "Wallet Connectors",
-      description: "Allow users to connect to over 350 web3 wallets",
-    },
-    {
-      key: "SPONSOR_TRANSACTIONS",
-      label: "Sponsor Transactions",
-      description:
-        "Abstract away signatures & gas using Account Abstraction and set up sponsorship rules",
-    },
-    {
-      key: "UNIFIED_IDENTITY",
-      label: "Unified Identity",
-      description:
-        "Enable your users to link multiple onchain and offchain identities to a single ID",
-    },
-    {
-      key: "CUSTOM_AUTH",
-      label: "Custom Auth",
-      description: "Authenticate with your backend using SIWE or JWT",
-    },
-    {
-      key: "QUERY_BLOCKCHAIN_DATA",
-      label: "Query Blockchain Data",
-      description: "All your data are belong to us",
-    },
-    {
-      key: "AUTO_TXN_MGMT",
-      label: "Automated Transaction Management",
-      description: "Scale transaction throughput with nonce management",
-    },
-    {
-      key: "GAMING_TOOLS",
-      label: "Gaming Tools",
-      description: "Everything you need to build a game",
-    },
-    {
-      key: "TOKEN_SWAPS",
-      label: "Token Swaps",
-      description:
-        "Bridge to and from tokens on any EVM, directly in your application",
-    },
-    {
-      key: "FIAT_ONRAMPS",
-      label: "Fiat Onramps",
-      description:
-        "Allow users to purchase with a credit card within your application.",
-    },
-  ];
 
   const Step3: React.FC<StepProps> = ({ register }) => (
     <div className="flex max-h-[700px] flex-col space-y-4 overflow-scroll">
@@ -441,7 +474,7 @@ export default function OnboardingPage({
                     <Card
                       key={interest.key}
                       className={cn(
-                        "flex aspect-square cursor-pointer flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted",
+                        "flex aspect-[4/3] cursor-pointer flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted md:aspect-[16/9]",
                         isChecked && "border-primary bg-muted",
                       )}
                       onClick={(event) => {
@@ -533,10 +566,10 @@ export default function OnboardingPage({
                   <Building className="size-8" />
                 )
               ) : (
-                <div className="size-7 overflow-hidden rounded-full">
+                <div className="size-9 overflow-hidden rounded-full">
                   <Blobbie
                     address={accountQuery.data?.creatorWalletAddress ?? ""}
-                    size={28}
+                    size={48}
                   />
                 </div>
               )}

@@ -49,28 +49,29 @@ function CustomConnectEmmbed() {
   const accountQuery = useAccount();
 
   async function onLoginSuccessful() {
-    if (nextSearchParam && isValidRedirectPath(nextSearchParam)) {
-      router.replace(nextSearchParam);
+    const account = await accountQuery.refetch();
+    if (!account.data) throw new Error("No account found.");
+    const existingAccountPreferences = await getAccountPreferences({
+      accountId: account.data.id,
+    });
+
+    if (!existingAccountPreferences) {
+      console.log("hello");
+      console.log(account);
+      router.replace(
+        `/onboarding?${account.data.email ? `email=${account.data.email}` : ""}${nextSearchParam && isValidRedirectPath(nextSearchParam) ? `${account.data.email ? "&" : ""}next=${nextSearchParam}` : ""}`,
+      );
     } else {
-      const dashboardType = getCookie("x-dashboard-type");
-      const account = await accountQuery.refetch();
-      if (!account.data) throw new Error("No account found.");
-      const existingAccountPreferences = await getAccountPreferences({
-        accountId: account.data.id,
-      });
-
-      console.log(account.data.email);
-
-      if (!existingAccountPreferences) {
-        router.replace(
-          `/onboarding?${account.data.email ? `email=${account.data.email}` : ""}`,
-        );
-      }
-
-      if (dashboardType === "team") {
-        router.replace("/team");
+      if (nextSearchParam && isValidRedirectPath(nextSearchParam)) {
+        router.replace(nextSearchParam);
       } else {
-        router.replace("/dashboard");
+        const dashboardType = getCookie("x-dashboard-type");
+
+        if (dashboardType === "team") {
+          router.replace("/team");
+        } else {
+          router.replace("/dashboard");
+        }
       }
     }
   }
