@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.46
+
+### Patch Changes
+
+- [#5150](https://github.com/thirdweb-dev/js/pull/5150) [`9fadbcc`](https://github.com/thirdweb-dev/js/commit/9fadbcc17abfe302933f7b860ab7c3b4fb577789) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#5083](https://github.com/thirdweb-dev/js/pull/5083) [`795e9c1`](https://github.com/thirdweb-dev/js/commit/795e9c13a4f33d9afec82302409a1a90719242a8) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds ecosystem headers to extractAuthorizationData result
+
 ## 0.4.45
 
 ### Patch Changes
