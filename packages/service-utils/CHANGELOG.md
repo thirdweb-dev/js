@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.47
+
+### Patch Changes
+
+- [#5169](https://github.com/thirdweb-dev/js/pull/5169) [`f23911e`](https://github.com/thirdweb-dev/js/commit/f23911e1da6c7a1817b9c1fa22d7ad72b2fde0c9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Reduce published even action parsing strictness
+
 ## 0.4.46
 
 ### Patch Changes
