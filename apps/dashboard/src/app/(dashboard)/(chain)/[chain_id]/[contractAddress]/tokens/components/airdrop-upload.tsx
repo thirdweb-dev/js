@@ -40,7 +40,12 @@ export interface AirdropAddressInput {
 }
 interface AirdropUploadProps {
   setAirdrop: (airdrop: AirdropAddressInput[]) => void;
-  onClose: () => void;
+  onClose?: () => void;
+  /**
+   * Sometimes it's not necessary to remove duplicated records
+   * For example, someone might want to batch claim tokens in a specific order
+   */
+  removeDuplicateAddresses?: boolean;
 }
 async function checkIsAddress(
   item: AirdropAddressInput,
@@ -76,15 +81,17 @@ async function checkIsAddress(
 }
 function processAirdropData(
   data: ((AirdropAddressInput & { resolvedAddress: string }) | undefined)[],
+  removeDuplicateAddresses?: boolean,
 ) {
-  const seen = new Set();
-  const filteredData = data
-    .filter((o) => o !== undefined)
-    .filter((el) => {
+  let filteredData = data.filter((o) => o !== undefined);
+  if (removeDuplicateAddresses) {
+    const seen = new Set();
+    filteredData = filteredData.filter((el) => {
       const duplicate = seen.has(el.resolvedAddress);
       seen.add(el.resolvedAddress);
       return !duplicate;
     });
+  }
   const valid = filteredData.filter(({ isValid }) => isValid);
   const invalid = filteredData.filter(({ isValid }) => !isValid);
   // Make sure the invalid records are at the top so that users can see
@@ -92,9 +99,19 @@ function processAirdropData(
   return ordered;
 }
 
+/**
+ * This upload form can be reused between the following features:
+ * 1. Batch transfer (or Airdrop) for ERC1155 contract (in the token page)
+ * 2. Batch transfer for ERC20 contract
+ * 3. Batch claim for ERC721 Drop contract
+ *
+ * since they all do not require a tokenId column in the CSV file.
+ * Should we want to include that column, we might have to refactor some code
+ */
 export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   setAirdrop,
   onClose,
+  removeDuplicateAddresses,
 }) => {
   const thirdwebClient = useThirdwebClient();
   const [validAirdrop, setValidAirdrop] = useState<AirdropAddressInput[]>([]);
@@ -145,7 +162,10 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
     combine: (results) => {
       return {
         data: {
-          result: processAirdropData(results.map((result) => result.data)),
+          result: processAirdropData(
+            results.map((result) => result.data),
+            removeDuplicateAddresses,
+          ),
           invalidFound: !!results.find((o) => !o.data?.isValid),
         },
         pending: results.some((result) => result.isPending),
@@ -158,7 +178,9 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   const paginationPortalRef = useRef<HTMLDivElement>(null);
   const onSave = () => {
     setAirdrop(normalizeQuery.data.result);
-    onClose();
+    if (onClose) {
+      onClose();
+    }
   };
   const removeInvalid = useCallback(() => {
     const filteredData = normalizeQuery.data?.result.filter(
@@ -255,15 +277,17 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
               <li>
                 Files <em>must</em> contain one .csv file with an address and
                 quantity column, if the quantity column is not provided, that
-                record will be flagged as invalid.
+                record will be flagged as invalid.{" "}
                 <Link download color="primary.500" href="/airdrop.csv">
                   Download an example CSV
                 </Link>
               </li>
-              <li>
-                Repeated addresses will be removed and only the first found will
-                be kept.
-              </li>
+              {removeDuplicateAddresses && (
+                <li>
+                  Repeated addresses will be removed and only the first found
+                  will be kept.
+                </li>
+              )}
             </UnorderedList>
           </div>
         </div>
@@ -389,7 +413,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
         </Tbody>
       </Table>
       {/* Only need to show the Pagination components if we have more than 25 records */}
-      {data.length > 0 && (
+      {data.length > 25 && (
         <Portal containerRef={portalRef}>
           <div className="flex w-full items-center justify-center">
             <div className="flex flex-row gap-1">

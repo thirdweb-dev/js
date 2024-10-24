@@ -137,6 +137,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
                     setAirdrop={(value) =>
                       setValue("addresses", value, { shouldDirty: true })
                     }
+                    removeDuplicateAddresses={true}
                   />
                 </SheetContent>
               </Sheet>
