@@ -9,11 +9,11 @@ import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { ConnectEmbed } from "thirdweb/react";
+import { getProfiles } from "thirdweb/wallets";
 import { getCookie } from "../../stores/SyncStoreToCookies";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
-import { getProfiles } from "thirdweb/wallets";
 
 export default function LoginPage() {
   return (

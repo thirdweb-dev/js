@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -21,7 +22,6 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { RadioGroup } from "@radix-ui/react-radio-group";
@@ -220,14 +220,34 @@ export default function OnboardingPage({
       <div className="absolute right-0 bottom-0 left-0 box-border flex w-full items-center justify-between overflow-auto p-12">
         {/* Stepper */}
         <div className="flex space-x-4">
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
           <div
+            key={"step-2"}
+            onClick={() => {
+              if (step > 2) {
+                setDirection(-1);
+              } else {
+                setDirection(1);
+              }
+              setStep(2);
+            }}
             className={
               step === 2
                 ? "h-3 w-12 rounded-md bg-white transition ease-in-out"
                 : "h-3 w-12 rounded-md bg-secondary transition ease-in-out"
             }
           />
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
           <div
+            key={"step-3"}
+            onClick={() => {
+              if (step > 3) {
+                setDirection(-1);
+              } else {
+                setDirection(1);
+              }
+              setStep(3);
+            }}
             className={
               step === 3
                 ? "h-3 w-12 rounded-md bg-white transition ease-in-out"
@@ -236,7 +256,24 @@ export default function OnboardingPage({
           />
         </div>
         <div className="flex space-x-4">
-          {step > 1 && (
+          {step < 3 && (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => {
+                setDirection(1);
+                setStep(step + 1);
+              }}
+            >
+              Skip
+            </Button>
+          )}
+          {step < 3 && (
+            <Button type="button" variant="primary" onClick={nextStep}>
+              Next
+            </Button>
+          )}
+          {step === 3 && (
             <Button
               type="button"
               variant="secondary"
@@ -246,11 +283,6 @@ export default function OnboardingPage({
               }}
             >
               Back
-            </Button>
-          )}
-          {step < 3 && (
-            <Button type="button" variant="primary" onClick={nextStep}>
-              Next
             </Button>
           )}
           {step === 3 && (
@@ -293,7 +325,7 @@ export default function OnboardingPage({
           <FormLabel>What's your email?</FormLabel>
           <FormControl>
             <Input
-              className="w-1/2"
+              className="w-1/2 min-w-[250px]"
               {...field}
               id="email"
               type="email"
@@ -307,7 +339,7 @@ export default function OnboardingPage({
   );
 
   const Step2: React.FC<StepProps> = ({ register }) => (
-    <div className="flex flex-col space-y-8">
+    <div className="flex max-h-[450px] flex-col space-y-8 overflow-y-scroll sm:max-h-full">
       {/* User Type */}
       <FormField
         name="userType"
@@ -317,12 +349,12 @@ export default function OnboardingPage({
             <FormControl>
               <RadioGroup
                 defaultValue={form.getValues("userType")}
-                className="flex space-x-4"
+                className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0"
                 onValueChange={(value) => form.setValue("userType", value)}
               >
                 <RadioGroupItemButton
                   value="Developer"
-                  className="aspect-square max-w-[180px] rounded-xl border border-foreground/25 p-4 hover:border-foreground"
+                  className="w-full items-center justify-center rounded-xl border border-foreground/25 p-4 hover:border-foreground sm:aspect-square sm:max-w-[180px]"
                 >
                   <div className="flex flex-col items-center justify-center space-y-2">
                     <Users2 className="size-8" />
@@ -336,7 +368,7 @@ export default function OnboardingPage({
                 </RadioGroupItemButton>
                 <RadioGroupItemButton
                   value="Studio"
-                  className="aspect-square max-w-[180px] rounded-xl border border-foreground/25 p-4 hover:border-foreground"
+                  className="w-full items-center justify-center rounded-xl border border-foreground/25 p-4 hover:border-foreground sm:aspect-square sm:max-w-[180px]"
                 >
                   <div className="flex flex-col items-center justify-center space-y-2">
                     <Building className="size-8" />
@@ -360,7 +392,7 @@ export default function OnboardingPage({
             <FormLabel>What's the name of your company?</FormLabel>
             <FormControl className="flex flex-col space-y-2">
               <Input
-                className="w-1/2"
+                className="w-1/2 min-w-[250px]"
                 id="name"
                 type="text"
                 placeholder="Hooli, Inc."
@@ -386,7 +418,7 @@ export default function OnboardingPage({
                   form.setValue("role", value);
                 }}
               >
-                <SelectTrigger id="role" className="w-1/2">
+                <SelectTrigger id="role" className="w-1/2 min-w-[250px]">
                   <SelectValue placeholder={"Select Role"} />
                 </SelectTrigger>
                 <SelectContent>
@@ -429,7 +461,7 @@ export default function OnboardingPage({
                   form.setValue("industry", value);
                 }}
               >
-                <SelectTrigger className="w-1/2">
+                <SelectTrigger className="w-1/2 min-w-[250px]">
                   <SelectValue placeholder={"Select Industry"} />
                 </SelectTrigger>
                 <SelectContent>
@@ -474,15 +506,15 @@ export default function OnboardingPage({
                     <Card
                       key={interest.key}
                       className={cn(
-                        "flex aspect-[4/3] cursor-pointer flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted md:aspect-[16/9]",
+                        "no-scrollbar flex aspect-[4/3] cursor-pointer flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted md:aspect-[16/9]",
                         isChecked && "border-primary bg-muted",
                       )}
                       onClick={(event) => {
                         event.preventDefault(); // Prevent default behavior
                         const newInterests = isChecked
                           ? checkedInterests.filter(
-                            (key) => key !== interest.key,
-                          )
+                              (key) => key !== interest.key,
+                            )
                           : [...checkedInterests, interest.key];
                         form.setValue("interests", newInterests);
                       }}
@@ -523,10 +555,10 @@ export default function OnboardingPage({
   };
 
   return (
-    <div className="relative flex flex-col place-items-center bg-muted/30 md:flex-row">
-      <main className="z-10 flex w-full gap-6">
+    <div className="relative flex place-items-center bg-muted/30">
+      <main className="z-10 flex w-full flex-col-reverse gap-6 md:flex-row">
         {/* Left Panel */}
-        <div className="items-between relative box-border flex h-screen w-full flex-col overflow-hidden p-12 lg:w-1/2">
+        <div className="items-between relative box-border flex h-[75vh] w-full flex-col overflow-hidden p-4 md:h-screen md:w-1/2 md:p-12">
           <div className="flex flex-col space-y-2">
             <h1 className="font-semibold text-xl tracking-tight">
               {step === 3 ? "Tell us what you need." : "Tell us about you."}
@@ -556,7 +588,7 @@ export default function OnboardingPage({
           <Footer />
         </div>
         {/* Right Panel */}
-        <div className="flex h-screen w-1/2 animate-gradient-x flex-col items-center justify-center bg-gradient-to-r from-[#25369F] via-[#290259] to-[#3E0D45]">
+        <div className="flex h-[25vh] w-full animate-gradient-x flex-col items-center justify-center bg-gradient-to-r from-[#25369F] via-[#290259] to-[#3E0D45] md:h-screen md:w-1/2">
           <Card className="flex w-[300px] items-center rounded-xl border-muted transition-all ">
             <CardContent className="flex items-center space-x-4 p-4">
               {form.getValues("userType") ? (
@@ -574,7 +606,7 @@ export default function OnboardingPage({
                 </div>
               )}
               <div className="flex flex-col">
-                <h5 className="font-regular font-sm text-white">
+                <h5 className="max-w-[200px] truncate font-regular font-sm text-white">
                   {form.getValues("email")
                     ? form.getValues("email")
                     : accountQuery.data?.creatorWalletAddress
