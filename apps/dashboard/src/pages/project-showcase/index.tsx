@@ -1,6 +1,4 @@
 "use client";
-
-import { AppFooter } from "@/components/blocks/app-footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,8 +18,8 @@ import {
 } from "@/components/ui/pagination";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { LandingLayout } from "components/landing-pages/layout";
 import { getAbsoluteUrl } from "lib/vercel-utils";
-import { NextSeo } from "next-seo";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -208,20 +206,24 @@ export function ProjectShowcaseUI() {
 export default function ProjectShowcasePage() {
   return (
     <ThirdwebProvider>
-      <NextSeo
-        openGraph={{
-          images: [
-            {
-              url: `${getAbsoluteUrl()}/assets/showcase/og_image.png`,
-              width: 450,
-              height: 236,
-            },
-          ],
+      <LandingLayout
+        seo={{
+          title: "Project Showcase | Built on thirdweb",
+          description:
+            "Discover the latest web3 apps and games built on thirdweb.",
+          openGraph: {
+            images: [
+              {
+                url: `${getAbsoluteUrl()}/assets/showcase/og_image.png`,
+                width: 1200,
+                height: 630,
+              },
+            ],
+          },
         }}
-      />
-
-      <ProjectShowcaseUI />
-      <AppFooter />
+      >
+        <ProjectShowcaseUI />
+      </LandingLayout>
     </ThirdwebProvider>
   );
 }
