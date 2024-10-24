@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.64.1
+
+### Patch Changes
+
+- [#5163](https://github.com/thirdweb-dev/js/pull/5163) [`158c2b6`](https://github.com/thirdweb-dev/js/commit/158c2b6e8e41a88233fc819af54f4e0848604d0a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect theme accentColor for default icons in connect UI
+
 ## 5.64.0
 
 ### Minor Changes
