@@ -4,7 +4,9 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { getWalletInfo } from "../../../../wallets/__generated__/getWalletInfo.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
+import type { AuthOption } from "../../../../wallets/types.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { radius } from "../../../core/design-system/index.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { getLastAuthProvider } from "../../../core/utils/storage.js";
@@ -13,7 +15,14 @@ import {
   genericWalletIcon,
   getSocialIcon,
 } from "../../../core/utils/walletIcon.js";
+import { EmailIcon } from "../ConnectWallet/icons/EmailIcon.js";
+import { FingerPrintIcon } from "../ConnectWallet/icons/FingerPrintIcon.js";
+import { GuestIcon } from "../ConnectWallet/icons/GuestIcon.js";
+import { OutlineWalletIcon } from "../ConnectWallet/icons/OutlineWalletIcon.js";
+import { PhoneIcon } from "../ConnectWallet/icons/PhoneIcon.js";
 import { Img } from "./Img.js";
+
+type WalletImageState = { uri: string; authProvider?: AuthOption };
 
 /**
  * @internal
@@ -24,7 +33,8 @@ export function WalletImage(props: {
   client: ThirdwebClient;
   style?: React.CSSProperties;
 }) {
-  const [image, setImage] = useState<string | undefined>(undefined);
+  const theme = useCustomTheme();
+  const [image, setImage] = useState<WalletImageState | undefined>(undefined);
   const activeWallet = useActiveWallet();
   useEffect(() => {
     async function fetchImage() {
@@ -33,7 +43,7 @@ export function WalletImage(props: {
       // show the admin EOA icon for smart
       const storage = webLocalStorage;
       const activeEOAId = props.id;
-      let image: string | undefined;
+      let image: WalletImageState | undefined;
 
       if (
         activeEOAId === "inApp" &&
@@ -43,17 +53,22 @@ export function WalletImage(props: {
         // when showing an active wallet icon - check last auth provider and override the IAW icon
         const lastAuthProvider = await getLastAuthProvider(storage);
         image = lastAuthProvider
-          ? getSocialIcon(lastAuthProvider)
-          : genericWalletIcon;
+          ? {
+              uri: getSocialIcon(lastAuthProvider),
+              authProvider: lastAuthProvider as AuthOption,
+            }
+          : { uri: "", authProvider: "wallet" };
       } else {
         const mipdImage = getInstalledWalletProviders().find(
           (x) => x.info.rdns === activeEOAId,
         )?.info.icon;
 
         if (mipdImage) {
-          image = mipdImage;
+          image = { uri: mipdImage };
         } else {
-          image = await getWalletInfo(activeEOAId, true);
+          image = {
+            uri: await getWalletInfo(activeEOAId, true),
+          };
         }
       }
 
@@ -62,10 +77,34 @@ export function WalletImage(props: {
     fetchImage();
   }, [props.id, activeWallet]);
 
-  if (image) {
+  if (image?.authProvider === "email") {
+    return <EmailIcon size={props.size} color={theme.colors.accentText} />;
+  }
+
+  if (image?.authProvider === "phone") {
+    return <PhoneIcon size={props.size} color={theme.colors.accentText} />;
+  }
+
+  if (image?.authProvider === "passkey") {
+    return (
+      <FingerPrintIcon size={props.size} color={theme.colors.accentText} />
+    );
+  }
+
+  if (image?.authProvider === "wallet") {
+    return (
+      <OutlineWalletIcon size={props.size} color={theme.colors.accentText} />
+    );
+  }
+
+  if (image?.authProvider === "guest") {
+    return <GuestIcon size={props.size} color={theme.colors.accentText} />;
+  }
+
+  if (image?.uri) {
     return (
       <Img
-        src={image}
+        src={image.uri}
         width={props.size}
         height={props.size}
         loading="eager"
@@ -101,17 +140,5 @@ function WalletImageQuery(props: {
     );
   }
 
-  return (
-    <Img
-      client={props.client}
-      src={walletImage.isLoading ? undefined : walletImage.data}
-      fallbackImage={genericWalletIcon}
-      width={props.size}
-      height={props.size}
-      loading="eager"
-      style={{
-        borderRadius: radius.md,
-      }}
-    />
-  );
+  return <OutlineWalletIcon size={props.size} />;
 }

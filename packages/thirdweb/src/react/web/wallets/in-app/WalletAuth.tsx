@@ -131,7 +131,12 @@ export function WalletAuth(props: {
         size={props.size}
         meta={props.meta || {}}
         walletConnect={props.walletConnect}
-        modalHeader={{ title: props.inAppLocale.linkWallet, onBack: back }}
+        modalHeader={{
+          title: props.isLinking
+            ? props.inAppLocale.linkWallet
+            : props.inAppLocale.signInWithWallet,
+          onBack: back,
+        }}
         walletIdsToHide={["inApp"]}
         disableSelectionDataReset={true}
       />
@@ -141,7 +146,14 @@ export function WalletAuth(props: {
   return (
     <Container animate="fadein" fullHeight flex="column">
       <Container p="lg">
-        <ModalHeader title={props.inAppLocale.linkWallet} onBack={back} />
+        <ModalHeader
+          title={
+            props.isLinking
+              ? props.inAppLocale.linkWallet
+              : props.inAppLocale.signInWithWallet
+          }
+          onBack={back}
+        />
       </Container>
 
       <Container
