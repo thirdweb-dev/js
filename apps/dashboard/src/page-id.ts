@@ -6,8 +6,6 @@ export enum PageId {
   // ---------------------------------------------------------------------------
   //  marketing / growth pages
   // ---------------------------------------------------------------------------
-  // thirdweb.com
-  Homepage = "homepage-landing",
   // thirdweb.com/contact-us
   ContactUs = "contact-us-page",
 

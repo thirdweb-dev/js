@@ -13,7 +13,7 @@ import {
 import type { ComponentWithChildren } from "types/component-with-children";
 import { convertFontSizeToCSSVar } from "./utils/typography";
 
-export interface HeadingProps extends Omit<ChakraHeadingProps, "size"> {
+interface HeadingProps extends Omit<ChakraHeadingProps, "size"> {
   size?: HeadingSizes;
 }
 
