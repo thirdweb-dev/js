@@ -28,6 +28,9 @@ import {
   useForm,
 } from "react-hook-form";
 import { FormErrorMessage, FormLabel } from "tw-components";
+import { THIRDWEB_ANALYTICS_API_HOST } from "constants/urls";
+import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   email: string;
@@ -63,8 +66,10 @@ const RadioGroupItemButton = React.forwardRef<
 });
 
 export default function OnboardingPage() {
+  const accountQuery = useAccount();
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
+  const router = useRouter();
 
   const {
     register,
@@ -80,8 +85,32 @@ export default function OnboardingPage() {
     },
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const res = await fetch(
+      `${THIRDWEB_ANALYTICS_API_HOST}/v1/preferences/account`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          accountId: accountQuery.data?.id,
+          userType: data.userType,
+          role: data.role,
+          industry: data.industry,
+          name: data.name,
+          email: data.email,
+          interests: data.interests,
+        }),
+      },
+    );
+    const json = await res.json();
+
+    if (res.status !== 200) {
+      throw new Error(json.message);
+    }
+
+    router.push("/dashboard");
   };
 
   const watchInterests = watch("interests");

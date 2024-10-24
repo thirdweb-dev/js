@@ -1,4 +1,6 @@
 const LOGGED_IN_ONLY_PATHS = [
+  // must be logged in to go through onboarding
+  "/onboarding",
   // anything that _starts_ with /dashboard is logged in only
   "/dashboard",
   // team pages are logged in only
