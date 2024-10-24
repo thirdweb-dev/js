@@ -5,14 +5,14 @@ import { getAccount } from "../../../../../../account/settings/getAccount";
 import { TeamMembersSettingsPage } from "./TeamMembersSettingsPage";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     team_slug: string;
-  };
+  }>;
 }) {
   const [account, team, members] = await Promise.all([
     getAccount(),
-    getTeamBySlug(props.params.team_slug),
-    getMembers(props.params.team_slug),
+    getTeamBySlug((await props.params).team_slug),
+    getMembers((await props.params).team_slug),
   ]);
 
   if (!team || !account || !members) {

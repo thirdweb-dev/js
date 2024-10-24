@@ -21,7 +21,7 @@ export async function getContractPageParamsInfo(params: {
   }
 
   if (!chainMetadata) {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const localChainStoreValue = cookieStore.get(TW_LOCAL_CHAIN_STORE)?.value;
 
     if (localChainStoreValue) {

@@ -20,8 +20,11 @@ import { getSidebarLinkGroups } from "./utils/getSidebarLinkgroups";
 import { fetchAllSlugs, getSlugToDocMap } from "./utils/slugs";
 import { nameToSubgroupSlug, subgroups } from "./utils/subgroups";
 
-type PageProps = { params: { version: string; slug?: string[] } };
-type LayoutProps = { params: { version: string }; children: React.ReactNode };
+type PageProps = { params: Promise<{ version: string; slug?: string[] }> };
+type LayoutProps = {
+  params: Promise<{ version: string }>;
+  children: React.ReactNode;
+};
 
 // make sure getTDocPage() is used in .../[version]/[...slug]/page.tsx file
 export function getTDocPage(options: {
@@ -34,10 +37,11 @@ export function getTDocPage(options: {
   const { getDoc, sdkTitle, packageSlug, getVersions, metadataIcon } = options;
 
   async function Page(props: PageProps) {
-    const version = props.params.version ?? "v5";
+    const params = await props.params;
+    const version = params.version ?? "v5";
     const doc = await getDoc(version);
     const slugToDoc = getSlugToDocMap(doc);
-    const docSlug = props.params.slug?.join("/");
+    const docSlug = params.slug?.join("/");
 
     if (!version) {
       notFound();
@@ -122,18 +126,19 @@ export function getTDocPage(options: {
     );
 
     const paths = returnVal.flat();
-    return paths;
+    return paths.map((p) => Promise.resolve(p));
   }
 
   async function generateMetadata(props: PageProps): Promise<Metadata> {
-    let docName = props.params.slug ? props.params.slug[0] : undefined;
+    const params = await props.params;
+    let docName = params.slug ? params.slug[0] : undefined;
 
     if (!docName) {
       return {
         title: `${sdkTitle} | thirdweb docs`,
       };
     }
-    const extensionName = props.params.slug ? props.params.slug[1] : undefined;
+    const extensionName = params.slug ? params.slug[1] : undefined;
     if (extensionName) {
       docName = `${extensionName} - ${docName}`;
     }
@@ -169,7 +174,8 @@ export function getTDocLayout(options: {
   const { getDoc, packageSlug, sdkTitle } = options;
 
   return async function Layout(props: LayoutProps) {
-    const { version } = props.params;
+    const params = await props.params;
+    const { version } = params;
     const doc = await getDoc(version);
 
     return (
@@ -299,7 +305,6 @@ function RenderLinkGroup(props: { linkGroup: LinkGroup; level: number }) {
           );
         }
       })}
-
       {ungroupedLinks.length > 0 && (
         <GroupOfLinks
           level={props.level + 1}

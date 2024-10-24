@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page(props: {
-  searchParams: Partial<SimulateTransactionForm>;
+  searchParams: Promise<Partial<SimulateTransactionForm>>;
 }) {
-  return <TransactionSimulator searchParams={props.searchParams} />;
+  return <TransactionSimulator searchParams={await props.searchParams} />;
 }

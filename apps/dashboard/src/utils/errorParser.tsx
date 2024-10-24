@@ -2,6 +2,8 @@ import Link from "next/link";
 import posthog from "posthog-js";
 import { Text } from "tw-components";
 
+import type { JSX } from "react";
+
 const PLEASE_REACH_OUT_MESSAGE = (
   <Text as="span" color="inherit">
     If you believe this is incorrect or the error persists, please visit our{" "}

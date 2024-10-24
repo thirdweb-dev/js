@@ -84,7 +84,7 @@ export function useContractEvents<
     enabled = true,
     watch = true,
   } = options;
-  const latestBlockNumber = useRef<bigint>(); // We use this to keep track of the latest block number when new pollers are spawned
+  const latestBlockNumber = useRef<bigint>(undefined); // We use this to keep track of the latest block number when new pollers are spawned
 
   const queryClient = useQueryClient();
 

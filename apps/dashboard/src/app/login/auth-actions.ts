@@ -43,7 +43,7 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
     throw new Error("API_SERVER_SECRET is not set");
   }
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   // forward the request to the API server
   const res = await fetch(`${API_SERVER_URL}/v2/siwe/login`, {
@@ -121,7 +121,7 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
 }
 
 export async function doLogout() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   // delete all cookies that start with the token prefix
   const allCookies = cookieStore.getAll();
   for (const cookie of allCookies) {
@@ -135,7 +135,7 @@ export async function doLogout() {
 
 export async function isLoggedIn(address: string) {
   const cookieName = COOKIE_PREFIX_TOKEN + getAddress(address);
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   // check if we have an access token
   const token = cookieStore.get(cookieName)?.value;
   if (!token) {

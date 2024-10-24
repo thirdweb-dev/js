@@ -39,7 +39,7 @@ export function WalletAuth(props: {
 }) {
   const { wallet, done } = props;
   const addConnectedWallet = useAddConnectedWallet();
-  const walletToConnect = useRef<Wallet>();
+  const walletToConnect = useRef<Wallet>(undefined);
   const [status, setStatus] = useState<"loading" | "error" | "selecting">(
     "selecting",
   );

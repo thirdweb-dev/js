@@ -6,7 +6,7 @@ import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { PageId } from "page-id";
 import { type TemplateCardProps, templates } from "pages/templates";
-import { Fragment } from "react";
+import { Fragment, type JSX } from "react";
 import {
   Heading,
   Link,

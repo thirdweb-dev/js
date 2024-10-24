@@ -5,6 +5,8 @@ import {
 import type { ThirdwebContract } from "thirdweb";
 import type { ComponentWithChildren } from "types/component-with-children";
 
+import type { JSX } from "react";
+
 interface AdminOnlyProps {
   contract: ThirdwebContract;
   failOpen?: boolean;

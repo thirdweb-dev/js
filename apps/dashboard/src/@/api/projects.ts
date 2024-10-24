@@ -21,7 +21,7 @@ export type Project = {
 };
 
 export async function getProjects(teamSlug: string) {
-  const cookiesManager = cookies();
+  const cookiesManager = await cookies();
   const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const token = activeAccount
     ? cookiesManager.get(COOKIE_PREFIX_TOKEN + activeAccount)?.value
@@ -46,7 +46,7 @@ export async function getProjects(teamSlug: string) {
 }
 
 export async function getProject(teamSlug: string, projectSlug: string) {
-  const cookiesManager = cookies();
+  const cookiesManager = await cookies();
   const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const token = activeAccount
     ? cookiesManager.get(COOKIE_PREFIX_TOKEN + activeAccount)?.value

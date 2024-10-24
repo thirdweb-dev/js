@@ -1,10 +1,10 @@
 import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { cookies } from "next/headers";
+import { type UnsafeUnwrappedCookies, cookies } from "next/headers";
 import { cn } from "../../lib/utils";
 import { AuthButton } from "./auth-button";
 
 export function BasicAuthPreview() {
-  const jwt = cookies().get("jwt");
+  const jwt = (cookies() as unknown as UnsafeUnwrappedCookies).get("jwt");
   return (
     <div className="flex flex-col gap-5">
       <div className="mx-auto">

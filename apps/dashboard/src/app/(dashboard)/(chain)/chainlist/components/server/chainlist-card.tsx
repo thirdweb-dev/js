@@ -6,6 +6,8 @@ import { ChainIcon } from "../../../components/server/chain-icon";
 import type { ChainSupportedService } from "../../../types/chain";
 import { getChainMetadata } from "../../../utils";
 
+import type { JSX } from "react";
+
 type ChainListCardProps = {
   favoriteButton: JSX.Element;
   chainId: number;

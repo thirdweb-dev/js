@@ -23,7 +23,7 @@ export async function login(payload: VerifyLoginPayloadParams) {
     const jwt = await thirdwebAuth.generateJWT({
       payload: verifiedPayload.payload,
     });
-    cookies().set("jwt", jwt);
+    (await cookies()).set("jwt", jwt);
   }
 }
 
@@ -32,7 +32,7 @@ export async function isLoggedIn(address: string) {
   if (!address) {
     return false;
   }
-  const jwt = cookies().get("jwt");
+  const jwt = (await cookies()).get("jwt");
   // if no jwt is found then return false
   if (!jwt?.value) {
     return false;
@@ -60,5 +60,5 @@ export async function getAuthResult(jwtValue: string) {
 }
 
 export async function logout() {
-  cookies().delete("jwt");
+  (await cookies()).delete("jwt");
 }

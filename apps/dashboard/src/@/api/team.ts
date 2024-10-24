@@ -23,7 +23,7 @@ export type Team = {
 };
 
 export async function getTeamBySlug(slug: string) {
-  const cookiesManager = cookies();
+  const cookiesManager = await cookies();
   const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const token = activeAccount
     ? cookiesManager.get(COOKIE_PREFIX_TOKEN + activeAccount)?.value
@@ -45,7 +45,7 @@ export async function getTeamBySlug(slug: string) {
 }
 
 export async function getTeams() {
-  const cookiesManager = cookies();
+  const cookiesManager = await cookies();
   const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const token = activeAccount
     ? cookiesManager.get(COOKIE_PREFIX_TOKEN + activeAccount)?.value

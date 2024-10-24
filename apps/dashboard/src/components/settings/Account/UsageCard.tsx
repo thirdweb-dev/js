@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 import { CircleHelpIcon } from "lucide-react";
 import { toUSD } from "utils/number";
 
+import type { JSX } from "react";
+
 interface UsageCardProps {
   name: string;
   overage?: number;

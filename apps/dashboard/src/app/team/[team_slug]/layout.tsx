@@ -4,7 +4,7 @@ import { TWAutoConnect } from "../../components/autoconnect";
 
 export default function RootTeamLayout(props: {
   children: React.ReactNode;
-  params: { team_slug: string };
+  params: Promise<{ team_slug: string }>;
 }) {
   return (
     <div className="flex min-h-screen flex-col">

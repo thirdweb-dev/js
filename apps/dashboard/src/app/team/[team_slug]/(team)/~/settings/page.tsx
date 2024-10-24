@@ -4,11 +4,11 @@ import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { TeamGeneralSettingsPage } from "./general/TeamGeneralSettingsPage";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     team_slug: string;
-  };
+  }>;
 }) {
-  const team = await getTeamBySlug(props.params.team_slug);
+  const team = await getTeamBySlug((await props.params).team_slug);
   const token = getAuthToken();
   if (!team || !token) {
     notFound();

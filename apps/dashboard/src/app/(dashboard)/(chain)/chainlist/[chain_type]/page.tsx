@@ -27,17 +27,17 @@ import {
   type SearchParams,
 } from "../components/server/chain-table";
 
-export function generateMetadata(props: {
-  params: { chain_type: "mainnets" | "testnets" };
+export async function generateMetadata(props: {
+  params: Promise<{ chain_type: "mainnets" | "testnets" }>;
 }) {
-  if (props.params.chain_type === "mainnets") {
+  if ((await props.params).chain_type === "mainnets") {
     return {
       title: "List of Mainnets | Explorers, Popular Contracts & Chain IDs",
       description:
         "A list of EVM mainnets with RPCs, smart contracts, block explorers & faucets. Deploy smart contracts to all EVM chains with thirdweb.",
     };
   }
-  if (props.params.chain_type === "testnets") {
+  if ((await props.params).chain_type === "testnets") {
     return {
       title: "List of Testnets | Explorers, Popular Contracts & Chain IDs",
       description:
@@ -56,22 +56,31 @@ export function generateMetadata(props: {
 export const dynamic = "force-dynamic";
 
 export default async function ChainListLayout(props: {
-  params: { chain_type: "mainnets" | "testnets" };
-  searchParams: SearchParams;
+  params: Promise<{ chain_type: "mainnets" | "testnets" }>;
+  searchParams: Promise<SearchParams>;
 }) {
-  const headersList = headers();
+  const headersList = await headers();
   const viewportWithHint = Number(
     headersList.get("Sec-Ch-Viewport-Width") || 0,
   );
 
+  const [params, sParams] = await Promise.all([
+    props.params,
+    props.searchParams,
+  ]);
+
+  const searchParams = {
+    type: params.chain_type,
+    ...sParams,
+  };
+
   // default is driven by viewport hint
-  const activeView = props.searchParams.view
-    ? props.searchParams.view
+  const activeView = searchParams.view
+    ? searchParams.view
     : viewportWithHint > 1000
       ? "table"
       : "grid";
 
-  const searchParams = { type: props.params.chain_type, ...props.searchParams };
   return (
     <>
       <div className="flex h-14 border-border border-b pl-7">
@@ -85,12 +94,12 @@ export default async function ChainListLayout(props: {
               <DropdownMenu>
                 <Link
                   href={
-                    props.params.chain_type === "testnets"
+                    (await props.params).chain_type === "testnets"
                       ? "/chainlist/testnets"
                       : "/chainlist/mainnets"
                   }
                 >
-                  {props.params.chain_type === "testnets"
+                  {(await props.params).chain_type === "testnets"
                     ? "Testnets"
                     : "Mainnets"}
                 </Link>
@@ -116,8 +125,8 @@ export default async function ChainListLayout(props: {
             <div className="flex flex-row items-center justify-between gap-4 lg:flex-col lg:justify-start">
               <h1 className="font-semibold text-4xl tracking-tighter lg:text-5xl">
                 List of{" "}
-                {props.params.chain_type.charAt(0).toUpperCase() +
-                  props.params.chain_type.slice(1)}
+                {(await props.params).chain_type.charAt(0).toUpperCase() +
+                  (await props.params).chain_type.slice(1)}
               </h1>
               <AddYourChainButton className="lg:hidden" />
             </div>

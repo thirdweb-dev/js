@@ -14,6 +14,8 @@ import { products } from "../../../components/server/products";
 import type { ChainSupportedService } from "../../../types/chain";
 import { getChainMetadata } from "../../../utils";
 
+import type { JSX } from "react";
+
 type ChainListRowProps = {
   favoriteButton: JSX.Element;
   chainId: number;

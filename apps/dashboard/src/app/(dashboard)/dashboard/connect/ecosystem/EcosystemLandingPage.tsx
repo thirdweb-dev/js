@@ -13,7 +13,7 @@ import { fetchEcosystemList } from "./utils/fetchEcosystemList";
 export async function EcosystemLandingPage(props: {
   ecosystemLayoutPath: string;
 }) {
-  const cookiesManager = cookies();
+  const cookiesManager = await cookies();
   const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const authToken = activeAccount
     ? cookiesManager.get(`${COOKIE_PREFIX_TOKEN}${activeAccount}`)?.value

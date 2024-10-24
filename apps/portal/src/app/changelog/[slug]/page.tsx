@@ -13,11 +13,11 @@ import { RenderDate } from "../components/RenderData";
 import { transform } from "../utils/transform";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }) {
-  const data = (await fetchPost(props.params.slug))[0];
+  const data = (await fetchPost((await props.params).slug))[0];
 
   if (!data) {
     notFound();

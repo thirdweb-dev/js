@@ -7,10 +7,10 @@ import { DeployContractHeader } from "../../components/contract-header";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 
 type PublishedContractDeployPageProps = {
-  params: {
+  params: Promise<{
     publisher: string;
     contract_id: string;
-  };
+  }>;
 };
 
 export default async function PublishedContractPage(
@@ -18,8 +18,8 @@ export default async function PublishedContractPage(
 ) {
   const publishedContractVersions =
     await getPublishedContractsWithPublisherMapping({
-      publisher: props.params.publisher,
-      contract_id: props.params.contract_id,
+      publisher: (await props.params).publisher,
+      contract_id: (await props.params).contract_id,
     });
 
   if (!publishedContractVersions) {
@@ -35,12 +35,12 @@ export default async function PublishedContractPage(
   return (
     <>
       <DeployContractHeader
-        {...props.params}
+        {...(await props.params)}
         allVersions={publishedContractVersions}
         activeVersion={publishedContract}
       >
         <PublishedActions
-          {...props.params}
+          {...(await props.params)}
           dispayName={publishedContract.displayName || publishedContract.name}
         />
       </DeployContractHeader>
@@ -50,7 +50,7 @@ export default async function PublishedContractPage(
         <div className="grid w-full grid-cols-12 gap-6 md:gap-10">
           <PublishedContract
             publishedContract={publishedContract}
-            walletOrEns={props.params.publisher}
+            walletOrEns={(await props.params).publisher}
           />
         </div>
       </ChakraProviderSetup>
