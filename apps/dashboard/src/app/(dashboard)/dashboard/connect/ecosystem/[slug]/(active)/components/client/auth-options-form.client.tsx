@@ -227,7 +227,10 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
                             className="h-6 w-6"
                           />
                           <p className="text-center font-normal">
-                            {option.slice(0, 1).toUpperCase() + option.slice(1)}
+                            {option === "siwe"
+                              ? "Wallet"
+                              : option.slice(0, 1).toUpperCase() +
+                                option.slice(1)}
                           </p>
                           <div className="flex-1" />
                           <FormControl>

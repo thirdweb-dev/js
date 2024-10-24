@@ -112,7 +112,7 @@ export type OAuthRedirectObject = {
 
 // TODO: type this better for each auth provider
 export type Profile = {
-  type: AuthOption | "wallet";
+  type: AuthOption;
   details: {
     id?: string;
     email?: string;

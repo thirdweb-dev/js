@@ -28,6 +28,7 @@ export function WalletAuth(props: {
   inAppLocale: InAppWalletLocale;
   onBack: () => void;
   walletConnect: { projectId?: string } | undefined;
+  isLinking: boolean;
   meta?: {
     title?: string;
     titleIconUrl?: string;
@@ -61,16 +62,25 @@ export function WalletAuth(props: {
     setStatus("loading");
     walletToConnect.current = walletToLink;
     try {
-      await linkProfile({
-        client: props.client,
-        strategy: "wallet",
-        wallet: walletToLink,
-        chain: wallet.getChain() || defineChain(1),
-        ecosystem,
-      }).catch((e) => {
-        setError(e.message);
-        throw e;
-      });
+      if (props.isLinking) {
+        await linkProfile({
+          client: props.client,
+          strategy: "wallet",
+          wallet: walletToLink,
+          chain: wallet.getChain() || defineChain(1),
+          ecosystem,
+        }).catch((e) => {
+          setError(e.message);
+          throw e;
+        });
+      } else {
+        await wallet.connect({
+          client: props.client,
+          strategy: "wallet",
+          wallet: walletToLink,
+          chain: walletToLink.getChain() || defineChain(1),
+        });
+      }
       addConnectedWallet(walletToLink);
       done();
     } catch {

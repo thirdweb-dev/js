@@ -79,6 +79,7 @@ function usePlaygroundWallets() {
     github: false,
     coinbase: false,
     guest: false,
+    wallet: false,
   });
 
   const [enabledWallets, setEnabledWallets] = useState<WalletRecord>({

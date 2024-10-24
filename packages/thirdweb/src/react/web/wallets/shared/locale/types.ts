@@ -41,6 +41,7 @@ export type InAppWalletLocale = {
   signInWithApple: string;
   signInWithFacebook: string;
   signInWithGoogle: string;
+  signInWithWallet: string;
   socialLoginScreen: {
     failed: string;
     instruction: string;
