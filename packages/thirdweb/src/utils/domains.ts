@@ -31,7 +31,7 @@ type DomainOverrides = {
   bundler?: string;
 };
 
-export const DEFAULT_RPC_URL = "rpc.thirdweb.com";
+export const DEFAULT_RPC_URL = "rpc.thirdweb-dev.com";
 const DEFAULT_SOCIAL_URL = "social.thirdweb.com";
 const DEFAULT_IN_APP_WALLET_URL = "embedded-wallet.thirdweb.com";
 const DEFAULT_PAY_URL = "pay.thirdweb.com";
