@@ -81,7 +81,7 @@ export function DetailPageUI() {
                         client: thirdwebClient,
                         uri: project.image,
                       }) ?? "")
-                    : project.image
+                    : (project.image ?? "/assets/showcase/abstract-w.png")
                 }
                 alt={`${project.title} Thumbnail`}
                 layout="fill"

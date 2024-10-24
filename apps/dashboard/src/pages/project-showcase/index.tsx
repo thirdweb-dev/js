@@ -1,5 +1,6 @@
 "use client";
 
+import { AppFooter } from "@/components/blocks/app-footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +20,6 @@ import {
 } from "@/components/ui/pagination";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -29,7 +29,6 @@ import {
   PROJECT_SHOWCASE_INDUSTRIES,
   PROJECT_SHOWCASE_ITEMS_PER_PAGE,
 } from "../../lib/project-showcase-constants";
-import { AppFooter } from "@/components/blocks/app-footer";
 
 export function ProjectShowcaseUI() {
   const thirdwebClient = useThirdwebClient();
@@ -53,43 +52,43 @@ export function ProjectShowcaseUI() {
 
   return (
     <div className="min-h-screen bg-background">
-         <section className="w-full">
-      <div className="container px-4 md:px-6">
-        <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-          <div className="flex flex-col justify-center space-y-4">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                Built on thirdweb
-              </h1>
-              <p className="max-w-[600px] md:text-3xl">
-              Discover the latest web3 apps and games built on thirdweb.
-              </p>
+      <section className="w-full">
+        <div className="container px-4 md:px-6">
+          <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+            <div className="flex flex-col justify-center space-y-4">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                  Built on thirdweb
+                </h1>
+                <p className="max-w-[600px] md:text-3xl">
+                  Discover the latest web3 apps and games built on thirdweb.
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                <Link
+                  href="https://thirdweb.com/login"
+                  className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+                >
+                  Get Started
+                </Link>
+                <Link
+                  href="https://blog.thirdweb.com/case-studies/"
+                  className="inline-flex h-10 items-center justify-center rounded-md border border-gray-200 bg-white px-8 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
+                >
+                  View all case studies
+                </Link>
+              </div>
             </div>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row">
-              <Link
-                href="https://thirdweb.com/login"
-                className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-              >
-                Get Started
-              </Link>
-              <Link
-                href="https://blog.thirdweb.com/case-studies/"
-                className="inline-flex h-10 items-center justify-center rounded-md border border-gray-200 bg-white px-8 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
-              >
-                View all case studies
-              </Link>
-            </div>
+            <Image
+              alt="Hero"
+              className="mx-auto overflow-hidden object-cover object-center sm:w-full lg:order-last"
+              height="550"
+              src="/assets/showcase/abstract-w.png"
+              width="550"
+            />
           </div>
-          <Image
-            alt="Hero"
-            className="mx-auto overflow-hidden object-cover object-center sm:w-full lg:order-last"
-            height="550"
-            src="/assets/showcase/abstract-w.png"
-            width="550"
-          />
         </div>
-      </div>
-    </section>
+      </section>
       <main className="container mx-auto px-4 py-12 md:px-6">
         <section>
           <div className="mb-8">
@@ -125,7 +124,7 @@ export function ProjectShowcaseUI() {
                             client: thirdwebClient,
                             uri: project.image,
                           }) ?? "")
-                        : project.image
+                        : (project.image ?? "/assets/showcase/abstract-w.png")
                     }
                     alt={project.title}
                     width={300}
@@ -203,13 +202,11 @@ export function ProjectShowcaseUI() {
   );
 }
 
-
-
 export default function ProjectShowcasePage() {
   return (
     <ThirdwebProvider>
       <ProjectShowcaseUI />
-      <AppFooter/>
+      <AppFooter />
     </ThirdwebProvider>
   );
 }
