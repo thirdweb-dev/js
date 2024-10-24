@@ -2,6 +2,7 @@ import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { BatchLazyMintButton } from "./components/batch-lazy-mint-button";
+import { BatchUpdateMetadataButton } from "./components/batch-update-metadata-button";
 import { NFTClaimButton } from "./components/claim-button";
 import { NFTLazyMintButton } from "./components/lazy-mint-button";
 import { NFTMintButton } from "./components/mint-button";
@@ -50,6 +51,8 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   const isRevealable = ERC721Ext.isRevealSupported(functionSelectors);
   const canCreateDelayedRevealBatch =
     ERC721Ext.isCreateDelayedRevealBatchSupported(functionSelectors);
+  const canBatchUpdateMetadata =
+    ERC721Ext.isUpdateMetadataSupported(functionSelectors);
 
   return (
     <div className="flex flex-col gap-6">
@@ -79,6 +82,9 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
               isErc721={isErc721}
               contract={contract}
             />
+          )}
+          {canBatchUpdateMetadata && isErc721 && (
+            <BatchUpdateMetadataButton contract={contract} />
           )}
         </div>
       </div>

@@ -217,3 +217,6 @@ export {
   claimToBatch,
   type ClaimToBatchParams,
 } from "../../extensions/erc721/drops/write/claimToBatch.js";
+export { getBaseURICount } from "../../extensions/erc721/__generated__/IBatchMintMetadata/read/getBaseURICount.js";
+export { getBatchIdAtIndex } from "../../extensions/erc721/__generated__/IBatchMintMetadata/read/getBatchIdAtIndex.js";
+export { updateBatchBaseURI } from "../../extensions/erc721/__generated__/DropERC721/write/updateBatchBaseURI.js";
