@@ -16,7 +16,6 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
-import { genericWalletIcon } from "../../../core/utils/walletIcon.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { sortWallets } from "../../utils/sortWallets.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
@@ -42,6 +41,7 @@ import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { WalletButtonEl, WalletEntryButton } from "./WalletEntryButton.js";
 import { WalletTypeRowButton } from "./WalletTypeRowButton.js";
 import { compactModalMaxHeight } from "./constants.js";
+import { OutlineWalletIcon } from "./icons/OutlineWalletIcon.js";
 import type { ConnectLocale } from "./locale/types.js";
 
 const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
@@ -226,7 +226,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   const connectAWallet = (
     <WalletTypeRowButton
       client={props.client}
-      icon={genericWalletIcon}
+      icon={OutlineWalletIcon}
       onClick={() => {
         setIsWalletGroupExpanded(true);
       }}
