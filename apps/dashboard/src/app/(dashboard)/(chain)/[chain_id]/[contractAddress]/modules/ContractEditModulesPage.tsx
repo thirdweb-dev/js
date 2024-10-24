@@ -96,7 +96,7 @@ export const ContractEditModulesPage: React.FC<
         installedModules={installedModules}
         refetchModules={() => installedModulesQuery.refetch()}
         contract={contract}
-        ownerAccount={isOwner ? account : undefined}
+        isOwnerAccount={isOwner}
       />
     </div>
   );
