@@ -217,7 +217,7 @@ export default function OnboardingPage({
 
   const Footer: React.FC = () => {
     return (
-      <div className="absolute right-0 bottom-0 left-0 box-border flex w-full items-center justify-between overflow-auto p-12">
+      <div className="absolute right-0 bottom-0 left-0 box-border flex w-full items-center justify-between overflow-auto p-4 pb-12 sm:p-12">
         {/* Stepper */}
         <div className="flex space-x-4">
           {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
@@ -291,7 +291,7 @@ export default function OnboardingPage({
               variant="primary"
               onClick={form.handleSubmit(onSubmit)}
             >
-              Finish
+              {watchInterests.length > 0 ? "Finish" : "Skip"}
             </Button>
           )}
         </div>
@@ -325,7 +325,7 @@ export default function OnboardingPage({
           <FormLabel>What's your email?</FormLabel>
           <FormControl>
             <Input
-              className="w-1/2 min-w-[250px]"
+              className="w-full min-w-[250px] sm:w-1/2"
               {...field}
               id="email"
               type="email"
@@ -339,7 +339,7 @@ export default function OnboardingPage({
   );
 
   const Step2: React.FC<StepProps> = ({ register }) => (
-    <div className="flex max-h-[450px] flex-col space-y-8 overflow-y-scroll sm:max-h-full">
+    <div className="no-scrollbar flex max-h-[450px] flex-col space-y-8 overflow-y-scroll pb-2 pl-2 sm:max-h-full">
       {/* User Type */}
       <FormField
         name="userType"
@@ -392,7 +392,7 @@ export default function OnboardingPage({
             <FormLabel>What's the name of your company?</FormLabel>
             <FormControl className="flex flex-col space-y-2">
               <Input
-                className="w-1/2 min-w-[250px]"
+                className="w-full min-w-[250px] sm:w-1/2"
                 id="name"
                 type="text"
                 placeholder="Hooli, Inc."
@@ -418,7 +418,10 @@ export default function OnboardingPage({
                   form.setValue("role", value);
                 }}
               >
-                <SelectTrigger id="role" className="w-1/2 min-w-[250px]">
+                <SelectTrigger
+                  id="role"
+                  className="w-full min-w-[250px] sm:w-1/2"
+                >
                   <SelectValue placeholder={"Select Role"} />
                 </SelectTrigger>
                 <SelectContent>
@@ -461,7 +464,7 @@ export default function OnboardingPage({
                   form.setValue("industry", value);
                 }}
               >
-                <SelectTrigger className="w-1/2 min-w-[250px]">
+                <SelectTrigger className="w-full min-w-[250px] sm:w-1/2">
                   <SelectValue placeholder={"Select Industry"} />
                 </SelectTrigger>
                 <SelectContent>
@@ -490,7 +493,7 @@ export default function OnboardingPage({
   );
 
   const Step3: React.FC<StepProps> = ({ register }) => (
-    <div className="flex max-h-[700px] flex-col space-y-4 overflow-scroll">
+    <div className="flex max-h-[450px] flex-col space-y-4 overflow-scroll sm:max-h-[700px]">
       <FormField
         name="industry"
         control={form.control}
@@ -506,7 +509,7 @@ export default function OnboardingPage({
                     <Card
                       key={interest.key}
                       className={cn(
-                        "no-scrollbar flex aspect-[4/3] cursor-pointer flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted md:aspect-[16/9]",
+                        "no-scrollbar flex aspect-[2.5/1] cursor-pointer flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted md:aspect-[16/9]",
                         isChecked && "border-primary bg-muted",
                       )}
                       onClick={(event) => {
@@ -558,7 +561,7 @@ export default function OnboardingPage({
     <div className="relative flex place-items-center bg-muted/30">
       <main className="z-10 flex w-full flex-col-reverse gap-6 md:flex-row">
         {/* Left Panel */}
-        <div className="items-between relative box-border flex h-[75vh] w-full flex-col overflow-hidden p-4 md:h-screen md:w-1/2 md:p-12">
+        <div className="items-between relative box-border flex h-[80vh] w-full flex-col overflow-hidden p-4 md:h-screen md:w-1/2 md:p-12">
           <div className="flex flex-col space-y-2">
             <h1 className="font-semibold text-xl tracking-tight">
               {step === 3 ? "Tell us what you need." : "Tell us about you."}
@@ -588,7 +591,7 @@ export default function OnboardingPage({
           <Footer />
         </div>
         {/* Right Panel */}
-        <div className="flex h-[25vh] w-full animate-gradient-x flex-col items-center justify-center bg-gradient-to-r from-[#25369F] via-[#290259] to-[#3E0D45] md:h-screen md:w-1/2">
+        <div className="flex h-[20vh] w-full animate-gradient-x flex-col items-center justify-center bg-gradient-to-r from-[#25369F] via-[#290259] to-[#3E0D45] md:h-screen md:w-1/2">
           <Card className="flex w-[300px] items-center rounded-xl border-muted transition-all ">
             <CardContent className="flex items-center space-x-4 p-4">
               {form.getValues("userType") ? (
