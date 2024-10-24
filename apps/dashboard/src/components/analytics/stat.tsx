@@ -8,7 +8,9 @@ export const Stat: React.FC<{
     <dl className="flex items-center justify-between gap-4 rounded-lg border border-border bg-muted/50 p-4 lg:p-6">
       <div>
         <dd className="font-semibold text-3xl tracking-tight lg:text-5xl">
-          {value && formatter ? formatter(value) : value?.toLocaleString()}
+          {value !== undefined && formatter
+            ? formatter(value)
+            : value?.toLocaleString()}
         </dd>
         <dt className="font-medium text-muted-foreground text-sm tracking-tight lg:text-lg">
           {label}

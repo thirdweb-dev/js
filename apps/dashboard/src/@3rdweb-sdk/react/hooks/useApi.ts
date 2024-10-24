@@ -5,6 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { THIRDWEB_ANALYTICS_API_HOST, THIRDWEB_API_HOST } from "constants/urls";
+import { useAllChainsData } from "hooks/chains/allChains";
 import invariant from "tiny-invariant";
 import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
 import { useLoggedInUser } from "./useLoggedInUser";
@@ -442,6 +443,7 @@ export function useUserOpUsageAggregate(args: {
 }) {
   const { clientId, from, to } = args;
   const { user, isLoggedIn } = useLoggedInUser();
+  const chainStore = useAllChainsData();
 
   return useQuery<UserOpStats>({
     queryKey: accountKeys.userOpStats(
@@ -452,16 +454,25 @@ export function useUserOpUsageAggregate(args: {
       "all",
     ),
     queryFn: async () => {
-      const userOpStats: UserOpStats[] = await getUserOpUsage({
-        clientId,
-        from,
-        to,
-        period: "all",
-      });
+      const userOpStats: (UserOpStats & { chainId?: string })[] =
+        await getUserOpUsage({
+          clientId,
+          from,
+          to,
+          period: "all",
+        });
 
       // Aggregate stats across wallet types
       return userOpStats.reduce(
         (acc, curr) => {
+          // Skip testnets from the aggregated stats
+          if (curr.chainId) {
+            const chain = chainStore.idToChain.get(Number(curr.chainId));
+            if (chain?.testnet) {
+              return acc;
+            }
+          }
+
           acc.successful += curr.successful;
           acc.failed += curr.failed;
           acc.sponsoredUsd += curr.sponsoredUsd;
