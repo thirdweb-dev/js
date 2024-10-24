@@ -3,6 +3,8 @@
 import { ColorModeToggle } from "@/components/color-mode-toggle";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { getAccountPreferences } from "lib/onboarding";
 import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -11,8 +13,6 @@ import { getCookie } from "../../stores/SyncStoreToCookies";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
-import { getAccountPreferences } from "lib/onboarding";
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 
 export default function LoginPage() {
   return (
@@ -58,6 +58,8 @@ function CustomConnectEmmbed() {
       const existingAccountPreferences = await getAccountPreferences({
         accountId: account.data.id,
       });
+
+      console.log(account.data.email);
 
       if (!existingAccountPreferences) {
         router.replace(

@@ -1,9 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -15,8 +21,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Checkbox } from "@chakra-ui/react";
-import { FormControl } from "@chakra-ui/react";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { RadioGroup } from "@radix-ui/react-radio-group";
 import { THIRDWEB_ANALYTICS_API_HOST } from "constants/urls";
 import { motion } from "framer-motion";
 import { Users2 } from "lucide-react";
@@ -25,7 +31,6 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
 import {
-  type FieldErrors,
   type SubmitHandler,
   type UseFormRegister,
   useForm,
@@ -33,7 +38,7 @@ import {
 import { getCookie } from "stores/SyncStoreToCookies";
 import { Blobbie } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
-import { FormErrorMessage, FormLabel } from "tw-components";
+import { FormLabel } from "tw-components";
 
 interface FormData {
   email: string;
@@ -46,7 +51,6 @@ interface FormData {
 
 interface StepProps {
   register: UseFormRegister<FormData>;
-  errors: FieldErrors<FormData>;
 }
 
 // Displays the radio item as a button-like element
@@ -76,15 +80,7 @@ export default function OnboardingPage({
   const [direction, setDirection] = useState(1);
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    trigger,
-    getValues,
-    setValue,
-    watch,
-  } = useForm<FormData>({
+  const form = useForm<FormData>({
     defaultValues: {
       interests: [],
       email: searchParams.email ?? "",
@@ -124,20 +120,13 @@ export default function OnboardingPage({
     }
   };
 
-  const watchInterests = watch("interests");
+  const watchInterests = form.watch("interests");
 
   const Footer: React.FC = () => {
     return (
       <div className="absolute right-0 bottom-0 left-0 box-border flex w-full items-center justify-between overflow-auto p-12">
         {/* Stepper */}
         <div className="flex space-x-4">
-          {/* <div
-          className={
-            step === 1
-              ? "h-3 w-12 rounded-md bg-white transition ease-in-out"
-              : "h-3 w-12 rounded-md bg-secondary transition ease-in-out"
-          }
-        /> */}
           <div
             className={
               step === 2
@@ -175,7 +164,7 @@ export default function OnboardingPage({
             <Button
               type="submit"
               variant="primary"
-              onClick={handleSubmit(onSubmit)}
+              onClick={form.handleSubmit(onSubmit)}
             >
               Finish
             </Button>
@@ -192,148 +181,188 @@ export default function OnboardingPage({
         : step === 2
           ? ["userType", "name", "role", "industry"]
           : ["interests"];
-    const isStepValid = await trigger(fields as Array<keyof FormData>);
+    const isStepValid = await form.trigger(fields as Array<keyof FormData>);
     if (isStepValid) {
       setDirection(1);
       setStep(step + 1);
       fields.map((field) => {
-        register(field as keyof FormData);
+        form.register(field as keyof FormData);
       });
     }
   };
 
-  const Step1: React.FC<StepProps> = ({ register, errors }) => (
-    <div>
-      <FormControl className="box-border flex-col space-y-2">
-        <FormLabel>What's your email?</FormLabel>
-        <Input
-          className="w-1/2"
-          id="email"
-          type="email"
-          placeholder="user@example.com"
-          {...register("email", { required: "Email is required" })}
-        />
-        <FormErrorMessage>
-          {errors.email && <span>{errors.email.message}</span>}
-        </FormErrorMessage>
-      </FormControl>
-    </div>
+  const Step1: React.FC = () => (
+    // className="box-border flex-col space-y-2"
+
+    <FormField
+      control={form.control}
+      name="email"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>What's your email?</FormLabel>
+          <FormControl>
+            <Input
+              className="w-1/2"
+              {...field}
+              id="email"
+              type="email"
+              placeholder="user@example.com"
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 
-  const Step2: React.FC<StepProps> = ({ register, errors }) => (
+  const Step2: React.FC<StepProps> = ({ register }) => (
     <div className="flex flex-col space-y-8">
       {/* User Type */}
-      <FormControl>
-        <RadioGroup
-          defaultValue={getValues("userType")}
-          className="flex space-x-4"
-          onValueChange={(value) => setValue("userType", value)}
-        >
-          <RadioGroupItemButton
-            value="Developer"
-            className="aspect-square max-w-[180px] rounded-xl border border-foreground/25 p-4 hover:border-foreground"
-          >
-            <div className="flex flex-col items-center justify-center space-y-2">
-              <Users2 className="size-8" />
-              <h5 className="font-semibold text-white text-xl">Developer</h5>
-              <p className="font-regular text-white leading-snug">
-                I am building an application or game
-              </p>
-            </div>
-          </RadioGroupItemButton>
-          <RadioGroupItemButton
-            value="Studio"
-            className="aspect-square max-w-[180px] rounded-xl border border-foreground/25 p-4 hover:border-foreground"
-          >
-            <div className="flex flex-col items-center justify-center space-y-2">
-              <Building className="size-8" />
-              <h5 className="font-semibold text-white text-xl">Studio</h5>
-              <p className="font-regular text-white leading-snug">
-                I am building multiple applications or games
-              </p>
-            </div>
-          </RadioGroupItemButton>
-        </RadioGroup>
-
-        <FormErrorMessage>
-          {errors.userType && <span>{errors.userType.message}</span>}
-        </FormErrorMessage>
-      </FormControl>
+      <FormField
+        name="userType"
+        control={form.control}
+        render={() => (
+          <FormItem>
+            <FormControl>
+              <RadioGroup
+                defaultValue={form.getValues("userType")}
+                className="flex space-x-4"
+                onValueChange={(value) => form.setValue("userType", value)}
+              >
+                <RadioGroupItemButton
+                  value="Developer"
+                  className="aspect-square max-w-[180px] rounded-xl border border-foreground/25 p-4 hover:border-foreground"
+                >
+                  <div className="flex flex-col items-center justify-center space-y-2">
+                    <Users2 className="size-8" />
+                    <h5 className="font-semibold text-white text-xl">
+                      Developer
+                    </h5>
+                    <p className="font-regular text-white leading-snug">
+                      I am building an application or game
+                    </p>
+                  </div>
+                </RadioGroupItemButton>
+                <RadioGroupItemButton
+                  value="Studio"
+                  className="aspect-square max-w-[180px] rounded-xl border border-foreground/25 p-4 hover:border-foreground"
+                >
+                  <div className="flex flex-col items-center justify-center space-y-2">
+                    <Building className="size-8" />
+                    <h5 className="font-semibold text-white text-xl">Studio</h5>
+                    <p className="font-regular text-white leading-snug">
+                      I am building multiple applications or games
+                    </p>
+                  </div>
+                </RadioGroupItemButton>
+              </RadioGroup>
+            </FormControl>
+          </FormItem>
+        )}
+      />
       {/* Name */}
-      <FormControl className="flex flex-col space-y-2">
-        <FormLabel>What's the name of your company?</FormLabel>
-        <Input
-          className="w-1/2"
-          id="name"
-          type="text"
-          placeholder="Hooli, Inc."
-          {...register("name")}
-        />
-      </FormControl>
-      <FormControl className="flex flex-col space-y-2">
-        <FormLabel>What's your role?</FormLabel>
-        <Select
-          defaultValue={getValues("role")}
-          onValueChange={(value) => {
-            setValue("role", value);
-          }}
-        >
-          <SelectTrigger id="role" className="w-1/2">
-            <SelectValue placeholder={"Select Role"} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem key={"founder"} value={"Founder"}>
-                Founder
-              </SelectItem>
-              <SelectItem key={"product"} value={"Product"}>
-                Product
-              </SelectItem>
-              <SelectItem key={"developer"} value={"Developer"}>
-                Developer
-              </SelectItem>
-              <SelectItem key={"biz-dev"} value={"Business Development"}>
-                Business Development
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+      <FormField
+        name="name"
+        control={form.control}
+        render={() => (
+          <FormItem>
+            <FormLabel>What's the name of your company?</FormLabel>
+            <FormControl className="flex flex-col space-y-2">
+              <Input
+                className="w-1/2"
+                id="name"
+                type="text"
+                placeholder="Hooli, Inc."
+                {...register("name")}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-        <FormErrorMessage>
-          {errors.role && <span>{errors.role.message}</span>}
-        </FormErrorMessage>
-      </FormControl>
-      <FormControl className="flex flex-col space-y-2">
-        <FormLabel>What industry is your company in?</FormLabel>
-        <Select
-          defaultValue={getValues("industry")}
-          onValueChange={(value) => {
-            setValue("industry", value);
-          }}
-        >
-          <SelectTrigger className="w-1/2">
-            <SelectValue placeholder={"Select Industry"} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem key={"consumer"} value={"consumer"}>
-              Consumer
-            </SelectItem>
-            <SelectItem key={"defi"} value={"defi"}>
-              DeFi
-            </SelectItem>
-            <SelectItem key={"gaming"} value={"gaming"}>
-              Gaming
-            </SelectItem>
-            <SelectItem key={"social"} value={"social"}>
-              Social
-            </SelectItem>
-          </SelectContent>
-        </Select>
+      {/* Role */}
+      <FormField
+        name="role"
+        control={form.control}
+        render={() => (
+          <FormItem>
+            <FormLabel>What's your role?</FormLabel>
+            <FormControl className="flex flex-col space-y-2">
+              <Select
+                defaultValue={form.getValues("role")}
+                onValueChange={(value) => {
+                  form.setValue("role", value);
+                }}
+              >
+                <SelectTrigger id="role" className="w-1/2">
+                  <SelectValue placeholder={"Select Role"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem key={"founder"} value={"Founder"}>
+                      Founder
+                    </SelectItem>
+                    <SelectItem key={"product"} value={"Product"}>
+                      Product
+                    </SelectItem>
+                    <SelectItem key={"developer"} value={"Developer"}>
+                      Developer
+                    </SelectItem>
+                    <SelectItem key={"biz-dev"} value={"Business Development"}>
+                      Business Development
+                    </SelectItem>
+                    <SelectItem key={"other"} value={"Other"}>
+                      Other
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-        <FormErrorMessage>
-          {errors.industry && <span>{errors.industry.message}</span>}
-        </FormErrorMessage>
-      </FormControl>
+      {/* Industry */}
+      <FormField
+        name="industry"
+        control={form.control}
+        render={() => (
+          <FormItem>
+            <FormLabel>What industry is your company in?</FormLabel>
+            <FormControl className="flex flex-col space-y-2">
+              <Select
+                defaultValue={form.getValues("industry")}
+                onValueChange={(value) => {
+                  form.setValue("industry", value);
+                }}
+              >
+                <SelectTrigger className="w-1/2">
+                  <SelectValue placeholder={"Select Industry"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem key={"consumer"} value={"consumer"}>
+                    Consumer
+                  </SelectItem>
+                  <SelectItem key={"defi"} value={"defi"}>
+                    DeFi
+                  </SelectItem>
+                  <SelectItem key={"gaming"} value={"gaming"}>
+                    Gaming
+                  </SelectItem>
+                  <SelectItem key={"social"} value={"social"}>
+                    Social
+                  </SelectItem>
+                  <SelectItem key={"other"} value={"other"}>
+                    Social
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </FormControl>
+          </FormItem>
+        )}
+      />
     </div>
   );
 
@@ -397,42 +426,54 @@ export default function OnboardingPage({
 
   const Step3: React.FC<StepProps> = ({ register }) => (
     <div className="flex max-h-[700px] flex-col space-y-4 overflow-scroll">
-      <FormControl>
-        <div className="grid w-full grid-cols-1 gap-6 xl:grid-cols-2 2xl:grid-cols-3">
-          {interestValues.map((interest) => {
-            const checkedInterests = watchInterests || [];
-            const isChecked = checkedInterests.includes(interest.key);
+      <FormField
+        name="industry"
+        control={form.control}
+        render={() => (
+          <FormItem>
+            <FormControl>
+              <div className="grid w-full grid-cols-1 gap-6 xl:grid-cols-2 2xl:grid-cols-3">
+                {interestValues.map((interest) => {
+                  const checkedInterests = watchInterests || [];
+                  const isChecked = checkedInterests.includes(interest.key);
 
-            return (
-              <label
-                key={interest.key}
-                className="cursor-pointer"
-                htmlFor={`interest-${interest.key}`}
-              >
-                <Card
-                  className={cn(
-                    "flex aspect-square flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted",
-                    isChecked && "border-primary bg-muted",
-                  )}
-                >
-                  <Checkbox
-                    className="sr-only"
-                    value={interest.key}
-                    {...register("interests")}
-                    id={`interest-${interest.key}`}
-                  />
-                  <h5 className="font-semibold text-lg tracking-tight">
-                    {interest.label}
-                  </h5>
-                  <p className="font-regular text-foreground/75 text-sm tracking-tight">
-                    {interest.description}
-                  </p>
-                </Card>
-              </label>
-            );
-          })}
-        </div>
-      </FormControl>
+                  return (
+                    <Card
+                      key={interest.key}
+                      className={cn(
+                        "flex aspect-square cursor-pointer flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted",
+                        isChecked && "border-primary bg-muted",
+                      )}
+                      onClick={(event) => {
+                        event.preventDefault(); // Prevent default behavior
+                        const newInterests = isChecked
+                          ? checkedInterests.filter(
+                              (key) => key !== interest.key,
+                            )
+                          : [...checkedInterests, interest.key];
+                        form.setValue("interests", newInterests);
+                      }}
+                    >
+                      <Checkbox
+                        className="sr-only"
+                        value={interest.key}
+                        {...register("interests")}
+                        id={`interest-${interest.key}`}
+                      />
+                      <h5 className="font-semibold text-lg tracking-tight">
+                        {interest.label}
+                      </h5>
+                      <p className="font-regular text-foreground/75 text-sm tracking-tight">
+                        {interest.description}
+                      </p>
+                    </Card>
+                  );
+                })}
+              </div>
+            </FormControl>
+          </FormItem>
+        )}
+      />
     </div>
   );
 
@@ -463,28 +504,30 @@ export default function OnboardingPage({
                 : "This will help us personalize your experience."}
             </h3>
           </div>
-          <motion.div
-            key={step}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={transition}
-          >
+          <Form {...form}>
             <form className="my-8">
-              {step === 1 && <Step1 register={register} errors={errors} />}
-              {step === 2 && <Step2 register={register} errors={errors} />}
-              {step === 3 && <Step3 register={register} errors={errors} />}
+              <motion.div
+                key={step}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={transition}
+              >
+                {step === 1 && <Step1 />}
+                {step === 2 && <Step2 register={form.register} />}
+                {step === 3 && <Step3 register={form.register} />}
+              </motion.div>
             </form>
-          </motion.div>
+          </Form>
           <Footer />
         </div>
         {/* Right Panel */}
         <div className="flex h-screen w-1/2 animate-gradient-x flex-col items-center justify-center bg-gradient-to-r from-[#25369F] via-[#290259] to-[#3E0D45]">
           <Card className="flex w-[300px] items-center rounded-xl border-muted transition-all ">
             <CardContent className="flex items-center space-x-4 p-4">
-              {getValues("userType") ? (
-                getValues("userType") === "Developer" ? (
+              {form.getValues("userType") ? (
+                form.getValues("userType") === "Developer" ? (
                   <Users2 className="size-8" />
                 ) : (
                   <Building className="size-8" />
@@ -499,17 +542,17 @@ export default function OnboardingPage({
               )}
               <div className="flex flex-col">
                 <h5 className="font-regular font-sm text-white">
-                  {getValues("email")
-                    ? getValues("email")
+                  {form.getValues("email")
+                    ? form.getValues("email")
                     : accountQuery.data?.creatorWalletAddress
                       ? shortenAddress(accountQuery.data?.creatorWalletAddress)
                       : ""}
                 </h5>
 
                 <h5
-                  className={`font-sm text-foreground/50 ${getValues("role") ? "" : "hidden"}`}
+                  className={`font-sm text-foreground/50 ${form.getValues("role") ? "" : "hidden"}`}
                 >
-                  {getValues("role")}
+                  {form.getValues("role")}
                 </h5>
               </div>
             </CardContent>
