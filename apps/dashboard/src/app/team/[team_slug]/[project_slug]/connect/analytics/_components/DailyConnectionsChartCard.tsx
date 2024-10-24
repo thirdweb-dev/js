@@ -15,6 +15,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { WalletStats } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  EmptyChartState,
+  LoadingChartState,
+} from "components/analytics/empty-chart-state";
 import { DotNetIcon } from "components/icons/brand-icons/DotNetIcon";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
@@ -24,7 +28,6 @@ import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
-import { EmptyChartState, LoadingChartState } from "./EmptyChartState";
 
 type ChartToShow = "uniqueWallets" | "totalWallets";
 

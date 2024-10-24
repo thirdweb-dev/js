@@ -1,8 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  BadgeContainer,
-  mobileViewport,
-} from "../../../../../../../stories/utils";
+import { BadgeContainer, mobileViewport } from "../../../stories/utils";
 import { TotalSponsoredChartCard } from "./TotalSponsoredChartCard";
 import { createUserOpStatsStub } from "./storyUtils";
 

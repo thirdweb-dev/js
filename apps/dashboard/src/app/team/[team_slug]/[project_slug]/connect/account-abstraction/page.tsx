@@ -6,6 +6,7 @@ import { AccountAbstractionPage } from "./AccountAbstractionPage";
 
 export default async function Page(props: {
   params: { team_slug: string; project_slug: string };
+  searchParams: { tab?: string };
 }) {
   const { team_slug, project_slug } = props.params;
   const project = await getProject(team_slug, project_slug);
@@ -22,7 +23,13 @@ export default async function Page(props: {
 
   return (
     <ChakraProviderSetup>
-      <AccountAbstractionPage apiKeyServices={apiKey.services || []} />
+      <AccountAbstractionPage
+        projectSlug={project.slug}
+        teamSlug={team_slug}
+        projectKey={project.publishableKey}
+        apiKeyServices={apiKey.services || []}
+        tab={props.searchParams.tab}
+      />
     </ChakraProviderSetup>
   );
 }

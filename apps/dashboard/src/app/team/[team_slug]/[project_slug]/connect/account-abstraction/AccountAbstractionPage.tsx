@@ -10,10 +10,10 @@ import {
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
+import { SmartWallets } from "components/smart-wallets";
 import { CircleAlertIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
-import { AccountFactories } from "../../../../../../components/smart-wallets/AccountFactories";
 import { AAFooterSection } from "./AAFooterSection";
 import { isOpChainId } from "./isOpChain";
 
@@ -22,7 +22,11 @@ const TRACKING_CATEGORY = "smart-wallet";
 // TODO - the factories shown on this page is not project specific, need to revamp this page
 
 export function AccountAbstractionPage(props: {
+  projectSlug: string;
+  teamSlug: string;
+  projectKey: string;
   apiKeyServices: ApiKeyService[];
+  tab?: string;
 }) {
   const { apiKeyServices } = props;
   const looggedInUserQuery = useLoggedInUser();
@@ -48,7 +52,6 @@ export function AccountAbstractionPage(props: {
       <h1 className="mb-1 font-semibold text-2xl tracking-tight lg:text-3xl">
         Account Abstraction
       </h1>
-
       <p className="text-muted-foreground text-sm">
         Easily integrate Account abstraction (ERC-4337) compliant smart accounts
         into your apps.{" "}
@@ -62,9 +65,7 @@ export function AccountAbstractionPage(props: {
           View Documentation
         </TrackedLinkTW>
       </p>
-
       <div className="h-6" />
-
       {looggedInUserQuery.isPending ? (
         <div className="flex h-[400px] items-center justify-center rounded-lg border border-border">
           <Spinner className="size-14" />
@@ -89,10 +90,15 @@ export function AccountAbstractionPage(props: {
             )
           )}
 
-          <AccountFactories trackingCategory={TRACKING_CATEGORY} />
+          <SmartWallets
+            smartWalletsLayoutSlug={`/team/${props.teamSlug}/${props.projectSlug}/connect/account-abstraction`}
+            apiKeyServices={apiKeyServices}
+            trackingCategory={TRACKING_CATEGORY}
+            clientId={props.projectKey}
+            tab={props.tab}
+          />
         </div>
       )}
-
       <div className="h-14" />
       <AAFooterSection trackingCategory={TRACKING_CATEGORY} />
     </div>

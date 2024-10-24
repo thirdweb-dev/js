@@ -1,9 +1,6 @@
 "use client";
-import {
-  useUserOpUsageAggregate,
-  useWalletUsageAggregate,
-  useWalletUsagePeriod,
-} from "@3rdweb-sdk/react/hooks/useApi";
+
+import { useUserOpUsagePeriod } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   DateRangeSelector,
   type Range,
@@ -12,12 +9,12 @@ import {
 import { IntervalSelector } from "components/analytics/interval-selector";
 import { differenceInDays } from "date-fns";
 import { useState } from "react";
-import { ConnectAnalyticsDashboardUI } from "./ConnectAnalyticsDashboardUI";
+import { SponsoredTransactionsChartCard } from "./SponsoredTransactionsChartCard";
+import { TotalSponsoredChartCard } from "./TotalSponsoredChartCard";
 
-export function ConnectAnalyticsDashboard(props: {
-  clientId: string;
-  connectLayoutSlug: string;
-}) {
+export function AccountAbstractionAnalytics({
+  clientId,
+}: { clientId: string }) {
   const [range, setRange] = useState<Range>(() =>
     getLastNDaysRange("last-120"),
   );
@@ -28,26 +25,16 @@ export function ConnectAnalyticsDashboard(props: {
     daysInRange > 30 ? "week" : "day",
   );
 
-  const walletUsageQuery = useWalletUsagePeriod({
-    clientId: props.clientId,
+  const userOpUsageQuery = useUserOpUsagePeriod({
+    clientId: clientId,
     from: range.from,
     to: range.to,
     period: intervalType,
   });
 
-  const walletUsageAggregateQuery = useWalletUsageAggregate({
-    clientId: props.clientId,
-    from: range.from,
-    to: range.to,
-  });
-
-  const userOpAggregateQuery = useUserOpUsageAggregate({
-    clientId: props.clientId,
-  });
-
   return (
     <div>
-      <div className="flex gap-3">
+      <div className="flex justify-end gap-3">
         <DateRangeSelector
           range={range}
           setRange={(newRange) => {
@@ -61,16 +48,20 @@ export function ConnectAnalyticsDashboard(props: {
           setIntervalType={setIntervalType}
         />
       </div>
-      <div className="h-4" />
-      <ConnectAnalyticsDashboardUI
-        walletUsage={walletUsageQuery.data || []}
-        aggregateWalletUsage={walletUsageAggregateQuery.data || []}
-        aggregateUserOpUsageQuery={userOpAggregateQuery.data}
-        connectLayoutSlug={props.connectLayoutSlug}
-        isPending={
-          walletUsageQuery.isPending || walletUsageAggregateQuery.isPending
-        }
-      />
+
+      <div className="h-6" />
+
+      <div className="flex flex-col gap-4 lg:gap-6">
+        <TotalSponsoredChartCard
+          userOpStats={userOpUsageQuery.data || []}
+          isPending={userOpUsageQuery.isPending}
+        />
+
+        <SponsoredTransactionsChartCard
+          userOpStats={userOpUsageQuery.data || []}
+          isPending={userOpUsageQuery.isPending}
+        />
+      </div>
     </div>
   );
 }

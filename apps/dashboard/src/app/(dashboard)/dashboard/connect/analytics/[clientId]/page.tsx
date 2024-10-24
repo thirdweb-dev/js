@@ -51,7 +51,10 @@ export default async function Page(props: {
 
       <div className="h-4 lg:h-8" />
 
-      <ConnectAnalyticsDashboard clientId={apiKey.key} />
+      <ConnectAnalyticsDashboard
+        clientId={apiKey.key}
+        connectLayoutSlug="/dashboard/connect"
+      />
 
       <div className="h-4 lg:h-8" />
       <ConnectSDKCard description="Add the Connect SDK to your app to start collecting analytics." />

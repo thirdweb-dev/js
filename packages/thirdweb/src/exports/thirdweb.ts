@@ -180,9 +180,9 @@ export {
   type GetBuyWithCryptoQuoteParams,
 } from "../pay/buyWithCrypto/getQuote.js";
 
-export {
-  type QuoteApprovalParams,
-  type QuoteTokenInfo,
+export type {
+  QuoteApprovalParams,
+  QuoteTokenInfo,
 } from "../pay/buyWithCrypto/commonTypes.js";
 
 export {

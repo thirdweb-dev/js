@@ -17,12 +17,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { WalletStats } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  EmptyChartState,
+  LoadingChartState,
+} from "components/analytics/empty-chart-state";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { DocLink } from "components/shared/DocLink";
 import { useMemo, useState } from "react";
 import { Pie, PieChart } from "recharts";
-import { EmptyChartState, LoadingChartState } from "./EmptyChartState";
 
 type ChartToShow = "totalConnections" | "uniqueWalletsConnected";
 

@@ -435,7 +435,7 @@ export function useUserOpUsageAggregate(args: {
   const { clientId, from, to } = args;
   const { user, isLoggedIn } = useLoggedInUser();
 
-  return useQuery({
+  return useQuery<UserOpStats>({
     queryKey: accountKeys.userOpStats(
       user?.address as string,
       clientId as string,
@@ -444,12 +444,28 @@ export function useUserOpUsageAggregate(args: {
       "all",
     ),
     queryFn: async () => {
-      return getUserOpUsage({
+      const userOpStats: UserOpStats[] = await getUserOpUsage({
         clientId,
         from,
         to,
         period: "all",
       });
+
+      // Aggregate stats across wallet types
+      return userOpStats.reduce(
+        (acc, curr) => {
+          acc.successful += curr.successful;
+          acc.failed += curr.failed;
+          acc.sponsoredUsd += curr.sponsoredUsd;
+          return acc;
+        },
+        {
+          date: (from || new Date()).toISOString(),
+          successful: 0,
+          failed: 0,
+          sponsoredUsd: 0,
+        },
+      );
     },
     enabled: !!clientId && !!user?.address && isLoggedIn,
   });

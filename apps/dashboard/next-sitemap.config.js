@@ -1,4 +1,5 @@
 // @ts-check
+
 /**
  *
  */
@@ -77,8 +78,16 @@ module.exports = {
     };
   },
   additionalPaths: async (config) => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const FRAMER_PATHS = require("./framer-rewrites");
     const allChains = await fetchChainsFromApi();
     return [
+      ...FRAMER_PATHS.map((path) => ({
+        loc: path,
+        changefreq: config.changefreq,
+        priority: config.priority,
+        lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+      })),
       ...allChains.map((chain) => {
         return {
           loc: `/${chain.slug}`,

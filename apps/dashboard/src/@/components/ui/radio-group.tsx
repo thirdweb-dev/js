@@ -51,12 +51,12 @@ const RadioGroupItemButton = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "group flex min-w-32 cursor-pointer items-center space-x-3 space-y-0 rounded-md border-2 px-3 py-4 font-medium transition-all hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 peer-hover:border-nonce data-[state=checked]:border-inverted",
+        "group flex min-w-32 cursor-pointer items-center space-x-3 space-y-0 rounded-lg border px-4 py-3 font-medium transition-all hover:border-foreground/25 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 peer-hover:border-nonce data-[state=checked]:border-muted-foreground",
         className,
       )}
       {...props}
     >
-      <div className="flex aspect-square h-4 w-4 items-center justify-center rounded-full border-2 text-inverted ring-offset-background transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 group-hover:border-foreground/25 group-data-[state=checked]:border-inverted">
+      <div className="flex aspect-square h-4 w-4 items-center justify-center rounded-full border text-inverted ring-offset-background transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 group-hover:border-foreground/25 group-data-[state=checked]:border-inverted">
         {/* Show on checked */}
         <RadioGroupPrimitive.Indicator className="flex items-center justify-center rounded-full transition-all">
           <Circle className="h-2 w-2 fill-current text-current" />

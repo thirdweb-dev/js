@@ -34,9 +34,9 @@ export { useWaitForReceipt } from "../react/core/hooks/contract/useWaitForReceip
 export { useContractEvents } from "../react/core/hooks/contract/useContractEvents.js";
 
 // transaction
-export {
-  type SendTransactionConfig,
-  type SendTransactionPayModalConfig,
+export type {
+  SendTransactionConfig,
+  SendTransactionPayModalConfig,
 } from "../react/core/hooks/transaction/useSendTransaction.js";
 export { useSimulateTransaction } from "../react/core/hooks/transaction/useSimulateTransaction.js";
 export { useSendTransaction } from "../react/native/hooks/transaction/useSendTransaction.js";

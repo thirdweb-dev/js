@@ -20,7 +20,7 @@ export function AddPartnerDialogButton(props: {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2 max-sm:w-full">
+        <Button className="gap-2 max-sm:w-full" variant="outline" size="sm">
           <PlusIcon className="size-4" />
           Add Partner
         </Button>
