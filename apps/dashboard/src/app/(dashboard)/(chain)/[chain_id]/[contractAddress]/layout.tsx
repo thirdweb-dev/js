@@ -39,7 +39,7 @@ export default async function Layout(props: {
   }
 
   // check if the contract exists
-  const isValidContract = await isContractDeployed(contract);
+  const isValidContract = await isContractDeployed(contract).catch(() => false);
   if (!isValidContract) {
     // TODO - replace 404 with a better page to upsale deploy or other thirdweb products
     notFound();
