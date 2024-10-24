@@ -1,20 +1,7 @@
 import { z } from "zod";
 
 export const usageEventSchema = z.object({
-  source: z.enum([
-    "ecosystemWallets",
-    "embeddedWallets",
-    "rpc",
-    "storage",
-    "bundler",
-    "paymaster",
-    "relayer",
-    "connectWallet",
-    "checkout",
-    "engine",
-    "pay",
-    "rpcV2",
-  ]),
+  source: z.string(),
   action: z.string(),
 
   /**
