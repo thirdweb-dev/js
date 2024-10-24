@@ -11,7 +11,7 @@ if (typeof window !== "undefined") {
       api_host: "https://a.thirdweb.com",
       autocapture: true,
       debug: false,
-      capture_pageview: false,
+      capture_pageview: true,
       disable_session_recording: true,
     },
   );

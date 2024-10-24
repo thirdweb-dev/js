@@ -17,7 +17,7 @@ function respond(jwt: string | null) {
 
 export const GET = async (req: NextRequest) => {
   const address = req.nextUrl.searchParams.get("address");
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   if (!address) {
     return NextResponse.json(

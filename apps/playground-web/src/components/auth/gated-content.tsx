@@ -8,7 +8,7 @@ import { balanceOf } from "thirdweb/extensions/erc20";
 import { AuthButton } from "./auth-button";
 
 export async function GatedContentPreview() {
-  const jwt = cookies().get("jwt");
+  const jwt = (await cookies()).get("jwt");
   const authResult = jwt?.value ? await getAuthResult(jwt.value) : undefined;
   if (!authResult) {
     return (

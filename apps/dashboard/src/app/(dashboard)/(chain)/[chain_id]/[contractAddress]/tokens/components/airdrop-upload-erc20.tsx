@@ -279,7 +279,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
 
 interface AirdropTableProps {
   data: ERC20AirdropAddressInput[];
-  portalRef: React.RefObject<HTMLDivElement>;
+  portalRef: React.RefObject<HTMLDivElement | null>;
 }
 const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
   const columns = useMemo(() => {

@@ -2,10 +2,10 @@ import { redirect } from "next/navigation";
 import { getAuthTokenWalletAddress } from "../../../../api/lib/getAuthToken";
 import { DeployedContractsPage } from "./_components/DeployedContractsPage";
 
-export default function Page(props: {
-  params: { team_slug: string; project_slug: string };
+export default async function Page(props: {
+  params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
-  const { team_slug, project_slug } = props.params;
+  const { team_slug, project_slug } = await props.params;
   const accountAddress = getAuthTokenWalletAddress();
 
   if (!accountAddress) {

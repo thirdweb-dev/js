@@ -416,7 +416,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
 
 interface SnapshotTableProps {
   data: SnapshotAddressInput[];
-  portalRef: React.RefObject<HTMLDivElement>;
+  portalRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const SnapshotTableColumns = [

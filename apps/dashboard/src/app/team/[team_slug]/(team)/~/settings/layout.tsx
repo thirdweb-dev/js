@@ -3,12 +3,12 @@ import { notFound } from "next/navigation";
 import { SettingsLayout } from "./SettingsLayout";
 
 export default async function Layout(props: {
-  params: {
+  params: Promise<{
     team_slug: string;
-  };
+  }>;
   children: React.ReactNode;
 }) {
-  const team = await getTeamBySlug(props.params.team_slug);
+  const team = await getTeamBySlug((await props.params).team_slug);
 
   if (!team) {
     notFound();

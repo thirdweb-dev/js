@@ -13,9 +13,9 @@ import { ChainCTA } from "./components/server/cta-card";
 import { ExplorersSection } from "./components/server/explorer-section";
 
 export default async function Page(props: {
-  params: { chain_id: string };
+  params: Promise<{ chain_id: string }>;
 }) {
-  const chain = await getChain(props.params.chain_id);
+  const chain = await getChain((await props.params).chain_id);
   const chainMetadata = await getChainMetadata(chain.chainId);
   const isDeprecated = chain.status === "deprecated";
 

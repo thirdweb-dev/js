@@ -5,10 +5,10 @@ import { getAPIKeyForProjectId } from "../../../../../api/lib/getAPIKeys";
 import { AccountAbstractionPage } from "./AccountAbstractionPage";
 
 export default async function Page(props: {
-  params: { team_slug: string; project_slug: string };
-  searchParams: { tab?: string };
+  params: Promise<{ team_slug: string; project_slug: string }>;
+  searchParams: Promise<{ tab?: string }>;
 }) {
-  const { team_slug, project_slug } = props.params;
+  const { team_slug, project_slug } = await props.params;
   const project = await getProject(team_slug, project_slug);
 
   if (!project) {
@@ -28,7 +28,7 @@ export default async function Page(props: {
         teamSlug={team_slug}
         projectKey={project.publishableKey}
         apiKeyServices={apiKey.services || []}
-        tab={props.searchParams.tab}
+        tab={(await props.searchParams).tab}
       />
     </ChakraProviderSetup>
   );

@@ -21,12 +21,13 @@ import chromeStoreSvg from "./assets/chromestore.svg";
 import playStoreSvg from "./assets/playstore.svg";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     walletId: WalletId;
-  };
+  }>;
 };
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata(props: PageProps) {
+  const params = await props.params;
   const walletMetadata = await getWalletInfo(params.walletId);
 
   return createMetadata({
@@ -41,8 +42,8 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function Page(props: PageProps) {
   const [walletMetadata, walletImage] = await Promise.all([
-    getWalletInfo(props.params.walletId),
-    getWalletInfo(props.params.walletId, true),
+    getWalletInfo((await props.params).walletId),
+    getWalletInfo((await props.params).walletId, true),
   ]);
 
   const isWCSupported =
@@ -59,12 +60,11 @@ export default async function Page(props: PageProps) {
             name: "Supported Wallets",
           },
           {
-            href: `/typescript/v5/supported-wallets/${props.params.walletId}`,
+            href: `/typescript/v5/supported-wallets/${(await props.params).walletId}`,
             name: walletMetadata.name,
           },
         ]}
       />
-
       <div className="mb-10 flex items-center gap-3 [&_h1]:m-0">
         <Image
           src={walletImage}
@@ -77,7 +77,6 @@ export default async function Page(props: PageProps) {
           {walletMetadata.name}
         </Heading>
       </div>
-
       <DocLink
         href={walletMetadata.homepage}
         className="flex items-center gap-2"
@@ -85,7 +84,6 @@ export default async function Page(props: PageProps) {
         <GlobeIcon className="size-5" />
         {walletMetadata.homepage}
       </DocLink>
-
       <div className="mt-6 mb-12 flex gap-4">
         {walletMetadata.app.android && (
           <DocLink
@@ -108,17 +106,13 @@ export default async function Page(props: PageProps) {
           </DocLink>
         )}
       </div>
-
       <Heading level={2} id="wallet-id">
         Wallet ID
       </Heading>
-
-      <CodeBlock lang="ts" code={`"${props.params.walletId}"`} />
-
+      <CodeBlock lang="ts" code={`"${(await props.params).walletId}"`} />
       <Heading level={2} id="wallet-id">
         Connect Wallet
       </Heading>
-
       <Tabs defaultValue="tab-1">
         <TabsList>
           <TabsTrigger value="tab-1"> TypeScript </TabsTrigger>
@@ -130,11 +124,11 @@ export default async function Page(props: PageProps) {
             lang="ts"
             code={
               isWCSupported && isInjectedSupported
-                ? injectedAndWCSupportedCodeTS(props.params.walletId)
+                ? injectedAndWCSupportedCodeTS((await props.params).walletId)
                 : isInjectedSupported
-                  ? injectedSupportedTS(props.params.walletId)
+                  ? injectedSupportedTS((await props.params).walletId)
                   : isWCSupported
-                    ? WCSupportedTS(props.params.walletId)
+                    ? WCSupportedTS((await props.params).walletId)
                     : "Code not available"
             }
           />
@@ -144,11 +138,11 @@ export default async function Page(props: PageProps) {
             lang="ts"
             code={
               isWCSupported && isInjectedSupported
-                ? injectedAndWCSupportedCodeReact(props.params.walletId)
+                ? injectedAndWCSupportedCodeReact((await props.params).walletId)
                 : isInjectedSupported
-                  ? injectedSupportedCodeReact(props.params.walletId)
+                  ? injectedSupportedCodeReact((await props.params).walletId)
                   : isWCSupported
-                    ? WCSupportedCodeReact(props.params.walletId)
+                    ? WCSupportedCodeReact((await props.params).walletId)
                     : "Code not available"
             }
           />
@@ -167,7 +161,10 @@ export default async function Page(props: PageProps) {
             <Heading level={3} id="connect-component">
               Example
             </Heading>
-            <CodeBlock lang="tsx" code={componentCode(props.params.walletId)} />
+            <CodeBlock
+              lang="tsx"
+              code={componentCode((await props.params).walletId)}
+            />
           </Paragraph>
         </TabsContent>
       </Tabs>
@@ -179,9 +176,9 @@ export async function generateStaticParams(): Promise<PageProps["params"][]> {
   const walletList = await getAllWalletsList();
 
   return walletList.map((w) => {
-    return {
+    return Promise.resolve({
       walletId: w.id,
-    };
+    });
   });
 }
 

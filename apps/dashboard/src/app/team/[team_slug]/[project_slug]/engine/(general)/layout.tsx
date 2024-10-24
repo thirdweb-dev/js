@@ -1,15 +1,15 @@
 import type { SidebarLink } from "@/components/blocks/Sidebar";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 
-export default function Layout(props: {
-  params: {
+export default async function Layout(props: {
+  params: Promise<{
     team_slug: string;
     project_slug: string;
     engineId: string;
-  };
+  }>;
   children: React.ReactNode;
 }) {
-  const linkPrefix = `/team/${props.params.team_slug}/${props.params.project_slug}/engine`;
+  const linkPrefix = `/team/${(await props.params).team_slug}/${(await props.params).project_slug}/engine`;
   const sidebarLinks: SidebarLink[] = [
     {
       label: "Overview",

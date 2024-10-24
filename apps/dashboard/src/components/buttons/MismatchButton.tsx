@@ -94,7 +94,8 @@ export const MismatchButton = forwardRef<
 
   const chainId = activeWalletChain?.id;
 
-  const eventRef = useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>();
+  const eventRef =
+    useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>(undefined);
   if (!wallet || !chainId) {
     return (
       <CustomConnectWallet borderRadius="md" colorScheme="primary" {...props} />
@@ -389,7 +390,7 @@ function GetFundsFromFaucet(props: {
 }
 
 const MismatchNotice: React.FC<{
-  initialFocusRef: React.RefObject<HTMLButtonElement>;
+  initialFocusRef: React.RefObject<HTMLButtonElement | null>;
   onClose: (hasSwitched: boolean) => void;
   desiredChainId: number;
 }> = ({ initialFocusRef, onClose, desiredChainId }) => {

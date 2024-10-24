@@ -119,7 +119,6 @@ export function TeamSelectionUI(props: {
           </ul>
         </div>
       </ScrollShadow>
-
       {/* Bottom */}
       {teamPlan && teamPlan !== "pro" && props.upgradeTeamLink && (
         <div className="border-border border-t p-2">

@@ -19,7 +19,10 @@ import { PageId } from "page-id";
 import { Heading, LinkButton, Text } from "tw-components";
 
 const List = dynamic(
-  () => import("@chakra-ui/react").then((result) => result.List),
+  () =>
+    import("@chakra-ui/react").then((result) => ({
+      default: result.List,
+    })),
   {
     ssr: false,
   },

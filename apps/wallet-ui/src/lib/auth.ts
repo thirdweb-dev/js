@@ -34,7 +34,7 @@ export async function login(payload: VerifyLoginPayloadParams) {
     const jwt = await thirdwebAuth.generateJWT({
       payload: verifiedPayload.payload,
     });
-    cookies().set({
+    (await cookies()).set({
       name: "jwt",
       value: jwt,
       httpOnly: true,
@@ -63,7 +63,7 @@ export async function isLoggedIn(): Promise<boolean> {
 }
 
 export async function getCurrentUser(): Promise<string | null> {
-  const jwt = cookies().get("jwt");
+  const jwt = (await cookies()).get("jwt");
   if (!jwt?.value) {
     return null;
   }
@@ -76,5 +76,5 @@ export async function getCurrentUser(): Promise<string | null> {
 }
 
 export async function logout() {
-  cookies().delete("jwt");
+  (await cookies()).delete("jwt");
 }

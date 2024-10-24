@@ -3,14 +3,14 @@ import { notFound } from "next/navigation";
 import { PayAnalytics } from "../../../../../../components/pay/PayAnalytics/PayAnalytics";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     team_slug: string;
     project_slug: string;
-  };
+  }>;
 }) {
   const project = await getProject(
-    props.params.team_slug,
-    props.params.project_slug,
+    (await props.params).team_slug,
+    (await props.params).project_slug,
   );
 
   if (!project) {

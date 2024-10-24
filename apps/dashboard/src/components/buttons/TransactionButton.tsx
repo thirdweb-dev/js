@@ -180,7 +180,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
 
 interface ExternalApprovalNoticeProps {
   walletId?: WalletId;
-  initialFocusRef: React.RefObject<HTMLButtonElement>;
+  initialFocusRef: React.RefObject<HTMLButtonElement | null>;
 }
 
 const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({

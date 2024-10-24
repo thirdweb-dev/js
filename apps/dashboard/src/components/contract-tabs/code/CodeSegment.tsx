@@ -3,7 +3,7 @@ import { JavaScriptIcon } from "components/icons/brand-icons/JavaScriptIcon";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
-import { type Dispatch, type SetStateAction, useMemo } from "react";
+import { type Dispatch, type JSX, type SetStateAction, useMemo } from "react";
 import { Button, CodeBlock } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 import type {
