@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { ConnectEmbed } from "thirdweb/react";
+import { getProfiles } from "thirdweb/wallets";
 import { getCookie } from "../../stores/SyncStoreToCookies";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
@@ -45,7 +46,8 @@ function CustomConnectEmmbed() {
   const nextSearchParam = searchParams?.get("next");
   const client = useThirdwebClient();
 
-  function onLoginSuccessful() {
+  async function onLoginSuccessful() {
+    const profiles = await getProfiles({ client });
     if (nextSearchParam && isValidRedirectPath(nextSearchParam)) {
       router.replace(nextSearchParam);
     } else {
@@ -53,7 +55,9 @@ function CustomConnectEmmbed() {
       if (dashboardType === "team") {
         router.replace("/team");
       } else {
-        router.replace("/dashboard");
+        router.replace(
+          `/onboarding?${profiles[0] ? `email=${profiles[0].details.email}` : ""}`,
+        );
       }
     }
   }

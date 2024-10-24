@@ -13,12 +13,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Checkbox } from "@chakra-ui/react";
 import { FormControl } from "@chakra-ui/react";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { THIRDWEB_ANALYTICS_API_HOST } from "constants/urls";
 import { motion } from "framer-motion";
 import { Users2 } from "lucide-react";
 import { Building } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
 import {
@@ -27,10 +30,9 @@ import {
   type UseFormRegister,
   useForm,
 } from "react-hook-form";
+import { Blobbie } from "thirdweb/react";
+import { shortenAddress } from "thirdweb/utils";
 import { FormErrorMessage, FormLabel } from "tw-components";
-import { THIRDWEB_ANALYTICS_API_HOST } from "constants/urls";
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { useRouter } from "next/navigation";
 
 interface FormData {
   email: string;
@@ -65,9 +67,12 @@ const RadioGroupItemButton = React.forwardRef<
   );
 });
 
-export default function OnboardingPage() {
+export default function OnboardingPage({
+  searchParams,
+}: { searchParams: { address: string; email: string | undefined } }) {
   const accountQuery = useAccount();
-  const [step, setStep] = useState(1);
+  console.log(searchParams.email);
+  const [step, setStep] = useState(searchParams.email ? 2 : 1);
   const [direction, setDirection] = useState(1);
   const router = useRouter();
 
@@ -82,6 +87,7 @@ export default function OnboardingPage() {
   } = useForm<FormData>({
     defaultValues: {
       interests: [],
+      email: searchParams.email ?? "",
     },
   });
 
@@ -438,7 +444,7 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="relative flex h-screen flex-col place-items-center bg-muted/30 md:flex-row">
+    <div className="relative flex flex-col place-items-center bg-muted/30 md:flex-row">
       <main className="z-10 flex w-full gap-6">
         {/* Left Panel */}
         <div className="items-between relative box-border flex h-screen w-full flex-col overflow-hidden p-12 lg:w-1/2">
@@ -470,7 +476,7 @@ export default function OnboardingPage() {
         </div>
         {/* Right Panel */}
         <div className="flex h-screen w-1/2 animate-gradient-x flex-col items-center justify-center bg-gradient-to-r from-[#25369F] via-[#290259] to-[#3E0D45]">
-          <Card className="flex w-[275px] items-center rounded-xl border-muted transition-all ">
+          <Card className="flex w-[300px] items-center rounded-xl border-muted transition-all ">
             <CardContent className="flex items-center space-x-4 p-4">
               {getValues("userType") ? (
                 getValues("userType") === "Developer" ? (
@@ -478,10 +484,21 @@ export default function OnboardingPage() {
                 ) : (
                   <Building className="size-8" />
                 )
-              ) : null}
+              ) : (
+                <div className="size-7 overflow-hidden rounded-full">
+                  <Blobbie
+                    address={accountQuery.data?.creatorWalletAddress ?? ""}
+                    size={28}
+                  />
+                </div>
+              )}
               <div className="flex flex-col">
                 <h5 className="font-regular font-sm text-white">
-                  {getValues("email") ?? "a1...b2"}
+                  {getValues("email")
+                    ? getValues("email")
+                    : accountQuery.data?.creatorWalletAddress
+                      ? shortenAddress(accountQuery.data?.creatorWalletAddress)
+                      : ""}
                 </h5>
 
                 <h5
