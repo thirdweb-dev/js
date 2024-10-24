@@ -18,7 +18,7 @@ import { useTheme } from "next-themes";
 import type { StaticImageData } from "next/image";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo } from "react";
+import { type JSX, useEffect, useMemo } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
 
 const Step = {

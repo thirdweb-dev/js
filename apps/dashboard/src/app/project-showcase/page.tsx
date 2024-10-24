@@ -44,13 +44,10 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
-
-export default function ProjectShowcasePage({
-  searchParams,
-}: {
-  searchParams: { industry?: string; page?: string };
+export default async function ProjectShowcasePage(props: {
+  searchParams: Promise<{ industry?: string; page?: string }>;
 }) {
+  const searchParams = await props.searchParams;
   const selectedIndustry = searchParams.industry || "All";
   const currentPage = Number.parseInt(searchParams.page || "1", 10);
 

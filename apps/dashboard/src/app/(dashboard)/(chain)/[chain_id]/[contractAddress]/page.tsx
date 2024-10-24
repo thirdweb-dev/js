@@ -8,12 +8,13 @@ import { PublishedBy } from "./overview/components/published-by.server";
 import { ContractOverviewPageClient } from "./overview/contract-overview-page.client";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     contractAddress: string;
     chain_id: string;
-  };
+  }>;
 }) {
-  const info = await getContractPageParamsInfo(props.params);
+  const params = await props.params;
+  const info = await getContractPageParamsInfo(params);
 
   if (!info) {
     notFound();

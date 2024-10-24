@@ -6,12 +6,13 @@ import { ContractProposalsPage } from "./ContractProposalsPage";
 import { ContractProposalsPageClient } from "./ContractProposalsPage.client";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     contractAddress: string;
     chain_id: string;
-  };
+  }>;
 }) {
-  const info = await getContractPageParamsInfo(props.params);
+  const params = await props.params;
+  const info = await getContractPageParamsInfo(params);
 
   if (!info) {
     notFound();
@@ -25,7 +26,7 @@ export default async function Page(props: {
   const { isVoteContract } = await getContractPageMetadata(contract);
 
   if (!isVoteContract) {
-    redirect(`/${props.params.chain_id}/${props.params.contractAddress}`);
+    redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
   return <ContractProposalsPage contract={contract} />;

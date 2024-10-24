@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 import { CodeExample } from "@/components/code/code-example";
 import { EcosystemConnectEmbed } from "../../../../components/in-app-wallet/ecosystem";
 import { Profiles } from "../../../../components/in-app-wallet/profile-sections";

@@ -10,7 +10,7 @@ import { getAuthToken } from "../../../../api/lib/getAuthToken";
 // - else redirect to first key
 
 export default async function Page() {
-  const authToken = getAuthToken();
+  const authToken = await getAuthToken();
 
   if (!authToken) {
     redirect(

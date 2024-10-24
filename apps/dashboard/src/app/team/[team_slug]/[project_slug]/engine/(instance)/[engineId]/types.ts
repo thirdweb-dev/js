@@ -1,7 +1,7 @@
 export type EngineInstancePageProps = {
-  params: {
+  params: Promise<{
     team_slug: string;
     project_slug: string;
     engineId: string;
-  };
+  }>;
 };

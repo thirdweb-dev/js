@@ -144,7 +144,6 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
           height={isMobile ? "100%" : "300px"}
         />
       </Card>
-
       <Flex flexDir="column" gap={6} w="full" px={2}>
         <Flex flexDir="column" gap={1.5}>
           <NFTName value={nft.metadata.name} />

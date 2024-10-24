@@ -57,6 +57,3 @@ export default async function ExplorePage() {
     </div>
   );
 }
-
-// TODO - figure out why this page is not building if we let it be static
-export const dynamic = "force-dynamic";

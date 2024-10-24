@@ -50,7 +50,7 @@ const FileVideo: React.FC<
 };
 interface BatchTableProps {
   data: NFTInput[];
-  portalRef: React.RefObject<HTMLDivElement>;
+  portalRef: React.RefObject<HTMLDivElement | null>;
   nextTokenIdToMint?: bigint;
 }
 

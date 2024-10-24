@@ -25,9 +25,9 @@ import { z } from "zod";
 
 const LazyShareFreeWalletsModal = dynamic(
   () =>
-    import("./share-free-wallets-modal.client").then(
-      (mod) => mod.ShareFreeWalletsModal,
-    ),
+    import("./share-free-wallets-modal.client").then((mod) => ({
+      default: mod.ShareFreeWalletsModal,
+    })),
   {
     ssr: false,
     loading: () => null,

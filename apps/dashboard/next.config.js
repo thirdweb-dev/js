@@ -158,7 +158,6 @@ const moduleExports = {
     serverSourceMaps: false,
   },
   cacheMaxMemorySize: 0,
-  swcMinify: true,
   compiler: {
     emotion: true,
   },

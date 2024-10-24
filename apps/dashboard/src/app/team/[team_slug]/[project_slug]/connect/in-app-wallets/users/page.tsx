@@ -1,9 +1,10 @@
 import { InAppWalletUsersPageContent } from "components/embedded-wallets/Users";
 import { TRACKING_CATEGORY } from "../_constants";
 
-export default function Page({
-  params,
-}: { params: { team_slug: string; project_slug: string } }) {
+export default async function Page(props: {
+  params: Promise<{ team_slug: string; project_slug: string }>;
+}) {
+  const params = await props.params;
   return (
     <>
       <InAppWalletUsersPageContent

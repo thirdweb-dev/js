@@ -1,9 +1,8 @@
-import { redirect } from "next/navigation";
+import { EcosystemPermissionsPage } from "../../../../../../../(dashboard)/dashboard/connect/ecosystem/[slug]/(active)/configuration/components/client/EcosystemPermissionsPage";
 
-export default function Page({
-  params,
-}: { params: { team_slug: string; project_slug: string; slug: string } }) {
-  redirect(
-    `/team/${params.team_slug}/${params.project_slug}/connect/ecosystem/${params.slug}/analytics`,
-  );
+export default async function Page(props: {
+  params: Promise<{ slug: string }>;
+}) {
+  const params = await props.params;
+  return <EcosystemPermissionsPage params={params} />;
 }

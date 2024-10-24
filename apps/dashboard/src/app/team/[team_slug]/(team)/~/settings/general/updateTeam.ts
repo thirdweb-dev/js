@@ -8,7 +8,7 @@ export async function updateTeam(params: {
   teamId: string;
   value: Partial<Team>;
 }) {
-  const authToken = getAuthToken();
+  const authToken = await getAuthToken();
 
   if (!authToken) {
     throw new Error("No auth token");

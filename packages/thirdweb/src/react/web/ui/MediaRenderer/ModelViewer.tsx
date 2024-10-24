@@ -1,15 +1,6 @@
 import "@google/model-viewer";
-import type { ModelViewerElement } from "@google/model-viewer";
 import React from "react";
 import type { MediaRendererProps } from "./types.js";
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      "model-viewer": Partial<ModelViewerElement>;
-    }
-  }
-}
 
 const ModelViewer = /* @__PURE__ */ (() =>
   React.forwardRef<
@@ -19,6 +10,7 @@ const ModelViewer = /* @__PURE__ */ (() =>
     return (
       <div style={{ ...style }} className={className} ref={ref}>
         {src ? (
+          // @ts-expect-error - model-viewer is not a standard HTML element
           <model-viewer
             src={src}
             alt={alt || "3D Model"}

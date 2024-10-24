@@ -1,7 +1,7 @@
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { CheckIcon } from "lucide-react";
-import { useMemo } from "react";
+import { type JSX, useMemo } from "react";
 
 type Step = {
   title: string | JSX.Element;

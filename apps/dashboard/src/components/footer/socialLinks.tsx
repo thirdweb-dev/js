@@ -6,6 +6,8 @@ import { TiktokIcon } from "components/icons/brand-icons/TiktokIcon";
 import { XIcon } from "components/icons/brand-icons/XIcon";
 import { YoutubeIcon } from "components/icons/brand-icons/YoutubeIcon";
 
+import type { JSX } from "react";
+
 interface socialLinkInfo {
   link: string;
   icon: JSX.Element;
