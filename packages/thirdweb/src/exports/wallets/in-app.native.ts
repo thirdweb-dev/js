@@ -11,7 +11,7 @@ export {
   linkProfile,
 } from "../../wallets/in-app/native/auth/index.js";
 
-export { type GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/types.js";
+export type { GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/types.js";
 export type {
   InAppWalletCreationOptions,
   InAppWalletAuth,
