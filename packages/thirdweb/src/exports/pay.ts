@@ -10,9 +10,9 @@ export {
   type GetBuyWithCryptoTransferParams,
 } from "../pay/buyWithCrypto/getTransfer.js";
 
-export {
-  type QuoteApprovalParams,
-  type QuoteTokenInfo,
+export type {
+  QuoteApprovalParams,
+  QuoteTokenInfo,
 } from "../pay/buyWithCrypto/commonTypes.js";
 
 export {
