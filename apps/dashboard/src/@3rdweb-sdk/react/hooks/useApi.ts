@@ -241,6 +241,14 @@ export interface UserOpStats {
   sponsoredUsd: number;
 }
 
+export interface UserOpStatsByChain {
+  date: string;
+  successful: number;
+  failed: number;
+  sponsoredUsd: number;
+  chainId?: string;
+}
+
 interface BillingProduct {
   name: string;
   id: string;
