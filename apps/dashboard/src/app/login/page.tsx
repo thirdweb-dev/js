@@ -7,11 +7,12 @@ import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { ConnectEmbed } from "thirdweb/react";
-import { getProfiles } from "thirdweb/wallets";
 import { getCookie } from "../../stores/SyncStoreToCookies";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
+import { getAccountPreferences } from "lib/onboarding";
+import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 
 export default function LoginPage() {
   return (
@@ -45,19 +46,29 @@ function CustomConnectEmmbed() {
   const { theme } = useTheme();
   const nextSearchParam = searchParams?.get("next");
   const client = useThirdwebClient();
+  const accountQuery = useAccount();
 
   async function onLoginSuccessful() {
-    const profiles = await getProfiles({ client });
     if (nextSearchParam && isValidRedirectPath(nextSearchParam)) {
       router.replace(nextSearchParam);
     } else {
       const dashboardType = getCookie("x-dashboard-type");
+      const account = await accountQuery.refetch();
+      if (!account.data) throw new Error("No account found.");
+      const existingAccountPreferences = await getAccountPreferences({
+        accountId: account.data.id,
+      });
+
+      if (!existingAccountPreferences) {
+        router.replace(
+          `/onboarding?${account.data.email ? `email=${account.data.email}` : ""}`,
+        );
+      }
+
       if (dashboardType === "team") {
         router.replace("/team");
       } else {
-        router.replace(
-          `/onboarding?${profiles[0] ? `email=${profiles[0].details.email}` : ""}`,
-        );
+        router.replace("/dashboard");
       }
     }
   }

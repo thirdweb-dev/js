@@ -30,6 +30,7 @@ import {
   type UseFormRegister,
   useForm,
 } from "react-hook-form";
+import { getCookie } from "stores/SyncStoreToCookies";
 import { Blobbie } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 import { FormErrorMessage, FormLabel } from "tw-components";
@@ -71,7 +72,6 @@ export default function OnboardingPage({
   searchParams,
 }: { searchParams: { address: string; email: string | undefined } }) {
   const accountQuery = useAccount();
-  console.log(searchParams.email);
   const [step, setStep] = useState(searchParams.email ? 2 : 1);
   const [direction, setDirection] = useState(1);
   const router = useRouter();
@@ -116,7 +116,12 @@ export default function OnboardingPage({
       throw new Error(json.message);
     }
 
-    router.push("/dashboard");
+    const dashboardType = getCookie("x-dashboard-type");
+    if (dashboardType === "team") {
+      router.push("/team");
+    } else {
+      router.push("/dashboard");
+    }
   };
 
   const watchInterests = watch("interests");
