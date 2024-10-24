@@ -60,7 +60,9 @@ export const WalletImage = (props: {
       try {
         const externalWalletImage = await getWalletInfo(activeEOAId, true);
         if (externalWalletImage) {
-          return resolveScheme({ client, uri: externalWalletImage });
+          return externalWalletImage.startsWith("ipfs://")
+            ? resolveScheme({ client, uri: externalWalletImage })
+            : externalWalletImage;
         }
       } catch {}
 

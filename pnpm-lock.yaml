@@ -815,8 +815,8 @@ importers:
         specifier: ^1
         version: 1.1.2(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)
       '@mobile-wallet-protocol/client':
-        specifier: 0.0.3
-        version: 0.0.3(@react-native-async-storage/async-storage@2.0.0(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)))(expo-web-browser@13.0.3(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)
+        specifier: 0.1.1
+        version: 0.1.1(@react-native-async-storage/async-storage@2.0.0(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)))(expo-web-browser@13.0.3(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)
       '@react-native-async-storage/async-storage':
         specifier: ^1 || ^2
         version: 2.0.0(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))
@@ -968,8 +968,8 @@ importers:
         specifier: 1.1.2
         version: 1.1.2(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10))(react@18.3.1)
       '@mobile-wallet-protocol/client':
-        specifier: 0.0.3
-        version: 0.0.3(@react-native-async-storage/async-storage@1.24.0(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10)))(expo-web-browser@13.0.3(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10))(react@18.3.1)
+        specifier: 0.1.1
+        version: 0.1.1(@react-native-async-storage/async-storage@1.24.0(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10)))(expo-web-browser@13.0.3(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10))(react@18.3.1)
       '@react-native-async-storage/async-storage':
         specifier: 1.24.0
         version: 1.24.0(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10))
@@ -3844,8 +3844,8 @@ packages:
   '@metamask/safe-event-emitter@2.0.0':
     resolution: {integrity: sha512-/kSXhY692qiV1MXu6EeOZvg5nECLclxNXcKCxJ3cXQgYuRymRHpdx/t7JXfsK+JLjwA1e1c1/SBrlQYpusC29Q==}
 
-  '@mobile-wallet-protocol/client@0.0.3':
-    resolution: {integrity: sha512-t6tu32ah205C/lRo2RyApsK2LxVESWzABfu3M9fEIkx6dF8bAaCLUKlakgLPesy7uuMXCe/xy8doON8Xa/ceKw==}
+  '@mobile-wallet-protocol/client@0.1.1':
+    resolution: {integrity: sha512-bnlGirHtG3xdxuJZCWqY6uxTF28t7iSr6+gl4x+4/Nt5ps6IS/jZsXQihHREoFVXUkfnlN++wqjJmBhP6YlsYw==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '*'
       expo: '*'
@@ -19154,7 +19154,7 @@ snapshots:
 
   '@metamask/safe-event-emitter@2.0.0': {}
 
-  '@mobile-wallet-protocol/client@0.0.3(@react-native-async-storage/async-storage@1.24.0(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10)))(expo-web-browser@13.0.3(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10))(react@18.3.1)':
+  '@mobile-wallet-protocol/client@0.1.1(@react-native-async-storage/async-storage@1.24.0(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10)))(expo-web-browser@13.0.3(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10))(react@18.3.1)':
     dependencies:
       '@noble/ciphers': 0.5.3
       '@noble/curves': 1.6.0
@@ -19166,7 +19166,7 @@ snapshots:
       react: 18.3.1
       react-native: 0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.3)(utf-8-validate@5.0.10)
 
-  '@mobile-wallet-protocol/client@0.0.3(@react-native-async-storage/async-storage@2.0.0(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)))(expo-web-browser@13.0.3(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)':
+  '@mobile-wallet-protocol/client@0.1.1(@react-native-async-storage/async-storage@2.0.0(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)))(expo-web-browser@13.0.3(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(expo@51.0.37(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.75.3(@babel/core@7.25.8)(@babel/preset-env@7.25.8(@babel/core@7.25.8))(@types/react@18.3.11)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)':
     dependencies:
       '@noble/ciphers': 0.5.3
       '@noble/curves': 1.6.0
