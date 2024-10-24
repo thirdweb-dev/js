@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/pagination";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { getAbsoluteUrl } from "lib/vercel-utils";
+import { NextSeo } from "next-seo";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -206,6 +208,18 @@ export function ProjectShowcaseUI() {
 export default function ProjectShowcasePage() {
   return (
     <ThirdwebProvider>
+      <NextSeo
+        openGraph={{
+          images: [
+            {
+              url: `${getAbsoluteUrl()}/assets/showcase/og_image.png`,
+              width: 450,
+              height: 236,
+            },
+          ],
+        }}
+      />
+
       <ProjectShowcaseUI />
       <AppFooter />
     </ThirdwebProvider>
