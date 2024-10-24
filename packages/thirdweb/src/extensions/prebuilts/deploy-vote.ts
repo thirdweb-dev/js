@@ -136,6 +136,27 @@ async function getInitializeTransaction(options: {
     external_link,
     social_urls,
   } = params;
+
+  // Validate initialVoteQuorumFraction
+  const _num = Number(minVoteQuorumRequiredPercent);
+  if (Number.isNaN(_num)) {
+    throw new Error(
+      `${minVoteQuorumRequiredPercent} is not a valid minVoteQuorumRequiredPercent`,
+    );
+  }
+  if (_num < 0 || _num > 100) {
+    throw new Error("minVoteQuorumRequiredPercent must be >= 0 and <= 100");
+  }
+
+  // Make sure if user is passing a float, it should only have 2 digit after the decimal point
+  if (!Number.isInteger(_num)) {
+    throw new Error(
+      `${_num} is an invalid value. Only integer-like values accepted`,
+    );
+  }
+
+  const initialVoteQuorumFraction = BigInt(_num);
+
   const tokenErc20Contract = getContract({
     address: tokenAddress,
     client,
@@ -176,26 +197,6 @@ async function getInitializeTransaction(options: {
       ],
     })) ||
     "";
-
-  // Validate initialVoteQuorumFraction
-  const _num = Number(minVoteQuorumRequiredPercent);
-  if (Number.isNaN(_num)) {
-    throw new Error(
-      `${minVoteQuorumRequiredPercent} is not a valid minVoteQuorumRequiredPercent`,
-    );
-  }
-  if (_num < 0 || _num > 100) {
-    throw new Error("minVoteQuorumRequiredPercent must be >= 0 and <= 100");
-  }
-
-  // Make sure if user is passing a float, it should only have 2 digit after the decimal point
-  if (!Number.isInteger(_num)) {
-    throw new Error(
-      `${_num} is an invalid value. Only integer-like values accepted`,
-    );
-  }
-
-  const initialVoteQuorumFraction = BigInt(_num);
 
   return initialize({
     contract: implementationContract,
