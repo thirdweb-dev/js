@@ -13,6 +13,7 @@ import { getCookie } from "../../stores/SyncStoreToCookies";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
+import { getProfiles } from "thirdweb/wallets";
 
 export default function LoginPage() {
   return (
@@ -56,23 +57,26 @@ function CustomConnectEmmbed() {
     });
 
     if (!existingAccountPreferences) {
-      console.log("hello");
-      console.log(account);
-      router.replace(
-        `/onboarding?${account.data.email ? `email=${account.data.email}` : ""}${nextSearchParam && isValidRedirectPath(nextSearchParam) ? `${account.data.email ? "&" : ""}next=${nextSearchParam}` : ""}`,
-      );
-    } else {
-      if (nextSearchParam && isValidRedirectPath(nextSearchParam)) {
-        router.replace(nextSearchParam);
-      } else {
-        const dashboardType = getCookie("x-dashboard-type");
+      const profiles = await getProfiles({ client });
 
-        if (dashboardType === "team") {
-          router.replace("/team");
-        } else {
-          router.replace("/dashboard");
-        }
-      }
+      const email = profiles.find((profile) => profile.details.email)?.details
+        .email;
+      router.replace(
+        `/onboarding?${email ? `email=${email}` : ""}${nextSearchParam && isValidRedirectPath(nextSearchParam) ? `${account.data.email ? "&" : ""}next=${nextSearchParam}` : ""}`,
+      );
+      return;
+    }
+
+    if (nextSearchParam && isValidRedirectPath(nextSearchParam)) {
+      router.replace(nextSearchParam);
+      return;
+    }
+
+    const dashboardType = getCookie("x-dashboard-type");
+    if (dashboardType === "team") {
+      router.replace("/team");
+    } else {
+      router.replace("/dashboard");
     }
   }
 
