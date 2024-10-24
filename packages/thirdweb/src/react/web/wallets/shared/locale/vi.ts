@@ -57,4 +57,5 @@ export default {
   passkey: "Passkey",
   linkWallet: "Link a Wallet",
   loginAsGuest: "Đăng nhập với tư cách khách",
+  signInWithWallet: "Đăng nhập bằng Wallet",
 } satisfies InAppWalletLocale;

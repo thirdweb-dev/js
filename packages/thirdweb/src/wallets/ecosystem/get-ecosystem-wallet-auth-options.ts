@@ -40,5 +40,11 @@ export async function getEcosystemOptions(
     );
   }
 
+  // siwe is the auth option in the backend, but we want to use wallet as the auth option in the frontend
+  if (data.authOptions?.includes("siwe")) {
+    data.authOptions = data.authOptions.filter((o: string) => o !== "siwe");
+    data.authOptions.push("wallet");
+  }
+
   return data ?? null;
 }

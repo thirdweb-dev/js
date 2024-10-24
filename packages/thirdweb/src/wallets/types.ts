@@ -41,6 +41,7 @@ export const authOptions = [
   "email",
   "phone",
   "passkey",
+  "wallet",
 ] as const;
 export type AuthOption = (typeof authOptions)[number];
 

@@ -57,7 +57,9 @@ export type ConnectWalletSelectUIState =
         connectionPromise: Promise<Account | Profile[]>;
       };
       passkeyLogin?: boolean;
-      walletLogin?: boolean;
+      walletLogin?: {
+        linking: boolean;
+      };
     };
 
 const defaultAuthOptions: AuthOption[] = [
@@ -186,6 +188,7 @@ export const ConnectWalletSocialOptions = (
 
   const passKeyEnabled = authOptions.includes("passkey");
   const guestEnabled = authOptions.includes("guest");
+  const siweEnabled = authOptions.includes("wallet");
 
   const placeholder =
     inputMode === "email" ? locale.emailPlaceholder : locale.phonePlaceholder;
@@ -306,7 +309,9 @@ export const ConnectWalletSocialOptions = (
 
   function handleWalletLogin() {
     setData({
-      walletLogin: true,
+      walletLogin: {
+        linking: props.isLinking || false,
+      },
     });
     props.select();
   }
@@ -464,6 +469,18 @@ export const ConnectWalletSocialOptions = (
           }}
           title={locale.passkey}
           disabled={props.disabled}
+        />
+      )}
+
+      {/* SIWE login */}
+      {siweEnabled && (
+        <WalletTypeRowButton
+          client={props.client}
+          icon={getSocialIcon("")}
+          onClick={() => {
+            handleWalletLogin();
+          }}
+          title={locale.signInWithWallet}
         />
       )}
 
