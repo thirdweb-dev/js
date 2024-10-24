@@ -12,14 +12,15 @@ export const metadata: Metadata = {
   },
 };
 
-// we're using searchParams here - use dynamic rendering
-export const dynamic = "force-dynamic";
-
 export default async function DashboardContractTrendingPage(props: {
-  searchParams: { timeRange?: TimeRange; page?: number; sortBy?: SortBy };
+  searchParams: Promise<{
+    timeRange?: TimeRange;
+    page?: number;
+    sortBy?: SortBy;
+  }>;
 }) {
   const topContracts = await fetchTopContracts({
-    ...props.searchParams,
+    ...(await props.searchParams),
     timeRange: "month",
     perPage: 20,
   });
@@ -29,10 +30,9 @@ export default async function DashboardContractTrendingPage(props: {
       <h1 className="mb-5 font-semibold text-2xl tracking-tight md:text-3xl">
         Trending Contracts
       </h1>
-
       <TrendingContractSection
         topContracts={topContracts}
-        searchParams={props.searchParams}
+        searchParams={await props.searchParams}
         showPagination={true}
       />
     </ContractsSidebarLayout>

@@ -9,7 +9,7 @@ interface PublishedByProps {
 
 export const PublishedBy: React.FC<PublishedByProps> = async ({ contract }) => {
   const client = getThirdwebClient();
-  const address = getAuthTokenWalletAddress();
+  const address = await getAuthTokenWalletAddress();
   const props = await getPublishedByCardProps({
     address,
     contract,

@@ -14,10 +14,11 @@ export async function EcosystemLayoutSlug({
   params: { slug: string };
   ecosystemLayoutPath: string;
 }) {
-  const cookiesManager = cookies();
+  const cookiesManager = await cookies();
   const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const authToken = activeAccount
-    ? cookies().get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))?.value
+    ? (await cookies()).get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))
+        ?.value
     : null;
 
   if (!authToken) {

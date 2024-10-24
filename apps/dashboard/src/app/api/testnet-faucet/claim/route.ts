@@ -1,3 +1,4 @@
+import { ipAddress } from "@vercel/functions";
 import { startOfToday } from "date-fns";
 import { cacheGet, cacheSet } from "lib/redis";
 import { type NextRequest, NextResponse } from "next/server";
@@ -37,11 +38,11 @@ export const POST = async (req: NextRequest) => {
   }
 
   // CF header, fallback to req.ip, then X-Forwarded-For
-  const ipAddress =
+  const ip =
     req.headers.get("CF-Connecting-IP") ||
-    req.ip ||
+    ipAddress(req) ||
     req.headers.get("X-Forwarded-For");
-  if (!ipAddress) {
+  if (!ip) {
     return NextResponse.json(
       {
         error: "Could not validate elligibility.",
@@ -67,7 +68,7 @@ export const POST = async (req: NextRequest) => {
       body: JSON.stringify({
         secret: process.env.TURNSTILE_SECRET_KEY,
         response: turnstileToken,
-        remoteip: ipAddress,
+        remoteip: ip,
       }),
       method: "POST",
       headers: {
@@ -86,7 +87,7 @@ export const POST = async (req: NextRequest) => {
     );
   }
 
-  const ipCacheKey = `testnet-faucet:${chainId}:${ipAddress}`;
+  const ipCacheKey = `testnet-faucet:${chainId}:${ip}`;
   const addressCacheKey = `testnet-faucet:${chainId}:${toAddress}`;
 
   // Assert 1 request per IP/chain every 24 hours.

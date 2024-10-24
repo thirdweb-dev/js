@@ -2,7 +2,7 @@ import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { cookies } from "next/headers";
 
 export const POST = async () => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   // delete all cookies that start with the token prefix
   const allCookies = cookieStore.getAll();

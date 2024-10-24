@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Flex, Radio, Tooltip } from "@chakra-ui/react";
 import { InfoIcon } from "lucide-react";
-import type { MouseEventHandler } from "react";
+import type { JSX, MouseEventHandler } from "react";
 import { Card, Heading, Text } from "tw-components";
 
 interface SelectOptionProps {

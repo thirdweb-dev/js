@@ -4,11 +4,11 @@ import { getInAppWalletSupportedAPIKeys } from "../../getInAppWalletSupportedAPI
 import { TRACKING_CATEGORY } from "../_constants";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     clientId: string;
-  };
+  }>;
 }) {
-  const { clientId } = props.params;
+  const { clientId } = await props.params;
   const apiKeys = await getInAppWalletSupportedAPIKeys();
   const apiKey = apiKeys.find((key) => key.key === clientId);
 

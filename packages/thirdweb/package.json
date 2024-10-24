@@ -215,10 +215,10 @@
     "@walletconnect/sign-client": "2.17.1",
     "abitype": "1.0.6",
     "fuse.js": "7.0.0",
-    "input-otp": "^1.2.4",
+    "input-otp": "^1.2.5",
     "mipd": "0.0.7",
     "uqr": "0.1.2",
-    "viem": "2.21.35"
+    "viem": "2.21.37"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -318,9 +318,9 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@aws-sdk/client-kms": "3.679.0",
-    "@aws-sdk/client-lambda": "3.680.0",
-    "@aws-sdk/credential-providers": "3.679.0",
+    "@aws-sdk/client-kms": "3.682.0",
+    "@aws-sdk/client-lambda": "3.682.0",
+    "@aws-sdk/credential-providers": "3.682.0",
     "@biomejs/biome": "1.9.4",
     "@chromatic-com/storybook": "2.0.2",
     "@codspeed/vitest-plugin": "3.1.1",
@@ -339,7 +339,7 @@
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/cross-spawn": "^6.0.6",
-    "@types/react": "^18.3.11",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
     "@viem/anvil": "0.0.10",
     "@vitejs/plugin-react": "^4.3.3",
     "@vitest/coverage-v8": "2.1.4",
@@ -351,10 +351,10 @@
     "expo-linking": "6.3.1",
     "expo-web-browser": "13.0.3",
     "happy-dom": "^15.7.4",
-    "knip": "5.34.2",
+    "knip": "5.34.3",
     "msw": "^2.5.2",
     "prettier": "^3.3.2",
-    "react": "18.3.1",
+    "react": "19.0.0-rc-69d4b800-20241021",
     "react-native": "0.76.0",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-passkey": "3.0.0-beta2",

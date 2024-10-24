@@ -12,7 +12,7 @@ export type EnsureLoginResponse = {
 export const GET = async (req: NextRequest) => {
   const address = req.nextUrl.searchParams.get("address");
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   // if we are "disconnected" we are not logged in, clear the cookie and redirect to login
   // this is the "log out" case (for now)
   if (!address) {

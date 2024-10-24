@@ -1,18 +1,17 @@
 import type { Range } from "components/analytics/date-range-selector";
 import { InAppWalletAnalytics } from "components/embedded-wallets/Analytics";
 
-export default function Page({
-  params,
-  searchParams,
-}: {
-  params: { team_slug: string; project_slug: string };
-  searchParams: {
+export default async function Page(props: {
+  params: Promise<{ team_slug: string; project_slug: string }>;
+  searchParams: Promise<{
     from?: string;
     to?: string;
     type?: string;
     interval?: string;
-  };
+  }>;
 }) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const range =
     searchParams.from && searchParams.to
       ? {

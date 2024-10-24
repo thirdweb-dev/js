@@ -4,15 +4,13 @@ import { notFound } from "next/navigation";
 import { ConnectAnalyticsDashboard } from "./ConnectAnalyticsDashboard";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     team_slug: string;
     project_slug: string;
-  };
+  }>;
 }) {
-  const project = await getProject(
-    props.params.team_slug,
-    props.params.project_slug,
-  );
+  const params = await props.params;
+  const project = await getProject(params.team_slug, params.project_slug);
 
   if (!project) {
     notFound();
@@ -28,11 +26,10 @@ export default async function Page(props: {
           Visualize how your users are connecting to your app
         </p>
       </div>
-
       <div className="h-6 lg:h-8" />
       <ConnectAnalyticsDashboard
         clientId={project.publishableKey}
-        connectLayoutSlug={`/team/${props.params.team_slug}/${props.params.project_slug}/connect`}
+        connectLayoutSlug={`/team/${params.team_slug}/${params.project_slug}/connect`}
       />
       <div className="h-4 lg:h-8" />
       <ConnectSDKCard description="Add the Connect SDK to your app to get started collecting analytics." />

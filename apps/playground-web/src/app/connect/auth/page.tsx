@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import { BasicAuthPreview } from "@/components/auth/basic-auth";
 import { GatedContentPreview } from "@/components/auth/gated-content";
 import { CodeExample } from "@/components/code/code-example";

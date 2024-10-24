@@ -4,22 +4,20 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export default async function Layout(props: {
-  params: {
+  params: Promise<{
     team_slug: string;
     project_slug: string;
-  };
+  }>;
   children: React.ReactNode;
 }) {
-  const project = await getProject(
-    props.params.team_slug,
-    props.params.project_slug,
-  );
+  const params = await props.params;
+  const project = await getProject(params.team_slug, params.project_slug);
 
   if (!project) {
     notFound();
   }
 
-  const payLayoutPath = `/team/${props.params.team_slug}/${props.params.project_slug}/connect/pay`;
+  const payLayoutPath = `/team/${params.team_slug}/${params.project_slug}/connect/pay`;
 
   return (
     <div className="flex w-full flex-col gap-8">

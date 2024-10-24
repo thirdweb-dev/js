@@ -8,16 +8,16 @@ import { InAppWalletsAPIKeysMenu } from "../inAppWalletsAPIKeysMenu";
 import { Tabs } from "./_components/tabs";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     clientId: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     tab?: string;
-  };
+  }>;
   children: React.ReactNode;
 }) {
   const authToken = getAuthToken();
-  const { clientId } = props.params;
+  const { clientId } = await props.params;
 
   if (!authToken) {
     redirect(

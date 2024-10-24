@@ -5,7 +5,7 @@ import { PageHeader } from "./PageHeader";
 import { getInAppWalletSupportedAPIKeys } from "./getInAppWalletSupportedAPIKeys";
 
 export default async function Page() {
-  const authToken = getAuthToken();
+  const authToken = await getAuthToken();
 
   if (!authToken) {
     redirect(
