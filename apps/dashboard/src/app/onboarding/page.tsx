@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Checkbox } from "@chakra-ui/react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { RadioGroup } from "@radix-ui/react-radio-group";
@@ -481,8 +481,8 @@ export default function OnboardingPage({
                         event.preventDefault(); // Prevent default behavior
                         const newInterests = isChecked
                           ? checkedInterests.filter(
-                              (key) => key !== interest.key,
-                            )
+                            (key) => key !== interest.key,
+                          )
                           : [...checkedInterests, interest.key];
                         form.setValue("interests", newInterests);
                       }}

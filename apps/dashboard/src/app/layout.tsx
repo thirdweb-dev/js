@@ -71,7 +71,6 @@ export default function RootLayout({
           )}
         >
           <PostHogPageView />
-          <UnlimitedWalletsBanner />
           <AppRouterProviders>{children}</AppRouterProviders>
           <Toaster richColors />
           <DashboardRouterTopProgressBar />

@@ -6,12 +6,14 @@ import { AppFooter } from "@/components/blocks/app-footer";
 import type React from "react";
 import { TWAutoConnect } from "../components/autoconnect";
 import { AccountHeader } from "./components/AccountHeader";
+import { UnlimitedWalletsBanner } from "components/notices/AnnouncementBanner";
 
 export default async function AccountLayout(props: {
   children: React.ReactNode;
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <UnlimitedWalletsBanner />
       <div className="flex grow flex-col">
         <HeaderAndNav />
         <div className="border-border border-b py-10">

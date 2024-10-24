@@ -61,9 +61,14 @@ function CustomConnectEmmbed() {
 
       const email = profiles.find((profile) => profile.details.email)?.details
         .email;
-      router.replace(
-        `/onboarding?${email ? `email=${email}` : ""}${nextSearchParam && isValidRedirectPath(nextSearchParam) ? `${account.data.email ? "&" : ""}next=${nextSearchParam}` : ""}`,
-      );
+      const params = new URLSearchParams();
+      if (email) {
+        params.append("email", email);
+      }
+      if (nextSearchParam) {
+        params.append("next", nextSearchParam);
+      }
+      router.replace(`/onboarding?${params.toString()}`);
       return;
     }
 
