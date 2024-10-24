@@ -25,10 +25,20 @@ export type StaticPrepareTransactionOptions = {
   client: ThirdwebClient;
   // extras
   extraCallData?: Hex;
-  erc20Value?: {
-    amountWei: bigint;
-    tokenAddress: Address;
-  };
+  erc20Value?:
+    | {
+        amountWei: bigint;
+        tokenAddress: Address;
+      }
+    | Promise<
+        Readonly<
+          | {
+              amountWei: bigint;
+              tokenAddress: Address;
+            }
+          | undefined
+        >
+      >;
 };
 
 export type EIP712TransactionOptions = {

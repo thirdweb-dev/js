@@ -5,6 +5,7 @@ import type {
   WithOverrides,
 } from "../../../../transaction/types.js";
 import { getClaimParams } from "../../../../utils/extensions/drops/get-claim-params.js";
+import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
 import { encodeClaim } from "../../__generated__/IDrop/write/claim.js";
 
 /**
@@ -49,7 +50,10 @@ export function claimToBatch(
   return multicall({
     contract: options.contract,
     asyncParams: () => getClaimToBatchParams(options),
-    overrides: options.overrides,
+    overrides: {
+      erc20Value: getERC20Value(options),
+      ...options.overrides,
+    },
   });
 }
 
@@ -94,6 +98,53 @@ async function getClaimToBatchParams(
   );
 
   return { data };
+}
+
+/**
+ * @internal
+ */
+async function getERC20Value(
+  options: BaseTransactionOptions<ClaimToBatchParams>,
+): Promise<
+  | {
+      amountWei: bigint;
+      tokenAddress: string;
+    }
+  | undefined
+> {
+  const data = await Promise.all(
+    options.content.map(async (item) => {
+      const claimParams = await getClaimParams({
+        type: "erc721",
+        contract: options.contract,
+        to: item.to,
+        from: options.from,
+        quantity: item.quantity,
+      });
+      const erc20Value = await resolvePromisedValue(
+        claimParams.overrides.erc20Value,
+      );
+      return erc20Value;
+    }),
+  );
+
+  const filteredData = data.filter((item) => item !== undefined);
+
+  if (!filteredData.length || !filteredData[0]) {
+    return undefined;
+  }
+
+  const totalAmountWei = filteredData
+    .filter((item) => item !== undefined)
+    .reduce(
+      (accumulator, currentValue) => accumulator + currentValue.amountWei,
+      BigInt(0),
+    );
+
+  return {
+    amountWei: totalAmountWei,
+    tokenAddress: filteredData[0].tokenAddress,
+  };
 }
 
 /**
