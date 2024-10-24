@@ -33,17 +33,17 @@ import { isAddress } from "thirdweb/utils";
 import { Button, Heading, Text } from "tw-components";
 import { csvMimeTypes } from "utils/batch";
 
-export interface ERC20AirdropAddressInput {
+export interface AirdropAddressInput {
   address: string;
   quantity: string;
   isValid?: boolean;
 }
 interface AirdropUploadProps {
-  setAirdrop: (airdrop: ERC20AirdropAddressInput[]) => void;
+  setAirdrop: (airdrop: AirdropAddressInput[]) => void;
   onClose: () => void;
 }
 async function checkIsAddress(
-  item: ERC20AirdropAddressInput,
+  item: AirdropAddressInput,
   thirdwebClient: ThirdwebClient,
 ) {
   const { address, ...rest } = item;
@@ -75,10 +75,7 @@ async function checkIsAddress(
   };
 }
 function processAirdropData(
-  data: (
-    | (ERC20AirdropAddressInput & { resolvedAddress: string })
-    | undefined
-  )[],
+  data: ((AirdropAddressInput & { resolvedAddress: string }) | undefined)[],
 ) {
   const seen = new Set();
   const filteredData = data
@@ -95,14 +92,12 @@ function processAirdropData(
   return ordered;
 }
 
-export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
+export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   setAirdrop,
   onClose,
 }) => {
   const thirdwebClient = useThirdwebClient();
-  const [validAirdrop, setValidAirdrop] = useState<ERC20AirdropAddressInput[]>(
-    [],
-  );
+  const [validAirdrop, setValidAirdrop] = useState<AirdropAddressInput[]>([]);
   const [noCsv, setNoCsv] = useState(false);
   const reset = useCallback(() => {
     setValidAirdrop([]);
@@ -124,8 +119,8 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
       Papa.parse(csv, {
         header: true,
         complete: (results) => {
-          const data: ERC20AirdropAddressInput[] = (
-            results.data as ERC20AirdropAddressInput[]
+          const data: AirdropAddressInput[] = (
+            results.data as AirdropAddressInput[]
           )
             .map(({ address, quantity }) => ({
               address: (address || "").trim(),
@@ -278,7 +273,7 @@ export const AirdropUploadERC20: React.FC<AirdropUploadProps> = ({
 };
 
 interface AirdropTableProps {
-  data: ERC20AirdropAddressInput[];
+  data: AirdropAddressInput[];
   portalRef: React.RefObject<HTMLDivElement>;
 }
 const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
@@ -316,7 +311,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
           return quantity || "1";
         },
       },
-    ] as Column<ERC20AirdropAddressInput>[];
+    ] as Column<AirdropAddressInput>[];
   }, []);
   const {
     getTableProps,
