@@ -176,7 +176,11 @@ export default function OnboardingPage({
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log(data);
+    const account = await accountQuery.refetch();
+    if (!account.data?.id) {
+      throw new Error("No account found");
+    }
+
     const res = await fetch(
       `${THIRDWEB_ANALYTICS_API_HOST}/v1/preferences/account`,
       {
@@ -185,7 +189,7 @@ export default function OnboardingPage({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          accountId: accountQuery.data?.id,
+          accountId: account.data.id,
           userType: data.userType,
           role: data.role,
           industry: data.industry,
@@ -516,8 +520,8 @@ export default function OnboardingPage({
                         event.preventDefault(); // Prevent default behavior
                         const newInterests = isChecked
                           ? checkedInterests.filter(
-                              (key) => key !== interest.key,
-                            )
+                            (key) => key !== interest.key,
+                          )
                           : [...checkedInterests, interest.key];
                         form.setValue("interests", newInterests);
                       }}
