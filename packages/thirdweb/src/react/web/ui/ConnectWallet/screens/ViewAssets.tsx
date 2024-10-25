@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { type Theme, iconSize } from "../../../../core/design-system/index.js";
 import type {
@@ -26,10 +26,34 @@ export function ViewAssets(props: {
   setScreen: (screen: WalletDetailsModalScreen) => void;
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
+  swapAssetTabsPositions?: boolean;
 }) {
   const [activeTab, setActiveTab] = useState("Tokens");
   const { connectLocale } = props;
-
+  const options = useMemo(() => {
+    const tabs = [
+      {
+        label: (
+          <span className="flex gap-2">
+            <CoinsIcon size={iconSize.sm} /> Tokens
+          </span>
+        ),
+        value: "Tokens",
+      },
+      {
+        label: (
+          <span className="flex gap-2">
+            <ImageIcon size={iconSize.sm} /> NFTs
+          </span>
+        ),
+        value: "NFTs",
+      },
+    ];
+    if (props.swapAssetTabsPositions) {
+      tabs.reverse();
+    }
+    return tabs;
+  }, [props.swapAssetTabsPositions]);
   return (
     <Container
       animate="fadein"
@@ -52,28 +76,7 @@ export function ViewAssets(props: {
         }}
       >
         <Spacer y="md" />
-        <Tabs
-          options={[
-            {
-              label: (
-                <span className="flex gap-2">
-                  <CoinsIcon size={iconSize.sm} /> Tokens
-                </span>
-              ),
-              value: "Tokens",
-            },
-            {
-              label: (
-                <span className="flex gap-2">
-                  <ImageIcon size={iconSize.sm} /> NFTs
-                </span>
-              ),
-              value: "NFTs",
-            },
-          ]}
-          selected={activeTab}
-          onSelect={setActiveTab}
-        >
+        <Tabs options={options} selected={activeTab} onSelect={setActiveTab}>
           <Container
             scrollY
             style={{

@@ -311,6 +311,12 @@ export type ConnectButton_detailsModalOptions = {
    * All wallet IDs included in this array will be hidden from wallet selection when connected.
    */
   hiddenWallets?: WalletId[];
+
+  /**
+   * When you click on "View Assets", by default the "Tokens" tab is shown first.
+   * If you want to show the "NFTs" tab first, set this prop to `true`
+   */
+  swapAssetTabsPositions?: boolean;
 };
 
 /**

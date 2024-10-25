@@ -170,6 +170,7 @@ export const ConnectedWalletDetails: React.FC<{
         chains={props.chains}
         displayBalanceToken={props.detailsButton?.displayBalanceToken}
         connectOptions={props.connectOptions}
+        swapAssetTabsPositions={props.detailsModal?.swapAssetTabsPositions}
       />,
     );
   }
@@ -284,6 +285,7 @@ function DetailsModal(props: {
   chains: Chain[];
   displayBalanceToken?: Record<number, string>;
   connectOptions: DetailsModalConnectOptions | undefined;
+  swapAssetTabsPositions?: boolean;
 }) {
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
   const { disconnect } = useDisconnect();
@@ -799,6 +801,7 @@ function DetailsModal(props: {
           setScreen={setScreen}
           client={client}
           connectLocale={locale}
+          swapAssetTabsPositions={props.detailsModal?.swapAssetTabsPositions}
         />
       );
     } else {
@@ -1458,6 +1461,12 @@ export type UseWalletDetailsModalOptions = {
    * By default the "Buy Funds" button is shown.
    */
   hideBuyFunds?: boolean;
+
+  /**
+   * When you click on "View Assets", by default the "Tokens" tab is shown first.
+   * If you want to show the "NFTs" tab first, set this prop to `true`
+   */
+  swapAssetTabsPositions?: boolean;
 };
 
 /**
@@ -1515,6 +1524,7 @@ export function useWalletDetailsModal() {
               hideBuyFunds: props.hideBuyFunds,
               hideReceiveFunds: props.hideReceiveFunds,
               hideSendFunds: props.hideSendFunds,
+              swapAssetTabsPositions: props.swapAssetTabsPositions,
             }}
             displayBalanceToken={props.displayBalanceToken}
             theme={props.theme || "dark"}

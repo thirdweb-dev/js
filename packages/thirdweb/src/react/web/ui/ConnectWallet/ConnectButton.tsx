@@ -247,6 +247,19 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * />
  * ```
  *
+ * ### Customizing the orders of the tabs in the [View Funds] screen
+ * When you click on "View Assets", by default the "Tokens" tab is shown first.
+ * If you want to show the "NFTs" tab first, set this prop to `true`
+ *
+ * ```tsx
+ * <ConnectButton
+ *   client={client}
+ *   detailsModal={{
+ *     swapAssetTabsPositions: true,
+ *   }}
+ * />
+ * ```
+ *
  * @param props
  * Props for the `ConnectButton` component
  *
