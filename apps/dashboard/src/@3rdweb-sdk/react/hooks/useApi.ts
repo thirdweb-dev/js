@@ -259,17 +259,17 @@ export interface BillingCredit {
 
 interface UseAccountInput {
   refetchInterval?:
-  | number
-  | false
-  | ((
-    query: Query<
-      Account,
-      Error,
-      Account,
-      readonly ["account", string, "me"]
-    >,
-  ) => number | false | undefined)
-  | undefined;
+    | number
+    | false
+    | ((
+        query: Query<
+          Account,
+          Error,
+          Account,
+          readonly ["account", string, "me"]
+        >,
+      ) => number | false | undefined)
+    | undefined;
 }
 
 export function useAccount({ refetchInterval }: UseAccountInput = {}) {

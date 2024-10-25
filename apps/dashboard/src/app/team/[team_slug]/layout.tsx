@@ -1,7 +1,7 @@
 import { DashboardTypeCookieSetter } from "@/components/DashboardTypeCookieSetter";
 import { AppFooter } from "@/components/blocks/app-footer";
-import { TWAutoConnect } from "../../components/autoconnect";
 import { UnlimitedWalletsBanner } from "components/notices/AnnouncementBanner";
+import { TWAutoConnect } from "../../components/autoconnect";
 
 export default function RootTeamLayout(props: {
   children: React.ReactNode;
