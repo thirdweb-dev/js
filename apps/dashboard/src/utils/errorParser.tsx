@@ -1,15 +1,14 @@
 import Link from "next/link";
 import posthog from "posthog-js";
-import { Text } from "tw-components";
 
 const PLEASE_REACH_OUT_MESSAGE = (
-  <Text as="span" color="inherit">
+  <span>
     If you believe this is incorrect or the error persists, please visit our{" "}
-    <Link className="font-bold underline" target="_blank" href="/support">
+    <Link className="font-semibold underline" target="_blank" href="/support">
       support site
     </Link>
     .
-  </Text>
+  </span>
 );
 
 const UNKNOWN_ERROR_MESSAGE = "An unknown error occurred, please try again.";
@@ -19,12 +18,8 @@ export function parseErrorToMessage(error: unknown): string | JSX.Element {
 
   return (
     <div className="flex flex-col gap-4">
-      <Text as="span" color="inherit" noOfLines={3}>
-        {message}
-      </Text>
-      <Text fontStyle="italic" as="span" color="inherit">
-        {PLEASE_REACH_OUT_MESSAGE}
-      </Text>
+      <span className="line-clamp-3">{message}</span>
+      <span className="italic">{PLEASE_REACH_OUT_MESSAGE}</span>
     </div>
   );
 }
