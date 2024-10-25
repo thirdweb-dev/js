@@ -13,9 +13,10 @@ export function formatTokenBalance(
     displayValue: string;
   },
   showSymbol = true,
+  decimals = 5,
 ) {
   return (
-    formatNumber(Number(balanceData.displayValue), 5) +
+    formatNumber(Number(balanceData.displayValue), decimals) +
     (showSymbol ? ` ${balanceData.symbol}` : "")
   );
 }

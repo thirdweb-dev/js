@@ -13,7 +13,7 @@ export type TransactionCostAndData = {
 
 export type SelectedScreen =
   | {
-      id: "main" | "select-payment-method" | "buy-with-fiat" | "select-wallet";
+      id: "main" | "select-payment-method" | "buy-with-fiat";
     }
   | {
       id: "buy-with-crypto";

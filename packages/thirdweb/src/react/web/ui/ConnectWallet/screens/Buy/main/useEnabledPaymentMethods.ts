@@ -8,7 +8,6 @@ import type { SupportedChainAndTokens } from "../swap/useSwapSupportedChains.js"
 // change the current method if it should be disabled
 // return whether the payment selection should be shown or not ( if only one payment method is enabled, don't show the selection )
 export type PaymentMethods = {
-  showPaymentSelection: boolean;
   buyWithFiatEnabled: boolean;
   buyWithCryptoEnabled: boolean;
 };
@@ -59,11 +58,8 @@ export function useEnabledPaymentMethods(options: {
   const buyWithFiatEnabled = payOptions.buyWithFiat !== false && fiat;
   const buyWithCryptoEnabled = payOptions.buyWithCrypto !== false && swap;
 
-  const showPaymentSelection = buyWithFiatEnabled && buyWithCryptoEnabled;
-
   return {
     buyWithFiatEnabled,
     buyWithCryptoEnabled,
-    showPaymentSelection,
   };
 }
