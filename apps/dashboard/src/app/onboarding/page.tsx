@@ -10,7 +10,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  useFormField,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,13 +43,9 @@ import {
   Users2,
   Wallet,
 } from "lucide-react";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import { useState } from "react";
-import {
-  type SubmitHandler,
-  type UseFormRegister,
-  useForm,
-} from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import { getCookie } from "stores/SyncStoreToCookies";
 import { Blobbie } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
@@ -345,7 +340,7 @@ export default function OnboardingPage({
         form.register(field as keyof FormData);
       });
     }
-  }, [step]);
+  }, [step, form.trigger, form.register]);
 
   const Overlay = () => {
     return (
@@ -615,8 +610,8 @@ export default function OnboardingPage({
                                       event.preventDefault(); // Prevent default behavior
                                       const newInterests = isChecked
                                         ? checkedInterests.filter(
-                                          (key) => key !== interest.key,
-                                        )
+                                            (key) => key !== interest.key,
+                                          )
                                         : [...checkedInterests, interest.key];
                                       form.setValue("interests", newInterests);
                                     }}
