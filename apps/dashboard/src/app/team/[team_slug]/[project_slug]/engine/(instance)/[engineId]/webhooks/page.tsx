@@ -1,8 +1,8 @@
 "use client";
 
 import { WithEngineInstance } from "components/engine/EnginePageLayout";
-import { EngineWebhooks } from "components/engine/configuration/engine-webhooks";
 import type { EngineInstancePageProps } from "../types";
+import { EngineWebhooks } from "./components/engine-webhooks";
 
 export default function Page(props: EngineInstancePageProps) {
   const { params } = props;

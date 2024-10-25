@@ -1,5 +1,5 @@
+import { EngineExplorer } from "app/team/[team_slug]/[project_slug]/engine/(instance)/[engineId]/explorer/components/engine-explorer";
 import { createEnginePage } from "components/engine/EnginePage";
-import { EngineExplorer } from "components/engine/explorer/engine-explorer";
 
 export default createEnginePage(({ instance }) => (
   <EngineExplorer instanceUrl={instance.url} />

@@ -9,9 +9,9 @@ import {
 import { Flex } from "@chakra-ui/react";
 import { ChartAreaIcon, InfoIcon } from "lucide-react";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
-import { ErrorRate } from "./components/ErrorRate";
-import { Healthcheck } from "./components/Healthcheck";
-import { StatusCodes } from "./components/StatusCodes";
+import { ErrorRate } from "./ErrorRate";
+import { Healthcheck } from "./Healthcheck";
+import { StatusCodes } from "./StatusCodes";
 
 interface EngineStatusProps {
   instance: EngineInstance;

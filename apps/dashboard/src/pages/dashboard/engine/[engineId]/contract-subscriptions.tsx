@@ -1,5 +1,5 @@
+import { EngineContractSubscriptions } from "app/team/[team_slug]/[project_slug]/engine/(instance)/[engineId]/contract-subscriptions/components/engine-contract-subscription";
 import { createEnginePage } from "components/engine/EnginePage";
-import { EngineContractSubscriptions } from "components/engine/contract-subscription/engine-contract-subscription";
 
 export default createEnginePage(({ instance }) => (
   <EngineContractSubscriptions instanceUrl={instance.url} />

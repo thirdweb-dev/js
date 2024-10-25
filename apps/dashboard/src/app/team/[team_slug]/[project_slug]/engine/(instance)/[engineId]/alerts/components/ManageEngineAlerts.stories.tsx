@@ -8,8 +8,8 @@ import { Toaster } from "sonner";
 import {
   createEngineAlertRuleStub,
   createEngineNotificationChannelStub,
-} from "../../../stories/stubs";
-import { BadgeContainer, mobileViewport } from "../../../stories/utils";
+} from "stories/stubs";
+import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ManageEngineAlertsSectionUI } from "./ManageEngineAlerts";
 
 const meta = {
