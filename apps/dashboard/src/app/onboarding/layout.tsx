@@ -1,14 +1,11 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { AutoConnect } from "thirdweb/react";
+import { TWAutoConnect } from "app/components/autoconnect";
 
 export default function OnboardingLayout({
   children,
 }: { children: React.ReactNode }) {
-  const thirdwebClient = getThirdwebClient();
-
   return (
     <>
-      <AutoConnect client={thirdwebClient} />
+      <TWAutoConnect />
       {children}
     </>
   );

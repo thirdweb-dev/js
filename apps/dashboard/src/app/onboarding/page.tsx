@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,7 +30,6 @@ import { THIRDWEB_ANALYTICS_API_HOST } from "constants/urls";
 import { motion } from "framer-motion";
 import { Users2 } from "lucide-react";
 import { Building } from "lucide-react";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
 import {
@@ -165,7 +165,7 @@ export default function OnboardingPage({
   const accountQuery = useAccount();
   const [step, setStep] = useState(searchParams.email ? 2 : 1);
   const [direction, setDirection] = useState(1);
-  const router = useRouter();
+  const router = useDashboardRouter();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -520,8 +520,8 @@ export default function OnboardingPage({
                         event.preventDefault(); // Prevent default behavior
                         const newInterests = isChecked
                           ? checkedInterests.filter(
-                            (key) => key !== interest.key,
-                          )
+                              (key) => key !== interest.key,
+                            )
                           : [...checkedInterests, interest.key];
                         form.setValue("interests", newInterests);
                       }}
