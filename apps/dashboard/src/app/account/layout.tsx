@@ -3,10 +3,10 @@ import { getTeams } from "@/api/team";
 import { DashboardTypeCookieSetter } from "@/components/DashboardTypeCookieSetter";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import { AppFooter } from "@/components/blocks/app-footer";
+import { UnlimitedWalletsBanner } from "components/notices/AnnouncementBanner";
 import type React from "react";
 import { TWAutoConnect } from "../components/autoconnect";
 import { AccountHeader } from "./components/AccountHeader";
-import { UnlimitedWalletsBanner } from "components/notices/AnnouncementBanner";
 
 export default async function AccountLayout(props: {
   children: React.ReactNode;
