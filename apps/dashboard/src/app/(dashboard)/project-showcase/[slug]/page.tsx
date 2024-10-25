@@ -1,4 +1,5 @@
 import { ExternalLink, FileText } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "../../../../@/components/ui/badge";
 import { Button } from "../../../../@/components/ui/button";
@@ -9,6 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../../@/components/ui/card";
+import { getThirdwebClient } from "../../../../@/constants/thirdweb.server";
+import { resolveSchemeWithErrorHandler } from "../../../../@/lib/resolveSchemeWithErrorHandler";
 import { PROJECT_SHOWCASE_DATA } from "../../../../lib/project-showcase-constants";
 
 export default async function DetailPage({
@@ -69,20 +72,20 @@ export default async function DetailPage({
           </div>
           <div className="md:w-1/2">
             <div className="relative aspect-video h-full w-full md:aspect-square">
-              {/* <Image
+              <Image
                 src={
                   project.image?.startsWith("ipfs://")
-                    ? ((await resolveSchemeWithErrorHandler({
-                        client: thirdwebClient,
+                    ? (resolveSchemeWithErrorHandler({
+                        client: getThirdwebClient(),
                         uri: project.image,
-                      })) ?? "")
+                      }) ?? "")
                     : (project.image ?? "/assets/showcase/default_image.png")
                 }
                 alt={`${project.title} Thumbnail`}
                 width={500}
                 height={500}
-                className="rounded-b-lg md:rounded-r-lg md:rounded-bl-none object-cover"
-              /> */}
+                className="rounded-b-lg object-cover md:rounded-r-lg md:rounded-bl-none"
+              />
             </div>
           </div>
         </div>

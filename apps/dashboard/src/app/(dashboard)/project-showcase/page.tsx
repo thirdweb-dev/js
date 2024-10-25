@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "../../../@/components/ui/badge";
 import {
@@ -16,6 +17,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "../../../@/components/ui/pagination";
+import { getThirdwebClient } from "../../../@/constants/thirdweb.server";
+import { resolveSchemeWithErrorHandler } from "../../../@/lib/resolveSchemeWithErrorHandler";
 import {
   PROJECT_SHOWCASE_DATA,
   PROJECT_SHOWCASE_INDUSTRIES,
@@ -94,13 +97,21 @@ export default function ProjectShowcasePage({
                 className="block"
               >
                 <Card className="flex h-full cursor-pointer flex-col overflow-hidden transition-shadow hover:shadow-lg">
-                  {/* <Image
-                    src={project.image ?? "/assets/showcase/default_image.png"}
+                  <Image
+                    src={
+                      project.image?.startsWith("ipfs://")
+                        ? (resolveSchemeWithErrorHandler({
+                            client: getThirdwebClient(),
+                            uri: project.image,
+                          }) ?? "")
+                        : (project.image ??
+                          "/assets/showcase/default_image.png")
+                    }
                     alt={project.title}
                     width={300}
                     height={200}
                     className="h-48 w-full object-cover"
-                  /> */}
+                  />
                   <CardHeader>
                     <CardTitle className="mb-3">{project.title}</CardTitle>
                     <CardDescription>{project.description}</CardDescription>
