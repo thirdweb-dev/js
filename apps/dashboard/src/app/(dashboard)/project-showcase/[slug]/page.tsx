@@ -1,25 +1,20 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { ExternalLink, FileText } from "lucide-react";
+import Link from "next/link";
+import { Badge } from "../../../../@/components/ui/badge";
+import { Button } from "../../../../@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { ExternalLink, FileText } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { ThirdwebProvider } from "thirdweb/react";
-import { PROJECT_SHOWCASE_DATA } from "../../lib/project-showcase-constants";
+} from "../../../../@/components/ui/card";
+import { PROJECT_SHOWCASE_DATA } from "../../../../lib/project-showcase-constants";
 
-export function DetailPageUI() {
-  const thirdwebClient = useThirdwebClient();
-  const router = useRouter();
-  const { slug } = router.query;
+export default async function DetailPage({
+  params,
+}: { params: { slug: string } }) {
+  const { slug } = params;
 
   const project = PROJECT_SHOWCASE_DATA.find((p) => p.slug === slug);
 
@@ -74,32 +69,24 @@ export function DetailPageUI() {
           </div>
           <div className="md:w-1/2">
             <div className="relative aspect-video h-full w-full md:aspect-square">
-              <Image
+              {/* <Image
                 src={
                   project.image?.startsWith("ipfs://")
-                    ? (resolveSchemeWithErrorHandler({
+                    ? ((await resolveSchemeWithErrorHandler({
                         client: thirdwebClient,
                         uri: project.image,
-                      }) ?? "")
+                      })) ?? "")
                     : (project.image ?? "/assets/showcase/default_image.png")
                 }
                 alt={`${project.title} Thumbnail`}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-b-lg md:rounded-r-lg md:rounded-bl-none"
-              />
+                width={500}
+                height={500}
+                className="rounded-b-lg md:rounded-r-lg md:rounded-bl-none object-cover"
+              /> */}
             </div>
           </div>
         </div>
       </Card>
     </div>
-  );
-}
-
-export default function DetailPage() {
-  return (
-    <ThirdwebProvider>
-      <DetailPageUI />
-    </ThirdwebProvider>
   );
 }

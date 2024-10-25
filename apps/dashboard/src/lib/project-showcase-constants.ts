@@ -16,7 +16,8 @@ export const PROJECT_SHOWCASE_DATA = [
     title: "Bankless Academy",
     slug: "bankless-academy",
     description: "No description available",
-    image: "ipfs://QmVpJ7MkwhieELNiQ4iC9A5Nm2mbf2XVBfSJEnpQAsx3Zk/bankless_academy.png",
+    image:
+      "ipfs://QmVpJ7MkwhieELNiQ4iC9A5Nm2mbf2XVBfSJEnpQAsx3Zk/bankless_academy.png",
     industries: ["Education"],
     link: "https://app.banklessacademy.com/",
   },
@@ -26,7 +27,8 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "blue-social",
     description:
       "Social app that connects users through nearby Bluetooth technology.",
-    image: "ipfs://QmTg3LzqpPgVmwjEqchSusUsbQTSzPDfGjbxyDYtXeoyVp/blue_social.png",
+    image:
+      "ipfs://QmTg3LzqpPgVmwjEqchSusUsbQTSzPDfGjbxyDYtXeoyVp/blue_social.png",
     industries: ["Social"],
     link: "https://blue.social/",
     case_study: "https://blog.thirdweb.com/case-studies/blue-social-base/",
@@ -59,7 +61,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "coinbase",
     description:
       "Leading cryptocurrency exchange platform for buying, selling, and managing digital currencies.",
-      image: "ipfs://Qmc4kY7YGccmo7iMcsJrDNPLz8PdzUEGrE2ExLDH6GWH2f",
+    image: "ipfs://Qmc4kY7YGccmo7iMcsJrDNPLz8PdzUEGrE2ExLDH6GWH2f",
     industries: ["Tools"],
     link: "https://coinbase.com",
     case_study:
@@ -115,7 +117,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "dtravel",
     description:
       "A decentralized travel booking platform allowing users to book vacation rentals using cryptocurrencies, powered by blockchain technology.",
-      image: "ipfs://Qmdobva5hHNJaeJA2FrGW9An52VrxvWcGqUKPxqE853Ah2",
+    image: "ipfs://Qmdobva5hHNJaeJA2FrGW9An52VrxvWcGqUKPxqE853Ah2",
     industries: ["Real World Assets"],
     link: "https://www.dtravel.com/",
   },
@@ -125,7 +127,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "even",
     description:
       "Music distribution platform that allows artists to sell music directly to fans via blockchain.",
-      image: "ipfs://QmaTL2A3f2pE23cNiteecpakUviZu8nAcpWe8CD5bDwMXq",
+    image: "ipfs://QmaTL2A3f2pE23cNiteecpakUviZu8nAcpWe8CD5bDwMXq",
     industries: ["Art"],
     link: "even.biz",
     case_study:
@@ -137,7 +139,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "forest-knight",
     description:
       "Tactical, turn-based blockchain game set in a fantasy universe.",
-      image: "ipfs://QmcNZJ7Noq6nmjmBvEkTB5Xfs61gXVx9GgrbkQjvZAaZQS",
+    image: "ipfs://QmcNZJ7Noq6nmjmBvEkTB5Xfs61gXVx9GgrbkQjvZAaZQS",
     industries: ["Games"],
     link: "forestknight.io",
     case_study:
@@ -149,7 +151,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "fr3n",
     description:
       "A Web3 platform that helps developers and creators build decentralized apps (dApps) and Web3 projects with integrated community features.",
-      image: "ipfs://QmQPWZTt3ckHws6rbLWSzJA92CcWSFXASfKit84GiEMfAf",
+    image: "ipfs://QmQPWZTt3ckHws6rbLWSzJA92CcWSFXASfKit84GiEMfAf",
     industries: ["Social"],
     link: "https://fr3n.tech/",
   },
@@ -191,7 +193,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "genesis-blockchain",
     description:
       "A blockchain infrastructure provider offering scalable, secure solutions for building decentralized applications on the Genesis Blockchain network.",
-      image: "ipfs://QmW3PubszmG7YQWQDHNwui413cH5hioCiZz5PrFsUEJb6h",
+    image: "ipfs://QmW3PubszmG7YQWQDHNwui413cH5hioCiZz5PrFsUEJb6h",
     industries: ["Decentralized Finance"],
     link: "https://www.genesisblockchain.io/",
   },
@@ -234,7 +236,7 @@ export const PROJECT_SHOWCASE_DATA = [
     description:
       "A decentralized social networking platform that connects people by facilitating meaningful interactions through Web3 features.",
     image: "ipfs://QmWrak5tKJ6Eanb1GcDxevNeDkBUzMRdZMzVodfoLDrwvM",
-      industries: ["Social", "Tools"],
+    industries: ["Social", "Tools"],
     link: "https://www.icebreaker.xyz/",
   },
   {
@@ -244,7 +246,7 @@ export const PROJECT_SHOWCASE_DATA = [
     description:
       "Blockchain-based game inspired by ancient mythology, focused on strategy and role-playing elements.",
     image: "ipfs://QmVNfmuGi6fM4zodybo5KVAxqq7XcALr9wMzX7ZYwt3znV",
-      industries: ["Games"],
+    industries: ["Games"],
     link: "https://infinigods.com",
     case_study:
       "https://blog.thirdweb.com/case-studies/king-of-destiny-launches-avatar-nfts-thirdweb-engine/",
@@ -323,7 +325,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "meka-legends",
     description:
       "Mech-themed blockchain-based game where players collect and battle with customizable robots.",
-      image: "ipfs://QmagV85D2b5KNxVP9x2XGvi7Skb5ciCBkb2WCo8cv661td",
+    image: "ipfs://QmagV85D2b5KNxVP9x2XGvi7Skb5ciCBkb2WCo8cv661td",
 
     industries: ["Games"],
     link: "https://mekalegends.com",
@@ -337,7 +339,7 @@ export const PROJECT_SHOWCASE_DATA = [
     description:
       "Decentralized publishing platform that allows creators to write, fund, and share content via blockchain.",
     image: "ipfs://QmYXGnKbzagqQ7DoYUrU7k9iaUi7fNQEwZP4TMcn5PTPZu",
-      industries: ["Social", "Tools"],
+    industries: ["Social", "Tools"],
     link: "https://mirror.xyz",
     case_study:
       "https://blog.thirdweb.com/case-studies/mirror-creators-build-loyal-audiences-with-subscriber-nfts/",
@@ -358,8 +360,8 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "pixels",
     description:
       "Pixelated blockchain-based farming game with metaverse elements and play-to-earn mechanics.",
-      image: "ipfs://QmcrZniY3DPK6sGCPuGyXbWTrkSU23r2hHXrZA82rcLqsn",
-      industries: ["Games"],
+    image: "ipfs://QmcrZniY3DPK6sGCPuGyXbWTrkSU23r2hHXrZA82rcLqsn",
+    industries: ["Games"],
     link: "https://pixels.xyz",
     case_study:
       "https://blog.thirdweb.com/case-studies/pixels-builds-an-onchain-ecosystem-for-its-web3-game/",
@@ -370,9 +372,9 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "stand-with-crypto",
     description:
       "Movement advocating for the widespread adoption and defense of blockchain technology.",
-      industries: ["Education", "Social"],
+    industries: ["Education", "Social"],
     image: "ipfs://QmNh26mNw7cU1VuWqcZZedRhAPbcTqXeMH2Ei1kLbcgCB4",
-      link: "https://standwithcrypto.org",
+    link: "https://standwithcrypto.org",
     case_study: "https://blog.thirdweb.com/case-studies/untitled-2/",
   },
   {
@@ -392,7 +394,7 @@ export const PROJECT_SHOWCASE_DATA = [
     description:
       "Collaborative storytelling platform that uses blockchain to create, share, and own narrative content.",
     image: "ipfs://Qmau1mgrzahdfEtJFU9i2pSKMM7AwHav6tQCVEdJARUFpb",
-      industries: ["Social"],
+    industries: ["Social"],
     link: "https://storychain.io",
     case_study:
       "https://blog.thirdweb.com/case-studies/storychain-bridging-web2-and-web3-through-ai-powered-storytelling/",
@@ -416,7 +418,7 @@ export const PROJECT_SHOWCASE_DATA = [
     description:
       "Decentralized governance tool for DAOs, helping users vote and manage blockchain organizations.",
     image: "ipfs://Qmb8X3ceRvKMpuvAnrfQxFHsD2oBsXGypJ3pYp3ZC7Koq7",
-      industries: ["Tools"],
+    industries: ["Tools"],
     link: "https://tally.xyz",
     case_study:
       "https://blog.thirdweb.com/case-studies/tally-expands-the-decentralized-web-with-dao-tools/",
@@ -439,7 +441,7 @@ export const PROJECT_SHOWCASE_DATA = [
     description:
       "Community-driven NFT platform that offers exclusive digital content and benefits to NFT holders",
     image: "ipfs://QmYwk9BosE3vMrJnhQj62phwPW71qFWwcTuXYoYQPVwChU",
-      industries: ["Art"],
+    industries: ["Art"],
     link: "https://whal3s.xyz",
     case_study:
       "https://blog.thirdweb.com/case-studies/whal3s-shapes-events-and-experiences-with-nfts/",
