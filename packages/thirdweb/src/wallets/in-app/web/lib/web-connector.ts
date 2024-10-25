@@ -318,6 +318,7 @@ export class InAppWebConnector implements InAppConnector {
       case "facebook":
       case "google":
       case "telegram":
+      case "github":
       case "twitch":
       case "farcaster":
       case "line":
@@ -390,6 +391,7 @@ export class InAppWebConnector implements InAppConnector {
       case "google":
       case "farcaster":
       case "telegram":
+      case "github":
       case "line":
       case "x":
       case "guest":

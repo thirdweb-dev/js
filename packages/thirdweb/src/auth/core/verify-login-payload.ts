@@ -1,3 +1,4 @@
+import { trackLogin } from "../../analytics/track/siwe.js";
 import { getCachedChain } from "../../chains/utils.js";
 import { verifySignature } from "../verify-signature.js";
 import { DEFAULT_LOGIN_STATEMENT, DEFAULT_LOGIN_VERSION } from "./constants.js";
@@ -42,7 +43,7 @@ export type VerifyLoginPayloadResult =
  * @internal
  */
 export function verifyLoginPayload(options: AuthOptions) {
-  return async ({
+  const verifyLoginPayloadFn = async ({
     payload,
     signature,
   }: VerifyLoginPayloadParams): Promise<VerifyLoginPayloadResult> => {
@@ -151,5 +152,28 @@ export function verifyLoginPayload(options: AuthOptions) {
       valid: true,
       payload: { ...payload, [VERIFIED_SYMBOL]: true },
     };
+  };
+
+  return async ({
+    payload,
+    signature,
+  }: VerifyLoginPayloadParams): Promise<VerifyLoginPayloadResult> => {
+    const result = await verifyLoginPayloadFn({ payload, signature });
+
+    // We can only track logins if the client is provided
+    if (options.client) {
+      trackLogin({
+        client: options.client,
+        walletAddress: payload.address,
+        chainId: payload.chain_id
+          ? Number.parseInt(payload.chain_id)
+          : undefined,
+        error: !result.valid
+          ? { message: result.error, code: "401" }
+          : undefined,
+      });
+    }
+
+    return result;
   };
 }

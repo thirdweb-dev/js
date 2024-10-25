@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { createUserOpStatsStub } from "components/smart-wallets/AccountAbstractionAnalytics/storyUtils";
 import { mobileViewport } from "../../../../../../../stories/utils";
 import { ConnectAnalyticsDashboardUI } from "../ConnectAnalyticsDashboardUI";
-import { createUserOpStatsStub, createWalletStatsStub } from "./storyUtils";
+import { createWalletStatsStub } from "./storyUtils";
 
 const meta = {
   title: "Charts/Connect/Analytics Dashboard",
@@ -31,8 +32,8 @@ function Component() {
       <ConnectAnalyticsDashboardUI
         walletUsage={createWalletStatsStub(30)}
         aggregateWalletUsage={createWalletStatsStub(30)}
-        userOpUsage={createUserOpStatsStub(30)}
-        aggregateUserOpUsage={createUserOpStatsStub(1)}
+        aggregateUserOpUsageQuery={createUserOpStatsStub(1)?.[0]}
+        connectLayoutSlug="connectLayoutSlug"
         isPending={false}
       />
     </div>

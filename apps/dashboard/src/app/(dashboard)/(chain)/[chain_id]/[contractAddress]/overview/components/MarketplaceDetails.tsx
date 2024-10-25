@@ -1,3 +1,5 @@
+"use client";
+
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { SkeletonContainer } from "@/components/ui/skeleton";

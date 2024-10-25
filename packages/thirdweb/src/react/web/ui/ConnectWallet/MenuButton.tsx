@@ -34,9 +34,6 @@ export const MenuButton = /* @__PURE__ */ StyledButton((_) => {
     },
     "&[disabled]": {
       cursor: "not-allowed",
-      svg: {
-        display: "none",
-      },
     },
     svg: {
       color: theme.colors.secondaryText,

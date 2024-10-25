@@ -3,7 +3,7 @@ import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
-import Link from "next/link";
+import { DocLink } from "./DocLink";
 
 export function ConnectSDKCard({
   title,
@@ -67,22 +67,5 @@ function BackgroundPattern() {
         maskImage: "linear-gradient(to left, black, transparent)",
       }}
     />
-  );
-}
-
-function DocLink(props: {
-  link: string;
-  label: string;
-  icon: React.FC<{ className?: string }>;
-}) {
-  return (
-    <Link
-      href={props.link}
-      target="_blank"
-      className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
-    >
-      <props.icon className="size-4" />
-      {props.label}
-    </Link>
   );
 }

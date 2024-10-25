@@ -1,14 +1,17 @@
 export const authOptions = [
+  "email",
+  "phone",
+  "passkey",
+  "siwe",
+  "guest",
   "google",
   "facebook",
   "x",
   "discord",
   "farcaster",
   "telegram",
+  "github",
   "twitch",
-  "phone",
-  "email",
-  "guest",
   "apple",
   "coinbase",
   "line",
@@ -30,12 +33,12 @@ export type Ecosystem = {
       jwksUri: string;
       aud: string;
     };
-  };
+  } | null;
   smartAccountOptions?: {
     chainIds: number[];
     sponsorGas: boolean;
     accountFactoryAddress: string;
-  };
+  } | null;
   url: string;
   status: "active" | "requested" | "paymentFailed";
   createdAt: string;

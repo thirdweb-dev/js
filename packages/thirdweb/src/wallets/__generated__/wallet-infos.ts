@@ -435,11 +435,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     hasMobileSupport: true,
   },
   {
-    id: "org.nitrogen",
-    name: "Nitrogen Wallet",
-    hasMobileSupport: true,
-  },
-  {
     id: "io.loopring.wallet",
     name: "Loopring",
     hasMobileSupport: true,
@@ -635,11 +630,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     hasMobileSupport: true,
   },
   {
-    id: "io.tradestrike",
-    name: "StrikeX Wallet",
-    hasMobileSupport: true,
-  },
-  {
     id: "cc.avacus",
     name: "Avacus",
     hasMobileSupport: true,
@@ -790,11 +780,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     hasMobileSupport: true,
   },
   {
-    id: "com.brave.wallet",
-    name: "Bitski",
-    hasMobileSupport: true,
-  },
-  {
     id: "io.streakk",
     name: "Streakk Wallet",
     hasMobileSupport: true,
@@ -922,6 +907,11 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "com.tomi",
     name: "tomiPAY",
+    hasMobileSupport: true,
+  },
+  {
+    id: "io.tradestrike",
+    name: "StrikeX Wallet",
     hasMobileSupport: true,
   },
   {
@@ -1795,6 +1785,36 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     hasMobileSupport: true,
   },
   {
+    id: "com.ipmb",
+    name: "IPMB Wallet",
+    hasMobileSupport: true,
+  },
+  {
+    id: "com.daffione",
+    name: "DaffiOne",
+    hasMobileSupport: true,
+  },
+  {
+    id: "io.owallet",
+    name: "OWallet",
+    hasMobileSupport: true,
+  },
+  {
+    id: "com.beexo",
+    name: "Beexo",
+    hasMobileSupport: true,
+  },
+  {
+    id: "com.webauth",
+    name: "WebAuth",
+    hasMobileSupport: true,
+  },
+  {
+    id: "id.plumaa",
+    name: "Plumaa ID",
+    hasMobileSupport: true,
+  },
+  {
     id: "com.coinbase.wallet",
     name: "Coinbase Wallet",
     hasMobileSupport: false,
@@ -1807,6 +1827,11 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "io.rabby",
     name: "Rabby",
+    hasMobileSupport: false,
+  },
+  {
+    id: "com.brave.wallet",
+    name: "Brave Wallet",
     hasMobileSupport: false,
   },
   {
@@ -1857,6 +1882,11 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "io.leapwallet.CompassWallet",
     name: "Compass Wallet",
+    hasMobileSupport: false,
+  },
+  {
+    id: "app.nightly",
+    name: "Nightly",
     hasMobileSupport: false,
   },
   {

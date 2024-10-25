@@ -6,7 +6,7 @@ export type {
 
 export { ConnectButton } from "../react/web/ui/ConnectWallet/ConnectButton.js";
 export { ConnectEmbed } from "../react/web/ui/ConnectWallet/Modal/ConnectEmbed.js";
-export { type ConnectEmbedProps } from "../react/core/hooks/connection/ConnectEmbedProps.js";
+export type { ConnectEmbedProps } from "../react/core/hooks/connection/ConnectEmbedProps.js";
 
 export type {
   ConnectButtonProps,
@@ -70,9 +70,9 @@ export { useWaitForReceipt } from "../react/core/hooks/contract/useWaitForReceip
 export { useContractEvents } from "../react/core/hooks/contract/useContractEvents.js";
 
 // transaction
-export {
-  type SendTransactionConfig,
-  type SendTransactionPayModalConfig,
+export type {
+  SendTransactionConfig,
+  SendTransactionPayModalConfig,
 } from "../react/core/hooks/transaction/useSendTransaction.js";
 export { useSimulateTransaction } from "../react/core/hooks/transaction/useSimulateTransaction.js";
 export { useSendTransaction } from "../react/web/hooks/transaction/useSendTransaction.js";
@@ -123,7 +123,7 @@ export { AutoConnect } from "../react/web/ui/AutoConnect/AutoConnect.js";
 export type { AutoConnectProps } from "../react/core/hooks/connection/types.js";
 
 // auth
-export { type SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
+export type { SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
 
 export {
   PayEmbed,

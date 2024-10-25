@@ -119,13 +119,7 @@ export function AppFooter(props: AppFooterProps) {
           >
             Terms of Service
           </Link>
-          <Link
-            className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
-            href="https://thirdweb.com/gas"
-            target="_blank"
-          >
-            Gas Estimator
-          </Link>
+
           <Link
             className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
             href="https://thirdweb.com/chainlist"

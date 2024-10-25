@@ -83,33 +83,24 @@ export function mintToBatch(
   return multicall({
     contract: options.contract,
     asyncParams: async () => {
-      const uris = await Promise.all(
-        options.nfts.map((item) => {
-          if (typeof item.metadata === "string") {
-            return item.metadata;
-          }
-          return upload({
-            client: options.contract.client,
-            files: [item.metadata],
+      const data = await Promise.all(
+        options.nfts.map(async (nft) => {
+          const uri =
+            typeof nft.metadata === "string"
+              ? nft.metadata
+              : await upload({
+                  client: options.contract.client,
+                  files: [nft.metadata],
+                });
+          return encodeMintTo({
+            to: options.to,
+            // maxUint256 is used to indicate that this is a NEW token!
+            tokenId: maxUint256,
+            uri,
+            amount: nft.supply,
           });
         }),
       );
-
-      const data = uris.map((uri, index) => {
-        const item = options.nfts[index];
-        if (!item) {
-          // Should not happen
-          throw new Error("Index mismatch");
-        }
-        return encodeMintTo({
-          to: options.to,
-          // maxUint256 is used to indicate that this is a NEW token!
-          tokenId: maxUint256,
-          uri,
-          amount: item.supply,
-        });
-      });
-
       return { data };
     },
     overrides: options.overrides,

@@ -19,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   type useAllContractList,
   useRemoveContractMutation,
@@ -38,7 +37,6 @@ import {
   useTable,
 } from "react-table";
 import { useAllChainsData } from "../../../hooks/chains/allChains";
-import { useChainSlug } from "../../../hooks/chains/chainSlug";
 import { AsyncContractNameCell, AsyncContractTypeCell } from "./cells";
 import { ShowMoreButton } from "./show-more-button";
 
@@ -174,7 +172,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
         accessor: (row) => row.address,
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => {
-          return <AsyncContractNameCell cell={cell.row.original} />;
+          return <AsyncContractNameCell cell={cell.row.original} linkOverlay />;
         },
       },
       {
@@ -231,6 +229,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
               copyIconPosition="left"
               address={cell.row.original.address}
               variant="ghost"
+              className="relative z-10"
             />
           );
         },
@@ -245,6 +244,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
                 <Button
                   size="icon"
                   variant="ghost"
+                  className="relative z-10"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <EllipsisVerticalIcon className="size-4" />
@@ -367,8 +367,6 @@ const ContractTable: React.FC<ContractTableProps> = ({
 };
 
 const ContractTableRow = memo(({ row }: { row: Row<BasicContract> }) => {
-  const chainSlug = useChainSlug(row.original.chainId);
-  const router = useDashboardRouter();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { key, ...rowProps } = row.getRowProps();
 
@@ -376,11 +374,7 @@ const ContractTableRow = memo(({ row }: { row: Row<BasicContract> }) => {
     <TableRow
       {...rowProps}
       role="group"
-      className="cursor-pointer hover:bg-muted/50"
-      // TODO - replace this with before:absolute thing
-      onClick={() => {
-        router.push(`/${chainSlug}/${row.original.address}`);
-      }}
+      className="relative cursor-pointer hover:bg-muted/50"
     >
       {row.cells.map((cell, cellIndex) => {
         return (

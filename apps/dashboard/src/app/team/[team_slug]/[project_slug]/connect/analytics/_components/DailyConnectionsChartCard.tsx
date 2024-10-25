@@ -15,10 +15,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { WalletStats } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  EmptyChartState,
+  LoadingChartState,
+} from "components/analytics/empty-chart-state";
+import { DotNetIcon } from "components/icons/brand-icons/DotNetIcon";
+import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
+import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
+import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
+import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
+import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
-import { EmptyChartState, LoadingChartState } from "./EmptyChartState";
 
 type ChartToShow = "uniqueWallets" | "totalWallets";
 
@@ -129,7 +138,45 @@ export function DailyConnectionsChartCard(props: {
         {props.isPending ? (
           <LoadingChartState />
         ) : barChartData.length === 0 ? (
-          <EmptyChartState />
+          <EmptyChartState>
+            <div className="flex flex-col items-center justify-center">
+              <span className="mb-6 text-lg">
+                Send your first connect event
+              </span>
+              <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
+                <DocLink
+                  link="https://portal.thirdweb.com/typescript/v5/getting-started"
+                  label="TypeScript"
+                  icon={TypeScriptIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/react/v5"
+                  label="React"
+                  icon={ReactIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/react-native/v5"
+                  label="React Native"
+                  icon={ReactIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/dotnet/getting-started"
+                  label="Unity"
+                  icon={UnityIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/unreal-engine/getting-started"
+                  label="Unreal Engine"
+                  icon={UnrealIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/dotnet/getting-started"
+                  label=".NET"
+                  icon={DotNetIcon}
+                />
+              </div>
+            </div>
+          </EmptyChartState>
         ) : (
           <BarChart
             accessibilityLayer

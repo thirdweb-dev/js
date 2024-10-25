@@ -19,12 +19,7 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   return (
     <div className="flex w-full flex-col gap-8">
       <Flex p={0} position="relative">
-        <Flex
-          pt={{ base: isColumn ? 0 : 6, md: 6 }}
-          direction="column"
-          gap={8}
-          w="full"
-        >
+        <Flex direction="column" gap={6} w="full">
           {/* Info */}
           <section>
             <h2 className="mb-1 font-semibold text-xl tracking-tight">

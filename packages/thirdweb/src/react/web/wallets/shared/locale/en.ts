@@ -55,6 +55,7 @@ export default {
   signInWithPhone: "Sign in with phone number",
   phoneRequired: "Phone number is required",
   passkey: "Passkey",
+  signInWithWallet: "Sign in with Wallet",
   linkWallet: "Link a Wallet",
   loginAsGuest: "Continue as guest",
 } satisfies InAppWalletLocale;

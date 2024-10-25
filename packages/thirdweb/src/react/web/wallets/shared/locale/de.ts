@@ -58,4 +58,5 @@ export default {
   passkey: "Passkey",
   linkWallet: "Verknüpfen Sie eine Brieftasche",
   loginAsGuest: "Melden Sie sich als Gast an",
+  signInWithWallet: "Mit Wallet anmelden",
 } satisfies InAppWalletLocale;

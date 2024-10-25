@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { cn } from "@/lib/utils";
 import { useDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import type { BasicContract } from "contract-ui/types/types";
 import { useChainSlug } from "hooks/chains/chainSlug";
@@ -16,13 +17,14 @@ import { usePublishedContractsFromDeploy } from "../hooks";
 
 interface AsyncContractNameCellProps {
   cell: BasicContract;
+  linkOverlay?: boolean;
 }
 
 // The row components for the contract table, in the <Your contracts> page
 // url: /dashboard/contracts/deploy
 
 export const AsyncContractNameCell = memo(
-  ({ cell }: AsyncContractNameCellProps) => {
+  ({ cell, linkOverlay }: AsyncContractNameCellProps) => {
     const chainSlug = useChainSlug(cell.chainId);
     const chain = useV5DashboardChain(cell.chainId);
     const client = useThirdwebClient();
@@ -46,7 +48,10 @@ export const AsyncContractNameCell = memo(
             <Link
               href={`/${chainSlug}/${cell.address}`}
               passHref
-              className="text-foreground"
+              className={cn(
+                "text-foreground",
+                linkOverlay && "before:absolute before:inset-0",
+              )}
             >
               {v || shortenIfAddress(cell.address)}
             </Link>

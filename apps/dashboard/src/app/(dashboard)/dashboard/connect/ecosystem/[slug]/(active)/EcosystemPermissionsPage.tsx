@@ -10,7 +10,7 @@ export function EcosystemPermissionsPage({
   const { ecosystem } = useEcosystem({ slug: params.slug });
 
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-8">
       <IntegrationPermissionsSection ecosystem={ecosystem} />
       <AuthOptionsSection ecosystem={ecosystem} />
       {ecosystem?.permission === "PARTNER_WHITELIST" && (

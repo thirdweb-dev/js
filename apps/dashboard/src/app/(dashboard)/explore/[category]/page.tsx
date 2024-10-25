@@ -1,4 +1,3 @@
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,12 +6,16 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { ContractCard } from "components/explore/contract-card";
+import {
+  ContractCard,
+  ContractCardSkeleton,
+} from "components/explore/contract-card";
 import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
 import { ALL_CATEGORIES, getCategory } from "data/explore";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 type ExploreCategoryPageProps = {
   params: {
@@ -101,35 +104,36 @@ export default async function ExploreCategoryPage(
             }
 
             return (
-              <ContractCard
+              <Suspense
+                fallback={<ContractCardSkeleton />}
                 key={publisher + contractId + overrides?.title}
-                publisher={publisher}
-                contractId={contractId}
-                titleOverride={overrides?.title}
-                descriptionOverride={overrides?.description}
-                tracking={{
-                  source: category.id,
-                  itemIndex: `${idx}`,
-                }}
-                isBeta={category.isBeta}
-                modules={
-                  modules?.length
-                    ? modules.map((m) => ({
-                        publisher: m.split("/")[0] || "",
-                        moduleId: m.split("/")[1] || "",
-                      }))
-                    : undefined
-                }
-              />
+              >
+                <ContractCard
+                  publisher={publisher}
+                  contractId={contractId}
+                  titleOverride={overrides?.title}
+                  descriptionOverride={overrides?.description}
+                  tracking={{
+                    source: category.id,
+                    itemIndex: `${idx}`,
+                  }}
+                  isBeta={category.isBeta}
+                  modules={
+                    modules?.length
+                      ? modules.map((m) => ({
+                          publisher: m.split("/")[0] || "",
+                          moduleId: m.split("/")[1] || "",
+                        }))
+                      : undefined
+                  }
+                />
+              </Suspense>
             );
           })}
         </div>
 
         <div className="h-16" />
-        {/* TODO: remove this once we update the deploy upsell card */}
-        <ChakraProviderSetup>
-          <DeployUpsellCard />
-        </ChakraProviderSetup>
+        <DeployUpsellCard />
       </div>
     </div>
   );
@@ -140,3 +144,6 @@ export async function generateStaticParams() {
     params: { category },
   }));
 }
+
+// TODO - figure out why this page is not building if we let it be static
+export const dynamic = "force-dynamic";

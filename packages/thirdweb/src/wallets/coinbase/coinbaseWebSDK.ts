@@ -14,6 +14,7 @@ import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 
 import type { Preference } from "@coinbase/wallet-sdk/dist/core/provider/interface.js";
+import { trackTransaction } from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain, getChainMetadata } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -278,8 +279,15 @@ export async function coinbaseSDKWalletGetCallsStatus(args: {
   }) as Promise<GetCallsStatusResponse>;
 }
 
-function createAccount(provider: ProviderInterface, _address: string) {
-  const address = getAddress(_address);
+function createAccount({
+  provider,
+  address,
+  client,
+}: {
+  provider: ProviderInterface;
+  address: string;
+  client: ThirdwebClient;
+}) {
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
@@ -290,12 +298,22 @@ function createAccount(provider: ProviderInterface, _address: string) {
             accessList: tx.accessList,
             value: tx.value ? numberToHex(tx.value) : undefined,
             gas: tx.gas ? numberToHex(tx.gas) : undefined,
-            from: this.address,
+            from: getAddress(address),
             to: tx.to as Address,
             data: tx.data,
           },
         ],
       })) as Hex;
+
+      trackTransaction({
+        client: client,
+        walletAddress: getAddress(address),
+        walletType: COINBASE,
+        transactionHash,
+        contractAddress: tx.to ?? undefined,
+        gasPrice: tx.gasPrice,
+      });
+
       return {
         transactionHash,
       };
@@ -372,8 +390,9 @@ function onConnect(
   chain: Chain,
   provider: ProviderInterface,
   emitter: WalletEmitter<typeof COINBASE>,
+  client: ThirdwebClient,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
-  const account = createAccount(provider, address);
+  const account = createAccount({ provider, address, client });
 
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
@@ -389,7 +408,11 @@ function onConnect(
 
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
-      const newAccount = createAccount(provider, getAddress(accounts[0]));
+      const newAccount = createAccount({
+        provider,
+        address: getAddress(accounts[0]),
+        client,
+      });
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);
     } else {
@@ -452,7 +475,7 @@ export async function connectCoinbaseWalletSDK(
     chain = options.chain;
   }
 
-  return onConnect(address, chain, provider, emitter);
+  return onConnect(address, chain, provider, emitter, options.client);
 }
 
 /**
@@ -483,7 +506,7 @@ export async function autoConnectCoinbaseWalletSDK(
       ? options.chain
       : getCachedChain(chainId);
 
-  return onConnect(address, chain, provider, emitter);
+  return onConnect(address, chain, provider, emitter, options.client);
 }
 
 async function switchChainCoinbaseWalletSDK(

@@ -1,3 +1,5 @@
+"use client";
+
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { Box, Flex, List, SimpleGrid, Tag } from "@chakra-ui/react";
 import { getAllRoleMembers } from "contract-ui/hooks/permissions";
@@ -8,14 +10,11 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { useReadContract } from "thirdweb/react";
-import {
-  Button,
-  Card,
-  Heading,
-  Text,
-  TrackedLink,
-  type TrackedLinkProps,
-} from "tw-components";
+import { Button } from "tw-components/button";
+import { Card } from "tw-components/card";
+import { Heading } from "tw-components/heading";
+import { TrackedLink, type TrackedLinkProps } from "tw-components/link";
+import { Text } from "tw-components/text";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 interface PermissionsTableProps {

@@ -129,6 +129,7 @@ function EcosystemWalletConnectUI(props: {
         done={done}
         onBack={goBackToMain || (() => setSelectionData({}))}
         locale={props.connectLocale}
+        isLinking={state.walletLogin.linking}
       />
     );
   }

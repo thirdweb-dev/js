@@ -131,13 +131,6 @@ export function useFunctionParamsFromABI(abi?: Abi, functionName?: string) {
   }, [abi, functionName]);
 }
 
-export function toContractIdIpfsHash(contractId: ContractId) {
-  if (contractId?.startsWith("ipfs://")) {
-    return contractId;
-  }
-  return `ipfs://${contractId}`;
-}
-
 export type PublishedContractDetails = Awaited<
   ReturnType<typeof fetchPublishedContracts>
 >[number];

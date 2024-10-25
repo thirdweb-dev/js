@@ -28,6 +28,7 @@ export function WalletAuth(props: {
   inAppLocale: InAppWalletLocale;
   onBack: () => void;
   walletConnect: { projectId?: string } | undefined;
+  isLinking: boolean;
   meta?: {
     title?: string;
     titleIconUrl?: string;
@@ -61,16 +62,25 @@ export function WalletAuth(props: {
     setStatus("loading");
     walletToConnect.current = walletToLink;
     try {
-      await linkProfile({
-        client: props.client,
-        strategy: "wallet",
-        wallet: walletToLink,
-        chain: wallet.getChain() || defineChain(1),
-        ecosystem,
-      }).catch((e) => {
-        setError(e.message);
-        throw e;
-      });
+      if (props.isLinking) {
+        await linkProfile({
+          client: props.client,
+          strategy: "wallet",
+          wallet: walletToLink,
+          chain: wallet.getChain() || defineChain(1),
+          ecosystem,
+        }).catch((e) => {
+          setError(e.message);
+          throw e;
+        });
+      } else {
+        await wallet.connect({
+          client: props.client,
+          strategy: "wallet",
+          wallet: walletToLink,
+          chain: walletToLink.getChain() || defineChain(1),
+        });
+      }
       addConnectedWallet(walletToLink);
       done();
     } catch {
@@ -121,7 +131,12 @@ export function WalletAuth(props: {
         size={props.size}
         meta={props.meta || {}}
         walletConnect={props.walletConnect}
-        modalHeader={{ title: props.inAppLocale.linkWallet, onBack: back }}
+        modalHeader={{
+          title: props.isLinking
+            ? props.inAppLocale.linkWallet
+            : props.inAppLocale.signInWithWallet,
+          onBack: back,
+        }}
         walletIdsToHide={["inApp"]}
         disableSelectionDataReset={true}
       />
@@ -131,7 +146,14 @@ export function WalletAuth(props: {
   return (
     <Container animate="fadein" fullHeight flex="column">
       <Container p="lg">
-        <ModalHeader title={props.inAppLocale.linkWallet} onBack={back} />
+        <ModalHeader
+          title={
+            props.isLinking
+              ? props.inAppLocale.linkWallet
+              : props.inAppLocale.signInWithWallet
+          }
+          onBack={back}
+        />
       </Container>
 
       <Container

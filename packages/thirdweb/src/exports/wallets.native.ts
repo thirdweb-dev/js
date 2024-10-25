@@ -116,7 +116,7 @@ export type {
 
 export { getAllWalletsList } from "../wallets/getAllWalletsList.js";
 export { getWalletInfo } from "../wallets/__generated__/getWalletInfo.js";
-export { type WalletInfo } from "../wallets/wallet-info.js";
+export type { WalletInfo } from "../wallets/wallet-info.js";
 
 export { createWalletAdapter } from "../adapters/wallet-adapter.js";
 export type { AdapterWalletOptions } from "../adapters/wallet-adapter.js";

@@ -1,3 +1,5 @@
+"use client";
+
 import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { Button } from "@/components/ui/button";
 import {

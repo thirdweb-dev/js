@@ -57,4 +57,5 @@ export default {
   passkey: "Clave de acceso",
   linkWallet: "Vincular una billetera",
   loginAsGuest: "Inicia sesión como invitado",
+  signInWithWallet: "Iniciar sesión con billetera",
 } satisfies InAppWalletLocale;

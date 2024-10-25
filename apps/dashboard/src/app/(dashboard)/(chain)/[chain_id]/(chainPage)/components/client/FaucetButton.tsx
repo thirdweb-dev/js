@@ -47,7 +47,7 @@ export function FaucetButton({
   amount,
 }: {
   chain: ChainMetadata;
-  amount: string;
+  amount: number;
 }) {
   const client = useThirdwebClient();
   const address = useActiveAccount()?.address;

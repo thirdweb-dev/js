@@ -69,15 +69,17 @@ function usePlaygroundWallets() {
     google: true,
     discord: true,
     telegram: true,
-    twitch: false,
     farcaster: true,
-    facebook: false,
-    apple: false,
     email: true,
     passkey: true,
     phone: true,
+    twitch: false,
+    facebook: false,
+    apple: false,
+    github: false,
     coinbase: false,
     guest: false,
+    wallet: false,
   });
 
   const [enabledWallets, setEnabledWallets] = useState<WalletRecord>({

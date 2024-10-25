@@ -44,7 +44,7 @@ export default async function Page(props: {
   );
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col content-start justify-between gap-4 lg:flex-row">
         <PageHeader />
 
@@ -68,7 +68,9 @@ export default async function Page(props: {
       <SmartWallets
         apiKeyServices={apiKey.services || []}
         trackingCategory="smart-wallet"
-        defaultTab={props.searchParams.tab === "1" ? 1 : 0}
+        tab={props.searchParams.tab}
+        smartWalletsLayoutSlug={`/dashboard/connect/account-abstraction/${clientId}`}
+        clientId={apiKey.key}
       />
 
       <ConnectSDKCard

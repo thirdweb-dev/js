@@ -1,17 +1,28 @@
 "use client";
 
-import { Flex, useDisclosure } from "@chakra-ui/react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Flex } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { UploadIcon } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { multicall } from "thirdweb/extensions/common";
 import { balanceOf, encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Text } from "tw-components";
-import { type AirdropAddressInput, AirdropUpload } from "./airdrop-upload";
+import {
+  type AirdropAddressInput,
+  AirdropUpload,
+} from "../../../tokens/components/airdrop-upload";
 
 interface AirdropTabProps {
   contract: ThirdwebContract;
@@ -22,8 +33,6 @@ interface AirdropTabProps {
  * This component must only take in ERC1155 contracts
  */
 const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
-  const account = useActiveAccount();
-
   const address = useActiveAccount()?.address;
   const { handleSubmit, setValue, watch, reset, formState } = useForm<{
     addresses: AirdropAddressInput[];
@@ -31,100 +40,106 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
     defaultValues: { addresses: [] },
   });
   const trackEvent = useTrack();
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { mutate, isPending } = useSendAndConfirmTransaction();
-
-  const { onSuccess, onError } = useTxNotifications(
-    "Airdrop successful",
-    "Error transferring",
-    contract,
-  );
-
+  const sendAndConfirmTx = useSendAndConfirmTransaction();
   const addresses = watch("addresses");
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="flex w-full flex-col gap-2">
       <form
         onSubmit={handleSubmit(async (_data) => {
-          trackEvent({
-            category: "nft",
-            action: "airdrop",
-            label: "attempt",
-            contract_address: contract.address,
-            token_id: tokenId,
-          });
-          const totalOwned = await balanceOf({
-            contract,
-            tokenId: BigInt(tokenId),
-            owner: account?.address ?? "",
-          });
-          // todo: make a batch-transfer extension for erc1155?
-          const totalToAirdrop = _data.addresses.reduce((prev, curr) => {
-            return BigInt(prev) + BigInt(curr?.quantity || 1);
-          }, 0n);
-          if (totalOwned < totalToAirdrop) {
-            return onError(
-              new Error(
-                `The caller owns ${totalOwned.toString()} NFTs, but wants to airdrop ${totalToAirdrop.toString()} NFTs.`,
-              ),
-            );
-          }
-          const data = _data.addresses.map(({ address: to, quantity }) =>
-            encodeSafeTransferFrom({
-              from: account?.address ?? "",
-              to,
-              value: BigInt(quantity),
-              data: "0x",
+          try {
+            trackEvent({
+              category: "nft",
+              action: "airdrop",
+              label: "attempt",
+              contract_address: contract.address,
+              token_id: tokenId,
+            });
+            const totalOwned = await balanceOf({
+              contract,
               tokenId: BigInt(tokenId),
-            }),
-          );
-          const transaction = multicall({ contract, data });
-          mutate(transaction, {
-            onSuccess: () => {
-              trackEvent({
-                category: "nft",
-                action: "airdrop",
-                label: "success",
-                contract_address: contract.address,
-                token_id: tokenId,
-              });
-              onSuccess();
-              reset();
-            },
-            onError: (error) => {
-              trackEvent({
-                category: "nft",
-                action: "airdrop",
-                label: "success",
-                contract_address: contract.address,
-                token_id: tokenId,
-                error,
-              });
-              onError(error);
-            },
-          });
+              owner: address ?? "",
+            });
+            // todo: make a batch-transfer extension for erc1155?
+            const totalToAirdrop = _data.addresses.reduce((prev, curr) => {
+              return BigInt(prev) + BigInt(curr?.quantity || 1);
+            }, 0n);
+            if (totalOwned < totalToAirdrop) {
+              return toast.error(
+                `The caller owns ${totalOwned.toString()} NFTs, but wants to airdrop ${totalToAirdrop.toString()} NFTs.`,
+              );
+            }
+            const data = _data.addresses.map(({ address: to, quantity }) =>
+              encodeSafeTransferFrom({
+                from: address ?? "",
+                to,
+                value: BigInt(quantity),
+                data: "0x",
+                tokenId: BigInt(tokenId),
+              }),
+            );
+            const transaction = multicall({ contract, data });
+            const promise = sendAndConfirmTx.mutateAsync(transaction, {
+              onSuccess: () => {
+                trackEvent({
+                  category: "nft",
+                  action: "airdrop",
+                  label: "success",
+                  contract_address: contract.address,
+                  token_id: tokenId,
+                });
+                reset();
+              },
+              onError: (error) => {
+                trackEvent({
+                  category: "nft",
+                  action: "airdrop",
+                  label: "success",
+                  contract_address: contract.address,
+                  token_id: tokenId,
+                  error,
+                });
+              },
+            });
+            toast.promise(promise, {
+              loading: "Airdropping NFTs",
+              success: "Airdropped successfully",
+              error: "Failed to airdrop",
+            });
+          } catch (err) {
+            console.error(err);
+            toast.error("Failed to airdrop NFTs");
+          }
         })}
       >
         <div className="flex flex-col gap-2">
           <div className="mb-3 flex w-full flex-col gap-6 md:flex-row">
-            <AirdropUpload
-              isOpen={isOpen}
-              onClose={onClose}
-              setAirdrop={(value) =>
-                setValue("addresses", value, { shouldDirty: true })
-              }
-            />
             <Flex direction={{ base: "column", md: "row" }} gap={4}>
-              <Button
-                colorScheme="primary"
-                borderRadius="md"
-                onClick={onOpen}
-                rightIcon={<UploadIcon className="size-5" />}
-              >
-                Upload addresses
-              </Button>
+              <Sheet open={open} onOpenChange={setOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    colorScheme="primary"
+                    borderRadius="md"
+                    rightIcon={<UploadIcon className="size-5" />}
+                  >
+                    Upload addresses
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
+                  <SheetHeader>
+                    <SheetTitle className="mb-5 text-left">
+                      Aidrop NFTs
+                    </SheetTitle>
+                  </SheetHeader>
+                  <AirdropUpload
+                    onClose={() => setOpen(false)}
+                    setAirdrop={(value) =>
+                      setValue("addresses", value, { shouldDirty: true })
+                    }
+                  />
+                </SheetContent>
+              </Sheet>
 
               <Flex
                 gap={2}
@@ -149,7 +164,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
           <TransactionButton
             txChainID={contract.chain.id}
             transactionCount={1}
-            isLoading={isPending}
+            isLoading={sendAndConfirmTx.isPending}
             type="submit"
             colorScheme="primary"
             disabled={!!address && addresses.length === 0}

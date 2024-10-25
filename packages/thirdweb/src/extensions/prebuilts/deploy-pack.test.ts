@@ -1,14 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
+import { TEST_ACCOUNT_C } from "~test/test-wallets.js";
 import { isAddress } from "../../utils/address.js";
 import { deployPackContract } from "./deploy-pack.js";
+
+const account = TEST_ACCOUNT_C;
 
 describe.runIf(process.env.TW_SECRET_KEY)("deploy-pack contract", () => {
   it("should deploy Pack contract", async () => {
     const address = await deployPackContract({
-      account: TEST_ACCOUNT_A,
+      account,
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
       params: {

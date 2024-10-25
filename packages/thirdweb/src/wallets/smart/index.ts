@@ -8,6 +8,7 @@ import {
 } from "viem";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { allowance } from "../../extensions/erc20/__generated__/IERC20/read/allowance.js";
 import { approve } from "../../extensions/erc20/write/approve.js";
@@ -18,6 +19,7 @@ import {
   signEip712Transaction,
 } from "../../transaction/actions/zksync/send-eip712-transaction.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import { readContract } from "../../transaction/read-contract.js";
 import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
@@ -97,10 +99,26 @@ export async function connectSmartWallet(
   }
 
   const options = creationOptions;
+  const chain = connectChain ?? options.chain;
+
+  // if factory is passed, but no entrypoint, try to resolve entrypoint from factory
+  if (options.factoryAddress && !options.overrides?.entrypointAddress) {
+    const entrypointAddress = await getEntrypointFromFactory(
+      options.factoryAddress,
+      client,
+      chain,
+    );
+    if (entrypointAddress) {
+      options.overrides = {
+        ...options.overrides,
+        entrypointAddress,
+      };
+    }
+  }
+
   const factoryAddress =
     options.factoryAddress ??
-    getDefaultAccountFactory(creationOptions.overrides?.entrypointAddress);
-  const chain = connectChain ?? options.chain;
+    getDefaultAccountFactory(options.overrides?.entrypointAddress);
   const sponsorGas =
     "gasless" in options ? options.gasless : options.sponsorGas;
 
@@ -636,5 +654,25 @@ async function confirmContractDeployment(args: {
     }
     await new Promise((resolve) => setTimeout(resolve, 500));
     isDeployed = await isContractDeployed(accountContract);
+  }
+}
+async function getEntrypointFromFactory(
+  factoryAddress: string,
+  client: ThirdwebClient,
+  chain: Chain,
+) {
+  const factoryContract = getContract({
+    address: factoryAddress,
+    client,
+    chain,
+  });
+  try {
+    const entrypointAddress = await readContract({
+      contract: factoryContract,
+      method: "function entrypoint() public view returns (address)",
+    });
+    return entrypointAddress;
+  } catch {
+    return undefined;
   }
 }

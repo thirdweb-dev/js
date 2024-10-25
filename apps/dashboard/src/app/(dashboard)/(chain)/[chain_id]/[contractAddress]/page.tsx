@@ -31,6 +31,7 @@ export default async function Page(props: {
       }
       chainSlug={chainMetadata.slug}
       isAnalyticsSupported={contractPageMetadata.isAnalyticsSupported}
+      functionSelectors={contractPageMetadata.functionSelectors}
     />
   );
 }

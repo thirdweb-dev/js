@@ -1,9 +1,9 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { DownloadIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "../../../../../@/components/ui/button";
 import { ImportModal } from "../../../../../components/contract-components/import-contract/modal";
 
 export function DeployedContractsPageHeader() {

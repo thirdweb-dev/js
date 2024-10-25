@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.crypto",
   name: "Crypto.com | DeFi Wallet",
   homepage: "https://crypto.com/",
-  image_id: "7c5ff577-a68d-49c5-02cd-3d83637b0b00",
+  image_id: "88388eb4-4471-4e72-c4b4-852d496fea00",
   app: {
     browser: null,
     ios: "https://apps.apple.com/US/app/id1512048310?mt=8",

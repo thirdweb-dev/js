@@ -4,7 +4,7 @@ import { shortenAddress } from "../../../../../utils/address.js";
 import type { Profile } from "../../../../../wallets/in-app/core/authentication/types.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
 import { useSocialProfiles } from "../../../../core/social/useSocialProfiles.js";
-import { getWalletIcon } from "../../../../core/utils/walletIcon.js";
+import { getSocialIcon } from "../../../../core/utils/walletIcon.js";
 import { useProfiles } from "../../../hooks/wallets/useProfiles.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { Img } from "../../components/Img.js";
@@ -14,6 +14,9 @@ import { Text } from "../../components/text.js";
 import { Blobbie } from "../Blobbie.js";
 import { MenuButton } from "../MenuButton.js";
 import { AddUserIcon } from "../icons/AddUserIcon.js";
+import { EmailIcon } from "../icons/EmailIcon.js";
+import { FingerPrintIcon } from "../icons/FingerPrintIcon.js";
+import { PhoneIcon } from "../icons/PhoneIcon.js";
 import type { ConnectLocale } from "../locale/types.js";
 import type { WalletDetailsModalScreen } from "./types.js";
 
@@ -84,7 +87,7 @@ export function LinkedProfilesScreen(props: {
                 fontSize: fontSize.sm,
               }}
             >
-              <AddUserIcon size={iconSize.md} />
+              <AddUserIcon size={iconSize.lg} />
               <Text color="primaryText">
                 {props.locale.manageWallet.linkProfile}
               </Text>
@@ -147,9 +150,15 @@ function LinkedProfile({
         >
           <Blobbie address={profile.details.address} size={32} />
         </Container>
+      ) : profile.type === "passkey" ? (
+        <FingerPrintIcon size={iconSize.lg} />
+      ) : profile.type === "email" ? (
+        <EmailIcon size={iconSize.lg} />
+      ) : profile.type === "phone" ? (
+        <PhoneIcon size={iconSize.lg} />
       ) : (
         <Img
-          src={getWalletIcon(profile.type)}
+          src={getSocialIcon(profile.type)}
           width={iconSize.lg}
           height={iconSize.lg}
           loading="eager"

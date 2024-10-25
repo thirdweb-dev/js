@@ -1,7 +1,7 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { fetchDeployMetadata as sdkFetchDeployMetadata } from "thirdweb/contract";
 import { removeUndefinedFromObjectDeep } from "../../utils/object";
-import { toContractIdIpfsHash } from "./hooks";
+import type { ContractId } from "./types";
 
 // metadata PRE publish, only has the compiler output info (from CLI)
 
@@ -14,4 +14,11 @@ export async function fetchDeployMetadata(contractId: string) {
       uri: contractIdIpfsHash,
     }),
   );
+}
+
+function toContractIdIpfsHash(contractId: ContractId) {
+  if (contractId?.startsWith("ipfs://")) {
+    return contractId;
+  }
+  return `ipfs://${contractId}`;
 }

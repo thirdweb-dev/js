@@ -1,5 +1,37 @@
 # thirdweb
 
+## 5.64.1
+
+### Patch Changes
+
+- [#5163](https://github.com/thirdweb-dev/js/pull/5163) [`158c2b6`](https://github.com/thirdweb-dev/js/commit/158c2b6e8e41a88233fc819af54f4e0848604d0a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect theme accentColor for default icons in connect UI
+
+## 5.64.0
+
+### Minor Changes
+
+- [#5062](https://github.com/thirdweb-dev/js/pull/5062) [`0cafa33`](https://github.com/thirdweb-dev/js/commit/0cafa33a1886a7d813d78b8fcb77cf0e2e638594) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds GitHub authentication
+
+- [#5036](https://github.com/thirdweb-dev/js/pull/5036) [`f8c981c`](https://github.com/thirdweb-dev/js/commit/f8c981c0ca3dd34505f77fab6e4d3aba3f2bf852) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add new ERC1155 extension: mintAdditionalSupplyToBatch
+
+### Patch Changes
+
+- [#5125](https://github.com/thirdweb-dev/js/pull/5125) [`d522343`](https://github.com/thirdweb-dev/js/commit/d522343e04fad4c8561e1183b02a5f04b6f1e7b2) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Optimize mintAdditionalSupplyToBatch extension
+
+- [#5153](https://github.com/thirdweb-dev/js/pull/5153) [`47b1bbb`](https://github.com/thirdweb-dev/js/commit/47b1bbbd7c93d758829ea30fa830b4f4eb9ee390) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable Sign in with Wallet for ecosystems
+
+- [#5150](https://github.com/thirdweb-dev/js/pull/5150) [`9fadbcc`](https://github.com/thirdweb-dev/js/commit/9fadbcc17abfe302933f7b860ab7c3b4fb577789) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#5123](https://github.com/thirdweb-dev/js/pull/5123) [`364d97e`](https://github.com/thirdweb-dev/js/commit/364d97e97ef4a410383db497ab8efe43e7970dda) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Auto resolve entrypoint address from factory when available
+
+- [#5129](https://github.com/thirdweb-dev/js/pull/5129) [`319a203`](https://github.com/thirdweb-dev/js/commit/319a203a4e0ef2632fb6221bec0ab2ba97ba91ad) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes Brave Wallet Metadata
+
+- [#5148](https://github.com/thirdweb-dev/js/pull/5148) [`2fdb69d`](https://github.com/thirdweb-dev/js/commit/2fdb69dd445a8a8858b1f8869d31acd425ed245f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize mintAdditionalSupplyTo
+
+- [#5091](https://github.com/thirdweb-dev/js/pull/5091) [`45fcfb1`](https://github.com/thirdweb-dev/js/commit/45fcfb1daefeb30440650aae2febb67212576b7f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support smart account options for ecosystem wallets
+
+- [#5090](https://github.com/thirdweb-dev/js/pull/5090) [`50f98d7`](https://github.com/thirdweb-dev/js/commit/50f98d7486809c541252a9cfc6979d102960366b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix useProfiles not updating when connecting to a different account
+
 ## 5.63.2
 
 ### Patch Changes

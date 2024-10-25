@@ -1,9 +1,11 @@
+"use client";
+
 import { Flex, useBreakpointValue } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721 from "thirdweb/extensions/erc721";
 import * as ERC1155 from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
-import { TrackedLink, type TrackedLinkProps } from "tw-components";
+import { TrackedLink, type TrackedLinkProps } from "tw-components/link";
 import { NFTCards } from "../../_components/NFTCards";
 
 interface NFTDetailsProps {

@@ -1,8 +1,6 @@
-"use client";
-
+import { PlainTextCodeBlock } from "@/components/ui/code";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ExternalLinkIcon } from "lucide-react";
-import { CodeBlock } from "tw-components";
 
 export const DeployUpsellCard: React.FC = () => {
   return (
@@ -29,11 +27,7 @@ export const DeployUpsellCard: React.FC = () => {
 
       <div className="h-2" />
 
-      <CodeBlock
-        code="npx thirdweb create contract"
-        language="bash"
-        prefix="$"
-      />
+      <PlainTextCodeBlock code="npx thirdweb create contract" />
 
       <div className="h-8" />
 
@@ -53,7 +47,7 @@ export const DeployUpsellCard: React.FC = () => {
 
       <div className="h-2" />
 
-      <CodeBlock code="npx thirdweb deploy" language="bash" prefix="$" />
+      <PlainTextCodeBlock code="npx thirdweb deploy" />
     </section>
   );
 };

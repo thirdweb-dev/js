@@ -29,6 +29,7 @@ export const socialAuthOptions = [
   "coinbase",
   "farcaster",
   "telegram",
+  "github",
   "twitch",
 ] as const;
 export type SocialAuthOption = (typeof socialAuthOptions)[number];
@@ -40,6 +41,7 @@ export const authOptions = [
   "email",
   "phone",
   "passkey",
+  "wallet",
 ] as const;
 export type AuthOption = (typeof authOptions)[number];
 

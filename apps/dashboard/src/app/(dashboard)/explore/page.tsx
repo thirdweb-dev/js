@@ -1,4 +1,3 @@
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -53,11 +52,11 @@ export default async function ExplorePage() {
         </div>
 
         <div className="h-16" />
-        {/* TODO: remove this once we update the deploy upsell card */}
-        <ChakraProviderSetup>
-          <DeployUpsellCard />
-        </ChakraProviderSetup>
+        <DeployUpsellCard />
       </div>
     </div>
   );
 }
+
+// TODO - figure out why this page is not building if we let it be static
+export const dynamic = "force-dynamic";

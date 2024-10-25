@@ -105,6 +105,16 @@ export async function extractAuthorizationData(
     bundleId = requestUrl.searchParams.get("bundleId");
   }
 
+  let ecosystemId = headers.get("x-ecosystem-id");
+  if (!ecosystemId) {
+    ecosystemId = requestUrl.searchParams.get("ecosystemId");
+  }
+
+  let ecosystemPartnerId = headers.get("x-ecosystem-partner-id");
+  if (!ecosystemPartnerId) {
+    ecosystemPartnerId = requestUrl.searchParams.get("ecosystemPartnerId");
+  }
+
   let origin = headers.get("origin");
   // if origin header is not available we'll fall back to referrer;
   if (!origin) {
@@ -150,6 +160,8 @@ export async function extractAuthorizationData(
     hashedJWT: jwt ? await hashSecretKey(jwt) : null,
     secretKey,
     clientId,
+    ecosystemId,
+    ecosystemPartnerId,
     origin,
     bundleId,
     secretKeyHash,
