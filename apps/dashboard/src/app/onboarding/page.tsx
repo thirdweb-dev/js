@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,7 +44,6 @@ import {
   Wallet,
   WalletCards,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
 import {
@@ -197,7 +197,7 @@ export default function OnboardingPage({
   const [step, setStep] = useState(searchParams.email ? 2 : 1);
   const [direction, setDirection] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const router = useDashboardRouter();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
