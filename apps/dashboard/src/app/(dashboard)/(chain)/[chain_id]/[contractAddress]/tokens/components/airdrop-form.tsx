@@ -96,6 +96,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                 setAirdrop={(value) =>
                   setValue("addresses", value, { shouldDirty: true })
                 }
+                removeDuplicateAddresses={true}
               />
             ) : (
               <div className="flex flex-col gap-4 md:flex-row">
