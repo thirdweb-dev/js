@@ -157,7 +157,7 @@ export default function ProjectShowcasePage({
                     </CardHeader>
                   </Link>
                   <CardContent>
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                       <div className="flex flex-wrap gap-2">
                         {project.industries?.map((industry) => (
                           <Badge key={industry} variant="secondary">
