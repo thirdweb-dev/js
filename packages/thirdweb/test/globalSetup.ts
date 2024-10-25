@@ -62,6 +62,9 @@ export default async function globalSetup() {
 
   const shutdownAnvil = await startProxy({
     port: 8648,
+    options: {
+      balance: 1000000000n,
+    },
   });
 
   // TODO re-enable thirdweb RPC for this fork
