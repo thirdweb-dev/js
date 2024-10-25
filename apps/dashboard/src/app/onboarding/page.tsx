@@ -316,17 +316,21 @@ export default function OnboardingPage({
           />
         </div>
         <div className="flex space-x-4">
-          <Button
-            type="button"
-            variant={"secondary"}
-            onClick={() => {
-              setDirection(1);
-              setStep(step + 1);
-            }}
-          >
-            Skip
-          </Button>
-
+          {step > 1 && (
+            <Button
+              type="button"
+              variant={"secondary"}
+              onClick={() => {
+                setDirection(1);
+                setStep(step + 1);
+                if (step === 3) {
+                  form.handleSubmit(onSubmit);
+                }
+              }}
+            >
+              Skip
+            </Button>
+          )}
           {step < 3 && (
             <Button type="button" variant="primary" onClick={nextStep}>
               Next
