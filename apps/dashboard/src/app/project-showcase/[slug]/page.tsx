@@ -1,18 +1,17 @@
 import { ExternalLink, FileText } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "../../../../@/components/ui/badge";
-import { Button } from "../../../../@/components/ui/button";
+import { Badge } from "../../../@/components/ui/badge";
+import { Button } from "../../../@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../../@/components/ui/card";
-import { getThirdwebClient } from "../../../../@/constants/thirdweb.server";
-import { resolveSchemeWithErrorHandler } from "../../../../@/lib/resolveSchemeWithErrorHandler";
-import { PROJECT_SHOWCASE_DATA } from "../../../../lib/project-showcase-constants";
+} from "../../../@/components/ui/card";
+import { getThirdwebClient } from "../../../@/constants/thirdweb.server";
+import { resolveSchemeWithErrorHandler } from "../../../@/lib/resolveSchemeWithErrorHandler";
+import { PROJECT_SHOWCASE_DATA } from "../../../lib/project-showcase-constants";
 
 export default async function DetailPage({
   params,
@@ -72,7 +71,8 @@ export default async function DetailPage({
           </div>
           <div className="md:w-1/2">
             <div className="relative aspect-video h-full w-full md:aspect-square">
-              <Image
+              {/* eslint-disable @next/next/no-img-element */}
+              <img
                 src={
                   project.image?.startsWith("ipfs://")
                     ? (resolveSchemeWithErrorHandler({
