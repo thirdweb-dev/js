@@ -24,15 +24,14 @@ import {
   spacing,
 } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
-import {
-  emailIcon,
-  getSocialIcon,
-  passkeyIcon,
-  phoneIcon,
-  socialIcons,
-} from "../../../core/utils/walletIcon.js";
+import { socialIcons } from "../../../core/utils/walletIcon.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
+import { EmailIcon } from "../../ui/ConnectWallet/icons/EmailIcon.js";
+import { FingerPrintIcon } from "../../ui/ConnectWallet/icons/FingerPrintIcon.js";
+import { GuestIcon } from "../../ui/ConnectWallet/icons/GuestIcon.js";
+import { OutlineWalletIcon } from "../../ui/ConnectWallet/icons/OutlineWalletIcon.js";
+import { PhoneIcon } from "../../ui/ConnectWallet/icons/PhoneIcon.js";
 import { Img } from "../../ui/components/Img.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
@@ -57,7 +56,9 @@ export type ConnectWalletSelectUIState =
         connectionPromise: Promise<Account | Profile[]>;
       };
       passkeyLogin?: boolean;
-      walletLogin?: boolean;
+      walletLogin?: {
+        linking: boolean;
+      };
     };
 
 const defaultAuthOptions: AuthOption[] = [
@@ -186,6 +187,7 @@ export const ConnectWalletSocialOptions = (
 
   const passKeyEnabled = authOptions.includes("passkey");
   const guestEnabled = authOptions.includes("guest");
+  const siweEnabled = authOptions.includes("wallet");
 
   const placeholder =
     inputMode === "email" ? locale.emailPlaceholder : locale.phonePlaceholder;
@@ -306,7 +308,9 @@ export const ConnectWalletSocialOptions = (
 
   function handleWalletLogin() {
     setData({
-      walletLogin: true,
+      walletLogin: {
+        linking: props.isLinking || false,
+      },
     });
     props.select();
   }
@@ -408,7 +412,7 @@ export const ConnectWalletSocialOptions = (
         ) : (
           <WalletTypeRowButton
             client={props.client}
-            icon={emailIcon}
+            icon={EmailIcon}
             onClick={() => {
               setManualInputMode("email");
             }}
@@ -446,7 +450,7 @@ export const ConnectWalletSocialOptions = (
         ) : (
           <WalletTypeRowButton
             client={props.client}
-            icon={phoneIcon}
+            icon={PhoneIcon}
             onClick={() => {
               setManualInputMode("phone");
             }}
@@ -458,7 +462,7 @@ export const ConnectWalletSocialOptions = (
       {passKeyEnabled && (
         <WalletTypeRowButton
           client={props.client}
-          icon={passkeyIcon}
+          icon={FingerPrintIcon}
           onClick={() => {
             handlePassKeyLogin();
           }}
@@ -467,11 +471,23 @@ export const ConnectWalletSocialOptions = (
         />
       )}
 
+      {/* SIWE login */}
+      {siweEnabled && (
+        <WalletTypeRowButton
+          client={props.client}
+          icon={OutlineWalletIcon}
+          onClick={() => {
+            handleWalletLogin();
+          }}
+          title={locale.signInWithWallet}
+        />
+      )}
+
       {/* Guest login */}
       {guestEnabled && (
         <WalletTypeRowButton
           client={props.client}
-          icon={getSocialIcon("guest")}
+          icon={GuestIcon}
           onClick={() => {
             handleGuestLogin();
           }}
@@ -483,7 +499,7 @@ export const ConnectWalletSocialOptions = (
       {props.isLinking && (
         <WalletTypeRowButton
           client={props.client}
-          icon={getSocialIcon("")}
+          icon={OutlineWalletIcon}
           onClick={() => {
             handleWalletLogin();
           }}

@@ -56,4 +56,5 @@ export default {
   passkey: "パスキー",
   linkWallet: "ウォレットをリンクする",
   loginAsGuest: "ゲストとしてログイン",
+  signInWithWallet: "ウォレットでログイン",
 } satisfies InAppWalletLocale;

@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.63.2",
+  "version": "5.64.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -224,7 +224,7 @@
     "@aws-sdk/client-lambda": "^3",
     "@aws-sdk/credential-providers": "^3",
     "@coinbase/wallet-mobile-sdk": "^1",
-    "@mobile-wallet-protocol/client": "0.0.3",
+    "@mobile-wallet-protocol/client": "0.1.1",
     "@react-native-async-storage/async-storage": "^1 || ^2",
     "ethers": "^5 || ^6",
     "expo-linking": "^6",

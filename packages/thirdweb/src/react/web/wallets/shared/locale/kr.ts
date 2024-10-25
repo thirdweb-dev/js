@@ -54,4 +54,5 @@ export default {
   passkey: "비밀번호",
   linkWallet: "지갑 연결",
   loginAsGuest: "게스트로 로그인",
+  signInWithWallet: "지갑으로 로그인",
 } satisfies InAppWalletLocale;

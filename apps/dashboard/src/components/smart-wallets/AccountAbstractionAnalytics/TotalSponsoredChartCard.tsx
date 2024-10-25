@@ -4,10 +4,12 @@ import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import type { UserOpStats } from "@3rdweb-sdk/react/hooks/useApi";
+import type { UserOpStatsByChain } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   EmptyChartState,
   LoadingChartState,
@@ -20,44 +22,91 @@ import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { useAllChainsData } from "../../../hooks/chains/allChains";
 
-type ChartData = {
+type ChartData = Record<string, number> & {
   time: string; // human readable date
-  sponsoredUsd: number;
 };
 
-const chartConfig = {
-  sponsoredUsd: {
-    label: "Total Sponsored",
-    color: "hsl(var(--chart-1))",
-  },
-} satisfies ChartConfig;
-
 export function TotalSponsoredChartCard(props: {
-  userOpStats: UserOpStats[];
+  userOpStats: UserOpStatsByChain[];
   isPending: boolean;
 }) {
   const { userOpStats } = props;
-  const barChartData: ChartData[] = useMemo(() => {
-    const chartDataMap: Map<string, ChartData> = new Map();
+  const topChainsToShow = 10;
+  const chainsStore = useAllChainsData();
 
-    for (const data of userOpStats) {
-      const chartData = chartDataMap.get(data.date);
+  const { chartConfig, chartData } = useMemo(() => {
+    const _chartConfig: ChartConfig = {};
+    const _chartDataMap: Map<string, ChartData> = new Map();
+    const chainIdToVolumeMap: Map<string, number> = new Map();
+    // for each stat, add it in _chartDataMap
+    for (const stat of userOpStats) {
+      const chartData = _chartDataMap.get(stat.date);
+      const { chainId } = stat;
+      const chain = chainsStore.idToChain.get(Number(chainId));
+
+      // if no data for current day - create new entry
       if (!chartData) {
-        chartDataMap.set(data.date, {
-          time: format(new Date(data.date), "MMM dd"),
-          sponsoredUsd: data.sponsoredUsd,
-        });
+        _chartDataMap.set(stat.date, {
+          time: format(new Date(stat.date), "MMM dd"),
+          [chainId || "Unknown"]: Math.round(stat.sponsoredUsd * 100) / 100,
+        } as ChartData);
       } else {
-        chartData.sponsoredUsd += data.sponsoredUsd;
+        chartData[chain?.name || chainId || "Unknown"] =
+          (chartData[chain?.name || chainId || "Unknown"] || 0) +
+          Math.round(stat.sponsoredUsd * 100) / 100;
+      }
+
+      chainIdToVolumeMap.set(
+        chain?.name || chainId || "Unknown",
+        stat.sponsoredUsd + (chainIdToVolumeMap.get(chainId || "Unknown") || 0),
+      );
+    }
+
+    const chainsSorted = Array.from(chainIdToVolumeMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map((w) => w[0]);
+
+    const chainsToShow = chainsSorted.slice(0, topChainsToShow);
+    const chainsToTagAsOthers = chainsSorted.slice(topChainsToShow);
+
+    // replace chainIdsToTagAsOther chainId with "other"
+    for (const data of _chartDataMap.values()) {
+      for (const chainId in data) {
+        if (chainsToTagAsOthers.includes(chainId)) {
+          data.others = (data.others || 0) + (data[chainId] || 0);
+          delete data[chainId];
+        }
       }
     }
 
-    return Array.from(chartDataMap.values());
-  }, [userOpStats]);
+    chainsToShow.forEach((walletType, i) => {
+      _chartConfig[walletType] = {
+        label: chainsToShow[i],
+        color: `hsl(var(--chart-${(i % 10) + 1}))`,
+      };
+    });
 
-  const disableActions = props.isPending || barChartData.length === 0;
+    // Add Other
+    chainsToShow.push("others");
+    _chartConfig.others = {
+      label: "Others",
+      color: "hsl(var(--muted-foreground))",
+    };
+
+    return {
+      chartData: Array.from(_chartDataMap.values()),
+      chartConfig: _chartConfig,
+    };
+  }, [userOpStats, chainsStore]);
+
+  const uniqueChainIds = Object.keys(chartConfig);
+  const disableActions =
+    props.isPending ||
+    chartData.length === 0 ||
+    chartData.every((data) => data.sponsoredUsd === 0);
 
   return (
     <div className="relative w-full rounded-lg border border-border bg-muted/50 p-4 md:p-6">
@@ -70,17 +119,21 @@ export function TotalSponsoredChartCard(props: {
 
       <div className="top-6 right-6 mb-4 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
         <ExportToCSVButton
-          disabled={disableActions}
           className="bg-background"
+          fileName="Connect Wallets"
+          disabled={disableActions}
           getData={async () => {
-            const header = ["Date", "Total Sponsored"];
-            const rows = barChartData.map((row) => [
-              row.time,
-              row.sponsoredUsd.toString(),
-            ]);
+            // Shows the number of each type of wallet connected on all dates
+            const header = ["Date", ...uniqueChainIds];
+            const rows = chartData.map((data) => {
+              const { time, ...rest } = data;
+              return [
+                time,
+                ...uniqueChainIds.map((w) => (rest[w] || 0).toString()),
+              ];
+            });
             return { header, rows };
           }}
-          fileName="Total Sponsored"
         />
       </div>
 
@@ -91,8 +144,8 @@ export function TotalSponsoredChartCard(props: {
       >
         {props.isPending ? (
           <LoadingChartState />
-        ) : barChartData.length === 0 ||
-          barChartData.every((data) => data.sponsoredUsd === 0) ? (
+        ) : chartData.length === 0 ||
+          chartData.every((data) => data.sponsoredUsd === 0) ? (
           <EmptyChartState>
             <div className="flex flex-col items-center justify-center">
               <span className="mb-6 text-lg">Sponsor gas for your users</span>
@@ -133,7 +186,7 @@ export function TotalSponsoredChartCard(props: {
         ) : (
           <BarChart
             accessibilityLayer
-            data={barChartData}
+            data={chartData}
             margin={{
               top: 20,
             }}
@@ -148,21 +201,20 @@ export function TotalSponsoredChartCard(props: {
             />
 
             <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
-
-            <Bar
-              dataKey={"sponsoredUsd"}
-              fill={"var(--color-sponsoredUsd)"}
-              radius={8}
-            >
-              {barChartData.length < 50 && (
-                <LabelList
-                  position="top"
-                  offset={12}
-                  className="invisible fill-foreground sm:visible"
-                  fontSize={12}
+            <ChartLegend content={<ChartLegendContent />} />
+            {uniqueChainIds.map((chainId) => {
+              return (
+                <Bar
+                  key={chainId}
+                  dataKey={chainId}
+                  fill={chartConfig[chainId]?.color}
+                  radius={4}
+                  stackId="a"
+                  strokeWidth={1.5}
+                  className="stroke-muted"
                 />
-              )}
-            </Bar>
+              );
+            })}
           </BarChart>
         )}
       </ChartContainer>

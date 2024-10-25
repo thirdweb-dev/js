@@ -1,6 +1,9 @@
 export const authOptions = [
   "email",
   "phone",
+  "passkey",
+  "siwe",
+  "guest",
   "google",
   "facebook",
   "x",
@@ -12,7 +15,6 @@ export const authOptions = [
   "apple",
   "coinbase",
   "line",
-  "guest",
 ] as const;
 
 export type Ecosystem = {

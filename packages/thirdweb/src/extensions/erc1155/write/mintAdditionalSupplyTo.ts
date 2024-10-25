@@ -38,16 +38,10 @@ export function mintAdditionalSupplyTo(
   return MintTo.mintTo({
     contract: options.contract,
     asyncParams: async () => {
-      // we'll be re-using the exising token URI
-      const tokenUri = await URI.uri({
-        contract: options.contract,
-        tokenId: options.tokenId,
-      });
-
       return {
         to: options.to,
         tokenId: options.tokenId,
-        uri: tokenUri,
+        uri: "", // contract will maintain the existing token URI
         amount: options.supply,
       };
     },

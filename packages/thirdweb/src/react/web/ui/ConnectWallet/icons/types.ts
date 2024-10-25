@@ -1,1 +1,1 @@
-export type IconFC = React.FC<{ size: string }>;
+export type IconFC = React.FC<{ size: string; color?: string }>;

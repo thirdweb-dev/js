@@ -57,4 +57,5 @@ export default {
   passkey: "Passkey",
   linkWallet: "Mag-link ng Wallet",
   loginAsGuest: "Mag-login bilang bisita",
+  signInWithWallet: "Mag-login gamit ang Wallet",
 } satisfies InAppWalletLocale;

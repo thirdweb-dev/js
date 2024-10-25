@@ -8,7 +8,7 @@ const getEcosystem = () => {
     process.env.NEXT_PUBLIC_IN_APP_WALLET_URL?.endsWith(".thirdweb-dev.com")
   ) {
     // dev ecosystem
-    return "ecosystem.bonfire-development";
+    return "ecosystem.catlovers";
   }
   // prod ecosystem
   return "ecosystem.new-age";

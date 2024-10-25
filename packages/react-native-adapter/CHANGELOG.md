@@ -1,5 +1,13 @@
 # @thirdweb-dev/react-native-adapter
 
+## 1.5.1
+
+### Patch Changes
+
+- [#5150](https://github.com/thirdweb-dev/js/pull/5150) [`9fadbcc`](https://github.com/thirdweb-dev/js/commit/9fadbcc17abfe302933f7b860ab7c3b4fb577789) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#5151](https://github.com/thirdweb-dev/js/pull/5151) [`06c0cf3`](https://github.com/thirdweb-dev/js/commit/06c0cf3898419edc79ba042d041612a8ae6967f8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - update to latest @mobile-wallet-protocol/client
+
 ## 1.5.0
 
 ### Minor Changes
