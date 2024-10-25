@@ -4,6 +4,7 @@ import { ContractMetadata } from "components/custom-contract/contract-header/con
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { localhost } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isAddress, isContractDeployed } from "thirdweb/utils";
 import { resolveFunctionSelectors } from "../../../../../lib/selectors";
@@ -38,11 +39,15 @@ export default async function Layout(props: {
     notFound();
   }
 
-  // check if the contract exists
-  const isValidContract = await isContractDeployed(contract).catch(() => false);
-  if (!isValidContract) {
-    // TODO - replace 404 with a better page to upsale deploy or other thirdweb products
-    notFound();
+  if (contract.chain.id !== localhost.id) {
+    // check if the contract exists
+    const isValidContract = await isContractDeployed(contract).catch(
+      () => false,
+    );
+    if (!isValidContract) {
+      // TODO - replace 404 with a better page to upsale deploy or other thirdweb products
+      notFound();
+    }
   }
 
   const contractPageMetadata = await getContractPageMetadata(contract);
