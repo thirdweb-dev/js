@@ -1,7 +1,9 @@
+import { FileText } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "../../@/components/ui/badge";
+import { Button } from "../../@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -127,43 +129,57 @@ export default function ProjectShowcasePage({
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {paginatedProjects.map((project) => (
-              <Link
-                key={project.id}
-                href={`/project-showcase/${project.slug}`}
-                className="block"
-              >
+              <div key={project.id} className="block">
                 <Card className="flex h-full cursor-pointer flex-col overflow-hidden transition-shadow hover:shadow-lg">
-                  {/* eslint-disable @next/next/no-img-element */}
-                  <img
-                    src={
-                      project.image?.startsWith("ipfs://")
-                        ? (resolveSchemeWithErrorHandler({
-                            client: getThirdwebClient(),
-                            uri: project.image,
-                          }) ?? "")
-                        : (project.image ??
-                          "/assets/showcase/default_image.png")
-                    }
-                    alt={project.title}
-                    width={300}
-                    height={200}
-                    className="h-48 w-full object-cover"
-                  />
-                  <CardHeader>
-                    <CardTitle className="mb-3">{project.title}</CardTitle>
-                    <CardDescription>{project.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <div className="flex flex-wrap gap-2">
-                      {project.industries?.map((industry) => (
-                        <Badge key={industry} variant="secondary">
-                          {industry}
-                        </Badge>
-                      ))}
+                  <Link
+                    href={`/project-showcase/${project.slug}`}
+                    className="flex-grow"
+                  >
+                    {/* eslint-disable @next/next/no-img-element */}
+                    <img
+                      src={
+                        project.image?.startsWith("ipfs://")
+                          ? (resolveSchemeWithErrorHandler({
+                              client: getThirdwebClient(),
+                              uri: project.image,
+                            }) ?? "")
+                          : (project.image ??
+                            "/assets/showcase/default_image.png")
+                      }
+                      alt={project.title}
+                      width={300}
+                      height={200}
+                      className="h-48 w-full object-cover"
+                    />
+                    <CardHeader>
+                      <CardTitle className="mb-3">{project.title}</CardTitle>
+                      <CardDescription>{project.description}</CardDescription>
+                    </CardHeader>
+                  </Link>
+                  <CardContent>
+                    <div className="flex justify-between items-center">
+                      <div className="flex flex-wrap gap-2">
+                        {project.industries?.map((industry) => (
+                          <Badge key={industry} variant="secondary">
+                            {industry}
+                          </Badge>
+                        ))}
+                      </div>
+                      {project.case_study && (
+                        <Link
+                          href={project.case_study}
+                          target="_blank"
+                          // onClick={(e) => e.stopPropagation()}
+                        >
+                          <Button variant="outline" size="sm">
+                            <FileText className="mr-2 h-4 w-4" /> Case Study
+                          </Button>
+                        </Link>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
-              </Link>
+              </div>
             ))}
           </div>
           <div className="mt-8 flex flex-col items-center">
