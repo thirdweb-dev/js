@@ -455,6 +455,18 @@ export const PROJECT_SHOWCASE_DATA = [
     industries: ["Decentralized Finance", "Games", "Tools"],
     link: "https://xaigames.io",
   },
+  {
+    id: 42,
+    title: "Zeeverse",
+    slug: "zeeverse",
+    description:
+      "Zeeverse is a free-to-play monster-tamer RPG set in an indigenous fantasy world.",
+    image: "ipfs://QmU9MTJk4ESbJ7XGYUQzZqXxHWFUAx7SZNmeYDfLZHExtd",
+    industries: ["Game"],
+    link: "https://zee-verse.com/?ref=blog.thirdweb.com",
+    case_study:
+      "https://blog.thirdweb.com/case-studies/how-zeeverse-built-a-monster-tamer-rpg-with-seamless-web3-onboarding/",
+  },
 ];
 
 export const PROJECT_SHOWCASE_INDUSTRIES = [
