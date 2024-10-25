@@ -1,4 +1,5 @@
 "use client";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,8 +28,21 @@ import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { RadioGroup } from "@radix-ui/react-radio-group";
 import { THIRDWEB_ANALYTICS_API_HOST } from "constants/urls";
 import { motion } from "framer-motion";
-import { Users2 } from "lucide-react";
-import { Building } from "lucide-react";
+import {
+  Building,
+  Coins,
+  FileCode2,
+  Fingerprint,
+  Gamepad2,
+  Gift,
+  Landmark,
+  ListOrdered,
+  RectangleEllipsis,
+  ScanFace,
+  Users2,
+  Wallet,
+  WalletCards,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
@@ -42,61 +56,78 @@ import { Blobbie } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 import { z } from "zod";
 
+const iconSize = 24;
+
 const interestValues = [
   {
     key: "SOCIAL_LOGIN",
-    label: "Social Login",
+    label: "Social Logins",
     description:
-      "Let users login to your app with Email, Phone, Telegram, and more",
+      "Google, X, Discord, Farcaster, Telegram, Apple, and many more.",
+    icon: <RectangleEllipsis size={iconSize} />,
   },
   {
     key: "WALLET_CONECTORS",
     label: "Wallet Connectors",
-    description: "Allow users to connect to over 350 web3 wallets",
+    description: "Sign-in with any of the 350+ supported wallets.",
+    icon: <Wallet size={iconSize} />,
+  },
+  {
+    key: "INAPP_WALLETS",
+    label: "In-App Wallets",
+    description:
+      "Create accounts securely with email, phone, social or passkey.",
+    icon: <WalletCards size={iconSize} />,
   },
   {
     key: "SPONSOR_TRANSACTIONS",
     label: "Sponsor Transactions",
-    description:
-      "Abstract away signatures & gas using Account Abstraction and set up sponsorship rules",
+    description: "Abstract away signatures & gas using Paymaster services.",
+    icon: <Gift size={iconSize} />,
+  },
+  {
+    key: "CONTRACT_DEPLOYS",
+    label: "Deploy Contracts",
+    description: "Deploy audited contracts to any EVM network",
+    icon: <FileCode2 size={iconSize} />,
   },
   {
     key: "UNIFIED_IDENTITY",
     label: "Unified Identity",
     description:
-      "Enable your users to link multiple onchain and offchain identities to a single ID",
+      "Create a complete picture of all your users via identity linking.",
+    icon: <ScanFace size={iconSize} />,
   },
   {
     key: "CUSTOM_AUTH",
     label: "Custom Auth",
-    description: "Authenticate with your backend using SIWE or JWT",
-  },
-  {
-    key: "QUERY_BLOCKCHAIN_DATA",
-    label: "Query Blockchain Data",
-    description: "All your data are belong to us",
+    description: "Authenticate with your backend using SIWE or JWT.",
+    icon: <Fingerprint size={iconSize} />,
   },
   {
     key: "AUTO_TXN_MGMT",
     label: "Automated Transaction Management",
-    description: "Scale transaction throughput with nonce management",
+    description: "Read and write onchain at scale with unlimited throughput.",
+    icon: <ListOrdered size={iconSize} />,
   },
   {
     key: "GAMING_TOOLS",
     label: "Gaming Tools",
-    description: "Everything you need to build a game",
+    description:
+      "SDKs to craft a seamless player experience and drive monetization.",
+    icon: <Gamepad2 size={iconSize} />,
   },
   {
     key: "TOKEN_SWAPS",
-    label: "Token Swaps",
-    description:
-      "Bridge to and from tokens on any EVM, directly in your application",
+    label: "Swaps & Bridging",
+    description: "Bridge from hundreds of tokens across 20+ EVM chains.",
+    icon: <Coins size={iconSize} />,
   },
   {
     key: "FIAT_ONRAMPS",
-    label: "Fiat Onramps",
-    description:
-      "Allow users to purchase with a credit card within your application.",
+    label: "Onramp Funds",
+    description: "Enable fiat purchases to interact with your app.",
+    icon: <Landmark size={iconSize} />,
   },
 ];
 
@@ -165,6 +196,7 @@ export default function OnboardingPage({
   const accountQuery = useAccount();
   const [step, setStep] = useState(searchParams.email ? 2 : 1);
   const [direction, setDirection] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const form = useForm<FormData>({
@@ -176,7 +208,7 @@ export default function OnboardingPage({
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log(data);
+    setIsLoading(true);
     const res = await fetch(
       `${THIRDWEB_ANALYTICS_API_HOST}/v1/preferences/account`,
       {
@@ -195,6 +227,7 @@ export default function OnboardingPage({
         }),
       },
     );
+
     const json = await res.json();
 
     if (res.status !== 200) {
@@ -259,7 +292,7 @@ export default function OnboardingPage({
           {step < 3 && (
             <Button
               type="button"
-              variant="secondary"
+              variant={"secondary"}
               onClick={() => {
                 setDirection(1);
                 setStep(step + 1);
@@ -276,7 +309,7 @@ export default function OnboardingPage({
           {step === 3 && (
             <Button
               type="button"
-              variant="secondary"
+              variant="ghost"
               onClick={() => {
                 setDirection(-1);
                 setStep(step - 1);
@@ -288,7 +321,7 @@ export default function OnboardingPage({
           {step === 3 && (
             <Button
               type="submit"
-              variant="primary"
+              variant={watchInterests.length > 0 ? "primary" : "secondary"}
               onClick={form.handleSubmit(onSubmit)}
             >
               {watchInterests.length > 0 ? "Finish" : "Skip"}
@@ -326,10 +359,13 @@ export default function OnboardingPage({
           <FormControl>
             <Input
               className="w-full min-w-[250px] sm:w-1/2"
-              {...field}
-              id="email"
               type="email"
               placeholder="user@example.com"
+              {...field}
+              onBlur={(e) => {
+                e.preventDefault();
+                e.target.focus();
+              }}
             />
           </FormControl>
           <FormMessage />
@@ -493,14 +529,14 @@ export default function OnboardingPage({
   );
 
   const Step3: React.FC<StepProps> = ({ register }) => (
-    <div className="flex max-h-[450px] flex-col space-y-4 overflow-scroll sm:max-h-[700px]">
+    <div className="flex max-h-[550px] flex-col space-y-4 overflow-scroll sm:max-h-[600px] md:max-h-[700px] lg:max-h-[750px]">
       <FormField
         name="industry"
         control={form.control}
         render={() => (
           <FormItem>
             <FormControl>
-              <div className="grid w-full grid-cols-1 gap-6 xl:grid-cols-2 2xl:grid-cols-3">
+              <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3">
                 {interestValues.map((interest) => {
                   const checkedInterests = watchInterests || [];
                   const isChecked = checkedInterests.includes(interest.key);
@@ -509,7 +545,7 @@ export default function OnboardingPage({
                     <Card
                       key={interest.key}
                       className={cn(
-                        "no-scrollbar flex aspect-[2.5/1] cursor-pointer flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted md:aspect-[16/9]",
+                        "no-scrollbar flex aspect-[3.5/1] cursor-pointer flex-col items-start justify-start space-y-1 p-4 transition-colors hover:bg-muted sm:aspect-[2/1] md:aspect-[16/9] lg:aspect-[4/3]",
                         isChecked && "border-primary bg-muted",
                       )}
                       onClick={(event) => {
@@ -528,6 +564,7 @@ export default function OnboardingPage({
                         {...register("interests")}
                         id={`interest-${interest.key}`}
                       />
+                      {interest.icon ?? null}
                       <h5 className="font-semibold text-lg tracking-tight">
                         {interest.label}
                       </h5>
@@ -545,6 +582,21 @@ export default function OnboardingPage({
     </div>
   );
 
+  const Overlay = () => {
+    return (
+      // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+      <div
+        className="absolute z-50 flex h-screen w-screen flex-col items-center justify-center space-y-4 bg-[#00000088] text-center"
+        onClick={(e) => e.preventDefault()}
+      >
+        <h4 className="font-semibold text-2xl text-white">
+          Welcome to thirdweb!
+        </h4>
+        <Spinner className="size-10 text-foreground" />
+      </div>
+    );
+  };
+
   const variants = {
     enter: { opacity: 0, x: 200 * direction },
     center: { opacity: 1, x: 0 },
@@ -559,6 +611,7 @@ export default function OnboardingPage({
 
   return (
     <div className="relative flex place-items-center bg-muted/30">
+      {isLoading ? <Overlay /> : null}
       <main className="z-10 flex w-full flex-col-reverse gap-6 md:flex-row">
         {/* Left Panel */}
         <div className="items-between relative box-border flex h-[80vh] w-full flex-col overflow-hidden p-4 md:h-screen md:w-1/2 md:p-12">
