@@ -32,7 +32,6 @@ import { motion } from "framer-motion";
 import {
   Building,
   Coins,
-  FileCode2,
   Fingerprint,
   Gamepad2,
   Gift,
@@ -40,9 +39,9 @@ import {
   ListOrdered,
   RectangleEllipsis,
   ScanFace,
+  ScanSearch,
   Users2,
   Wallet,
-  WalletCards,
 } from "lucide-react";
 import React from "react";
 import { useState } from "react";
@@ -73,24 +72,19 @@ const interestValues = [
     icon: <Wallet size={iconSize} />,
   },
   {
-    key: "INAPP_WALLETS",
-    label: "In-App Wallets",
-    description:
-      "Create accounts securely with email, phone, social or passkey.",
-    icon: <WalletCards size={iconSize} />,
-  },
-  {
     key: "SPONSOR_TRANSACTIONS",
     label: "Sponsor Transactions",
     description: "Abstract away signatures & gas using Paymaster services.",
     icon: <Gift size={iconSize} />,
   },
   {
-    key: "CONTRACT_DEPLOYS",
-    label: "Deploy Contracts",
-    description: "Deploy audited contracts to any EVM network",
-    icon: <FileCode2 size={iconSize} />,
+    key: "QUERY_BLOCKCHAIN_DATA",
+    label: "Query Blockchain Data",
+    description:
+      "Lightning-fast queries across any chain, any transaction, any event",
+    icon: <ScanSearch size={iconSize} />,
   },
+
   {
     key: "UNIFIED_IDENTITY",
     label: "Unified Identity",
@@ -132,7 +126,7 @@ const interestValues = [
 ];
 
 const formSchema = z.object({
-  email: z.string().email("Email is not valid").optional(),
+  email: z.string().min(0).email().or(z.literal("")),
   userType: z.string().optional(),
   name: z
     .string()
@@ -211,6 +205,7 @@ export default function OnboardingPage({
     setIsLoading(true);
 
     const account = await accountQuery.refetch();
+
     if (!account.data?.id) {
       throw new Error("No account found");
     }
@@ -295,7 +290,7 @@ export default function OnboardingPage({
           />
         </div>
         <div className="flex space-x-4">
-          {step < 3 && (
+          {step === 2 && (
             <Button
               type="button"
               variant={"secondary"}
@@ -327,10 +322,10 @@ export default function OnboardingPage({
           {step === 3 && (
             <Button
               type="submit"
-              variant={watchInterests.length > 0 ? "primary" : "secondary"}
+              variant="primary"
               onClick={form.handleSubmit(onSubmit)}
             >
-              {watchInterests.length > 0 ? "Finish" : "Skip"}
+              Finish
             </Button>
           )}
         </div>
