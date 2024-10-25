@@ -9,6 +9,7 @@ import type { Prettify } from "../../../utils/type-utils.js";
 import type { ClientAndChain } from "../../../utils/types.js";
 import { type ThirdwebContract, getContract } from "../../contract.js";
 import { fetchPublishedContractMetadata } from "../publisher.js";
+import type { ReplacementValues } from "./bootstrap.js";
 import { computeCreate2FactoryAddress } from "./create-2-factory.js";
 
 export type InfraContractId =
@@ -16,6 +17,8 @@ export type InfraContractId =
   | "Forwarder"
   | "ForwarderEOAOnly"
   | "TWCloneFactory"
+  | "MintFeeManagerCore"
+  | "MultiSig"
   | (string & {});
 
 type GetDeployedInfraParams = Prettify<
@@ -26,6 +29,26 @@ type GetDeployedInfraParams = Prettify<
     version?: string;
   }
 >;
+
+/**
+ * @internal
+ */
+export async function getPredictedInfraContractAddress(
+  options: GetDeployedInfraParams,
+): Promise<string> {
+  const contractMetadata = await fetchPublishedContractMetadata({
+    client: options.client,
+    contractId: options.contractId,
+    publisher: options.publisher,
+    version: options.version,
+  });
+  return await computeContractAddress({
+    client: options.client,
+    chain: options.chain,
+    contractMetadata,
+    constructorParams: options.constructorParams,
+  })
+}
 
 /**
  * @internal
@@ -77,8 +100,26 @@ export function prepareInfraContractDeployTransactionFromMetadata(options: {
   contractMetadata: FetchDeployMetadataResult;
   constructorParams?: Record<string, unknown>;
   salt?: string;
+  replacementValues?: ReplacementValues
 }) {
   const { client, chain } = options;
+  let params: Record<string, unknown>;
+  if(options.contractMetadata.constructorParams) {
+    if(!options.constructorParams) {
+      Object.keys(options.contractMetadata.constructorParams).forEach(async (key, index) => {
+        const param = options.contractMetadata.constructorParams![key];
+
+        if (param?.defaultValue === "{{tw-mintfee-mmanager}}") {
+            params[index] = options.replacementValues?.mintFeeManager || "";
+        } else if (param?.defaultValue === "{{tw-multisig}}") {
+          params[index] = options.replacementValues?.multisig || "";
+        } else {
+          params[index] = "";
+        }
+      });
+    }
+  }
+
   return prepareTransaction({
     client,
     chain,
@@ -89,7 +130,10 @@ export function prepareInfraContractDeployTransactionFromMetadata(options: {
       }),
     data: async () => {
       const infraContractInfo =
-        await computeDeploymentInfoFromMetadata(options);
+        await computeDeploymentInfoFromMetadata({
+          ...options,
+          constructorParams: params
+        });
       return infraContractInfo.initBytecodeWithsalt;
     },
   });
