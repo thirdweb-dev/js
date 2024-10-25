@@ -73,7 +73,7 @@ const interestValues = [
     key: "INAPP_WALLETS",
     label: "In-App Wallets",
     description:
-      "Create accounts securely with email, phone, social or passkey.",
+      "Create accounts securely with email, phone, social, or passkey.",
     icon: <WalletCards size={iconSize} />,
   },
 
