@@ -171,6 +171,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
       </div>
 
       <MobileBurgerMenuButton
+        type="loggedIn"
         email={props.account?.email}
         logout={props.logout}
         connectButton={props.connectButton}

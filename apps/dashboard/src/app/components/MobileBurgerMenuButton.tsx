@@ -16,12 +16,20 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useLayoutEffect, useState } from "react";
 import { CmdKSearchModal } from "../../components/cmd-k-search";
+import { ThirdwebMiniLogo } from "./ThirdwebMiniLogo";
 
-export function MobileBurgerMenuButton(props: {
-  email: string | undefined;
-  logout: () => void;
-  connectButton: React.ReactNode;
-}) {
+export function MobileBurgerMenuButton(
+  props:
+    | {
+        type: "loggedIn";
+        email: string | undefined;
+        logout: () => void;
+        connectButton: React.ReactNode;
+      }
+    | {
+        type: "loggedOut";
+      },
+) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setTheme, theme } = useTheme();
   const [isCMDSearchModalOpen, setIsCMDSearchModalOpen] = useState(false);
@@ -62,41 +70,51 @@ export function MobileBurgerMenuButton(props: {
             <XIcon className="size-7 text-muted-foreground" />
           </Button>
 
-          <SkeletonContainer
-            skeletonData="someone@example.com"
-            loadedData={props.email}
-            className="inline-block self-start"
-            render={(email) => <p className="text-foreground">{email}</p>}
-          />
+          <Link href="/team">
+            <ThirdwebMiniLogo className="h-5" />
+          </Link>
 
-          <div className="h-4" />
+          <div className="h-5" />
 
-          <div className="[&>button]:!w-full">{props.connectButton}</div>
+          {props.type === "loggedIn" && (
+            <>
+              <SkeletonContainer
+                skeletonData="someone@example.com"
+                loadedData={props.email}
+                className="inline-block self-start"
+                render={(email) => <p className="text-foreground">{email}</p>}
+              />
 
-          <div className="h-6" />
+              <div className="h-3" />
 
-          <div className="flex flex-col gap-4">
-            <Link
-              href="/account"
-              className="flex items-center gap-2 text-base text-muted-foreground hover:text-foreground "
-            >
-              <SettingsIcon className="size-4" />
-              Account Settings
-            </Link>
+              <div className="[&>button]:!w-full">{props.connectButton}</div>
 
-            <Button
-              variant="link"
-              className="!h-auto hover:!no-underline justify-start gap-2 px-0 py-1 text-start text-base text-muted-foreground hover:text-foreground"
-              onClick={props.logout}
-            >
-              <LogOutIcon className="size-4" />
-              Log Out
-            </Button>
-          </div>
+              <div className="h-6" />
 
-          <div className="h-6" />
-          <Separator />
-          <div className="h-6" />
+              <div className="flex flex-col gap-4">
+                <Link
+                  href="/account"
+                  className="flex items-center gap-2 text-base text-muted-foreground hover:text-foreground "
+                >
+                  <SettingsIcon className="size-4" />
+                  Account Settings
+                </Link>
+
+                <Button
+                  variant="link"
+                  className="!h-auto hover:!no-underline justify-start gap-2 px-0 py-1 text-start text-base text-muted-foreground hover:text-foreground"
+                  onClick={props.logout}
+                >
+                  <LogOutIcon className="size-4" />
+                  Log Out
+                </Button>
+              </div>
+
+              <div className="h-6" />
+              <Separator />
+              <div className="h-6" />
+            </>
+          )}
 
           <div className="flex flex-col gap-5">
             <Button

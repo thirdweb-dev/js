@@ -273,7 +273,9 @@ export const CmdKSearchModal = (props: {
   );
 };
 
-export const CmdKSearch: React.FC = () => {
+export const CmdKSearch = (props: {
+  className?: string;
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -282,7 +284,7 @@ export const CmdKSearch: React.FC = () => {
         <Input
           onClick={() => setOpen(true)}
           placeholder="Search any contract"
-          className="bg-transparent pr-4"
+          className={cn("bg-transparent pr-4", props.className)}
         />
         <div className="-translate-y-1/2 absolute top-1/2 right-3 flex items-center gap-[2px] text-muted-foreground text-sm">
           <CommandIcon className="size-3" /> K
