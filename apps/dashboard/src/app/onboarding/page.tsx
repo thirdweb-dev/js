@@ -32,6 +32,7 @@ import { motion } from "framer-motion";
 import {
   Building,
   Coins,
+  FileCode2,
   Fingerprint,
   Gamepad2,
   Gift,
@@ -42,6 +43,7 @@ import {
   ScanSearch,
   Users2,
   Wallet,
+  WalletCards,
 } from "lucide-react";
 import React, { useCallback } from "react";
 import { useState } from "react";
@@ -68,10 +70,24 @@ const interestValues = [
     icon: <Wallet size={iconSize} />,
   },
   {
+    key: "INAPP_WALLETS",
+    label: "In-App Wallets",
+    description:
+      "Create accounts securely with email, phone, social or passkey.",
+    icon: <WalletCards size={iconSize} />,
+  },
+
+  {
     key: "SPONSOR_TRANSACTIONS",
     label: "Sponsor Transactions",
     description: "Abstract away signatures & gas using Paymaster services.",
     icon: <Gift size={iconSize} />,
+  },
+  {
+    key: "CONTRACT_DEPLOYS",
+    label: "Deploy Contracts",
+    description: "Deploy audited contracts to any EVM network",
+    icon: <FileCode2 size={iconSize} />,
   },
   {
     key: "QUERY_BLOCKCHAIN_DATA",
@@ -245,7 +261,25 @@ export default function OnboardingPage({
     return (
       <div className="absolute right-0 bottom-0 left-0 box-border flex w-full items-center justify-between overflow-auto p-4 pb-12 sm:p-12">
         {/* Stepper */}
+
         <div className="flex space-x-4">
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+          <div
+            key={"step-1"}
+            onClick={() => {
+              if (step > 1) {
+                setDirection(-1);
+              } else {
+                setDirection(1);
+              }
+              setStep(1);
+            }}
+            className={
+              step === 1
+                ? "h-3 w-12 cursor-pointer rounded-md bg-white transition ease-in-out"
+                : "h-3 w-12 cursor-pointer rounded-md bg-secondary transition ease-in-out"
+            }
+          />
           {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
           <div
             key={"step-2"}
@@ -259,8 +293,8 @@ export default function OnboardingPage({
             }}
             className={
               step === 2
-                ? "h-3 w-12 rounded-md bg-white transition ease-in-out"
-                : "h-3 w-12 rounded-md bg-secondary transition ease-in-out"
+                ? "h-3 w-12 cursor-pointer rounded-md bg-white transition ease-in-out"
+                : "h-3 w-12 cursor-pointer rounded-md bg-secondary transition ease-in-out"
             }
           />
           {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
@@ -276,41 +310,29 @@ export default function OnboardingPage({
             }}
             className={
               step === 3
-                ? "h-3 w-12 rounded-md bg-white transition ease-in-out"
-                : "h-3 w-12 rounded-md bg-secondary transition ease-in-out"
+                ? "h-3 w-12 cursor-pointer rounded-md bg-white transition ease-in-out"
+                : "h-3 w-12 cursor-pointer rounded-md bg-secondary transition ease-in-out"
             }
           />
         </div>
         <div className="flex space-x-4">
-          {step === 2 && (
-            <Button
-              type="button"
-              variant={"secondary"}
-              onClick={() => {
-                setDirection(1);
-                setStep(step + 1);
-              }}
-            >
-              Skip
-            </Button>
-          )}
+          <Button
+            type="button"
+            variant={"secondary"}
+            onClick={() => {
+              setDirection(1);
+              setStep(step + 1);
+            }}
+          >
+            Skip
+          </Button>
+
           {step < 3 && (
             <Button type="button" variant="primary" onClick={nextStep}>
               Next
             </Button>
           )}
-          {step === 3 && (
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => {
-                setDirection(-1);
-                setStep(step - 1);
-              }}
-            >
-              Back
-            </Button>
-          )}
+
           {step === 3 && (
             <Button
               type="submit"
@@ -330,8 +352,8 @@ export default function OnboardingPage({
       step === 1
         ? ["email"]
         : step === 2
-          ? ["userType", "name", "role", "industry"]
-          : ["interests"];
+          ? ["email", "userType", "name", "role", "industry"]
+          : ["email", "userType", "name", "role", "industry", "interests"];
     const isStepValid = await form.trigger(fields as Array<keyof FormData>);
     if (isStepValid) {
       setDirection(1);
@@ -585,7 +607,7 @@ export default function OnboardingPage({
                   </div>
                 )}
                 {step === 3 && (
-                  <div className="flex max-h-[550px] flex-col space-y-4 overflow-scroll sm:max-h-[600px] md:max-h-[700px] lg:max-h-[750px]">
+                  <div className="flex max-h-[550px] flex-col space-y-4 overflow-scroll sm:max-h-[600px] md:max-h-[700px] lg:max-h-[700px]">
                     <FormField
                       name="industry"
                       control={form.control}
@@ -663,7 +685,7 @@ export default function OnboardingPage({
               )}
               <div className="flex flex-col">
                 <h5 className="max-w-[200px] truncate font-regular font-sm text-white">
-                  {form.getValues("email")
+                  {step > 1
                     ? form.getValues("email")
                     : accountQuery.data?.creatorWalletAddress
                       ? shortenAddress(accountQuery.data?.creatorWalletAddress)
