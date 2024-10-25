@@ -84,7 +84,10 @@ export async function estimateUserOpGas(args: {
   // add gas buffer for managed account factory delegate calls
   return {
     preVerificationGas: hexToBigInt(res.preVerificationGas),
-    verificationGas: hexToBigInt(res.verificationGas),
+    verificationGas:
+      res.verificationGas !== undefined
+        ? hexToBigInt(res.verificationGas)
+        : undefined,
     verificationGasLimit: hexToBigInt(res.verificationGasLimit),
     callGasLimit: hexToBigInt(res.callGasLimit) + MANAGED_ACCOUNT_GAS_BUFFER,
     paymasterVerificationGasLimit:
@@ -146,7 +149,7 @@ export async function getUserOpGasFees(args: {
 export async function getUserOpReceipt(
   args: BundlerOptions & {
     userOpHash: Hex;
-  },
+  }
 ): Promise<TransactionReceipt | undefined> {
   const res = await getUserOpReceiptRaw(args);
 
@@ -163,7 +166,7 @@ export async function getUserOpReceipt(
     const revertReason = logs[0]?.args?.revertReason;
     if (!revertReason) {
       throw new Error(
-        `UserOp failed at txHash: ${res.receipt.transactionHash}`,
+        `UserOp failed at txHash: ${res.receipt.transactionHash}`
       );
     }
     const revertMsg = decodeErrorResult({
@@ -172,7 +175,7 @@ export async function getUserOpReceipt(
     throw new Error(
       `UserOp failed with reason: '${revertMsg.args.join(",")}' at txHash: ${
         res.receipt.transactionHash
-      }`,
+      }`
     );
   }
   return res.receipt;
@@ -197,7 +200,7 @@ export async function getUserOpReceipt(
 export async function getUserOpReceiptRaw(
   args: BundlerOptions & {
     userOpHash: Hex;
-  },
+  }
 ): Promise<UserOperationReceipt | undefined> {
   const res = await sendBundlerRequest({
     options: args,
@@ -294,7 +297,7 @@ async function sendBundlerRequest(args: {
     throw new Error(
       `${operation} error: ${error}
 Status: ${response.status}
-Code: ${code}`,
+Code: ${code}`
     );
   }
 
