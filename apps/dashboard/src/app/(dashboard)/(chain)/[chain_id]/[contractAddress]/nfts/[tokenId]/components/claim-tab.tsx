@@ -3,7 +3,6 @@
 import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
@@ -23,13 +22,6 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
   const form = useForm<{ to: string; amount: string }>({
     defaultValues: { amount: "1", to: address },
   });
-
-  const { onSuccess, onError } = useTxNotifications(
-    "Claimed successfully",
-    "Failed to claim",
-    contract,
-  );
-
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const account = useActiveAccount();
   return (
@@ -59,28 +51,34 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
             account,
           });
           if (approveTx) {
-            try {
-              await sendAndConfirmTx.mutateAsync(approveTx);
-            } catch {
-              return toast.error("Error approving ERC20 token");
-            }
+            const approvalPromise = sendAndConfirmTx.mutateAsync(approveTx);
+            toast.promise(approvalPromise, {
+              loading: "Approving ERC20 token for this claim",
+              success: "Approved succesfully",
+              error: "Failed to approve ERC20",
+            });
+            await approvalPromise;
           }
-          await sendAndConfirmTx.mutateAsync(transaction);
+          const promise = sendAndConfirmTx.mutateAsync(transaction);
+          toast.promise(promise, {
+            loading: "Claiming NFT",
+            success: "NFT claimed successfully",
+            error: "Failed to claim NFT",
+          });
           trackEvent({
             category: "nft",
             action: "claim",
             label: "success",
           });
-          onSuccess();
           form.reset();
         } catch (error) {
+          console.error(error);
           trackEvent({
             category: "nft",
             action: "claim",
             label: "error",
             error,
           });
-          onError(error);
         }
       })}
     >
