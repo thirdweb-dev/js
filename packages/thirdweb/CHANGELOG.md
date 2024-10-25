@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.64.2
+
+### Patch Changes
+
+- [#5172](https://github.com/thirdweb-dev/js/pull/5172) [`e8f952a`](https://github.com/thirdweb-dev/js/commit/e8f952a191d9180926d8d6b4e1317c683fe8a1e3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Always add URI to SIWE payload
+
 ## 5.64.1
 
 ### Patch Changes
