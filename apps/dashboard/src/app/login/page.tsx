@@ -3,10 +3,13 @@
 import { ColorModeToggle } from "@/components/color-mode-toggle";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { getAccountPreferences } from "lib/onboarding";
 import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { ConnectEmbed } from "thirdweb/react";
+import { getProfiles } from "thirdweb/wallets";
 import { getCookie } from "../../stores/SyncStoreToCookies";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
@@ -44,17 +47,41 @@ function CustomConnectEmmbed() {
   const { theme } = useTheme();
   const nextSearchParam = searchParams?.get("next");
   const client = useThirdwebClient();
+  const accountQuery = useAccount();
 
-  function onLoginSuccessful() {
+  async function onLoginSuccessful() {
+    const account = await accountQuery.refetch();
+    if (!account.data) throw new Error("No account found.");
+    const existingAccountPreferences = await getAccountPreferences({
+      accountId: account.data.id,
+    });
+
+    if (!existingAccountPreferences) {
+      const profiles = await getProfiles({ client });
+
+      const email = profiles.find((profile) => profile.details.email)?.details
+        .email;
+      const params = new URLSearchParams();
+      if (email) {
+        params.append("email", email);
+      }
+      if (nextSearchParam) {
+        params.append("next", nextSearchParam);
+      }
+      router.replace(`/onboarding?${params.toString()}`);
+      return;
+    }
+
     if (nextSearchParam && isValidRedirectPath(nextSearchParam)) {
       router.replace(nextSearchParam);
+      return;
+    }
+
+    const dashboardType = getCookie("x-dashboard-type");
+    if (dashboardType === "team") {
+      router.replace("/team");
     } else {
-      const dashboardType = getCookie("x-dashboard-type");
-      if (dashboardType === "team") {
-        router.replace("/team");
-      } else {
-        router.replace("/dashboard");
-      }
+      router.replace("/dashboard");
     }
   }
 

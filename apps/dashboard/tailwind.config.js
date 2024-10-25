@@ -89,12 +89,23 @@ module.exports = {
           "0%,70%,100%": { opacity: "1" },
           "20%,50%": { opacity: "0" },
         },
+        "gradient-x": {
+          "0%, 100%": {
+            "background-size": "250% 250%",
+            "background-position": "left center",
+          },
+          "50%": {
+            "background-size": "250% 250%",
+            "background-position": "right center",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         skeleton: "skeleton 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
+        "gradient-x": "gradient-x 15s ease infinite",
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],

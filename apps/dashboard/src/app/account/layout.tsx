@@ -3,6 +3,7 @@ import { getTeams } from "@/api/team";
 import { DashboardTypeCookieSetter } from "@/components/DashboardTypeCookieSetter";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import { AppFooter } from "@/components/blocks/app-footer";
+import { UnlimitedWalletsBanner } from "components/notices/AnnouncementBanner";
 import type React from "react";
 import { TWAutoConnect } from "../components/autoconnect";
 import { AccountHeader } from "./components/AccountHeader";
@@ -12,6 +13,7 @@ export default async function AccountLayout(props: {
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <UnlimitedWalletsBanner />
       <div className="flex grow flex-col">
         <HeaderAndNav />
         <div className="border-border border-b py-10">

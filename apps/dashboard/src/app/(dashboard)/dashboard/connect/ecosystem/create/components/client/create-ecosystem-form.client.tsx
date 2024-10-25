@@ -131,23 +131,16 @@ export function CreateEcosystemForm(props: {
                       defaultValue="PARTNER_WHITELIST"
                       className="flex flex-wrap gap-4 py-2"
                     >
-                      <FormItem>
-                        <FormControl>
-                          <RadioGroupItemButton
-                            value="PARTNER_WHITELIST"
-                            id="PARTNER_WHITELIST"
-                          >
-                            Allowlist
-                          </RadioGroupItemButton>
-                        </FormControl>
-                      </FormItem>
-                      <FormItem>
-                        <FormControl>
-                          <RadioGroupItemButton value="ANYONE" id="ANYONE">
-                            Public
-                          </RadioGroupItemButton>
-                        </FormControl>
-                      </FormItem>
+                      <RadioGroupItemButton
+                        value="PARTNER_WHITELIST"
+                        id="PARTNER_WHITELIST"
+                      >
+                        Allowlist
+                      </RadioGroupItemButton>
+
+                      <RadioGroupItemButton value="ANYONE" id="ANYONE">
+                        Public
+                      </RadioGroupItemButton>
                     </RadioGroup>
                   </FormControl>
                   <FormDescription>
