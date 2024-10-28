@@ -172,7 +172,7 @@ export type PaymasterResult = {
 
 export type EstimationResult = {
   preVerificationGas: bigint;
-  verificationGas: bigint;
+  verificationGas?: bigint;
   verificationGasLimit: bigint;
   callGasLimit: bigint;
   // v0.7 types

@@ -84,7 +84,10 @@ export async function estimateUserOpGas(args: {
   // add gas buffer for managed account factory delegate calls
   return {
     preVerificationGas: hexToBigInt(res.preVerificationGas),
-    verificationGas: hexToBigInt(res.verificationGas),
+    verificationGas:
+      res.verificationGas !== undefined
+        ? hexToBigInt(res.verificationGas)
+        : undefined,
     verificationGasLimit: hexToBigInt(res.verificationGasLimit),
     callGasLimit: hexToBigInt(res.callGasLimit) + MANAGED_ACCOUNT_GAS_BUFFER,
     paymasterVerificationGasLimit:
