@@ -235,12 +235,6 @@ export interface WalletStats {
   walletType: string;
 }
 
-export interface InAppWalletStats {
-  date: string;
-  authenticationMethod: string;
-  uniqueWalletsConnected: number;
-}
-
 export interface UserOpStats {
   date: string;
   successful: number;
