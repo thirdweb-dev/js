@@ -1,6 +1,8 @@
 import { notFound, redirect } from "next/navigation";
+import { localhost } from "thirdweb/chains";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
+import { EmbedSetupClient } from "./EmbedSetup.client";
 import { EmbedSetup } from "./embed-setup";
 
 export default async function Page(props: {
@@ -15,11 +17,16 @@ export default async function Page(props: {
     notFound();
   }
 
-  const { embedType } = await getContractPageMetadata(info.contract);
+  const { contract } = info;
+  if (contract.chain.id === localhost.id) {
+    return <EmbedSetupClient contract={contract} />;
+  }
+
+  const { embedType } = await getContractPageMetadata(contract);
 
   if (embedType === null) {
     redirect(`/${props.params.chain_id}/${props.params.contractAddress}`);
   }
 
-  return <EmbedSetup contract={info.contract} ercOrMarketplace={embedType} />;
+  return <EmbedSetup contract={contract} ercOrMarketplace={embedType} />;
 }

@@ -46,8 +46,13 @@ export type ContractPageMetadata = {
   functionSelectors: string[];
 };
 
-export async function getContractPageMetadata(
+export async function getContractPageMetadata(contract: ThirdwebContract) {
+  return getContractPageMetadataSetup(contract, isAnalyticsSupportedForChain);
+}
+
+export async function getContractPageMetadataSetup(
   contract: ThirdwebContract,
+  isAnalyticsSupportedFn: (chainId: number) => Promise<boolean>,
 ): Promise<ContractPageMetadata> {
   const [
     functionSelectorsResult,
@@ -55,7 +60,7 @@ export async function getContractPageMetadata(
     contractTypeResult,
   ] = await Promise.allSettled([
     resolveFunctionSelectors(contract),
-    isAnalyticsSupportedForChain(contract.chain.id),
+    isAnalyticsSupportedFn(contract.chain.id),
     getContractType({ contract }),
   ]);
 

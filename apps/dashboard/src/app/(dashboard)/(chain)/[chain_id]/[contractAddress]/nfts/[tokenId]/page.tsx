@@ -1,6 +1,8 @@
 import { notFound, redirect } from "next/navigation";
+import { localhost } from "thirdweb/chains";
 import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
+import { TokenIdPageClient } from "./TokenIdPage.client";
 import { TokenIdPage } from "./token-id";
 
 export default async function Page(props: {
@@ -16,16 +18,22 @@ export default async function Page(props: {
     notFound();
   }
 
+  if (!isOnlyNumbers(props.params.tokenId)) {
+    // redirect to nfts index page
+    redirect(`/${props.params.chain_id}/${props.params.contractAddress}/nfts`);
+  }
+
   const { contract } = info;
+  if (contract.chain.id === localhost.id) {
+    return (
+      <TokenIdPageClient contract={contract} tokenId={props.params.tokenId} />
+    );
+  }
+
   const { supportedERCs } = await getContractPageMetadata(contract);
 
   if (!supportedERCs.isERC721 && !supportedERCs.isERC1155) {
     redirect(`/${props.params.chain_id}/${props.params.contractAddress}`);
-  }
-
-  if (!isOnlyNumbers(props.params.tokenId)) {
-    // redirect to nfts index page
-    redirect(`/${props.params.chain_id}/${props.params.contractAddress}/nfts`);
   }
 
   return (

@@ -1,6 +1,7 @@
 "use client";
 import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
+import * as CommonExt from "thirdweb/extensions/common";
 import { SettingsMetadata } from "./components/metadata";
 import { SettingsPlatformFees } from "./components/platform-fees";
 import { SettingsPrimarySale } from "./components/primary-sale";
@@ -14,7 +15,7 @@ interface ContractSettingsPageProps {
   isPlatformFeesSupported: boolean;
 }
 
-export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
+const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
   contract,
   isContractMetadataSupported,
   isPrimarySaleSupported,
@@ -66,3 +67,31 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
     </Flex>
   );
 };
+
+export function ContractSettingsPage(props: {
+  contract: ThirdwebContract;
+  functionSelectors: string[];
+}) {
+  const { functionSelectors, contract } = props;
+  return (
+    <ContractSettingsPageInner
+      contract={contract}
+      isContractMetadataSupported={[
+        CommonExt.isGetContractMetadataSupported(functionSelectors),
+        CommonExt.isSetContractMetadataSupported(functionSelectors),
+      ].every(Boolean)}
+      isPrimarySaleSupported={[
+        CommonExt.isPrimarySaleRecipientSupported(functionSelectors),
+        CommonExt.isSetPrimarySaleRecipientSupported(functionSelectors),
+      ].every(Boolean)}
+      isRoyaltiesSupported={[
+        CommonExt.isGetDefaultRoyaltyInfoSupported(functionSelectors),
+        CommonExt.isSetDefaultRoyaltyInfoSupported(functionSelectors),
+      ].every(Boolean)}
+      isPlatformFeesSupported={[
+        CommonExt.isGetPlatformFeeInfoSupported(functionSelectors),
+        CommonExt.isSetPlatformFeeInfoSupported(functionSelectors),
+      ].every(Boolean)}
+    />
+  );
+}

@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
-import * as CommonExt from "thirdweb/extensions/common";
+import { localhost } from "thirdweb/chains";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { ContractSettingsPage } from "./ContractSettingsPage";
+import { ContractSettingsPageClient } from "./ContractSettingsPage.client";
 
 export default async function Page(props: {
   params: {
@@ -16,27 +17,17 @@ export default async function Page(props: {
     notFound();
   }
 
+  const { contract } = info;
+  if (contract.chain.id === localhost.id) {
+    return <ContractSettingsPageClient contract={contract} />;
+  }
+
   const { functionSelectors } = await getContractPageMetadata(info.contract);
 
   return (
     <ContractSettingsPage
       contract={info.contract}
-      isContractMetadataSupported={[
-        CommonExt.isGetContractMetadataSupported(functionSelectors),
-        CommonExt.isSetContractMetadataSupported(functionSelectors),
-      ].every(Boolean)}
-      isPrimarySaleSupported={[
-        CommonExt.isPrimarySaleRecipientSupported(functionSelectors),
-        CommonExt.isSetPrimarySaleRecipientSupported(functionSelectors),
-      ].every(Boolean)}
-      isRoyaltiesSupported={[
-        CommonExt.isGetDefaultRoyaltyInfoSupported(functionSelectors),
-        CommonExt.isSetDefaultRoyaltyInfoSupported(functionSelectors),
-      ].every(Boolean)}
-      isPlatformFeesSupported={[
-        CommonExt.isGetPlatformFeeInfoSupported(functionSelectors),
-        CommonExt.isSetPlatformFeeInfoSupported(functionSelectors),
-      ].every(Boolean)}
+      functionSelectors={functionSelectors}
     />
   );
 }

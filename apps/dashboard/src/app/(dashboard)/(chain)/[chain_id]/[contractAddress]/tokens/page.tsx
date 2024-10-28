@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { localhost } from "thirdweb/chains";
 import {
   isClaimToSupported,
   isMintToSupported,
@@ -6,6 +7,7 @@ import {
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { ContractTokensPage } from "./ContractTokensPage";
+import { ContractTokensPageClient } from "./ContractTokensPage.client";
 
 export default async function Page(props: {
   params: {
@@ -17,6 +19,10 @@ export default async function Page(props: {
 
   if (!info) {
     notFound();
+  }
+
+  if (info.contract.chain.id === localhost.id) {
+    return <ContractTokensPageClient contract={info.contract} />;
   }
 
   const { supportedERCs, functionSelectors } = await getContractPageMetadata(

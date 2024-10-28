@@ -31,14 +31,19 @@ export const AccountSigners: React.FC<AccountSignersProps> = ({ contract }) => {
   );
   const data = transformedAdmins.concat(transformedSigners || []);
   return (
-    <div className="flex flex-col gap-6">
-      {data.map((item) => (
-        <AccountSigner
-          key={item.signer}
-          item={item}
-          contractChainId={contract.chain.id}
-        />
-      ))}
+    <div>
+      <h1 className="mb-4 font-semibold text-2xl tracking-tight">
+        Account Signers
+      </h1>
+      <div className="flex flex-col gap-6">
+        {data.map((item) => (
+          <AccountSigner
+            key={item.signer}
+            item={item}
+            contractChainId={contract.chain.id}
+          />
+        ))}
+      </div>
     </div>
   );
 };

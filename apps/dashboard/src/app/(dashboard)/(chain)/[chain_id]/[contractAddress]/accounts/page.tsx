@@ -1,7 +1,9 @@
 import { notFound, redirect } from "next/navigation";
+import { localhost } from "thirdweb/chains";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { AccountsPage } from "./AccountsPage";
+import { AccountsPageClient } from "./AccountsPage.client";
 
 export default async function Page(props: {
   params: {
@@ -15,7 +17,12 @@ export default async function Page(props: {
     notFound();
   }
 
-  const { contract } = info;
+  const { contract, chainMetadata } = info;
+
+  if (chainMetadata.chainId === localhost.id) {
+    return <AccountsPageClient contract={contract} />;
+  }
+
   const { isAccountFactory } = await getContractPageMetadata(contract);
 
   if (!isAccountFactory) {

@@ -1,5 +1,8 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { fetchDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
+import {
+  type DashboardContractMetadata,
+  fetchDashboardContractMetadata,
+} from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import { fetchPublishedContractsFromDeploy } from "components/contract-components/fetchPublishedContractsFromDeploy";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -8,12 +11,34 @@ import { MetadataHeader } from "./metadata-header";
 interface ContractMetadataProps {
   contract: ThirdwebContract;
   chain: ChainMetadata;
+  contractMetadata: DashboardContractMetadata | undefined;
+  externalLinks:
+    | {
+        name: string;
+        url: string;
+      }[]
+    | undefined;
 }
 
-export async function ContractMetadata({
+export function ContractMetadata({
   contract,
   chain,
+  contractMetadata,
+  externalLinks,
 }: ContractMetadataProps) {
+  return (
+    <MetadataHeader
+      data={contractMetadata}
+      chain={chain}
+      address={contract.address}
+      externalLinks={externalLinks}
+    />
+  );
+}
+
+export async function getContractMetadataHeaderData(
+  contract: ThirdwebContract,
+) {
   const settledResults = await Promise.allSettled([
     fetchDashboardContractMetadata(contract),
     fetchPublishedContractsFromDeploy({
@@ -34,12 +59,8 @@ export async function ContractMetadata({
 
   const latestPublished = publishedContractsFromDeploy?.slice(-1)[0];
 
-  return (
-    <MetadataHeader
-      data={contractMetadata}
-      chain={chain}
-      address={contract.address}
-      externalLinks={latestPublished?.externalLinks}
-    />
-  );
+  return {
+    contractMetadata,
+    externalLinks: latestPublished?.externalLinks,
+  };
 }

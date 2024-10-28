@@ -18,7 +18,7 @@ export function useDashboardContractMetadata(contract: ThirdwebContract) {
   });
 }
 
-type DashboardContractMetadata = {
+export type DashboardContractMetadata = {
   name: string;
   symbol: string;
   image: string;

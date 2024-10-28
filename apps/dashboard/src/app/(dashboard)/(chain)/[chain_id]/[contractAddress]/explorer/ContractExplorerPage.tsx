@@ -1,21 +1,36 @@
-"use client";
-
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Flex } from "@chakra-ui/react";
 import type { Abi } from "abitype";
 import { getContractFunctionsFromAbi } from "components/contract-components/getContractFunctionsFromAbi";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
+import { CircleAlertIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
-
-// TODO - figure out why we have to add "use client" here and it does not work without it
+import type { ChainMetadata } from "thirdweb/chains";
 
 interface ContractExplorePageProps {
   contract: ThirdwebContract;
-  abi: Abi;
+  abi: Abi | undefined;
+  chainMetadata: ChainMetadata;
 }
+
 export const ContractExplorerPage: React.FC<ContractExplorePageProps> = ({
   contract,
   abi,
+  chainMetadata,
 }) => {
+  if (!abi) {
+    return (
+      <Alert variant="destructive">
+        <CircleAlertIcon className="size-5" />
+        <AlertTitle>Failed to resolve contract ABI</AlertTitle>
+        <AlertDescription>
+          Please verify that contract address is correct and deployed on "
+          {chainMetadata.name}" chain.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
   const functions = getContractFunctionsFromAbi(abi);
   return (
     <Flex direction="column" h="70vh">

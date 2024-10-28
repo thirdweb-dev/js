@@ -4,8 +4,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CheckIcon, CircleAlertIcon, RotateCcwIcon } from "lucide-react";
 import { useState } from "react";
-import { ConfigureNetworks } from "../../../../../components/configure-networks/ConfigureNetworks";
-import { addChainOverrides } from "../../../../../stores/chainStores";
+import { addChainOverrides } from "stores/chainStores";
+import { ConfigureNetworks } from "../../../../../../components/configure-networks/ConfigureNetworks";
 
 export function ConfigureCustomChain(props: {
   chainSlug: string;

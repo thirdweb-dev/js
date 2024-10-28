@@ -1,20 +1,14 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ContractCard } from "components/explore/contract-card";
 import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
-import type { ThirdwebContract } from "thirdweb";
+import type { ThirdwebClient, ThirdwebContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
 import { getBytecode, getContract } from "thirdweb/contract";
 import { getPublishedUriFromCompilerUri } from "thirdweb/extensions/thirdweb";
 import { getInstalledModules } from "thirdweb/modules";
 import { download } from "thirdweb/storage";
 import { extractIPFSUri } from "thirdweb/utils";
-import { getAuthTokenWalletAddress } from "../../../app/api/lib/getAuthToken";
-import { isEnsName, resolveEns } from "../../../lib/ens";
-import { fetchPublishedContractsFromDeploy } from "../fetchPublishedContractsFromDeploy";
-
-interface PublishedByProps {
-  contract: ThirdwebContract;
-}
+import { fetchPublishedContractsFromDeploy } from "../../../../../../../components/contract-components/fetchPublishedContractsFromDeploy";
+import { isEnsName, resolveEns } from "../../../../../../../lib/ens";
 
 type ModuleMetadataPickedKeys = {
   publisher: string;
@@ -23,14 +17,17 @@ type ModuleMetadataPickedKeys = {
   version: string;
 };
 
-export const PublishedBy: React.FC<PublishedByProps> = async ({ contract }) => {
-  const client = getThirdwebClient();
+export async function getPublishedByCardProps(params: {
+  address: string | null;
+  contract: ThirdwebContract;
+  client: ThirdwebClient;
+}) {
+  const { address, contract, client } = params;
+
   const publishedContractsFromDeploy = await fetchPublishedContractsFromDeploy({
     contract,
     client,
   });
-
-  const address = getAuthTokenWalletAddress();
 
   const reversedPublishedContractsFromDeploy = [
     ...(publishedContractsFromDeploy || []),
@@ -133,19 +130,35 @@ export const PublishedBy: React.FC<PublishedByProps> = async ({ contract }) => {
     }
   }
 
+  return {
+    modules,
+    name: publishedContractToShow.name,
+    publisher: publisherAddressOrEns,
+    version: publishedContractToShow.version,
+    isBeta: (publishedContractToShow.displayName || "")
+      .toLowerCase()
+      .includes("beta"),
+  };
+}
+
+export function PublishedByUI(props: {
+  modules: ModuleMetadataPickedKeys[];
+  name: string;
+  publisher: string;
+  version: string | undefined;
+  isBeta: boolean;
+}) {
   return (
     <ContractCard
-      contractId={publishedContractToShow.name}
-      publisher={publisherAddressOrEns}
-      version={publishedContractToShow.version}
-      isBeta={(publishedContractToShow.displayName || "")
-        .toLowerCase()
-        .includes("beta")}
-      modules={modules.map((m) => ({
+      contractId={props.name}
+      publisher={props.publisher}
+      version={props.version}
+      isBeta={props.isBeta}
+      modules={props.modules.map((m) => ({
         publisher: m.publisher,
         moduleId: m.name,
         version: m.version,
       }))}
     />
   );
-};
+}
