@@ -1,11 +1,10 @@
-import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
+import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
-  iconSize,
   radius,
   spacing,
 } from "../../../../../../core/design-system/index.js";
@@ -14,13 +13,12 @@ import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletB
 import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Container } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import { GenericWalletIcon } from "../../../icons/GenericWalletIcon.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
 import { PayTokenIcon } from "../PayTokenIcon.js";
+import { WalletRow } from "../WalletSelectorButton.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -28,9 +26,8 @@ import { PayTokenIcon } from "../PayTokenIcon.js";
  * It also renders the balance of active wallet for the selected token in selected chain
  * @internal
  */
-export function PayWithCrypto(props: {
+export function PayWithCryptoQuoteInfo(props: {
   value: string;
-  onSelectToken: () => void;
   chain: Chain;
   token: TokenInfo | NativeToken;
   isLoading: boolean;
@@ -39,8 +36,8 @@ export function PayWithCrypto(props: {
   payerAccount: Account;
   swapRequired: boolean;
 }) {
+  const theme = useCustomTheme();
   const { name } = useChainName(props.chain);
-
   const balanceQuery = useWalletBalance({
     address: props.payerAccount.address,
     chain: props.chain,
@@ -51,36 +48,56 @@ export function PayWithCrypto(props: {
   return (
     <Container
       bg="tertiaryBg"
-      borderColor="borderColor"
-      flex="row"
       style={{
-        borderWidth: "1px",
-        borderTopWidth: 0,
-        borderStyle: "solid",
-        flexWrap: "nowrap",
-        justifyContent: "space-between",
-        minHeight: "64px",
-        alignItems: "center",
+        borderRadius: radius.lg,
+        border: `1px solid ${theme.colors.borderColor}`,
         ...(props.swapRequired
-          ? { borderBottom: "none" }
-          : {
-              borderBottomLeftRadius: radius.md,
-              borderBottomRightRadius: radius.md,
-            }),
+          ? {
+              borderBottom: "none",
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+            }
+          : {}),
       }}
     >
-      {/* Left */}
-      <Button
-        variant="ghost"
-        onClick={props.onSelectToken}
+      {/* Wallet and balance */}
+      <Container
+        flex="row"
+        gap="sm"
+        style={{
+          justifyContent: "space-between",
+          padding: spacing.sm,
+          borderBottom: `1px solid ${theme.colors.borderColor}`,
+        }}
+      >
+        <WalletRow client={props.client} address={props.payerAccount.address} />
+        {balanceQuery.data ? (
+          <Container flex="row" gap="3xs" center="y">
+            <Text size="xs" color="secondaryText" weight={500}>
+              {formatTokenBalance(balanceQuery.data, false, 3)}
+            </Text>
+            <TokenSymbol
+              token={props.token}
+              chain={props.chain}
+              size="xs"
+              color="secondaryText"
+            />
+          </Container>
+        ) : (
+          <Skeleton width="70px" height={fontSize.xs} />
+        )}
+      </Container>
+      {/* Quoted price */}
+      <Container
+        flex="row"
         gap="sm"
         style={{
           paddingInline: spacing.sm,
           paddingBlock: spacing.sm,
           minWidth: "50%",
           justifyContent: "flex-start",
+          minHeight: "64px",
         }}
-        disabled={props.freezeChainAndTokenSelection}
       >
         <PayTokenIcon
           token={props.token}
@@ -89,57 +106,26 @@ export function PayWithCrypto(props: {
           client={props.client}
         />
         <Container flex="column" gap="3xs">
-          <Container flex="row" gap="xs" center="y" color="primaryText">
-            <TokenSymbol token={props.token} chain={props.chain} size="sm" />
-            <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-          </Container>
+          {props.isLoading ? (
+            <Skeleton width="120px" height={fontSize.md} color="borderColor" />
+          ) : (
+            <Container flex="row" gap="xxs" center="y" color="primaryText">
+              <Text
+                size="md"
+                color={props.value ? "primaryText" : "secondaryText"}
+              >
+                {formatNumber(Number(props.value), 6) || ""}
+              </Text>
+              <TokenSymbol token={props.token} chain={props.chain} size="sm" />
+            </Container>
+          )}
           {name ? (
             <Text size="xs">{name}</Text>
           ) : (
             <Skeleton width="90px" height={fontSize.xs} />
           )}
         </Container>
-      </Button>
-
-      {/* Right */}
-      <div
-        style={{
-          flexGrow: 1,
-          flexShrink: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-end",
-          gap: spacing.xxs,
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-          justifyContent: "center",
-          paddingRight: spacing.sm,
-        }}
-      >
-        {props.isLoading ? (
-          <Skeleton width="120px" height={fontSize.md} color="borderColor" />
-        ) : (
-          <Text
-            size="md"
-            color={props.value ? "primaryText" : "secondaryText"}
-            style={{}}
-          >
-            {formatNumber(Number(props.value), 6) || ""}
-          </Text>
-        )}
-
-        <Container flex="row" gap="xxs" center="y" color="secondaryText">
-          <GenericWalletIcon size={fontSize.xs} />
-          {balanceQuery.data ? (
-            <Text size="xs" color="secondaryText" weight={500}>
-              {formatTokenBalance(balanceQuery.data, false)}
-            </Text>
-          ) : (
-            <Skeleton width="70px" height={fontSize.xs} />
-          )}
-        </Container>
-      </div>
+      </Container>
     </Container>
   );
 }

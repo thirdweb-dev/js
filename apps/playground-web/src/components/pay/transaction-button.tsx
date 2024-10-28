@@ -28,7 +28,7 @@ const usdcContract = getContract({
   client: THIRDWEB_CLIENT,
 });
 
-export function PayTransactionButtonPreview() {
+export function PayTransactionPreview() {
   const account = useActiveAccount();
   const { theme } = useTheme();
   const { data: nft } = useReadContract(getNFT, {
@@ -41,42 +41,51 @@ export function PayTransactionButtonPreview() {
       <StyledConnectButton />
       <div className="h-10" />
       {account && (
-        <>
-          <PayEmbed
-            client={THIRDWEB_CLIENT}
-            theme={theme === "light" ? "light" : "dark"}
-            payOptions={{
-              mode: "transaction",
-              transaction: claimTo({
-                contract: nftContract,
-                quantity: 1n,
-                tokenId: 0n,
-                to: account?.address || "",
-              }),
-              metadata: nft?.metadata,
-            }}
-          />
-          <div className="h-10" />
-          <h4 className="py-4 font-bold">ERC20 Transfer (no metadata)</h4>
-          <TransactionButton
-            transaction={() => {
-              if (!account) throw new Error("No active account");
-              return transfer({
-                contract: usdcContract,
-                amount: "50",
-                to: account?.address || "",
-              });
-            }}
-            onError={(e) => {
-              console.error(e);
-            }}
-            payModal={{
-              theme: theme === "light" ? "light" : "dark",
-            }}
-          >
-            Buy NFT
-          </TransactionButton>
-        </>
+        <PayEmbed
+          client={THIRDWEB_CLIENT}
+          theme={theme === "light" ? "light" : "dark"}
+          payOptions={{
+            mode: "transaction",
+            transaction: claimTo({
+              contract: nftContract,
+              quantity: 1n,
+              tokenId: 0n,
+              to: account?.address || "",
+            }),
+            metadata: nft?.metadata,
+          }}
+        />
+      )}
+    </>
+  );
+}
+
+export function PayTransactionButtonPreview() {
+  const account = useActiveAccount();
+  const { theme } = useTheme();
+
+  return (
+    <>
+      <StyledConnectButton />
+      {account && (
+        <TransactionButton
+          transaction={() => {
+            if (!account) throw new Error("No active account");
+            return transfer({
+              contract: usdcContract,
+              amount: "50",
+              to: account?.address || "",
+            });
+          }}
+          onError={(e) => {
+            console.error(e);
+          }}
+          payModal={{
+            theme: theme === "light" ? "light" : "dark",
+          }}
+        >
+          Transfer funds
+        </TransactionButton>
       )}
     </>
   );

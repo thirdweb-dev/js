@@ -1,6 +1,6 @@
 import { APIHeader } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
-import { StyledPayEmbedPreview } from "@/components/pay/embed";
+import { BuyMerchPreview } from "@/components/pay/direct-payment";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
@@ -17,11 +17,11 @@ export default function Page() {
     <ThirdwebProvider>
       <main className="container px-0 pb-20">
         <APIHeader
-          title="The easiest way for users to fund their wallets"
+          title="Commerce payments with fiat or crypto"
           description={
             <>
-              Onramp users with credit card &amp; cross-chain crypto payments —
-              and generate revenue for each user transaction.
+              Let your users pay for any service with fiat or crypto on any
+              chain.
             </>
           }
           docsLink="https://portal.thirdweb.com/connect/pay/get-started"
@@ -29,49 +29,54 @@ export default function Page() {
         />
 
         <section className="space-y-8">
-          <StyledPayEmbed />
+          <BuyMerch />
         </section>
       </main>
     </ThirdwebProvider>
   );
 }
 
-function StyledPayEmbed() {
+function BuyMerch() {
   return (
     <>
       <div className="space-y-2">
         <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Top Up
+          Commerce
         </h2>
         <p className="max-w-[600px]">
-          Inline component that allows users to buy any currency.
+          Take paymets from Fiat or Crypto directly to your seller wallet.
           <br />
-          Customize theme, currency, amounts, payment methods and more.
+          Get notified for every sale through webhooks, which lets you trigger
+          any action you want like shipping physical goods, activating services
+          or doing onchain actions.
         </p>
       </div>
 
       <CodeExample
-        preview={<StyledPayEmbedPreview />}
-        code={`
-        import { PayEmbed } from "thirdweb/react";
+        preview={<BuyMerchPreview />}
+        code={`import { PayEmbed, getDefaultToken } from "thirdweb/react";
+          import { base } from "thirdweb/chains";
 
         function App() {
           return (
             <PayEmbed
               client={client}
+              theme={"light"}
               payOptions={{
-                mode: "fund_wallet",
-                metadata: {
-                  name: "Get funds",
-                },
-                prefillBuy: {
+                mode: "direct_payment",
+                paymentInfo: {
+                  amount: "35",
                   chain: base,
-                  amount: "0.01",
+                  token: getDefaultToken(base, "USDC"),
+                  sellerAddress: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675",
                 },
-                // ... theme, currency, amounts, payment methods, etc.
+                metadata: {
+                  name: "Black Hoodie (Size L)",
+                  image: "/drip-hoodie.png",
+                },
               }}
-          />
-        );
+            />
+          );
         };`}
         lang="tsx"
       />

@@ -10,10 +10,30 @@ setThirdwebDomains({
   pay: process.env.NEXT_PUBLIC_PAY_URL,
 });
 
+const isDev =
+  process.env.NODE_ENV === "development" ||
+  process.env.NEXT_PUBLIC_RPC_URL?.endsWith(".thirdweb-dev.com");
+
 export const THIRDWEB_CLIENT = createThirdwebClient(
   process.env.THIRDWEB_SECRET_KEY
-    ? { secretKey: process.env.THIRDWEB_SECRET_KEY }
+    ? {
+        secretKey: process.env.THIRDWEB_SECRET_KEY,
+        config: {
+          storage: isDev
+            ? {
+                gatewayUrl: "https://gateway.pinata.cloud/ipfs/",
+              }
+            : undefined,
+        },
+      }
     : {
         clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID as string,
+        config: {
+          storage: isDev
+            ? {
+                gatewayUrl: "https://gateway.pinata.cloud/ipfs/",
+              }
+            : undefined,
+        },
       },
 );

@@ -56,16 +56,30 @@ export const navLinks: SidebarLink[] = [
     ],
   },
   {
-    name: "Social",
-    href: "/connect/social",
-  },
-  {
     name: "Pay",
-    href: "/connect/pay",
+    expanded: true,
+    links: [
+      {
+        name: "Top up",
+        href: "/connect/pay",
+      },
+      {
+        name: "Commerce",
+        href: "/connect/pay/commerce",
+      },
+      {
+        name: "Transactions",
+        href: "/connect/pay/transactions",
+      },
+    ],
   },
   {
     name: "Auth",
     href: "/connect/auth",
+  },
+  {
+    name: "Social",
+    href: "/connect/social",
   },
   {
     name: "Blockchain API",
