@@ -218,7 +218,7 @@
     "input-otp": "^1.2.4",
     "mipd": "0.0.7",
     "uqr": "0.1.2",
-    "viem": "2.21.34"
+    "viem": "2.21.35"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
