@@ -29,7 +29,7 @@ const mintAdditionalSupplyFormSchema = z.object({
   to: z.string().refine((value) => isAddress(value), {
     message: "Invalid Ethereum address",
   }),
-  amount: z.number().int().min(1, "Amount must be at least 1"),
+  amount: z.coerce.number().int().min(1, "Amount must be at least 1"),
 });
 
 const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
@@ -96,7 +96,7 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} type="number" />
               </FormControl>
               <FormDescription>
                 How many would you like to mint?
