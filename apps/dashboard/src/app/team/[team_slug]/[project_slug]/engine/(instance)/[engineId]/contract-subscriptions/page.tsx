@@ -1,8 +1,8 @@
 "use client";
 
 import { WithEngineInstance } from "components/engine/EnginePageLayout";
-import { EngineContractSubscriptions } from "components/engine/contract-subscription/engine-contract-subscription";
 import type { EngineInstancePageProps } from "../types";
+import { EngineContractSubscriptions } from "./components/engine-contract-subscription";
 
 export default function Page(props: EngineInstancePageProps) {
   const { params } = props;

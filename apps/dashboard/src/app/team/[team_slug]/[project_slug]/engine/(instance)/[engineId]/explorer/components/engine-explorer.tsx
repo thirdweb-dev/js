@@ -1,7 +1,7 @@
 "use client";
 
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
-import "../../../css/swagger-ui.css";
+import "./swagger-ui.css";
 import "swagger-ui-react/swagger-ui.css";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import dynamic from "next/dynamic";

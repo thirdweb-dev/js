@@ -1,8 +1,8 @@
 "use client";
 
 import { WithEngineInstance } from "components/engine/EnginePageLayout";
-import { EngineAlertsPage } from "../../../../../../../../components/engine/alerts/EngineAlertsPage";
 import type { EngineInstancePageProps } from "../types";
+import { EngineAlertsPage } from "./components/EngineAlertsPage";
 
 export default function Page(props: EngineInstancePageProps) {
   const { params } = props;

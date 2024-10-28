@@ -1,8 +1,8 @@
 "use client";
 
 import { WithEngineInstance } from "components/engine/EnginePageLayout";
-import { EngineAdmins } from "components/engine/permissions/engine-admins";
 import type { EngineInstancePageProps } from "../types";
+import { EngineAdmins } from "./components/engine-admins";
 
 export default function Page(props: EngineInstancePageProps) {
   const { params } = props;

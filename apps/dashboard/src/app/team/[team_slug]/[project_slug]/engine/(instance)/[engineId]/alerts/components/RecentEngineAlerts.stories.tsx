@@ -3,8 +3,8 @@ import { Toaster } from "sonner";
 import {
   createEngineAlertRuleStub,
   createEngineAlertStub,
-} from "../../../stories/stubs";
-import { BadgeContainer, mobileViewport } from "../../../stories/utils";
+} from "stories/stubs";
+import { BadgeContainer, mobileViewport } from "stories/utils";
 import { RecentEngineAlertsSectionUI } from "./RecentEngineAlerts";
 
 const meta = {
