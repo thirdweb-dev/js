@@ -5,13 +5,9 @@
   "ignore": ["src/**/__generated__/**"],
   "ignoreBinaries": ["printf"],
   "ignoreDependencies": [
-    "@codspeed/vitest-plugin",
     "@testing-library/jest-dom",
     "tslib",
-    "dotenv-mono",
-    "@size-limit/preset-big-lib",
-    "@viem/anvil",
-    "@vitest/coverage-v8"
+    "@size-limit/preset-big-lib"
   ],
   "rules": {
     "optionalPeerDependencies": "off",
