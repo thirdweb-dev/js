@@ -1,7 +1,6 @@
-import type { FrameRequest } from "@coinbase/onchainkit";
 import * as Sentry from "@sentry/nextjs";
-import { CoinbaseKit } from "classes/CoinbaseKit";
 import { SuperChainFormFrame } from "classes/SuperchainFormFrame";
+import { validateFrameMessage } from "lib/farcaster-frames";
 import type { NextRequest } from "next/server";
 import {
   errorResponse,
@@ -27,9 +26,9 @@ export default async function handler(req: NextRequest) {
   }
 
   try {
-    const body = (await req.json()) as FrameRequest;
+    const body = await req.json();
 
-    const { isValid, message } = await CoinbaseKit.validateMessage(body);
+    const { isValid, message } = await validateFrameMessage(body);
 
     if (!isValid || !message) {
       return errorResponse("Invalid message", 400);

@@ -1,6 +1,5 @@
-import type { FrameRequest } from "@coinbase/onchainkit";
-import { CoinbaseKit } from "classes/CoinbaseKit";
 import { SuperChainFrame } from "classes/SuperChainFrame";
+import { validateFrameMessage } from "lib/farcaster-frames";
 import {
   finalGrowthPlanFrameMetaData,
   growthPlanFrameMetaData,
@@ -23,9 +22,9 @@ export default async function handler(req: NextRequest) {
     return errorResponse("Invalid method", 400);
   }
 
-  const body = (await req.json()) as FrameRequest;
+  const body = await req.json();
 
-  const { isValid, message } = await CoinbaseKit.validateMessage(body);
+  const { isValid, message } = await validateFrameMessage(body);
 
   if (!isValid || !message) {
     return errorResponse("Invalid message", 400);

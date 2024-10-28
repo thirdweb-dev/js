@@ -1,13 +1,14 @@
-import type { FrameRequest } from "@coinbase/onchainkit";
-import { CoinbaseKit } from "classes/CoinbaseKit";
 import { ConnectFrame } from "classes/ConnectFrame";
+import {
+  getFarcasterAccountAddress,
+  validateFrameMessage,
+} from "lib/farcaster-frames";
 import type { NextRequest } from "next/server";
 import {
   errorResponse,
   redirectResponse,
   successHtmlResponse,
 } from "utils/api";
-import { getFarcasterAccountAddress } from "utils/farcaster";
 
 export const config = {
   runtime: "edge",
@@ -18,9 +19,9 @@ export default async function handler(req: NextRequest) {
     return errorResponse("Invalid method", 400);
   }
 
-  const body = (await req.json()) as FrameRequest;
+  const body = await req.json();
 
-  const { isValid, message } = await CoinbaseKit.validateMessage(body);
+  const { isValid, message } = await validateFrameMessage(body);
 
   if (!isValid || !message) {
     return errorResponse("Invalid message", 400);

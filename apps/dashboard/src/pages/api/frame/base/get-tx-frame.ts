@@ -1,14 +1,13 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
-import type { FrameRequest } from "@coinbase/onchainkit";
-import { CoinbaseKit } from "classes/CoinbaseKit";
+import {
+  getFarcasterAccountAddress,
+  validateFrameMessage,
+} from "lib/farcaster-frames";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getContract } from "thirdweb";
 import { base } from "thirdweb/chains";
 import { errorResponse } from "utils/api";
-import {
-  getErc721PreparedEncodedData,
-  getFarcasterAccountAddress,
-} from "utils/tx-frame";
+import { getErc721PreparedEncodedData } from "utils/tx-frame";
 import { abi } from "./abi";
 
 // https://thirdweb.com/base/0x352810fF1c51a42B568662D46570A30B590a715a
@@ -24,9 +23,7 @@ export default async function handler(
   }
 
   // Validate message with @coinbase/onchainkit
-  const { isValid, message } = await CoinbaseKit.validateMessage(
-    req.body as FrameRequest,
-  );
+  const { isValid, message } = await validateFrameMessage(req.body);
 
   // Validate if message is valid
   if (!isValid || !message) {

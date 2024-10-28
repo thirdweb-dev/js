@@ -1,6 +1,9 @@
-import { type FrameRequest, getFrameHtmlResponse } from "@coinbase/onchainkit";
-import { CoinbaseKit } from "classes/CoinbaseKit";
+import { getFrameHtmlResponse } from "@coinbase/onchainkit";
 import { ThirdwebDegenEngine } from "classes/ThirdwebDegenEngine";
+import {
+  getFarcasterAccountAddress,
+  validateFrameMessage,
+} from "lib/farcaster-frames";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import type { NextRequest } from "next/server";
 import {
@@ -8,7 +11,6 @@ import {
   redirectResponse,
   successHtmlResponse,
 } from "utils/api";
-import { getFarcasterAccountAddress } from "utils/farcaster";
 import { shortenAddress } from "utils/string";
 
 const postUrl = `${getAbsoluteUrl()}/api/frame/degen/mint`;
@@ -26,9 +28,9 @@ export default async function handler(req: NextRequest) {
     return errorResponse("Invalid method", 400);
   }
 
-  const body = (await req.json()) as FrameRequest;
+  const body = await req.json();
 
-  const { isValid, message } = await CoinbaseKit.validateMessage(body);
+  const { isValid, message } = await validateFrameMessage(body);
 
   if (!isValid || !message) {
     return errorResponse("Invalid message", 400);
