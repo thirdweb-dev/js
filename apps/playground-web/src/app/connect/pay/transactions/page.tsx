@@ -131,7 +131,9 @@ function NoFundsPopup() {
                   to: account.address,
                 });
               }}
-            />
+            >
+              Buy VIP Pass
+            </TransactionButton>
           );
         };`}
         lang="tsx"

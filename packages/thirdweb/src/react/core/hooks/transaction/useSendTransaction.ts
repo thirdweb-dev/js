@@ -13,6 +13,7 @@ import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { getTokenBalance } from "../../../../wallets/utils/getTokenBalance.js";
 import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
+import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
 import type { SupportedTokens } from "../../utils/defaultTokens.js";
@@ -164,10 +165,39 @@ export function useSendTransactionCore(args: {
 
         (async () => {
           try {
-            const [_nativeValue, _erc20Value] = await Promise.all([
-              resolvePromisedValue(tx.value),
-              resolvePromisedValue(tx.erc20Value),
-            ]);
+            const [_nativeValue, _erc20Value, supportedDestinations] =
+              await Promise.all([
+                resolvePromisedValue(tx.value),
+                resolvePromisedValue(tx.erc20Value),
+                fetchBuySupportedDestinations(tx.client).catch(() => null),
+              ]);
+
+            if (!supportedDestinations) {
+              // could not fetch supported destinations, just send the tx
+              sendTx();
+              return;
+            }
+
+            if (
+              !supportedDestinations
+                .map((x) => x.chain.id)
+                .includes(tx.chain.id) ||
+              (_erc20Value &&
+                !supportedDestinations.some(
+                  (x) =>
+                    x.chain.id === tx.chain.id &&
+                    x.tokens.find(
+                      (t) =>
+                        t.address.toLowerCase() ===
+                        _erc20Value.tokenAddress.toLowerCase(),
+                    ),
+                ))
+            ) {
+              // chain/token not supported, just send the tx
+              sendTx();
+              return;
+            }
+
             const nativeValue = _nativeValue || 0n;
             const erc20Value = _erc20Value?.amountWei || 0n;
 

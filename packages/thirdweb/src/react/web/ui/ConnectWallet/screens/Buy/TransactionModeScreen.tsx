@@ -6,23 +6,32 @@ import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toTokens } from "../../../../../../utils/units.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../../core/design-system/CustomThemeProvider.js";
-import { iconSize, spacing } from "../../../../../core/design-system/index.js";
+import { fontSize, spacing } from "../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useChainMetadata } from "../../../../../core/hooks/others/useChainQuery.js";
+import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
+import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../../../core/hooks/wallets/useActiveWallet.js";
 import { hasSponsoredTransactionsEnabled } from "../../../../../core/utils/wallet.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
 import { ChainIcon } from "../../../components/ChainIcon.js";
 import { Img } from "../../../components/Img.js";
+import { Skeleton } from "../../../components/Skeleton.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { TokenIcon } from "../../../components/TokenIcon.js";
-import { WalletImage } from "../../../components/WalletImage.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
+import { TokenSymbol } from "../../../components/token/TokenSymbol.js";
 import { ConnectButton } from "../../ConnectButton.js";
-import type { ERC20OrNativeToken } from "../nativeToken.js";
+import { formatTokenBalance } from "../formatTokenBalance.js";
+import {
+  type ERC20OrNativeToken,
+  NATIVE_TOKEN,
+  isNativeToken,
+} from "../nativeToken.js";
+import { WalletRow } from "./WalletSelectorButton.js";
 import { useTransactionCostAndData } from "./main/useBuyTxStates.js";
 import type { SupportedChainAndTokens } from "./swap/useSwapSupportedChains.js";
 
@@ -54,8 +63,22 @@ export function TransactionModeScreen(props: {
   });
   const theme = useCustomTheme();
   const activeWallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
   const sponsoredTransactionsEnabled =
     hasSponsoredTransactionsEnabled(activeWallet);
+  const balanceQuery = useWalletBalance(
+    {
+      address: activeAccount?.address,
+      chain: payUiOptions.transaction.chain,
+      tokenAddress: isNativeToken(transactionCostAndData?.token || NATIVE_TOKEN)
+        ? undefined
+        : transactionCostAndData?.token.address,
+      client: props.client,
+    },
+    {
+      enabled: !!transactionCostAndData,
+    },
+  );
 
   if (!transactionCostAndData || !chainData) {
     return <LoadingScreen />;
@@ -74,39 +97,47 @@ export function TransactionModeScreen(props: {
             style={{
               width: "100%",
               borderRadius: spacing.md,
+              border: `1px solid ${theme.colors.borderColor}`,
               backgroundColor: theme.colors.tertiaryBg,
             }}
           />
-        ) : activeWallet ? (
-          <Container
-            flex="row"
-            center="both"
-            style={{
-              padding: spacing.md,
-              marginBottom: spacing.md,
-              borderRadius: spacing.md,
-              backgroundColor: theme.colors.tertiaryBg,
-            }}
-          >
-            <WalletImage
-              size={iconSize.xl}
-              id={activeWallet.id}
-              client={client}
-            />
-            <div
+        ) : activeAccount ? (
+          <Container flex="column" gap="sm">
+            <Text size="sm" color="danger" style={{ textAlign: "center" }}>
+              Insufficient funds
+            </Text>
+            <Container
+              flex="row"
               style={{
-                flexGrow: 1,
-                borderBottom: "6px dotted",
-                borderColor: theme.colors.secondaryIconColor,
-                marginLeft: spacing.md,
-                marginRight: spacing.md,
+                justifyContent: "space-between",
+                padding: spacing.sm,
+                marginBottom: spacing.sm,
+                borderRadius: spacing.md,
+                backgroundColor: theme.colors.tertiaryBg,
+                border: `1px solid ${theme.colors.borderColor}`,
               }}
-            />
-            <ChainIcon
-              client={client}
-              size={iconSize.xl}
-              chainIconUrl={chainData.icon?.url}
-            />
+            >
+              <WalletRow
+                address={activeAccount?.address}
+                iconSize="md"
+                client={client}
+              />
+              {balanceQuery.data ? (
+                <Container flex="row" gap="3xs" center="y">
+                  <Text size="xs" color="secondaryText" weight={500}>
+                    {formatTokenBalance(balanceQuery.data, false, 3)}
+                  </Text>
+                  <TokenSymbol
+                    token={transactionCostAndData.token}
+                    chain={payUiOptions.transaction.chain}
+                    size="xs"
+                    color="secondaryText"
+                  />
+                </Container>
+              ) : (
+                <Skeleton width="70px" height={fontSize.xs} />
+              )}
+            </Container>
           </Container>
         ) : null}
         <Spacer y="md" />

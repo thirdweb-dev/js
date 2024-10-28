@@ -34,7 +34,7 @@ export type SupportedChainAndTokens = Array<{
   }>;
 }>;
 
-async function fetchBuySupportedDestinations(
+export async function fetchBuySupportedDestinations(
   client: ThirdwebClient,
   isTestMode?: boolean,
 ): Promise<SupportedChainAndTokens> {

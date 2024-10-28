@@ -21,9 +21,11 @@ const nftContract = getContract({
   client: THIRDWEB_CLIENT,
 });
 
+const USDC = getDefaultToken(sepolia, "USDC");
+
 const usdcContract = getContract({
   // biome-ignore lint/style/noNonNullAssertion: its there
-  address: getDefaultToken(sepolia, "USDC")!.address,
+  address: USDC!.address,
   chain: sepolia,
   client: THIRDWEB_CLIENT,
 });
@@ -68,24 +70,34 @@ export function PayTransactionButtonPreview() {
     <>
       <StyledConnectButton />
       {account && (
-        <TransactionButton
-          transaction={() => {
-            if (!account) throw new Error("No active account");
-            return transfer({
-              contract: usdcContract,
-              amount: "50",
-              to: account?.address || "",
-            });
-          }}
-          onError={(e) => {
-            console.error(e);
-          }}
-          payModal={{
-            theme: theme === "light" ? "light" : "dark",
-          }}
-        >
-          Transfer funds
-        </TransactionButton>
+        <div className="flex flex-col items-center justify-center gap-2">
+          <div className="flex items-center gap-2">
+            Price:{" "}
+            {USDC?.icon && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={USDC.icon} width={16} alt={USDC.name} />
+            )}
+            50 {USDC?.symbol}
+          </div>
+          <TransactionButton
+            transaction={() => {
+              if (!account) throw new Error("No active account");
+              return transfer({
+                contract: usdcContract,
+                amount: "50",
+                to: account?.address || "",
+              });
+            }}
+            onError={(e) => {
+              console.error(e);
+            }}
+            payModal={{
+              theme: theme === "light" ? "light" : "dark",
+            }}
+          >
+            Buy VIP Pass
+          </TransactionButton>
+        </div>
       )}
     </>
   );
