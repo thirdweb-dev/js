@@ -13,10 +13,6 @@ export const sidebar: SideBar = {
       href: sdkSlug,
     },
     {
-      name: "Migration Guide",
-      href: `${sdkSlug}/migration-guide`,
-    },
-    {
       name: "Getting Started",
       href: `${sdkSlug}/getting-started`,
       icon: <ZapIcon />,
@@ -28,6 +24,10 @@ export const sidebar: SideBar = {
         {
           name: "Thirdweb Manager",
           href: `${sdkSlug}/thirdwebmanager`,
+        },
+        {
+          name: "Build Instructions",
+          href: `${sdkSlug}/build-instructions`,
         },
       ],
     },
@@ -80,6 +80,10 @@ export const sidebar: SideBar = {
           href: `${sdkSlug}/contracts`,
         },
         { separator: true },
+        {
+          name: "Migrate from v4",
+          href: `${sdkSlug}/migration-guide`,
+        },
         {
           name: ".NET SDK Portal",
           href: "/dotnet",
