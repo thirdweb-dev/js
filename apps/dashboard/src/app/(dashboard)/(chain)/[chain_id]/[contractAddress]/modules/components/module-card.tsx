@@ -25,7 +25,25 @@ import {
 } from "thirdweb";
 import { uninstallModuleByProxy } from "thirdweb/modules";
 import type { Account } from "thirdweb/wallets";
+import { MintableModule } from "./Mintable";
+import { TransferableModule } from "./Transferable";
 import { useModuleContractInfo } from "./moduleContractInfo";
+
+function Module(
+  props: Omit<ModuleCardUIProps, "children" | "updateButton"> & {
+    contract: ContractOptions;
+    isOwnerAccount: boolean;
+  },
+) {
+  if (props.contractInfo.name.includes("Transferable")) {
+    return <TransferableModule {...props} />;
+  }
+  if (props.contractInfo.name.includes("Mintable")) {
+    return <MintableModule {...props} />;
+  }
+
+  return <ModuleCardUI {...props} />;
+}
 
 type ModuleProps = {
   moduleAddress: string;
@@ -88,7 +106,8 @@ export function ModuleCard(props: ModuleProps) {
 
   return (
     <>
-      <ModuleCardUI
+      <Module
+        contract={contract}
         contractInfo={{
           name: contractInfo.name,
           description: contractInfo.description,
