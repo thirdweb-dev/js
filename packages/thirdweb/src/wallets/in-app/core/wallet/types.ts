@@ -12,6 +12,7 @@ import type {
   MultiStepAuthArgsType,
   SingleStepAuthArgsType,
 } from "../authentication/types.js";
+import type { UserStatus } from "./enclave-wallet.js";
 
 export type Ecosystem = {
   id: EcosystemWalletId;
@@ -32,6 +33,8 @@ export type InAppWalletAutoConnectOptions = {
   authResult?: AuthStoredTokenWithCookieReturnType;
   chain?: Chain;
 };
+
+export type WalletUser = UserStatus;
 
 export type InAppWalletSocialAuth = SocialAuthOption;
 export type InAppWalletOAuth = OAuthOption;
