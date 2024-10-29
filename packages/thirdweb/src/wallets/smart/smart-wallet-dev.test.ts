@@ -1,9 +1,10 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { zkSyncSepolia } from "../../chains/chain-definitions/zksync-sepolia.js";
+import { defineChain } from "../../chains/utils.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
+import { deployPublishedContract } from "../../extensions/prebuilts/deploy-published.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
@@ -20,14 +21,14 @@ let smartWalletAddress: Address;
 let personalAccount: Account;
 let accountContract: ThirdwebContract;
 
-const chain = zkSyncSepolia;
+const chain = defineChain(531050104);
 const client = TEST_CLIENT;
 const contract = getContract({
   client,
   chain,
   address: "0x6A7a26c9a595E6893C255C9dF0b593e77518e0c3",
 });
-describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
+describe.runIf(process.env.TW_SECRET_KEY).sequential(
   "SmartWallet policy tests",
   {
     retry: 0,
@@ -69,7 +70,7 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
       expect(isDeployed).toEqual(true);
     });
 
-    it("should send a transaction", async () => {
+    it.skip("should send a transaction", async () => {
       const tx = prepareTransaction({
         client,
         chain,
@@ -105,6 +106,30 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         tokenId: 0n,
       });
       expect(balance).toEqual(1n);
+    });
+
+    it("should deploy a published autofactory contract", async () => {
+      const address = await deployPublishedContract({
+        client: TEST_CLIENT,
+        chain,
+        account: smartAccount,
+        contractId: "DropERC721",
+        contractParams: {
+          defaultAdmin: smartAccount.address, // defaultAdmin
+          name: "test", // name
+          symbol: "test", // symbol
+          contractURI: "", // contractURI
+          trustedForwarders: [], // trustedForwarders
+          saleRecipient: smartAccount.address, // saleRecipient
+          royaltyRecipient: smartAccount.address, // royaltyRecipient
+          royaltyBps: 0n, // royaltyBps
+          platformFeeBps: 0n, // platformFeeBps
+          platformFeeRecipient: smartAccount.address, // platformFeeRecipient
+        },
+      });
+      console.log("deployed address", address);
+      expect(address).toBeDefined();
+      expect(address.length).toBe(42);
     });
   },
 );
