@@ -4,7 +4,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
-import { ThirdwebProvider } from "thirdweb/react";
 import {
   type TransferableModuleFormValues,
   TransferableModuleUI,
@@ -59,106 +58,72 @@ function Component() {
   };
 
   return (
-    <ThirdwebProvider>
-      <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-        <div className="items-top flex space-x-2">
-          <Checkbox
-            id="terms1"
-            checked={isOwner}
-            onCheckedChange={(v) => setIsOwner(!!v)}
-          />
-          <div className="grid gap-1.5 leading-none">
-            <label
-              htmlFor="terms1"
-              className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Is Owner
-            </label>
-          </div>
+    <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+      <div className="flex gap-2">
+        <Checkbox
+          id="terms1"
+          checked={isOwner}
+          onCheckedChange={(v) => setIsOwner(!!v)}
+        />
+        <div className="grid gap-1.5 leading-none">
+          <label
+            htmlFor="terms1"
+            className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Is Owner
+          </label>
         </div>
-
-        <BadgeContainer label="Empty AllowList, Not Restricted">
-          <TransferableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            isRestricted={false}
-            adminAddress={testAddress1}
-            update={updateStub}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Empty AllowList, Restricted">
-          <TransferableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            isRestricted={true}
-            adminAddress={testAddress1}
-            update={updateStub}
-            uninstallButton={{
-              onClick: () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Length 1 AllowList, Restricted">
-          <TransferableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            isRestricted={true}
-            adminAddress={testAddress1}
-            update={updateStub}
-            uninstallButton={{
-              onClick: () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Length 2 AllowList, Restricted">
-          <TransferableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            isRestricted={true}
-            adminAddress={testAddress1}
-            update={updateStub}
-            uninstallButton={{
-              onClick: () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Pending">
-          <TransferableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={true}
-            adminAddress={testAddress1}
-            isRestricted={false}
-            update={updateStub}
-            uninstallButton={{
-              onClick: () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-          />
-        </BadgeContainer>
-
-        <Toaster richColors />
       </div>
-    </ThirdwebProvider>
+
+      <BadgeContainer label="Empty AllowList, Not Restricted">
+        <TransferableModuleUI
+          contractInfo={contractInfo}
+          moduleAddress="0x0000000000000000000000000000000000000000"
+          isPending={false}
+          isRestricted={false}
+          adminAddress={testAddress1}
+          update={updateStub}
+          uninstallButton={{
+            onClick: async () => removeMutation.mutateAsync(),
+            isPending: removeMutation.isPending,
+          }}
+          isOwnerAccount={isOwner}
+        />
+      </BadgeContainer>
+
+      <BadgeContainer label="Empty AllowList, Restricted">
+        <TransferableModuleUI
+          contractInfo={contractInfo}
+          moduleAddress="0x0000000000000000000000000000000000000000"
+          isPending={false}
+          isRestricted={true}
+          adminAddress={testAddress1}
+          update={updateStub}
+          uninstallButton={{
+            onClick: () => removeMutation.mutateAsync(),
+            isPending: removeMutation.isPending,
+          }}
+          isOwnerAccount={isOwner}
+        />
+      </BadgeContainer>
+
+      <BadgeContainer label="Pending">
+        <TransferableModuleUI
+          contractInfo={contractInfo}
+          moduleAddress="0x0000000000000000000000000000000000000000"
+          isPending={true}
+          adminAddress={testAddress1}
+          isRestricted={false}
+          update={updateStub}
+          uninstallButton={{
+            onClick: () => removeMutation.mutateAsync(),
+            isPending: removeMutation.isPending,
+          }}
+          isOwnerAccount={isOwner}
+        />
+      </BadgeContainer>
+
+      <Toaster richColors />
+    </div>
   );
 }

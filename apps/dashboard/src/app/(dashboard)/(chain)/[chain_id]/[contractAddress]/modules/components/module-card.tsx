@@ -1,3 +1,5 @@
+"use client";
+
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -15,7 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { InfoIcon } from "lucide-react";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import {
   type ContractOptions,
@@ -25,34 +27,17 @@ import {
 } from "thirdweb";
 import { uninstallModuleByProxy } from "thirdweb/modules";
 import type { Account } from "thirdweb/wallets";
-import { MintableModule } from "./Mintable";
-import { TransferableModule } from "./Transferable";
+import { ModuleInstance } from "./module-instance";
 import { useModuleContractInfo } from "./moduleContractInfo";
 
-function Module(
-  props: Omit<ModuleCardUIProps, "children" | "updateButton"> & {
-    contract: ContractOptions;
-    isOwnerAccount: boolean;
-  },
-) {
-  if (props.contractInfo.name.includes("Transferable")) {
-    return <TransferableModule {...props} />;
-  }
-  if (props.contractInfo.name.includes("Mintable")) {
-    return <MintableModule {...props} />;
-  }
-
-  return <ModuleCardUI {...props} />;
-}
-
-type ModuleProps = {
+type ModuleCardProps = {
   moduleAddress: string;
   contract: ContractOptions;
   onRemoveModule: () => void;
   ownerAccount: Account | undefined;
 };
 
-export function ModuleCard(props: ModuleProps) {
+export function ModuleCard(props: ModuleCardProps) {
   const { contract, moduleAddress, ownerAccount } = props;
   const [isUninstallModalOpen, setIsUninstallModalOpen] = useState(false);
 
@@ -101,28 +86,30 @@ export function ModuleCard(props: ModuleProps) {
   };
 
   if (!contractInfo) {
-    return <Skeleton className="h-[190px] w-full border border-border" />;
+    return <GenericModuleLoadingSkeleton />;
   }
 
   return (
     <>
-      <Module
-        contract={contract}
-        contractInfo={{
-          name: contractInfo.name,
-          description: contractInfo.description,
-          publisher: contractInfo.publisher,
-          version: contractInfo.version,
-        }}
-        isOwnerAccount={!!ownerAccount}
-        uninstallButton={{
-          onClick: () => {
-            setIsUninstallModalOpen(true);
-          },
-          isPending: uninstallMutation.isPending,
-        }}
-        moduleAddress={moduleAddress}
-      />
+      <Suspense fallback={<GenericModuleLoadingSkeleton />}>
+        <ModuleInstance
+          contract={contract}
+          contractInfo={{
+            name: contractInfo.name,
+            description: contractInfo.description,
+            publisher: contractInfo.publisher,
+            version: contractInfo.version,
+          }}
+          ownerAccount={ownerAccount}
+          uninstallButton={{
+            onClick: () => {
+              setIsUninstallModalOpen(true);
+            },
+            isPending: uninstallMutation.isPending,
+          }}
+          moduleAddress={moduleAddress}
+        />
+      </Suspense>
 
       <Dialog
         open={isUninstallModalOpen}
@@ -188,7 +175,7 @@ export type ModuleCardUIProps = {
     isPending: boolean;
   };
   updateButton?: {
-    onClick: () => void;
+    onClick?: () => void;
     isPending: boolean;
     isDisabled: boolean;
   };
@@ -304,4 +291,8 @@ export function ModuleCardUI(props: ModuleCardUIProps) {
       </div>
     </section>
   );
+}
+
+function GenericModuleLoadingSkeleton() {
+  return <Skeleton className="h-[190px] w-full border border-border" />;
 }
