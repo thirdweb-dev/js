@@ -137,19 +137,17 @@ export async function loginWithPasskey(options: {
   }
   const fetchWithId = getClientFetch(options.client, options.ecosystem);
   // 1. request challenge from  server/iframe
-  const res = await fetchWithId(getChallengePath("sign-in"));
-  const challengeData = await res.json();
+  const [challengeData, credentialId] = await Promise.all([
+    fetchWithId(getChallengePath("sign-in")).then((r) => r.json()),
+    options.storage?.getPasskeyCredentialId(),
+  ]);
   if (!challengeData.challenge) {
     throw new Error("No challenge received");
   }
   const challenge = challengeData.challenge;
-  // 1.2. find the user's credentialId in local storage
-  const credentialId =
-    (await options.storage?.getPasskeyCredentialId()) ?? undefined;
-
   // 2. initiate login
   const authentication = await options.passkeyClient.authenticate({
-    credentialId,
+    credentialId: credentialId ?? undefined,
     challenge,
     rp: options.rp,
   });
