@@ -208,6 +208,7 @@ export function FaucetButton({
               <FormItem>
                 <FormControl>
                   <Turnstile
+                    className="mt-4"
                     siteKey={TURNSTILE_SITE_KEY}
                     onSuccess={(token) => field.onChange(token)}
                   />
