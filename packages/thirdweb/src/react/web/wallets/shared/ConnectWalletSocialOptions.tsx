@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
-import { getEcosystemOptions } from "../../../../wallets/ecosystem/get-ecosystem-wallet-auth-options.js";
+import { getEcosystemInfo } from "../../../../wallets/ecosystem/get-ecosystem-wallet-auth-options.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Profile } from "../../../../wallets/in-app/core/authentication/types.js";
 import { linkProfile } from "../../../../wallets/in-app/web/lib/auth/index.js";
@@ -123,7 +123,7 @@ export const ConnectWalletSocialOptions = (
     queryKey: ["auth-options", wallet.id],
     queryFn: async () => {
       if (isEcosystemWallet(wallet)) {
-        const options = await getEcosystemOptions(wallet.id);
+        const options = await getEcosystemInfo(wallet.id);
         return options?.authOptions ?? null;
       }
       return null;

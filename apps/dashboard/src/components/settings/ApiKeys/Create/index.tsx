@@ -43,11 +43,17 @@ import {
   apiKeyCreateValidationSchema,
 } from "../validations";
 
+export type CreateAPIKeyPrefillOptions = {
+  name?: string;
+  domains?: string;
+};
+
 export type CreateAPIKeyDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   wording: "project" | "api-key";
   onCreateAndComplete?: () => void;
+  prefill?: CreateAPIKeyPrefillOptions;
 };
 
 const CreateAPIKeyDialog = (props: CreateAPIKeyDialogProps) => {
@@ -71,6 +77,7 @@ export const CreateAPIKeyDialogUI = (props: {
     CreateKeyInput,
     unknown
   >;
+  prefill?: CreateAPIKeyPrefillOptions;
 }) => {
   const [screen, setScreen] = useState<
     { id: "create" } | { id: "api-details"; key: ApiKey }
@@ -102,6 +109,7 @@ export const CreateAPIKeyDialogUI = (props: {
               onAPIKeyCreated={(key) => {
                 setScreen({ id: "api-details", key });
               }}
+              prefill={props.prefill}
             />
           )}
 
@@ -131,6 +139,7 @@ function CreateAPIKeyForm(props: {
     unknown
   >;
   onAPIKeyCreated: (key: ApiKey) => void;
+  prefill?: CreateAPIKeyPrefillOptions;
 }) {
   const { wording } = props;
   const [showAlert, setShowAlert] = useState<"no-domain" | "any-domain">();
@@ -141,8 +150,8 @@ function CreateAPIKeyForm(props: {
   const form = useForm<ApiKeyCreateValidationSchema>({
     resolver: zodResolver(apiKeyCreateValidationSchema),
     defaultValues: {
-      name: "",
-      domains: "",
+      name: props.prefill?.name || "",
+      domains: props.prefill?.domains || "",
     },
   });
 

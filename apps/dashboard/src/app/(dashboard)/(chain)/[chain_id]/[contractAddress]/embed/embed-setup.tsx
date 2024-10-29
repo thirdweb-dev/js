@@ -1,19 +1,22 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useApiKeys, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, FormControl, Input, Link, Select } from "@chakra-ui/react";
+import { Flex, FormControl, Input, Select } from "@chakra-ui/react";
+import { LazyCreateAPIKeyDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useClipboard } from "hooks/useClipboard";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { CheckIcon, CopyIcon } from "lucide-react";
-import { useMemo } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { StoredChain } from "stores/chainStores";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
+import { useActiveAccount } from "thirdweb/react";
 import {
-  Button,
   Card,
   CodeBlock,
   FormHelperText,
@@ -211,10 +214,6 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
 
   const apiKeys = useApiKeys();
   const createKeyMutation = useCreateApiKey();
-  const { onSuccess, onError } = useTxNotifications(
-    "API key created",
-    "Failed to create API key",
-  );
 
   const validApiKey = (apiKeys.data || []).find(
     (apiKey) =>
@@ -298,14 +297,35 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   );
 
   const { hasCopied, onCopy } = useClipboard(embedCode, 3000);
+  const [showCreateAPIKeyModal, setShowCreateAPIKeyModal] = useState(false);
+  const activeAccount = useActiveAccount();
+  const pathname = usePathname();
 
   return (
     <Flex gap={8} direction="column">
+      <LazyCreateAPIKeyDialog
+        wording="api-key"
+        prefill={{
+          name: "Embed API Key",
+          domains: "embed.ipfscdn.io",
+        }}
+        open={showCreateAPIKeyModal}
+        onOpenChange={setShowCreateAPIKeyModal}
+        onCreateAndComplete={() => {
+          trackEvent({
+            category: "api-keys",
+            action: "create",
+            label: "success",
+            fromEmbed: true,
+          });
+          apiKeys.refetch();
+        }}
+      />
+
       <Flex gap={8} direction={{ base: "column", md: "row" }}>
-        <Card className="flex w-full flex-col gap-2 md:w-1/2">
-          <Heading size="title.sm" mb={4}>
-            Configuration
-          </Heading>
+        <Card className="flex w-full flex-col gap-5 md:w-1/2">
+          <Heading size="title.sm">Configuration</Heading>
+
           {ercOrMarketplace === "marketplace" ? (
             <FormControl>
               <FormLabel>Listing ID</FormLabel>
@@ -315,6 +335,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               </FormHelperText>
             </FormControl>
           ) : null}
+
           {ercOrMarketplace === "marketplace-v3" ? (
             <FormControl>
               <FormLabel>Listing type</FormLabel>
@@ -327,6 +348,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               </FormHelperText>
             </FormControl>
           ) : null}
+
           {ercOrMarketplace === "marketplace-v3" &&
           watch("listingType") === "direct-listing" ? (
             <FormControl>
@@ -337,6 +359,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               </FormHelperText>
             </FormControl>
           ) : null}
+
           {ercOrMarketplace === "marketplace-v3" &&
           watch("listingType") === "english-auction" ? (
             <FormControl>
@@ -347,6 +370,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               </FormHelperText>
             </FormControl>
           ) : null}
+
           {ercOrMarketplace === "erc1155" ? (
             <FormControl>
               <FormLabel>Token ID</FormLabel>
@@ -356,9 +380,20 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               </FormHelperText>
             </FormControl>
           ) : null}
+
           <FormControl>
             <FormLabel>Client ID</FormLabel>
-            {validApiKey ? (
+            {!activeAccount ? (
+              <Button asChild className="w-full">
+                <Link
+                  href={`/login${
+                    pathname ? `?next=${encodeURIComponent(pathname)}` : ""
+                  }`}
+                >
+                  Sign in to create a client ID
+                </Link>
+              </Button>
+            ) : validApiKey ? (
               <Input
                 readOnly
                 disabled
@@ -366,11 +401,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               />
             ) : (
               <Button
-                bgColor="bgBlack"
-                color="bgWhite"
-                _hover={{
-                  opacity: 0.8,
-                }}
+                className="w-full"
                 onClick={() => {
                   trackEvent({
                     category: "api-keys",
@@ -379,44 +410,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
                     fromEmbed: true,
                   });
 
-                  createKeyMutation.mutate(
-                    {
-                      name: "Embed API key",
-                      domains: ["embed.ipfscdn.io"],
-                      services: [
-                        {
-                          name: "rpc",
-                          targetAddresses: ["*"],
-                        },
-                        {
-                          name: "storage",
-                          targetAddresses: ["*"],
-                          actions: ["read"],
-                        },
-                      ],
-                    },
-                    {
-                      onSuccess: () => {
-                        onSuccess();
-                        trackEvent({
-                          category: "api-keys",
-                          action: "create",
-                          label: "success",
-                          fromEmbed: true,
-                        });
-                      },
-                      onError: (err) => {
-                        onError(err);
-                        trackEvent({
-                          category: "api-keys",
-                          action: "create",
-                          label: "error",
-                          error: err,
-                          fromEmbed: true,
-                        });
-                      },
-                    },
-                  );
+                  setShowCreateAPIKeyModal(true);
                 }}
                 disabled={createKeyMutation.isPending}
               >
@@ -428,14 +422,15 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               You need a client ID to use embeds.{" "}
               <Link
                 href="https://portal.thirdweb.com/account/api-keys"
-                color="primary.500"
-                isExternal
+                className="text-link-foreground hover:text-foreground"
+                target="_blank"
               >
                 Learn more
               </Link>
               .
             </FormHelperText>
           </FormControl>
+
           <FormControl>
             <FormLabel>RPC Url</FormLabel>
             <Input type="url" {...register("rpcUrl")} />
@@ -477,8 +472,8 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
                 A relayer can be used to make the transaction gasless for the
                 end user.{" "}
                 <Link
-                  isExternal
-                  color="blue.500"
+                  target="_blank"
+                  className="text-link-foreground hover:text-foreground"
                   href="https://blog.thirdweb.com/guides/setup-gasless-transactions"
                 >
                   Learn more
@@ -486,6 +481,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               </FormHelperText>
             </FormControl>
           )}
+
           <FormControl>
             <Heading size="title.sm" my={4}>
               Customization
@@ -501,6 +497,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               on the user system&apos;s preferences.
             </FormHelperText>
           </FormControl>
+
           <FormControl>
             <FormLabel>Primary Color</FormLabel>
             <Select {...register("primaryColor")}>
@@ -517,6 +514,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               Used for the main actions button backgrounds.
             </FormHelperText>
           </FormControl>
+
           {ercOrMarketplace === "marketplace" ||
           ercOrMarketplace === "marketplace-v3" ? (
             <FormControl>
@@ -535,6 +533,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
             </FormControl>
           ) : null}
         </Card>
+
         <Card className="flex w-full flex-col gap-2 md:w-1/2">
           <Heading size="title.sm">Embed Code</Heading>
           <CodeBlock
@@ -545,8 +544,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
             language="markup"
           />
           <Button
-            colorScheme="purple"
-            w="auto"
+            className="w-auto gap-2"
             variant="outline"
             onClick={() => {
               onCopy();
@@ -558,14 +556,12 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
                 chainId,
               });
             }}
-            leftIcon={
-              hasCopied ? (
-                <CheckIcon className="size-4" />
-              ) : (
-                <CopyIcon className="size-4" />
-              )
-            }
           >
+            {hasCopied ? (
+              <CheckIcon className="size-4" />
+            ) : (
+              <CopyIcon className="size-4" />
+            )}
             {hasCopied ? "Copied!" : "Copy to clipboard"}
           </Button>
         </Card>

@@ -261,10 +261,7 @@ export async function isLoggedIn() {
 	}
 
 	const authResult = await thirdwebAuth.verifyJWT({ jwt: jwt.value });
-	if (!authResult.valid) {
-		return false;
-	}
-	return true;
+	return authResult.valid;
 }
 
 export async function logout() {
@@ -306,7 +303,7 @@ const AuthenticatedPage = async () => {
 export default AuthenticatedPage;
 ```
 
-That's it! You know have a working SIWE Next.js app.
+That's it! You now have a working SIWE Next.js app.
 
 ## Support
 

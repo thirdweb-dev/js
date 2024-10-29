@@ -1,10 +1,12 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
+import { zkSyncSepolia } from "../../chains/chain-definitions/zksync-sepolia.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { sendTransaction } from "../../transaction/actions/send-transaction.js";
+import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import type { Address } from "../../utils/address.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { setThirdwebDomains } from "../../utils/domains.js";
@@ -18,7 +20,7 @@ let smartWalletAddress: Address;
 let personalAccount: Account;
 let accountContract: ThirdwebContract;
 
-const chain = arbitrumSepolia;
+const chain = zkSyncSepolia;
 const client = TEST_CLIENT;
 const contract = getContract({
   client,
@@ -61,13 +63,30 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
       expect(smartWalletAddress).toHaveLength(42);
     });
 
-    it("can sign a msg", async () => {
+    it.skip("can sign a msg", async () => {
       await smartAccount.signMessage({ message: "hello world" });
       const isDeployed = await isContractDeployed(accountContract);
       expect(isDeployed).toEqual(true);
     });
 
-    it("can execute a tx", async () => {
+    it("should send a transaction", async () => {
+      const tx = prepareTransaction({
+        client,
+        chain,
+        to: smartAccount.address,
+        value: 0n,
+      });
+
+      console.log("Sending transaction...");
+      const receipt = await sendTransaction({
+        transaction: tx,
+        account: smartAccount,
+      });
+      console.log("Transaction sent:", receipt.transactionHash);
+      expect(receipt.transactionHash).toBeDefined();
+    });
+
+    it.skip("can execute a tx", async () => {
       const tx = await sendAndConfirmTransaction({
         transaction: claimTo({
           contract,

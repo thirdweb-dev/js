@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster } from "sonner";
-import { CreateAPIKeyDialogUI } from ".";
+import { CreateAPIKeyDialogUI, type CreateAPIKeyPrefillOptions } from ".";
 import { createApiKeyStub } from "../../../../stories/stubs";
 import { mobileViewport } from "../../../../stories/utils";
 
@@ -51,8 +51,19 @@ export const MobileAPIKeyWording: Story = {
   },
 };
 
+export const DesktopAPIKeyWordingWithPrefill: Story = {
+  args: {
+    wording: "api-key",
+    prefill: {
+      name: "Foo",
+      domains: "foo.bar",
+    },
+  },
+};
+
 function Story(props: {
   wording: "project" | "api-key";
+  prefill?: CreateAPIKeyPrefillOptions;
 }) {
   const [isOpen, setIsOpen] = useState(true);
   const mutation = useMutation({
@@ -72,6 +83,7 @@ function Story(props: {
         open={isOpen}
         onOpenChange={setIsOpen}
         createKeyMutation={mutation}
+        prefill={props.prefill}
       />
 
       <Button

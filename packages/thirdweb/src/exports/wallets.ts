@@ -75,6 +75,7 @@ export type {
 } from "../wallets/smart/types.js";
 
 export type {
+  WalletUser,
   InAppWalletAuth,
   /**
    * @deprecated use InAppWalletAuth instead

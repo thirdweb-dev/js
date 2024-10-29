@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.64.3
+
+### Patch Changes
+
+- [#5207](https://github.com/thirdweb-dev/js/pull/5207) [`adeda1e`](https://github.com/thirdweb-dev/js/commit/adeda1ef7629bb31fe5280c26f4d53218d7bea82) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle unsupported Pay chains properly for sending paid transactions
+
+- [#5176](https://github.com/thirdweb-dev/js/pull/5176) [`84571ef`](https://github.com/thirdweb-dev/js/commit/84571efaf80bc7b9054a375233beb8789326255d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Redesigned Pay payment selection flow
+
+- [#5212](https://github.com/thirdweb-dev/js/pull/5212) [`07ea65b`](https://github.com/thirdweb-dev/js/commit/07ea65bcd8141076c8b557628df3da7823455324) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better handling of ecosystem smart accounts
+
 ## 5.64.2
 
 ### Patch Changes

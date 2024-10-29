@@ -1,5 +1,4 @@
 "use client";
-import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,6 +26,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { isAddress } from "thirdweb";
 import { getSocialIcon } from "thirdweb/wallets/in-app";
 import {
   DEFAULT_ACCOUNT_FACTORY_V0_6,
@@ -57,7 +57,7 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
       customAuthEndpoint: ecosystem.customAuthOptions?.authEndpoint?.url || "",
       customHeaders: ecosystem.customAuthOptions?.authEndpoint?.headers || [],
       useSmartAccount: !!ecosystem.smartAccountOptions,
-      chainIds: ecosystem.smartAccountOptions?.chainIds || [],
+      chainIds: [], // unused - TODO: remove from service
       sponsorGas: ecosystem.smartAccountOptions?.sponsorGas || false,
       accountFactoryType:
         ecosystem.smartAccountOptions?.accountFactoryAddress ===
@@ -92,14 +92,18 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
         })
         .refine(
           (data) => {
-            if (data.useSmartAccount && data.chainIds.length === 0) {
+            if (
+              data.useSmartAccount &&
+              data.customAccountFactoryAddress &&
+              !isAddress(data.customAccountFactoryAddress)
+            ) {
               return false;
             }
             return true;
           },
           {
-            message: "Please select at least one chain for smart accounts",
-            path: ["chainIds"],
+            message: "Please enter a valid custom account factory address",
+            path: ["customAccountFactoryAddress"],
           },
         )
         .refine(
@@ -166,7 +170,7 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
       }
 
       smartAccountOptions = {
-        chainIds: data.chainIds,
+        chainIds: [], // unused - TODO remove from service
         sponsorGas: data.sponsorGas,
         accountFactoryAddress,
       };
@@ -403,27 +407,6 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
           />
           {form.watch("useSmartAccount") && (
             <div className="mt-1 flex flex-col gap-4">
-              <FormField
-                control={form.control}
-                name="chainIds"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Supported Chains</FormLabel>
-                    <FormDescription>
-                      Select the chains you want to support for smart accounts
-                    </FormDescription>
-                    <FormControl>
-                      <div className="w-full bg-background">
-                        <MultiNetworkSelector
-                          selectedChainIds={field.value}
-                          onChange={field.onChange}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="sponsorGas"

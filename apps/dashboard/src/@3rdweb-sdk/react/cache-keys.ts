@@ -63,8 +63,11 @@ export const embeddedWalletsKeys = {
   all: ["embeddedWallets"] as const,
   wallet: (walletAddress: string) =>
     [...embeddedWalletsKeys.all, walletAddress] as const,
-  embeddedWallets: (walletAddress: string, clientId: string | undefined) =>
-    [...embeddedWalletsKeys.wallet(walletAddress), clientId] as const,
+  embeddedWallets: (
+    walletAddress: string,
+    clientId: string | undefined,
+    page: number,
+  ) => [...embeddedWalletsKeys.wallet(walletAddress), clientId, page] as const,
 };
 
 export const engineKeys = {

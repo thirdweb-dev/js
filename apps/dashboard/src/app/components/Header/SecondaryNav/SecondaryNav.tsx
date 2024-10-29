@@ -13,6 +13,19 @@ export function SecondaryNav(props: {
 }) {
   return (
     <div className="flex items-center gap-6">
+      <SecondaryNavLinks />
+      <AccountButton
+        logout={props.logout}
+        connectButton={props.connectButton}
+        account={props.account}
+      />
+    </div>
+  );
+}
+
+export function SecondaryNavLinks() {
+  return (
+    <div className="flex items-center gap-6">
       <ToolTipLabel
         label={
           <span>
@@ -45,12 +58,6 @@ export function SecondaryNav(props: {
       >
         Docs
       </Link>
-
-      <AccountButton
-        logout={props.logout}
-        connectButton={props.connectButton}
-        account={props.account}
-      />
     </div>
   );
 }

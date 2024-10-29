@@ -69,31 +69,29 @@ export function ColorFormGroup(props: {
                         className="flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors hover:bg-secondary"
                         key={color.colorId}
                       >
-                        <div className="rounded-full border">
-                          <ColorInput
-                            className="size-10"
-                            value={themeObj.colors[color.colorId]}
-                            onChange={(value) => {
-                              setConnectOptions((v) => {
-                                const overridesKey =
-                                  v.theme.type === "dark"
-                                    ? "darkColorOverrides"
-                                    : "lightColorOverrides";
+                        <ColorInput
+                          className="size-10"
+                          value={themeObj.colors[color.colorId]}
+                          onChange={(value) => {
+                            setConnectOptions((v) => {
+                              const overridesKey =
+                                v.theme.type === "dark"
+                                  ? "darkColorOverrides"
+                                  : "lightColorOverrides";
 
-                                return {
-                                  ...v,
-                                  theme: {
-                                    ...v.theme,
-                                    [overridesKey]: {
-                                      ...v.theme[overridesKey],
-                                      [color.colorId]: value,
-                                    },
+                              return {
+                                ...v,
+                                theme: {
+                                  ...v.theme,
+                                  [overridesKey]: {
+                                    ...v.theme[overridesKey],
+                                    [color.colorId]: value,
                                   },
-                                };
-                              });
-                            }}
-                          />
-                        </div>
+                                },
+                              };
+                            });
+                          }}
+                        />
                         <div>
                           <div>{color.label}</div>
                           <div className="ml-auto font-mono text-muted-foreground text-xs">

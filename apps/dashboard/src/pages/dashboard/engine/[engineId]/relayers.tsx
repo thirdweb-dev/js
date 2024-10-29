@@ -1,5 +1,5 @@
+import { EngineRelayer } from "app/team/[team_slug]/[project_slug]/engine/(instance)/[engineId]/relayers/components/engine-relayer";
 import { createEnginePage } from "components/engine/EnginePage";
-import { EngineRelayer } from "components/engine/relayer/engine-relayer";
 
 export default createEnginePage(({ instance }) => (
   <EngineRelayer instanceUrl={instance.url} />

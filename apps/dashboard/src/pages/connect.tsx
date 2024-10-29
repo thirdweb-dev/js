@@ -11,7 +11,6 @@ import { LandingHeroWithSideImage } from "components/landing-pages/hero-with-sid
 import { LandingLayout } from "components/landing-pages/layout";
 import { MiniPlayground } from "components/wallets/ConnectWalletMiniPlayground/MiniPlayground";
 import { SupportedPlatformLink } from "components/wallets/SupportedPlatformLink";
-import { connectFrames } from "lib/connect-frames";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import Head from "next/head";
 import { PageId } from "page-id";
@@ -129,23 +128,6 @@ const ConnectLanding: ThirdwebNextPage = () => {
         },
       }}
     >
-      {/* Farcaster frames headers */}
-      <Head>
-        <meta property="fc:frame" content="vNext" />
-        <meta
-          property="fc:frame:image"
-          content={connectFrames["1"]?.imageUrl}
-        />
-        <meta
-          property="fc:frame:post_url"
-          content={`${getAbsoluteUrl()}/api/frame/connect?step=1`}
-        />
-        <meta property="fc:frame:button:1" content="Features →" />
-        <meta property="fc:frame:button:2" content="Start building" />
-        <meta name="fc:frame:button:1:action" content="post" />
-        <meta name="fc:frame:button:2:action" content="post_redirect" />
-      </Head>
-
       <Head>
         <style>
           {`

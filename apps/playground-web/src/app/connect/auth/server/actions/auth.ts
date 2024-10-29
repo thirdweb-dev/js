@@ -8,7 +8,7 @@ import { generateAccount, privateKeyToAccount } from "thirdweb/wallets";
 const privateKey = process.env.THIRDWEB_ADMIN_PRIVATE_KEY;
 
 const thirdwebAuth = createAuth({
-  domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "",
+  domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "thirdweb.com",
   client: THIRDWEB_CLIENT,
   adminAccount: privateKey
     ? privateKeyToAccount({ client: THIRDWEB_CLIENT, privateKey })
