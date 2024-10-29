@@ -70,6 +70,12 @@ const filterOut = [
   "Yash094",
   "gregfromstl",
   "DustinTurska",
+  "iuwqyir",
+  "GWSzeto",
+  "Joe-Thirdweb",
+  "AmineAfia",
+  "catalyst17",
+  "dirtycajunrice",
 ];
 
 const repositories = [
