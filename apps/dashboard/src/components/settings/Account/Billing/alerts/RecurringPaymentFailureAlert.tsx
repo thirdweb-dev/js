@@ -6,7 +6,6 @@ import { OnboardingModal } from "components/onboarding/Modal";
 import { getRecurringPaymentFailureResponse } from "lib/billing";
 import { ExternalLinkIcon, XIcon } from "lucide-react";
 import { useState } from "react";
-import { Text } from "tw-components";
 import { LazyOnboardingBilling } from "../../../../onboarding/LazyOnboardingBilling";
 import { ManageBillingButton } from "../ManageButton";
 
@@ -70,14 +69,14 @@ export const RecurringPaymentFailureAlert: React.FC<
             <ul className="list-disc pl-3.5">
               {affectedServices.map((service) => (
                 <li key={service}>
-                  <Text>{service}</Text>
+                  <span>{service}</span>
                 </li>
               ))}
             </ul>
           </div>
         )}
 
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-3 md:flex-row">
           <ManageBillingButton
             account={dashboardAccount}
             loading={paymentMethodSaving}
