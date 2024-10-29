@@ -23,7 +23,6 @@ import plumeCTA from "./temp-assets/plumeCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
 import soneiumBanner from "./temp-assets/soneiumBanner.png";
-import soneiumCTA from "./temp-assets/soneiumCTA.png";
 import superpositionBanner from "./temp-assets/superpositionBanner.png";
 import superpositionCTA from "./temp-assets/superpositionCTA.png";
 import thirdwebBanner from "./temp-assets/thirdweb-banner.png";
