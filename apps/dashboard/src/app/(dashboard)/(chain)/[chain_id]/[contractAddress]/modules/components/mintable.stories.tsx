@@ -38,6 +38,11 @@ function Component() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
+  async function mintStub(values: MintableModuleFormValues) {
+    console.log("submitting", values);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
   const removeMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -81,6 +86,7 @@ function Component() {
             isPending={false}
             primarySaleRecipient={""}
             update={updateStub}
+            mint={mintStub}
             uninstallButton={{
               onClick: async () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
@@ -96,6 +102,7 @@ function Component() {
             isPending={false}
             primarySaleRecipient={testAddress1}
             update={updateStub}
+            mint={mintStub}
             uninstallButton={{
               onClick: () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
@@ -111,6 +118,7 @@ function Component() {
             isPending={true}
             primarySaleRecipient={testAddress1}
             update={updateStub}
+            mint={mintStub}
             uninstallButton={{
               onClick: () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,

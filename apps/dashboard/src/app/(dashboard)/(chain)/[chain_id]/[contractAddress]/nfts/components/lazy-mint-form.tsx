@@ -139,6 +139,8 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
     watch("animation_url") instanceof File ||
     watch("external_url") instanceof File;
 
+  const _data = watch();
+
   return (
     <>
       <DrawerHeader>

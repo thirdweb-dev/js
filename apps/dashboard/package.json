@@ -30,6 +30,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@marsidev/react-turnstile": "^1.0.2",
     "@n8tb1t/use-scroll-position": "^2.0.3",
+    "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-checkbox": "^1.1.2",
