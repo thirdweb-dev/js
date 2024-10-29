@@ -55,8 +55,7 @@ function MintableModule(props: ModuleInstanceProps) {
 
   const mint = useCallback(
     async (values: MintableModuleFormValues) => {
-      const { recipient, amount, primarySaleRecipient: _, ...data } = values;
-      const nft = parseAttributes(data);
+      const nft = parseAttributes(values);
       if (!ownerAccount) {
         throw new Error("Not an owner account");
       }
@@ -65,12 +64,12 @@ function MintableModule(props: ModuleInstanceProps) {
         props.contractInfo.name === "MintableERC721"
           ? MintableERC721.mintWithRole({
               contract,
-              to: recipient,
+              to: values.recipient,
               nfts: [nft],
             })
           : MintableERC1155.mintWithRole({
               contract,
-              to: recipient,
+              to: values.recipient,
               amount: BigInt(values.amount),
               nft,
             });
