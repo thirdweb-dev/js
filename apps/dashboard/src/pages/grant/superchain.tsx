@@ -92,7 +92,6 @@ const superchains = [
     name: "Soneium",
     link: "/soneium-minato?switch",
     src: require("../../../public/assets/grant/superchain/soneium-icon.png"),
-    isComingSoon: true,
   },
   {
     id: "campNetworkv2",
