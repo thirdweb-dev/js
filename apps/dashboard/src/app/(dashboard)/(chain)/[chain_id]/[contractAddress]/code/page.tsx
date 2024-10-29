@@ -28,7 +28,7 @@ export default async function Page(props: {
     );
   }
 
-  const abi = await resolveContractAbi(contract).then(() => undefined);
+  const abi = await resolveContractAbi(contract).catch(() => undefined);
 
   return (
     <ContractCodePage
