@@ -1,12 +1,10 @@
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
-import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import {
   type SocialAuthOption,
   socialAuthOptions,
 } from "../../../../wallets/types.js";
-import { getEcosystemOptions } from "../../../ecosystem/get-ecosystem-wallet-auth-options.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 import type { EcosystemWalletId, WalletId } from "../../../wallet-types.js";
 import type {
@@ -15,7 +13,6 @@ import type {
   WalletConnectionOption,
 } from "../../../wallet-types.js";
 import type { InAppConnector } from "../interfaces/connector.js";
-import type { Ecosystem } from "./types.js";
 
 /**
  * Checks if the provided wallet is an in-app wallet.
@@ -40,7 +37,6 @@ export async function connectInAppWallet(
     | CreateWalletArgs<"inApp">[1]
     | CreateWalletArgs<EcosystemWalletId>[1],
   connector: InAppConnector,
-  ecosystem: Ecosystem | undefined,
 ): Promise<[Account, Chain]> {
   if (
     // if auth mode is not specified, the default is popup
@@ -77,33 +73,6 @@ export async function connectInAppWallet(
     });
   }
 
-  if (ecosystem) {
-    const ecosystemOptions = await getEcosystemOptions(ecosystem.id);
-    const smartAccountOptions = ecosystemOptions?.smartAccountOptions;
-    if (smartAccountOptions) {
-      const allowedChains = smartAccountOptions.chainIds;
-      const firstAllowedChain = allowedChains[0];
-      if (!firstAllowedChain) {
-        throw new Error(
-          "At least one chain must be allowed for ecosystem smart account",
-        );
-      }
-      const preferredChain =
-        options.chain && allowedChains.includes(options.chain.id)
-          ? options.chain
-          : getCachedChain(firstAllowedChain);
-      return convertToSmartAccount({
-        client: options.client,
-        authAccount,
-        smartAccountOptions: {
-          chain: preferredChain,
-          sponsorGas: smartAccountOptions.sponsorGas,
-          factoryAddress: smartAccountOptions.accountFactoryAddress,
-        },
-      });
-    }
-  }
-
   return [authAccount, options.chain || ethereum] as const;
 }
 
@@ -118,7 +87,6 @@ export async function autoConnectInAppWallet(
     | CreateWalletArgs<"inApp">[1]
     | CreateWalletArgs<EcosystemWalletId>[1],
   connector: InAppConnector,
-  ecosystem: Ecosystem | undefined,
 ): Promise<[Account, Chain]> {
   if (options.authResult && connector.loginWithAuthToken) {
     await connector.loginWithAuthToken(options.authResult);
@@ -142,33 +110,6 @@ export async function autoConnectInAppWallet(
       smartAccountOptions: createOptions.smartAccount,
       chain: options.chain,
     });
-  }
-
-  if (ecosystem) {
-    const ecosystemOptions = await getEcosystemOptions(ecosystem.id);
-    const smartAccountOptions = ecosystemOptions?.smartAccountOptions;
-    if (smartAccountOptions) {
-      const allowedChains = smartAccountOptions.chainIds;
-      const firstAllowedChain = allowedChains[0];
-      if (!firstAllowedChain) {
-        throw new Error(
-          "At least one chain must be allowed for ecosystem smart account",
-        );
-      }
-      const preferredChain =
-        options.chain && allowedChains.includes(options.chain.id)
-          ? options.chain
-          : getCachedChain(firstAllowedChain);
-      return convertToSmartAccount({
-        client: options.client,
-        authAccount,
-        smartAccountOptions: {
-          chain: preferredChain,
-          sponsorGas: smartAccountOptions.sponsorGas,
-          factoryAddress: smartAccountOptions.accountFactoryAddress,
-        },
-      });
-    }
   }
 
   return [authAccount, options.chain || ethereum] as const;
