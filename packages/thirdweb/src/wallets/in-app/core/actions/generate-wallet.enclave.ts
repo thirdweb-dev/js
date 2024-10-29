@@ -9,13 +9,13 @@ import type { Ecosystem } from "../wallet/types.js";
  * @internal
  */
 export async function generateWallet({
-  authToken,
   client,
   ecosystem,
+  authToken,
 }: {
   client: ThirdwebClient;
-  ecosystem: Ecosystem;
   authToken: string;
+  ecosystem?: Ecosystem;
 }) {
   const clientFetch = getClientFetch(client, ecosystem);
   const response = await clientFetch(

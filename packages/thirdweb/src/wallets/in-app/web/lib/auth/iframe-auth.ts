@@ -128,7 +128,7 @@ export class Auth {
       });
     }
 
-    if (user.wallets.length === 0 && this.ecosystem) {
+    if (user.wallets.length === 0) {
       // If this is a new ecosystem wallet without an enclave yet, we'll generate an enclave
       const result = await generateWallet({
         authToken: authToken.storedToken.cookieString,
