@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
@@ -229,7 +230,7 @@ export const InAppWalletSettingsUI: React.FC<
             canEditAdvancedFeatures={canEditAdvancedFeatures}
           />
 
-          <div className="h-5" />
+          <Separator className="my-5" />
 
           <AuthEndpointFields
             form={form}
