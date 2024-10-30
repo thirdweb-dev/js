@@ -10,6 +10,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.j
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
+import { formatExplorerTxUrl } from "../../../../../../../utils/url.js";
 import {
   type Theme,
   fontSize,
@@ -345,7 +346,10 @@ export function FiatSteps(props: {
           onRampExplorers.explorers[0]?.url && onRampTxHash
             ? {
                 label: "View on Explorer",
-                url: `${onRampExplorers.explorers[0]?.url}/tx/${onRampTxHash}`,
+                url: formatExplorerTxUrl(
+                  onRampExplorers.explorers[0]?.url,
+                  onRampTxHash,
+                ),
               }
             : undefined
         }
@@ -382,7 +386,10 @@ export function FiatSteps(props: {
           toChainExplorers.explorers[0]?.url && toTokenTxHash
             ? {
                 label: "View on Explorer",
-                url: `${toChainExplorers.explorers[0].url}/tx/${toTokenTxHash}`,
+                url: formatExplorerTxUrl(
+                  toChainExplorers.explorers[0]?.url,
+                  toTokenTxHash,
+                ),
               }
             : undefined
         }
