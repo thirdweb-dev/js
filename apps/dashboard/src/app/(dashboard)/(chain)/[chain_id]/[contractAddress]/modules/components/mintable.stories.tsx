@@ -106,7 +106,6 @@ function Component() {
         <BadgeContainer label="Empty Primary Sale Recipient">
           <MintableModuleUI
             contractInfo={contractInfo}
-            allModuleContractInfo={[]}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             primarySaleRecipient={""}
@@ -126,7 +125,6 @@ function Component() {
         <BadgeContainer label="Filled Primary Sale Recipient">
           <MintableModuleUI
             contractInfo={contractInfo}
-            allModuleContractInfo={[]}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             primarySaleRecipient={testAddress1}
@@ -146,7 +144,6 @@ function Component() {
         <BadgeContainer label="Pending">
           <MintableModuleUI
             contractInfo={contractInfo}
-            allModuleContractInfo={[]}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={true}
             primarySaleRecipient={testAddress1}

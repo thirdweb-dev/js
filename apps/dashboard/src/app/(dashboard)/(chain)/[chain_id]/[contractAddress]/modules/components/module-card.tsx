@@ -25,23 +25,26 @@ import {
   sendTransaction,
   waitForReceipt,
 } from "thirdweb";
-import type { CompilerMetadata } from "thirdweb/dist/types/utils/any-evm/deploy-metadata";
 import { uninstallModuleByProxy } from "thirdweb/modules";
 import type { Account } from "thirdweb/wallets";
 import { ModuleInstance } from "./module-instance";
 import { useModuleContractInfo } from "./moduleContractInfo";
 
-type ModuleCardProps = {
+export type ModuleCardProps = {
   moduleAddress: string;
   contract: ContractOptions;
   onRemoveModule: () => void;
   ownerAccount: Account | undefined;
-  allModuleContractInfo: CompilerMetadata[];
+  allModuleContractInfo: {
+    name: string;
+    description?: string;
+    version?: string;
+    publisher?: string;
+  }[];
 };
 
 export function ModuleCard(props: ModuleCardProps) {
-  const { contract, moduleAddress, ownerAccount, allModuleContractInfo } =
-    props;
+  const { contract, moduleAddress, ownerAccount } = props;
   const [isUninstallModalOpen, setIsUninstallModalOpen] = useState(false);
 
   const contractInfo = useModuleContractInfo(
@@ -103,7 +106,6 @@ export function ModuleCard(props: ModuleCardProps) {
             publisher: contractInfo.publisher,
             version: contractInfo.version,
           }}
-          allModuleContractInfo={allModuleContractInfo}
           ownerAccount={ownerAccount}
           uninstallButton={{
             onClick: () => {
@@ -112,6 +114,7 @@ export function ModuleCard(props: ModuleCardProps) {
             isPending: uninstallMutation.isPending,
           }}
           moduleAddress={moduleAddress}
+          allModuleContractInfo={props.allModuleContractInfo}
         />
       </Suspense>
 
@@ -172,12 +175,6 @@ export type ModuleCardUIProps = {
     version?: string;
     publisher?: string;
   };
-  allModuleContractInfo: {
-    name: string;
-    description?: string;
-    version?: string;
-    publisher?: string;
-  }[];
   moduleAddress: string;
   isOwnerAccount: boolean;
   uninstallButton: {

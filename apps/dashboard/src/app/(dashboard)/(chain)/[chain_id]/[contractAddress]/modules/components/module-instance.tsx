@@ -14,6 +14,12 @@ export type ModuleInstanceProps = Omit<
 > & {
   contract: ThirdwebContract;
   ownerAccount: Account | undefined;
+  allModuleContractInfo: {
+    name: string;
+    description?: string;
+    version?: string;
+    publisher?: string;
+  }[];
 };
 
 export function ModuleInstance(props: ModuleInstanceProps) {
