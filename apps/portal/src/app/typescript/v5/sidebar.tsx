@@ -139,7 +139,7 @@ export const sidebar: SideBar = {
             },
             ...[
               "smartWallet",
-              "predictAddress",
+              "predictSmartAccountAddress",
               "createAndSignUserOp",
               "createUnsignedUserOp",
               "signUserOp",

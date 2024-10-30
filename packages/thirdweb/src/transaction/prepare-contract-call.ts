@@ -92,6 +92,29 @@ export type PrepareContractCallOptions<
  * });
  * ```
  *
+ * ### Usage with ERC20 value:
+ *
+ * For transactions that transfer ERC20 tokens, you can specify the value as the amount of tokens to transfer.
+ *
+ * You can use this in conjuction with the [`getApprovalForTransaction`](https://portal.thirdweb.com/references/typescript/v5/getApprovalForTransaction) function to easily create approval transactions for ERC20 tokens.
+ *
+ * This value will also be read by the react hooks and UI components to present to total cost to the user.
+ *
+ * ```ts
+ * import { prepareContractCall } from "thirdweb";
+ * import { toWei } from "thirdweb/utils";
+ *
+ * const transaction = prepareContractCall({
+ *  contract,
+ *  method: "function payWithCoin()",
+ *  params: [],
+ *  erc20Value: {
+ *    tokenAddress: "0x...", // the address of the ERC20 token
+ *    amountWei: toWei("0.1"), // the amount of tokens to transfer in wei
+ *  },
+ * });
+ * ```
+ *
  * ### Usage with a JSON ABI function object:
  *
  * ```ts
