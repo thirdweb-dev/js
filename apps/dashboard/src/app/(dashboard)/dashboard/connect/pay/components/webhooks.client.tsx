@@ -1,7 +1,6 @@
 "use client";
 
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -47,6 +46,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { shortenString } from "utils/usedapp-external";
 import { z } from "zod";
+import GenericLoadingPage from "../loading";
 
 type Webhook = {
   url: string;
@@ -79,7 +79,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
   });
 
   if (webhooksQuery.isPending) {
-    return <Spinner className="mx-auto size-8" />;
+    return <GenericLoadingPage />;
   }
 
   if (!webhooksQuery.data?.length) {

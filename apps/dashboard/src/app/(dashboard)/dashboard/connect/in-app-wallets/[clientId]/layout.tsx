@@ -2,6 +2,7 @@ import { InAppWalletsSummary } from "components/embedded-wallets/Analytics/Summa
 import { getInAppWalletUsage } from "data/analytics/wallets/in-app";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
+import { InAppWaletFooterSection } from "../../../../../team/[team_slug]/[project_slug]/connect/in-app-wallets/_components/footer";
 import { PageHeader } from "../PageHeader";
 import { getInAppWalletSupportedAPIKeys } from "../getInAppWalletSupportedAPIKeys";
 import { InAppWalletsAPIKeysMenu } from "../inAppWalletsAPIKeysMenu";
@@ -32,19 +33,24 @@ export default async function Page(props: {
     redirect("/dashboard/connect/in-app-wallets");
   }
 
-  const allTimeStats = await getInAppWalletUsage({
+  const allTimeStatsPromise = getInAppWalletUsage({
     clientId,
     from: new Date(2022, 0, 1),
     to: new Date(),
     period: "all",
   });
 
-  const monthlyStats = await getInAppWalletUsage({
+  const monthlyStatsPromise = getInAppWalletUsage({
     clientId,
     from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     to: new Date(),
     period: "month",
   });
+
+  const [allTimeStats, monthlyStats] = await Promise.all([
+    allTimeStatsPromise,
+    monthlyStatsPromise,
+  ]).catch(() => [null, null]);
 
   return (
     <div>
@@ -65,14 +71,16 @@ export default async function Page(props: {
       <div className="h-8" />
 
       <InAppWalletsSummary
-        allTimeStats={allTimeStats}
-        monthlyStats={monthlyStats}
+        allTimeStats={allTimeStats || []}
+        monthlyStats={monthlyStats || []}
       />
 
       <div className="h-8" />
       <Tabs clientId={clientId} />
       <div className="h-8" />
       {props.children}
+      <div className="h-16" />
+      <InAppWaletFooterSection trackingCategory="embedded-wallet" />
     </div>
   );
 }

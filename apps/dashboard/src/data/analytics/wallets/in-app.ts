@@ -1,3 +1,4 @@
+import type { InAppWalletStats } from "@3rdweb-sdk/react/hooks/useApi";
 import { fetchAnalytics } from "../fetch-analytics";
 
 export async function getInAppWalletUsage(args: {
@@ -28,11 +29,13 @@ export async function getInAppWalletUsage(args: {
       },
     },
   );
-  const json = await res?.json();
 
-  if (!res || res.status !== 200) {
-    throw new Error(json.message);
+  if (res?.status !== 200) {
+    console.error("Failed to fetch in-app wallet stats");
+    return null;
   }
 
-  return json.data;
+  const json = await res.json();
+
+  return json.data as InAppWalletStats[];
 }
