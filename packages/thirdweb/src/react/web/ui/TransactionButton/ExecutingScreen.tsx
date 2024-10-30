@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Hex } from "viem";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
+import { formatExplorerTxUrl } from "../../../../utils/url.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useChainExplorers } from "../../../core/hooks/others/useChainQuery.js";
 import { useSendTransaction } from "../../hooks/transaction/useSendTransaction.js";
@@ -106,7 +107,10 @@ export function ExecutingTxScreen(props: {
               <ButtonLink
                 fullWidth
                 variant="outline"
-                href={`${chainExplorers.explorers[0]?.url}/tx/${txHash}`}
+                href={formatExplorerTxUrl(
+                  chainExplorers.explorers[0]?.url ?? "",
+                  txHash,
+                )}
                 target="_blank"
                 as="a"
                 gap="xs"

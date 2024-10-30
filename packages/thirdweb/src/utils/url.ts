@@ -63,3 +63,11 @@ export function formatWalletConnectUrl(
     ? formatUniversalUrl(appUrl, wcUri)
     : formatNativeUrl(appUrl, wcUri);
 }
+
+export function formatExplorerTxUrl(explorerUrl: string, txHash: string) {
+  return `${explorerUrl.endsWith("/") ? explorerUrl : `${explorerUrl}/`}tx/${txHash}`;
+}
+
+export function formatExplorerAddressUrl(explorerUrl: string, address: string) {
+  return `${explorerUrl.endsWith("/") ? explorerUrl : `${explorerUrl}/`}address/${address}`;
+}
