@@ -20,7 +20,8 @@ import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { formatTickerNumber } from "../../../lib/format-utils";
 
 type ChartData = Record<string, number> & {
   time: string; // human readable date
@@ -93,7 +94,9 @@ export function InAppWalletUsersChartCard(props: {
     };
 
     return {
-      chartData: Array.from(_chartDataMap.values()),
+      chartData: Array.from(_chartDataMap.values()).sort(
+        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
+      ),
       chartConfig: _chartConfig,
     };
   }, [inAppWalletStats]);
@@ -193,7 +196,26 @@ export function InAppWalletUsersChartCard(props: {
               axisLine={false}
             />
 
-            <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
+            <YAxis
+              dataKey={(data) =>
+                Object.entries(data)
+                  .filter(([key]) => key !== "time")
+                  .map(([, value]) => value)
+                  .reduce((acc, current) => Number(acc) + Number(current), 0)
+              }
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => formatTickerNumber(value)}
+            />
+
+            <ChartTooltip
+              cursor={true}
+              content={
+                <ChartTooltipContent
+                  valueFormatter={(value) => formatTickerNumber(Number(value))}
+                />
+              }
+            />
             <ChartLegend content={<ChartLegendContent />} />
             {uniqueAuthMethods.map((authMethod) => {
               return (

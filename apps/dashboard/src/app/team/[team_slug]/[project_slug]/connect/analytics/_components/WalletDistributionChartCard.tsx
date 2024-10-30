@@ -26,6 +26,10 @@ import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { DocLink } from "components/shared/DocLink";
 import { useMemo, useState } from "react";
 import { Pie, PieChart } from "recharts";
+import {
+  formatTickerNumber,
+  formatWalletType,
+} from "../../../../../../../lib/format-utils";
 
 type ChartToShow = "totalConnections" | "uniqueWalletsConnected";
 
@@ -63,7 +67,8 @@ export function WalletDistributionChartCard(props: {
       let _uniqueConnections = 0;
 
       for (const stat of walletStats) {
-        const { walletType } = stat;
+        const { walletType: rawWalletType } = stat;
+        const walletType = formatWalletType(rawWalletType);
         const chartData = _chartDataMap.get(walletType);
 
         _totalConnections += stat.totalConnections;
@@ -235,7 +240,7 @@ export function WalletDistributionChartCard(props: {
                           ? uniqueConnections
                           : totalConnections;
                       const percentageValue = ((v / sumValue) * 100).toFixed(2);
-                      return `${percentageValue}% - ${v}`;
+                      return `${percentageValue}% - ${formatTickerNumber(v)}`;
                     }
                   }}
                 />

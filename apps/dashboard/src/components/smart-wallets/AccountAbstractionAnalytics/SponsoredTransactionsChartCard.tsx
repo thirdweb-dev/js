@@ -21,7 +21,8 @@ import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { formatTickerNumber } from "../../../lib/format-utils";
 
 type ChartData = {
   time: string; // human readable date
@@ -69,9 +70,12 @@ export function SponsoredTransactionsChartCard(props: {
 
   return (
     <div className="relative w-full rounded-lg border border-border bg-muted/50 p-4 md:p-6">
-      <h3 className="mb-4 font-semibold text-xl tracking-tight md:text-2xl">
+      <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
         Sponsored Transactions
       </h3>
+      <p className="mb-3 text-muted-foreground text-sm">
+        Total number of sponsored transactions.
+      </p>
 
       <div className="top-6 right-6 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
         <ExportToCSVButton
@@ -153,7 +157,21 @@ export function SponsoredTransactionsChartCard(props: {
               axisLine={false}
             />
 
-            <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
+            <YAxis
+              dataKey={(data) => data.successful + data.failed}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => formatTickerNumber(value)}
+            />
+
+            <ChartTooltip
+              cursor={true}
+              content={
+                <ChartTooltipContent
+                  valueFormatter={(value) => formatTickerNumber(Number(value))}
+                />
+              }
+            />
             <ChartLegend content={<ChartLegendContent />} />
             {(["failed", "successful"] as const).map((result) => {
               return (

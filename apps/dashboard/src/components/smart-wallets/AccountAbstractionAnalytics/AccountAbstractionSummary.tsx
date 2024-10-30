@@ -8,12 +8,12 @@ export function AccountAbstractionSummary(props: {
   return (
     <div className="grid grid-cols-2 gap-4 lg:gap-6">
       <Stat
-        label="Sponsored Transactions"
+        label="Mainnet Sponsored Transactions"
         value={props.aggregateUserOpUsageQuery?.successful || 0}
         icon={ActivityIcon}
       />
       <Stat
-        label="Total Sponsored"
+        label="Mainnet Gas Sponsored"
         value={props.aggregateUserOpUsageQuery?.sponsoredUsd || 0}
         formatter={(value: number) =>
           new Intl.NumberFormat("en-US", {

@@ -22,8 +22,9 @@ import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { useAllChainsData } from "../../../hooks/chains/allChains";
+import { formatTickerNumber } from "../../../lib/format-utils";
 
 type ChartData = Record<string, number> & {
   time: string; // human readable date
@@ -51,7 +52,8 @@ export function TotalSponsoredChartCard(props: {
       if (!chartData) {
         _chartDataMap.set(stat.date, {
           time: format(new Date(stat.date), "MMM dd"),
-          [chainId || "Unknown"]: Math.round(stat.sponsoredUsd * 100) / 100,
+          [chain?.name || chainId || "Unknown"]:
+            Math.round(stat.sponsoredUsd * 100) / 100,
         } as ChartData);
       } else {
         chartData[chain?.name || chainId || "Unknown"] =
@@ -120,7 +122,7 @@ export function TotalSponsoredChartCard(props: {
       <div className="top-6 right-6 mb-4 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
         <ExportToCSVButton
           className="bg-background"
-          fileName="Connect Wallets"
+          fileName="Gas Sponsored"
           disabled={disableActions}
           getData={async () => {
             // Shows the number of each type of wallet connected on all dates
@@ -200,7 +202,25 @@ export function TotalSponsoredChartCard(props: {
               axisLine={false}
             />
 
-            <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
+            <YAxis
+              dataKey={(data) => {
+                console.log(data);
+                return Object.entries(data)
+                  .filter(([key]) => key !== "time")
+                  .map(([, value]) => value)
+                  .reduce((acc, current) => Number(acc) + Number(current), 0);
+              }}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => `$${formatTickerNumber(value)}`}
+            />
+
+            <ChartTooltip
+              cursor={true}
+              content={
+                <ChartTooltipContent valueFormatter={(value) => `$${value}`} />
+              }
+            />
             <ChartLegend content={<ChartLegendContent />} />
             {uniqueChainIds.map((chainId) => {
               return (

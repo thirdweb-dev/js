@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { createUserOpStatsStub } from "components/smart-wallets/AccountAbstractionAnalytics/storyUtils";
+import { getLastNDaysRange } from "../../../../../../../components/analytics/date-range-selector";
 import { mobileViewport } from "../../../../../../../stories/utils";
 import { ConnectAnalyticsDashboardUI } from "../ConnectAnalyticsDashboardUI";
 import { createWalletStatsStub } from "./storyUtils";
@@ -30,6 +31,10 @@ function Component() {
   return (
     <div className="container max-w-[1150px] py-8">
       <ConnectAnalyticsDashboardUI
+        setRange={() => {}}
+        range={getLastNDaysRange("last-120")}
+        intervalType="day"
+        setIntervalType={() => {}}
         walletUsage={createWalletStatsStub(30)}
         aggregateWalletUsage={createWalletStatsStub(30)}
         aggregateUserOpUsageQuery={createUserOpStatsStub(1)?.[0]}

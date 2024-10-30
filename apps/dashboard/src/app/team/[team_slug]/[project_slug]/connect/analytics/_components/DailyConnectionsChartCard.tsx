@@ -27,7 +27,15 @@ import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  LabelList,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { formatTickerNumber } from "../../../../../../../lib/format-utils";
 
 type ChartToShow = "uniqueWallets" | "totalWallets";
 
@@ -194,7 +202,21 @@ export function DailyConnectionsChartCard(props: {
               axisLine={false}
             />
 
-            <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
+            <YAxis
+              dataKey={(data) => data[chartToShow]}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => formatTickerNumber(value)}
+            />
+
+            <ChartTooltip
+              cursor={true}
+              content={
+                <ChartTooltipContent
+                  valueFormatter={(value) => formatTickerNumber(Number(value))}
+                />
+              }
+            />
 
             <Bar
               dataKey={chartToShow}
@@ -207,6 +229,7 @@ export function DailyConnectionsChartCard(props: {
                   offset={12}
                   className="invisible fill-foreground sm:visible"
                   fontSize={12}
+                  formatter={(value: number) => formatTickerNumber(value)}
                 />
               )}
             </Bar>

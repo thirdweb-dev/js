@@ -3,10 +3,10 @@ import { Stat } from "components/analytics/stat";
 import { ActivityIcon, UserIcon } from "lucide-react";
 
 export function InAppWalletsSummary(props: {
-  allTimeStats: InAppWalletStats[];
-  monthlyStats: InAppWalletStats[];
+  allTimeStats: InAppWalletStats[] | undefined;
+  monthlyStats: InAppWalletStats[] | undefined;
 }) {
-  const allTimeStats = props.allTimeStats.reduce(
+  const allTimeStats = props.allTimeStats?.reduce(
     (acc, curr) => {
       acc.uniqueWalletsConnected += curr.uniqueWalletsConnected;
       return acc;
@@ -16,7 +16,7 @@ export function InAppWalletsSummary(props: {
     },
   );
 
-  const monthlyStats = props.monthlyStats.reduce(
+  const monthlyStats = props.monthlyStats?.reduce(
     (acc, curr) => {
       acc.uniqueWalletsConnected += curr.uniqueWalletsConnected;
       return acc;
@@ -30,12 +30,12 @@ export function InAppWalletsSummary(props: {
     <div className="grid grid-cols-2 gap-4 lg:gap-6">
       <Stat
         label="Total Users"
-        value={allTimeStats.uniqueWalletsConnected}
+        value={allTimeStats?.uniqueWalletsConnected || 0}
         icon={ActivityIcon}
       />
       <Stat
         label="Monthly Active Users"
-        value={monthlyStats.uniqueWalletsConnected}
+        value={monthlyStats?.uniqueWalletsConnected || 0}
         icon={UserIcon}
       />
     </div>

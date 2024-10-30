@@ -26,7 +26,11 @@ import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  formatTickerNumber,
+  formatWalletType,
+} from "../../../../../../../lib/format-utils";
 
 type ChartToShow = "uniqueWalletsConnected" | "totalConnections";
 
@@ -60,7 +64,8 @@ export function WalletConnectorsChartCard(props: {
     // for each stat, add it in _chartDataMap
     for (const stat of walletStats) {
       const chartData = _chartDataMap.get(stat.date);
-      const { walletType } = stat;
+      const { walletType: rawWalletType } = stat;
+      const walletType = formatWalletType(rawWalletType);
 
       // if no data for current day - create new entry
       if (!chartData) {
@@ -213,7 +218,26 @@ export function WalletConnectorsChartCard(props: {
               axisLine={false}
             />
 
-            <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
+            <YAxis
+              dataKey={(data) =>
+                Object.entries(data)
+                  .filter(([key]) => key !== "time")
+                  .map(([, value]) => value)
+                  .reduce((acc, current) => Number(acc) + Number(current), 0)
+              }
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => formatTickerNumber(value)}
+            />
+
+            <ChartTooltip
+              cursor={true}
+              content={
+                <ChartTooltipContent
+                  valueFormatter={(value) => formatTickerNumber(Number(value))}
+                />
+              }
+            />
             <ChartLegend content={<ChartLegendContent />} />
             {uniqueWalletTypes.map((walletType) => {
               return (
