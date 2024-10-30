@@ -1,5 +1,4 @@
 "use client";
-
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
@@ -9,162 +8,127 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import type { WalletStats } from "@3rdweb-sdk/react/hooks/useApi";
+import type { InAppWalletStats } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   EmptyChartState,
   LoadingChartState,
 } from "components/analytics/empty-chart-state";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
+import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
+import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import {
-  formatTickerNumber,
-  formatWalletType,
-} from "../../../../../../../lib/format-utils";
-
-type ChartToShow = "uniqueWalletsConnected" | "totalConnections";
+import { formatTickerNumber } from "../../../lib/format-utils";
 
 type ChartData = Record<string, number> & {
   time: string; // human readable date
 };
 
-const chartLabelToShow: Record<ChartToShow, string> = {
-  uniqueWalletsConnected: "Unique Wallets",
-  totalConnections: "Total Wallets",
-};
-export function WalletConnectorsChartCard(props: {
-  walletStats: WalletStats[];
+export function InAppWalletUsersChartCard(props: {
+  inAppWalletStats: InAppWalletStats[];
   isPending: boolean;
 }) {
-  // show top 10 wallets as distinct, and combine the rest as "Others"
-  const topWalletsToShow = 10;
-  const { walletStats } = props;
-  const [chartToShow, setChartToShow] = useState<ChartToShow>(
-    "uniqueWalletsConnected",
-  );
-  const chartToShowOptions: ChartToShow[] = [
-    "uniqueWalletsConnected",
-    "totalConnections",
-  ];
+  const { inAppWalletStats } = props;
+  const topChainsToShow = 10;
 
   const { chartConfig, chartData } = useMemo(() => {
     const _chartConfig: ChartConfig = {};
     const _chartDataMap: Map<string, ChartData> = new Map();
-    const walletTypeToValueMap: Map<string, number> = new Map();
+    const authMethodToVolumeMap: Map<string, number> = new Map();
     // for each stat, add it in _chartDataMap
-    for (const stat of walletStats) {
+    for (const stat of inAppWalletStats) {
       const chartData = _chartDataMap.get(stat.date);
-      const { walletType: rawWalletType } = stat;
-      const walletType = formatWalletType(rawWalletType);
+      const { authenticationMethod } = stat;
 
       // if no data for current day - create new entry
-      if (!chartData) {
+      if (!chartData && stat.uniqueWalletsConnected > 0) {
         _chartDataMap.set(stat.date, {
           time: format(new Date(stat.date), "MMM dd"),
-          [walletType]: stat[chartToShow],
+          [authenticationMethod || "Unknown"]: stat.uniqueWalletsConnected,
         } as ChartData);
-      } else {
-        chartData[walletType] =
-          (chartData[walletType] || 0) + stat[chartToShow];
+      } else if (chartData) {
+        chartData[authenticationMethod || "Unknown"] =
+          (chartData[authenticationMethod || "Unknown"] || 0) +
+          stat.uniqueWalletsConnected;
       }
 
-      walletTypeToValueMap.set(
-        walletType,
-        stat[chartToShow] + (walletTypeToValueMap.get(walletType) || 0),
+      authMethodToVolumeMap.set(
+        authenticationMethod || "Unknown",
+        stat.uniqueWalletsConnected +
+          (authMethodToVolumeMap.get(authenticationMethod || "Unknown") || 0),
       );
     }
 
-    const walletTypesSorted = Array.from(walletTypeToValueMap.entries())
+    const authMethodsSorted = Array.from(authMethodToVolumeMap.entries())
       .sort((a, b) => b[1] - a[1])
       .map((w) => w[0]);
 
-    const walletTypesToShow = walletTypesSorted.slice(0, topWalletsToShow);
-    const walletTypesToTagAsOthers = walletTypesSorted.slice(topWalletsToShow);
+    const authMethodsToShow = authMethodsSorted.slice(0, topChainsToShow);
+    const authMethodsAsOther = authMethodsSorted.slice(topChainsToShow);
 
-    // replace walletTypesToTagAsOthers walletType with "other"
+    // replace chainIdsToTagAsOther chainId with "other"
     for (const data of _chartDataMap.values()) {
-      for (const walletType in data) {
-        if (walletTypesToTagAsOthers.includes(walletType)) {
-          data.others = (data.others || 0) + (data[walletType] || 0);
-          delete data[walletType];
+      for (const authMethod in data) {
+        if (authMethodsAsOther.includes(authMethod)) {
+          data.others = (data.others || 0) + (data[authMethod] || 0);
+          delete data[authMethod];
         }
       }
     }
 
-    walletTypesToShow.forEach((walletType, i) => {
+    authMethodsToShow.forEach((walletType, i) => {
       _chartConfig[walletType] = {
-        label: walletTypesToShow[i],
+        label: authMethodsToShow[i],
         color: `hsl(var(--chart-${(i % 10) + 1}))`,
       };
     });
 
     // Add Other
-    walletTypesToShow.push("others");
+    authMethodsToShow.push("others");
     _chartConfig.others = {
       label: "Others",
       color: "hsl(var(--muted-foreground))",
     };
 
     return {
-      chartData: Array.from(_chartDataMap.values()),
+      chartData: Array.from(_chartDataMap.values()).sort(
+        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
+      ),
       chartConfig: _chartConfig,
     };
-  }, [walletStats, chartToShow]);
+  }, [inAppWalletStats]);
 
-  const uniqueWalletTypes = Object.keys(chartConfig);
-  const disableActions = props.isPending || chartData.length === 0;
+  const uniqueAuthMethods = Object.keys(chartConfig);
+  const disableActions =
+    props.isPending ||
+    chartData.length === 0 ||
+    chartData.every((data) => data.sponsoredUsd === 0);
 
   return (
     <div className="relative w-full rounded-lg border border-border bg-muted/50 p-4 md:p-6">
       <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
-        Connected Wallets
+        Unique Users
       </h3>
       <p className="mb-3 text-muted-foreground text-sm">
-        The different types of wallets used to connect to your app each day.
+        The total number of active in-app wallet users on your project.
       </p>
 
       <div className="top-6 right-6 mb-4 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
-        <Select
-          onValueChange={(v) => {
-            setChartToShow(v as ChartToShow);
-          }}
-          value={chartToShow}
-          disabled={disableActions}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {chartToShowOptions.map((option) => (
-              <SelectItem key={option} value={option}>
-                {chartLabelToShow[option]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
         <ExportToCSVButton
           className="bg-background"
           fileName="Connect Wallets"
           disabled={disableActions}
           getData={async () => {
             // Shows the number of each type of wallet connected on all dates
-            const header = ["Date", ...uniqueWalletTypes];
+            const header = ["Date", ...uniqueAuthMethods];
             const rows = chartData.map((data) => {
               const { time, ...rest } = data;
               return [
                 time,
-                ...uniqueWalletTypes.map((w) => (rest[w] || 0).toString()),
+                ...uniqueAuthMethods.map((w) => (rest[w] || 0).toString()),
               ];
             });
             return { header, rows };
@@ -173,30 +137,44 @@ export function WalletConnectorsChartCard(props: {
       </div>
 
       {/* Chart */}
-      <ChartContainer config={chartConfig} className="h-[400px] w-full">
+      <ChartContainer
+        config={chartConfig}
+        className="h-[250px] w-full md:h-[350px]"
+      >
         {props.isPending ? (
           <LoadingChartState />
-        ) : chartData.length === 0 ? (
+        ) : chartData.length === 0 ||
+          chartData.every((data) => data.sponsoredUsd === 0) ? (
           <EmptyChartState>
             <div className="flex flex-col items-center justify-center">
               <span className="mb-6 text-lg">
-                Connect any wallet to your app
+                Connect users to your app with social logins
               </span>
               <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
                 <DocLink
-                  link="https://portal.thirdweb.com/typescript/v5/supported-wallets"
+                  link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
                   label="TypeScript"
                   icon={TypeScriptIcon}
                 />
                 <DocLink
-                  link="https://portal.thirdweb.com/typescript/v5/supported-wallets"
+                  link="https://portal.thirdweb.com/react/v5/in-app-wallet/get-started"
                   label="React"
                   icon={ReactIcon}
                 />
                 <DocLink
-                  link="https://portal.thirdweb.com/typescript/v5/supported-wallets"
+                  link="https://portal.thirdweb.com/react/v5/in-app-wallet/get-started"
                   label="React Native"
                   icon={ReactIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/unity/v5/wallets/in-app-wallet"
+                  label="Unity"
+                  icon={UnityIcon}
+                />
+                <DocLink
+                  link="https://portal.thirdweb.com/unreal-engine/getting-started"
+                  label="Unreal Engine"
+                  icon={UnrealIcon}
                 />
               </div>
             </div>
@@ -239,12 +217,12 @@ export function WalletConnectorsChartCard(props: {
               }
             />
             <ChartLegend content={<ChartLegendContent />} />
-            {uniqueWalletTypes.map((walletType) => {
+            {uniqueAuthMethods.map((authMethod) => {
               return (
                 <Bar
-                  key={walletType}
-                  dataKey={walletType}
-                  fill={chartConfig[walletType]?.color}
+                  key={authMethod}
+                  dataKey={authMethod}
+                  fill={chartConfig[authMethod]?.color}
                   radius={4}
                   stackId="a"
                   strokeWidth={1.5}
