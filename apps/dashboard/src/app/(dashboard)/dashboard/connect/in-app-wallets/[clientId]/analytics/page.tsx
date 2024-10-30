@@ -5,7 +5,7 @@ export default function Page({
   params,
   searchParams,
 }: {
-  params: { team_slug: string; project_slug: string };
+  params: { clientId: string };
   searchParams: {
     from?: string;
     to?: string;
@@ -27,9 +27,10 @@ export default function Page({
   )
     ? (searchParams.interval as "day" | "week")
     : "week";
+
   return (
     <InAppWalletAnalytics
-      clientId={params.project_slug}
+      clientId={params.clientId}
       interval={interval}
       range={range as Range}
     />
