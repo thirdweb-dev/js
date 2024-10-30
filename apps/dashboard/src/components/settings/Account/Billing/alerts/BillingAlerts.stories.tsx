@@ -1,11 +1,11 @@
+import { accountStatus } from "@3rdweb-sdk/react/hooks/useApi";
 import type { Meta, StoryObj } from "@storybook/react";
+import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
-import { AccountStatus } from "../../../../../@3rdweb-sdk/react/hooks/useApi";
 import {
   createBillableServiceUsageDataStub,
   createDashboardAccountStub,
 } from "../../../../../stories/stubs";
-import { BadgeContainer, mobileViewport } from "../../../../../stories/utils";
 import { BillingAlertsUI } from "./Alert";
 
 const meta = {
@@ -54,7 +54,7 @@ function Story() {
         <BadgeContainer label="#paymentVerification">
           <BillingAlertsUI
             dashboardAccount={createDashboardAccountStub("foo", {
-              status: AccountStatus.PaymentVerification,
+              status: accountStatus.paymentVerification,
               stripePaymentActionUrl: "https://example.com",
             })}
             usageData={createBillableServiceUsageDataStub({

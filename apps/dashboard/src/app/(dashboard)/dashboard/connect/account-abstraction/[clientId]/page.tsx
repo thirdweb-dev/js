@@ -1,4 +1,4 @@
-import { AccountStatus } from "@3rdweb-sdk/react/hooks/useApi";
+import { accountStatus } from "@3rdweb-sdk/react/hooks/useApi";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { ConnectSDKCard } from "components/shared/ConnectSDKCard";
 import { SmartWallets } from "components/smart-wallets";
@@ -38,7 +38,7 @@ export default async function Page(props: {
   const hasSmartWalletsWithoutBilling = apiKeys.find((k) =>
     k.services?.find(
       (s) =>
-        dashboardAccount.status !== AccountStatus.ValidPayment &&
+        dashboardAccount.status !== accountStatus.validPayment &&
         s.name === "bundler",
     ),
   );

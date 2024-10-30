@@ -5,8 +5,8 @@ import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
 import {
   type Account,
-  AccountStatus,
   type UsageBillableByService,
+  accountStatus,
   useAccount,
   useAccountUsage,
 } from "@3rdweb-sdk/react/hooks/useApi";
@@ -45,11 +45,9 @@ export const BillingAlerts = (props: {
   const usageQuery = useAccountUsage();
   const meQuery = useAccount({
     refetchInterval: (account) =>
-      [
-        AccountStatus.InvalidPayment,
-        AccountStatus.InvalidPaymentMethod,
-        AccountStatus.PaymentVerification,
-      ].includes(account.state.data?.status as AccountStatus)
+      account.state.data?.status === accountStatus.invalidPayment ||
+      account.state.data?.status === accountStatus.invalidPaymentMethod ||
+      account.state.data?.status === accountStatus.paymentVerification
         ? 1000
         : false,
   });
@@ -112,7 +110,7 @@ export function BillingAlertsUI(props: {
     const paymentFailureAlerts: AlertConditionType[] = [
       {
         shouldShowAlert:
-          dashboardAccount.status === AccountStatus.PaymentVerification,
+          dashboardAccount.status === accountStatus.paymentVerification,
         key: "verifyPaymentAlert",
         title: "Your payment method requires verification",
         description:
@@ -122,7 +120,7 @@ export function BillingAlertsUI(props: {
       },
       {
         shouldShowAlert:
-          dashboardAccount.status === AccountStatus.InvalidPaymentMethod,
+          dashboardAccount.status === accountStatus.invalidPaymentMethod,
         key: "invalidPaymentMethodAlert",
         title: "Your payment method is invalid",
         description:
@@ -162,7 +160,7 @@ export function BillingAlertsUI(props: {
       usage.storage.sumFileSizeBytes >= limits.storage;
 
     const hasHardLimits =
-      dashboardAccount.status !== AccountStatus.ValidPayment;
+      dashboardAccount.status !== accountStatus.validPayment;
     const isFreePlan = dashboardAccount.plan === "free";
     const isGrowthPlan = dashboardAccount.plan === "growth";
     const usageAlerts: AlertConditionType[] = [

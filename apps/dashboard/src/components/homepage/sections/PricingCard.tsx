@@ -1,4 +1,4 @@
-import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
+import { type AccountPlan, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
 import { Box, type CardProps, Flex } from "@chakra-ui/react";
 import {
   Badge,
@@ -133,7 +133,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
           <FeatureItem key={Array.isArray(f) ? f[0] : f} text={f} />
         ))}
       </Flex>
-      {name === AccountPlan.Growth && onDashboard ? (
+      {name === accountPlan.growth && onDashboard ? (
         <UpgradeModal
           name={name}
           ctaProps={ctaProps}

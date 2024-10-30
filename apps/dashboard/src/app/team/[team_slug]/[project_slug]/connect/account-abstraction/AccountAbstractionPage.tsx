@@ -4,8 +4,8 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
-  AccountStatus,
   type ApiKeyService,
+  accountStatus,
   useAccount,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
@@ -40,7 +40,7 @@ export function AccountAbstractionPage(props: {
 
     return apiKeyServices.find(
       (s) =>
-        accountQuery.data.status !== AccountStatus.ValidPayment &&
+        accountQuery.data.status !== accountStatus.validPayment &&
         s.name === "bundler",
     );
   }, [apiKeyServices, accountQuery.data]);

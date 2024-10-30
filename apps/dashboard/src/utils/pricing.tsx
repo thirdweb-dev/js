@@ -1,4 +1,4 @@
-import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
+import { type AccountPlan, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
 import { Link, Text } from "tw-components";
 
 export const CONTACT_US_URL =
@@ -14,7 +14,7 @@ export const PLANS: {
     features: Array<string | string[]>;
   };
 } = {
-  [AccountPlan.Free]: {
+  [accountPlan.free]: {
     title: "Starter",
     price: 0,
     subTitle: null,
@@ -29,7 +29,7 @@ export const PLANS: {
       "Blockchain infra (RPC, IPFS)",
     ],
   },
-  [AccountPlan.Growth]: {
+  [accountPlan.growth]: {
     price: 99,
     title: "Growth",
     subTitle: "Everything in Starter, plus:",
@@ -45,7 +45,7 @@ export const PLANS: {
       "Advanced paymaster rules",
     ],
   },
-  [AccountPlan.Pro]: {
+  [accountPlan.pro]: {
     price: "Custom",
     title: "Pro",
     subTitle: "Everything in Growth, plus:",
@@ -60,7 +60,7 @@ export const PLANS: {
       "Enterprise grade SLAs",
     ],
   },
-  [AccountPlan.Enterprise]: {
+  [accountPlan.enterprise]: {
     price: "$$$",
     title: "Enterprise",
     subTitle: "Everything in Pro, plus:",

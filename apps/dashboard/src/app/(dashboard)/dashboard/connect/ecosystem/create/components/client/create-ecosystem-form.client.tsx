@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItemButton } from "@/components/ui/radio-group";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { AccountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { accountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -164,7 +164,7 @@ export function CreateEcosystemForm(props: {
               )}
             />
           </div>
-          {billingAccountInfo?.status !== AccountStatus.ValidPayment ? (
+          {billingAccountInfo?.status !== accountStatus.validPayment ? (
             <ToolTipLabel label="Please update your payment method to create an ecosystem">
               {/* Allows the button to be disabled but the tooltip still works */}
               <div className="w-full">

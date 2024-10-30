@@ -1,4 +1,4 @@
-import { AccountPlan, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { accountPlan, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
 import { Select as ChakraSelect } from "chakra-react-select";
 import { ChakraNextImage } from "components/Image";
@@ -41,7 +41,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
       firstname: "",
       lastname: "",
       thirdweb_account_id: account?.id || "",
-      plan_type: PlanToCreditsRecord[account?.plan || AccountPlan.Free].title,
+      plan_type: PlanToCreditsRecord[account?.plan || accountPlan.free].title,
       email: account?.email || "",
       company: "",
       website: "",

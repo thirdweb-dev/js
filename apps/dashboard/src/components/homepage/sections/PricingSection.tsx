@@ -1,4 +1,4 @@
-import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
+import { accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
 import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import { Heading, Text, TrackedLink } from "tw-components";
 import { CONTACT_US_URL } from "utils/pricing";
@@ -48,7 +48,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
 
         <SimpleGrid columns={{ base: 1, xl: 3 }} gap={{ base: 6, xl: 8 }}>
           <PricingCard
-            name={AccountPlan.Free}
+            name={accountPlan.free}
             ctaTitle="Get started for free"
             ctaProps={{
               category: trackingCategory,
@@ -61,7 +61,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             ctaTitle={
               canTrialGrowth ? "Claim your 1-month free" : "Get started"
             }
-            name={AccountPlan.Growth}
+            name={accountPlan.growth}
             ctaHint={
               canTrialGrowth
                 ? "Your free trial will end after 30 days."
@@ -82,7 +82,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           />
 
           <PricingCard
-            name={AccountPlan.Pro}
+            name={accountPlan.pro}
             ctaTitle="Contact us"
             ctaProps={{
               category: trackingCategory,

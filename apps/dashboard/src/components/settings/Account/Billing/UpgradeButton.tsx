@@ -2,7 +2,7 @@
 
 import { NavLink } from "@/components/ui/NavLink";
 import { Button } from "@/components/ui/button";
-import { AccountPlan, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { accountPlan, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { usePathname } from "next/navigation";
 
@@ -16,7 +16,7 @@ export const UpgradeButton = () => {
     meQuery.isPending ||
     !meQuery.data ||
     pathname?.startsWith("/dashboard/settings/billing") ||
-    meQuery.data?.plan !== AccountPlan.Free
+    meQuery.data?.plan !== accountPlan.free
   ) {
     return null;
   }

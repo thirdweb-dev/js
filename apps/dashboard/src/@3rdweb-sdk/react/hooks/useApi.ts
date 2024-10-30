@@ -12,21 +12,24 @@ import { useLoggedInUser } from "./useLoggedInUser";
 
 // FIXME: We keep repeating types, API server should provide them
 
-export enum AccountStatus {
-  NoCustomer = "noCustomer",
-  NoPayment = "noPayment",
-  PaymentVerification = "paymentVerification",
-  ValidPayment = "validPayment",
-  InvalidPayment = "invalidPayment",
-  InvalidPaymentMethod = "invalidPaymentMethod",
-}
+export const accountStatus = {
+  noCustomer: "noCustomer",
+  noPayment: "noPayment",
+  paymentVerification: "paymentVerification",
+  validPayment: "validPayment",
+  invalidPayment: "invalidPayment",
+  invalidPaymentMethod: "invalidPaymentMethod",
+} as const;
 
-export enum AccountPlan {
-  Free = "free",
-  Growth = "growth",
-  Pro = "pro",
-  Enterprise = "enterprise",
-}
+export const accountPlan = {
+  free: "free",
+  growth: "growth",
+  pro: "pro",
+  enterprise: "enterprise",
+} as const;
+
+export type AccountStatus = (typeof accountStatus)[keyof typeof accountStatus];
+export type AccountPlan = (typeof accountPlan)[keyof typeof accountPlan];
 
 export type AuthorizedWallet = {
   id: string;

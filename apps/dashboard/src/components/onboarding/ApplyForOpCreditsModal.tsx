@@ -1,6 +1,7 @@
 import {
-  AccountPlan,
-  AccountStatus,
+  type AccountPlan,
+  accountPlan,
+  accountStatus,
   useAccount,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import {
@@ -32,13 +33,13 @@ export type CreditsRecord = {
 };
 
 export const PlanToCreditsRecord: Record<AccountPlan, CreditsRecord> = {
-  [AccountPlan.Free]: {
+  [accountPlan.free]: {
     title: "Starter",
     upTo: true,
     credits: "$250",
     color: "#3b394b",
   },
-  [AccountPlan.Growth]: {
+  [accountPlan.growth]: {
     title: "Growth",
     upTo: true,
     credits: "$2,500",
@@ -52,7 +53,7 @@ export const PlanToCreditsRecord: Record<AccountPlan, CreditsRecord> = {
     ctaTitle: "Upgrade for $99",
     ctaHref: "/dashboard/settings/billing",
   },
-  [AccountPlan.Pro]: {
+  [accountPlan.pro]: {
     title: "Pro",
     credits: "$3,000+",
     color: "#282B6F",
@@ -64,7 +65,7 @@ export const PlanToCreditsRecord: Record<AccountPlan, CreditsRecord> = {
     ctaTitle: "Contact Us",
     ctaHref: "https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro",
   },
-  [AccountPlan.Enterprise]: {
+  [accountPlan.enterprise]: {
     title: "Enterprise",
     credits: "Custom",
     color: "#000000",
@@ -94,16 +95,16 @@ export const ApplyForOpCreditsModal: React.FC = () => {
 
   const hasValidPayment = useMemo(() => {
     return (
-      !!(account?.data?.status === AccountStatus.ValidPayment) ||
+      !!(account?.data?.status === accountStatus.validPayment) ||
       hasAddedPaymentMethod
     );
   }, [account?.data?.status, hasAddedPaymentMethod]);
 
-  const isFreePlan = account.data?.plan === AccountPlan.Free;
-  const isProPlan = account.data?.plan === AccountPlan.Pro;
+  const isFreePlan = account.data?.plan === accountPlan.free;
+  const isProPlan = account.data?.plan === accountPlan.pro;
 
   const creditsRecord =
-    PlanToCreditsRecord[account.data?.plan || AccountPlan.Free];
+    PlanToCreditsRecord[account.data?.plan || accountPlan.free];
 
   return (
     <>
@@ -193,11 +194,11 @@ export const ApplyForOpCreditsModal: React.FC = () => {
                 >
                   {isFreePlan && (
                     <PlanCard
-                      creditsRecord={PlanToCreditsRecord[AccountPlan.Growth]}
+                      creditsRecord={PlanToCreditsRecord[accountPlan.growth]}
                     />
                   )}
                   <PlanCard
-                    creditsRecord={PlanToCreditsRecord[AccountPlan.Pro]}
+                    creditsRecord={PlanToCreditsRecord[accountPlan.pro]}
                   />
                 </SimpleGrid>
               </>
