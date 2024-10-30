@@ -19,7 +19,7 @@ const ECOSYSTEM_PARTNER_ID_HEADER = "x-ecosystem-partner-id";
 
 let sessionNonce: Hex | undefined = undefined;
 
-export function getSessionHeaders() {
+function getSessionHeaders() {
   if (!sessionNonce) {
     sessionNonce = randomBytesHex(16);
   }
