@@ -27,7 +27,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <h2>Something went wrong!</h2>
         <button type="button" onClick={() => reset()}>
