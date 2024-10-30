@@ -9,12 +9,14 @@ import { keccakId } from "../../../utils/any-evm/keccak-id.js";
 import { computeDeploymentAddress } from "../../../utils/any-evm/zksync/computeDeploymentAddress.js";
 import {
   KNOWN_CODES_STORAGE,
+  PUBLISHED_PRIVATE_KEY,
   singletonFactoryAbi,
 } from "../../../utils/any-evm/zksync/constants.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import { ensureBytecodePrefix } from "../../../utils/bytecode/prefix.js";
 import { type Hex, uint8ArrayToHex } from "../../../utils/encoding/hex.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
+import { privateKeyToAccount } from "../../../wallets/private-key.js";
 import { getContract } from "../../contract.js";
 import { zkDeployContract } from "./zkDeployContract.js";
 import { zkDeployCreate2Factory } from "./zkDeployCreate2Factory.js";
@@ -69,10 +71,15 @@ export async function zkDeployContractDeterministic(
     });
     // if not known, publish the bytecodehash
     if (marker !== 1n) {
+      console.log("deploying marker");
+      const create2Signer = privateKeyToAccount({
+        client: options.client,
+        privateKey: PUBLISHED_PRIVATE_KEY,
+      });
       await zkDeployContract({
         client: options.client,
         chain: options.chain,
-        account: options.account,
+        account: create2Signer,
         abi: options.abi,
         bytecode,
         params: options.params,

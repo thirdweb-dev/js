@@ -34,16 +34,18 @@ export async function zkDeployCreate2Factory(
     client: options.client,
     privateKey: PUBLISHED_PRIVATE_KEY,
   });
+  console.log("create2Signer", create2Signer);
   const valueToSend = toWei("0.01");
   const balance = await getWalletBalance({
     address: create2Signer.address,
     chain: options.chain,
     client: options.client,
   });
+  console.log("balance", balance);
 
   if (balance.value < valueToSend) {
     await sendAndConfirmTransaction({
-      account: options.account,
+      account: create2Signer,
       transaction: prepareTransaction({
         chain: options.chain,
         client: options.client,
@@ -56,9 +58,10 @@ export async function zkDeployCreate2Factory(
   await zkDeployContract({
     client: options.client,
     chain: options.chain,
-    account: options.account,
+    account: create2Signer,
     abi: parseAbi(singletonFactoryAbi),
     bytecode: singletonFactoryBytecode,
+    deploymentType: "create2",
   });
 
   return ZKSYNC_SINGLETON_FACTORY;

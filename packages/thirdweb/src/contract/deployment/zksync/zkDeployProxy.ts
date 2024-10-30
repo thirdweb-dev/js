@@ -37,6 +37,7 @@ export async function zkDeployProxy(
       `Implementation contract at ${implementationAddress} is not deployed`,
     );
   }
+  console.log("deploying tw proxy");
   // deploy tw proxy of the implementation
   const proxyAddress = await zkDeployContract({
     client: options.client,
@@ -49,6 +50,7 @@ export async function zkDeployProxy(
       _data: await encode(options.initializeTransaction),
     },
     salt: options.salt,
+    deploymentType: "create2",
   });
 
   // return address of proxy

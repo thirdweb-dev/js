@@ -19,6 +19,7 @@ export async function zkDeployContract(
     bytecode: Hex;
     params?: Record<string, unknown>;
     salt?: string;
+    deploymentType?: "create" | "create2";
   },
 ) {
   if (options.salt !== undefined) {
@@ -29,12 +30,14 @@ export async function zkDeployContract(
   const data = encodeDeployData({
     abi: options.abi,
     bytecode: options.bytecode,
-    deploymentType: "create",
+    deploymentType: options.deploymentType ?? "create",
     args: normalizeFunctionParams(
       options.abi.find((abi) => abi.type === "constructor"),
       options.params,
     ),
   });
+
+  console.log("deploying", options.deploymentType);
 
   const receipt = await sendAndConfirmTransaction({
     account: options.account,
@@ -46,9 +49,14 @@ export async function zkDeployContract(
       eip712: {
         factoryDeps: [options.bytecode],
         // TODO (zksync): allow passing in a paymaster
+        paymaster: "0x950e3Bb8C6bab20b56a70550EC037E22032A413e",
+        paymasterInput:
+          "0x8c5a344500000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000",
       },
     }),
   });
+
+  console.log("receipt", receipt);
 
   const events = parseEventLogs({
     logs: receipt.logs,
@@ -56,6 +64,8 @@ export async function zkDeployContract(
   });
 
   const contractAddress = events[0]?.args.contractAddress;
+
+  console.log("deployed contractAddress", contractAddress);
   if (!contractAddress) {
     throw new Error("Contract creation failed");
   }
