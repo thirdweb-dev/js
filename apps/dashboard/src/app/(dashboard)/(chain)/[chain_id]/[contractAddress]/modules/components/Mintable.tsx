@@ -21,7 +21,6 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
@@ -53,6 +52,7 @@ export type MintFormValues = NFTMetadataInputLimited & {
   supply: number;
   customImage: string;
   customAnimationUrl: string;
+  tokenId?: string;
 };
 
 function MintableModule(props: ModuleInstanceProps) {
@@ -66,6 +66,12 @@ function MintableModule(props: ModuleInstanceProps) {
   );
 
   const isErc721 = props.contractInfo.name === "MintableERC721";
+  const isBatchMetadataInstalled = !!props.allModuleContractInfo.find(
+    (module) => module.name.includes("BatchMetadata"),
+  );
+  const isSequentialTokenIdInstalled = !!props.allModuleContractInfo.find(
+    (module) => module.name.includes("SequentialTokenId"),
+  );
 
   const mint = useCallback(
     async (values: MintFormValues) => {
@@ -84,6 +90,7 @@ function MintableModule(props: ModuleInstanceProps) {
             contract,
             to: values.recipient,
             amount: BigInt(values.amount),
+            tokenId: values.tokenId ? BigInt(values.tokenId) : undefined,
             nft,
           });
 
@@ -122,7 +129,9 @@ function MintableModule(props: ModuleInstanceProps) {
       updatePrimaryRecipient={update}
       mint={mint}
       isOwnerAccount={!!ownerAccount}
-      showAmount={!isErc721}
+      isErc721={isErc721}
+      isBatchMetadataInstalled={isBatchMetadataInstalled}
+      isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
     />
   );
 }
@@ -134,7 +143,9 @@ export function MintableModuleUI(
     isOwnerAccount: boolean;
     updatePrimaryRecipient: (values: UpdateFormValues) => Promise<void>;
     mint: (values: MintFormValues) => Promise<void>;
-    showAmount: boolean;
+    isErc721: boolean;
+    isBatchMetadataInstalled: boolean;
+    isSequentialTokenIdInstalled: boolean;
   },
 ) {
   return (
@@ -154,7 +165,11 @@ export function MintableModuleUI(
                 {props.isOwnerAccount && (
                   <MintNFTSection
                     mint={props.mint}
-                    showAmount={props.showAmount}
+                    isErc721={props.isErc721}
+                    isBatchMetadataInstalled={props.isBatchMetadataInstalled}
+                    isSequentialTokenIdInstalled={
+                      props.isSequentialTokenIdInstalled
+                    }
                   />
                 )}
                 {!props.isOwnerAccount && (
@@ -271,7 +286,9 @@ function PrimarySalesSection(props: {
 
 function MintNFTSection(props: {
   mint: (values: MintFormValues) => Promise<void>;
-  showAmount: boolean;
+  isErc721: boolean;
+  isBatchMetadataInstalled: boolean;
+  isSequentialTokenIdInstalled: boolean;
 }) {
   const form = useForm<MintFormValues>({
     values: {
@@ -300,94 +317,91 @@ function MintNFTSection(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-6 lg:flex-row">
-            {/* Left */}
-            <div className="shrink-0 lg:w-[300px]">
-              <NFTMediaFormGroup form={form} previewMaxWidth="300px" />
-            </div>
+          {props.isBatchMetadataInstalled && (
+            <div className="flex flex-col gap-6 lg:flex-row">
+              {/* Left */}
+              <div className="shrink-0 lg:w-[300px]">
+                <NFTMediaFormGroup form={form} previewMaxWidth="300px" />
+              </div>
 
-            {/* Right */}
-            <div className="flex grow flex-col gap-6">
-              {/* name  */}
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
+              {/* Right */}
+              <div className="flex grow flex-col gap-6">
+                {/* name  */}
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              {/* Description */}
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} />
-                    </FormControl>
+                {/* Description */}
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              {/* TODO - convert to shadcn + tailwind */}
-              <PropertiesFormControl
-                watch={form.watch}
-                errors={form.formState.errors}
-                control={form.control}
-                register={form.register}
-                setValue={form.setValue}
-              />
+                {/* TODO - convert to shadcn + tailwind */}
+                <PropertiesFormControl
+                  watch={form.watch}
+                  errors={form.formState.errors}
+                  control={form.control}
+                  register={form.register}
+                  setValue={form.setValue}
+                />
 
-              {/* Advanced options */}
-              <Accordion
-                type="single"
-                collapsible={
-                  !(
-                    form.formState.errors.background_color ||
-                    form.formState.errors.external_url
-                  )
-                }
-              >
-                <AccordionItem
-                  value="advanced-options"
-                  className="-mx-1 border-t border-b-0"
+                {/* Advanced options */}
+                <Accordion
+                  type="single"
+                  collapsible={
+                    !(
+                      form.formState.errors.background_color ||
+                      form.formState.errors.external_url
+                    )
+                  }
                 >
-                  <AccordionTrigger className="px-1">
-                    Advanced Options
-                  </AccordionTrigger>
-                  <AccordionContent className="px-1">
-                    <AdvancedNFTMetadataFormGroup form={form} />
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+                  <AccordionItem
+                    value="advanced-options"
+                    className="-mx-1 border-t border-b-0"
+                  >
+                    <AccordionTrigger className="px-1">
+                      Advanced Options
+                    </AccordionTrigger>
+                    <AccordionContent className="px-1">
+                      <AdvancedNFTMetadataFormGroup form={form} />
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
             </div>
-          </div>
+          )}
 
           <Separator />
 
           {/* Other options */}
-          <div
-            className={cn(
-              "grid gap-4",
-              props.showAmount ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1",
-            )}
-          >
+          <div className="flex flex-col gap-4 md:flex-row">
             <FormField
               control={form.control}
               name="recipient"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex-1">
                   <FormLabel>Recipient Address</FormLabel>
                   <FormControl>
                     <Input placeholder="0x..." {...field} />
@@ -397,13 +411,28 @@ function MintNFTSection(props: {
               )}
             />
 
-            {props.showAmount && (
+            {!props.isErc721 && (
               <FormField
                 control={form.control}
                 name="amount"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex-1">
                     <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {!props.isErc721 && !props.isSequentialTokenIdInstalled && (
+              <FormField
+                control={form.control}
+                name="tokenId"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Token ID</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>

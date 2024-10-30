@@ -78,6 +78,7 @@ function Component() {
       <BadgeContainer label="Empty AllowList, Not Restricted">
         <TransferableModuleUI
           contractInfo={contractInfo}
+          allModuleContractInfo={[]}
           moduleAddress="0x0000000000000000000000000000000000000000"
           isPending={false}
           isRestricted={false}
@@ -94,6 +95,7 @@ function Component() {
       <BadgeContainer label="Empty AllowList, Restricted">
         <TransferableModuleUI
           contractInfo={contractInfo}
+          allModuleContractInfo={[]}
           moduleAddress="0x0000000000000000000000000000000000000000"
           isPending={false}
           isRestricted={true}
@@ -110,6 +112,7 @@ function Component() {
       <BadgeContainer label="Pending">
         <TransferableModuleUI
           contractInfo={contractInfo}
+          allModuleContractInfo={[]}
           moduleAddress="0x0000000000000000000000000000000000000000"
           isPending={true}
           adminAddress={testAddress1}

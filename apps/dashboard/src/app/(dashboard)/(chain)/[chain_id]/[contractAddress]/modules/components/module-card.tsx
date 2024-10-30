@@ -25,6 +25,7 @@ import {
   sendTransaction,
   waitForReceipt,
 } from "thirdweb";
+import type { CompilerMetadata } from "thirdweb/dist/types/utils/any-evm/deploy-metadata";
 import { uninstallModuleByProxy } from "thirdweb/modules";
 import type { Account } from "thirdweb/wallets";
 import { ModuleInstance } from "./module-instance";
@@ -35,10 +36,12 @@ type ModuleCardProps = {
   contract: ContractOptions;
   onRemoveModule: () => void;
   ownerAccount: Account | undefined;
+  allModuleContractInfo: CompilerMetadata[];
 };
 
 export function ModuleCard(props: ModuleCardProps) {
-  const { contract, moduleAddress, ownerAccount } = props;
+  const { contract, moduleAddress, ownerAccount, allModuleContractInfo } =
+    props;
   const [isUninstallModalOpen, setIsUninstallModalOpen] = useState(false);
 
   const contractInfo = useModuleContractInfo(
@@ -100,6 +103,7 @@ export function ModuleCard(props: ModuleCardProps) {
             publisher: contractInfo.publisher,
             version: contractInfo.version,
           }}
+          allModuleContractInfo={allModuleContractInfo}
           ownerAccount={ownerAccount}
           uninstallButton={{
             onClick: () => {
@@ -168,6 +172,12 @@ export type ModuleCardUIProps = {
     version?: string;
     publisher?: string;
   };
+  allModuleContractInfo: {
+    name: string;
+    description?: string;
+    version?: string;
+    publisher?: string;
+  }[];
   moduleAddress: string;
   isOwnerAccount: boolean;
   uninstallButton: {

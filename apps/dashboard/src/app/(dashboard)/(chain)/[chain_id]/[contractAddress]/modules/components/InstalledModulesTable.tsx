@@ -23,7 +23,6 @@ export const InstalledModulesTable = (props: {
     installedModules.data || [],
     props.contract,
   );
-  console.log("allModuleContractInfo: ", allModuleContractInfo);
 
   const sectionTitle = (
     <h2 className="mb-3 font-bold text-2xl tracking-tight">
@@ -54,6 +53,7 @@ export const InstalledModulesTable = (props: {
             <ModuleCard
               key={moduleAddress}
               moduleAddress={moduleAddress}
+              allModuleContractInfo={allModuleContractInfo?.data || []}
               contract={props.contract}
               onRemoveModule={props.refetchModules}
               ownerAccount={ownerAccount}

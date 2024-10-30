@@ -72,6 +72,7 @@ function Component() {
       <BadgeContainer label="No Update, No Children">
         <ModuleCardUI
           contractInfo={contractInfo}
+          allModuleContractInfo={[]}
           moduleAddress="0x0000000000000000000000000000000000000000"
           uninstallButton={{
             onClick: () => removeMutation.mutateAsync(),
@@ -84,6 +85,7 @@ function Component() {
       <BadgeContainer label="Update Button (disabled), No Children">
         <ModuleCardUI
           contractInfo={contractInfo}
+          allModuleContractInfo={[]}
           moduleAddress="0x0000000000000000000000000000000000000000"
           uninstallButton={{
             onClick: () => removeMutation.mutateAsync(),
@@ -101,6 +103,7 @@ function Component() {
       <BadgeContainer label="Update Button (enabled), Children, Owner">
         <ModuleCardUI
           contractInfo={contractInfo}
+          allModuleContractInfo={[]}
           moduleAddress="0x0000000000000000000000000000000000000000"
           uninstallButton={{
             onClick: () => removeMutation.mutateAsync(),

@@ -37,7 +37,11 @@ const testAddress1 = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 
 function Component() {
   const [isOwner, setIsOwner] = useState(true);
-  const [showAmount, setShowAmount] = useState(false);
+  const [isErc721, setIsErc721] = useState(false);
+  const [isBatchMetadataInstalled, setIsBatchMetadataInstalled] =
+    useState(false);
+  const [isSequentialTokenIdInstalled, setIsSequentialTokenIdInstalled] =
+    useState(false);
   async function updatePrimaryRecipientStub(values: UpdateFormValues) {
     console.log("submitting", values);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -78,16 +82,31 @@ function Component() {
           />
 
           <CheckboxWithLabel
-            value={showAmount}
-            onChange={setShowAmount}
-            id="showAmount"
+            value={isErc721}
+            onChange={setIsErc721}
+            id="isErc721"
             label="Show Amount Input"
+          />
+
+          <CheckboxWithLabel
+            value={isSequentialTokenIdInstalled}
+            onChange={setIsSequentialTokenIdInstalled}
+            id="isSequentialTokenIdInstalled"
+            label="Show Token ID Input"
+          />
+
+          <CheckboxWithLabel
+            value={isBatchMetadataInstalled}
+            onChange={setIsBatchMetadataInstalled}
+            id="isBatchMetadataInstalled"
+            label="Show Metadata Input"
           />
         </div>
 
         <BadgeContainer label="Empty Primary Sale Recipient">
           <MintableModuleUI
             contractInfo={contractInfo}
+            allModuleContractInfo={[]}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             primarySaleRecipient={""}
@@ -98,13 +117,16 @@ function Component() {
               isPending: removeMutation.isPending,
             }}
             isOwnerAccount={isOwner}
-            showAmount={showAmount}
+            isErc721={isErc721}
+            isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
+            isBatchMetadataInstalled={isBatchMetadataInstalled}
           />
         </BadgeContainer>
 
         <BadgeContainer label="Filled Primary Sale Recipient">
           <MintableModuleUI
             contractInfo={contractInfo}
+            allModuleContractInfo={[]}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             primarySaleRecipient={testAddress1}
@@ -115,13 +137,16 @@ function Component() {
               isPending: removeMutation.isPending,
             }}
             isOwnerAccount={isOwner}
-            showAmount={showAmount}
+            isErc721={isErc721}
+            isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
+            isBatchMetadataInstalled={isBatchMetadataInstalled}
           />
         </BadgeContainer>
 
         <BadgeContainer label="Pending">
           <MintableModuleUI
             contractInfo={contractInfo}
+            allModuleContractInfo={[]}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={true}
             primarySaleRecipient={testAddress1}
@@ -132,7 +157,9 @@ function Component() {
               isPending: removeMutation.isPending,
             }}
             isOwnerAccount={isOwner}
-            showAmount={showAmount}
+            isErc721={isErc721}
+            isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
+            isBatchMetadataInstalled={isBatchMetadataInstalled}
           />
         </BadgeContainer>
 
