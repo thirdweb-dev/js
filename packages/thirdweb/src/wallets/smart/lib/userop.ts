@@ -149,6 +149,7 @@ export async function createUnsignedUserOp(args: {
   const bundlerOptions = {
     client,
     chain,
+    bundlerUrl: overrides?.bundlerUrl,
     entrypointAddress: overrides?.entrypointAddress,
   };
 
