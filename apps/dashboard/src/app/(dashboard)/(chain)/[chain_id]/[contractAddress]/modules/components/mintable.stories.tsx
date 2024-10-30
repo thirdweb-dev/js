@@ -85,21 +85,21 @@ function Component() {
             value={isErc721}
             onChange={setIsErc721}
             id="isErc721"
-            label="Show Amount Input"
+            label="isErc721"
           />
 
           <CheckboxWithLabel
             value={isSequentialTokenIdInstalled}
             onChange={setIsSequentialTokenIdInstalled}
             id="isSequentialTokenIdInstalled"
-            label="Show Token ID Input"
+            label="isSequentialTokenIdInstalled"
           />
 
           <CheckboxWithLabel
             value={isBatchMetadataInstalled}
             onChange={setIsBatchMetadataInstalled}
             id="isBatchMetadataInstalled"
-            label="Show Metadata Input"
+            label="isBatchMetadataInstalled"
           />
         </div>
 
