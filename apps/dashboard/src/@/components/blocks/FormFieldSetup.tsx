@@ -9,6 +9,7 @@ export function FormFieldSetup(props: {
   children: React.ReactNode;
   tooltip?: React.ReactNode;
   isRequired: boolean;
+  helperText?: React.ReactNode;
 }) {
   return (
     <div>
@@ -26,8 +27,13 @@ export function FormFieldSetup(props: {
         )}
       </div>
       {props.children}
+
+      {props.helperText && (
+        <p className="mt-2 text-muted-foreground text-sm">{props.helperText}</p>
+      )}
+
       {props.errorMessage && (
-        <p className="mt-1 text-destructive-text text-sm">
+        <p className="mt-2 text-destructive-text text-sm">
           {props.errorMessage}
         </p>
       )}

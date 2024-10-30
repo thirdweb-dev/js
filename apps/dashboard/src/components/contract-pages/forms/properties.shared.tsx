@@ -94,7 +94,7 @@ export const PropertiesFormControl = <
           <div className="flex flex-row items-center gap-2" key={field.id}>
             <FormControl
               isInvalid={isInvalid}
-              className="flex flex-row items-start"
+              className="flex flex-row items-start gap-3"
             >
               <FormControl isInvalid={!!keyError}>
                 <Input

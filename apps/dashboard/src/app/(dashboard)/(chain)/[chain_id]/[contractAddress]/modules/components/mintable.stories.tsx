@@ -1,11 +1,15 @@
+import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
-import { ThirdwebProvider } from "thirdweb/react";
-import { type MintableModuleFormValues, MintableModuleUI } from "./Mintable";
+import {
+  type MintFormValues,
+  MintableModuleUI,
+  type UpdateFormValues,
+} from "./Mintable";
 
 const meta = {
   title: "Modules/Mintable",
@@ -33,12 +37,13 @@ const testAddress1 = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 
 function Component() {
   const [isOwner, setIsOwner] = useState(true);
-  async function updateStub(values: MintableModuleFormValues) {
+  const [showAmount, setShowAmount] = useState(false);
+  async function updatePrimaryRecipientStub(values: UpdateFormValues) {
     console.log("submitting", values);
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
-  async function mintStub(values: MintableModuleFormValues) {
+  async function mintStub(values: MintFormValues) {
     console.log("submitting", values);
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
@@ -60,23 +65,24 @@ function Component() {
     version: "1.0.0",
   };
 
+  // TODO - remove ChakraProviderSetup after converting the chakra components used in MintableModuleUI
   return (
-    <ThirdwebProvider>
+    <ChakraProviderSetup>
       <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-        <div className="items-top flex space-x-2">
-          <Checkbox
-            id="terms1"
-            checked={isOwner}
-            onCheckedChange={(v) => setIsOwner(!!v)}
+        <div className="flex items-center gap-5">
+          <CheckboxWithLabel
+            value={isOwner}
+            onChange={setIsOwner}
+            id="isOwner"
+            label="Is Owner"
           />
-          <div className="grid gap-1.5 leading-none">
-            <label
-              htmlFor="terms1"
-              className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Is Owner
-            </label>
-          </div>
+
+          <CheckboxWithLabel
+            value={showAmount}
+            onChange={setShowAmount}
+            id="showAmount"
+            label="Show Amount Input"
+          />
         </div>
 
         <BadgeContainer label="Empty Primary Sale Recipient">
@@ -85,13 +91,14 @@ function Component() {
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             primarySaleRecipient={""}
-            update={updateStub}
+            updatePrimaryRecipient={updatePrimaryRecipientStub}
             mint={mintStub}
             uninstallButton={{
               onClick: async () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
             }}
             isOwnerAccount={isOwner}
+            showAmount={showAmount}
           />
         </BadgeContainer>
 
@@ -101,13 +108,14 @@ function Component() {
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             primarySaleRecipient={testAddress1}
-            update={updateStub}
+            updatePrimaryRecipient={updatePrimaryRecipientStub}
             mint={mintStub}
             uninstallButton={{
               onClick: () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
             }}
             isOwnerAccount={isOwner}
+            showAmount={showAmount}
           />
         </BadgeContainer>
 
@@ -117,18 +125,44 @@ function Component() {
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={true}
             primarySaleRecipient={testAddress1}
-            update={updateStub}
+            updatePrimaryRecipient={updatePrimaryRecipientStub}
             mint={mintStub}
             uninstallButton={{
               onClick: () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
             }}
             isOwnerAccount={isOwner}
+            showAmount={showAmount}
           />
         </BadgeContainer>
 
         <Toaster richColors />
       </div>
-    </ThirdwebProvider>
+    </ChakraProviderSetup>
+  );
+}
+
+function CheckboxWithLabel(props: {
+  value: boolean;
+  onChange: (value: boolean) => void;
+  id: string;
+  label: string;
+}) {
+  return (
+    <div className="items-top flex space-x-2">
+      <Checkbox
+        id={props.id}
+        checked={props.value}
+        onCheckedChange={(v) => props.onChange(!!v)}
+      />
+      <div className="grid gap-1.5 leading-none">
+        <label
+          htmlFor={props.id}
+          className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          {props.label}
+        </label>
+      </div>
+    </div>
   );
 }
