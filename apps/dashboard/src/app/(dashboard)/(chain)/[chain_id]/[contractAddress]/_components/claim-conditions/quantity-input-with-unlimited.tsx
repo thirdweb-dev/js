@@ -5,6 +5,7 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { toTokens } from "thirdweb";
 import { Button } from "tw-components";
 
 interface QuantityInputWithUnlimitedProps
@@ -60,7 +61,13 @@ export const QuantityInputWithUnlimited: React.FC<
           if (value === "unlimited") {
             setStringValue("unlimited");
           } else if (!Number.isNaN(Number(value))) {
-            setStringValue(Number(Number(value).toFixed(decimals)).toString());
+            if (decimals) {
+              setStringValue(toTokens(BigInt(value), decimals));
+            } else {
+              setStringValue(
+                Number(Number(value).toFixed(decimals)).toString(),
+              );
+            }
           } else {
             setStringValue("0");
           }

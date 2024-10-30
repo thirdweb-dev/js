@@ -26,10 +26,12 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
+import { toast } from "sonner";
 import {
   NATIVE_TOKEN_ADDRESS,
   type ThirdwebContract,
   ZERO_ADDRESS,
+  toUnits,
 } from "thirdweb";
 import { decimals } from "thirdweb/extensions/erc20";
 import {
@@ -48,7 +50,11 @@ import {
 } from "../legacy-zod-schema";
 import { ResetClaimEligibility } from "../reset-claim-eligibility";
 import { SnapshotUpload } from "../snapshot-upload";
-import { getClaimPhasesInLegacyFormat, setClaimPhasesTx } from "./hooks";
+import {
+  getClaimPhasesInLegacyFormat,
+  setClaimPhasesTx,
+  toBigInt,
+} from "./hooks";
 import { ClaimConditionsPhase } from "./phase";
 
 type ClaimConditionDashboardInput = ClaimConditionInput & {
@@ -355,6 +361,31 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
     });
 
     try {
+      if (isErc20 && !tokenDecimalsData) {
+        return toast.error("Could not fetch token metadata");
+      }
+
+      // For ERC20 claim condition, we need to convert `maxClaimableSupply` and `maxClaimbablePerWallet` to wei
+      const phases = isErc20
+        ? d.phases.map((item) => {
+            item.maxClaimableSupply =
+              item.maxClaimableSupply !== undefined
+                ? toUnits(
+                    String(toBigInt(item.maxClaimableSupply)).toString(),
+                    tokenDecimalsData,
+                  ).toString()
+                : undefined;
+            item.maxClaimablePerWallet =
+              item.maxClaimablePerWallet !== undefined
+                ? toUnits(
+                    String(toBigInt(item.maxClaimablePerWallet)),
+                    tokenDecimalsData,
+                  ).toString()
+                : undefined;
+            return item;
+          })
+        : d.phases;
+
       const tx = setClaimPhasesTx(
         {
           contract,
@@ -364,7 +395,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
               ? { type: "erc721" }
               : { type: "erc1155", tokenId: BigInt(tokenId || 0) }),
         },
-        d.phases,
+        phases,
       );
       await sendTx.mutateAsync(tx);
       trackEvent({
@@ -630,7 +661,10 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                       colorScheme="primary"
                       txChainID={contract.chain.id}
                       transactionCount={1}
-                      isDisabled={claimConditionsQuery.isPending}
+                      isDisabled={
+                        claimConditionsQuery.isPending ||
+                        (isErc20 && tokenDecimals.isPending)
+                      }
                       type="submit"
                       isLoading={sendTx.isPending}
                       loadingText="Saving..."

@@ -1,7 +1,8 @@
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon, XIcon } from "lucide-react";
-import type { ThirdwebContract } from "thirdweb";
+import { type ThirdwebContract, toTokens } from "thirdweb";
+import { maxUint256 } from "thirdweb/utils";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 import { ClaimConditionTypeData, useClaimConditionsFormContext } from ".";
 import { PricePreview } from "../price-preview";
@@ -34,6 +35,7 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
     isActive,
     isMultiPhase,
     phaseIndex,
+    tokenDecimals,
   } = useClaimConditionsFormContext();
 
   const toggleEditing = () => {
@@ -102,7 +104,18 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
               <Text fontWeight="bold">
                 {isErc20 ? "Tokens" : "NFTs"} to drop
               </Text>
-              <Text textTransform="capitalize">{field.maxClaimableSupply}</Text>
+              <Text textTransform="capitalize">
+                {field.maxClaimableSupply === "unlimited"
+                  ? "Unlimited"
+                  : isErc20 && field.maxClaimableSupply
+                    ? BigInt(field.maxClaimableSupply) === maxUint256
+                      ? "Unlimited"
+                      : toTokens(
+                          BigInt(field.maxClaimableSupply),
+                          tokenDecimals,
+                        )
+                    : field.maxClaimableSupply}
+              </Text>
             </div>
             <PricePreview
               price={field.price}
@@ -117,7 +130,16 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
                 <Text>Unlimited</Text>
               ) : (
                 <Text textTransform="capitalize">
-                  {field.maxClaimablePerWallet}
+                  {field.maxClaimablePerWallet === "unlimited"
+                    ? "Unlimited"
+                    : isErc20 && field.maxClaimablePerWallet
+                      ? BigInt(field.maxClaimablePerWallet) === maxUint256
+                        ? "Unlimited"
+                        : toTokens(
+                            BigInt(field.maxClaimablePerWallet),
+                            tokenDecimals,
+                          )
+                      : field.maxClaimablePerWallet}
                 </Text>
               )}
             </div>

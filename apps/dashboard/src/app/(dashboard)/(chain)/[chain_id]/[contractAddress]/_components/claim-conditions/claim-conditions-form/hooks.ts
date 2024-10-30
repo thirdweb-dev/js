@@ -175,7 +175,7 @@ function toDate(timestamp: number | Date | undefined) {
   }
   return new Date(timestamp);
 }
-function toBigInt(value: string | number | undefined) {
+export function toBigInt(value: string | number | undefined) {
   if (value === undefined) {
     return undefined;
   }
