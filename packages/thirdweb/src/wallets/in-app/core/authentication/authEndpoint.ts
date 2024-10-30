@@ -1,34 +1,37 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { getSessionHeaders } from "../../native/helpers/api/fetchers.js";
+import { getClientFetch } from "../../../../utils/fetch.js";
 import { ROUTE_AUTH_ENDPOINT_CALLBACK } from "../../native/helpers/constants.js";
 import { createErrorMessage } from "../../native/helpers/errors.js";
-import type { ClientScopedStorage } from "./client-scoped-storage.js";
+import type { Ecosystem } from "../wallet/types.js";
 import type { AuthStoredTokenWithCookieReturnType } from "./types.js";
 
 export async function authEndpoint(args: {
   payload: string;
   client: ThirdwebClient;
-  storage: ClientScopedStorage;
+  ecosystem?: Ecosystem;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
-  const resp = await fetch(ROUTE_AUTH_ENDPOINT_CALLBACK, {
+  const clientFetch = getClientFetch(args.client, args.ecosystem);
+
+  const res = await clientFetch(ROUTE_AUTH_ENDPOINT_CALLBACK, {
     method: "POST",
     headers: {
-      ...getSessionHeaders(),
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       payload: args.payload,
       developerClientId: args.client.clientId,
     }),
   });
-  if (!resp.ok) {
-    const error = await resp.json();
+
+  if (!res.ok) {
+    const error = await res.json();
     throw new Error(
       `Custom auth endpoint authentication error: ${error.message}`,
     );
   }
 
   try {
-    const { verifiedToken } = await resp.json();
+    const { verifiedToken } = await res.json();
 
     return { storedToken: verifiedToken };
   } catch (e) {

@@ -4,8 +4,10 @@ import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { SocialAuthOption } from "../../../../wallets/types.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import { getUserStatus } from "../../core/actions/get-enclave-user-status.js";
+import { authEndpoint } from "../../core/authentication/authEndpoint.js";
 import { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
 import { guestAuthenticate } from "../../core/authentication/guest.js";
+import { customJwt } from "../../core/authentication/jwt.js";
 import {
   getLinkedProfilesInternal,
   linkAccount,
@@ -268,8 +270,11 @@ export class InAppWebConnector implements InAppConnector {
     });
   }
 
-  async loginWithAuthToken(authResult: AuthStoredTokenWithCookieReturnType) {
-    return this.auth.loginWithAuthToken(authResult);
+  async loginWithAuthToken(
+    authResult: AuthStoredTokenWithCookieReturnType,
+    recoveryCode?: string,
+  ) {
+    return this.auth.loginWithAuthToken(authResult, recoveryCode);
   }
 
   /**
@@ -292,19 +297,21 @@ export class InAppWebConnector implements InAppConnector {
           client: this.client,
           ecosystem: this.ecosystem,
         });
+      case "auth_endpoint": {
+        return authEndpoint({
+          payload: args.payload,
+          client: this.client,
+          ecosystem: this.ecosystem,
+        });
+      }
       case "jwt":
-        return this.auth.authenticateWithCustomJwt({
+        return customJwt({
           jwt: args.jwt,
-          encryptionKey: args.encryptionKey,
+          client: this.client,
+          ecosystem: this.ecosystem,
         });
       case "passkey": {
         return this.passkeyAuth(args);
-      }
-      case "auth_endpoint": {
-        return this.auth.authenticateWithCustomAuthEndpoint({
-          payload: args.payload,
-          encryptionKey: args.encryptionKey,
-        });
       }
       case "iframe_email_verification": {
         return this.auth.authenticateWithIframe({
@@ -359,17 +366,10 @@ export class InAppWebConnector implements InAppConnector {
   ): Promise<AuthLoginReturnType> {
     const strategy = args.strategy;
     switch (strategy) {
+      case "auth_endpoint":
       case "jwt": {
-        return this.auth.loginWithCustomJwt({
-          jwt: args.jwt,
-          encryptionKey: args.encryptionKey,
-        });
-      }
-      case "auth_endpoint": {
-        return this.auth.loginWithCustomAuthEndpoint({
-          payload: args.payload,
-          encryptionKey: args.encryptionKey,
-        });
+        const authToken = await this.authenticate(args);
+        return await this.loginWithAuthToken(authToken, args.encryptionKey);
       }
       case "iframe_email_verification": {
         return this.auth.loginWithIframe({

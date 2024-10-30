@@ -199,13 +199,13 @@ export class InAppNativeConnector implements InAppConnector {
         return customJwt({
           jwt: params.jwt,
           client: this.client,
-          storage: this.storage,
+          ecosystem: this.ecosystem,
         });
       case "auth_endpoint":
         return authEndpoint({
           payload: params.payload,
           client: this.client,
-          storage: this.storage,
+          ecosystem: this.ecosystem,
         });
       default:
         throw new Error(`Unsupported authentication type: ${strategy}`);

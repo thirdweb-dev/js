@@ -23,6 +23,7 @@ import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js
 import { sleep } from "../../utils/sleep.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
+import { predictSmartAccountAddress } from "./lib/calls.js";
 import { DEFAULT_ACCOUNT_FACTORY_V0_7 } from "./lib/constants.js";
 import { smartWallet } from "./smart-wallet.js";
 
@@ -70,6 +71,13 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
 
     it("can connect", async () => {
       expect(smartWalletAddress).toHaveLength(42);
+      const predictedAddress = await predictSmartAccountAddress({
+        client,
+        chain,
+        adminAddress: personalAccount.address,
+        factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
+      });
+      expect(predictedAddress).toEqual(smartWalletAddress);
     });
 
     it("should revert on unsuccessful transactions", async () => {
