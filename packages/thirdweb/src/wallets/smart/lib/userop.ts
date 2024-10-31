@@ -151,6 +151,7 @@ export async function createUnsignedUserOp(args: {
     chain,
     bundlerUrl: overrides?.bundlerUrl,
     entrypointAddress: overrides?.entrypointAddress,
+    paymaster: overrides?.paymaster,
   };
 
   const entrypointVersion = getEntryPointVersion(
