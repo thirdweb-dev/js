@@ -94,7 +94,10 @@ function MintableModule(props: ModuleInstanceProps) {
           contract,
           to: values.recipient,
           amount: BigInt(values.amount),
-          tokenId: values.useNextTokenId ? undefined : BigInt(values.tokenId),
+          tokenId: values.useNextTokenId
+            ? undefined
+            : // NOTE: this string should never be reached since if useNextTokenId is false, then tokenId should be defined
+              BigInt(values.tokenId || "0"),
           nft,
         });
       } else {
