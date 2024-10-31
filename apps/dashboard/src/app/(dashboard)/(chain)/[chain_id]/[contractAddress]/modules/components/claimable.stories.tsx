@@ -72,8 +72,8 @@ function Component() {
     maxMintPerWallet: BigInt(10),
     pricePerUnit: BigInt(10),
     currency: "0x0000000000000000000000000000000000000000",
-    startTimestamp: 1689092800,
-    endTimestamp: 1689092800,
+    //startTimestamp: 1689092800,
+    //endTimestamp: 1689092800,
     allowlistMerkleRoot:
       "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
     auxData: "0x",

@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,12 +20,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
-import { CircleAlertIcon, Trash2Icon } from "lucide-react";
+import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -37,8 +34,6 @@ import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { z } from "zod";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
-import { AdvancedNFTMetadataFormGroup } from "./nft/AdvancedNFTMetadataFormGroup";
-import { NFTMediaFormGroup } from "./nft/NFTMediaFormGroup";
 
 const zodAddress = z.string().refine(
   (v) => {
@@ -48,19 +43,6 @@ const zodAddress = z.string().refine(
     return false;
   },
   { message: "Invalid Address" },
-);
-
-const mintFormSchema = z.object({
-  useNextTokenId: z.boolean().optional(),
-  tokenId: z.bigint().optional(),
-  quantity: z.number().min(0),
-  recipient: zodAddress,
-});
-
-export type MintFormValues = z.infer<typeof mintFormSchema>;
-
-const MAX_UINT256 = BigInt(
-  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
 );
 
 export type ClaimCondition = {
@@ -110,12 +92,11 @@ function ClaimableModule(props: ModuleInstanceProps) {
           quantity: values.quantity,
         });
       } else if (values.tokenId) {
-        const tokenId = values.useNextTokenId ? MAX_UINT256 : values.tokenId;
         mintTx = ClaimableERC1155.mint({
           contract,
           to: values.recipient,
           quantity: values.quantity,
-          tokenId,
+          tokenId: BigInt(values.tokenId),
         });
       } else {
         throw new Error("Invalid tokenId");
@@ -135,17 +116,27 @@ function ClaimableModule(props: ModuleInstanceProps) {
         throw new Error("Not an owner account");
       }
 
+      console.log("values: ", values);
+
       let setClaimConditionTx: PreparedTransaction;
       if (isErc721) {
         setClaimConditionTx = ClaimableERC721.setClaimCondition({
-          contract,
           ...values,
+          contract,
+          allowList:
+            values.allowList && values.allowList.length > 0
+              ? values.allowList.map(({ address }) => address)
+              : undefined,
         });
       } else if (values.tokenId) {
         setClaimConditionTx = ClaimableERC1155.setClaimCondition({
-          contract,
-          tokenId: BigInt(values.tokenId),
           ...values,
+          contract,
+          allowList:
+            values.allowList && values.allowList.length > 0
+              ? values.allowList.map(({ address }) => address)
+              : undefined,
+          tokenId: BigInt(values.tokenId),
         });
       } else {
         throw new Error("Invalid tokenId");
@@ -216,8 +207,6 @@ export function ClaimableModuleUI(
                   <MintNFTSection
                     mint={props.mint}
                     isErc721={props.isErc721}
-                    // TODO: remove this
-                    isBatchMetadataInstalled={false}
                     isSequentialTokenIdInstalled={
                       props.isSequentialTokenIdInstalled
                     }
@@ -261,27 +250,32 @@ export function ClaimableModuleUI(
 const configFormSchema = z.object({
   primarySaleRecipient: zodAddress,
 
-  tokenId: z.number().optional(),
+  tokenId: z.string().optional(),
 
-  pricePerToken: z.number().min(0),
-  currencyAddress: zodAddress,
+  pricePerToken: z.number().optional(),
+  currencyAddress: z.string().optional(),
 
-  maxClaimableSupply: z.string().refine((v) => v.length > 0 && Number(v) >= 0, {
-    message: "Invalid max claimable supply",
-  }),
+  maxClaimableSupply: z
+    .string()
+    .refine((v) => v.length === 0 || Number(v) >= 0, {
+      message: "Invalid max claimable supply",
+    }),
   maxClaimablePerWallet: z
     .string()
-    .refine((v) => v.length > 0 && Number(v) >= 0, {
+    .refine((v) => v.length === 0 || Number(v) >= 0, {
       message: "Invalid max claimable per wallet",
     }),
 
-  startTime: z.date(),
-  endTime: z.date(),
+  startTime: z.date().optional(),
+  endTime: z.date().optional(),
 
-  allowList: z.array(z.object({ address: zodAddress })),
+  allowList: z.array(z.object({ address: zodAddress })).optional(),
 });
 
 export type ConfigFormValues = z.infer<typeof configFormSchema>;
+
+// perform this outside else it forces too many re-renders
+const now = Date.now() / 1000;
 
 function ConfigSection(props: {
   primarySaleRecipient: string | undefined;
@@ -293,16 +287,26 @@ function ConfigSection(props: {
   const form = useForm<ConfigFormValues>({
     resolver: zodResolver(configFormSchema),
     values: {
-      primarySaleRecipient: props.primarySaleRecipient ?? "",
+      primarySaleRecipient: props.primarySaleRecipient || "",
       // TODO: parse units based on the currency decimals
       pricePerToken: props.claimCondition?.pricePerUnit ? 0 : 0,
-      currencyAddress: props.claimCondition?.currency ?? "",
+      currencyAddress:
+        props.claimCondition?.currency ===
+        "0x0000000000000000000000000000000000000000"
+          ? ""
+          : props.claimCondition?.currency,
       maxClaimableSupply:
-        props.claimCondition?.availableSupply.toString() ?? "",
+        props.claimCondition?.availableSupply.toString() === "0"
+          ? ""
+          : props.claimCondition?.availableSupply.toString() || "",
       maxClaimablePerWallet:
-        props.claimCondition?.maxMintPerWallet.toString() ?? "",
-      startTime: new Date((props.claimCondition?.startTimestamp ?? 0) * 1000),
-      endTime: new Date((props.claimCondition?.endTimestamp ?? 0) * 1000),
+        props.claimCondition?.maxMintPerWallet.toString() === "0"
+          ? ""
+          : props.claimCondition?.maxMintPerWallet.toString() || "",
+      startTime: new Date((props.claimCondition?.startTimestamp || now) * 1000),
+      endTime: new Date(
+        (props.claimCondition?.endTimestamp || now + 604800) * 1000,
+      ),
       allowList: [],
     },
   });
@@ -321,8 +325,9 @@ function ConfigSection(props: {
     const values = form.getValues();
     if (!props.isErc721 && !values.tokenId) {
       form.setError("tokenId", { message: "Token ID is required" });
+      return;
     }
-    const promise = updateMutation.mutateAsync(form.getValues());
+    const promise = updateMutation.mutateAsync(values);
     toast.promise(promise, {
       success:
         "Successfully updated claim conditions or primary sale recipient",
@@ -335,33 +340,28 @@ function ConfigSection(props: {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
           <div className="flex gap-4">
-            <FormField
-              control={form.control}
-              name="tokenId"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Token ID</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      disabled={!props.isOwnerAccount}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {!props.isErc721 && (
+              <FormField
+                control={form.control}
+                name="tokenId"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Token ID</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={!props.isOwnerAccount} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}
               name="primarySaleRecipient"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormDescription>
-                    The wallet address that should receive the revenue from
-                    initial sales of the assets.
-                  </FormDescription>
+                  <FormLabel>Sale Recipient</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="0x..."
@@ -380,7 +380,7 @@ function ConfigSection(props: {
               control={form.control}
               name="pricePerToken"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex-1">
                   <FormLabel>Price Per Token</FormLabel>
                   <FormControl>
                     <Input {...field} disabled={!props.isOwnerAccount} />
@@ -394,7 +394,7 @@ function ConfigSection(props: {
               control={form.control}
               name="currencyAddress"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex-1">
                   <FormLabel>Currency</FormLabel>
                   <FormControl>
                     <Input
@@ -414,7 +414,7 @@ function ConfigSection(props: {
               control={form.control}
               name="maxClaimableSupply"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex-1">
                   <FormLabel>Max Available Supply</FormLabel>
                   <FormControl>
                     <Input {...field} disabled={!props.isOwnerAccount} />
@@ -428,7 +428,7 @@ function ConfigSection(props: {
               control={form.control}
               name="maxClaimablePerWallet"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex-1">
                   <FormLabel>Maximum number of mints per wallet</FormLabel>
                   <FormControl>
                     <Input
@@ -443,63 +443,95 @@ function ConfigSection(props: {
             />
           </div>
 
-          <div className="flex gap-4">
-            <FormField
-              control={form.control}
-              name="startTime"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Start & End Time</FormLabel>
-                  <FormControl>
-                    <DatePickerWithRange
-                      from={field.value || new Date()}
-                      to={endTime || new Date()}
-                      setFrom={field.onChange}
-                      setTo={(to: Date) => form.setValue("endTime", to)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+          <FormField
+            control={form.control}
+            name="startTime"
+            render={({ field }) => (
+              <FormItem className="flex flex-1 items-center gap-4">
+                <FormLabel>Start & End Time</FormLabel>
+                <FormControl>
+                  <DatePickerWithRange
+                    from={field.value || new Date()}
+                    to={endTime || new Date()}
+                    setFrom={field.onChange}
+                    setTo={(to: Date) => form.setValue("endTime", to)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Separator />
+
+          <div className="w-full space-y-2">
+            <FormLabel>Allowlist</FormLabel>
+            <div className="flex flex-col gap-3">
+              {allowListFields.fields.map((fieldItem, index) => (
+                <div className="flex items-start gap-3" key={fieldItem.id}>
+                  <FormField
+                    control={form.control}
+                    name={`allowList.${index}.address`}
+                    render={({ field }) => (
+                      <FormItem className="grow">
+                        <FormControl>
+                          <Input
+                            placeholder="0x..."
+                            {...field}
+                            disabled={!props.isOwnerAccount}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <ToolTipLabel label="Remove address">
+                    <Button
+                      variant="outline"
+                      className="!text-destructive-text bg-background"
+                      onClick={() => {
+                        allowListFields.remove(index);
+                      }}
+                      disabled={!props.isOwnerAccount}
+                    >
+                      <Trash2Icon className="size-4" />
+                    </Button>
+                  </ToolTipLabel>
+                </div>
+              ))}
+
+              {allowListFields.fields.length === 0 && (
+                <Alert variant="warning">
+                  <CircleAlertIcon className="size-5 max-sm:hidden" />
+                  <AlertTitle className="max-sm:!pl-0">
+                    No allowlist configured
+                  </AlertTitle>
+                </Alert>
               )}
-            />
+            </div>
+
+            <div className="h-1" />
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  // add admin by default if adding the first input
+                  allowListFields.append({
+                    address: "",
+                  });
+                }}
+                className="gap-2"
+                disabled={!props.isOwnerAccount}
+              >
+                <PlusIcon className="size-3" />
+                Add Address
+              </Button>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-3">
-            {allowListFields.fields.map((fieldItem, index) => (
-              <div className="flex items-start gap-3" key={fieldItem.id}>
-                <FormField
-                  control={form.control}
-                  name={`allowList.${index}.address`}
-                  render={({ field }) => (
-                    <FormItem className="grow">
-                      <FormControl>
-                        <Input
-                          placeholder="0x..."
-                          {...field}
-                          disabled={!props.isOwnerAccount}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <ToolTipLabel label="Remove address">
-                  <Button
-                    variant="outline"
-                    className="!text-destructive-text bg-background"
-                    onClick={() => {
-                      allowListFields.remove(index);
-                    }}
-                    disabled={!props.isOwnerAccount}
-                  >
-                    <Trash2Icon className="size-4" />
-                  </Button>
-                </ToolTipLabel>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-4 flex justify-end">
+          <div className="flex justify-end">
             <Button
               size="sm"
               className="min-w-24 gap-2"
@@ -516,19 +548,25 @@ function ConfigSection(props: {
   );
 }
 
+const mintFormSchema = z.object({
+  tokenId: z.number().optional(),
+  quantity: z.string().refine((v) => v.length > 0 && Number(v) >= 0, {
+    message: "Invalid quantity",
+  }),
+  recipient: zodAddress,
+});
+
+export type MintFormValues = z.infer<typeof mintFormSchema>;
+
 function MintNFTSection(props: {
   mint: (values: MintFormValues) => Promise<void>;
   isErc721: boolean;
-  isBatchMetadataInstalled: boolean;
   isSequentialTokenIdInstalled: boolean;
 }) {
   const form = useForm<MintFormValues>({
     values: {
-      supply: 1,
-      customImage: "",
-      customAnimationUrl: "",
+      quantity: "",
       recipient: "",
-      quantity: 1,
     },
     reValidateMode: "onChange",
   });
@@ -538,7 +576,12 @@ function MintNFTSection(props: {
   });
 
   const onSubmit = async () => {
-    const promise = mintMutation.mutateAsync(form.getValues());
+    const values = form.getValues();
+    if (!props.isErc721 && !values.tokenId) {
+      form.setError("tokenId", { message: "Token ID is required" });
+      return;
+    }
+    const promise = mintMutation.mutateAsync(values);
     toast.promise(promise, {
       success: "Successfully minted NFT",
       error: "Failed to mint NFT",
@@ -549,84 +592,6 @@ function MintNFTSection(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
-          {props.isBatchMetadataInstalled && (
-            <div className="flex flex-col gap-6 lg:flex-row">
-              {/* Left */}
-              <div className="shrink-0 lg:w-[300px]">
-                <NFTMediaFormGroup form={form} previewMaxWidth="300px" />
-              </div>
-
-              {/* Right */}
-              <div className="flex grow flex-col gap-6">
-                {/* name  */}
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Description */}
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* TODO - convert to shadcn + tailwind */}
-                <PropertiesFormControl
-                  watch={form.watch}
-                  errors={form.formState.errors}
-                  control={form.control}
-                  register={form.register}
-                  setValue={form.setValue}
-                />
-
-                {/* Advanced options */}
-                <Accordion
-                  type="single"
-                  collapsible={
-                    !(
-                      form.formState.errors.background_color ||
-                      form.formState.errors.external_url
-                    )
-                  }
-                >
-                  <AccordionItem
-                    value="advanced-options"
-                    className="-mx-1 border-t border-b-0"
-                  >
-                    <AccordionTrigger className="px-1">
-                      Advanced Options
-                    </AccordionTrigger>
-                    <AccordionContent className="px-1">
-                      <AdvancedNFTMetadataFormGroup form={form} />
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </div>
-            </div>
-          )}
-
-          <Separator />
-
           {/* Other options */}
           <div className="flex flex-col gap-4 md:flex-row">
             <FormField
@@ -643,22 +608,21 @@ function MintNFTSection(props: {
               )}
             />
 
-            {!props.isErc721 && (
-              <FormField
-                control={form.control}
-                name="quantity"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>quantity</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              control={form.control}
+              name="quantity"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>quantity</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            {!props.isErc721 && !props.isSequentialTokenIdInstalled && (
+            {!props.isErc721 && (
               <FormField
                 control={form.control}
                 name="tokenId"
@@ -668,6 +632,7 @@ function MintNFTSection(props: {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

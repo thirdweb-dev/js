@@ -3,7 +3,7 @@
 import { lazy } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import type { Account } from "thirdweb/wallets";
-import ClaimableModule from "./claimable";
+import ClaimableModule from "./Claimable";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 
 const MintableModule = lazy(() => import("./Mintable"));
