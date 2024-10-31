@@ -1,5 +1,37 @@
 # thirdweb
 
+## 5.64.4
+
+### Patch Changes
+
+- [#5237](https://github.com/thirdweb-dev/js/pull/5237) [`802d3bf`](https://github.com/thirdweb-dev/js/commit/802d3bfd4bbf211ba2477c8c2a44a2f1c7b79967) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Sanitize block explorer URLs
+
+- [#5231](https://github.com/thirdweb-dev/js/pull/5231) [`686d0c3`](https://github.com/thirdweb-dev/js/commit/686d0c3c051ac0f36fcec7412948cbc41e303388) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect custom bundler URL for getting gas fees + better DX for `predictSmartAccountAddress()`
+
+- [#5187](https://github.com/thirdweb-dev/js/pull/5187) [`68ce724`](https://github.com/thirdweb-dev/js/commit/68ce724ff646e4992e33c025e12f4bf083e1ca7a) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - expose WalletUser type for in app / ecosystem wallets
+
+- [#5214](https://github.com/thirdweb-dev/js/pull/5214) [`ad4af68`](https://github.com/thirdweb-dev/js/commit/ad4af68d1d96859e8dedcdcb22ebbc6c6cc29f1f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Reduce async calls before requesting webauthn credentials for ios 15
+
+- [#5229](https://github.com/thirdweb-dev/js/pull/5229) [`9425e9e`](https://github.com/thirdweb-dev/js/commit/9425e9ef429a98119fc0648eb43850c7b9fa8571) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Consolidate custom jwt and custom auth endpoint through common endpoint
+
+- [#5244](https://github.com/thirdweb-dev/js/pull/5244) [`178d407`](https://github.com/thirdweb-dev/js/commit/178d407e6f20fb44ab32977c95912f56b2f1bc51) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for custom singlePhase drops
+
+  If you are using a custom drop contract, you can now set claim conditions and claim by passing the `singlePhaseDrop` option to the `setClaimConditions` and `claimTo` functions.
+
+  ```ts
+  setClaimConditions({
+    contract,
+    phases: [
+      {
+        startTime: new Date(0),
+        maxClaimableSupply: 10n,
+      },
+    ],
+    tokenId: 0n,
+    singlePhaseDrop: true, // <--- for custom drop contracts
+  });
+  ```
+
 ## 5.64.3
 
 ### Patch Changes
