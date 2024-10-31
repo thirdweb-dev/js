@@ -272,7 +272,7 @@ function PrimarySalesSection(props: {
           <Button
             size="sm"
             className="min-w-24 gap-2"
-            disabled={updateMutation.isPending}
+            disabled={updateMutation.isPending || !props.isOwnerAccount}
             type="submit"
           >
             {updateMutation.isPending && <Spinner className="size-4" />}

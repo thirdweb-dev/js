@@ -7,6 +7,7 @@ import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 
 const MintableModule = lazy(() => import("./Mintable"));
 const TransferableModule = lazy(() => import("./Transferable"));
+const RoyaltyModule = lazy(() => import("./Royalty"));
 
 export type ModuleInstanceProps = Omit<
   ModuleCardUIProps,
@@ -29,6 +30,10 @@ export function ModuleInstance(props: ModuleInstanceProps) {
 
   if (props.contractInfo.name.includes("Mintable")) {
     return <MintableModule {...props} />;
+  }
+
+  if (props.contractInfo.name.includes("Royalty")) {
+    return <RoyaltyModule {...props} />;
   }
 
   return <ModuleCardUI {...props} isOwnerAccount={!!props.ownerAccount} />;
