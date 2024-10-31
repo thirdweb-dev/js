@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/accordion";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -29,84 +28,108 @@ import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
+import { type PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
 import { isAddress } from "thirdweb";
-import { MintableERC721, MintableERC1155 } from "thirdweb/modules";
-import { useReadContract } from "thirdweb/react";
-import type { NFTMetadataInputLimited } from "types/modified-types";
-import { parseAttributes } from "utils/parseAttributes";
+import { ClaimableERC721, ClaimableERC1155 } from "thirdweb/modules";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { z } from "zod";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
 import { AdvancedNFTMetadataFormGroup } from "./nft/AdvancedNFTMetadataFormGroup";
 import { NFTMediaFormGroup } from "./nft/NFTMediaFormGroup";
 
-export type UpdateFormValues = {
-  primarySaleRecipient: string;
-};
+const zodAddress = z.string().refine(
+  (v) => {
+    if (isAddress(v)) {
+      return true;
+    }
+    return false;
+  },
+  { message: "Invalid Address" },
+);
 
-// TODO - add form validation with zod schema for mint form
+const updateFormSchema = z.object({
+  primarySaleRecipient: zodAddress,
+  availableSupply: z.number().min(0),
+  allowList: z.array(zodAddress),
+  pricePerToken: z.number().min(0),
+  currency: zodAddress,
+  maxClaimableSupply: z.number().min(0),
+  maxClaimablePerWallet: z.number().min(0),
+  startTime: z.date(),
+  endTime: z.date(),
+  auxData: z.string(),
+  tokenId: z.bigint().optional(),
+});
 
-export type MintFormValues = NFTMetadat||aInputLimited & {
-  useNextTokenId: boolean;
-  recipient: string;
-  amount: number;
-  supply: number;
-  customImage: string;
-  customAnimationUrl: string;
-  tokenId?: string;
-};
+export type UpdateFormValues = z.infer<typeof updateFormSchema>;
 
-function MintableModule(props: ModuleInstanceProps) {
+const mintFormSchema = z.object({
+  useNextTokenId: z.boolean().optional(),
+  tokenId: z.bigint().optional(),
+  quantity: z.number().min(0),
+  recipient: zodAddress,
+});
+
+export type MintFormValues = z.infer<typeof mintFormSchema>;
+
+const MAX_UINT256 = BigInt(
+  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+);
+
+function ClaimableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
+  const account = useActiveAccount();
 
   const primarySaleRecipientQuery = useReadContract(
-    MintableERC721.getSaleConfig,
+    ClaimableERC721.getSaleConfig,
+    {
+      contract: contract,
+    },
+  );
+  const claimConditionQuery = useReadContract(
+    ClaimableERC721.getClaimCondition,
     {
       contract: contract,
     },
   );
 
-  const isErc721 = props.contractInfo.name === "MintableERC721";
-  const isBatchMetadataInstalled = !!props.allModuleContractInfo.find(
-    (module) => module.name.includes("BatchMetadata"),
-  );
+  const isErc721 = props.contractInfo.name === "ClaimableERC721";
   const isSequentialTokenIdInstalled = !!props.allModuleContractInfo.find(
     (module) => module.name.includes("SequentialTokenId"),
   );
 
   const mint = useCallback(
     async (values: MintFormValues) => {
-      const nft = parseAttributes(values);
-      if (!ownerAccount) {
-        throw new Error("Not an owner account");
+      if (!account) {
+        throw new Error("Wallet not connected");
       }
-      
+
       let mintTx: PreparedTransaction;
       if (isErc721) {
-       mintTx = MintableERC721.mintWithRole({ 
-            contract,
-            to: values.recipient,
-            nfts: [nft],
-          })
-      } else if (values.useNextTokenId || values.tokenId) {
-        mintTx = MintableERC1155.mintWithRole({
-            contract,
-            to: values.recipient,
-            amount: BigInt(values.amount),
-            tokenId: values.useNextTokenId ? undefined : BigInt(values.tokenId),
-            nft,
-          });
+        mintTx = ClaimableERC721.mint({
+          contract,
+          to: values.recipient,
+          quantity: values.quantity,
+        });
+      } else if (values.tokenId) {
+        const tokenId = values.useNextTokenId ? MAX_UINT256 : values.tokenId;
+        mintTx = ClaimableERC1155.mint({
+          contract,
+          to: values.recipient,
+          quantity: values.quantity,
+          tokenId,
+        });
       } else {
-        throw new Error("Invalid token ID");
+        throw new Error("Invalid tokenId");
       }
 
       await sendAndConfirmTransaction({
-        account: ownerAccount,
+        account: account,
         transaction: mintTx,
       });
     },
-    [contract, ownerAccount, isErc721],
+    [contract, account, isErc721],
   );
 
   const update = useCallback(
@@ -115,7 +138,28 @@ function MintableModule(props: ModuleInstanceProps) {
         throw new Error("Not an owner account");
       }
 
-      const setSaleConfigTx = MintableERC721.setSaleConfig({
+      let setClaimConditionTx: PreparedTransaction;
+      if (isErc721) {
+        setClaimConditionTx = ClaimableERC721.setClaimCondition({
+          contract,
+          ...values,
+        });
+      } else if (values.tokenId) {
+        setClaimConditionTx = ClaimableERC1155.setClaimCondition({
+          contract,
+          tokenId: values.tokenId,
+          ...values,
+        });
+      } else {
+        throw new Error("Invalid tokenId");
+      }
+
+      await sendAndConfirmTransaction({
+        account: ownerAccount,
+        transaction: setClaimConditionTx,
+      });
+
+      const setSaleConfigTx = ClaimableERC721.setSaleConfig({
         contract: contract,
         primarySaleRecipient: values.primarySaleRecipient,
       });
@@ -125,25 +169,27 @@ function MintableModule(props: ModuleInstanceProps) {
         transaction: setSaleConfigTx,
       });
     },
-    [contract, ownerAccount],
+    [contract, ownerAccount, isErc721],
   );
 
   return (
-    <MintableModuleUI
+    <ClaimableModuleUI
       {...props}
-      isPending={primarySaleRecipientQuery.isPending}
+      isPending={
+        primarySaleRecipientQuery.isPending || claimConditionQuery.isPending
+      }
       primarySaleRecipient={primarySaleRecipientQuery.data}
-      updatePrimaryRecipient={update}
+      claimCondition={claimConditionQuery.data}
+      update={update}
       mint={mint}
       isOwnerAccount={!!ownerAccount}
       isErc721={isErc721}
-      isBatchMetadataInstalled={isBatchMetadataInstalled}
       isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
     />
   );
 }
 
-export function MintableModuleUI(
+export function ClaimableModuleUI(
   props: Omit<ModuleCardUIProps, "children" | "updateButton"> & {
     primarySaleRecipient: string | undefined;
     isPending: boolean;
@@ -299,12 +345,11 @@ function MintNFTSection(props: {
 }) {
   const form = useForm<MintFormValues>({
     values: {
-      useNextTokenId: false,
       supply: 1,
       customImage: "",
       customAnimationUrl: "",
       recipient: "",
-      amount: 1,
+      quantity: 1,
     },
     reValidateMode: "onChange",
   });
@@ -320,8 +365,6 @@ function MintNFTSection(props: {
       error: "Failed to mint NFT",
     });
   };
-
-  const useNextTokenId = form.watch("useNextTokenId");
 
   return (
     <Form {...form}>
@@ -424,10 +467,10 @@ function MintNFTSection(props: {
             {!props.isErc721 && (
               <FormField
                 control={form.control}
-                name="amount"
+                name="quantity"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Amount</FormLabel>
+                    <FormLabel>quantity</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -436,39 +479,19 @@ function MintNFTSection(props: {
               />
             )}
 
-            {!props.isErc721 && (
-              <div className="relative flex-1">
-                <FormField
-                  control={form.control}
-                  name="tokenId"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Token ID</FormLabel>
-                      <FormControl>
-                        <Input {...field} disabled={useNextTokenId} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="useNextTokenId"
-                  render={({ field }) => (
-                    <FormItem className="absolute top-0 right-0 flex items-center gap-2">
-                      <CheckboxWithLabel>
-                        <Checkbox
-                          className="mt-0"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                        Use next token ID
-                      </CheckboxWithLabel>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+            {!props.isErc721 && !props.isSequentialTokenIdInstalled && (
+              <FormField
+                control={form.control}
+                name="tokenId"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Token ID</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             )}
           </div>
 
@@ -489,4 +512,4 @@ function MintNFTSection(props: {
   );
 }
 
-export default MintableModule;
+export default ClaimableModule;
