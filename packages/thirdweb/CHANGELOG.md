@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.64.5
+
+### Patch Changes
+
+- [#5246](https://github.com/thirdweb-dev/js/pull/5246) [`82c8726`](https://github.com/thirdweb-dev/js/commit/82c8726c10c0186b82cc740e2131179aff7905c9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix custom paymaster callback not being respected
+
 ## 5.64.4
 
 ### Patch Changes
