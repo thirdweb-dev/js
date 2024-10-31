@@ -1,4 +1,5 @@
 "use client";
+import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Accordion,
@@ -21,12 +22,13 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
-import { CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon, Trash2Icon } from "lucide-react";
 import { useCallback } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
 import { isAddress } from "thirdweb";
@@ -48,22 +50,6 @@ const zodAddress = z.string().refine(
   { message: "Invalid Address" },
 );
 
-const updateFormSchema = z.object({
-  primarySaleRecipient: zodAddress,
-  availableSupply: z.number().min(0),
-  allowList: z.array(zodAddress),
-  pricePerToken: z.number().min(0),
-  currency: zodAddress,
-  maxClaimableSupply: z.number().min(0),
-  maxClaimablePerWallet: z.number().min(0),
-  startTime: z.date(),
-  endTime: z.date(),
-  auxData: z.string(),
-  tokenId: z.bigint().optional(),
-});
-
-export type UpdateFormValues = z.infer<typeof updateFormSchema>;
-
 const mintFormSchema = z.object({
   useNextTokenId: z.boolean().optional(),
   tokenId: z.bigint().optional(),
@@ -76,6 +62,17 @@ export type MintFormValues = z.infer<typeof mintFormSchema>;
 const MAX_UINT256 = BigInt(
   "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
 );
+
+export type ClaimCondition = {
+  availableSupply: bigint;
+  allowlistMerkleRoot: `0x${string}`;
+  pricePerUnit: bigint;
+  currency: string;
+  maxMintPerWallet: bigint;
+  startTimestamp: number;
+  endTimestamp: number;
+  auxData: string;
+};
 
 function ClaimableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
@@ -133,7 +130,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
   );
 
   const update = useCallback(
-    async (values: UpdateFormValues) => {
+    async (values: ConfigFormValues) => {
       if (!ownerAccount) {
         throw new Error("Not an owner account");
       }
@@ -147,7 +144,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
       } else if (values.tokenId) {
         setClaimConditionTx = ClaimableERC1155.setClaimCondition({
           contract,
-          tokenId: values.tokenId,
+          tokenId: BigInt(values.tokenId),
           ...values,
         });
       } else {
@@ -194,10 +191,10 @@ export function ClaimableModuleUI(
     primarySaleRecipient: string | undefined;
     isPending: boolean;
     isOwnerAccount: boolean;
-    updatePrimaryRecipient: (values: UpdateFormValues) => Promise<void>;
+    claimCondition: ClaimCondition | undefined;
+    update: (values: ConfigFormValues) => Promise<void>;
     mint: (values: MintFormValues) => Promise<void>;
     isErc721: boolean;
-    isBatchMetadataInstalled: boolean;
     isSequentialTokenIdInstalled: boolean;
   },
 ) {
@@ -219,7 +216,8 @@ export function ClaimableModuleUI(
                   <MintNFTSection
                     mint={props.mint}
                     isErc721={props.isErc721}
-                    isBatchMetadataInstalled={props.isBatchMetadataInstalled}
+                    // TODO: remove this
+                    isBatchMetadataInstalled={false}
                     isSequentialTokenIdInstalled={
                       props.isSequentialTokenIdInstalled
                     }
@@ -241,13 +239,15 @@ export function ClaimableModuleUI(
               className="border-none "
             >
               <AccordionTrigger className="border-border border-t px-1">
-                Primary Sale Recipient
+                Claim Conditions & Primary Sale Recipient
               </AccordionTrigger>
               <AccordionContent className="px-1">
-                <PrimarySalesSection
+                <ConfigSection
                   isOwnerAccount={props.isOwnerAccount}
                   primarySaleRecipient={props.primarySaleRecipient}
-                  update={props.updatePrimaryRecipient}
+                  claimCondition={props.claimCondition}
+                  update={props.update}
+                  isErc721={props.isErc721}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -258,79 +258,258 @@ export function ClaimableModuleUI(
   );
 }
 
-const primarySaleRecipientFormSchema = z.object({
-  primarySaleRecipient: z.string().refine(
-    (v) => {
-      // don't return `isAddress(v)` directly to avoid typecasting address as `0x${string}`
-      if (isAddress(v)) {
-        return true;
-      }
-      return false;
-    },
-    {
-      message: "Invalid Address",
-    },
-  ),
+const configFormSchema = z.object({
+  primarySaleRecipient: zodAddress,
+
+  tokenId: z.number().optional(),
+
+  pricePerToken: z.number().min(0),
+  currencyAddress: zodAddress,
+
+  maxClaimableSupply: z.string().refine((v) => v.length > 0 && Number(v) >= 0, {
+    message: "Invalid max claimable supply",
+  }),
+  maxClaimablePerWallet: z
+    .string()
+    .refine((v) => v.length > 0 && Number(v) >= 0, {
+      message: "Invalid max claimable per wallet",
+    }),
+
+  startTime: z.date(),
+  endTime: z.date(),
+
+  allowList: z.array(z.object({ address: zodAddress })),
 });
 
-function PrimarySalesSection(props: {
+export type ConfigFormValues = z.infer<typeof configFormSchema>;
+
+function ConfigSection(props: {
   primarySaleRecipient: string | undefined;
-  update: (values: UpdateFormValues) => Promise<void>;
+  claimCondition: ClaimCondition | undefined;
+  update: (values: ConfigFormValues) => Promise<void>;
   isOwnerAccount: boolean;
+  isErc721: boolean;
 }) {
-  const form = useForm<UpdateFormValues>({
-    resolver: zodResolver(primarySaleRecipientFormSchema),
+  const form = useForm<ConfigFormValues>({
+    resolver: zodResolver(configFormSchema),
     values: {
       primarySaleRecipient: props.primarySaleRecipient ?? "",
+      // TODO: parse units based on the currency decimals
+      pricePerToken: props.claimCondition?.pricePerUnit ? 0 : 0,
+      currencyAddress: props.claimCondition?.currency ?? "",
+      maxClaimableSupply:
+        props.claimCondition?.availableSupply.toString() ?? "",
+      maxClaimablePerWallet:
+        props.claimCondition?.maxMintPerWallet.toString() ?? "",
+      startTime: new Date((props.claimCondition?.startTimestamp ?? 0) * 1000),
+      endTime: new Date((props.claimCondition?.endTimestamp ?? 0) * 1000),
+      allowList: [],
     },
   });
+  const allowListFields = useFieldArray({
+    control: form.control,
+    name: "allowList",
+  });
+
+  const endTime = form.watch("endTime");
 
   const updateMutation = useMutation({
     mutationFn: props.update,
   });
 
   const onSubmit = async () => {
+    const values = form.getValues();
+    if (!props.isErc721 && !values.tokenId) {
+      form.setError("tokenId", { message: "Token ID is required" });
+    }
     const promise = updateMutation.mutateAsync(form.getValues());
     toast.promise(promise, {
-      success: "Successfully updated primary sale recipient",
-      error: "Failed to update primary sale recipient",
+      success:
+        "Successfully updated claim conditions or primary sale recipient",
+      error: "Failed to update claim conditions or primary sale recipient",
     });
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          control={form.control}
-          name="primarySaleRecipient"
-          render={({ field }) => (
-            <FormItem>
-              <FormDescription>
-                The wallet address that should receive the revenue from initial
-                sales of the assets.
-              </FormDescription>
-              <FormControl>
-                <Input
-                  placeholder="0x..."
-                  {...field}
-                  disabled={!props.isOwnerAccount}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex flex-col gap-6">
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="tokenId"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Token ID</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...field}
+                      disabled={!props.isOwnerAccount}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <div className="mt-4 flex justify-end">
-          <Button
-            size="sm"
-            className="min-w-24 gap-2"
-            disabled={updateMutation.isPending || !props.isOwnerAccount}
-            type="submit"
-          >
-            {updateMutation.isPending && <Spinner className="size-4" />}
-            Update
-          </Button>
+            <FormField
+              control={form.control}
+              name="primarySaleRecipient"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormDescription>
+                    The wallet address that should receive the revenue from
+                    initial sales of the assets.
+                  </FormDescription>
+                  <FormControl>
+                    <Input
+                      placeholder="0x..."
+                      {...field}
+                      disabled={!props.isOwnerAccount}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="pricePerToken"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price Per Token</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled={!props.isOwnerAccount} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="currencyAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Currency</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="0x..."
+                      {...field}
+                      disabled={!props.isOwnerAccount}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="maxClaimableSupply"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Max Available Supply</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled={!props.isOwnerAccount} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="maxClaimablePerWallet"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Maximum number of mints per wallet</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="0x..."
+                      {...field}
+                      disabled={!props.isOwnerAccount}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="startTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Start & End Time</FormLabel>
+                  <FormControl>
+                    <DatePickerWithRange
+                      from={field.value || new Date()}
+                      to={endTime || new Date()}
+                      setFrom={field.onChange}
+                      setTo={(to: Date) => form.setValue("endTime", to)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex flex-col gap-3">
+            {allowListFields.fields.map((fieldItem, index) => (
+              <div className="flex items-start gap-3" key={fieldItem.id}>
+                <FormField
+                  control={form.control}
+                  name={`allowList.${index}.address`}
+                  render={({ field }) => (
+                    <FormItem className="grow">
+                      <FormControl>
+                        <Input
+                          placeholder="0x..."
+                          {...field}
+                          disabled={!props.isOwnerAccount}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <ToolTipLabel label="Remove address">
+                  <Button
+                    variant="outline"
+                    className="!text-destructive-text bg-background"
+                    onClick={() => {
+                      allowListFields.remove(index);
+                    }}
+                    disabled={!props.isOwnerAccount}
+                  >
+                    <Trash2Icon className="size-4" />
+                  </Button>
+                </ToolTipLabel>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 flex justify-end">
+            <Button
+              size="sm"
+              className="min-w-24 gap-2"
+              disabled={updateMutation.isPending || !props.isOwnerAccount}
+              type="submit"
+            >
+              {updateMutation.isPending && <Spinner className="size-4" />}
+              Update
+            </Button>
+          </div>
         </div>
       </form>{" "}
     </Form>

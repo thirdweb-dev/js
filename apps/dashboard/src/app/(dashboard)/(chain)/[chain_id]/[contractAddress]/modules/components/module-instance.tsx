@@ -3,6 +3,7 @@
 import { lazy } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import type { Account } from "thirdweb/wallets";
+import ClaimableModule from "./claimable";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 
 const MintableModule = lazy(() => import("./Mintable"));
@@ -34,6 +35,10 @@ export function ModuleInstance(props: ModuleInstanceProps) {
 
   if (props.contractInfo.name.includes("Royalty")) {
     return <RoyaltyModule {...props} />;
+  }
+
+  if (props.contractInfo.name.includes("Claimable")) {
+    return <ClaimableModule {...props} />;
   }
 
   return <ModuleCardUI {...props} isOwnerAccount={!!props.ownerAccount} />;

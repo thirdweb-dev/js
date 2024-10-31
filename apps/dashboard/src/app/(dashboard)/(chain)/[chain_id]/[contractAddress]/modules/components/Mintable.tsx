@@ -29,7 +29,7 @@ import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
+import { type PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
 import { isAddress } from "thirdweb";
 import { MintableERC721, MintableERC1155 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
@@ -47,7 +47,7 @@ export type UpdateFormValues = {
 
 // TODO - add form validation with zod schema for mint form
 
-export type MintFormValues = NFTMetadat||aInputLimited & {
+export type MintFormValues = NFTMetadataInputLimited & {
   useNextTokenId: boolean;
   recipient: string;
   amount: number;
@@ -81,22 +81,22 @@ function MintableModule(props: ModuleInstanceProps) {
       if (!ownerAccount) {
         throw new Error("Not an owner account");
       }
-      
+
       let mintTx: PreparedTransaction;
       if (isErc721) {
-       mintTx = MintableERC721.mintWithRole({ 
-            contract,
-            to: values.recipient,
-            nfts: [nft],
-          })
+        mintTx = MintableERC721.mintWithRole({
+          contract,
+          to: values.recipient,
+          nfts: [nft],
+        });
       } else if (values.useNextTokenId || values.tokenId) {
         mintTx = MintableERC1155.mintWithRole({
-            contract,
-            to: values.recipient,
-            amount: BigInt(values.amount),
-            tokenId: values.useNextTokenId ? undefined : BigInt(values.tokenId),
-            nft,
-          });
+          contract,
+          to: values.recipient,
+          amount: BigInt(values.amount),
+          tokenId: values.useNextTokenId ? undefined : BigInt(values.tokenId),
+          nft,
+        });
       } else {
         throw new Error("Invalid token ID");
       }
