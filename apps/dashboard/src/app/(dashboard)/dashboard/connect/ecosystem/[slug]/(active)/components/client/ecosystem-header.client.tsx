@@ -165,11 +165,23 @@ export function EcosystemHeader(props: {
               {!ecosystem.slug ? (
                 <Skeleton className="h-6 w-[300px]" />
               ) : (
-                <div className="flex items-center gap-1">
-                  <p className="text-muted-foreground">
-                    ecosystem.{ecosystem.slug}
-                  </p>
-                  <CopyButton text={`ecosystem.${ecosystem.slug}`} />
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-1">
+                    <p className="text-muted-foreground">
+                      ecosystem.{ecosystem.slug}
+                    </p>
+                    <CopyButton text={`ecosystem.${ecosystem.slug}`} />
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <a
+                      href={`https://${ecosystem.slug}.ecosystem.thirdweb.com`}
+                      className="text-link-foreground"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {`${ecosystem.slug}.ecosystem.thirdweb.com`}
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
