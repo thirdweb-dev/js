@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { type Theme, iconSize } from "../../../../core/design-system/index.js";
 import type {
@@ -18,6 +18,29 @@ import type { WalletDetailsModalScreen } from "./types.js";
 /**
  * @internal
  */
+export type AssetTabs = "token" | "nft";
+
+const TokenTab = {
+  label: (
+    <span className="flex gap-2">
+      <CoinsIcon size={iconSize.sm} /> Tokens
+    </span>
+  ),
+  value: "Tokens",
+};
+
+const NftTab = {
+  label: (
+    <span className="flex gap-2">
+      <ImageIcon size={iconSize.sm} /> NFTs
+    </span>
+  ),
+  value: "NFTs",
+};
+
+/**
+ * @internal
+ */
 export function ViewAssets(props: {
   supportedTokens?: SupportedTokens;
   supportedNFTs?: SupportedNFTs;
@@ -26,9 +49,29 @@ export function ViewAssets(props: {
   setScreen: (screen: WalletDetailsModalScreen) => void;
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
+  assetTabs?: AssetTabs[];
 }) {
-  const [activeTab, setActiveTab] = useState("Tokens");
   const { connectLocale } = props;
+  const options = useMemo(() => {
+    if (!props.assetTabs) {
+      return [TokenTab, NftTab];
+    }
+    if (!props.assetTabs.length) {
+      return [];
+    }
+    const tabs = [];
+    for (const item of props.assetTabs) {
+      if (item === "token") {
+        tabs.push(TokenTab);
+      } else if (item === "nft") {
+        tabs.push(NftTab);
+      }
+    }
+    return tabs;
+  }, [props.assetTabs]);
+
+  // Since `options` is now a dynamic value, the default active tab is set to the value of the first tab in `options`
+  const [activeTab, setActiveTab] = useState(options[0]?.value || "Tokens");
 
   return (
     <Container
@@ -52,28 +95,7 @@ export function ViewAssets(props: {
         }}
       >
         <Spacer y="md" />
-        <Tabs
-          options={[
-            {
-              label: (
-                <span className="flex gap-2">
-                  <CoinsIcon size={iconSize.sm} /> Tokens
-                </span>
-              ),
-              value: "Tokens",
-            },
-            {
-              label: (
-                <span className="flex gap-2">
-                  <ImageIcon size={iconSize.sm} /> NFTs
-                </span>
-              ),
-              value: "NFTs",
-            },
-          ]}
-          selected={activeTab}
-          onSelect={setActiveTab}
-        >
+        <Tabs options={options} selected={activeTab} onSelect={setActiveTab}>
           <Container
             scrollY
             style={{

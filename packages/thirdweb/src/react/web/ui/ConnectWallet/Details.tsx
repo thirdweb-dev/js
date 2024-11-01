@@ -109,7 +109,7 @@ import { ManageWalletScreen } from "./screens/ManageWalletScreen.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
-import { ViewAssets } from "./screens/ViewAssets.js";
+import { type AssetTabs, ViewAssets } from "./screens/ViewAssets.js";
 import { ViewNFTs } from "./screens/ViewNFTs.js";
 import { ViewTokens } from "./screens/ViewTokens.js";
 import { WalletConnectReceiverScreen } from "./screens/WalletConnectReceiverScreen.js";
@@ -170,6 +170,7 @@ export const ConnectedWalletDetails: React.FC<{
         chains={props.chains}
         displayBalanceToken={props.detailsButton?.displayBalanceToken}
         connectOptions={props.connectOptions}
+        assetTabs={props.detailsModal?.assetTabs}
       />,
     );
   }
@@ -284,6 +285,7 @@ function DetailsModal(props: {
   chains: Chain[];
   displayBalanceToken?: Record<number, string>;
   connectOptions: DetailsModalConnectOptions | undefined;
+  assetTabs?: AssetTabs[];
 }) {
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
   const { disconnect } = useDisconnect();
@@ -627,21 +629,24 @@ function DetailsModal(props: {
           </MenuButton>
 
           {/* View Funds */}
-          <MenuButton
-            onClick={() => {
-              setScreen("view-assets");
-            }}
-            style={{
-              fontSize: fontSize.sm,
-            }}
-          >
-            <CoinsIcon size={iconSize.md} />
-            <Text color="primaryText">
-              {props.supportedNFTs
-                ? locale.viewFunds.viewAssets
-                : locale.viewFunds.title}
-            </Text>
-          </MenuButton>
+          {/* Hide the View Funds button if the assetTabs props is set to an empty array */}
+          {(props.assetTabs === undefined || props.assetTabs.length) && (
+            <MenuButton
+              onClick={() => {
+                setScreen("view-assets");
+              }}
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              <CoinsIcon size={iconSize.md} />
+              <Text color="primaryText">
+                {props.supportedNFTs
+                  ? locale.viewFunds.viewAssets
+                  : locale.viewFunds.title}
+              </Text>
+            </MenuButton>
+          )}
 
           {/* Manage Wallet */}
           <MenuButton
@@ -799,6 +804,7 @@ function DetailsModal(props: {
           setScreen={setScreen}
           client={client}
           connectLocale={locale}
+          assetTabs={props.detailsModal?.assetTabs}
         />
       );
     } else {
@@ -1458,6 +1464,13 @@ export type UseWalletDetailsModalOptions = {
    * By default the "Buy Funds" button is shown.
    */
   hideBuyFunds?: boolean;
+
+  /**
+   * When you click on "View Assets", by default the "Tokens" tab is shown first.
+   * If you want to show the "NFTs" tab first, change the order of the asset tabs to: ["nft", "token"]
+   * Note: If an empty array is passed, the [View Funds] button will be hidden
+   */
+  assetTabs?: AssetTabs[];
 };
 
 /**
@@ -1515,6 +1528,7 @@ export function useWalletDetailsModal() {
               hideBuyFunds: props.hideBuyFunds,
               hideReceiveFunds: props.hideReceiveFunds,
               hideSendFunds: props.hideSendFunds,
+              assetTabs: props.assetTabs,
             }}
             displayBalanceToken={props.displayBalanceToken}
             theme={props.theme || "dark"}
