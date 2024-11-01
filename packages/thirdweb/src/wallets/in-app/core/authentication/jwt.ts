@@ -1,5 +1,6 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
+import { stringify } from "../../../../utils/json.js";
 import { ROUTE_AUTH_JWT_CALLBACK } from "../../native/helpers/constants.js";
 import { createErrorMessage } from "../../native/helpers/errors.js";
 import type { Ecosystem } from "../wallet/types.js";
@@ -17,7 +18,7 @@ export async function customJwt(args: {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
+    body: stringify({
       jwt: args.jwt,
       developerClientId: args.client.clientId,
     }),

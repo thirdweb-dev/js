@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { MerkleTree } from "../../../merkletree/MerkleTree.js";
 import { upload } from "../../../storage/upload.js";
 import type { Hex } from "../../encoding/hex.js";
+import { stringify } from "../../json.js";
 import { hashEntry } from "./hash-entry.js";
 import type {
   OverrideEntry,
@@ -67,7 +68,7 @@ export async function processOverrideList(options: {
       entries,
     };
     shardsToUpload.push({
-      data: JSON.stringify(data),
+      data: stringify(data),
       name: `${shardId}.json`,
     });
   }
@@ -87,7 +88,7 @@ export async function processOverrideList(options: {
   // 6. Also upload the original entries for retrieving all entries
   const originalEntriesUri = await upload({
     client: options.client,
-    files: [JSON.stringify(options.overrides)],
+    files: [stringify(options.overrides)],
   });
   // 7. assmeble the final sharded merkle tree info
   const shardedMerkleInfo: ShardedMerkleTreeInfo = {

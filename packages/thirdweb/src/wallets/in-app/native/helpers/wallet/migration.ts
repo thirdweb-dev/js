@@ -4,6 +4,7 @@ import QuickCrypto from "react-native-quick-crypto";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import { stringToBytes } from "../../../../../utils/encoding/to-bytes.js";
+import { stringify } from "../../../../../utils/json.js";
 import { randomBytesBuffer } from "../../../../../utils/random.js";
 import {
   concatUint8Arrays,
@@ -72,7 +73,7 @@ export async function migrateToEnclaveWallet(args: {
   });
   if (!idTokenResponse.ok) {
     throw new Error(
-      `Failed to fetch id token from Cognito: ${JSON.stringify(
+      `Failed to fetch id token from Cognito: ${stringify(
         await idTokenResponse.json(),
         null,
         2,
@@ -164,7 +165,7 @@ async function executeMigration(args: {
     url: `${getThirdwebBaseUrl("inAppWallet")}/api/v1/enclave-wallet/migrate`,
     props: {
       method: "POST",
-      body: JSON.stringify({
+      body: stringify({
         address: args.address,
         kmsCiphertextB64: args.kmsCiphertextB64,
         encryptedPrivateKeyB64: args.encryptedPrivateKeyB64,
@@ -175,7 +176,7 @@ async function executeMigration(args: {
   });
   if (!migrationResponse.ok) {
     throw new Error(
-      `Failed to migrate to enclave wallet: ${JSON.stringify(
+      `Failed to migrate to enclave wallet: ${stringify(
         await migrationResponse.json(),
       )}`,
     );

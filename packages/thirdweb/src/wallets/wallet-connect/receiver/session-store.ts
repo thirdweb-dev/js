@@ -1,3 +1,4 @@
+import { stringify } from "../../../utils/json.js";
 import { ClientScopedStorage } from "../../in-app/core/authentication/client-scoped-storage.js";
 import type { WalletConnectSession } from "./types.js";
 
@@ -45,9 +46,7 @@ export async function saveSession(
     await walletConnectSessions.getWalletConnectSessions();
   const sessions = JSON.parse(stringifiedSessions ?? "[]");
   sessions.push(session);
-  await walletConnectSessions.saveWalletConnectSessions(
-    JSON.stringify(sessions),
-  );
+  await walletConnectSessions.saveWalletConnectSessions(stringify(sessions));
 }
 
 /**
@@ -65,9 +64,7 @@ export async function removeSession(
   const newSessions = sessions.filter(
     (s: WalletConnectSession) => s.topic !== session.topic,
   );
-  await walletConnectSessions.saveWalletConnectSessions(
-    JSON.stringify(newSessions),
-  );
+  await walletConnectSessions.saveWalletConnectSessions(stringify(newSessions));
 }
 
 /**

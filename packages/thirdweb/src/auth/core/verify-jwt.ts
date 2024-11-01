@@ -1,3 +1,4 @@
+import { stringify } from "../../utils/json.js";
 import { decodeJWT } from "../../utils/jwt/decode-jwt.js";
 import type { JWTPayload } from "../../utils/jwt/types.js";
 import { verifyEOASignature } from "../verify-signature.js";
@@ -82,7 +83,7 @@ export function verifyJWT(options: AuthOptions) {
     }
 
     const verified = await verifyEOASignature({
-      message: JSON.stringify(payload),
+      message: stringify(payload),
       signature,
       address: issuerAddress,
     });

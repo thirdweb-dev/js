@@ -1,4 +1,5 @@
 import { getRpcClient } from "../../src/rpc/rpc.js";
+import { stringify } from "../../src/utils/json.js";
 import { wait } from "../../src/utils/promise/wait.js";
 import { FORKED_ETHEREUM_CHAIN } from "./chains.js";
 import { TEST_CLIENT } from "./test-clients.js";
@@ -17,5 +18,5 @@ export async function mineBlock(chain = FORKED_ETHEREUM_CHAIN) {
 }
 
 export function cloneObject<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj));
+  return JSON.parse(stringify(obj));
 }

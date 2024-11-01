@@ -5,6 +5,7 @@ import { getContract } from "../../contract/contract.js";
 import { approve } from "../../extensions/erc20/write/approve.js";
 import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import { stringify } from "../../utils/json.js";
 import { getPayBuyWithCryptoQuoteEndpoint } from "../utils/definitions.js";
 import type {
   QuoteApprovalInfo,
@@ -223,7 +224,7 @@ export async function getBuyWithCryptoQuote(
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
+      body: stringify({
         fromAddress: params.fromAddress,
         toAddress: params.toAddress,
         fromChainId: params.fromChainId.toString(),
