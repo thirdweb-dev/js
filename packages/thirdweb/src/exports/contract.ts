@@ -43,5 +43,4 @@ export { prepareAutoFactoryDeployTransaction } from "../contract/deployment/depl
 
 export {
   getCompilerMetadata,
-  type CompilerMetadata,
 } from "../contract/actions/get-compiler-metadata.js";
