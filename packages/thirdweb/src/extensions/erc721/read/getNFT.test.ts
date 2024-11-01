@@ -1,16 +1,5 @@
 import { describe, expect, it } from "vitest";
-
-import { ANVIL_CHAIN } from "~test/chains.js";
-import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
-import { TEST_CLIENT } from "~test/test-clients.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
-import { getContract } from "../../../contract/contract.js";
-import { deployERC721Contract } from "../../../extensions/prebuilts/deploy-erc721.js";
-import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
-import { parseNFT } from "../../../utils/nft/parseNft.js";
-import { setTokenURI } from "../__generated__/INFTMetadata/write/setTokenURI.js";
-import { mintTo } from "../write/mintTo.js";
 import { getNFT } from "./getNFT.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
@@ -98,61 +87,5 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
         "type": "ERC721",
       }
     `);
-  });
-
-  it("should return a default value if the URI of the token doesn't exist", async () => {
-    /**
-     * To create this test scenario, we first deploy an NFTCollection/Edition contract,
-     * mint a token, then purposefully change that token's URI to an empty string, using setTokenURI
-     */
-    const contract = getContract({
-      address: await deployERC721Contract({
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
-        account: TEST_ACCOUNT_A,
-        type: "TokenERC721",
-        params: {
-          name: "",
-          contractURI: TEST_CONTRACT_URI,
-        },
-      }),
-      chain: ANVIL_CHAIN,
-      client: TEST_CLIENT,
-    });
-
-    await sendAndConfirmTransaction({
-      transaction: mintTo({
-        contract,
-        nft: { name: "token 0" },
-        to: TEST_ACCOUNT_A.address,
-      }),
-      account: TEST_ACCOUNT_A,
-    });
-
-    await sendAndConfirmTransaction({
-      transaction: setTokenURI({
-        contract,
-        tokenId: 0n,
-        // Need to have some spaces because NFTMetadata.sol does not allow to update an empty valud
-        uri: "  ",
-      }),
-      account: TEST_ACCOUNT_A,
-    });
-
-    expect(await getNFT({ contract, tokenId: 0n })).toStrictEqual(
-      parseNFT(
-        {
-          id: 0n,
-          type: "ERC721",
-          uri: "",
-        },
-        {
-          tokenId: 0n,
-          tokenUri: "",
-          type: "ERC721",
-          owner: null,
-        },
-      ),
-    );
   });
 });

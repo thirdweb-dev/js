@@ -1,4 +1,3 @@
-import {} from "viem";
 import { describe, expect, it } from "vitest";
 import { TEST_ACCOUNT_C } from "~test/test-wallets.js";
 import { optimizeMintBatchContent } from "./mintAdditionalSupplyToBatch.js";

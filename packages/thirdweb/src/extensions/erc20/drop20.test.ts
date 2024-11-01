@@ -1,5 +1,4 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { VITALIK_WALLET } from "../../../test/src/addresses.js";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
@@ -13,6 +12,7 @@ import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { toEther } from "../../utils/units.js";
+import { name } from "../common/read/name.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { getClaimConditions } from "./drops/read/getClaimConditions.js";
 import { claimTo } from "./drops/write/claimTo.js";
@@ -35,10 +35,19 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         client: TEST_CLIENT,
         params: {
           name: "Test DropERC20",
-          contractURI: TEST_CONTRACT_URI,
         },
         type: "DropERC20",
       });
+
+      expect(contractAddress).toBeDefined();
+      const deployedName = await name({
+        contract: getContract({
+          client: TEST_CLIENT,
+          chain: ANVIL_CHAIN,
+          address: contractAddress,
+        }),
+      });
+      expect(deployedName).toBe("Test DropERC20");
 
       contract = getContract({
         address: contractAddress,

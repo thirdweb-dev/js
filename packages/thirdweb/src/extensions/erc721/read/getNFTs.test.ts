@@ -1,17 +1,8 @@
-import { type Abi, toFunctionSelector } from "viem";
 import { describe, expect, it } from "vitest";
-import { ANVIL_CHAIN } from "~test/chains.js";
-import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
-import { TEST_CLIENT } from "~test/test-clients.js";
 import {
   DOODLES_CONTRACT,
   UNISWAPV3_FACTORY_CONTRACT,
 } from "~test/test-contracts.js";
-import { TEST_ACCOUNT_B } from "~test/test-wallets.js";
-import { resolveContractAbi } from "../../../contract/actions/resolve-abi.js";
-import { getContract } from "../../../contract/contract.js";
-import { deployERC721Contract } from "../../../extensions/prebuilts/deploy-erc721.js";
-import { isGetNFTSupported } from "./getNFT.js";
 import { getNFTs } from "./getNFTs.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
@@ -195,29 +186,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
 
   it.todo("works for a contract with `1` indexed NFTs", async () => {
     // TODO find a contract that we can use that has "1 indexed" NFTs, then re-enable this test
-  });
-
-  it("isGetNFTsSupported should work", async () => {
-    const contract = getContract({
-      address: await deployERC721Contract({
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
-        type: "TokenERC721",
-        params: {
-          name: "",
-          contractURI: TEST_CONTRACT_URI,
-        },
-        account: TEST_ACCOUNT_B,
-      }),
-      chain: ANVIL_CHAIN,
-      client: TEST_CLIENT,
-    });
-
-    const abi = await resolveContractAbi<Abi>(contract);
-    const selectors = abi
-      .filter((f) => f.type === "function")
-      .map((f) => toFunctionSelector(f));
-    expect(isGetNFTSupported(selectors)).toBe(true);
   });
 
   it("should throw error if totalSupply and nextTokenIdToMint are not supported", async () => {

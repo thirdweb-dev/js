@@ -11,6 +11,7 @@ import {
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { name } from "../common/read/name.js";
 import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
 import { balanceOf } from "./__generated__/IERC1155/read/balanceOf.js";
 import { totalSupply } from "./__generated__/IERC1155/read/totalSupply.js";
@@ -37,11 +38,21 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       params: {
-        name: "Test TokenERC1155",
+        name: "Edition",
         contractURI: TEST_CONTRACT_URI,
       },
       type: "TokenERC1155",
     });
+
+    expect(contractAddress).toBeDefined();
+    const deployedName = await name({
+      contract: getContract({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        address: contractAddress,
+      }),
+    });
+    expect(deployedName).toBe("Edition");
 
     contract = getContract({
       address: contractAddress,

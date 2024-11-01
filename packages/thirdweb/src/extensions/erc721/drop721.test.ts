@@ -13,6 +13,7 @@ import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { toEther } from "../../utils/units.js";
+import { name } from "../common/read/name.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
 import { balanceOf } from "./__generated__/IERC721A/read/balanceOf.js";
@@ -40,10 +41,18 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         client: TEST_CLIENT,
         params: {
           name: "Test DropERC721",
-          contractURI: TEST_CONTRACT_URI,
         },
         type: "DropERC721",
       });
+
+      contract = getContract({
+        address: contractAddress,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+      });
+
+      const deployedName = await name({ contract });
+      expect(deployedName).toBe("Test DropERC721");
 
       const erc20ContractAddress = await deployERC20Contract({
         account: TEST_ACCOUNT_A,
@@ -58,12 +67,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
       erc20Contract = getContract({
         address: erc20ContractAddress,
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
-      });
-
-      contract = getContract({
-        address: contractAddress,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
       });
