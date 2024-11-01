@@ -24,7 +24,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -40,6 +39,7 @@ import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
 import { AdvancedNFTMetadataFormGroup } from "./nft/AdvancedNFTMetadataFormGroup";
 import { NFTMediaFormGroup } from "./nft/NFTMediaFormGroup";
+import { PropertiesFormControl } from "./nft/PropertiesFormControl";
 
 export type UpdateFormValues = {
   primarySaleRecipient: string;
@@ -369,14 +369,7 @@ function MintNFTSection(props: {
                   )}
                 />
 
-                {/* TODO - convert to shadcn + tailwind */}
-                <PropertiesFormControl
-                  watch={form.watch}
-                  errors={form.formState.errors}
-                  control={form.control}
-                  register={form.register}
-                  setValue={form.setValue}
-                />
+                <PropertiesFormControl form={form} />
 
                 {/* Advanced options */}
                 <Accordion

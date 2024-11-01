@@ -3,7 +3,7 @@
 import { lazy } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import type { Account } from "thirdweb/wallets";
-import { BatchMetadataModule } from "./BatchMetadata";
+import BatchMetadataModule from "./BatchMetadata";
 import ClaimableModule from "./Claimable";
 import OpenEditionMetadataModule from "./OpenEditionMetadata";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";

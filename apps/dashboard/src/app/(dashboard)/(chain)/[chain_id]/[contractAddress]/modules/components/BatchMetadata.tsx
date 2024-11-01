@@ -41,7 +41,7 @@ export type UploadMetadataFormValues = NFTMetadataInputLimited & {
   tokenId?: string;
 };
 
-export function BatchMetadataModule(props: ModuleInstanceProps) {
+function BatchMetadataModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
 
   const uploadMetadata = useCallback(
@@ -181,10 +181,7 @@ function UploadMetadataNFTSection(props: {
                 )}
               />
 
-              <PropertiesFormControl
-                control={form.control}
-                setValue={form.setValue}
-              />
+              <PropertiesFormControl form={form} />
 
               {/* Advanced options */}
               <Accordion

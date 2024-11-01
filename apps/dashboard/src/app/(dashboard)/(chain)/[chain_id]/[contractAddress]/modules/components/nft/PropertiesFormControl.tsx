@@ -10,6 +10,8 @@ import { BanIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import {
   type ArrayPath,
   type FieldValues,
+  type Path,
+  type PathValue,
   type UseFormReturn,
   useFieldArray,
 } from "react-hook-form";
@@ -29,7 +31,7 @@ export function PropertiesFormControl<
 }: {
   form: UseFormReturn<TFieldValues>;
 }) {
-  const { fields, append, remove, replace } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "attributes" as ArrayPath<TFieldValues>,
   });
@@ -42,9 +44,15 @@ export function PropertiesFormControl<
           className="flex items-center gap-2"
           variant="destructive"
           size="sm"
-          // biome-ignore lint/suspicious/noExplicitAny: FIXME
           onClick={() =>
-            form.setValue("attributes", [{ trait_type: "", value: "" } as any])
+            form.setValue(
+              "attributes" as Path<TFieldValues>,
+              // biome-ignore lint/suspicious/noExplicitAny: FIXME
+              [{ trait_type: "", value: "" } as any] as PathValue<
+                TFieldValues,
+                Path<TFieldValues>
+              >,
+            )
           }
         >
           Reset
@@ -58,7 +66,7 @@ export function PropertiesFormControl<
           <div className="flex items-start gap-3" key={fieldItem.id}>
             <FormField
               control={form.control}
-              name={`attributes.${index}.trait_type`}
+              name={`attributes.${index}.trait_type` as Path<TFieldValues>}
               render={({ field }) => (
                 <FormItem className="grow">
                   <FormControl>
@@ -71,7 +79,7 @@ export function PropertiesFormControl<
 
             <FormField
               control={form.control}
-              name={`attributes.${index}.value`}
+              name={`attributes.${index}.trait_type` as Path<TFieldValues>}
               render={({ field }) => (
                 <FormItem className="grow">
                   <FormControl>

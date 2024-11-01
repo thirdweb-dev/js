@@ -110,7 +110,7 @@ export function OpenEditionMetadataModuleUI(
   );
 }
 
-export function SetSharedMetadataSection(props: {
+function SetSharedMetadataSection(props: {
   setSharedMetadata: (values: SetSharedMetadataFormValues) => Promise<void>;
 }) {
   const form = useForm<SetSharedMetadataFormValues>({
