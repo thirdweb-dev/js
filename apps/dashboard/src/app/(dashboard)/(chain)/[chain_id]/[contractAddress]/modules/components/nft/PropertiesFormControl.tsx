@@ -16,12 +16,11 @@ import {
   useFieldArray,
 } from "react-hook-form";
 
-type OptionalPropertiesInput = {
-  [key: string]: string | number;
-};
-
 interface IPropertyFieldValues extends FieldValues {
-  attributes?: OptionalPropertiesInput;
+  attributes?: {
+    trait_type: string;
+    value: string;
+  }[];
 }
 
 export function PropertiesFormControl<
