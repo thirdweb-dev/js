@@ -2,6 +2,7 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { getClaimParams } from "../../../../utils/extensions/drops/get-claim-params.js";
 import { isGetContractMetadataSupported } from "../../../common/read/getContractMetadata.js";
 import * as GeneratedClaim from "../../__generated__/IDrop1155/write/claim.js";
+import { isClaimConditionSupported } from "../../__generated__/IDropSinglePhase1155/read/claimCondition.js";
 import { isGetActiveClaimConditionSupported } from "../read/getActiveClaimCondition.js";
 
 /**
@@ -12,6 +13,7 @@ export type ClaimToParams = {
   tokenId: bigint;
   quantity: bigint;
   from?: string;
+  singlePhaseDrop?: boolean;
 };
 
 /**
@@ -59,6 +61,7 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         quantity: options.quantity,
         from: options.from,
         tokenId: options.tokenId,
+        singlePhaseDrop: options.singlePhaseDrop,
       });
 
       return {
@@ -85,9 +88,10 @@ export function isClaimToSupported(availableSelectors: string[]) {
   return [
     // has to support the claim method
     GeneratedClaim.isClaimSupported(availableSelectors),
-    // has to support the getActiveClaimCondition method
-    isGetActiveClaimConditionSupported(availableSelectors),
     // requires contractMetadata for claimer proofs
     isGetContractMetadataSupported(availableSelectors),
+    // required to check if the contract supports the getActiveClaimCondition method
+    isGetActiveClaimConditionSupported(availableSelectors) ||
+      isClaimConditionSupported(availableSelectors),
   ].every(Boolean);
 }

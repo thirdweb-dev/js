@@ -2,7 +2,7 @@ import type { Range } from "components/analytics/date-range-selector";
 import { InAppWalletAnalytics } from "components/embedded-wallets/Analytics";
 
 export default async function Page(props: {
-  params: Promise<{ team_slug: string; project_slug: string }>;
+  params: Promise<{ team_slug: string; project_slug: string; clientId: string; }>;
   searchParams: Promise<{
     from?: string;
     to?: string;
@@ -26,9 +26,10 @@ export default async function Page(props: {
   )
     ? (searchParams.interval as "day" | "week")
     : "week";
+
   return (
     <InAppWalletAnalytics
-      clientId={params.project_slug}
+      clientId={params.clientId}
       interval={interval}
       range={range as Range}
     />

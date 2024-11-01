@@ -225,6 +225,8 @@ async function createSmartAccount(
           };
         };
         paymasterOverride = options.overrides?.paymaster || paymasterCallback;
+      } else {
+        paymasterOverride = options.overrides?.paymaster;
       }
       const executeTx = prepareExecute({
         accountContract,

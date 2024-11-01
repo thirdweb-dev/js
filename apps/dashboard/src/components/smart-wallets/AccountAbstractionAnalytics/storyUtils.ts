@@ -1,7 +1,7 @@
-import type { UserOpStats } from "@3rdweb-sdk/react/hooks/useApi";
+import type { UserOpStatsByChain } from "@3rdweb-sdk/react/hooks/useApi";
 
-export function createUserOpStatsStub(days: number): UserOpStats[] {
-  const stubbedData: UserOpStats[] = [];
+export function createUserOpStatsStub(days: number): UserOpStatsByChain[] {
+  const stubbedData: UserOpStatsByChain[] = [];
 
   let d = days;
   while (d !== 0) {
@@ -13,6 +13,7 @@ export function createUserOpStatsStub(days: number): UserOpStats[] {
       successful,
       failed,
       sponsoredUsd,
+      chainId: Math.floor(Math.random() * 100).toString(),
     });
 
     if (Math.random() > 0.7) {

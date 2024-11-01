@@ -2,6 +2,7 @@ import { trackConnect } from "../../analytics/track/connect.js";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChainIfExists } from "../../chains/utils.js";
 import { getContract } from "../../contract/contract.js";
+import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { createWalletEmitter } from "../wallet-emitter.js";
@@ -202,19 +203,24 @@ export function smartWallet(
       if (!lastConnectOptions) {
         throw new Error("Cannot switch chain without a previous connection");
       }
-      // check if factory is deployed
-      const factory = getContract({
-        address:
-          createOptions.factoryAddress ||
-          getDefaultAccountFactory(createOptions.overrides?.entrypointAddress),
-        chain: newChain,
-        client: lastConnectOptions.client,
-      });
-      const isDeployed = await isContractDeployed(factory);
-      if (!isDeployed) {
-        throw new Error(
-          `Factory contract not deployed on chain: ${newChain.id}`,
-        );
+      const isZksyncChain = await isZkSyncChain(newChain);
+      if (!isZksyncChain) {
+        // check if factory is deployed
+        const factory = getContract({
+          address:
+            createOptions.factoryAddress ||
+            getDefaultAccountFactory(
+              createOptions.overrides?.entrypointAddress,
+            ),
+          chain: newChain,
+          client: lastConnectOptions.client,
+        });
+        const isDeployed = await isContractDeployed(factory);
+        if (!isDeployed) {
+          throw new Error(
+            `Factory contract not deployed on chain: ${newChain.id}`,
+          );
+        }
       }
       const { connectSmartWallet } = await import("./index.js");
       const [connectedAccount, connectedChain] = await connectSmartWallet(

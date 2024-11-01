@@ -27,7 +27,7 @@ export const JudgesEarn = () => {
   ];
 
   return (
-    <div className="relative flex flex-col gap-8">
+    <div className="container relative flex max-w-[1200px] flex-col gap-8">
       <Heading size="title.2xl">Judges</Heading>
       <SimpleGrid
         columns={{ base: 1, lg: 4 }}
@@ -38,10 +38,9 @@ export const JudgesEarn = () => {
         {judges.map((judge) => (
           <Flex key={judge.name} flexDir="column" gap={2} alignItems="center">
             <MaskedAvatar
-              boxSize={40}
               src={judge.image}
               alt={judge.name}
-              className="rounded-full"
+              className="size-52"
             />
             <Heading size="title.sm" mt={4} textAlign="center">
               {judge.name}

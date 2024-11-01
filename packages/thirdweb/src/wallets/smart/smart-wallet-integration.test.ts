@@ -18,7 +18,9 @@ import { setContractURI } from "../../extensions/marketplace/__generated__/IMark
 import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
+import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
+import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { sleep } from "../../utils/sleep.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
@@ -363,6 +365,37 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         tokenId: 0n,
       });
       expect(balance).toEqual(2n);
+    });
+
+    it("can use a different paymaster", async () => {
+      const wallet = smartWallet({
+        chain,
+        factoryAddress: factoryAddress,
+        gasless: true,
+        overrides: {
+          paymaster: async () => {
+            return {
+              paymaster: "0x",
+              paymasterData: "0x",
+            };
+          },
+        },
+      });
+      const newSmartAccount = await wallet.connect({
+        client: TEST_CLIENT,
+        personalAccount,
+      });
+      const transaction = prepareTransaction({
+        client: TEST_CLIENT,
+        chain,
+        value: 0n,
+      });
+      await expect(
+        sendTransaction({
+          transaction,
+          account: newSmartAccount,
+        }),
+      ).rejects.toThrowError(/AA21 didn't pay prefund/);
     });
   },
 );

@@ -30,7 +30,7 @@ export const ContractPublisher: React.FC<ContractPublisherProps> = async ({
     >
       <PublisherAvatar
         isPending={false}
-        boxSize={5}
+        className="size-5"
         address={addressOrEns || ""}
       />
 

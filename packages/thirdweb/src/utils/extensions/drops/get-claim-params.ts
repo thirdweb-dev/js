@@ -6,13 +6,14 @@ import {
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getContractMetadata } from "../../../extensions/common/read/getContractMetadata.js";
 import type { Hex } from "../../encoding/hex.js";
-import type { OverrideProof } from "./types.js";
+import type { ClaimCondition, OverrideProof } from "./types.js";
 
 export type GetClaimParamsOptions = {
   contract: ThirdwebContract;
   to: string;
   quantity: bigint;
   from?: string;
+  singlePhaseDrop?: boolean;
 } & (
   | {
       type: "erc721";
@@ -47,9 +48,18 @@ export type GetClaimParamsOptions = {
  * @extension COMMON
  */
 export async function getClaimParams(options: GetClaimParamsOptions) {
-  const cc = await (async () => {
+  const cc: ClaimCondition = await (async () => {
     if (options.type === "erc1155") {
       // lazy-load the getActiveClaimCondition function
+      if (options.singlePhaseDrop) {
+        const { claimCondition } = await import(
+          "../../../extensions/erc1155/__generated__/IDropSinglePhase1155/read/claimCondition.js"
+        );
+        return await claimCondition({
+          contract: options.contract,
+          tokenId: options.tokenId,
+        });
+      }
       const { getActiveClaimCondition } = await import(
         "../../../extensions/erc1155/drops/read/getActiveClaimCondition.js"
       );
@@ -60,6 +70,14 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     }
     if (options.type === "erc721") {
       // lazy-load the getActiveClaimCondition function
+      if (options.singlePhaseDrop) {
+        const { claimCondition } = await import(
+          "../../../extensions/erc721/__generated__/IDropSinglePhase/read/claimCondition.js"
+        );
+        return await claimCondition({
+          contract: options.contract,
+        });
+      }
       const { getActiveClaimCondition } = await import(
         "../../../extensions/erc721/drops/read/getActiveClaimCondition.js"
       );
@@ -71,6 +89,15 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     // otherwise erc20 case!
 
     // lazy-load the getActiveClaimCondition function
+    if (options.singlePhaseDrop) {
+      // same ABI as erc721
+      const { claimCondition } = await import(
+        "../../../extensions/erc721/__generated__/IDropSinglePhase/read/claimCondition.js"
+      );
+      return await claimCondition({
+        contract: options.contract,
+      });
+    }
     const { getActiveClaimCondition } = await import(
       "../../../extensions/erc20/drops/read/getActiveClaimCondition.js"
     );

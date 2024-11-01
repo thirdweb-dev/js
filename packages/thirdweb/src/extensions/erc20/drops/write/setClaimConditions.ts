@@ -16,6 +16,7 @@ import { decimals, isDecimalsSupported } from "../../read/decimals.js";
 export type SetClaimConditionsParams = {
   phases: ClaimConditionsInput[];
   resetClaimEligibility?: boolean;
+  singlePhaseDrop?: boolean;
 };
 
 /**
@@ -56,6 +57,7 @@ export function setClaimConditions(
           phases: options.phases,
           resetClaimEligibility: options.resetClaimEligibility,
           tokenDecimals: await decimals({ contract: options.contract }),
+          singlePhase: options.singlePhaseDrop,
         }),
       };
     },

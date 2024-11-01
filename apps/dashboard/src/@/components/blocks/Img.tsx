@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useIsomorphicLayoutEffect } from "../../lib/useIsomorphicLayoutEffect";
 import { cn } from "../../lib/utils";
 
 type imgElementProps = React.DetailedHTMLProps<
@@ -25,19 +26,39 @@ export function Img(props: imgElementProps) {
   const { className, fallback, skeleton, ...restProps } = props;
   const defaultSkeleton = <div className="animate-pulse bg-accent" />;
   const defaultFallback = <div className="bg-muted" />;
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useIsomorphicLayoutEffect(() => {
+    const imgEl = imgRef.current;
+    if (!imgEl) {
+      return;
+    }
+    if (imgEl.complete) {
+      setStatus("loaded");
+    } else {
+      function handleLoad() {
+        setStatus("loaded");
+      }
+      imgEl.addEventListener("load", handleLoad);
+      return () => {
+        imgEl.removeEventListener("load", handleLoad);
+      };
+    }
+  }, []);
 
   return (
     <div className="relative">
       <img
         {...restProps}
-        onLoad={() => {
-          setStatus("loaded");
-        }}
+        // avoid setting empty src string to prevent request to the entire page
+        src={restProps.src || undefined}
+        ref={imgRef}
         onError={() => {
           setStatus("fallback");
         }}
         style={{
           opacity: status === "loaded" ? 1 : 0,
+          ...restProps.style,
         }}
         alt={restProps.alt || ""}
         className={cn(
@@ -48,6 +69,7 @@ export function Img(props: imgElementProps) {
 
       {status !== "loaded" && (
         <div
+          style={restProps.style}
           className={cn(
             "fade-in-0 absolute inset-0 overflow-hidden transition-opacity duration-300 [&>*]:h-full [&>*]:w-full",
             className,

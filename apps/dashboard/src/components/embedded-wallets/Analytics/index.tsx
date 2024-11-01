@@ -20,7 +20,7 @@ export async function InAppWalletAnalytics({
     from: range.from,
     to: range.to,
     period: interval,
-  });
+  }).catch(() => null);
 
   return (
     <div>
@@ -29,7 +29,10 @@ export async function InAppWalletAnalytics({
       <div className="h-6" />
 
       <div className="flex flex-col gap-4 lg:gap-6">
-        <InAppWalletUsersChartCard inAppWalletStats={stats} isPending={false} />
+        <InAppWalletUsersChartCard
+          inAppWalletStats={stats || []}
+          isPending={false}
+        />
       </div>
     </div>
   );

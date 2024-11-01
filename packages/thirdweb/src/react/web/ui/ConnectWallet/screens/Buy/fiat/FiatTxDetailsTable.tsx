@@ -2,6 +2,7 @@ import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
+import { formatExplorerTxUrl } from "../../../../../../../utils/url.js";
 import {
   fontSize,
   iconSize,
@@ -121,9 +122,10 @@ export function OnRampTxDetailsTable(props: {
           <ButtonLink
             fullWidth
             variant="outline"
-            href={`${
-              onRampExplorers.explorers[0].url || ""
-            }/tx/${onrampTxHash}`}
+            href={formatExplorerTxUrl(
+              onRampExplorers.explorers[0]?.url,
+              onrampTxHash,
+            )}
             target="_blank"
             gap="xs"
             style={{

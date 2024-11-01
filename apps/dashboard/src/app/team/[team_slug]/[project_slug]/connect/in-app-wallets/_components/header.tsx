@@ -4,19 +4,24 @@ import { getInAppWalletUsage } from "data/analytics/wallets/in-app";
 import { TRACKING_CATEGORY } from "../_constants";
 
 export async function InAppWalletsHeader({ clientId }: { clientId: string }) {
-  const allTimeStats = await getInAppWalletUsage({
+  const allTimeStatsPromise = getInAppWalletUsage({
     clientId,
     from: new Date(2022, 0, 1),
     to: new Date(),
     period: "all",
   });
 
-  const monthlyStats = await getInAppWalletUsage({
+  const monthlyStatsPromise = getInAppWalletUsage({
     clientId,
     from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     to: new Date(),
     period: "month",
   });
+
+  const [allTimeStats, monthlyStats] = await Promise.all([
+    allTimeStatsPromise,
+    monthlyStatsPromise,
+  ]).catch(() => [null, null]);
 
   return (
     <div>
@@ -38,8 +43,8 @@ export async function InAppWalletsHeader({ clientId }: { clientId: string }) {
         </TrackedLinkTW>
       </p>
       <InAppWalletsSummary
-        allTimeStats={allTimeStats}
-        monthlyStats={monthlyStats}
+        allTimeStats={allTimeStats || []}
+        monthlyStats={monthlyStats || []}
       />
     </div>
   );
