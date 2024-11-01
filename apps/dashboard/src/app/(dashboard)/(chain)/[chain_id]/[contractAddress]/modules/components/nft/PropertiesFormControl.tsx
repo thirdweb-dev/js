@@ -1,0 +1,111 @@
+import { Button } from "@/components/ui/button";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { BanIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import {
+  type ArrayPath,
+  type FieldValues,
+  type UseFormReturn,
+  useFieldArray,
+} from "react-hook-form";
+
+type OptionalPropertiesInput = {
+  [key: string]: string | number;
+};
+
+interface IPropertyFieldValues extends FieldValues {
+  attributes?: OptionalPropertiesInput;
+}
+
+export function PropertiesFormControl<
+  TFieldValues extends IPropertyFieldValues,
+>({
+  form,
+}: {
+  form: UseFormReturn<TFieldValues>;
+}) {
+  const { fields, append, remove, replace } = useFieldArray({
+    control: form.control,
+    name: "attributes" as ArrayPath<TFieldValues>,
+  });
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-2">
+        <p>Attributes</p>
+        <Button
+          className="flex items-center gap-2"
+          variant="destructive"
+          size="sm"
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
+          onClick={() =>
+            form.setValue("attributes", [{ trait_type: "", value: "" } as any])
+          }
+        >
+          Reset
+          <BanIcon className="size-4" />
+        </Button>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        {/* Addresses */}
+        {fields.map((fieldItem, index) => (
+          <div className="flex items-start gap-3" key={fieldItem.id}>
+            <FormField
+              control={form.control}
+              name={`attributes.${index}.trait_type`}
+              render={({ field }) => (
+                <FormItem className="grow">
+                  <FormControl>
+                    <Input placeholder="0x..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name={`attributes.${index}.value`}
+              render={({ field }) => (
+                <FormItem className="grow">
+                  <FormControl>
+                    <Input placeholder="0x..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              variant="outline"
+              className="!text-destructive-text bg-background"
+              onClick={() => remove(index)}
+            >
+              <Trash2Icon className="size-4" />
+            </Button>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-row gap-2">
+        <Button
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={() =>
+            // biome-ignore lint/suspicious/noExplicitAny: FIXME
+            append({ trait_type: undefined, value: undefined } as any)
+          }
+        >
+          <PlusIcon className="size-5" />
+          Add Row
+        </Button>
+      </div>
+    </div>
+  );
+}
