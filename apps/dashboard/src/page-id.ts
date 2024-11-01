@@ -66,8 +66,6 @@ export enum PageId {
   // thirdweb.com/rpc-edge
   RPCEdgeLanding = "rpc-edge-landing",
 
-  // thirdweb.com/engine
-  EngineLanding = "engine-landing",
   // thirdweb.com/web3-dashboard
   DashboardLanding = "dashboard-landing",
 
