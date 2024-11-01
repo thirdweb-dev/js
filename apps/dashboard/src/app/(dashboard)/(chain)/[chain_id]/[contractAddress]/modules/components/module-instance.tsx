@@ -3,6 +3,7 @@
 import { lazy } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import type { Account } from "thirdweb/wallets";
+import { BatchMetadataModule } from "./BatchMetadata";
 import ClaimableModule from "./Claimable";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 
@@ -39,6 +40,10 @@ export function ModuleInstance(props: ModuleInstanceProps) {
 
   if (props.contractInfo.name.includes("Claimable")) {
     return <ClaimableModule {...props} />;
+  }
+
+  if (props.contractInfo.name.includes("BatchMetadata")) {
+    return <BatchMetadataModule {...props} />;
   }
 
   return <ModuleCardUI {...props} isOwnerAccount={!!props.ownerAccount} />;
