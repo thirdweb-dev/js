@@ -5,6 +5,7 @@ import type { ThirdwebContract } from "thirdweb";
 import type { Account } from "thirdweb/wallets";
 import { BatchMetadataModule } from "./BatchMetadata";
 import ClaimableModule from "./Claimable";
+import OpenEditionMetadataModule from "./OpenEditionMetadata";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 
 const MintableModule = lazy(() => import("./Mintable"));
@@ -44,6 +45,10 @@ export function ModuleInstance(props: ModuleInstanceProps) {
 
   if (props.contractInfo.name.includes("BatchMetadata")) {
     return <BatchMetadataModule {...props} />;
+  }
+
+  if (props.contractInfo.name.includes("OpenEditionMetadata")) {
+    return <OpenEditionMetadataModule {...props} />;
   }
 
   return <ModuleCardUI {...props} isOwnerAccount={!!props.ownerAccount} />;
