@@ -151,6 +151,8 @@ export function ApplyCouponCardUI(props: {
               res.data,
               // prod & dev
               values.promoCode === "FREEWALLETS" ||
+                // new prod code
+                values.promoCode === "FREEWALLETS24" ||
                 values.promoCode === "TESTFREEWALLETS",
             );
           }
