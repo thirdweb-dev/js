@@ -6,4 +6,5 @@ module.exports = [
   "/unlimited-wallets",
   "/engine",
   "/solutions/gaming",
+  "/solutions/consumer-apps",
 ];
