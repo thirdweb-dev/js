@@ -38,6 +38,7 @@ export type UploadMetadataFormValues = NFTMetadataInputLimited & {
   supply: number;
   customImage: string;
   customAnimationUrl: string;
+  attributes: { trait_type: string; value: string }[];
   tokenId?: string;
 };
 
@@ -121,6 +122,7 @@ function UploadMetadataNFTSection(props: {
       supply: 1,
       customImage: "",
       customAnimationUrl: "",
+      attributes: [{ trait_type: "", value: "" }],
     },
     reValidateMode: "onChange",
   });

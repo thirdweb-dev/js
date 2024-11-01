@@ -79,7 +79,7 @@ export function PropertiesFormControl<
 
             <FormField
               control={form.control}
-              name={`attributes.${index}.trait_type` as Path<TFieldValues>}
+              name={`attributes.${index}.value` as Path<TFieldValues>}
               render={({ field }) => (
                 <FormItem className="grow">
                   <FormControl>

@@ -54,6 +54,7 @@ export type MintFormValues = NFTMetadataInputLimited & {
   supply: number;
   customImage: string;
   customAnimationUrl: string;
+  attributes: { trait_type: string; value: string }[];
   tokenId?: string;
 };
 
@@ -305,6 +306,7 @@ function MintNFTSection(props: {
       customImage: "",
       customAnimationUrl: "",
       recipient: "",
+      attributes: [{ trait_type: "", value: "" }],
       amount: 1,
     },
     reValidateMode: "onChange",

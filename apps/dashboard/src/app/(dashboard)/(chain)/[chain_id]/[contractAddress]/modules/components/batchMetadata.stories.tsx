@@ -1,4 +1,3 @@
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
@@ -59,32 +58,30 @@ function Component() {
 
   // TODO - remove ChakraProviderSetup after converting the chakra components used in BatchMetadataModuleUI
   return (
-    <ChakraProviderSetup>
-      <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-        <div className="flex items-center gap-5">
-          <CheckboxWithLabel
-            value={isOwner}
-            onChange={setIsOwner}
-            id="isOwner"
-            label="Is Owner"
-          />
-        </div>
-
-        <BadgeContainer label="Default">
-          <BatchMetadataModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            uploadMetadata={uploadMetadataStub}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-          />
-        </BadgeContainer>
-        <Toaster richColors />
+    <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+      <div className="flex items-center gap-5">
+        <CheckboxWithLabel
+          value={isOwner}
+          onChange={setIsOwner}
+          id="isOwner"
+          label="Is Owner"
+        />
       </div>
-    </ChakraProviderSetup>
+
+      <BadgeContainer label="Default">
+        <BatchMetadataModuleUI
+          contractInfo={contractInfo}
+          moduleAddress="0x0000000000000000000000000000000000000000"
+          uploadMetadata={uploadMetadataStub}
+          uninstallButton={{
+            onClick: async () => removeMutation.mutateAsync(),
+            isPending: removeMutation.isPending,
+          }}
+          isOwnerAccount={isOwner}
+        />
+      </BadgeContainer>
+      <Toaster richColors />
+    </div>
   );
 }
 
