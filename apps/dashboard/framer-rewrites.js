@@ -4,4 +4,6 @@ module.exports = [
   "/connect/sign-in",
   "/contracts/modular-contracts",
   "/unlimited-wallets",
+  "/engine",
+  "/solutions/gaming",
 ];
