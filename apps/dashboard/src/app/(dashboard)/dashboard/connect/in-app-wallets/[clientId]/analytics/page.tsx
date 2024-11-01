@@ -2,7 +2,11 @@ import type { Range } from "components/analytics/date-range-selector";
 import { InAppWalletAnalytics } from "components/embedded-wallets/Analytics";
 
 export default async function Page(props: {
-  params: Promise<{ team_slug: string; project_slug: string; clientId: string; }>;
+  params: Promise<{
+    team_slug: string;
+    project_slug: string;
+    clientId: string;
+  }>;
   searchParams: Promise<{
     from?: string;
     to?: string;
