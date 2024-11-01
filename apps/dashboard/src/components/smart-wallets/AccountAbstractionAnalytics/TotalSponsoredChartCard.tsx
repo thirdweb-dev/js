@@ -204,7 +204,6 @@ export function TotalSponsoredChartCard(props: {
 
             <YAxis
               dataKey={(data) => {
-                console.log(data);
                 return Object.entries(data)
                   .filter(([key]) => key !== "time")
                   .map(([, value]) => value)
