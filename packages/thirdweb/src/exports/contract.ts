@@ -41,6 +41,4 @@ export {
 } from "../contract/deployment/deploy-with-abi.js";
 export { prepareAutoFactoryDeployTransaction } from "../contract/deployment/deploy-via-autofactory.js";
 
-export {
-  getCompilerMetadata,
-} from "../contract/actions/get-compiler-metadata.js";
+export { getCompilerMetadata } from "../contract/actions/get-compiler-metadata.js";
