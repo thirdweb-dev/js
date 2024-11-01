@@ -53,8 +53,8 @@ function AnnouncementBanner(props: {
 export function UnlimitedWalletsBanner() {
   return (
     <AnnouncementBanner
-      href="/dashboard/settings/billing?coupon=FREEWALLETS"
-      label='Claim 12 months of free in-app wallets. Use code "FREEWALLETS". Redeem offer by October 31st!'
+      href="/dashboard/settings/billing?coupon=FREEWALLETS24"
+      label='Claim 12 months of free in-app wallets. Use code "FREEWALLETS24". Redeem offer by December 31st!'
       trackingLabel="unlimited-wallets"
     />
   );
