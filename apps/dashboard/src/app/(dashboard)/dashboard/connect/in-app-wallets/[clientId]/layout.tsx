@@ -1,5 +1,6 @@
 import { InAppWalletsSummary } from "components/embedded-wallets/Analytics/Summary";
 import { getInAppWalletUsage } from "data/analytics/wallets/in-app";
+import { subDays } from "date-fns";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { InAppWaletFooterSection } from "../../../../../team/[team_slug]/[project_slug]/connect/in-app-wallets/_components/footer";
@@ -42,7 +43,7 @@ export default async function Page(props: {
 
   const monthlyStatsPromise = getInAppWalletUsage({
     clientId,
-    from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    from: subDays(new Date(), 30),
     to: new Date(),
     period: "month",
   });
