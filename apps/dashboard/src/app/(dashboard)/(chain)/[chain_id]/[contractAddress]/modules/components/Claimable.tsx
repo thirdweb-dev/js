@@ -174,6 +174,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
       isOwnerAccount={!!ownerAccount}
       isErc721={isErc721}
       isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
+      chainId={props.contract.chain.id}
     />
   );
 }
@@ -188,6 +189,7 @@ export function ClaimableModuleUI(
     mint: (values: MintFormValues) => Promise<void>;
     isErc721: boolean;
     isSequentialTokenIdInstalled: boolean;
+    chainId: number;
   },
 ) {
   return (
@@ -238,6 +240,7 @@ export function ClaimableModuleUI(
                   claimCondition={props.claimCondition}
                   update={props.update}
                   isErc721={props.isErc721}
+                  chainId={props.chainId}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -284,6 +287,7 @@ function ConfigSection(props: {
   update: (values: ConfigFormValues) => Promise<void>;
   isOwnerAccount: boolean;
   isErc721: boolean;
+  chainId: number;
 }) {
   const form = useForm<ConfigFormValues>({
     resolver: zodResolver(configFormSchema),
@@ -397,7 +401,10 @@ function ConfigSection(props: {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Currency</FormLabel>
-                  <CurrencySelector field={field} />
+                  <CurrencySelector
+                    contractChainId={props.chainId}
+                    field={field}
+                  />
                 </FormItem>
               )}
             />

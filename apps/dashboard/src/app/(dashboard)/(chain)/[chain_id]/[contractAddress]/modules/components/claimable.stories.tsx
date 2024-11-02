@@ -122,6 +122,7 @@ function Component() {
             isErc721={isErc721}
             claimCondition={claimCondition}
             isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
+            chainId={1}
           />
         </BadgeContainer>
 
@@ -141,6 +142,7 @@ function Component() {
             isErc721={isErc721}
             claimCondition={claimCondition}
             isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
+            chainId={1}
           />
         </BadgeContainer>
 
@@ -160,6 +162,7 @@ function Component() {
             isErc721={isErc721}
             claimCondition={claimCondition}
             isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
+            chainId={1}
           />
         </BadgeContainer>
 

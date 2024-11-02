@@ -26,7 +26,9 @@ interface CurrencySelectorProps<
   field: ControllerRenderProps<TFieldValues>;
 }
 
-export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
+export function CurrencySelector<
+  TFieldValues extends FieldValues = FieldValues,
+>({
   small,
   hideDefaultCurrencies,
   showCustomCurrency = true,
@@ -34,7 +36,7 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
   defaultCurrencies = [],
   field,
   contractChainId: chainId,
-}) => {
+}: CurrencySelectorProps<TFieldValues>) {
   const { idToChain } = useAllChainsData();
   const chain = chainId ? idToChain.get(chainId) : undefined;
 
@@ -185,4 +187,4 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
       </Select>
     </div>
   );
-};
+}
