@@ -69,7 +69,7 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
       </SheetTrigger>
       <SheetContent className="z-[10000]">
         <SheetHeader>
-          <SheetTitle>Burn tokens</SheetTitle>
+          <SheetTitle className="text-left">Burn tokens</SheetTitle>
         </SheetHeader>
         <form className="mt-10 flex flex-col gap-3">
           <div className="flex w-full flex-col gap-6 md:flex-row">

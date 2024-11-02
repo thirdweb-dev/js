@@ -49,9 +49,9 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({ contract }) => {
           Claim
         </Button>
       </SheetTrigger>
-      <SheetContent className="z-[10000] overflow-y-auto sm:w-[540px] sm:max-w-[90%] lg:w-[700px]">
+      <SheetContent className="overflow-y-auto sm:w-[540px] sm:max-w-[90%] lg:w-[700px]">
         <SheetHeader>
-          <SheetTitle>Claim NFTs</SheetTitle>
+          <SheetTitle className="text-left">Claim NFTs</SheetTitle>
         </SheetHeader>
         <form className="mt-8 flex w-full flex-col gap-3 md:flex-row">
           <div className="flex w-full flex-col gap-6 md:flex-row">

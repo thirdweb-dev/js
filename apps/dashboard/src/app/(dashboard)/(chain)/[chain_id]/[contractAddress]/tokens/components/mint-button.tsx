@@ -60,7 +60,9 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
         </SheetTrigger>
         <SheetContent className="z-[10000]">
           <SheetHeader>
-            <SheetTitle>Mint additional tokens</SheetTitle>
+            <SheetTitle className="text-left">
+              Mint additional tokens
+            </SheetTitle>
           </SheetHeader>
           <form
             className="mt-10 flex flex-col gap-6"

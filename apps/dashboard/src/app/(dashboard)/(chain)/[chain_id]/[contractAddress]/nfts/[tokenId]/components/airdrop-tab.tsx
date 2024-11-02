@@ -129,7 +129,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
                 <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
                   <SheetHeader>
                     <SheetTitle className="mb-5 text-left">
-                      Aidrop NFTs
+                      Airdrop NFTs
                     </SheetTitle>
                   </SheetHeader>
                   <AirdropUpload

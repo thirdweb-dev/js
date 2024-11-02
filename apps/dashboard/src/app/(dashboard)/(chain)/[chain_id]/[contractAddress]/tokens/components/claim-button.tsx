@@ -62,7 +62,7 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
       </SheetTrigger>
       <SheetContent className="z-[10000]">
         <SheetHeader>
-          <SheetTitle>Claim tokens</SheetTitle>
+          <SheetTitle className="text-left">Claim tokens</SheetTitle>
         </SheetHeader>
         <form>
           <div className="mt-10 flex flex-col gap-6">

@@ -43,7 +43,7 @@ export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
       </SheetTrigger>
       <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
         <SheetHeader>
-          <SheetTitle>Aidrop tokens</SheetTitle>
+          <SheetTitle className="text-left">Airdrop tokens</SheetTitle>
         </SheetHeader>
         <TokenAirdropForm contract={contract} toggle={setOpen} />
       </SheetContent>
