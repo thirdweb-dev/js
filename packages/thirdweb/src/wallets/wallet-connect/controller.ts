@@ -351,6 +351,7 @@ function createAccount({
         walletAddress: getAddress(address),
         walletType: "walletConnect",
         transactionHash,
+        chainId: tx.chainId,
         contractAddress: tx.to ?? undefined,
         gasPrice: tx.gasPrice,
       });

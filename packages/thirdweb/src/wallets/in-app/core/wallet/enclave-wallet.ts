@@ -202,6 +202,7 @@ export class EnclaveWallet implements IWebWallet {
         trackTransaction({
           client,
           ecosystem,
+          chainId: tx.chainId,
           walletAddress: address,
           walletType: "inApp",
           transactionHash,

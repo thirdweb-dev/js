@@ -307,6 +307,7 @@ function createAccount({
 
       trackTransaction({
         client: client,
+        chainId: tx.chainId,
         walletAddress: getAddress(address),
         walletType: COINBASE,
         transactionHash,
