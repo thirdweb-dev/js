@@ -1,4 +1,4 @@
-name: Check for "linear" in pull request body
+name: Check for linked issue in pull request body
 
 on:
   pull_request:
