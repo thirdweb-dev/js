@@ -69,7 +69,7 @@ export function PropertiesFormControl<
               render={({ field }) => (
                 <FormItem className="grow">
                   <FormControl>
-                    <Input placeholder="0x..." {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,7 +82,7 @@ export function PropertiesFormControl<
               render={({ field }) => (
                 <FormItem className="grow">
                   <FormControl>
-                    <Input placeholder="0x..." {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

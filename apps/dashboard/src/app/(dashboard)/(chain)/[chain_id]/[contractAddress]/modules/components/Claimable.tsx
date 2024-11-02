@@ -32,6 +32,7 @@ import { isAddress } from "thirdweb";
 import { ClaimableERC721, ClaimableERC1155 } from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { z } from "zod";
+import { CurrencySelector } from "./CurrencySelector";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
 
@@ -227,7 +228,7 @@ export function ClaimableModuleUI(
               value="primary-sale-recipient"
               className="border-none "
             >
-              <AccordionTrigger className="border-border border-t px-1">
+              <AccordionTrigger className="border-border border-t px-1 text-left">
                 Claim Conditions & Primary Sale Recipient
               </AccordionTrigger>
               <AccordionContent className="px-1">
@@ -331,7 +332,8 @@ function ConfigSection(props: {
     toast.promise(promise, {
       success:
         "Successfully updated claim conditions or primary sale recipient",
-      error: "Failed to update claim conditions or primary sale recipient",
+      error: (error) =>
+        `Failed to update claim conditions or primary sale recipient: ${error}`,
     });
   };
 
@@ -339,7 +341,7 @@ function ConfigSection(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
-          <div className="flex gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {!props.isErc721 && (
               <FormField
                 control={form.control}
@@ -375,7 +377,7 @@ function ConfigSection(props: {
             />
           </div>
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="pricePerToken"
@@ -389,27 +391,19 @@ function ConfigSection(props: {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="currencyAddress"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem>
                   <FormLabel>Currency</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="0x..."
-                      {...field}
-                      disabled={!props.isOwnerAccount}
-                    />
-                  </FormControl>
-                  <FormMessage />
+                  <CurrencySelector field={field} />
                 </FormItem>
               )}
             />
           </div>
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="maxClaimableSupply"
@@ -447,7 +441,7 @@ function ConfigSection(props: {
             control={form.control}
             name="startTime"
             render={({ field }) => (
-              <FormItem className="flex flex-1 items-center gap-4">
+              <FormItem className="flex flex-1 items-center gap-2">
                 <FormLabel>Start & End Time</FormLabel>
                 <FormControl>
                   <DatePickerWithRange
@@ -584,7 +578,7 @@ function MintNFTSection(props: {
     const promise = mintMutation.mutateAsync(values);
     toast.promise(promise, {
       success: "Successfully minted NFT",
-      error: "Failed to mint NFT",
+      error: (error) => `Failed to mint NFT: ${error}`,
     });
   };
 
@@ -593,7 +587,7 @@ function MintNFTSection(props: {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
           {/* Other options */}
-          <div className="flex flex-col gap-4 md:flex-row">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="recipient"

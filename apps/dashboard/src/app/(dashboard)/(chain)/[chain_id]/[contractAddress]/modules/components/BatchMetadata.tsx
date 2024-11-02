@@ -135,7 +135,7 @@ function UploadMetadataNFTSection(props: {
     const promise = uploadMetadataMutation.mutateAsync(form.getValues());
     toast.promise(promise, {
       success: "Successfully uploadMetadataed NFT",
-      error: "Failed to uploadMetadata NFT",
+      error: (error) => `Failed to uploadMetadata NFT: ${error}`,
     });
   };
 

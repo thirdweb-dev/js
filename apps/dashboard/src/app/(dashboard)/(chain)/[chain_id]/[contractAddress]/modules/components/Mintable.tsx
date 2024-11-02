@@ -249,7 +249,7 @@ function PrimarySalesSection(props: {
     const promise = updateMutation.mutateAsync(form.getValues());
     toast.promise(promise, {
       success: "Successfully updated primary sale recipient",
-      error: "Failed to update primary sale recipient",
+      error: (error) => `Failed to update primary sale recipient: ${error}`,
     });
   };
 
@@ -320,7 +320,7 @@ function MintNFTSection(props: {
     const promise = mintMutation.mutateAsync(form.getValues());
     toast.promise(promise, {
       success: "Successfully minted NFT",
-      error: "Failed to mint NFT",
+      error: (error) => `Failed to mint NFT: ${error}`,
     });
   };
 

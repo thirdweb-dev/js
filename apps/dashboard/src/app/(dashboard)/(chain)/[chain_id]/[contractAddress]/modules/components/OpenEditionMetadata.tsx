@@ -132,7 +132,7 @@ function SetSharedMetadataSection(props: {
     const promise = setSharedMetadataMutation.mutateAsync(form.getValues());
     toast.promise(promise, {
       success: "Successfully set shared metadata",
-      error: "Failed to set shared metadata",
+      error: (error) => `Failed to set shared metadata: ${error}`,
     });
   };
 

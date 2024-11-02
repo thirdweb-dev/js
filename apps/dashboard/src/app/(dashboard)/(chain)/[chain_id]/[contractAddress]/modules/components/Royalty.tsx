@@ -232,7 +232,7 @@ function RoyaltyInfoPerTokenSection(props: {
     );
     toast.promise(promise, {
       success: "Successfully set royalty info for token",
-      error: "Failed to set royalty info for token",
+      error: (error) => `Failed to set royalty info for token: ${error}`,
     });
   };
 
@@ -242,7 +242,7 @@ function RoyaltyInfoPerTokenSection(props: {
         <div className="flex flex-col gap-4">
           <div className="h-1" />
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="tokenId"
@@ -361,7 +361,8 @@ function DefaultRoyaltyInfoSection(props: {
     const promise = updateMutation.mutateAsync(form.getValues());
     toast.promise(promise, {
       success: "Successfully updated royalty info or transfer validator",
-      error: "Failed to update royalty info or transfer validator",
+      error: (error) =>
+        `Failed to update royalty info or transfer validator: ${error}`,
     });
   };
 
@@ -371,7 +372,7 @@ function DefaultRoyaltyInfoSection(props: {
         <div className="flex flex-col gap-4">
           <div className="h-1" />
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="recipient"

@@ -149,7 +149,7 @@ export function TransferableModuleUI(
     const promise = updateMutation.mutateAsync(values);
     toast.promise(promise, {
       success: "Successfully updated transfer restrictions",
-      error: "Failed to update transfer restrictions",
+      error: (error) => `Failed to update transfer restrictions: ${error}`,
     });
   };
 
