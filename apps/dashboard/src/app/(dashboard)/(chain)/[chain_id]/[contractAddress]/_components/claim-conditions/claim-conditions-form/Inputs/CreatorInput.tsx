@@ -1,4 +1,4 @@
-import { Input } from "@chakra-ui/react";
+import { Input } from "@/components/ui/input";
 import { useActiveAccount } from "thirdweb/react";
 import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
