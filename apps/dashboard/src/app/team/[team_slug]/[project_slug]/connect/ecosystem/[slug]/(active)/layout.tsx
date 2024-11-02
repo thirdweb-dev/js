@@ -1,4 +1,4 @@
-import { EcosystemLayoutSlug } from "../../../../../../../(dashboard)/dashboard/connect/ecosystem/[slug]/(active)/EcosystemSlugLayout";
+import { EcosystemLayoutSlug } from "../../../../../../../(dashboard)/dashboard/connect/ecosystem/[slug]/(active)/components/EcosystemSlugLayout";
 
 export default async function Layout(props: {
   params: { team_slug: string; project_slug: string; slug: string };

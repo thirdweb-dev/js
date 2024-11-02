@@ -1,4 +1,4 @@
-import { EcosystemLayoutSlug } from "./EcosystemSlugLayout";
+import { EcosystemLayoutSlug } from "./components/EcosystemSlugLayout";
 
 export default async function Layout({
   children,

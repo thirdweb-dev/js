@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import type { Ecosystem, Partner } from "../../../../types";
+import type { Ecosystem, Partner } from "../../../../../types";
 import { UpdatePartnerForm } from "./update-partner-form.client";
 
 export function UpdatePartnerModal({

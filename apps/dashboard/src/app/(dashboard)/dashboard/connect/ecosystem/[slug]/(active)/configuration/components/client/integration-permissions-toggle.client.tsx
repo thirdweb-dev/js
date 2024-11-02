@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
 import invariant from "tiny-invariant";
-import type { Ecosystem } from "../../../../types";
+import type { Ecosystem } from "../../../../../types";
 import { useUpdateEcosystem } from "../../hooks/use-update-ecosystem";
 
 export function IntegrationPermissionsToggle({

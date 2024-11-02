@@ -8,7 +8,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import type { InAppWalletStats } from "@3rdweb-sdk/react/hooks/useApi";
+import type { EcosystemWalletStats } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   EmptyChartState,
   LoadingChartState,
@@ -16,23 +16,23 @@ import {
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
-import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
+import { formatTickerNumber } from "lib/format-utils";
 import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { formatTickerNumber } from "../../../lib/format-utils";
 
 type ChartData = Record<string, number> & {
   time: string; // human readable date
 };
 const defaultLabel = "Unknown Auth";
 
-export function InAppWalletUsersChartCard(props: {
-  inAppWalletStats: InAppWalletStats[];
+export function EcosystemWalletUsersChartCard(props: {
+  ecosystemWalletStats: EcosystemWalletStats[];
   isPending: boolean;
 }) {
-  const { inAppWalletStats } = props;
+  const { ecosystemWalletStats } = props;
+
   const topChainsToShow = 10;
 
   const { chartConfig, chartData } = useMemo(() => {
@@ -40,12 +40,12 @@ export function InAppWalletUsersChartCard(props: {
     const _chartDataMap: Map<string, ChartData> = new Map();
     const authMethodToVolumeMap: Map<string, number> = new Map();
     // for each stat, add it in _chartDataMap
-    for (const stat of inAppWalletStats) {
+    for (const stat of ecosystemWalletStats) {
       const chartData = _chartDataMap.get(stat.date);
       const { authenticationMethod } = stat;
 
       // if no data for current day - create new entry
-      if (!chartData && stat.uniqueWalletsConnected > 0) {
+      if (!chartData) {
         _chartDataMap.set(stat.date, {
           time: format(new Date(stat.date), "MMM dd"),
           [authenticationMethod || defaultLabel]: stat.uniqueWalletsConnected,
@@ -103,13 +103,15 @@ export function InAppWalletUsersChartCard(props: {
       ),
       chartConfig: _chartConfig,
     };
-  }, [inAppWalletStats]);
+  }, [ecosystemWalletStats]);
 
   const uniqueAuthMethods = Object.keys(chartConfig);
   const disableActions =
     props.isPending ||
     chartData.length === 0 ||
-    chartData.every((data) => data.sponsoredUsd === 0);
+    uniqueAuthMethods.every((authMethod) =>
+      chartData.every((data) => data[authMethod] === 0),
+    );
 
   return (
     <div className="relative w-full rounded-lg border border-border bg-muted/50 p-4 md:p-6">
@@ -117,7 +119,7 @@ export function InAppWalletUsersChartCard(props: {
         Unique Users
       </h3>
       <p className="mb-3 text-muted-foreground text-sm">
-        The total number of active in-app wallet users on your project.
+        The total number of active users in your ecosystem for each period.
       </p>
 
       <div className="top-6 right-6 mb-4 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
@@ -148,7 +150,9 @@ export function InAppWalletUsersChartCard(props: {
         {props.isPending ? (
           <LoadingChartState />
         ) : chartData.length === 0 ||
-          chartData.every((data) => data.sponsoredUsd === 0) ? (
+          uniqueAuthMethods.every((authMethod) =>
+            chartData.every((data) => data[authMethod] === 0),
+          ) ? (
           <EmptyChartState>
             <div className="flex flex-col items-center justify-center">
               <span className="mb-6 text-lg">
@@ -156,29 +160,24 @@ export function InAppWalletUsersChartCard(props: {
               </span>
               <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
                 <DocLink
-                  link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
+                  link="https://portal.thirdweb.com/typescript/v5/ecosystemWallet"
                   label="TypeScript"
                   icon={TypeScriptIcon}
                 />
                 <DocLink
-                  link="https://portal.thirdweb.com/react/v5/in-app-wallet/get-started"
+                  link="https://portal.thirdweb.com/react/v5/ecosystem-wallet/get-started"
                   label="React"
                   icon={ReactIcon}
                 />
                 <DocLink
-                  link="https://portal.thirdweb.com/react/v5/in-app-wallet/get-started"
+                  link="https://portal.thirdweb.com/react/v5/ecosystem-wallet/get-started"
                   label="React Native"
                   icon={ReactIcon}
                 />
                 <DocLink
-                  link="https://portal.thirdweb.com/unity/v5/wallets/in-app-wallet"
+                  link="https://portal.thirdweb.com/unity/v5/wallets/ecosystem-wallet"
                   label="Unity"
                   icon={UnityIcon}
-                />
-                <DocLink
-                  link="https://portal.thirdweb.com/unreal-engine/getting-started"
-                  label="Unreal Engine"
-                  icon={UnrealIcon}
                 />
               </div>
             </div>

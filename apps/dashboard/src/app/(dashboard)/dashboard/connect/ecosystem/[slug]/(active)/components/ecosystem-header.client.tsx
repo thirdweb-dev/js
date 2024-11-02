@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TabLinks } from "@/components/ui/tabs";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import type { EcosystemWalletStats } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   AlertTriangleIcon,
   CheckIcon,
@@ -24,9 +25,10 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEcosystemList } from "../../../../hooks/use-ecosystem-list";
-import type { Ecosystem } from "../../../../types";
-import { useEcosystem } from "../../hooks/use-ecosystem";
+import { useEcosystemList } from "../../../hooks/use-ecosystem-list";
+import type { Ecosystem } from "../../../types";
+import { EcosystemWalletsSummary } from "../analytics/components/Summary";
+import { useEcosystem } from "../hooks/use-ecosystem";
 
 function EcosystemAlertBanner({ ecosystem }: { ecosystem: Ecosystem }) {
   switch (ecosystem.status) {
@@ -110,6 +112,8 @@ function EcosystemSelect(props: {
 export function EcosystemHeader(props: {
   ecosystem: Ecosystem;
   ecosystemLayoutPath: string;
+  allTimeStats: EcosystemWalletStats[];
+  monthlyStats: EcosystemWalletStats[];
 }) {
   const pathname = usePathname();
   const { data: fetchedEcosystem } = useEcosystem({
@@ -193,19 +197,21 @@ export function EcosystemHeader(props: {
             />
           </div>
         </div>
+        <EcosystemWalletsSummary
+          allTimeStats={props.allTimeStats}
+          monthlyStats={props.monthlyStats}
+        />
         <TabLinks
           links={[
             {
-              name: "Permissions",
-              href: `${props.ecosystemLayoutPath}/${ecosystem.slug}`,
-              isActive:
-                pathname === `${props.ecosystemLayoutPath}/${ecosystem.slug}`,
+              name: "Analytics",
+              href: `${props.ecosystemLayoutPath}/${ecosystem.slug}/analytics`,
+              isActive: !!pathname && pathname.endsWith("/analytics"),
             },
             {
-              name: "Analytics (Coming Soon)",
-              href: "#",
-              isActive: false,
-              isDisabled: true,
+              name: "Configuration",
+              href: `${props.ecosystemLayoutPath}/${ecosystem.slug}/configuration`,
+              isActive: !!pathname && pathname.endsWith("/configuration"),
             },
             {
               name: "Design (Coming Soon)",

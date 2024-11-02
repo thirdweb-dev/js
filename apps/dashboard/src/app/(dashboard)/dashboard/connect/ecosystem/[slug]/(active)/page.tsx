@@ -1,5 +1,5 @@
-import { EcosystemPermissionsPage } from "./EcosystemPermissionsPage";
+import { redirect } from "next/navigation";
 
 export default function Page({ params }: { params: { slug: string } }) {
-  return <EcosystemPermissionsPage params={params} />;
+  redirect(`/dashboard/connect/ecosystem/${params.slug}/analytics`);
 }

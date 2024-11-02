@@ -16,9 +16,9 @@ import { cn } from "@/lib/utils";
 import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import type { Ecosystem, Partner } from "../../../../types";
+import type { Ecosystem, Partner } from "../../../../../types";
+import { usePartners } from "../../../hooks/use-partners";
 import { useDeletePartner } from "../../hooks/use-delete-partner";
-import { usePartners } from "../../hooks/use-partners";
 import { UpdatePartnerModal } from "../client/update-partner-modal.client";
 
 export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {

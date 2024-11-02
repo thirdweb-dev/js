@@ -1,8 +1,8 @@
 "use client";
-import { AuthOptionsSection } from "./components/server/auth-options-section";
-import { EcosystemPartnersSection } from "./components/server/ecosystem-partners-section";
-import { IntegrationPermissionsSection } from "./components/server/integration-permissions-section";
-import { useEcosystem } from "./hooks/use-ecosystem";
+import { useEcosystem } from "../../../hooks/use-ecosystem";
+import { AuthOptionsSection } from "../server/auth-options-section";
+import { EcosystemPartnersSection } from "../server/ecosystem-partners-section";
+import { IntegrationPermissionsSection } from "../server/integration-permissions-section";
 
 export function EcosystemPermissionsPage({
   params,

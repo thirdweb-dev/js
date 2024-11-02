@@ -34,7 +34,7 @@ import {
 } from "thirdweb/wallets/smart";
 import invariant from "tiny-invariant";
 import { z } from "zod";
-import { type Ecosystem, authOptions } from "../../../../types";
+import { type Ecosystem, authOptions } from "../../../../../types";
 import { useUpdateEcosystem } from "../../hooks/use-update-ecosystem";
 
 type AuthOptionsFormData = {

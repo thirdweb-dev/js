@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
-import type { Ecosystem } from "../../../../types";
+import type { Ecosystem } from "../../../../../types";
 import { AddPartnerForm } from "./add-partner-form.client";
 
 export function AddPartnerDialogButton(props: {

@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import type { Ecosystem, Partner } from "../../../../types";
+import type { Ecosystem, Partner } from "../../../../../types";
 import { partnerFormSchema } from "../../constants";
 import { useUpdatePartner } from "../../hooks/use-update-partner";
 

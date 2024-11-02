@@ -3,8 +3,8 @@ import {
   getLastNDaysRange,
 } from "components/analytics/date-range-selector";
 import { getInAppWalletUsage } from "data/analytics/wallets/in-app";
+import { RangeSelector } from "../../analytics/range-selector";
 import { InAppWalletUsersChartCard } from "./InAppWalletUsersChartCard";
-import { RangeSelector } from "./RangeSelector";
 
 export async function InAppWalletAnalytics({
   clientId,

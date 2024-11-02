@@ -1,4 +1,3 @@
-"use client";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import type { Ecosystem } from "../../../../types";
+import type { Ecosystem } from "../../../../../types";
 import { partnerFormSchema } from "../../constants";
 import { useAddPartner } from "../../hooks/use-add-partner";
 
