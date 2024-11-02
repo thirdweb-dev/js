@@ -1,4 +1,5 @@
 import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
@@ -10,19 +11,18 @@ import {
   Select,
   Spinner,
   Tooltip,
-  useModalContext,
 } from "@chakra-ui/react";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
 import { isMoralisSupported } from "lib/wallet/nfts/moralis";
 import { isSimpleHashSupported } from "lib/wallet/nfts/simpleHash";
 import type { WalletNFT } from "lib/wallet/nfts/types";
 import { CircleAlertIcon, InfoIcon } from "lucide-react";
-import { useMemo } from "react";
+import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
@@ -58,6 +58,8 @@ import {
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { shortenIfAddress } from "utils/usedapp-external";
 
+const LIST_FORM_ID = "marketplace-list-form";
+
 type ListForm =
   | (Omit<CreateListingParams, "quantity" | "currencyContractAddress"> & {
       currencyContractAddress: string;
@@ -79,9 +81,9 @@ type ListForm =
 
 type CreateListingsFormProps = {
   contract: ThirdwebContract;
-  formId: string;
+  actionText: string;
+  setOpen: Dispatch<SetStateAction<boolean>>;
   type?: "direct-listings" | "english-auctions";
-  setIsFormLoading: (loading: boolean) => void;
 };
 
 const auctionTimes = [
@@ -96,14 +98,15 @@ const auctionTimes = [
 
 export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   contract,
-  formId,
   type,
-  setIsFormLoading,
+  actionText,
+  setOpen,
 }) => {
   const trackEvent = useTrack();
   const chainId = contract.chain.id;
   const { idToChain } = useAllChainsData();
   const network = idToChain.get(chainId);
+  const [isFormLoading, setIsFormLoading] = useState(false);
 
   const isSupportedChain =
     chainId &&
@@ -203,17 +206,10 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
   const noNfts = !nfts?.length;
 
-  const modalContext = useModalContext();
-
-  const { onSuccess, onError } = useTxNotifications(
-    "NFT listed successfully",
-    "Failed to list NFT",
-  );
-
   return (
     <form
-      className="flex flex-col gap-6"
-      id={formId}
+      className="flex flex-col gap-6 pb-16"
+      id={LIST_FORM_ID}
       onSubmit={form.handleSubmit(async (formData) => {
         if (!formData.selected || !selectedContract) {
           return;
@@ -247,12 +243,13 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
               approved: true,
             });
 
-            try {
-              await sendAndConfirmTx.mutateAsync(approveTx);
-            } catch {
-              setIsFormLoading(false);
-              return toast.error("Failed to approve NFT for marketplace");
-            }
+            const promise = sendAndConfirmTx.mutateAsync(approveTx);
+            toast.promise(promise, {
+              loading: "Approving NFT for listing",
+              success: "NFT approved succesfully",
+              error: "Failed to approve NFT",
+            });
+            await promise;
           }
 
           if (formData.listingType === "direct") {
@@ -270,12 +267,14 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
               pricePerToken: String(formData.pricePerToken),
               endTimestamp,
             });
-            await sendAndConfirmTx.mutateAsync(transaction, {
-              onSuccess: () => {
-                onSuccess();
-                modalContext.onClose();
-              },
-              onError,
+
+            const promise = sendAndConfirmTx.mutateAsync(transaction, {
+              onSuccess: () => setOpen(false),
+            });
+            toast.promise(promise, {
+              loading: "Listing NFT",
+              success: "NFT listed successfully",
+              error: "Failed to list NFT",
             });
           } else if (formData.listingType === "auction") {
             let minimumBidAmountWei: bigint;
@@ -323,16 +322,15 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                 buyoutBidAmountWei * BigInt(formData.quantity),
             });
 
-            await sendAndConfirmTx.mutateAsync(transaction, {
+            const promise = sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
-                onSuccess();
                 trackEvent({
                   category: "marketplace",
                   action: "add-listing",
                   label: "success",
                   network,
                 });
-                modalContext.onClose();
+                setOpen(false);
               },
               onError: (error) => {
                 trackEvent({
@@ -342,11 +340,16 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                   network,
                   error,
                 });
-                onError(error);
               },
             });
+            toast.promise(promise, {
+              loading: "Creating auction",
+              success: "Auction created successfully",
+              error: "Failed to create auction",
+            });
           }
-        } catch {
+        } catch (err) {
+          console.error(err);
           toast.error("Failed to list NFT");
         }
 
@@ -540,6 +543,27 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
           <AlertTitle>No NFT selected</AlertTitle>
         </Alert>
       )}
+
+      {/* Need to pin these at the bottom because this is a very long form */}
+      <div className="fixed right-6 bottom-4 flex flex-row items-center justify-end gap-3">
+        <Button
+          disabled={isFormLoading}
+          variant="default"
+          onClick={() => setOpen(false)}
+        >
+          Cancel
+        </Button>
+        <TransactionButton
+          txChainID={contract.chain.id}
+          isLoading={isFormLoading}
+          transactionCount={2}
+          form={LIST_FORM_ID}
+          type="submit"
+          colorScheme="primary"
+        >
+          {actionText}
+        </TransactionButton>
+      </div>
     </form>
   );
 };
