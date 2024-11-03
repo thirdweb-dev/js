@@ -190,32 +190,46 @@ export function useEngineQueueMetrics(
   });
 }
 
-export function useEngineLatestVersion() {
+interface GetDeploymentInput {
+  teamId: string;
+  deploymentId: string;
+}
+
+export function useEngineGetDeployment(input: GetDeploymentInput) {
   return useQuery({
-    queryKey: engineKeys.latestVersion(),
+    queryKey: engineKeys.deployment(),
     queryFn: async () => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/latest-version`, {
-        method: "GET",
-      });
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/teams/${input.teamId}/engine/deployments/${input.deploymentId}`,
+        {
+          method: "GET",
+        },
+      );
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
       const json = await res.json();
-      return json.data.version as string;
+      return json.data as {
+        serverVersions: {
+          latest: string;
+          recent: string[];
+        };
+      };
     },
   });
 }
 
-interface UpdateVersionInput {
+interface UpdateDeploymentInput {
+  teamId: string;
   deploymentId: string;
   serverVersion: string;
 }
 
-export function useEngineUpdateServerVersion() {
+export function useEngineUpdateDeployment() {
   return useMutation({
-    mutationFn: async (input: UpdateVersionInput) => {
+    mutationFn: async (input: UpdateDeploymentInput) => {
       const res = await fetch(
-        `${THIRDWEB_API_HOST}/v2/engine/deployments/${input.deploymentId}/infrastructure`,
+        `${THIRDWEB_API_HOST}/v1/teams/${input.teamId}/engine/deployments/${input.deploymentId}`,
         {
           method: "PUT",
           headers: {
@@ -261,24 +275,26 @@ export function useEngineRemoveFromDashboard() {
   });
 }
 
-export interface DeleteCloudHostedInput {
+export interface DeleteDeploymentInput {
+  teamId: string;
   deploymentId: string;
   reason: "USING_SELF_HOSTED" | "TOO_EXPENSIVE" | "MISSING_FEATURES" | "OTHER";
   feedback: string;
 }
 
-export function useEngineDeleteCloudHosted() {
+export function useEngineDeleteDeployment() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
+      teamId,
       deploymentId,
       reason,
       feedback,
-    }: DeleteCloudHostedInput) => {
+    }: DeleteDeploymentInput) => {
       const res = await fetch(
-        `${THIRDWEB_API_HOST}/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
+        `${THIRDWEB_API_HOST}/v1/teams/${teamId}/engine/deployments/${deploymentId}/delete`,
         {
           method: "POST",
           headers: {

@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   type EngineInstance,
-  useEngineLatestVersion,
+  useEngineGetDeployment,
   useEngineSystemHealth,
-  useEngineUpdateServerVersion,
+  useEngineUpdateDeployment,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { CircleArrowDownIcon, CloudDownloadIcon } from "lucide-react";
 import { useState } from "react";
@@ -28,7 +28,7 @@ export const EngineVersionBadge = ({
   instance: EngineInstance;
 }) => {
   const healthQuery = useEngineSystemHealth(instance.url);
-  const latestVersionQuery = useEngineLatestVersion();
+  const latestVersionQuery = useEngineGetDeployment();
   const [isModalOpen, setModalOpen] = useState(false);
 
   const currentVersion = healthQuery.data?.engineVersion ?? "...";
@@ -86,7 +86,9 @@ const UpdateVersionModal = (props: {
   instance: EngineInstance;
 }) => {
   const { open, onOpenChange, latestVersion, instance } = props;
-  const updateEngineServerMutation = useEngineUpdateServerVersion();
+  const updateDeploymentMutation = useEngineUpdateDeployment();
+
+  const teamId = "DEBUG - UNIMPLEMENTED";
 
   if (!instance.deploymentId) {
     // For self-hosted, show a prompt to the Github release page.
@@ -123,7 +125,8 @@ const UpdateVersionModal = (props: {
     invariant(instance.deploymentId, "Engine is missing deploymentId.");
 
     try {
-      const promise = updateEngineServerMutation.mutateAsync({
+      const promise = updateDeploymentMutation.mutateAsync({
+        teamId,
         deploymentId: instance.deploymentId,
         serverVersion: latestVersion,
       });
@@ -166,7 +169,7 @@ const UpdateVersionModal = (props: {
             variant="primary"
             className="gap-2"
           >
-            {updateEngineServerMutation.isPending ? (
+            {updateDeploymentMutation.isPending ? (
               <Spinner className="size-4" />
             ) : (
               <CloudDownloadIcon className="size-4" />
