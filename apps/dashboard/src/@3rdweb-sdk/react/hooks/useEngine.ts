@@ -262,6 +262,7 @@ export function useEngineRemoveFromDashboard() {
 }
 
 export interface DeleteCloudHostedInput {
+  engineId: string;
   deploymentId: string;
   reason: "USING_SELF_HOSTED" | "TOO_EXPENSIVE" | "MISSING_FEATURES" | "OTHER";
   feedback: string;
@@ -273,12 +274,13 @@ export function useEngineDeleteCloudHosted() {
 
   return useMutation({
     mutationFn: async ({
+      engineId,
       deploymentId,
       reason,
       feedback,
     }: DeleteCloudHostedInput) => {
       const res = await fetch(
-        `${THIRDWEB_API_HOST}/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
+        `${THIRDWEB_API_HOST}/v2/engine/deployments/${deploymentId}/infrastructure/delete?engineId=${engineId}`,
         {
           method: "POST",
           headers: {

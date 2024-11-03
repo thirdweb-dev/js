@@ -387,6 +387,7 @@ function DeleteSubscriptionModalContent(props: {
   const [ackDeletion, setAckDeletion] = useState(false);
   const form = useForm<DeleteCloudHostedInput>({
     defaultValues: {
+      engineId: instance.id,
       deploymentId: instance.deploymentId,
     },
     reValidateMode: "onChange",
