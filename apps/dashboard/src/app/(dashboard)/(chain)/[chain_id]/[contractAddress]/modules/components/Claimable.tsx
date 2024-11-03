@@ -432,11 +432,7 @@ function ConfigSection(props: {
                 <FormItem className="flex-1">
                   <FormLabel>Maximum number of mints per wallet</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="0x..."
-                      {...field}
-                      disabled={!props.isOwnerAccount}
-                    />
+                    <Input {...field} disabled={!props.isOwnerAccount} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
