@@ -6,9 +6,6 @@ export const TEST_CLIENT = createThirdwebClient(
   secretKey
     ? {
         secretKey,
-        config: {
-          storage: { gatewayUrl: "https://gateway.pinata.cloud/ipfs/" },
-        },
       }
     : {
         clientId: "TEST",

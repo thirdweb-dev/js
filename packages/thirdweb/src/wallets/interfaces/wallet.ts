@@ -7,7 +7,10 @@ import type {
   TypedDataDefinition,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
-import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import type {
+  EIP712TransactionOptions,
+  PreparedTransaction,
+} from "../../transaction/prepare-transaction.js";
 import type { SendTransactionResult } from "../../transaction/types.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 import type {
@@ -19,6 +22,7 @@ import type {
 
 export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
+  eip712?: EIP712TransactionOptions;
 };
 
 type SendRawTransactionOptions = {

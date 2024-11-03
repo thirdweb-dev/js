@@ -59,6 +59,7 @@ import { useV5DashboardChain } from "../../lib/v5-adapter";
 const GAS_FREE_CHAINS = [
   75513, // Geek verse testnet
   75512, // Geek verse mainnet
+  531050104, // sophon testnet
 ];
 
 function useNetworkMismatchAdapter(desiredChainId: number) {

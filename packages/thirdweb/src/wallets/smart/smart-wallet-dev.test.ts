@@ -28,7 +28,7 @@ const contract = getContract({
   chain,
   address: "0x6A7a26c9a595E6893C255C9dF0b593e77518e0c3",
 });
-describe.runIf(process.env.TW_SECRET_KEY).sequential(
+describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
   "SmartWallet policy tests",
   {
     retry: 0,

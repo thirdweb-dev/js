@@ -37,8 +37,6 @@ export async function zkDeployContract(
     ),
   });
 
-  console.log("deploying", options.deploymentType);
-
   const receipt = await sendAndConfirmTransaction({
     account: options.account,
     transaction: prepareTransaction({
@@ -49,14 +47,9 @@ export async function zkDeployContract(
       eip712: {
         factoryDeps: [options.bytecode],
         // TODO (zksync): allow passing in a paymaster
-        paymaster: "0x950e3Bb8C6bab20b56a70550EC037E22032A413e",
-        paymasterInput:
-          "0x8c5a344500000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000",
       },
     }),
   });
-
-  console.log("receipt", receipt);
 
   const events = parseEventLogs({
     logs: receipt.logs,
@@ -65,7 +58,6 @@ export async function zkDeployContract(
 
   const contractAddress = events[0]?.args.contractAddress;
 
-  console.log("deployed contractAddress", contractAddress);
   if (!contractAddress) {
     throw new Error("Contract creation failed");
   }
