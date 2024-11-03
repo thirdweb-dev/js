@@ -13,10 +13,53 @@ import {
   UnorderedList,
   chakra,
 } from "@chakra-ui/react";
-import { onlyText } from "react-children-utilities";
+import { Children, type ReactNode, isValidElement } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { CodeBlock, Heading, Text } from "tw-components";
+
+// From https://github.com/fernandopasik/react-children-utilities
+const onlyText = (children: ReactNode | ReactNode[]): string => {
+  if (!Array.isArray(children) && !isValidElement(children)) {
+    return childToString(children);
+  }
+
+  return Children.toArray(children).reduce(
+    (text: string, child: ReactNode): string => {
+      let newText = "";
+
+      if (
+        isValidElement<{ children?: ReactNode[] }>(child) &&
+        Boolean(child.props.children)
+      ) {
+        newText = onlyText(child.props.children);
+      } else if (isValidElement(child)) {
+        newText = "";
+      } else {
+        newText = childToString(child);
+      }
+
+      return text.concat(newText);
+    },
+    "",
+  );
+};
+
+const childToString = (child?: ReactNode): string => {
+  if (
+    typeof child === "undefined" ||
+    child === null ||
+    typeof child === "boolean"
+  ) {
+    return "";
+  }
+
+  if (JSON.stringify(child) === "{}") {
+    return "";
+  }
+
+  return (child as number | string).toString();
+};
 
 const ChakraReactMarkdown = chakra(ReactMarkdown);
 
