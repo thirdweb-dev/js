@@ -17,22 +17,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { sendAndConfirmTransaction } from "thirdweb";
 import { BatchMetadataERC721 } from "thirdweb/modules";
 import type { NFTMetadataInputLimited } from "types/modified-types";
 import { parseAttributes } from "utils/parseAttributes";
+import { useTxNotifications } from "../../../../../../../hooks/useTxNotifications";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
 import { AdvancedNFTMetadataFormGroup } from "./nft/AdvancedNFTMetadataFormGroup";
 import { NFTMediaFormGroup } from "./nft/NFTMediaFormGroup";
 import { PropertiesFormControl } from "./nft/PropertiesFormControl";
+
+// TODO: add form validation on the upload form
+// TODO: this module currently shows the UI for doing a single upload, but it should be batch upload UI
 
 export type UploadMetadataFormValues = NFTMetadataInputLimited & {
   supply: number;
@@ -82,14 +84,12 @@ export function BatchMetadataModuleUI(
 ) {
   return (
     <ModuleCardUI {...props}>
-      <div className="h-1" />
-
       <div className="flex flex-col gap-4">
-        {/* uploadMetadata NFT */}
         <Accordion type="single" collapsible className="-mx-1">
+          {/* uploadMetadata  */}
           <AccordionItem value="metadata" className="border-none">
             <AccordionTrigger className="border-border border-t px-1">
-              uploadMetadata NFT
+              Upload NFT Metadata
             </AccordionTrigger>
             <AccordionContent className="px-1">
               {props.isOwnerAccount && (
@@ -117,6 +117,7 @@ export function BatchMetadataModuleUI(
 function UploadMetadataNFTSection(props: {
   uploadMetadata: (values: UploadMetadataFormValues) => Promise<void>;
 }) {
+  // TODO: add form validation here
   const form = useForm<UploadMetadataFormValues>({
     values: {
       supply: 1,
@@ -127,16 +128,19 @@ function UploadMetadataNFTSection(props: {
     reValidateMode: "onChange",
   });
 
+  const uploadNotifications = useTxNotifications(
+    "NFT metadata uploaded successfully",
+    "Failed to uploadMetadata NFT metadata",
+  );
+
   const uploadMetadataMutation = useMutation({
     mutationFn: props.uploadMetadata,
+    onSuccess: uploadNotifications.onSuccess,
+    onError: uploadNotifications.onError,
   });
 
   const onSubmit = async () => {
-    const promise = uploadMetadataMutation.mutateAsync(form.getValues());
-    toast.promise(promise, {
-      success: "Successfully uploadMetadataed NFT",
-      error: (error) => `Failed to uploadMetadata NFT: ${error}`,
-    });
+    uploadMetadataMutation.mutateAsync(form.getValues());
   };
 
   return (
@@ -197,7 +201,7 @@ function UploadMetadataNFTSection(props: {
               >
                 <AccordionItem
                   value="advanced-options"
-                  className="-mx-1 border-t border-b-0"
+                  className="-mx-1 border-y"
                 >
                   <AccordionTrigger className="px-1">
                     Advanced Options
@@ -210,8 +214,6 @@ function UploadMetadataNFTSection(props: {
             </div>
           </div>
 
-          <Separator />
-
           <div className="flex justify-end">
             <Button
               size="sm"
@@ -222,7 +224,7 @@ function UploadMetadataNFTSection(props: {
               {uploadMetadataMutation.isPending && (
                 <Spinner className="size-4" />
               )}
-              uploadMetadata
+              Upload
             </Button>
           </div>
         </div>

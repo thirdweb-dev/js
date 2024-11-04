@@ -6,58 +6,30 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { BanIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import {
-  type ArrayPath,
-  type FieldValues,
-  type Path,
-  type PathValue,
-  type UseFormReturn,
-  useFieldArray,
-} from "react-hook-form";
+import { PlusIcon, RotateCcwIcon, Trash2Icon } from "lucide-react";
+import { type UseFormReturn, useFieldArray } from "react-hook-form";
 
-interface IPropertyFieldValues extends FieldValues {
+type PropertiesFormValues = {
   attributes?: {
     trait_type: string;
     value: string;
   }[];
-}
+};
 
-export function PropertiesFormControl<
-  TFieldValues extends IPropertyFieldValues,
->({
-  form,
-}: {
-  form: UseFormReturn<TFieldValues>;
+export function PropertiesFormControl<T extends PropertiesFormValues>(props: {
+  form: UseFormReturn<T>;
 }) {
+  // T contains all properties of PropertiesFormValues, so this correct
+  const form = props.form as unknown as UseFormReturn<PropertiesFormValues>;
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "attributes" as ArrayPath<TFieldValues>,
+    name: "attributes",
   });
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-2">
-        <p>Attributes</p>
-        <Button
-          className="flex items-center gap-2"
-          variant="destructive"
-          size="sm"
-          onClick={() =>
-            form.setValue(
-              "attributes" as Path<TFieldValues>,
-              // biome-ignore lint/suspicious/noExplicitAny: FIXME
-              [{ trait_type: "", value: "" } as any] as PathValue<
-                TFieldValues,
-                Path<TFieldValues>
-              >,
-            )
-          }
-        >
-          Reset
-          <BanIcon className="size-4" />
-        </Button>
-      </div>
+      <h4>Attributes</h4>
 
       <div className="flex flex-col gap-3">
         {/* Addresses */}
@@ -65,11 +37,11 @@ export function PropertiesFormControl<
           <div className="flex items-start gap-3" key={fieldItem.id}>
             <FormField
               control={form.control}
-              name={`attributes.${index}.trait_type` as Path<TFieldValues>}
+              name={`attributes.${index}.trait_type`}
               render={({ field }) => (
                 <FormItem className="grow">
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} placeholder="Trait Type" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -78,11 +50,11 @@ export function PropertiesFormControl<
 
             <FormField
               control={form.control}
-              name={`attributes.${index}.value` as Path<TFieldValues>}
+              name={`attributes.${index}.value`}
               render={({ field }) => (
                 <FormItem className="grow">
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} placeholder="Value" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -100,17 +72,26 @@ export function PropertiesFormControl<
         ))}
       </div>
 
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row gap-3">
         <Button
           size="sm"
           className="flex items-center gap-2"
-          onClick={() =>
-            // biome-ignore lint/suspicious/noExplicitAny: FIXME
-            append({ trait_type: undefined, value: undefined } as any)
-          }
+          onClick={() => append({ trait_type: "", value: "" })}
         >
           <PlusIcon className="size-5" />
           Add Row
+        </Button>
+
+        <Button
+          className="flex items-center gap-2"
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            form.setValue("attributes", [{ trait_type: "", value: "" }])
+          }
+        >
+          Reset
+          <RotateCcwIcon className="size-4" />
         </Button>
       </div>
     </div>

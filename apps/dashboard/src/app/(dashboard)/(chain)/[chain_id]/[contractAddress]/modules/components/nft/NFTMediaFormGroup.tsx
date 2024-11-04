@@ -100,7 +100,7 @@ export function NFTMediaFormGroup<T extends NFTMediaFormGroupValues>(props: {
           value={mediaFileUrl as File | string}
           showPreview={true}
           setValue={setFile}
-          className="rounded border border-border transition-all duration-200"
+          className="max-sm:!max-w-full rounded border border-border transition-all duration-200"
           selectOrUpload="Upload"
           helperText="Media"
         />

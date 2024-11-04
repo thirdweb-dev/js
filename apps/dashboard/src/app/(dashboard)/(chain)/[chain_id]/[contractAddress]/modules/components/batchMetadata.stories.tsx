@@ -4,6 +4,12 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
+import { ZERO_ADDRESS } from "thirdweb";
+import { ThirdwebProvider } from "thirdweb/react";
+import {
+  ErrorProvider,
+  type TransactionError,
+} from "../../../../../../../contexts/error-handler";
 import {
   BatchMetadataModuleUI,
   type UploadMetadataFormValues,
@@ -37,6 +43,17 @@ function Component() {
   async function uploadMetadataStub(values: UploadMetadataFormValues) {
     console.log("submitting", values);
     await new Promise((resolve) => setTimeout(resolve, 1000));
+    const error = new Error("Upload failed");
+    (error as TransactionError).reason = "This is a test reason error";
+    (error as TransactionError).info = {
+      from: ZERO_ADDRESS,
+      to: ZERO_ADDRESS,
+      network: {
+        name: "test",
+        chainId: 1,
+      },
+    };
+    throw error;
   }
 
   const removeMutation = useMutation({
@@ -58,30 +75,34 @@ function Component() {
 
   // TODO - remove ChakraProviderSetup after converting the chakra components used in BatchMetadataModuleUI
   return (
-    <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-      <div className="flex items-center gap-5">
-        <CheckboxWithLabel
-          value={isOwner}
-          onChange={setIsOwner}
-          id="isOwner"
-          label="Is Owner"
-        />
-      </div>
+    <ThirdwebProvider>
+      <ErrorProvider>
+        <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+          <div className="flex items-center gap-5">
+            <CheckboxWithLabel
+              value={isOwner}
+              onChange={setIsOwner}
+              id="isOwner"
+              label="Is Owner"
+            />
+          </div>
 
-      <BadgeContainer label="Default">
-        <BatchMetadataModuleUI
-          contractInfo={contractInfo}
-          moduleAddress="0x0000000000000000000000000000000000000000"
-          uploadMetadata={uploadMetadataStub}
-          uninstallButton={{
-            onClick: async () => removeMutation.mutateAsync(),
-            isPending: removeMutation.isPending,
-          }}
-          isOwnerAccount={isOwner}
-        />
-      </BadgeContainer>
-      <Toaster richColors />
-    </div>
+          <BadgeContainer label="Default">
+            <BatchMetadataModuleUI
+              contractInfo={contractInfo}
+              moduleAddress="0x0000000000000000000000000000000000000000"
+              uploadMetadata={uploadMetadataStub}
+              uninstallButton={{
+                onClick: async () => removeMutation.mutateAsync(),
+                isPending: removeMutation.isPending,
+              }}
+              isOwnerAccount={isOwner}
+            />
+          </BadgeContainer>
+          <Toaster richColors />
+        </div>
+      </ErrorProvider>
+    </ThirdwebProvider>
   );
 }
 
