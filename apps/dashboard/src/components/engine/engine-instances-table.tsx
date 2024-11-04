@@ -430,34 +430,22 @@ function DeleteSubscriptionModalContent(props: {
 
       <form onSubmit={form.handleSubmit(onSubmit)}>
         {/* Reason */}
-        <FormControl isRequired>
+        <FormControl>
           <FormLabel className="!text-base">
             Please share your feedback to help us improve Engine.
           </FormLabel>
           <RadioGroup>
             <div className="flex flex-col gap-2">
-              <Radio
-                value="USING_SELF_HOSTED"
-                {...form.register("reason", { required: true })}
-              >
+              <Radio value="USING_SELF_HOSTED" {...form.register("reason")}>
                 <span className="text-sm"> Migrating to self-hosted </span>
               </Radio>
-              <Radio
-                value="TOO_EXPENSIVE"
-                {...form.register("reason", { required: true })}
-              >
+              <Radio value="TOO_EXPENSIVE" {...form.register("reason")}>
                 <span className="text-sm"> Too expensive </span>
               </Radio>
-              <Radio
-                value="MISSING_FEATURES"
-                {...form.register("reason", { required: true })}
-              >
+              <Radio value="MISSING_FEATURES" {...form.register("reason")}>
                 <span className="text-sm"> Missing features </span>
               </Radio>
-              <Radio
-                value="OTHER"
-                {...form.register("reason", { required: true })}
-              >
+              <Radio value="OTHER" {...form.register("reason")}>
                 <span className="text-sm"> Other </span>
               </Radio>
             </div>
