@@ -43,8 +43,7 @@ export function ModuleInstance(props: ModuleInstanceProps) {
     return <ClaimableModule {...props} />;
   }
 
-  // TODO: remove the -ignore suffix once batch metadata uploading is supported
-  if (props.contractInfo.name.includes("BatchMetadata-ignore")) {
+  if (props.contractInfo.name.includes("BatchMetadata")) {
     return <BatchMetadataModule {...props} />;
   }
 
