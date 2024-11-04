@@ -624,7 +624,7 @@ async function _sendUserOp(args: {
   });
   // wait for tx receipt rather than return the userOp hash
   const receipt = await waitForUserOpReceipt({
-    ...options,
+    ...bundlerOptions,
     userOpHash,
   });
 
