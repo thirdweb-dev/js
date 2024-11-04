@@ -225,7 +225,10 @@ export function RoyaltyModuleUI(
 }
 
 const royaltyInfoFormSchema = z.object({
-  tokenId: z.coerce.number().min(0, { message: "Invalid tokenId" }),
+  tokenId: z.string().refine((v) => v.length > 0 && Number(v) >= 0, {
+    message: "Invalid tokenId",
+  }),
+
   recipient: addressSchema,
   bps: z
     .string()
@@ -241,7 +244,7 @@ function RoyaltyInfoPerTokenSection(props: {
   const form = useForm<RoyaltyInfoFormValues>({
     resolver: zodResolver(royaltyInfoFormSchema),
     values: {
-      tokenId: 0,
+      tokenId: "",
       recipient: "",
       bps: "",
     },

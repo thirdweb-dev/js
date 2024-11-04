@@ -282,7 +282,9 @@ export function ClaimableModuleUI(
 }
 
 const claimConditionFormSchema = z.object({
-  tokenId: z.number().min(0, { message: "Invalid tokenId" }).optional(),
+  tokenId: z.string().refine((v) => v.length === 0 || Number(v) >= 0, {
+    message: "Invalid tokenId",
+  }),
 
   pricePerToken: z.coerce
     .number()
@@ -329,6 +331,7 @@ function ClaimConditionSection(props: {
   const form = useForm<ClaimConditionFormValues>({
     resolver: zodResolver(claimConditionFormSchema),
     values: {
+      tokenId: "",
       currencyAddress:
         props.claimCondition?.currency ===
         "0x0000000000000000000000000000000000000000"
@@ -640,7 +643,9 @@ function PrimarySaleRecipientSection(props: {
 }
 
 const mintFormSchema = z.object({
-  tokenId: z.coerce.number().min(0, { message: "Invalid tokenId" }).optional(),
+  tokenId: z.string().refine((v) => v.length === 0 || Number(v) >= 0, {
+    message: "Invalid tokenId",
+  }),
   quantity: z.coerce.number().min(0, { message: "Invalid quantity" }),
   recipient: addressSchema,
 });
@@ -654,6 +659,7 @@ function MintNFTSection(props: {
   const form = useForm<MintFormValues>({
     resolver: zodResolver(mintFormSchema),
     values: {
+      tokenId: "",
       quantity: 0,
       recipient: "",
     },
