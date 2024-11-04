@@ -324,8 +324,8 @@ importers:
         specifier: 8.3.6
         version: 8.3.6(react@18.3.1)(storybook@8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       '@storybook/addon-onboarding':
-        specifier: 8.3.6
-        version: 8.3.6(react@18.3.1)(storybook@8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: 8.4.1
+        version: 8.4.1(react@18.3.1)(storybook@8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       '@storybook/addon-viewport':
         specifier: 8.3.6
         version: 8.3.6(storybook@8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10))
@@ -987,8 +987,8 @@ importers:
         specifier: 8.3.6
         version: 8.3.6(react@18.3.1)(storybook@8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       '@storybook/addon-onboarding':
-        specifier: 8.3.6
-        version: 8.3.6(react@18.3.1)(storybook@8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        specifier: 8.4.1
+        version: 8.4.1(react@18.3.1)(storybook@8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       '@storybook/react':
         specifier: 8.3.6
         version: 8.3.6(@storybook/test@8.3.6(storybook@8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.3)
@@ -5217,10 +5217,10 @@ packages:
     peerDependencies:
       storybook: ^8.3.6
 
-  '@storybook/addon-onboarding@8.3.6':
-    resolution: {integrity: sha512-DvwtK3k5docaO7ZO0LRXL1myCwOnW2X+e9c383GEk9AykgL5otzkMjxRZ1rSAw39q/WIE9H0vBvUmzGVRpUm+A==}
+  '@storybook/addon-onboarding@8.4.1':
+    resolution: {integrity: sha512-xcMCQ2HPvl8O/NHt2V5T1hDlzitRGI5ATSrfo7o7JjcsAgFNSNtcFn7YU8M5SIpHd5u4v24ubE/pMrsskpp/+Q==}
     peerDependencies:
-      storybook: ^8.3.6
+      storybook: ^8.4.1
 
   '@storybook/addon-outline@8.3.6':
     resolution: {integrity: sha512-+VXpM8SIHX2cn30qLlMvER9/6iioFRSn2sAfLniqy4RrcQmcMP+qgE7ZzbzExt7cneJh3VFsYqBS/HElu14Vgg==}
@@ -20013,7 +20013,7 @@ snapshots:
       storybook: 8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       tiny-invariant: 1.3.3
 
-  '@storybook/addon-onboarding@8.3.6(react@18.3.1)(storybook@8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10))':
+  '@storybook/addon-onboarding@8.4.1(react@18.3.1)(storybook@8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10))':
     dependencies:
       react-confetti: 6.1.0(react@18.3.1)
       storybook: 8.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)

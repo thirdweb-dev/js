@@ -331,7 +331,7 @@
     "@storybook/addon-essentials": "8.3.6",
     "@storybook/addon-interactions": "8.3.6",
     "@storybook/addon-links": "8.3.6",
-    "@storybook/addon-onboarding": "8.3.6",
+    "@storybook/addon-onboarding": "8.4.1",
     "@storybook/react": "8.3.6",
     "@storybook/react-vite": "8.3.6",
     "@storybook/test": "8.3.6",
