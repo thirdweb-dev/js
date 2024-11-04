@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
+import { ThirdwebProvider } from "thirdweb/react";
 import {
   OpenEditionMetadataModuleUI,
   type SetSharedMetadataFormValues,
@@ -56,37 +57,39 @@ function Component() {
   };
 
   return (
-    <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-      <div className="flex gap-2">
-        <Checkbox
-          id="terms1"
-          checked={isOwner}
-          onCheckedChange={(v) => setIsOwner(!!v)}
-        />
-        <div className="grid gap-1.5 leading-none">
-          <label
-            htmlFor="terms1"
-            className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            Is Owner
-          </label>
+    <ThirdwebProvider>
+      <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+        <div className="flex gap-2">
+          <Checkbox
+            id="terms1"
+            checked={isOwner}
+            onCheckedChange={(v) => setIsOwner(!!v)}
+          />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="terms1"
+              className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Is Owner
+            </label>
+          </div>
         </div>
+
+        <BadgeContainer label="Default">
+          <OpenEditionMetadataModuleUI
+            contractInfo={contractInfo}
+            moduleAddress="0x0000000000000000000000000000000000000000"
+            setSharedMetadata={setSharedMetadataStub}
+            uninstallButton={{
+              onClick: async () => removeMutation.mutateAsync(),
+              isPending: removeMutation.isPending,
+            }}
+            isOwnerAccount={isOwner}
+          />
+        </BadgeContainer>
+
+        <Toaster richColors />
       </div>
-
-      <BadgeContainer label="Default">
-        <OpenEditionMetadataModuleUI
-          contractInfo={contractInfo}
-          moduleAddress="0x0000000000000000000000000000000000000000"
-          setSharedMetadata={setSharedMetadataStub}
-          uninstallButton={{
-            onClick: async () => removeMutation.mutateAsync(),
-            isPending: removeMutation.isPending,
-          }}
-          isOwnerAccount={isOwner}
-        />
-      </BadgeContainer>
-
-      <Toaster richColors />
-    </div>
+    </ThirdwebProvider>
   );
 }
