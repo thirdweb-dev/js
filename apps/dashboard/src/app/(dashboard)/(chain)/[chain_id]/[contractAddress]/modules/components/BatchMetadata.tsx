@@ -136,7 +136,6 @@ export function BatchMetadataModuleUI(
 function UploadMetadataNFTSection(props: {
   uploadMetadata: (values: UploadMetadataFormValues) => Promise<void>;
 }) {
-  // TODO: add form validation here
   const form = useForm<UploadMetadataFormValues>({
     values: {
       supply: 1,

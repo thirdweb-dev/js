@@ -282,17 +282,12 @@ export function ClaimableModuleUI(
 }
 
 const claimConditionFormSchema = z.object({
-  tokenId: z.coerce
-    .number()
-    .min(0, { message: "Invalid tokenId" })
-    .optional()
-    .or(z.literal("")),
+  tokenId: z.coerce.number().min(0, { message: "Invalid tokenId" }).optional(),
 
   pricePerToken: z.coerce
     .number()
     .min(0, { message: "Invalid price per token" })
-    .optional()
-    .or(z.literal("")),
+    .optional(),
   currencyAddress: z.string().optional(),
 
   maxClaimableSupply: z
@@ -645,11 +640,7 @@ function PrimarySaleRecipientSection(props: {
 }
 
 const mintFormSchema = z.object({
-  tokenId: z.coerce
-    .number()
-    .min(0, { message: "Invalid tokenId" })
-    .optional()
-    .or(z.literal("")),
+  tokenId: z.coerce.number().min(0, { message: "Invalid tokenId" }).optional(),
   quantity: z.coerce.number().min(0, { message: "Invalid quantity" }),
   recipient: addressSchema,
 });
