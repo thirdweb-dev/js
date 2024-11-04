@@ -20,28 +20,18 @@ import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { isAddress, sendAndConfirmTransaction } from "thirdweb";
+import { sendAndConfirmTransaction } from "thirdweb";
 import { TransferableERC721 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import { z } from "zod";
+import { addressSchema } from "../zod-schemas";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
 
 const formSchema = z.object({
   allowList: z.array(
     z.object({
-      address: z.string().refine(
-        (v) => {
-          // don't return `isAddress(v)` directly to avoid typecasting address as `0x${string}`
-          if (isAddress(v)) {
-            return true;
-          }
-          return false;
-        },
-        {
-          message: "Invalid Address",
-        },
-      ),
+      address: addressSchema,
     }),
   ),
   isRestricted: z.boolean(),

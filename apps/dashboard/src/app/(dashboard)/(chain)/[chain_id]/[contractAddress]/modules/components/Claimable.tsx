@@ -28,23 +28,13 @@ import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
-import { isAddress } from "thirdweb";
 import { ClaimableERC721, ClaimableERC1155 } from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { z } from "zod";
+import { addressSchema } from "../zod-schemas";
 import { CurrencySelector } from "./CurrencySelector";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
-
-const zodAddress = z.string().refine(
-  (v) => {
-    if (isAddress(v)) {
-      return true;
-    }
-    return false;
-  },
-  { message: "Invalid Address" },
-);
 
 export type ClaimCondition = {
   availableSupply: bigint;
@@ -252,7 +242,7 @@ export function ClaimableModuleUI(
 }
 
 const configFormSchema = z.object({
-  primarySaleRecipient: zodAddress,
+  primarySaleRecipient: addressSchema,
 
   tokenId: z.string().optional(),
 
@@ -273,7 +263,7 @@ const configFormSchema = z.object({
   startTime: z.date().optional(),
   endTime: z.date().optional(),
 
-  allowList: z.array(z.object({ address: zodAddress })).optional(),
+  allowList: z.array(z.object({ address: addressSchema })).optional(),
 });
 
 export type ConfigFormValues = z.infer<typeof configFormSchema>;
@@ -550,7 +540,7 @@ const mintFormSchema = z.object({
   quantity: z.string().refine((v) => v.length > 0 && Number(v) >= 0, {
     message: "Invalid quantity",
   }),
-  recipient: zodAddress,
+  recipient: addressSchema,
 });
 
 export type MintFormValues = z.infer<typeof mintFormSchema>;

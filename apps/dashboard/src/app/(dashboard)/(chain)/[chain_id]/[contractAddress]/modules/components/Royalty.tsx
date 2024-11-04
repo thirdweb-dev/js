@@ -24,10 +24,11 @@ import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { isAddress, sendAndConfirmTransaction } from "thirdweb";
+import { sendAndConfirmTransaction } from "thirdweb";
 import { RoyaltyERC721 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import { z } from "zod";
+import { addressSchema } from "../zod-schemas";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
 
@@ -192,15 +193,7 @@ const royaltyInfoFormSchema = z.object({
     .string()
     .min(1, { message: "Invalid Token ID" })
     .refine((v) => Number(v) >= 0, { message: "Invalid Token ID" }),
-  recipient: z.string().refine(
-    (v) => {
-      if (isAddress(v)) {
-        return true;
-      }
-      return false;
-    },
-    { message: "Invalid Address" },
-  ),
+  recipient: addressSchema,
   bps: z
     .string()
     .min(1, { message: "Invalid BPS" })
@@ -306,31 +299,11 @@ function RoyaltyInfoPerTokenSection(props: {
 }
 
 const defaultRoyaltyFormSchema = z.object({
-  recipient: z.string().refine(
-    (v) => {
-      // return true if it is an empty string to emulate optional condition
-      // don't return `isAddress(v)` directly to avoid typecasting address as `0x${string}
-      if (!v || isAddress(v)) {
-        return true;
-      }
-      return false;
-    },
-    { message: "Invalid Address" },
-  ),
+  recipient: addressSchema,
   bps: z.string().refine((v) => v.length === 0 || Number(v) >= 0, {
     message: "Invalid BPS",
   }),
-  transferValidator: z.string().refine(
-    (v) => {
-      // return true if it is an empty string to emulate optional condition
-      // don't return `isAddress(v)` directly to avoid typecasting address as `0x${string}
-      if (!v || isAddress(v)) {
-        return true;
-      }
-      return false;
-    },
-    { message: "Invalid Address" },
-  ),
+  transferValidator: addressSchema,
 });
 
 export type RoyaltyConfigFormValues = z.infer<typeof defaultRoyaltyFormSchema>;

@@ -29,12 +29,12 @@ import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
-import { isAddress } from "thirdweb";
 import { MintableERC721, MintableERC1155 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import type { NFTMetadataInputLimited } from "types/modified-types";
 import { parseAttributes } from "utils/parseAttributes";
 import { z } from "zod";
+import { addressSchema } from "../zod-schemas";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
 import { AdvancedNFTMetadataFormGroup } from "./nft/AdvancedNFTMetadataFormGroup";
@@ -215,18 +215,7 @@ export function MintableModuleUI(
 }
 
 const primarySaleRecipientFormSchema = z.object({
-  primarySaleRecipient: z.string().refine(
-    (v) => {
-      // don't return `isAddress(v)` directly to avoid typecasting address as `0x${string}`
-      if (isAddress(v)) {
-        return true;
-      }
-      return false;
-    },
-    {
-      message: "Invalid Address",
-    },
-  ),
+  primarySaleRecipient: addressSchema,
 });
 
 function PrimarySalesSection(props: {
