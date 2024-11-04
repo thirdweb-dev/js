@@ -101,7 +101,26 @@ export function BatchMetadataModuleUI(
                 <Alert variant="info">
                   <CircleAlertIcon className="size-5" />
                   <AlertTitle>
-                    You don't have permission to uploadMetadata NFTs on this
+                    You don't have permission to upload metadata on this
+                    contract
+                  </AlertTitle>
+                </Alert>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* batchMetadata  */}
+          <AccordionItem value="batch-metadata" className="border-none">
+            <AccordionTrigger className="border-border border-t px-1">
+              Batch Upload NFT Metadata
+            </AccordionTrigger>
+            <AccordionContent className="px-1">
+              {props.isOwnerAccount && <BatchMetadataNFTSection />}
+              {!props.isOwnerAccount && (
+                <Alert variant="info">
+                  <CircleAlertIcon className="size-5" />
+                  <AlertTitle>
+                    You don't have permission to upload metadata on this
                     contract
                   </AlertTitle>
                 </Alert>
@@ -230,6 +249,15 @@ function UploadMetadataNFTSection(props: {
         </div>
       </form>
     </Form>
+  );
+}
+
+function BatchMetadataNFTSection() {
+  return (
+    <Alert variant="info">
+      <CircleAlertIcon className="size-5" />
+      <AlertTitle>Coming soon!</AlertTitle>
+    </Alert>
   );
 }
 
