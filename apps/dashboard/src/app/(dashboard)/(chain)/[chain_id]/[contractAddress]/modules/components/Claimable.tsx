@@ -608,11 +608,7 @@ const mintFormSchema = z.object({
     .min(0, { message: "Invalid tokenId" })
     .optional()
     .or(z.literal("")),
-  quantity: z.coerce
-    .number()
-    .min(0, { message: "Invalid quantity" })
-    .optional()
-    .or(z.literal("")),
+  quantity: z.coerce.number().min(0, { message: "Invalid quantity" }),
   recipient: addressSchema,
 });
 
@@ -625,7 +621,7 @@ function MintNFTSection(props: {
   const form = useForm<MintFormValues>({
     resolver: zodResolver(mintFormSchema),
     values: {
-      quantity: "",
+      quantity: 0,
       recipient: "",
     },
     reValidateMode: "onChange",
