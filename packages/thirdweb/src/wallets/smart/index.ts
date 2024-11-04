@@ -119,6 +119,7 @@ export async function connectSmartWallet(
         entrypointAddress,
       };
     }
+    console.log("entrypointAddress", entrypointAddress);
   }
 
   if (
