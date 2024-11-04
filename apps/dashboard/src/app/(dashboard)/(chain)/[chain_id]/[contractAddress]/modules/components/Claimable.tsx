@@ -29,7 +29,13 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { type PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
+import {
+  type PreparedTransaction,
+  getContract,
+  sendAndConfirmTransaction,
+  toTokens,
+} from "thirdweb";
+import { decimals } from "thirdweb/extensions/erc20";
 import { ClaimableERC721, ClaimableERC1155 } from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { z } from "zod";
@@ -65,6 +71,23 @@ function ClaimableModule(props: ModuleInstanceProps) {
       contract: contract,
     },
   );
+
+  const currencyContract = getContract({
+    address: claimConditionQuery.data?.currency || "",
+    chain: props.contract.chain,
+    client: props.contract.client,
+  });
+
+  const tokenDecimals = useReadContract(decimals, {
+    contract: currencyContract,
+    queryOptions: {
+      enabled:
+        claimConditionQuery.data &&
+        claimConditionQuery.data?.currency !==
+          "0x0000000000000000000000000000000000000000",
+    },
+  });
+  const tokenDecimalsData = tokenDecimals.data ?? 0;
 
   const isErc721 = props.contractInfo.name === "ClaimableERC721";
 
@@ -160,7 +183,12 @@ function ClaimableModule(props: ModuleInstanceProps) {
     <ClaimableModuleUI
       {...props}
       isPendingPrimarySaleRecipient={primarySaleRecipientQuery.isPending}
-      isPendingClaimCondition={claimConditionQuery.isPending}
+      isPendingClaimCondition={
+        claimConditionQuery.isPending ||
+        (claimConditionQuery.data?.currency !==
+          "0x0000000000000000000000000000000000000000" &&
+          tokenDecimals.isPending)
+      }
       primarySaleRecipient={primarySaleRecipientQuery.data}
       claimCondition={claimConditionQuery.data}
       setClaimCondition={setClaimCondition}
@@ -169,6 +197,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
       isOwnerAccount={!!ownerAccount}
       isErc721={isErc721}
       chainId={props.contract.chain.id}
+      tokenDecimals={tokenDecimalsData}
     />
   );
 }
@@ -187,6 +216,7 @@ export function ClaimableModuleUI(
     mint: (values: MintFormValues) => Promise<void>;
     isErc721: boolean;
     chainId: number;
+    tokenDecimals: number;
   },
 ) {
   return (
@@ -218,6 +248,7 @@ export function ClaimableModuleUI(
                   update={props.setClaimCondition}
                   isErc721={props.isErc721}
                   chainId={props.chainId}
+                  tokenDecimals={props.tokenDecimals}
                 />
               ) : (
                 <Skeleton className="h-[74px]" />
@@ -285,6 +316,8 @@ export type ClaimConditionFormValues = z.infer<typeof claimConditionFormSchema>;
 
 // perform this outside else it forces too many re-renders
 const now = Date.now() / 1000;
+const MAX_UINT_256 =
+  "115792089237316195423570985008687907853269984665640564039457584007913129639935";
 
 function ClaimConditionSection(props: {
   primarySaleRecipient: string | undefined;
@@ -293,6 +326,7 @@ function ClaimConditionSection(props: {
   isOwnerAccount: boolean;
   isErc721: boolean;
   chainId: number;
+  tokenDecimals: number;
 }) {
   const { idToChain } = useAllChainsData();
   const chain = idToChain.get(props.chainId);
@@ -300,19 +334,27 @@ function ClaimConditionSection(props: {
   const form = useForm<ClaimConditionFormValues>({
     resolver: zodResolver(claimConditionFormSchema),
     values: {
-      // TODO: parse units based on the currency decimals
-      pricePerToken: props.claimCondition?.pricePerUnit ? 0 : 0,
       currencyAddress:
         props.claimCondition?.currency ===
         "0x0000000000000000000000000000000000000000"
           ? ""
           : props.claimCondition?.currency,
+      pricePerToken:
+        props.claimCondition?.pricePerUnit &&
+        props.claimCondition?.currency !==
+          "0x0000000000000000000000000000000000000000"
+          ? Number(
+              toTokens(props.claimCondition?.pricePerUnit, props.tokenDecimals),
+            )
+          : 0,
       maxClaimableSupply:
-        props.claimCondition?.availableSupply.toString() === "0"
+        props.claimCondition?.availableSupply.toString() === "0" ||
+        props.claimCondition?.availableSupply.toString() === MAX_UINT_256
           ? ""
           : props.claimCondition?.availableSupply.toString() || "",
       maxClaimablePerWallet:
-        props.claimCondition?.maxMintPerWallet.toString() === "0"
+        props.claimCondition?.maxMintPerWallet.toString() === "0" ||
+        props.claimCondition?.maxMintPerWallet.toString() === MAX_UINT_256
           ? ""
           : props.claimCondition?.maxMintPerWallet.toString() || "",
       startTime: new Date((props.claimCondition?.startTimestamp || now) * 1000),

@@ -76,8 +76,8 @@ function Component() {
   const claimCondition = {
     availableSupply: BigInt(100),
     maxMintPerWallet: BigInt(10),
-    pricePerUnit: BigInt(10),
-    currency: "0x0000000000000000000000000000000000000000",
+    pricePerUnit: 10n,
+    currency: "0x000000000000000000000000000000000000000",
     startTimestamp: 1689092800,
     endTimestamp: 1689092800,
     allowlistMerkleRoot:
@@ -122,6 +122,7 @@ function Component() {
             isErc721={isErc721}
             claimCondition={claimCondition}
             chainId={1}
+            tokenDecimals={18}
           />
         </BadgeContainer>
 
@@ -143,6 +144,7 @@ function Component() {
             isErc721={isErc721}
             claimCondition={claimCondition}
             chainId={1}
+            tokenDecimals={18}
           />
         </BadgeContainer>
 
@@ -164,6 +166,7 @@ function Component() {
             isErc721={isErc721}
             claimCondition={claimCondition}
             chainId={1}
+            tokenDecimals={18}
           />
         </BadgeContainer>
 
