@@ -19,10 +19,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { sendAndConfirmTransaction } from "thirdweb";
 import { OpenEditionMetadataERC721 } from "thirdweb/modules";
 import { z } from "zod";
@@ -124,16 +124,19 @@ function SetSharedMetadataSection(props: {
     reValidateMode: "onChange",
   });
 
+  const setSharedMetadataNotifications = useTxNotifications(
+    "Successfully set shared metadata",
+    "Failed to set shared metadata",
+  );
+
   const setSharedMetadataMutation = useMutation({
     mutationFn: props.setSharedMetadata,
+    onSuccess: setSharedMetadataNotifications.onSuccess,
+    onError: setSharedMetadataNotifications.onError,
   });
 
   const onSubmit = async () => {
-    const promise = setSharedMetadataMutation.mutateAsync(form.getValues());
-    toast.promise(promise, {
-      success: "Successfully set shared metadata",
-      error: (error) => `Failed to set shared metadata: ${error}`,
-    });
+    setSharedMetadataMutation.mutateAsync(form.getValues());
   };
 
   return (

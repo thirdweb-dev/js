@@ -45,8 +45,6 @@ export type UpdateFormValues = {
   primarySaleRecipient: string;
 };
 
-// TODO - add form validation with zod schema for mint form
-
 export type MintFormValues = NFTMetadataInputLimited & {
   useNextTokenId: boolean;
   recipient: string;
@@ -276,12 +274,22 @@ function PrimarySalesSection(props: {
   );
 }
 
+const mintFormSchema = z.object({
+  useNextTokenId: z.boolean(),
+  supply: z.coerce.number().min(0, { message: "Invalid supply" }),
+  customImage: z.string().optional(),
+  customAnimationUrl: z.string().optional(),
+  recipient: addressSchema,
+  tokenId: z.coerce.bigint().min(0n, { message: "Invalid tokenId" }).optional(),
+});
+
 function MintNFTSection(props: {
   mint: (values: MintFormValues) => Promise<void>;
   isErc721: boolean;
   isBatchMetadataInstalled: boolean;
 }) {
   const form = useForm<MintFormValues>({
+    resolver: zodResolver(mintFormSchema),
     values: {
       useNextTokenId: false,
       supply: 1,
