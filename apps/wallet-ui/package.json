@@ -10,7 +10,7 @@
     "fix": "biome check ./src --fix"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.9.0",
+    "@hookform/resolvers": "^3.9.1",
     "@noble/curves": "1.6.0",
     "@radix-ui/react-dialog": "1.1.2",
     "@radix-ui/react-label": "^2.1.0",
