@@ -1,5 +1,36 @@
 # thirdweb
 
+## 5.65.0
+
+### Minor Changes
+
+- [#5126](https://github.com/thirdweb-dev/js/pull/5126) [`c621c13`](https://github.com/thirdweb-dev/js/commit/c621c13f11166a5ff8aa1fbd9e5e78dd83cbaef5) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Allow to customize the display order of Asset tabs
+
+  When you click on "View Assets", by default the "Tokens" tab is shown first.
+
+  If you want to show the "NFTs" tab first, change the order of the asset tabs to: ["nft", "token"]
+
+  Note: If an empty array is passed, the [View Funds] button will be hidden
+
+  ```tsx
+  <ConnectButton
+    client={client}
+    detailsModal={{
+      assetTabs: ["nft", "token"],
+    }}
+  />
+  ```
+
+### Patch Changes
+
+- [#5253](https://github.com/thirdweb-dev/js/pull/5253) [`baf2198`](https://github.com/thirdweb-dev/js/commit/baf21980be291d037797ce17fcd2e8a64e3b7814) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use stringify instead of JSON.stringify in most places to handle bigint serialization
+
+- [#5272](https://github.com/thirdweb-dev/js/pull/5272) [`e3c0af2`](https://github.com/thirdweb-dev/js/commit/e3c0af28f7531bccbcc38f3f4ffb3516151636de) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Tracks transaction chain IDs
+
+- [#5250](https://github.com/thirdweb-dev/js/pull/5250) [`f40d247`](https://github.com/thirdweb-dev/js/commit/f40d2474e6cc1227a8d05151210ef4793beb6142) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow smart accounts to switch chains between zk and non zk chains
+
+- [#5270](https://github.com/thirdweb-dev/js/pull/5270) [`0660416`](https://github.com/thirdweb-dev/js/commit/06604162a11d99ff119bbf427a24b9a7d82c1575) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Enable configuring the analytics endpoint
+
 ## 5.64.5
 
 ### Patch Changes
