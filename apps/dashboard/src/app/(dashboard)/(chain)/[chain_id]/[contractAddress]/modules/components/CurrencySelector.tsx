@@ -8,11 +8,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import { CURRENCIES, type CurrencyMetadata } from "constants/currencies";
 import { useMemo, useState } from "react";
 import type { ControllerRenderProps, FieldValues } from "react-hook-form";
+import type { StoredChain } from "stores/chainStores";
 import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS, isAddress } from "thirdweb";
-import { useAllChainsData } from "../../../../../../../hooks/chains/allChains";
 
 interface CurrencySelectorProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -22,23 +23,23 @@ interface CurrencySelectorProps<
   showCustomCurrency?: boolean;
   isPaymentsSelector?: boolean;
   defaultCurrencies?: CurrencyMetadata[];
-  contractChainId: number;
+  chain?: StoredChain;
   field: ControllerRenderProps<TFieldValues>;
+  className?: string;
 }
 
 export function CurrencySelector<
   TFieldValues extends FieldValues = FieldValues,
 >({
-  small,
   hideDefaultCurrencies,
   showCustomCurrency = true,
   isPaymentsSelector = false,
   defaultCurrencies = [],
+  className,
   field,
-  contractChainId: chainId,
+  chain,
 }: CurrencySelectorProps<TFieldValues>) {
-  const { idToChain } = useAllChainsData();
-  const chain = chainId ? idToChain.get(chainId) : undefined;
+  const { chainId } = chain || {};
 
   const helperCurrencies =
     defaultCurrencies.length > 0
@@ -130,9 +131,7 @@ export function CurrencySelector<
   }
 
   return (
-    <div
-      className={`flex flex-col ${small && !hideDefaultCurrencies ? "mt-1" : "mt-0"}`}
-    >
+    <div className={cn("flex flex-col", className)}>
       <Select
         onValueChange={(value) =>
           value === "custom" ? setIsAddingCurrency(true) : field.onChange(value)

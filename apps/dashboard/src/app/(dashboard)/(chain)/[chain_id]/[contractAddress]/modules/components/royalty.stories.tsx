@@ -6,9 +6,10 @@ import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
 import {
-  type RoyaltyConfigFormValues,
+  type DefaultRoyaltyFormValues,
   type RoyaltyInfoFormValues,
   RoyaltyModuleUI,
+  type TransferValidatorFormValues,
 } from "./Royalty";
 
 const meta = {
@@ -42,7 +43,12 @@ function Component() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
-  async function updateRoyaltyConfigInfo(values: RoyaltyConfigFormValues) {
+  async function setDefaultRoyaltyInfoStub(values: DefaultRoyaltyFormValues) {
+    console.log("submitting", values);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  async function setTransferValidatorStub(values: TransferValidatorFormValues) {
     console.log("submitting", values);
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
@@ -82,7 +88,8 @@ function Component() {
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             setRoyaltyInfoForToken={setRoyaltyInfoForToken}
-            update={updateRoyaltyConfigInfo}
+            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+            setTransferValidator={setTransferValidatorStub}
             uninstallButton={{
               onClick: async () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
@@ -97,7 +104,8 @@ function Component() {
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             setRoyaltyInfoForToken={setRoyaltyInfoForToken}
-            update={updateRoyaltyConfigInfo}
+            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+            setTransferValidator={setTransferValidatorStub}
             defaultRoyaltyInfo={[_testAddress1, 100]}
             uninstallButton={{
               onClick: async () => removeMutation.mutateAsync(),
@@ -113,7 +121,8 @@ function Component() {
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             setRoyaltyInfoForToken={setRoyaltyInfoForToken}
-            update={updateRoyaltyConfigInfo}
+            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+            setTransferValidator={setTransferValidatorStub}
             transferValidator={"0x0000000000000000000000000000000000000000"}
             uninstallButton={{
               onClick: async () => removeMutation.mutateAsync(),
@@ -129,7 +138,8 @@ function Component() {
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             setRoyaltyInfoForToken={setRoyaltyInfoForToken}
-            update={updateRoyaltyConfigInfo}
+            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+            setTransferValidator={setTransferValidatorStub}
             defaultRoyaltyInfo={[_testAddress1, 100]}
             transferValidator={"0x0000000000000000000000000000000000000000"}
             uninstallButton={{

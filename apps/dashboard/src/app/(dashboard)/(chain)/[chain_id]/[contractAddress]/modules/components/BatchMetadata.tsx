@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -26,7 +27,6 @@ import { sendAndConfirmTransaction } from "thirdweb";
 import { BatchMetadataERC721 } from "thirdweb/modules";
 import type { NFTMetadataInputLimited } from "types/modified-types";
 import { parseAttributes } from "utils/parseAttributes";
-import { useTxNotifications } from "../../../../../../../hooks/useTxNotifications";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
 import { AdvancedNFTMetadataFormGroup } from "./nft/AdvancedNFTMetadataFormGroup";

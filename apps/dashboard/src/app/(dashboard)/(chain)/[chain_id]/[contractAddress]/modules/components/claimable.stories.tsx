@@ -6,9 +6,10 @@ import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
 import {
+  type ClaimConditionFormValues,
   ClaimableModuleUI,
-  type ConfigFormValues,
   type MintFormValues,
+  type PrimarySaleRecipientFormValues,
 } from "./Claimable";
 
 const meta = {
@@ -38,9 +39,14 @@ const testAddress1 = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 function Component() {
   const [isOwner, setIsOwner] = useState(true);
   const [isErc721, setIsErc721] = useState(false);
-  const [isSequentialTokenIdInstalled, setIsSequentialTokenIdInstalled] =
-    useState(false);
-  async function updateStub(values: ConfigFormValues) {
+  async function updatePrimarySaleRecipientStub(
+    values: PrimarySaleRecipientFormValues,
+  ) {
+    console.log("submitting", values);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  async function updateClaimConditionStub(values: ClaimConditionFormValues) {
     console.log("submitting", values);
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
@@ -96,22 +102,17 @@ function Component() {
             id="isErc721"
             label="isErc721"
           />
-
-          <CheckboxWithLabel
-            value={isSequentialTokenIdInstalled}
-            onChange={setIsSequentialTokenIdInstalled}
-            id="isSequentialTokenIdInstalled"
-            label="isSequentialTokenIdInstalled"
-          />
         </div>
 
         <BadgeContainer label="Empty Primary Sale Recipient">
           <ClaimableModuleUI
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
+            isPendingPrimarySaleRecipient={false}
+            isPendingClaimCondition={false}
             primarySaleRecipient={""}
-            update={updateStub}
+            setPrimarySaleRecipient={updatePrimarySaleRecipientStub}
+            setClaimCondition={updateClaimConditionStub}
             mint={mintStub}
             uninstallButton={{
               onClick: async () => removeMutation.mutateAsync(),
@@ -120,7 +121,6 @@ function Component() {
             isOwnerAccount={isOwner}
             isErc721={isErc721}
             claimCondition={claimCondition}
-            isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
             chainId={1}
           />
         </BadgeContainer>
@@ -129,9 +129,11 @@ function Component() {
           <ClaimableModuleUI
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
+            isPendingPrimarySaleRecipient={false}
+            isPendingClaimCondition={false}
             primarySaleRecipient={testAddress1}
-            update={updateStub}
+            setPrimarySaleRecipient={updatePrimarySaleRecipientStub}
+            setClaimCondition={updateClaimConditionStub}
             mint={mintStub}
             uninstallButton={{
               onClick: () => removeMutation.mutateAsync(),
@@ -140,7 +142,6 @@ function Component() {
             isOwnerAccount={isOwner}
             isErc721={isErc721}
             claimCondition={claimCondition}
-            isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
             chainId={1}
           />
         </BadgeContainer>
@@ -149,9 +150,11 @@ function Component() {
           <ClaimableModuleUI
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={true}
+            isPendingPrimarySaleRecipient={false}
+            isPendingClaimCondition={false}
             primarySaleRecipient={testAddress1}
-            update={updateStub}
+            setClaimCondition={updateClaimConditionStub}
+            setPrimarySaleRecipient={updatePrimarySaleRecipientStub}
             mint={mintStub}
             uninstallButton={{
               onClick: () => removeMutation.mutateAsync(),
@@ -160,7 +163,6 @@ function Component() {
             isOwnerAccount={isOwner}
             isErc721={isErc721}
             claimCondition={claimCondition}
-            isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
             chainId={1}
           />
         </BadgeContainer>

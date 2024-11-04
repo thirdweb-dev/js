@@ -140,7 +140,7 @@ function SetSharedMetadataSection(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
-          <div className="flex gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="name"
@@ -169,7 +169,7 @@ function SetSharedMetadataSection(props: {
             />
           </div>
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="imageUri"

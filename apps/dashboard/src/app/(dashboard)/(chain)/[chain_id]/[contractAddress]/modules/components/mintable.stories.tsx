@@ -40,8 +40,6 @@ function Component() {
   const [isErc721, setIsErc721] = useState(false);
   const [isBatchMetadataInstalled, setIsBatchMetadataInstalled] =
     useState(false);
-  const [isSequentialTokenIdInstalled, setIsSequentialTokenIdInstalled] =
-    useState(false);
   async function updatePrimaryRecipientStub(values: UpdateFormValues) {
     console.log("submitting", values);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -88,13 +86,6 @@ function Component() {
           />
 
           <CheckboxWithLabel
-            value={isSequentialTokenIdInstalled}
-            onChange={setIsSequentialTokenIdInstalled}
-            id="isSequentialTokenIdInstalled"
-            label="isSequentialTokenIdInstalled"
-          />
-
-          <CheckboxWithLabel
             value={isBatchMetadataInstalled}
             onChange={setIsBatchMetadataInstalled}
             id="isBatchMetadataInstalled"
@@ -116,7 +107,6 @@ function Component() {
             }}
             isOwnerAccount={isOwner}
             isErc721={isErc721}
-            isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
             isBatchMetadataInstalled={isBatchMetadataInstalled}
           />
         </BadgeContainer>
@@ -135,7 +125,6 @@ function Component() {
             }}
             isOwnerAccount={isOwner}
             isErc721={isErc721}
-            isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
             isBatchMetadataInstalled={isBatchMetadataInstalled}
           />
         </BadgeContainer>
@@ -154,7 +143,6 @@ function Component() {
             }}
             isOwnerAccount={isOwner}
             isErc721={isErc721}
-            isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
             isBatchMetadataInstalled={isBatchMetadataInstalled}
           />
         </BadgeContainer>

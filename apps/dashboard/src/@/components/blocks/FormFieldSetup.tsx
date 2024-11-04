@@ -12,7 +12,7 @@ export function FormFieldSetup(props: {
   helperText?: React.ReactNode;
 }) {
   return (
-    <div>
+    <div className="flex items-center gap-4">
       <div className="mb-2 inline-flex items-center gap-1">
         <Label htmlFor={props.htmlFor}>{props.label}</Label>
 

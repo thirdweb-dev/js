@@ -24,10 +24,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { type PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
 import { MintableERC721, MintableERC1155 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
@@ -72,9 +72,6 @@ function MintableModule(props: ModuleInstanceProps) {
   const isBatchMetadataInstalled = !!props.allModuleContractInfo.find(
     (module) => module.name.includes("BatchMetadata"),
   );
-  const isSequentialTokenIdInstalled = !!props.allModuleContractInfo.find(
-    (module) => module.name.includes("SequentialTokenId"),
-  );
 
   const mint = useCallback(
     async (values: MintFormValues) => {
@@ -95,8 +92,7 @@ function MintableModule(props: ModuleInstanceProps) {
           contract,
           to: values.recipient,
           amount: BigInt(values.amount),
-          // biome-ignore lint/style/noNonNullAssertion: if useNextTokenId is false, then tokenId should be defined
-          tokenId: values.useNextTokenId ? undefined : BigInt(values.tokenId!),
+          tokenId: values.tokenId ? BigInt(values.tokenId) : undefined,
           nft,
         });
       } else {
@@ -140,7 +136,6 @@ function MintableModule(props: ModuleInstanceProps) {
       isOwnerAccount={!!ownerAccount}
       isErc721={isErc721}
       isBatchMetadataInstalled={isBatchMetadataInstalled}
-      isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
     />
   );
 }
@@ -154,7 +149,6 @@ export function MintableModuleUI(
     mint: (values: MintFormValues) => Promise<void>;
     isErc721: boolean;
     isBatchMetadataInstalled: boolean;
-    isSequentialTokenIdInstalled: boolean;
   },
 ) {
   return (
@@ -176,9 +170,6 @@ export function MintableModuleUI(
                     mint={props.mint}
                     isErc721={props.isErc721}
                     isBatchMetadataInstalled={props.isBatchMetadataInstalled}
-                    isSequentialTokenIdInstalled={
-                      props.isSequentialTokenIdInstalled
-                    }
                   />
                 )}
                 {!props.isOwnerAccount && (
@@ -230,16 +221,19 @@ function PrimarySalesSection(props: {
     },
   });
 
+  const updateNotifications = useTxNotifications(
+    "Successfully updated primary sale recipient",
+    "Failed to update primary sale recipient",
+  );
+
   const updateMutation = useMutation({
     mutationFn: props.update,
+    onSuccess: updateNotifications.onSuccess,
+    onError: updateNotifications.onError,
   });
 
   const onSubmit = async () => {
-    const promise = updateMutation.mutateAsync(form.getValues());
-    toast.promise(promise, {
-      success: "Successfully updated primary sale recipient",
-      error: (error) => `Failed to update primary sale recipient: ${error}`,
-    });
+    updateMutation.mutateAsync(form.getValues());
   };
 
   return (
@@ -286,7 +280,6 @@ function MintNFTSection(props: {
   mint: (values: MintFormValues) => Promise<void>;
   isErc721: boolean;
   isBatchMetadataInstalled: boolean;
-  isSequentialTokenIdInstalled: boolean;
 }) {
   const form = useForm<MintFormValues>({
     values: {
@@ -301,16 +294,24 @@ function MintNFTSection(props: {
     reValidateMode: "onChange",
   });
 
+  const mintNotifications = useTxNotifications(
+    "Successfully minted NFT",
+    "Failed to mint NFT",
+  );
+
   const mintMutation = useMutation({
     mutationFn: props.mint,
+    onSuccess: mintNotifications.onSuccess,
+    onError: mintNotifications.onError,
   });
 
   const onSubmit = async () => {
-    const promise = mintMutation.mutateAsync(form.getValues());
-    toast.promise(promise, {
-      success: "Successfully minted NFT",
-      error: (error) => `Failed to mint NFT: ${error}`,
-    });
+    const values = form.getValues();
+    if (!props.isErc721 && !values.useNextTokenId && !values.tokenId) {
+      form.setError("tokenId", { message: "Token ID is required" });
+      return;
+    }
+    mintMutation.mutateAsync(values);
   };
 
   const useNextTokenId = form.watch("useNextTokenId");

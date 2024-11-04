@@ -20,10 +20,10 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { sendAndConfirmTransaction } from "thirdweb";
 import { RoyaltyERC721 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
@@ -69,8 +69,31 @@ function RoyaltyModule(props: ModuleInstanceProps) {
     [contract, ownerAccount],
   );
 
-  const update = useCallback(
-    async (values: RoyaltyConfigFormValues) => {
+  const setTransferValidator = useCallback(
+    async (values: TransferValidatorFormValues) => {
+      if (!ownerAccount) {
+        throw new Error("Not an owner account");
+      }
+      if (
+        values.transferValidator &&
+        values.transferValidator !== transferValidatorQuery.data
+      ) {
+        const setTransferValidatorTx = RoyaltyERC721.setTransferValidator({
+          contract: contract,
+          validator: values.transferValidator,
+        });
+
+        await sendAndConfirmTransaction({
+          account: ownerAccount,
+          transaction: setTransferValidatorTx,
+        });
+      }
+    },
+    [contract, ownerAccount, transferValidatorQuery.data],
+  );
+
+  const setDefaultRoyaltyInfo = useCallback(
+    async (values: DefaultRoyaltyFormValues) => {
       if (!ownerAccount) {
         throw new Error("Not an owner account");
       }
@@ -94,28 +117,8 @@ function RoyaltyModule(props: ModuleInstanceProps) {
           transaction: setSaleConfigTx,
         });
       }
-
-      if (
-        values.transferValidator &&
-        values.transferValidator !== transferValidatorQuery.data
-      ) {
-        const setTransferValidatorTx = RoyaltyERC721.setTransferValidator({
-          contract: contract,
-          validator: values.transferValidator,
-        });
-
-        await sendAndConfirmTransaction({
-          account: ownerAccount,
-          transaction: setTransferValidatorTx,
-        });
-      }
     },
-    [
-      contract,
-      ownerAccount,
-      transferValidatorQuery.data,
-      defaultRoyaltyInfoQuery.data,
-    ],
+    [contract, ownerAccount, defaultRoyaltyInfoQuery.data],
   );
 
   return (
@@ -126,7 +129,8 @@ function RoyaltyModule(props: ModuleInstanceProps) {
       }
       transferValidator={transferValidatorQuery.data}
       defaultRoyaltyInfo={defaultRoyaltyInfoQuery.data}
-      update={update}
+      setDefaultRoyaltyInfo={setDefaultRoyaltyInfo}
+      setTransferValidator={setTransferValidator}
       setRoyaltyInfoForToken={setRoyaltyInfoForToken}
       isOwnerAccount={!!ownerAccount}
     />
@@ -139,7 +143,10 @@ export function RoyaltyModuleUI(
     isOwnerAccount: boolean;
     defaultRoyaltyInfo?: readonly [string, number];
     transferValidator?: string;
-    update: (values: RoyaltyConfigFormValues) => Promise<void>;
+    setDefaultRoyaltyInfo: (values: DefaultRoyaltyFormValues) => Promise<void>;
+    setTransferValidator: (
+      values: TransferValidatorFormValues,
+    ) => Promise<void>;
     setRoyaltyInfoForToken: (values: RoyaltyInfoFormValues) => Promise<void>;
   },
 ) {
@@ -170,16 +177,45 @@ export function RoyaltyModuleUI(
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionItem value="defaultRoyaltyInfo" className="border-none">
+          <AccordionItem value="default-royalty-info" className="border-none">
             <AccordionTrigger className="border-border border-t px-1">
-              Default Royalty Info & Transfer Validator
+              Default Royalty Info
             </AccordionTrigger>
             <AccordionContent className="px-1">
-              <DefaultRoyaltyInfoSection
-                defaultRoyaltyInfo={props.defaultRoyaltyInfo}
-                transferValidator={props.transferValidator}
-                update={props.update}
-              />
+              {props.isOwnerAccount ? (
+                <DefaultRoyaltyInfoSection
+                  update={props.setDefaultRoyaltyInfo}
+                  defaultRoyaltyInfo={props.defaultRoyaltyInfo}
+                />
+              ) : (
+                <Alert variant="info">
+                  <CircleAlertIcon className="size-5" />
+                  <AlertTitle>
+                    You don't have permission to set default royalty info
+                  </AlertTitle>
+                </Alert>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="transfer-validator" className="border-none">
+            <AccordionTrigger className="border-border border-t px-1">
+              Transfer Validator
+            </AccordionTrigger>
+            <AccordionContent className="px-1">
+              {props.isOwnerAccount ? (
+                <TransferValidatorSection
+                  update={props.setTransferValidator}
+                  transferValidator={props.transferValidator}
+                />
+              ) : (
+                <Alert variant="info">
+                  <CircleAlertIcon className="size-5" />
+                  <AlertTitle>
+                    You don't have permission to set transfer validator
+                  </AlertTitle>
+                </Alert>
+              )}
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -189,10 +225,11 @@ export function RoyaltyModuleUI(
 }
 
 const royaltyInfoFormSchema = z.object({
-  tokenId: z
-    .string()
-    .min(1, { message: "Invalid Token ID" })
-    .refine((v) => Number(v) >= 0, { message: "Invalid Token ID" }),
+  tokenId: z.coerce
+    .number()
+    .min(0, { message: "Invalid tokenId" })
+    .optional()
+    .or(z.literal("")),
   recipient: addressSchema,
   bps: z
     .string()
@@ -215,18 +252,19 @@ function RoyaltyInfoPerTokenSection(props: {
     reValidateMode: "onChange",
   });
 
+  const setRoyaltyInfoForTokenNotifications = useTxNotifications(
+    "Successfully set royalty info for token",
+    "Failed to set royalty info for token",
+  );
+
   const setRoyaltyInfoForTokenMutation = useMutation({
     mutationFn: props.setRoyaltyInfoForToken,
+    onSuccess: setRoyaltyInfoForTokenNotifications.onSuccess,
+    onError: setRoyaltyInfoForTokenNotifications.onError,
   });
 
   const onSubmit = async () => {
-    const promise = setRoyaltyInfoForTokenMutation.mutateAsync(
-      form.getValues(),
-    );
-    toast.promise(promise, {
-      success: "Successfully set royalty info for token",
-      error: (error) => `Failed to set royalty info for token: ${error}`,
-    });
+    setRoyaltyInfoForTokenMutation.mutateAsync(form.getValues());
   };
 
   return (
@@ -303,40 +341,39 @@ const defaultRoyaltyFormSchema = z.object({
   bps: z.string().refine((v) => v.length === 0 || Number(v) >= 0, {
     message: "Invalid BPS",
   }),
-  transferValidator: addressSchema,
 });
 
-export type RoyaltyConfigFormValues = z.infer<typeof defaultRoyaltyFormSchema>;
+export type DefaultRoyaltyFormValues = z.infer<typeof defaultRoyaltyFormSchema>;
 
 function DefaultRoyaltyInfoSection(props: {
   defaultRoyaltyInfo?: readonly [string, number];
-  transferValidator?: string;
-  update: (values: RoyaltyConfigFormValues) => Promise<void>;
+  update: (values: DefaultRoyaltyFormValues) => Promise<void>;
 }) {
   const [defaultRoyaltyRecipient, defaultRoyaltyBps] =
     props.defaultRoyaltyInfo || [];
 
-  const form = useForm<RoyaltyConfigFormValues>({
+  const form = useForm<DefaultRoyaltyFormValues>({
     resolver: zodResolver(defaultRoyaltyFormSchema),
     values: {
-      transferValidator: props.transferValidator || "",
       recipient: defaultRoyaltyRecipient || "",
       bps: defaultRoyaltyBps ? String(defaultRoyaltyBps) : "",
     },
     reValidateMode: "onChange",
   });
 
+  const updateNotifications = useTxNotifications(
+    "Successfully set default royalty info",
+    "Failed to update default royalty info",
+  );
+
   const updateMutation = useMutation({
     mutationFn: props.update,
+    onSuccess: updateNotifications.onSuccess,
+    onError: updateNotifications.onError,
   });
 
   const onSubmit = async () => {
-    const promise = updateMutation.mutateAsync(form.getValues());
-    toast.promise(promise, {
-      success: "Successfully updated royalty info or transfer validator",
-      error: (error) =>
-        `Failed to update royalty info or transfer validator: ${error}`,
-    });
+    updateMutation.mutateAsync(form.getValues());
   };
 
   return (
@@ -377,20 +414,6 @@ function DefaultRoyaltyInfoSection(props: {
 
           <div className="h-2" />
 
-          <FormField
-            control={form.control}
-            name="transferValidator"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Transfer Validator</FormLabel>
-                <FormControl>
-                  <Input placeholder="0x..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <div className="mt-4 flex justify-end">
             <Button
               size="sm"
@@ -402,6 +425,78 @@ function DefaultRoyaltyInfoSection(props: {
               Update
             </Button>
           </div>
+        </div>
+      </form>
+    </Form>
+  );
+}
+
+const transferValidatorFormSchema = z.object({
+  transferValidator: addressSchema,
+});
+
+export type TransferValidatorFormValues = z.infer<
+  typeof transferValidatorFormSchema
+>;
+
+function TransferValidatorSection(props: {
+  transferValidator: string | undefined;
+  update: (values: TransferValidatorFormValues) => Promise<void>;
+}) {
+  const form = useForm<TransferValidatorFormValues>({
+    resolver: zodResolver(transferValidatorFormSchema),
+    values: {
+      transferValidator: props.transferValidator || "",
+    },
+    reValidateMode: "onChange",
+  });
+
+  const updateNotifications = useTxNotifications(
+    "Successfully set transfer validator",
+    "Failed to set transfer validator",
+  );
+
+  const updateMutation = useMutation({
+    mutationFn: props.update,
+    onSuccess: updateNotifications.onSuccess,
+    onError: updateNotifications.onError,
+  });
+
+  const onSubmit = async () => {
+    updateMutation.mutateAsync(form.getValues());
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="h-1" />
+
+        <FormField
+          control={form.control}
+          name="transferValidator"
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormLabel>Transfer Validator</FormLabel>
+              <FormControl>
+                <Input placeholder="0x..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="h-2" />
+
+        <div className="mt-4 flex justify-end">
+          <Button
+            size="sm"
+            className="min-w-24 gap-2"
+            disabled={updateMutation.isPending}
+            type="submit"
+          >
+            {updateMutation.isPending && <Spinner className="size-4" />}
+            Update
+          </Button>
         </div>
       </form>
     </Form>

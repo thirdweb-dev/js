@@ -1,4 +1,5 @@
 "use client";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
@@ -23,10 +24,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useAllChainsData } from "hooks/chains/allChains";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { type PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
 import { ClaimableERC721, ClaimableERC1155 } from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
@@ -65,9 +67,6 @@ function ClaimableModule(props: ModuleInstanceProps) {
   );
 
   const isErc721 = props.contractInfo.name === "ClaimableERC721";
-  const isSequentialTokenIdInstalled = !!props.allModuleContractInfo.find(
-    (module) => module.name.includes("SequentialTokenId"),
-  );
 
   const mint = useCallback(
     async (values: MintFormValues) => {
@@ -101,13 +100,11 @@ function ClaimableModule(props: ModuleInstanceProps) {
     [contract, account, isErc721],
   );
 
-  const update = useCallback(
-    async (values: ConfigFormValues) => {
+  const setClaimCondition = useCallback(
+    async (values: ClaimConditionFormValues) => {
       if (!ownerAccount) {
         throw new Error("Not an owner account");
       }
-
-      console.log("values: ", values);
 
       let setClaimConditionTx: PreparedTransaction;
       if (isErc721) {
@@ -137,7 +134,15 @@ function ClaimableModule(props: ModuleInstanceProps) {
         account: ownerAccount,
         transaction: setClaimConditionTx,
       });
+    },
+    [contract, ownerAccount, isErc721],
+  );
 
+  const setPrimarySaleRecipient = useCallback(
+    async (values: PrimarySaleRecipientFormValues) => {
+      if (!ownerAccount) {
+        throw new Error("Not an owner account");
+      }
       const setSaleConfigTx = ClaimableERC721.setSaleConfig({
         contract: contract,
         primarySaleRecipient: values.primarySaleRecipient,
@@ -148,22 +153,21 @@ function ClaimableModule(props: ModuleInstanceProps) {
         transaction: setSaleConfigTx,
       });
     },
-    [contract, ownerAccount, isErc721],
+    [contract, ownerAccount],
   );
 
   return (
     <ClaimableModuleUI
       {...props}
-      isPending={
-        primarySaleRecipientQuery.isPending || claimConditionQuery.isPending
-      }
+      isPendingPrimarySaleRecipient={primarySaleRecipientQuery.isPending}
+      isPendingClaimCondition={claimConditionQuery.isPending}
       primarySaleRecipient={primarySaleRecipientQuery.data}
       claimCondition={claimConditionQuery.data}
-      update={update}
+      setClaimCondition={setClaimCondition}
+      setPrimarySaleRecipient={setPrimarySaleRecipient}
       mint={mint}
       isOwnerAccount={!!ownerAccount}
       isErc721={isErc721}
-      isSequentialTokenIdInstalled={isSequentialTokenIdInstalled}
       chainId={props.contract.chain.id}
     />
   );
@@ -172,81 +176,92 @@ function ClaimableModule(props: ModuleInstanceProps) {
 export function ClaimableModuleUI(
   props: Omit<ModuleCardUIProps, "children" | "updateButton"> & {
     primarySaleRecipient: string | undefined;
-    isPending: boolean;
+    isPendingPrimarySaleRecipient: boolean;
+    isPendingClaimCondition: boolean;
     isOwnerAccount: boolean;
     claimCondition: ClaimCondition | undefined;
-    update: (values: ConfigFormValues) => Promise<void>;
+    setClaimCondition: (values: ClaimConditionFormValues) => Promise<void>;
+    setPrimarySaleRecipient: (
+      values: PrimarySaleRecipientFormValues,
+    ) => Promise<void>;
     mint: (values: MintFormValues) => Promise<void>;
     isErc721: boolean;
-    isSequentialTokenIdInstalled: boolean;
     chainId: number;
   },
 ) {
   return (
     <ModuleCardUI {...props}>
       <div className="h-1" />
-      {props.isPending && <Skeleton className="h-[74px]" />}
 
-      {!props.isPending && (
-        <div className="flex flex-col gap-4">
-          {/* Mint NFT */}
-          <Accordion type="single" collapsible className="-mx-1">
-            <AccordionItem value="metadata" className="border-none">
-              <AccordionTrigger className="border-border border-t px-1">
-                Mint NFT
-              </AccordionTrigger>
-              <AccordionContent className="px-1">
-                {props.isOwnerAccount && (
-                  <MintNFTSection
-                    mint={props.mint}
-                    isErc721={props.isErc721}
-                    isSequentialTokenIdInstalled={
-                      props.isSequentialTokenIdInstalled
-                    }
-                  />
-                )}
-                {!props.isOwnerAccount && (
-                  <Alert variant="info">
-                    <CircleAlertIcon className="size-5" />
-                    <AlertTitle>
-                      You don't have permission to mint NFTs on this contract
-                    </AlertTitle>
-                  </Alert>
-                )}
-              </AccordionContent>
-            </AccordionItem>
+      <div className="flex flex-col gap-4">
+        {/* Mint NFT */}
+        <Accordion type="single" collapsible className="-mx-1">
+          <AccordionItem value="metadata" className="border-none">
+            <AccordionTrigger className="border-border border-t px-1">
+              Mint NFT
+            </AccordionTrigger>
+            <AccordionContent className="px-1">
+              <MintNFTSection mint={props.mint} isErc721={props.isErc721} />
+            </AccordionContent>
+          </AccordionItem>
 
-            <AccordionItem
-              value="primary-sale-recipient"
-              className="border-none "
-            >
-              <AccordionTrigger className="border-border border-t px-1 text-left">
-                Claim Conditions & Primary Sale Recipient
-              </AccordionTrigger>
-              <AccordionContent className="px-1">
-                <ConfigSection
+          <AccordionItem value="claim-conditions" className="border-none ">
+            <AccordionTrigger className="border-border border-t px-1 text-left">
+              Claim Conditions
+            </AccordionTrigger>
+            <AccordionContent className="px-1">
+              {!props.isPendingClaimCondition ? (
+                <ClaimConditionSection
                   isOwnerAccount={props.isOwnerAccount}
                   primarySaleRecipient={props.primarySaleRecipient}
                   claimCondition={props.claimCondition}
-                  update={props.update}
+                  update={props.setClaimCondition}
                   isErc721={props.isErc721}
                   chainId={props.chainId}
                 />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-      )}
+              ) : (
+                <Skeleton className="h-[74px]" />
+              )}
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem
+            value="primary-sale-recipient"
+            className="border-none "
+          >
+            <AccordionTrigger className="border-border border-t px-1 text-left">
+              Primary Sale Recipient
+            </AccordionTrigger>
+            <AccordionContent className="px-1">
+              {!props.isPendingPrimarySaleRecipient ? (
+                <PrimarySaleRecipientSection
+                  isOwnerAccount={props.isOwnerAccount}
+                  primarySaleRecipient={props.primarySaleRecipient}
+                  update={props.setPrimarySaleRecipient}
+                />
+              ) : (
+                <Skeleton className="h-[74px]" />
+              )}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
     </ModuleCardUI>
   );
 }
 
-const configFormSchema = z.object({
-  primarySaleRecipient: addressSchema,
+const claimConditionFormSchema = z.object({
+  tokenId: z.coerce
+    .number()
+    .min(0, { message: "Invalid tokenId" })
+    .optional()
+    .or(z.literal("")),
 
-  tokenId: z.string().optional(),
-
-  pricePerToken: z.number().optional(),
+  pricePerToken: z.coerce
+    .number()
+    .min(0, { message: "Invalid price per token" })
+    .optional()
+    .or(z.literal("")),
   currencyAddress: z.string().optional(),
 
   maxClaimableSupply: z
@@ -266,23 +281,25 @@ const configFormSchema = z.object({
   allowList: z.array(z.object({ address: addressSchema })).optional(),
 });
 
-export type ConfigFormValues = z.infer<typeof configFormSchema>;
+export type ClaimConditionFormValues = z.infer<typeof claimConditionFormSchema>;
 
 // perform this outside else it forces too many re-renders
 const now = Date.now() / 1000;
 
-function ConfigSection(props: {
+function ClaimConditionSection(props: {
   primarySaleRecipient: string | undefined;
   claimCondition: ClaimCondition | undefined;
-  update: (values: ConfigFormValues) => Promise<void>;
+  update: (values: ClaimConditionFormValues) => Promise<void>;
   isOwnerAccount: boolean;
   isErc721: boolean;
   chainId: number;
 }) {
-  const form = useForm<ConfigFormValues>({
-    resolver: zodResolver(configFormSchema),
+  const { idToChain } = useAllChainsData();
+  const chain = idToChain.get(props.chainId);
+
+  const form = useForm<ClaimConditionFormValues>({
+    resolver: zodResolver(claimConditionFormSchema),
     values: {
-      primarySaleRecipient: props.primarySaleRecipient || "",
       // TODO: parse units based on the currency decimals
       pricePerToken: props.claimCondition?.pricePerUnit ? 0 : 0,
       currencyAddress:
@@ -310,10 +327,17 @@ function ConfigSection(props: {
     name: "allowList",
   });
 
-  const endTime = form.watch("endTime");
+  const updateNotifications = useTxNotifications(
+    "Successfully updated claim conditions",
+    "Failed to update claim conditions",
+  );
+
+  const [startTime, endTime] = form.watch(["startTime", "endTime"]);
 
   const updateMutation = useMutation({
     mutationFn: props.update,
+    onSuccess: updateNotifications.onSuccess,
+    onError: updateNotifications.onError,
   });
 
   const onSubmit = async () => {
@@ -322,54 +346,28 @@ function ConfigSection(props: {
       form.setError("tokenId", { message: "Token ID is required" });
       return;
     }
-    const promise = updateMutation.mutateAsync(values);
-    toast.promise(promise, {
-      success:
-        "Successfully updated claim conditions or primary sale recipient",
-      error: (error) =>
-        `Failed to update claim conditions or primary sale recipient: ${error}`,
-    });
+    updateMutation.mutateAsync(values);
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {!props.isErc721 && (
-              <FormField
-                control={form.control}
-                name="tokenId"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Token ID</FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={!props.isOwnerAccount} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-
+          {!props.isErc721 && (
             <FormField
               control={form.control}
-              name="primarySaleRecipient"
+              name="tokenId"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Sale Recipient</FormLabel>
+                  <FormLabel>Token ID</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="0x..."
-                      {...field}
-                      disabled={!props.isOwnerAccount}
-                    />
+                    <Input {...field} disabled={!props.isOwnerAccount} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
+          )}
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
@@ -391,10 +389,7 @@ function ConfigSection(props: {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Currency</FormLabel>
-                  <CurrencySelector
-                    contractChainId={props.chainId}
-                    field={field}
-                  />
+                  <CurrencySelector chain={chain} field={field} />
                 </FormItem>
               )}
             />
@@ -430,24 +425,22 @@ function ConfigSection(props: {
             />
           </div>
 
-          <FormField
-            control={form.control}
-            name="startTime"
-            render={({ field }) => (
-              <FormItem className="flex flex-1 items-center gap-2">
-                <FormLabel>Start & End Time</FormLabel>
-                <FormControl>
-                  <DatePickerWithRange
-                    from={field.value || new Date()}
-                    to={endTime || new Date()}
-                    setFrom={field.onChange}
-                    setTo={(to: Date) => form.setValue("endTime", to)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <FormFieldSetup
+            htmlFor="startTime"
+            label="Start & End Time"
+            isRequired={false}
+            errorMessage={
+              form.formState.errors?.startTime?.message ||
+              form.formState.errors?.endTime?.message
+            }
+          >
+            <DatePickerWithRange
+              from={startTime || new Date()}
+              to={endTime || new Date()}
+              setFrom={(from: Date) => form.setValue("startTime", from)}
+              setTo={(to: Date) => form.setValue("endTime", to)}
+            />
+          </FormFieldSetup>
 
           <Separator />
 
@@ -535,11 +528,91 @@ function ConfigSection(props: {
   );
 }
 
+const primarySaleRecipientFormSchema = z.object({
+  primarySaleRecipient: addressSchema,
+});
+
+export type PrimarySaleRecipientFormValues = z.infer<
+  typeof primarySaleRecipientFormSchema
+>;
+
+function PrimarySaleRecipientSection(props: {
+  primarySaleRecipient: string | undefined;
+  update: (values: PrimarySaleRecipientFormValues) => Promise<void>;
+  isOwnerAccount: boolean;
+}) {
+  const form = useForm<PrimarySaleRecipientFormValues>({
+    resolver: zodResolver(primarySaleRecipientFormSchema),
+    values: {
+      primarySaleRecipient: props.primarySaleRecipient || "",
+    },
+  });
+
+  const updateNotificaions = useTxNotifications(
+    "Successfully update primary sale recipient",
+    "Failed to update primary sale recipient",
+  );
+
+  const updateMutation = useMutation({
+    mutationFn: props.update,
+    onSuccess: updateNotificaions.onSuccess,
+    onError: updateNotificaions.onError,
+  });
+
+  const onSubmit = async () => {
+    updateMutation.mutateAsync(form.getValues());
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="primarySaleRecipient"
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormLabel>Sale Recipient</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="0x..."
+                  {...field}
+                  disabled={!props.isOwnerAccount}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="h-5" />
+
+        <div className="flex justify-end">
+          <Button
+            size="sm"
+            className="min-w-24 gap-2"
+            disabled={updateMutation.isPending || !props.isOwnerAccount}
+            type="submit"
+          >
+            {updateMutation.isPending && <Spinner className="size-4" />}
+            Update
+          </Button>
+        </div>
+      </form>{" "}
+    </Form>
+  );
+}
+
 const mintFormSchema = z.object({
-  tokenId: z.number().optional(),
-  quantity: z.string().refine((v) => v.length > 0 && Number(v) >= 0, {
-    message: "Invalid quantity",
-  }),
+  tokenId: z.coerce
+    .number()
+    .min(0, { message: "Invalid tokenId" })
+    .optional()
+    .or(z.literal("")),
+  quantity: z.coerce
+    .number()
+    .min(0, { message: "Invalid quantity" })
+    .optional()
+    .or(z.literal("")),
   recipient: addressSchema,
 });
 
@@ -548,9 +621,9 @@ export type MintFormValues = z.infer<typeof mintFormSchema>;
 function MintNFTSection(props: {
   mint: (values: MintFormValues) => Promise<void>;
   isErc721: boolean;
-  isSequentialTokenIdInstalled: boolean;
 }) {
   const form = useForm<MintFormValues>({
+    resolver: zodResolver(mintFormSchema),
     values: {
       quantity: "",
       recipient: "",
@@ -558,8 +631,15 @@ function MintNFTSection(props: {
     reValidateMode: "onChange",
   });
 
+  const updateNotifications = useTxNotifications(
+    "Successfully minted NFT",
+    "Failed to mint NFT",
+  );
+
   const mintMutation = useMutation({
     mutationFn: props.mint,
+    onSuccess: updateNotifications.onSuccess,
+    onError: updateNotifications.onError,
   });
 
   const onSubmit = async () => {
@@ -568,11 +648,7 @@ function MintNFTSection(props: {
       form.setError("tokenId", { message: "Token ID is required" });
       return;
     }
-    const promise = mintMutation.mutateAsync(values);
-    toast.promise(promise, {
-      success: "Successfully minted NFT",
-      error: (error) => `Failed to mint NFT: ${error}`,
-    });
+    mintMutation.mutateAsync(values);
   };
 
   return (
