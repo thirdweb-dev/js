@@ -1,14 +1,16 @@
-const LOGGED_IN_ONLY_PATHS = [
-  // anything that _starts_ with /dashboard is logged in only
-  "/dashboard",
-  // team pages are logged in only
-  "/team",
-  // anything that _starts_ with /cli is logged in only
-  "/cli",
-  // publish page
-  "/contracts/publish",
-];
-
 export function isLoginRequired(pathname: string) {
-  return LOGGED_IN_ONLY_PATHS.some((path) => pathname.startsWith(path));
+  // remove '/' in front and then split by '/'
+  const paths = pathname.slice(1).split("/");
+
+  // /dashboard, /team, /cli
+  if (paths[0] === "dashboard" || paths[0] === "team" || paths[0] === "cli") {
+    return true;
+  }
+
+  // /contracts/publish
+  if (paths[0] === "contracts" && paths[1] === "publish") {
+    return true;
+  }
+
+  return false;
 }
