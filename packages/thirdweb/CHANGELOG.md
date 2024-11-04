@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.65.1
+
+### Patch Changes
+
+- [#5277](https://github.com/thirdweb-dev/js/pull/5277) [`58fb28d`](https://github.com/thirdweb-dev/js/commit/58fb28de297e5a81be18a185d495425e29913a0b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect bundlerUrl in waitForUserReceipt
+
 ## 5.65.0
 
 ### Minor Changes
