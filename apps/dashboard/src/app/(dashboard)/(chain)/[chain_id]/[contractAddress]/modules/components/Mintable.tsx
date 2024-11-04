@@ -280,7 +280,7 @@ const mintFormSchema = z.object({
   customImage: z.string().optional(),
   customAnimationUrl: z.string().optional(),
   recipient: addressSchema,
-  tokenId: z.coerce.bigint().min(0n, { message: "Invalid tokenId" }).optional(),
+  tokenId: z.number().min(0, { message: "Invalid tokenId" }).optional(),
 });
 
 function MintNFTSection(props: {

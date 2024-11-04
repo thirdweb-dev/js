@@ -282,7 +282,7 @@ export function ClaimableModuleUI(
 }
 
 const claimConditionFormSchema = z.object({
-  tokenId: z.coerce.bigint().min(0n, { message: "Invalid tokenId" }).optional(),
+  tokenId: z.number().min(0, { message: "Invalid tokenId" }).optional(),
 
   pricePerToken: z.coerce
     .number()
