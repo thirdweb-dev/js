@@ -984,7 +984,8 @@ function SwapScreenContent(props: {
 
   const disableContinue =
     (swapRequired && !quoteQuery.data) || isNotEnoughBalance;
-  const switchChainRequired = props.payer.chain.id !== fromChain.id;
+  const switchChainRequired =
+    props.payer.wallet.getChain()?.id !== fromChain.id;
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   function getErrorMessage(err: any) {
