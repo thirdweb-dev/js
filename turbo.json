@@ -45,7 +45,9 @@
         "ANALYTICS_SERVICE_API_KEY",
         "DISABLE_FAUCET_CHAIN_IDS",
         "API_SERVER_SECRET",
-        "TURNSTILE_SECRET_KEY"
+        "TURNSTILE_SECRET_KEY",
+        "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
+        "NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET"
       ],
       "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]

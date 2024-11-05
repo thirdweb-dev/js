@@ -36,7 +36,7 @@ export default async function TeamLayout(props: {
 
   return (
     <div className="flex grow flex-col">
-      <div className="bg-muted/50">
+      <div className="bg-white dark:bg-muted/50">
         <TeamHeader
           currentProject={project}
           currentTeam={team}
@@ -45,6 +45,11 @@ export default async function TeamLayout(props: {
         <TabPathLinks
           tabContainerClassName="px-4 lg:px-6"
           links={[
+            {
+              path: `/team/${params.team_slug}/${params.project_slug}`,
+              exactMatch: true,
+              name: "Overview",
+            },
             {
               path: `/team/${params.team_slug}/${params.project_slug}/connect/analytics`,
               name: "Connect",
