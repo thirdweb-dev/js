@@ -1,7 +1,6 @@
 "use client";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Accordion,
   AccordionContent,
@@ -24,6 +23,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { addDays, fromUnixTime } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -220,7 +220,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
       }}
       isOwnerAccount={!!ownerAccount}
       isErc721={isErc721}
-      chainId={props.contract.chain.id}
+      contractChainId={props.contract.chain.id}
       mintSection={{
         mint,
       }}
@@ -232,7 +232,7 @@ export function ClaimableModuleUI(
   props: Omit<ModuleCardUIProps, "children" | "updateButton"> & {
     isOwnerAccount: boolean;
     isErc721: boolean;
-    chainId: number;
+    contractChainId: number;
     primarySaleRecipientSection: {
       setPrimarySaleRecipient: (
         values: PrimarySaleRecipientFormValues,
@@ -272,6 +272,7 @@ export function ClaimableModuleUI(
               <MintNFTSection
                 mint={props.mintSection.mint}
                 isErc721={props.isErc721}
+                contractChainId={props.contractChainId}
               />
             </AccordionContent>
           </AccordionItem>
@@ -289,7 +290,7 @@ export function ClaimableModuleUI(
                   }
                   update={props.claimConditionSection.setClaimCondition}
                   isErc721={props.isErc721}
-                  chainId={props.chainId}
+                  chainId={props.contractChainId}
                   tokenDecimals={props.claimConditionSection.data.tokenDecimals}
                 />
               ) : (
@@ -315,6 +316,7 @@ export function ClaimableModuleUI(
                   update={
                     props.primarySaleRecipientSection.setPrimarySaleRecipient
                   }
+                  contractChainId={props.contractChainId}
                 />
               ) : (
                 <Skeleton className="h-[74px]" />
@@ -598,15 +600,18 @@ function ClaimConditionSection(props: {
           </div>
 
           <div className="flex justify-end">
-            <Button
+            <TransactionButton
               size="sm"
-              className="min-w-24 gap-2"
+              className="min-w-24"
               disabled={updateMutation.isPending || !props.isOwnerAccount}
               type="submit"
+              isLoading={updateMutation.isPending}
+              txChainID={props.chainId}
+              transactionCount={1}
+              colorScheme="primary"
             >
-              {updateMutation.isPending && <Spinner className="size-4" />}
               Update
-            </Button>
+            </TransactionButton>
           </div>
         </div>
       </form>{" "}
@@ -626,6 +631,7 @@ function PrimarySaleRecipientSection(props: {
   primarySaleRecipient: string | undefined;
   update: (values: PrimarySaleRecipientFormValues) => Promise<void>;
   isOwnerAccount: boolean;
+  contractChainId: number;
 }) {
   const form = useForm<PrimarySaleRecipientFormValues>({
     resolver: zodResolver(primarySaleRecipientFormSchema),
@@ -673,15 +679,18 @@ function PrimarySaleRecipientSection(props: {
         <div className="h-5" />
 
         <div className="flex justify-end">
-          <Button
+          <TransactionButton
             size="sm"
             className="min-w-24 gap-2"
             disabled={updateMutation.isPending || !props.isOwnerAccount}
             type="submit"
+            isLoading={updateMutation.isPending}
+            txChainID={props.contractChainId}
+            transactionCount={1}
+            colorScheme="primary"
           >
-            {updateMutation.isPending && <Spinner className="size-4" />}
             Update
-          </Button>
+          </TransactionButton>
         </div>
       </form>{" "}
     </Form>
@@ -701,6 +710,7 @@ export type MintFormValues = z.infer<typeof mintFormSchema>;
 function MintNFTSection(props: {
   mint: (values: MintFormValues) => Promise<void>;
   isErc721: boolean;
+  contractChainId: number;
 }) {
   const form = useForm<MintFormValues>({
     resolver: zodResolver(mintFormSchema),
@@ -784,15 +794,18 @@ function MintNFTSection(props: {
           </div>
 
           <div className="flex justify-end">
-            <Button
+            <TransactionButton
               size="sm"
               className="min-w-24 gap-2"
               disabled={mintMutation.isPending}
               type="submit"
+              isLoading={mintMutation.isPending}
+              txChainID={props.contractChainId}
+              transactionCount={1}
+              colorScheme="primary"
             >
-              {mintMutation.isPending && <Spinner className="size-4" />}
               Mint
-            </Button>
+            </TransactionButton>
           </div>
         </div>
       </form>

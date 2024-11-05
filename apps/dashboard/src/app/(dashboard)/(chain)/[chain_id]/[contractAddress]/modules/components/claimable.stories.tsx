@@ -1,3 +1,4 @@
+import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
@@ -20,6 +21,9 @@ const meta = {
   component: Component,
   parameters: {
     layout: "centered",
+    nextjs: {
+      appDirectory: true,
+    },
   },
 } satisfies Meta<typeof Component>;
 
@@ -94,74 +98,77 @@ function Component() {
     auxData: "0x",
   };
 
+  // Todo - remove chakra provider after converting Transaction Button
   return (
-    <ThirdwebProvider>
-      <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-        <div className="flex flex-wrap items-center gap-5">
-          <CheckboxWithLabel
-            value={isOwner}
-            onChange={setIsOwner}
-            id="isOwner"
-            label="Is Owner"
+    <ChakraProviderSetup>
+      <ThirdwebProvider>
+        <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+          <div className="flex flex-wrap items-center gap-5">
+            <CheckboxWithLabel
+              value={isOwner}
+              onChange={setIsOwner}
+              id="isOwner"
+              label="Is Owner"
+            />
+
+            <CheckboxWithLabel
+              value={isErc721}
+              onChange={setIsErc721}
+              id="isErc721"
+              label="isErc721"
+            />
+
+            <CheckboxWithLabel
+              value={isClaimConditionLoading}
+              onChange={setIsClaimConditionLoading}
+              id="isClaimConditionLoading"
+              label="Claim Condition Section Loading"
+            />
+
+            <CheckboxWithLabel
+              value={isPrimarySaleRecipientLoading}
+              onChange={setIsPrimarySaleRecipientLoading}
+              id="isPrimarySaleRecipientLoading"
+              label="Primary Sale Recipient Section Loading"
+            />
+          </div>
+
+          <ClaimableModuleUI
+            contractInfo={contractInfo}
+            moduleAddress="0x0000000000000000000000000000000000000000"
+            primarySaleRecipientSection={{
+              data: isPrimarySaleRecipientLoading
+                ? undefined
+                : {
+                    primarySaleRecipient: testAddress1,
+                  },
+              setPrimarySaleRecipient: updatePrimarySaleRecipientStub,
+            }}
+            claimConditionSection={{
+              data: isClaimConditionLoading
+                ? undefined
+                : {
+                    claimCondition,
+                    tokenDecimals: 18,
+                  },
+              setClaimCondition: updateClaimConditionStub,
+            }}
+            mintSection={{
+              mint: mintStub,
+            }}
+            uninstallButton={{
+              onClick: async () => removeMutation.mutateAsync(),
+              isPending: removeMutation.isPending,
+            }}
+            isOwnerAccount={isOwner}
+            isErc721={isErc721}
+            contractChainId={1}
           />
 
-          <CheckboxWithLabel
-            value={isErc721}
-            onChange={setIsErc721}
-            id="isErc721"
-            label="isErc721"
-          />
-
-          <CheckboxWithLabel
-            value={isClaimConditionLoading}
-            onChange={setIsClaimConditionLoading}
-            id="isClaimConditionLoading"
-            label="Claim Condition Section Loading"
-          />
-
-          <CheckboxWithLabel
-            value={isPrimarySaleRecipientLoading}
-            onChange={setIsPrimarySaleRecipientLoading}
-            id="isPrimarySaleRecipientLoading"
-            label="Primary Sale Recipient Section Loading"
-          />
+          <Toaster richColors />
         </div>
-
-        <ClaimableModuleUI
-          contractInfo={contractInfo}
-          moduleAddress="0x0000000000000000000000000000000000000000"
-          primarySaleRecipientSection={{
-            data: isPrimarySaleRecipientLoading
-              ? undefined
-              : {
-                  primarySaleRecipient: testAddress1,
-                },
-            setPrimarySaleRecipient: updatePrimarySaleRecipientStub,
-          }}
-          claimConditionSection={{
-            data: isClaimConditionLoading
-              ? undefined
-              : {
-                  claimCondition,
-                  tokenDecimals: 18,
-                },
-            setClaimCondition: updateClaimConditionStub,
-          }}
-          mintSection={{
-            mint: mintStub,
-          }}
-          uninstallButton={{
-            onClick: async () => removeMutation.mutateAsync(),
-            isPending: removeMutation.isPending,
-          }}
-          isOwnerAccount={isOwner}
-          isErc721={isErc721}
-          chainId={1}
-        />
-
-        <Toaster richColors />
-      </div>
-    </ThirdwebProvider>
+      </ThirdwebProvider>
+    </ChakraProviderSetup>
   );
 }
 

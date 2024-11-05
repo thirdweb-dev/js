@@ -1,5 +1,4 @@
 "use client";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Accordion,
   AccordionContent,
@@ -7,7 +6,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -20,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
@@ -92,6 +91,7 @@ function BatchMetadataModule(props: ModuleInstanceProps) {
       {...props}
       uploadMetadata={uploadMetadata}
       isOwnerAccount={!!ownerAccount}
+      contractChainId={contract.chain.id}
     />
   );
 }
@@ -100,6 +100,7 @@ export function BatchMetadataModuleUI(
   props: Omit<ModuleCardUIProps, "children" | "updateButton"> & {
     isOwnerAccount: boolean;
     uploadMetadata: (values: UploadMetadataFormValues) => Promise<void>;
+    contractChainId: number;
   },
 ) {
   return (
@@ -115,6 +116,7 @@ export function BatchMetadataModuleUI(
               {props.isOwnerAccount && (
                 <UploadMetadataNFTSection
                   uploadMetadata={props.uploadMetadata}
+                  contractChainId={props.contractChainId}
                 />
               )}
               {!props.isOwnerAccount && (
@@ -155,6 +157,7 @@ export function BatchMetadataModuleUI(
 
 function UploadMetadataNFTSection(props: {
   uploadMetadata: (values: UploadMetadataFormValues) => Promise<void>;
+  contractChainId: number;
 }) {
   const form = useForm<UploadMetadataFormValues>({
     resolver: zodResolver(uploadMetadataFormSchema),
@@ -252,17 +255,18 @@ function UploadMetadataNFTSection(props: {
           </div>
 
           <div className="flex justify-end">
-            <Button
+            <TransactionButton
               size="sm"
-              className="min-w-24 gap-2"
+              className="min-w-24"
               disabled={uploadMetadataMutation.isPending}
               type="submit"
+              isLoading={uploadMetadataMutation.isPending}
+              txChainID={props.contractChainId}
+              transactionCount={1}
+              colorScheme="primary"
             >
-              {uploadMetadataMutation.isPending && (
-                <Spinner className="size-4" />
-              )}
               Upload
-            </Button>
+            </TransactionButton>
           </div>
         </div>
       </form>
