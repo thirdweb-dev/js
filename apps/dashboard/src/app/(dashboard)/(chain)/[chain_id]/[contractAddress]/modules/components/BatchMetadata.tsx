@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
@@ -25,24 +26,43 @@ import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { sendAndConfirmTransaction } from "thirdweb";
 import { BatchMetadataERC721 } from "thirdweb/modules";
-import type { NFTMetadataInputLimited } from "types/modified-types";
 import { parseAttributes } from "utils/parseAttributes";
+import { z } from "zod";
+import { fileBufferOrStringSchema } from "../zod-schemas";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
 import { AdvancedNFTMetadataFormGroup } from "./nft/AdvancedNFTMetadataFormGroup";
 import { NFTMediaFormGroup } from "./nft/NFTMediaFormGroup";
 import { PropertiesFormControl } from "./nft/PropertiesFormControl";
 
-// TODO: add form validation on the upload form
-// TODO: this module currently shows the UI for doing a single upload, but it should be batch upload UI
+const uploadMetadataFormSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  image: fileBufferOrStringSchema.optional(),
+  animationUri: fileBufferOrStringSchema.optional(),
+  external_url: fileBufferOrStringSchema.optional(),
+  customImage: z.string().optional(),
+  customAnimationUrl: z.string().optional(),
+  background_color: z
+    .string()
+    .refine(
+      (c) => {
+        return /^#[0-9a-f]{6}$/i.test(c.toLowerCase());
+      },
+      {
+        message: "Invalid Hex Color",
+      },
+    )
+    .optional(),
+  attributes: z.array(
+    z.object({
+      trait_type: z.string().min(1),
+      value: z.string().min(1),
+    }),
+  ),
+});
 
-export type UploadMetadataFormValues = NFTMetadataInputLimited & {
-  supply: number;
-  customImage: string;
-  customAnimationUrl: string;
-  attributes: { trait_type: string; value: string }[];
-  tokenId?: string;
-};
+export type UploadMetadataFormValues = z.infer<typeof uploadMetadataFormSchema>;
 
 function BatchMetadataModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
@@ -137,11 +157,10 @@ function UploadMetadataNFTSection(props: {
   uploadMetadata: (values: UploadMetadataFormValues) => Promise<void>;
 }) {
   const form = useForm<UploadMetadataFormValues>({
+    resolver: zodResolver(uploadMetadataFormSchema),
     values: {
-      supply: 1,
-      customImage: "",
-      customAnimationUrl: "",
-      attributes: [{ trait_type: "", value: "" }],
+      name: "",
+      attributes: [],
     },
     reValidateMode: "onChange",
   });

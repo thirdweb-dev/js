@@ -14,8 +14,8 @@ import type { UseFormReturn } from "react-hook-form";
 import type { NFTInput } from "thirdweb/utils";
 
 type AdvancedNFTMetadataFormGroupValues = {
-  customImage: string;
-  customAnimationUrl: string;
+  customImage?: string;
+  customAnimationUrl?: string;
   background_color?: NFTInput["background_color"];
   external_url?: NFTInput["external_url"];
 };
@@ -59,7 +59,7 @@ export function AdvancedNFTMetadataFormGroup<
         name="customImage"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Image URL</FormLabel>
+            <FormLabel>Image URI</FormLabel>
             <FormControl>
               <Input {...field} />
             </FormControl>
@@ -77,7 +77,7 @@ export function AdvancedNFTMetadataFormGroup<
         name="customAnimationUrl"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Animation URL</FormLabel>
+            <FormLabel>Animation URI</FormLabel>
             <FormControl>
               <Input {...field} />
             </FormControl>
@@ -92,13 +92,17 @@ export function AdvancedNFTMetadataFormGroup<
 
       {!externalIsTextFile && (
         <FormFieldSetup
-          errorMessage={undefined}
+          errorMessage={form.formState.errors.external_url?.message}
           htmlFor="external-url"
           isRequired={false}
           label="External URL"
           helperText="This is the URL that will appear below the asset's image on OpenSea and will allow users to leave OpenSea and view the item on your site."
         >
-          <Input placeholder="https://" {...form.register("external_url")} />
+          <Input
+            placeholder="https://"
+            {...form.register("external_url")}
+            type="url"
+          />
         </FormFieldSetup>
       )}
     </div>
