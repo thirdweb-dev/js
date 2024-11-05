@@ -189,11 +189,13 @@ export type ModuleCardUIProps = {
     onClick: () => void;
     isPending: boolean;
   };
-  updateButton?: {
-    onClick?: () => void;
-    isPending: boolean;
-    isDisabled: boolean;
-  };
+  updateButton?:
+    | {
+        onClick?: () => void;
+        isPending: boolean;
+        isDisabled: boolean;
+      }
+    | React.FC;
 };
 
 export function ModuleCardUI(props: ModuleCardUIProps) {
@@ -291,17 +293,23 @@ export function ModuleCardUI(props: ModuleCardUIProps) {
           Uninstall
         </Button>
 
-        {props.isOwnerAccount && props.updateButton && (
-          <Button
-            size="sm"
-            className="min-w-24 gap-2"
-            type="submit"
-            onClick={props.updateButton.onClick}
-            disabled={props.updateButton.isPending || !props.isOwnerAccount}
-          >
-            {props.updateButton.isPending && <Spinner className="size-4" />}
-            Update
-          </Button>
+        {props.isOwnerAccount &&
+          props.updateButton &&
+          typeof props.updateButton !== "function" && (
+            <Button
+              size="sm"
+              className="min-w-24 gap-2"
+              type="submit"
+              onClick={props.updateButton.onClick}
+              disabled={props.updateButton.isPending || !props.isOwnerAccount}
+            >
+              {props.updateButton.isPending && <Spinner className="size-4" />}
+              Update
+            </Button>
+          )}
+
+        {props.isOwnerAccount && typeof props.updateButton === "function" && (
+          <props.updateButton />
         )}
       </div>
     </section>

@@ -16,6 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -95,6 +96,7 @@ function TransferableModule(props: ModuleInstanceProps) {
       adminAddress={props.ownerAccount?.address || ""}
       update={update}
       isOwnerAccount={!!props.ownerAccount}
+      contractChainId={props.contract.chain.id}
     />
   );
 }
@@ -107,6 +109,7 @@ export function TransferableModuleUI(
     adminAddress: string;
     isOwnerAccount: boolean;
     update: (values: TransferableModuleFormValues) => Promise<void>;
+    contractChainId: number;
   },
 ) {
   const form = useForm<TransferableModuleFormValues>({
@@ -150,9 +153,25 @@ export function TransferableModuleUI(
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <ModuleCardUI
           {...props}
-          updateButton={{
-            isPending: updateMutation.isPending,
-            isDisabled: !form.formState.isDirty,
+          updateButton={() => {
+            return (
+              <TransactionButton
+                size="sm"
+                className="min-w-24 gap-2"
+                type="submit"
+                disabled={
+                  props.isPending ||
+                  !props.isOwnerAccount ||
+                  !form.formState.isDirty
+                }
+                isLoading={updateMutation.isPending}
+                colorScheme="primary"
+                transactionCount={1}
+                txChainID={props.contractChainId}
+              >
+                Update
+              </TransactionButton>
+            );
           }}
         >
           {props.isPending && <Skeleton className="h-[90px]" />}

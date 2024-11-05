@@ -34,6 +34,7 @@ import { popularChains } from "../popularChains";
 export const CustomConnectWallet = (props: {
   loginRequired?: boolean;
   connectButtonClassName?: string;
+  signInLinkButtonClassName?: string;
   detailsButtonClassName?: string;
 }) => {
   const thirdwebClient = useThirdwebClient();
@@ -134,7 +135,12 @@ export const CustomConnectWallet = (props: {
   if (!isLoggedIn && loginRequired) {
     return (
       <>
-        <Button asChild variant="default" className="gap-2" size="lg">
+        <Button
+          asChild
+          variant="default"
+          className={props.signInLinkButtonClassName}
+          size="lg"
+        >
           <Link
             href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
           >

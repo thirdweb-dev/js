@@ -96,9 +96,17 @@ export const MismatchButton = forwardRef<
 
   const eventRef =
     useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>(undefined);
+
   if (!wallet || !chainId) {
     return (
-      <CustomConnectWallet borderRadius="md" colorScheme="primary" {...props} />
+      <CustomConnectWallet
+        borderRadius="md"
+        colorScheme="primary"
+        {...props}
+        signInLinkButtonClassName={
+          props.size === "sm" ? "!py-2 !h-auto" : undefined
+        }
+      />
     );
   }
   const notEnoughBalance =
