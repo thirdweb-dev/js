@@ -11,6 +11,7 @@ import { ThirdwebProvider } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
 import {
   type ClaimConditionFormValues,
+  type ClaimConditionValue,
   ClaimableModuleUI,
   type MintFormValues,
   type PrimarySaleRecipientFormValues,
@@ -43,6 +44,20 @@ export const Mobile: Story = {
 
 const testAddress1 = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 
+const claimCondition = {
+  availableSupply: BigInt(100),
+  maxMintPerWallet: BigInt(10),
+  pricePerUnit: 10n,
+  // we get checksummed NATIVE_TOKEN_ADDRESS from claim condition query for native token
+  currency: checksumAddress(NATIVE_TOKEN_ADDRESS),
+  // last week
+  startTimestamp: subDays(new Date(), 7).getTime() / 1000,
+  endTimestamp: new Date().getTime() / 1000,
+  allowlistMerkleRoot:
+    "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
+  auxData: "0x",
+} as ClaimConditionValue;
+
 function Component() {
   const [isOwner, setIsOwner] = useState(true);
   const [isErc721, setIsErc721] = useState(false);
@@ -67,6 +82,10 @@ function Component() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
+  async function getClaimConditionErc1155Stub() {
+    return claimCondition;
+  }
+
   const removeMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -82,20 +101,6 @@ function Component() {
       "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore ",
     publisher: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
     version: "1.0.0",
-  };
-
-  const claimCondition = {
-    availableSupply: BigInt(100),
-    maxMintPerWallet: BigInt(10),
-    pricePerUnit: 10n,
-    // we get checksummed NATIVE_TOKEN_ADDRESS from claim condition query for native token
-    currency: checksumAddress(NATIVE_TOKEN_ADDRESS),
-    // last week
-    startTimestamp: subDays(new Date(), 7).getTime() / 1000,
-    endTimestamp: new Date().getTime() / 1000,
-    allowlistMerkleRoot:
-      "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
-    auxData: "0x",
   };
 
   // Todo - remove chakra provider after converting Transaction Button
@@ -152,6 +157,7 @@ function Component() {
                     tokenDecimals: 18,
                   },
               setClaimCondition: updateClaimConditionStub,
+              getClaimConditionErc1155: getClaimConditionErc1155Stub,
             }}
             mintSection={{
               mint: mintStub,

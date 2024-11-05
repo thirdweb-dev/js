@@ -22,18 +22,20 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { addDays, fromUnixTime } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { useEffect } from "react";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
   type PreparedTransaction,
   ZERO_ADDRESS,
   getContract,
+  readContract,
   sendAndConfirmTransaction,
   toTokens,
 } from "thirdweb";
@@ -64,6 +66,18 @@ export type ClaimConditionValue = {
 // TODO - don't compare with ZERO_ADDRESS we are not getting ZERO_ADDRESS as currency address and instead getting 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE, (checksummed NATIVE_TOKEN_ADDRESS)
 
 // TODO - fix Currency selector not showing the selected currency
+//
+
+type ClaimCondition = {
+  availableSupply: bigint;
+  allowlistMerkleRoot: `0x${string}`;
+  pricePerUnit: bigint;
+  currency: string;
+  maxMintPerWallet: bigint;
+  startTimestamp: number;
+  endTimestamp: number;
+  auxData: string;
+};
 
 function ClaimableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
@@ -87,6 +101,14 @@ function ClaimableModule(props: ModuleInstanceProps) {
       },
     },
   );
+
+  const getClaimConditionErc1155 = (tokenId: string) =>
+    readContract({
+      contract: contract,
+      method:
+        "function getClaimConditionByTokenId(uint256 _id) returns (ClaimCondition memory claimCondition)",
+      params: [BigInt(tokenId)],
+    }) as Promise<ClaimCondition>;
 
   const currencyContract = getContract({
     address: claimConditionQuery.data?.currency || "",
@@ -217,6 +239,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
               }
             : undefined,
         setClaimCondition,
+        getClaimConditionErc1155,
       }}
       isOwnerAccount={!!ownerAccount}
       isErc721={isErc721}
@@ -248,6 +271,7 @@ export function ClaimableModuleUI(
     };
     claimConditionSection: {
       setClaimCondition: (values: ClaimConditionFormValues) => Promise<void>;
+      getClaimConditionErc1155: (tokenId: string) => Promise<ClaimCondition>;
       data:
         | {
             claimCondition: ClaimConditionValue | undefined;
@@ -292,6 +316,9 @@ export function ClaimableModuleUI(
                   isErc721={props.isErc721}
                   chainId={props.contractChainId}
                   tokenDecimals={props.claimConditionSection.data.tokenDecimals}
+                  getClaimConditionErc1155={
+                    props.claimConditionSection.getClaimConditionErc1155
+                  }
                 />
               ) : (
                 <Skeleton className="h-[350px]" />
@@ -370,6 +397,7 @@ function ClaimConditionSection(props: {
   isErc721: boolean;
   chainId: number;
   tokenDecimals: number | undefined;
+  getClaimConditionErc1155: (tokenId: string) => Promise<ClaimCondition>;
 }) {
   const { idToChain } = useAllChainsData();
   const chain = idToChain.get(props.chainId);
@@ -435,6 +463,61 @@ function ClaimConditionSection(props: {
     updateMutation.mutateAsync(values);
   };
 
+  const tokenId = form.watch("tokenId");
+
+  const claimConditionErc1155Query = useQuery({
+    queryKey: ["claimConditionErc1155", props.chainId, tokenId],
+    queryFn: () => props.getClaimConditionErc1155(tokenId),
+    enabled: !props.isErc721 && Number(tokenId) > 0,
+  });
+
+  useEffect(() => {
+    if (claimConditionErc1155Query.data) {
+      form.reset({
+        tokenId,
+        currencyAddress:
+          claimConditionErc1155Query.data.currency === ZERO_ADDRESS
+            ? ""
+            : claimConditionErc1155Query.data.currency,
+        pricePerToken:
+          claimConditionErc1155Query.data.pricePerUnit &&
+          claimConditionErc1155Query.data.currency !== ZERO_ADDRESS &&
+          props.tokenDecimals
+            ? Number(
+                toTokens(
+                  claimConditionErc1155Query.data.pricePerUnit,
+                  props.tokenDecimals,
+                ),
+              )
+            : 0,
+        maxClaimableSupply:
+          claimConditionErc1155Query.data.availableSupply.toString() === "0" ||
+          claimConditionErc1155Query.data.availableSupply.toString() ===
+            MAX_UINT_256
+            ? ""
+            : claimConditionErc1155Query.data.availableSupply.toString() || "",
+        maxClaimablePerWallet:
+          claimConditionErc1155Query.data.maxMintPerWallet.toString() === "0" ||
+          claimConditionErc1155Query.data.maxMintPerWallet.toString() ===
+            MAX_UINT_256
+            ? ""
+            : claimConditionErc1155Query.data.maxMintPerWallet.toString() || "",
+        startTime: claimConditionErc1155Query.data.startTimestamp
+          ? fromUnixTime(claimConditionErc1155Query.data.startTimestamp)
+          : defaultStartDate,
+        endTime: claimConditionErc1155Query.data.endTimestamp
+          ? fromUnixTime(claimConditionErc1155Query.data.endTimestamp)
+          : defaultEndDate,
+        allowList: [],
+      });
+    }
+  }, [
+    claimConditionErc1155Query.data,
+    form.reset,
+    tokenId,
+    props.tokenDecimals,
+  ]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -455,164 +538,189 @@ function ClaimConditionSection(props: {
             />
           )}
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="pricePerToken"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Price Per Token</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={!props.isOwnerAccount} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="currencyAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Currency</FormLabel>
-                  <CurrencySelector chain={chain} field={field} />
-                </FormItem>
-              )}
-            />
-          </div>
+          {!props.isErc721 && !(Number(tokenId) > 0) && (
+            <Alert variant="warning">
+              <CircleAlertIcon className="size-5 max-sm:hidden" />
+              <AlertTitle className="max-sm:!pl-0">
+                Please set the token ID in order to proceed
+              </AlertTitle>
+            </Alert>
+          )}
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="maxClaimableSupply"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Max Available Supply</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={!props.isOwnerAccount} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          {!props.isErc721 &&
+            Number(tokenId) > 0 &&
+            claimConditionErc1155Query.isPending && (
+              <Skeleton className="h-[350px]" />
+            )}
 
-            <FormField
-              control={form.control}
-              name="maxClaimablePerWallet"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Maximum number of mints per wallet</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={!props.isOwnerAccount} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <FormFieldSetup
-            htmlFor="duration"
-            label="Duration"
-            isRequired
-            errorMessage={
-              form.formState.errors?.startTime?.message ||
-              form.formState.errors?.endTime?.message
-            }
-          >
-            <div>
-              <DatePickerWithRange
-                from={startTime}
-                to={endTime}
-                setFrom={(from: Date) => form.setValue("startTime", from)}
-                setTo={(to: Date) => form.setValue("endTime", to)}
-              />
-            </div>
-          </FormFieldSetup>
-
-          <Separator />
-
-          <div className="w-full space-y-2">
-            <FormLabel>Allowlist</FormLabel>
-            <div className="flex flex-col gap-3">
-              {allowListFields.fields.map((fieldItem, index) => (
-                <div className="flex items-start gap-3" key={fieldItem.id}>
+          {props.isErc721 ||
+            (Number(tokenId) > 0 && !claimConditionErc1155Query.isPending && (
+              <>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
-                    name={`allowList.${index}.address`}
+                    name="pricePerToken"
                     render={({ field }) => (
-                      <FormItem className="grow">
+                      <FormItem className="flex-1">
+                        <FormLabel>Price Per Token</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="0x..."
-                            {...field}
-                            disabled={!props.isOwnerAccount}
-                          />
+                          <Input {...field} disabled={!props.isOwnerAccount} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <ToolTipLabel label="Remove address">
+                  <FormField
+                    control={form.control}
+                    name="currencyAddress"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Currency</FormLabel>
+                        <CurrencySelector chain={chain} field={field} />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="maxClaimableSupply"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Max Available Supply</FormLabel>
+                        <FormControl>
+                          <Input {...field} disabled={!props.isOwnerAccount} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="maxClaimablePerWallet"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>
+                          Maximum number of mints per wallet
+                        </FormLabel>
+                        <FormControl>
+                          <Input {...field} disabled={!props.isOwnerAccount} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormFieldSetup
+                  htmlFor="duration"
+                  label="Duration"
+                  isRequired
+                  errorMessage={
+                    form.formState.errors?.startTime?.message ||
+                    form.formState.errors?.endTime?.message
+                  }
+                >
+                  <div>
+                    <DatePickerWithRange
+                      from={startTime}
+                      to={endTime}
+                      setFrom={(from: Date) => form.setValue("startTime", from)}
+                      setTo={(to: Date) => form.setValue("endTime", to)}
+                    />
+                  </div>
+                </FormFieldSetup>
+
+                <Separator />
+
+                <div className="w-full space-y-2">
+                  <FormLabel>Allowlist</FormLabel>
+                  <div className="flex flex-col gap-3">
+                    {allowListFields.fields.map((fieldItem, index) => (
+                      <div
+                        className="flex items-start gap-3"
+                        key={fieldItem.id}
+                      >
+                        <FormField
+                          control={form.control}
+                          name={`allowList.${index}.address`}
+                          render={({ field }) => (
+                            <FormItem className="grow">
+                              <FormControl>
+                                <Input
+                                  placeholder="0x..."
+                                  {...field}
+                                  disabled={!props.isOwnerAccount}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <ToolTipLabel label="Remove address">
+                          <Button
+                            variant="outline"
+                            className="!text-destructive-text bg-background"
+                            onClick={() => {
+                              allowListFields.remove(index);
+                            }}
+                            disabled={!props.isOwnerAccount}
+                          >
+                            <Trash2Icon className="size-4" />
+                          </Button>
+                        </ToolTipLabel>
+                      </div>
+                    ))}
+
+                    {allowListFields.fields.length === 0 && (
+                      <Alert variant="warning">
+                        <CircleAlertIcon className="size-5 max-sm:hidden" />
+                        <AlertTitle className="max-sm:!pl-0">
+                          No allowlist configured
+                        </AlertTitle>
+                      </Alert>
+                    )}
+                  </div>
+
+                  <div className="h-1" />
+
+                  <div className="flex gap-3">
                     <Button
                       variant="outline"
-                      className="!text-destructive-text bg-background"
+                      size="sm"
                       onClick={() => {
-                        allowListFields.remove(index);
+                        // add admin by default if adding the first input
+                        allowListFields.append({
+                          address: "",
+                        });
                       }}
+                      className="gap-2"
                       disabled={!props.isOwnerAccount}
                     >
-                      <Trash2Icon className="size-4" />
+                      <PlusIcon className="size-3" />
+                      Add Address
                     </Button>
-                  </ToolTipLabel>
+                  </div>
                 </div>
-              ))}
 
-              {allowListFields.fields.length === 0 && (
-                <Alert variant="warning">
-                  <CircleAlertIcon className="size-5 max-sm:hidden" />
-                  <AlertTitle className="max-sm:!pl-0">
-                    No allowlist configured
-                  </AlertTitle>
-                </Alert>
-              )}
-            </div>
-
-            <div className="h-1" />
-
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  // add admin by default if adding the first input
-                  allowListFields.append({
-                    address: "",
-                  });
-                }}
-                className="gap-2"
-                disabled={!props.isOwnerAccount}
-              >
-                <PlusIcon className="size-3" />
-                Add Address
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex justify-end">
-            <TransactionButton
-              size="sm"
-              className="min-w-24"
-              disabled={updateMutation.isPending || !props.isOwnerAccount}
-              type="submit"
-              isLoading={updateMutation.isPending}
-              txChainID={props.chainId}
-              transactionCount={1}
-              colorScheme="primary"
-            >
-              Update
-            </TransactionButton>
-          </div>
+                <div className="flex justify-end">
+                  <TransactionButton
+                    size="sm"
+                    className="min-w-24"
+                    disabled={updateMutation.isPending || !props.isOwnerAccount}
+                    type="submit"
+                    isLoading={updateMutation.isPending}
+                    txChainID={props.chainId}
+                    transactionCount={1}
+                    colorScheme="primary"
+                  >
+                    Update
+                  </TransactionButton>
+                </div>
+              </>
+            ))}
         </div>
       </form>{" "}
     </Form>
