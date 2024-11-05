@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -29,14 +30,16 @@ import { z } from "zod";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
 
-const formSchema = z.object({
+const setSharedMetadataFormSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
   imageUri: z.string().optional(),
   animationUri: z.string().optional(),
 });
 
-export type SetSharedMetadataFormValues = z.infer<typeof formSchema>;
+export type SetSharedMetadataFormValues = z.infer<
+  typeof setSharedMetadataFormSchema
+>;
 
 function OpenEditionMetadataModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
@@ -114,7 +117,7 @@ function SetSharedMetadataSection(props: {
   setSharedMetadata: (values: SetSharedMetadataFormValues) => Promise<void>;
 }) {
   const form = useForm<SetSharedMetadataFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(setSharedMetadataFormSchema),
     values: {
       name: "",
       description: "",
@@ -143,12 +146,12 @@ function SetSharedMetadataSection(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="flex flex-col gap-6">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -157,28 +160,27 @@ function SetSharedMetadataSection(props: {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Textarea {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="imageUri"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Image URL</FormLabel>
+                  <FormLabel>Image URI</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -191,7 +193,7 @@ function SetSharedMetadataSection(props: {
               name="animationUri"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Animation URL</FormLabel>
+                  <FormLabel>Animation URI</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -211,7 +213,7 @@ function SetSharedMetadataSection(props: {
               {setSharedMetadataMutation.isPending && (
                 <Spinner className="size-4" />
               )}
-              Set Shared Metadata
+              Update
             </Button>
           </div>
         </div>
