@@ -51,17 +51,23 @@ export async function getPaymasterAndData(args: {
   const entrypoint = entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6;
   const paymasterUrl = getDefaultBundlerUrl(chain);
 
+  const body = {
+    jsonrpc: "2.0",
+    id: 1,
+    method: "pm_sponsorUserOperation",
+    params: [hexlifyUserOp(userOp), entrypoint],
+  };
+
+  if (DEBUG) {
+    console.debug("Paymaster body:", body);
+  }
+
   // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
   const fetchWithHeaders = getClientFetch(client);
   const response = await fetchWithHeaders(paymasterUrl, {
     method: "POST",
     headers,
-    body: stringify({
-      jsonrpc: "2.0",
-      id: 1,
-      method: "pm_sponsorUserOperation",
-      params: [hexlifyUserOp(userOp), entrypoint],
-    }),
+    body: stringify(body),
   });
   const res = await response.json();
 
