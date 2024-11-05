@@ -1,3 +1,4 @@
+import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
@@ -16,6 +17,9 @@ const meta = {
   component: Component,
   parameters: {
     layout: "centered",
+    nextjs: {
+      appDirectory: true,
+    },
   },
 } satisfies Meta<typeof Component>;
 
@@ -67,89 +71,96 @@ function Component() {
     version: "1.0.0",
   };
 
+  // TODO - remove ChakraProviderSetup after converting the TransactionButton to tailwind+shadcn
+
   return (
-    <ThirdwebProvider>
-      <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-        <div className="flex items-center gap-5">
-          <CheckboxWithLabel
-            value={isOwner}
-            onChange={setIsOwner}
-            id="isOwner"
-            label="Is Owner"
-          />
+    <ChakraProviderSetup>
+      <ThirdwebProvider>
+        <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+          <div className="flex items-center gap-5">
+            <CheckboxWithLabel
+              value={isOwner}
+              onChange={setIsOwner}
+              id="isOwner"
+              label="Is Owner"
+            />
 
-          <CheckboxWithLabel
-            value={isErc721}
-            onChange={setIsErc721}
-            id="isErc721"
-            label="isErc721"
-          />
+            <CheckboxWithLabel
+              value={isErc721}
+              onChange={setIsErc721}
+              id="isErc721"
+              label="isErc721"
+            />
 
-          <CheckboxWithLabel
-            value={isBatchMetadataInstalled}
-            onChange={setIsBatchMetadataInstalled}
-            id="isBatchMetadataInstalled"
-            label="isBatchMetadataInstalled"
-          />
+            <CheckboxWithLabel
+              value={isBatchMetadataInstalled}
+              onChange={setIsBatchMetadataInstalled}
+              id="isBatchMetadataInstalled"
+              label="isBatchMetadataInstalled"
+            />
+          </div>
+
+          <BadgeContainer label="Empty Primary Sale Recipient">
+            <MintableModuleUI
+              contractInfo={contractInfo}
+              moduleAddress="0x0000000000000000000000000000000000000000"
+              isPending={false}
+              primarySaleRecipient={""}
+              updatePrimaryRecipient={updatePrimaryRecipientStub}
+              mint={mintStub}
+              uninstallButton={{
+                onClick: async () => removeMutation.mutateAsync(),
+                isPending: removeMutation.isPending,
+              }}
+              isOwnerAccount={isOwner}
+              isErc721={isErc721}
+              isBatchMetadataInstalled={isBatchMetadataInstalled}
+              contractChainId={1}
+            />
+          </BadgeContainer>
+
+          <BadgeContainer label="Filled Primary Sale Recipient">
+            <MintableModuleUI
+              contractInfo={contractInfo}
+              moduleAddress="0x0000000000000000000000000000000000000000"
+              isPending={false}
+              primarySaleRecipient={testAddress1}
+              updatePrimaryRecipient={updatePrimaryRecipientStub}
+              mint={mintStub}
+              uninstallButton={{
+                onClick: () => removeMutation.mutateAsync(),
+                isPending: removeMutation.isPending,
+              }}
+              isOwnerAccount={isOwner}
+              isErc721={isErc721}
+              isBatchMetadataInstalled={isBatchMetadataInstalled}
+              contractChainId={1}
+            />
+          </BadgeContainer>
+
+          <BadgeContainer label="Pending">
+            <MintableModuleUI
+              contractInfo={contractInfo}
+              moduleAddress="0x0000000000000000000000000000000000000000"
+              isPending={true}
+              primarySaleRecipient={testAddress1}
+              updatePrimaryRecipient={updatePrimaryRecipientStub}
+              mint={mintStub}
+              uninstallButton={{
+                onClick: () => removeMutation.mutateAsync(),
+                isPending: removeMutation.isPending,
+              }}
+              isOwnerAccount={isOwner}
+              isErc721={isErc721}
+              isBatchMetadataInstalled={isBatchMetadataInstalled}
+              contractChainId={1}
+            />
+          </BadgeContainer>
+
+          <Toaster richColors />
         </div>
-
-        <BadgeContainer label="Empty Primary Sale Recipient">
-          <MintableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            primarySaleRecipient={""}
-            updatePrimaryRecipient={updatePrimaryRecipientStub}
-            mint={mintStub}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-            isErc721={isErc721}
-            isBatchMetadataInstalled={isBatchMetadataInstalled}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Filled Primary Sale Recipient">
-          <MintableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            primarySaleRecipient={testAddress1}
-            updatePrimaryRecipient={updatePrimaryRecipientStub}
-            mint={mintStub}
-            uninstallButton={{
-              onClick: () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-            isErc721={isErc721}
-            isBatchMetadataInstalled={isBatchMetadataInstalled}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Pending">
-          <MintableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={true}
-            primarySaleRecipient={testAddress1}
-            updatePrimaryRecipient={updatePrimaryRecipientStub}
-            mint={mintStub}
-            uninstallButton={{
-              onClick: () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-            isErc721={isErc721}
-            isBatchMetadataInstalled={isBatchMetadataInstalled}
-          />
-        </BadgeContainer>
-
-        <Toaster richColors />
-      </div>
-    </ThirdwebProvider>
+      </ThirdwebProvider>
+    </ChakraProviderSetup>
   );
 }
 

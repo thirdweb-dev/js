@@ -1,5 +1,4 @@
 "use client";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Accordion,
   AccordionContent,
@@ -7,7 +6,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Form,
@@ -24,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
@@ -134,6 +133,7 @@ function MintableModule(props: ModuleInstanceProps) {
       isOwnerAccount={!!ownerAccount}
       isErc721={isErc721}
       isBatchMetadataInstalled={isBatchMetadataInstalled}
+      contractChainId={contract.chain.id}
     />
   );
 }
@@ -147,6 +147,7 @@ export function MintableModuleUI(
     mint: (values: MintFormValues) => Promise<void>;
     isErc721: boolean;
     isBatchMetadataInstalled: boolean;
+    contractChainId: number;
   },
 ) {
   return (
@@ -168,6 +169,7 @@ export function MintableModuleUI(
                     mint={props.mint}
                     isErc721={props.isErc721}
                     isBatchMetadataInstalled={props.isBatchMetadataInstalled}
+                    contractChainId={props.contractChainId}
                   />
                 )}
                 {!props.isOwnerAccount && (
@@ -193,6 +195,7 @@ export function MintableModuleUI(
                   isOwnerAccount={props.isOwnerAccount}
                   primarySaleRecipient={props.primarySaleRecipient}
                   update={props.updatePrimaryRecipient}
+                  contractChainId={props.contractChainId}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -211,6 +214,7 @@ function PrimarySalesSection(props: {
   primarySaleRecipient: string | undefined;
   update: (values: UpdateFormValues) => Promise<void>;
   isOwnerAccount: boolean;
+  contractChainId: number;
 }) {
   const form = useForm<UpdateFormValues>({
     resolver: zodResolver(primarySaleRecipientFormSchema),
@@ -259,15 +263,18 @@ function PrimarySalesSection(props: {
         />
 
         <div className="mt-4 flex justify-end">
-          <Button
+          <TransactionButton
             size="sm"
-            className="min-w-24 gap-2"
+            className="min-w-24"
             disabled={updateMutation.isPending || !props.isOwnerAccount}
             type="submit"
+            isLoading={updateMutation.isPending}
+            colorScheme="primary"
+            transactionCount={1}
+            txChainID={props.contractChainId}
           >
-            {updateMutation.isPending && <Spinner className="size-4" />}
             Update
-          </Button>
+          </TransactionButton>
         </div>
       </form>{" "}
     </Form>
@@ -287,6 +294,7 @@ function MintNFTSection(props: {
   mint: (values: MintFormValues) => Promise<void>;
   isErc721: boolean;
   isBatchMetadataInstalled: boolean;
+  contractChainId: number;
 }) {
   const form = useForm<MintFormValues>({
     resolver: zodResolver(mintFormSchema),
@@ -467,15 +475,18 @@ function MintNFTSection(props: {
           </div>
 
           <div className="flex justify-end">
-            <Button
+            <TransactionButton
               size="sm"
-              className="min-w-24 gap-2"
+              className="min-w-24"
               disabled={mintMutation.isPending}
               type="submit"
+              isLoading={mintMutation.isPending}
+              colorScheme="primary"
+              txChainID={props.contractChainId}
+              transactionCount={1}
             >
-              {mintMutation.isPending && <Spinner className="size-4" />}
               Mint
-            </Button>
+            </TransactionButton>
           </div>
         </div>
       </form>
