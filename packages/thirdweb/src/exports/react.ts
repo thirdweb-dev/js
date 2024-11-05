@@ -195,3 +195,6 @@ export type {
   FarcasterProfile,
   LensProfile,
 } from "../social/types.js";
+
+// Site Embed
+export { SiteEmbed } from "../react/web/ui/SiteEmbed.js";
