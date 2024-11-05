@@ -4,16 +4,17 @@ import { FetchError } from "utils/error";
 import type { Ecosystem } from "../../../types";
 import { EcosystemAnalyticsPage } from "./components/EcosystemAnalyticsPage";
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: {
+export default async function Page(props: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{
     interval?: "day" | "week";
     range?: Range;
-  };
+  }>;
 }) {
+  const [params, searchParams] = await Promise.all([
+    props.params,
+    props.searchParams,
+  ]);
   const ecosystem = await getEcosystem(params.slug);
 
   return (

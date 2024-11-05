@@ -4,20 +4,22 @@ import { fetchApiServer } from "data/analytics/fetch-api-server";
 import { FetchError } from "utils/error";
 import { EcosystemAnalyticsPage } from "../../../../../../../../(dashboard)/dashboard/connect/ecosystem/[slug]/(active)/analytics/components/EcosystemAnalyticsPage";
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: {
+export default async function Page(props: {
+  params: Promise<{
     slug: string;
     team_slug: string;
     project_slug: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     interval?: "day" | "week";
     range?: Range;
-  };
+  }>;
 }) {
+  const [params, searchParams] = await Promise.all([
+    props.params,
+    props.searchParams,
+  ]);
+
   const ecosystem = await getEcosystem(params.slug);
   return (
     <EcosystemAnalyticsPage
