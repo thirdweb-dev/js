@@ -1,14 +1,17 @@
+import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import {
+  API_SERVER_URL,
+  THIRDWEB_ACCESS_TOKEN,
+  THIRDWEB_ENGINE_FAUCET_WALLET,
+  THIRDWEB_ENGINE_URL,
+} from "@/constants/env";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ipAddress } from "@vercel/functions";
 import { startOfToday } from "date-fns";
 import { cacheGet, cacheSet } from "lib/redis";
 import { type NextRequest, NextResponse } from "next/server";
-import { ZERO_ADDRESS } from "thirdweb";
+import { ZERO_ADDRESS, getAddress } from "thirdweb";
 import { getFaucetClaimAmount } from "./claim-amount";
-
-const THIRDWEB_ENGINE_URL = process.env.THIRDWEB_ENGINE_URL;
-const NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET =
-  process.env.NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET;
-const THIRDWEB_ACCESS_TOKEN = process.env.THIRDWEB_ACCESS_TOKEN;
 
 interface RequestTestnetFundsPayload {
   chainId: number;
@@ -18,8 +21,68 @@ interface RequestTestnetFundsPayload {
   turnstileToken: string;
 }
 
-// Note: This handler cannot use "edge" runtime because of Redis usage.
+/**
+ * How this endpoint works:
+ * Only users who have signed in to thirdweb.com with an account that is email-verified can claim.
+ * Those who satisfy the requirement above can claim once per 24 hours for every account
+ *
+ * Note: This handler cannot use "edge" runtime because of Redis usage.
+ */
 export const POST = async (req: NextRequest) => {
+  // Make sure user's connected to the site
+  const activeAccount = req.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;
+
+  if (!activeAccount) {
+    return NextResponse.json(
+      {
+        error: "No wallet detected",
+      },
+      { status: 400 },
+    );
+  }
+  const authCookieName = COOKIE_PREFIX_TOKEN + getAddress(activeAccount);
+
+  const authCookie = req.cookies.get(authCookieName);
+
+  if (!authCookie) {
+    return NextResponse.json(
+      {
+        error: "No wallet connected",
+      },
+      { status: 400 },
+    );
+  }
+
+  // Make sure the connected wallet has a thirdweb account
+  const accountRes = await fetch(`${API_SERVER_URL}/v1/account/me`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${authCookie.value}`,
+    },
+  });
+
+  if (accountRes.status !== 200) {
+    // Account not found on this connected address
+    return NextResponse.json(
+      {
+        error: "thirdweb account not found",
+      },
+      { status: 400 },
+    );
+  }
+
+  const account: { data: Account } = await accountRes.json();
+
+  // Make sure the logged-in account has verified its email
+  if (account.data.status === "noCustomer") {
+    return NextResponse.json(
+      {
+        error: "Account owner hasn't verified email",
+      },
+      { status: 400 },
+    );
+  }
+
   const requestBody = (await req.json()) as RequestTestnetFundsPayload;
   const { chainId, toAddress, turnstileToken } = requestBody;
   if (Number.isNaN(chainId)) {
@@ -28,7 +91,7 @@ export const POST = async (req: NextRequest) => {
 
   if (
     !THIRDWEB_ENGINE_URL ||
-    !NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET ||
+    !THIRDWEB_ENGINE_FAUCET_WALLET ||
     !THIRDWEB_ACCESS_TOKEN
   ) {
     return NextResponse.json(
@@ -89,15 +152,23 @@ export const POST = async (req: NextRequest) => {
 
   const ipCacheKey = `testnet-faucet:${chainId}:${ip}`;
   const addressCacheKey = `testnet-faucet:${chainId}:${toAddress}`;
+  const accountCacheKey = `testnet-faucet:${chainId}:${account.data.id}`;
 
   // Assert 1 request per IP/chain every 24 hours.
   // get the cached value
-  const [ipCacheValue, addressCache] = await Promise.all([
-    cacheGet(ipCacheKey),
-    cacheGet(addressCacheKey),
-  ]);
+  const [ipCacheValue, accountCacheValue, addressCacheValue] =
+    await Promise.all([
+      cacheGet(ipCacheKey),
+      cacheGet(accountCacheKey),
+      cacheGet(addressCacheKey),
+    ]);
+
   // if we have a cached value, return an error
-  if (ipCacheValue !== null || addressCache !== null) {
+  if (
+    ipCacheValue !== null ||
+    accountCacheValue !== null ||
+    addressCacheValue !== null
+  ) {
     return NextResponse.json(
       { error: "Already requested funds on this chain in the past 24 hours." },
       { status: 429 },
@@ -117,6 +188,7 @@ export const POST = async (req: NextRequest) => {
     // Store the claim request for 24 hours.
     await Promise.all([
       cacheSet(ipCacheKey, "claimed", 24 * 60 * 60),
+      cacheSet(accountCacheKey, "claimed", 24 * 60 * 60),
       cacheSet(addressCacheKey, "claimed", 24 * 60 * 60),
     ]);
     // then actually transfer the funds
@@ -126,7 +198,7 @@ export const POST = async (req: NextRequest) => {
       headers: {
         "Content-Type": "application/json",
         "x-idempotency-key": idempotencyKey,
-        "x-backend-wallet-address": NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
+        "x-backend-wallet-address": THIRDWEB_ENGINE_FAUCET_WALLET,
         Authorization: `Bearer ${THIRDWEB_ACCESS_TOKEN}`,
       },
       body: JSON.stringify({

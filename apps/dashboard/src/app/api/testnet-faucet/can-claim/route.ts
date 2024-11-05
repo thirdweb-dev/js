@@ -1,16 +1,14 @@
+import {
+  DISABLE_FAUCET_CHAIN_IDS,
+  THIRDWEB_ACCESS_TOKEN,
+  THIRDWEB_ENGINE_FAUCET_WALLET,
+  THIRDWEB_ENGINE_URL,
+} from "@/constants/env";
 import { ipAddress } from "@vercel/functions";
 import { cacheTtl } from "lib/redis";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import type { CanClaimResponseType } from "./CanClaimResponseType";
-
-const THIRDWEB_ENGINE_URL = process.env.THIRDWEB_ENGINE_URL;
-const NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET =
-  process.env.NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET;
-const THIRDWEB_ACCESS_TOKEN = process.env.THIRDWEB_ACCESS_TOKEN;
-
-// Comma-separated list of chain IDs to disable faucet for.
-const DISABLE_FAUCET_CHAIN_IDS = process.env.DISABLE_FAUCET_CHAIN_IDS;
 
 // Note: This handler cannot use "edge" runtime because of Redis usage.
 export const GET = async (req: NextRequest) => {
@@ -50,7 +48,7 @@ export const GET = async (req: NextRequest) => {
 
   if (
     !THIRDWEB_ENGINE_URL ||
-    !NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET ||
+    !THIRDWEB_ENGINE_FAUCET_WALLET ||
     !THIRDWEB_ACCESS_TOKEN ||
     isFaucetDisabled
   ) {
