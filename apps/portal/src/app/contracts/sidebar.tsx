@@ -2,7 +2,6 @@ import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
   ContractDeployIcon,
   ContractExploreIcon,
-  ContractInteractIcon,
   ContractModularContractIcon,
   ContractPublishIcon,
 } from "@/icons";
@@ -17,7 +16,6 @@ const coreContractsSlug = "/contracts/modular-contracts/core-contracts";
 
 // TODO: Deprecate links that start with the following slugs
 const buildSlug = "/contracts/build";
-const interactSlug = "/contracts/interact";
 const extensionsSlug = "/contracts/build/extensions";
 const baseContractsSlug = "/contracts/build/base-contracts";
 
