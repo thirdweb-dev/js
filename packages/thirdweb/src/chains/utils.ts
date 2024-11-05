@@ -10,7 +10,10 @@ import type {
   LegacyChain,
 } from "./types.js";
 
-const CUSTOM_CHAIN_MAP = new Map<number, Chain>();
+/**
+ * @internal Exported for tests
+ */
+export const CUSTOM_CHAIN_MAP = new Map<number, Chain>();
 
 /**
  * Defines a chain with the given options.
@@ -98,7 +101,10 @@ function isLegacyChain(
   return "rpc" in chain && Array.isArray(chain.rpc) && "slug" in chain;
 }
 
-function convertLegacyChain(legacyChain: LegacyChain): Chain {
+/**
+ * @internal
+ */
+export function convertLegacyChain(legacyChain: LegacyChain): Chain {
   const RPC_URL = getThirdwebDomains().rpc;
   return {
     id: legacyChain.chainId,
