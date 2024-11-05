@@ -5,7 +5,14 @@ import {
   useAccount,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Suspense, lazy, useEffect, useState } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  Suspense,
+  lazy,
+  useEffect,
+  useState,
+} from "react";
 import { useActiveWallet } from "thirdweb/react";
 import { useTrack } from "../../hooks/analytics/useTrack";
 import { LazyOnboardingBilling } from "./LazyOnboardingBilling";
@@ -42,7 +49,10 @@ type OnboardingState =
   | "skipped"
   | undefined;
 
-export const Onboarding: React.FC = () => {
+export const Onboarding: React.FC<{
+  // Pass this props to make the modal closable (it will enable backdrop + the "x" icon)
+  onOpenChange?: Dispatch<SetStateAction<boolean>>;
+}> = ({ onOpenChange }) => {
   const meQuery = useAccount();
 
   const { isLoggedIn } = useLoggedInUser();
@@ -202,7 +212,11 @@ export const Onboarding: React.FC = () => {
   }
 
   return (
-    <OnboardingModal isOpen={!!state} wide={state === "plan"}>
+    <OnboardingModal
+      isOpen={!!state}
+      wide={state === "plan"}
+      onOpenChange={onOpenChange}
+    >
       {state === "onboarding" && (
         <Suspense fallback={<Loading />}>
           <OnboardingGeneral
