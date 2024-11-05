@@ -1,3 +1,4 @@
+import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
@@ -17,6 +18,9 @@ const meta = {
   component: Component,
   parameters: {
     layout: "centered",
+    nextjs: {
+      appDirectory: true,
+    },
   },
 } satisfies Meta<typeof Component>;
 
@@ -70,89 +74,97 @@ function Component() {
     version: "1.0.0",
   };
 
+  // TODO - remove ChakraProviderSetup after converting the TransactionButton to tailwind+shadcn
+
   return (
-    <ThirdwebProvider>
-      <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-        <div className="flex items-center gap-5">
-          <CheckboxWithLabel
-            value={isOwner}
-            onChange={setIsOwner}
-            id="isOwner"
-            label="Is Owner"
-          />
+    <ChakraProviderSetup>
+      <ThirdwebProvider>
+        <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+          <div className="flex items-center gap-5">
+            <CheckboxWithLabel
+              value={isOwner}
+              onChange={setIsOwner}
+              id="isOwner"
+              label="Is Owner"
+            />
+          </div>
+
+          <BadgeContainer label="Empty Transfer Validator & Default Royalty Info">
+            <RoyaltyModuleUI
+              contractInfo={contractInfo}
+              moduleAddress="0x0000000000000000000000000000000000000000"
+              isPending={false}
+              setRoyaltyInfoForToken={setRoyaltyInfoForToken}
+              setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+              setTransferValidator={setTransferValidatorStub}
+              uninstallButton={{
+                onClick: async () => removeMutation.mutateAsync(),
+                isPending: removeMutation.isPending,
+              }}
+              isOwnerAccount={isOwner}
+              contractChainId={1}
+            />
+          </BadgeContainer>
+
+          <BadgeContainer label="Empty Transfer Validator & Non-Empty Default Royalty Info">
+            <RoyaltyModuleUI
+              contractInfo={contractInfo}
+              moduleAddress="0x0000000000000000000000000000000000000000"
+              isPending={false}
+              setRoyaltyInfoForToken={setRoyaltyInfoForToken}
+              setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+              setTransferValidator={setTransferValidatorStub}
+              defaultRoyaltyInfo={[_testAddress1, 100]}
+              uninstallButton={{
+                onClick: async () => removeMutation.mutateAsync(),
+                isPending: removeMutation.isPending,
+              }}
+              isOwnerAccount={isOwner}
+              contractChainId={1}
+            />
+          </BadgeContainer>
+
+          <BadgeContainer label="Non-Empty Transfer Validator & Empty Default Royalty Info">
+            <RoyaltyModuleUI
+              contractInfo={contractInfo}
+              moduleAddress="0x0000000000000000000000000000000000000000"
+              isPending={false}
+              setRoyaltyInfoForToken={setRoyaltyInfoForToken}
+              setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+              setTransferValidator={setTransferValidatorStub}
+              transferValidator={"0x0000000000000000000000000000000000000000"}
+              uninstallButton={{
+                onClick: async () => removeMutation.mutateAsync(),
+                isPending: removeMutation.isPending,
+              }}
+              isOwnerAccount={isOwner}
+              contractChainId={1}
+            />
+          </BadgeContainer>
+
+          <BadgeContainer label="Non-Empty Transfer Validator & Default Royalty Info">
+            <RoyaltyModuleUI
+              contractInfo={contractInfo}
+              moduleAddress="0x0000000000000000000000000000000000000000"
+              isPending={false}
+              setRoyaltyInfoForToken={setRoyaltyInfoForToken}
+              setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+              setTransferValidator={setTransferValidatorStub}
+              defaultRoyaltyInfo={[_testAddress1, 100]}
+              transferValidator={"0x0000000000000000000000000000000000000000"}
+              uninstallButton={{
+                onClick: async () => removeMutation.mutateAsync(),
+                isPending: removeMutation.isPending,
+              }}
+              isOwnerAccount={isOwner}
+              contractChainId={1}
+            />
+          </BadgeContainer>
+
+          <Toaster richColors />
         </div>
-
-        <BadgeContainer label="Empty Transfer Validator & Default Royalty Info">
-          <RoyaltyModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
-            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
-            setTransferValidator={setTransferValidatorStub}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Empty Transfer Validator & Non-Empty Default Royalty Info">
-          <RoyaltyModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
-            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
-            setTransferValidator={setTransferValidatorStub}
-            defaultRoyaltyInfo={[_testAddress1, 100]}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Non-Empty Transfer Validator & Empty Default Royalty Info">
-          <RoyaltyModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
-            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
-            setTransferValidator={setTransferValidatorStub}
-            transferValidator={"0x0000000000000000000000000000000000000000"}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Non-Empty Transfer Validator & Default Royalty Info">
-          <RoyaltyModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
-            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
-            setTransferValidator={setTransferValidatorStub}
-            defaultRoyaltyInfo={[_testAddress1, 100]}
-            transferValidator={"0x0000000000000000000000000000000000000000"}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-          />
-        </BadgeContainer>
-
-        <Toaster richColors />
-      </div>
-    </ThirdwebProvider>
+      </ThirdwebProvider>
+    </ChakraProviderSetup>
   );
 }
 

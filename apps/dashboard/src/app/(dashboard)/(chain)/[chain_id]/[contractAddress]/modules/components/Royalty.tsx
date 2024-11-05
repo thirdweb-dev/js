@@ -1,5 +1,4 @@
 "use client";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Accordion,
   AccordionContent,
@@ -7,7 +6,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -20,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
@@ -133,6 +132,7 @@ function RoyaltyModule(props: ModuleInstanceProps) {
       setTransferValidator={setTransferValidator}
       setRoyaltyInfoForToken={setRoyaltyInfoForToken}
       isOwnerAccount={!!ownerAccount}
+      contractChainId={props.contract.chain.id}
     />
   );
 }
@@ -148,6 +148,7 @@ export function RoyaltyModuleUI(
       values: TransferValidatorFormValues,
     ) => Promise<void>;
     setRoyaltyInfoForToken: (values: RoyaltyInfoFormValues) => Promise<void>;
+    contractChainId: number;
   },
 ) {
   return (
@@ -165,6 +166,7 @@ export function RoyaltyModuleUI(
               {props.isOwnerAccount ? (
                 <RoyaltyInfoPerTokenSection
                   setRoyaltyInfoForToken={props.setRoyaltyInfoForToken}
+                  contractChainId={props.contractChainId}
                 />
               ) : (
                 <Alert variant="info">
@@ -186,6 +188,7 @@ export function RoyaltyModuleUI(
                 <DefaultRoyaltyInfoSection
                   update={props.setDefaultRoyaltyInfo}
                   defaultRoyaltyInfo={props.defaultRoyaltyInfo}
+                  contractChainId={props.contractChainId}
                 />
               ) : (
                 <Alert variant="info">
@@ -207,6 +210,7 @@ export function RoyaltyModuleUI(
                 <TransferValidatorSection
                   update={props.setTransferValidator}
                   transferValidator={props.transferValidator}
+                  contractChainId={props.contractChainId}
                 />
               ) : (
                 <Alert variant="info">
@@ -240,6 +244,7 @@ export type RoyaltyInfoFormValues = z.infer<typeof royaltyInfoFormSchema>;
 
 function RoyaltyInfoPerTokenSection(props: {
   setRoyaltyInfoForToken: (values: RoyaltyInfoFormValues) => Promise<void>;
+  contractChainId: number;
 }) {
   const form = useForm<RoyaltyInfoFormValues>({
     resolver: zodResolver(royaltyInfoFormSchema),
@@ -317,17 +322,18 @@ function RoyaltyInfoPerTokenSection(props: {
           </div>
 
           <div className="mt-4 flex justify-end">
-            <Button
+            <TransactionButton
               size="sm"
-              className="min-w-24 gap-2"
+              className="min-w-24"
               disabled={setRoyaltyInfoForTokenMutation.isPending}
               type="submit"
+              isLoading={setRoyaltyInfoForTokenMutation.isPending}
+              colorScheme="primary"
+              transactionCount={1}
+              txChainID={props.contractChainId}
             >
-              {setRoyaltyInfoForTokenMutation.isPending && (
-                <Spinner className="size-4" />
-              )}
-              Update Royalty Info for Token
-            </Button>
+              Update
+            </TransactionButton>
           </div>
         </div>
       </form>
@@ -347,6 +353,7 @@ export type DefaultRoyaltyFormValues = z.infer<typeof defaultRoyaltyFormSchema>;
 function DefaultRoyaltyInfoSection(props: {
   defaultRoyaltyInfo?: readonly [string, number];
   update: (values: DefaultRoyaltyFormValues) => Promise<void>;
+  contractChainId: number;
 }) {
   const [defaultRoyaltyRecipient, defaultRoyaltyBps] =
     props.defaultRoyaltyInfo || [];
@@ -414,15 +421,18 @@ function DefaultRoyaltyInfoSection(props: {
           <div className="h-2" />
 
           <div className="mt-4 flex justify-end">
-            <Button
+            <TransactionButton
               size="sm"
-              className="min-w-24 gap-2"
+              className="min-w-24"
               disabled={updateMutation.isPending}
               type="submit"
+              colorScheme="primary"
+              transactionCount={1}
+              isLoading={updateMutation.isPending}
+              txChainID={props.contractChainId}
             >
-              {updateMutation.isPending && <Spinner className="size-4" />}
               Update
-            </Button>
+            </TransactionButton>
           </div>
         </div>
       </form>
@@ -441,6 +451,7 @@ export type TransferValidatorFormValues = z.infer<
 function TransferValidatorSection(props: {
   transferValidator: string | undefined;
   update: (values: TransferValidatorFormValues) => Promise<void>;
+  contractChainId: number;
 }) {
   const form = useForm<TransferValidatorFormValues>({
     resolver: zodResolver(transferValidatorFormSchema),
@@ -487,15 +498,18 @@ function TransferValidatorSection(props: {
         <div className="h-2" />
 
         <div className="mt-4 flex justify-end">
-          <Button
+          <TransactionButton
             size="sm"
             className="min-w-24 gap-2"
             disabled={updateMutation.isPending}
             type="submit"
+            colorScheme="primary"
+            isLoading={updateMutation.isPending}
+            transactionCount={1}
+            txChainID={props.contractChainId}
           >
-            {updateMutation.isPending && <Spinner className="size-4" />}
             Update
-          </Button>
+          </TransactionButton>
         </div>
       </form>
     </Form>
