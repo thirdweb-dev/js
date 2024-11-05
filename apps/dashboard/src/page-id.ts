@@ -54,13 +54,8 @@ export enum PageId {
   // thirdweb.com/cointracts
   ContractsLanding = "contracts-landing",
 
-  // thirdweb.com/hackathon/earn
-  HackathonEarnLanding = "earn-thirdweb-hacakthon",
   // thirdweb.com/grant/superchain
   GrantSuperChain = "grant-superchain",
-  // thirdweb.com/hackathon
-  HackathonLanding = "base-thirdweb-hacakthon",
-  ReadyPlayer3Landing = "readyplayer3",
 
   // ---------------------------------------------------------------------------
   //  general product pages
