@@ -24,6 +24,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { addDays, fromUnixTime } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
@@ -31,6 +32,7 @@ import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
   type PreparedTransaction,
+  ZERO_ADDRESS,
   getContract,
   sendAndConfirmTransaction,
   toTokens,
@@ -44,7 +46,7 @@ import { CurrencySelector } from "./CurrencySelector";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
 
-export type ClaimCondition = {
+export type ClaimConditionValue = {
   availableSupply: bigint;
   allowlistMerkleRoot: `0x${string}`;
   pricePerUnit: bigint;
@@ -55,20 +57,34 @@ export type ClaimCondition = {
   auxData: string;
 };
 
+// TODO - for erc1155 have a UI something like this:
+// - show one input initially - user enters tokenId
+// - fetch the claim conditions for that tokenId and show the entire claim condition form with those values if they exist, or show empty form state if they don't exist
+
+// TODO - don't compare with ZERO_ADDRESS we are not getting ZERO_ADDRESS as currency address and instead getting 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE, (checksummed NATIVE_TOKEN_ADDRESS)
+
+// TODO - fix Currency selector not showing the selected currency
+
 function ClaimableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
   const account = useActiveAccount();
 
+  const isErc721 = props.contractInfo.name === "ClaimableERC721";
+
   const primarySaleRecipientQuery = useReadContract(
-    ClaimableERC721.getSaleConfig,
+    isErc721 ? ClaimableERC721.getSaleConfig : ClaimableERC1155.getSaleConfig,
     {
       contract: contract,
     },
   );
+
   const claimConditionQuery = useReadContract(
     ClaimableERC721.getClaimCondition,
     {
       contract: contract,
+      queryOptions: {
+        enabled: isErc721,
+      },
     },
   );
 
@@ -78,18 +94,17 @@ function ClaimableModule(props: ModuleInstanceProps) {
     client: props.contract.client,
   });
 
-  const tokenDecimals = useReadContract(decimals, {
+  const shouldFetchTokenDecimals =
+    isErc721 &&
+    claimConditionQuery.data &&
+    claimConditionQuery.data?.currency !== ZERO_ADDRESS;
+
+  const tokenDecimalsQuery = useReadContract(decimals, {
     contract: currencyContract,
     queryOptions: {
-      enabled:
-        claimConditionQuery.data &&
-        claimConditionQuery.data?.currency !==
-          "0x0000000000000000000000000000000000000000",
+      enabled: shouldFetchTokenDecimals,
     },
   });
-  const tokenDecimalsData = tokenDecimals.data ?? 0;
-
-  const isErc721 = props.contractInfo.name === "ClaimableERC721";
 
   const mint = useCallback(
     async (values: MintFormValues) => {
@@ -182,41 +197,64 @@ function ClaimableModule(props: ModuleInstanceProps) {
   return (
     <ClaimableModuleUI
       {...props}
-      isPendingPrimarySaleRecipient={primarySaleRecipientQuery.isPending}
-      isPendingClaimCondition={
-        claimConditionQuery.isPending ||
-        (claimConditionQuery.data?.currency !==
-          "0x0000000000000000000000000000000000000000" &&
-          tokenDecimals.isPending)
-      }
-      primarySaleRecipient={primarySaleRecipientQuery.data}
-      claimCondition={claimConditionQuery.data}
-      setClaimCondition={setClaimCondition}
-      setPrimarySaleRecipient={setPrimarySaleRecipient}
-      mint={mint}
+      primarySaleRecipientSection={{
+        data: primarySaleRecipientQuery.data
+          ? { primarySaleRecipient: primarySaleRecipientQuery.data }
+          : undefined,
+        setPrimarySaleRecipient,
+      }}
+      claimConditionSection={{
+        data:
+          // claim condition is common for all tokens
+          isErc721 &&
+          // claim conditions is fetched
+          claimConditionQuery.isFetched &&
+          // token decimals is fetched if it should be fetched
+          (shouldFetchTokenDecimals ? tokenDecimalsQuery.isFetched : true)
+            ? {
+                claimCondition: claimConditionQuery.data,
+                tokenDecimals: tokenDecimalsQuery.data,
+              }
+            : undefined,
+        setClaimCondition,
+      }}
       isOwnerAccount={!!ownerAccount}
       isErc721={isErc721}
       chainId={props.contract.chain.id}
-      tokenDecimals={tokenDecimalsData}
+      mintSection={{
+        mint,
+      }}
     />
   );
 }
 
 export function ClaimableModuleUI(
   props: Omit<ModuleCardUIProps, "children" | "updateButton"> & {
-    primarySaleRecipient: string | undefined;
-    isPendingPrimarySaleRecipient: boolean;
-    isPendingClaimCondition: boolean;
     isOwnerAccount: boolean;
-    claimCondition: ClaimCondition | undefined;
-    setClaimCondition: (values: ClaimConditionFormValues) => Promise<void>;
-    setPrimarySaleRecipient: (
-      values: PrimarySaleRecipientFormValues,
-    ) => Promise<void>;
-    mint: (values: MintFormValues) => Promise<void>;
     isErc721: boolean;
     chainId: number;
-    tokenDecimals: number;
+    primarySaleRecipientSection: {
+      setPrimarySaleRecipient: (
+        values: PrimarySaleRecipientFormValues,
+      ) => Promise<void>;
+      data:
+        | {
+            primarySaleRecipient: string;
+          }
+        | undefined;
+    };
+    mintSection: {
+      mint: (values: MintFormValues) => Promise<void>;
+    };
+    claimConditionSection: {
+      setClaimCondition: (values: ClaimConditionFormValues) => Promise<void>;
+      data:
+        | {
+            claimCondition: ClaimConditionValue | undefined;
+            tokenDecimals: number | undefined;
+          }
+        | undefined;
+    };
   },
 ) {
   return (
@@ -231,7 +269,10 @@ export function ClaimableModuleUI(
               Mint NFT
             </AccordionTrigger>
             <AccordionContent className="px-1">
-              <MintNFTSection mint={props.mint} isErc721={props.isErc721} />
+              <MintNFTSection
+                mint={props.mintSection.mint}
+                isErc721={props.isErc721}
+              />
             </AccordionContent>
           </AccordionItem>
 
@@ -240,18 +281,19 @@ export function ClaimableModuleUI(
               Claim Conditions
             </AccordionTrigger>
             <AccordionContent className="px-1">
-              {!props.isPendingClaimCondition ? (
+              {props.claimConditionSection.data ? (
                 <ClaimConditionSection
                   isOwnerAccount={props.isOwnerAccount}
-                  primarySaleRecipient={props.primarySaleRecipient}
-                  claimCondition={props.claimCondition}
-                  update={props.setClaimCondition}
+                  claimCondition={
+                    props.claimConditionSection.data.claimCondition
+                  }
+                  update={props.claimConditionSection.setClaimCondition}
                   isErc721={props.isErc721}
                   chainId={props.chainId}
-                  tokenDecimals={props.tokenDecimals}
+                  tokenDecimals={props.claimConditionSection.data.tokenDecimals}
                 />
               ) : (
-                <Skeleton className="h-[74px]" />
+                <Skeleton className="h-[350px]" />
               )}
             </AccordionContent>
           </AccordionItem>
@@ -264,11 +306,15 @@ export function ClaimableModuleUI(
               Primary Sale Recipient
             </AccordionTrigger>
             <AccordionContent className="px-1">
-              {!props.isPendingPrimarySaleRecipient ? (
+              {props.primarySaleRecipientSection.data ? (
                 <PrimarySaleRecipientSection
                   isOwnerAccount={props.isOwnerAccount}
-                  primarySaleRecipient={props.primarySaleRecipient}
-                  update={props.setPrimarySaleRecipient}
+                  primarySaleRecipient={
+                    props.primarySaleRecipientSection.data.primarySaleRecipient
+                  }
+                  update={
+                    props.primarySaleRecipientSection.setPrimarySaleRecipient
+                  }
                 />
               ) : (
                 <Skeleton className="h-[74px]" />
@@ -282,10 +328,9 @@ export function ClaimableModuleUI(
 }
 
 const claimConditionFormSchema = z.object({
-  tokenId: z.string().refine((v) => v.length === 0 || Number(v) >= 0, {
+  tokenId: z.string().refine((v) => BigInt(v) >= 0n, {
     message: "Invalid tokenId",
   }),
-
   pricePerToken: z.coerce
     .number()
     .min(0, { message: "Invalid price per token" })
@@ -303,62 +348,61 @@ const claimConditionFormSchema = z.object({
       message: "Invalid max claimable per wallet",
     }),
 
-  startTime: z.date().optional(),
-  endTime: z.date().optional(),
-
+  startTime: z.date(),
+  endTime: z.date(),
   allowList: z.array(z.object({ address: addressSchema })).optional(),
 });
 
 export type ClaimConditionFormValues = z.infer<typeof claimConditionFormSchema>;
 
-// perform this outside else it forces too many re-renders
-const now = Date.now() / 1000;
 const MAX_UINT_256 =
   "115792089237316195423570985008687907853269984665640564039457584007913129639935";
 
+const defaultStartDate = addDays(new Date(), 7);
+const defaultEndDate = addDays(new Date(), 14);
+
 function ClaimConditionSection(props: {
-  primarySaleRecipient: string | undefined;
-  claimCondition: ClaimCondition | undefined;
+  claimCondition: ClaimConditionValue | undefined;
   update: (values: ClaimConditionFormValues) => Promise<void>;
   isOwnerAccount: boolean;
   isErc721: boolean;
   chainId: number;
-  tokenDecimals: number;
+  tokenDecimals: number | undefined;
 }) {
   const { idToChain } = useAllChainsData();
   const chain = idToChain.get(props.chainId);
+  const { claimCondition } = props;
 
   const form = useForm<ClaimConditionFormValues>({
     resolver: zodResolver(claimConditionFormSchema),
     values: {
       tokenId: "",
       currencyAddress:
-        props.claimCondition?.currency ===
-        "0x0000000000000000000000000000000000000000"
+        claimCondition?.currency === ZERO_ADDRESS
           ? ""
-          : props.claimCondition?.currency,
+          : claimCondition?.currency,
       pricePerToken:
-        props.claimCondition?.pricePerUnit &&
-        props.claimCondition?.currency !==
-          "0x0000000000000000000000000000000000000000"
-          ? Number(
-              toTokens(props.claimCondition?.pricePerUnit, props.tokenDecimals),
-            )
+        claimCondition?.pricePerUnit &&
+        claimCondition?.currency !== ZERO_ADDRESS &&
+        props.tokenDecimals
+          ? Number(toTokens(claimCondition?.pricePerUnit, props.tokenDecimals))
           : 0,
       maxClaimableSupply:
-        props.claimCondition?.availableSupply.toString() === "0" ||
-        props.claimCondition?.availableSupply.toString() === MAX_UINT_256
+        claimCondition?.availableSupply.toString() === "0" ||
+        claimCondition?.availableSupply.toString() === MAX_UINT_256
           ? ""
-          : props.claimCondition?.availableSupply.toString() || "",
+          : claimCondition?.availableSupply.toString() || "",
       maxClaimablePerWallet:
-        props.claimCondition?.maxMintPerWallet.toString() === "0" ||
-        props.claimCondition?.maxMintPerWallet.toString() === MAX_UINT_256
+        claimCondition?.maxMintPerWallet.toString() === "0" ||
+        claimCondition?.maxMintPerWallet.toString() === MAX_UINT_256
           ? ""
-          : props.claimCondition?.maxMintPerWallet.toString() || "",
-      startTime: new Date((props.claimCondition?.startTimestamp || now) * 1000),
-      endTime: new Date(
-        (props.claimCondition?.endTimestamp || now + 604800) * 1000,
-      ),
+          : claimCondition?.maxMintPerWallet.toString() || "",
+      startTime: claimCondition?.startTimestamp
+        ? fromUnixTime(claimCondition?.startTimestamp)
+        : defaultStartDate,
+      endTime: claimCondition?.endTimestamp
+        ? fromUnixTime(claimCondition?.endTimestamp)
+        : defaultEndDate,
       allowList: [],
     },
   });
@@ -466,20 +510,22 @@ function ClaimConditionSection(props: {
           </div>
 
           <FormFieldSetup
-            htmlFor="startTime"
-            label="Start & End Time"
-            isRequired={false}
+            htmlFor="duration"
+            label="Duration"
+            isRequired
             errorMessage={
               form.formState.errors?.startTime?.message ||
               form.formState.errors?.endTime?.message
             }
           >
-            <DatePickerWithRange
-              from={startTime || new Date()}
-              to={endTime || new Date()}
-              setFrom={(from: Date) => form.setValue("startTime", from)}
-              setTo={(to: Date) => form.setValue("endTime", to)}
-            />
+            <div>
+              <DatePickerWithRange
+                from={startTime}
+                to={endTime}
+                setFrom={(from: Date) => form.setValue("startTime", from)}
+                setTo={(to: Date) => form.setValue("endTime", to)}
+              />
+            </div>
           </FormFieldSetup>
 
           <Separator />
@@ -588,15 +634,15 @@ function PrimarySaleRecipientSection(props: {
     },
   });
 
-  const updateNotificaions = useTxNotifications(
+  const updateNotifications = useTxNotifications(
     "Successfully update primary sale recipient",
     "Failed to update primary sale recipient",
   );
 
   const updateMutation = useMutation({
     mutationFn: props.update,
-    onSuccess: updateNotificaions.onSuccess,
-    onError: updateNotificaions.onError,
+    onSuccess: updateNotifications.onSuccess,
+    onError: updateNotifications.onError,
   });
 
   const onSubmit = async () => {

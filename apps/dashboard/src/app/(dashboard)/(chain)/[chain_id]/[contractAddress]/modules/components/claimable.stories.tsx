@@ -1,10 +1,13 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
+import { subDays } from "date-fns";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
-import { BadgeContainer, mobileViewport } from "stories/utils";
+import { mobileViewport } from "stories/utils";
+import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { ThirdwebProvider } from "thirdweb/react";
+import { checksumAddress } from "thirdweb/utils";
 import {
   type ClaimConditionFormValues,
   ClaimableModuleUI,
@@ -39,6 +42,10 @@ const testAddress1 = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 function Component() {
   const [isOwner, setIsOwner] = useState(true);
   const [isErc721, setIsErc721] = useState(false);
+  const [isClaimConditionLoading, setIsClaimConditionLoading] = useState(false);
+  const [isPrimarySaleRecipientLoading, setIsPrimarySaleRecipientLoading] =
+    useState(false);
+
   async function updatePrimarySaleRecipientStub(
     values: PrimarySaleRecipientFormValues,
   ) {
@@ -77,9 +84,11 @@ function Component() {
     availableSupply: BigInt(100),
     maxMintPerWallet: BigInt(10),
     pricePerUnit: 10n,
-    currency: "0x000000000000000000000000000000000000000",
-    startTimestamp: 1689092800,
-    endTimestamp: 1689092800,
+    // we get checksummed NATIVE_TOKEN_ADDRESS from claim condition query for native token
+    currency: checksumAddress(NATIVE_TOKEN_ADDRESS),
+    // last week
+    startTimestamp: subDays(new Date(), 7).getTime() / 1000,
+    endTimestamp: new Date().getTime() / 1000,
     allowlistMerkleRoot:
       "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
     auxData: "0x",
@@ -88,7 +97,7 @@ function Component() {
   return (
     <ThirdwebProvider>
       <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-        <div className="flex items-center gap-5">
+        <div className="flex flex-wrap items-center gap-5">
           <CheckboxWithLabel
             value={isOwner}
             onChange={setIsOwner}
@@ -102,73 +111,53 @@ function Component() {
             id="isErc721"
             label="isErc721"
           />
+
+          <CheckboxWithLabel
+            value={isClaimConditionLoading}
+            onChange={setIsClaimConditionLoading}
+            id="isClaimConditionLoading"
+            label="Claim Condition Section Loading"
+          />
+
+          <CheckboxWithLabel
+            value={isPrimarySaleRecipientLoading}
+            onChange={setIsPrimarySaleRecipientLoading}
+            id="isPrimarySaleRecipientLoading"
+            label="Primary Sale Recipient Section Loading"
+          />
         </div>
 
-        <BadgeContainer label="Empty Primary Sale Recipient">
-          <ClaimableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPendingPrimarySaleRecipient={false}
-            isPendingClaimCondition={false}
-            primarySaleRecipient={""}
-            setPrimarySaleRecipient={updatePrimarySaleRecipientStub}
-            setClaimCondition={updateClaimConditionStub}
-            mint={mintStub}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-            isErc721={isErc721}
-            claimCondition={claimCondition}
-            chainId={1}
-            tokenDecimals={18}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Filled Primary Sale Recipient">
-          <ClaimableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPendingPrimarySaleRecipient={false}
-            isPendingClaimCondition={false}
-            primarySaleRecipient={testAddress1}
-            setPrimarySaleRecipient={updatePrimarySaleRecipientStub}
-            setClaimCondition={updateClaimConditionStub}
-            mint={mintStub}
-            uninstallButton={{
-              onClick: () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-            isErc721={isErc721}
-            claimCondition={claimCondition}
-            chainId={1}
-            tokenDecimals={18}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Pending">
-          <ClaimableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPendingPrimarySaleRecipient={false}
-            isPendingClaimCondition={false}
-            primarySaleRecipient={testAddress1}
-            setClaimCondition={updateClaimConditionStub}
-            setPrimarySaleRecipient={updatePrimarySaleRecipientStub}
-            mint={mintStub}
-            uninstallButton={{
-              onClick: () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-            isErc721={isErc721}
-            claimCondition={claimCondition}
-            chainId={1}
-            tokenDecimals={18}
-          />
-        </BadgeContainer>
+        <ClaimableModuleUI
+          contractInfo={contractInfo}
+          moduleAddress="0x0000000000000000000000000000000000000000"
+          primarySaleRecipientSection={{
+            data: isPrimarySaleRecipientLoading
+              ? undefined
+              : {
+                  primarySaleRecipient: testAddress1,
+                },
+            setPrimarySaleRecipient: updatePrimarySaleRecipientStub,
+          }}
+          claimConditionSection={{
+            data: isClaimConditionLoading
+              ? undefined
+              : {
+                  claimCondition,
+                  tokenDecimals: 18,
+                },
+            setClaimCondition: updateClaimConditionStub,
+          }}
+          mintSection={{
+            mint: mintStub,
+          }}
+          uninstallButton={{
+            onClick: async () => removeMutation.mutateAsync(),
+            isPending: removeMutation.isPending,
+          }}
+          isOwnerAccount={isOwner}
+          isErc721={isErc721}
+          chainId={1}
+        />
 
         <Toaster richColors />
       </div>
