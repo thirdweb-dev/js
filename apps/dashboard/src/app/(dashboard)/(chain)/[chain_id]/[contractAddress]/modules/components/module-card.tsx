@@ -14,10 +14,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import * as Sentry from "@sentry/nextjs";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { InfoIcon } from "lucide-react";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { toast } from "sonner";
 import {
   type ContractOptions,
@@ -98,24 +100,30 @@ export function ModuleCard(props: ModuleCardProps) {
   return (
     <>
       <Suspense fallback={<GenericModuleLoadingSkeleton />}>
-        <ModuleInstance
-          contract={contract}
-          contractInfo={{
-            name: contractInfo.name,
-            description: contractInfo.description,
-            publisher: contractInfo.publisher,
-            version: contractInfo.version,
-          }}
-          ownerAccount={ownerAccount}
-          uninstallButton={{
-            onClick: () => {
-              setIsUninstallModalOpen(true);
-            },
-            isPending: uninstallMutation.isPending,
-          }}
-          moduleAddress={moduleAddress}
-          allModuleContractInfo={props.allModuleContractInfo}
-        />
+        <ErrorBoundary
+          FallbackComponent={(p) => (
+            <ModuleErrorBoundary moduleName={contractInfo.name} {...p} />
+          )}
+        >
+          <ModuleInstance
+            contract={contract}
+            contractInfo={{
+              name: contractInfo.name,
+              description: contractInfo.description,
+              publisher: contractInfo.publisher,
+              version: contractInfo.version,
+            }}
+            ownerAccount={ownerAccount}
+            uninstallButton={{
+              onClick: () => {
+                setIsUninstallModalOpen(true);
+              },
+              isPending: uninstallMutation.isPending,
+            }}
+            moduleAddress={moduleAddress}
+            allModuleContractInfo={props.allModuleContractInfo}
+          />
+        </ErrorBoundary>
       </Suspense>
 
       <Dialog
@@ -302,4 +310,26 @@ export function ModuleCardUI(props: ModuleCardUIProps) {
 
 function GenericModuleLoadingSkeleton() {
   return <Skeleton className="h-[190px] w-full border border-border" />;
+}
+
+function ModuleErrorBoundary(
+  props: FallbackProps & {
+    moduleName: string;
+  },
+) {
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    Sentry.withScope((scope) => {
+      scope.setTag("component-crashed", "true");
+      scope.setTag("component-crashed-boundary", "ModuleErrorBoundary");
+      scope.setLevel("fatal");
+      Sentry.captureException(props.error);
+    });
+  }, [props.error]);
+
+  return (
+    <div className="flex h-[190px] w-full items-center justify-center border border-border">
+      Failed to render {props.moduleName} module
+    </div>
+  );
 }

@@ -3,14 +3,14 @@
 import { lazy } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import type { Account } from "thirdweb/wallets";
-import BatchMetadataModule from "./BatchMetadata";
-import ClaimableModule from "./Claimable";
-import OpenEditionMetadataModule from "./OpenEditionMetadata";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 
 const MintableModule = lazy(() => import("./Mintable"));
 const TransferableModule = lazy(() => import("./Transferable"));
 const RoyaltyModule = lazy(() => import("./Royalty"));
+const BatchMetadataModule = lazy(() => import("./BatchMetadata"));
+const ClaimableModule = lazy(() => import("./Claimable"));
+const OpenEditionMetadataModule = lazy(() => import("./OpenEditionMetadata"));
 
 export type ModuleInstanceProps = Omit<
   ModuleCardUIProps,
