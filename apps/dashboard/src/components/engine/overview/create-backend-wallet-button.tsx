@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
+import { Form, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -50,6 +50,11 @@ export const CreateBackendWalletButton: React.FC<
     instance.url,
     "HETEROGENEOUS_WALLET_TYPES",
   );
+  const { isSupported: supportsSmartBackendWallets } = useHasEngineFeature(
+    instance.url,
+    "SMART_BACKEND_WALLETS",
+  );
+
   const [isOpen, setIsOpen] = useState(false);
   const createWallet = useEngineCreateBackendWallet(instance.url);
   const trackEvent = useTrack();
@@ -93,17 +98,22 @@ export const CreateBackendWalletButton: React.FC<
   invariant(selectedOption, "Selected a valid backend wallet type.");
 
   // List all wallet types only if Engine is updated to support it.
-  const walletTypeOptions = supportsMultipleWalletTypes
-    ? EngineBackendWalletOptions
-    : [selectedOption];
+  let walletTypeOptions = [selectedOption];
+  if (supportsSmartBackendWallets) {
+    walletTypeOptions = EngineBackendWalletOptions;
+  } else if (supportsMultipleWalletTypes) {
+    walletTypeOptions = EngineBackendWalletOptions.filter(
+      ({ key }) => !key.startsWith("smart:"),
+    );
+  }
 
   const isAwsKmsConfigured = !!walletConfig.awsAccessKeyId;
   const isGcpKmsConfigured = !!walletConfig.gcpKmsKeyRingId;
 
-  const isFormValid =
-    walletType === "local" ||
-    (walletType === "aws-kms" && isAwsKmsConfigured) ||
-    (walletType === "gcp-kms" && isGcpKmsConfigured);
+  const isNotConfigured =
+    (["aws-kms", "smart:aws-kms"].includes(walletType) &&
+      !isAwsKmsConfigured) ||
+    (["gcp-kms", "smart:gcp-kms"].includes(walletType) && !isGcpKmsConfigured);
 
   return (
     <>
@@ -153,6 +163,17 @@ export const CreateBackendWalletButton: React.FC<
                         </SelectGroup>
                       </SelectContent>
                     </Select>
+
+                    <FormDescription className="py-2">
+                      Learn more about{" "}
+                      <Link
+                        href="https://portal.thirdweb.com/engine/features/backend-wallets"
+                        className="text-link-foreground hover:text-foreground"
+                      >
+                        backend wallet types
+                      </Link>
+                      .
+                    </FormDescription>
                   </FormFieldSetup>
 
                   {(walletType === "aws-kms" && !isAwsKmsConfigured) ||
@@ -185,14 +206,14 @@ export const CreateBackendWalletButton: React.FC<
                           ?.message
                       }
                       htmlFor="wallet-label"
-                      isRequired={false}
+                      isRequired
                       tooltip={null}
                     >
                       <Input
                         id="wallet-label"
                         type="text"
                         placeholder="A description to identify this backend wallet"
-                        {...form.register("label")}
+                        {...form.register("label", { required: true })}
                       />
                     </FormFieldSetup>
                   )}
@@ -206,7 +227,11 @@ export const CreateBackendWalletButton: React.FC<
                 <Button
                   type="submit"
                   className="min-w-28 gap-2"
-                  disabled={!isFormValid || createWallet.isPending}
+                  disabled={
+                    !form.formState.isValid ||
+                    isNotConfigured ||
+                    createWallet.isPending
+                  }
                 >
                   {createWallet.isPending && <Spinner className="size-4" />}
                   Create

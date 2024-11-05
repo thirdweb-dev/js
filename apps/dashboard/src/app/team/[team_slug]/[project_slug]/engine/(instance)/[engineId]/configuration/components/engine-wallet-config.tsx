@@ -27,11 +27,12 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
 }) => {
   const { data: walletConfig } = useEngineWalletConfig(instance.url);
 
-  const tabContent: Record<EngineBackendWalletType, React.ReactNode> = {
-    local: <LocalConfig />,
-    "aws-kms": <KmsAwsConfig instance={instance} />,
-    "gcp-kms": <KmsGcpConfig instance={instance} />,
-  } as const;
+  const tabContent: Partial<Record<EngineBackendWalletType, React.ReactNode>> =
+    {
+      local: <LocalConfig />,
+      "aws-kms": <KmsAwsConfig instance={instance} />,
+      "gcp-kms": <KmsGcpConfig instance={instance} />,
+    } as const;
 
   const [activeTab, setActiveTab] = useState<EngineBackendWalletType>("local");
 
