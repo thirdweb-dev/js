@@ -748,32 +748,6 @@ export const sidebar: SideBar = {
       ],
     },
     { separator: true },
-    // interact
-    {
-      name: "Interact",
-      icon: <ContractInteractIcon />,
-      isCollapsible: false,
-      links: [
-        {
-          name: "Overview",
-          href: `${interactSlug}/overview`,
-        },
-        {
-          name: "References",
-          links: [
-            {
-              name: "TypeScript",
-              href: "/typescript/v5",
-            },
-            {
-              name: "Unity",
-              href: "/unity",
-            },
-          ],
-        },
-      ],
-    },
-    { separator: true },
     // publish
     {
       name: "Publish",
