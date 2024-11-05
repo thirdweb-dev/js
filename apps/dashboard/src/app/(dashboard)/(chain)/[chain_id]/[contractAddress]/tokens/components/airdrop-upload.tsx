@@ -274,7 +274,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
 
 interface AirdropTableProps {
   data: AirdropAddressInput[];
-  portalRef: React.RefObject<HTMLDivElement>;
+  portalRef: React.RefObject<HTMLDivElement | null>;
 }
 const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
   const columns = useMemo(() => {

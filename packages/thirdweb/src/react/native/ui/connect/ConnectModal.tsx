@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { type JSX, useCallback, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { Chain } from "../../../../chains/types.js";

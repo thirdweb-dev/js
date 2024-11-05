@@ -13,11 +13,12 @@ import { hexToNumber, shortenAddress, toEther } from "thirdweb/utils";
 import { getChain } from "../../../utils";
 
 export default async function Page(props: {
-  params: { chain_id: string; txHash: `0x${string}` };
+  params: Promise<{ chain_id: string; txHash: `0x${string}` }>;
 }) {
+  const params = await props.params;
   // consider if we want to pass the JWT here, likely no need to do it but we could?
   const client = getThirdwebClient();
-  const chain = await getChain(props.params.chain_id);
+  const chain = await getChain(params.chain_id);
 
   const rpcRequest = getRpcClient({
     client,
@@ -28,10 +29,10 @@ export default async function Page(props: {
 
   const [transaction, receipt] = await Promise.all([
     eth_getTransactionByHash(rpcRequest, {
-      hash: props.params.txHash,
+      hash: params.txHash,
     }),
     eth_getTransactionReceipt(rpcRequest, {
-      hash: props.params.txHash,
+      hash: params.txHash,
     }),
   ]);
   if (!transaction.blockHash) {

@@ -6,7 +6,7 @@ import { getAccount } from "./getAccount";
 
 export default async function Page() {
   const account = await getAccount();
-  const token = getAuthToken();
+  const token = await getAuthToken();
 
   if (!account || !token) {
     redirect(`/login?next=${encodeURIComponent("/account")}`);

@@ -3,9 +3,12 @@ import { redirect } from "next/navigation";
 import { getInAppWalletSupportedAPIKeys } from "../../getInAppWalletSupportedAPIKeys";
 import { TRACKING_CATEGORY } from "../_constants";
 
-export default async function Page({
-  params: { clientId },
-}: { params: { clientId: string } }) {
+export default async function Page(props: {
+  params: Promise<{ clientId: string }>;
+}) {
+  const params = await props.params;
+  const { clientId } = params;
+
   const apiKeys = await getInAppWalletSupportedAPIKeys();
   const apiKey = apiKeys.find((key) => key.key === clientId);
 

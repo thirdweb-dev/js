@@ -7,9 +7,10 @@ export async function fetchApiServer(
   input: string | URL,
   init?: RequestInit,
 ): Promise<Response> {
-  const activeAccount = cookies().get(COOKIE_ACTIVE_ACCOUNT)?.value;
+  const cookieManager = await cookies();
+  const activeAccount = cookieManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const authToken = activeAccount
-    ? cookies().get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))?.value
+    ? cookieManager.get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))?.value
     : null;
 
   const [pathname, searchParams] = input.toString().split("?");

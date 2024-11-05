@@ -23,10 +23,7 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/*",
-    "src/*"
-  ],
+  "files": ["dist/*", "src/*"],
   "dependencies": {
     "@aws-sdk/client-kms": "3.682.0",
     "@aws-sdk/client-lambda": "3.682.0",

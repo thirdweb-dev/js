@@ -12,6 +12,4 @@ const config = getTDocPage({
 });
 
 export default config.default;
-// export const generateStaticParams = config.generateStaticParams;
 export const generateMetadata = config.generateMetadata;
-// export const dynamic = config.dynamic;

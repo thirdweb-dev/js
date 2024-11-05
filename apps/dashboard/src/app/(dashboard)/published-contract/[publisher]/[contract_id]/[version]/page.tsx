@@ -18,26 +18,27 @@ function mapThirdwebPublisher(publisher: string) {
 }
 
 type PublishedContractDeployPageProps = {
-  params: {
+  params: Promise<{
     publisher: string;
     contract_id: string;
     version: string;
-  };
+  }>;
 };
 
 export default async function PublishedContractPage(
   props: PublishedContractDeployPageProps,
 ) {
+  const params = await props.params;
   // resolve ENS if required
   let publisherAddress: string | undefined = undefined;
 
-  if (isAddress(props.params.publisher)) {
-    publisherAddress = props.params.publisher;
+  if (isAddress(params.publisher)) {
+    publisherAddress = params.publisher;
   } else {
     try {
       publisherAddress = await resolveAddress({
         client: getThirdwebClient(),
-        name: mapThirdwebPublisher(props.params.publisher),
+        name: mapThirdwebPublisher(params.publisher),
       });
     } catch {
       // ignore
@@ -51,12 +52,12 @@ export default async function PublishedContractPage(
   // get all the published versions of the contract
   const publishedContractVersions = await fetchPublishedContractVersions(
     publisherAddress,
-    props.params.contract_id,
+    params.contract_id,
   );
 
   // determine the "active" version of the contract based on the version that is passed
   const publishedContract =
-    publishedContractVersions.find((v) => v.version === props.params.version) ||
+    publishedContractVersions.find((v) => v.version === params.version) ||
     publishedContractVersions[0];
 
   if (!publishedContract) {
@@ -66,12 +67,12 @@ export default async function PublishedContractPage(
   return (
     <>
       <DeployContractHeader
-        {...props.params}
+        {...params}
         allVersions={publishedContractVersions}
         activeVersion={publishedContract}
       >
         <PublishedActions
-          {...props.params}
+          {...params}
           dispayName={publishedContract.displayName || publishedContract.name}
         />
       </DeployContractHeader>
@@ -81,7 +82,7 @@ export default async function PublishedContractPage(
         <SimpleGrid columns={12} gap={{ base: 6, md: 10 }} w="full">
           <PublishedContract
             publishedContract={publishedContract}
-            walletOrEns={props.params.publisher}
+            walletOrEns={params.publisher}
           />
         </SimpleGrid>
       </ChakraProviderSetup>

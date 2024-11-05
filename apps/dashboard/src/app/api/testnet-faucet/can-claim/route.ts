@@ -1,3 +1,4 @@
+import { ipAddress } from "@vercel/functions";
 import { cacheTtl } from "lib/redis";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -61,11 +62,11 @@ export const GET = async (req: NextRequest) => {
   }
 
   // CF header, fallback to req.ip, then X-Forwarded-For
-  const ipAddress =
+  const ip =
     req.headers.get("CF-Connecting-IP") ||
-    req.ip ||
+    ipAddress(req) ||
     req.headers.get("X-Forwarded-For");
-  if (!ipAddress) {
+  if (!ip) {
     return NextResponse.json(
       {
         error: "Could not validate eligibility.",
@@ -73,7 +74,7 @@ export const GET = async (req: NextRequest) => {
       { status: 400 },
     );
   }
-  const cacheKey = `testnet-faucet:${chainId}:${ipAddress}`;
+  const cacheKey = `testnet-faucet:${chainId}:${ip}`;
   const ttlSeconds = await cacheTtl(cacheKey);
 
   const res: CanClaimResponseType = {

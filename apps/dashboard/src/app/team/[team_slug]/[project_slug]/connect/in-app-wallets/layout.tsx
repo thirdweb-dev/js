@@ -7,15 +7,15 @@ import { Tabs } from "./_components/tabs";
 import { TRACKING_CATEGORY } from "./_constants";
 
 export default async function Layout(props: {
-  params: {
+  params: Promise<{
     team_slug: string;
     project_slug: string;
-  };
+  }>;
   children: React.ReactNode;
 }) {
   const project = await getProject(
-    props.params.team_slug,
-    props.params.project_slug,
+    (await props.params).team_slug,
+    (await props.params).project_slug,
   );
   if (!project) {
     notFound();
@@ -29,20 +29,14 @@ export default async function Layout(props: {
   return (
     <div>
       <InAppWalletsHeader clientId={apiKey.key} />
-
       <div className="h-8" />
-
       <Tabs
-        team_slug={props.params.team_slug}
-        project_slug={props.params.project_slug}
+        team_slug={(await props.params).team_slug}
+        project_slug={(await props.params).project_slug}
       />
-
       <div className="h-8" />
-
       {props.children}
-
       <div className="h-8" />
-
       <InAppWaletFooterSection trackingCategory={TRACKING_CATEGORY} />
     </div>
   );

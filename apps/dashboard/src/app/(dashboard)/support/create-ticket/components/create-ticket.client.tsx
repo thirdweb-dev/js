@@ -5,8 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SupportForm_SelectInput } from "components/help/contact-forms/shared/SupportForm_SelectInput";
 import dynamic from "next/dynamic";
-import { type ReactElement, useEffect, useRef, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import {
+  type ReactElement,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import { createTicketAction } from "./create-ticket.action";
 
@@ -73,7 +79,7 @@ export function CreateTicket() {
   const formRef = useRef<HTMLFormElement>(null);
   const [productLabel, setProductLabel] = useState("");
 
-  const [state, formAction] = useFormState(createTicketAction, {
+  const [state, formAction] = useActionState(createTicketAction, {
     message: "",
     success: false,
   });

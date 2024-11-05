@@ -48,6 +48,7 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
   const [otherFeedback, setOtherFeedback] = useState("");
 
   return (
+    // @ts-expect-error - this works fine
     <AlertDialog isOpen leastDestructiveRef={cancelRef} onClose={onClose}>
       <AlertDialogOverlay>
         <AlertDialogContent minW={{ base: "auto", md: "lg" }}>

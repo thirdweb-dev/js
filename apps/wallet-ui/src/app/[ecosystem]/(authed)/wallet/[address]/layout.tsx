@@ -8,9 +8,10 @@ import { resolveName } from "thirdweb/extensions/ens";
 import { shortenAddress } from "thirdweb/utils";
 
 export async function generateMetadata(
-  { params }: { params: { ecosystem: string; address: string } },
+  props: { params: Promise<{ ecosystem: string; address: string }> },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
+  const params = await props.params;
   const [ecosystem, parentMetadata] = await Promise.all([
     getEcosystemInfo(params.ecosystem),
     parent,
@@ -25,13 +26,14 @@ export async function generateMetadata(
   };
 }
 
-export default async function Layout({
-  children,
-  params,
-}: {
+export default async function Layout(props: {
   children: React.ReactNode;
-  params: { ecosystem: string; address: string };
+  params: Promise<{ ecosystem: string; address: string }>;
 }) {
+  const params = await props.params;
+
+  const { children } = props;
+
   const ensPromise = resolveName({
     client,
     address: params.address,

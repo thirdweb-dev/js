@@ -13,9 +13,10 @@ import { getThirdwebClient } from "../../../@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "../../../@/lib/resolveSchemeWithErrorHandler";
 import { PROJECT_SHOWCASE_DATA } from "../../../lib/project-showcase-constants";
 
-export default async function DetailPage({
-  params,
-}: { params: { slug: string } }) {
+export default async function DetailPage(props: {
+  params: Promise<{ slug: string }>;
+}) {
+  const params = await props.params;
   const { slug } = params;
 
   const project = PROJECT_SHOWCASE_DATA.find((p) => p.slug === slug);

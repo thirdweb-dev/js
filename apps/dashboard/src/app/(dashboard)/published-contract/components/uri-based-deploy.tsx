@@ -19,7 +19,7 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
     return <div>Could not fetch metadata</div>;
   }
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const address = cookieStore.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   if (!address) {
     redirect(`/login?next=${encodeURIComponent(pathname)}`);

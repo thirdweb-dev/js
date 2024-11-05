@@ -1,12 +1,12 @@
 import { CodeBlock, InlineCode } from "@/components/Document/Code";
 import { DocLink } from "@/components/Document/DocLink";
 import { Heading } from "@/components/Document/Heading";
-import { UnorderedList, OrderedList } from "@/components/Document/List";
+import { OrderedList, UnorderedList } from "@/components/Document/List";
 import { Paragraph } from "@/components/Document/Paragraph";
 import { Separator } from "@/components/Document/Separator";
 import { TBody, Table, Td, Th, Tr } from "@/components/Document/Table";
-import type { MDXComponents } from "mdx/types";
 import GithubSlugger from "github-slugger";
+import type { MDXComponents } from "mdx/types";
 import type { BuiltinLanguage } from "shiki";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {

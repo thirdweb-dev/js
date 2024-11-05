@@ -216,6 +216,7 @@ const CancelTransactionButton = ({
 
   return (
     <>
+      {/* @ts-expect-error - this works fine */}
       <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={closeButtonRef}>
         <ModalOverlay />
         <ModalContent className="!bg-background rounded-lg border border-border">

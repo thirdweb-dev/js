@@ -18,24 +18,16 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 type ExploreCategoryPageProps = {
-  params: {
+  params: Promise<{
     category: string;
-  };
+  }>;
 };
 
-export const metadata: Metadata = {
-  title: "Explore | Smart Contracts",
-  description:
-    "Browse a large collection of ready-to-deploy contracts that have been built by thirdweb and other contract developers. Find a contract for your specific app's or game's needs.",
-  openGraph: {
-    title: "thirdweb Explore: Smart Contracts & Protocols",
-  },
-};
-
-export async function generateMetadatra(
+export async function generateMetadata(
   props: ExploreCategoryPageProps,
 ): Promise<Metadata> {
-  const category = getCategory(props.params.category);
+  const params = await props.params;
+  const category = getCategory(params.category);
   if (!category) {
     notFound();
   }
@@ -48,7 +40,8 @@ export async function generateMetadatra(
 export default async function ExploreCategoryPage(
   props: ExploreCategoryPageProps,
 ) {
-  const category = getCategory(props.params.category);
+  const params = await props.params;
+  const category = getCategory(params.category);
   if (!category) {
     notFound();
   }
@@ -144,6 +137,3 @@ export async function generateStaticParams() {
     params: { category },
   }));
 }
-
-// TODO - figure out why this page is not building if we let it be static
-export const dynamic = "force-dynamic";

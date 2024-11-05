@@ -108,7 +108,6 @@ export const CreateBackendWalletButton: React.FC<
   return (
     <>
       <Button onClick={() => setIsOpen(true)}>Create</Button>
-
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
           className="z-[10001] p-0"
