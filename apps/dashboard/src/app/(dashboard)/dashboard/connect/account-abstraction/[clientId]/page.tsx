@@ -1,4 +1,4 @@
-import { AccountStatus } from "@3rdweb-sdk/react/hooks/useApi";
+import { accountStatus } from "@3rdweb-sdk/react/hooks/useApi";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { ConnectSDKCard } from "components/shared/ConnectSDKCard";
 import { SmartWallets } from "components/smart-wallets";
@@ -10,14 +10,14 @@ import { PageHeader } from "../PageHeader";
 import { getAASupportedAPIKeys } from "../getAASupportedAPIKeys";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     clientId: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     tab?: string;
-  };
+  }>;
 }) {
-  const { clientId } = props.params;
+  const { clientId } = await props.params;
   const dashboardAccount = await getAccount();
 
   if (!dashboardAccount) {
@@ -38,7 +38,7 @@ export default async function Page(props: {
   const hasSmartWalletsWithoutBilling = apiKeys.find((k) =>
     k.services?.find(
       (s) =>
-        dashboardAccount.status !== AccountStatus.ValidPayment &&
+        dashboardAccount.status !== accountStatus.validPayment &&
         s.name === "bundler",
     ),
   );
@@ -58,21 +58,18 @@ export default async function Page(props: {
           />
         </div>
       </div>
-
       {hasSmartWalletsWithoutBilling ? (
         <SmartWalletsBillingAlert />
       ) : (
         <OpChainAlert />
       )}
-
       <SmartWallets
         apiKeyServices={apiKey.services || []}
         trackingCategory="smart-wallet"
-        tab={props.searchParams.tab}
+        tab={(await props.searchParams).tab}
         smartWalletsLayoutSlug={`/dashboard/connect/account-abstraction/${clientId}`}
         clientId={apiKey.key}
       />
-
       <ConnectSDKCard
         title="Get Started"
         description="Add account abstraction to your app with the Connect SDK."

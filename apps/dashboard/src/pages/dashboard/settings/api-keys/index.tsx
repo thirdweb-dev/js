@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
-  AccountStatus,
+  accountStatus,
   useAccount,
   useApiKeys,
 } from "@3rdweb-sdk/react/hooks/useApi";
@@ -31,7 +31,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
     return apiKeys.find((k) =>
       k.services?.find(
         (s) =>
-          account.status !== AccountStatus.ValidPayment && s.name === "bundler",
+          account.status !== accountStatus.validPayment && s.name === "bundler",
       ),
     );
   }, [apiKeys, account]);

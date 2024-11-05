@@ -2,6 +2,7 @@ import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { hexToBigInt } from "../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../utils/fetch.js";
+import { stringify } from "../../../utils/json.js";
 import type {
   PaymasterResult,
   UserOperationV06,
@@ -59,7 +60,7 @@ export async function getPaymasterAndData(args: {
   const response = await fetchWithHeaders(paymasterUrl, {
     method: "POST",
     headers,
-    body: JSON.stringify({
+    body: stringify({
       jsonrpc: "2.0",
       id: 1,
       method: "pm_sponsorUserOperation",

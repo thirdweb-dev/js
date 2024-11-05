@@ -2,11 +2,11 @@ import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import {
   type Account,
-  AccountPlan,
-  AccountStatus,
   type ApiKey,
   type ApiKeyService,
   type UsageBillableByService,
+  accountPlan,
+  accountStatus,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import type {
   EngineAlert,
@@ -172,8 +172,8 @@ export function createDashboardAccountStub(
     id: id,
     name: `Name ${id}`,
     email: `email-${id}@example.com`,
-    status: AccountStatus.NoPayment,
-    plan: AccountPlan.Free,
+    status: accountStatus.noPayment,
+    plan: accountPlan.free,
     advancedEnabled: false,
     currentBillingPeriodStartsAt: new Date().toISOString(),
     currentBillingPeriodEndsAt: new Date().toISOString(),

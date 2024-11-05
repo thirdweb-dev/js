@@ -16,6 +16,7 @@ import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-co
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { toEther } from "../../utils/units.js";
 import { generateMerkleTreeInfoERC1155 } from "../airdrop/write/merkleInfoERC1155.js";
+import { name } from "../common/read/name.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
 import { balanceOf } from "./__generated__/IERC1155/read/balanceOf.js";
@@ -45,11 +46,21 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         params: {
-          name: "Test DropERC1155",
+          name: "EditionDrop",
           contractURI: TEST_CONTRACT_URI,
         },
         type: "DropERC1155",
       });
+
+      expect(contractAddress).toBeDefined();
+      const deployedName = await name({
+        contract: getContract({
+          client: TEST_CLIENT,
+          chain: ANVIL_CHAIN,
+          address: contractAddress,
+        }),
+      });
+      expect(deployedName).toBe("EditionDrop");
 
       contract = getContract({
         address: contractAddress,

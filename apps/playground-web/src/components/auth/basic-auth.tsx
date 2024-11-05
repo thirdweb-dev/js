@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 import { cn } from "../../lib/utils";
 import { AuthButton } from "./auth-button";
 
-export function BasicAuthPreview() {
-  const jwt = cookies().get("jwt");
+export async function BasicAuthPreview() {
+  const jwt = (await cookies()).get("jwt");
   return (
     <div className="flex flex-col gap-5">
       <div className="mx-auto">

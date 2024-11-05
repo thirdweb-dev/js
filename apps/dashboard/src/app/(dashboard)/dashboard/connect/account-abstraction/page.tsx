@@ -6,7 +6,7 @@ import { PageHeader } from "./PageHeader";
 import { getAASupportedAPIKeys } from "./getAASupportedAPIKeys";
 
 export default async function Page() {
-  const authToken = getAuthToken();
+  const authToken = await getAuthToken();
 
   if (!authToken) {
     redirect(

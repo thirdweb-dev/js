@@ -116,7 +116,8 @@ type EngineFeature =
   | "KEYPAIR_AUTH"
   | "CONTRACT_SUBSCRIPTIONS"
   | "IP_ALLOWLIST"
-  | "HETEROGENEOUS_WALLET_TYPES";
+  | "HETEROGENEOUS_WALLET_TYPES"
+  | "SMART_BACKEND_WALLETS";
 
 interface EngineSystemHealth {
   status: string;

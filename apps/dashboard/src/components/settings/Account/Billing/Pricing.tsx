@@ -1,4 +1,4 @@
-import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
+import { type AccountPlan, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
 import { SimpleGrid } from "@chakra-ui/react";
 import { PricingCard } from "components/homepage/sections/PricingCard";
 import { useMemo } from "react";
@@ -25,15 +25,13 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
   loading,
   onSelect,
 }) => {
-  const isPro = [AccountPlan.Pro, AccountPlan.Enterprise].includes(
-    plan as AccountPlan,
-  );
+  const isPro = plan === accountPlan.pro || plan === accountPlan.enterprise;
 
   const freeCtaTitle = useMemo(() => {
     if (!validPayment) {
       return "Get started for free";
     }
-    if (plan !== AccountPlan.Free) {
+    if (plan !== accountPlan.free) {
       return "Downgrade";
     }
 
@@ -51,7 +49,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       return "Contact us";
     }
 
-    if (plan === AccountPlan.Free) {
+    if (plan === accountPlan.free) {
       return canTrialGrowth ? trialTitle : "Upgrade";
     }
 
@@ -65,14 +63,14 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
   return (
     <SimpleGrid columns={{ base: 1, xl: 3 }} gap={{ base: 6, xl: 8 }}>
       <PricingCard
-        current={plan === AccountPlan.Free}
+        current={plan === accountPlan.free}
         size="sm"
-        name={AccountPlan.Free}
+        name={accountPlan.free}
         ctaTitle={freeCtaTitle}
         ctaProps={{
           onClick: (e) => {
             e.preventDefault();
-            handleSelect(AccountPlan.Free);
+            handleSelect(accountPlan.free);
           },
           isLoading: loading,
           isDisabled: loading || invalidPayment || paymentVerification,
@@ -85,18 +83,18 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
 
       <PricingCard
         activeTrialEndsAt={
-          plan === AccountPlan.Growth ? trialPeriodEndedAt : undefined
+          plan === accountPlan.growth ? trialPeriodEndedAt : undefined
         }
-        current={plan === AccountPlan.Growth}
+        current={plan === accountPlan.growth}
         size="sm"
-        name={AccountPlan.Growth}
+        name={accountPlan.growth}
         ctaTitle={growthCtaTitle}
         ctaHint="Your free trial will end after 30 days."
         canTrialGrowth={canTrialGrowth}
         ctaProps={{
           onClick: (e) => {
             e.preventDefault();
-            handleSelect(AccountPlan.Growth);
+            handleSelect(accountPlan.growth);
           },
           isLoading: loading,
           isDisabled: loading || invalidPayment || paymentVerification,
@@ -112,7 +110,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       <PricingCard
         current={isPro}
         size="sm"
-        name={AccountPlan.Pro}
+        name={accountPlan.pro}
         ctaTitle="Contact us"
         ctaProps={{
           category: "account",

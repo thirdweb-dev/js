@@ -290,7 +290,7 @@ async function sendBundlerRequest(args: {
   if (!response.ok || res.error) {
     let error = res.error || response.statusText;
     if (typeof error === "object") {
-      error = JSON.stringify(error);
+      error = stringify(error);
     }
     const code = res.code || "UNKNOWN";
 

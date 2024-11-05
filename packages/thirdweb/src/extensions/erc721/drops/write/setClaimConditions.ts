@@ -8,6 +8,7 @@ import {
 } from "../../../common/__generated__/IMulticall/write/multicall.js";
 import { isGetContractMetadataSupported } from "../../../common/read/getContractMetadata.js";
 import { isSetClaimConditionsSupported as isSetClaimConditionsSupportedGenerated } from "../../__generated__/IDrop/write/setClaimConditions.js";
+import { isSetClaimConditionsSupported as isSetClaimConditionsSupportedGeneratedSinglePhase } from "../../__generated__/IDropSinglePhase/write/setClaimConditions.js";
 
 /**
  * @extension ERC721
@@ -15,6 +16,7 @@ import { isSetClaimConditionsSupported as isSetClaimConditionsSupportedGenerated
 export type SetClaimConditionsParams = {
   phases: ClaimConditionsInput[];
   resetClaimEligibility?: boolean;
+  singlePhaseDrop?: boolean;
 };
 
 /**
@@ -55,6 +57,7 @@ export function setClaimConditions(
           phases: options.phases,
           resetClaimEligibility: options.resetClaimEligibility,
           tokenDecimals: 0,
+          singlePhase: options.singlePhaseDrop,
         }),
       };
     },
@@ -80,6 +83,7 @@ export function isSetClaimConditionsSupported(availableSelectors: string[]) {
     isGetContractMetadataSupported(availableSelectors) &&
     isSetContractURISupported(availableSelectors) &&
     // needs to actually be able to set the claim Conditions
-    isSetClaimConditionsSupportedGenerated(availableSelectors)
+    (isSetClaimConditionsSupportedGenerated(availableSelectors) ||
+      isSetClaimConditionsSupportedGeneratedSinglePhase(availableSelectors))
   );
 }

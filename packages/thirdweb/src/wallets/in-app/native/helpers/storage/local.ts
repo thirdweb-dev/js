@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { stringify } from "../../../../../utils/json.js";
 import {
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
   WALLET_USER_DETAILS_LOCAL_STORAGE_NAME,
@@ -65,7 +66,7 @@ export async function setWallerUserDetails({
   await setItemInAsyncStorage(
     // ! Keep this in sync with getWalletUserDetails function below
     name,
-    JSON.stringify({ userId, email: newEmail }),
+    stringify({ userId, email: newEmail }),
   );
 }
 

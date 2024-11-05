@@ -24,6 +24,7 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
+import { stringify } from "../../utils/json.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
 import {
@@ -350,6 +351,7 @@ function createAccount({
         walletAddress: getAddress(address),
         walletType: "walletConnect",
         transactionHash,
+        chainId: tx.chainId,
         contractAddress: tx.to ?? undefined,
         gasPrice: tx.gasPrice,
       });
@@ -536,7 +538,7 @@ function setRequestedChainsIds(
   chains: number[] | undefined,
   storage: AsyncStorage,
 ) {
-  storage?.setItem(storageKeys.requestedChains, JSON.stringify(chains));
+  storage?.setItem(storageKeys.requestedChains, stringify(chains));
 }
 
 /**

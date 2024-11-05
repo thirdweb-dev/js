@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 import { CodeExample } from "@/components/code/code-example";
 import { InAppConnectEmbed } from "../../../components/in-app-wallet/connect-button";
 import { Profiles } from "../../../components/in-app-wallet/profile-sections";
@@ -42,7 +41,7 @@ function AnyAuth() {
           inAppWallet(
             // built-in auth methods
             { auth: {
-              options: [ 
+              options: [
               "google",
               "x",
               "apple",

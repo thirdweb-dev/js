@@ -55,9 +55,9 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
             Reveal NFTs
           </Button>
         </SheetTrigger>
-        <SheetContent className="z-[10000] overflow-y-auto sm:w-[540px] sm:max-w-[90%] lg:w-[700px]">
+        <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
           <SheetHeader>
-            <SheetTitle>Reveal batch</SheetTitle>
+            <SheetTitle className="text-left">Reveal batch</SheetTitle>
           </SheetHeader>
           <form
             className="mt-10 flex flex-col gap-6"

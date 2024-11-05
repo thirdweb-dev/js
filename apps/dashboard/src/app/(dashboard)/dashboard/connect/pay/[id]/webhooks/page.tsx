@@ -3,11 +3,11 @@ import { getAPIKey } from "../../../../../../api/lib/getAPIKeys";
 import { PayWebhooksPage } from "../../components/webhooks.client";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }) {
-  const apiKey = await getAPIKey(props.params.id);
+  const apiKey = await getAPIKey((await props.params).id);
 
   if (!apiKey) {
     notFound();

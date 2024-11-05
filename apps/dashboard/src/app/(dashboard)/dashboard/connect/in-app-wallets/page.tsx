@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation";
 import { NoApiKeys } from "../../../../../components/settings/ApiKeys/NoApiKeys";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
+import { InAppWaletFooterSection } from "../../../../team/[team_slug]/[project_slug]/connect/in-app-wallets/_components/footer";
 import { PageHeader } from "./PageHeader";
 import { getInAppWalletSupportedAPIKeys } from "./getInAppWalletSupportedAPIKeys";
 
 export default async function Page() {
-  const authToken = getAuthToken();
+  const authToken = await getAuthToken();
 
   if (!authToken) {
     redirect(
@@ -25,6 +26,8 @@ export default async function Page() {
       <PageHeader />
       <div className="h-8" />
       <NoApiKeys service="in-app wallets" />
+      <div className="h-16" />
+      <InAppWaletFooterSection trackingCategory="embedded-wallet" />
     </div>
   );
 }

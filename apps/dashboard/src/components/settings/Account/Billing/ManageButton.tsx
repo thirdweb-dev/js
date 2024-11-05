@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   type Account,
-  AccountStatus,
+  accountStatus,
   useCreateBillingSession,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMemo } from "react";
@@ -26,14 +26,14 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
 
   const [buttonLabel, buttonText] = useMemo(() => {
     switch (account.status) {
-      case AccountStatus.InvalidPayment:
-      case AccountStatus.ValidPayment: {
+      case accountStatus.invalidPayment:
+      case accountStatus.validPayment: {
         return ["manage", "Manage billing"];
       }
-      case AccountStatus.PaymentVerification: {
+      case accountStatus.paymentVerification: {
         return ["verifyPaymentMethod", "Verify your payment method →"];
       }
-      case AccountStatus.InvalidPaymentMethod: {
+      case accountStatus.invalidPaymentMethod: {
         return ["addAnotherPayment", "Add another payment method →"];
       }
       default: {

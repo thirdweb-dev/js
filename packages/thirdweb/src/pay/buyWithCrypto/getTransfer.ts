@@ -6,6 +6,7 @@ import { approve } from "../../extensions/erc20/write/approve.js";
 import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import { stringify } from "../../utils/json.js";
 import { getPayBuyWithCryptoTransferEndpoint } from "../utils/definitions.js";
 import type {
   QuoteApprovalInfo,
@@ -129,7 +130,7 @@ export async function getBuyWithCryptoTransfer(
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
+      body: stringify({
         fromAddress: params.fromAddress,
         toAddress: params.toAddress,
         chainId: params.chainId,

@@ -3,6 +3,7 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { formatExplorerAddressUrl } from "../../../../utils/url.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useChainExplorers } from "../../../core/hooks/others/useChainQuery.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
@@ -125,7 +126,10 @@ export function TransactionsScreen(props: {
         <ButtonLink
           fullWidth
           variant="outline"
-          href={`${chainExplorers.explorers[0]?.url}/address/${activeAccount?.address}`}
+          href={formatExplorerAddressUrl(
+            chainExplorers.explorers[0]?.url ?? "",
+            activeAccount?.address ?? "",
+          )}
           target="_blank"
           as="a"
           gap="xs"

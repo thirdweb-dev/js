@@ -11,8 +11,8 @@ import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../api/lib/getAuthToken";
 import { CreateTicket } from "./components/create-ticket.client";
 
-export default function Page() {
-  const authToken = getAuthToken();
+export default async function Page() {
+  const authToken = await getAuthToken();
 
   if (!authToken) {
     return redirect(

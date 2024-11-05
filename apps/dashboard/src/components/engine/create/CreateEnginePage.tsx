@@ -1,7 +1,7 @@
 "use client";
 
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { AccountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { accountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ConfirmEngineTierDialog } from "../../../components/engine/create/ConfirmEngineTierDialog";
@@ -79,7 +79,7 @@ export const CreateEnginePage = () => {
             setIsConfirmationDialogOpen(false);
 
             // If Payment is already setup, deploy the Engine
-            if (accountQuery.data?.status === AccountStatus.ValidPayment) {
+            if (accountQuery.data?.status === accountStatus.validPayment) {
               await createEngineInstance(selectedTier);
             } else {
               trackEvent({

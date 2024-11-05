@@ -2,6 +2,7 @@ import { trackConnect } from "../../../../analytics/track/connect.js";
 import type { Chain } from "../../../../chains/types.js";
 import { getCachedChainIfExists } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { stringify } from "../../../../utils/json.js";
 import { getEcosystemInfo } from "../../../ecosystem/get-ecosystem-wallet-auth-options.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 import { createWalletEmitter } from "../../../wallet-emitter.js";
@@ -22,7 +23,7 @@ export async function getOrCreateInAppWalletConnector(
   connectorFactory: (client: ThirdwebClient) => Promise<InAppConnector>,
   ecosystem?: Ecosystem,
 ) {
-  const key = JSON.stringify({ clientId: client.clientId, ecosystem });
+  const key = stringify({ clientId: client.clientId, ecosystem });
   if (connectorCache.has(key)) {
     return connectorCache.get(key) as InAppConnector;
   }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
+import { stringify } from "../json.js";
 import {
   type FetchTokenMetadataOptions,
   fetchTokenMetadata,
@@ -9,7 +10,7 @@ describe("fetchTokenMetadata", () => {
   it("should return a json object from a valid base64 encoded json", async () => {
     const validJson = { foo: "bar" };
     const validBase64Json = `data:application/json;base64,${btoa(
-      JSON.stringify(validJson),
+      stringify(validJson),
     )}`;
 
     const options: FetchTokenMetadataOptions = {

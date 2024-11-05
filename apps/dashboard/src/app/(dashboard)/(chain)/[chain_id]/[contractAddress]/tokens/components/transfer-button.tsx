@@ -67,7 +67,7 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
       </SheetTrigger>
       <SheetContent className="z-[10000]">
         <SheetHeader>
-          <SheetTitle>Transfer tokens</SheetTitle>
+          <SheetTitle className="text-left">Transfer tokens</SheetTitle>
         </SheetHeader>
         <form className="mt-10">
           <div className="flex flex-col gap-6">

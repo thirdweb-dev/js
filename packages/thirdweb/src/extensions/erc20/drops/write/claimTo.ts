@@ -13,6 +13,7 @@ import { isGetActiveClaimConditionSupported } from "../read/getActiveClaimCondit
 export type ClaimToParams = {
   to: Address;
   from?: Address;
+  singlePhaseDrop?: boolean;
 } & ({ quantityInWei: bigint } | { quantity: string });
 
 /**
@@ -71,6 +72,7 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         quantity,
         from: options.from,
         tokenDecimals: await decimals({ contract: options.contract }),
+        singlePhaseDrop: options.singlePhaseDrop,
       });
     },
   });

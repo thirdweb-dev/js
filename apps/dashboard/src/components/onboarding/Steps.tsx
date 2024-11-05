@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
-  AccountStatus,
+  accountStatus,
   useAccount,
   useAccountCredits,
   useApiKeys,
@@ -18,7 +18,7 @@ import { useTheme } from "next-themes";
 import type { StaticImageData } from "next/image";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo } from "react";
+import { type JSX, useEffect, useMemo } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
 
 const Step = {
@@ -76,7 +76,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   );
 
   const hasValidPayment = useMemo(() => {
-    return meQuery?.data?.status === AccountStatus.ValidPayment;
+    return meQuery?.data?.status === accountStatus.validPayment;
   }, [meQuery?.data?.status]);
 
   const hasApiKeys = useMemo(() => {

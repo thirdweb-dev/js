@@ -59,17 +59,15 @@ export function claimToBatch(
 async function getClaimToBatchParams(
   options: BaseTransactionOptions<ClaimToBatchParams>,
 ) {
-  const errorIndexTo = options.content.findIndex((o) => !o.to);
-  if (errorIndexTo !== -1) {
-    throw new Error(
-      `Error: Item at index ${errorIndexTo} is missing recipient address ("to")`,
-    );
-  }
-  const errorIndexQuantity = options.content.findIndex((o) => !o.quantity);
-  if (errorIndexQuantity !== -1) {
-    throw new Error(
-      `Error: Item at index ${errorIndexQuantity} is missing claim quantity`,
-    );
+  for (let i = 0; i < options.content.length; i++) {
+    if (!options.content[i]?.quantity) {
+      throw new Error(`Error: Item at index ${i} is missing claim quantity`);
+    }
+    if (!options.content[i]?.to) {
+      throw new Error(
+        `Error: Item at index ${i} is missing recipient address ("to")`,
+      );
+    }
   }
   const content = optimizeClaimContent(options.content);
   const data = await Promise.all(
@@ -89,6 +87,7 @@ async function getClaimToBatchParams(
         pricePerToken: claimParams.pricePerToken,
         allowlistProof: claimParams.allowlistProof,
         data: claimParams.data,
+        overrides: claimParams.overrides,
       });
     }),
   );

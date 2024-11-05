@@ -19,7 +19,7 @@
   {
     "name": "thirdweb/chains (tree-shaking)",
     "path": "./dist/esm/exports/chains.js",
-    "limit": "500 B",
+    "limit": "600 B",
     "import": "{ ethereum }"
   },
   {

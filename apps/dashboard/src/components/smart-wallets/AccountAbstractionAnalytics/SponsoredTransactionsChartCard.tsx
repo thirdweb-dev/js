@@ -2,13 +2,14 @@
 
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
+  type ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import type { UserOpStats } from "@3rdweb-sdk/react/hooks/useApi";
+import type { UserOpStatsByChain } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   EmptyChartState,
   LoadingChartState,
@@ -20,58 +21,103 @@ import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { formatTickerNumber } from "../../../lib/format-utils";
 
-type ChartData = {
+type ChartData = Record<string, number> & {
   time: string; // human readable date
-  failed: number;
-  successful: number;
 };
 
-const chartConfig = {
-  successful: {
-    label: "Successful",
-    color: "hsl(var(--chart-1))",
-  },
-  failed: {
-    label: "Failed",
-    color: "red",
-  },
-};
 export function SponsoredTransactionsChartCard(props: {
-  userOpStats: UserOpStats[];
+  userOpStats: UserOpStatsByChain[];
   isPending: boolean;
 }) {
   const { userOpStats } = props;
+  const topChainsToShow = 10;
+  const chainsStore = useAllChainsData();
 
-  const barChartData: ChartData[] = useMemo(() => {
-    const chartDataMap: Map<string, ChartData> = new Map();
+  const { chartConfig, chartData } = useMemo(() => {
+    const _chartConfig: ChartConfig = {};
+    const _chartDataMap: Map<string, ChartData> = new Map();
+    const chainIdToVolumeMap: Map<string, number> = new Map();
+    // for each stat, add it in _chartDataMap
+    for (const stat of userOpStats) {
+      const chartData = _chartDataMap.get(stat.date);
+      const { chainId } = stat;
+      const chain = chainsStore.idToChain.get(Number(chainId));
 
-    for (const data of userOpStats) {
-      const chartData = chartDataMap.get(data.date);
+      // if no data for current day - create new entry
       if (!chartData) {
-        chartDataMap.set(data.date, {
-          time: format(new Date(data.date), "MMM dd"),
-          successful: data.successful,
-          failed: data.failed,
-        });
+        _chartDataMap.set(stat.date, {
+          time: format(new Date(stat.date), "MMM dd"),
+          [chain?.name || chainId || "Unknown"]:
+            Math.round(stat.sponsoredUsd * 100) / 100,
+        } as ChartData);
       } else {
-        chartData.successful += data.successful;
-        chartData.failed += data.failed;
+        chartData[chain?.name || chainId || "Unknown"] =
+          (chartData[chain?.name || chainId || "Unknown"] || 0) +
+          Math.round(stat.sponsoredUsd * 100) / 100;
+      }
+
+      chainIdToVolumeMap.set(
+        chain?.name || chainId || "Unknown",
+        stat.sponsoredUsd + (chainIdToVolumeMap.get(chainId || "Unknown") || 0),
+      );
+    }
+
+    const chainsSorted = Array.from(chainIdToVolumeMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map((w) => w[0]);
+
+    const chainsToShow = chainsSorted.slice(0, topChainsToShow);
+    const chainsToTagAsOthers = chainsSorted.slice(topChainsToShow);
+
+    // replace chainIdsToTagAsOther chainId with "other"
+    for (const data of _chartDataMap.values()) {
+      for (const chainId in data) {
+        if (chainsToTagAsOthers.includes(chainId)) {
+          data.others = (data.others || 0) + (data[chainId] || 0);
+          delete data[chainId];
+        }
       }
     }
 
-    return Array.from(chartDataMap.values());
-  }, [userOpStats]);
+    chainsToShow.forEach((walletType, i) => {
+      _chartConfig[walletType] = {
+        label: chainsToShow[i],
+        color: `hsl(var(--chart-${(i % 10) + 1}))`,
+      };
+    });
 
-  const disableActions = props.isPending || barChartData.length === 0;
+    // Add Other
+    chainsToShow.push("others");
+    _chartConfig.others = {
+      label: "Others",
+      color: "hsl(var(--muted-foreground))",
+    };
+
+    return {
+      chartData: Array.from(_chartDataMap.values()),
+      chartConfig: _chartConfig,
+    };
+  }, [userOpStats, chainsStore]);
+
+  const uniqueChainIds = Object.keys(chartConfig);
+  const disableActions =
+    props.isPending ||
+    chartData.length === 0 ||
+    chartData.every((data) => data.transactions === 0);
 
   return (
     <div className="relative w-full rounded-lg border border-border bg-muted/50 p-4 md:p-6">
-      <h3 className="mb-4 font-semibold text-xl tracking-tight md:text-2xl">
+      <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
         Sponsored Transactions
       </h3>
+      <p className="mb-3 text-muted-foreground text-sm">
+        Total number of sponsored transactions.
+      </p>
 
       <div className="top-6 right-6 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
         <ExportToCSVButton
@@ -79,10 +125,13 @@ export function SponsoredTransactionsChartCard(props: {
           fileName="Sponsored Transactions"
           disabled={disableActions}
           getData={async () => {
-            const header = ["Date", "Successful", "Failed"];
-            const rows = barChartData.map((data) => {
-              const { time, successful, failed } = data;
-              return [time, successful.toString(), failed.toString()];
+            const header = ["Date", ...uniqueChainIds];
+            const rows = chartData.map((data) => {
+              const { time, ...rest } = data;
+              return [
+                time,
+                ...uniqueChainIds.map((w) => (rest[w] || 0).toString()),
+              ];
             });
             return { header, rows };
           }}
@@ -93,10 +142,8 @@ export function SponsoredTransactionsChartCard(props: {
       <ChartContainer config={chartConfig} className="h-[400px] w-full">
         {props.isPending ? (
           <LoadingChartState />
-        ) : barChartData.length === 0 ||
-          barChartData.every(
-            (data) => data.failed === 0 && data.successful === 0,
-          ) ? (
+        ) : chartData.length === 0 ||
+          chartData.every((data) => data.transactions === 0) ? (
           <EmptyChartState>
             <div className="flex flex-col items-center justify-center">
               <span className="mb-6 text-lg">
@@ -139,7 +186,7 @@ export function SponsoredTransactionsChartCard(props: {
         ) : (
           <BarChart
             accessibilityLayer
-            data={barChartData}
+            data={chartData}
             margin={{
               top: 20,
             }}
@@ -153,14 +200,33 @@ export function SponsoredTransactionsChartCard(props: {
               axisLine={false}
             />
 
-            <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
+            <YAxis
+              dataKey={(data) => {
+                return Object.entries(data)
+                  .filter(([key]) => key !== "time")
+                  .map(([, value]) => value)
+                  .reduce((acc, current) => Number(acc) + Number(current), 0);
+              }}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => formatTickerNumber(value)}
+            />
+
+            <ChartTooltip
+              cursor={true}
+              content={
+                <ChartTooltipContent
+                  valueFormatter={(value) => formatTickerNumber(Number(value))}
+                />
+              }
+            />
             <ChartLegend content={<ChartLegendContent />} />
-            {(["failed", "successful"] as const).map((result) => {
+            {uniqueChainIds.map((chainId) => {
               return (
                 <Bar
-                  key={result}
-                  dataKey={result}
-                  fill={chartConfig[result].color}
+                  key={chainId}
+                  dataKey={chainId}
+                  fill={chartConfig[chainId]?.color}
                   radius={4}
                   stackId="a"
                   strokeWidth={1.5}

@@ -10,12 +10,13 @@ import { ContractTokensPage } from "./ContractTokensPage";
 import { ContractTokensPageClient } from "./ContractTokensPage.client";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     contractAddress: string;
     chain_id: string;
-  };
+  }>;
 }) {
-  const info = await getContractPageParamsInfo(props.params);
+  const params = await props.params;
+  const info = await getContractPageParamsInfo(params);
 
   if (!info) {
     notFound();

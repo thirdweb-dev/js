@@ -1,3 +1,4 @@
+import { ipAddress } from "@vercel/functions";
 import { type NextRequest, NextResponse } from "next/server";
 import invariant from "tiny-invariant";
 import { cacheGet, cacheSet } from "../../../lib/redis";
@@ -46,12 +47,12 @@ async function rateLimiter(req: NextRequest) {
   //  Max 1 requests per minute
   const rateLimitSeconds = 60;
 
-  const ipAddress =
+  const ip =
     req.headers.get("CF-Connecting-IP") ||
-    req.ip ||
+    ipAddress(req) ||
     req.headers.get("X-Forwarded-For");
 
-  if (!ipAddress) {
+  if (!ip) {
     return NextResponse.json(
       {
         error: "Could not validate elligibility.",
@@ -60,7 +61,7 @@ async function rateLimiter(req: NextRequest) {
     );
   }
 
-  const cacheKey = `contact-us:${ipAddress}`;
+  const cacheKey = `contact-us:${ip}`;
   const cacheValue = await cacheGet(cacheKey);
 
   // if we have a cached value, return an error

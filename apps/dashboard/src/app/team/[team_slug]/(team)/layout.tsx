@@ -6,10 +6,11 @@ import { TeamHeader } from "../../components/TeamHeader/TeamHeader";
 
 export default async function TeamLayout(props: {
   children: React.ReactNode;
-  params: { team_slug: string };
+  params: Promise<{ team_slug: string }>;
 }) {
+  const params = await props.params;
   const teams = await getTeams();
-  const team = teams.find((t) => t.slug === props.params.team_slug);
+  const team = teams.find((t) => t.slug === params.team_slug);
   const teamsAndProjects = await Promise.all(
     teams.map(async (team) => ({
       team,
@@ -34,16 +35,16 @@ export default async function TeamLayout(props: {
           tabContainerClassName="px-4 lg:px-6"
           links={[
             {
-              path: `/team/${props.params.team_slug}`,
+              path: `/team/${params.team_slug}`,
               name: "Projects",
               exactMatch: true,
             },
             {
-              path: `/team/${props.params.team_slug}/~/usage`,
+              path: `/team/${params.team_slug}/~/usage`,
               name: "Usage",
             },
             {
-              path: `/team/${props.params.team_slug}/~/settings`,
+              path: `/team/${params.team_slug}/~/settings`,
               name: "Settings",
             },
           ]}

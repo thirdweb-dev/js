@@ -3,11 +3,11 @@ import { PayAnalytics } from "../../../../../../components/pay/PayAnalytics/PayA
 import { getAPIKey } from "../../../../../api/lib/getAPIKeys";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }) {
-  const apiKey = await getAPIKey(props.params.id);
+  const apiKey = await getAPIKey((await props.params).id);
 
   if (!apiKey) {
     notFound();

@@ -7,6 +7,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getTransactionStore } from "../../../../../transaction/transaction-store.js";
 import { shortenHex } from "../../../../../utils/address.js";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { formatExplorerTxUrl } from "../../../../../utils/url.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { iconSize, spacing } from "../../../../core/design-system/index.js";
 import { useWaitForReceipt } from "../../../../core/hooks/contract/useWaitForReceipt.js";
@@ -192,7 +193,7 @@ function TransactionButton(props: {
   if (props.explorerUrl) {
     return (
       <a
-        href={`${props.explorerUrl}/tx/${props.hash}`}
+        href={formatExplorerTxUrl(props.explorerUrl, props.hash)}
         target="_blank"
         rel="noreferrer"
       >

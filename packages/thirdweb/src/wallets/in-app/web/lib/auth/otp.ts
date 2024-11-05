@@ -1,4 +1,5 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { stringify } from "../../../../../utils/json.js";
 import {
   getLoginCallbackUrl,
   getLoginUrl,
@@ -46,7 +47,7 @@ export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
   const response = await fetch(url, {
     method: "POST",
     headers,
-    body: JSON.stringify(body),
+    body: stringify(body),
   });
 
   if (!response.ok) {
@@ -103,7 +104,7 @@ export const verifyOtp = async (
   const response = await fetch(url, {
     method: "POST",
     headers,
-    body: JSON.stringify(body),
+    body: stringify(body),
   });
 
   if (!response.ok) {

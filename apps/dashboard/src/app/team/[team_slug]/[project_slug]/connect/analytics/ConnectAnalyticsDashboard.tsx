@@ -1,15 +1,15 @@
 "use client";
 import {
+  getInAppWalletUsage,
   useUserOpUsageAggregate,
   useWalletUsageAggregate,
   useWalletUsagePeriod,
 } from "@3rdweb-sdk/react/hooks/useApi";
+import { useQuery } from "@tanstack/react-query";
 import {
-  DateRangeSelector,
   type Range,
   getLastNDaysRange,
 } from "components/analytics/date-range-selector";
-import { IntervalSelector } from "components/analytics/interval-selector";
 import { differenceInDays } from "date-fns";
 import { useState } from "react";
 import { ConnectAnalyticsDashboardUI } from "./ConnectAnalyticsDashboardUI";
@@ -45,31 +45,42 @@ export function ConnectAnalyticsDashboard(props: {
     clientId: props.clientId,
   });
 
+  const inAppAggregateQuery = useQuery({
+    queryKey: ["in-app-usage-aggregate", props.clientId],
+    queryFn: async () => {
+      const [allTimeStats, monthlyStats] = await Promise.all([
+        getInAppWalletUsage({
+          clientId: props.clientId,
+          from: new Date(2022, 0, 1),
+          to: new Date(),
+          period: "all",
+        }),
+        getInAppWalletUsage({
+          clientId: props.clientId,
+          from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          to: new Date(),
+          period: "month",
+        }),
+      ]);
+      return { allTimeStats, monthlyStats };
+    },
+  });
+
   return (
     <div>
-      <div className="flex gap-3">
-        <DateRangeSelector
-          range={range}
-          setRange={(newRange) => {
-            setRange(newRange);
-            const days = differenceInDays(newRange.to, newRange.from);
-            setIntervalType(days > 30 ? "week" : "day");
-          }}
-        />
-        <IntervalSelector
-          intervalType={intervalType}
-          setIntervalType={setIntervalType}
-        />
-      </div>
-      <div className="h-4" />
       <ConnectAnalyticsDashboardUI
         walletUsage={walletUsageQuery.data || []}
         aggregateWalletUsage={walletUsageAggregateQuery.data || []}
         aggregateUserOpUsageQuery={userOpAggregateQuery.data}
         connectLayoutSlug={props.connectLayoutSlug}
+        inAppAggregateQuery={inAppAggregateQuery.data}
         isPending={
           walletUsageQuery.isPending || walletUsageAggregateQuery.isPending
         }
+        range={range}
+        setRange={setRange}
+        intervalType={intervalType}
+        setIntervalType={setIntervalType}
       />
     </div>
   );

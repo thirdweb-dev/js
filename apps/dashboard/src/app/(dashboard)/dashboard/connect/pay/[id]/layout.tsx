@@ -4,11 +4,12 @@ import { getApiKeys } from "../../../../../api/lib/getAPIKeys";
 import { APIKeySelector } from "../components/APIKeySelector";
 
 export default async function Layout(props: {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
   children: React.ReactNode;
 }) {
+  const params = await props.params;
   const apiKeys = await getApiKeys();
   const firstKey = apiKeys[0];
 
@@ -16,7 +17,7 @@ export default async function Layout(props: {
     redirect("/dashboard/connect/pay/no-keys");
   }
 
-  const selectedKey = apiKeys.find((x) => x.id === props.params.id);
+  const selectedKey = apiKeys.find((x) => x.id === params.id);
 
   if (!selectedKey) {
     redirect("/dashboard/connect/pay");
@@ -57,5 +58,3 @@ export default async function Layout(props: {
     </div>
   );
 }
-
-export const dynamic = "force-dynamic";

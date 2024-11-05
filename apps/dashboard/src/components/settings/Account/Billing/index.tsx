@@ -1,8 +1,9 @@
 "use client";
 import {
   type Account,
-  AccountPlan,
-  AccountStatus,
+  type AccountPlan,
+  accountPlan,
+  accountStatus,
   useUpdateAccountPlan,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
@@ -30,7 +31,7 @@ interface BillingProps {
 
 export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
   const updatePlanMutation = useUpdateAccountPlan(
-    account?.plan === AccountPlan.Free,
+    account?.plan === accountPlan.free,
   );
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [paymentMethodSaving, setPaymentMethodSaving] = useState(false);
@@ -52,10 +53,10 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
     "Failed to change your billing plan.",
   );
 
-  const validPayment = account.status === AccountStatus.ValidPayment;
+  const validPayment = account.status === accountStatus.validPayment;
   const paymentVerification =
-    account.status === AccountStatus.PaymentVerification;
-  const invalidPayment = account.status === AccountStatus.InvalidPayment;
+    account.status === accountStatus.paymentVerification;
+  const invalidPayment = account.status === accountStatus.invalidPayment;
 
   const handleUpdatePlan = useCallback(
     (plan: AccountPlan, feedback?: string) => {
@@ -114,7 +115,7 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
       return;
     }
     // downgrade from Growth to Free
-    if (plan === AccountPlan.Free || account.plan === AccountPlan.Growth) {
+    if (plan === accountPlan.free || account.plan === accountPlan.growth) {
       setDowngradePlan(plan);
     } else {
       handleUpdatePlan(plan);
@@ -211,8 +212,8 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
         // and didn't have it already set, so update it here when payment
         // method is available.
         if (
-          account.plan !== AccountPlan.Growth &&
-          selectedPlan === AccountPlan.Growth
+          account.plan !== accountPlan.growth &&
+          selectedPlan === accountPlan.growth
         ) {
           handleUpdatePlan(selectedPlan);
           setSelectedPlan(undefined);
@@ -232,12 +233,11 @@ export const Billing: React.FC<BillingProps> = ({ account, teamId }) => {
     handleUpdatePlan,
   ]);
 
-  const showSteps = [
-    AccountStatus.NoCustomer,
-    AccountStatus.NoPayment,
-    AccountStatus.InvalidPayment,
-    AccountStatus.InvalidPaymentMethod,
-  ].includes(account.status);
+  const showSteps =
+    account.status === accountStatus.noCustomer ||
+    account.status === accountStatus.noPayment ||
+    account.status === accountStatus.invalidPayment ||
+    account.status === accountStatus.invalidPaymentMethod;
 
   return (
     <Flex flexDir="column" gap={8}>

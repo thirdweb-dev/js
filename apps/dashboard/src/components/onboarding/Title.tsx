@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 type TitleAndDescriptionProps = {
   heading: string | JSX.Element;
   description: string | JSX.Element;

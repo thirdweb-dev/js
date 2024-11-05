@@ -1,5 +1,88 @@
 # thirdweb
 
+## 5.65.2
+
+### Patch Changes
+
+- [#5302](https://github.com/thirdweb-dev/js/pull/5302) [`75cbe64`](https://github.com/thirdweb-dev/js/commit/75cbe64a86db848047abd619b11cac06ac9d5a04) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix Pay UI not force switching connected wallet chain
+
+- [#5256](https://github.com/thirdweb-dev/js/pull/5256) [`f98059c`](https://github.com/thirdweb-dev/js/commit/f98059c426d9be6727e7c1086737539f3b7d11d9) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Optimize ERC20 transferBatch
+
+## 5.65.1
+
+### Patch Changes
+
+- [#5277](https://github.com/thirdweb-dev/js/pull/5277) [`58fb28d`](https://github.com/thirdweb-dev/js/commit/58fb28de297e5a81be18a185d495425e29913a0b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect bundlerUrl in waitForUserReceipt
+
+## 5.65.0
+
+### Minor Changes
+
+- [#5126](https://github.com/thirdweb-dev/js/pull/5126) [`c621c13`](https://github.com/thirdweb-dev/js/commit/c621c13f11166a5ff8aa1fbd9e5e78dd83cbaef5) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Allow to customize the display order of Asset tabs
+
+  When you click on "View Assets", by default the "Tokens" tab is shown first.
+
+  If you want to show the "NFTs" tab first, change the order of the asset tabs to: ["nft", "token"]
+
+  Note: If an empty array is passed, the [View Funds] button will be hidden
+
+  ```tsx
+  <ConnectButton
+    client={client}
+    detailsModal={{
+      assetTabs: ["nft", "token"],
+    }}
+  />
+  ```
+
+### Patch Changes
+
+- [#5253](https://github.com/thirdweb-dev/js/pull/5253) [`baf2198`](https://github.com/thirdweb-dev/js/commit/baf21980be291d037797ce17fcd2e8a64e3b7814) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use stringify instead of JSON.stringify in most places to handle bigint serialization
+
+- [#5272](https://github.com/thirdweb-dev/js/pull/5272) [`e3c0af2`](https://github.com/thirdweb-dev/js/commit/e3c0af28f7531bccbcc38f3f4ffb3516151636de) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Tracks transaction chain IDs
+
+- [#5250](https://github.com/thirdweb-dev/js/pull/5250) [`f40d247`](https://github.com/thirdweb-dev/js/commit/f40d2474e6cc1227a8d05151210ef4793beb6142) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow smart accounts to switch chains between zk and non zk chains
+
+- [#5270](https://github.com/thirdweb-dev/js/pull/5270) [`0660416`](https://github.com/thirdweb-dev/js/commit/06604162a11d99ff119bbf427a24b9a7d82c1575) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Enable configuring the analytics endpoint
+
+## 5.64.5
+
+### Patch Changes
+
+- [#5246](https://github.com/thirdweb-dev/js/pull/5246) [`82c8726`](https://github.com/thirdweb-dev/js/commit/82c8726c10c0186b82cc740e2131179aff7905c9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix custom paymaster callback not being respected
+
+## 5.64.4
+
+### Patch Changes
+
+- [#5237](https://github.com/thirdweb-dev/js/pull/5237) [`802d3bf`](https://github.com/thirdweb-dev/js/commit/802d3bfd4bbf211ba2477c8c2a44a2f1c7b79967) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Sanitize block explorer URLs
+
+- [#5231](https://github.com/thirdweb-dev/js/pull/5231) [`686d0c3`](https://github.com/thirdweb-dev/js/commit/686d0c3c051ac0f36fcec7412948cbc41e303388) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect custom bundler URL for getting gas fees + better DX for `predictSmartAccountAddress()`
+
+- [#5187](https://github.com/thirdweb-dev/js/pull/5187) [`68ce724`](https://github.com/thirdweb-dev/js/commit/68ce724ff646e4992e33c025e12f4bf083e1ca7a) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - expose WalletUser type for in app / ecosystem wallets
+
+- [#5214](https://github.com/thirdweb-dev/js/pull/5214) [`ad4af68`](https://github.com/thirdweb-dev/js/commit/ad4af68d1d96859e8dedcdcb22ebbc6c6cc29f1f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Reduce async calls before requesting webauthn credentials for ios 15
+
+- [#5229](https://github.com/thirdweb-dev/js/pull/5229) [`9425e9e`](https://github.com/thirdweb-dev/js/commit/9425e9ef429a98119fc0648eb43850c7b9fa8571) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Consolidate custom jwt and custom auth endpoint through common endpoint
+
+- [#5244](https://github.com/thirdweb-dev/js/pull/5244) [`178d407`](https://github.com/thirdweb-dev/js/commit/178d407e6f20fb44ab32977c95912f56b2f1bc51) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for custom singlePhase drops
+
+  If you are using a custom drop contract, you can now set claim conditions and claim by passing the `singlePhaseDrop` option to the `setClaimConditions` and `claimTo` functions.
+
+  ```ts
+  setClaimConditions({
+    contract,
+    phases: [
+      {
+        startTime: new Date(0),
+        maxClaimableSupply: 10n,
+      },
+    ],
+    tokenId: 0n,
+    singlePhaseDrop: true, // <--- for custom drop contracts
+  });
+  ```
+
 ## 5.64.3
 
 ### Patch Changes

@@ -114,7 +114,6 @@ function DocSidebarNonCollapsible(props: {
           <div className="font-semibold lg:text-base">{name}</div>
         )}
       </div>
-
       <ul className="flex flex-col">
         {links.map((link, i) => {
           return (

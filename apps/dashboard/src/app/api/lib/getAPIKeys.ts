@@ -36,7 +36,7 @@ export async function getAPIKey(apiKeyId: string) {
 }
 
 export async function getApiKeys() {
-  const authToken = getAuthToken();
+  const authToken = await getAuthToken();
 
   const res = await fetch(`${API_SERVER_URL}/v1/keys`, {
     method: "GET",

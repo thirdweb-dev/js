@@ -1,4 +1,4 @@
-import { Input } from "@chakra-ui/react";
+import { Input } from "@/components/ui/input";
 import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
 
@@ -18,7 +18,7 @@ export const PhaseNameInput: React.FC = () => {
       helperText="This does not affect how your claim phase functions and is for organizational purposes only."
     >
       <Input
-        isDisabled={formDisabled}
+        disabled={formDisabled}
         type="text"
         value={inputValue}
         placeholder={inputPlaceholder}

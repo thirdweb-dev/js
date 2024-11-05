@@ -1,5 +1,6 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
+import { stringify } from "../../../../utils/json.js";
 import { randomBytesHex } from "../../../../utils/random.js";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import type { Ecosystem } from "../wallet/types.js";
@@ -39,7 +40,7 @@ export async function guestAuthenticate(args: {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
+    body: stringify({
       sessionId,
     }),
   });

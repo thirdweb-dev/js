@@ -25,9 +25,9 @@ import { z } from "zod";
 
 const LazyShareFreeWalletsModal = dynamic(
   () =>
-    import("./share-free-wallets-modal.client").then(
-      (mod) => mod.ShareFreeWalletsModal,
-    ),
+    import("./share-free-wallets-modal.client").then((mod) => ({
+      default: mod.ShareFreeWalletsModal,
+    })),
   {
     ssr: false,
     loading: () => null,
@@ -151,6 +151,8 @@ export function ApplyCouponCardUI(props: {
               res.data,
               // prod & dev
               values.promoCode === "FREEWALLETS" ||
+                // new prod code
+                values.promoCode === "FREEWALLETS24" ||
                 values.promoCode === "TESTFREEWALLETS",
             );
           }

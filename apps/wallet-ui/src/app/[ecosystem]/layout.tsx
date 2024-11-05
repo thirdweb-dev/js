@@ -2,9 +2,10 @@ import { getEcosystemInfo } from "@/lib/ecosystems";
 import type { Metadata, ResolvingMetadata } from "next";
 
 export async function generateMetadata(
-  { params }: { params: { ecosystem: string } },
+  props: { params: Promise<{ ecosystem: string }> },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
+  const params = await props.params;
   const [ecosystem, parentMetadata] = await Promise.all([
     getEcosystemInfo(params.ecosystem),
     parent,

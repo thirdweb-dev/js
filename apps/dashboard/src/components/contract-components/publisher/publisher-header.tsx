@@ -54,7 +54,7 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
             >
               <PublisherAvatar
                 alt="Publisher avatar"
-                boxSize={14}
+                className="size-14"
                 address={ensQuery.data?.ensName || wallet}
               />
             </Link>

@@ -15,20 +15,21 @@ import { getContractPageMetadata } from "./_utils/getContractPageMetadata";
 import { getContractPageSidebarLinks } from "./_utils/getContractPageSidebarLinks";
 
 export default async function Layout(props: {
-  params: {
+  params: Promise<{
     contractAddress: string;
     chain_id: string;
-  };
+  }>;
   children: React.ReactNode;
 }) {
-  if (!isAddress(props.params.contractAddress)) {
+  const params = await props.params;
+  if (!isAddress(params.contractAddress)) {
     return notFound();
   }
 
-  const info = await getContractPageParamsInfo(props.params);
+  const info = await getContractPageParamsInfo(params);
 
   if (!info) {
-    return <ConfigureCustomChain chainSlug={props.params.chain_id} />;
+    return <ConfigureCustomChain chainSlug={params.chain_id} />;
   }
 
   const { contract, chainMetadata } = info;
@@ -78,14 +79,13 @@ export default async function Layout(props: {
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: {
+export async function generateMetadata(props: {
+  params: Promise<{
     contractAddress: string;
     chain_id: string;
-  };
+  }>;
 }): Promise<Metadata> {
+  const params = await props.params;
   try {
     const info = await getContractPageParamsInfo(params);
 

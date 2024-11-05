@@ -48,7 +48,6 @@ export function ColorFormGroup(props: {
           />
         </div>
       </div>
-
       <ScrollShadow
         scrollableClassName="h-[300px] p-2"
         shadowColor="hsl(var(--muted))"

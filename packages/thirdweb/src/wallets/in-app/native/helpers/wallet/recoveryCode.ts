@@ -5,6 +5,7 @@ import {
 } from "@aws-sdk/credential-providers";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { stringToBytes } from "../../../../../utils/encoding/to-bytes.js";
+import { stringify } from "../../../../../utils/json.js";
 import type { ClientScopedStorage } from "../../../core/authentication/client-scoped-storage.js";
 import { authFetchEmbeddedWalletUser } from "../api/fetchers.js";
 import {
@@ -31,7 +32,7 @@ export async function getCognitoRecoveryPasswordV1(args: {
   });
   if (!idTokenResponse.ok) {
     throw new Error(
-      `Failed to fetch id token from Cognito: ${JSON.stringify(
+      `Failed to fetch id token from Cognito: ${stringify(
         await idTokenResponse.json(),
         null,
         2,
@@ -61,7 +62,7 @@ export async function getCognitoRecoveryPasswordV1(args: {
   const params = {
     FunctionName: GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION_V1,
     Payload: stringToBytes(
-      JSON.stringify({
+      stringify({
         accessToken,
         idToken,
       }),
@@ -92,7 +93,7 @@ export async function getCognitoRecoveryPasswordV2(args: {
   });
   if (!idTokenResponse.ok) {
     throw new Error(
-      `Failed to fetch id token from Cognito: ${JSON.stringify(
+      `Failed to fetch id token from Cognito: ${stringify(
         await idTokenResponse.json(),
         null,
         2,
@@ -121,7 +122,7 @@ export async function getCognitoRecoveryPasswordV2(args: {
   const params = {
     FunctionName: GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION_V2,
     Payload: stringToBytes(
-      JSON.stringify({
+      stringify({
         token: lambdaToken,
       }),
     ),

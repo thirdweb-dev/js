@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import { shortenAddress } from "../../../../../../../utils/address.js";
+import { formatExplorerTxUrl } from "../../../../../../../utils/url.js";
 import {
   fontSize,
   iconSize,
@@ -199,7 +200,10 @@ export function SwapTxDetailsTable(
           <ButtonLink
             fullWidth
             variant="outline"
-            href={`${fromChainExplorers.explorers[0].url}/tx/${sourceTxHash}`}
+            href={formatExplorerTxUrl(
+              fromChainExplorers.explorers[0]?.url,
+              sourceTxHash,
+            )}
             target="_blank"
             gap="xs"
             style={{
@@ -330,7 +334,10 @@ export function SwapTxDetailsTable(
         <ButtonLink
           fullWidth
           variant="outline"
-          href={`${fromChainExplorers.explorers[0].url}/tx/${sourceTxHash}`}
+          href={formatExplorerTxUrl(
+            fromChainExplorers.explorers[0]?.url,
+            sourceTxHash,
+          )}
           target="_blank"
           gap="xs"
           style={{
@@ -352,7 +359,10 @@ export function SwapTxDetailsTable(
             <ButtonLink
               fullWidth
               variant="outline"
-              href={`${toChainExplorers.explorers[0].url}/tx/${destinationTxHash}`}
+              href={formatExplorerTxUrl(
+                toChainExplorers.explorers[0]?.url,
+                destinationTxHash,
+              )}
               target="_blank"
               gap="xs"
               style={{

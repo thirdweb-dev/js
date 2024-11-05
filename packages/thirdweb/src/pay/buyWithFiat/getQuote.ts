@@ -1,5 +1,6 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import { stringify } from "../../utils/json.js";
 import type { FiatProvider } from "../utils/commonTypes.js";
 import { getPayBuyWithFiatQuoteEndpoint } from "../utils/definitions.js";
 
@@ -299,7 +300,7 @@ export async function getBuyWithFiatQuote(
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
+      body: stringify({
         toAddress: params.toAddress,
         fromCurrencySymbol: params.fromCurrencySymbol,
         toChainId: params.toChainId.toString(),

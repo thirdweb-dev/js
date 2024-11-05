@@ -1,5 +1,6 @@
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { stringToBytes } from "../encoding/to-bytes.js";
+import { stringify } from "../json.js";
 import { randomBytesHex } from "../random.js";
 import { uint8ArrayToBase64 } from "../uint8-array.js";
 import { PRECOMPILED_B64_ENCODED_JWT_HEADER } from "./jwt-header.js";
@@ -47,14 +48,13 @@ type EncodeJWTParams = { payload: JWTPayloadInput; account: Account };
  */
 export async function encodeJWT(options: EncodeJWTParams) {
   const payload = await ensureJWTPayload(options.payload);
-  const message = JSON.stringify(payload);
+  const message = stringify(payload);
 
   const signature = await options.account.signMessage({ message });
 
-  const encodedData = uint8ArrayToBase64(
-    stringToBytes(JSON.stringify(payload)),
-    { urlSafe: true },
-  );
+  const encodedData = uint8ArrayToBase64(stringToBytes(message), {
+    urlSafe: true,
+  });
 
   const encodedSignature = uint8ArrayToBase64(stringToBytes(signature), {
     urlSafe: true,

@@ -3,6 +3,7 @@ import type { LoginPayload } from "../../../../auth/core/types.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
+import { stringify } from "../../../../utils/json.js";
 import type { Wallet } from "../../../interfaces/wallet.js";
 import type { Ecosystem } from "../wallet/types.js";
 import { getLoginCallbackUrl, getLoginUrl } from "./getLoginPath.js";
@@ -50,7 +51,7 @@ export async function siweAuthenticate(args: {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
+        body: stringify({
           signature,
           payload,
         }),

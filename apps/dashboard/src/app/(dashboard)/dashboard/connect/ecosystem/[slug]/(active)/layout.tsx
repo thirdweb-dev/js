@@ -1,9 +1,13 @@
-import { EcosystemLayoutSlug } from "./EcosystemSlugLayout";
+import { EcosystemLayoutSlug } from "./components/EcosystemSlugLayout";
 
-export default async function Layout({
-  children,
-  params,
-}: { children: React.ReactNode; params: { slug: string } }) {
+export default async function Layout(props: {
+  children: React.ReactNode;
+  params: Promise<{ slug: string }>;
+}) {
+  const params = await props.params;
+
+  const { children } = props;
+
   return (
     <EcosystemLayoutSlug
       params={params}
@@ -13,6 +17,3 @@ export default async function Layout({
     </EcosystemLayoutSlug>
   );
 }
-
-// because cookies() is used
-export const dynamic = "force-dynamic";

@@ -1,6 +1,7 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
+import { stringify } from "../../../../utils/json.js";
 import type { Ecosystem } from "../wallet/types.js";
 import type { ClientScopedStorage } from "./client-scoped-storage.js";
 import type { AuthStoredTokenWithCookieReturnType } from "./types.js";
@@ -96,7 +97,7 @@ export async function registerPasskey(options: {
       "Content-Type": "application/json",
       ...customHeaders,
     },
-    body: JSON.stringify({
+    body: stringify({
       type: "sign-up",
       authenticatorData: registration.authenticatorData,
       credentialId: registration.credentialId,
@@ -166,7 +167,7 @@ export async function loginWithPasskey(options: {
       "Content-Type": "application/json",
       ...customHeaders,
     },
-    body: JSON.stringify({
+    body: stringify({
       type: "sign-in",
       authenticatorData: authentication.authenticatorData,
       credentialId: authentication.credentialId,

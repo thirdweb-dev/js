@@ -2,6 +2,7 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { MerkleTree } from "../../../merkletree/MerkleTree.js";
 import { upload } from "../../../storage/upload.js";
 import type { Hex } from "../../encoding/hex.js";
+import { stringify } from "../../json.js";
 import { hashEntryERC721 } from "./hash-entry-erc721.js";
 import type {
   ShardDataERC721,
@@ -54,7 +55,7 @@ export async function processSnapshotERC721(options: {
       entries,
     };
     shardsToUpload.push({
-      data: JSON.stringify(data),
+      data: stringify(data),
       name: `${shardId}.json`,
     });
   }
@@ -74,7 +75,7 @@ export async function processSnapshotERC721(options: {
   // 6. Also upload the original entries for retrieving all entries
   const originalEntriesUri = await upload({
     client: options.client,
-    files: [JSON.stringify(options.snapshot)],
+    files: [stringify(options.snapshot)],
   });
   // 7. assmeble the final sharded merkle tree info
   const shardedMerkleInfo: ShardedMerkleTreeInfo = {

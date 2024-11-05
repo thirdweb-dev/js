@@ -105,8 +105,9 @@ function Inner({
       // writes
       ERC721Ext.isSetClaimConditionsSupported(functionSelectors),
       ERC721Ext.isResetClaimEligibilitySupported(functionSelectors),
+      isErc721,
     ].every(Boolean);
-  }, [functionSelectors]);
+  }, [functionSelectors, isErc721]);
 
   const hasERC20ClaimConditions = useMemo(() => {
     return [
@@ -118,8 +119,9 @@ function Inner({
       // writes
       ERC20Ext.isSetClaimConditionsSupported(functionSelectors),
       ERC20Ext.isResetClaimEligibilitySupported(functionSelectors),
+      isErc20,
     ].every(Boolean);
-  }, [functionSelectors]);
+  }, [functionSelectors, isErc20]);
 
   const claimConditions = useReadContract(
     isErc721 ? ERC721Ext.getClaimConditions : ERC20Ext.getClaimConditions,
@@ -233,7 +235,7 @@ function Inner({
           (erc20Supply.data || 0n) > 0n,
       });
     }
-    if (hasERC721ClaimConditions) {
+    if (hasERC721ClaimConditions && isErc721) {
       steps.push({
         title: "First NFT claimed",
         children: (

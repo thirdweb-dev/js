@@ -1,3 +1,5 @@
+import { stringify } from "../../../../utils/json.js";
+
 export const ErrorMessages = {
   invalidOtp:
     "Your OTP code is invalid or expired. Please request a new code or try again.",
@@ -8,5 +10,5 @@ export const createErrorMessage = (message: string, error: unknown): string => {
   if (error instanceof Error) {
     return `${message}: ${error.message}`;
   }
-  return `${message}: ${JSON.stringify(error)}`;
+  return `${message}: ${stringify(error)}`;
 };

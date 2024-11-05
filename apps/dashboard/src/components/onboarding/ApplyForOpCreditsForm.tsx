@@ -1,4 +1,4 @@
-import { AccountPlan, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { accountPlan, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
 import { Select as ChakraSelect } from "chakra-react-select";
 import { ChakraNextImage } from "components/Image";
@@ -41,7 +41,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
       firstname: "",
       lastname: "",
       thirdweb_account_id: account?.id || "",
-      plan_type: PlanToCreditsRecord[account?.plan || AccountPlan.Free].title,
+      plan_type: PlanToCreditsRecord[account?.plan || accountPlan.free].title,
       email: account?.email || "",
       company: "",
       website: "",
@@ -187,6 +187,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
             }))}
             placeholder="Select industry"
             isRequired
+            // @ts-expect-error - this works fine
             onChange={(value) => {
               if (value?.value) {
                 form.setValue("superchain_verticals", value.value);
@@ -213,10 +214,14 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
               label: chain === "Optimism" ? "OP Mainnet" : chain,
               value: chain,
             }))}
+            // @ts-expect-error - this works fine
             onChange={(values) => {
               form.setValue(
                 "superchain_chain",
-                values.map(({ value }) => value).join(";"),
+                values
+                  // @ts-expect-error - this works fine
+                  .map(({ value }) => value)
+                  .join(";"),
               );
             }}
             isMulti

@@ -5,6 +5,8 @@ import { Heading, Text, type TrackedLinkProps } from "tw-components";
 import { LandingCTAButtons } from "./cta-buttons";
 import { LandingDesktopMobileImage } from "./desktop-mobile-image";
 
+import type { JSX } from "react";
+
 interface LandingHeroWithSideImageProps {
   title: string | JSX.Element;
   titleWithGradient: string;

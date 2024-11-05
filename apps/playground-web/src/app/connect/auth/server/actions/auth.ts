@@ -2,7 +2,11 @@
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
-import { type VerifyLoginPayloadParams, createAuth } from "thirdweb/auth";
+import {
+  type GenerateLoginPayloadParams,
+  type VerifyLoginPayloadParams,
+  createAuth,
+} from "thirdweb/auth";
 import { generateAccount, privateKeyToAccount } from "thirdweb/wallets";
 
 const privateKey = process.env.THIRDWEB_ADMIN_PRIVATE_KEY;
@@ -15,7 +19,9 @@ const thirdwebAuth = createAuth({
     : await generateAccount({ client: THIRDWEB_CLIENT }),
 });
 
-export const generatePayload = thirdwebAuth.generatePayload;
+export async function generatePayload(options: GenerateLoginPayloadParams) {
+  return thirdwebAuth.generatePayload(options);
+}
 
 export async function login(payload: VerifyLoginPayloadParams) {
   const verifiedPayload = await thirdwebAuth.verifyPayload(payload);
@@ -23,7 +29,7 @@ export async function login(payload: VerifyLoginPayloadParams) {
     const jwt = await thirdwebAuth.generateJWT({
       payload: verifiedPayload.payload,
     });
-    cookies().set("jwt", jwt);
+    (await cookies()).set("jwt", jwt);
   }
 }
 
@@ -32,7 +38,7 @@ export async function isLoggedIn(address: string) {
   if (!address) {
     return false;
   }
-  const jwt = cookies().get("jwt");
+  const jwt = (await cookies()).get("jwt");
   // if no jwt is found then return false
   if (!jwt?.value) {
     return false;
@@ -60,5 +66,5 @@ export async function getAuthResult(jwtValue: string) {
 }
 
 export async function logout() {
-  cookies().delete("jwt");
+  (await cookies()).delete("jwt");
 }

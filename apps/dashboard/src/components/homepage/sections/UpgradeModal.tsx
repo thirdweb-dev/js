@@ -1,4 +1,8 @@
-import { AccountPlan, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  type AccountPlan,
+  accountPlan,
+  useAccount,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Flex,
   Modal,
@@ -44,7 +48,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
   // FIXME: this needs to be re-worked
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (account.data?.plan === AccountPlan.Growth) {
+    if (account.data?.plan === accountPlan.growth) {
       onClose();
     }
   }, [account.data?.plan, onClose]);

@@ -1,14 +1,12 @@
-"use client";
-
 import { WithEngineInstance } from "components/engine/EnginePageLayout";
 import type { EngineInstancePageProps } from "../types";
 import { EngineAdmins } from "./components/engine-admins";
 
-export default function Page(props: EngineInstancePageProps) {
-  const { params } = props;
+export default async function Page(props: EngineInstancePageProps) {
+  const params = await props.params;
   return (
     <WithEngineInstance
-      engineId={props.params.engineId}
+      engineId={params.engineId}
       content={(res) => <EngineAdmins instanceUrl={res.instance.url} />}
       rootPath={`/team/${params.team_slug}/${params.project_slug}/engine`}
     />

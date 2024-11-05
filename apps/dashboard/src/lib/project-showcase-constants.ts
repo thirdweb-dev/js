@@ -204,7 +204,7 @@ export const PROJECT_SHOWCASE_DATA = [
     description:
       "Gaming community and platform for connecting gamers across various titles and events.",
     industries: ["Games"],
-    link: "@goatgamingbot",
+    link: "https://goatgaming.com/",
     case_study:
       "https://blog.thirdweb.com/case-studies/how-goat-gaming-grew-by-250k-players-with-mini-games-on-telegram-with-thirdweb/",
   },
@@ -393,7 +393,7 @@ export const PROJECT_SHOWCASE_DATA = [
     slug: "storychain",
     description:
       "Collaborative storytelling platform that uses blockchain to create, share, and own narrative content.",
-    image: "ipfs://Qmau1mgrzahdfEtJFU9i2pSKMM7AwHav6tQCVEdJARUFpb",
+    image: "ipfs://QmUUBdNHa7ZoiRQicNathMY6G8GTBA4S9cRY1RRBXAKpYi",
     industries: ["Social"],
     link: "https://storychain.io",
     case_study:

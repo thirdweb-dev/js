@@ -251,6 +251,7 @@ export class IFrameWallet implements IWebWallet {
 
         trackTransaction({
           client,
+          chainId: tx.chainId,
           walletAddress: address,
           walletType: "inApp",
           transactionHash,

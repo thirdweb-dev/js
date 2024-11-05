@@ -1,7 +1,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type Account,
-  AccountStatus,
+  accountStatus,
   useAccount,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
@@ -26,9 +26,9 @@ function Loading() {
 
 const skipBilling = (account: Account) => {
   return (
-    [AccountStatus.ValidPayment, AccountStatus.PaymentVerification].includes(
-      account.status,
-    ) || account.onboardSkipped
+    account.status === accountStatus.validPayment ||
+    account.status === accountStatus.paymentVerification ||
+    account.onboardSkipped
   );
 };
 

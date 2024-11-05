@@ -12,21 +12,24 @@ import { useLoggedInUser } from "./useLoggedInUser";
 
 // FIXME: We keep repeating types, API server should provide them
 
-export enum AccountStatus {
-  NoCustomer = "noCustomer",
-  NoPayment = "noPayment",
-  PaymentVerification = "paymentVerification",
-  ValidPayment = "validPayment",
-  InvalidPayment = "invalidPayment",
-  InvalidPaymentMethod = "invalidPaymentMethod",
-}
+export const accountStatus = {
+  noCustomer: "noCustomer",
+  noPayment: "noPayment",
+  paymentVerification: "paymentVerification",
+  validPayment: "validPayment",
+  invalidPayment: "invalidPayment",
+  invalidPaymentMethod: "invalidPaymentMethod",
+} as const;
 
-export enum AccountPlan {
-  Free = "free",
-  Growth = "growth",
-  Pro = "pro",
-  Enterprise = "enterprise",
-}
+export const accountPlan = {
+  free: "free",
+  growth: "growth",
+  pro: "pro",
+  enterprise: "enterprise",
+} as const;
+
+export type AccountStatus = (typeof accountStatus)[keyof typeof accountStatus];
+export type AccountPlan = (typeof accountPlan)[keyof typeof accountPlan];
 
 export type AuthorizedWallet = {
   id: string;
@@ -235,6 +238,14 @@ export interface WalletStats {
   walletType: string;
 }
 
+export interface InAppWalletStats {
+  date: string;
+  authenticationMethod: string;
+  uniqueWalletsConnected: number;
+}
+
+export interface EcosystemWalletStats extends InAppWalletStats {}
+
 export interface UserOpStats {
   date: string;
   successful: number;
@@ -430,6 +441,43 @@ async function getUserOpUsage(args: {
   const json = await res.json();
 
   if (res.status !== 200) {
+    throw new Error(json.message);
+  }
+
+  return json.data;
+}
+
+export async function getInAppWalletUsage(args: {
+  clientId: string;
+  from?: Date;
+  to?: Date;
+  period?: "day" | "week" | "month" | "year" | "all";
+}) {
+  const { clientId, from, to, period } = args;
+
+  const searchParams = new URLSearchParams();
+  searchParams.append("clientId", clientId);
+  if (from) {
+    searchParams.append("from", from.toISOString());
+  }
+  if (to) {
+    searchParams.append("to", to.toISOString());
+  }
+  if (period) {
+    searchParams.append("period", period);
+  }
+  const res = await fetch(
+    `${THIRDWEB_ANALYTICS_API_HOST}/v1/wallets/in-app?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  const json = await res?.json();
+
+  if (!res || res.status !== 200) {
     throw new Error(json.message);
   }
 

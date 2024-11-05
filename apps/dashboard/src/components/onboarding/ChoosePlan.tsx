@@ -1,5 +1,6 @@
 import {
-  AccountPlan,
+  type AccountPlan,
+  accountPlan,
   useUpdateAccountPlan,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { PricingCard } from "components/homepage/sections/PricingCard";
@@ -24,7 +25,7 @@ const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
     });
 
     // free is default, so no need to update account
-    if (plan === AccountPlan.Free) {
+    if (plan === accountPlan.free) {
       trackEvent({
         category: "account",
         action: "choosePlan",
@@ -76,13 +77,13 @@ const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <PricingCard
           size="sm"
-          name={AccountPlan.Free}
+          name={accountPlan.free}
           ctaTitle="Get started for free"
           ctaProps={{
             category: "account",
             onClick: (e) => {
               e.preventDefault();
-              handleSave(AccountPlan.Free);
+              handleSave(accountPlan.free);
             },
             label: "freePlan",
             href: "/",
@@ -93,7 +94,7 @@ const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
         <PricingCard
           size="sm"
           ctaTitle="Claim your 1-month free"
-          name={AccountPlan.Growth}
+          name={accountPlan.growth}
           ctaHint="Your free trial will end after 30 days."
           canTrialGrowth={true}
           ctaProps={{
@@ -101,7 +102,7 @@ const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
             label: "growthPlan",
             onClick: (e) => {
               e.preventDefault();
-              handleSave(AccountPlan.Growth);
+              handleSave(accountPlan.growth);
             },
             href: "/",
             variant: "solid",

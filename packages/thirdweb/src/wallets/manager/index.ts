@@ -5,6 +5,7 @@ import { hasSmartAccount } from "../../react/core/utils/isSmartWallet.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
+import { stringify } from "../../utils/json.js";
 import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
 import { deleteConnectParamsFromStorage } from "../../utils/storage/walletStorage.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
@@ -216,7 +217,7 @@ export function createConnectionManager(storage: AsyncStorage) {
     () => {
       const _chain = activeWalletChainStore.getValue();
       if (_chain) {
-        storage.setItem(LAST_ACTIVE_CHAIN, JSON.stringify(_chain));
+        storage.setItem(LAST_ACTIVE_CHAIN, stringify(_chain));
       } else {
         storage.removeItem(LAST_ACTIVE_CHAIN);
       }
@@ -231,7 +232,7 @@ export function createConnectionManager(storage: AsyncStorage) {
       const accounts = connectedWallets.getValue();
       const ids = accounts.map((acc) => acc?.id).filter((c) => !!c) as string[];
 
-      storage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
+      storage.setItem(CONNECTED_WALLET_IDS, stringify(ids));
     },
     [connectedWallets],
     false,
@@ -276,7 +277,7 @@ export function createConnectionManager(storage: AsyncStorage) {
     const allChainsSame = chains.every((c) => {
       const definedChain = currentMapVal.get(c.id);
       // basically a deep equal check
-      return JSON.stringify(definedChain) === JSON.stringify(c);
+      return stringify(definedChain) === stringify(c);
     });
 
     if (allChainsSame) {

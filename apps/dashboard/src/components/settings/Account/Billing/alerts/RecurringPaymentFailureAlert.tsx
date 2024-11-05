@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { type Account, AccountStatus } from "@3rdweb-sdk/react/hooks/useApi";
+import { type Account, accountStatus } from "@3rdweb-sdk/react/hooks/useApi";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { getRecurringPaymentFailureResponse } from "lib/billing";
 import { ExternalLinkIcon, XIcon } from "lucide-react";
@@ -82,10 +82,8 @@ export const RecurringPaymentFailureAlert: React.FC<
             loading={paymentMethodSaving}
             loadingText="Verifying payment method"
             onClick={
-              [
-                AccountStatus.ValidPayment,
-                AccountStatus.InvalidPayment,
-              ].includes(dashboardAccount.status)
+              dashboardAccount.status === accountStatus.validPayment ||
+              dashboardAccount.status === accountStatus.invalidPayment
                 ? undefined
                 : () => setIsPaymentMethodOpen(true)
             }

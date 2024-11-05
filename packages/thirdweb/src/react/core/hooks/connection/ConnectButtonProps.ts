@@ -1,8 +1,10 @@
+import type { JSX } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
 import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
+import type { AssetTabs } from "../../../../react/web/ui/ConnectWallet/screens/ViewAssets.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -311,6 +313,13 @@ export type ConnectButton_detailsModalOptions = {
    * All wallet IDs included in this array will be hidden from wallet selection when connected.
    */
   hiddenWallets?: WalletId[];
+
+  /**
+   * When you click on "View Assets", by default the "Tokens" tab is shown first.
+   * If you want to show the "NFTs" tab first, change the order of the asset tabs to: ["nft", "token"]
+   * Note: If an empty array is passed, the [View Funds] button will be hidden
+   */
+  assetTabs?: AssetTabs[];
 };
 
 /**

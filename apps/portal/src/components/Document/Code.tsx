@@ -170,7 +170,6 @@ async function RenderCode(props: {
                   </span>
                 );
               })}
-
               {line.length === 0 && i !== tokens.length - 1 && " "}
             </div>
           );

@@ -15,6 +15,7 @@ export async function getMulticallSetClaimConditionTransactions(options: {
   tokenDecimals: number;
   tokenId?: bigint;
   resetClaimEligibility?: boolean;
+  singlePhase?: boolean;
 }): Promise<Hex[]> {
   const merkleInfos: Record<string, string> = {};
   const phases = await Promise.all(
@@ -94,23 +95,52 @@ export async function getMulticallSetClaimConditionTransactions(options: {
   let encodedSetClaimConditions: Hex;
   if (options.tokenId !== undefined) {
     // 1155
-    const { encodeSetClaimConditions } = await import(
-      "../../../extensions/erc1155/__generated__/IDrop1155/write/setClaimConditions.js"
-    );
-    encodedSetClaimConditions = encodeSetClaimConditions({
-      tokenId: options.tokenId,
-      phases: sortedPhases,
-      resetClaimEligibility: options.resetClaimEligibility || false,
-    });
+    if (options.singlePhase) {
+      const { encodeSetClaimConditions } = await import(
+        "../../../extensions/erc1155/__generated__/IDropSinglePhase1155/write/setClaimConditions.js"
+      );
+      const phase = sortedPhases[0];
+      if (!phase) {
+        throw new Error("No phase provided");
+      }
+      encodedSetClaimConditions = encodeSetClaimConditions({
+        tokenId: options.tokenId,
+        phase,
+        resetClaimEligibility: options.resetClaimEligibility || false,
+      });
+    } else {
+      const { encodeSetClaimConditions } = await import(
+        "../../../extensions/erc1155/__generated__/IDrop1155/write/setClaimConditions.js"
+      );
+      encodedSetClaimConditions = encodeSetClaimConditions({
+        tokenId: options.tokenId,
+        phases: sortedPhases,
+        resetClaimEligibility: options.resetClaimEligibility || false,
+      });
+    }
   } else {
-    // 721
-    const { encodeSetClaimConditions } = await import(
-      "../../../extensions/erc721/__generated__/IDrop/write/setClaimConditions.js"
-    );
-    encodedSetClaimConditions = encodeSetClaimConditions({
-      phases: sortedPhases,
-      resetClaimEligibility: options.resetClaimEligibility || false,
-    });
+    // erc721 or erc20
+    if (options.singlePhase) {
+      const { encodeSetClaimConditions } = await import(
+        "../../../extensions/erc721/__generated__/IDropSinglePhase/write/setClaimConditions.js"
+      );
+      const phase = sortedPhases[0];
+      if (!phase) {
+        throw new Error("No phase provided");
+      }
+      encodedSetClaimConditions = encodeSetClaimConditions({
+        phase,
+        resetClaimEligibility: options.resetClaimEligibility || false,
+      });
+    } else {
+      const { encodeSetClaimConditions } = await import(
+        "../../../extensions/erc721/__generated__/IDrop/write/setClaimConditions.js"
+      );
+      encodedSetClaimConditions = encodeSetClaimConditions({
+        phases: sortedPhases,
+        resetClaimEligibility: options.resetClaimEligibility || false,
+      });
+    }
   }
   encodedTransactions.push(encodedSetClaimConditions);
   return encodedTransactions;

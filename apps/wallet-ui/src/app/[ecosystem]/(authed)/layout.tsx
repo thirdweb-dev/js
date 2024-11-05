@@ -4,13 +4,14 @@ import { getEcosystemInfo } from "@/lib/ecosystems";
 import { resolveScheme } from "thirdweb/storage";
 import { client } from "../../../lib/client";
 
-export default async function Layout({
-  children,
-  params,
-}: {
+export default async function Layout(props: {
   children: React.ReactNode;
-  params: { ecosystem: string };
+  params: Promise<{ ecosystem: string }>;
 }) {
+  const params = await props.params;
+
+  const { children } = props;
+
   await authedOnly();
   const ecosystem = await getEcosystemInfo(params.ecosystem);
   return (

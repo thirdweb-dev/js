@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../client/client.js";
 
 import type { Chain } from "../chains/types.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
+import { stringify } from "../utils/json.js";
 import { type RpcRequest, fetchRpc, fetchSingleRpc } from "./fetch-rpc.js";
 
 const RPC_CLIENT_MAP = new WeakMap();
@@ -23,7 +24,7 @@ function getRpcClientMap(client: ThirdwebClient) {
  * @internal
  */
 function rpcRequestKey(request: RpcRequest): string {
-  return `${request.method}:${JSON.stringify(request.params)}`;
+  return `${request.method}:${stringify(request.params)}`;
 }
 
 const DEFAULT_MAX_BATCH_SIZE = 100;

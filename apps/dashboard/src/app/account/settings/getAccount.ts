@@ -3,7 +3,7 @@ import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { getAuthToken } from "../../api/lib/getAuthToken";
 
 export async function getAccount() {
-  const authToken = getAuthToken();
+  const authToken = await getAuthToken();
   const apiServerURL = new URL(API_SERVER_URL);
 
   apiServerURL.pathname = "/v1/account/me";

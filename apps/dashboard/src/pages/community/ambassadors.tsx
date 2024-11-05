@@ -599,7 +599,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                   <MaskedAvatar
                     src={ambassador.profileImage}
                     alt={ambassador.name}
-                    boxSize={20}
+                    className="size-20"
                   />
                   <Heading size="title.sm">{ambassador.name}</Heading>
                 </Flex>
@@ -619,7 +619,7 @@ const Ambassadors: ThirdwebNextPage = () => {
           >
             <Flex flexDir="column" gap={0}>
               <Heading as="h2" size="display.md" mb={4} textAlign="center">
-                Ready to
+                Ready to{" "}
                 <Heading
                   size="display.md"
                   as="span"
