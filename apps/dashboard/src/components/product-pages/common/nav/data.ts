@@ -79,16 +79,6 @@ export const PRODUCTS: SectionItemProps[] = [
     inLandingPage: true,
   },
   {
-    name: "Interact",
-    label: "interact",
-    description: "Integrate smart contract interactions directly into your app",
-    link: "/interact",
-    dashboardLink: "https://portal.thirdweb.com/contracts/interact/overview",
-    icon: require("../../../../../public/assets/product-icons/interact.png"),
-    section: "contracts",
-    inLandingPage: true,
-  },
-  {
     name: "Explore",
     label: "explore",
     description: "Ready-to-deploy contracts",
@@ -172,14 +162,6 @@ export const PRODUCTS: SectionItemProps[] = [
     section: "infrastructure",
   },
   {
-    name: "Sponsored Transactions",
-    label: "sponsored-transactions",
-    description: "Remove all user friction with invisible transactions",
-    link: "/sponsored-transactions",
-    icon: require("../../../../../public/assets/product-icons/sponsored-transactions.png"),
-    section: "payments",
-  },
-  {
     name: "Engine",
     label: "engine",
     description: "HTTP server with contract APIs and backend wallets",
@@ -190,9 +172,6 @@ export const PRODUCTS: SectionItemProps[] = [
     inLandingPage: true,
   },
 ];
-
-const PRODUCT_LABELS = PRODUCTS.map((product) => product.label);
-export type ProductLabel = (typeof PRODUCT_LABELS)[number];
 
 export const SOLUTIONS: SectionItemProps[] = [
   {
@@ -209,14 +188,6 @@ export const SOLUTIONS: SectionItemProps[] = [
     description: "All-in-one dev tools for your chain",
     link: "/solutions/chains",
     icon: require("../../../../../public/assets/solutions-icons/chains.svg"),
-    section: "solutions",
-  },
-  {
-    name: "Minting",
-    label: "minting",
-    description: "Build and mint NFTs at scale easily",
-    link: "/solutions/minting",
-    icon: require("../../../../../public/assets/solutions-icons/minting.svg"),
     section: "solutions",
   },
 ];

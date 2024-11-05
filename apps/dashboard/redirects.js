@@ -284,6 +284,43 @@ function redirects() {
       destination: "/explore",
       permanent: false,
     },
+
+    // framer redirects
+    {
+      source: "/deploy",
+      destination: "/contracts/deployment-tool",
+      permanent: false,
+    },
+    {
+      source: "/publish",
+      destination: "/contracts/deployment-tool",
+      permanent: false,
+    },
+    {
+      source: "/smart-contracts",
+      destination: "/contracts/explore",
+      permanent: false,
+    },
+    {
+      source: "/build",
+      destination: "/contracts/modular-contracts",
+      permanent: false,
+    },
+    {
+      source: "/ui-components",
+      destination: "/sdk",
+      permanent: false,
+    },
+    {
+      source: "/interact",
+      destination: "/sdk",
+      permanent: false,
+    },
+    {
+      source: "/sponsored-transactions",
+      destination: "/account-abstraction",
+      permanent: false,
+    },
   ];
 }
 
