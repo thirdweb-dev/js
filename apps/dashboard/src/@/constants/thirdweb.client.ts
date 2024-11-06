@@ -24,7 +24,10 @@ export function useThirdwebClient(jwt?: string) {
         throw new Error("Failed to get auth token");
       }
       const json = (await res.json()) as GetAuthTokenResponse;
-      return json.jwt || undefined;
+      if (!json.jwt) {
+        throw new Error("No JWT in response");
+      }
+      return json.jwt;
     },
   });
 

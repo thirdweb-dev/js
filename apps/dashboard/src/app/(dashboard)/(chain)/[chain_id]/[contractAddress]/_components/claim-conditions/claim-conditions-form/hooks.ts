@@ -208,6 +208,7 @@ function toBigInt(value: string | number | undefined): bigint | undefined {
   if (value === "unlimited") {
     return maxUint256;
   }
+  return BigInt(value);
 }
 
 // The input from client-side is non-wei, but the extension is expecting value in wei
