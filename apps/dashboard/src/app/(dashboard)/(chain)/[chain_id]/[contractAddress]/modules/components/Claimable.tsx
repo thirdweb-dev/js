@@ -28,7 +28,6 @@ import { addDays, fromUnixTime } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import { useEffect } from "react";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
@@ -58,15 +57,6 @@ export type ClaimConditionValue = {
   endTimestamp: number;
   auxData: string;
 };
-
-// TODO - for erc1155 have a UI something like this:
-// - show one input initially - user enters tokenId
-// - fetch the claim conditions for that tokenId and show the entire claim condition form with those values if they exist, or show empty form state if they don't exist
-
-// TODO - don't compare with ZERO_ADDRESS we are not getting ZERO_ADDRESS as currency address and instead getting 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE, (checksummed NATIVE_TOKEN_ADDRESS)
-
-// TODO - fix Currency selector not showing the selected currency
-//
 
 type ClaimCondition = {
   availableSupply: bigint;
@@ -403,39 +393,56 @@ function ClaimConditionSection(props: {
   const chain = idToChain.get(props.chainId);
   const { claimCondition } = props;
 
+  const tokenIdForm = useForm<{ tokenId: string }>({
+    defaultValues: {
+      tokenId: "",
+    },
+  });
+
+  const tokenId = tokenIdForm.watch("tokenId");
+
+  const claimConditionErc1155Query = useQuery({
+    queryKey: ["claimConditionErc1155", props.chainId, tokenId],
+    queryFn: () => props.getClaimConditionErc1155(tokenId),
+    enabled: !props.isErc721 && Number(tokenId) > 0,
+  });
+
+  const conditions = props.isErc721
+    ? claimCondition
+    : claimConditionErc1155Query.data;
+
   const form = useForm<ClaimConditionFormValues>({
     resolver: zodResolver(claimConditionFormSchema),
     values: {
-      tokenId: "",
+      tokenId,
       currencyAddress:
-        claimCondition?.currency === ZERO_ADDRESS
-          ? ""
-          : claimCondition?.currency,
+        conditions?.currency === ZERO_ADDRESS ? "" : conditions?.currency,
       pricePerToken:
-        claimCondition?.pricePerUnit &&
-        claimCondition?.currency !== ZERO_ADDRESS &&
+        conditions?.pricePerUnit &&
+        conditions?.currency !== ZERO_ADDRESS &&
         props.tokenDecimals
-          ? Number(toTokens(claimCondition?.pricePerUnit, props.tokenDecimals))
+          ? Number(toTokens(conditions?.pricePerUnit, props.tokenDecimals))
           : 0,
       maxClaimableSupply:
-        claimCondition?.availableSupply.toString() === "0" ||
-        claimCondition?.availableSupply.toString() === MAX_UINT_256
+        conditions?.availableSupply.toString() === "0" ||
+        conditions?.availableSupply.toString() === MAX_UINT_256
           ? ""
-          : claimCondition?.availableSupply.toString() || "",
+          : conditions?.availableSupply.toString() || "",
       maxClaimablePerWallet:
-        claimCondition?.maxMintPerWallet.toString() === "0" ||
-        claimCondition?.maxMintPerWallet.toString() === MAX_UINT_256
+        conditions?.maxMintPerWallet.toString() === "0" ||
+        conditions?.maxMintPerWallet.toString() === MAX_UINT_256
           ? ""
-          : claimCondition?.maxMintPerWallet.toString() || "",
-      startTime: claimCondition?.startTimestamp
-        ? fromUnixTime(claimCondition?.startTimestamp)
+          : conditions?.maxMintPerWallet.toString() || "",
+      startTime: conditions?.startTimestamp
+        ? fromUnixTime(conditions?.startTimestamp)
         : defaultStartDate,
-      endTime: claimCondition?.endTimestamp
-        ? fromUnixTime(claimCondition?.endTimestamp)
+      endTime: conditions?.endTimestamp
+        ? fromUnixTime(conditions?.endTimestamp)
         : defaultEndDate,
       allowList: [],
     },
   });
+
   const allowListFields = useFieldArray({
     control: form.control,
     name: "allowList",
@@ -463,68 +470,13 @@ function ClaimConditionSection(props: {
     updateMutation.mutateAsync(values);
   };
 
-  const tokenId = form.watch("tokenId");
-
-  const claimConditionErc1155Query = useQuery({
-    queryKey: ["claimConditionErc1155", props.chainId, tokenId],
-    queryFn: () => props.getClaimConditionErc1155(tokenId),
-    enabled: !props.isErc721 && Number(tokenId) > 0,
-  });
-
-  useEffect(() => {
-    if (claimConditionErc1155Query.data) {
-      form.reset({
-        tokenId,
-        currencyAddress:
-          claimConditionErc1155Query.data.currency === ZERO_ADDRESS
-            ? ""
-            : claimConditionErc1155Query.data.currency,
-        pricePerToken:
-          claimConditionErc1155Query.data.pricePerUnit &&
-          claimConditionErc1155Query.data.currency !== ZERO_ADDRESS &&
-          props.tokenDecimals
-            ? Number(
-                toTokens(
-                  claimConditionErc1155Query.data.pricePerUnit,
-                  props.tokenDecimals,
-                ),
-              )
-            : 0,
-        maxClaimableSupply:
-          claimConditionErc1155Query.data.availableSupply.toString() === "0" ||
-          claimConditionErc1155Query.data.availableSupply.toString() ===
-            MAX_UINT_256
-            ? ""
-            : claimConditionErc1155Query.data.availableSupply.toString() || "",
-        maxClaimablePerWallet:
-          claimConditionErc1155Query.data.maxMintPerWallet.toString() === "0" ||
-          claimConditionErc1155Query.data.maxMintPerWallet.toString() ===
-            MAX_UINT_256
-            ? ""
-            : claimConditionErc1155Query.data.maxMintPerWallet.toString() || "",
-        startTime: claimConditionErc1155Query.data.startTimestamp
-          ? fromUnixTime(claimConditionErc1155Query.data.startTimestamp)
-          : defaultStartDate,
-        endTime: claimConditionErc1155Query.data.endTimestamp
-          ? fromUnixTime(claimConditionErc1155Query.data.endTimestamp)
-          : defaultEndDate,
-        allowList: [],
-      });
-    }
-  }, [
-    claimConditionErc1155Query.data,
-    form.reset,
-    tokenId,
-    props.tokenDecimals,
-  ]);
-
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-6">
-          {!props.isErc721 && (
+    <div className="flex flex-col gap-6">
+      {!props.isErc721 && (
+        <Form {...tokenIdForm}>
+          <form>
             <FormField
-              control={form.control}
+              control={tokenIdForm.control}
               name="tokenId"
               render={({ field }) => (
                 <FormItem className="flex-1">
@@ -536,8 +488,12 @@ function ClaimConditionSection(props: {
                 </FormItem>
               )}
             />
-          )}
+          </form>
+        </Form>
+      )}
 
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           {!props.isErc721 && !(Number(tokenId) > 0) && (
             <Alert variant="warning">
               <CircleAlertIcon className="size-5 max-sm:hidden" />
@@ -721,9 +677,9 @@ function ClaimConditionSection(props: {
                 </div>
               </>
             ))}
-        </div>
-      </form>{" "}
-    </Form>
+        </form>{" "}
+      </Form>
+    </div>
   );
 }
 
