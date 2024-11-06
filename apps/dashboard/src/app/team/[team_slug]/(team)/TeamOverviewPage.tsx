@@ -127,7 +127,7 @@ function ProjectCard(props: {
         <Link
           className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0"
           // remove /connect when we have overview page
-          href={`/team/${team_slug}/${project.slug}/connect/analytics`}
+          href={`/team/${team_slug}/${project.slug}`}
         >
           <h2 className="font-medium text-base">{project.name}</h2>
         </Link>

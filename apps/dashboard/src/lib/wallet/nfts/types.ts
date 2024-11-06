@@ -136,6 +136,10 @@ export const simpleHashSupportedChainIdsMap: Record<number, string> = {
   [zkSync.id]: "zksync-era",
   [zora.id]: "zora",
   [zoraSepolia.id]: "zora-sepolia",
+  [1329]: "sei",
+  [1328]: "sei-atlantic-2",
+  [360]: "shape",
+  [33139]: "apechain",
 };
 
 export type AlchemySupportedChainId = keyof typeof alchemySupportedChainIdsMap;

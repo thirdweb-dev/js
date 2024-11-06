@@ -26,11 +26,18 @@ export function AccountButton(props: {
       <DropdownMenuTrigger asChild>
         <Button
           size="icon"
-          className="!p-0 !h-auto size-10 rounded-full hover:ring-2 hover:ring-offset-2"
+          asChild
+          className="size-10 rounded-full hover:ring-2 hover:ring-offset-2"
           variant="ghost"
         >
-          {/* TODO - set account image */}
-          <GradientAvatar id={props.account?.id} src={""} className="size-9" />
+          <button type="button">
+            {/* TODO - set account image */}
+            <GradientAvatar
+              id={props.account?.id}
+              src={""}
+              className="size-9"
+            />
+          </button>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[300px] rounded-lg p-0" align="end">

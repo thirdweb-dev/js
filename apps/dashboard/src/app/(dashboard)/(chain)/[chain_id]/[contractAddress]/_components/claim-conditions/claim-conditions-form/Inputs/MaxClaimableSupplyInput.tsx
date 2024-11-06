@@ -35,7 +35,7 @@ export const MaxClaimableSupplyInput: React.FC = () => {
     >
       <QuantityInputWithUnlimited
         isRequired
-        isDisabled={formDisabled}
+        isDisabled={formDisabled || (isErc20 && !tokenDecimals)}
         decimals={tokenDecimals}
         value={field.maxClaimableSupply?.toString() || "0"}
         onChange={(value) =>

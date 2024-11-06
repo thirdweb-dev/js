@@ -139,8 +139,8 @@ export class EnclaveWallet implements IWebWallet {
         chain: getCachedChain(tx.chainId),
       });
       const transaction: Record<string, Hex | number | undefined> = {
-        to: (tx.to as Hex) ?? undefined,
-        data: tx.data ? toHex(tx.data) : undefined,
+        to: tx.to ? getAddress(tx.to) : undefined,
+        data: tx.data,
         value: tx.value ? toHex(tx.value) : undefined,
         gas: tx.gas ? toHex(tx.gas + tx.gas / BigInt(10)) : undefined, // Add a 10% buffer to gas
         nonce: tx.nonce

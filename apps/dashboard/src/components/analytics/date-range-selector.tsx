@@ -107,7 +107,7 @@ const durationPresets = [
   },
 ] as const;
 
-type DurationId = (typeof durationPresets)[number]["id"];
+export type DurationId = (typeof durationPresets)[number]["id"];
 
 export type Range = {
   type: DurationId | "custom";

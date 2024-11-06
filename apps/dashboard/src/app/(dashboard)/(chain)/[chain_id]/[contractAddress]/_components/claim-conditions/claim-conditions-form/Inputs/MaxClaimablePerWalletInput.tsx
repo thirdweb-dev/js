@@ -54,7 +54,9 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
       <QuantityInputWithUnlimited
         isRequired
         decimals={tokenDecimals}
-        isDisabled={dropType === "specific" || formDisabled}
+        isDisabled={
+          dropType === "specific" || formDisabled || (isErc20 && !tokenDecimals)
+        }
         value={field?.maxClaimablePerWallet?.toString() || "0"}
         onChange={(value) =>
           form.setValue(

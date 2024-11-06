@@ -333,6 +333,7 @@ const solidityRedirects = {
 		"/contracts/build/base-contracts/erc-721/delayed-reveal",
 	"/solidity/base-contracts/smart-accounts":
 		"/contracts/build/base-contracts/erc-4337",
+	"/interact/overview":"/connect/blockchain-api"
 };
 
 const extensionsTable = "/typescript/v4/extensions#all-available-extensions";

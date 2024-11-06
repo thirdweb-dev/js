@@ -53,7 +53,7 @@ export const QuantityInputWithUnlimited: React.FC<
     <InputGroup {...restInputProps}>
       <Input
         isRequired={isRequired}
-        isDisabled={decimals === undefined || isDisabled}
+        isDisabled={isDisabled}
         value={stringValue === "unlimited" ? "Unlimited" : stringValue}
         onChange={(e) => updateValue(e.currentTarget.value)}
         onBlur={() => {
@@ -69,7 +69,7 @@ export const QuantityInputWithUnlimited: React.FC<
       {hideMaxButton ? null : (
         <InputRightElement w="auto">
           <Button
-            isDisabled={decimals === undefined || isDisabled}
+            isDisabled={isDisabled}
             colorScheme="primary"
             variant="ghost"
             size="sm"

@@ -80,27 +80,26 @@ export class InAppNativeConnector implements InAppConnector {
     }
     let wallet = user.wallets[0];
 
-    // TODO (enclaves): Migration to enclave wallet for in-app wallets as well
-    if (
-      authResult &&
-      this.storage.ecosystem &&
-      wallet &&
-      wallet.type === "sharded"
-    ) {
-      const { migrateToEnclaveWallet } = await import(
-        "./helpers/wallet/migration.js"
-      );
-      wallet = await migrateToEnclaveWallet({
-        client: this.client,
-        storage: this.storage,
-        storedToken: authResult.storedToken,
-        encryptionKey,
-      });
+    if (authResult && wallet && wallet.type === "sharded") {
+      try {
+        const { migrateToEnclaveWallet } = await import(
+          "./helpers/wallet/migration.js"
+        );
+        wallet = await migrateToEnclaveWallet({
+          client: this.client,
+          storage: this.storage,
+          storedToken: authResult.storedToken,
+          encryptionKey,
+        });
+      } catch {
+        console.warn(
+          "Failed to migrate from sharded to enclave wallet, continuing with sharded wallet",
+        );
+      }
     }
 
-    if (authResult && this.ecosystem && !wallet) {
-      // new ecosystem user, generate enclave wallet
-      // TODO (enclaves): same flow for in-app wallets
+    if (authResult && !wallet) {
+      // new user, generate enclave wallet
       const { generateWallet } = await import(
         "../core/actions/generate-wallet.enclave.js"
       );

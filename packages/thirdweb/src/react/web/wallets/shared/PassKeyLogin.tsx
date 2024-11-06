@@ -160,7 +160,8 @@ function LoginScreen(props: {
         await setLastAuthProvider("passkey", webLocalStorage);
       }
       done();
-    } catch {
+    } catch (e) {
+      console.error("Failed to login with passkey", e);
       setStatus("error");
     }
   }
