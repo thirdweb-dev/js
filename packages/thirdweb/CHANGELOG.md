@@ -1,5 +1,33 @@
 # thirdweb
 
+## 5.66.0
+
+### Minor Changes
+
+- [#5298](https://github.com/thirdweb-dev/js/pull/5298) [`5cc5c93`](https://github.com/thirdweb-dev/js/commit/5cc5c9327f5a38e1cfe1116cbff8842380cea06b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Added new `SiteEmbed` React component for embedding thirdweb-supported sites with seamless wallet connection support.
+
+  The component allows you to embed other thirdweb-enabled sites while maintaining wallet connection state, supporting both in-app and ecosystem wallets.
+
+  Example usage:
+
+  ```tsx
+  import { SiteEmbed } from "thirdweb/react";
+
+  <SiteEmbed
+    src="https://thirdweb.com"
+    client={client}
+    ecosystem={ecosystem}
+  />;
+  ```
+
+  Note: Embedded sites must include `<AutoConnect />` and support frame-ancestors in their Content Security Policy.
+
+### Patch Changes
+
+- [#5217](https://github.com/thirdweb-dev/js/pull/5217) [`b633293`](https://github.com/thirdweb-dev/js/commit/b633293ef1cccde61fc5eb4d536bf117eda29535) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Automatically migrate in-app wallets to the new enclave system
+
+- [#5315](https://github.com/thirdweb-dev/js/pull/5315) [`87e736d`](https://github.com/thirdweb-dev/js/commit/87e736daccba3827edeb8cd3524bfe25bf98e61f) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - fix ecosystem signing with data error
+
 ## 5.65.2
 
 ### Patch Changes
