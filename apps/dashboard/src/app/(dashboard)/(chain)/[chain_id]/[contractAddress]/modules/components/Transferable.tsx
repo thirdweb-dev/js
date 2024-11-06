@@ -178,7 +178,11 @@ export function TransferableModuleUI(
                 }
                 isLoading={updateMutation.isPending}
                 colorScheme="primary"
-                transactionCount={1 + allowListLength}
+                transactionCount={
+                  // if already restricted, only need to send the allowlist txs
+                  // else - need to send one more
+                  (props.isRestricted ? 0 : 1) + allowListLength
+                }
                 txChainID={props.contractChainId}
               >
                 Update
