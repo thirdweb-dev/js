@@ -58,14 +58,15 @@ export type MintFormValues = NFTMetadataInputLimited & {
 function MintableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
 
+  const isErc721 = props.contractInfo.name === "MintableERC721";
+
   const primarySaleRecipientQuery = useReadContract(
-    MintableERC721.getSaleConfig,
+    isErc721 ? MintableERC721.getSaleConfig : MintableERC1155.getSaleConfig,
     {
       contract: contract,
     },
   );
 
-  const isErc721 = props.contractInfo.name === "MintableERC721";
   const isBatchMetadataInstalled = !!props.allModuleContractInfo.find(
     (module) => module.name.includes("BatchMetadata"),
   );

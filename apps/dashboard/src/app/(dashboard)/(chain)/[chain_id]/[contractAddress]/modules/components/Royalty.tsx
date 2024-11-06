@@ -24,7 +24,7 @@ import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { sendAndConfirmTransaction } from "thirdweb";
-import { RoyaltyERC721 } from "thirdweb/modules";
+import { RoyaltyERC721, RoyaltyERC1155 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import { z } from "zod";
 import { addressSchema } from "../zod-schemas";
@@ -34,14 +34,20 @@ import type { ModuleInstanceProps } from "./module-instance";
 function RoyaltyModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
 
+  const isErc721 = props.contractInfo.name === "RoyaltyERC721";
+
   const defaultRoyaltyInfoQuery = useReadContract(
-    RoyaltyERC721.getDefaultRoyaltyInfo,
+    isErc721
+      ? RoyaltyERC721.getDefaultRoyaltyInfo
+      : RoyaltyERC1155.getDefaultRoyaltyInfo,
     {
       contract: contract,
     },
   );
   const transferValidatorQuery = useReadContract(
-    RoyaltyERC721.getTransferValidator,
+    isErc721
+      ? RoyaltyERC721.getTransferValidator
+      : RoyaltyERC1155.getTransferValidator,
     {
       contract: contract,
     },

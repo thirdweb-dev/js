@@ -22,7 +22,7 @@ import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { sendAndConfirmTransaction } from "thirdweb";
-import { TransferableERC721 } from "thirdweb/modules";
+import { TransferableERC721, TransferableERC1155 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import { z } from "zod";
 import { addressSchema } from "../zod-schemas";
@@ -42,8 +42,13 @@ export type TransferableModuleFormValues = z.infer<typeof formSchema>;
 
 function TransferableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
+
+  const isErc721 = props.contractInfo.name === "TransferableERC721";
+
   const isTransferEnabledQuery = useReadContract(
-    TransferableERC721.isTransferEnabled,
+    isErc721
+      ? TransferableERC721.isTransferEnabled
+      : TransferableERC1155.isTransferEnabled,
     {
       contract,
     },
