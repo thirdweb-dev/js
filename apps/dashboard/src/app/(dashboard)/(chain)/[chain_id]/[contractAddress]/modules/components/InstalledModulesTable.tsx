@@ -6,6 +6,7 @@ import { CircleSlash } from "lucide-react";
 import type { ContractOptions } from "thirdweb";
 import type { Account } from "thirdweb/wallets";
 import { ModuleCard } from "./module-card";
+import { useAllModuleContractInfo } from "./moduleContractInfo";
 
 export const InstalledModulesTable = (props: {
   contract: ContractOptions;
@@ -17,6 +18,11 @@ export const InstalledModulesTable = (props: {
   ownerAccount: Account | undefined;
 }) => {
   const { installedModules, ownerAccount } = props;
+
+  const allModuleContractInfo = useAllModuleContractInfo(
+    installedModules.data || [],
+    props.contract,
+  );
 
   const sectionTitle = (
     <h2 className="mb-3 font-bold text-2xl tracking-tight">
@@ -47,6 +53,7 @@ export const InstalledModulesTable = (props: {
             <ModuleCard
               key={moduleAddress}
               moduleAddress={moduleAddress}
+              allModuleContractInfo={allModuleContractInfo?.data || []}
               contract={props.contract}
               onRemoveModule={props.refetchModules}
               ownerAccount={ownerAccount}

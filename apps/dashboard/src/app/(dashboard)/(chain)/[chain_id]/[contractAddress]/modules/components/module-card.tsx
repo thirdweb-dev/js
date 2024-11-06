@@ -1,3 +1,5 @@
+"use client";
+
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -12,10 +14,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import * as Sentry from "@sentry/nextjs";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { InfoIcon } from "lucide-react";
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { toast } from "sonner";
 import {
   type ContractOptions,
@@ -25,16 +29,23 @@ import {
 } from "thirdweb";
 import { uninstallModuleByProxy } from "thirdweb/modules";
 import type { Account } from "thirdweb/wallets";
+import { ModuleInstance } from "./module-instance";
 import { useModuleContractInfo } from "./moduleContractInfo";
 
-type ModuleProps = {
+export type ModuleCardProps = {
   moduleAddress: string;
   contract: ContractOptions;
   onRemoveModule: () => void;
   ownerAccount: Account | undefined;
+  allModuleContractInfo: {
+    name: string;
+    description?: string;
+    version?: string;
+    publisher?: string;
+  }[];
 };
 
-export function ModuleCard(props: ModuleProps) {
+export function ModuleCard(props: ModuleCardProps) {
   const { contract, moduleAddress, ownerAccount } = props;
   const [isUninstallModalOpen, setIsUninstallModalOpen] = useState(false);
 
@@ -83,27 +94,37 @@ export function ModuleCard(props: ModuleProps) {
   };
 
   if (!contractInfo) {
-    return <Skeleton className="h-[190px] w-full border border-border" />;
+    return <GenericModuleLoadingSkeleton />;
   }
 
   return (
     <>
-      <ModuleCardUI
-        contractInfo={{
-          name: contractInfo.name,
-          description: contractInfo.description,
-          publisher: contractInfo.publisher,
-          version: contractInfo.version,
-        }}
-        isOwnerAccount={!!ownerAccount}
-        uninstallButton={{
-          onClick: () => {
-            setIsUninstallModalOpen(true);
-          },
-          isPending: uninstallMutation.isPending,
-        }}
-        moduleAddress={moduleAddress}
-      />
+      <Suspense fallback={<GenericModuleLoadingSkeleton />}>
+        <ErrorBoundary
+          FallbackComponent={(p) => (
+            <ModuleErrorBoundary moduleName={contractInfo.name} {...p} />
+          )}
+        >
+          <ModuleInstance
+            contract={contract}
+            contractInfo={{
+              name: contractInfo.name,
+              description: contractInfo.description,
+              publisher: contractInfo.publisher,
+              version: contractInfo.version,
+            }}
+            ownerAccount={ownerAccount}
+            uninstallButton={{
+              onClick: () => {
+                setIsUninstallModalOpen(true);
+              },
+              isPending: uninstallMutation.isPending,
+            }}
+            moduleAddress={moduleAddress}
+            allModuleContractInfo={props.allModuleContractInfo}
+          />
+        </ErrorBoundary>
+      </Suspense>
 
       <Dialog
         open={isUninstallModalOpen}
@@ -168,11 +189,13 @@ export type ModuleCardUIProps = {
     onClick: () => void;
     isPending: boolean;
   };
-  updateButton?: {
-    onClick: () => void;
-    isPending: boolean;
-    isDisabled: boolean;
-  };
+  updateButton?:
+    | {
+        onClick?: () => void;
+        isPending: boolean;
+        isDisabled: boolean;
+      }
+    | React.FC;
 };
 
 export function ModuleCardUI(props: ModuleCardUIProps) {
@@ -270,19 +293,51 @@ export function ModuleCardUI(props: ModuleCardUIProps) {
           Uninstall
         </Button>
 
-        {props.isOwnerAccount && props.updateButton && (
-          <Button
-            size="sm"
-            className="min-w-24 gap-2"
-            type="submit"
-            onClick={props.updateButton.onClick}
-            disabled={props.updateButton.isPending || !props.isOwnerAccount}
-          >
-            {props.updateButton.isPending && <Spinner className="size-4" />}
-            Update
-          </Button>
+        {props.isOwnerAccount &&
+          props.updateButton &&
+          typeof props.updateButton !== "function" && (
+            <Button
+              size="sm"
+              className="min-w-24 gap-2"
+              type="submit"
+              onClick={props.updateButton.onClick}
+              disabled={props.updateButton.isPending || !props.isOwnerAccount}
+            >
+              {props.updateButton.isPending && <Spinner className="size-4" />}
+              Update
+            </Button>
+          )}
+
+        {props.isOwnerAccount && typeof props.updateButton === "function" && (
+          <props.updateButton />
         )}
       </div>
     </section>
+  );
+}
+
+function GenericModuleLoadingSkeleton() {
+  return <Skeleton className="h-[190px] w-full border border-border" />;
+}
+
+function ModuleErrorBoundary(
+  props: FallbackProps & {
+    moduleName: string;
+  },
+) {
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    Sentry.withScope((scope) => {
+      scope.setTag("component-crashed", "true");
+      scope.setTag("component-crashed-boundary", "ModuleErrorBoundary");
+      scope.setLevel("fatal");
+      Sentry.captureException(props.error);
+    });
+  }, [props.error]);
+
+  return (
+    <div className="flex h-[190px] w-full items-center justify-center border border-border">
+      Failed to render {props.moduleName} module
+    </div>
   );
 }

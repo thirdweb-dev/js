@@ -1,5 +1,7 @@
+import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import { Toaster } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
@@ -28,6 +30,8 @@ export const Mobile: Story = {
 };
 
 function Component() {
+  const [isOwner, setIsOwner] = useState(true);
+
   const removeMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -51,7 +55,23 @@ function Component() {
   return (
     <ThirdwebProvider>
       <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-        <BadgeContainer label="No Update, No Children, Owner Account">
+        <div className="flex gap-2">
+          <Checkbox
+            id="terms1"
+            checked={isOwner}
+            onCheckedChange={(v) => setIsOwner(!!v)}
+          />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="terms1"
+              className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Is Owner
+            </label>
+          </div>
+        </div>
+
+        <BadgeContainer label="No Update, No Children">
           <ModuleCardUI
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
@@ -59,23 +79,11 @@ function Component() {
               onClick: () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
             }}
-            isOwnerAccount={true}
+            isOwnerAccount={isOwner}
           />
         </BadgeContainer>
 
-        <BadgeContainer label="No Update, No Children, Not Owner Account">
-          <ModuleCardUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            uninstallButton={{
-              onClick: () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={false}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Update Button (disabled), No Children, Owner">
+        <BadgeContainer label="Update Button (disabled), No Children">
           <ModuleCardUI
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
@@ -88,7 +96,7 @@ function Component() {
               isPending: updateMutation.isPending,
               onClick: () => updateMutation.mutateAsync(),
             }}
-            isOwnerAccount={true}
+            isOwnerAccount={isOwner}
           />
         </BadgeContainer>
 
@@ -105,7 +113,7 @@ function Component() {
               isPending: updateMutation.isPending,
               onClick: () => updateMutation.mutateAsync(),
             }}
-            isOwnerAccount={true}
+            isOwnerAccount={isOwner}
           >
             <div className="flex h-36 items-center justify-center rounded-lg bg-muted text-muted-foreground text-sm">
               CHILDREN

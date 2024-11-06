@@ -19,6 +19,7 @@ export default async function Page(props: {
   }
 
   const { contract } = info;
+
   if (contract.chain.id === localhost.id) {
     return <ContractEditModulesPageClient contract={contract} />;
   }
