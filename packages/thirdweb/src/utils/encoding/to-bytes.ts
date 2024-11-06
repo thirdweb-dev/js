@@ -9,7 +9,13 @@ type PadOptions = {
   size?: number | null;
 };
 
-function padBytes(bytes: Uint8Array, { dir, size = 32 }: PadOptions = {}) {
+/**
+ * @internal Exported for test
+ */
+export function padBytes(
+  bytes: Uint8Array,
+  { dir, size = 32 }: PadOptions = {},
+) {
   if (size === null) {
     return bytes;
   }
