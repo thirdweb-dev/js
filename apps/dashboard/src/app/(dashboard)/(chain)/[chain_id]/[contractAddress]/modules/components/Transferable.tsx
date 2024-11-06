@@ -158,6 +158,7 @@ export function TransferableModuleUI(
   };
 
   const isRestricted = form.watch("isRestricted");
+  const allowListLength = form.watch("allowList").length;
 
   return (
     <Form {...form}>
@@ -177,7 +178,7 @@ export function TransferableModuleUI(
                 }
                 isLoading={updateMutation.isPending}
                 colorScheme="primary"
-                transactionCount={1}
+                transactionCount={1 + allowListLength}
                 txChainID={props.contractChainId}
               >
                 Update
