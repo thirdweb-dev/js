@@ -32,6 +32,7 @@ export function createMetadata(obj: {
 }): Metadata {
   return {
     title: obj.title,
+    description: obj.description,
     metadataBase: new URL("https://portal.thirdweb.com"),
     twitter: {
       title: obj.title,
@@ -45,6 +46,7 @@ export function createMetadata(obj: {
       description: obj.description,
       locale: "en_US",
       type: "website",
+      siteName: "thirdweb docs",
       images: obj.image
         ? [
             {
