@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import type { COINBASE } from "../../../../wallets/constants.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
@@ -10,12 +9,12 @@ import { ConnectingScreen } from "./ConnectingScreen.js";
 /**
  * @internal
  */
-function CoinbaseSDKWalletConnectUI(props: {
+function ExternalWalletConnectUI(props: {
   onBack?: () => void;
   onGetStarted: () => void;
   done: () => void;
   locale: InjectedWalletLocale;
-  wallet: Wallet<typeof COINBASE>;
+  wallet: Wallet;
   walletInfo: WalletInfo;
   client: ThirdwebClient;
   chain: Chain | undefined;
@@ -70,4 +69,4 @@ function CoinbaseSDKWalletConnectUI(props: {
   );
 }
 
-export default CoinbaseSDKWalletConnectUI;
+export default ExternalWalletConnectUI;

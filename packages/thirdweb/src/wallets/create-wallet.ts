@@ -7,7 +7,6 @@ import type { Account, Wallet } from "./interfaces/wallet.js";
 import type {
   CreateWalletArgs,
   EcosystemWalletId,
-  InjectedConnectOptions,
   WalletAutoConnectionOption,
   WalletId,
 } from "./wallet-types.js";
@@ -23,6 +22,7 @@ import { COINBASE } from "./constants.js";
 import { isEcosystemWallet } from "./ecosystem/is-ecosystem-wallet.js";
 import { ecosystemWallet } from "./in-app/web/ecosystem.js";
 import { inAppWallet } from "./in-app/web/in-app.js";
+import { getInjectedProvider } from "./injected/index.js";
 import { smartWallet } from "./smart/smart-wallet.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
 import { createWalletEmitter } from "./wallet-emitter.js";
@@ -226,7 +226,7 @@ export function createWallet<const ID extends WalletId>(
           const { injectedProvider } = await import("./injected/mipdStore.js");
           // injected wallet priority for autoConnect
           if (id !== "walletConnect" && injectedProvider(id)) {
-            const { autoConnectInjectedWallet } = await import(
+            const { autoConnectEip1193Wallet } = await import(
               "./injected/index.js"
             );
 
@@ -235,8 +235,9 @@ export function createWallet<const ID extends WalletId>(
               connectedChain,
               doDisconnect,
               doSwitchChain,
-            ] = await autoConnectInjectedWallet({
+            ] = await autoConnectEip1193Wallet({
               id: id as InjectedSupportedWalletIds,
+              provider: getInjectedProvider(id),
               emitter,
               chain: options.chain,
               client: options.client,
@@ -339,7 +340,7 @@ export function createWallet<const ID extends WalletId>(
 
           const { injectedProvider } = await import("./injected/mipdStore.js");
           if (injectedProvider(id) && !forceWalletConnectOption) {
-            const { connectInjectedWallet } = await import(
+            const { connectEip1193Wallet } = await import(
               "./injected/index.js"
             );
 
@@ -348,11 +349,13 @@ export function createWallet<const ID extends WalletId>(
               connectedChain,
               doDisconnect,
               doSwitchChain,
-            ] = await connectInjectedWallet(
-              id as InjectedSupportedWalletIds,
-              options as InjectedConnectOptions,
+            ] = await connectEip1193Wallet({
+              id: id as InjectedSupportedWalletIds,
+              provider: getInjectedProvider(id),
+              client: options.client,
+              chain: options.chain,
               emitter,
-            );
+            });
             // set the states
             account = connectedAccount;
             chain = connectedChain;

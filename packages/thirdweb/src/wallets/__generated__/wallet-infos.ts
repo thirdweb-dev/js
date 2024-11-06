@@ -95,7 +95,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     hasMobileSupport: true,
   },
   {
-    id: "com.crypto",
+    id: "com.crypto.wallet",
     name: "Crypto.com | DeFi Wallet",
     hasMobileSupport: true,
   },
@@ -906,7 +906,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   },
   {
     id: "com.tomi",
-    name: "tomiPAY",
+    name: "tomi Wallet",
     hasMobileSupport: true,
   },
   {
@@ -1815,6 +1815,16 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     hasMobileSupport: true,
   },
   {
+    id: "social.gm2",
+    name: "GM² Social",
+    hasMobileSupport: true,
+  },
+  {
+    id: "nl.greenhood.wallet",
+    name: "Greenhood",
+    hasMobileSupport: true,
+  },
+  {
     id: "com.coinbase.wallet",
     name: "Coinbase Wallet",
     hasMobileSupport: false,
@@ -1890,6 +1900,11 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     hasMobileSupport: false,
   },
   {
+    id: "com.blazpay.wallet",
+    name: "Blazpay",
+    hasMobileSupport: false,
+  },
+  {
     id: "com.lootrush",
     name: "LootRush",
     hasMobileSupport: false,
@@ -1902,6 +1917,11 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "xyz.dawnwallet",
     name: "Dawn Wallet",
+    hasMobileSupport: false,
+  },
+  {
+    id: "xyz.abs",
+    name: "Abstract Global Wallet",
     hasMobileSupport: false,
   },
   {

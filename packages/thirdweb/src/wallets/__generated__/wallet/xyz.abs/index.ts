@@ -2,10 +2,10 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.walletconnect.com",
-  name: "SampleW",
-  homepage: "https://walletconnect.com",
-  image_id: "b81aaf2d-3548-4e65-46cd-fd59fbb6b300",
+  id: "xyz.abs",
+  name: "Abstract Global Wallet",
+  homepage: "https://abs.xyz/",
+  image_id: "abstract.png",
   app: {
     browser: null,
     ios: null,
@@ -13,19 +13,19 @@ export const wallet = {
     mac: null,
     windows: null,
     linux: null,
-    chrome: "https://cloud.walletconnect.com",
+    chrome: null,
     firefox: null,
     safari: null,
     edge: null,
     opera: null,
   },
-  rdns: "com.walletconnect.com",
+  rdns: "xyz.abs",
   mobile: {
     native: null,
     universal: null,
   },
   desktop: {
-    native: "sampleW://",
-    universal: "https://wallet-connect.sampleW.com",
+    native: null,
+    universal: null,
   },
 } as const;

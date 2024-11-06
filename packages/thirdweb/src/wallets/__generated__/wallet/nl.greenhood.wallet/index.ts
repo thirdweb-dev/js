@@ -2,14 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.crypto",
-  name: "Crypto.com | DeFi Wallet",
-  homepage: "https://crypto.com/",
-  image_id: "88388eb4-4471-4e72-c4b4-852d496fea00",
+  id: "nl.greenhood.wallet",
+  name: "Greenhood",
+  homepage: "https://www.greenhood.nl",
+  image_id: "7b6aaa4d-fa17-4cc6-71e1-79f2e68c0900",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/US/app/id1512048310?mt=8",
-    android: "https://play.google.com/store/apps/details?id=com.defi.wallet",
+    ios: "https://apps.apple.com/us/app/greenhood-wallet/id1661248135",
+    android:
+      "https://play.google.com/store/apps/details?id=com.greehood.wallet",
     mac: null,
     windows: null,
     linux: null,
@@ -19,10 +20,10 @@ export const wallet = {
     edge: null,
     opera: null,
   },
-  rdns: null,
+  rdns: "nl.greenhood.wallet",
   mobile: {
-    native: "dfw://",
-    universal: "https://wallet.crypto.com",
+    native: "greenhood://",
+    universal: null,
   },
   desktop: {
     native: null,
