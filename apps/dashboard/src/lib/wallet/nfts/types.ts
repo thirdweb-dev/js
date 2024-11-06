@@ -47,6 +47,7 @@ import {
   xai,
   xaiSepolia,
   zkSync,
+  zkSyncSepolia,
   zora,
   zoraSepolia,
 } from "thirdweb/chains";
@@ -85,6 +86,50 @@ const moralisSupportedChainIdsMap: Record<number, string> = {
   [gnosis.id]: "",
   [gnosisChiadoTestnet.id]: "",
   [base.id]: "",
+  [polygonAmoy.id]: "",
+  [optimism.id]: "",
+  [linea.id]: "",
+  // Chiliz
+  [88888]: "",
+  // Chiliz testnet
+  [88882]: "",
+  // Holesky
+  [17000]: "",
+  // Pulse chain
+  [369]: "",
+  [moonbeam.id]: "",
+  // Moonriver
+  [1285]: "",
+  // Moonbase Alpha
+  [1287]: "",
+  [blast.id]: "",
+  [blastSepolia.id]: "",
+  [zkSync.id]: "",
+  [zkSyncSepolia.id]: "",
+  // Mantle
+  [5000]: "",
+  // Mantle Sepolia
+  [5003]: "",
+  // opBNB
+  [204]: "",
+  [polygonZkEvm.id]: "",
+  [polygonZkEvmTestnet.id]: "",
+  // Zeta chain
+  [7000]: "",
+  // Zeta chain testnet
+  [7001]: "",
+  // Flow
+  [747]: "",
+  // Flow testnet
+  [545]: "",
+  // Ronin
+  [2020]: "",
+  // Ronin Saigon testnet
+  [2021]: "",
+  // Lisk
+  [1135]: "",
+  // Lisk Sepolia testnet
+  [4202]: "",
 };
 
 // List: https://docs.simplehash.com/reference/supported-chains-testnets
