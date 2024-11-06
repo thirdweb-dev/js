@@ -61,12 +61,15 @@ function TransferableModule(props: ModuleInstanceProps) {
       }
 
       // isRestricted is the opposite of transferEnabled
-      const _transferEnabled = !values.isRestricted;
+      const transferEnabled = !values.isRestricted;
 
-      if (isTransferEnabledQuery.data !== _transferEnabled) {
-        const setTransferableTx = TransferableERC721.setTransferable({
+      if (isTransferEnabledQuery.data !== transferEnabled) {
+        const setTransferable = isErc721
+          ? TransferableERC721.setTransferable
+          : TransferableERC1155.setTransferable;
+        const setTransferableTx = setTransferable({
           contract,
-          enableTransfer: _transferEnabled,
+          enableTransfer: transferEnabled,
         });
 
         await sendAndConfirmTransaction({
@@ -77,7 +80,10 @@ function TransferableModule(props: ModuleInstanceProps) {
 
       await Promise.all(
         values.allowList.map(async ({ address }) => {
-          const setTransferableForTx = TransferableERC721.setTransferableFor({
+          const setTransferableFor = isErc721
+            ? TransferableERC721.setTransferableFor
+            : TransferableERC1155.setTransferableFor;
+          const setTransferableForTx = setTransferableFor({
             contract,
             enableTransfer: true,
             target: address,
@@ -90,7 +96,7 @@ function TransferableModule(props: ModuleInstanceProps) {
         }),
       );
     },
-    [contract, ownerAccount, isTransferEnabledQuery.data],
+    [contract, ownerAccount, isTransferEnabledQuery.data, isErc721],
   );
 
   return (

@@ -190,7 +190,10 @@ function ClaimableModule(props: ModuleInstanceProps) {
       if (!ownerAccount) {
         throw new Error("Not an owner account");
       }
-      const setSaleConfigTx = ClaimableERC721.setSaleConfig({
+      const setSaleConfig = isErc721
+        ? ClaimableERC721.setSaleConfig
+        : ClaimableERC1155.setSaleConfig;
+      const setSaleConfigTx = setSaleConfig({
         contract: contract,
         primarySaleRecipient: values.primarySaleRecipient,
       });
@@ -200,7 +203,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
         transaction: setSaleConfigTx,
       });
     },
-    [contract, ownerAccount],
+    [contract, ownerAccount, isErc721],
   );
 
   return (

@@ -142,7 +142,10 @@ function MintableModule(props: ModuleInstanceProps) {
         throw new Error("Not an owner account");
       }
 
-      const setSaleConfigTx = MintableERC721.setSaleConfig({
+      const setSaleConfig = isErc721
+        ? MintableERC721.setSaleConfig
+        : MintableERC1155.setSaleConfig;
+      const setSaleConfigTx = setSaleConfig({
         contract: contract,
         primarySaleRecipient: values.primarySaleRecipient,
       });
@@ -152,7 +155,7 @@ function MintableModule(props: ModuleInstanceProps) {
         transaction: setSaleConfigTx,
       });
     },
-    [contract, ownerAccount],
+    [contract, ownerAccount, isErc721],
   );
 
   return (

@@ -88,7 +88,7 @@ function BatchMetadataModule(props: ModuleInstanceProps) {
         transaction: uploadMetadataTx,
       });
     },
-    [contract, ownerAccount, isErc721],
+    [contract, ownerAccount],
   );
 
   return (

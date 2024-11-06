@@ -59,7 +59,10 @@ function RoyaltyModule(props: ModuleInstanceProps) {
         throw new Error("Not an owner account");
       }
 
-      const setRoyaltyForTokenTx = RoyaltyERC721.setRoyaltyInfoForToken({
+      const setRoyaltyInfoForToken = isErc721
+        ? RoyaltyERC721.setRoyaltyInfoForToken
+        : RoyaltyERC1155.setRoyaltyInfoForToken;
+      const setRoyaltyForTokenTx = setRoyaltyInfoForToken({
         contract: contract,
         recipient: values.recipient,
         bps: Number(values.bps),
@@ -71,7 +74,7 @@ function RoyaltyModule(props: ModuleInstanceProps) {
         transaction: setRoyaltyForTokenTx,
       });
     },
-    [contract, ownerAccount],
+    [contract, ownerAccount, isErc721],
   );
 
   const setTransferValidator = useCallback(
@@ -83,7 +86,10 @@ function RoyaltyModule(props: ModuleInstanceProps) {
         values.transferValidator &&
         values.transferValidator !== transferValidatorQuery.data
       ) {
-        const setTransferValidatorTx = RoyaltyERC721.setTransferValidator({
+        const setTransferValidator = isErc721
+          ? RoyaltyERC721.setTransferValidator
+          : RoyaltyERC1155.setTransferValidator;
+        const setTransferValidatorTx = setTransferValidator({
           contract: contract,
           validator: values.transferValidator,
         });
@@ -94,7 +100,7 @@ function RoyaltyModule(props: ModuleInstanceProps) {
         });
       }
     },
-    [contract, ownerAccount, transferValidatorQuery.data],
+    [contract, ownerAccount, transferValidatorQuery.data, isErc721],
   );
 
   const setDefaultRoyaltyInfo = useCallback(
