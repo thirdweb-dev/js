@@ -2,6 +2,7 @@ import {
   type BaseTransactionOptions,
   type ThirdwebClient,
   toTokens,
+  toUnits,
 } from "thirdweb";
 import type { OverrideEntry } from "thirdweb/dist/types/utils/extensions/drops/types";
 import type { Prettify } from "thirdweb/dist/types/utils/type-utils";
@@ -42,6 +43,7 @@ type CombinedClaimCondition = Prettify<
 type Options =
   | {
       type: "erc20";
+      decimals?: number;
     }
   | {
       type: "erc721";
@@ -91,12 +93,24 @@ export async function getClaimPhasesInLegacyFormat(
         startTime: new Date(Number(condition.startTimestamp * 1000n)),
         currencyAddress: condition.currency,
         price: condition.pricePerToken,
-        maxClaimableSupply: toUnlimited(condition.maxClaimableSupply),
+        maxClaimableSupply:
+          options.type === "erc20"
+            ? convertERC20ValueToDisplayValue(
+                condition.maxClaimableSupply,
+                options.decimals,
+              )
+            : toUnlimited(condition.maxClaimableSupply),
         currencyMetadata,
         currentMintSupply: (
           condition.maxClaimableSupply - condition.supplyClaimed
         ).toString(),
-        maxClaimablePerWallet: toUnlimited(condition.quantityLimitPerWallet),
+        maxClaimablePerWallet:
+          options.type === "erc20"
+            ? convertERC20ValueToDisplayValue(
+                condition.quantityLimitPerWallet,
+                options.decimals,
+              )
+            : toUnlimited(condition.quantityLimitPerWallet),
         merkleRootHash: condition.merkleRoot,
         metadata,
         snapshot,
@@ -114,8 +128,20 @@ export function setClaimPhasesTx(
   const phases = rawPhases.map((phase) => {
     return {
       startTime: toDate(phase.startTime),
-      maxClaimableSupply: toBigInt(phase.maxClaimableSupply),
-      maxClaimablePerWallet: toBigInt(phase.maxClaimablePerWallet),
+      maxClaimableSupply:
+        baseOptions.type === "erc20"
+          ? convertERC20ValueToWei(
+              phase.maxClaimableSupply,
+              baseOptions.decimals,
+            )
+          : toBigInt(phase.maxClaimableSupply),
+      maxClaimablePerWallet:
+        baseOptions.type === "erc20"
+          ? convertERC20ValueToWei(
+              phase.maxClaimablePerWallet,
+              baseOptions.decimals,
+            )
+          : toBigInt(phase.maxClaimablePerWallet),
       merkleRootHash: phase.merkleRootHash as string | undefined,
       overrideList: phase.snapshot?.length
         ? snapshotToOverrides(phase.snapshot)
@@ -175,18 +201,56 @@ function toDate(timestamp: number | Date | undefined) {
   }
   return new Date(timestamp);
 }
-function toBigInt(value: string | number | undefined) {
+function toBigInt(value: string | number | undefined): bigint | undefined {
   if (value === undefined) {
     return undefined;
   }
   if (value === "unlimited") {
     return maxUint256;
   }
+}
+
+// The input from client-side is non-wei, but the extension is expecting value in wei
+// so we need to convert it using toUnits
+function convertERC20ValueToWei(
+  value: string | number | undefined,
+  decimals?: number,
+) {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === "unlimited") {
+    return maxUint256;
+  }
+  // The ERC20Claim condition extension in v5 does not convert to wei for us
+  // so we have to, manually
+  if (decimals) {
+    return toUnits(value.toString(), decimals);
+  }
   return BigInt(value);
 }
 
+// This value we get from ERC20Ext.getClaimConditions is in wei
+// so we have to convert it using toTokens for readability, and for users to update
+// (when user updates this value, we convert it back to wei - see `function setClaimPhasesTx`)
+function convertERC20ValueToDisplayValue(
+  value: bigint,
+  decimals?: number,
+): string {
+  if (value === maxUint256) {
+    return "unlimited";
+  }
+  if (decimals) {
+    return toTokens(value, decimals);
+  }
+  return value.toString();
+}
+
 function toUnlimited(value: bigint) {
-  return value === maxUint256 ? "unlimited" : value.toString();
+  if (value === maxUint256) {
+    return "unlimited";
+  }
+  return value.toString();
 }
 
 async function fetchSnapshot(
