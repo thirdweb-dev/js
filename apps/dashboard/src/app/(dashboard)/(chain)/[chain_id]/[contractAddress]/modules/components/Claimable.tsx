@@ -34,7 +34,6 @@ import {
   type PreparedTransaction,
   ZERO_ADDRESS,
   getContract,
-  readContract,
   sendAndConfirmTransaction,
   toTokens,
 } from "thirdweb";
@@ -93,12 +92,10 @@ function ClaimableModule(props: ModuleInstanceProps) {
   );
 
   const getClaimConditionErc1155 = (tokenId: string) =>
-    readContract({
+    ClaimableERC1155.getClaimCondition({
       contract: contract,
-      method:
-        "function getClaimConditionByTokenId(uint256 _id) returns (ClaimCondition memory claimCondition)",
-      params: [BigInt(tokenId)],
-    }) as Promise<ClaimCondition>;
+      tokenId: BigInt(tokenId),
+    });
 
   const currencyContract = getContract({
     address: claimConditionQuery.data?.currency || "",
@@ -296,16 +293,18 @@ export function ClaimableModuleUI(
               Claim Conditions
             </AccordionTrigger>
             <AccordionContent className="px-1">
-              {props.claimConditionSection.data ? (
+              {!props.isErc721 || props.claimConditionSection.data ? (
                 <ClaimConditionSection
                   isOwnerAccount={props.isOwnerAccount}
                   claimCondition={
-                    props.claimConditionSection.data.claimCondition
+                    props.claimConditionSection.data?.claimCondition
                   }
                   update={props.claimConditionSection.setClaimCondition}
                   isErc721={props.isErc721}
                   chainId={props.contractChainId}
-                  tokenDecimals={props.claimConditionSection.data.tokenDecimals}
+                  tokenDecimals={
+                    props.claimConditionSection.data?.tokenDecimals
+                  }
                   getClaimConditionErc1155={
                     props.claimConditionSection.getClaimConditionErc1155
                   }
@@ -381,12 +380,12 @@ const defaultStartDate = addDays(new Date(), 7);
 const defaultEndDate = addDays(new Date(), 14);
 
 function ClaimConditionSection(props: {
-  claimCondition: ClaimConditionValue | undefined;
+  claimCondition?: ClaimConditionValue;
   update: (values: ClaimConditionFormValues) => Promise<void>;
   isOwnerAccount: boolean;
   isErc721: boolean;
   chainId: number;
-  tokenDecimals: number | undefined;
+  tokenDecimals?: number;
   getClaimConditionErc1155: (tokenId: string) => Promise<ClaimCondition>;
 }) {
   const { idToChain } = useAllChainsData();
@@ -404,7 +403,7 @@ function ClaimConditionSection(props: {
   const claimConditionErc1155Query = useQuery({
     queryKey: ["claimConditionErc1155", props.chainId, tokenId],
     queryFn: () => props.getClaimConditionErc1155(tokenId),
-    enabled: !props.isErc721 && Number(tokenId) > 0,
+    enabled: !props.isErc721 && BigInt(tokenId) >= 0n,
   });
 
   const conditions = props.isErc721
@@ -494,7 +493,7 @@ function ClaimConditionSection(props: {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          {!props.isErc721 && !(Number(tokenId) > 0) && (
+          {!props.isErc721 && (tokenId === "" || BigInt(tokenId) < 0n) && (
             <Alert variant="warning">
               <CircleAlertIcon className="size-5 max-sm:hidden" />
               <AlertTitle className="max-sm:!pl-0">
@@ -504,179 +503,177 @@ function ClaimConditionSection(props: {
           )}
 
           {!props.isErc721 &&
-            Number(tokenId) > 0 &&
+            tokenId !== "" &&
+            BigInt(tokenId) >= 0n &&
             claimConditionErc1155Query.isPending && (
               <Skeleton className="h-[350px]" />
             )}
 
-          {props.isErc721 ||
-            (Number(tokenId) > 0 && !claimConditionErc1155Query.isPending && (
-              <>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="pricePerToken"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Price Per Token</FormLabel>
-                        <FormControl>
-                          <Input {...field} disabled={!props.isOwnerAccount} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="currencyAddress"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Currency</FormLabel>
-                        <CurrencySelector chain={chain} field={field} />
-                      </FormItem>
-                    )}
+          {(props.isErc721 ||
+            (tokenId !== "" &&
+              BigInt(tokenId) >= 0n &&
+              !claimConditionErc1155Query.isPending)) && (
+            <div className="flex flex-col gap-6">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="pricePerToken"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Price Per Token</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled={!props.isOwnerAccount} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="currencyAddress"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Currency</FormLabel>
+                      <CurrencySelector chain={chain} field={field} />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="maxClaimableSupply"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Max Available Supply</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled={!props.isOwnerAccount} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="maxClaimablePerWallet"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Maximum number of mints per wallet</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled={!props.isOwnerAccount} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormFieldSetup
+                htmlFor="duration"
+                label="Duration"
+                isRequired
+                errorMessage={
+                  form.formState.errors?.startTime?.message ||
+                  form.formState.errors?.endTime?.message
+                }
+              >
+                <div>
+                  <DatePickerWithRange
+                    from={startTime}
+                    to={endTime}
+                    setFrom={(from: Date) => form.setValue("startTime", from)}
+                    setTo={(to: Date) => form.setValue("endTime", to)}
                   />
                 </div>
+              </FormFieldSetup>
 
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="maxClaimableSupply"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Max Available Supply</FormLabel>
-                        <FormControl>
-                          <Input {...field} disabled={!props.isOwnerAccount} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              <Separator />
 
-                  <FormField
-                    control={form.control}
-                    name="maxClaimablePerWallet"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>
-                          Maximum number of mints per wallet
-                        </FormLabel>
-                        <FormControl>
-                          <Input {...field} disabled={!props.isOwnerAccount} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              <div className="w-full space-y-2">
+                <FormLabel>Allowlist</FormLabel>
+                <div className="flex flex-col gap-3">
+                  {allowListFields.fields.map((fieldItem, index) => (
+                    <div className="flex items-start gap-3" key={fieldItem.id}>
+                      <FormField
+                        control={form.control}
+                        name={`allowList.${index}.address`}
+                        render={({ field }) => (
+                          <FormItem className="grow">
+                            <FormControl>
+                              <Input
+                                placeholder="0x..."
+                                {...field}
+                                disabled={!props.isOwnerAccount}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <ToolTipLabel label="Remove address">
+                        <Button
+                          variant="outline"
+                          className="!text-destructive-text bg-background"
+                          onClick={() => {
+                            allowListFields.remove(index);
+                          }}
+                          disabled={!props.isOwnerAccount}
+                        >
+                          <Trash2Icon className="size-4" />
+                        </Button>
+                      </ToolTipLabel>
+                    </div>
+                  ))}
+
+                  {allowListFields.fields.length === 0 && (
+                    <Alert variant="warning">
+                      <CircleAlertIcon className="size-5 max-sm:hidden" />
+                      <AlertTitle className="max-sm:!pl-0">
+                        No allowlist configured
+                      </AlertTitle>
+                    </Alert>
+                  )}
                 </div>
 
-                <FormFieldSetup
-                  htmlFor="duration"
-                  label="Duration"
-                  isRequired
-                  errorMessage={
-                    form.formState.errors?.startTime?.message ||
-                    form.formState.errors?.endTime?.message
-                  }
-                >
-                  <div>
-                    <DatePickerWithRange
-                      from={startTime}
-                      to={endTime}
-                      setFrom={(from: Date) => form.setValue("startTime", from)}
-                      setTo={(to: Date) => form.setValue("endTime", to)}
-                    />
-                  </div>
-                </FormFieldSetup>
+                <div className="h-1" />
 
-                <Separator />
-
-                <div className="w-full space-y-2">
-                  <FormLabel>Allowlist</FormLabel>
-                  <div className="flex flex-col gap-3">
-                    {allowListFields.fields.map((fieldItem, index) => (
-                      <div
-                        className="flex items-start gap-3"
-                        key={fieldItem.id}
-                      >
-                        <FormField
-                          control={form.control}
-                          name={`allowList.${index}.address`}
-                          render={({ field }) => (
-                            <FormItem className="grow">
-                              <FormControl>
-                                <Input
-                                  placeholder="0x..."
-                                  {...field}
-                                  disabled={!props.isOwnerAccount}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <ToolTipLabel label="Remove address">
-                          <Button
-                            variant="outline"
-                            className="!text-destructive-text bg-background"
-                            onClick={() => {
-                              allowListFields.remove(index);
-                            }}
-                            disabled={!props.isOwnerAccount}
-                          >
-                            <Trash2Icon className="size-4" />
-                          </Button>
-                        </ToolTipLabel>
-                      </div>
-                    ))}
-
-                    {allowListFields.fields.length === 0 && (
-                      <Alert variant="warning">
-                        <CircleAlertIcon className="size-5 max-sm:hidden" />
-                        <AlertTitle className="max-sm:!pl-0">
-                          No allowlist configured
-                        </AlertTitle>
-                      </Alert>
-                    )}
-                  </div>
-
-                  <div className="h-1" />
-
-                  <div className="flex gap-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        // add admin by default if adding the first input
-                        allowListFields.append({
-                          address: "",
-                        });
-                      }}
-                      className="gap-2"
-                      disabled={!props.isOwnerAccount}
-                    >
-                      <PlusIcon className="size-3" />
-                      Add Address
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex justify-end">
-                  <TransactionButton
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
                     size="sm"
-                    className="min-w-24"
-                    disabled={updateMutation.isPending || !props.isOwnerAccount}
-                    type="submit"
-                    isLoading={updateMutation.isPending}
-                    txChainID={props.chainId}
-                    transactionCount={1}
-                    colorScheme="primary"
+                    onClick={() => {
+                      // add admin by default if adding the first input
+                      allowListFields.append({
+                        address: "",
+                      });
+                    }}
+                    className="gap-2"
+                    disabled={!props.isOwnerAccount}
                   >
-                    Update
-                  </TransactionButton>
+                    <PlusIcon className="size-3" />
+                    Add Address
+                  </Button>
                 </div>
-              </>
-            ))}
+              </div>
+
+              <div className="flex justify-end">
+                <TransactionButton
+                  size="sm"
+                  className="min-w-24"
+                  disabled={updateMutation.isPending || !props.isOwnerAccount}
+                  type="submit"
+                  isLoading={updateMutation.isPending}
+                  txChainID={props.chainId}
+                  transactionCount={1}
+                  colorScheme="primary"
+                >
+                  Update
+                </TransactionButton>
+              </div>
+            </div>
+          )}
         </form>{" "}
       </Form>
     </div>

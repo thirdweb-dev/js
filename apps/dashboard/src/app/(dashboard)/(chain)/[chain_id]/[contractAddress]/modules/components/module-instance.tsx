@@ -31,7 +31,7 @@ export function ModuleInstance(props: ModuleInstanceProps) {
     return <TransferableModule {...props} />;
   }
 
-  if (props.contractInfo.name.includes("Mintable")) {
+  if (props.contractInfo.name.includes("Mintable-ignore")) {
     return <MintableModule {...props} />;
   }
 

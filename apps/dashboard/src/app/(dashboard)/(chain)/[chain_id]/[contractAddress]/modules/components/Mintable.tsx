@@ -27,7 +27,11 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { type PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
+import {
+  type PreparedTransaction,
+  prepareContractCall,
+  sendAndConfirmTransaction,
+} from "thirdweb";
 import { MintableERC721, MintableERC1155 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import type { NFTMetadataInputLimited } from "types/modified-types";
@@ -48,12 +52,21 @@ export type MintFormValues = NFTMetadataInputLimited & {
   useNextTokenId: boolean;
   recipient: string;
   amount: number;
-  supply: number;
   customImage: string;
   customAnimationUrl: string;
   attributes: { trait_type: string; value: string }[];
   tokenId?: string;
 };
+
+const isValidNft = (values: MintFormValues) =>
+  values.name ||
+  values.description ||
+  values.image ||
+  values.animation_url ||
+  values.external_url ||
+  values.customAnimationUrl;
+
+const MINTER_ROLE = 1n;
 
 function MintableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
@@ -66,6 +79,11 @@ function MintableModule(props: ModuleInstanceProps) {
       contract: contract,
     },
   );
+  const hasMinterRole = useReadContract({
+    contract: contract,
+    method: "function hasAllRoles(address user, uint256 roles) returns (bool)",
+    params: [ownerAccount?.address || "", MINTER_ROLE],
+  });
 
   const isBatchMetadataInstalled = !!props.allModuleContractInfo.find(
     (module) => module.name.includes("BatchMetadata"),
@@ -73,9 +91,22 @@ function MintableModule(props: ModuleInstanceProps) {
 
   const mint = useCallback(
     async (values: MintFormValues) => {
-      const nft = parseAttributes(values);
+      const nft = isValidNft(values) ? parseAttributes(values) : "";
       if (!ownerAccount) {
         throw new Error("Not an owner account");
+      }
+
+      if (!hasMinterRole.data) {
+        const grantRoleTx = prepareContractCall({
+          contract,
+          method: "function grantRole(address user, uint256 role) public",
+          params: [ownerAccount.address || "", MINTER_ROLE],
+        });
+
+        await sendAndConfirmTransaction({
+          account: ownerAccount,
+          transaction: grantRoleTx,
+        });
       }
 
       let mintTx: PreparedTransaction;
@@ -102,7 +133,7 @@ function MintableModule(props: ModuleInstanceProps) {
         transaction: mintTx,
       });
     },
-    [contract, ownerAccount, isErc721],
+    [contract, ownerAccount, isErc721, hasMinterRole.data],
   );
 
   const update = useCallback(
@@ -284,11 +315,10 @@ function PrimarySalesSection(props: {
 
 const mintFormSchema = z.object({
   useNextTokenId: z.boolean(),
-  supply: z.coerce.number().min(0, { message: "Invalid supply" }),
   customImage: z.string().optional(),
   customAnimationUrl: z.string().optional(),
   recipient: addressSchema,
-  tokenId: z.number().min(0, { message: "Invalid tokenId" }).optional(),
+  tokenId: z.coerce.number().min(0, { message: "Invalid tokenId" }).optional(),
 });
 
 function MintNFTSection(props: {
@@ -301,7 +331,6 @@ function MintNFTSection(props: {
     resolver: zodResolver(mintFormSchema),
     values: {
       useNextTokenId: false,
-      supply: 1,
       customImage: "",
       customAnimationUrl: "",
       recipient: "",
@@ -450,6 +479,7 @@ function MintNFTSection(props: {
                       <FormControl>
                         <Input {...field} disabled={useNextTokenId} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
