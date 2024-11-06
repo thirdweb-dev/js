@@ -531,6 +531,7 @@ function ClaimConditionSection(props: {
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="currencyAddress"

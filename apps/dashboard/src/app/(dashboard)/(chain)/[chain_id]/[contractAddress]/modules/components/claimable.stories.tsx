@@ -6,7 +6,7 @@ import { subDays } from "date-fns";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { mobileViewport } from "stories/utils";
-import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
+import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
 import { ThirdwebProvider } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
 import {
@@ -53,8 +53,7 @@ const claimCondition = {
   // last week
   startTimestamp: subDays(new Date(), 7).getTime() / 1000,
   endTimestamp: new Date().getTime() / 1000,
-  allowlistMerkleRoot:
-    "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
+  allowlistMerkleRoot: ZERO_ADDRESS,
   auxData: "0x",
 } as ClaimConditionValue;
 
@@ -83,6 +82,7 @@ function Component() {
   }
 
   async function getClaimConditionErc1155Stub() {
+    console.log("claim condition in stub: ", claimCondition);
     return claimCondition;
   }
 

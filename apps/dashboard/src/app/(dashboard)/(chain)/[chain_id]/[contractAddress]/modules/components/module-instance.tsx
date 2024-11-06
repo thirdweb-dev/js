@@ -39,7 +39,7 @@ export function ModuleInstance(props: ModuleInstanceProps) {
     return <RoyaltyModule {...props} />;
   }
 
-  if (props.contractInfo.name.includes("Claimable")) {
+  if (props.contractInfo.name.includes("Claimable-ignore")) {
     return <ClaimableModule {...props} />;
   }
 
