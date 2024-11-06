@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
+import { CustomConnectWallet } from "../../../../../../../@3rdweb-sdk/react/components/connect-wallet";
 import {
   type MintFormValues,
   MintableModuleUI,
@@ -77,7 +78,11 @@ function Component() {
     <ChakraProviderSetup>
       <ThirdwebProvider>
         <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-          <div className="flex items-center gap-5">
+          <div>
+            <CustomConnectWallet loginRequired={false} />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-5">
             <CheckboxWithLabel
               value={isOwner}
               onChange={setIsOwner}

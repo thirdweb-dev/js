@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
+import { CustomConnectWallet } from "../../../../../../../@3rdweb-sdk/react/components/connect-wallet";
 import {
   OpenEditionMetadataModuleUI,
   type SetSharedMetadataFormValues,
@@ -64,6 +65,10 @@ function Component() {
     <ThirdwebProvider>
       <ChakraProviderSetup>
         <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+          <div>
+            <CustomConnectWallet loginRequired={false} />
+          </div>
+
           <div className="flex gap-2">
             <Checkbox
               id="terms1"

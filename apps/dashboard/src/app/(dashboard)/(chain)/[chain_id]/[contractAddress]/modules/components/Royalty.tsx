@@ -287,51 +287,47 @@ function RoyaltyInfoPerTokenSection(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-4">
-          <div className="h-1" />
+          <FormField
+            control={form.control}
+            name="tokenId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Token ID</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="tokenId"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Token ID</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="recipient"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Recipient</FormLabel>
+                <FormControl>
+                  <Input placeholder="0x..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="recipient"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Recipient</FormLabel>
-                  <FormControl>
-                    <Input placeholder="0x..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="bps"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>BPS</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="bps"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>BPS</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className="mt-4 flex justify-end">
             <TransactionButton
@@ -398,39 +394,33 @@ function DefaultRoyaltyInfoSection(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-4">
-          <div className="h-1" />
+          <FormField
+            control={form.control}
+            name="recipient"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Default Royalty Recipient</FormLabel>
+                <FormControl>
+                  <Input placeholder="0x..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="recipient"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Default Royalty Recipient</FormLabel>
-                  <FormControl>
-                    <Input placeholder="0x..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="bps"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Default Royalty BPS</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="h-2" />
+          <FormField
+            control={form.control}
+            name="bps"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Default Royalty BPS</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className="mt-4 flex justify-end">
             <TransactionButton

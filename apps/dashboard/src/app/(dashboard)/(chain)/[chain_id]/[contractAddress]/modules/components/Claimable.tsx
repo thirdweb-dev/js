@@ -496,15 +496,6 @@ function ClaimConditionSection(props: {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          {!props.isErc721 && (tokenId === "" || BigInt(tokenId) < 0n) && (
-            <Alert variant="warning">
-              <CircleAlertIcon className="size-5 max-sm:hidden" />
-              <AlertTitle className="max-sm:!pl-0">
-                Please set the token ID in order to proceed
-              </AlertTitle>
-            </Alert>
-          )}
-
           {!props.isErc721 &&
             tokenId !== "" &&
             BigInt(tokenId) >= 0n &&
@@ -747,7 +738,11 @@ function PrimarySaleRecipientSection(props: {
           <TransactionButton
             size="sm"
             className="min-w-24 gap-2"
-            disabled={updateMutation.isPending || !props.isOwnerAccount}
+            disabled={
+              updateMutation.isPending ||
+              !props.isOwnerAccount ||
+              !form.formState.isDirty
+            }
             type="submit"
             isLoading={updateMutation.isPending}
             txChainID={props.contractChainId}
@@ -811,28 +806,41 @@ function MintNFTSection(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
-          {/* Other options */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="recipient"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Recipient Address</FormLabel>
-                  <FormControl>
-                    <Input placeholder="0x..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="recipient"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Recipient Address</FormLabel>
+                <FormControl>
+                  <Input placeholder="0x..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
+          <FormField
+            control={form.control}
+            name="quantity"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>quantity</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {!props.isErc721 && (
             <FormField
               control={form.control}
-              name="quantity"
+              name="tokenId"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>quantity</FormLabel>
+                  <FormLabel>Token ID</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -840,23 +848,7 @@ function MintNFTSection(props: {
                 </FormItem>
               )}
             />
-
-            {!props.isErc721 && (
-              <FormField
-                control={form.control}
-                name="tokenId"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Token ID</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-          </div>
+          )}
 
           <div className="flex justify-end">
             <TransactionButton

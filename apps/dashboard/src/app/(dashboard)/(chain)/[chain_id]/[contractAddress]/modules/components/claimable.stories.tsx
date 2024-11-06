@@ -9,6 +9,7 @@ import { mobileViewport } from "stories/utils";
 import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
 import { ThirdwebProvider } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
+import { CustomConnectWallet } from "../../../../../../../@3rdweb-sdk/react/components/connect-wallet";
 import {
   type ClaimConditionFormValues,
   type ClaimConditionValue,
@@ -83,6 +84,7 @@ function Component() {
 
   async function getClaimConditionErc1155Stub() {
     console.log("claim condition in stub: ", claimCondition);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     return claimCondition;
   }
 
@@ -108,6 +110,10 @@ function Component() {
     <ChakraProviderSetup>
       <ThirdwebProvider>
         <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+          <div>
+            <CustomConnectWallet loginRequired={false} />
+          </div>
+
           <div className="flex flex-wrap items-center gap-5">
             <CheckboxWithLabel
               value={isOwner}
