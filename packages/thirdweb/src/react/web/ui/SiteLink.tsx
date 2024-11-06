@@ -9,39 +9,39 @@ import type { Ecosystem } from "../../../wallets/in-app/core/wallet/types.js";
 import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 
 /**
- * Embeds another thirdweb-supported site for seamless in-app and ecosystem wallet connection.
+ * Creates a link to another thirdweb-supported site with wallet connection parameters.
  *
- * @note Make sure the embedded site includes <AutoConnect /> and supports frame ancestors, see [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors) for more information.
+ * @note The target site must support the connected wallet (ecosystem or in-app).
  *
- * @note The embedded site must support the connected wallet (ecosystem or in-app).
- *
- * @param {Object} props - The props to pass to the iframe
- * @param {String} props.src - The URL of the site to embed
+ * @param {Object} props - The props to pass to the anchor tag
+ * @param {String} props.href - The URL of the site to link to
  * @param {ThirdwebClient} props.client - The current site's thirdweb client
- * @param {Ecosystem} [props.ecosystem] - The ecosystem to use for the wallet connection in the embedded site
+ * @param {Ecosystem} [props.ecosystem] - The ecosystem to use for the wallet connection in the target site
+ * @param {React.ReactNode} props.children - The content to render inside the link
  *
  * @example
  * ```tsx
- * import { SiteEmbed } from "thirdweb/react";
+ * import { SiteLink } from "thirdweb/react";
  *
- * <SiteEmbed src="https://thirdweb.com" client={thirdwebClient} ecosystem={{ id: "ecosystem.thirdweb" }} />
+ * <SiteLink href="https://thirdweb.com" client={thirdwebClient} ecosystem={{ id: "ecosystem.thirdweb" }}>
+ *   Visit Site
+ * </SiteLink>
  * ```
  */
-export function SiteEmbed({
-  src,
+export function SiteLink({
+  href,
   client,
   ecosystem,
+  children,
   ...props
 }: {
-  src: string;
+  href: string;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
-} & React.DetailedHTMLProps<
-  React.IframeHTMLAttributes<HTMLIFrameElement>,
-  HTMLIFrameElement
->) {
+  children: React.ReactNode;
+} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">) {
   if (!client.clientId) {
-    throw new Error("The SiteEmbed client must have a clientId");
+    throw new Error("The SiteLink client must have a clientId");
   }
 
   const activeWallet = useActiveWallet();
@@ -50,7 +50,7 @@ export function SiteEmbed({
   const {
     data: { authProvider, authCookie } = {},
   } = useQuery({
-    queryKey: ["site-embed", walletId, src, client.clientId, ecosystem],
+    queryKey: ["site-link", walletId, href, client.clientId, ecosystem],
     enabled:
       activeWallet && (isEcosystemWallet(activeWallet) || walletId === "inApp"),
     queryFn: async () => {
@@ -67,7 +67,7 @@ export function SiteEmbed({
     },
   });
 
-  const url = new URL(src);
+  const url = new URL(href);
   if (walletId) {
     url.searchParams.set("walletId", walletId);
   }
@@ -79,12 +79,8 @@ export function SiteEmbed({
   }
 
   return (
-    <iframe
-      src={encodeURI(url.toString())}
-      width="100%"
-      height="100%"
-      allowFullScreen
-      {...props}
-    />
+    <a href={encodeURI(url.toString())} {...props}>
+      {children}
+    </a>
   );
 }
