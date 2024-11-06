@@ -91,6 +91,14 @@ export type GetBuyWithFiatQuoteParams = {
    * By default, we choose a recommended provider based on the location of the user, KYC status, and currency.
    */
   preferredProvider?: FiatProvider;
+
+    /**
+   * Optional parameter to specify an overriding onramp provider.
+   *
+   * By default, we choose a recommended provider based on the location of the user, KYC status, and currency.
+   * If this is set, we will always choose this specific onramp provider, or error if this provider cannot support the user.
+   */
+  providerOverride?: FiatProvider;
 };
 
 /**
@@ -313,6 +321,7 @@ export async function getBuyWithFiatQuote(
         fromAddress: params.fromAddress,
         toGasAmountWei: params.toGasAmountWei,
         preferredProvider: params.preferredProvider,
+        providerOverride: params.providerOverride,
       }),
     });
 

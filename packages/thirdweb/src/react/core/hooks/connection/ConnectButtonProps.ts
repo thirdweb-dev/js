@@ -91,6 +91,7 @@ export type PayUIOptions = Prettify<
             currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
           };
           preferredProvider?: FiatProvider;
+          providerOverride?: FiatProvider;
         }
       | false;
 

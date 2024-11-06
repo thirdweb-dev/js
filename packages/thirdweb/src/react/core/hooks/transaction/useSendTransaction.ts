@@ -61,6 +61,7 @@ export type SendTransactionPayModalConfig =
             };
             testMode?: boolean;
             preferredProvider?: FiatProvider;
+            providerOverride?: FiatProvider;
           };
       purchaseData?: object;
       /**
