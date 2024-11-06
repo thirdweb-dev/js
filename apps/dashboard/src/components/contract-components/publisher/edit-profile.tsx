@@ -1,13 +1,15 @@
 "use client";
 
-import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { Button } from "@/components/ui/button";
 import {
-  Box,
-  FormControl,
-  Input,
-  Textarea,
-  useDisclosure,
-} from "@chakra-ui/react";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { Box, FormControl, Input, Textarea } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
@@ -20,23 +22,17 @@ import {
 import type { ProfileMetadata, ProfileMetadataInput } from "constants/schemas";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { EditIcon, GlobeIcon, ImageIcon, PencilIcon } from "lucide-react";
-import { useId } from "react";
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import {
   getContractPublisher,
   setPublisherProfileUri,
 } from "thirdweb/extensions/thirdweb";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
-import {
-  Button,
-  Drawer,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-} from "tw-components";
+import { FormErrorMessage, FormLabel } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
 
 interface EditProfileProps {
@@ -47,9 +43,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   publisherProfile,
 }) => {
   const FORM_ID = useId();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const client = useThirdwebClient();
-
   const {
     register,
     handleSubmit,
@@ -73,103 +67,77 @@ export const EditProfile: React.FC<EditProfileProps> = ({
       relayerForwarderAddress: DASHBOARD_FORWARDER_ADDRESS,
     },
   });
-
-  const { onSuccess, onError } = useTxNotifications(
-    "Profile update successfully",
-    "Error updating profile",
-  );
-
   const trackEvent = useTrack();
+  const [open, setOpen] = useState(false);
 
   return (
-    <>
-      <Button
-        onClick={onOpen}
-        size="sm"
-        variant="outline"
-        leftIcon={<EditIcon />}
-      >
-        Edit Profile
-      </Button>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button size="sm" variant="outline">
+          <EditIcon className="mr-2 size-4" /> Edit Profile
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
+        <SheetHeader>
+          <SheetTitle className="text-left">Edit your profile</SheetTitle>
+        </SheetHeader>
+        <form
+          className="mt-6 flex flex-col gap-6"
+          id={FORM_ID}
+          onSubmit={handleSubmit((d) => {
+            if (!address) {
+              return;
+            }
+            trackEvent({
+              category: "profile",
+              action: "edit",
+              label: "attempt",
+            });
+            try {
+              const tx = setPublisherProfileUri({
+                contract: getContractPublisher(client),
+                asyncParams: async () => {
+                  return {
+                    publisher: address,
+                    uri: await upload({
+                      files: [d],
+                      client,
+                    }),
+                  };
+                },
+              });
+              const promise = sendTx.mutateAsync(tx, {
+                onSuccess: async () => {
+                  await queryClient.invalidateQueries({
+                    queryKey: ["releaser-profile", address],
+                  });
+                  trackEvent({
+                    category: "profile",
+                    action: "edit",
+                    label: "success",
+                  });
+                  setOpen(false);
+                },
+                onError: (error) => {
+                  trackEvent({
+                    category: "profile",
+                    action: "edit",
+                    label: "error",
+                    error,
+                  });
+                },
+              });
 
-      <form
-        id={FORM_ID}
-        onSubmit={handleSubmit((d) => {
-          if (!address) {
-            return;
-          }
-          trackEvent({
-            category: "profile",
-            action: "edit",
-            label: "attempt",
-          });
-          const tx = setPublisherProfileUri({
-            contract: getContractPublisher(client),
-            asyncParams: async () => {
-              return {
-                publisher: address,
-                uri: await upload({
-                  files: [d],
-                  client,
-                }),
-              };
-            },
-          });
-          sendTx.mutate(tx, {
-            onSuccess: async () => {
-              await queryClient.invalidateQueries({
-                queryKey: ["releaser-profile", address],
+              toast.promise(promise, {
+                loading: "Updating profile",
+                success: "Profile updated successfully",
+                error: "Failed to update profile",
               });
-              onSuccess();
-              trackEvent({
-                category: "profile",
-                action: "edit",
-                label: "success",
-              });
-              onClose();
-            },
-            onError: (error) => {
-              onError(error);
-              trackEvent({
-                category: "profile",
-                action: "edit",
-                label: "error",
-                error,
-              });
-            },
-          });
-        })}
-      >
-        <Drawer
-          isOpen={isOpen}
-          onClose={onClose}
-          allowPinchZoom
-          preserveScrollBarGap
-          size="lg"
-          header={{
-            children: <Heading size="title.md">Edit your profile</Heading>,
-          }}
-          footer={{
-            children: (
-              <Button
-                borderRadius="md"
-                position="relative"
-                role="group"
-                colorScheme="primary"
-                type="submit"
-                isLoading={sendTx.isPending}
-                form={FORM_ID}
-              >
-                Save
-              </Button>
-            ),
-          }}
-          drawerBodyProps={{
-            gap: 6,
-            display: "flex",
-            flexDirection: "column",
-            overflowX: "hidden",
-          }}
+            } catch (err) {
+              console.error(err);
+              toast.error("Failed to update profile");
+            }
+          })}
         >
           <FormControl isInvalid={!!errors.avatar}>
             <FormLabel>
@@ -260,8 +228,19 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             />
             <FormErrorMessage>{errors?.discord?.message}</FormErrorMessage>
           </FormControl>
-        </Drawer>
-      </form>
-    </>
+          <div className="mt-6 flex flex-row justify-end gap-3">
+            <Button
+              className="relative rounded-md"
+              variant="primary"
+              type="submit"
+              disabled={sendTx.isPending}
+              form={FORM_ID}
+            >
+              Save
+            </Button>
+          </div>
+        </form>
+      </SheetContent>
+    </Sheet>
   );
 };
