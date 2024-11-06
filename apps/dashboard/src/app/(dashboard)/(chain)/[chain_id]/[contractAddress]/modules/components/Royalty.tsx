@@ -117,7 +117,11 @@ function RoyaltyModule(props: ModuleInstanceProps) {
         (values.recipient !== defaultRoyaltyRecipient ||
           Number(values.bps) !== defaultRoyaltyBps)
       ) {
-        const setSaleConfigTx = RoyaltyERC721.setDefaultRoyaltyInfo({
+        const setDefaultRoyaltyInfo = isErc721
+          ? RoyaltyERC721.setDefaultRoyaltyInfo
+          : RoyaltyERC1155.setDefaultRoyaltyInfo;
+
+        const setSaleConfigTx = setDefaultRoyaltyInfo({
           contract: contract,
           royaltyRecipient: values.recipient,
           royaltyBps: Number(values.bps),
@@ -129,7 +133,7 @@ function RoyaltyModule(props: ModuleInstanceProps) {
         });
       }
     },
-    [contract, ownerAccount, defaultRoyaltyInfoQuery.data],
+    [contract, ownerAccount, defaultRoyaltyInfoQuery.data, isErc721],
   );
 
   return (
