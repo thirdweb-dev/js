@@ -6,6 +6,16 @@
       "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
+    "postbuild": {
+      "dependsOn": ["^postbuild"],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "public/robots.txt",
+        "public/sitemap*.xml",
+        "searchIndex.json"
+      ]
+    },
     "bench": {
       "cache": false,
       "dependsOn": []

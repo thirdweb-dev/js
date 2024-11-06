@@ -196,5 +196,6 @@ export type {
   LensProfile,
 } from "../social/types.js";
 
-// Site Embed
+// Site Embed and Linking
 export { SiteEmbed } from "../react/web/ui/SiteEmbed.js";
+export { SiteLink } from "../react/web/ui/SiteLink.js";
