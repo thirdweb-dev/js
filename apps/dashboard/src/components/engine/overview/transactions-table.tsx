@@ -2,15 +2,19 @@ import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Collapse,
   Divider,
-  DrawerHeader,
   Flex,
   FormControl,
   Tooltip,
-  type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -19,17 +23,9 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { InfoIcon, MoveLeftIcon, MoveRightIcon } from "lucide-react";
-import { useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { toTokens } from "thirdweb";
-import {
-  Button,
-  Card,
-  Drawer,
-  FormLabel,
-  Heading,
-  LinkButton,
-  Text,
-} from "tw-components";
+import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
 import { TWTable } from "../../shared/TWTable";
 import { TransactionTimeline } from "./transaction-timeline";
 
@@ -276,7 +272,6 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
         <TransactionDetailsDrawer
           transaction={selectedTransaction}
           instanceUrl={instanceUrl}
-          disclosure={transactionDisclosure}
           onClickPrevious={
             idx > 0
               ? () => setSelectedTransaction(transactions[idx - 1] || null)
@@ -287,6 +282,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
               ? () => setSelectedTransaction(transactions[idx + 1] || null)
               : undefined
           }
+          setSelectedTransaction={setSelectedTransaction}
         />
       )}
     </>
@@ -296,15 +292,15 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
 const TransactionDetailsDrawer = ({
   transaction,
   instanceUrl,
-  disclosure,
   onClickPrevious,
   onClickNext,
+  setSelectedTransaction,
 }: {
   transaction: Transaction;
   instanceUrl: string;
-  disclosure: UseDisclosureReturn;
   onClickPrevious?: () => void;
   onClickNext?: () => void;
+  setSelectedTransaction: Dispatch<SetStateAction<Transaction | null>>;
 }) => {
   const { idToChain } = useAllChainsData();
   const errorMessageDisclosure = useDisclosure();
@@ -337,275 +333,273 @@ const TransactionDetailsDrawer = ({
     }
   }
 
+  const handleOpenChange = (isOpen: boolean) => {
+    setSelectedTransaction(isOpen ? transaction : null);
+  };
+
   return (
-    <Drawer
-      isOpen={disclosure.isOpen}
-      onClose={disclosure.onClose}
-      size="sm"
-      closeOnOverlayClick
-      header={{
-        children: (
-          <DrawerHeader as={Flex} gap={3}>
-            <Heading size="title.sm">Transaction Details</Heading>
-            <Badge variant="outline">{status.name}</Badge>
-          </DrawerHeader>
-        ),
-      }}
-      footer={{
-        children: (
-          <Flex gap={3}>
-            <Button
-              isDisabled={!onClickPrevious}
-              onClick={onClickPrevious}
-              variant="outline"
-              leftIcon={<MoveLeftIcon className="size-4" />}
-            >
-              Previous
-            </Button>
-            <Button
-              isDisabled={!onClickNext}
-              onClick={onClickNext}
-              variant="outline"
-              rightIcon={<MoveRightIcon className="size-4" />}
-            >
-              Next
-            </Button>
-          </Flex>
-        ),
-      }}
-    >
-      <div className="flex flex-col gap-4">
-        <FormControl>
-          <FormLabel>Queue ID</FormLabel>
-          <Text>{transaction.queueId}</Text>
-        </FormControl>
-
-        <FormControl>
-          <FormLabel>Chain</FormLabel>
-          <Flex align="center" gap={2}>
-            <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
-            <Text>{chain?.name}</Text>
-          </Flex>
-        </FormControl>
-
-        {functionCalled && (
+    <Sheet open={!!transaction} onOpenChange={handleOpenChange}>
+      <SheetContent className="w-full overflow-y-auto sm:min-w-[500px] lg:min-w-[500px]">
+        <SheetHeader>
+          <SheetTitle className="mb-3 flex flex-row items-center gap-3 border-border border-b pb-3 text-left">
+            Transaction Details <Badge variant="outline">{status.name}</Badge>
+          </SheetTitle>
+        </SheetHeader>
+        <div className="flex flex-col gap-4">
           <FormControl>
-            <FormLabel>Function</FormLabel>
-            <Text>{functionCalled}</Text>
+            <FormLabel>Queue ID</FormLabel>
+            <Text>{transaction.queueId}</Text>
           </FormControl>
-        )}
 
-        <FormControl>
-          <FormLabel>
-            {transaction.accountAddress ? "Signer Address" : "From Address"}
-          </FormLabel>
-          <LinkButton
-            variant="ghost"
-            isExternal
-            size="xs"
-            href={
-              explorer
-                ? `${explorer.url}/address/${transaction.fromAddress}`
-                : "#"
-            }
-          >
-            <Text fontFamily="mono">{transaction.fromAddress}</Text>
-          </LinkButton>
-        </FormControl>
-
-        {transaction.accountAddress && (
           <FormControl>
-            <FormLabel>Account Address</FormLabel>
+            <FormLabel>Chain</FormLabel>
+            <Flex align="center" gap={2}>
+              <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
+              <Text>{chain?.name}</Text>
+            </Flex>
+          </FormControl>
+
+          {functionCalled && (
+            <FormControl>
+              <FormLabel>Function</FormLabel>
+              <Text>{functionCalled}</Text>
+            </FormControl>
+          )}
+
+          <FormControl>
+            <FormLabel>
+              {transaction.accountAddress ? "Signer Address" : "From Address"}
+            </FormLabel>
             <LinkButton
               variant="ghost"
               isExternal
               size="xs"
               href={
                 explorer
-                  ? `${explorer.url}/address/${transaction.accountAddress}`
+                  ? `${explorer.url}/address/${transaction.fromAddress}`
                   : "#"
               }
             >
-              <Text fontFamily="mono">{transaction.accountAddress}</Text>
+              <Text fontFamily="mono">{transaction.fromAddress}</Text>
             </LinkButton>
           </FormControl>
-        )}
 
-        <FormControl>
-          {/* The "to" address is usually a contract except for native token transfers. */}
-          <FormLabel>
-            {functionCalled === "transfer"
-              ? "Recipient Address"
-              : "Contract Address"}
-          </FormLabel>
-          <LinkButton
-            variant="ghost"
-            isExternal
-            size="xs"
-            href={
-              explorer
-                ? `${explorer.url}/address/${transaction.toAddress}`
-                : "#"
-            }
-          >
-            <Text fontFamily="mono">{transaction.toAddress}</Text>
-          </LinkButton>
-        </FormControl>
-
-        {transaction.errorMessage && (
-          <FormControl>
-            <FormLabel>Error</FormLabel>
-            <Text noOfLines={errorMessageDisclosure.isOpen ? undefined : 3}>
-              {transaction.errorMessage}
-            </Text>
-            <Button
-              onClick={errorMessageDisclosure.onToggle}
-              variant="link"
-              size="xs"
-              colorScheme="gray"
-            >
-              {errorMessageDisclosure.isOpen ? "Show less" : "Show more"}
-            </Button>
-          </FormControl>
-        )}
-
-        <Divider />
-
-        <TransactionTimeline
-          transaction={transaction}
-          instanceUrl={instanceUrl}
-        />
-
-        <Divider />
-
-        {/* On-chain details */}
-
-        <FormControl>
-          <div className="flex flex-row">
-            <FormLabel>Value</FormLabel>
-            <Tooltip
-              label={`The amount of ${symbol} sent to the "To" .`}
-              shouldWrapChildren
-            >
-              <InfoIcon className="size-4" />
-            </Tooltip>
-          </div>
-          <Text>
-            {transaction.value
-              ? toTokens(BigInt(transaction.value), decimals)
-              : 0}{" "}
-            {symbol}
-          </Text>
-        </FormControl>
-
-        {transaction.transactionHash && (
-          <>
+          {transaction.accountAddress && (
             <FormControl>
-              <FormLabel>Transaction Hash</FormLabel>
+              <FormLabel>Account Address</FormLabel>
               <LinkButton
                 variant="ghost"
                 isExternal
                 size="xs"
                 href={
                   explorer
-                    ? `${explorer.url}/tx/${transaction.transactionHash}`
+                    ? `${explorer.url}/address/${transaction.accountAddress}`
                     : "#"
                 }
-                maxW="100%"
               >
-                <Text fontFamily="mono" isTruncated>
-                  {transaction.transactionHash}
-                </Text>
+                <Text fontFamily="mono">{transaction.accountAddress}</Text>
               </LinkButton>
             </FormControl>
+          )}
 
-            <FormControl>
-              <FormLabel>Transaction Fee</FormLabel>
-              <Text>{txFeeDisplay}</Text>
-            </FormControl>
-
-            <Collapse in={advancedTxDetailsDisclosure.isOpen}>
-              <div className="flex flex-col gap-4">
-                {transaction.nonce && (
-                  <FormControl>
-                    <div className="flex flex-row">
-                      <FormLabel>Nonce</FormLabel>
-                      <Tooltip
-                        label="The nonce value this transaction was submitted to mempool."
-                        shouldWrapChildren
-                      >
-                        <InfoIcon className="size-4" />
-                      </Tooltip>
-                    </div>
-                    <Text>{transaction.nonce ?? "N/A"}</Text>
-                  </FormControl>
-                )}
-
-                {transaction.gasLimit && (
-                  <FormControl>
-                    <div className="flex flex-row">
-                      <FormLabel>Gas Units</FormLabel>
-                      <Tooltip
-                        label="The gas units spent for this transaction."
-                        shouldWrapChildren
-                      >
-                        <InfoIcon className="size-4" />
-                      </Tooltip>
-                    </div>
-                    <Text>{Number(transaction.gasLimit).toLocaleString()}</Text>
-                  </FormControl>
-                )}
-
-                {transaction.gasPrice && (
-                  <FormControl>
-                    <div className="flex flex-row">
-                      <FormLabel>Gas Price</FormLabel>
-                      <Tooltip
-                        label="The price in wei spent for each gas unit."
-                        shouldWrapChildren
-                      >
-                        <InfoIcon className="size-4" />
-                      </Tooltip>
-                    </div>
-                    <Text>{Number(transaction.gasPrice).toLocaleString()}</Text>
-                  </FormControl>
-                )}
-
-                {transaction.blockNumber && (
-                  <FormControl>
-                    <FormLabel>Block</FormLabel>
-                    <LinkButton
-                      variant="ghost"
-                      isExternal
-                      size="xs"
-                      href={
-                        explorer
-                          ? `${explorer.url}/block/${transaction.blockNumber}`
-                          : "#"
-                      }
-                      maxW="100%"
-                    >
-                      <Text>{transaction.blockNumber}</Text>
-                    </LinkButton>
-                  </FormControl>
-                )}
-              </div>
-            </Collapse>
-
-            <Button
-              onClick={advancedTxDetailsDisclosure.onToggle}
-              variant="link"
+          <FormControl>
+            {/* The "to" address is usually a contract except for native token transfers. */}
+            <FormLabel>
+              {functionCalled === "transfer"
+                ? "Recipient Address"
+                : "Contract Address"}
+            </FormLabel>
+            <LinkButton
+              variant="ghost"
+              isExternal
               size="xs"
-              colorScheme="gray"
-              w="fit-content"
+              href={
+                explorer
+                  ? `${explorer.url}/address/${transaction.toAddress}`
+                  : "#"
+              }
             >
-              {advancedTxDetailsDisclosure.isOpen
-                ? "Hide transaction details"
-                : "Show transaction details"}
-            </Button>
-          </>
-        )}
-      </div>
-    </Drawer>
+              <Text fontFamily="mono">{transaction.toAddress}</Text>
+            </LinkButton>
+          </FormControl>
+
+          {transaction.errorMessage && (
+            <FormControl>
+              <FormLabel>Error</FormLabel>
+              <Text noOfLines={errorMessageDisclosure.isOpen ? undefined : 3}>
+                {transaction.errorMessage}
+              </Text>
+              <Button
+                onClick={errorMessageDisclosure.onToggle}
+                variant="link"
+                size="xs"
+                colorScheme="gray"
+              >
+                {errorMessageDisclosure.isOpen ? "Show less" : "Show more"}
+              </Button>
+            </FormControl>
+          )}
+
+          <Divider />
+
+          <TransactionTimeline
+            transaction={transaction}
+            instanceUrl={instanceUrl}
+          />
+
+          <Divider />
+
+          {/* On-chain details */}
+
+          <FormControl>
+            <div className="flex flex-row">
+              <FormLabel>Value</FormLabel>
+              <Tooltip
+                label={`The amount of ${symbol} sent to the "To" .`}
+                shouldWrapChildren
+              >
+                <InfoIcon className="size-4" />
+              </Tooltip>
+            </div>
+            <Text>
+              {transaction.value
+                ? toTokens(BigInt(transaction.value), decimals)
+                : 0}{" "}
+              {symbol}
+            </Text>
+          </FormControl>
+
+          {transaction.transactionHash && (
+            <>
+              <FormControl>
+                <FormLabel>Transaction Hash</FormLabel>
+                <LinkButton
+                  variant="ghost"
+                  isExternal
+                  size="xs"
+                  href={
+                    explorer
+                      ? `${explorer.url}/tx/${transaction.transactionHash}`
+                      : "#"
+                  }
+                  maxW="100%"
+                >
+                  <Text fontFamily="mono" isTruncated>
+                    {transaction.transactionHash}
+                  </Text>
+                </LinkButton>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Transaction Fee</FormLabel>
+                <Text>{txFeeDisplay}</Text>
+              </FormControl>
+
+              <Collapse in={advancedTxDetailsDisclosure.isOpen}>
+                <div className="flex flex-col gap-4">
+                  {transaction.nonce && (
+                    <FormControl>
+                      <div className="flex flex-row">
+                        <FormLabel>Nonce</FormLabel>
+                        <Tooltip
+                          label="The nonce value this transaction was submitted to mempool."
+                          shouldWrapChildren
+                        >
+                          <InfoIcon className="size-4" />
+                        </Tooltip>
+                      </div>
+                      <Text>{transaction.nonce ?? "N/A"}</Text>
+                    </FormControl>
+                  )}
+
+                  {transaction.gasLimit && (
+                    <FormControl>
+                      <div className="flex flex-row">
+                        <FormLabel>Gas Units</FormLabel>
+                        <Tooltip
+                          label="The gas units spent for this transaction."
+                          shouldWrapChildren
+                        >
+                          <InfoIcon className="size-4" />
+                        </Tooltip>
+                      </div>
+                      <Text>
+                        {Number(transaction.gasLimit).toLocaleString()}
+                      </Text>
+                    </FormControl>
+                  )}
+
+                  {transaction.gasPrice && (
+                    <FormControl>
+                      <div className="flex flex-row">
+                        <FormLabel>Gas Price</FormLabel>
+                        <Tooltip
+                          label="The price in wei spent for each gas unit."
+                          shouldWrapChildren
+                        >
+                          <InfoIcon className="size-4" />
+                        </Tooltip>
+                      </div>
+                      <Text>
+                        {Number(transaction.gasPrice).toLocaleString()}
+                      </Text>
+                    </FormControl>
+                  )}
+
+                  {transaction.blockNumber && (
+                    <FormControl>
+                      <FormLabel>Block</FormLabel>
+                      <LinkButton
+                        variant="ghost"
+                        isExternal
+                        size="xs"
+                        href={
+                          explorer
+                            ? `${explorer.url}/block/${transaction.blockNumber}`
+                            : "#"
+                        }
+                        maxW="100%"
+                      >
+                        <Text>{transaction.blockNumber}</Text>
+                      </LinkButton>
+                    </FormControl>
+                  )}
+                </div>
+              </Collapse>
+
+              <Button
+                onClick={advancedTxDetailsDisclosure.onToggle}
+                variant="link"
+                size="xs"
+                colorScheme="gray"
+                w="fit-content"
+              >
+                {advancedTxDetailsDisclosure.isOpen
+                  ? "Hide transaction details"
+                  : "Show transaction details"}
+              </Button>
+            </>
+          )}
+        </div>
+        <div className="mt-4 flex flex-row justify-end gap-3 border-border border-t pt-4">
+          <Button
+            isDisabled={!onClickPrevious}
+            onClick={onClickPrevious}
+            variant="outline"
+            leftIcon={<MoveLeftIcon className="size-4" />}
+          >
+            Previous
+          </Button>
+          <Button
+            isDisabled={!onClickNext}
+            onClick={onClickNext}
+            variant="outline"
+            rightIcon={<MoveRightIcon className="size-4" />}
+          >
+            Next
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
