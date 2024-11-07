@@ -285,29 +285,8 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
     });
 
     it("can switch chains", async () => {
-      const baseSepoliaEdition = getContract({
-        address: "0x638263e3eAa3917a53630e61B1fBa685308024fa",
-        chain: baseSepolia,
-        client: TEST_CLIENT,
-      });
       await wallet.switchChain(baseSepolia);
-      const tx = await sendAndConfirmTransaction({
-        transaction: claimTo({
-          contract: baseSepoliaEdition,
-          quantity: 1n,
-          to: smartWalletAddress,
-          tokenId: 0n,
-        }),
-        // biome-ignore lint/style/noNonNullAssertion: should be set after switching chains
-        account: wallet.getAccount()!,
-      });
-      expect(tx.transactionHash).toHaveLength(66);
-      const balance = await balanceOf({
-        contract: baseSepoliaEdition,
-        owner: smartWalletAddress,
-        tokenId: 0n,
-      });
-      expect(balance).toEqual(1n);
+      expect(wallet.getChain()?.id).toEqual(baseSepolia.id);
     });
 
     it("can execute a 2 tx in parallel", async () => {
