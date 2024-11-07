@@ -510,8 +510,9 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
               <Fragment key={`snapshot_${field.id}_${index}`}>
                 <SnapshotUpload
                   dropType={dropType}
-                  isOpen={openSnapshotIndex === index}
-                  onClose={() => setOpenSnapshotIndex(-1)}
+                  snapshotIndex={openSnapshotIndex}
+                  index={index}
+                  setOpenSnapshotIndex={setOpenSnapshotIndex}
                   value={snapshotValue}
                   setSnapshot={(snapshot) =>
                     form.setValue(`phases.${index}.snapshot`, snapshot)

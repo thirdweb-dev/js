@@ -1,3 +1,4 @@
+import { TableContainer } from "@/components/ui/table";
 import {
   IconButton,
   Portal,
@@ -64,47 +65,49 @@ export function CsvDataTable<T extends object>({
   );
   return (
     <>
-      <Table {...getTableProps()}>
-        <Thead>
-          {headerGroups.map((headerGroup, headerGroupIndex) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-            <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
-              {headerGroup.headers.map((column, columnIndex) => (
-                <Th
-                  {...column.getHeaderProps()}
-                  border="none"
-                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                  key={columnIndex}
-                >
-                  <Text as="label" size="label.sm" color="faded">
-                    {column.render("Header")}
-                  </Text>
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody {...getTableBodyProps()}>
-          {page.map((row, rowIndex) => {
-            prepareRow(row);
-            return (
+      <TableContainer>
+        <Table {...getTableProps()}>
+          <Thead>
+            {headerGroups.map((headerGroup, headerGroupIndex) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-              <Tr {...row.getRowProps()} key={rowIndex}>
-                {row.cells.map((cell, cellIndex) => (
-                  <Td
-                    {...cell.getCellProps()}
-                    borderColor="borderColor"
+              <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+                {headerGroup.headers.map((column, columnIndex) => (
+                  <Th
+                    {...column.getHeaderProps()}
+                    border="none"
                     // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                    key={cellIndex}
+                    key={columnIndex}
                   >
-                    {cell.render("Cell")}
-                  </Td>
+                    <Text as="label" size="label.sm" color="faded">
+                      {column.render("Header")}
+                    </Text>
+                  </Th>
                 ))}
               </Tr>
-            );
-          })}
-        </Tbody>
-      </Table>
+            ))}
+          </Thead>
+          <Tbody {...getTableBodyProps()}>
+            {page.map((row, rowIndex) => {
+              prepareRow(row);
+              return (
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+                <Tr {...row.getRowProps()} key={rowIndex}>
+                  {row.cells.map((cell, cellIndex) => (
+                    <Td
+                      {...cell.getCellProps()}
+                      borderColor="borderColor"
+                      // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+                      key={cellIndex}
+                    >
+                      {cell.render("Cell")}
+                    </Td>
+                  ))}
+                </Tr>
+              );
+            })}
+          </Tbody>
+        </Table>
+      </TableContainer>
       {/* Only need to show the Pagination components if we have more than 25 records */}
       {data.length > 0 && (
         <Portal containerRef={portalRef}>
