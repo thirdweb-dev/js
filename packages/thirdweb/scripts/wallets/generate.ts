@@ -347,6 +347,7 @@ const customWalletImports = [
   "inApp",
   "walletConnect",
   "embedded",
+  "embeddedWallet",
   "adapter",
 ]
   .map(
