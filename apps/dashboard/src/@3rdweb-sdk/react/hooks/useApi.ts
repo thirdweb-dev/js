@@ -238,6 +238,13 @@ export interface WalletStats {
   walletType: string;
 }
 
+export interface WalletUserStats {
+  date: string;
+  newUsers: number;
+  returningUsers: number;
+  totalUsers: number;
+}
+
 export interface InAppWalletStats {
   date: string;
   authenticationMethod: string;
