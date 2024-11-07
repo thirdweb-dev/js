@@ -1,5 +1,5 @@
 "use client";
-import {} from "thirdweb/react";
+
 import { inAppWallet } from "thirdweb/wallets/in-app";
 import { StyledConnectEmbed } from "../styled-connect-embed";
 

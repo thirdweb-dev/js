@@ -4,7 +4,6 @@ import {
   TeamHeaderLoggedOutDesktopUI,
   TeamHeaderLoggedOutMobileUI,
 } from "./TeamHeaderLoggedOut";
-import {} from "./TeamHeaderUI";
 
 const meta = {
   title: "Team/TeamHeaderLoggedOut",
