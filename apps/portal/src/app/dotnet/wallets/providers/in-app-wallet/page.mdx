@@ -64,10 +64,10 @@ var address = await wallet.LoginWithOauth(
 var address = await siweWallet.LoginWithSiwe(chainId: 1);
 
 // Custom Auth (JWT)
-var address = await wallet.LoginWithCustomAuth(jwt: "myjwt", encryptionkey: "myencryptionkey");
+var address = await wallet.LoginWithCustomAuth(jwt: "myjwt");
 
 // Custom Auth (AuthEndpoint)
-var address = await wallet.LoginWithAuthEndpoint(payload: "mypayload", encryptionkey: "myencryptionkey");
+var address = await wallet.LoginWithAuthEndpoint(payload: "mypayload");
 
 // Guest Login (Easy onboarding)
 var address = await wallet.LoginWithGuest();
