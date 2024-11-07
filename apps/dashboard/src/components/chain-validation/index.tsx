@@ -1,4 +1,5 @@
 import { InlineCode } from "@/components/ui/inline-code";
+import { TableContainer } from "@/components/ui/table";
 import {
   FormControl,
   Input,
@@ -15,7 +16,7 @@ import { useRpcValidation } from "hooks/chains/useRpcValidation";
 import { AlertCircleIcon, CheckCircleIcon } from "lucide-react";
 import { type ChangeEvent, useState } from "react";
 
-import { Button, Card, FormLabel, Link, TableContainer } from "tw-components";
+import { Button, Card, FormLabel, Link } from "tw-components";
 
 const StatusCheck = (props: {
   status: "success" | "error" | "warning";

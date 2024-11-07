@@ -8,5 +8,4 @@ export * from "./form";
 export * from "./heading";
 export * from "./link";
 export * from "./menu";
-export * from "./table-container";
 export * from "./text";

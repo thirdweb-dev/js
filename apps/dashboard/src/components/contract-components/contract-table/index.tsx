@@ -1,8 +1,8 @@
+import { TableContainer } from "@/components/ui/table";
 import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { type Column, type Row, useTable } from "react-table";
 import { Text } from "tw-components";
-import { TableContainer } from "tw-components/table-container";
 import type { ComponentWithChildren } from "types/component-with-children";
 import type { ContractCellContext, ContractId } from "../types";
 import { ContractDescriptionCell } from "./cells/description";
@@ -55,7 +55,7 @@ export const DeployableContractTable: ComponentWithChildren<
     data: contractIds.map((contractId) => ({ contractId })),
   });
   return (
-    <TableContainer className="relative">
+    <TableContainer>
       {isFetching && (
         <Spinner
           color="primary"

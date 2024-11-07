@@ -1,3 +1,4 @@
+import { TableContainer } from "@/components/ui/table";
 import {
   Box,
   ButtonGroup,
@@ -24,7 +25,7 @@ import {
 import { MoveRightIcon } from "lucide-react";
 import pluralize from "pluralize";
 import { type SetStateAction, useMemo } from "react";
-import { Button, TableContainer, Text } from "tw-components";
+import { Button, Text } from "tw-components";
 
 type TWQueryTableProps<TRowData, TInputData> = {
   // biome-ignore lint/suspicious/noExplicitAny: FIXME
