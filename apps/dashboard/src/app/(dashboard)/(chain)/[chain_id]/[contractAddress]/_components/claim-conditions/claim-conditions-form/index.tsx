@@ -13,6 +13,7 @@ import {
   Flex,
   Menu,
   MenuButton,
+  MenuItem,
   MenuList,
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -39,7 +40,7 @@ import {
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import invariant from "tiny-invariant";
-import { Button, Heading, MenuItem, Text } from "tw-components";
+import { Button, Heading, Text } from "tw-components";
 import * as z from "zod";
 import { ZodError } from "zod";
 import {

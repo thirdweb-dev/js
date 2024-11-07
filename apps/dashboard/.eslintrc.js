@@ -59,7 +59,6 @@ module.exports = {
               "FormHelperText",
               "FormErrorMessage",
               "MenuGroup",
-              "MenuItem",
               "VStack",
               "HStack",
               "AspectRatio",

@@ -16,14 +16,14 @@ import { fontWeights, letterSpacings, lineHeights } from "theme/typography";
 import { ChakraNextLink } from "./link";
 import { convertFontSizeToCSSVar } from "./utils/typography";
 
-export const buttonSizesMap = {
+const buttonSizesMap = {
   xs: "sm",
   sm: "md",
   md: "lg",
   lg: "xl",
 } as const;
 
-export type PossibleButtonSize = keyof typeof buttonSizesMap;
+type PossibleButtonSize = keyof typeof buttonSizesMap;
 
 export interface ButtonProps extends Omit<ChakraButtonProps, "size"> {
   size?: PossibleButtonSize;
