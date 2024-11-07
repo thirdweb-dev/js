@@ -51,7 +51,6 @@ export type CreateAPIKeyPrefillOptions = {
 export type CreateAPIKeyDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  wording: "project" | "api-key";
   onCreateAndComplete?: () => void;
   prefill?: CreateAPIKeyPrefillOptions;
 };
@@ -69,7 +68,6 @@ export default CreateAPIKeyDialog;
 export const CreateAPIKeyDialogUI = (props: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  wording: "project" | "api-key";
   onCreateAndComplete?: () => void;
   createKeyMutation: UseMutationResult<
     ApiKey,
@@ -104,7 +102,6 @@ export const CreateAPIKeyDialogUI = (props: {
         <DynamicHeight>
           {screen.id === "create" && (
             <CreateAPIKeyForm
-              wording={props.wording}
               createKeyMutation={createKeyMutation}
               onAPIKeyCreated={(key) => {
                 setScreen({ id: "api-details", key });
@@ -121,7 +118,6 @@ export const CreateAPIKeyDialogUI = (props: {
                 setScreen({ id: "create" });
                 props.onCreateAndComplete?.();
               }}
-              wording={props.wording}
             />
           )}
         </DynamicHeight>
@@ -131,7 +127,6 @@ export const CreateAPIKeyDialogUI = (props: {
 };
 
 function CreateAPIKeyForm(props: {
-  wording: "project" | "api-key";
   createKeyMutation: UseMutationResult<
     ApiKey,
     unknown,
@@ -141,7 +136,6 @@ function CreateAPIKeyForm(props: {
   onAPIKeyCreated: (key: ApiKey) => void;
   prefill?: CreateAPIKeyPrefillOptions;
 }) {
-  const { wording } = props;
   const [showAlert, setShowAlert] = useState<"no-domain" | "any-domain">();
 
   const { createKeyMutation } = props;
@@ -182,9 +176,7 @@ function CreateAPIKeyForm(props: {
 
     createKeyMutation.mutate(formattedValues, {
       onSuccess: (data) => {
-        toast.success(
-          `${wording === "api-key" ? "API Key" : "Project"} created successfully`,
-        );
+        toast.success("Project created successfully");
         props.onAPIKeyCreated(data);
         trackEvent({
           category: "api-keys",
@@ -193,9 +185,7 @@ function CreateAPIKeyForm(props: {
         });
       },
       onError: (err) => {
-        toast.error(
-          `Failed to create ${wording === "api-key" ? "API Key" : "Project"}`,
-        );
+        toast.error("Failed to create a project");
         trackEvent({
           category: "api-keys",
           action: "create",
@@ -240,11 +230,7 @@ function CreateAPIKeyForm(props: {
       <form onSubmit={handleSubmit} autoComplete="off">
         <div className="p-6">
           <DialogHeader className="mb-4">
-            <DialogTitle className="text-2xl">
-              {props.wording === "api-key"
-                ? "Create an API Key"
-                : "Create a Project"}
-            </DialogTitle>
+            <DialogTitle className="text-2xl">Create a Project</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-6">
@@ -253,15 +239,11 @@ function CreateAPIKeyForm(props: {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    {wording === "api-key" ? "Display Name" : "Project Name"}
-                  </FormLabel>
+                  <FormLabel>Project Name</FormLabel>
                   <FormControl>
                     <Input
                       className="bg-muted/50"
-                      placeholder={
-                        wording === "api-key" ? "My API Key" : "My Project"
-                      }
+                      placeholder="My Project"
                       {...field}
                     />
                   </FormControl>
@@ -412,7 +394,6 @@ function DomainsAlert(props: {
 function APIKeyDetails(props: {
   apiKey: ApiKey;
   onComplete: () => void;
-  wording: "project" | "api-key";
 }) {
   const { apiKey } = props;
   const [secretStored, setSecretStored] = useState(false);
@@ -465,8 +446,7 @@ function APIKeyDetails(props: {
           <AlertDescription>
             <div className="mb-5">
               Secret keys cannot be recovered. If you lose your secret key, you
-              will need to create a{" "}
-              {props.wording === "project" ? "project" : "API key"}
+              will need to create a project
             </div>
             <CheckboxWithLabel className="text-foreground">
               <Checkbox

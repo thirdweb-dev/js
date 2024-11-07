@@ -2,8 +2,8 @@ export function isLoginRequired(pathname: string) {
   // remove '/' in front and then split by '/'
   const paths = pathname.slice(1).split("/");
 
-  // /dashboard, /team, /cli
-  if (paths[0] === "dashboard" || paths[0] === "team" || paths[0] === "cli") {
+  // /team, /cli
+  if (paths[0] === "team" || paths[0] === "cli") {
     return true;
   }
 

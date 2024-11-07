@@ -1,6 +1,4 @@
 "use client";
-
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -215,11 +213,7 @@ export function FaucetButton({
           Verify your Email
         </Button>
         {/* We will show the modal only if the user click on it, because this is a public page */}
-        {showOnboarding && (
-          <ChakraProviderSetup>
-            <Onboarding onOpenChange={setShowOnBoarding} />
-          </ChakraProviderSetup>
-        )}
+        {showOnboarding && <Onboarding onOpenChange={setShowOnBoarding} />}
       </>
     );
   }

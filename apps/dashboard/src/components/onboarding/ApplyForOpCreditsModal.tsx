@@ -51,7 +51,7 @@ export const PlanToCreditsRecord: Record<AccountPlan, CreditsRecord> = {
       "Custom Branding",
     ],
     ctaTitle: "Upgrade for $99",
-    ctaHref: "/dashboard/settings/billing",
+    ctaHref: "/team/~/~/settings/billing",
   },
   [accountPlan.pro]: {
     title: "Pro",

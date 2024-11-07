@@ -4,7 +4,7 @@ import { getAuthToken } from "./getAuthToken";
 
 // TODO - Fix the `/v1/keys/${apiKeyId}` endpoint in API server
 
-export async function getAPIKey(apiKeyId: string) {
+async function getAPIKey(apiKeyId: string) {
   // The `/v1/keys/${apiKeyId}`; does not return the "FULL" ApiKey object for some reason
   // Until this is fixed in API server - we just use the getApiKeys() and find the key by id
 
@@ -35,7 +35,7 @@ export async function getAPIKey(apiKeyId: string) {
   // return json.data as ApiKey;
 }
 
-export async function getApiKeys() {
+async function getApiKeys() {
   const authToken = await getAuthToken();
 
   const res = await fetch(`${API_SERVER_URL}/v1/keys`, {

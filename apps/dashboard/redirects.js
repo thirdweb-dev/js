@@ -1,5 +1,69 @@
+const legacyDashboardToTeamRedirects = [
+  {
+    source: "/dashboard",
+    destination: "/team",
+    permanent: false,
+  },
+  {
+    source: "/dashboard/contracts/:path*",
+    destination: "/team/~/~/contracts",
+    permanent: false,
+  },
+  {
+    source: "/dashboard/connect/ecosystem/:path*",
+    destination: "/team/~/~/ecosystem/:path*",
+    permanent: false,
+  },
+  {
+    source: "/dashboard/engine/:path*",
+    destination: "/team/~/~/engine/:path*",
+    permanent: false,
+  },
+  {
+    source: "/dashboard/settings/api-keys",
+    destination: "/team/~/~/projects",
+    permanent: false,
+  },
+  {
+    source: "/dashboard/settings/devices",
+    destination: "/account/devices",
+    permanent: false,
+  },
+  {
+    source: "/dashboard/settings/billing",
+    destination: "/team/~/~/settings/billing",
+    permanent: false,
+  },
+  {
+    source: "/dashboard/settings/gas-credits",
+    destination: "/team/~/~/settings/credits",
+    permanent: false,
+  },
+  {
+    source: "/dashboard/settings/usage",
+    destination: "/team/~/~/usage",
+    permanent: false,
+  },
+  {
+    source: "/dashboard/settings/storage",
+    destination: "/team/~/~/usage/storage",
+    permanent: false,
+  },
+  {
+    source: "/dashboard/settings/notifications",
+    destination: "/team/~/~/settings/notifications",
+    permanent: false,
+  },
+  // rest of the /dashboard/* routes
+  {
+    source: "/dashboard/:path*",
+    destination: "/team",
+    permanent: false,
+  },
+];
+
 /** @type {import('next').NextConfig['redirects']} */
-function redirects() {
+async function redirects() {
   return [
     {
       source: "/portal/:match*",
@@ -10,16 +74,6 @@ function redirects() {
       source: "/solutions/appchain-api",
       destination: "/solutions/chains",
       permanent: true,
-    },
-    {
-      source: "/dashboard/publish/:path*",
-      destination: "/contracts/publish/:path*",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/mumbai/publish/:path*",
-      destination: "/contracts/publish/:path*",
-      permanent: false,
     },
     {
       source: "/contracts/release",
@@ -97,23 +151,8 @@ function redirects() {
       destination: "/polygon-zkevm",
       permanent: false,
     },
-    {
-      source: "/settings",
-      destination: "/dashboard/settings/api-keys",
-      permanent: false,
-    },
-    // backwards compat: page moved to pages/settings/api-key
-    {
-      source: "/dashboard/api-keys",
-      destination: "/dashboard/settings/api-keys",
-      permanent: false,
-    },
     // backwards compat: page moved to pages/settings/devices
-    {
-      source: "/dashboard/settings/account",
-      destination: "/dashboard/settings/devices",
-      permanent: false,
-    },
+
     {
       source: "/template/nft-drop",
       destination: "/template/erc721",
@@ -121,77 +160,17 @@ function redirects() {
     },
     {
       source: "/create-api-key",
-      destination: "/dashboard/settings/api-keys",
+      destination: "/team/~/~/projects",
       permanent: false,
     },
     {
       source: "/dashboard/settings",
-      destination: "/dashboard/settings/api-keys",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/connect",
-      destination: "/dashboard/connect/analytics",
+      destination: "/team/~/~/projects",
       permanent: false,
     },
     {
       source: "/dashboard/connect/playground",
       destination: "https://playground.thirdweb.com/connect/sign-in/button",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/wallet",
-      destination: "https://playground.thirdweb.com/connect/sign-in/button",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/rpc",
-      destination: "/dashboard/infrastructure/rpc-edge",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/storage",
-      destination: "/dashboard/infrastructure/storage",
-      permanent: false,
-    },
-    {
-      source: "/smart-wallet",
-      destination: "/account-abstraction",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/published",
-      destination: "/dashboard/publish",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/wallets",
-      destination: "https://playground.thirdweb.com/connect/sign-in/button",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/wallets/analytics",
-      destination: "/dashboard/connect/analytics",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/wallets/embedded",
-      destination: "/dashboard/connect/embedded-wallets",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/wallets/smart-wallet",
-      destination: "/dashboard/connect/account-abstraction",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/wallets/connect",
-      destination: "https://playground.thirdweb.com/connect/sign-in/button",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/infrastructure",
-      destination: "/dashboard/settings/storage",
       permanent: false,
     },
     {
@@ -202,26 +181,6 @@ function redirects() {
     {
       source: "/dashboard/infrastructure/rpc-edge",
       destination: "/chainlist",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/contracts",
-      destination: "/dashboard/contracts/deploy",
-      permanent: false,
-    },
-    {
-      source: "/solidity-sdk",
-      destination: "/build",
-      permanent: false,
-    },
-    {
-      source: "/connect-wallet",
-      destination: "/connect",
-      permanent: false,
-    },
-    {
-      source: "/wallet-sdk",
-      destination: "https://portal.thirdweb.com/wallet-sdk/latest",
       permanent: false,
     },
     {
@@ -244,25 +203,10 @@ function redirects() {
       destination: "/optimism",
       permanent: false,
     },
-    {
-      source: "/dashboard/payments/settings",
-      destination: "/dashboard/connect/pay",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/payments/contracts",
-      destination: "/dashboard/connect/pay",
-      permanent: false,
-    },
     // Redirecting as ambassadors lives in community now
     {
       source: "/ambassadors",
       destination: "/community/ambassadors",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/connect/embedded-wallets",
-      destination: "/dashboard/connect/in-app-wallets",
       permanent: false,
     },
     {
@@ -321,6 +265,7 @@ function redirects() {
       destination: "/account-abstraction",
       permanent: false,
     },
+    ...legacyDashboardToTeamRedirects,
   ];
 }
 

@@ -17,8 +17,8 @@ Learn how to accept fiat and crypto from your customers with Pay and trigger Eng
 
 ### Requirements
 
-- [A thirdweb Client ID](https://thirdweb.com/dashboard/settings/api-keys)
-- [An Engine Instance](https://thirdweb.com/dashboard/engine)
+- [A thirdweb Client ID](https://portal.thirdweb.com/typescript/v5/client)
+- [An Engine Instance](https://thirdweb.com/team/~/~/engine)
 
 ### Purchase Flow Overview
 
@@ -41,9 +41,9 @@ Now, let's get started.
 	<Step title="Set Up Thirdweb Engine">
 
     	1. If you haven't already, log in and [deploy an Engine
-    	instance](https://thirdweb.com/dashboard/engine)
+    	instance](https://thirdweb.com/team/~/~/engine)
 
-    	2. Create or import a backend wallet for Engine in [your Engine dashboard](https://thirdweb.com/dashboard/engine).
+    	2. Create or import a backend wallet for Engine in [your Engine dashboard](https://thirdweb.com/team/~/~/engine).
 
     	3. Send the required funds to the backend wallet
     		* For example, if purchasing with Arb Nova USDC, then your backend wallet should hold this ERC20 token.
@@ -85,7 +85,7 @@ Now, let's get started.
 
 </Step>
   <Step title="Integrate thirdweb Pay (Server)">
-		1. Log in & create a “Purchase Complete” webhook in [the Pay dashboard](https://thirdweb.com/dashboard/connect/pay).
+		1. Log in & create a “Purchase Complete” webhook in your Team > Connect > Pay > Webhooks page.
 		2. The [Pay webhook POST response](/connect/pay/webhooks#purchase-complete) will include the BuyWithCryptoStatus or BuyWithFiatStatus in the body.
 			* This will also include the purchaseData you previously passed (metadata identifying the customer information, etc.).
 			* A request will be sent on every status change.

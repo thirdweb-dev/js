@@ -1,4 +1,5 @@
 import { getTeamBySlug } from "@/api/team";
+import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 import { notFound } from "next/navigation";
 import { SettingsLayout } from "./SettingsLayout";
 
@@ -14,5 +15,10 @@ export default async function Layout(props: {
     notFound();
   }
 
-  return <SettingsLayout team={team}>{props.children}</SettingsLayout>;
+  return (
+    <SettingsLayout team={team}>
+      <BillingAlerts className="mb-10" />
+      {props.children}
+    </SettingsLayout>
+  );
 }

@@ -1,6 +1,5 @@
 "use client";
-
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { Separator } from "@/components/ui/separator";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Notifications } from "components/settings/Account/Notifications";
@@ -10,11 +9,7 @@ export const SettingsNotificationsPage = () => {
   const account = meQuery.data;
 
   if (!account) {
-    return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <Spinner className="size-10" />
-      </div>
-    );
+    return <GenericLoadingPage />;
   }
 
   return (

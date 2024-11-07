@@ -55,7 +55,7 @@ export function ResourcesDropdownButton() {
 
           <DropdownMenuItem>
             <Link href="/trending" className="w-full p-1">
-              Popular Contracts
+              Trending Contracts
             </Link>
           </DropdownMenuItem>
 

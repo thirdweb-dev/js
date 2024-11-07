@@ -749,9 +749,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             <Text>
               You will need to pass a client ID/secret key to use
               thirdweb&apos;s infrastructure services. If you don&apos;t have
-              any API keys yet you can create one for free from the{" "}
-              <Link href="/dashboard/settings/api-keys" color="primary.500">
-                dashboard settings
+              any API keys yet you can create one by creating a project for free
+              from the{" "}
+              <Link href="/team/~/~/projects" color="primary.500">
+                dashboard
               </Link>
               .
             </Text>

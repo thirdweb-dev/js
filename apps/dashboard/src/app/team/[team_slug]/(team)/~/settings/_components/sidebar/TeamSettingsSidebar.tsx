@@ -1,12 +1,14 @@
 import type { Team } from "@/api/team";
 import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ThirdwebClient } from "thirdweb";
 import { SidebarLink } from "./SidebarLink";
 import { getTeamSettingsLinks } from "./getTeamSettingsLinks";
 
 export function TeamSettingsSidebar(props: {
   team: Team;
   account: Pick<Account, "id"> | undefined;
+  client: ThirdwebClient;
 }) {
   const teamLinks = getTeamSettingsLinks(props.team.slug);
   const teamGroupLinks = teamLinks.filter((link) => link.group === "team");
@@ -24,6 +26,7 @@ export function TeamSettingsSidebar(props: {
           id: props.team.id,
           src: props.team.image || "",
         }}
+        client={props.client}
       />
       <RenderLinkGroup
         links={accountGroupLinks}
@@ -31,8 +34,9 @@ export function TeamSettingsSidebar(props: {
         team={props.team}
         titleAvatarIcon={{
           id: props.account?.id,
-          src: props.team.image || "",
+          src: "", // TODO - set account image
         }}
+        client={props.client}
       />
     </aside>
   );
@@ -49,6 +53,7 @@ function RenderLinkGroup(props: {
     id: string | undefined;
     src: string;
   };
+  client: ThirdwebClient;
 }) {
   return (
     <>
@@ -57,6 +62,7 @@ function RenderLinkGroup(props: {
           src={props.titleAvatarIcon.src}
           className="size-4"
           id={props.titleAvatarIcon.id}
+          client={props.client}
         />
         <p className="text-muted-foreground text-xs">{props.title}</p>
       </div>

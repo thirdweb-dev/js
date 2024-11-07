@@ -46,6 +46,8 @@ export function TeamGeneralSettingsPage(props: {
             image: uri,
           },
         });
+
+        router.refresh();
       }}
     />
   );

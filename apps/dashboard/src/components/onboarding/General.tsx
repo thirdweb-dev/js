@@ -21,14 +21,17 @@ const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
   const { disconnect } = useDisconnect();
 
   async function handleDisconnect() {
-    if (activeWallet) {
-      disconnect(activeWallet);
-    }
     await fetch("/api/auth/logout", {
       method: "POST",
-    }).catch((err) => {
-      console.error("Failed to log out", err);
-    });
+    })
+      .catch((err) => {
+        console.error("Failed to log out", err);
+      })
+      .then(() => {
+        if (activeWallet) {
+          disconnect(activeWallet);
+        }
+      });
   }
 
   return (

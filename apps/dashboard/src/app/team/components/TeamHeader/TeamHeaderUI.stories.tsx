@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ThirdwebProvider } from "thirdweb/react";
 import { teamsAndProjectsStub } from "../../../../stories/stubs";
@@ -33,6 +34,8 @@ export const Mobile: Story = {
   },
 };
 
+const client = getThirdwebClient();
+
 function Variants(props: {
   type: "mobile" | "desktop";
 }) {
@@ -62,6 +65,7 @@ function Variants(props: {
               email: "foo@example.com",
               id: "1",
             }}
+            client={client}
           />
         </BadgeContainer>
 
@@ -74,6 +78,7 @@ function Variants(props: {
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
             createProject={() => {}}
+            client={client}
           />
         </BadgeContainer>
 
@@ -89,6 +94,7 @@ function Variants(props: {
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
             createProject={() => {}}
+            client={client}
           />
         </BadgeContainer>
 
@@ -104,6 +110,7 @@ function Variants(props: {
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
             createProject={() => {}}
+            client={client}
           />
         </BadgeContainer>
       </div>

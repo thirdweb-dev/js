@@ -1,9 +1,8 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
-import { DashboardTypeCookieSetter } from "@/components/DashboardTypeCookieSetter";
-import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import { AppFooter } from "@/components/blocks/app-footer";
 import type React from "react";
+import { TabPathLinks } from "../../@/components/ui/tabs";
 import { TWAutoConnect } from "../components/autoconnect";
 import { AccountHeader } from "./components/AccountHeader";
 
@@ -14,36 +13,9 @@ export default async function AccountLayout(props: {
     <div className="flex min-h-screen flex-col bg-background">
       <div className="flex grow flex-col">
         <HeaderAndNav />
-        <div className="border-border border-b py-10">
-          <div className="mx-auto max-w-[1100px] px-6">
-            <h1 className="font-semibold text-3xl tracking-tight">
-              My Account
-            </h1>
-          </div>
-        </div>
-        <SidebarLayout
-          className="max-w-[1100px]"
-          sidebarLinks={[
-            {
-              href: "/account",
-              label: "Overview",
-              exactMatch: true,
-            },
-            {
-              href: "/account/wallets",
-              label: "Wallets",
-            },
-            {
-              href: "/account/settings",
-              label: "Settings",
-            },
-          ]}
-        >
-          {props.children}
-        </SidebarLayout>
+        {props.children}
       </div>
       <TWAutoConnect />
-      <DashboardTypeCookieSetter type="team" />
       <AppFooter />
     </div>
   );
@@ -60,8 +32,36 @@ async function HeaderAndNav() {
   );
 
   return (
-    <div className="border-b bg-muted/50">
+    <div className="bg-muted/50">
       <AccountHeader teamsAndProjects={teamsAndProjects} />
+      <TabPathLinks
+        tabContainerClassName="px-4 lg:px-6"
+        links={[
+          {
+            path: "/account",
+            name: "Overview",
+            exactMatch: true,
+          },
+          {
+            path: "/account/contracts",
+            name: "Contracts",
+            exactMatch: true,
+          },
+          // TODO - enable these links after they are functional
+          // {
+          //   path: "/account/settings",
+          //   name: "Settings",
+          // },
+          // {
+          //   path: "/account/wallets",
+          //   name: "Wallets",
+          // },
+          {
+            path: "/account/devices",
+            name: "Devices",
+          },
+        ]}
+      />
     </div>
   );
 }

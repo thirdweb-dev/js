@@ -305,6 +305,7 @@ async function TotalSponsoredCard({ data }: { data: UserOpStatsByChain[] }) {
             label: chain?.name || item.chainId || "Unknown",
             value: item.sponsoredUsd,
             icon: chain?.icon?.url ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={resolveSchemeWithErrorHandler({
                   client: getThirdwebClient(),

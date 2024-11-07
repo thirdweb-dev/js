@@ -58,7 +58,7 @@ export function ChainHeader(props: ChainHeaderProps) {
               }
             />
             <Button variant="default" asChild>
-              <Link href="https://thirdweb.com/dashboard" target="_blank">
+              <Link href="/team" target="_blank">
                 Get started with thirdweb
               </Link>
             </Button>

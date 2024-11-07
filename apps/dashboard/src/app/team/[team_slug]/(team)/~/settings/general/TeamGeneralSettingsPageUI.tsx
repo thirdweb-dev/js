@@ -31,7 +31,6 @@ export function TeamGeneralSettingsPageUI(props: {
         team={props.team}
         updateTeamField={props.updateTeamField}
       />
-      {/* THIS IS NOT WORKING - CAN"T UPDATE IMAGE */}
       <TeamAvatarFormControl
         updateTeamImage={props.updateTeamImage}
         avatar={props.team.image}

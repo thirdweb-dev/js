@@ -5,7 +5,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "predev": "pnpm run create-index",
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "prebuild": "pnpm run create-index",
     "build": "next build",
     "postbuild": "pnpm run extract-search-data && pnpm next-sitemap",

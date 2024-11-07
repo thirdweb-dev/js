@@ -103,7 +103,11 @@ export async function middleware(request: NextRequest) {
     if (firstTeam) {
       const modifiedPaths = [...paths];
       modifiedPaths[1] = firstTeam.slug;
-      return redirect(request, `/${modifiedPaths.join("/")}`);
+      return redirect(
+        request,
+        `/${modifiedPaths.join("/")}`,
+        request.nextUrl.searchParams.toString(),
+      );
     }
   }
   // END /<address>/... case

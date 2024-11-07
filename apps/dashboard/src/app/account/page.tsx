@@ -1,17 +1,45 @@
 import { getTeams } from "@/api/team";
+import { getMembers } from "@/api/team-members";
+import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
+import { redirect } from "next/navigation";
 import { AccountTeamsUI } from "./overview/AccountTeamsUI";
+import { getAccount } from "./settings/getAccount";
 
 export default async function Page() {
+  const account = await getAccount();
+
+  if (!account) {
+    redirect("/login?next=/account");
+  }
+
   const teams = await getTeams();
 
-  const teamsWithRole = teams.map((team) => ({
-    team,
-    // TODO fetch the role of current user in this team
-    role: "MEMBER" as const, // THIS IS A PLACEHOLDER !!!
-  }));
+  const teamsWithRole = (
+    await Promise.all(
+      teams.map(async (team) => {
+        const members = await getMembers(team.slug);
+        if (!members) {
+          return {
+            team,
+            role: "MEMBER" as const,
+          };
+        }
+
+        const accountMemberInfo = members.find(
+          (m) => m.accountId === account.id,
+        );
+
+        return {
+          team,
+          role: accountMemberInfo?.role || "MEMBER",
+        };
+      }),
+    )
+  ).filter((x) => !!x);
 
   return (
-    <div className="grow">
+    <div className="container grow py-8">
+      <BillingAlerts className="mb-10" />
       <AccountTeamsUI teamsWithRole={teamsWithRole} />
     </div>
   );

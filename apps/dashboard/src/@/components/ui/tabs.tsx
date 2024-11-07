@@ -197,6 +197,7 @@ export function TabPathLinks(props: {
         isActive: l.exactMatch
           ? pathname === l.path
           : pathname.startsWith(l.path),
+        isDisabled: l.isDisabled,
       }))}
     />
   );

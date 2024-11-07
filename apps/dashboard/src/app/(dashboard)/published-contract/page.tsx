@@ -10,7 +10,7 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
   if (!searchParams?.uri) {
     // redirect back out if we do not have a uri
-    return redirect("/dashboard");
+    return redirect("/team");
   }
 
   const contractMetadata = await fetchDeployMetadata({

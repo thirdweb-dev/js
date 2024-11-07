@@ -1,4 +1,5 @@
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
+import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 
 export default async function Layout(props: {
   children: React.ReactNode;
@@ -40,6 +41,7 @@ export default async function Layout(props: {
           },
         ]}
       >
+        <BillingAlerts className="mb-10" />
         {props.children}
       </SidebarLayout>
     </div>

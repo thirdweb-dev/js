@@ -87,7 +87,7 @@ describe("authorizeClient", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      "Incorrect key provided. You can view your active API keys at https://thirdweb.com/dashboard/settings",
+      "Incorrect key provided. You can view your active API keys at https://thirdweb.com/create-api-key",
     );
     expect(result.errorCode).toBe("SECRET_INVALID");
     expect(result.status).toBe(401);

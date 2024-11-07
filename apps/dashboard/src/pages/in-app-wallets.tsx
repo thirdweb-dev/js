@@ -223,7 +223,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("../../public/assets/landingpage/desktop/analytics.png")}
             mobileImage={require("../../public/assets/landingpage/mobile/analytics.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="/dashboard/wallets/analytics"
+            href="/team"
             colSpan={1}
           />
         </LandingGridSection>

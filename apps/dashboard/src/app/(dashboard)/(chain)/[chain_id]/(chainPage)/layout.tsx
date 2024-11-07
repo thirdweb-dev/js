@@ -205,7 +205,7 @@ export default async function ChainPageLayout(props: {
                   }
                 />
                 <Button variant="primary">
-                  <Link href="https://thirdweb.com/dashboard" target="_blank">
+                  <Link href="/team" target="_blank">
                     Get started
                   </Link>
                 </Button>

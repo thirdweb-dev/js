@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { EllipsisIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -97,14 +98,19 @@ function TeamRow(props: {
   team: Team;
   role: TeamAccountRole;
 }) {
+  const client = useThirdwebClient();
   const plan = getValidTeamPlan(props.team);
 
   return (
     <div className="flex items-center justify-between gap-2">
       {/* start */}
       <div className="flex items-center gap-4">
-        {/* TODO - set image  */}
-        <GradientAvatar className="size-8" src={""} id={props.team.id} />
+        <GradientAvatar
+          className="size-8"
+          src={props.team.image}
+          id={props.team.id}
+          client={client}
+        />
 
         <div>
           <div className="flex items-center gap-3">

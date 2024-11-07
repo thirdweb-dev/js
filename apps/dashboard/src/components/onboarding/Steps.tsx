@@ -188,11 +188,11 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
     () => [
       {
         key: Step.keys,
-        title: "Create an API Key",
+        title: "Create a Project",
         description:
-          "An API key is required to use thirdweb's services through the SDK and CLI.",
-        cta: "Create key",
-        href: "/dashboard/settings/api-keys",
+          "An Client ID or Secret Key is required to use thirdweb's services through the SDK and CLI. You can create get one by creating a project",
+        cta: "Create Project",
+        href: "/team/~/~/projects",
         canSkip: true,
       },
       {
@@ -201,7 +201,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         description:
           "Add your payment method to ensure no disruption to thirdweb services when you exceed free monthly limits.",
         cta: "Add payment",
-        href: "/dashboard/settings/billing",
+        href: "/team/~/~/settings/billing",
         canSkip: true,
       },
       {
@@ -230,7 +230,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
             data: { step: Step.optimismCredits },
           });
         },
-        href: "/dashboard/settings/gas-credits",
+        href: "/team/~/~/settings/credits",
         learnMore:
           "https://blog.thirdweb.com/accelerating-the-superchain-with-optimism",
         rightImageDark: require("../../../public/assets/dashboard/optimism-credits-dark.png"),

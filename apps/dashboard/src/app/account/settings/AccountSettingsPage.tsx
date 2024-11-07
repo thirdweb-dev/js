@@ -1,6 +1,7 @@
 "use client";
 
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
 import { AccountSettingsPageUI } from "./AccountSettingsPageUI";
@@ -10,24 +11,27 @@ export function AccountSettingsPage(props: {
   client: ThirdwebClient;
 }) {
   return (
-    <AccountSettingsPageUI
-      account={props.account}
-      updateAccountImage={async (file) => {
-        if (file) {
-          // upload to IPFS
-          const ipfsUri = await upload({
-            client: props.client,
-            files: [file],
-          });
+    <div>
+      <BillingAlerts className="mb-10" />
+      <AccountSettingsPageUI
+        account={props.account}
+        updateAccountImage={async (file) => {
+          if (file) {
+            // upload to IPFS
+            const ipfsUri = await upload({
+              client: props.client,
+              files: [file],
+            });
 
-          // TODO - Implement updating the account image with uri
-          console.log(ipfsUri);
-        } else {
-          // TODO - Implement deleting the account image
-        }
+            // TODO - Implement updating the account image with uri
+            console.log(ipfsUri);
+          } else {
+            // TODO - Implement deleting the account image
+          }
 
-        throw new Error("Not implemented");
-      }}
-    />
+          throw new Error("Not implemented");
+        }}
+      />
+    </div>
   );
 }

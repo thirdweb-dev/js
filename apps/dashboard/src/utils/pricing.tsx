@@ -199,7 +199,7 @@ export const FAQ_GENERAL = [
       <Text>
         Nope! You can self serve and upgrade to the Growth plan in the Dashboard
         under{" "}
-        <Link href="/dashboard/settings/billing" color="blue.500">
+        <Link href="/team/~/~/settings/billing" color="blue.500">
           Billing
         </Link>{" "}
         whenever you are ready!
@@ -212,7 +212,7 @@ export const FAQ_GENERAL = [
       <Text>
         You can review your usage history at any time on the Dashboard by
         visiting the{" "}
-        <Link href="/dashboard/settings/usage" color="blue.500">
+        <Link href="/team/~/~/usage" color="blue.500">
           Usage
         </Link>{" "}
         tab under Settings.

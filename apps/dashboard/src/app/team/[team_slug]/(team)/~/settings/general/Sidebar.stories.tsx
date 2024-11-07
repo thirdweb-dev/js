@@ -1,3 +1,4 @@
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { teamStub } from "../../../../../../../stories/stubs";
 import {
@@ -35,6 +36,8 @@ export const Mobile: Story = {
   },
 };
 
+const client = getThirdwebClient();
+
 function Story(props: {
   type: "mobile" | "desktop";
 }) {
@@ -48,6 +51,7 @@ function Story(props: {
               account={{
                 id: "x",
               }}
+              client={client}
             />
           </BadgeContainer>
 
@@ -55,6 +59,7 @@ function Story(props: {
             <TeamSettingsSidebar
               team={teamStub("foo", "free")}
               account={undefined}
+              client={client}
             />
           </BadgeContainer>
         </div>

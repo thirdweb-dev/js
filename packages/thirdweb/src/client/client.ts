@@ -73,7 +73,7 @@ export type ThirdwebClient = {
 /**
  * Creates a Thirdweb client using the provided client ID (client-side) or secret key (server-side).
  *
- * Get your client ID and secret key from the Thirdweb dashboard [here](https://thirdweb.com/dashboard/settings/api-keys).
+ * Get your client ID and secret key from the Thirdweb dashboard [here](https://thirdweb.com/create-api-key).
  * **Never share your secret key with anyone.
  *
  * A client is necessary for most functions in the thirdweb SDK. It provides access to thirdweb APIs including built-in RPC, storage, and more.

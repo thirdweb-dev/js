@@ -1,3 +1,33 @@
+import connectIcon from "/public/assets/landingpage/connect-icon.png";
+import contractsIcon from "/public/assets/landingpage/contracts-icon.png";
+import engineIcon from "/public/assets/landingpage/engine-icon.png";
+import authIcon from "/public/assets/product-icons/auth.png";
+import cliIcon from "/public/assets/product-icons/cli.svg";
+import contractsProductIcon from "/public/assets/product-icons/contracts.png";
+import dashboardProductIcon from "/public/assets/product-icons/dashboard.svg";
+import deployIcon from "/public/assets/product-icons/deploy.png";
+import embeddedWalletIcon from "/public/assets/product-icons/embedded-wallet.png";
+import engineProductIcon from "/public/assets/product-icons/engine.png";
+import extensionIcon from "/public/assets/product-icons/extensions.png";
+import netIcon from "/public/assets/product-icons/net.svg";
+import payIcon from "/public/assets/product-icons/pay.svg";
+import publishIcon from "/public/assets/product-icons/publish.png";
+import reactIcon from "/public/assets/product-icons/react.svg";
+import rpcEdgeIcon from "/public/assets/product-icons/rpc-edge.png";
+import smartWalletIcon from "/public/assets/product-icons/smart-wallet.png";
+import solidityIcon from "/public/assets/product-icons/solidity.svg";
+import storageIcon from "/public/assets/product-icons/storage.png";
+import typescriptIcon from "/public/assets/product-icons/typescript.svg";
+import unityIcon from "/public/assets/product-icons/unity.svg";
+import walletSdkIcon from "/public/assets/product-icons/wallet-sdk.png";
+import chainsIcon from "/public/assets/solutions-icons/chains.svg";
+import gamingIcon from "/public/assets/solutions-icons/gaming.svg";
+import datastoreIcon from "/public/assets/tw-icons/datastore.png";
+import docsIcon from "/public/assets/tw-icons/docs.svg";
+import guidesIcon from "/public/assets/tw-icons/guides.svg";
+import missionIcon from "/public/assets/tw-icons/mission.svg";
+import opensourceIcon from "/public/assets/tw-icons/opensource.svg";
+import templatesIcon from "/public/assets/tw-icons/templates.svg";
 import type { SectionItemProps, SectionProps } from "./types";
 
 export const PRODUCT_SECTIONS: SectionProps[] = [
@@ -6,7 +36,7 @@ export const PRODUCT_SECTIONS: SectionProps[] = [
     label: "connect",
     description: "Onboard, authenticate and manage users",
     link: "/connect",
-    icon: require("../../../../../public/assets/landingpage/connect-icon.png"),
+    icon: connectIcon,
     section: "connect-v2",
   },
   {
@@ -14,7 +44,7 @@ export const PRODUCT_SECTIONS: SectionProps[] = [
     label: "contracts",
     description: "Create, deploy, and interact with smart contracts",
     link: "/contracts",
-    icon: require("../../../../../public/assets/landingpage/contracts-icon.png"),
+    icon: contractsIcon,
     section: "contracts-v2",
   },
   {
@@ -22,7 +52,7 @@ export const PRODUCT_SECTIONS: SectionProps[] = [
     label: "engine",
     description: "Connect your application to decentralized networks",
     link: "/engine",
-    icon: require("../../../../../public/assets/landingpage/engine-icon.png"),
+    icon: engineIcon,
     section: "engine-v2",
   },
 ];
@@ -34,7 +64,7 @@ export const MOBILE_PRODUCTS_SECTIONS: SectionItemProps[] = [
     description: "Onboard, authenticate and manage users",
     link: "/connect",
     dashboardLink: "/connect",
-    icon: require("../../../../../public/assets/landingpage/connect-icon.png"),
+    icon: connectIcon,
     section: "connect",
     inLandingPage: true,
   },
@@ -43,7 +73,7 @@ export const MOBILE_PRODUCTS_SECTIONS: SectionItemProps[] = [
     label: "contracts",
     description: "Create, deploy, and interact with smart contracts",
     link: "/contracts",
-    icon: require("../../../../../public/assets/landingpage/contracts-icon.png"),
+    icon: contractsIcon,
     section: "contracts",
   },
   {
@@ -52,7 +82,7 @@ export const MOBILE_PRODUCTS_SECTIONS: SectionItemProps[] = [
     description: "Connect your application to decentralized networks",
     link: "/engine",
     dashboardLink: "/engine",
-    icon: require("../../../../../public/assets/product-icons/engine.png"),
+    icon: engineProductIcon,
     section: "infrastructure",
   },
 ];
@@ -63,8 +93,8 @@ export const PRODUCTS: SectionItemProps[] = [
     label: "deploy",
     description: "Contract deployment built for any use-case",
     link: "/deploy",
-    dashboardLink: "/dashboard/contracts/deploy",
-    icon: require("../../../../../public/assets/product-icons/deploy.png"),
+    dashboardLink: "/team/~/~/contracts",
+    icon: deployIcon,
     section: "contracts",
     inLandingPage: true,
   },
@@ -73,8 +103,8 @@ export const PRODUCTS: SectionItemProps[] = [
     label: "contractkit",
     description: "Write your own smart contracts",
     link: "/build",
-    dashboardLink: "/dashboard/contracts/build",
-    icon: require("../../../../../public/assets/product-icons/extensions.png"),
+    dashboardLink: "https://portal.thirdweb.com/contracts/build/overview",
+    icon: extensionIcon,
     section: "contracts",
     inLandingPage: true,
   },
@@ -83,7 +113,7 @@ export const PRODUCTS: SectionItemProps[] = [
     label: "explore",
     description: "Ready-to-deploy contracts",
     link: "/smart-contracts",
-    icon: require("../../../../../public/assets/product-icons/contracts.png"),
+    icon: contractsProductIcon,
     section: "contracts",
     inLandingPage: true,
   },
@@ -92,7 +122,7 @@ export const PRODUCTS: SectionItemProps[] = [
     label: "publish",
     description: "Publish your contracts on-chain",
     link: "/publish",
-    icon: require("../../../../../public/assets/product-icons/publish.png"),
+    icon: publishIcon,
     section: "contracts",
   },
   {
@@ -102,7 +132,7 @@ export const PRODUCTS: SectionItemProps[] = [
       "Flexible user sign-up flow with wallet and social sign-in methods",
     link: "/connect",
     dashboardLink: "https://playground.thirdweb.com/connect/sign-in/button",
-    icon: require("../../../../../public/assets/product-icons/wallet-sdk.png"),
+    icon: walletSdkIcon,
     section: "connect",
     inLandingPage: true,
   },
@@ -111,8 +141,9 @@ export const PRODUCTS: SectionItemProps[] = [
     label: "smart-wallet",
     description: "Complete toolkit for Account Abstraction",
     link: "/account-abstraction",
-    dashboardLink: "/dashboard/connect/account-abstraction",
-    icon: require("../../../../../public/assets/product-icons/smart-wallet.png"),
+    dashboardLink:
+      "https://portal.thirdweb.com/connect/account-abstraction/overview",
+    icon: smartWalletIcon,
     section: "connect",
     inLandingPage: true,
   },
@@ -121,8 +152,8 @@ export const PRODUCTS: SectionItemProps[] = [
     label: "embedded-wallets",
     description: "Email & social login wallets for your customers",
     link: "/embedded-wallets",
-    dashboardLink: "/dashboard/connect/in-app-wallets",
-    icon: require("../../../../../public/assets/product-icons/embedded-wallet.png"),
+    dashboardLink: "https://portal.thirdweb.com/connect/in-app-wallet/overview",
+    icon: embeddedWalletIcon,
     section: "connect",
     inLandingPage: true,
   },
@@ -132,8 +163,8 @@ export const PRODUCTS: SectionItemProps[] = [
     description:
       "Easily integrate fiat onramps and cross-chain crypto purchases",
     link: "/pay",
-    dashboardLink: "/dashboard/connect/pay",
-    icon: require("../../../../../public/assets/product-icons/pay.svg"),
+    dashboardLink: "https://portal.thirdweb.com/connect/pay/overview",
+    icon: payIcon,
     section: "connect",
     inLandingPage: true,
   },
@@ -142,7 +173,7 @@ export const PRODUCTS: SectionItemProps[] = [
     label: "auth",
     description: "Authenticate users with their wallets",
     link: "/auth",
-    icon: require("../../../../../public/assets/product-icons/auth.png"),
+    icon: authIcon,
     section: "connect",
   },
   {
@@ -150,7 +181,7 @@ export const PRODUCTS: SectionItemProps[] = [
     label: "storage",
     description: "Secure, fast, decentralized storage",
     link: "/storage",
-    icon: require("../../../../../public/assets/product-icons/storage.png"),
+    icon: storageIcon,
     section: "infrastructure",
   },
   {
@@ -158,7 +189,7 @@ export const PRODUCTS: SectionItemProps[] = [
     label: "rpc-edge",
     description: "Enterprise-grade RPCs, for free",
     link: "/rpc-edge",
-    icon: require("../../../../../public/assets/product-icons/rpc-edge.png"),
+    icon: rpcEdgeIcon,
     section: "infrastructure",
   },
   {
@@ -166,8 +197,8 @@ export const PRODUCTS: SectionItemProps[] = [
     label: "engine",
     description: "HTTP server with contract APIs and backend wallets",
     link: "/engine",
-    dashboardLink: "/dashboard/engine",
-    icon: require("../../../../../public/assets/product-icons/engine.png"),
+    dashboardLink: "/team/~/~/engine",
+    icon: engineProductIcon,
     section: "infrastructure",
     inLandingPage: true,
   },
@@ -179,7 +210,7 @@ export const SOLUTIONS: SectionItemProps[] = [
     label: "gaming",
     description: "Integrate web3 into games",
     link: "/solutions/gaming",
-    icon: require("../../../../../public/assets/solutions-icons/gaming.svg"),
+    icon: gamingIcon,
     section: "solutions",
   },
   {
@@ -187,7 +218,7 @@ export const SOLUTIONS: SectionItemProps[] = [
     label: "chains",
     description: "All-in-one dev tools for your chain",
     link: "/solutions/chains",
-    icon: require("../../../../../public/assets/solutions-icons/chains.svg"),
+    icon: chainsIcon,
     section: "solutions",
   },
 ];
@@ -198,7 +229,7 @@ export const COMPANY: SectionItemProps[] = [
     label: "mission",
     description: "Why we work in web3",
     link: "/mission",
-    icon: require("../../../../../public/assets/tw-icons/mission.svg"),
+    icon: missionIcon,
     section: "company",
   },
   {
@@ -206,7 +237,7 @@ export const COMPANY: SectionItemProps[] = [
     label: "blog",
     description: "Our latest news and updates",
     link: "https://blog.thirdweb.com",
-    icon: require("../../../../../public/assets/tw-icons/datastore.png"),
+    icon: datastoreIcon,
     section: "company",
   },
 ];
@@ -235,7 +266,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "docs",
     description: "Complete thirdweb documentation",
     link: "https://portal.thirdweb.com",
-    icon: require("../../../../../public/assets/tw-icons/docs.svg"),
+    icon: docsIcon,
     section: "resources",
   },
   {
@@ -243,7 +274,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "templates",
     description: "Ready-to-ship repositories",
     link: "/templates",
-    icon: require("../../../../../public/assets/tw-icons/templates.svg"),
+    icon: templatesIcon,
     section: "resources",
   },
   {
@@ -251,7 +282,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "guides",
     description: "Learn how to build with thirdweb",
     link: "https://blog.thirdweb.com/guides",
-    icon: require("../../../../../public/assets/tw-icons/guides.svg"),
+    icon: guidesIcon,
     section: "resources",
   },
   {
@@ -259,7 +290,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "open-source",
     description: "Learn how to contribute to thirdweb",
     link: "/open-source",
-    icon: require("../../../../../public/assets/tw-icons/opensource.svg"),
+    icon: opensourceIcon,
     section: "resources",
   },
   {
@@ -267,7 +298,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "typescript",
     description: "Integrate web3 into your app",
     link: "https://portal.thirdweb.com/typescript/v5",
-    icon: require("../../../../../public/assets/product-icons/typescript.svg"),
+    icon: typescriptIcon,
     section: "sdks",
   },
   {
@@ -275,7 +306,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "react",
     description: "Components and Hooks for wallets and contracts",
     link: "https://portal.thirdweb.com/typescript/v5/react",
-    icon: require("../../../../../public/assets/product-icons/react.svg"),
+    icon: reactIcon,
     section: "sdks",
   },
   {
@@ -283,7 +314,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "react-native",
     description: "React Native hooks and components for mobile apps",
     link: "https://portal.thirdweb.com/react-native/v0",
-    icon: require("../../../../../public/assets/product-icons/react.svg"),
+    icon: reactIcon,
     section: "sdks",
   },
   {
@@ -291,7 +322,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "unity",
     description: "Build games with blockchain and web3 capabilities",
     link: "https://portal.thirdweb.com/unity",
-    icon: require("../../../../../public/assets/product-icons/unity.svg"),
+    icon: unityIcon,
     section: "sdks",
   },
   {
@@ -299,7 +330,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: ".net",
     description: "Build .NET apps and Godot games",
     link: "https://portal.thirdweb.com/dotnet",
-    icon: require("../../../../../public/assets/product-icons/net.svg"),
+    icon: netIcon,
     section: "sdks",
   },
   {
@@ -307,7 +338,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "dashboard",
     description: "Manage and analyze contract activity",
     link: "/dashboards",
-    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    icon: dashboardProductIcon,
     section: "tools",
   },
   {
@@ -315,7 +346,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "solidity",
     description: "Build custom smart contracts efficiently",
     link: "https://portal.thirdweb.com/contracts/build/overview",
-    icon: require("../../../../../public/assets/product-icons/solidity.svg"),
+    icon: solidityIcon,
     section: "sdks",
   },
   {
@@ -323,7 +354,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "cli",
     description: "Tools to create, build, and deploy web3 applications",
     link: "https://portal.thirdweb.com/cli",
-    icon: require("../../../../../public/assets/product-icons/cli.svg"),
+    icon: cliIcon,
     section: "tools",
   },
   {
@@ -331,7 +362,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "transaction-simulator",
     description: "",
     link: "/tools/transaction-simulator",
-    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    icon: dashboardProductIcon,
     section: "tools",
   },
   {
@@ -339,7 +370,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "wei-converter",
     description: "",
     link: "https://thirdweb.com/tools/wei-converter",
-    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    icon: dashboardProductIcon,
     section: "tools",
   },
   {
@@ -347,7 +378,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "hex-converter",
     description: "",
     link: "https://thirdweb.com/tools/hex-converter",
-    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    icon: dashboardProductIcon,
     section: "tools",
   },
   {
@@ -355,7 +386,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "unixtime-converter",
     description: "",
     link: "https://thirdweb.com/tools/unixtime-converter",
-    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    icon: dashboardProductIcon,
     section: "tools",
   },
   {
@@ -363,7 +394,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "keccak256-converter",
     description: "",
     link: "https://thirdweb.com/tools/keccak256-converter",
-    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    icon: dashboardProductIcon,
     section: "tools",
   },
 ];

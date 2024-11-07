@@ -1,7 +1,4 @@
 import { DocImage, Callout, Steps, Step } from "@doc";
-import createKeyImage from "../assets/create-key.png";
-import credentialsImage from "../assets/credentials.png";
-import descriptiveNameImage from "../assets/descriptive-name.png";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
@@ -14,26 +11,25 @@ export const metadata = createMetadata({
 	},
 });
 
-# Create an API Key
+# Create a Project
 
 <Steps>
 
 <Step title="Login to dashboard">
 
-Log in to the dashboard and navigate to **[Settings > API
-Keys](https://thirdweb.com/dashboard/settings/api-keys)** view.
+Log in to the dashboard and go to your **[Team projects page](https://thirdweb.com/team/~/~/projects)**
 
 </Step>
 
-<Step title="Create API Key">
-Select `Create API Key`
+<Step title="Create Project">
 
-<DocImage src={createKeyImage} />
+Click on Add New > Create Project
+
 </Step>
 
 <Step title="Assign a name">
 
-Assign a descriptive name to the API Key.
+Assign a descriptive name to the Project.
 
 </Step>
 
@@ -43,7 +39,6 @@ Input the domains you want to restrict your application to in Allowed Domains th
 1. Authorize all domains by selecting the checkbox or inputting `*` into the text field
 2. Authorize local URLs with `localhost:<port>`
 
-<DocImage src={descriptiveNameImage} />
 
 </Step>
 
@@ -58,7 +53,6 @@ Store your secret key in a secure location and confirm that you have stored it b
 	access restrictions.
 </Callout>
 
-<DocImage src={credentialsImage} />
 
 </Step>
 </Steps>

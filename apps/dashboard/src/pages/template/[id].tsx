@@ -198,12 +198,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               NFT Drop
             </Link>{" "}
             or import your existing one using the{" "}
-            <Link
-              href="/dashboard"
-              isExternal
-              color="blue.300"
-              fontWeight="500"
-            >
+            <Link href="/team" isExternal color="blue.300" fontWeight="500">
               dashboard
             </Link>
             .
@@ -295,12 +290,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               Marketplace V3
             </Link>{" "}
             smart contract using the{" "}
-            <Link
-              href="/dashboard"
-              isExternal
-              color="blue.300"
-              fontWeight="500"
-            >
+            <Link href="/team" isExternal color="blue.300" fontWeight="500">
               dashboard
             </Link>
             .
@@ -390,12 +380,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               NFT collection
             </Link>{" "}
             or import your existing one using the
-            <Link
-              href="/dashboard"
-              isExternal
-              color="blue.300"
-              fontWeight="500"
-            >
+            <Link href="/team" isExternal color="blue.300" fontWeight="500">
               dashboard
             </Link>
             .

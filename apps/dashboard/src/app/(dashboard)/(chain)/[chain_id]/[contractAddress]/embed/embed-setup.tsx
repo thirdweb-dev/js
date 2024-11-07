@@ -304,7 +304,6 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   return (
     <Flex gap={8} direction="column">
       <LazyCreateAPIKeyDialog
-        wording="api-key"
         prefill={{
           name: "Embed API Key",
           domains: "embed.ipfscdn.io",

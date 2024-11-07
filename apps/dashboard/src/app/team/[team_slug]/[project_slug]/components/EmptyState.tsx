@@ -6,7 +6,6 @@ import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
-import { ArrowRightIcon } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import accountAbstractionIcon from "../../../../../../public/assets/tw-icons/account-abstraction.svg";
@@ -63,15 +62,9 @@ export function EmptyState() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" asChild>
+          <Button variant="outline" asChild className="min-w-36">
             <Link href="https://portal.thirdweb.com/connect" target="_blank">
               View Docs
-            </Link>
-          </Button>
-          <Button asChild variant="primary">
-            <Link href="https://thirdweb.com/dashboard/settings/api-keys">
-              Get Started
-              <ArrowRightIcon className="ml-2 size-4" />
             </Link>
           </Button>
         </div>
@@ -138,7 +131,7 @@ function SDKBadge({
   href,
 }: { icon: React.FC<{ className?: string }>; label: string; href: string }) {
   return (
-    <div className="rounded-full bg-neutral-200 px-2.5 py-1 dark:bg-neutral-800">
+    <div className="rounded-full bg-muted px-2.5 py-1">
       <DocLink link={href} label={label} icon={icon} />
     </div>
   );

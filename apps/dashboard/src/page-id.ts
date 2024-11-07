@@ -61,52 +61,14 @@ export enum PageId {
   //  general product pages
   // ---------------------------------------------------------------------------
 
-  // thirdweb.com/dashboard/infrastructure/storage
-  DashboardSettingsStorage = "dashboard-storage",
-
-  // thirdweb.com/dashboard/contracts/build
-  DashboardContractsBuild = "dashboard-contracts-build",
-
-  // thirdweb.com/dashboard/contracts
-  Contracts = "contracts",
-
   // thirdweb.com/events
   Events = "events",
 
   // thirdweb..com/mission
   Mission = "mission",
 
-  // thirdweb.com/gas
-  GasEstimator = "gas-estimator",
-
   // thirdweb.com/404
   PageNotFound = "page-not-found",
-
-  // ---------------------------------------------------------------------------
-  //  engine pages
-  // ---------------------------------------------------------------------------
-
-  // thirdweb.com/dashboard/engine
-  EngineManage = "engine-manage",
-  EngineCreate = "engine-create",
-
-  // ---------------------------------------------------------------------------
-  //  settings pages
-  // ---------------------------------------------------------------------------
-
-  // thirdweb.com/dashboard/settings/api-keys
-  SettingsApiKeys = "settings-api-keys",
-
-  // thirdweb.com/dashboard/settings/api-keys/:id
-  SettingsApiKey = "settings-api-key",
-
-  // thirdweb.com/dashboard/settings/devices
-  SettingsDevices = "settings-devices",
-  // thirdweb.com/dashboard/settings/usage
-  SettingsUsage = "settings-usage",
-
-  // thirdweb.com/dashboard/settings/notifications
-  SettingsNotifications = "settings-notifications",
 
   // ---------------------------------------------------------------------------
   //  solutions pages

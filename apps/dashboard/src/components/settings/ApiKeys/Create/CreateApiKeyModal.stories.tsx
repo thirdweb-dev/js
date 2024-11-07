@@ -21,48 +21,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DesktopProjectWording: Story = {
-  args: {
-    wording: "project",
-  },
+export const Desktop: Story = {
+  args: {},
 };
 
-export const MobileProjectWording: Story = {
-  args: {
-    wording: "project",
-  },
+export const Mobile: Story = {
+  args: {},
   parameters: {
     viewport: mobileViewport("iphone14"),
-  },
-};
-
-export const DesktopAPIKeyWording: Story = {
-  args: {
-    wording: "api-key",
-  },
-};
-
-export const MobileAPIKeyWording: Story = {
-  args: {
-    wording: "api-key",
-  },
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
-};
-
-export const DesktopAPIKeyWordingWithPrefill: Story = {
-  args: {
-    wording: "api-key",
-    prefill: {
-      name: "Foo",
-      domains: "foo.bar",
-    },
   },
 };
 
 function Story(props: {
-  wording: "project" | "api-key";
   prefill?: CreateAPIKeyPrefillOptions;
 }) {
   const [isOpen, setIsOpen] = useState(true);
@@ -79,7 +49,6 @@ function Story(props: {
   return (
     <div className="flex grow items-center justify-center p-6">
       <CreateAPIKeyDialogUI
-        wording={props.wording}
         open={isOpen}
         onOpenChange={setIsOpen}
         createKeyMutation={mutation}

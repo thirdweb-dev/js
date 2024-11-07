@@ -417,7 +417,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
           <LandingEndCTA
             title="Integrate in a few lines of code."
             trackingCategory={TRACKING_CATEGORY}
-            ctaLink="/dashboard/connect/playground"
+            ctaLink="https://playground.thirdweb.com/connect/sign-in/button"
             gradient="linear(to-r, #3385FF, #7BB0FF)"
             contactUsBg="#0E0E0E"
             contactUsHover={{ background: "#0E0E0E" }}

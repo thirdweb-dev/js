@@ -8,7 +8,7 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 import { CircleAlertIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { formatToDollars } from "./CreditsButton";
+import { formatToDollars } from "./formatToDollars";
 
 interface CreditsItemProps {
   credit?: BillingCredit;
@@ -124,7 +124,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
         {!hasAppliedForOpGrant && isOpCredit && (
           <Button asChild size="sm" variant="outline" className="bg-background">
             <Link
-              href="/dashboard/settings/gas-credits"
+              href="/team/~/~/settings/credits"
               onClick={() => {
                 trackEvent({
                   category: "op-sponsorship",

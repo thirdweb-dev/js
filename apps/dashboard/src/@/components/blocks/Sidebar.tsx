@@ -51,7 +51,8 @@ export function RenderSidebarLinks(props: { links: SidebarLink[] }) {
       {props.links.map((link, i) => {
         if ("group" in link) {
           return (
-            <div className={cn({ "mt-6": i !== 0 })}>
+            // biome-ignore lint/suspicious/noArrayIndexKey: items won't be reordered
+            <div className={cn({ "mt-6": i !== 0 })} key={i}>
               <p className={cn("px-3 py-2 font-medium text-foreground")}>
                 {link.group}
               </p>
@@ -63,7 +64,8 @@ export function RenderSidebarLinks(props: { links: SidebarLink[] }) {
         const isExternal = link.href.startsWith("http");
         return (
           <NavLink
-            key={link.href}
+            // biome-ignore lint/suspicious/noArrayIndexKey: items won't be reordered
+            key={i}
             href={link.href}
             className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-muted"
             activeClassName="text-foreground"

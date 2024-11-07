@@ -62,7 +62,7 @@ import { createThirdwebClient } from "thirdweb";
 import { createAuth } from "thirdweb/auth";
 
 const client = createThirdwebClient({
-clientId: '1234567890', // get yours at https://thirdweb.com/dashboard/settings/api-keys
+clientId: '1234567890', // get yours by creating a project on https://thirdweb.com/create-api-key
 });
 
 const thirdwebAuth = createAuth({
@@ -80,14 +80,14 @@ export default function App() {
 				client={client}
 				auth={{
 					getLoginPayload: async (params) => {
-						// here you should call your backend, using generatePayload to return 
+						// here you should call your backend, using generatePayload to return
 						// a SIWE compliant login payload to the client
 						return thirdwebAuth.generatePayload(params)
 					},
 					doLogin: async (params) => {
              					// here you should call your backend to verify the signed payload passed in params
 						// this will verify that the signature matches the intended wallet
-						const verifiedPayload = await thirdwebAuth.verifyPayload(params); 						
+						const verifiedPayload = await thirdwebAuth.verifyPayload(params);
 						setLoggedIn(verifiedPayload.valid)
 					},
 					isLoggedIn: async () => {
@@ -114,7 +114,7 @@ export default function App() {
 import { createAuth } from "thirdweb/auth";
 
 const client = createThirdwebClient({
-	clientId: "1234567890", // get yours at https://thirdweb.com/dashboard/settings/api-keys
+	clientId: "1234567890", // get yours at https://thirdweb.com/create-api-key
 });
 
 const auth = createAuth({

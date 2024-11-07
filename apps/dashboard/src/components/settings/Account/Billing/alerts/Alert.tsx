@@ -266,7 +266,7 @@ export function BillingAlertsUI(props: {
                 title={alert.title}
                 description={alert.description}
                 ctaText="Verify payment method"
-                ctaHref="/dashboard/settings/billing"
+                ctaHref="/team/~/~/settings/billing"
                 label="verifyPaymentAlert"
                 dashboardAccount={dashboardAccount}
               />
@@ -282,7 +282,7 @@ export function BillingAlertsUI(props: {
                 title={alert.title}
                 description={alert.description}
                 ctaText="Upgrade your plan"
-                ctaHref="/dashboard/settings/billing"
+                ctaHref="/team/~/~/settings/billing"
                 label="upgradePlanAlert"
                 dashboardAccount={dashboardAccount}
               />
@@ -323,7 +323,7 @@ const AddPaymentNotification: React.FC<AddPaymentNotificationProps> = ({
   title,
   description = "To ensure there are no future interruptions to your services, please add your payment method.",
   ctaText = "Add a payment method",
-  ctaHref = "/dashboard/settings/billing",
+  ctaHref = "/team/~/~/settings/billing",
   label = "addPaymentAlert",
   showCTAs = true,
   dashboardAccount,
@@ -338,7 +338,7 @@ const AddPaymentNotification: React.FC<AddPaymentNotificationProps> = ({
     setIsPaymentMethodOpen(false);
   };
 
-  const isBilling = ctaHref === "/dashboard/settings/billing";
+  const isBilling = ctaHref === "/team/~/~/settings/billing";
 
   return (
     <Alert

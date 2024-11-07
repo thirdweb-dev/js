@@ -7,7 +7,7 @@ import {
   Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { EngineTierCard } from "components/engine/create/tier-card";
+import { EngineTierCard } from "app/team/[team_slug]/(team)/~/engine/(general)/create/tier-card";
 import { PricingSection } from "components/homepage/sections/PricingSection";
 import { LandingFAQ } from "components/landing-pages/faq";
 import { LandingLayout } from "components/landing-pages/layout";
@@ -32,7 +32,7 @@ import {
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
-import { EcosystemWalletPricingCard } from "../app/(dashboard)/dashboard/connect/ecosystem/create/components/pricing-card";
+import { EcosystemWalletPricingCard } from "../app/team/[team_slug]/(team)/~/ecosystem/create/components/pricing-card";
 import { FAQ_GENERAL, FAQ_PRICING, PRICING_SECTIONS } from "../utils/pricing";
 import type { ThirdwebNextPage } from "../utils/types";
 
@@ -354,7 +354,7 @@ const EnginePricing = ({ isMobile }: { isMobile: boolean }) => {
               label: "clicked-cloud-hosted",
               tier: "STANDARD",
             });
-            router.push("/dashboard/engine");
+            router.push("/team/~/~/engine");
           }}
         />
 
@@ -369,7 +369,7 @@ const EnginePricing = ({ isMobile }: { isMobile: boolean }) => {
               label: "clicked-cloud-hosted",
               tier: "PREMIUM",
             });
-            router.push("/dashboard/engine");
+            router.push("/team/~/~/engine");
           }}
         />
 
@@ -413,7 +413,7 @@ const EcosystemPricing = () => {
         </p>
         <div className="flex flex-row gap-4">
           <Button size="lg" asChild className="gap-2">
-            <NextLink href="/dashboard/connect/ecosystem/create">
+            <NextLink href="/team/~/~/ecosystem/create">
               <span>Get Started</span>
               <ChevronRight className="size-4" />
             </NextLink>

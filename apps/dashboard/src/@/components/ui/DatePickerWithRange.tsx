@@ -50,7 +50,7 @@ export function DatePickerWithRange(props: {
           id="date"
           variant="outline"
           className={cn(
-            "justify-start gap-2 bg-card text-left font-normal",
+            "justify-start gap-2 text-left font-normal",
             props.className,
           )}
         >

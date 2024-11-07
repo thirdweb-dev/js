@@ -1,5 +1,7 @@
 import { Img } from "@/components/blocks/Img";
 import { useMemo } from "react";
+import type { ThirdwebClient } from "thirdweb";
+import { resolveSchemeWithErrorHandler } from "../../../lib/resolveSchemeWithErrorHandler";
 import { cn } from "../../../lib/utils";
 
 const gradients = [
@@ -32,6 +34,7 @@ export function GradientAvatar(props: {
   src: string | undefined;
   id: string | undefined;
   className: string;
+  client: ThirdwebClient;
 }) {
   const gradient = useMemo(() => {
     if (!props.id) {
@@ -40,9 +43,16 @@ export function GradientAvatar(props: {
     return getGradientForString(props.id);
   }, [props.id]);
 
+  const resolvedSrc = props.src
+    ? resolveSchemeWithErrorHandler({
+        client: props.client,
+        uri: props.src,
+      })
+    : props.src;
+
   return (
     <Img
-      src={props.src}
+      src={resolvedSrc}
       className={cn("rounded-full", props.className)}
       fallback={
         gradient ? (

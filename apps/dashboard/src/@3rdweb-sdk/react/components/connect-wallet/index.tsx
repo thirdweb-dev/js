@@ -15,7 +15,6 @@ import { usePathname } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import type { Chain } from "thirdweb";
 import {
-  AutoConnect,
   ConnectButton,
   type NetworkSelectorProps,
   useConnectModal,
@@ -126,8 +125,6 @@ export const CustomConnectWallet = (props: {
         <div className="flex h-[48px] w-[144px] items-center justify-center rounded-lg border border-border bg-muted">
           <Spinner className="size-4" />
         </div>
-        {/* need auto connect here so that we actually connect */}
-        <AutoConnect client={thirdwebClient} />
       </>
     );
   }
@@ -147,8 +144,6 @@ export const CustomConnectWallet = (props: {
             Sign In
           </Link>
         </Button>
-        {/* need auto connect here so that we actually connect */}
-        <AutoConnect client={thirdwebClient} />
       </>
     );
   }

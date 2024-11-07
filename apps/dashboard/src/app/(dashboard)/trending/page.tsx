@@ -1,6 +1,5 @@
 import { type SortBy, type TimeRange, fetchTopContracts } from "lib/search";
 import type { Metadata } from "next";
-import { ContractsSidebarLayout } from "../../../core-ui/sidebar/contracts";
 import { TrendingContractSection } from "./components/trending-table";
 
 export const metadata: Metadata = {
@@ -26,7 +25,7 @@ export default async function DashboardContractTrendingPage(props: {
   });
 
   return (
-    <ContractsSidebarLayout>
+    <div className="container py-8">
       <h1 className="mb-5 font-semibold text-2xl tracking-tight md:text-3xl">
         Trending Contracts
       </h1>
@@ -35,6 +34,6 @@ export default async function DashboardContractTrendingPage(props: {
         searchParams={await props.searchParams}
         showPagination={true}
       />
-    </ContractsSidebarLayout>
+    </div>
   );
 }

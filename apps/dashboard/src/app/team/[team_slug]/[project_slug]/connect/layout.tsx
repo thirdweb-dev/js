@@ -1,4 +1,6 @@
+import type { SidebarLink } from "@/components/blocks/Sidebar";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
+import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 
 export default async function Layout(props: {
   params: Promise<{
@@ -9,18 +11,15 @@ export default async function Layout(props: {
 }) {
   const { team_slug, project_slug } = await props.params;
 
-  const links: { label: string; href: string }[] = [
+  const links: SidebarLink[] = [
     {
       label: "Analytics",
-      href: `/team/${team_slug}/${project_slug}/connect/analytics`,
+      href: `/team/${team_slug}/${project_slug}/connect`,
+      exactMatch: true,
     },
     {
       label: "In-App Wallets",
       href: `/team/${team_slug}/${project_slug}/connect/in-app-wallets`,
-    },
-    {
-      label: "Ecosystem Wallets",
-      href: `/team/${team_slug}/${project_slug}/connect/ecosystem`,
     },
     {
       label: "Account Abstraction",
@@ -36,5 +35,10 @@ export default async function Layout(props: {
     },
   ];
 
-  return <SidebarLayout sidebarLinks={links}>{props.children}</SidebarLayout>;
+  return (
+    <SidebarLayout sidebarLinks={links}>
+      <BillingAlerts className="mb-10" />
+      {props.children}
+    </SidebarLayout>
+  );
 }

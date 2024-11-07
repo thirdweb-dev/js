@@ -21,7 +21,6 @@ interface AsyncContractNameCellProps {
 }
 
 // The row components for the contract table, in the <Your contracts> page
-// url: /dashboard/contracts/deploy
 
 export const AsyncContractNameCell = memo(
   ({ cell, linkOverlay }: AsyncContractNameCellProps) => {

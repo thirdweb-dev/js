@@ -19,7 +19,7 @@ export function AppFooter(props: AppFooterProps) {
   return (
     <footer
       className={cn(
-        "w-full border-border border-t bg-white py-6 md:py-8 dark:bg-muted/50",
+        "w-full border-border border-t bg-muted/50 py-6 md:py-8",
         props.className,
       )}
     >

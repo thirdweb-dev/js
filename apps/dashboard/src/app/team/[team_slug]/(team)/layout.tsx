@@ -2,7 +2,7 @@ import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { notFound } from "next/navigation";
-import { TeamHeader } from "../../components/TeamHeader/TeamHeader";
+import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 
 export default async function TeamLayout(props: {
   children: React.ReactNode;
@@ -23,9 +23,9 @@ export default async function TeamLayout(props: {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full grow flex-col">
       <div className="bg-muted/50">
-        <TeamHeader
+        <TeamHeaderLoggedIn
           currentTeam={team}
           teamsAndProjects={teamsAndProjects}
           currentProject={undefined}
@@ -36,8 +36,24 @@ export default async function TeamLayout(props: {
           links={[
             {
               path: `/team/${params.team_slug}`,
-              name: "Projects",
+              name: "Overview",
               exactMatch: true,
+            },
+            {
+              path: `/team/${params.team_slug}/~/projects`,
+              name: "Projects",
+            },
+            {
+              path: `/team/${params.team_slug}/~/contracts`,
+              name: "Contracts",
+            },
+            {
+              path: `/team/${params.team_slug}/~/engine`,
+              name: "Engines",
+            },
+            {
+              path: `/team/${params.team_slug}/~/ecosystem`,
+              name: "Ecosystems",
             },
             {
               path: `/team/${params.team_slug}/~/usage`,
@@ -51,7 +67,7 @@ export default async function TeamLayout(props: {
         />
       </div>
 
-      <main className="grow">{props.children}</main>
+      <main className="flex grow flex-col">{props.children}</main>
     </div>
   );
 }

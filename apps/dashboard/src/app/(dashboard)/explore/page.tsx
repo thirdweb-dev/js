@@ -1,9 +1,3 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
 import { ContractRow } from "components/explore/contract-row";
 import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
 import { PublishUpsellCard } from "components/explore/upsells/publish-submit";
@@ -23,13 +17,6 @@ export const metadata: Metadata = {
 export default async function ExplorePage() {
   return (
     <div className="flex flex-col">
-      <Breadcrumb className="border-border border-b px-6 py-4">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbPage>Explore</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       <div className="container flex flex-col gap-4 py-8">
         <h1 className="mb-3 font-bold text-3xl tracking-tighter lg:text-5xl">
           Explore

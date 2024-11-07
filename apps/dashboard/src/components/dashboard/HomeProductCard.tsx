@@ -16,6 +16,7 @@ export const HomeProductCard: React.FC<HomeProductCardProps> = ({
   isFromLandingPage,
 }) => {
   const trackEvent = useTrack();
+  const href = (isFromLandingPage ? product.link : product.dashboardLink) || "";
   return (
     <div className="relative flex h-full items-center gap-3.5 overflow-hidden rounded-lg border border-border bg-muted/50 p-4 hover:bg-muted md:min-h-24">
       {product.icon && (
@@ -25,9 +26,8 @@ export const HomeProductCard: React.FC<HomeProductCardProps> = ({
       )}
       <div>
         <Link
-          href={
-            (isFromLandingPage ? product.link : product.dashboardLink) || ""
-          }
+          href={href}
+          target={href.startsWith("http") ? "_blank" : undefined}
           className="font-semibold tracking-tight before:absolute before:inset-0"
           onClick={() => {
             trackEvent({

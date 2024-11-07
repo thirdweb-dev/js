@@ -77,7 +77,7 @@ const PageNotFound: ThirdwebNextPage = () => {
           <TrackedLink
             category="page-not-found"
             label="homepage"
-            href="/dashboard"
+            href="/team"
             color="blue.500"
           >
             dashboard

@@ -1,14 +1,13 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { IconLogo } from "components/logo";
-import type { Dispatch, SetStateAction } from "react";
 import type { ComponentWithChildren } from "types/component-with-children";
 
 interface OnboardingModalProps {
   isOpen: boolean;
   wide?: boolean;
   // Pass this props to make the modal closable (it will enable backdrop + the "x" icon)
-  onOpenChange?: Dispatch<SetStateAction<boolean>>;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const OnboardingModal: ComponentWithChildren<OnboardingModalProps> = ({

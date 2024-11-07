@@ -1,12 +1,16 @@
 import { AppFooter } from "@/components/blocks/app-footer";
 import { ErrorProvider } from "../../contexts/error-handler";
-import { DashboardHeader } from "../components/Header/DashboardHeader";
+import { TeamHeader } from "../team/components/TeamHeader/team-header";
 
-export default function DashboardLayout(props: { children: React.ReactNode }) {
+export default function DashboardLayout(props: {
+  children: React.ReactNode;
+}) {
   return (
     <ErrorProvider>
       <div className="flex min-h-screen flex-col bg-background">
-        <DashboardHeader />
+        <div className="border-border border-b bg-muted/50">
+          <TeamHeader />
+        </div>
         <div className="flex grow flex-col">{props.children}</div>
         <AppFooter />
       </div>

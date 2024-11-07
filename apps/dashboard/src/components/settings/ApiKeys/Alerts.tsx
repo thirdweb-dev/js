@@ -50,7 +50,7 @@ export const SmartWalletsBillingAlert = ({
               To use them on Mainnet,
             </Text>
             <TrackedLink
-              href="/dashboard/settings/billing"
+              href="/team/~/~/settings/billing"
               category="api_keys"
               label="smart_wallets_missing_billing"
               fontWeight="medium"

@@ -69,7 +69,7 @@ const RPCEdgeLanding: ThirdwebNextPage = () => {
           titleWithGradient="for free"
           subtitle="Free RPCs with high data reliability, throughput, and uptime — so that you can build production-grade web3 apps that scale."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="/dashboard/infrastructure/rpc-edge"
+          ctaLink="/chainlist"
           contactUsTitle="Book Demo"
           gradient="linear(to-r, #9786DF, #9786DF)"
           image={require("../../public/assets/product-pages/hero/desktop-hero-rpc-edge.png")}
@@ -170,7 +170,7 @@ const RPCEdgeLanding: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="/dashboard/infrastructure/rpc-edge"
+          ctaLink="/chainlist"
           gradient="linear(to-r, #BFA3DA, #84309C, #C735B0)"
         />
       </Container>
