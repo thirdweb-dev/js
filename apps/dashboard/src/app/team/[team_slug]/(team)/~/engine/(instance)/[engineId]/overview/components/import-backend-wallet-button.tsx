@@ -112,8 +112,9 @@ export const ImportBackendWalletButton: React.FC<
   invariant(selectedOption, "Selected a valid backend wallet type.");
 
   // List all wallet types only if Engine is updated to support it.
+  // Disallow importing smart backend wallets.
   const walletTypeOptions = supportsMultipleWalletTypes
-    ? EngineBackendWalletOptions
+    ? EngineBackendWalletOptions.filter(({ key }) => !key.startsWith("smart:"))
     : [selectedOption];
 
   const isAwsKmsConfigured = !!walletConfig.awsAccessKeyId;

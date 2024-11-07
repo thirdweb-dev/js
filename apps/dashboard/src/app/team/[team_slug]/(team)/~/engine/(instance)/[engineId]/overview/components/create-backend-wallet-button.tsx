@@ -108,13 +108,11 @@ export const CreateBackendWalletButton: React.FC<
     );
   }
 
-  const isAwsKmsConfigured = !!walletConfig.awsAccessKeyId;
-  const isGcpKmsConfigured = !!walletConfig.gcpKmsKeyRingId;
-
   const isNotConfigured =
     (["aws-kms", "smart:aws-kms"].includes(walletType) &&
-      !isAwsKmsConfigured) ||
-    (["gcp-kms", "smart:gcp-kms"].includes(walletType) && !isGcpKmsConfigured);
+      !walletConfig.awsAccessKeyId) ||
+    (["gcp-kms", "smart:gcp-kms"].includes(walletType) &&
+      !walletConfig.gcpKmsKeyRingId);
 
   return (
     <>
@@ -145,10 +143,9 @@ export const CreateBackendWalletButton: React.FC<
                     tooltip={null}
                   >
                     <Select
-                      onValueChange={(value) => {
-                        form.reset();
-                        form.setValue("type", value as EngineBackendWalletType);
-                      }}
+                      onValueChange={(value) =>
+                        form.setValue("type", value as EngineBackendWalletType)
+                      }
                       value={form.watch("type")}
                     >
                       <SelectTrigger>
@@ -177,8 +174,7 @@ export const CreateBackendWalletButton: React.FC<
                     </FormDescription>
                   </FormFieldSetup>
 
-                  {(walletType === "aws-kms" && !isAwsKmsConfigured) ||
-                  (walletType === "gcp-kms" && !isGcpKmsConfigured) ? (
+                  {isNotConfigured ? (
                     // Warning if not configured
                     <Alert variant="warning">
                       <CircleAlertIcon className="size-5" />

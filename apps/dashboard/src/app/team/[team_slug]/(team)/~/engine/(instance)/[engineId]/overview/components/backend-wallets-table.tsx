@@ -31,7 +31,7 @@ import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
-import { DownloadIcon, Trash2Icon, UploadIcon } from "lucide-react";
+import { DownloadIcon, PencilIcon, UploadIcon } from "lucide-react";
 import QRCode from "qrcode";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -164,7 +164,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
         isFetched={isFetched}
         onMenuClick={[
           {
-            icon: <Trash2Icon className="size-4" />,
+            icon: <PencilIcon className="size-4" />,
             text: "Edit",
             onClick: (wallet) => {
               setSelectedBackendWallet(wallet);
