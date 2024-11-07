@@ -10,8 +10,7 @@ import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import {
   getPlatformFeeInfo,
   setPlatformFeeInfo,
@@ -36,11 +35,11 @@ const CommonPlatformFeeSchema = z.object({
   /**
    * platform fee basis points
    */
-  platform_fee_basis_points: BasisPointsSchema.default(0),
+  platform_fee_basis_points: BasisPointsSchema,
   /**
    * platform fee recipient address
    */
-  platform_fee_recipient: AddressOrEnsSchema.default(ZERO_ADDRESS),
+  platform_fee_recipient: AddressOrEnsSchema,
 });
 
 export const SettingsPlatformFees = ({
@@ -84,14 +83,6 @@ export const SettingsPlatformFees = ({
             action: "set-platform-fees",
             label: "attempt",
           });
-          // In the v4 hook we defaulted recipient to address_zero and bps to `0`
-          // but let's actually throw an error here for better transparency
-          if (!data.platform_fee_basis_points) {
-            return toast.error("Please enter valid basis points.");
-          }
-          if (!data.platform_fee_recipient) {
-            return toast.error("Please enter a valid platform fee recipient.");
-          }
           const transaction = setPlatformFeeInfo({
             contract,
             platformFeeRecipient: data.platform_fee_recipient,
