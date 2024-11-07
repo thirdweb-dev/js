@@ -1,5 +1,33 @@
 # thirdweb
 
+## 5.67.0
+
+### Minor Changes
+
+- [#5326](https://github.com/thirdweb-dev/js/pull/5326) [`f5f5ae6`](https://github.com/thirdweb-dev/js/commit/f5f5ae63b441e0c0848c8ec88e0d1a81638b852b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Add SiteLink component for creating wallet-aware links between thirdweb-enabled sites. This component automatically adds wallet connection parameters to the target URL when a wallet is connected, enabling seamless wallet state sharing between sites.
+
+  Example:
+
+  ```tsx
+  import { SiteLink } from "thirdweb/react";
+
+  function App() {
+    return (
+      <SiteLink
+        href="https://thirdweb.com"
+        client={thirdwebClient}
+        ecosystem={{ id: "ecosystem.thirdweb" }}
+      >
+        Visit thirdweb.com with connected wallet
+      </SiteLink>
+    );
+  }
+  ```
+
+### Patch Changes
+
+- [#5341](https://github.com/thirdweb-dev/js/pull/5341) [`1db950e`](https://github.com/thirdweb-dev/js/commit/1db950e678332eb151b647bfe158f35d565fbc10) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make encryption key optional for in-app and ecosystem wallets custom auth
+
 ## 5.66.0
 
 ### Minor Changes
