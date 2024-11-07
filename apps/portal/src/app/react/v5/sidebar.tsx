@@ -392,6 +392,21 @@ export const sidebar: SideBar = {
     },
     { separator: true },
     {
+      name: "Advanced",
+      isCollapsible: false,
+      links: [
+        {
+          name: "UI Components",
+          links: ["SiteEmbed", "SiteLink"].map((name) => ({
+            name,
+            href: `${slug}/${name}`,
+            icon: <CodeIcon />,
+          })),
+        },
+      ],
+    },
+    { separator: true },
+    {
       name: "Migrate from v4",
       href: `${slug}/migrate`,
       links: [
