@@ -7,35 +7,16 @@ const meta = {
   component: Component,
   parameters: {
     layout: "centered",
+    nextjs: {
+      appDirectory: true,
+    },
   },
 } satisfies Meta<typeof Component>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Basic: Story = {
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-  },
-};
-
-export const WithPositiveTrend: Story = {
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-  },
-};
-
-export const WithNegativeTrend: Story = {
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-  },
-};
+export const Basic: Story = {};
 
 function Component() {
   return (

@@ -6,7 +6,7 @@ import {
 } from "./TeamHeaderLoggedOut";
 
 const meta = {
-  title: "Team/TeamHeaderLoggedOut",
+  title: "Headers/TeamHeader/LoggedOut",
   component: Variants,
   parameters: {
     nextjs: {

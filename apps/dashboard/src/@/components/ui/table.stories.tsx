@@ -13,7 +13,7 @@ import { BadgeContainer, mobileViewport } from "../../../stories/utils";
 import { Badge } from "./badge";
 
 const meta = {
-  title: "Shadcn/table",
+  title: "Shadcn/Table",
   component: Component,
   parameters: {
     layout: "centered",

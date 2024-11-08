@@ -3,7 +3,7 @@ import { BadgeContainer, mobileViewport } from "../../stories/utils";
 import { StepsCard } from "./StepsCard";
 
 const meta = {
-  title: "blocks/StepsCard",
+  title: "Blocks/Cards/StepsCard",
   component: Component,
   parameters: {
     layout: "centered",

@@ -8,7 +8,7 @@ import { BadgeContainer, mobileViewport } from "stories/utils";
 import { RecentEngineAlertsSectionUI } from "./RecentEngineAlerts";
 
 const meta = {
-  title: "engine/alerts/recent",
+  title: "Engine/Alerts/Recent Alerts",
   component: Story,
   parameters: {
     nextjs: {

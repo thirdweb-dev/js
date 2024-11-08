@@ -11,10 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { EllipsisIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { TeamPlanBadge } from "../../components/TeamPlanBadge";
 import { getValidTeamPlan } from "../../team/components/TeamHeader/getValidTeamPlan";
 import { SearchInput } from "../components/SearchInput";
@@ -24,6 +24,7 @@ export function AccountTeamsUI(props: {
     team: Team;
     role: TeamAccountRole;
   }[];
+  client: ThirdwebClient;
 }) {
   const [teamSearchValue, setTeamSearchValue] = useState("");
   const teamsToShow = !teamSearchValue
@@ -70,7 +71,7 @@ export function AccountTeamsUI(props: {
               key={v.team.id}
               className="border-border border-b p-4 last:border-b-0"
             >
-              <TeamRow team={v.team} role={v.role} />
+              <TeamRow team={v.team} role={v.role} client={props.client} />
             </li>
           );
         })}
@@ -97,8 +98,8 @@ export function AccountTeamsUI(props: {
 function TeamRow(props: {
   team: Team;
   role: TeamAccountRole;
+  client: ThirdwebClient;
 }) {
-  const client = useThirdwebClient();
   const plan = getValidTeamPlan(props.team);
 
   return (
@@ -109,7 +110,7 @@ function TeamRow(props: {
           className="size-8"
           src={props.team.image}
           id={props.team.id}
-          client={client}
+          client={props.client}
         />
 
         <div>

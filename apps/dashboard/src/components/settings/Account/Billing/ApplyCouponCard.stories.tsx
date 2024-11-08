@@ -4,7 +4,7 @@ import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
 import { type ActiveCouponResponse, ApplyCouponCardUI } from "./CouponCard";
 
 const meta = {
-  title: "billing/Coupons/ApplyCoupon",
+  title: "Billing/Coupons/ApplyCoupon",
   component: Story,
   parameters: {
     nextjs: {

@@ -126,7 +126,7 @@ const withIconsData = [
 
 function Component() {
   return (
-    <div className="container space-y-8 py-8">
+    <div className="container max-w-[600px] space-y-8 py-8">
       <BadgeContainer label="Basic">
         <StatBreakdownCard
           title="Sponsored Gas"

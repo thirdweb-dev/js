@@ -1,5 +1,6 @@
 import type { Team } from "@/api/team";
 import { Toaster } from "@/components/ui/sonner";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { mobileViewport } from "../../../../../../../stories/utils";
 import {
@@ -55,6 +56,7 @@ function Story() {
           console.log(value);
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
+        client={getThirdwebClient()}
       />
       <ComponentVariantions />
       <Toaster richColors />

@@ -10,7 +10,7 @@ import {
 } from "./AccountHeaderUI";
 
 const meta = {
-  title: "Account/Account Header",
+  title: "Headers/AccountHeader",
   component: Variants,
   parameters: {
     nextjs: {

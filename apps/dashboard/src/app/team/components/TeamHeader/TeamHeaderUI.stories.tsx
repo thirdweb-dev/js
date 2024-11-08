@@ -7,7 +7,7 @@ import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
 import { TeamHeaderDesktopUI, TeamHeaderMobileUI } from "./TeamHeaderUI";
 
 const meta = {
-  title: "Team/Team selector",
+  title: "Headers/TeamHeader/LoggedIn",
   component: Variants,
   parameters: {
     nextjs: {

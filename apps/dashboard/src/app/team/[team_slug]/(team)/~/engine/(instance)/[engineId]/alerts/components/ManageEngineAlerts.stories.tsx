@@ -13,7 +13,7 @@ import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ManageEngineAlertsSectionUI } from "./ManageEngineAlerts";
 
 const meta = {
-  title: "engine/alerts/manage",
+  title: "Engine/Alerts/Manage Alerts",
   component: Story,
   parameters: {
     nextjs: {
