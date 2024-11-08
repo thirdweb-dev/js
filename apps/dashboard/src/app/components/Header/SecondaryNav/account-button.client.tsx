@@ -104,7 +104,7 @@ export function AccountButton(props: {
             variant="ghost"
             className="justify-start px-3 text-muted-foreground text-sm hover:text-foreground"
           >
-            <Link href="/">Home Page</Link>
+            <Link href="/home">Home Page</Link>
           </Button>
 
           {props.account && (
