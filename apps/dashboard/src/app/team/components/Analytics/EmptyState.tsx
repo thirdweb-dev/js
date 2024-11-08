@@ -6,17 +6,18 @@ import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
+import { ArrowRightIcon } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-import accountAbstractionIcon from "../../../../../../public/assets/tw-icons/account-abstraction.svg";
-import authIcon from "../../../../../../public/assets/tw-icons/auth.svg";
-import payIcon from "../../../../../../public/assets/tw-icons/pay.svg";
-import socialAuthIcon from "../../../../../../public/assets/tw-icons/social-auth.svg";
-import walletsIcon from "../../../../../../public/assets/tw-icons/wallets.svg";
+import accountAbstractionIcon from "../../../../../public/assets/tw-icons/account-abstraction.svg";
+import authIcon from "../../../../../public/assets/tw-icons/auth.svg";
+import payIcon from "../../../../../public/assets/tw-icons/pay.svg";
+import socialAuthIcon from "../../../../../public/assets/tw-icons/social-auth.svg";
+import walletsIcon from "../../../../../public/assets/tw-icons/wallets.svg";
 
 export function EmptyState() {
   return (
-    <div className="flex items-center justify-center md:min-h-[500px]">
+    <div className="flex items-start justify-center md:min-h-[500px]">
       <div className="group container flex flex-col items-center justify-center gap-8 rounded-lg border bg-card p-6 py-24">
         <div className="flex max-w-[500px] flex-col items-center justify-center gap-6">
           <AnimatedIcons />
@@ -62,9 +63,9 @@ export function EmptyState() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" asChild className="min-w-36">
+          <Button variant="primary" asChild className="min-w-36">
             <Link href="https://portal.thirdweb.com/connect" target="_blank">
-              View Docs
+              View Docs <ArrowRightIcon className="ml-2 h-4 w-auto" />
             </Link>
           </Button>
         </div>

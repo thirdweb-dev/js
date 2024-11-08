@@ -24,11 +24,11 @@ import {
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
 
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { CombinedBarChartCard } from "./components/CombinedBarChartCard";
-import { EmptyState } from "./components/EmptyState";
-import { PieChartCard } from "./components/PieChartCard";
-import { ProjectOverviewHeader } from "./components/ProjectOverviewHeader";
-import { StatBreakdownCard } from "./components/StatBreakdownCard";
+import { AnalyticsHeader } from "../../components/Analytics/AnalyticsHeader";
+import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChartCard";
+import { EmptyState } from "../../components/Analytics/EmptyState";
+import { PieChartCard } from "../../components/Analytics/PieChartCard";
+import { StatBreakdownCard } from "../../components/Analytics/StatBreakdownCard";
 
 type PageParams = {
   team_slug: string;
@@ -111,10 +111,10 @@ export default async function ProjectOverviewPage(props: PageProps) {
     userOpUsage.length === 0;
 
   return (
-    <div className="">
+    <div className="pb-16">
       <div className="w-full border-border-800 border-b px-6 dark:bg-muted/50">
-        <ProjectOverviewHeader
-          project={project}
+        <AnalyticsHeader
+          title={project.name}
           interval={interval}
           range={range}
         />

@@ -15,7 +15,7 @@ import type {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { ZERO_ADDRESS } from "thirdweb";
 
-export function projectStub(id: string, teamId: string) {
+function projectStub(id: string, teamId: string) {
   const project: Project = {
     bundleIds: [] as string[],
     createdAt: new Date(),
