@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import emptyStateHeaderImage from "/public/assets/engine/empty-state-header.png";
+import emptyStateHeaderImage from "../../../../../../../../../public/assets/engine/empty-state-header.png";
 import { EngineInstancesTable } from "./engine-instances-table";
 
 export const EngineInstancesList = (props: {

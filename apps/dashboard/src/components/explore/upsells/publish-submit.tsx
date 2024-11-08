@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import Image from "next/image";
-import exploreFeatureImage from "/public/assets/landingpage/explore-featured.png";
-import heroIcon1 from "/public/assets/product-pages/publish/hero-icon-1.png";
-import heroIcon2 from "/public/assets/product-pages/publish/hero-icon-2.png";
+import exploreFeatureImage from "../../../../public/assets/landingpage/explore-featured.png";
+import heroIcon1 from "../../../../public/assets/product-pages/publish/hero-icon-1.png";
+import heroIcon2 from "../../../../public/assets/product-pages/publish/hero-icon-2.png";
 
 export const PublishUpsellCard: React.FC = () => {
   return (
