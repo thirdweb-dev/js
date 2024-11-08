@@ -363,7 +363,7 @@ function DetailsModal(props: {
           {chainNameQuery.name || `Unknown chain #${walletChain?.id}`}
           <Text color="secondaryText" size="xs">
             {balanceQuery.data ? (
-              formatNumber(Number(balanceQuery.data.displayValue), 5)
+              formatNumber(Number(balanceQuery.data.displayValue), 9)
             ) : (
               <Skeleton height="1em" width="100px" />
             )}{" "}

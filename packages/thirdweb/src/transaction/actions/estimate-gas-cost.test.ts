@@ -22,11 +22,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("estimateGasCost", () => {
         transaction: tx,
       });
       expect(result).toMatchInlineSnapshot(`
-          {
-            "ether": "0.001196638702568277",
-            "wei": 1196638702568277n,
-          }
-        `);
+        {
+          "ether": "0.002468675264234022",
+          "wei": 2468675264234022n,
+        }
+      `);
     });
 
     it("should estimateGasCost native token", async () => {
@@ -41,8 +41,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("estimateGasCost", () => {
       });
       expect(result).toMatchInlineSnapshot(`
         {
-          "ether": "0.00052179661420146",
-          "wei": 521796614201460n,
+          "ether": "0.00107647061028156",
+          "wei": 1076470610281560n,
         }
       `);
     });
@@ -61,8 +61,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("estimateGasCost", () => {
       });
       expect(result).toMatchInlineSnapshot(`
         {
-          "ether": "0.000021198198952138",
-          "wei": 21198198952138n,
+          "ether": "0.000023420415571618",
+          "wei": 23420415571618n,
         }
       `);
     });
