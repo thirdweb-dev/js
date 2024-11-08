@@ -60,7 +60,7 @@ export function PieChartCard({
         <PieChart title={title} data={processedData} />
       </CardContent>
       <CardFooter className="no-scrollbar flex max-w-full justify-center p-6 pt-0 max-md:overflow-x-auto">
-        <div className="flex flex-nowrap justify-center gap-x-4 gap-y-2.5 md:flex-wrap">
+        <div className="flex flex-wrap justify-center gap-x-4 gap-y-2.5">
           {processedData.map(
             ({ label, fill }: { label: string; fill?: string }) => (
               <div key={fill} className="flex items-center gap-2">
