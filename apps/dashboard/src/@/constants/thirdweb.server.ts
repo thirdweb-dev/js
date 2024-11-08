@@ -54,16 +54,25 @@ export function getThirdwebClient(jwt?: string) {
               chain: transaction.chain,
             },
             transaction: serializedTx,
+          }).catch((e) => {
+            console.warn(
+              "No zk paymaster data available on chain ",
+              transaction.chain.id,
+              e,
+            );
+            return undefined;
           });
           return {
             account,
             transaction: {
               ...transaction,
-              eip712: {
-                ...transaction.eip712,
-                paymaster: pmData.paymaster,
-                paymasterInput: pmData.paymasterInput,
-              },
+              eip712: pmData
+                ? {
+                    ...transaction.eip712,
+                    paymaster: pmData.paymaster,
+                    paymasterInput: pmData.paymasterInput,
+                  }
+                : transaction.eip712,
             },
           };
         }

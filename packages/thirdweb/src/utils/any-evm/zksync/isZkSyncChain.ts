@@ -18,7 +18,8 @@ export async function isZkSyncChain(chain: Chain) {
     chain.id === 37111 ||
     chain.id === 978658 ||
     chain.id === 531050104 ||
-    chain.id === 4457845
+    chain.id === 4457845 ||
+    chain.id === 2741
   ) {
     return true;
   }
