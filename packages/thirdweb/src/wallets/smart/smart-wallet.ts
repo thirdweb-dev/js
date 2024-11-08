@@ -167,6 +167,7 @@ export function smartWallet(
         client: options.client,
         walletType: "smart",
         walletAddress: account.address,
+        chainId: chain.id,
       });
       // return account
       return account;
@@ -187,6 +188,7 @@ export function smartWallet(
         client: options.client,
         walletType: "smart",
         walletAddress: account.address,
+        chainId: chain.id,
       });
       // return account
       emitter.emit("accountChanged", account);

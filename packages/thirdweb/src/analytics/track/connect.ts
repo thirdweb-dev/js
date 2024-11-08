@@ -10,8 +10,9 @@ export async function trackConnect(args: {
   ecosystem?: Ecosystem;
   walletType: string;
   walletAddress: string;
+  chainId?: number;
 }) {
-  const { client, ecosystem, walletType, walletAddress } = args;
+  const { client, ecosystem, walletType, walletAddress, chainId } = args;
   return track({
     client,
     ecosystem,
@@ -20,6 +21,7 @@ export async function trackConnect(args: {
       action: "connect",
       walletType,
       walletAddress,
+      chainId,
     },
   });
 }

@@ -106,6 +106,7 @@ export function createInAppWallet(args: {
         ecosystem,
         walletType: walletId,
         walletAddress: account.address,
+        chainId: chain.id,
       });
       // return only the account
       return account;
@@ -153,6 +154,7 @@ export function createInAppWallet(args: {
         ecosystem,
         walletType: walletId,
         walletAddress: account.address,
+        chainId: chain.id,
       });
       // return only the account
       return account;
