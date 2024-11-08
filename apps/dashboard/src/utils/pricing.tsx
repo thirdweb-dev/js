@@ -1,5 +1,5 @@
 import { type AccountPlan, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
-import { Link, Text } from "tw-components";
+import Link from "next/link";
 
 export const CONTACT_US_URL =
   "https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro";
@@ -173,75 +173,81 @@ export const FAQ_GENERAL = [
   {
     title: "How do I get started?",
     description: (
-      <Text>
+      <span className="text-muted-foreground">
         thirdweb Starter plan is completely usage based. Simply connect your
         wallet to start using thirdweb platform. You only need to create an
         account with your email address and add payment method when you&apos;re
         approaching your monthly free usage credits (so that we can send you
         billing updates if you go over).
-      </Text>
+      </span>
     ),
   },
   {
     title: "Which plan is right for me?",
     description: (
-      <Text>
+      <span className="text-muted-foreground">
         If you are looking for production grade infrastructure, advanced
         customizations, and higher limits for transactions, Growth tier is the
         right choice. If you are looking for dedicated solutions and support
         SLAs, we recommend signing up for the Pro plan.
-      </Text>
+      </span>
     ),
   },
   {
     title: "Do I need to talk to the sales team for the Growth plan?",
     description: (
-      <Text>
+      <span className="text-muted-foreground">
         Nope! You can self serve and upgrade to the Growth plan in the Dashboard
         under{" "}
-        <Link href="/team/~/~/settings/billing" color="blue.500">
+        <Link
+          href="/team/~/~/settings/billing"
+          className="text-link-foreground hover:text-foreground"
+        >
           Billing
         </Link>{" "}
         whenever you are ready!
-      </Text>
+      </span>
     ),
   },
   {
     title: "Will I be able to see my usage history?",
     description: (
-      <Text>
+      <span className="text-muted-foreground">
         You can review your usage history at any time on the Dashboard by
         visiting the{" "}
-        <Link href="/team/~/~/usage" color="blue.500">
+        <Link
+          href="/team/~/~/usage"
+          className="text-link-foreground hover:text-foreground"
+        >
           Usage
         </Link>{" "}
         tab under Settings.
-      </Text>
+      </span>
     ),
   },
   {
     title: "How is pricing calculated for in-app wallets?",
     description: (
-      <Text>
+      <span className="text-muted-foreground">
         In-App wallets are billed based on &quot;Monthly active wallets&quot;.
-      </Text>
+      </span>
     ),
   },
   {
     title: "What is a Monthly Active Wallet?",
     description: (
-      <Text>
+      <span className="text-muted-foreground">
         A Monthly Active Wallet is defined as a wallet where a user logs in
         during the billing period.
-      </Text>
+      </span>
     ),
   },
   {
     title: "Do you have an implementation fee?",
     description: (
-      <Text>
+      <span className="text-muted-foreground">
         No, we do not have any implementation fees for any of our plans.
-      </Text>
+      </span>
     ),
   },
 ];
@@ -250,38 +256,38 @@ export const FAQ_PRICING = [
   {
     title: "RPC requests",
     description: (
-      <Text>
+      <span className="text-muted-foreground">
         When your app makes requests to the blockchain, and you use
         thirdweb&apos;s built-in infrastructure, it will count as a RPC request.
-      </Text>
+      </span>
     ),
   },
   {
     title: "Storage gateway",
     description: (
-      <Text>
+      <span className="text-muted-foreground">
         When your app downloads files from IPFS, and you use thirdweb&apos;s
         built-in infrastructure, it will count as a storage gateway request.
-      </Text>
+      </span>
     ),
   },
   {
     title: "Storage pinning",
     description: (
-      <Text>
+      <span className="text-muted-foreground">
         When your app uploads files to IPFS, and you use thirdweb&apos;s
         built-in infrastructure, it will count towards your storage pinning
         limit.
-      </Text>
+      </span>
     ),
   },
   {
     title: "Monthly Active Wallet",
     description: (
-      <Text>
+      <span className="text-muted-foreground">
         When a user logs in during a 30-day period in using the in-app wallet
         service, they are counted as a monthly active wallet.
-      </Text>
+      </span>
     ),
   },
 ];

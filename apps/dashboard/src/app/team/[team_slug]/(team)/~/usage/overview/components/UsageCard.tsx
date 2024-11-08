@@ -1,9 +1,8 @@
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { CircleHelpIcon } from "lucide-react";
-import { toUSD } from "utils/number";
-
 import type { JSX } from "react";
+import { toUSD } from "utils/number";
 
 interface UsageCardProps {
   name: string;
@@ -23,20 +22,18 @@ export const UsageCard: React.FC<UsageCardProps> = ({
   tooltip,
 }) => {
   return (
-    <div className="flex min-h-[140px] flex-col rounded-lg border border-border bg-background p-4">
-      <div className="flex items-center gap-2">
-        <h3 className="font-medium text-base">{name}</h3>
-        {tooltip && (
-          <ToolTipLabel label={tooltip}>
-            <CircleHelpIcon className="size-4 text-muted-foreground" />
-          </ToolTipLabel>
-        )}
-      </div>
+    <div className="relative flex min-h-[150px] flex-col rounded-lg border border-border bg-muted/50 p-4">
+      <h3 className="pr-10 font-medium text-lg">{name}</h3>
+      {tooltip && (
+        <ToolTipLabel label={tooltip}>
+          <CircleHelpIcon className="absolute top-4 right-4 size-5 text-muted-foreground hover:text-foreground" />
+        </ToolTipLabel>
+      )}
 
       <div className="h-6" />
 
-      <div className="mt-auto flex flex-col gap-2">
-        {title && <p className="mb-2 font-semibold text-foreground">{title}</p>}
+      <div className="mt-auto flex flex-col gap-1.5">
+        {title && <p className="text-foreground text-sm">{title}</p>}
 
         {total !== undefined && (
           <p className="text-muted-foreground text-sm">

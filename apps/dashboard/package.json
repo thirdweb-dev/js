@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "NODE_OPTIONS=--max-old-space-size=6144 next build",
     "start": "next start",
     "format": "biome format ./src --write",
