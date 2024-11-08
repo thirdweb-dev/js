@@ -1,5 +1,5 @@
 import { isOpStackChain } from "../../chains/constants.js";
-import { getGasPrice } from "../../gas/get-gas-price.js";
+import { getDefaultGasOverrides } from "../../gas/fee-data.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { toEther } from "../../utils/units.js";
 import { type EstimateGasOptions, estimateGas } from "./estimate-gas.js";
@@ -33,10 +33,16 @@ export async function estimateGasCost(
   const gasLimit =
     (await resolvePromisedValue(transaction.gas)) ||
     (await estimateGas({ transaction, from }));
-  const gasPrice = await getGasPrice({
-    client: transaction.client,
-    chain: transaction.chain,
-  });
+  const fees = await getDefaultGasOverrides(
+    transaction.client,
+    transaction.chain,
+  );
+  const gasPrice = fees.maxFeePerGas || fees.gasPrice;
+  if (!gasPrice) {
+    throw new Error(
+      `Unable to determine gas price for chain ${transaction.chain.id}`,
+    );
+  }
   let l1Fee: bigint;
   if (isOpStackChain(transaction.chain)) {
     const { estimateL1Fee } = await import("../../gas/estimate-l1-fee.js");

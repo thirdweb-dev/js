@@ -115,7 +115,7 @@ function TokenBalanceRow(props: {
       <div style={{ flex: 1 }} />
       <Container flex="row" center="y" gap="3xs">
         <Text size="xs" color="secondaryText">
-          {formatTokenBalance(tokenBalance.balance, true, 3)}
+          {formatTokenBalance(tokenBalance.balance, true)}
         </Text>
       </Container>
     </StyledButton>
