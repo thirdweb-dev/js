@@ -501,6 +501,7 @@ function createZkSyncAccount(args: {
         value: transaction.value ?? 0n,
         chain: getCachedChain(transaction.chainId),
         client: connectionOptions.client,
+        eip712: transaction.eip712,
       };
 
       let serializableTransaction = await populateEip712Transaction({
@@ -508,7 +509,7 @@ function createZkSyncAccount(args: {
         transaction: prepTx,
       });
 
-      if (args.sponsorGas) {
+      if (args.sponsorGas && !serializableTransaction.paymaster) {
         // get paymaster input
         const pmData = await getZkPaymasterData({
           options: {

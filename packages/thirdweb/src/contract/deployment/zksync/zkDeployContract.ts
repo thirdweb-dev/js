@@ -19,6 +19,7 @@ export async function zkDeployContract(
     bytecode: Hex;
     params?: Record<string, unknown>;
     salt?: string;
+    deploymentType?: "create" | "create2";
   },
 ) {
   if (options.salt !== undefined) {
@@ -29,7 +30,7 @@ export async function zkDeployContract(
   const data = encodeDeployData({
     abi: options.abi,
     bytecode: options.bytecode,
-    deploymentType: "create",
+    deploymentType: options.deploymentType ?? "create",
     args: normalizeFunctionParams(
       options.abi.find((abi) => abi.type === "constructor"),
       options.params,
@@ -56,6 +57,7 @@ export async function zkDeployContract(
   });
 
   const contractAddress = events[0]?.args.contractAddress;
+
   if (!contractAddress) {
     throw new Error("Contract creation failed");
   }

@@ -24,3 +24,6 @@ export const THIRDWEB_STORAGE_DOMAIN =
 
 export const THIRDWEB_SOCIAL_API_DOMAIN =
   process.env.NEXT_PUBLIC_SOCIAL_URL || "social.thirdweb-dev.com";
+
+export const THIRDWEB_BUNDLER_DOMAIN =
+  process.env.NEXT_PUBLIC_BUNDLER_URL || "bundler.thirdweb-dev.com";
