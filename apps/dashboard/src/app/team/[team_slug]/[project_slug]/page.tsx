@@ -181,7 +181,7 @@ function processTimeSeriesData(
 
   let cumulativeUsers = 0;
   for (const stat of userStats) {
-    cumulativeUsers += stat.totalUsers ?? 0;
+    cumulativeUsers += stat.newUsers ?? 0;
     metrics.push({
       date: stat.date,
       activeUsers: stat.totalUsers ?? 0,
@@ -224,6 +224,14 @@ function UsersChartCard({
       aggregateFn={(_data, key) =>
         timeSeriesData[timeSeriesData.length - 1]?.[key]
       }
+      // Get the trend from the last two COMPLETE periods
+      trendFn={(data, key) =>
+        data.filter((d) => (d[key] as number) > 0).length >= 3
+          ? ((data[data.length - 2]?.[key] as number) ?? 0) /
+              ((data[data.length - 3]?.[key] as number) ?? 0) -
+            1
+          : undefined
+      }
       existingQueryParams={searchParams}
     />
   );
@@ -232,12 +240,7 @@ function UsersChartCard({
 async function WalletDistributionCard({ data }: { data: WalletStats[] }) {
   const formattedData = await Promise.all(
     data
-      .filter(
-        (w) =>
-          w.walletType !== "smart" &&
-          w.walletType !== "unknown" &&
-          w.walletType !== "inApp",
-      )
+      .filter((w) => w.walletType !== "smart" && w.walletType !== "smartWallet")
       .map(async (w) => {
         const wallet = await getWalletInfo(w.walletType as WalletId).catch(
           () => ({ name: w.walletType }),
@@ -254,16 +257,12 @@ async function WalletDistributionCard({ data }: { data: WalletStats[] }) {
   return (
     <PieChartCard
       title="Wallets Connected"
-      data={formattedData.map(
-        ({ walletName, uniqueWalletsConnected }, index) => {
-          return {
-            value: uniqueWalletsConnected,
-            label: walletName,
-            // Multiply by 2 to avoid colors used by authentication methods
-            fill: `hsl(var(--chart-${(index + 1) * 2}))`,
-          };
-        },
-      )}
+      data={formattedData.map(({ walletName, uniqueWalletsConnected }) => {
+        return {
+          value: uniqueWalletsConnected,
+          label: walletName,
+        };
+      })}
     />
   );
 }
@@ -272,14 +271,10 @@ function AuthMethodDistributionCard({ data }: { data: InAppWalletStats[] }) {
   return (
     <PieChartCard
       title="Social Authentication"
-      data={data.map(
-        ({ authenticationMethod, uniqueWalletsConnected }, index) => ({
-          value: uniqueWalletsConnected,
-          label: authenticationMethod,
-          // Multiply by 2 and add 1 to avoid colors used by wallets connected
-          fill: `hsl(var(--chart-${index * 2 + 1}))`,
-        }),
-      )}
+      data={data.map(({ authenticationMethod, uniqueWalletsConnected }) => ({
+        value: uniqueWalletsConnected,
+        label: authenticationMethod,
+      }))}
     />
   );
 }
@@ -305,17 +300,18 @@ async function TotalSponsoredCard({ data }: { data: UserOpStatsByChain[] }) {
             label: chain?.name || item.chainId || "Unknown",
             value: item.sponsoredUsd,
             icon: chain?.icon?.url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={resolveSchemeWithErrorHandler({
-                  client: getThirdwebClient(),
-                  uri: chain?.icon.url,
-                })}
-                width={chain?.icon?.width}
-                height={chain?.icon?.height}
-                className="size-4"
-                alt=""
-              />
+              <div className="flex size-4 items-center justify-center">
+                <img
+                  src={resolveSchemeWithErrorHandler({
+                    client: getThirdwebClient(),
+                    uri: chain?.icon.url,
+                  })}
+                  width={chain?.icon?.width}
+                  height={chain?.icon?.height}
+                  className="h-4 w-auto"
+                  alt=""
+                />
+              </div>
             ) : undefined,
             fill: `hsl(var(--chart-${index + 1}))`,
           };
@@ -345,17 +341,18 @@ async function UserOpUsageCard({ data }: { data: UserOpStatsByChain[] }) {
             label: chain?.name || item.chainId || "Unknown",
             value: item.successful + item.failed,
             icon: chain?.icon?.url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={resolveSchemeWithErrorHandler({
-                  client: getThirdwebClient(),
-                  uri: chain.icon.url,
-                })}
-                width={chain?.icon?.width}
-                height={chain?.icon?.height}
-                className="size-4"
-                alt=""
-              />
+              <div className="flex size-4 items-center justify-center">
+                <img
+                  src={resolveSchemeWithErrorHandler({
+                    client: getThirdwebClient(),
+                    uri: chain.icon.url,
+                  })}
+                  width={chain?.icon?.width}
+                  height={chain?.icon?.height}
+                  className="h-4 w-auto"
+                  alt=""
+                />
+              </div>
             ) : undefined,
             fill: `hsl(var(--chart-${index + 1}))`,
           };

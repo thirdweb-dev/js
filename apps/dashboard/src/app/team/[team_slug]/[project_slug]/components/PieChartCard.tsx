@@ -28,7 +28,9 @@ export function PieChartCard({
     const sorted = [...data].sort((a, b) => b.value - a.value);
 
     // Take top 9
-    const top10 = sorted.slice(0, 9);
+    const top10 = sorted.slice(0, 9).map((item) => ({
+      ...item,
+    }));
 
     // Aggregate the rest
     const otherValue = sorted
@@ -44,7 +46,11 @@ export function PieChartCard({
     }
 
     return top10;
-  })();
+  })().map((item, index) => ({
+    ...item,
+    fill: item.fill || `hsl(var(--chart-${index + 1}))`,
+  }));
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="border-border border-b p-0">

@@ -53,6 +53,7 @@ export function CombinedBarChartCard<
                       usersChart: key,
                     },
                   }}
+                  prefetch
                   scroll={false}
                   key={chart}
                   data-active={activeChart === chart}

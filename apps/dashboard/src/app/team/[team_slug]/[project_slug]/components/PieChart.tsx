@@ -6,6 +6,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { formatTickerNumber } from "lib/format-utils";
 import { Pie, PieChart as RechartsPieChart } from "recharts";
 
 export function PieChart({
@@ -39,7 +40,12 @@ export function PieChart({
       <RechartsPieChart>
         <ChartTooltip
           cursor={false}
-          content={<ChartTooltipContent hideLabel />}
+          content={
+            <ChartTooltipContent
+              hideLabel
+              valueFormatter={(v: unknown) => formatTickerNumber(v as number)}
+            />
+          }
         />
         <Pie data={data} dataKey="value" nameKey="label" innerRadius={60} />
       </RechartsPieChart>

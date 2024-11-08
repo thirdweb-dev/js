@@ -13,11 +13,6 @@ export default async function Layout(props: {
 
   const links: SidebarLink[] = [
     {
-      label: "Analytics",
-      href: `/team/${team_slug}/${project_slug}/connect`,
-      exactMatch: true,
-    },
-    {
       label: "In-App Wallets",
       href: `/team/${team_slug}/${project_slug}/connect/in-app-wallets`,
     },

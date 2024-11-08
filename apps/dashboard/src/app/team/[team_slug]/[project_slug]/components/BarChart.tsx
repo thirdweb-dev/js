@@ -59,7 +59,7 @@ export function BarChart({
           }}
         />
         <YAxis
-          width={32}
+          width={48}
           dataKey={activeKey}
           tickLine={false}
           axisLine={false}
@@ -68,7 +68,7 @@ export function BarChart({
         <ChartTooltip
           content={
             <ChartTooltipContent
-              className="w-[150px]"
+              className="w-[200px]"
               nameKey={activeKey}
               labelFormatter={(value) => {
                 return new Date(value).toLocaleDateString("en-US", {
@@ -77,6 +77,7 @@ export function BarChart({
                   year: "numeric",
                 });
               }}
+              valueFormatter={(v: unknown) => formatTickerNumber(v as number)}
             />
           }
         />
