@@ -17,5 +17,6 @@ export default async function PublishedContractDeployPage(props: Props) {
   const modules = searchParams.module
     ?.map((m) => moduleFromBase64(m))
     .filter((m) => m !== null);
+
   return <DeployFormForPublishInfo {...params} modules={modules} />;
 }
