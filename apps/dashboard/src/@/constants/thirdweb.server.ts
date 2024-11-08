@@ -12,9 +12,11 @@ import {
   THIRDWEB_STORAGE_DOMAIN,
 } from "constants/urls";
 import { createThirdwebClient } from "thirdweb";
+import { getChainMetadata } from "thirdweb/chains";
 import { populateEip712Transaction } from "thirdweb/transaction";
 import {
   getTransactionDecorator,
+  isZkSyncChain,
   setThirdwebDomains,
   setTransactionDecorator,
 } from "thirdweb/utils";
@@ -37,32 +39,34 @@ export function getThirdwebClient(jwt?: string) {
 
   if (!getTransactionDecorator()) {
     setTransactionDecorator(async ({ account, transaction }) => {
-      // special override for sophon testnet (zk chain)
-      // sophon only allows transactions through their paymaster
-      // so always use eip712 tx + paymaster
-      if (transaction.chain.id === 531050104) {
-        const serializedTx = await populateEip712Transaction({
-          transaction,
-          account,
-        });
-        const pmData = await getZkPaymasterData({
-          options: {
-            client: transaction.client,
-            chain: transaction.chain,
-          },
-          transaction: serializedTx,
-        });
-        return {
-          account,
-          transaction: {
-            ...transaction,
-            eip712: {
-              ...transaction.eip712,
-              paymaster: pmData.paymaster,
-              paymasterInput: pmData.paymasterInput,
+      // use paymaster for zk chains on testnets
+      const chainMeta = await getChainMetadata(transaction.chain);
+      if (chainMeta.testnet) {
+        const isZkChain = await isZkSyncChain(transaction.chain);
+        if (isZkChain) {
+          const serializedTx = await populateEip712Transaction({
+            transaction,
+            account,
+          });
+          const pmData = await getZkPaymasterData({
+            options: {
+              client: transaction.client,
+              chain: transaction.chain,
             },
-          },
-        };
+            transaction: serializedTx,
+          });
+          return {
+            account,
+            transaction: {
+              ...transaction,
+              eip712: {
+                ...transaction.eip712,
+                paymaster: pmData.paymaster,
+                paymasterInput: pmData.paymasterInput,
+              },
+            },
+          };
+        }
       }
       return { account, transaction };
     });
