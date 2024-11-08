@@ -158,12 +158,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
             overflow={{ base: "auto", md: "hidden" }}
             pb={{ base: 4, md: 0 }}
           >
-            <ButtonGroup
-              size="sm"
-              variant="ghost"
-              spacing={2}
-              w={(tabs.length + 1) * 95}
-            >
+            <ButtonGroup size="sm" variant="ghost" spacing={2}>
               <Button
                 type="button"
                 isActive={tab === "Details"}
