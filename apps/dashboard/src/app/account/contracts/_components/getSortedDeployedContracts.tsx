@@ -5,6 +5,7 @@ import { fetchChain } from "../../../../utils/fetchChain";
 
 export async function getSortedDeployedContracts(params: {
   address: string;
+  onlyMainnet?: boolean;
 }) {
   const contracts = await getAllMultichainRegistry({
     contract: MULTICHAIN_REGISTRY_CONTRACT,
@@ -36,6 +37,11 @@ export async function getSortedDeployedContracts(params: {
   }
 
   mainnetContracts.sort((a, b) => a.chainId - b.chainId);
+
+  if (params.onlyMainnet) {
+    return mainnetContracts;
+  }
+
   testnetContracts.sort((a, b) => a.chainId - b.chainId);
 
   return [...mainnetContracts, ...testnetContracts];

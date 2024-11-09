@@ -11,7 +11,6 @@ export function DeployedContractsTable(props: {
     <DeployedContracts
       contractList={props.contracts}
       limit={50}
-      isPending={false}
       onContractRemoved={router.refresh}
     />
   );

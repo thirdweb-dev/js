@@ -1,6 +1,9 @@
 "use client";
 
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -8,12 +11,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Textarea } from "@/components/ui/textarea";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { Box, FormControl, Input, Textarea } from "@chakra-ui/react";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { useQueryClient } from "@tanstack/react-query";
-import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
-import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
-import { XIcon } from "components/icons/brand-icons/XIcon";
 import { FileInput } from "components/shared/FileInput";
 import {
   DASHBOARD_ENGINE_RELAYER_URL,
@@ -22,7 +23,7 @@ import {
 import type { ProfileMetadata, ProfileMetadataInput } from "constants/schemas";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { EditIcon, GlobeIcon, ImageIcon, PencilIcon } from "lucide-react";
+import { EditIcon } from "lucide-react";
 import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,7 +33,6 @@ import {
 } from "thirdweb/extensions/thirdweb";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
-import { FormErrorMessage, FormLabel } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
 
 interface EditProfileProps {
@@ -73,16 +73,16 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button size="sm" variant="outline">
-          <EditIcon className="mr-2 size-4" /> Edit Profile
+        <Button variant="outline" className="gap-2">
+          <EditIcon className="size-4" /> Edit Profile
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
+      <SheetContent className="w-full overflow-y-auto md:min-w-[600px]">
         <SheetHeader>
           <SheetTitle className="text-left">Edit your profile</SheetTitle>
         </SheetHeader>
         <form
-          className="mt-6 flex flex-col gap-6"
+          className="mt-6 flex flex-col gap-5"
           id={FORM_ID}
           onSubmit={handleSubmit((d) => {
             if (!address) {
@@ -93,150 +93,146 @@ export const EditProfile: React.FC<EditProfileProps> = ({
               action: "edit",
               label: "attempt",
             });
-            try {
-              const tx = setPublisherProfileUri({
-                contract: getContractPublisher(client),
-                asyncParams: async () => {
-                  return {
-                    publisher: address,
-                    uri: await upload({
-                      files: [d],
-                      client,
-                    }),
-                  };
-                },
-              });
-              const promise = sendTx.mutateAsync(tx, {
-                onSuccess: async () => {
-                  await queryClient.invalidateQueries({
-                    queryKey: ["releaser-profile", address],
-                  });
-                  trackEvent({
-                    category: "profile",
-                    action: "edit",
-                    label: "success",
-                  });
-                  setOpen(false);
-                },
-                onError: (error) => {
-                  trackEvent({
-                    category: "profile",
-                    action: "edit",
-                    label: "error",
-                    error,
-                  });
-                },
-              });
 
-              toast.promise(promise, {
-                loading: "Updating profile",
-                success: "Profile updated successfully",
-                error: "Failed to update profile",
-              });
-            } catch (err) {
-              console.error(err);
-              toast.error("Failed to update profile");
-            }
+            const tx = setPublisherProfileUri({
+              contract: getContractPublisher(client),
+              asyncParams: async () => {
+                return {
+                  publisher: address,
+                  uri: await upload({
+                    files: [d],
+                    client,
+                  }),
+                };
+              },
+            });
+
+            const promise = sendTx.mutateAsync(tx, {
+              onSuccess: async () => {
+                await queryClient.invalidateQueries({
+                  queryKey: ["releaser-profile", address],
+                });
+                trackEvent({
+                  category: "profile",
+                  action: "edit",
+                  label: "success",
+                });
+                setOpen(false);
+              },
+              onError: (error) => {
+                trackEvent({
+                  category: "profile",
+                  action: "edit",
+                  label: "error",
+                  error,
+                });
+              },
+            });
+
+            toast.promise(promise, {
+              success: "Profile updated successfully",
+              error: "Failed to update profile",
+            });
           })}
         >
-          <FormControl isInvalid={!!errors.avatar}>
-            <FormLabel>
-              <div className="flex flex-row gap-2">
-                <ImageIcon className="size-4" />
-                Avatar
-              </div>
-            </FormLabel>
-            <Box width={{ base: "auto", md: "250px" }}>
-              <FileInput
-                accept={{ "image/*": [] }}
-                value={imageUrl}
-                showUploadButton
-                setValue={(file) => setValue("avatar", file)}
-                className="rounded border border-border transition-all"
-                renderPreview={(fileUrl) => (
-                  <MaskedAvatar className="h-full w-full" src={fileUrl} />
-                )}
-              />
-            </Box>
-            <FormErrorMessage>
-              {errors?.avatar?.message as unknown as string}
-            </FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!errors.bio}>
-            <FormLabel>
-              <div className="flex flex-row gap-2">
-                <PencilIcon className="size-4" />
-                Bio
-              </div>
-            </FormLabel>
+          <FormFieldSetup
+            errorMessage={errors?.avatar?.message}
+            htmlFor="avatar"
+            isRequired={false}
+            label="Avatar"
+          >
+            <FileInput
+              accept={{ "image/*": [] }}
+              value={resolveSchemeWithErrorHandler({
+                client,
+                uri: imageUrl,
+              })}
+              showUploadButton
+              setValue={(file) => setValue("avatar", file)}
+              className="max-w-[250px] rounded border border-border transition-all"
+              renderPreview={(fileUrl) => (
+                <MaskedAvatar className="h-full w-full" src={fileUrl} />
+              )}
+              previewMaxWidth="200px"
+            />
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            errorMessage={errors?.bio?.message}
+            htmlFor="bio"
+            isRequired={false}
+            label="Bio"
+          >
             <Textarea
               {...register("bio")}
               autoFocus
               placeholder="Tell us about yourself"
+              id="bio"
             />
-            <FormErrorMessage>{errors?.bio?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!errors.github}>
-            <FormLabel>
-              <div className="flex flex-row gap-2">
-                <GithubIcon className="size-4" />
-                GitHub
-              </div>
-            </FormLabel>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            errorMessage={errors?.github?.message}
+            htmlFor="github"
+            isRequired={false}
+            label="GitHub"
+          >
             <Input
               {...register("github")}
               placeholder="https://github.com/yourname"
+              id="github"
             />
-            <FormErrorMessage>{errors?.github?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!errors.twitter}>
-            <FormLabel>
-              <div className="flex flex-row gap-2">
-                <XIcon className="size-4" />
-                Twitter
-              </div>
-            </FormLabel>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            errorMessage={errors?.twitter?.message}
+            htmlFor="twitter"
+            isRequired={false}
+            label="Twitter"
+          >
             <Input
               {...register("twitter")}
               placeholder="https://twitter.com/yourname"
+              id="twitter"
             />
-            <FormErrorMessage>{errors?.twitter?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!errors.website}>
-            <FormLabel>
-              <div className="flex flex-row gap-2">
-                <GlobeIcon className="size-4" />
-                Website
-              </div>
-            </FormLabel>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            errorMessage={errors?.website?.message}
+            htmlFor="website"
+            isRequired={false}
+            label="Website"
+          >
             <Input
               {...register("website")}
               placeholder="https://yourwebsite.com"
+              id="website"
             />
-            <FormErrorMessage>{errors?.website?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!errors.discord}>
-            <FormLabel>
-              <div className="flex flex-row gap-2">
-                <DiscordIcon className="size-4" />
-                Discord
-              </div>
-            </FormLabel>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            errorMessage={errors?.discord?.message}
+            htmlFor="discord"
+            isRequired={false}
+            label="Discord"
+          >
             <Input
               {...register("discord")}
               placeholder="https://discord.gg/yourserver"
+              id="discord"
             />
-            <FormErrorMessage>{errors?.discord?.message}</FormErrorMessage>
-          </FormControl>
+          </FormFieldSetup>
+
           <div className="mt-6 flex flex-row justify-end gap-3">
             <Button
-              className="relative rounded-md"
+              className="gap-2"
               variant="primary"
               type="submit"
               disabled={sendTx.isPending}
               form={FORM_ID}
             >
-              Save
+              {sendTx.isPending && <Spinner className="size-4" />}
+              Update Profile
             </Button>
           </div>
         </form>

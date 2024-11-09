@@ -42,7 +42,6 @@ import { ShowMoreButton } from "./show-more-button";
 
 interface DeployedContractsProps {
   contractList: ReturnType<typeof useAllContractList>["data"];
-  isPending: boolean;
   limit?: number;
   onContractRemoved?: () => void;
 }
@@ -50,7 +49,6 @@ interface DeployedContractsProps {
 export const DeployedContracts: React.FC<DeployedContractsProps> = ({
   contractList,
   limit = 10,
-  isPending,
   onContractRemoved,
 }) => {
   const chainIdsWithDeployments = useMemo(() => {
@@ -68,11 +66,10 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
         combinedList={contractList}
         limit={limit}
         chainIdsWithDeployments={chainIdsWithDeployments}
-        loading={isPending}
         onContractRemoved={onContractRemoved}
       />
 
-      {contractList.length === 0 && !isPending && (
+      {contractList.length === 0 && (
         <div className="flex h-[100px] items-center justify-center text-muted-foreground">
           No contracts found
         </div>
@@ -148,19 +145,15 @@ function SelectNetworkFilter({
 
 interface ContractTableProps {
   combinedList: BasicContract[];
-  isFetching?: boolean;
   limit: number;
   chainIdsWithDeployments: number[];
-  loading: boolean;
   onContractRemoved?: () => void;
 }
 
 const ContractTable: React.FC<ContractTableProps> = ({
   combinedList,
-  isFetching,
   limit,
   chainIdsWithDeployments,
-  loading,
   onContractRemoved,
 }) => {
   const { idToChain } = useAllChainsData();
@@ -310,7 +303,6 @@ const ContractTable: React.FC<ContractTableProps> = ({
 
   return (
     <TableContainer>
-      {isFetching && <Spinner className="absolute top-2 right-4 size-3" />}
       <Table {...getTableProps()}>
         <TableHeader>
           {headerGroups.map((headerGroup, index) => (
@@ -353,14 +345,6 @@ const ContractTable: React.FC<ContractTableProps> = ({
           showMoreLimit={pageSize}
           setShowMoreLimit={setNumRowsOnPage}
         />
-      )}
-      {loading && (
-        <div className="flex items-center justify-center py-4">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Spinner className="size-3" />
-            Loading contracts
-          </div>
-        </div>
       )}
     </TableContainer>
   );

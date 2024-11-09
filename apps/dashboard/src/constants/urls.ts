@@ -1,6 +1,3 @@
-export const THIRDWEB_DOMAIN =
-  process.env.NEXT_PUBLIC_THIRDWEB_DOMAIN || "thirdweb.com";
-
 export const THIRDWEB_API_HOST = "/api/server-proxy/api";
 
 export const THIRDWEB_ANALYTICS_API_HOST = "/api/server-proxy/analytics";

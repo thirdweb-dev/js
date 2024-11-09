@@ -10,15 +10,17 @@ import {
 } from "thirdweb/extensions/thirdweb";
 import { download } from "thirdweb/storage";
 
-function mapThirdwebPublisher(publisher: string) {
+export function mapThirdwebPublisher(publisher: string) {
   if (publisher === "thirdweb.eth") {
     return "deployer.thirdweb.eth";
   }
+
   return publisher;
 }
 
 export async function fetchPublisherProfile(publisherAddress: string) {
   const client = getThirdwebClient();
+
   const profileUri = await getPublisherProfileUri({
     contract: getContractPublisher(client),
     publisher: isAddress(publisherAddress)
@@ -28,9 +30,11 @@ export async function fetchPublisherProfile(publisherAddress: string) {
           name: mapThirdwebPublisher(publisherAddress),
         }),
   });
+
   if (!profileUri) {
     return null;
   }
+
   try {
     const res = await download({
       client,
