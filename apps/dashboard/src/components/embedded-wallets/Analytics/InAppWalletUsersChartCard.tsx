@@ -1,4 +1,5 @@
 "use client";
+import type { InAppWalletStats } from "@/api/analytics";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
@@ -8,7 +9,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import type { InAppWalletStats } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   EmptyChartState,
   LoadingChartState,

@@ -1,14 +1,18 @@
+import {
+  getInAppWalletUsage,
+  getUserOpUsage,
+  getWalletConnections,
+  getWalletUsers,
+} from "@/api/analytics";
 import { notFound, redirect } from "next/navigation";
-
-import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { fetchAnalytics } from "data/analytics/fetch-analytics";
 
 import type {
   InAppWalletStats,
-  UserOpStatsByChain,
+  UserOpStats,
   WalletStats,
   WalletUserStats,
-} from "@3rdweb-sdk/react/hooks/useApi";
+} from "@/api/analytics";
+
 import {
   type DurationId,
   type Range,
@@ -21,22 +25,20 @@ import {
   getChainMetadata,
 } from "thirdweb/chains";
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
-
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { AnalyticsHeader } from "../../components/Analytics/AnalyticsHeader";
 import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChartCard";
 import { EmptyState } from "../../components/Analytics/EmptyState";
 import { PieChartCard } from "../../components/Analytics/PieChartCard";
-import { StatBreakdownCard } from "../../components/Analytics/StatBreakdownCard";
 
 import { getTeamBySlug } from "@/api/team";
 import { getAccount } from "app/account/settings/getAccount";
+import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
 import { Changelog, type ChangelogItem } from "components/dashboard/Changelog";
 
 // revalidate every 5 minutes
 export const revalidate = 300;
 
-export default async function Page(props: {
+export default async function TeamOverviewPage(props: {
   params: { team_slug: string };
   searchParams: {
     usersChart?: string;
@@ -74,6 +76,7 @@ export default async function Page(props: {
     walletConnections,
     walletUserStatsTimeSeries,
     inAppWalletUsage,
+    userOpUsageTimeSeries,
     userOpUsage,
   ] = await Promise.all([
     // Aggregated wallet connections
@@ -102,6 +105,12 @@ export default async function Page(props: {
       accountId: account.id,
       from: range.from,
       to: range.to,
+      period: interval,
+    }),
+    getUserOpUsage({
+      accountId: account.id,
+      from: range.from,
+      to: range.to,
       period: "all",
     }),
   ]);
@@ -121,7 +130,7 @@ export default async function Page(props: {
           range={range}
         />
       </div>
-      <div className="flex flex-col justify-between gap-16 pb-16 md:container md:pt-8 xl:flex-row">
+      <div className="flex flex-col justify-between gap-16 md:container md:pt-8 md:pb-16 xl:flex-row">
         <div className="grow">
           {isEmpty ? (
             <div className="container p-6">
@@ -129,34 +138,50 @@ export default async function Page(props: {
             </div>
           ) : (
             <div className="space-y-6">
-              {walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) && (
+              {walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) ? (
                 <div className="">
                   <UsersChartCard
-                    chartKey={
-                      (searchParams.usersChart as
-                        | "totalUsers"
-                        | "activeUsers"
-                        | "newUsers"
-                        | "returningUsers") ?? "activeUsers"
-                    }
                     userStats={walletUserStatsTimeSeries}
                     searchParams={searchParams}
                   />
                 </div>
+              ) : (
+                <EmptyStateCard
+                  metric="Connect"
+                  link="https://portal.thirdweb.com/connect/quickstart"
+                />
               )}
               <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
-                {walletConnections.length > 0 && (
+                {walletConnections.length > 0 ? (
                   <WalletDistributionCard data={walletConnections} />
+                ) : (
+                  <EmptyStateCard
+                    metric="Connect"
+                    link="https://portal.thirdweb.com/connect/quickstart"
+                  />
                 )}
-                {inAppWalletUsage.length > 0 && (
+                {inAppWalletUsage.length > 0 ? (
                   <AuthMethodDistributionCard data={inAppWalletUsage} />
+                ) : (
+                  <EmptyStateCard
+                    metric="In-App Wallets"
+                    link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
+                  />
                 )}
               </div>
-              {userOpUsage.length > 0 && (
-                <div className="grid gap-6 max-md:px-6 max-md:pb-6 md:grid-cols-2">
-                  <TotalSponsoredCard data={userOpUsage} />
-                  <UserOpUsageCard data={userOpUsage} />
+              {userOpUsage.length > 0 ? (
+                <div className="">
+                  <TotalSponsoredCard
+                    searchParams={searchParams}
+                    data={userOpUsageTimeSeries}
+                    aggregatedData={userOpUsage}
+                  />
                 </div>
+              ) : (
+                <EmptyStateCard
+                  metric="Sponsored Transactions"
+                  link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
+                />
               )}
             </div>
           )}
@@ -212,11 +237,9 @@ function processTimeSeriesData(
 }
 
 function UsersChartCard({
-  chartKey,
   userStats,
   searchParams,
 }: {
-  chartKey: keyof UserMetrics;
   userStats: WalletUserStats[];
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
@@ -236,10 +259,12 @@ function UsersChartCard({
     <CombinedBarChartCard
       title="Users"
       chartConfig={chartConfig}
-      activeChart={chartKey}
+      activeChart={
+        (searchParams?.usersChart as keyof UserMetrics) ?? "activeUsers"
+      }
       data={timeSeriesData}
       aggregateFn={(_data, key) =>
-        timeSeriesData[timeSeriesData.length - 1]?.[key]
+        timeSeriesData[timeSeriesData.length - 2]?.[key]
       }
       // Get the trend from the last two COMPLETE periods
       trendFn={(data, key) =>
@@ -249,6 +274,7 @@ function UsersChartCard({
             1
           : undefined
       }
+      queryKey="usersChart"
       existingQueryParams={searchParams}
     />
   );
@@ -296,233 +322,96 @@ function AuthMethodDistributionCard({ data }: { data: InAppWalletStats[] }) {
   );
 }
 
-async function TotalSponsoredCard({ data }: { data: UserOpStatsByChain[] }) {
-  const chains = await Promise.all(
-    data.map(
-      (item) =>
-        // eslint-disable-next-line no-restricted-syntax
-        item.chainId && getChainMetadata(defineChain(Number(item.chainId))),
-    ),
-  ).then((chains) => chains.filter((c) => c) as ChainMetadata[]);
-
-  return (
-    <StatBreakdownCard
-      title="Total Sponsored"
-      isCurrency
-      data={data
-        .sort((a, b) => b.sponsoredUsd - a.sponsoredUsd)
-        .map((item, index) => {
-          const chain = chains.find((c) => c.chainId === Number(item.chainId));
-          return {
-            label: chain?.name || item.chainId || "Unknown",
-            value: item.sponsoredUsd,
-            icon: chain?.icon?.url ? (
-              <div className="flex size-4 items-center justify-center">
-                <img
-                  src={resolveSchemeWithErrorHandler({
-                    client: getThirdwebClient(),
-                    uri: chain?.icon.url,
-                  })}
-                  width={chain?.icon?.width}
-                  height={chain?.icon?.height}
-                  className="h-4 w-auto"
-                  alt=""
-                />
-              </div>
-            ) : undefined,
-            fill: `hsl(var(--chart-${index + 1}))`,
-          };
-        })}
-    />
-  );
-}
-
-async function UserOpUsageCard({ data }: { data: UserOpStatsByChain[] }) {
-  const chains = await Promise.all(
-    data.map(
-      (item) =>
-        // eslint-disable-next-line no-restricted-syntax
-        item.chainId && getChainMetadata(defineChain(Number(item.chainId))),
-    ),
-  ).then((chains) => chains.filter((c) => c) as ChainMetadata[]);
-
-  return (
-    <StatBreakdownCard
-      title="User Operations"
-      data={data
-        .sort((a, b) => b.successful - a.successful)
-        .map((item, index) => {
-          const chain = chains.find((c) => c.chainId === Number(item.chainId));
-
-          return {
-            label: chain?.name || item.chainId || "Unknown",
-            value: item.successful + item.failed,
-            icon: chain?.icon?.url ? (
-              <div className="flex size-4 items-center justify-center">
-                <img
-                  src={resolveSchemeWithErrorHandler({
-                    client: getThirdwebClient(),
-                    uri: chain.icon.url,
-                  })}
-                  width={chain?.icon?.width}
-                  height={chain?.icon?.height}
-                  className="h-4 w-auto"
-                  alt=""
-                />
-              </div>
-            ) : undefined,
-            fill: `hsl(var(--chart-${index + 1}))`,
-          };
-        })}
-    />
-  );
-}
-
-export async function getWalletConnections(args: {
-  accountId: string;
-  from?: Date;
-  to?: Date;
-  period?: "day" | "week" | "month" | "year" | "all";
-}): Promise<WalletStats[]> {
-  const { accountId, from, to, period } = args;
-
-  const searchParams = new URLSearchParams();
-  searchParams.append("accountId", accountId);
-  if (from) {
-    searchParams.append("from", from.toISOString());
-  }
-  if (to) {
-    searchParams.append("to", to.toISOString());
-  }
-  if (period) {
-    searchParams.append("period", period);
-  }
-  const res = await fetchAnalytics(`v1/wallets?${searchParams.toString()}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (res?.status !== 200) {
-    console.error("Failed to fetch wallet connections");
-    return [];
-  }
-
-  const json = await res.json();
-
-  return json.data as WalletStats[];
-}
-
-export async function getInAppWalletUsage(args: {
-  accountId: string;
-  from?: Date;
-  to?: Date;
-  period?: "day" | "week" | "month" | "year" | "all";
-}): Promise<InAppWalletStats[]> {
-  const { accountId, from, to, period } = args;
-
-  const searchParams = new URLSearchParams();
-  searchParams.append("accountId", accountId);
-  if (from) {
-    searchParams.append("from", from.toISOString());
-  }
-  if (to) {
-    searchParams.append("to", to.toISOString());
-  }
-  if (period) {
-    searchParams.append("period", period);
-  }
-  const res = await fetchAnalytics(
-    `v1/wallets/in-app?${searchParams.toString()}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
-
-  if (res?.status !== 200) {
-    console.error("Failed to fetch in-app wallet usage");
-    return [];
-  }
-
-  const json = await res.json();
-
-  return json.data as InAppWalletStats[];
-}
-
-async function getUserOpUsage(args: {
-  accountId: string;
-  from?: Date;
-  to?: Date;
-  period?: "day" | "week" | "month" | "year" | "all";
+async function TotalSponsoredCard({
+  data,
+  aggregatedData,
+  searchParams,
+}: {
+  data: UserOpStats[];
+  aggregatedData: UserOpStats[];
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const { accountId, from, to, period } = args;
+  const chains = await Promise.all(
+    data.map(
+      (item) =>
+        // eslint-disable-next-line no-restricted-syntax
+        item.chainId && getChainMetadata(defineChain(Number(item.chainId))),
+    ),
+  ).then((chains) => chains.filter((c) => c) as ChainMetadata[]);
 
-  const searchParams = new URLSearchParams();
-  searchParams.append("accountId", accountId);
-  if (from) {
-    searchParams.append("from", from.toISOString());
+  // Process data to combine by date and chain type
+  const dateMap = new Map<string, { mainnet: number; testnet: number }>();
+  for (const item of data) {
+    const chain = chains.find((c) => c.chainId === Number(item.chainId));
+
+    const existing = dateMap.get(item.date) || { mainnet: 0, testnet: 0 };
+    if (chain?.testnet) {
+      existing.testnet += item.sponsoredUsd;
+    } else {
+      existing.mainnet += item.sponsoredUsd;
+    }
+    dateMap.set(item.date, existing);
   }
-  if (to) {
-    searchParams.append("to", to.toISOString());
-  }
-  if (period) {
-    searchParams.append("period", period);
-  }
-  const res = await fetchAnalytics(`v1/user-ops?${searchParams.toString()}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
+
+  // Convert to array and sort by date
+  const timeSeriesData = Array.from(dateMap.entries())
+    .map(([date, values]) => ({
+      date,
+      mainnet: values.mainnet,
+      testnet: values.testnet,
+      total: values.mainnet + values.testnet,
+    }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  const processedAggregatedData = {
+    mainnet: aggregatedData
+      .filter(
+        (d) => !chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
+      )
+      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
+    testnet: aggregatedData
+      .filter(
+        (d) => chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
+      )
+      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
+    total: aggregatedData.reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
+  };
+
+  const chartConfig = {
+    mainnet: {
+      label: "Mainnet Chains",
+      color: "hsl(var(--chart-1))",
     },
-  });
-  const json = await res.json();
-
-  if (res.status !== 200) {
-    console.error("Failed to fetch user ops usage");
-    return [];
-  }
-
-  return json.data as UserOpStatsByChain[];
-}
-
-async function getWalletUsers(args: {
-  accountId: string;
-  from?: Date;
-  to?: Date;
-  period?: "day" | "week" | "month" | "year" | "all";
-}): Promise<WalletUserStats[]> {
-  const { accountId, from, to, period } = args;
-
-  const searchParams = new URLSearchParams();
-  searchParams.append("accountId", accountId);
-  if (from) {
-    searchParams.append("from", from.toISOString());
-  }
-  if (to) {
-    searchParams.append("to", to.toISOString());
-  }
-  if (period) {
-    searchParams.append("period", period);
-  }
-  const res = await fetchAnalytics(
-    `v1/wallets/users?${searchParams.toString()}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    testnet: {
+      label: "Testnet Chains",
+      color: "hsl(var(--chart-2))",
     },
+    total: {
+      label: "All Chains",
+      color: "hsl(var(--chart-3))",
+    },
+  };
+
+  return (
+    <CombinedBarChartCard
+      isCurrency
+      title="Total Sponsored"
+      chartConfig={chartConfig}
+      data={timeSeriesData}
+      activeChart={
+        (searchParams?.totalSponsored as keyof typeof chartConfig) ?? "mainnet"
+      }
+      queryKey="totalSponsored"
+      existingQueryParams={searchParams}
+      aggregateFn={(_data, key) => processedAggregatedData[key]}
+      // Get the trend from the last two COMPLETE periods
+      trendFn={(data, key) =>
+        data.filter((d) => (d[key] as number) > 0).length >= 3
+          ? ((data[data.length - 2]?.[key] as number) ?? 0) /
+              ((data[data.length - 3]?.[key] as number) ?? 0) -
+            1
+          : undefined
+      }
+    />
   );
-
-  if (res?.status !== 200) {
-    console.error("Failed to fetch wallet user stats");
-    return [];
-  }
-
-  const json = await res.json();
-
-  return json.data as WalletUserStats[];
 }

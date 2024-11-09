@@ -1,4 +1,4 @@
-import type { InAppWalletStats } from "@3rdweb-sdk/react/hooks/useApi";
+import type { InAppWalletStats } from "@/api/analytics";
 import { fetchAnalytics } from "../fetch-analytics";
 
 export async function getInAppWalletUsage(args: {

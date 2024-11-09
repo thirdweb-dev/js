@@ -1,4 +1,4 @@
-import type { WalletStats } from "@3rdweb-sdk/react/hooks/useApi";
+import type { WalletStats } from "@/api/analytics";
 import type { WalletId } from "thirdweb/wallets";
 
 const walletsToPickFrom: WalletId[] = [

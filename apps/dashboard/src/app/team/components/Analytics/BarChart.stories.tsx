@@ -3,7 +3,7 @@ import { BadgeContainer } from "stories/utils";
 import { BarChart } from "./BarChart";
 
 const meta = {
-  title: "project/Overview/BarChart",
+  title: "Analytics/BarChart",
   component: Component,
   parameters: {
     layout: "centered",

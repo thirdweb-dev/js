@@ -1,4 +1,5 @@
 "use client";
+import type { EcosystemWalletStats } from "@/api/analytics";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
@@ -8,7 +9,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import type { EcosystemWalletStats } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   EmptyChartState,
   LoadingChartState,

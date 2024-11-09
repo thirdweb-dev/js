@@ -3,7 +3,7 @@ import { BadgeContainer, mobileViewport } from "stories/utils";
 import { PieChartCard } from "./PieChartCard";
 
 const meta = {
-  title: "project/Overview/PieChartCard",
+  title: "Analytics/PieChartCard",
   component: Component,
   parameters: {
     layout: "centered",

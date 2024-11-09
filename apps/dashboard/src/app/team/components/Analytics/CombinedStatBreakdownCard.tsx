@@ -1,41 +1,36 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { toUSD } from "utils/number";
-import { BarChart } from "./BarChart";
 import { Stat } from "./Stat";
+import { StatBreakdown } from "./StatBreakdown";
 
-type CombinedBarChartConfig<K extends string> = {
-  [key in K]: { label: string; color: string };
+type StatBreakdownConfig<K extends string> = {
+  [key in K]: {
+    label: string;
+    data: {
+      label: string;
+      value: number;
+      fill?: string;
+      icon?: React.ReactNode;
+    }[];
+  };
 };
 
-export function CombinedBarChartCard<
-  T extends string,
-  K extends Exclude<T, "date">,
->({
+export function CombinedStatBreakdownCard<T extends string>({
   title,
-  chartConfig,
-  data,
-  activeChart,
+  config,
+  activeKey,
   queryKey,
+  aggregateFn = (data) => data.reduce((acc, curr) => acc + curr.value, 0),
   isCurrency = false,
-  aggregateFn = (data, key) =>
-    data[data.length - 1]?.[key] as number | undefined,
-  trendFn = (data, key) =>
-    data.filter((d) => (d[key] as number) > 0).length >= 2
-      ? ((data[data.length - 1]?.[key] as number) ?? 0) /
-          ((data[data.length - 2]?.[key] as number) ?? 0) -
-        1
-      : undefined,
   existingQueryParams,
 }: {
   title?: string;
-  chartConfig: CombinedBarChartConfig<K>;
-  data: { [key in T]: number | string }[];
-  activeChart: K;
+  config: StatBreakdownConfig<T>;
+  activeKey: T;
   queryKey: string;
+  aggregateFn?: (data: (typeof config)[T]["data"]) => number;
   isCurrency?: boolean;
-  aggregateFn?: (d: typeof data, key: K) => number | undefined;
-  trendFn?: (d: typeof data, key: K) => number | undefined;
   existingQueryParams?: { [key: string]: string | string[] | undefined };
 }) {
   return (
@@ -48,8 +43,9 @@ export function CombinedBarChartCard<
         )}
         <div className="max-md:no-scrollbar overflow-x-auto border-t">
           <div className="flex flex-nowrap">
-            {Object.keys(chartConfig).map((chart: string) => {
-              const key = chart as K;
+            {Object.keys(config).map((breakdown) => {
+              const key = breakdown as T;
+              const { data, label } = config[key];
               return (
                 <Link
                   href={{
@@ -60,22 +56,19 @@ export function CombinedBarChartCard<
                   }}
                   prefetch
                   scroll={false}
-                  key={chart}
-                  data-active={activeChart === chart}
+                  key={breakdown}
+                  data-active={activeKey === breakdown}
                   className="relative z-30 flex min-w-[200px] flex-1 flex-col justify-center gap-1 border-l first:border-l-0 hover:bg-muted/50"
                 >
                   <Stat
-                    label={chartConfig[key].label}
+                    label={label}
                     value={
-                      isCurrency
-                        ? toUSD(aggregateFn(data, key) ?? 0)
-                        : (aggregateFn(data, key) ?? 0)
+                      isCurrency ? toUSD(aggregateFn(data)) : aggregateFn(data)
                     }
-                    trend={trendFn(data, key) || undefined}
                   />
                   <div
                     className="absolute right-0 bottom-0 left-0 h-0 bg-foreground transition-all duration-300 ease-out data-[active=true]:h-[3px]"
-                    data-active={activeChart === chart}
+                    data-active={activeKey === breakdown}
                   />
                 </Link>
               );
@@ -83,14 +76,8 @@ export function CombinedBarChartCard<
           </div>
         </div>
       </CardHeader>
-      <CardContent className="px-2 sm:p-6 sm:pl-0">
-        <BarChart
-          isCurrency={isCurrency}
-          tooltipLabel={title}
-          chartConfig={chartConfig}
-          data={data}
-          activeKey={activeChart}
-        />
+      <CardContent className="p-6">
+        <StatBreakdown data={config[activeKey].data} isCurrency={isCurrency} />
       </CardContent>
     </Card>
   );

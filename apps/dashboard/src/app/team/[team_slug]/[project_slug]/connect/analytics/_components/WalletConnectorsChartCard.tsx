@@ -1,5 +1,6 @@
 "use client";
 
+import type { WalletStats } from "@/api/analytics";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
@@ -16,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { WalletStats } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   EmptyChartState,
   LoadingChartState,

@@ -3,7 +3,7 @@ import { BadgeContainer } from "stories/utils";
 import { Stat } from "./Stat";
 
 const meta = {
-  title: "project/Overview/Stat",
+  title: "Analytics/Stat",
   component: Component,
   parameters: {
     layout: "centered",

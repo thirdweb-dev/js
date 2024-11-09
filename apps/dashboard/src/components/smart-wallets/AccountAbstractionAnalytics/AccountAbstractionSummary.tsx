@@ -1,4 +1,4 @@
-import type { UserOpStats } from "@3rdweb-sdk/react/hooks/useApi";
+import type { UserOpStats } from "@/api/analytics";
 import { Stat } from "components/analytics/stat";
 import { ActivityIcon, CoinsIcon } from "lucide-react";
 

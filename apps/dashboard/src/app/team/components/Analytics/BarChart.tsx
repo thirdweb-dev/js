@@ -13,17 +13,20 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { toUSD } from "utils/number";
 
 export function BarChart({
   chartConfig,
   data,
   activeKey,
   tooltipLabel,
+  isCurrency = false,
 }: {
   chartConfig: ChartConfig;
   data: { [key in string]: number | string }[];
   activeKey: string;
   tooltipLabel?: string;
+  isCurrency?: boolean;
 }) {
   return (
     <ChartContainer
@@ -77,7 +80,11 @@ export function BarChart({
                   year: "numeric",
                 });
               }}
-              valueFormatter={(v: unknown) => formatTickerNumber(v as number)}
+              valueFormatter={(v: unknown) =>
+                isCurrency
+                  ? toUSD(v as number)
+                  : formatTickerNumber(v as number)
+              }
             />
           }
         />

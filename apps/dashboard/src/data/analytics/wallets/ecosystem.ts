@@ -1,4 +1,4 @@
-import type { EcosystemWalletStats } from "@3rdweb-sdk/react/hooks/useApi";
+import type { EcosystemWalletStats } from "@/api/analytics";
 import { fetchAnalytics } from "../fetch-analytics";
 
 export async function getEcosystemWalletUsage(args: {

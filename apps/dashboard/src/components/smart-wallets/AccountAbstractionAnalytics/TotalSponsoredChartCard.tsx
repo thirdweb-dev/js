@@ -1,5 +1,6 @@
 "use client";
 
+import type { UserOpStats } from "@/api/analytics";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
@@ -9,7 +10,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import type { UserOpStatsByChain } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   EmptyChartState,
   LoadingChartState,
@@ -31,7 +31,7 @@ type ChartData = Record<string, number> & {
 };
 
 export function TotalSponsoredChartCard(props: {
-  userOpStats: UserOpStatsByChain[];
+  userOpStats: UserOpStats[];
   isPending: boolean;
 }) {
   const { userOpStats } = props;

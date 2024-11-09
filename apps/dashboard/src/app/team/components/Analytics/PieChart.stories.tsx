@@ -3,7 +3,7 @@ import { BadgeContainer } from "stories/utils";
 import { PieChart } from "./PieChart";
 
 const meta = {
-  title: "project/Overview/PieChart",
+  title: "Analytics/PieChart",
   component: Component,
   parameters: {
     layout: "centered",

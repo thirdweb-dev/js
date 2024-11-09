@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { BadgeContainer, mobileViewport } from "stories/utils";
-import { EmptyState } from "./EmptyState";
+import { EmptyStateCard } from "./EmptyStateCard";
 
 const meta = {
-  title: "Analytics/EmptyState",
+  title: "Analytics/EmptyStateCard",
   component: Component,
   parameters: {
     layout: "centered",
@@ -32,9 +32,16 @@ export const Mobile: Story = {
 
 function Component() {
   return (
-    <div className="container max-w-[1150px] py-8">
-      <BadgeContainer label="Base">
-        <EmptyState />
+    <div className="container max-w-[1000px] space-y-8 py-8">
+      <BadgeContainer label="Basic">
+        <EmptyStateCard metric="transactions" />
+      </BadgeContainer>
+
+      <BadgeContainer label="With Link">
+        <EmptyStateCard
+          metric="revenue"
+          link="https://docs.example.com/analytics"
+        />
       </BadgeContainer>
     </div>
   );

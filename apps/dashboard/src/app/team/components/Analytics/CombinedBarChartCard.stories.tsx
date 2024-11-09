@@ -3,7 +3,7 @@ import { BadgeContainer, mobileViewport } from "stories/utils";
 import { CombinedBarChartCard } from "./CombinedBarChartCard";
 
 const meta = {
-  title: "project/Overview/CombinedBarChartCard",
+  title: "Analytics/CombinedBarChartCard",
   component: Component,
   parameters: {
     layout: "centered",
@@ -87,6 +87,7 @@ function Component() {
           chartConfig={chartConfig}
           data={generateTimeSeriesData(30)}
           activeChart="dailyUsers"
+          queryKey="dailyUsers"
         />
       </BadgeContainer>
 
@@ -96,6 +97,7 @@ function Component() {
           chartConfig={chartConfig}
           data={generateTimeSeriesData(30)}
           activeChart="monthlyUsers"
+          queryKey="monthlyUsers"
         />
       </BadgeContainer>
     </div>

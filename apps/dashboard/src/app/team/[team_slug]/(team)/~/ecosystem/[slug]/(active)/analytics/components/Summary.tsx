@@ -1,4 +1,4 @@
-import type { EcosystemWalletStats } from "@3rdweb-sdk/react/hooks/useApi";
+import type { EcosystemWalletStats } from "@/api/analytics";
 import { Stat } from "components/analytics/stat";
 import { ActivityIcon, UserIcon } from "lucide-react";
 

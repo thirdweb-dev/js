@@ -1,7 +1,7 @@
-import type { UserOpStatsByChain } from "@3rdweb-sdk/react/hooks/useApi";
+import type { UserOpStats } from "@/api/analytics";
 
-export function createUserOpStatsStub(days: number): UserOpStatsByChain[] {
-  const stubbedData: UserOpStatsByChain[] = [];
+export function createUserOpStatsStub(days: number): UserOpStats[] {
+  const stubbedData: UserOpStats[] = [];
 
   let d = days;
   while (d !== 0) {

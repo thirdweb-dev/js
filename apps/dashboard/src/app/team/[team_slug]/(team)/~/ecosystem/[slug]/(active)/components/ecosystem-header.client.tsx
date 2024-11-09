@@ -1,4 +1,5 @@
 "use client";
+import type { EcosystemWalletStats } from "@/api/analytics";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -15,7 +16,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import type { EcosystemWalletStats } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   AlertTriangleIcon,
   CheckIcon,
