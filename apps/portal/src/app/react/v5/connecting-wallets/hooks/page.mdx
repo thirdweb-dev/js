@@ -1,6 +1,6 @@
 import { ArticleIconCard, createMetadata, DocImage, Stack } from "@doc";
-import { Wallet2Icon } from "lucide-react";
-import { ComponentIcon } from "lucide-react";
+import { Wallet2Icon, ComponentIcon, Wallet } from "lucide-react";
+import { ReactIcon } from "@/icons";
 
 export const metadata = createMetadata({
 	image: {
@@ -44,8 +44,113 @@ function Example() {
 }
 ```
 
-Refer to [`createWallet`](/references/typescript/v5/createWallet) and [`injectedProvider`](/references/typescript/v5/injectedProvider) for more information.
+## Creating Wallets
 
-## Post Connection
+You can create any wallet by id with auto completion using the [`createWallet`](/references/typescript/v5/createWallet) function. Or use one of the first party wallets like [`inAppWallet`](/references/typescript/v5/inAppWallet) or [`ecosystemWallet`](/references/typescript/v5/ecosystemWallet).
 
-Once the wallet is connected, you can use the [Wallet Connection hooks](/references/typescript/v5/hooks#wallet-connection) to get information about the connected wallet like getting the address, account, etc
+<ArticleIconCard
+	title="inAppWallet"
+	icon={Wallet}
+	href="/references/typescript/v5/inAppWallet"
+	description="Create an in app wallet"
+/>
+
+<ArticleIconCard
+	title="ecosystemWallet"
+	icon={Wallet}
+	href="/references/typescript/v5/ecosystemWallet"
+	description="Create an ecosystem wallet"
+/>
+
+<ArticleIconCard
+	title="createWallet"
+	icon={Wallet}
+	href="/references/typescript/v5/createWallet"
+	description="Create any external wallet by id with auto completion"
+/>
+
+## Pre Connection Hooks
+
+Use these hooks to trigger and manage wallet wallet connection within your own UI. Refer to [wallet connection hooks reference](/references/typescript/v5/useConnect) for more information.
+
+<Stack>
+
+<ArticleIconCard
+	title="useConnect"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useConnect"
+	description="Hook to connect any created wallet"
+/>
+
+<ArticleIconCard
+	title="useAutoConnect"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useConnect"
+	description="Hook to auto connect a previously connected wallet"
+/>
+
+<ArticleIconCard
+	title="useConnectModal"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useConnectModal"
+	description="Hook to open a prebuilt connection modal UI from anywhere"
+/>
+
+<ArticleIconCard
+	title="useSwitchActiveWalletChain"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useSwitchActiveWalletChain"
+	description="Hook to switch the active wallet chain"
+/>
+
+<ArticleIconCard
+	title="useDisconnect"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useDisconnect"
+	description="Hook to disconnect the wallet"
+/>
+
+</Stack>
+
+## Post Connection Hooks
+
+Once the wallet is connected, you can use the [wallet connection hooks](/references/typescript/v5/hooks#wallet-connection) to get information about the connected wallet like getting the address, account, etc.
+
+<Stack>
+
+<ArticleIconCard
+	title="useActiveAccount"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useActiveAccount"
+	description="Get the currently connected account"
+/>
+
+<ArticleIconCard
+	title="useActiveWallet"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useActiveWallet"
+	description="Get the currently connected wallet"
+/>
+
+<ArticleIconCard
+	title="useWalletDetailsModal"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useWalletDetailsModal"
+	description="Show a prebuilt modal UI with wallet details from anywhere"
+/>
+
+<ArticleIconCard
+	title="useConnectedWallets"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useConnectedWallets"
+	description="Get all connected wallets"
+/>
+
+<ArticleIconCard
+	title="useAdminWallet"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useConnectedWallets"
+	description="Get the underlying admin wallet of a smart account"
+/>
+
+</Stack>

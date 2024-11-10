@@ -1,0 +1,51 @@
+import { ReactIcon } from "@/icons";
+import { createMetadata } from "@doc";
+import { ExternalLink } from "lucide-react";
+import { ArticleIconCard, Stack } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Web3 Social Identities | thirdweb",
+	description: "Query all web3 social identities for a given address",
+});
+
+# Web3 Social Identities
+
+Query all web3 social identities for a given address.
+
+## Supported Social Identities
+
+- [Farcaster](https://farcaster.xyz/)
+- [Lens Protocol](https://lens.xyz/)
+- [ENS](https://ens.domains/)
+
+## Live Playground
+
+Try out the demo for yourself in the [web3 social identities live playground](https://playground.thirdweb.com/connect/social)
+
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com/connect/social"
+	description="See the SDK in action on the live playground"
+/>
+</Stack>
+
+## Usage with UI Components
+
+When using [`ConnectButton`](/references/typescript/v5/ConnectButton) or [`useWalletDetailsModal`](/references/typescript/v5/useWalletDetailsModal), the user's avatar and username will be automatically populated with their linked social profiles.
+
+## Usage with your own UI
+
+Use the [`useSocialProfiles`](/references/typescript/v5/useSocialProfiles) hook to query all web3 social identities for a given address.
+
+<Stack>
+
+<ArticleIconCard
+	title="useSocialProfiles"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useSocialProfiles"
+	description="Hook to query all web3 social identities for a given address"
+/>
+</Stack>

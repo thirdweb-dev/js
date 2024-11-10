@@ -1,0 +1,75 @@
+import { createMetadata } from "@doc";
+import { ReactIcon } from "@/icons";
+import { ArticleIconCard, Stack } from "@doc";
+export const metadata = createMetadata({
+	title: "Account UI Components | thirdweb",
+	description: "UI components for displaying account information",
+});
+
+# Account UI Components
+
+Build your own UI for displaying account information with these headless components.
+
+```tsx
+import {
+  AccountProvider,
+  AccountAvatar,
+  AccountName,
+  AccountBalance,
+} from "thirdweb/react";
+
+const App = () => (
+<AccountProvider>
+  <AccountAvatar />
+  <AccountName />
+  <AccountBalance />
+</AccountProvider>
+);
+```
+
+## Available components
+
+<Stack>
+
+<ArticleIconCard
+	title="AccountProvider"
+	icon={ReactIcon}
+	href="/references/typescript/v5/AccountProvider"
+	description="Component to provide the account context to your app"
+/>
+
+<ArticleIconCard
+	title="AccountAvatar"
+	icon={ReactIcon}
+	href="/references/typescript/v5/AccountAvatar"
+	description="Component to display the avatar of an account"
+/>
+
+<ArticleIconCard
+	title="AccountName"
+	icon={ReactIcon}
+	href="/references/typescript/v5/AccountName"
+	description="Component to display the name of an account"
+/>
+
+<ArticleIconCard
+	title="AccountAddress"
+	icon={ReactIcon}
+	href="/references/typescript/v5/AccountAddress"
+	description="Component to display the address of an account"
+/>
+
+<ArticleIconCard
+	title="AccountBalance"
+	icon={ReactIcon}
+	href="/references/typescript/v5/AccountBalance"
+	description="Component to display the balance of an account"
+/>
+
+<ArticleIconCard
+	title="AccountBlobbie"
+	icon={ReactIcon}
+	href="/references/typescript/v5/AccountBlobbie"
+	description="Component to display the generic avatar for an account"
+/>
+</Stack>

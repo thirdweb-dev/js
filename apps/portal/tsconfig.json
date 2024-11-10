@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -24,21 +20,11 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@public/*": [
-        "./public/*"
-      ],
-      "flexsearch": [
-        "./node_modules/@types/flexsearch"
-      ],
-      "@root/*": [
-        "./*"
-      ],
-      "@doc": [
-        "./src/components/Document"
-      ]
+      "@/*": ["./src/*"],
+      "@public/*": ["./public/*"],
+      "flexsearch": ["./node_modules/@types/flexsearch"],
+      "@root/*": ["./*"],
+      "@doc": ["./src/components/Document"]
     },
     "forceConsistentCasingInFileNames": true
   },
@@ -46,11 +32,10 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "src/app/react/v5/components/onchain/page.mdx"
   ],
-  "exclude": [
-    "node_modules"
-  ],
+  "exclude": ["node_modules"],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs"

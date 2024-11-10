@@ -1,11 +1,7 @@
-import { Book, BookIcon, CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
+import { Book, CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
 import type { SideBar } from "../../../components/Layouts/DocLayout";
-import { TypeScriptIcon } from "../../../icons";
-import { fetchTypeScriptDoc } from "../../references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
-import { getCustomTag } from "../../references/components/TDoc/utils/getSidebarLinkgroups";
 
 const slug = "/react/v5";
-const docs = await fetchTypeScriptDoc("v5");
 
 export const sidebar: SideBar = {
   name: "Connect React SDK",
@@ -28,245 +24,45 @@ export const sidebar: SideBar = {
       icon: <ExternalLink />,
     },
     {
-      separator: true,
-    },
-    {
-      name: "Core",
+      name: "API Reference",
+      href: "/references/typescript/v5",
       isCollapsible: false,
-      links: [
-        {
-          name: "Client",
-          href: `${slug}/createThirdwebClient`,
-        },
-        {
-          name: "ThirdwebProvider",
-          href: `${slug}/ThirdwebProvider`,
-        },
-        {
-          name: "Themes",
-          links: [
-            {
-              name: "Theme Props",
-              href: `${slug}/Theme`,
-              icon: <CodeIcon />,
-            },
-            ...(docs.functions
-              ?.filter((f) => {
-                const [tag] = getCustomTag(f) || [];
-                return tag === "@theme";
-              })
-              ?.map((f) => ({
-                name: f.name,
-                href: `${slug}/${f.name}`,
-                icon: <CodeIcon />,
-              })) || []),
-          ],
-        },
-        {
-          name: "Adapters",
-          links: [
-            {
-              name: "Introduction",
-              icon: <Book />,
-              href: `${slug}/adapters`,
-            },
-            ...[
-              "createWalletAdapter",
-              "viemAdapter",
-              "ethers6Adapter",
-              "ethers5Adapter",
-            ].map((name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            })),
-          ],
-        },
-        {
-          name: "TS reference",
-          href: "/typescript/v5",
-          icon: <TypeScriptIcon />,
-        },
-      ],
+      icon: <CodeIcon />,
     },
     {
       separator: true,
     },
     {
-      name: "Wallets",
+      name: "Onboarding Users",
       isCollapsible: false,
       links: [
         {
           name: "UI Components",
-          links: [
-            {
-              name: "Introduction",
-              href: `${slug}/connecting-wallets/ui-components`,
-              icon: <Book />,
-            },
-            ...["ConnectButton", "ConnectEmbed", "AutoConnect"].map((name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            })),
-            {
-              name: "Account",
-              isCollapsible: true,
-              links: [
-                "AccountProvider",
-                "AccountAddress",
-                "AccountAvatar",
-                "AccountName",
-                "AccountBlobbie",
-                "AccountBalance",
-              ].map((name) => ({
-                name,
-                href: `${slug}/${name}`,
-                icon: <CodeIcon />,
-              })),
-            },
-          ],
+          href: `${slug}/connecting-wallets/ui-components`,
         },
         {
           name: "Connection Hooks",
-          links: [
-            {
-              name: "Introduction",
-              href: `${slug}/connecting-wallets/hooks`,
-              icon: <Book />,
-            },
-            ...(docs.hooks
-              ?.filter((hook) => {
-                const [tag] = getCustomTag(hook) || [];
-                return tag === "@walletConnection";
-              })
-              ?.map((hook) => ({
-                name: hook.name,
-                href: `${slug}/${hook.name}`,
-                icon: <CodeIcon />,
-              })) || []),
-          ],
-        },
-        {
-          name: "Wallet Hooks",
-          links:
-            docs.hooks
-              ?.filter((hook) => {
-                const [tag] = getCustomTag(hook) || [];
-                return tag === "@wallet";
-              })
-              ?.map((hook) => ({
-                name: hook.name,
-                href: `${slug}/${hook.name}`,
-                icon: <CodeIcon />,
-              })) || [],
+          href: `${slug}/connecting-wallets/hooks`,
         },
         {
           name: "In-App Wallets",
-          links: [
-            {
-              name: "Playground",
-              href: "https://playground.thirdweb.com/connect/in-app-wallet",
-              icon: <ExternalLink />,
-            },
-            {
-              name: "Get Started",
-              href: `${slug}/in-app-wallet/get-started`,
-              icon: <ZapIcon />,
-            },
-            {
-              name: "Sponsor Transactions",
-              href: `${slug}/in-app-wallet/enable-gasless`,
-              icon: <BookIcon />,
-            },
-            {
-              name: "Build your own UI",
-              href: `${slug}/in-app-wallet/build-your-own-ui`,
-              icon: <BookIcon />,
-            },
-            {
-              name: "Export Private Key",
-              href: `${slug}/in-app-wallet/export-private-key`,
-              icon: <BookIcon />,
-            },
-            ...[
-              "inAppWallet",
-              "preAuthenticate",
-              "useLinkProfile",
-              "useProfiles",
-              "hasStoredPasskey",
-            ].map((name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            })),
-          ],
+          href: `${slug}/in-app-wallet/get-started`,
         },
         {
-          name: "Ecosystem Wallets",
-          links: [
-            {
-              name: "Playground",
-              href: "https://playground.thirdweb.com/connect/ecosystem",
-              icon: <ExternalLink />,
-            },
-            {
-              name: "Get Started",
-              href: `${slug}/ecosystem-wallet/get-started`,
-              icon: <ZapIcon />,
-            },
-            ...[
-              "ecosystemWallet",
-              "preAuthenticate",
-              "useLinkProfile",
-              "useProfiles",
-              "hasStoredPasskey",
-            ].map((name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            })),
-          ],
+          name: "Ecosystems Wallets",
+          href: `${slug}/ecosystem-wallet/get-started`,
+        },
+        {
+          name: "External Wallets",
+          href: "/typescript/v5/supported-wallets",
         },
         {
           name: "Account Abstraction",
-          links: [
-            {
-              name: "Playground",
-              href: "https://playground.thirdweb.com/connect/account-abstraction",
-              icon: <ExternalLink />,
-            },
-            {
-              name: "Get Started",
-              href: `${slug}/account-abstraction/get-started`,
-              icon: <Book />,
-            },
-            {
-              name: "Build your own UI",
-              href: `${slug}/account-abstraction/build-your-own-ui`,
-              icon: <Book />,
-            },
-            {
-              name: "Admins & Session Keys",
-              href: `${slug}/account-abstraction/permissions`,
-              icon: <Book />,
-            },
-            {
-              name: "Batching Transactions",
-              href: `${slug}/account-abstraction/batching-transactions`,
-              icon: <Book />,
-            },
-            {
-              name: "Core API",
-              href: "/typescript/v5/smartWallet",
-              icon: <TypeScriptIcon />,
-            },
-          ],
+          href: `${slug}/account-abstraction/get-started`,
         },
         {
-          name: "All Supported Wallets",
-          href: "/typescript/v5/supported-wallets",
-          icon: <TypeScriptIcon />,
+          name: "Funding wallets",
+          href: `${slug}/pay/fund-wallets`,
         },
       ],
     },
@@ -274,56 +70,32 @@ export const sidebar: SideBar = {
       separator: true,
     },
     {
-      name: "Social API",
-      isCollapsible: false,
-      links: ["useSocialProfiles"].map((name) => ({
-        name,
-        href: `${slug}/${name}`,
-        icon: <CodeIcon />,
-      })),
-    },
-    {
-      separator: true,
-    },
-    {
-      name: "Pay",
+      name: "User Identity",
       isCollapsible: false,
       links: [
         {
           name: "UI Components",
-          links: ["PayEmbed"].map((name) => ({
-            name,
-            href: `${slug}/${name}`,
-            icon: <CodeIcon />,
-          })),
+          href: `${slug}/components/account`,
         },
         {
-          name: "Buy with Fiat",
-          links:
-            docs.hooks
-              ?.filter((f) => {
-                const [tag] = getCustomTag(f) || [];
-                return tag === "@buyCrypto" && f.name.includes("Fiat");
-              })
-              ?.map((f) => ({
-                name: f.name,
-                href: `${slug}/${f.name}`,
-                icon: <CodeIcon />,
-              })) || [],
+          name: "Sign in with Ethereum",
+          href: `${slug}/auth`,
         },
         {
-          name: "Buy with Crypto",
-          links:
-            docs.hooks
-              ?.filter((f) => {
-                const [tag] = getCustomTag(f) || [];
-                return tag === "@buyCrypto" && f.name.includes("Crypto");
-              })
-              ?.map((f) => ({
-                name: f.name,
-                href: `${slug}/${f.name}`,
-                icon: <CodeIcon />,
-              })) || [],
+          name: "Link Profiles",
+          href: `${slug}/linking`,
+        },
+        {
+          name: "Web3 Social Identities",
+          href: `${slug}/social`,
+        },
+        {
+          name: "Permissions",
+          href: `${slug}/account-abstraction/permissions`,
+        },
+        {
+          name: "Export private key",
+          href: `${slug}/in-app-wallet/export-private-key`,
         },
       ],
     },
@@ -331,118 +103,52 @@ export const sidebar: SideBar = {
       separator: true,
     },
     {
-      name: "Blockchain API",
+      name: "Onchain Interactions",
       isCollapsible: false,
       links: [
+        // TODO - SPONSOR TRANSACTIONS
         {
           name: "UI Components",
-          links: [
-            ...["ClaimButton", "TransactionButton", "MediaRenderer"].map(
-              (name) => ({
-                name,
-                href: `${slug}/${name}`,
-                icon: <CodeIcon />,
-              }),
-            ),
-            {
-              name: "NFT",
-              isCollapsible: true,
-              links: [
-                "NFTProvider",
-                "NFTMedia",
-                "NFTName",
-                "NFTDescription",
-              ].map((name) => ({
-                name,
-                href: `${slug}/${name}`,
-                icon: <CodeIcon />,
-              })),
-            },
-            {
-              name: "Token",
-              isCollapsible: true,
-              links: [
-                "TokenProvider",
-                "TokenName",
-                "TokenSymbol",
-                "TokenIcon",
-              ].map((name) => ({
-                name,
-                href: `${slug}/${name}`,
-                icon: <CodeIcon />,
-              })),
-            },
-          ],
+          href: `${slug}/components/onchain`,
         },
         {
           name: "Reading State",
-          links: [
-            {
-              name: "Introduction",
-              href: `${slug}/reading-state`,
-              icon: <Book />,
-            },
-            ...(docs.hooks
-              ?.filter((hook) => {
-                const [tag] = getCustomTag(hook) || [];
-                return tag === "@contract";
-              })
-              ?.map((hook) => ({
-                name: hook.name,
-                href: `${slug}/${hook.name}`,
-                icon: <CodeIcon />,
-              })) || []),
-          ],
+          href: `${slug}/reading-state`,
         },
         {
           name: "Transactions",
-          links: [
-            {
-              name: "Introduction",
-              href: `${slug}/transactions`,
-              icon: <Book />,
-            },
-            ...(docs.hooks
-              ?.filter((hook) => {
-                const [tag] = getCustomTag(hook) || [];
-                return tag === "@transaction";
-              })
-              ?.map((hook) => ({
-                name: hook.name,
-                href: `${slug}/${hook.name}`,
-                icon: <CodeIcon />,
-              })) || []),
-          ],
+          href: `${slug}/transactions`,
         },
         {
-          name: "Extensions",
-          links: [
-            {
-              name: "Using Extensions",
-              href: `${slug}/extensions`,
-              icon: <Book />,
-            },
-            {
-              name: "Available Extensions",
-              href: "/typescript/v5/extensions/built-in",
-              icon: <TypeScriptIcon />,
-            },
-          ],
+          name: "Sponsored Transactions",
+          href: `${slug}/in-app-wallet/enable-gasless`,
         },
         {
-          name: "Core API",
-          href: "/typescript/v5/chain",
-          icon: <TypeScriptIcon />,
+          name: "Chain Abstraction",
+          href: `${slug}/pay/transaction`,
         },
       ],
     },
-    { separator: true },
+    {
+      separator: true,
+    },
     {
       name: "Advanced",
       isCollapsible: false,
       links: [
         {
-          name: "UI Components",
+          name: "Adapters",
+          links: [
+            {
+              // TODO one guide per library
+              name: "Usage with other libraries",
+              icon: <Book />,
+              href: `${slug}/adapters`,
+            },
+          ],
+        },
+        {
+          name: "Shared Logins",
           links: ["SiteEmbed", "SiteLink"].map((name) => ({
             name,
             href: `${slug}/${name}`,
@@ -477,11 +183,6 @@ export const sidebar: SideBar = {
     {
       name: "Migrate from RainbowKit",
       href: `${slug}/rainbow-kit-migrate`,
-    },
-    {
-      name: "Full Reference",
-      href: "/references/typescript/v5",
-      isCollapsible: false,
     },
   ],
 };

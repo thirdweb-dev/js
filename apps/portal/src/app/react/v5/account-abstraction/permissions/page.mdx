@@ -1,10 +1,11 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { createMetadata } from "@doc";
+import { createMetadata, Stack, ArticleIconCard } from "@doc";
 import { V4SDKbanner } from "@/components/others/V4SDKBanner";
+import { TypeScriptIcon } from "@/icons";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Account Permissions & Session Keys",
+		title: "Permissions & Session Keys",
 		icon: "thirdweb",
 	},
 	title: "Account Permissions & Session Keys | thirdweb",
@@ -14,11 +15,9 @@ export const metadata = createMetadata({
 
 # Account Permissions & Session Keys
 
-All of the account contracts - [Simple](https://thirdweb.com/thirdweb.eth/AccountFactory) and [Managed](https://thirdweb.com/thirdweb.eth/ManagedAccountFactory) - share the same permission model. In this section, we'll describe this permission model in detail.
+A [smart account](/react/v5/account-abstraction/get-started) can have two types of actors: _Session Keys_ and _Admins_.
 
-An account recognizes only two types of actors: _Session Keys_ and _Admins_.
-
-## 1. Admins
+## Admins
 
 Admins have **unrestricted access** to the account; call any functions on the contract, use the contract without going through the ERC-4337 infrastructure (bundlers, EntryPoint, etc.), withdraw the account's native token balance, and so on.
 
@@ -49,7 +48,33 @@ const onClick = () => {
 };
 ```
 
-## 2. Session Keys
+Check out the [API reference](/references/typescript/v5/erc4337/addAdmin) function for more information.
+
+<Stack>
+
+<ArticleIconCard
+	title="addAdmin"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/erc4337/addAdmin"
+	description="Function to add a new admin to the account"
+/>
+
+<ArticleIconCard
+	title="getAllAdmins"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/erc4337/getAllAdmins"
+	description="Function to get all admins of the account"
+/>
+
+<ArticleIconCard
+	title="removeAdmin"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/erc4337/removeAdmin"
+	description="Function to remove an admin from the account"
+/>
+</Stack>
+
+## Session Keys
 
 Session Keys are additional authorized signers that must go through ERC-4337 infrastructure (bundlers, EntryPoint, etc.) to use an account to execute transactions. Session keys can use an account under certain restrictions.
 
@@ -91,3 +116,36 @@ const onClick = () => {
 	sendTransaction(transaction);
 };
 ```
+
+Check out the [API reference](/references/typescript/v5/erc4337/addSessionKey) for more information.
+
+<Stack>
+
+<ArticleIconCard
+	title="addSessionKey"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/erc4337/addSessionKey"
+	description="Function to add a new session key to the account"
+/>
+
+<ArticleIconCard
+	title="getAllActiveSigners"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/erc4337/getAllActiveSigners"
+	description="Function to get all session keys of the account"
+/>
+
+<ArticleIconCard
+	title="getPermissionsForSigner"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/erc4337/getPermissionsForSigner"
+	description="Function to get the permissions assigned to a session key"
+/>
+
+<ArticleIconCard
+	title="removeSessionKey"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/erc4337/removeSessionKey"
+	description="Function to remove a session key from the account"
+/>
+</Stack>

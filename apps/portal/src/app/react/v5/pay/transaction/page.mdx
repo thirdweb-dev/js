@@ -1,0 +1,80 @@
+import { ExternalLink } from "lucide-react";
+import { ArticleIconCard, Stack } from "@doc";
+import { ReactIcon } from "@/icons";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Transact from any chain or token | thirdweb",
+	description: "Let users transact from any chain or token",
+});
+
+# Chain Abstraction
+
+Facilitate transactions by letting users pay with any token from any chain, or with fiat.
+
+## Live Playground
+
+Try out the demo for yourself in the [live playground](https://playground.thirdweb.com/connect/pay/transactions)
+
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com/connect/pay/transactions"
+	description="See the SDK in action on the live playground"
+/>
+</Stack>
+
+## Usage with PayEmbed
+
+You can use the `PayEmbed` component to let users execute a transaction from any chain, paying with any token.
+
+```tsx
+import { claimTo } from "thirdweb/extensions/erc1155";
+import { PayEmbed, useActiveAccount } from "thirdweb/react";
+
+function App() {
+  const account = useActiveAccount();
+  const { data: nft } = useReadContract(getNFT, {
+    contract: nftContract,
+    tokenId: 0n,
+  });
+
+  return (
+    <PayEmbed
+      client={client}
+      payOptions={{
+        mode: "transaction",
+        transaction: claimTo({
+          contract: nftContract,
+          quantity: 1n,
+          tokenId: 0n,
+          to: account?.address,
+        }),
+        metadata: nft?.metadata,
+      }}
+    />
+  );
+}
+```
+
+Check out the [PayEmbed API reference](/references/typescript/v5/PayEmbed) for more information.
+
+<Stack>
+
+<ArticleIconCard
+	title="PayEmbed"
+	icon={ReactIcon}
+	href="/references/typescript/v5/PayEmbed"
+	description="Prebuilt UI to fund wallets with crypto or fiat"
+/>
+
+</Stack>
+
+
+## Usage with regular transactions
+
+Any transaction sent with `useSendTransaction` or with `TransactionButton` will prompt the user to choose a different payment method if they don't have enough balance for the transaction.
+
+You can turn off this behaviour by setting the `payModal` option to `false`.

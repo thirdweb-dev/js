@@ -19,7 +19,6 @@ export interface NFTNameProps
  * so you can style it just like how you would style a <span> element.
  * @returns A <span> element containing the name of the NFT
  *
- * @component
  * @example
  * ### Basic usage
  * ```tsx
@@ -58,6 +57,7 @@ export interface NFTNameProps
  * ```
  *
  * @nft
+ * @component
  * @beta
  */
 export function NFTName({
