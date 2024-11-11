@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -18,7 +19,6 @@ import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc721";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { Button } from "tw-components";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 const CLAIM_FORM_ID = "nft-claim-form";
@@ -45,8 +45,8 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({ contract }) => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button colorScheme="primary" leftIcon={<GemIcon className="size-4" />}>
-          Claim
+        <Button variant="primary" className="gap-2">
+          <GemIcon className="size-4" /> Claim
         </Button>
       </SheetTrigger>
       <SheetContent className="overflow-y-auto sm:w-[540px] sm:max-w-[90%] lg:w-[700px]">

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -18,7 +19,7 @@ import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { getBatchesToReveal, reveal } from "thirdweb/extensions/erc721";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
-import { Button, FormErrorMessage, FormLabel } from "tw-components";
+import { FormErrorMessage, FormLabel } from "tw-components";
 
 interface NFTRevealButtonProps {
   contract: ThirdwebContract;
@@ -48,11 +49,8 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
     <MinterOnly contract={contract}>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Button
-            colorScheme="primary"
-            leftIcon={<EyeIcon className="size-4" />}
-          >
-            Reveal NFTs
+          <Button variant="primary" className="gap-2">
+            <EyeIcon className="size-4" /> Reveal NFTs
           </Button>
         </SheetTrigger>
         <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">

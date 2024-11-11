@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Accordion,
   AccordionButton,
@@ -25,7 +26,6 @@ import { lazyMint as lazyMint721 } from "thirdweb/extensions/erc721";
 import { lazyMint as lazyMint1155 } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import {
-  Button,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
@@ -313,9 +313,9 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
       </form>
       <div className="mt-8 flex flex-row justify-end gap-3">
         <Button
-          isDisabled={sendAndConfirmTx.isPending}
+          disabled={sendAndConfirmTx.isPending}
           variant="outline"
-          mr={3}
+          className="mr-3"
           onClick={() => setOpen(false)}
         >
           Cancel

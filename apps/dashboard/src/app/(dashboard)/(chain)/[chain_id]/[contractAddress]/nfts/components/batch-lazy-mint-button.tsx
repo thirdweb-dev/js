@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -17,7 +18,6 @@ import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
-import { Button } from "tw-components";
 
 interface BatchLazyMintButtonProps {
   canCreateDelayedRevealBatch: boolean;
@@ -55,10 +55,8 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
     <MinterOnly contract={contract}>
       <Sheet onOpenChange={setOpen} open={open}>
         <SheetTrigger asChild>
-          <Button
-            colorScheme="primary"
-            leftIcon={<FileStackIcon className="size-4" />}
-          >
+          <Button variant="primary" className="gap-2">
+            <FileStackIcon className="size-4" />
             Batch Upload
           </Button>
         </SheetTrigger>

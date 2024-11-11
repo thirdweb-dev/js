@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -23,7 +24,6 @@ import {
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import {
-  Button,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
@@ -59,12 +59,12 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
-          colorScheme="primary"
-          leftIcon={<Flame size={16} />}
+          variant="primary"
           {...restButtonProps}
-          isDisabled={!hasBalance}
+          disabled={!hasBalance}
+          className="gap-2"
         >
-          Burn
+          <Flame size={16} /> Burn
         </Button>
       </SheetTrigger>
       <SheetContent className="z-[10000]">
