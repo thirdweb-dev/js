@@ -14,18 +14,8 @@ import {
   fetchPublishedContractVersions,
   fetchPublisherProfile,
 } from "./fetch-contracts-with-versions";
-import { fetchDeployMetadata } from "./fetchDeployMetadata";
 import { fetchPublishedContracts } from "./fetchPublishedContracts";
 import { fetchPublishedContractsFromDeploy } from "./fetchPublishedContractsFromDeploy";
-import type { ContractId } from "./types";
-
-export function useFetchDeployMetadata(contractId: ContractId) {
-  return useQuery({
-    queryKey: ["publish-metadata", contractId],
-    queryFn: () => fetchDeployMetadata(contractId),
-    enabled: !!contractId,
-  });
-}
 
 function publisherProfileQuery(publisherAddress?: string) {
   return queryOptions({

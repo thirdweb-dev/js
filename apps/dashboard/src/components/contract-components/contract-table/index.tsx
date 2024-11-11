@@ -1,157 +1,93 @@
-import { TableContainer } from "@/components/ui/table";
-import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import { useMemo } from "react";
-import { type Column, type Row, useTable } from "react-table";
-import { Text } from "tw-components";
-import type { ComponentWithChildren } from "types/component-with-children";
-import type { ContractCellContext, ContractId } from "../types";
-import { ContractDescriptionCell } from "./cells/description";
-import { ContractImageCell } from "./cells/image";
-import { ContractNameCell } from "./cells/name";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import Link from "next/link";
+import { fetchDeployMetadata } from "../fetchDeployMetadata";
+import { ContractIdImage } from "../shared/contract-id-image";
 
-interface DeployableContractTableProps {
-  contractIds: ContractId[];
-  isFetching?: boolean;
-  context?: ContractCellContext;
-}
+type DeployableContractTableProps = {
+  contractIds: string[];
+  context: "deploy" | "publish";
+};
 
-export const DeployableContractTable: ComponentWithChildren<
-  DeployableContractTableProps
-> = ({ contractIds, isFetching, context, children }) => {
-  const tableColumns: Column<{ contractId: ContractId }>[] = useMemo(() => {
-    let cols: Column<{ contractId: ContractId }>[] = [
-      {
-        Header: "Icon",
-        accessor: (row) => row.contractId,
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        Cell: (cell: any) => <ContractImageCell cell={cell} />,
-      },
-      {
-        Header: "Name",
-        accessor: (row) => row.contractId,
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        Cell: (cell: any) => <ContractNameCell cell={cell} />,
-      },
-    ];
+export async function DeployableContractTable(
+  props: DeployableContractTableProps,
+) {
+  const { contractIds, context } = props;
+  const deployedContractMetadata = await Promise.all(
+    contractIds.map(async (id) => {
+      const res = await fetchDeployMetadata(id);
+      return {
+        contractId: id,
+        ...res,
+      };
+    }),
+  ).catch(() => null);
 
-    if (context !== "deploy") {
-      cols = [
-        ...cols,
-        {
-          Header: "Description",
-          accessor: (row) => row.contractId,
-          // biome-ignore lint/suspicious/noExplicitAny: FIXME
-          Cell: (cell: any) => <ContractDescriptionCell cell={cell} />,
-        },
-      ];
-    }
+  if (!deployedContractMetadata) {
+    return (
+      <div className="flex min-h-[300px] items-center justify-center rounded-lg border">
+        Failed to load deploy metadata for all contracts
+      </div>
+    );
+  }
 
-    return cols;
-    // this is to avoid re-rendering of the table when the contractIds array changes (it will always be a string array, so we can just join it and compare the string output)
-  }, [context]);
-
-  const tableInstance = useTable({
-    columns: tableColumns,
-    data: contractIds.map((contractId) => ({ contractId })),
-  });
+  const showDescriptionCell = context === "publish";
   return (
     <TableContainer>
-      {isFetching && (
-        <Spinner
-          color="primary"
-          size="xs"
-          position="absolute"
-          top={2}
-          right={4}
-        />
-      )}
-      <Table {...tableInstance.getTableProps()}>
-        <Thead>
-          {tableInstance.headerGroups.map((headerGroup) => (
-            <Tr
-              {...headerGroup.getHeaderGroupProps()}
-              key={headerGroup.getHeaderGroupProps().key}
-            >
-              {headerGroup.headers.map((column) => (
-                <Th
-                  {...column.getHeaderProps()}
-                  key={column.getHeaderProps().key}
-                  border="none"
-                >
-                  <Text as="label" size="label.md" color="faded">
-                    {column.render("Header")}
-                  </Text>
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody {...tableInstance.getTableBodyProps()} position="relative">
-          {tableInstance.rows.map((row) => {
-            tableInstance.prepareRow(row);
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Icon</TableHead>
+            <TableHead>Name</TableHead>
+            {showDescriptionCell && <TableHead>Description</TableHead>}
+          </TableRow>
+        </TableHeader>
+
+        <TableBody className="relative">
+          {deployedContractMetadata.map((metadata, i) => {
             return (
               <TableRow
-                row={row}
-                key={row.original.contractId}
-                context={context}
-              />
+                className="relative cursor-pointer hover:bg-muted/50"
+                // biome-ignore lint/suspicious/noArrayIndexKey: static list
+                key={i}
+              >
+                {/* Icon */}
+                <TableCell>
+                  <ContractIdImage deployedMetadataResult={metadata} />
+                </TableCell>
+
+                {/* name */}
+                <TableCell>
+                  <Link
+                    target="_blank"
+                    href={`/contracts/${context}/${encodeURIComponent(metadata.contractId)}`}
+                    className="text-left text-muted-foreground before:absolute before:inset-0"
+                  >
+                    {metadata.name}
+                  </Link>
+                </TableCell>
+
+                {showDescriptionCell && (
+                  <TableCell>
+                    {
+                      <span className="line-clamp-1 text-muted-foreground">
+                        {metadata.description || "First Version"}
+                      </span>
+                    }
+                  </TableCell>
+                )}
+              </TableRow>
             );
           })}
-        </Tbody>
+        </TableBody>
       </Table>
-      {children}
     </TableContainer>
   );
-};
-
-interface TableRowProps {
-  row: Row<{ contractId: ContractId }>;
-  context?: ContractCellContext;
-}
-
-const TableRow: React.FC<TableRowProps> = ({ row, context }) => {
-  return (
-    <Tr
-      borderBottomWidth={1}
-      role="group"
-      cursor="pointer"
-      _last={{ borderBottomWidth: 0 }}
-      _hover={{ bg: "blackAlpha.50" }}
-      _dark={{
-        _hover: {
-          bg: "whiteAlpha.50",
-        },
-      }}
-      pointerEvents={row?.original?.contractId ? "auto" : "none"}
-      onClick={() => {
-        // always open in new tab
-        window.open(actionUrlPath(context, row.original.contractId));
-      }}
-      {...row.getRowProps()}
-    >
-      {row.cells.map((cell) => (
-        <Td
-          {...cell.getCellProps()}
-          key={cell.getCellProps().key}
-          borderBottomWidth="inherit"
-          borderBottomColor="borderColor"
-          _last={{ textAlign: "end" }}
-        >
-          {cell.render("Cell")}
-        </Td>
-      ))}
-    </Tr>
-  );
-};
-
-function actionUrlPath(context: ContractCellContext | undefined, hash: string) {
-  switch (context) {
-    case "publish":
-      return `/contracts/publish/${encodeURIComponent(hash)}`;
-    case "deploy":
-      return `/contracts/deploy/${encodeURIComponent(hash)}`;
-    default:
-      // should never happen
-      return `/contracts/deploy/${encodeURIComponent(hash)}`;
-  }
 }
