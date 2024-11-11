@@ -1,18 +1,14 @@
-import {
-  Input,
-  InputGroup,
-  type InputProps,
-  InputRightElement,
-} from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
-import { Button } from "tw-components";
 
-interface QuantityInputWithUnlimitedProps
-  extends Omit<InputProps, "onChange" | "value" | "onBlur" | "max" | "min"> {
+interface QuantityInputWithUnlimitedProps {
   value: string;
   onChange: (value: string) => void;
   hideMaxButton?: true;
   decimals?: number;
+  isDisabled: boolean;
+  isRequired: boolean;
 }
 
 export const QuantityInputWithUnlimited: React.FC<
@@ -24,7 +20,6 @@ export const QuantityInputWithUnlimited: React.FC<
   isDisabled,
   isRequired,
   decimals,
-  ...restInputProps
 }) => {
   const [stringValue, setStringValue] = useState<string>(
     Number.isNaN(Number(value)) ? "0" : value.toString(),
@@ -50,10 +45,10 @@ export const QuantityInputWithUnlimited: React.FC<
   };
 
   return (
-    <InputGroup {...restInputProps}>
+    <div className="flex flex-row items-center rounded-md border border-border">
       <Input
-        isRequired={isRequired}
-        isDisabled={isDisabled}
+        required={isRequired}
+        disabled={isDisabled}
         value={stringValue === "unlimited" ? "Unlimited" : stringValue}
         onChange={(e) => updateValue(e.currentTarget.value)}
         onBlur={() => {
@@ -65,23 +60,21 @@ export const QuantityInputWithUnlimited: React.FC<
             setStringValue("0");
           }
         }}
+        className="border-none"
       />
       {hideMaxButton ? null : (
-        <InputRightElement w="auto">
-          <Button
-            isDisabled={isDisabled}
-            colorScheme="primary"
-            variant="ghost"
-            size="sm"
-            mr={1}
-            onClick={() => {
-              updateValue("unlimited");
-            }}
-          >
-            Unlimited
-          </Button>
-        </InputRightElement>
+        <Button
+          disabled={isDisabled}
+          variant="ghost"
+          size="sm"
+          className="mr-1 text-primary"
+          onClick={() => {
+            updateValue("unlimited");
+          }}
+        >
+          Unlimited
+        </Button>
       )}
-    </InputGroup>
+    </div>
   );
 };
