@@ -1,7 +1,6 @@
 "use client";
 
 import type { ThirdwebContract } from "thirdweb";
-import { Heading } from "tw-components";
 import { CreateListingButton } from "../components/list-button";
 import { EnglishAuctionsTable } from "./components/table";
 
@@ -15,7 +14,7 @@ export const ContractEnglishAuctionsPage: React.FC<
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row items-center justify-between">
-        <Heading size="title.sm">Contract Auctions</Heading>
+        <p className="text-lg">Contract Auctions</p>
         <div className="flex flex-row gap-4">
           <CreateListingButton
             contract={contract}
