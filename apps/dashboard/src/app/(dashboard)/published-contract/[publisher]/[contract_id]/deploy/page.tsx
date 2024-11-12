@@ -7,15 +7,21 @@ type Props = {
     contract_id: string;
   }>;
   searchParams: Promise<{
-    module?: string[];
+    module?: string[] | string;
   }>;
 };
 
 export default async function PublishedContractDeployPage(props: Props) {
   const searchParams = await props.searchParams;
   const params = await props.params;
-  const modules = searchParams.module
-    ?.map((m) => moduleFromBase64(m))
-    .filter((m) => m !== null);
+  const moduleParam =
+    typeof searchParams.module === "string"
+      ? [searchParams.module]
+      : searchParams.module;
+
+  const modules =
+    moduleParam?.map((m) => moduleFromBase64(m)).filter((m) => m !== null) ||
+    [];
+
   return <DeployFormForPublishInfo {...params} modules={modules} />;
 }
