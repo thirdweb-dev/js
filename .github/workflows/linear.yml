@@ -18,7 +18,7 @@ jobs:
 
           echo "Pull Request Body: $pr_body"
 
-          if echo "$pr_body" | grep -iE "CNCT|DASH"; then
+          if echo "$pr_body" | grep -iE "CNCT|DASH|BLOCK"; then
             echo "Linked issue found in the pull request body."
           else
             echo "No linked issue found in the pull request body."
