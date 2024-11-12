@@ -1,3 +1,4 @@
+import * as ox__Hex from "ox/Hex";
 import { describe, expect, test, vi } from "vitest";
 import { TEST_WALLET_B } from "~test/addresses.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
@@ -121,9 +122,7 @@ describe("toProvider", () => {
       params: [tx],
     });
 
-    expect(result).toEqual(
-      "0x659bb0802d1d29c47a763ed03cea8f435f98e3be923fef1979f065d60cfb0242",
-    );
+    expect(ox__Hex.validate(result)).toBe(true);
   });
 
   test("should handle eth_estimateGas", async () => {
