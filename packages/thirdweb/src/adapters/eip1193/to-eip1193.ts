@@ -16,6 +16,41 @@ export type ToEip1193ProviderOptions = {
   connectOverride?: (wallet: Wallet) => Promise<Account>;
 };
 
+/**
+ * Converts a Thirdweb wallet into an EIP-1193 compatible provider.
+ * 
+ * This adapter allows you to use a Thirdweb wallet with any library or dApp that expects an EIP-1193 provider.
+ * The provider implements the standard EIP-1193 interface including request handling and event subscription.
+ * 
+ * @param options - Configuration options for creating the provider
+ * @param options.wallet - The Thirdweb wallet to adapt into a provider
+ * @param options.chain - The blockchain chain to connect to
+ * @param options.client - The Thirdweb client instance
+ * @param options.connectOverride - Optional custom connect handler to override default connection behavior
+ * @returns An EIP-1193 compatible provider that wraps the Thirdweb wallet
+ * 
+ * @example
+ * ```ts
+ * import { toProvider } from "thirdweb/adapters/eip1193";
+ * 
+ * // Create an EIP-1193 provider from a Thirdweb wallet
+ * const provider = toProvider({
+ *   wallet,
+ *   chain: ethereum,
+ *   client: createThirdwebClient({ clientId: "..." })
+ * });
+ * 
+ * // Use with any EIP-1193 compatible library
+ * const accounts = await provider.request({ 
+ *   method: "eth_requestAccounts" 
+ * });
+ * 
+ * // Listen for events
+ * provider.on("accountsChanged", (accounts) => {
+ *   console.log("Active accounts:", accounts);
+ * });
+ * ```
+ */
 export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
   const { chain, client, wallet, connectOverride } = options;
   const rpcClient = getRpcClient({ client, chain });
