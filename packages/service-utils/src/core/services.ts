@@ -65,6 +65,13 @@ export const SERVICE_DEFINITIONS = {
     // all actions allowed
     actions: [],
   },
+  nebula: {
+    name: "nebula",
+    title: "Nebula",
+    description: "Nebula services",
+    // all actions allowed
+    actions: [],
+  },
 } as const;
 
 export const SERVICE_NAMES = Object.keys(
