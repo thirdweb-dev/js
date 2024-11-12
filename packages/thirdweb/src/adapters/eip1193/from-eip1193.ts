@@ -16,20 +16,6 @@ export type FromEip1193AdapterOptions = {
   walletId?: WalletId;
 };
 
-/**
- * Converts an EIP1193 provider to a Thirdweb wallet.
- *
- * @param options - The options for converting an EIP1193 provider to a Thirdweb wallet.
- * @returns A Thirdweb wallet.
- * @example
- * ```ts
- * import { EIP1193 } from "thirdweb/wallets";
- * const wallet = EIP1193.fromProvider({ provider });
- *
- * // ... now you can use wallet with ConnectButton, useConnect, etc
- * ```
- * @walletUtils
- */
 export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
   const id: WalletId = options.walletId ?? "adapter";
   const emitter = createWalletEmitter();
@@ -55,7 +41,7 @@ export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
     chain = undefined;
   }
 
-  let handleDisconnect = async () => {};
+  let handleDisconnect = async () => { };
 
   const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
     reset();

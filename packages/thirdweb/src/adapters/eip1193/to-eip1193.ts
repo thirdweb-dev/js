@@ -16,20 +16,6 @@ export type ToEip1193ProviderOptions = {
   connectOverride?: (wallet: Wallet) => Promise<Account>;
 };
 
-/**
- * Converts an EIP1193 provider to a Thirdweb wallet.
- *
- * @param options - The options for converting an EIP1193 provider to a Thirdweb wallet.
- * @returns A Thirdweb wallet.
- * @example
- * ```ts
- * import { EIP1193 } from "thirdweb/wallets";
- * const provider = EIP1193.toProvider({ wallet, chain, client });
- *
- * // ... now you can use this providers with third party libraries
- * ```
- * @walletUtils
- */
 export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
   const { chain, client, wallet, connectOverride } = options;
   const rpcClient = getRpcClient({ client, chain });
@@ -98,8 +84,8 @@ export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
         const account = connectOverride
           ? await connectOverride(wallet)
           : await wallet.connect({
-              client,
-            });
+            client,
+          });
         if (!account) {
           throw new Error("Unable to connect wallet");
         }
