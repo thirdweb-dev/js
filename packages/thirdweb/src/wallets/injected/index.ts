@@ -70,7 +70,7 @@ export async function connectEip1193Wallet({
 
   const addr = addresses?.[0];
   if (!addr) {
-    throw new Error("no accounts available");
+    throw new Error("Failed to connect to wallet, no accounts available");
   }
 
   // use the first account
@@ -123,7 +123,7 @@ export async function autoConnectEip1193Wallet({
 
   const addr = addresses[0];
   if (!addr) {
-    throw new Error("no accounts available");
+    throw new Error("Failed to connect to wallet, no accounts available");
   }
 
   // use the first account

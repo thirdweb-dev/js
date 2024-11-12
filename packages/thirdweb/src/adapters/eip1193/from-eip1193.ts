@@ -1,3 +1,4 @@
+import * as ox__Hex from "ox/Hex";
 import { trackConnect } from "../../analytics/track/connect.js";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChainIfExists } from "../../chains/utils.js";
@@ -9,7 +10,6 @@ import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { createWalletEmitter } from "../../wallets/wallet-emitter.js";
 import type { WalletId } from "../../wallets/wallet-types.js";
 import type { EIP1193Provider } from "./types.js";
-import * as ox__Hex from "ox/Hex";
 
 export type FromEip1193AdapterOptions = {
   provider: EIP1193Provider | (() => Promise<EIP1193Provider>);
@@ -55,7 +55,7 @@ export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
     chain = undefined;
   }
 
-  let handleDisconnect = async () => { };
+  let handleDisconnect = async () => {};
 
   const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
     reset();
@@ -75,7 +75,7 @@ export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
   };
 
   return {
-    id: options.walletId as WalletId,
+    id,
     subscribe: emitter.subscribe,
     getConfig: () => undefined,
     getChain() {
