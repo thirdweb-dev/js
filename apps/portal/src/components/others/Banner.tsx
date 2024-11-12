@@ -10,8 +10,12 @@ export function Banner(props: { text: string; href: string; id: string }) {
   const bannerCancelledKey = `banner-cancelled${props.href}`;
 
   useEffect(() => {
-    if (localStorage.getItem(bannerCancelledKey) !== "true") {
-      setShowBanner(true);
+    try {
+      if (localStorage.getItem(bannerCancelledKey) !== "true") {
+        setShowBanner(true);
+      }
+    } catch {
+      // ignore
     }
   }, [bannerCancelledKey]);
 
@@ -41,7 +45,11 @@ export function Banner(props: { text: string; href: string; id: string }) {
         className="absolute right-4 shrink-0 bg-none bg-transparent p-1"
         onClick={() => {
           setShowBanner(false);
-          localStorage.setItem(bannerCancelledKey, "true");
+          try {
+            localStorage.setItem(bannerCancelledKey, "true");
+          } catch {
+            // ignore
+          }
         }}
       >
         <XIcon

@@ -26,7 +26,11 @@ export function ThemeSwitcher(props: { className?: string }) {
         const newTheme = theme === "light" ? "dark" : "light";
         setTheme(newTheme);
         document.body.dataset.theme = newTheme;
-        localStorage.setItem("website-theme", newTheme);
+        try {
+          localStorage.setItem("website-theme", newTheme);
+        } catch {
+          // ignore
+        }
       }}
       variant="outline"
       className={cn("p-2", props.className)}
