@@ -1,3 +1,4 @@
+import { CodeClient } from "@/components/ui/code/code.client";
 import {
   Accordion,
   AccordionButton,
@@ -6,7 +7,7 @@ import {
   AccordionPanel,
 } from "@chakra-ui/react";
 import type { Abi } from "abitype";
-import { CodeBlock, Heading } from "tw-components";
+import { Heading } from "tw-components";
 import type { SourceFile } from "../types";
 
 interface SourcesAccordionProps {
@@ -37,10 +38,10 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
               </AccordionButton>
               <AccordionPanel>
                 {isExpanded && (
-                  <CodeBlock
+                  <CodeClient
                     code={JSON.stringify(abi, null, 2)}
-                    language="json"
-                    overflow="auto"
+                    lang="json"
+                    loadingClassName="min-h-[500px]"
                   />
                 )}
               </AccordionPanel>
@@ -48,11 +49,12 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
           )}
         </AccordionItem>
       )}
-      {sources.map((signature) => (
+      {sources.map((signature, i) => (
         <AccordionItem
           gap={4}
           flexDirection="column"
-          key={signature.filename}
+          // biome-ignore lint/suspicious/noArrayIndexKey: static list
+          key={i}
           borderColor="borderColor"
           _first={{ borderTopWidth: 0 }}
           _last={{ borderBottomWidth: 0 }}
@@ -65,10 +67,10 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
               </AccordionButton>
               <AccordionPanel>
                 {isExpanded && (
-                  <CodeBlock
-                    overflow="auto"
+                  <CodeClient
                     code={signature.source.trim()}
-                    language="solidity"
+                    lang="solidity"
+                    loadingClassName="min-h-[500px]"
                   />
                 )}
               </AccordionPanel>

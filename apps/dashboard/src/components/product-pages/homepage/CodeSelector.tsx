@@ -1,17 +1,10 @@
-import { Flex } from "@chakra-ui/react";
+import { CodeClient } from "@/components/ui/code/code.client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FileTextIcon, SquareTerminalIcon } from "lucide-react";
-import { themes } from "prism-react-renderer";
 import { useState } from "react";
-import {
-  Card,
-  CodeBlock,
-  LinkButton,
-  type LinkButtonProps,
-} from "tw-components";
+import { LinkButton, type LinkButtonProps } from "tw-components";
 import { CodeOptionButton, type CodeOptions } from "../common/CodeOptionButton";
-
-const darkTheme = themes.dracula;
 
 const landingSnippets = {
   javascript: `import { createThirdwebClient, getContract } from "thirdweb";
@@ -82,6 +75,8 @@ export interface CodeSelectorProps {
   docs?: string;
 }
 
+const queryClient = new QueryClient();
+
 export const CodeSelector: React.FC<CodeSelectorProps> = ({
   defaultLanguage = "javascript",
   docs = "https://portal.thirdweb.com/",
@@ -92,69 +87,45 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
 
   return (
     <>
-      <Flex
-        background="rgba(0,0,0,0.4)"
-        boxShadow="0 0 1px 1px hsl(0deg 0% 100% / 15%)"
-        justify="center"
-        margin="0 auto"
-        transform={{ base: "translateY(20px)", md: "translateY(50%)" }}
-        zIndex={100}
-        backdropFilter="blur(10px)"
-        borderRadius="8px"
-        padding="2px"
-        gap="2px"
-        maxW="calc(100% - 60px)"
-        flexWrap="wrap"
-      >
-        {Object.keys(landingSnippets).map((key) =>
-          landingSnippets[key as keyof typeof landingSnippets] ? (
-            <CodeOptionButton
-              key={key}
-              setActiveLanguage={setActiveLanguage}
-              activeLanguage={activeLanguage}
-              language={key as CodeOptions}
-              textTransform="capitalize"
-            >
-              {key === "javascript"
-                ? "JavaScript"
-                : key === "react-native"
-                  ? "React Native"
-                  : key}
-            </CodeOptionButton>
-          ) : null,
-        )}
-      </Flex>
+      <div className="z-[100] translate-y-[20px] px-6 md:translate-y-[50%]">
+        <div className="flex flex-wrap justify-center gap-1 rounded-lg border bg-background p-1 ">
+          {Object.keys(landingSnippets).map((key) =>
+            landingSnippets[key as keyof typeof landingSnippets] ? (
+              <CodeOptionButton
+                key={key}
+                setActiveLanguage={setActiveLanguage}
+                activeLanguage={activeLanguage}
+                language={key as CodeOptions}
+                textTransform="capitalize"
+              >
+                {key === "javascript"
+                  ? "JavaScript"
+                  : key === "react-native"
+                    ? "React Native"
+                    : key}
+              </CodeOptionButton>
+            ) : null,
+          )}
+        </div>
+      </div>
 
-      <Card
-        w={{ base: "full", md: "69%" }}
-        p={0}
-        background="rgba(0,0,0,0.4)"
-        boxShadow="0 0 1px 1px hsl(0deg 0% 100% / 15%)"
-        position="relative"
-        border="none"
-      >
-        <CodeBlock
-          darkTheme={darkTheme}
-          color="white"
-          fontSize={{ base: "12px", md: "14px" }}
-          borderWidth={0}
-          w="full"
-          py={6}
-          pb={{ base: 12, md: 6 }}
-          code={landingSnippets[activeLanguage]}
-          language={
-            activeLanguage === "react" || activeLanguage === "react-native"
-              ? "jsx"
-              : activeLanguage === "unity"
-                ? "cpp"
-                : activeLanguage
-          }
-          backgroundColor="transparent"
-          mt={4}
-        />
+      <div className="relative w-full max-w-[800px]">
+        <QueryClientProvider client={queryClient}>
+          <CodeClient
+            scrollableClassName="pt-6 pb-12 md:pb-6 mt-4"
+            code={landingSnippets[activeLanguage]}
+            lang={
+              activeLanguage === "react" || activeLanguage === "react-native"
+                ? "jsx"
+                : activeLanguage === "unity"
+                  ? "cpp"
+                  : activeLanguage
+            }
+          />
+        </QueryClientProvider>
 
         {/* Links for Replit and Docs  */}
-        <Flex justify="end" gap={4} position="absolute" bottom={0} right={2}>
+        <div className="absolute right-6 bottom-2 flex items-center justify-end gap-4">
           <CustomLinkButton
             px={4}
             text="Docs"
@@ -181,8 +152,8 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
               })
             }
           />
-        </Flex>
-      </Card>
+        </div>
+      </div>
     </>
   );
 };

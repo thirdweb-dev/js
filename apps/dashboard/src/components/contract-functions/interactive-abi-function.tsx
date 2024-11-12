@@ -1,6 +1,8 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { CodeClient } from "@/components/ui/code/code.client";
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import { InlineCode } from "@/components/ui/inline-code";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
@@ -35,7 +37,6 @@ import { parseAbiParams, stringify } from "thirdweb/utils";
 import {
   Button,
   Card,
-  CodeBlock,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
@@ -44,18 +45,24 @@ import {
   TrackedLink,
 } from "tw-components";
 
-function formatResponseData(data: unknown): string {
+function formatResponseData(data: unknown): {
+  type: "json" | "text";
+  data: string;
+} {
   // Early exit if data is already a string,
   // otherwise JSON.stringify(data) will wrap it in extra quotes - which will affect the value for [Copy button]
   if (typeof data === "string") {
     // "" is a valid response. For example, some token has `symbol` === ""
     if (data === "") {
-      return `""`;
+      return { type: "text", data: `""` };
     }
-    return data;
+    return { type: "text", data };
   }
   if (typeof data === "bigint") {
-    return data.toString();
+    return {
+      type: "text",
+      data: data.toString(),
+    };
   }
 
   if (typeof data === "object") {
@@ -72,7 +79,10 @@ function formatResponseData(data: unknown): string {
     }
   }
 
-  return stringify(data, null, 2);
+  return {
+    type: "json",
+    data: stringify(data, null, 2),
+  };
 }
 
 function formatError(error: Error): string {
@@ -426,35 +436,36 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                   </Badge>
                 )}
               </div>
-              <CodeBlock
-                w="full"
-                position="relative"
-                language={
-                  formattedResponseData.startsWith("http") ||
-                  formattedResponseData.startsWith("ipfs")
-                    ? "text"
-                    : "json"
-                }
-                code={formattedResponseData}
-              />
-              {/* If the result is an IPFS URI, show a handy link so that users can open it in a new tab */}
-              {formattedResponseData.startsWith("ipfs://") && (
-                <Text size="label.sm">
-                  <TrackedLink
-                    href={replaceIpfsUrl(formattedResponseData)}
-                    isExternal
-                    category="contract-explorer"
-                    label="open-in-gateway"
-                  >
-                    Open in gateway
-                  </TrackedLink>
-                </Text>
+
+              {formattedResponseData.type === "text" ? (
+                <PlainTextCodeBlock code={formattedResponseData.data} />
+              ) : (
+                <CodeClient
+                  lang={formattedResponseData.type}
+                  code={formattedResponseData.data}
+                />
               )}
+
+              {/* If the result is an IPFS URI, show a handy link so that users can open it in a new tab */}
+              {formattedResponseData.type === "text" &&
+                formattedResponseData.data.startsWith("ipfs://") && (
+                  <Text size="label.sm">
+                    <TrackedLink
+                      href={replaceIpfsUrl(formattedResponseData.data)}
+                      isExternal
+                      category="contract-explorer"
+                      label="open-in-gateway"
+                    >
+                      Open in gateway
+                    </TrackedLink>
+                  </Text>
+                )}
               {/* Same with the logic above but this time it's applied to traditional urls */}
-              {(formattedResponseData.startsWith("https://") ||
-                formattedResponseData.startsWith("http://")) && (
+              {((formattedResponseData.type === "text" &&
+                formattedResponseData.data.startsWith("https://")) ||
+                formattedResponseData.data.startsWith("http://")) && (
                 <Link
-                  href={formattedResponseData}
+                  href={formattedResponseData.data}
                   target="_blank"
                   className="mt-1 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
                 >

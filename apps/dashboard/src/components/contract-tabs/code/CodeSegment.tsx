@@ -1,10 +1,11 @@
+import { CodeClient } from "@/components/ui/code/code.client";
 import { ButtonGroup, Flex, Icon } from "@chakra-ui/react";
 import { JavaScriptIcon } from "components/icons/brand-icons/JavaScriptIcon";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { type Dispatch, type JSX, type SetStateAction, useMemo } from "react";
-import { Button, CodeBlock } from "tw-components";
+import { Button } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 import type {
   CodeEnvironment,
@@ -116,16 +117,17 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
 
       {onlyTabs ? null : (
         <>
-          <CodeBlock
+          <CodeClient
             code={code}
-            language={
+            loadingClassName="min-h-[450px]"
+            lang={
               isInstallCommand
                 ? activeEnvironment === "react-native"
-                  ? "jsx"
+                  ? "tsx"
                   : "bash"
                 : activeEnvironment === "react" ||
                     activeEnvironment === "react-native"
-                  ? "jsx"
+                  ? "tsx"
                   : activeEnvironment === "unity"
                     ? "cpp"
                     : activeEnvironment

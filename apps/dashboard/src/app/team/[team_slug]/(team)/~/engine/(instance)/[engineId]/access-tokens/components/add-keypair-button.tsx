@@ -1,3 +1,4 @@
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import {
   type KeypairAlgorithm,
   useEngineAddKeypair,
@@ -21,7 +22,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
 import { useState } from "react";
-import { Button, CodeBlock, FormLabel, Text } from "tw-components";
+import { Button, FormLabel, Text } from "tw-components";
 
 const KEYPAIR_ALGORITHM_DETAILS: Record<
   KeypairAlgorithm,
@@ -156,27 +157,19 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
                   </Select>
                 </div>
 
-                <CodeBlock
-                  fontSize="small"
+                <PlainTextCodeBlock
                   code={
                     KEYPAIR_ALGORITHM_DETAILS[algorithm].privateKeyInstructions
                   }
-                  language="solidity"
                 />
                 <Text>Extract the public key.</Text>
-                <CodeBlock
-                  fontSize="small"
+                <PlainTextCodeBlock
                   code={
                     KEYPAIR_ALGORITHM_DETAILS[algorithm].publicKeyInstructions
                   }
-                  language="solidity"
                 />
                 <Text>Print the public key.</Text>
-                <CodeBlock
-                  fontSize="small"
-                  code="cat public.key"
-                  language="solidity"
-                />
+                <PlainTextCodeBlock code="cat public.key" />
               </div>
             </FormControl>
 

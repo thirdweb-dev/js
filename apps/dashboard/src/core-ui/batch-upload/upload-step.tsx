@@ -68,11 +68,19 @@ export const UploadStep: React.FC<UploadStepProps> = ({
         <UnorderedList>
           <li>
             Files <em>must</em> contain one .csv or .json file with metadata. -{" "}
-            <Link download color="blue.500" href="/example.csv">
+            <Link
+              download
+              className="text-link-foreground hover:text-foreground"
+              href="/example.csv"
+            >
               Download example.csv
             </Link>
             .{" "}
-            <Link download color="blue.500" href="/example.json">
+            <Link
+              download
+              className="text-link-foreground hover:text-foreground"
+              href="/example.json"
+            >
               Download example.json
             </Link>
             .
@@ -111,16 +119,24 @@ export const UploadStep: React.FC<UploadStepProps> = ({
             automatically for you. If you already have the files uploaded, you
             can add an <InlineCode code="image" /> and/or
             <InlineCode code="animation_url" /> column and add the IPFS hashes
-            there.
-            <Link download color="blue.500" href="/example-with-ipfs.csv">
+            there.{" "}
+            <Link
+              download
+              className="text-link-foreground hover:text-foreground"
+              href="/example-with-ipfs.csv"
+            >
               Download example.csv
             </Link>
           </li>
           <li>
             If you want to make your media files map to your NFTs, you can add
             the name of your files to the <InlineCode code="image" /> and
-            <InlineCode code="animation_url" /> column.
-            <Link download color="blue.500" href="/example-with-maps.csv">
+            <InlineCode code="animation_url" /> column.{" "}
+            <Link
+              download
+              className="text-link-foreground hover:text-foreground"
+              href="/example-with-maps.csv"
+            >
               Download example.csv
             </Link>
           </li>

@@ -179,24 +179,22 @@ export default function Page() {
 const storageSnippets = {
   react: `// Check out the latest docs here: https://portal.thirdweb.com/typescript/v5/storage
 
-// Initialize your provider
 import { ThirdwebProvider } from "thirdweb/react";
+import { upload } from "thirdweb/storage";
+import { MediaRenderer } from "thirdweb/react";
 
-function Provider() {
+// Wrap your app in ThirdwebProvider
+function Providers() {
   return (
     <ThirdwebProvider
       >
-      ...
+      <App />
     </ThirdwebProvider>
   );
 }
 
-// Upload files to IPFS
-import { upload } from "thirdweb/storage";
-
-function App() {
-  const uploadData = () => {
-    // And upload the data with the upload function
+function UploadFiles() {
+  const uploadData = async () => {
     const uri = await upload({
       client, // thirdweb client
       files: [
@@ -204,15 +202,13 @@ function App() {
       ],
     });
   }
-  ...
+
+  return <div> ... </div>
 }
 
-// Render files from IPFS
-import { MediaRenderer } from "thirdweb/react";
-
-function App() {
+ // Supported types: image, video, audio, 3d model, html
+function ShowFiles() {
   return (
-    // Supported types: image, video, audio, 3d model, html
     <MediaRenderer src="ipfs://QmamvVM5kvsYjQJYs7x8LXKYGFkwtGvuRvqZsuzvpHmQq9/0" />
   );
 }`,
