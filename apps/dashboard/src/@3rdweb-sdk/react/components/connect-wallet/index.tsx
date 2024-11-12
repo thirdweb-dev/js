@@ -35,6 +35,7 @@ export const CustomConnectWallet = (props: {
   connectButtonClassName?: string;
   signInLinkButtonClassName?: string;
   detailsButtonClassName?: string;
+  chain?: Chain;
 }) => {
   const thirdwebClient = useThirdwebClient();
   const loginRequired =
@@ -204,6 +205,7 @@ export const CustomConnectWallet = (props: {
             },
           },
         }}
+        chain={props.chain}
       />
 
       <LazyConfigureNetworkModal
