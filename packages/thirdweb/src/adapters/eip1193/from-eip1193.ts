@@ -97,6 +97,7 @@ export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
       chain = connectedChain;
       handleDisconnect = doDisconnect;
       handleSwitchChain = doSwitchChain;
+      emitter.emit("onConnect", connectOptions);
       trackConnect({
         client: connectOptions.client,
         walletType: id,
@@ -119,6 +120,7 @@ export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
       chain = connectedChain;
       handleDisconnect = doDisconnect;
       handleSwitchChain = doSwitchChain;
+      emitter.emit("onConnect", connectOptions);
       trackConnect({
         client: connectOptions.client,
         walletType: id,
@@ -130,7 +132,11 @@ export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
     disconnect: async () => {
       reset();
       await handleDisconnect();
+      emitter.emit("disconnect", undefined);
     },
-    switchChain: (c) => handleSwitchChain(c),
+    switchChain: async (c) => {
+      await handleSwitchChain(c);
+      emitter.emit("chainChanged", c);
+    },
   };
 }
