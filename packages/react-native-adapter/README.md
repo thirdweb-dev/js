@@ -6,7 +6,7 @@ This package is required to run the thirdweb connect SDK in React Native.
 
 ### 1. Install the packages
 
-Using your favorite pacakge manager, install all the require dependencies
+Using your favorite package manager, install all the required dependencies
 
 ```shell
 npx expo install thirdweb @thirdweb-dev/react-native-adapter
@@ -119,7 +119,7 @@ This means that you can follow all the React documentation and expect it all to 
 Examples:
 
 ```tsx
-import { ThirdwebProvider } form "thirdweb/react";
+import { ThirdwebProvider } from "thirdweb/react";
 ```
 
 ### Resources
