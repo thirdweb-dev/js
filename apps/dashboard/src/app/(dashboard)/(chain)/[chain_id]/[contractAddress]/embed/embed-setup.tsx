@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { CodeClient } from "@/components/ui/code/code.client";
 import { useApiKeys, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl, Input, Select } from "@chakra-ui/react";
 import { LazyCreateAPIKeyDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
@@ -16,14 +17,7 @@ import type { StoredChain } from "stores/chainStores";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { useActiveAccount } from "thirdweb/react";
-import {
-  Card,
-  CodeBlock,
-  FormHelperText,
-  FormLabel,
-  Heading,
-  Text,
-} from "tw-components";
+import { Card, FormHelperText, FormLabel, Heading, Text } from "tw-components";
 
 interface EmbedSetupProps {
   contract: ThirdwebContract;
@@ -535,12 +529,10 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
 
         <Card className="flex w-full flex-col gap-2 md:w-1/2">
           <Heading size="title.sm">Embed Code</Heading>
-          <CodeBlock
-            canCopy={false}
-            whiteSpace="pre"
-            overflowX="auto"
+          <CodeClient
             code={embedCode}
-            language="markup"
+            lang="html"
+            loadingClassName="min-h-[190px]"
           />
           <Button
             className="w-auto gap-2"

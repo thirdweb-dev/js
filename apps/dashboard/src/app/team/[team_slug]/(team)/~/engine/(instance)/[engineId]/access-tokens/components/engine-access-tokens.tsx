@@ -1,5 +1,6 @@
 "use client";
 
+import { CodeClient } from "@/components/ui/code/code.client";
 import { InlineCode } from "@/components/ui/inline-code";
 import {
   useEngineAccessTokens,
@@ -8,7 +9,7 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import { useState } from "react";
-import { Button, CodeBlock, Heading, Link, Text } from "tw-components";
+import { Button, Heading, Link, Text } from "tw-components";
 import { AccessTokensTable } from "./access-tokens-table";
 import { AddAccessTokenButton } from "./add-access-token-button";
 import { AddKeypairButton } from "./add-keypair-button";
@@ -107,8 +108,8 @@ const StandardAccessTokensPanel = ({
         <Text>
           Set the <InlineCode code="authorization" /> header.
         </Text>
-        <CodeBlock
-          language="typescript"
+        <CodeClient
+          lang="ts"
           code={`const resp = fetch("<engine_url>/backend-wallet/get-all", {
   headers: {
     authorization: "Bearer <access_token>",
@@ -158,8 +159,8 @@ const KeypairAuthenticationPanel = ({
         <Text>
           Set the <InlineCode code="authorization" /> header.
         </Text>
-        <CodeBlock
-          language="typescript"
+        <CodeClient
+          lang="ts"
           code={`import jsonwebtoken from "jsonwebtoken";
 
 // Generate an access token.

@@ -1,3 +1,4 @@
+import { CodeClient } from "@/components/ui/code/code.client";
 import {
   Box,
   type BoxProps,
@@ -16,7 +17,7 @@ import {
 import { onlyText } from "react-children-utilities";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { CodeBlock, Heading, Text } from "tw-components";
+import { Heading, Text } from "tw-components";
 
 const ChakraReactMarkdown = chakra(ReactMarkdown);
 
@@ -123,12 +124,13 @@ export const MarkdownRenderer: React.FC<
           if (props?.className) {
             const language = props.className.replace("language-", "");
             return (
-              <CodeBlock
-                code={onlyText(props.children).trim()}
-                language={language}
-                mb={4}
-                {...cleanedProps(props)}
-              />
+              <div className="mb-4">
+                <CodeClient
+                  code={onlyText(props.children).trim()}
+                  lang={language}
+                  {...cleanedProps(props)}
+                />
+              </div>
             );
           }
 

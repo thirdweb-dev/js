@@ -1,10 +1,9 @@
 "use client";
-
-import { CodeBlock } from "@/components/ui/CodeBlock";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CodeClient } from "@/components/ui/code/code.client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -312,7 +311,7 @@ ${Object.keys(populatedTransaction)
           >
             Connect SDK example
           </a>
-          <CodeBlock code={state.codeExample} language="typescript" />
+          <CodeClient code={state.codeExample} lang="ts" />
         </div>
       )}
     </div>
@@ -363,7 +362,7 @@ const transaction = prepareContractCall({
   contract,
   method: resolveMethod("${parsedData.functionName}"),
   params: [${displayParams.join(", ")}],
-  value: ${parsedData.value ? `${parsedData.value}n` : ""},
+  ${parsedData.value ? `value: ${parsedData.value}n,` : ""}
 });
 
 const result = await simulateTransaction({

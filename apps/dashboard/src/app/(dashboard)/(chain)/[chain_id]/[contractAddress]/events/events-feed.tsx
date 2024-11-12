@@ -1,5 +1,6 @@
 "use client";
 
+import { CodeClient } from "@/components/ui/code/code.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   type InternalTransaction,
@@ -32,14 +33,7 @@ import { Fragment, useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { stringify } from "thirdweb/utils";
-import {
-  Button,
-  Card,
-  CodeBlock,
-  FormLabel,
-  Heading,
-  Text,
-} from "tw-components";
+import { Button, Card, FormLabel, Heading, Text } from "tw-components";
 
 interface EventsFeedProps {
   contract: ThirdwebContract;
@@ -351,12 +345,12 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                   <Box gridColumn="span 3">
                     <Text fontWeight="bold">{event.eventName}</Text>
                   </Box>
-
-                  <CodeBlock
-                    gridColumn="span 9"
-                    code={stringify(event.args)}
-                    language="json"
-                  />
+                  <Box gridColumn="span 9">
+                    <CodeClient
+                      code={stringify(event.args, null, 2)}
+                      lang="json"
+                    />
+                  </Box>
                 </SimpleGrid>
 
                 {arr.length - 1 === idx ? null : <Divider />}

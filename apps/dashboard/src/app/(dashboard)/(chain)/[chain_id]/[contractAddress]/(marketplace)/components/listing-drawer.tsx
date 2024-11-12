@@ -12,7 +12,7 @@ import type {
 } from "thirdweb/extensions/marketplace";
 import { useActiveAccount } from "thirdweb/react";
 
-import { CodeBlock } from "@/components/ui/CodeBlock";
+import { CodeClient } from "@/components/ui/code/code.client";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { CancelTab } from "./cancel-tab";
 import { LISTING_STATUS } from "./types";
@@ -148,13 +148,11 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
           {data?.asset.metadata.properties ? (
             <Card className="flex flex-col gap-3 p-4">
               <p className="font-bold">Attributes</p>
-              <CodeBlock
+              <CodeClient
                 code={
                   JSON.stringify(data.asset.metadata.properties, null, 2) || ""
                 }
-                language="json"
-                canCopy={false}
-                className="overflow-auto"
+                lang="json"
               />
             </Card>
           ) : null}
