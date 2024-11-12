@@ -78,14 +78,10 @@ export enum PageId {
   // ---------------------------------------------------------------------------
   //  "publish" product pages
   // ---------------------------------------------------------------------------
-  // thirdweb.com/contracts/publish
-  PublishMultiple = "publish-multiple-contracts",
 
   // ---------------------------------------------------------------------------
   //  "deploy" product pages
   // ---------------------------------------------------------------------------
-  // thirdweb.com/contracts/deploy
-  DeployMultiple = "deploy-multiple-contracts",
 
   // thirdweb.com/:network/:contractAddress (evm)
   // example: thirdweb.com/goerli/0x2eaDAa60dBB74Ead3E20b23E4C5A0Dd789932846

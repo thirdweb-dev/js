@@ -1,36 +1,7 @@
-import { cachedTextEncoder } from "../text-encoder.js";
-import { assertSize } from "./helpers/assert-size.js";
-import { charCodeToBase16 } from "./helpers/charcode-to-base-16.js";
-import { type Hex, isHex } from "./helpers/is-hex.js";
-import { type NumberToHexOpts, numberToHex, padHex } from "./hex.js";
-
-type PadOptions = {
-  dir?: "left" | "right";
-  size?: number | null;
-};
-
-/**
- * @internal Exported for test
- */
-export function padBytes(
-  bytes: Uint8Array,
-  { dir, size = 32 }: PadOptions = {},
-) {
-  if (size === null) {
-    return bytes;
-  }
-  if (bytes.length > size) {
-    throw new Error(`Size overflow: ${bytes.length} > ${size}`);
-  }
-  const paddedBytes = new Uint8Array(size);
-  for (let i = 0; i < size; i++) {
-    const padEnd = dir === "right";
-    paddedBytes[padEnd ? i : size - i - 1] =
-      // biome-ignore lint/style/noNonNullAssertion: we know its there
-      bytes[padEnd ? i : bytes.length - i - 1]!;
-  }
-  return paddedBytes;
-}
+import * as ox__Bytes from "ox/Bytes";
+import { isHex } from "./helpers/is-hex.js";
+import type { Hex } from "./hex.js";
+import type { NumberToHexOpts } from "./hex.js";
 
 export type ToBytesParameters = {
   /** Size of the output bytes. */
@@ -68,10 +39,7 @@ export function toBytes(
   }
 }
 
-export type BoolToBytesOpts = {
-  /** Size of the output bytes. */
-  size?: number;
-};
+export type BoolToBytesOpts = ox__Bytes.fromBoolean.Options;
 
 /**
  * Converts a boolean value to a Uint8Array of bytes.
@@ -87,19 +55,10 @@ export type BoolToBytesOpts = {
  * @utils
  */
 export function boolToBytes(value: boolean, opts: BoolToBytesOpts = {}) {
-  const bytes = new Uint8Array(1);
-  bytes[0] = Number(value);
-  if (typeof opts.size === "number") {
-    assertSize(bytes, { size: opts.size });
-    return padBytes(bytes, { size: opts.size });
-  }
-  return bytes;
+  return ox__Bytes.fromBoolean(value, opts);
 }
 
-export type HexToBytesOpts = {
-  /** Size of the output bytes. */
-  size?: number;
-};
+export type HexToBytesOpts = ox__Bytes.fromHex.Options;
 
 /**
  * Converts a hexadecimal string to a Uint8Array of bytes.
@@ -116,32 +75,7 @@ export type HexToBytesOpts = {
  * @utils
  */
 export function hexToBytes(hex_: Hex, opts: HexToBytesOpts = {}): Uint8Array {
-  let hex = hex_;
-  if (opts.size) {
-    assertSize(hex, { size: opts.size });
-    hex = padHex(hex, { dir: "right", size: opts.size });
-  }
-
-  let hexString = hex.slice(2) as string;
-  if (hexString.length % 2) {
-    hexString = `0${hexString}`;
-  }
-
-  const length = hexString.length / 2;
-  const bytes = new Uint8Array(length);
-  for (let index = 0, j = 0; index < length; index++) {
-    const nibbleLeft = charCodeToBase16(hexString.charCodeAt(j++));
-    const nibbleRight = charCodeToBase16(hexString.charCodeAt(j++));
-    if (nibbleLeft === undefined || nibbleRight === undefined) {
-      throw new Error(
-        `Invalid byte sequence ("${hexString[j - 2]}${
-          hexString[j - 1]
-        }" in "${hexString}").`,
-      );
-    }
-    bytes[index] = nibbleLeft * 16 + nibbleRight;
-  }
-  return bytes;
+  return ox__Bytes.fromHex(hex_, opts);
 }
 
 /**
@@ -158,8 +92,7 @@ export function hexToBytes(hex_: Hex, opts: HexToBytesOpts = {}): Uint8Array {
  * @utils
  */
 export function numberToBytes(value: bigint | number, opts?: NumberToHexOpts) {
-  const hex = numberToHex(value, opts);
-  return hexToBytes(hex);
+  return ox__Bytes.fromNumber(value, opts);
 }
 
 export type StringToBytesOpts = {
@@ -184,10 +117,5 @@ export function stringToBytes(
   value: string,
   opts: StringToBytesOpts = {},
 ): Uint8Array {
-  const bytes = cachedTextEncoder().encode(value);
-  if (typeof opts.size === "number") {
-    assertSize(bytes, { size: opts.size });
-    return padBytes(bytes, { dir: "right", size: opts.size });
-  }
-  return bytes;
+  return ox__Bytes.fromString(value, opts);
 }

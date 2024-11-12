@@ -1,6 +1,5 @@
 import { CURRENCIES } from "constants/currencies";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { isAddressZero } from "utils/zeroAddress";
 
@@ -25,19 +24,19 @@ export const PricePreview: React.FC<PricePreviewProps> = ({
   );
 
   return (
-    <div className="flex flex-col">
-      <Text fontWeight="bold">Default price</Text>
+    <div className="flex flex-col text-muted-foreground">
+      <p className="font-bold">Default price</p>
       {Number(price) === 0 ? (
-        <Text>Free</Text>
+        <p>Free</p>
       ) : (
-        <Text>
+        <p>
           {price}{" "}
           {foundCurrency
             ? foundCurrency.symbol
             : isAddressZero(currencyAddress || "")
               ? chain?.nativeCurrency.symbol || "(Native Token)"
               : `(${shortenIfAddress(currencyAddress)})`}
-        </Text>
+        </p>
       )}
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -11,7 +12,7 @@ import {
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Gem } from "lucide-react";
+import { GemIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,12 +23,7 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import {
-  Button,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-} from "tw-components";
+import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface TokenClaimButtonProps {
   contract: ThirdwebContract;
@@ -52,12 +48,8 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button
-          colorScheme="primary"
-          leftIcon={<Gem size={16} />}
-          {...restButtonProps}
-        >
-          Claim
+        <Button variant="primary" className="gap-2" {...restButtonProps}>
+          <GemIcon size={16} /> Claim
         </Button>
       </SheetTrigger>
       <SheetContent className="z-[10000]">

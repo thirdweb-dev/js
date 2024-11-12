@@ -17,7 +17,6 @@ import {
   ChevronRightIcon,
 } from "lucide-react";
 import { type Column, usePagination, useTable } from "react-table";
-import { Text } from "tw-components";
 
 interface CsvDataTableProps<T extends object> {
   data: T[];
@@ -78,9 +77,9 @@ export function CsvDataTable<T extends object>({
                     // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     key={columnIndex}
                   >
-                    <Text as="label" size="label.sm" color="faded">
+                    <p className="text-muted-foreground">
                       {column.render("Header")}
-                    </Text>
+                    </p>
                   </Th>
                 ))}
               </Tr>

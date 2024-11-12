@@ -22,6 +22,7 @@ import { isMoralisSupported } from "lib/wallet/nfts/moralis";
 import { isSimpleHashSupported } from "lib/wallet/nfts/simpleHash";
 import type { WalletNFT } from "lib/wallet/nfts/types";
 import { CircleAlertIcon, InfoIcon } from "lucide-react";
+import Link from "next/link";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -47,14 +48,7 @@ import type {
   CreateListingParams,
 } from "thirdweb/extensions/marketplace";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import {
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Heading,
-  Link,
-  Text,
-} from "tw-components";
+import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { shortenIfAddress } from "utils/usedapp-external";
 
@@ -357,9 +351,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
       })}
     >
       <FormControl>
-        <Heading as={FormLabel} size="label.lg">
-          Select NFT
-        </Heading>
+        <FormLabel>Select NFT</FormLabel>
         <FormHelperText mb="8px">
           Select the NFT you want to list for sale
         </FormHelperText>
@@ -367,24 +359,22 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
           <Flex flexDir="column" gap={4} mb={4}>
             <div className="flex flex-row items-center gap-3 rounded-md border border-border border-orange-100 bg-orange-50 p-[10px] dark:border-orange-300 dark:bg-orange-300">
               <InfoIcon className="size-6 text-orange-400 dark:text-orange-900" />
-              <Text color="orange.800" _dark={{ color: "orange.900" }}>
+              <p className="text-orange-800 dark:text-orange-900">
                 This chain is not supported by our NFT API yet, please enter the
                 contract address of the NFT you want to list.
-              </Text>
+              </p>
             </div>
             <FormControl
               isInvalid={!!form.formState.errors.selected?.contractAddress}
             >
-              <Heading as={FormLabel} size="label.lg">
-                Contract address
-              </Heading>
+              <FormLabel>Contract address</FormLabel>
               <SolidityInput
                 solidityType="address"
                 formContext={form}
                 {...form.register("selected.contractAddress", {
                   required: "Contract address is required",
                 })}
-                placeholder=""
+                placeholder="0x..."
               />
               <FormErrorMessage>
                 {form.formState.errors.selected?.contractAddress?.message}
@@ -458,21 +448,19 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         ) : nfts && nfts.length === 0 ? (
           <div className="flex flex-row items-center gap-3 rounded-md border border-border border-orange-100 bg-orange-50 p-[10px] dark:border-orange-300 dark:bg-orange-300">
             <InfoIcon className="size-6 text-orange-400 dark:text-orange-900" />
-            <Text color="orange.800" _dark={{ color: "orange.900" }}>
+            <p className="text-orange-800 dark:text-orange-900">
               There are no NFTs owned by this wallet. You need NFTs to create a
               listing. You can create NFTs with thirdweb.{" "}
-              <Link href="/explore/nft" color="blue.600" isExternal>
+              <Link href="/explore/nft" color="blue.600" target="_blank">
                 Explore NFT contracts
               </Link>
               .
-            </Text>
+            </p>
           </div>
         ) : null}
       </FormControl>
       <FormControl isRequired isDisabled={noNfts}>
-        <Heading as={FormLabel} size="label.lg">
-          Listing Currency
-        </Heading>
+        <FormLabel>Listing Currency</FormLabel>
         <CurrencySelector
           contractChainId={chainId}
           value={form.watch("currencyContractAddress")}
@@ -485,11 +473,11 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         </FormHelperText>
       </FormControl>
       <FormControl isRequired isDisabled={noNfts}>
-        <Heading as={FormLabel} size="label.lg">
+        <FormLabel>
           {form.watch("listingType") === "auction"
             ? "Buyout Price Per Token"
             : "Listing Price"}
-        </Heading>
+        </FormLabel>
         <Input {...form.register("pricePerToken")} />
         <FormHelperText>
           {form.watch("listingType") === "auction"
@@ -500,9 +488,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
       {form.watch("selected")?.type?.toLowerCase() !== "erc721" && (
         <FormControl isRequired isDisabled={noNfts}>
           <div className="flex flex-row justify-between gap-2">
-            <Heading as={FormLabel} size="label.lg">
-              Quantity
-            </Heading>
+            <FormLabel>Quantity</FormLabel>
           </div>
           <Input {...form.register("quantity")} />
           <FormHelperText>
@@ -513,18 +499,14 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
       {form.watch("listingType") === "auction" && (
         <>
           <FormControl isRequired isDisabled={noNfts}>
-            <Heading as={FormLabel} size="label.lg">
-              Reserve Price Per Token
-            </Heading>
+            <FormLabel>Reserve Price Per Token</FormLabel>
             <Input {...form.register("reservePricePerToken")} />
             <FormHelperText>
               The minimum price per token necessary to bid on this auction
             </FormHelperText>
           </FormControl>
           <FormControl isRequired>
-            <Heading as={FormLabel} size="label.lg">
-              Auction Duration
-            </Heading>
+            <FormLabel>Auction Duration</FormLabel>
             <Select {...form.register("listingDurationInSeconds")}>
               {auctionTimes.map((time) => (
                 <option key={time.value} value={time.value}>

@@ -1,4 +1,4 @@
-import { Link } from "tw-components";
+import Link from "next/link";
 import { QuantityInputWithUnlimited } from "../../quantity-input-with-unlimited";
 import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
@@ -41,8 +41,8 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
           Limits are set per wallets and not per user, sophisticated actors
           could get around wallet restrictions.{" "}
           <Link
-            isExternal
-            color="blue.500"
+            className="text-blue-500"
+            target="_blank"
             href="https://portal.thirdweb.com/contracts/design/Drop#sybil-attacks"
           >
             Learn more

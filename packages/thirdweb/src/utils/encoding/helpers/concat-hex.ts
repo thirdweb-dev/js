@@ -1,4 +1,5 @@
-import type { Hex } from "./is-hex.js";
+import * as ox__Hex from "ox/Hex";
+import type { Hex } from "../hex.js";
 
 /**
  * Concatenates an array of hexadecimal values into a single hexadecimal value.
@@ -8,8 +9,5 @@ import type { Hex } from "./is-hex.js";
  * @utils
  */
 export function concatHex(values: readonly Hex[]): Hex {
-  return `0x${(values as Hex[]).reduce(
-    (acc, x) => acc + x.replace("0x", ""),
-    "",
-  )}`;
+  return ox__Hex.concat(...values);
 }

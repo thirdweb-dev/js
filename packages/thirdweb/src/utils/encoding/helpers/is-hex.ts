@@ -1,9 +1,7 @@
-export type Hex = `0x${string}`;
+import * as ox__Hex from "ox/Hex";
+import type { Hex } from "../hex.js";
 
-export type IsHexOptions = {
-  /** If set to true, the value must start with "0x" and only contain hexadecimal characters. If set to false, the value can start with "0x" or not. Default is true. */
-  strict?: boolean;
-};
+export type IsHexOptions = ox__Hex.assert.Options;
 
 /**
  * Checks if a value is a valid hexadecimal string.
@@ -22,13 +20,5 @@ export function isHex(
   value: unknown,
   options: IsHexOptions = {},
 ): value is Hex {
-  if (!value) {
-    return false;
-  }
-  if (typeof value !== "string") {
-    return false;
-  }
-  return options.strict
-    ? /^0x[0-9a-fA-F]*$/.test(value)
-    : value.startsWith("0x");
+  return ox__Hex.validate(value, options);
 }

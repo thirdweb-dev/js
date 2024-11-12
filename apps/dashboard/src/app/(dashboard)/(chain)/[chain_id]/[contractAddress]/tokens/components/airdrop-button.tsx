@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -7,12 +8,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Droplet } from "lucide-react";
+import { DropletIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { balanceOf } from "thirdweb/extensions/erc20";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { Button } from "tw-components";
 import { TokenAirdropForm } from "./airdrop-form";
 interface TokenAirdropButtonProps {
   contract: ThirdwebContract;
@@ -33,12 +33,12 @@ export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
-          colorScheme="primary"
-          leftIcon={<Droplet size={16} />}
+          variant="primary"
           {...restButtonProps}
-          isDisabled={!hasBalance}
+          disabled={!hasBalance}
+          className="gap-2"
         >
-          Airdrop
+          <DropletIcon size={16} /> Airdrop
         </Button>
       </SheetTrigger>
       <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">

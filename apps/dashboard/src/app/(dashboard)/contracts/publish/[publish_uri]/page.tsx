@@ -25,7 +25,11 @@ export default async function PublishContractPage(
   const publishMetadataFromUri = await fetchDeployMetadata({
     uri: publishUri,
     client: getThirdwebClient(),
-  });
+  }).catch(() => null);
+
+  if (!publishMetadataFromUri) {
+    notFound();
+  }
 
   let publishMetadata = publishMetadataFromUri;
 

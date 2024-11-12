@@ -1,7 +1,5 @@
-import { assertSize } from "./helpers/assert-size.js";
-import type { Hex } from "./helpers/is-hex.js";
-import { trim } from "./helpers/trim.js";
-import { hexToBigInt, hexToNumber, uint8ArrayToHex } from "./hex.js";
+import * as ox__Bytes from "ox/Bytes";
+import { type Hex, uint8ArrayToHex } from "./hex.js";
 
 export type FromBytesParameters<
   TTo extends "string" | "hex" | "bigint" | "number" | "boolean",
@@ -86,17 +84,10 @@ export function bytesToBigInt(
   bytes: Uint8Array,
   opts: BytesToBigIntOpts = {},
 ): bigint {
-  if (typeof opts.size !== "undefined") {
-    assertSize(bytes, { size: opts.size });
-  }
-  const hex = uint8ArrayToHex(bytes, opts);
-  return hexToBigInt(hex, opts);
+  return ox__Bytes.toBigInt(bytes, opts);
 }
 
-export type BytesToBoolOpts = {
-  /** Size of the bytes. */
-  size?: number;
-};
+export type BytesToBoolOpts = ox__Bytes.toBoolean.Options;
 
 /**
  * Converts a byte array to a boolean value.
@@ -117,16 +108,7 @@ export function bytesToBool(
   bytes_: Uint8Array,
   opts: BytesToBoolOpts = {},
 ): boolean {
-  let bytes = bytes_;
-  if (typeof opts.size !== "undefined") {
-    assertSize(bytes, { size: opts.size });
-    bytes = trim(bytes);
-  }
-
-  if (bytes.length > 1 || (bytes[0] && bytes[0] > 1)) {
-    throw new Error(`Invalid boolean representation: ${bytes}`);
-  }
-  return Boolean(bytes[0]);
+  return ox__Bytes.toBoolean(bytes_, opts);
 }
 
 export type BytesToNumberOpts = BytesToBigIntOpts;
@@ -149,17 +131,10 @@ export function bytesToNumber(
   bytes: Uint8Array,
   opts: BytesToNumberOpts = {},
 ): number {
-  if (typeof opts.size !== "undefined") {
-    assertSize(bytes, { size: opts.size });
-  }
-  const hex = uint8ArrayToHex(bytes, opts);
-  return hexToNumber(hex, opts);
+  return ox__Bytes.toNumber(bytes, opts);
 }
 
-export type BytesToStringOpts = {
-  /** Size of the bytes. */
-  size?: number;
-};
+export type BytesToStringOpts = ox__Bytes.toString.Options;
 
 /**
  * Converts an array of bytes to a string using UTF-8 encoding.
@@ -179,10 +154,5 @@ export function bytesToString(
   bytes_: Uint8Array,
   opts: BytesToStringOpts = {},
 ): string {
-  let bytes = bytes_;
-  if (typeof opts.size !== "undefined") {
-    assertSize(bytes, { size: opts.size });
-    bytes = trim(bytes, { dir: "right" });
-  }
-  return new TextDecoder().decode(bytes);
+  return ox__Bytes.toString(bytes_, opts);
 }

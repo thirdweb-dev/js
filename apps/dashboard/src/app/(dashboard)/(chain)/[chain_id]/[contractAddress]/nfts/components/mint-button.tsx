@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -11,7 +12,6 @@ import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
-import { Button } from "tw-components";
 import { NFTMintForm } from "./mint-form";
 
 interface NFTMintButtonProps {
@@ -30,11 +30,8 @@ export const NFTMintButton: React.FC<NFTMintButtonProps> = ({
     <MinterOnly contract={contract}>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Button
-            colorScheme="primary"
-            leftIcon={<PlusIcon className="size-5" />}
-            {...restButtonProps}
-          >
+          <Button variant="primary" className="gap-2" {...restButtonProps}>
+            <PlusIcon className="size-5" />
             Mint
           </Button>
         </SheetTrigger>

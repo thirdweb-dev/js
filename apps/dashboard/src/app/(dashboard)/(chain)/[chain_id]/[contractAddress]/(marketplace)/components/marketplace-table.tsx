@@ -1,7 +1,6 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Button } from "@/components/ui/button";
 import {
-  ButtonGroup,
-  Flex,
   IconButton,
   Select,
   Skeleton,
@@ -38,7 +37,6 @@ import type {
   EnglishAuction,
 } from "thirdweb/extensions/marketplace";
 import { min } from "thirdweb/utils";
-import { Button, Text } from "tw-components";
 import { ListingDrawer } from "./listing-drawer";
 import { LISTING_STATUS } from "./types";
 
@@ -73,9 +71,9 @@ const tableColumns: Column<DirectListing | EnglishAuction>[] = [
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     Cell: ({ cell }: { cell: Cell<any, any> }) => {
       return (
-        <Text size="label.md" whiteSpace="nowrap">
+        <p className="whitespace-nowrap text-muted-foreground">
           {cell.value.displayValue} {cell.value.symbol}
-        </Text>
+        </p>
       );
     },
   },
@@ -182,21 +180,23 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
   >(null);
 
   return (
-    <Flex gap={4} direction="column">
-      <ButtonGroup size="sm" variant="outline" isAttached>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-row">
         <Button
           onClick={() => setListingsToShow("all")}
-          variant={listingsToShow === "all" ? "solid" : "outline"}
+          variant={listingsToShow === "all" ? "default" : "outline"}
+          className="w-18 rounded-r-none"
         >
           All
         </Button>
         <Button
           onClick={() => setListingsToShow("valid")}
-          variant={listingsToShow === "valid" ? "solid" : "outline"}
+          variant={listingsToShow === "valid" ? "default" : "outline"}
+          className="rounded-l-none"
         >
           Valid
         </Button>
-      </ButtonGroup>
+      </div>
       <TableContainer maxW="100%" className="relative">
         {((listingsToShow === "all" && getAllQueryResult.isFetching) ||
           (listingsToShow === "valid" && getValidQueryResult.isFetching)) && (
@@ -226,9 +226,9 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
                     // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     key={columnIndex}
                   >
-                    <Text as="label" size="label.sm" color="faded">
+                    <p className="text-muted-foreground">
                       {column.render("Header")}
-                    </Text>
+                    </p>
                   </Th>
                 ))}
                 {/* // Need to add an empty header for the drawer button */}
@@ -273,7 +273,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
         </Table>
       </TableContainer>
       <div className="flex w-full items-center justify-center">
-        <Flex gap={2} direction="row" align="center">
+        <div className="flex flex-row items-center gap-2">
           <IconButton
             isDisabled={!canPreviousPage || totalCountQuery.isPending}
             aria-label="first page"
@@ -286,7 +286,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
             icon={<ChevronLeftIcon className="size-4" />}
             onClick={() => previousPage()}
           />
-          <Text whiteSpace="nowrap">
+          <p className="whitespace-nowrap">
             Page <strong>{pageIndex + 1}</strong> of{" "}
             <Skeleton
               as="span"
@@ -295,7 +295,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
             >
               <strong>{pageCount}</strong>
             </Skeleton>
-          </Text>
+          </p>
           <IconButton
             isDisabled={!canNextPage || totalCountQuery.isPending}
             aria-label="next page"
@@ -322,8 +322,8 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
             <option value="250">250</option>
             <option value="500">500</option>
           </Select>
-        </Flex>
+        </div>
       </div>
-    </Flex>
+    </div>
   );
 };

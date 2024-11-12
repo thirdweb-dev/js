@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -10,7 +11,6 @@ import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
-import { Button } from "tw-components";
 import { LazyMintNftForm } from "./lazy-mint-form";
 
 interface NFTLazyMintButtonProps {
@@ -28,11 +28,8 @@ export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({
     <MinterOnly contract={contract}>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Button
-            colorScheme="primary"
-            leftIcon={<PlusIcon className="size-5" />}
-            {...restButtonProps}
-          >
+          <Button variant="primary" className="gap-2" {...restButtonProps}>
+            <PlusIcon className="size-5" />
             Single Upload
           </Button>
         </SheetTrigger>

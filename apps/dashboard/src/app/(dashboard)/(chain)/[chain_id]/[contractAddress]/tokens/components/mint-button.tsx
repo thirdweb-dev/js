@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -12,7 +13,7 @@ import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Plus } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,7 +24,7 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import { Button, FormErrorMessage, FormLabel } from "tw-components";
+import { FormErrorMessage, FormLabel } from "tw-components";
 
 interface TokenMintButtonProps {
   contract: ThirdwebContract;
@@ -50,12 +51,8 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
     <MinterOnly contract={contract}>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Button
-            colorScheme="primary"
-            leftIcon={<Plus size={16} />}
-            {...restButtonProps}
-          >
-            Mint
+          <Button variant="primary" {...restButtonProps} className="gap-2">
+            <PlusIcon size={16} /> Mint
           </Button>
         </SheetTrigger>
         <SheetContent className="z-[10000]">

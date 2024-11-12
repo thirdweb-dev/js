@@ -4,59 +4,11 @@ import {
   boolToBytes,
   hexToBytes,
   numberToBytes,
-  padBytes,
   stringToBytes,
   toBytes,
 } from "./to-bytes.js";
 
 describe("to-bytes.js", () => {
-  describe("padBytes", () => {
-    it("should pad bytes to the left by default to the specified size", () => {
-      const result = padBytes(new Uint8Array([1, 2, 3]), { size: 5 });
-      expect(result).toEqual(new Uint8Array([0, 0, 1, 2, 3]));
-    });
-
-    it('should pad bytes to the right if dir is "right"', () => {
-      const result = padBytes(new Uint8Array([1, 2, 3]), {
-        dir: "right",
-        size: 5,
-      });
-      expect(result).toEqual(new Uint8Array([1, 2, 3, 0, 0]));
-    });
-
-    it("should not pad if the byte array is already the specified size", () => {
-      const result = padBytes(new Uint8Array([1, 2, 3, 4, 5]), { size: 5 });
-      expect(result).toEqual(new Uint8Array([1, 2, 3, 4, 5]));
-    });
-
-    it("should throw an error if the byte array exceeds the specified size", () => {
-      expect(() =>
-        padBytes(new Uint8Array([1, 2, 3, 4, 5, 6]), { size: 5 }),
-      ).toThrow("Size overflow: 6 > 5");
-    });
-
-    it("should return the same byte array if size is null", () => {
-      const bytes = new Uint8Array([1, 2, 3]);
-      const result = padBytes(bytes, { size: null });
-      expect(result).toEqual(bytes);
-    });
-
-    it("should pad to the default size of 32 if size is not specified", () => {
-      const result = padBytes(new Uint8Array([1, 2, 3]));
-      expect(result).toStrictEqual(
-        new Uint8Array([
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 1, 2, 3,
-        ]),
-      );
-    });
-
-    it("should handle an empty byte array and pad to the specified size", () => {
-      const result = padBytes(new Uint8Array([]), { size: 3 });
-      expect(result).toEqual(new Uint8Array([0, 0, 0]));
-    });
-  });
-
   describe("toBytes", () => {
     it("should convert a number to bytes", () => {
       expect(toBytes(123)).toEqual(new Uint8Array([123]));
@@ -109,7 +61,7 @@ describe("to-bytes.js", () => {
 
     it("should throw an error if the specified size is less than the byte size", () => {
       expect(() => boolToBytes(true, { size: 0 })).toThrow(
-        "Size overflow: 1 > 0",
+        "Size cannot exceed `0` bytes. Given size: `1` bytes.",
       );
     });
 
@@ -151,7 +103,7 @@ describe("to-bytes.js", () => {
 
     it("should throw an error if the hex string exceeds the specified size", () => {
       expect(() => hexToBytes("0x123456", { size: 2 })).toThrow(
-        "Size overflow",
+        "Size cannot exceed `2` bytes. Given size: `3` bytes.",
       );
     });
 
@@ -211,7 +163,7 @@ describe("to-bytes.js", () => {
 
     it("should throw an error if the byte array exceeds the specified size", () => {
       expect(() => stringToBytes("Hello", { size: 3 })).toThrow(
-        "Size overflow: 5 > 3",
+        "Size cannot exceed `3` bytes. Given size: `5` bytes.",
       );
     });
 
