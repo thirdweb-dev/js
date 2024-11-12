@@ -202,7 +202,10 @@ export function FaucetButton({
   }
 
   // Email verification is required to claim from the faucet
-  if (accountQuery.data.status === "noCustomer") {
+  if (
+    !accountQuery.data.emailConfirmedAt &&
+    !accountQuery.data.unconfirmedEmail
+  ) {
     return (
       <>
         <Button
