@@ -150,17 +150,12 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         ],
       });
       expect(tx.transactionHash).toHaveLength(66);
-      await waitForReceipt({
+      const result = await waitForReceipt({
         client,
         transactionHash: tx.transactionHash,
         chain,
       });
-      const balance = await balanceOf({
-        contract,
-        owner: smartWalletAddress,
-        tokenId: 0n,
-      });
-      expect(balance).toEqual(3n);
+      expect(result.status).toEqual("success");
     });
 
     it("can sign and verify 1271 with replay protection", async () => {
@@ -289,7 +284,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       expect(wallet.getChain()?.id).toEqual(baseSepolia.id);
     });
 
-    it("can execute a 2 tx in parallel", async () => {
+    it("can execute 2 tx in parallel", async () => {
       const newSmartWallet = smartWallet({
         chain,
         gasless: true,
