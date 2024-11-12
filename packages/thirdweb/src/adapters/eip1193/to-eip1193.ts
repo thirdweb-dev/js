@@ -119,8 +119,8 @@ export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
         const account = connectOverride
           ? await connectOverride(wallet)
           : await wallet.connect({
-            client,
-          });
+              client,
+            });
         if (!account) {
           throw new Error("Unable to connect wallet");
         }

@@ -80,7 +80,7 @@ export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
     chain = undefined;
   }
 
-  let handleDisconnect = async () => { };
+  let handleDisconnect = async () => {};
 
   const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
     reset();
