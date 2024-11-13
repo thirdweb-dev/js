@@ -28,6 +28,10 @@ const links = [
     name: "Contracts",
     href: "/contracts",
   },
+  {
+    name: "Insight",
+    href: "/insight",
+  },
 ];
 
 const toolLinks = [

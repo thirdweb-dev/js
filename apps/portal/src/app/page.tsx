@@ -14,6 +14,7 @@ import {
   DotNetIcon,
   EcosystemWalletsIcon,
   InfraEngineIcon,
+  InfraInsightIcon,
   PayIcon,
   ReactIcon,
   TypeScriptIcon,
@@ -45,6 +46,7 @@ export default function Page() {
       <WalletsSection />
       <EngineSection />
       <ContractsSection />
+      <InsightSection />
     </main>
   );
 }
@@ -354,6 +356,23 @@ function EngineSection() {
           title="Engine"
           description="Backend server to reliably call smart contracts"
           icon={InfraEngineIcon}
+        />
+      </Grid>
+    </section>
+  );
+}
+
+function InsightSection() {
+  return (
+    <section className="my-12">
+      <SectionTitle id="insight" title="Insight" />
+      <div className="mb-6 border-b" />
+      <Grid>
+        <ArticleCardIndex
+          href="/insight"
+          title="Insight"
+          description="Query, transform and analyze blockchain data"
+          icon={InfraInsightIcon}
         />
       </Grid>
     </section>

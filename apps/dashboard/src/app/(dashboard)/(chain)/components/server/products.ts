@@ -2,6 +2,7 @@ import type { ChainSupportedService } from "../../types/chain";
 import { ConnectSDKIcon } from "./icons/ConnectSDKIcon";
 import { ContractIcon } from "./icons/ContractIcon";
 import { EngineIcon } from "./icons/EngineIcon";
+import { InsightIcon } from "./icons/InsightIcon";
 import { PayIcon } from "./icons/PayIcon";
 import { RPCIcon } from "./icons/RPCIcon";
 import { SmartAccountIcon } from "./icons/SmartAccountIcon";
@@ -48,6 +49,13 @@ export const products = [
     icon: PayIcon,
     description: "Point of sale solution for bridging, onramping & swapping",
     link: "https://portal.thirdweb.com/connect/pay/overview",
+  },
+  {
+    name: "Insight",
+    id: "insight",
+    icon: InsightIcon,
+    description: "Query, transform and analyze blockchain data",
+    link: "https://portal.thirdweb.com/insight",
   },
 ] satisfies Array<{
   name: string;

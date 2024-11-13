@@ -17,6 +17,7 @@ export { ContractPublishIcon } from "./products/contracts/ContractPublishIcon";
 export { InfraEngineIcon } from "./products/infra/InfraEngineIcon";
 export { InfraRPCIcon } from "./products/infra/InfraRPCIcon";
 export { InfraStorageIcon } from "./products/infra/InfraStorageIcon";
+export { InfraInsightIcon } from "./products/infra/InfraInsightIcon";
 // // payments
 export { PaymentsNFTCheckoutIcon } from "./products/payments/PaymentsNFTCheckoutIcon";
 export { PaymentsSponsoredIcon } from "./products/payments/PaymentsSponsoredIcon";

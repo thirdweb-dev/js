@@ -20,7 +20,8 @@ type DynamicImageOptions = {
     | "storage"
     | "changelog"
     | "dotnet"
-    | "unreal-engine";
+    | "unreal-engine"
+    | "insight";
 };
 
 export type MetadataImageIcon = DynamicImageOptions["icon"];

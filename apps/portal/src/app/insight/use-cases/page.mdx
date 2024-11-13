@@ -1,0 +1,62 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Insight Use Cases | thirdweb Infrastructure",
+	description: "Example use cases for thirdweb Insight",
+  image: {
+    title: "Insight",
+    icon: "insight",
+  },
+});
+
+# Use Cases
+
+## Gaming
+
+### Show assets owned by players
+In blockchain games, players often own digital assets such as in-game items or tokens. To display these assets, the events blueprint can track Transfer events of ERC-721 (NFT) or ERC-1155 tokens, allowing you to determine which assets belong to each player’s wallet.
+- The Events blueprint can be used to fetch Transfer events where the player’s wallet is the recipient, showing all NFTs or in-game items acquired by the player.
+
+### Show users the tokens they earned
+Some games reward players with tokens based on achievements or progress. Using the transactions blueprint, you can display these earned tokens by tracking transactions where the game’s smart contract sends tokens to the player’s wallet.
+- Transactions Blueprint: Shows all transactions where the game contract transfers tokens to players.
+- Events Blueprint: Filters Transfer events from the game’s contract to list all tokens awarded to players.
+
+## DeFi
+
+### Analyse Token Economics e.g. USDC 24h volume
+Token economics, like daily trading volume, helps in understanding a token’s liquidity and market activity. By using the transactions blueprint users can get transactions involving USDC and then aggregating data based on timestamps, you can calculate 24-hour transaction volume.
+- Transactions Blueprint: Retrieves all USDC transactions in the past 24 hours, enabling calculation of volume and other economic indicators.
+
+### Optimize protocol gas efficiency
+DeFi protocols aim to minimize gas fees for users. Using the transactions blueprint allow users to analyze the gas consumption of different transactions, you can identify areas where gas optimization is possible by evaluating high-gas transactions or commonly used functions.
+- Transactions Blueprint: Summarizes gas usage across transactions for specific functions, helping to analyze and optimize protocol functions for efficiency.
+
+### Analyse Token ownership
+Understanding who holds a token (e.g., whales, retail investors) is crucial in DeFi to gauge community health and investment risk. The events blueprint helps track token transfer events, where users can analyze the distribution and concentration of token holders.
+- Events Blueprint: Retrieves Transfer events to build a map of current token holders, showing distributions among wallets.
+
+## NFTs
+
+### Get all transfers of an NFT collection
+To track the movement of an entire NFT collection, users can use the events blueprint to capture all Transfer events for that collection. This helps show ownership history or current trading volume for the collection.
+- Events Blueprint: Queries Transfer events by contract address, returning each transfer for the NFT collection.
+
+### Get All NFTs owned by address
+To show all NFTs owned by a user, users can use the events blueprint to fetch Transfer events where the specified address is the recipient. This shows a complete list of NFTs in their wallet.
+- Events Blueprint: Retrieves Transfer events for each NFT contract where the wallet address is the recipient.
+
+## Wallets
+
+### Get all transactions performed by a wallet cross chain
+Wallet activity often spans multiple chains. By using the transactions blueprint with the wallet address across different chain_ids, users can retrieve a cross-chain view of all transactions for that wallet.
+- Transactions Blueprint: Filters transactions by wallet address and chain ID, providing a history of cross-chain transactions.
+
+### Get all ERC-20 tokens owned by a wallet
+This allows users to see all ERC-20 tokens they own. By using the events blueprint to find Transfer events where the wallet address is the recipient, you can list each ERC-20 token held by that wallet.
+- Events Blueprint: Tracks Transfer events of ERC-20 tokens to the wallet address, providing a list of token balances.
+
+### Detect wallet staking activity (e.g. AAVE)
+To identify staking activity in AAVE or any DeFi protocol, users can use the events blueprint to watch for staking-related events, such as Deposit or Stake events on any protocol e.g. AAVE’s smart contracts. This helps monitor which wallets are actively staking assets.
+- Events Blueprint: Filters by staking events on AAVE’s staking contracts for the wallet address, providing insights into wallet staking activity.
+

@@ -122,6 +122,9 @@ function pidToHref(pid: (typeof products)[number]["id"]) {
     case "rpc-edge": {
       return "https://portal.thirdweb.com/infrastructure/rpc-edge/overview";
     }
+    case "insight": {
+      return "https://portal.thirdweb.com/insight";
+    }
   }
 }
 

@@ -7,7 +7,8 @@ export type ChainSupportedService =
   | "account-abstraction"
   | "pay"
   | "rpc-edge"
-  | "chainsaw";
+  | "chainsaw"
+  | "insight";
 
 export type ChainService = {
   service: ChainSupportedService;
