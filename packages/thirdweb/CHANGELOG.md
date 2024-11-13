@@ -1,5 +1,66 @@
 # thirdweb
 
+## 5.68.0
+
+### Minor Changes
+
+- [#5354](https://github.com/thirdweb-dev/js/pull/5354) [`a1fc436`](https://github.com/thirdweb-dev/js/commit/a1fc436a92eb5fccbbcf5b3e8b8fbea3343d14e0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Adds EIP1193 adapters that allow conversion between Thirdweb wallets and EIP-1193 providers:
+
+  - `EIP1193.fromProvider()`: Creates a Thirdweb wallet from any EIP-1193 compatible provider (like MetaMask, WalletConnect)
+  - `EIP1193.toProvider()`: Converts a Thirdweb wallet into an EIP-1193 provider that can be used with any web3 library
+
+  Key features:
+
+  - Full EIP-1193 compliance for seamless integration
+  - Handles account management (connect, disconnect, chain switching)
+  - Supports all standard Ethereum JSON-RPC methods
+  - Comprehensive event system for state changes
+  - Type-safe interfaces with full TypeScript support
+
+  Examples:
+
+  ```ts
+  // Convert MetaMask's provider to a Thirdweb wallet
+  const wallet = EIP1193.fromProvider({
+    provider: window.ethereum,
+    walletId: "io.metamask",
+  });
+
+  // Use like any other Thirdweb wallet
+  const account = await wallet.connect({
+    client: createThirdwebClient({ clientId: "..." }),
+  });
+
+  // Convert a Thirdweb wallet to an EIP-1193 provider
+  const provider = EIP1193.toProvider({
+    wallet,
+    chain: ethereum,
+    client: createThirdwebClient({ clientId: "..." }),
+  });
+
+  // Use with any EIP-1193 compatible library
+  const accounts = await provider.request({
+    method: "eth_requestAccounts",
+  });
+
+  // Listen for events
+  provider.on("accountsChanged", (accounts) => {
+    console.log("Active accounts:", accounts);
+  });
+  ```
+
+### Patch Changes
+
+- [#5335](https://github.com/thirdweb-dev/js/pull/5335) [`1e7e32f`](https://github.com/thirdweb-dev/js/commit/1e7e32f2cbb23dad48eda6e1224c09df89fc249d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added global transaction decorator, better eip712 transaction support
+
+- [#5349](https://github.com/thirdweb-dev/js/pull/5349) [`46d0b4b`](https://github.com/thirdweb-dev/js/commit/46d0b4bdc050b92886cfea5623a08aa8f7272006) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use maxFeePerGas for Pay gas cost estimations in transaction flow
+
+- [#5366](https://github.com/thirdweb-dev/js/pull/5366) [`ef56304`](https://github.com/thirdweb-dev/js/commit/ef563041954958a6ae6fa58a4e2c1edd7ea88940) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds ox for internal utilities
+
+- [#5390](https://github.com/thirdweb-dev/js/pull/5390) [`6771cfe`](https://github.com/thirdweb-dev/js/commit/6771cfed62aedce6ccb22e3c092f117a1b7e4242) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - fix enclave transaction signing for transactions with 0 maxPriorityFeePerGas
+
+- [#5343](https://github.com/thirdweb-dev/js/pull/5343) [`5de5418`](https://github.com/thirdweb-dev/js/commit/5de541878cfd4102baa049a0d84ce9911746ac6c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds chain ID to tracked analytics
+
 ## 5.67.0
 
 ### Minor Changes
