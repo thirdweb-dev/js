@@ -1,3 +1,4 @@
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import { useEngineCreateAccessToken } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
@@ -13,7 +14,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
 import { useState } from "react";
-import { Button, Checkbox, CodeBlock, Text } from "tw-components";
+import { Button, Checkbox, Text } from "tw-components";
 
 interface AddAccessTokenButtonProps {
   instanceUrl: string;
@@ -82,7 +83,7 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
           <ModalHeader>Access token</ModalHeader>
           <ModalBody as={Flex} flexDir="column" gap={4}>
             <div className="flex flex-col gap-4">
-              <CodeBlock code={accessToken} />
+              <PlainTextCodeBlock code={accessToken} />
               <Text color="red.500">
                 This access token will not be shown again.
               </Text>

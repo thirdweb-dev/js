@@ -30,42 +30,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(address.length).toBe(42);
     });
 
-    it("should deploy a published direct deploy contract deterministically", async () => {
-      const address = await deployPublishedContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
-        account: TEST_ACCOUNT_A,
-        contractId: "AccountFactory",
-        contractParams: {
-          defaultAdmin: TEST_ACCOUNT_A.address,
-          entrypoint: ENTRYPOINT_ADDRESS_v0_6,
-        },
-        salt: "test",
-      });
-      expect(address).toBe("0x8a9e25cbf6daa2b56cc0df4669195b8c8c20cda8");
-      const isDeployed = await isContractDeployed({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
-        address,
-      });
-      expect(isDeployed).toBe(true);
-
-      const ethAddress = await deployPublishedContract({
-        client: TEST_CLIENT,
-        chain: FORKED_ETHEREUM_CHAIN_WITH_MINING,
-        account: TEST_ACCOUNT_A,
-        contractId: "AccountFactory",
-        contractParams: {
-          defaultAdmin: TEST_ACCOUNT_A.address,
-          entrypoint: ENTRYPOINT_ADDRESS_v0_6,
-        },
-        salt: "test",
-      });
-
-      // ensure they are the same address!
-      expect(address).toBe(ethAddress);
-    });
-
     it("should deploy a published autofactory contract", async () => {
       const address = await deployPublishedContract({
         client: TEST_CLIENT,

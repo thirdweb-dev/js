@@ -1,4 +1,5 @@
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import {
   type Keypair,
   useEngineRemoveKeypair,
@@ -22,7 +23,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
-import { Button, CodeBlock, FormLabel, Text } from "tw-components";
+import { Button, FormLabel, Text } from "tw-components";
 import { toDateTimeLocal } from "utils/date-utils";
 
 interface KeypairsTableProps {
@@ -52,7 +53,13 @@ const columns = [
   columnHelper.accessor("publicKey", {
     header: "Public Key",
     cell: (cell) => {
-      return <CodeBlock fontSize="small" code={cell.getValue()} w={560} />;
+      return (
+        <PlainTextCodeBlock
+          code={cell.getValue()}
+          className="max-w-[350px]"
+          codeClassName="text-xs"
+        />
+      );
     },
   }),
   columnHelper.accessor("algorithm", {

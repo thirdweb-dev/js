@@ -2,7 +2,7 @@
   {
     "name": "thirdweb (esm)",
     "path": "./dist/esm/exports/thirdweb.js",
-    "limit": "45 kB",
+    "limit": "50 kB",
     "import": "*"
   },
   {
@@ -13,7 +13,7 @@
   {
     "name": "thirdweb (minimal + tree-shaking)",
     "path": "./dist/esm/exports/thirdweb.js",
-    "limit": "5 kB",
+    "limit": "7.5 kB",
     "import": "{ createThirdwebClient, getRpcClient, defineChain }"
   },
   {

@@ -1,3 +1,4 @@
+import { CodeClient } from "@/components/ui/code/code.client";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   Box,
@@ -27,7 +28,7 @@ import {
 import { useMemo } from "react";
 import { type Column, usePagination, useTable } from "react-table";
 import type { NFTInput } from "thirdweb/utils";
-import { CodeBlock, Text } from "tw-components";
+import { Text } from "tw-components";
 
 const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
   const img = useImageFileOrUrl(
@@ -115,11 +116,10 @@ export const BatchTable: React.FC<BatchTableProps> = ({
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: ({ cell }: { cell: any }) =>
           cell.value ? (
-            <CodeBlock
-              canCopy={false}
+            <CodeClient
               code={JSON.stringify(cell.value || {}, null, 2)}
-              language="json"
-              width={300}
+              lang="json"
+              scrollableClassName="max-w-[300px]"
             />
           ) : null,
       },

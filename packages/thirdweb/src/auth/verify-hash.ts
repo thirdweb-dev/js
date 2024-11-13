@@ -110,7 +110,7 @@ export async function verifyHash({
     });
 
     const hexResult = isHex(result) ? toBytes(result) : result;
-    return equalBytes(hexResult, toBytes("0x1"));
+    return equalBytes(hexResult, toBytes(true));
   } catch {
     // Some chains do not support the eth_call simulation and will fail, so we fall back to regular EIP1271 validation
     const validEip1271 = await verifyEip1271Signature({

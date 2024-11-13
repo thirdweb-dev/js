@@ -141,34 +141,39 @@ export class EnclaveWallet implements IWebWallet {
       const transaction: Record<string, Hex | number | undefined> = {
         to: tx.to ? getAddress(tx.to) : undefined,
         data: tx.data,
-        value: tx.value ? toHex(tx.value) : undefined,
-        gas: tx.gas ? toHex(tx.gas + tx.gas / BigInt(10)) : undefined, // Add a 10% buffer to gas
-        nonce: tx.nonce
-          ? toHex(tx.nonce)
-          : toHex(
-              await import(
-                "../../../../rpc/actions/eth_getTransactionCount.js"
-              ).then(({ eth_getTransactionCount }) =>
-                eth_getTransactionCount(rpcRequest, {
-                  address: this.address,
-                  blockTag: "pending",
-                }),
+        value: typeof tx.value === "bigint" ? toHex(tx.value) : undefined,
+        gas:
+          typeof tx.gas === "bigint"
+            ? toHex(tx.gas + tx.gas / BigInt(10))
+            : undefined, // Add a 10% buffer to gas
+        nonce:
+          typeof tx.nonce === "number"
+            ? toHex(tx.nonce)
+            : toHex(
+                await import(
+                  "../../../../rpc/actions/eth_getTransactionCount.js"
+                ).then(({ eth_getTransactionCount }) =>
+                  eth_getTransactionCount(rpcRequest, {
+                    address: this.address,
+                    blockTag: "pending",
+                  }),
+                ),
               ),
-            ),
         chainId: toHex(tx.chainId),
       };
 
       if (tx.maxFeePerGas) {
         transaction.maxFeePerGas = toHex(tx.maxFeePerGas);
-        transaction.maxPriorityFeePerGas = tx.maxPriorityFeePerGas
-          ? toHex(tx.maxPriorityFeePerGas)
-          : undefined;
+        transaction.maxPriorityFeePerGas =
+          typeof tx.maxPriorityFeePerGas === "bigint"
+            ? toHex(tx.maxPriorityFeePerGas)
+            : undefined;
         transaction.type = 2;
       } else {
-        transaction.gasPrice = tx.gasPrice ? toHex(tx.gasPrice) : undefined;
+        transaction.gasPrice =
+          typeof tx.gasPrice === "bigint" ? toHex(tx.gasPrice) : undefined;
         transaction.type = 0;
       }
-
       return signEnclaveTransaction({
         client,
         storage,

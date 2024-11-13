@@ -1,5 +1,5 @@
-import { CodeBlock } from "@/components/ui/CodeBlock";
 import { Badge } from "@/components/ui/badge";
+import { CodeClient } from "@/components/ui/code/code.client";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -36,7 +36,7 @@ export default function ContractFunctionComment({
       <p className="mt-6">
         About this function <Badge>Beta</Badge>
       </p>
-      <CodeBlock code={comment} canCopy={false} language="solidity" />
+      <CodeClient lang="solidity" code={comment} />
     </>
   );
 }
