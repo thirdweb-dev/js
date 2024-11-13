@@ -1,3 +1,4 @@
+import type { CodeEnvironment } from "@/components/blocks/code-segment.client";
 import { CodeClient } from "@/components/ui/code/code.client";
 import {
   Flex,
@@ -10,7 +11,6 @@ import {
 } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChakraNextImage } from "components/Image";
-import type { CodeEnvironment } from "components/contract-tabs/code/types";
 import { Aurora } from "components/homepage/Aurora";
 import { connectPlaygroundData } from "components/product-pages/common/connect/data";
 import { useState } from "react";

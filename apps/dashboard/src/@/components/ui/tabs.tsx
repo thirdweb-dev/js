@@ -87,6 +87,8 @@ export function TabButtons(props: {
   tabContainerClassName?: string;
   containerClassName?: string;
   shadowColor?: string;
+  tabIconClassName?: string;
+  hideBottomLine?: boolean;
 }) {
   const { containerRef, lineRef, activeTabRef } =
     useUnderline<HTMLButtonElement>();
@@ -94,7 +96,9 @@ export function TabButtons(props: {
   return (
     <div className={cn("relative", props.containerClassName)}>
       {/* Bottom line */}
-      <div className="absolute right-0 bottom-0 left-0 h-[1px] bg-border" />
+      {!props.hideBottomLine && (
+        <div className="absolute right-0 bottom-0 left-0 h-[1px] bg-border" />
+      )}
 
       <ScrollShadow
         scrollableClassName="pb-[8px] relative"
@@ -120,7 +124,9 @@ export function TabButtons(props: {
                 )}
                 onClick={tab.isEnabled ? tab.onClick : undefined}
               >
-                {tab.icon && <tab.icon className="size-6" />}
+                {tab.icon && (
+                  <tab.icon className={cn("size-6", props.tabIconClassName)} />
+                )}
                 {tab.name}
               </Button>
             );

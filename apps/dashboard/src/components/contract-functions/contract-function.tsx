@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  type CodeEnvironment,
+  CodeSegment,
+} from "@/components/blocks/code-segment.client";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -49,8 +53,6 @@ import {
   COMMANDS,
   formatSnippet,
 } from "../../contract-ui/tabs/code/components/code-overview";
-import { CodeSegment } from "../contract-tabs/code/CodeSegment";
-import type { CodeEnvironment } from "../contract-tabs/code/types";
 import { InteractiveAbiFunction } from "./interactive-abi-function";
 
 const ContractFunctionComment = lazy(
