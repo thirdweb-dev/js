@@ -38,13 +38,9 @@ export async function login(payload: VerifyLoginPayloadParams) {
       name: "jwt",
       value: jwt,
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 3600,
-      domain:
-        process.env.NODE_ENV === "development"
-          ? "localhost"
-          : process.env.NEXT_PUBLIC_ROOT_DOMAIN,
       path: "/",
     });
     return true;
