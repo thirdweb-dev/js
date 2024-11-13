@@ -1,9 +1,11 @@
 "use client";
 
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
+import {
+  type CodeEnvironment,
+  CodeSegment,
+} from "@/components/blocks/code-segment.client";
 import { Divider, Flex, GridItem, SimpleGrid, Tooltip } from "@chakra-ui/react";
-import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
-import type { CodeEnvironment } from "components/contract-tabs/code/types";
 import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
 import { useState } from "react";
 import { Card, Heading, Link, Text, TrackedCopyButton } from "tw-components";
