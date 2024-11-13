@@ -22,7 +22,7 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "renegade-web3wallet://",
-    universal: null,
+    universal: "https://webapp.myrenegade.net",
   },
   desktop: {
     native: null,

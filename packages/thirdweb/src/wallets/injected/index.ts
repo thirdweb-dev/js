@@ -1,4 +1,4 @@
-import type { Address } from "abitype";
+import type { EIP1193Provider } from "viem";
 import {
   type SignTypedDataParameters,
   getTypesForEIP712Domain,
@@ -18,13 +18,12 @@ import {
 } from "../../utils/encoding/hex.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js";
-import type { Ethereum } from "../interfaces/ethereum.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
-import type { InjectedConnectOptions, WalletId } from "../wallet-types.js";
+import type { WalletId } from "../wallet-types.js";
 import { injectedProvider } from "./mipdStore.js";
 
 // TODO: save the provider in data
@@ -40,19 +39,38 @@ export function getInjectedProvider(walletId: WalletId) {
 /**
  * @internal
  */
-export async function connectInjectedWallet(
-  id: InjectedSupportedWalletIds,
-  options: InjectedConnectOptions,
-  emitter: WalletEmitter<InjectedSupportedWalletIds>,
-): Promise<ReturnType<typeof onConnect>> {
-  const provider = getInjectedProvider(id);
-  const addresses = await provider.request({
-    method: "eth_requestAccounts",
-  });
+export async function connectEip1193Wallet({
+  id,
+  provider,
+  emitter,
+  client,
+  chain,
+}: {
+  id: InjectedSupportedWalletIds | ({} & string);
+  provider: EIP1193Provider;
+  client: ThirdwebClient;
+  chain?: Chain;
+  emitter: WalletEmitter<InjectedSupportedWalletIds>;
+}): Promise<ReturnType<typeof onConnect>> {
+  let addresses: string[] | undefined;
+  const retries = 3;
+  let attempts = 0;
+  // retry 3 times, some providers take a while to return accounts on connect
+  while (!addresses?.[0] && attempts < retries) {
+    try {
+      addresses = await provider.request({
+        method: "eth_requestAccounts",
+      });
+    } catch (e) {
+      console.error(e);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+    attempts++;
+  }
 
-  const addr = addresses[0];
+  const addr = addresses?.[0];
   if (!addr) {
-    throw new Error("no accounts available");
+    throw new Error("Failed to connect to wallet, no accounts available");
   }
 
   // use the first account
@@ -64,14 +82,12 @@ export async function connectInjectedWallet(
     .then(normalizeChainId);
 
   let connectedChain =
-    options.chain && options.chain.id === chainId
-      ? options.chain
-      : getCachedChain(chainId);
+    chain && chain.id === chainId ? chain : getCachedChain(chainId);
 
   // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
-  if (options.chain && options.chain.id !== chainId) {
-    await switchChain(provider, options.chain);
-    connectedChain = options.chain;
+  if (chain && chain.id !== chainId) {
+    await switchChain(provider, chain);
+    connectedChain = chain;
   }
 
   return onConnect({
@@ -79,7 +95,7 @@ export async function connectInjectedWallet(
     address,
     chain: connectedChain,
     emitter,
-    client: options.client,
+    client,
     id,
   });
 }
@@ -87,19 +103,19 @@ export async function connectInjectedWallet(
 /**
  * @internal
  */
-export async function autoConnectInjectedWallet({
+export async function autoConnectEip1193Wallet({
   id,
+  provider,
   emitter,
   client,
   chain,
 }: {
-  id: InjectedSupportedWalletIds;
+  id: InjectedSupportedWalletIds | ({} & string);
+  provider: EIP1193Provider;
   emitter: WalletEmitter<InjectedSupportedWalletIds>;
   client: ThirdwebClient;
   chain?: Chain;
 }): Promise<ReturnType<typeof onConnect>> {
-  const provider = getInjectedProvider(id);
-
   // connected accounts
   const addresses = await provider.request({
     method: "eth_accounts",
@@ -107,7 +123,7 @@ export async function autoConnectInjectedWallet({
 
   const addr = addresses[0];
   if (!addr) {
-    throw new Error("no accounts available");
+    throw new Error("Failed to connect to wallet, no accounts available");
   }
 
   // use the first account
@@ -137,27 +153,44 @@ function createAccount({
   client,
   id,
 }: {
-  provider: Ethereum;
+  provider: EIP1193Provider;
   address: string;
   client: ThirdwebClient;
-  id: WalletId;
+  id: WalletId | ({} & string);
 }) {
   const account: Account = {
     address: getAddress(address),
     async sendTransaction(tx: SendTransactionOption) {
+      const gasFees = tx.gasPrice
+        ? {
+            gasPrice: tx.gasPrice ? numberToHex(tx.gasPrice) : undefined,
+          }
+        : {
+            maxFeePerGas: tx.maxFeePerGas
+              ? numberToHex(tx.maxFeePerGas)
+              : undefined,
+            maxPriorityFeePerGas: tx.maxPriorityFeePerGas
+              ? numberToHex(tx.maxPriorityFeePerGas)
+              : undefined,
+          };
+      const params = [
+        {
+          ...gasFees,
+          nonce: tx.nonce ? numberToHex(tx.nonce) : undefined,
+          accessList: tx.accessList,
+          value: tx.value ? numberToHex(tx.value) : undefined,
+          gas: tx.gas ? numberToHex(tx.gas) : undefined,
+          from: this.address,
+          to: tx.to ? getAddress(tx.to) : undefined,
+          data: tx.data,
+          ...tx.eip712,
+        },
+      ];
+
       const transactionHash = (await provider.request({
         method: "eth_sendTransaction",
-        params: [
-          {
-            accessList: tx.accessList,
-            value: tx.value ? numberToHex(tx.value) : undefined,
-            gas: tx.gas ? numberToHex(tx.gas) : undefined,
-            gasPrice: tx.gasPrice ? numberToHex(tx.gasPrice) : undefined,
-            from: this.address,
-            to: tx.to as Address,
-            data: tx.data,
-          },
-        ],
+        // @ts-expect-error - overriding types here
+        params,
       })) as Hex;
 
       trackTransaction({
@@ -251,12 +284,12 @@ async function onConnect({
   client,
   id,
 }: {
-  provider: Ethereum;
+  provider: EIP1193Provider;
   address: string;
   chain: Chain;
   emitter: WalletEmitter<InjectedSupportedWalletIds>;
   client: ThirdwebClient;
-  id: WalletId;
+  id: WalletId | ({} & string);
 }): Promise<[Account, Chain, DisconnectFn, SwitchChainFn]> {
   const account = createAccount({ provider, address, client, id });
   async function disconnect() {
@@ -308,7 +341,7 @@ async function onConnect({
 /**
  * @internal
  */
-async function switchChain(provider: Ethereum, chain: Chain) {
+async function switchChain(provider: EIP1193Provider, chain: Chain) {
   const hexChainId = numberToHex(chain.id);
   try {
     await provider.request({

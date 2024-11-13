@@ -9,7 +9,7 @@ type TransactionEvent = {
   ecosystem?: Ecosystem;
   transactionHash?: string;
   walletAddress?: string;
-  walletType?: WalletId;
+  walletType?: WalletId | ({} & string);
   chainId?: number;
   contractAddress?: string;
   functionName?: string;

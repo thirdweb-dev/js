@@ -1,6 +1,8 @@
 import type { TransactionSerializable } from "viem";
 import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
 import { getRpcClient } from "../../rpc/rpc.js";
+import { getAddress } from "../../utils/address.js";
+import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { encode } from "./encode.js";
@@ -45,6 +47,25 @@ export type ToSerializableTransactionOptions = {
 export async function toSerializableTransaction(
   options: ToSerializableTransactionOptions,
 ) {
+  // zk chains require a different rpc method for gas estimation and gas fees
+  const isZkSync = await isZkSyncChain(options.transaction.chain);
+  if (isZkSync) {
+    const { getZkGasFees } = await import(
+      "./zksync/send-eip712-transaction.js"
+    );
+    const { gas, maxFeePerGas, maxPriorityFeePerGas } = await getZkGasFees({
+      transaction: options.transaction,
+      from: options.from ? getAddress(options.from) : undefined,
+    });
+    // passing these values here will avoid re-fetching them below
+    options.transaction = {
+      ...options.transaction,
+      gas,
+      maxFeePerGas,
+      maxPriorityFeePerGas,
+    };
+  }
+
   const rpcRequest = getRpcClient(options.transaction);
   const chainId = options.transaction.chain.id;
   const from = options.from;
