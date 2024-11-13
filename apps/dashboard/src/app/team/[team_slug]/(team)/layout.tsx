@@ -56,6 +56,10 @@ export default async function TeamLayout(props: {
               name: "Ecosystems",
             },
             {
+              path: `/team/${params.team_slug}/~/nebula`,
+              name: "Nebula",
+            },
+            {
               path: `/team/${params.team_slug}/~/usage`,
               name: "Usage",
             },
