@@ -25,7 +25,7 @@ export function ConnectEmbed() {
           const success = await login(loginParams);
           if (success) {
             router.push(
-              `/wallet/${loginParams.payload.address}?${searchParams.toString()}`,
+              `/${params.ecosystem}/wallet/${loginParams.payload.address}?${searchParams.toString()}`,
             );
           }
         },

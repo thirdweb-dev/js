@@ -12,7 +12,7 @@ export default async function Layout(props: {
 
   const { children } = props;
 
-  await authedOnly();
+  await authedOnly(params.ecosystem);
   const ecosystem = await getEcosystemInfo(params.ecosystem);
   return (
     <div className="flex w-full flex-col items-stretch">

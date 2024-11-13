@@ -41,7 +41,10 @@ export async function login(payload: VerifyLoginPayloadParams) {
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
       maxAge: 3600,
-      domain: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
+      domain:
+        process.env.NODE_ENV === "development"
+          ? "localhost"
+          : process.env.NEXT_PUBLIC_ROOT_DOMAIN,
       path: "/",
     });
     return true;
@@ -49,12 +52,12 @@ export async function login(payload: VerifyLoginPayloadParams) {
   return false;
 }
 
-export async function authedOnly() {
+export async function authedOnly(ecosystem?: string) {
   const loggedIn = await getCurrentUser();
   if (loggedIn) {
     return;
   }
-  redirect("/login");
+  redirect(`/${ecosystem || ""}/login`);
 }
 
 export async function isLoggedIn(): Promise<boolean> {

@@ -4,16 +4,18 @@ import { redirect } from "next/navigation";
 
 export default async function Page(props: {
   searchParams: Promise<{ uri: string }>;
+  params: Promise<{ ecosystem: string }>;
 }) {
-  const searchParams = await props.searchParams;
-
-  const { uri } = searchParams;
+  const [{ uri }, { ecosystem }] = await Promise.all([
+    props.searchParams,
+    props.params,
+  ]);
 
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    redirect(`/login?uri=${encodeURIComponent(uri)}`);
+    redirect(`${ecosystem}/login?uri=${encodeURIComponent(uri)}`);
   }
 
-  redirect(`/wallet/${currentUser}?uri=${encodeURIComponent(uri)}`);
+  redirect(`${ecosystem}/wallet/${currentUser}?uri=${encodeURIComponent(uri)}`);
 }

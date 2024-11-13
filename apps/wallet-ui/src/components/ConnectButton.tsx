@@ -1,4 +1,5 @@
 "use client";
+import { logout } from "@/lib/auth";
 import { client } from "@/lib/client";
 import { useTheme } from "next-themes";
 import {
@@ -23,6 +24,9 @@ export default function ConnectButton({
       wallets={[ecosystemWallet(ecosystem)]}
       client={client}
       theme={theme === "light" ? "light" : "dark"}
+      onDisconnect={() => {
+        logout();
+      }}
     />
   );
 }
