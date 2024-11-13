@@ -1,7 +1,7 @@
+import { Badge } from "@/components/ui/badge";
 import { type AccountPlan, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
 import { Box, type CardProps, Flex } from "@chakra-ui/react";
 import {
-  Badge,
   Card,
   Heading,
   Text,
@@ -60,7 +60,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     >
       <Flex flexDir="column" gap={6}>
         <Flex flexDir="column" gap={3}>
-          <div className="flex flex-row gap-2">
+          <div className="flex flex-row items-center gap-2">
             <Heading
               as="h3"
               size={size === "lg" ? "title.lg" : "title.sm"}
@@ -68,17 +68,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
             >
               {plan.title}
             </Heading>
-            {current && (
-              <Badge
-                borderRadius="md"
-                size="label.sm"
-                px={3}
-                py={1.5}
-                textTransform="capitalize"
-              >
-                Current plan
-              </Badge>
-            )}
+            {current && <Badge className="capitalize">Current plan</Badge>}
           </div>
           <Text maxW={320} h={12}>
             {plan.description}

@@ -1,6 +1,7 @@
+import { Badge } from "@/components/ui/badge";
 import { Flex } from "@chakra-ui/react";
 import { AlertCircleIcon, CheckCircleIcon, InfoIcon } from "lucide-react";
-import { Badge, Text } from "tw-components";
+import { Text } from "tw-components";
 
 interface BillingHeaderProps {
   validPayment: boolean;
@@ -20,13 +21,7 @@ export const BillingHeader: React.FC<BillingHeaderProps> = ({
           Manage your payment methods, billing information and invoices.
         </Text>
 
-        <Badge
-          borderRadius="md"
-          size="label.sm"
-          px={3}
-          py={1.5}
-          textTransform="capitalize"
-        >
+        <Badge className="capitalize" variant="outline">
           <span className="flex flex-row items-center gap-2">
             <Icon
               validPayment={validPayment}

@@ -1,6 +1,7 @@
+import { Badge } from "@/components/ui/badge";
 import { useAccount, useAccountCredits } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
-import { Badge, Card, Heading, Text } from "tw-components";
+import { Card, Heading, Text } from "tw-components";
 import { PLANS } from "utils/pricing";
 import { CreditsItem } from "./CreditsItem";
 
@@ -19,13 +20,7 @@ export const BillingPlanCard = () => {
     <Card as={Flex} flexDir="column" gap={2}>
       <div className="flex flex-row items-center gap-2">
         <Heading size="title.xs">Your current plan is</Heading>
-        <Badge
-          borderRadius="md"
-          size="label.sm"
-          textTransform="capitalize"
-          px={3}
-          py={1.5}
-        >
+        <Badge className="capitalize">
           {PLANS[account.plan as keyof typeof PLANS].title}
         </Badge>
       </div>

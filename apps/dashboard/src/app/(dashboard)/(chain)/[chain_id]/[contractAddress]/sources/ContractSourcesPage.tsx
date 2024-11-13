@@ -1,5 +1,8 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
 import {
@@ -21,7 +24,7 @@ import { CircleCheckIcon, CircleXIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
-import { Badge, Button, Card, Heading } from "tw-components";
+import { Heading } from "tw-components";
 
 interface ContractSourcesPageProps {
   contract: ThirdwebContract;
@@ -91,9 +94,7 @@ const VerifyContractModal: React.FC<
         <ModalHeader>
           <Flex gap={2} align="center">
             <Heading size="subtitle.md">Contract Verification</Heading>
-            <Badge variant="outline" colorScheme="purple" rounded="md" px={2}>
-              beta
-            </Badge>
+            <Badge>beta</Badge>
           </Flex>
         </ModalHeader>
         <ModalCloseButton mt={2} />
@@ -213,11 +214,11 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
             chainId={contract.chain.id}
             contractAddress={contract.address}
           />
-          <Button variant="solid" colorScheme="purple" onClick={onOpen}>
+          <Button variant="primary" onClick={onOpen}>
             Verify contract
           </Button>
         </Flex>
-        <Card p={0}>
+        <Card>
           <SourcesPanel sources={sources} abi={abiQuery.data} />
         </Card>
       </Flex>
@@ -264,7 +265,7 @@ function RefreshContractMetadataButton(props: {
 
   return (
     <Button
-      isLoading={contractCacheMutation.isPending}
+      disabled={contractCacheMutation.isPending}
       variant="outline"
       onClick={() => {
         toast.promise(contractCacheMutation.mutateAsync(), {
@@ -274,8 +275,9 @@ function RefreshContractMetadataButton(props: {
           error: (e) => e?.message || "Failed to refresh contract data.",
         });
       }}
+      className="w-[182px]"
     >
-      Refresh Contract Data
+      {contractCacheMutation.isPending ? <Spinner /> : "Refresh Contract Data"}
     </Button>
   );
 }

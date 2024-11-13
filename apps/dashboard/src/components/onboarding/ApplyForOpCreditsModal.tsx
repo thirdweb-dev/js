@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
   type AccountPlan,
   accountPlan,
@@ -16,7 +17,7 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useEffect, useMemo, useState } from "react";
-import { Badge, Button, Card, Heading, Text } from "tw-components";
+import { Button, Card, Heading, Text } from "tw-components";
 import { ApplyForOpCreditsForm } from "./ApplyForOpCreditsForm";
 import { LazyOnboardingBilling } from "./LazyOnboardingBilling";
 import { OnboardingModal } from "./Modal";
@@ -114,13 +115,10 @@ export const ApplyForOpCreditsModal: React.FC = () => {
             <Card position="relative">
               <Box position="absolute">
                 <Badge
-                  borderRadius="full"
-                  size="label.sm"
-                  px={3}
-                  bgColor={creditsRecord.color}
-                  color="#fff"
-                  textTransform="capitalize"
-                  fontWeight="bold"
+                  className="rounded-full px-3 font-bold text-white capitalize"
+                  style={{
+                    backgroundColor: creditsRecord.color,
+                  }}
                 >
                   {creditsRecord.title}
                 </Badge>
