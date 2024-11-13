@@ -26,10 +26,6 @@ export default async function Page(props: PageProps) {
     resolvedInfo.address,
   ).catch(() => null);
 
-  if (!publisherProfile) {
-    return notFound();
-  }
-
   return (
     <ProfileUI
       ensName={resolvedInfo.ensName}

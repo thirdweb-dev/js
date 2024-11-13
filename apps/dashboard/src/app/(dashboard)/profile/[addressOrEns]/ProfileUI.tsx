@@ -13,7 +13,7 @@ import { PublishedContracts } from "./components/published-contracts";
 export function ProfileUI(props: {
   profileAddress: string;
   ensName: string | undefined;
-  publisherProfile: ProfileMetadata;
+  publisherProfile: ProfileMetadata | null;
   showEditProfile: boolean;
 }) {
   const { profileAddress, ensName, publisherProfile, showEditProfile } = props;
@@ -34,21 +34,25 @@ export function ProfileUI(props: {
               {displayName}
             </h1>
 
-            {publisherProfile.bio && (
+            {publisherProfile?.bio && (
               <p className="line-clamp-2 text-muted-foreground">
                 {publisherProfile.bio}
               </p>
             )}
 
             <div className="-translate-x-2 mt-1">
-              <PublisherSocials publisherProfile={publisherProfile} />
+              {publisherProfile && (
+                <PublisherSocials publisherProfile={publisherProfile} />
+              )}
             </div>
           </div>
         </div>
 
         {showEditProfile && (
           <div className="shrink-0">
-            <EditProfile publisherProfile={publisherProfile} />
+            {publisherProfile && (
+              <EditProfile publisherProfile={publisherProfile} />
+            )}
           </div>
         )}
       </div>
