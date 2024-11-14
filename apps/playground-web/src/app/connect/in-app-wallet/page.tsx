@@ -1,4 +1,5 @@
 import { CodeExample } from "@/components/code/code-example";
+import { CustomLoginForm } from "@/components/in-app-wallet/custom-login-form";
 import { InAppConnectEmbed } from "../../../components/in-app-wallet/connect-button";
 import { Profiles } from "../../../components/in-app-wallet/profile-sections";
 import ThirdwebProvider from "../../../components/thirdweb-provider";
@@ -30,12 +31,15 @@ function AnyAuth() {
           base.
         </p>
       </div>
-
-      <CodeExample
-        preview={<InAppConnectEmbed />}
-        code={`import { inAppWallet } from "thirdweb/wallets";
+      <div className="space-y-2">
+        <h3 className="mb-3 font-medium text-lg">Prebuilt UI</h3>
+        <p className="max-w-[600px]">
+          Instant out of the box authentication with a prebuilt UI.
+        </p>
+        <CodeExample
+          preview={<InAppConnectEmbed />}
+          code={`import { inAppWallet } from "thirdweb/wallets";
         import { ConnectEmbed } from "thirdweb/react";
-
 
         const wallets = [
           inAppWallet(
@@ -66,8 +70,83 @@ function AnyAuth() {
           return (
 <ConnectEmbed client={client} wallets={wallets} />);
 };`}
-        lang="tsx"
-      />
+          lang="tsx"
+        />
+      </div>
+      <div className="space-y-2">
+        <h3 className="mb-3 font-medium text-lg">Custom Auth and UI</h3>
+        <p className="max-w-[600px]">
+          Customize the login UI and integrate with your existing user base. No
+          limits on customizations and auth methods.
+        </p>
+        <CodeExample
+          preview={
+            <div className="w-1/2">
+              <CustomLoginForm />
+            </div>
+          }
+          code={`import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { useConnect } from "thirdweb/react";
+import { inAppWallet } from "thirdweb/wallets";
+
+export function CustomLoginForm() {
+  const [email, setEmail] = useState("");
+  const { connect, isConnecting, error } = useConnect();
+
+  const { mutate: loginWithCustomAuth } = useMutation({
+    mutationFn: async (email: string) => {
+      const wallet = await connect(async () => {
+        const wallet = inAppWallet();
+        await wallet.connect({
+          strategy: "auth_endpoint",
+          client,
+          // your own custom auth payload here
+          payload: JSON.stringify({
+            userId: email,
+            email,
+          }),
+        });
+        return wallet;
+      });
+      return wallet;
+    }
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    loginWithCustomAuth(email);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="email">
+          Email Address
+        </label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          required
+        />
+        <button
+          type="submit"
+          disabled={isConnecting || !email}
+        >
+          {isConnecting ? "Submitting..." : "Submit"}
+        </button>
+        {error && <p>{error.message}</p>}
+      </div>
+    </form>
+  );
+}
+`}
+          lang="tsx"
+        />
+      </div>
     </>
   );
 }
