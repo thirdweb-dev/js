@@ -1,6 +1,4 @@
-import { getTeamBySlug, getTeamNebulaWaitList } from "@/api/team";
-import { redirect } from "next/navigation";
-import { JoinNebulaWaitlistPage } from "./components/nebula-waitlist-page.client";
+import { NebulaWaitListPage } from "./components/nebula-waitlist-page";
 
 export default async function Page(props: {
   params: Promise<{
@@ -9,31 +7,11 @@ export default async function Page(props: {
   }>;
 }) {
   const params = await props.params;
-  const team = await getTeamBySlug(params.team_slug);
-
-  if (!team) {
-    redirect(
-      `/login?next=${encodeURIComponent(`/team/${params.team_slug}/${params.project_slug}/nebula`)}`,
-    );
-  }
-
-  const nebulaWaitList = await getTeamNebulaWaitList(team.slug);
-
-  // this should never happen
-  if (!nebulaWaitList) {
-    return (
-      <div className="container flex grow flex-col py-8">
-        <div className="flex min-h-[300px] grow flex-col items-center justify-center rounded-lg border p-6 text-destructive-text">
-          Something went wrong trying to fetch the nebula waitlist
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <JoinNebulaWaitlistPage
-      onWaitlist={nebulaWaitList.onWaitlist}
-      teamSlug={team.slug}
+    <NebulaWaitListPage
+      redirectOnNoTeam={`/login?next=${encodeURIComponent(`/team/${params.team_slug}/${params.project_slug}/nebula`)}`}
+      teamSlug={params.team_slug}
     />
   );
 }

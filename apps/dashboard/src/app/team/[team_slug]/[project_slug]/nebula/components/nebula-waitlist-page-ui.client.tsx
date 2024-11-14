@@ -1,21 +1,9 @@
-"use client";
-
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useMutation } from "@tanstack/react-query";
-import { ArrowRightIcon, CheckIcon, OrbitIcon, ShareIcon } from "lucide-react";
+import { OrbitIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { toast } from "sonner";
+import { ShareButton } from "./share-button.client";
 
-export function JoinNebulaWaitlistPageUI(props: {
-  onWaitlist: boolean;
-  joinWaitList: () => Promise<void>;
-}) {
-  const router = useDashboardRouter();
-
+export function NebulaWaitListPageUI() {
   return (
     <div className="flex grow flex-col">
       {/* Header */}
@@ -31,86 +19,13 @@ export function JoinNebulaWaitlistPageUI(props: {
       </div>
 
       <div className="container flex grow flex-col overflow-hidden pt-32 pb-48">
-        {props.onWaitlist ? (
-          <CenteredCard
-            key="on-waitlist"
-            title="You're on the waitlist"
-            description="You should receive access to Nebula soon!"
-            footer={<ShareButton />}
-          />
-        ) : (
-          <CenteredCard
-            key="not-on-waitlist"
-            title="Nebula"
-            description="Blockchain-first AI that can read & write onchain in realtime."
-            footer={
-              <JoinWaitingListButton
-                joinWaitList={props.joinWaitList}
-                onSuccess={() => {
-                  router.refresh();
-                }}
-              />
-            }
-          />
-        )}
+        <CenteredCard
+          title="You're on the waitlist"
+          description="You should receive access to Nebula soon!"
+          footer={<ShareButton />}
+        />
       </div>
     </div>
-  );
-}
-
-function ShareButton() {
-  const [isCopied, setIsCopied] = useState(false);
-
-  return (
-    <ToolTipLabel label="Copy Page Link">
-      <Button
-        variant="outline"
-        className="gap-2"
-        onClick={() => {
-          navigator.clipboard.writeText("https://thirdweb.com/team/~/~/nebula");
-          setIsCopied(true);
-          setTimeout(() => setIsCopied(false), 1000);
-        }}
-      >
-        Share
-        {isCopied ? (
-          <CheckIcon className="size-4 text-green-500" />
-        ) : (
-          <ShareIcon className="size-4" />
-        )}
-      </Button>
-    </ToolTipLabel>
-  );
-}
-
-function JoinWaitingListButton(props: {
-  joinWaitList: () => Promise<void>;
-  onSuccess: () => void;
-}) {
-  const joinWaitListMutation = useMutation({
-    mutationFn: props.joinWaitList,
-    onSuccess: props.onSuccess,
-  });
-
-  return (
-    <Button
-      className="gap-2 rounded-full"
-      variant="primary"
-      onClick={() => {
-        const promise = joinWaitListMutation.mutateAsync();
-        toast.promise(promise, {
-          success: "Joined the waitlist!",
-          error: "Failed to join waitlist",
-        });
-      }}
-    >
-      Join the waitlist
-      {joinWaitListMutation.isPending ? (
-        <Spinner className="size-4" />
-      ) : (
-        <ArrowRightIcon className="size-4" />
-      )}
-    </Button>
   );
 }
 
