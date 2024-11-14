@@ -21,6 +21,7 @@ import {
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
+import type { GaslessOptions } from "thirdweb/transaction";
 
 type Props = {
   contract: ThirdwebContract;
@@ -36,6 +37,7 @@ type Props = {
         currencySymbol: string | null;
         noActiveClaimCondition: false;
         quantityLimitPerWallet: bigint;
+        gasless?: GaslessOptions;
       }
     | { noActiveClaimCondition: true }
   );
@@ -181,6 +183,11 @@ export function NftMint(props: Props) {
               contractAddress={props.contract.address}
               chain={props.contract.chain}
               client={props.contract.client}
+              gasless={
+                props.noActiveClaimCondition === false
+                  ? props.gasless
+                  : undefined
+              }
               claimParams={
                 props.type === "erc1155"
                   ? {

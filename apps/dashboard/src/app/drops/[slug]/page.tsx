@@ -112,6 +112,7 @@ export default async function DropPage({
       pricePerToken={pricePerToken}
       noActiveClaimCondition={false}
       quantityLimitPerWallet={claimCondition.quantityLimitPerWallet}
+      gasless={project.gasless}
       {...project}
     />
   );

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { GaslessOptions } from "thirdweb/transaction";
 
 type DropPageData = {
   slug: string;
@@ -9,6 +10,7 @@ type DropPageData = {
   // If not defined, we will use the image of the NFT or contract's image
   thumbnail?: string;
   metadata: Metadata;
+  gasless?: GaslessOptions;
 } & ({ type: "erc1155"; tokenId: bigint } | { type: "erc721" });
 
 export const DROP_PAGES: DropPageData[] = [
@@ -44,6 +46,12 @@ export const DROP_PAGES: DropPageData[] = [
         description:
           "This exclusive commemorative NFT marks the official launch of ZERϴ's mainnet and our exciting partnership with thirdweb. Own a piece of this milestone in blockchain history as we make onchain transactions free with zero.network",
       },
+    },
+    gasless: {
+      provider: "engine",
+      relayerForwarderAddress: "",
+      relayerUrl:
+        "https://thirdweb.engine-usw2.thirdweb.com/relayer/790e2b34-a35d-4526-9396-f2163eb6e3a5",
     },
   },
 
