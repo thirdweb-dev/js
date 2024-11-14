@@ -103,7 +103,7 @@ function TransferableModule(props: ModuleInstanceProps) {
     <TransferableModuleUI
       {...props}
       isPending={isTransferEnabledQuery.isPending}
-      isRestricted={!!isTransferEnabledQuery.data}
+      isRestricted={!isTransferEnabledQuery.data}
       adminAddress={props.ownerAccount?.address || ""}
       update={update}
       isOwnerAccount={!!props.ownerAccount}
