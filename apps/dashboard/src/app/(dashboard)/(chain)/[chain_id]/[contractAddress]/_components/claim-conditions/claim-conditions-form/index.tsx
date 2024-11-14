@@ -454,7 +454,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
     };
   }, [claimConditionsQuery.data, controlledFields, isMultiPhase]);
 
-  if (isFetchingData) {
+  if (claimConditionsQuery.isPending) {
     return (
       <div className="flex h-[400px] w-full items-center justify-center rounded-lg border border-border">
         <Spinner className="size-10" />
