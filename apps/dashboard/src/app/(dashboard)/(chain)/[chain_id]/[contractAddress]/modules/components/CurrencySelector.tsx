@@ -166,7 +166,8 @@ export function CurrencySelector<
             ))}
           {isCustomCurrency &&
             !isPaymentsSelector &&
-            initialValue !== NATIVE_TOKEN_ADDRESS.toLowerCase() && (
+            initialValue.toLowerCase() !==
+              NATIVE_TOKEN_ADDRESS.toLowerCase() && (
               <SelectItem key={initialValue} value={initialValue}>
                 {initialValue}
               </SelectItem>

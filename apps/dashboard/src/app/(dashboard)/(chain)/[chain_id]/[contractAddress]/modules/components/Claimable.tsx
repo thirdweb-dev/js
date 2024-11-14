@@ -1,4 +1,5 @@
 "use client";
+
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import {
@@ -7,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,19 +19,26 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { addDays, fromUnixTime } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import { useCallback } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  useCallback,
+  useState,
+} from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
+  NATIVE_TOKEN_ADDRESS,
   type PreparedTransaction,
   ZERO_ADDRESS,
   getContract,
@@ -57,22 +65,15 @@ export type ClaimConditionValue = {
   auxData: string;
 };
 
-type ClaimCondition = {
-  availableSupply: bigint;
-  allowlistMerkleRoot: `0x${string}`;
-  pricePerUnit: bigint;
-  currency: string;
-  maxMintPerWallet: bigint;
-  startTimestamp: number;
-  endTimestamp: number;
-  auxData: string;
-};
+const positiveIntegerRegex = /^[0-9]\d*$/;
 
 function ClaimableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
   const account = useActiveAccount();
+  const [tokenId, setTokenId] = useState<string>("");
 
   const isErc721 = props.contractInfo.name === "ClaimableERC721";
+  const isValidTokenId = positiveIntegerRegex.test(tokenId);
 
   const primarySaleRecipientQuery = useReadContract(
     isErc721 ? ClaimableERC721.getSaleConfig : ClaimableERC1155.getSaleConfig,
@@ -82,20 +83,27 @@ function ClaimableModule(props: ModuleInstanceProps) {
   );
 
   const claimConditionQuery = useReadContract(
-    ClaimableERC721.getClaimCondition,
+    isErc721
+      ? ClaimableERC721.getClaimCondition
+      : ClaimableERC1155.getClaimCondition,
     {
+      tokenId: positiveIntegerRegex.test(tokenId) ? BigInt(tokenId) : 0n,
       contract: contract,
       queryOptions: {
-        enabled: isErc721,
+        enabled: isErc721 || (!!tokenId && isValidTokenId),
       },
     },
   );
 
-  const getClaimConditionErc1155 = (tokenId: string) =>
-    ClaimableERC1155.getClaimCondition({
-      contract: contract,
-      tokenId: BigInt(tokenId),
-    });
+  const noClaimConditionSet =
+    claimConditionQuery.data?.availableSupply === 0n &&
+    claimConditionQuery.data?.allowlistMerkleRoot ===
+      "0x0000000000000000000000000000000000000000000000000000000000000000" &&
+    claimConditionQuery.data?.pricePerUnit === 0n &&
+    claimConditionQuery.data?.currency === ZERO_ADDRESS &&
+    claimConditionQuery.data?.maxMintPerWallet === 0n &&
+    claimConditionQuery.data?.startTimestamp === 0 &&
+    claimConditionQuery.data?.endTimestamp === 0;
 
   const currencyContract = getContract({
     address: claimConditionQuery.data?.currency || "",
@@ -104,7 +112,6 @@ function ClaimableModule(props: ModuleInstanceProps) {
   });
 
   const shouldFetchTokenDecimals =
-    isErc721 &&
     claimConditionQuery.data &&
     claimConditionQuery.data?.currency !== ZERO_ADDRESS;
 
@@ -217,10 +224,8 @@ function ClaimableModule(props: ModuleInstanceProps) {
       }}
       claimConditionSection={{
         data:
-          // claim condition is common for all tokens
-          isErc721 &&
-          // claim conditions is fetched
-          claimConditionQuery.isFetched &&
+          // claim conditions data is present
+          claimConditionQuery.data &&
           // token decimals is fetched if it should be fetched
           (shouldFetchTokenDecimals ? tokenDecimalsQuery.isFetched : true)
             ? {
@@ -229,11 +234,17 @@ function ClaimableModule(props: ModuleInstanceProps) {
               }
             : undefined,
         setClaimCondition,
-        getClaimConditionErc1155,
+        tokenId,
+        isLoading:
+          claimConditionQuery.isLoading ||
+          (!!shouldFetchTokenDecimals && tokenDecimalsQuery.isLoading),
       }}
       isOwnerAccount={!!ownerAccount}
       isErc721={isErc721}
       contractChainId={props.contract.chain.id}
+      setTokenId={setTokenId}
+      isValidTokenId={isValidTokenId}
+      noClaimConditionSet={noClaimConditionSet}
       mintSection={{
         mint,
       }}
@@ -246,6 +257,9 @@ export function ClaimableModuleUI(
     isOwnerAccount: boolean;
     isErc721: boolean;
     contractChainId: number;
+    setTokenId: Dispatch<SetStateAction<string>>;
+    isValidTokenId: boolean;
+    noClaimConditionSet: boolean;
     primarySaleRecipientSection: {
       setPrimarySaleRecipient: (
         values: PrimarySaleRecipientFormValues,
@@ -260,14 +274,15 @@ export function ClaimableModuleUI(
       mint: (values: MintFormValues) => Promise<void>;
     };
     claimConditionSection: {
+      tokenId: string;
       setClaimCondition: (values: ClaimConditionFormValues) => Promise<void>;
-      getClaimConditionErc1155: (tokenId: string) => Promise<ClaimCondition>;
       data:
         | {
-            claimCondition: ClaimConditionValue | undefined;
+            claimCondition: ClaimConditionValue;
             tokenDecimals: number | undefined;
           }
         | undefined;
+      isLoading: boolean;
     };
   },
 ) {
@@ -296,25 +311,44 @@ export function ClaimableModuleUI(
               Claim Conditions
             </AccordionTrigger>
             <AccordionContent className="px-1">
-              {!props.isErc721 || props.claimConditionSection.data ? (
-                <ClaimConditionSection
-                  isOwnerAccount={props.isOwnerAccount}
-                  claimCondition={
-                    props.claimConditionSection.data?.claimCondition
-                  }
-                  update={props.claimConditionSection.setClaimCondition}
-                  isErc721={props.isErc721}
-                  chainId={props.contractChainId}
-                  tokenDecimals={
-                    props.claimConditionSection.data?.tokenDecimals
-                  }
-                  getClaimConditionErc1155={
-                    props.claimConditionSection.getClaimConditionErc1155
-                  }
-                />
-              ) : (
-                <Skeleton className="h-[350px]" />
+              {!props.isErc721 && (
+                <div className="flex flex-col gap-6">
+                  <div className="flex-1 space-y-1">
+                    <Label>Token ID</Label>
+                    <p className="text-muted-foreground text-sm">
+                      {props.isOwnerAccount
+                        ? "View and Update claim conditions for given token ID"
+                        : "View claim conditions for given token ID"}
+                    </p>
+                    <Input onChange={(e) => props.setTokenId(e.target.value)} />
+                  </div>
+                </div>
               )}
+
+              <div className="h-6" />
+
+              {props.isValidTokenId &&
+                props.claimConditionSection.data &&
+                !props.claimConditionSection.isLoading && (
+                  <ClaimConditionSection
+                    isOwnerAccount={props.isOwnerAccount}
+                    claimCondition={
+                      props.claimConditionSection.data.claimCondition
+                    }
+                    update={props.claimConditionSection.setClaimCondition}
+                    isErc721={props.isErc721}
+                    chainId={props.contractChainId}
+                    noClaimConditionSet={props.noClaimConditionSet}
+                    tokenDecimals={
+                      props.claimConditionSection.data?.tokenDecimals
+                    }
+                    tokenId={props.claimConditionSection.tokenId}
+                  />
+                )}
+              {props.isValidTokenId &&
+                props.claimConditionSection.isLoading && (
+                  <Skeleton className="h-[350px]" />
+                )}
             </AccordionContent>
           </AccordionItem>
 
@@ -383,63 +417,48 @@ const defaultStartDate = addDays(new Date(), 7);
 const defaultEndDate = addDays(new Date(), 14);
 
 function ClaimConditionSection(props: {
-  claimCondition?: ClaimConditionValue;
+  claimCondition: ClaimConditionValue;
   update: (values: ClaimConditionFormValues) => Promise<void>;
   isOwnerAccount: boolean;
   isErc721: boolean;
   chainId: number;
   tokenDecimals?: number;
-  getClaimConditionErc1155: (tokenId: string) => Promise<ClaimCondition>;
+  tokenId: string;
+  noClaimConditionSet: boolean;
 }) {
   const { idToChain } = useAllChainsData();
   const chain = idToChain.get(props.chainId);
-  const { claimCondition } = props;
-
-  const tokenIdForm = useForm<{ tokenId: string }>({
-    defaultValues: {
-      tokenId: "",
-    },
-  });
-
-  const tokenId = tokenIdForm.watch("tokenId");
-
-  const claimConditionErc1155Query = useQuery({
-    queryKey: ["claimConditionErc1155", props.chainId, tokenId],
-    queryFn: () => props.getClaimConditionErc1155(tokenId),
-    enabled: !props.isErc721 && BigInt(tokenId) >= 0n,
-  });
-
-  const conditions = props.isErc721
-    ? claimCondition
-    : claimConditionErc1155Query.data;
+  const { tokenId, claimCondition } = props;
+  const [addClaimConditionButtonClicked, setAddClaimConditionButtonClicked] =
+    useState(false);
 
   const form = useForm<ClaimConditionFormValues>({
     resolver: zodResolver(claimConditionFormSchema),
     values: {
       tokenId,
       currencyAddress:
-        conditions?.currency === ZERO_ADDRESS ? "" : conditions?.currency,
-      pricePerToken:
-        conditions?.pricePerUnit &&
-        conditions?.currency !== ZERO_ADDRESS &&
-        props.tokenDecimals
-          ? Number(toTokens(conditions?.pricePerUnit, props.tokenDecimals))
-          : 0,
+        claimCondition?.currency === ZERO_ADDRESS
+          ? NATIVE_TOKEN_ADDRESS // default to the native token address
+          : claimCondition?.currency,
+      // default case is zero state, so 0 // 10 ** 18 still results in 0
+      pricePerToken: Number(
+        toTokens(claimCondition?.pricePerUnit, props.tokenDecimals || 18),
+      ),
       maxClaimableSupply:
-        conditions?.availableSupply.toString() === "0" ||
-        conditions?.availableSupply.toString() === MAX_UINT_256
+        claimCondition?.availableSupply.toString() === "0" ||
+        claimCondition?.availableSupply.toString() === MAX_UINT_256
           ? ""
-          : conditions?.availableSupply.toString() || "",
+          : claimCondition?.availableSupply.toString() || "",
       maxClaimablePerWallet:
-        conditions?.maxMintPerWallet.toString() === "0" ||
-        conditions?.maxMintPerWallet.toString() === MAX_UINT_256
+        claimCondition?.maxMintPerWallet.toString() === "0" ||
+        claimCondition?.maxMintPerWallet.toString() === MAX_UINT_256
           ? ""
-          : conditions?.maxMintPerWallet.toString() || "",
-      startTime: conditions?.startTimestamp
-        ? fromUnixTime(conditions?.startTimestamp)
+          : claimCondition?.maxMintPerWallet.toString() || "",
+      startTime: claimCondition?.startTimestamp
+        ? fromUnixTime(claimCondition?.startTimestamp)
         : defaultStartDate,
-      endTime: conditions?.endTimestamp
-        ? fromUnixTime(conditions?.endTimestamp)
+      endTime: claimCondition?.endTimestamp
+        ? fromUnixTime(claimCondition?.endTimestamp)
         : defaultEndDate,
       allowList: [],
     },
@@ -474,39 +493,30 @@ function ClaimConditionSection(props: {
 
   return (
     <div className="flex flex-col gap-6">
-      {!props.isErc721 && (
-        <Form {...tokenIdForm}>
-          <form>
-            <FormField
-              control={tokenIdForm.control}
-              name="tokenId"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Token ID</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={!props.isOwnerAccount} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </form>
-        </Form>
+      {props.noClaimConditionSet && !addClaimConditionButtonClicked && (
+        <>
+          <Alert variant="warning">
+            <CircleAlertIcon className="size-5 max-sm:hidden" />
+            <AlertTitle>No Claim Condition Set</AlertTitle>
+            <AlertDescription>
+              You have not set a claim condition for this token. You can set a
+              claim condition by clicking the "Set Claim Condition" button.
+            </AlertDescription>
+          </Alert>
+
+          <Button
+            onClick={() => setAddClaimConditionButtonClicked(true)}
+            variant="outline"
+            className="w-full"
+          >
+            Add Claim Condition
+          </Button>
+        </>
       )}
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          {!props.isErc721 &&
-            tokenId !== "" &&
-            BigInt(tokenId) >= 0n &&
-            claimConditionErc1155Query.isPending && (
-              <Skeleton className="h-[350px]" />
-            )}
-
-          {(props.isErc721 ||
-            (tokenId !== "" &&
-              BigInt(tokenId) >= 0n &&
-              !claimConditionErc1155Query.isPending)) && (
+      {(!props.noClaimConditionSet || addClaimConditionButtonClicked) && (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
@@ -668,9 +678,9 @@ function ClaimConditionSection(props: {
                 </TransactionButton>
               </div>
             </div>
-          )}
-        </form>{" "}
-      </Form>
+          </form>{" "}
+        </Form>
+      )}
     </div>
   );
 }
