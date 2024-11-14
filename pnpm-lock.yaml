@@ -543,8 +543,8 @@ importers:
   apps/portal:
     dependencies:
       '@dirtycajunrice/klee':
-        specifier: ^1.0.1
-        version: 1.0.1(react@19.0.0-rc-69d4b800-20241021)
+        specifier: ^1.0.5
+        version: 1.0.5(react@19.0.0-rc-69d4b800-20241021)
       '@mdx-js/loader':
         specifier: ^2.3.0
         version: 2.3.0(webpack@5.96.1)
@@ -2243,8 +2243,8 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
-  '@dirtycajunrice/klee@1.0.1':
-    resolution: {integrity: sha512-bFye60D7RyFGgwVeNdJ+H6TCNchphwIVkb3C7jG4LNfAVrFUFFlmvVzhgLnQajBSxzThC1YCsTf9Qix5JUnAjA==}
+  '@dirtycajunrice/klee@1.0.5':
+    resolution: {integrity: sha512-H4AlruNtAYZX/qBb+otutGGQ7RoEejIUwzLLo2bKaBNMTnY4hcZr8DeondPhLAI90iFxUdI18ttQMotSQO7pag==}
     peerDependencies:
       react: ^18.3.1
 
@@ -15827,7 +15827,7 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@dirtycajunrice/klee@1.0.1(react@19.0.0-rc-69d4b800-20241021)':
+  '@dirtycajunrice/klee@1.0.5(react@19.0.0-rc-69d4b800-20241021)':
     dependencies:
       react: 19.0.0-rc-69d4b800-20241021
 
