@@ -35,10 +35,7 @@ function projectStub(id: string, teamId: string) {
   return project;
 }
 
-export function teamStub(
-  id: string,
-  billingPlan: "free" | "pro" | "growth",
-): Team {
+export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
   const team: Team = {
     id: `team-${id}-id`,
     billingPlan: billingPlan,

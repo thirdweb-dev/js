@@ -1,20 +1,23 @@
-import { type AccountPlan, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
+import type { Team } from "../@/api/team";
 
 export const CONTACT_US_URL =
   "https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro";
 
-export const PLANS: {
-  [T in AccountPlan]: {
+type NonFreeTeamPlan = Exclude<Team["billingPlan"], "free">;
+
+export const TEAM_PLANS: Record<
+  NonFreeTeamPlan,
+  {
     title: string;
     price: string | number;
     subTitle: string | null;
     trialPeriodDays: number;
     description: string;
     features: Array<string | string[]>;
-  };
-} = {
-  [accountPlan.free]: {
+  }
+> = {
+  starter: {
     title: "Starter",
     price: 0,
     subTitle: null,
@@ -29,7 +32,7 @@ export const PLANS: {
       "Blockchain infra (RPC, IPFS)",
     ],
   },
-  [accountPlan.growth]: {
+  growth: {
     price: 99,
     title: "Growth",
     subTitle: "Everything in Starter, plus:",
@@ -45,7 +48,7 @@ export const PLANS: {
       "Advanced paymaster rules",
     ],
   },
-  [accountPlan.pro]: {
+  pro: {
     price: "Custom",
     title: "Pro",
     subTitle: "Everything in Growth, plus:",
@@ -59,14 +62,6 @@ export const PLANS: {
       "Direct access to solutions & engineering teams",
       "Enterprise grade SLAs",
     ],
-  },
-  [accountPlan.enterprise]: {
-    price: "$$$",
-    title: "Enterprise",
-    subTitle: "Everything in Pro, plus:",
-    trialPeriodDays: 0,
-    description: "Contact our Sales team to get you onboarded.",
-    features: [],
   },
 };
 

@@ -4,8 +4,8 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { accountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { ConfirmEngineTierDialog } from "app/team/[team_slug]/(team)/~/engine/(general)/create/ConfirmEngineTierDialog";
 import { EngineTierCard } from "app/team/[team_slug]/(team)/~/engine/(general)/create/tier-card";
-import { LazyOnboardingBilling } from "components/onboarding/LazyOnboardingBilling";
-import { OnboardingModal } from "components/onboarding/Modal";
+import { LazyAddPaymentMethod } from "components/onboarding/LazyOnboardingBilling";
+import { TWModal } from "components/onboarding/Modal";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
@@ -93,8 +93,8 @@ export default function Page() {
         />
       )}
 
-      <OnboardingModal isOpen={isBillingModalOpen}>
-        <LazyOnboardingBilling
+      <TWModal isOpen={isBillingModalOpen}>
+        <LazyAddPaymentMethod
           onSave={async () => {
             if (!selectedTier) {
               return;
@@ -105,7 +105,7 @@ export default function Page() {
           }}
           onCancel={() => setIsBillingModalOpen(false)}
         />
-      </OnboardingModal>
+      </TWModal>
 
       <h1 className="mb-2 font-semibold text-2xl tracking-tight">
         Choose an Engine deployment

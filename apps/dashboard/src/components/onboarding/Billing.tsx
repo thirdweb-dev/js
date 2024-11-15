@@ -1,10 +1,8 @@
 import { accountKeys } from "@3rdweb-sdk/react/cache-keys";
-import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useQueryClient } from "@tanstack/react-query";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTheme } from "next-themes";
 import { OnboardingPaymentForm } from "./PaymentForm";
 import { TitleAndDescription } from "./Title";
@@ -14,52 +12,20 @@ const stripePromise = process.env.NEXT_PUBLIC_STRIPE_KEY
   ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY)
   : null;
 
-interface OnboardingBillingProps {
+interface AddPaymentMethodProps {
   onSave: () => void;
   onCancel: () => void;
 }
 
-const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
+const AddPaymentMethod: React.FC<AddPaymentMethodProps> = ({
   onSave,
   onCancel,
 }) => {
   const { theme } = useTheme();
-  const trackEvent = useTrack();
   const queryClient = useQueryClient();
   const { user } = useLoggedInUser();
 
-  const mutation = useUpdateAccount();
-
   const handleCancel = () => {
-    trackEvent({
-      category: "account",
-      action: "onboardSkippedBilling",
-      label: "attempt",
-    });
-
-    mutation.mutate(
-      {
-        onboardSkipped: true,
-      },
-      {
-        onSuccess: () => {
-          trackEvent({
-            category: "account",
-            action: "onboardSkippedBilling",
-            label: "success",
-          });
-        },
-        onError: (error) => {
-          trackEvent({
-            category: "account",
-            action: "onboardSkippedBilling",
-            label: "error",
-            error,
-          });
-        },
-      },
-    );
-
     onCancel();
   };
 
@@ -98,7 +64,7 @@ const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
   );
 };
 
-export default OnboardingBilling;
+export default AddPaymentMethod;
 
 const appearance = {
   variables: {

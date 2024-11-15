@@ -1,12 +1,10 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { type Account, accountStatus } from "@3rdweb-sdk/react/hooks/useApi";
-import { OnboardingModal } from "components/onboarding/Modal";
 import { getRecurringPaymentFailureResponse } from "lib/billing";
 import { ExternalLinkIcon, XIcon } from "lucide-react";
-import { useState } from "react";
-import { LazyOnboardingBilling } from "../../../../onboarding/LazyOnboardingBilling";
 import { ManageBillingButton } from "../ManageButton";
 
 type RecurringPaymentFailureAlertProps = {
@@ -26,15 +24,7 @@ export const RecurringPaymentFailureAlert: React.FC<
   affectedServices = [],
   paymentFailureCode = "bank_decline",
 }) => {
-  // TODO: We should find a way to move this deeper into the
-  // TODO: ManageBillingButton component and set an optional field to override
-  const [paymentMethodSaving, setPaymentMethodSaving] = useState(false);
-  const [isPaymentMethodOpen, setIsPaymentMethodOpen] = useState(false);
-
-  const handlePaymentAdded = () => {
-    setPaymentMethodSaving(true);
-    setIsPaymentMethodOpen(false);
-  };
+  const router = useDashboardRouter();
 
   const { title, reason, resolution } = getRecurringPaymentFailureResponse({
     paymentFailureCode,
@@ -46,13 +36,6 @@ export const RecurringPaymentFailureAlert: React.FC<
 
   return (
     <Alert variant="destructive" className="py-6">
-      <OnboardingModal isOpen={isPaymentMethodOpen}>
-        <LazyOnboardingBilling
-          onSave={handlePaymentAdded}
-          onCancel={() => setIsPaymentMethodOpen(false)}
-        />
-      </OnboardingModal>
-
       <AlertTitle>{header}</AlertTitle>
       <AlertDescription>
         {reason ? `${reason}. ` : ""}
@@ -79,13 +62,16 @@ export const RecurringPaymentFailureAlert: React.FC<
         <div className="flex flex-col gap-3 md:flex-row">
           <ManageBillingButton
             account={dashboardAccount}
-            loading={paymentMethodSaving}
             loadingText="Verifying payment method"
             onClick={
               dashboardAccount.status === accountStatus.validPayment ||
               dashboardAccount.status === accountStatus.invalidPayment
                 ? undefined
-                : () => setIsPaymentMethodOpen(true)
+                : () => {
+                    // TODO - get the team slug prop and redirect to that instead of the default team
+                    // and don't show this button if this is on the billing page already
+                    router.push("/team/~/~/settings/billing");
+                  }
             }
           />
 
