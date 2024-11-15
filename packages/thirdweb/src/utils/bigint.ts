@@ -70,7 +70,7 @@ type _ReplaceBigInts<
     >
   : result;
 
-export type ReplaceBigInts<obj, type> = obj extends bigint
+type ReplaceBigInts<obj, type> = obj extends bigint
   ? type
   : obj extends unknown[]
     ? _ReplaceBigInts<Readonly<obj>, type>

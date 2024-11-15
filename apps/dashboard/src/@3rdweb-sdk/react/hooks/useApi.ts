@@ -29,7 +29,7 @@ export const accountPlan = {
   enterprise: "enterprise",
 } as const;
 
-export type AccountStatus = (typeof accountStatus)[keyof typeof accountStatus];
+type AccountStatus = (typeof accountStatus)[keyof typeof accountStatus];
 export type AccountPlan = (typeof accountPlan)[keyof typeof accountPlan];
 
 export type AuthorizedWallet = {
