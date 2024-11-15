@@ -12,6 +12,7 @@ export const authOptions = [
   "telegram",
   "github",
   "twitch",
+  "steam",
   "apple",
   "coinbase",
   "line",

@@ -101,6 +101,7 @@ export type AuthProvider =
   | "X"
   | "Line"
   | "Twitch"
+  | "Steam"
   | "GitHub"
   | "Farcaster"
   | "Telegram";
