@@ -168,7 +168,8 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
             isDestructive: true,
           },
         ]}
-        bodyRowClassName="hover:bg-muted/50 relative"
+        bodyRowClassName="hover:bg-muted/50"
+        bodyRowLinkBox
       />
 
       {instanceToUpdate && (

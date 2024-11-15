@@ -54,7 +54,8 @@ export async function DeployableContractTable(
           {deployedContractMetadata.map((metadata, i) => {
             return (
               <TableRow
-                className="relative cursor-pointer hover:bg-muted/50"
+                linkBox
+                className="cursor-pointer hover:bg-muted/50"
                 // biome-ignore lint/suspicious/noArrayIndexKey: static list
                 key={i}
               >

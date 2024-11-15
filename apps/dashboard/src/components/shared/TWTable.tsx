@@ -55,6 +55,7 @@ type TWTableProps<TRowData> = {
   };
   title: string;
   bodyRowClassName?: string;
+  bodyRowLinkBox?: boolean;
 };
 
 export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
@@ -174,6 +175,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                     }
                   : {})}
                 className={tableProps.bodyRowClassName}
+                linkBox={tableProps.bodyRowLinkBox}
               >
                 {row.getVisibleCells().map((cell) => {
                   return (

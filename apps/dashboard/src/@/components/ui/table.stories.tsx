@@ -9,7 +9,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Meta, StoryObj } from "@storybook/react";
+import Link from "next/link";
 import { BadgeContainer, mobileViewport } from "../../../stories/utils";
+import { cn } from "../../lib/utils";
 import { Badge } from "./badge";
 
 const meta = {
@@ -39,6 +41,10 @@ function Component() {
     <div className="flex min-w-0 flex-col gap-6 px-4 py-6 lg:mx-auto lg:max-w-[1000px]">
       <BadgeContainer label="Normal">
         <TableDemo />
+      </BadgeContainer>
+
+      <BadgeContainer label="Clickable Row">
+        <TableDemo linkBox />
       </BadgeContainer>
 
       <BadgeContainer label="With Footer">
@@ -90,6 +96,7 @@ const invoices: Invoice[] = [
 
 function TableDemo(props: {
   footer?: boolean;
+  linkBox?: boolean;
 }) {
   return (
     <TableContainer>
@@ -104,8 +111,21 @@ function TableDemo(props: {
         </TableHeader>
         <TableBody>
           {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
+            <TableRow
+              key={invoice.invoice}
+              linkBox={props.linkBox}
+              className={cn(props.linkBox && "cursor-pointer hover:bg-muted")}
+            >
+              <TableCell className="font-medium">
+                <Link
+                  href={`/invoices/${invoice.invoice}`}
+                  className={cn(
+                    props.linkBox && "before:absolute before:inset-0",
+                  )}
+                >
+                  {invoice.invoice}
+                </Link>
+              </TableCell>
               <TableCell>
                 <Badge>{invoice.paymentStatus}</Badge>
               </TableCell>
