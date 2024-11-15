@@ -70,16 +70,16 @@ export const EngineTierCard = ({
 
   const card = (
     <div
-      className="flex flex-col gap-6 rounded-xl border border-border bg-muted/20 p-6"
+      className="flex flex-col gap-6 rounded-xl border border-border bg-muted/50 p-6"
       style={{
-        background: isPrimaryCta
-          ? "linear-gradient(to top, hsl(var(--muted)), hsl(var(--muted)/50%))"
+        backgroundImage: isPrimaryCta
+          ? "linear-gradient(to top, hsl(var(--muted)) 40%, transparent)"
           : undefined,
       }}
     >
       <Flex flexDir="column" gap={4}>
         {/* Name */}
-        <h3 className="font-semibold text-3xl tracking-tight">{name}</h3>
+        <h3 className="font-semibold text-2xl tracking-tight">{name}</h3>
 
         {/* Price */}
         {monthlyPriceUsd === "custom" ? (

@@ -1,5 +1,4 @@
-import { accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
-import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Box, Container, Flex } from "@chakra-ui/react";
 import { Heading, Text, TrackedLink } from "tw-components";
 import { CONTACT_US_URL } from "utils/pricing";
 import { PricingCard } from "./PricingCard";
@@ -46,51 +45,51 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           )}
         </Flex>
 
-        <SimpleGrid columns={{ base: 1, xl: 3 }} gap={{ base: 6, xl: 8 }}>
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
           <PricingCard
-            name={accountPlan.free}
-            ctaTitle="Get started for free"
-            ctaProps={{
-              category: trackingCategory,
+            billingPlan="starter"
+            cta={{
+              title: "Get started for free",
               href: "/team/~/~/settings/billing",
-            }}
-          />
-
-          <PricingCard
-            highlighted
-            ctaTitle={
-              canTrialGrowth ? "Claim your 1-month free" : "Get started"
-            }
-            name={accountPlan.growth}
-            ctaHint={
-              canTrialGrowth
-                ? "Your free trial will end after 30 days."
-                : undefined
-            }
-            canTrialGrowth={canTrialGrowth}
-            ctaProps={{
-              category: trackingCategory,
-              label: canTrialGrowth ? "claimGrowthTrial" : undefined,
-              href: "/team/~/~/settings/billing",
-              bgColor: "white",
-              color: "black",
-              _hover: {
-                bgColor: "white",
-                opacity: 0.8,
+              target: "_blank",
+              tracking: {
+                category: trackingCategory,
+                label: "getStartedFree",
               },
             }}
           />
 
           <PricingCard
-            name={accountPlan.pro}
-            ctaTitle="Contact us"
-            ctaProps={{
-              category: trackingCategory,
-              href: CONTACT_US_URL,
-              isExternal: true,
+            highlighted
+            billingPlan="growth"
+            cta={{
+              title: canTrialGrowth ? "Claim your 1-month free" : "Get started",
+              hint: canTrialGrowth
+                ? "Your free trial will end after 30 days."
+                : undefined,
+              href: "/team/~/~/settings/billing",
+              target: "_blank",
+              tracking: {
+                category: trackingCategory,
+                label: canTrialGrowth ? "claimGrowthTrial" : undefined,
+              },
+              variant: "default",
             }}
           />
-        </SimpleGrid>
+
+          <PricingCard
+            billingPlan="pro"
+            cta={{
+              href: CONTACT_US_URL,
+              title: "Contact us",
+              target: "_blank",
+              tracking: {
+                category: trackingCategory,
+                label: "contactUs",
+              },
+            }}
+          />
+        </div>
       </Flex>
     </Container>
   );

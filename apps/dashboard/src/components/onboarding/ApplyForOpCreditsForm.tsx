@@ -1,4 +1,4 @@
-import { accountPlan, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
 import { Select as ChakraSelect } from "chakra-react-select";
 import { ChakraNextImage } from "components/Image";
@@ -8,6 +8,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Button, FormHelperText, FormLabel } from "tw-components";
+import type { Team } from "../../@/api/team";
 import { PlanToCreditsRecord } from "./ApplyForOpCreditsModal";
 
 interface FormSchema {
@@ -26,12 +27,15 @@ interface FormSchema {
 
 interface ApplyForOpCreditsFormProps {
   onClose: () => void;
+  plan: Team["billingPlan"];
+  account: Account;
 }
 
 export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
   onClose,
+  account,
+  plan,
 }) => {
-  const { data: account } = useAccount();
   const [, setHasAppliedForOpGrant] = useLocalStorage(
     `appliedForOpGrant-${account?.id}`,
     false,
@@ -41,7 +45,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
       firstname: "",
       lastname: "",
       thirdweb_account_id: account?.id || "",
-      plan_type: PlanToCreditsRecord[account?.plan || accountPlan.free].title,
+      plan_type: PlanToCreditsRecord[plan].title,
       email: account?.email || "",
       company: "",
       website: "",
@@ -50,7 +54,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
       superchain_chain: "",
       what_would_you_like_to_meet_about_: "",
     }),
-    [account],
+    [account, plan],
   );
 
   const form = useForm<FormSchema>({
