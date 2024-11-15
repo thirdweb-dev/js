@@ -13,7 +13,7 @@ export type Team = {
   deletedAt?: string;
   bannedAt?: string;
   image?: string;
-  billingPlan: "pro" | "growth" | "free";
+  billingPlan: "pro" | "growth" | "free" | "starter";
   billingStatus: "validPayment" | (string & {}) | null;
   billingEmail: string | null;
 };

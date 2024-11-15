@@ -67,6 +67,7 @@ const Pricing: ThirdwebNextPage = () => {
       >
         <PricingSection
           trackingCategory={TRACKING_CATEGORY}
+          // TODO: use API response
           canTrialGrowth={true}
         />
 

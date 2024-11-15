@@ -1,3 +1,5 @@
+"use client";
+
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
@@ -14,13 +16,19 @@ interface ManageBillingButtonProps {
   loading?: boolean;
   loadingText?: string;
   onClick?: () => void;
+  variant?: "outline" | "default";
+  onlyRenderIfLink?: boolean;
 }
+
+// TODO - need to rework this and use the billing info from team instead
 
 export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
   account,
   loading,
   loadingText,
   onClick,
+  variant,
+  onlyRenderIfLink,
 }) => {
   const trackEvent = useTrack();
 
@@ -54,16 +62,26 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
 
   if (url) {
     return (
-      <Button asChild>
-        <TrackedLinkTW href={url} category="billingAccount" label={buttonLabel}>
+      <Button asChild variant={variant}>
+        <TrackedLinkTW
+          href={url}
+          category="billingAccount"
+          label={buttonLabel}
+          target="_blank"
+        >
           {buttonText}
         </TrackedLinkTW>
       </Button>
     );
   }
 
+  if (onlyRenderIfLink) {
+    return null;
+  }
+
   return (
     <Button
+      variant={variant}
       disabled={loading || !onClick}
       onClick={(e) => {
         trackEvent({

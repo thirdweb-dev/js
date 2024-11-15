@@ -3,14 +3,14 @@ import { cn } from "@/lib/utils";
 import { IconLogo } from "components/logo";
 import type { ComponentWithChildren } from "types/component-with-children";
 
-interface OnboardingModalProps {
+interface TWModalProps {
   isOpen: boolean;
   wide?: boolean;
   // Pass this props to make the modal closable (it will enable backdrop + the "x" icon)
   onOpenChange?: (open: boolean) => void;
 }
 
-export const OnboardingModal: ComponentWithChildren<OnboardingModalProps> = ({
+export const TWModal: ComponentWithChildren<TWModalProps> = ({
   children,
   isOpen,
   wide,

@@ -2,6 +2,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import {
   type Account,
@@ -12,15 +13,13 @@ import {
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import * as Sentry from "@sentry/nextjs";
-import { OnboardingModal } from "components/onboarding/Modal";
 import { format } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { ExternalLinkIcon, XIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
-import { LazyOnboardingBilling } from "../../../../onboarding/LazyOnboardingBilling";
 import { ManageBillingButton } from "../ManageButton";
 import { RecurringPaymentFailureAlert } from "./RecurringPaymentFailureAlert";
 
@@ -328,16 +327,7 @@ const AddPaymentNotification: React.FC<AddPaymentNotificationProps> = ({
   showCTAs = true,
   dashboardAccount,
 }) => {
-  // TODO: We should find a way to move this deeper into the
-  // TODO: ManageBillingButton component and set an optional field to override
-  const [paymentMethodSaving, setPaymentMethodSaving] = useState(false);
-  const [isPaymentMethodOpen, setIsPaymentMethodOpen] = useState(false);
-
-  const handlePaymentAdded = () => {
-    setPaymentMethodSaving(true);
-    setIsPaymentMethodOpen(false);
-  };
-
+  const router = useDashboardRouter();
   const isBilling = ctaHref === "/team/~/~/settings/billing";
 
   return (
@@ -345,13 +335,6 @@ const AddPaymentNotification: React.FC<AddPaymentNotificationProps> = ({
       variant={status === "error" ? "destructive" : "warning"}
       className="relative py-6"
     >
-      <OnboardingModal isOpen={isPaymentMethodOpen}>
-        <LazyOnboardingBilling
-          onSave={handlePaymentAdded}
-          onCancel={() => setIsPaymentMethodOpen(false)}
-        />
-      </OnboardingModal>
-
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription>{description}</AlertDescription>
 
@@ -360,9 +343,12 @@ const AddPaymentNotification: React.FC<AddPaymentNotificationProps> = ({
           {isBilling ? (
             <ManageBillingButton
               account={dashboardAccount}
-              loading={paymentMethodSaving}
               loadingText="Verifying payment method"
-              onClick={() => setIsPaymentMethodOpen(true)}
+              onClick={() => {
+                // TODO - get the team slug prop and redirect to that instead of the default team
+                // and don't show this button if this is on the billing page already
+                router.push("/team/~/~/settings/billing");
+              }}
             />
           ) : (
             <Button variant="outline" asChild>

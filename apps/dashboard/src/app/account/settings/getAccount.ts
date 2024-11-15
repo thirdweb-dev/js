@@ -4,11 +4,8 @@ import { getAuthToken } from "../../api/lib/getAuthToken";
 
 export async function getAccount() {
   const authToken = await getAuthToken();
-  const apiServerURL = new URL(API_SERVER_URL);
 
-  apiServerURL.pathname = "/v1/account/me";
-
-  const res = await fetch(apiServerURL, {
+  const res = await fetch(`${API_SERVER_URL}/v1/account/me`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${authToken}`,
