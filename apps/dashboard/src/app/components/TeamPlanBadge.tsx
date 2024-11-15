@@ -1,14 +1,15 @@
+import type { Team } from "@/api/team";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export function TeamPlanBadge(props: {
-  plan: "free" | "growth" | "pro";
+  plan: Team["billingPlan"];
   className?: string;
 }) {
   return (
     <Badge
       variant={
-        props.plan === "free"
+        props.plan === "free" || props.plan === "starter"
           ? "secondary"
           : props.plan === "growth"
             ? "success"

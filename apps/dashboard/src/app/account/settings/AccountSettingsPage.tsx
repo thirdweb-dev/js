@@ -1,7 +1,6 @@
 "use client";
 
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
 import { AccountSettingsPageUI } from "./AccountSettingsPageUI";
@@ -12,7 +11,6 @@ export function AccountSettingsPage(props: {
 }) {
   return (
     <div>
-      <BillingAlerts className="mb-10" />
       <AccountSettingsPageUI
         account={props.account}
         updateAccountImage={async (file) => {

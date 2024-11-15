@@ -1,6 +1,5 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
-import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 import { Suspense } from "react";
 import { DeployedContractsPageHeader } from "../DeployedContractsPageHeader";
 import { DeployedContractsTable } from "./DeployedContractsTable";
@@ -13,7 +12,6 @@ export function DeployedContractsPage(props: {
 }) {
   return (
     <div className={props.className}>
-      <BillingAlerts className="mb-10" />
       <DeployedContractsPageHeader />
       <div className="h-6" />
       <Suspense fallback={<Loading />}>

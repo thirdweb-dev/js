@@ -1,6 +1,5 @@
 import type { SidebarLink } from "@/components/blocks/Sidebar";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
-import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 
 export default async function Layout(props: {
   params: Promise<{
@@ -30,10 +29,5 @@ export default async function Layout(props: {
     },
   ];
 
-  return (
-    <SidebarLayout sidebarLinks={links}>
-      <BillingAlerts className="mb-10" />
-      {props.children}
-    </SidebarLayout>
-  );
+  return <SidebarLayout sidebarLinks={links}>{props.children}</SidebarLayout>;
 }

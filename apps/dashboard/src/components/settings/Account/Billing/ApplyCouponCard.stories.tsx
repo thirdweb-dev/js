@@ -60,7 +60,6 @@ function Story() {
           onCouponApplied={undefined}
           prefillPromoCode="XYZ"
           isPaymentSetup={true}
-          onAddPayment={() => {}}
         />
       </BadgeContainer>
 
@@ -69,9 +68,6 @@ function Story() {
           submit={statusStub(200)}
           onCouponApplied={undefined}
           isPaymentSetup={false}
-          onAddPayment={() => {
-            console.log("show payment modal");
-          }}
         />
       </BadgeContainer>
 
@@ -80,7 +76,6 @@ function Story() {
           submit={statusStub(200)}
           onCouponApplied={undefined}
           isPaymentSetup={true}
-          onAddPayment={() => {}}
         />
       </BadgeContainer>
 
@@ -89,7 +84,6 @@ function Story() {
           submit={statusStub(400)}
           onCouponApplied={undefined}
           isPaymentSetup={true}
-          onAddPayment={() => {}}
         />
       </BadgeContainer>
 
@@ -98,7 +92,6 @@ function Story() {
           submit={statusStub(401)}
           onCouponApplied={undefined}
           isPaymentSetup={true}
-          onAddPayment={() => {}}
         />
       </BadgeContainer>
 
@@ -107,7 +100,6 @@ function Story() {
           submit={statusStub(409)}
           onCouponApplied={undefined}
           isPaymentSetup={true}
-          onAddPayment={() => {}}
         />
       </BadgeContainer>
 
@@ -116,7 +108,6 @@ function Story() {
           submit={statusStub(429)}
           onCouponApplied={undefined}
           isPaymentSetup={true}
-          onAddPayment={() => {}}
         />
       </BadgeContainer>
 
@@ -125,7 +116,6 @@ function Story() {
           submit={statusStub(500)}
           onCouponApplied={undefined}
           isPaymentSetup={true}
-          onAddPayment={() => {}}
         />
       </BadgeContainer>
       <Toaster richColors />

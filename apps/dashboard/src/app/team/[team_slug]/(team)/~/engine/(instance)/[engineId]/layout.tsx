@@ -1,4 +1,3 @@
-import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 import { EngineSidebarLayout } from "./_components/EnginePageLayout";
 
 export default async function Layout(props: {
@@ -11,7 +10,6 @@ export default async function Layout(props: {
   const params = await props.params;
   return (
     <EngineSidebarLayout engineId={params.engineId} teamSlug={params.team_slug}>
-      <BillingAlerts className="mb-10" />
       {props.children}
     </EngineSidebarLayout>
   );

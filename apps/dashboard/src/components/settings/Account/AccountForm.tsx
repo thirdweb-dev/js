@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import { type Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { type ChangeEvent, useState } from "react";
@@ -26,7 +25,6 @@ interface AccountFormProps {
   account: Account;
   horizontal?: boolean;
   previewEnabled?: boolean;
-  showBillingButton?: boolean;
   showSubscription?: boolean;
   hideName?: boolean;
   buttonProps?: ButtonProps;
@@ -47,7 +45,6 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   horizontal = false,
   previewEnabled = false,
   hideName = false,
-  showBillingButton = false,
   showSubscription = false,
   disableUnchanged = false,
   padded = true,
@@ -221,11 +218,9 @@ export const AccountForm: React.FC<AccountFormProps> = ({
         <div
           className={cn(
             "flex w-full flex-row items-center gap-2",
-            showBillingButton ? "justify-between" : "justify-end",
+            "justify-end",
           )}
         >
-          {showBillingButton && <ManageBillingButton account={account} />}
-
           {!previewEnabled && (
             <Button
               {...buttonProps}
