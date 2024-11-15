@@ -7,11 +7,11 @@ import {
   Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { EngineTierCard } from "app/team/[team_slug]/(team)/~/engine/(general)/create/tier-card";
-import { PricingSection } from "components/homepage/sections/PricingSection";
+// import { EngineTierCard } from "app/team/[team_slug]/(team)/~/engine/(general)/create/tier-card";
+// import { PricingSection } from "components/homepage/sections/PricingSection";
 import { LandingFAQ } from "components/landing-pages/faq";
 import { LandingLayout } from "components/landing-pages/layout";
-import { useTrack } from "hooks/analytics/useTrack";
+// import { useTrack } from "hooks/analytics/useTrack";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import {
   ArrowRightIcon,
@@ -22,7 +22,7 @@ import {
   MoveUpRightIcon,
 } from "lucide-react";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import {
   Card,
@@ -30,7 +30,7 @@ import {
   Link,
   Text,
   TrackedIconButton,
-  TrackedLink,
+  // TrackedLink,
 } from "tw-components";
 import { EcosystemWalletPricingCard } from "../app/team/[team_slug]/(team)/~/ecosystem/create/components/pricing-card";
 import { FAQ_GENERAL, FAQ_PRICING, PRICING_SECTIONS } from "../utils/pricing";
@@ -65,10 +65,11 @@ const Pricing: ThirdwebNextPage = () => {
         flexDir="column"
         gap={{ base: "80px", lg: "120px" }}
       >
-        <PricingSection
+        {/* <PricingSection
           trackingCategory={TRACKING_CATEGORY}
+          // TODO: use API response
           canTrialGrowth={true}
-        />
+        /> */}
 
         <Flex flexDir="column" gap={20}>
           {PRICING_SECTIONS.map((section) => (
@@ -210,7 +211,7 @@ const Pricing: ThirdwebNextPage = () => {
             <Heading as="h3" size="subtitle.lg">
               Engine
             </Heading>
-            <EnginePricing isMobile={isMobile} />
+            {/* <EnginePricing isMobile={isMobile} /> */}
           </Flex>
 
           <EcosystemPricing />
@@ -324,72 +325,72 @@ const Item = ({
   );
 };
 
-const EnginePricing = ({ isMobile }: { isMobile: boolean }) => {
-  const track = useTrack();
-  const router = useRouter();
+// const EnginePricing = ({ isMobile }: { isMobile: boolean }) => {
+//   const track = useTrack();
+//   const router = useRouter();
 
-  return (
-    <Flex flexDir="column" gap={4}>
-      <Text>
-        Host Engine on thirdweb with no setup or maintenance required.{" "}
-        <TrackedLink
-          href="https://portal.thirdweb.com/engine"
-          isExternal
-          color="blue.500"
-          fontSize="small"
-          category={TRACKING_CATEGORY}
-          label="clicked-docs"
-        >
-          Learn more about Engine &rarr;
-        </TrackedLink>
-      </Text>
-      <SimpleGrid columns={isMobile ? 1 : 3} gap={6}>
-        <EngineTierCard
-          tier="STARTER"
-          ctaText="Get Started"
-          onClick={() => {
-            track({
-              category: TRACKING_CATEGORY,
-              action: "click",
-              label: "clicked-cloud-hosted",
-              tier: "STANDARD",
-            });
-            router.push("/team/~/~/engine");
-          }}
-        />
+//   return (
+//     <Flex flexDir="column" gap={4}>
+//       <Text>
+//         Host Engine on thirdweb with no setup or maintenance required.{" "}
+//         <TrackedLink
+//           href="https://portal.thirdweb.com/engine"
+//           isExternal
+//           color="blue.500"
+//           fontSize="small"
+//           category={TRACKING_CATEGORY}
+//           label="clicked-docs"
+//         >
+//           Learn more about Engine &rarr;
+//         </TrackedLink>
+//       </Text>
+//       <SimpleGrid columns={isMobile ? 1 : 3} gap={6}>
+//         <EngineTierCard
+//           tier="STARTER"
+//           ctaText="Get Started"
+//           onClick={() => {
+//             track({
+//               category: TRACKING_CATEGORY,
+//               action: "click",
+//               label: "clicked-cloud-hosted",
+//               tier: "STANDARD",
+//             });
+//             router.push("/team/~/~/engine");
+//           }}
+//         />
 
-        <EngineTierCard
-          tier="PREMIUM"
-          isPrimaryCta
-          ctaText="Get Started"
-          onClick={() => {
-            track({
-              category: TRACKING_CATEGORY,
-              action: "click",
-              label: "clicked-cloud-hosted",
-              tier: "PREMIUM",
-            });
-            router.push("/team/~/~/engine");
-          }}
-        />
+//         <EngineTierCard
+//           tier="PREMIUM"
+//           isPrimaryCta
+//           ctaText="Get Started"
+//           onClick={() => {
+//             track({
+//               category: TRACKING_CATEGORY,
+//               action: "click",
+//               label: "clicked-cloud-hosted",
+//               tier: "PREMIUM",
+//             });
+//             router.push("/team/~/~/engine");
+//           }}
+//         />
 
-        <EngineTierCard
-          tier="ENTERPRISE"
-          previousTier="Premium Engine"
-          onClick={() => {
-            track({
-              category: TRACKING_CATEGORY,
-              action: "click",
-              label: "clicked-cloud-hosted",
-              tier: "ENTERPRISE",
-            });
-            router.push("/contact-us");
-          }}
-        />
-      </SimpleGrid>
-    </Flex>
-  );
-};
+//         <EngineTierCard
+//           tier="ENTERPRISE"
+//           previousTier="Premium Engine"
+//           onClick={() => {
+//             track({
+//               category: TRACKING_CATEGORY,
+//               action: "click",
+//               label: "clicked-cloud-hosted",
+//               tier: "ENTERPRISE",
+//             });
+//             router.push("/contact-us");
+//           }}
+//         />
+//       </SimpleGrid>
+//     </Flex>
+//   );
+// };
 
 const EcosystemPricing = () => {
   return (

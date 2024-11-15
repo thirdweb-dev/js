@@ -22,7 +22,6 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 import { LazyCreateAPIKeyDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 
 type SortyById = "name" | "createdAt";
@@ -62,7 +61,6 @@ export function TeamProjectsPage(props: {
   return (
     <div className="container ">
       <div className="h-10" />
-      <BillingAlerts className="mb-10" />
 
       {/* Filters + Add New */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center">

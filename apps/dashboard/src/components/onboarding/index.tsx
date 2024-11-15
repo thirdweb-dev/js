@@ -13,7 +13,6 @@ import {
 import { useActiveWallet } from "thirdweb/react";
 import { useTrack } from "../../hooks/analytics/useTrack";
 import type { OnboardingState } from "./types";
-import { skipBilling } from "./utils";
 
 const LazyOnboardingUI = lazy(() => import("./on-boarding-ui.client"));
 
@@ -73,17 +72,12 @@ export const Onboarding: React.FC<{
       setState("skipped");
     }
     // user hasn't skipped onboarding, has valid email and no valid payment yet
-    else if (!skipBilling(account)) {
+    else if (!account.onboardSkipped) {
       setState("plan");
     }
   }, [account, state, wallet]);
 
   if (!isLoggedIn || !account || state === "skipped" || !state) {
-    return null;
-  }
-
-  if (state === "billing" && !process.env.NEXT_PUBLIC_STRIPE_KEY) {
-    // can't do billing without stripe key
     return null;
   }
 
@@ -95,17 +89,6 @@ export const Onboarding: React.FC<{
       action: "onboardingStateInvalid",
       label: "onboarding",
       data: { state },
-    });
-    return null;
-  }
-
-  if (state === "billing" && skipBilling(account)) {
-    console.error("Billing state is invalid, skipping rendering");
-    trackEvent({
-      category: "account",
-      action: "onboardingStateInvalid",
-      label: "billing",
-      data: { state, skipBilling },
     });
     return null;
   }

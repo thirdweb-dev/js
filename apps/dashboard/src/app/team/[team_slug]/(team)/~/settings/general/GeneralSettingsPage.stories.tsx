@@ -1,7 +1,7 @@
-import type { Team } from "@/api/team";
 import { Toaster } from "@/components/ui/sonner";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
+import { teamStub } from "../../../../../../../stories/stubs";
 import { mobileViewport } from "../../../../../../../stories/utils";
 import {
   DeleteTeamCard,
@@ -33,16 +33,7 @@ export const Mobile: Story = {
   },
 };
 
-const testTeam: Team = {
-  id: "team-id-foo-bar",
-  name: "Team XYZ",
-  slug: "team-slug-foo-bar",
-  createdAt: "2023-07-07T19:21:33.604Z",
-  updatedAt: "2024-07-11T00:01:02.241Z",
-  billingStatus: "validPayment",
-  billingPlan: "free",
-  billingEmail: "foo@example.com",
-};
+const testTeam = teamStub("foo", "free");
 
 function Story() {
   return (

@@ -1,19 +1,12 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
-import {
-  type Account,
-  type ApiKey,
-  type ApiKeyService,
-  type UsageBillableByService,
-  accountPlan,
-  accountStatus,
-} from "@3rdweb-sdk/react/hooks/useApi";
+import type { TeamSubscription } from "@/api/team-subscription";
+import type { ApiKey, ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
 import type {
   EngineAlert,
   EngineAlertRule,
   EngineNotificationChannel,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { ZERO_ADDRESS } from "thirdweb";
 
 function projectStub(id: string, teamId: string) {
   const project: Project = {
@@ -35,10 +28,7 @@ function projectStub(id: string, teamId: string) {
   return project;
 }
 
-export function teamStub(
-  id: string,
-  billingPlan: "free" | "pro" | "growth",
-): Team {
+export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
   const team: Team = {
     id: `team-${id}-id`,
     billingPlan: billingPlan,
@@ -48,6 +38,7 @@ export function teamStub(
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     billingEmail: "foo@example.com",
+    growthTrialEligible: true,
   };
 
   return team;
@@ -164,54 +155,110 @@ export function createEngineAlertStub(
   };
 }
 
-export function createDashboardAccountStub(
-  id: string,
-  overrides: Partial<Account> = {},
-): Account {
-  return {
-    id: id,
-    name: `Name ${id}`,
-    email: `email-${id}@example.com`,
-    status: accountStatus.noPayment,
-    plan: accountPlan.free,
-    advancedEnabled: false,
-    currentBillingPeriodStartsAt: new Date().toISOString(),
-    currentBillingPeriodEndsAt: new Date().toISOString(),
-    emailConfirmedAt: new Date().toISOString(),
-    creatorWalletAddress: ZERO_ADDRESS,
-    isStaff: false,
-    recurringPaymentFailures: [],
-    ...overrides,
-  };
-}
+export function teamSubscriptionsStub(
+  plan: "plan:starter" | "plan:growth" | "plan:custom",
+  overrides?: {
+    usage?: {
+      storage?: {
+        quantity: number;
+        amount: number;
+      };
+      inAppWalletAmount?: {
+        quantity: number;
+        amount: number;
+      };
+      aaSponsorshipAmount?: {
+        quantity: number;
+        amount: number;
+      };
+      aaSponsorshipOpGrantAmount?: {
+        quantity: number;
+        amount: number;
+      };
+    };
+    trialEnd?: string;
+  },
+): TeamSubscription[] {
+  const planName =
+    plan === "plan:starter"
+      ? "Starter"
+      : plan === "plan:growth"
+        ? "Growth"
+        : "Pro";
 
-export function createBillableServiceUsageDataStub(
-  overrides: Partial<UsageBillableByService> = {},
-): UsageBillableByService {
-  return {
-    usage: {
-      bundler: [],
-      storage: {
-        sumFileSizeBytes: 0,
+  const planCost =
+    plan === "plan:starter" ? 0 : plan === "plan:growth" ? 9900 : 59900;
+  const usage = overrides?.usage || {};
+  const usageLinesTotalCost = Object.values(usage).reduce(
+    (total, { amount }) => total + amount,
+    0,
+  );
+  return [
+    // plan
+    {
+      id: "sub-1",
+      type: "PLAN",
+      status: "active",
+      currentPeriodStart: "2024-11-15T20:56:06.000Z",
+      currentPeriodEnd: "2024-12-15T20:56:06.000Z",
+      trialStart: null,
+      trialEnd: overrides?.trialEnd || null,
+      upcomingInvoice: {
+        amount: planCost,
+        currency: "usd",
+        lines: [
+          {
+            amount: planCost,
+            description: `1 × ${planName} Plan (at $0.00 / month)`,
+            thirdwebSku: plan,
+          },
+        ],
       },
-      embeddedWallets: {
-        countWalletAddresses: 0,
+    },
+    {
+      id: "sub-2",
+      type: "USAGE",
+      status: "active",
+      currentPeriodStart: "2024-11-15T20:56:15.000Z",
+      currentPeriodEnd: "2024-12-15T20:56:06.000Z",
+      trialStart: null,
+      trialEnd: null,
+      upcomingInvoice: {
+        amount: usageLinesTotalCost,
+        currency: "usd",
+        lines: [
+          // Storage
+          {
+            amount: usage.storage?.amount || 0,
+            description: `${usage.storage?.quantity || 0} x Storage Pinning (Tier 1 at $0.00 / month)`,
+            thirdwebSku: "usage:storage",
+          },
+          // In-App Wallets
+          {
+            amount: usage.inAppWalletAmount?.amount || 0,
+            description: `${
+              usage.inAppWalletAmount?.quantity || 0
+            } x In-App Wallets (Tier 1 at $0.00 / month)`,
+            thirdwebSku: "usage:in_app_wallet",
+          },
+          // AA Sponsorship
+          {
+            amount: usage.aaSponsorshipAmount?.amount || 0,
+            description: `${
+              usage.aaSponsorshipAmount?.quantity || 0
+            } x AA Gas Sponsorship (at $0.011 / month)`,
+            thirdwebSku: "usage:aa_sponsorship",
+          },
+          // OP Grant
+          {
+            amount: usage.aaSponsorshipOpGrantAmount?.amount || 0,
+            description: `${
+              usage.aaSponsorshipOpGrantAmount?.quantity || 0
+            } x AA Gas Sponsorship (OP) (at $0.011 / month)`,
+            thirdwebSku: "usage:aa_sponsorship_op_grant",
+          },
+        ],
       },
     },
-    billableUsd: {
-      bundler: 0,
-      storage: 0,
-      embeddedWallets: 0,
-    },
-    limits: {
-      storage: 0,
-      embeddedWallets: 0,
-    },
-    rateLimits: {
-      storage: 0,
-      rpc: 0,
-    },
-    rateLimitedAt: {},
-    ...overrides,
-  };
+  ];
 }

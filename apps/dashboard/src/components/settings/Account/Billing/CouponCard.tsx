@@ -2,6 +2,7 @@
 
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Form,
   FormControl,
@@ -11,7 +12,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Spinner } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, fromUnixTime } from "date-fns";
@@ -53,7 +53,6 @@ function ApplyCouponCard(props: {
     isFreeWalletsCoupon: boolean,
   ) => void;
   isPaymentSetup: boolean;
-  onAddPayment: () => void;
 }) {
   const searchParams = useSearchParams();
   const couponCode = searchParams?.get("coupon");
@@ -63,7 +62,6 @@ function ApplyCouponCard(props: {
       prefillPromoCode={couponCode || undefined}
       scrollIntoView={!!couponCode}
       isPaymentSetup={props.isPaymentSetup}
-      onAddPayment={props.onAddPayment}
       submit={async (promoCode: string) => {
         const res = await fetch("/api/server-proxy/api/v1/coupons/redeem", {
           method: "POST",
@@ -108,7 +106,6 @@ export function ApplyCouponCardUI(props: {
   prefillPromoCode?: string;
   scrollIntoView?: boolean;
   isPaymentSetup: boolean;
-  onAddPayment: () => void;
 }) {
   const containerRef = useRef<HTMLFormElement | null>(null);
   const form = useForm<z.infer<typeof couponFormSchema>>({
@@ -137,7 +134,6 @@ export function ApplyCouponCardUI(props: {
 
   async function onSubmit(values: z.infer<typeof couponFormSchema>) {
     if (!props.isPaymentSetup) {
-      props.onAddPayment();
       return;
     }
 
@@ -199,11 +195,11 @@ export function ApplyCouponCardUI(props: {
           bottomText={
             props.isPaymentSetup
               ? ""
-              : "A valid payment method must be added to apply a coupon"
+              : "A valid payment method must be added to apply a coupon."
           }
           saveButton={{
             variant: "default",
-            disabled: false,
+            disabled: !props.isPaymentSetup,
             isPending: applyCoupon.isPending,
             label: "Apply Coupon",
             type: "submit",
@@ -220,7 +216,11 @@ export function ApplyCouponCardUI(props: {
               <FormItem>
                 <FormLabel>Coupon Code</FormLabel>
                 <FormControl>
-                  <Input {...field} className="lg:max-w-[450px]" />
+                  <Input
+                    {...field}
+                    className="lg:max-w-[450px]"
+                    disabled={!props.isPaymentSetup}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -280,7 +280,6 @@ export function CouponDetailsCardUI(props: {
 export function CouponSection(props: {
   teamId: string | undefined;
   isPaymentSetup: boolean;
-  onAddPayment: () => void;
 }) {
   const [showShareModal, setShowShareModal] = useState(false);
   const loggedInUser = useLoggedInUser();
@@ -372,7 +371,6 @@ export function CouponSection(props: {
               });
             }}
             isPaymentSetup={props.isPaymentSetup}
-            onAddPayment={props.onAddPayment}
           />
         </Suspense>
       )}
