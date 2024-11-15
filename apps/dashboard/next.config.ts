@@ -115,6 +115,7 @@ const SENTRY_OPTIONS: SentryBuildOptions = {
 };
 
 const baseNextConfig: NextConfig = {
+  serverExternalPackages: ["pino-pretty"],
   async headers() {
     return [
       {
