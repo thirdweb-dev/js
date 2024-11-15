@@ -38,7 +38,8 @@ export function getAbsoluteUrlFromPath(path: string) {
   const url = new URL(
     isProd
       ? "https://thirdweb.com"
-      : process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL || "https://thirdweb-dev.com",
+      : `https://${process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL}` ||
+          "https://thirdweb-dev.com",
   );
 
   url.pathname = path;

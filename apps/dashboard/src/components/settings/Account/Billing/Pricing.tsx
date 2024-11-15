@@ -20,7 +20,6 @@ type CtaLink = {
 export const BillingPricing: React.FC<BillingPricingProps> = ({
   team,
   trialPeriodEndedAt,
-  canTrialGrowth,
 }) => {
   const validTeamPlan = getValidTeamPlan(team);
   const starterPlanSubscribeRoute = `/team/${team.slug}/subscribe/plan:starter`;
@@ -68,7 +67,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       // free > growth
       case "free": {
         return {
-          label: canTrialGrowth ? trialTitle : "Get started",
+          label: team.growthTrialEligible ? trialTitle : "Get started",
           href: growthPlanSubscribeRoute,
         };
       }
@@ -76,7 +75,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       // starter > growth
       case "starter": {
         return {
-          label: canTrialGrowth ? trialTitle : "Upgrade",
+          label: team.growthTrialEligible ? trialTitle : "Upgrade",
           href: growthPlanSubscribeRoute,
         };
       }
@@ -95,7 +94,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
         };
       }
     }
-  }, [validTeamPlan, canTrialGrowth, growthPlanSubscribeRoute]);
+  }, [team, validTeamPlan, growthPlanSubscribeRoute]);
 
   const proCta: CtaLink | undefined = useMemo(() => {
     // pro > pro
@@ -147,17 +146,18 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
                 target: growthCardCta.target,
                 tracking: {
                   category: "account",
-                  label: canTrialGrowth ? "claimGrowthTrial" : "growthPlan",
+                  label: team.growthTrialEligible
+                    ? "claimGrowthTrial"
+                    : "growthPlan",
                 },
                 variant: "default",
-                hint:
-                  validTeamPlan === "starter" || validTeamPlan === "free"
-                    ? "Your free trial will end after 30 days."
-                    : undefined,
+                hint: team.growthTrialEligible
+                  ? "Your free trial will end after 30 days."
+                  : undefined,
               }
             : undefined
         }
-        canTrialGrowth={canTrialGrowth}
+        canTrialGrowth={team.growthTrialEligible || false}
         // upsell growth plan if user is on free plan
         highlighted={validTeamPlan === "free"}
       />
