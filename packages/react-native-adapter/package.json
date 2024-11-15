@@ -28,9 +28,9 @@
     "src/*"
   ],
   "dependencies": {
-    "@aws-sdk/client-kms": "3.687.0",
-    "@aws-sdk/client-lambda": "3.687.0",
-    "@aws-sdk/credential-providers": "3.687.0",
+    "@aws-sdk/client-kms": "3.693.0",
+    "@aws-sdk/client-lambda": "3.693.0",
+    "@aws-sdk/credential-providers": "3.693.0",
     "@mobile-wallet-protocol/client": "0.1.2",
     "@walletconnect/react-native-compat": "2.17.2"
   },
