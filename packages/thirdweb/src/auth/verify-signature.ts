@@ -152,7 +152,8 @@ export async function verifySignature(options: VerifySignatureParams) {
   if (isVerifyContractWalletSignatureParams(options)) {
     try {
       return await verifyContractWalletSignature(options);
-    } catch {
+    } catch (err) {
+      console.error("Error verifying smart contract wallet signature", err);
       // no-op we skip to return false
     }
   } else if (!warningTriggered) {
