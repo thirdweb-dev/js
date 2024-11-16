@@ -1,4 +1,4 @@
-import { type Signature, recoverAddress } from "viem";
+import { type SignableMessage, type Signature, recoverAddress } from "viem";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { type Hex, isHex } from "../utils/encoding/hex.js";
@@ -10,7 +10,7 @@ import { verifyHash } from "./verify-hash.js";
  * @auth
  */
 export type VerifyEOASignatureParams = {
-  message: string;
+  message: string | SignableMessage;
   signature: string | Uint8Array | Signature;
   address: string;
 };

@@ -9,6 +9,7 @@ import {
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { ZERO_ADDRESS } from "../../constants/addresses.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { allowance } from "../../extensions/erc20/__generated__/IERC20/read/allowance.js";
 import { approve } from "../../extensions/erc20/write/approve.js";
@@ -285,13 +286,13 @@ async function createSmartAccount(
         { readContract },
         { encodeAbiParameters },
         { hashMessage },
-        { checkContractWalletSignature },
+        { verifyContractWalletSignature },
       ] = await Promise.all([
         import("../../utils/bytecode/is-contract-deployed.js"),
         import("../../transaction/read-contract.js"),
         import("../../utils/abi/encodeAbiParameters.js"),
         import("../../utils/hashing/hashMessage.js"),
-        import("../../extensions/erc1271/checkContractWalletSignature.js"),
+        import("../../auth/verify-signature.js"),
       ]);
       const isDeployed = await isContractDeployed(accountContract);
       if (!isDeployed) {
@@ -307,31 +308,41 @@ async function createSmartAccount(
         });
       }
 
+      console.log("contract deployed");
+
       const originalMsgHash = hashMessage(message);
-      // check if the account contract supports EIP721 domain separator based signing
-      let factorySupports712 = false;
-      try {
-        // this will throw if the contract does not support it (old factories)
-        await readContract({
+      // check if the account contract supports EIP721 domain separator or modular based signing
+      const [messageHash, isModularFactory] = await Promise.all([
+        readContract({
           contract: accountContract,
           method:
             "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
           params: [originalMsgHash],
-        });
-        factorySupports712 = true;
-      } catch {
-        // ignore
-      }
+        }).catch((err) => {
+          console.error(err);
+          return undefined;
+        }),
+        readContract({
+          contract: accountContract,
+          method: "function canInstall(address) public view returns (bool)",
+          params: [ZERO_ADDRESS],
+        })
+          .catch(() => false)
+          .then(() => true),
+      ]);
+
+      console.log("factoryType", messageHash, isModularFactory);
 
       let sig: `0x${string}`;
-      if (factorySupports712) {
+      if (messageHash) {
         const wrappedMessageHash = encodeAbiParameters(
           [{ type: "bytes32" }],
           [originalMsgHash],
         );
-        sig = await options.personalAccount.signTypedData({
+
+        const hasheTypedData = hashTypedData({
           domain: {
-            name: "Account",
+            name: isModularFactory ? "DefaultValidator" : "Account",
             version: "1",
             chainId: options.chain.id,
             verifyingContract: accountContract.address,
@@ -340,14 +351,40 @@ async function createSmartAccount(
           types: { AccountMessage: [{ name: "message", type: "bytes" }] },
           message: { message: wrappedMessageHash },
         });
+
+        console.log("hasheTypedData", hasheTypedData);
+        console.log("equal", messageHash === hasheTypedData);
+
+        sig = await options.personalAccount.signTypedData({
+          domain: {
+            name: isModularFactory ? "DefaultValidator" : "Account",
+            version: "1",
+            chainId: options.chain.id,
+            verifyingContract: accountContract.address,
+          },
+          primaryType: "AccountMessage",
+          types: { AccountMessage: [{ name: "message", type: "bytes" }] },
+          message: { message: wrappedMessageHash },
+        });
+        if (isModularFactory) {
+          // add validator address
+          sig = concatHex([ZERO_ADDRESS, sig]);
+        }
       } else {
         sig = await options.personalAccount.signMessage({ message });
       }
 
-      const isValid = await checkContractWalletSignature({
-        contract: accountContract,
+      console.log(sig);
+
+      const isValid = await verifyContractWalletSignature({
+        address: accountContract.address,
+        chain: accountContract.chain,
+        client: accountContract.client,
         message,
         signature: sig,
+      }).catch((err) => {
+        console.error("Error checking contract wallet signature", err);
+        return false;
       });
 
       if (isValid) {
