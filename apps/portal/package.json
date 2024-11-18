@@ -44,7 +44,7 @@
     "remark-gfm": "3.0.1",
     "semver": "^7.6.0",
     "server-only": "^0.0.1",
-    "shiki": "1.22.2",
+    "shiki": "1.23.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "thirdweb": "workspace:*",
