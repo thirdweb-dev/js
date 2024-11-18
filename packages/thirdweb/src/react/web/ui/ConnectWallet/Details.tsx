@@ -224,8 +224,9 @@ export const ConnectedWalletDetails: React.FC<{
             alt=""
             src={avatarSrc}
             style={{
-              width: "100%",
               height: "100%",
+              width: "100%",
+              objectFit: "cover",
             }}
           />
         ) : (
@@ -410,8 +411,9 @@ function DetailsModal(props: {
           <img
             src={avatarSrc}
             style={{
-              width: iconSize.xxl,
-              height: iconSize.xxl,
+              height: "100%",
+              width: "100%",
+              objectFit: "cover",
             }}
             alt=""
           />
