@@ -309,7 +309,7 @@
     "@vitejs/plugin-react": "^4.3.3",
     "@vitest/coverage-v8": "2.1.5",
     "@vitest/ui": "2.1.5",
-    "cross-spawn": "7.0.5",
+    "cross-spawn": "7.0.6",
     "dotenv-mono": "^1.3.14",
     "ethers5": "npm:ethers@5",
     "ethers6": "npm:ethers@6",
