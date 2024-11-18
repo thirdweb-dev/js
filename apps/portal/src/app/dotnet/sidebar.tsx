@@ -68,6 +68,10 @@ const walletActions: SidebarLink = (() => {
             name: "ExecuteTransaction",
             href: `${parentSlug}/executetransaction`,
           },
+          {
+            name: "Transfer",
+            href: `${parentSlug}/transfer`,
+          },
         ],
       },
       {
@@ -75,12 +79,16 @@ const walletActions: SidebarLink = (() => {
         isCollapsible: false,
         links: [
           {
-            name: "GetEmail",
-            href: `${parentSlug}/getemail`,
+            name: "GetUserDetails",
+            href: `${parentSlug}/getuserdetails`,
           },
           {
-            name: "GetPhoneNumber",
-            href: `${parentSlug}/getphonenumber`,
+            name: "GetEcosystemDetails",
+            href: `${parentSlug}/getecosystemdetails`,
+          },
+          {
+            name: "GenerateExternalLoginLink",
+            href: `${parentSlug}/generateexternalloginlink`,
           },
         ],
       },
@@ -123,10 +131,6 @@ const walletActions: SidebarLink = (() => {
           {
             name: "GetTransactionCount",
             href: `${parentSlug}/gettransactioncount`,
-          },
-          {
-            name: "Transfer",
-            href: `${parentSlug}/transfer`,
           },
         ],
       },
