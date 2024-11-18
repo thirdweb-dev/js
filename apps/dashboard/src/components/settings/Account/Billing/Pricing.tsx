@@ -8,7 +8,6 @@ import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/get
 interface BillingPricingProps {
   team: Team;
   trialPeriodEndedAt: string | undefined;
-  canTrialGrowth: boolean;
 }
 
 type CtaLink = {
@@ -22,8 +21,8 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
   trialPeriodEndedAt,
 }) => {
   const validTeamPlan = getValidTeamPlan(team);
-  const starterPlanSubscribeRoute = `/team/${team.slug}/subscribe/plan:starter`;
-  const growthPlanSubscribeRoute = `/team/${team.slug}/subscribe/plan:growth`;
+  const starterPlanSubscribeRoute = `/team/${team.slug}/billing/subscribe/plan:starter`;
+  const growthPlanSubscribeRoute = `/team/${team.slug}/billing/subscribe/plan:growth`;
   const contactUsHref = "/contact-us";
 
   const starterCta: CtaLink | undefined = useMemo(() => {

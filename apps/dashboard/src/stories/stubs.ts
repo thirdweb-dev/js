@@ -1,5 +1,6 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
+import type { TeamSubscription } from "@/api/team-subscription";
 import {
   type Account,
   type ApiKey,
@@ -45,6 +46,7 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     billingEmail: "foo@example.com",
+    growthTrialEligible: true,
   };
 
   return team;
@@ -211,4 +213,112 @@ export function createBillableServiceUsageDataStub(
     rateLimitedAt: {},
     ...overrides,
   };
+}
+
+export function teamSubscriptionsStub(
+  plan: "plan:starter" | "plan:growth" | "plan:custom",
+  overrides?: {
+    usage?: {
+      storage?: {
+        quantity: number;
+        amount: number;
+      };
+      inAppWalletAmount?: {
+        quantity: number;
+        amount: number;
+      };
+      aaSponsorshipAmount?: {
+        quantity: number;
+        amount: number;
+      };
+      aaSponsorshipOpGrantAmount?: {
+        quantity: number;
+        amount: number;
+      };
+    };
+    trialEnd?: string;
+  },
+): TeamSubscription[] {
+  const planName =
+    plan === "plan:starter"
+      ? "Starter"
+      : plan === "plan:growth"
+        ? "Growth"
+        : "Pro";
+
+  const planCost =
+    plan === "plan:starter" ? 0 : plan === "plan:growth" ? 9900 : 59900;
+  const usage = overrides?.usage || {};
+  const usageLinesTotalCost = Object.values(usage).reduce(
+    (total, { amount }) => total + amount,
+    0,
+  );
+  return [
+    // plan
+    {
+      id: "sub-1",
+      type: "PLAN",
+      status: "active",
+      currentPeriodStart: "2024-11-15T20:56:06.000Z",
+      currentPeriodEnd: "2024-12-15T20:56:06.000Z",
+      trialStart: null,
+      trialEnd: overrides?.trialEnd || null,
+      upcomingInvoice: {
+        amount: planCost,
+        currency: "usd",
+        lines: [
+          {
+            amount: planCost,
+            description: `1 × ${planName} Plan (at $0.00 / month)`,
+            thirdwebSku: plan,
+          },
+        ],
+      },
+    },
+    {
+      id: "sub-2",
+      type: "USAGE",
+      status: "active",
+      currentPeriodStart: "2024-11-15T20:56:15.000Z",
+      currentPeriodEnd: "2024-12-15T20:56:06.000Z",
+      trialStart: null,
+      trialEnd: null,
+      upcomingInvoice: {
+        amount: usageLinesTotalCost,
+        currency: "usd",
+        lines: [
+          // Storage
+          {
+            amount: usage.storage?.amount || 0,
+            description: `${usage.storage?.quantity || 0} x Storage Pinning (Tier 1 at $0.00 / month)`,
+            thirdwebSku: "usage:storage",
+          },
+          // In-App Wallets
+          {
+            amount: usage.inAppWalletAmount?.amount || 0,
+            description: `${
+              usage.inAppWalletAmount?.quantity || 0
+            } x In-App Wallets (Tier 1 at $0.00 / month)`,
+            thirdwebSku: "usage:in_app_wallet",
+          },
+          // AA Sponsorship
+          {
+            amount: usage.aaSponsorshipAmount?.amount || 0,
+            description: `${
+              usage.aaSponsorshipAmount?.quantity || 0
+            } x AA Gas Sponsorship (at $0.011 / month)`,
+            thirdwebSku: "usage:aa_sponsorship",
+          },
+          // OP Grant
+          {
+            amount: usage.aaSponsorshipOpGrantAmount?.amount || 0,
+            description: `${
+              usage.aaSponsorshipOpGrantAmount?.quantity || 0
+            } x AA Gas Sponsorship (OP) (at $0.011 / month)`,
+            thirdwebSku: "usage:aa_sponsorship_op_grant",
+          },
+        ],
+      },
+    },
+  ];
 }

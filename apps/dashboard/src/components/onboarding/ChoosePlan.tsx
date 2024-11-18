@@ -29,7 +29,7 @@ function OnboardingChoosePlan(props: {
           billingPlan="starter"
           cta={{
             title: "Get started for free",
-            href: "/team/~/subscribe/plan:starter",
+            href: "/team/~/billing/subscribe/plan:starter",
             tracking: {
               category: "account",
             },
@@ -45,7 +45,7 @@ function OnboardingChoosePlan(props: {
               category: "account",
               label: "growthPlan",
             },
-            href: "/team/~/subscribe/plan:growth",
+            href: "/team/~/billing/subscribe/plan:growth",
             variant: "default",
           }}
           canTrialGrowth={props.canTrialGrowth}

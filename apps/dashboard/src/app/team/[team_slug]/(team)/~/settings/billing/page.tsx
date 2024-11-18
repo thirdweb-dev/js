@@ -1,8 +1,8 @@
 import { getTeamBySlug } from "@/api/team";
+import { getTeamSubscriptions } from "@/api/team-subscription";
 import { redirect } from "next/navigation";
 import { Billing } from "../../../../../../../components/settings/Account/Billing";
 import { getAccount } from "../../../../../../account/settings/getAccount";
-import { getAccountUsage } from "../../usage/getAccountUsage";
 
 export default async function Page(props: {
   params: Promise<{
@@ -24,9 +24,9 @@ export default async function Page(props: {
     redirect("/team");
   }
 
-  const accountUsage = await getAccountUsage();
+  const subscriptions = await getTeamSubscriptions(team.slug);
 
-  if (!accountUsage) {
+  if (!subscriptions) {
     return (
       <div className="flex min-h-[350px] items-center justify-center rounded-lg border p-4 text-destructive-text">
         Something went wrong. Please try again later.
@@ -34,5 +34,5 @@ export default async function Page(props: {
     );
   }
 
-  return <Billing team={team} account={account} accountUsage={accountUsage} />;
+  return <Billing team={team} subscriptions={subscriptions} />;
 }

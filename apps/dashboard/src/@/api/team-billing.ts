@@ -39,3 +39,40 @@ export async function getStripeCheckoutLink(slug: string, sku: string) {
     link: null,
   } as const;
 }
+
+export async function getStripeBillingPortalLink(slug: string) {
+  const token = await getAuthToken();
+
+  if (!token) {
+    return {
+      status: 401,
+      link: null,
+    };
+  }
+
+  const res = await fetch(
+    `${API_SERVER_URL}/v1/teams/${slug}/checkout/create-session-link`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        redirectTo: getAbsoluteUrlFromPath(
+          `/team/${slug}/~/settings/billing`,
+        ).toString(),
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  if (res.ok) {
+    return {
+      status: 200,
+      link: (await res.json())?.result as string,
+    } as const;
+  }
+  return {
+    status: res.status,
+    link: null,
+  } as const;
+}
