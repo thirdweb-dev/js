@@ -1,4 +1,5 @@
 import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
@@ -23,11 +24,13 @@ import { isSimpleHashSupported } from "lib/wallet/nfts/simpleHash";
 import type { WalletNFT } from "lib/wallet/nfts/types";
 import { CircleAlertIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
-import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useMemo, useState } from "react";
+import { type UseFormReturn, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
+  type Chain,
   NATIVE_TOKEN_ADDRESS,
+  type ThirdwebClient,
   type ThirdwebContract,
   getContract,
   toUnits,
@@ -35,10 +38,12 @@ import {
 } from "thirdweb";
 import { decimals } from "thirdweb/extensions/erc20";
 import {
+  getNFT as getNFT721,
   isApprovedForAll as isApprovedForAll721,
   setApprovalForAll as setApprovalForAll721,
 } from "thirdweb/extensions/erc721";
 import {
+  getNFT as getNFT1155,
   isApprovedForAll as isApprovedForAll1155,
   setApprovalForAll as setApprovalForAll1155,
 } from "thirdweb/extensions/erc1155";
@@ -47,7 +52,12 @@ import type {
   CreateAuctionParams,
   CreateListingParams,
 } from "thirdweb/extensions/marketplace";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import {
+  MediaRenderer,
+  useActiveAccount,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -76,8 +86,13 @@ type ListForm =
 type CreateListingsFormProps = {
   contract: ThirdwebContract;
   actionText: string;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  type?: "direct-listings" | "english-auctions";
+  setOpen: (isOpen: boolean) => void;
+  type: "direct-listings" | "english-auctions";
+  prefilledNFT?: {
+    id: string;
+    type: "ERC721" | "ERC1155";
+    contractAddress: string;
+  };
 };
 
 const auctionTimes = [
@@ -95,32 +110,21 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   type,
   actionText,
   setOpen,
+  prefilledNFT,
 }) => {
   const trackEvent = useTrack();
   const chainId = contract.chain.id;
   const { idToChain } = useAllChainsData();
   const network = idToChain.get(chainId);
   const [isFormLoading, setIsFormLoading] = useState(false);
-
-  const isSupportedChain =
-    chainId &&
-    (isSimpleHashSupported(chainId) ||
-      isAlchemySupported(chainId) ||
-      isMoralisSupported(chainId));
-
-  const account = useActiveAccount();
-
-  const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs({
-    chainId,
-    walletAddress: account?.address,
-  });
   const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const account = useActiveAccount();
 
   const form = useForm<ListForm>({
     defaultValues:
       type === "direct-listings"
         ? {
-            selected: undefined,
+            selected: prefilledNFT,
             currencyContractAddress: NATIVE_TOKEN_ADDRESS,
             quantity: "1",
             pricePerToken: "0",
@@ -130,7 +134,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
             listingDurationInSeconds: (60 * 60 * 24 * 30).toString(),
           }
         : {
-            selected: undefined,
+            selected: prefilledNFT,
             currencyContractAddress: NATIVE_TOKEN_ADDRESS,
             quantity: "1",
             buyoutPricePerToken: "0",
@@ -142,70 +146,22 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
           },
   });
 
-  const selectedContract = form.watch("selected.contractAddress")
+  const selectedNFT = prefilledNFT || form.watch("selected");
+
+  const selectedContract = selectedNFT?.contractAddress
     ? getContract({
-        address: form.watch("selected.contractAddress"),
+        address: selectedNFT.contractAddress,
         chain: contract.chain,
         client: contract.client,
       })
     : undefined;
-
-  const { data: ownedNFTs, isPending: isOwnedNFTsLoading } =
-    useDashboardOwnedNFTs({
-      contract: selectedContract,
-      owner: account?.address,
-      // Only run this hook as the last resort if this chain is not supported by the API services we are using
-      disabled:
-        !selectedContract ||
-        isSupportedChain ||
-        isWalletNFTsLoading ||
-        (walletNFTs?.result || []).length > 0,
-    });
-
-  const isSelected = (nft: WalletNFT) => {
-    return (
-      form.watch("selected")?.id === nft.id &&
-      form.watch("selected")?.contractAddress === nft.contractAddress
-    );
-  };
-
-  const ownedWalletNFTs: WalletNFT[] = useMemo(() => {
-    return ownedNFTs?.map((nft) => {
-      if (nft.type === "ERC721") {
-        return {
-          id: String(nft.id),
-          metadata: nft.metadata,
-          supply: "1",
-          contractAddress: form.watch("selected.contractAddress"),
-          tokenId: nft.id.toString(),
-          owner: nft.owner,
-          type: "ERC721",
-          tokenURI: nft.tokenURI,
-        };
-      }
-      return {
-        id: String(nft.id),
-        metadata: nft.metadata,
-        supply: String(nft.supply),
-        contractAddress: form.watch("selected.contractAddress"),
-        tokenId: nft.id.toString(),
-        owner: nft.owner,
-        type: "ERC1155",
-        tokenURI: nft.tokenURI,
-      };
-    }) as WalletNFT[];
-  }, [ownedNFTs, form]);
-
-  const nfts = ownedWalletNFTs || walletNFTs?.result;
-
-  const noNfts = !nfts?.length;
 
   return (
     <form
       className="flex flex-col gap-6 pb-16"
       id={LIST_FORM_ID}
       onSubmit={form.handleSubmit(async (formData) => {
-        if (!formData.selected || !selectedContract) {
+        if (!selectedNFT || !selectedContract) {
           return;
         }
 
@@ -217,7 +173,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
         try {
           const isNftApproved =
-            formData.selected.type === "ERC1155"
+            selectedNFT.type === "ERC1155"
               ? isApprovedForAll1155
               : isApprovedForAll721;
           const isApproved = await isNftApproved({
@@ -228,7 +184,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
           if (!isApproved) {
             const setNftApproval =
-              formData.selected.type === "ERC1155"
+              selectedNFT.type === "ERC1155"
                 ? setApprovalForAll1155
                 : setApprovalForAll721;
             const approveTx = setNftApproval({
@@ -253,8 +209,8 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
             );
             const transaction = createListing({
               contract,
-              assetContractAddress: formData.selected.contractAddress,
-              tokenId: BigInt(formData.selected.id),
+              assetContractAddress: selectedNFT.contractAddress,
+              tokenId: BigInt(selectedNFT.id),
               currencyContractAddress: formData.currencyContractAddress,
               quantity: BigInt(formData.quantity),
               startTimestamp: formData.startTimestamp,
@@ -302,8 +258,8 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
             const transaction = createAuction({
               contract,
-              assetContractAddress: formData.selected.contractAddress,
-              tokenId: BigInt(formData.selected.id),
+              assetContractAddress: selectedNFT.contractAddress,
+              tokenId: BigInt(selectedNFT.id),
               startTimestamp: formData.startTimestamp,
               currencyContractAddress: formData.currencyContractAddress,
               endTimestamp: new Date(
@@ -350,6 +306,227 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         setIsFormLoading(false);
       })}
     >
+      {prefilledNFT ? (
+        <PrefilledNFTInfo
+          prefilledNFT={prefilledNFT}
+          chain={contract.chain}
+          client={contract.client}
+        />
+      ) : (
+        <NFTPicker marketplaceContract={contract} form={form} />
+      )}
+      <FormControl isRequired isDisabled={!selectedNFT}>
+        <FormLabel>Listing Currency</FormLabel>
+        <CurrencySelector
+          contractChainId={chainId}
+          value={form.watch("currencyContractAddress")}
+          onChange={(e) =>
+            form.setValue("currencyContractAddress", e.target.value)
+          }
+        />
+        <FormHelperText>
+          The currency you want to sell your tokens for.
+        </FormHelperText>
+      </FormControl>
+      <FormControl isRequired isDisabled={!selectedNFT}>
+        <FormLabel>
+          {form.watch("listingType") === "auction"
+            ? "Buyout Price Per Token"
+            : "Listing Price"}
+        </FormLabel>
+        <Input {...form.register("pricePerToken")} />
+        <FormHelperText>
+          {form.watch("listingType") === "auction"
+            ? "The price per token a buyer can pay to instantly buyout the auction."
+            : "The price of each token you are listing for sale."}
+        </FormHelperText>
+      </FormControl>
+      {form.watch("selected")?.type?.toLowerCase() !== "erc721" && (
+        <FormControl isRequired isDisabled={!selectedNFT}>
+          <div className="flex flex-row justify-between gap-2">
+            <FormLabel>Quantity</FormLabel>
+          </div>
+          <Input {...form.register("quantity")} />
+          <FormHelperText>
+            The number of tokens to list for sale.
+          </FormHelperText>
+        </FormControl>
+      )}
+      {form.watch("listingType") === "auction" && (
+        <>
+          <FormControl isRequired isDisabled={!selectedNFT}>
+            <FormLabel>Reserve Price Per Token</FormLabel>
+            <Input {...form.register("reservePricePerToken")} />
+            <FormHelperText>
+              The minimum price per token necessary to bid on this auction
+            </FormHelperText>
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel>Auction Duration</FormLabel>
+            <Select {...form.register("listingDurationInSeconds")}>
+              {auctionTimes.map((time) => (
+                <option key={time.value} value={time.value}>
+                  {time.label}
+                </option>
+              ))}
+            </Select>
+            <FormHelperText>The duration of this auction.</FormHelperText>
+          </FormControl>
+        </>
+      )}
+
+      {!selectedNFT && (
+        <Alert>
+          <CircleAlertIcon className="size-4" />
+          <AlertTitle>No NFT selected</AlertTitle>
+        </Alert>
+      )}
+
+      {/* Need to pin these at the bottom because this is a very long form */}
+      <div className="fixed right-6 bottom-4 flex flex-row items-center justify-end gap-3">
+        <Button
+          disabled={isFormLoading}
+          variant="default"
+          onClick={() => setOpen(false)}
+        >
+          Cancel
+        </Button>
+        <TransactionButton
+          txChainID={contract.chain.id}
+          isLoading={isFormLoading}
+          transactionCount={2}
+          form={LIST_FORM_ID}
+          type="submit"
+          colorScheme="primary"
+        >
+          {actionText}
+        </TransactionButton>
+      </div>
+    </form>
+  );
+};
+
+// todo: Change this component to use the new headless UI once published
+function PrefilledNFTInfo({
+  prefilledNFT,
+  chain,
+  client,
+}: {
+  prefilledNFT: {
+    id: string;
+    type: "ERC721" | "ERC1155";
+    contractAddress: string;
+  };
+  chain: Chain;
+  client: ThirdwebClient;
+}) {
+  const nftQuery = useReadContract(
+    prefilledNFT.type === "ERC1155" ? getNFT1155 : getNFT721,
+    {
+      contract: getContract({
+        address: prefilledNFT.contractAddress,
+        chain,
+        client,
+      }),
+      tokenId: BigInt(prefilledNFT.id),
+    },
+  );
+  const src =
+    nftQuery.data?.metadata.animation_url || nftQuery.data?.metadata.image;
+  return (
+    <div className="my-3 flex flex-col">
+      <p>Selected NFT</p>
+      <MediaRenderer
+        src={src}
+        client={client}
+        className="w-full md:max-w-[250px]"
+      />
+      {nftQuery.data?.metadata.name && (
+        <div className="mt-2 flex flex-row items-center gap-2 text-lg">
+          {nftQuery.data.metadata.name} <Badge>{prefilledNFT.type}</Badge>
+        </div>
+      )}
+    </div>
+  );
+}
+
+type NFTPickerProps = {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  form: UseFormReturn<ListForm, any, undefined>;
+  marketplaceContract: ThirdwebContract;
+};
+
+function NFTPicker(props: NFTPickerProps) {
+  const chainId = props.marketplaceContract.chain.id;
+  const isSupportedChain =
+    chainId &&
+    (isSimpleHashSupported(chainId) ||
+      isAlchemySupported(chainId) ||
+      isMoralisSupported(chainId));
+
+  const account = useActiveAccount();
+
+  const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs({
+    chainId,
+    walletAddress: account?.address,
+  });
+  const selectedContract = props.form.watch("selected.contractAddress")
+    ? getContract({
+        address: props.form.watch("selected.contractAddress"),
+        chain: props.marketplaceContract.chain,
+        client: props.marketplaceContract.client,
+      })
+    : undefined;
+
+  const { data: ownedNFTs, isPending: isOwnedNFTsLoading } =
+    useDashboardOwnedNFTs({
+      contract: selectedContract,
+      owner: account?.address,
+      // Only run this hook as the last resort if this chain is not supported by the API services we are using
+      disabled:
+        !selectedContract ||
+        isSupportedChain ||
+        isWalletNFTsLoading ||
+        (walletNFTs?.result || []).length > 0,
+    });
+
+  const isSelected = (nft: WalletNFT) => {
+    return (
+      props.form.watch("selected")?.id === nft.id &&
+      props.form.watch("selected")?.contractAddress === nft.contractAddress
+    );
+  };
+  const ownedWalletNFTs: WalletNFT[] = useMemo(() => {
+    return ownedNFTs?.map((nft) => {
+      if (nft.type === "ERC721") {
+        return {
+          id: String(nft.id),
+          metadata: nft.metadata,
+          supply: "1",
+          contractAddress: props.form.watch("selected.contractAddress"),
+          tokenId: nft.id.toString(),
+          owner: nft.owner,
+          type: "ERC721",
+          tokenURI: nft.tokenURI,
+        };
+      }
+      return {
+        id: String(nft.id),
+        metadata: nft.metadata,
+        supply: String(nft.supply),
+        contractAddress: props.form.watch("selected.contractAddress"),
+        tokenId: nft.id.toString(),
+        owner: nft.owner,
+        type: "ERC1155",
+        tokenURI: nft.tokenURI,
+      };
+    }) as WalletNFT[];
+  }, [ownedNFTs, props.form]);
+
+  const nfts = ownedWalletNFTs || walletNFTs?.result;
+
+  return (
+    <>
       <FormControl>
         <FormLabel>Select NFT</FormLabel>
         <FormHelperText mb="8px">
@@ -365,19 +542,21 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
               </p>
             </div>
             <FormControl
-              isInvalid={!!form.formState.errors.selected?.contractAddress}
+              isInvalid={
+                !!props.form.formState.errors.selected?.contractAddress
+              }
             >
               <FormLabel>Contract address</FormLabel>
               <SolidityInput
                 solidityType="address"
-                formContext={form}
-                {...form.register("selected.contractAddress", {
+                formContext={props.form}
+                {...props.form.register("selected.contractAddress", {
                   required: "Contract address is required",
                 })}
                 placeholder="0x..."
               />
               <FormErrorMessage>
-                {form.formState.errors.selected?.contractAddress?.message}
+                {props.form.formState.errors.selected?.contractAddress?.message}
               </FormErrorMessage>
               <FormHelperText>
                 This will display all the NFTs you own from this contract.
@@ -388,7 +567,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         {isWalletNFTsLoading ||
         (isOwnedNFTsLoading &&
           !isSupportedChain &&
-          form.watch("selected.contractAddress")) ? (
+          props.form.watch("selected.contractAddress")) ? (
           <div className="flex h-[60px] items-center justify-center">
             <Spinner />
           </div>
@@ -427,8 +606,8 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                     cursor="pointer"
                     onClick={() =>
                       isSelected(nft)
-                        ? form.setValue("selected", undefined)
-                        : form.setValue("selected", nft)
+                        ? props.form.setValue("selected", undefined)
+                        : props.form.setValue("selected", nft)
                     }
                     outline={isSelected(nft) ? "3px solid" : undefined}
                     outlineColor={isSelected(nft) ? "purple.500" : undefined}
@@ -459,93 +638,6 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
           </div>
         ) : null}
       </FormControl>
-      <FormControl isRequired isDisabled={noNfts}>
-        <FormLabel>Listing Currency</FormLabel>
-        <CurrencySelector
-          contractChainId={chainId}
-          value={form.watch("currencyContractAddress")}
-          onChange={(e) =>
-            form.setValue("currencyContractAddress", e.target.value)
-          }
-        />
-        <FormHelperText>
-          The currency you want to sell your tokens for.
-        </FormHelperText>
-      </FormControl>
-      <FormControl isRequired isDisabled={noNfts}>
-        <FormLabel>
-          {form.watch("listingType") === "auction"
-            ? "Buyout Price Per Token"
-            : "Listing Price"}
-        </FormLabel>
-        <Input {...form.register("pricePerToken")} />
-        <FormHelperText>
-          {form.watch("listingType") === "auction"
-            ? "The price per token a buyer can pay to instantly buyout the auction."
-            : "The price of each token you are listing for sale."}
-        </FormHelperText>
-      </FormControl>
-      {form.watch("selected")?.type?.toLowerCase() !== "erc721" && (
-        <FormControl isRequired isDisabled={noNfts}>
-          <div className="flex flex-row justify-between gap-2">
-            <FormLabel>Quantity</FormLabel>
-          </div>
-          <Input {...form.register("quantity")} />
-          <FormHelperText>
-            The number of tokens to list for sale.
-          </FormHelperText>
-        </FormControl>
-      )}
-      {form.watch("listingType") === "auction" && (
-        <>
-          <FormControl isRequired isDisabled={noNfts}>
-            <FormLabel>Reserve Price Per Token</FormLabel>
-            <Input {...form.register("reservePricePerToken")} />
-            <FormHelperText>
-              The minimum price per token necessary to bid on this auction
-            </FormHelperText>
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Auction Duration</FormLabel>
-            <Select {...form.register("listingDurationInSeconds")}>
-              {auctionTimes.map((time) => (
-                <option key={time.value} value={time.value}>
-                  {time.label}
-                </option>
-              ))}
-            </Select>
-            <FormHelperText>The duration of this auction.</FormHelperText>
-          </FormControl>
-        </>
-      )}
-
-      {!form.watch("selected.id") && (
-        <Alert>
-          <CircleAlertIcon className="size-4" />
-          <AlertTitle>No NFT selected</AlertTitle>
-        </Alert>
-      )}
-
-      {/* Need to pin these at the bottom because this is a very long form */}
-      <div className="fixed right-6 bottom-4 flex flex-row items-center justify-end gap-3">
-        <Button
-          disabled={isFormLoading}
-          variant="default"
-          onClick={() => setOpen(false)}
-        >
-          Cancel
-        </Button>
-        <TransactionButton
-          txChainID={contract.chain.id}
-          isLoading={isFormLoading}
-          transactionCount={2}
-          form={LIST_FORM_ID}
-          type="submit"
-          colorScheme="primary"
-        >
-          {actionText}
-        </TransactionButton>
-      </div>
-    </form>
+    </>
   );
-};
+}

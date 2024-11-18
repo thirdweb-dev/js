@@ -18,7 +18,7 @@ import { CreateListingsForm } from "./list-form";
 interface CreateListingButtonProps {
   contract: ThirdwebContract;
   createText?: string;
-  type?: "direct-listings" | "english-auctions";
+  type: "direct-listings" | "english-auctions";
 }
 
 export const CreateListingButton: React.FC<CreateListingButtonProps> = ({

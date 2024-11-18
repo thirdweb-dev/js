@@ -6,6 +6,7 @@ import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
+import { ListMarketplaceButton } from "../components/list-marketplace-button";
 import type { NFTDrawerTab } from "./types";
 
 type UseNFTDrawerTabsParams = {
@@ -114,6 +115,8 @@ export function useNFTDrawerTabs({
       return false;
     })();
 
+    const isListable = isERC1155 || isERC721;
+
     let tabs: NFTDrawerTab[] = [];
     if (hasERC1155ClaimConditions) {
       tabs = tabs.concat([
@@ -194,6 +197,22 @@ export function useNFTDrawerTabs({
               contract={contract}
               nft={nft}
               useUpdateMetadata={supportsUpdateMetadata}
+            />
+          ),
+        },
+      ]);
+    }
+
+    if (isListable) {
+      tabs = tabs.concat([
+        {
+          title: "Marketplace",
+          isDisabled: false,
+          children: (
+            <ListMarketplaceButton
+              contract={contract}
+              tokenId={BigInt(tokenId)}
+              type={isERC1155 ? "ERC1155" : "ERC721"}
             />
           ),
         },
