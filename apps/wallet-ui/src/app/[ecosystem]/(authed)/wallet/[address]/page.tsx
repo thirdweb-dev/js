@@ -6,12 +6,12 @@ export default async function Page(props: {
   params: Promise<{ address: string }>;
   searchParams: Promise<{ chainId?: string; uri?: string }>;
 }) {
-  const searchParams = await props.searchParams;
+  const [searchParams, params] = await Promise.all([
+    props.searchParams,
+    props.params,
+  ]);
 
   const { chainId, uri } = searchParams;
-
-  const params = await props.params;
-
   const { address } = params;
 
   return (

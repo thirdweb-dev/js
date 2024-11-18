@@ -1,4 +1,5 @@
 import ConnectButton from "@/components/ConnectButton";
+import { Image } from "@/components/ui/image";
 import { authedOnly } from "@/lib/auth";
 import { getEcosystemInfo } from "@/lib/ecosystems";
 import { resolveScheme } from "thirdweb/storage";
@@ -12,14 +13,14 @@ export default async function Layout(props: {
 
   const { children } = props;
 
-  await authedOnly();
+  await authedOnly(params.ecosystem);
   const ecosystem = await getEcosystemInfo(params.ecosystem);
   return (
     <div className="flex w-full flex-col items-stretch">
       <header className="hidden w-full border-accent border-b bg-card py-4 sm:block">
         <div className="container mx-auto flex justify-between">
           <div className="flex items-center gap-2">
-            <img
+            <Image
               className="h-8 w-8"
               src={resolveScheme({ uri: ecosystem.imageUrl, client })}
               alt={ecosystem.name}

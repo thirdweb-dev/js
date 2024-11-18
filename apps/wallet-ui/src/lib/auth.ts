@@ -1,8 +1,8 @@
 "use server";
 import "server-only";
+import { redirect } from "@/lib/redirect";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { toHex } from "thirdweb";
 import {
   type GenerateLoginPayloadParams,
@@ -41,7 +41,6 @@ export async function login(payload: VerifyLoginPayloadParams) {
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
       maxAge: 3600,
-      domain: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
       path: "/",
     });
     return true;
@@ -49,15 +48,16 @@ export async function login(payload: VerifyLoginPayloadParams) {
   return false;
 }
 
-export async function authedOnly() {
-  const loggedIn = await getCurrentUser();
+export async function authedOnly(ecosystemId: string) {
+  const loggedIn = await isLoggedIn();
   if (loggedIn) {
     return;
   }
-  redirect("/login");
+
+  redirect("/login", ecosystemId);
 }
 
-export async function isLoggedIn(): Promise<boolean> {
+async function isLoggedIn(): Promise<boolean> {
   const user = await getCurrentUser();
   return !!user;
 }

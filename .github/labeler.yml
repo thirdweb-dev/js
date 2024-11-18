@@ -8,6 +8,12 @@ playground:
 packages:
   - changed-files:
     - any-glob-to-any-file: "packages/**/*"
+sdk:
+  - changed-files:
+    - any-glob-to-any-file: "packages/thirdweb/**/*"
 portal:
   - changed-files:
     - any-glob-to-any-file: "apps/portal/**/*"
+"Ecosystem Portal":
+  - changed-files:
+    - any-glob-to-any-file: "apps/wallet-ui/**/*"

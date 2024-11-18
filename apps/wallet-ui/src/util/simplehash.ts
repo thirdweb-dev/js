@@ -49,15 +49,6 @@ export function chainIdToName(chainId: number) {
   throw new Error(`Unknown chain id: ${chainId}`);
 }
 
-export function chainIdToLabel(chainId: number) {
-  const chain = chainIdNameMap.find((chain) => chain.id === chainId);
-  if (chain) {
-    return chain.label;
-  }
-
-  throw new Error(`Unknown chain id: ${chainId}`);
-}
-
 export function nameToChainId(name: string) {
   const chain = chainIdNameMap.find((chain) => chain.name === name);
   if (chain) {

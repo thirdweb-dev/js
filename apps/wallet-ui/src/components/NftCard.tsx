@@ -1,3 +1,4 @@
+import { Image } from "@/components/ui/image";
 import type { Erc721Token } from "@/types/Erc721Token";
 import { shortenAddress } from "thirdweb/utils";
 import { getChain } from "../lib/chains";
@@ -21,7 +22,7 @@ export default async function NftCard({
       <Card className="group h-[400px] w-full md:h-[350px] xl:h-[300px]">
         <div className="absolute inset-0 h-full w-full bg-accent object-cover">
           {(data.image_url || data.collection.image_url) && (
-            <img
+            <Image
               src={data.image_url || data.collection.image_url}
               alt={data.name}
               className="h-full w-full object-cover object-center"
