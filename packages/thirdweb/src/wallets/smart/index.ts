@@ -312,16 +312,15 @@ async function createSmartAccount(
 
       const originalMsgHash = hashMessage(message);
       // check if the account contract supports EIP721 domain separator or modular based signing
-      const [messageHash, isModularFactory] = await Promise.all([
+      const [is712Factory, isModularFactory] = await Promise.all([
         readContract({
           contract: accountContract,
           method:
             "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
           params: [originalMsgHash],
-        }).catch((err) => {
-          console.error(err);
-          return undefined;
-        }),
+        })
+          .catch(() => false)
+          .then(() => true),
         readContract({
           contract: accountContract,
           method: "function canInstall(address) public view returns (bool)",
@@ -331,29 +330,14 @@ async function createSmartAccount(
           .then(() => true),
       ]);
 
-      console.log("factoryType", messageHash, isModularFactory);
+      console.log("factoryType", is712Factory, isModularFactory);
 
       let sig: `0x${string}`;
-      if (messageHash) {
+      if (is712Factory || isModularFactory) {
         const wrappedMessageHash = encodeAbiParameters(
           [{ type: "bytes32" }],
           [originalMsgHash],
         );
-
-        const hasheTypedData = hashTypedData({
-          domain: {
-            name: isModularFactory ? "DefaultValidator" : "Account",
-            version: "1",
-            chainId: options.chain.id,
-            verifyingContract: accountContract.address,
-          },
-          primaryType: "AccountMessage",
-          types: { AccountMessage: [{ name: "message", type: "bytes" }] },
-          message: { message: wrappedMessageHash },
-        });
-
-        console.log("hasheTypedData", hasheTypedData);
-        console.log("equal", messageHash === hasheTypedData);
 
         sig = await options.personalAccount.signTypedData({
           domain: {
@@ -368,13 +352,16 @@ async function createSmartAccount(
         });
         if (isModularFactory) {
           // add validator address
-          sig = concatHex([ZERO_ADDRESS, sig]);
+          sig = encodeAbiParameters(
+            [{ type: "address" }, { type: "bytes" }],
+            [ZERO_ADDRESS, sig],
+          );
         }
       } else {
         sig = await options.personalAccount.signMessage({ message });
       }
 
-      console.log(sig);
+      console.log("sig", sig);
 
       const isValid = await verifyContractWalletSignature({
         address: accountContract.address,

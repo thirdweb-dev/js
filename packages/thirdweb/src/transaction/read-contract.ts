@@ -25,6 +25,7 @@ import {
   prepareMethod,
 } from "../utils/abi/prepare-method.js";
 import type { Hex } from "../utils/encoding/hex.js";
+import { extractError } from "./extract-error.js";
 
 export type ReadContractResult<outputs extends readonly AbiParameter[]> = // if the outputs are 0 length, return never, invalid case
   outputs extends { length: 0 }
@@ -211,16 +212,20 @@ export async function readContract<
     client: contract.client,
   });
 
-  const result = await eth_call(rpcRequest, {
-    data: encodedData,
-    to: contract.address,
-    from: options.from,
-  });
-  // use the prepared method to decode the result
-  const decoded = decodeAbiParameters(resolvedPreparedMethod[2], result);
-  if (Array.isArray(decoded) && decoded.length === 1) {
-    return decoded[0];
-  }
+  try {
+    const result = await eth_call(rpcRequest, {
+      data: encodedData,
+      to: contract.address,
+      from: options.from,
+    });
+    // use the prepared method to decode the result
+    const decoded = decodeAbiParameters(resolvedPreparedMethod[2], result);
+    if (Array.isArray(decoded) && decoded.length === 1) {
+      return decoded[0];
+    }
 
-  return decoded as ReadContractResult<TPreparedMethod[2]>;
+    return decoded as ReadContractResult<TPreparedMethod[2]>;
+  } catch (err) {
+    throw await extractError({ error: err, contract });
+  }
 }

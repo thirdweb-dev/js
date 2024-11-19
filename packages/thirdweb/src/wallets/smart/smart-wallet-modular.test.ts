@@ -7,9 +7,8 @@ import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import type { Address } from "../../utils/address.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
-import { generateAccount } from "../utils/generateAccount.js";
 import { smartWallet } from "./smart-wallet.js";
-
+import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 let wallet: Wallet;
 let smartAccount: Account;
 let smartWalletAddress: Address;
@@ -28,9 +27,10 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
   },
   () => {
     beforeAll(async () => {
-      personalAccount = await generateAccount({
-        client,
-      });
+      personalAccount = TEST_ACCOUNT_A;
+      // personalAccount = await generateAccount({
+      //   client,
+      //  });
       wallet = smartWallet({
         chain,
         gasless: true,
@@ -52,9 +52,9 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       expect(smartWalletAddress).toHaveLength(42);
 
       // const d = decodeErrorResult({
-      //   data: "0x79bd117bb61d27f600000000000000000000000000000000000000000000000000000000",
+      //   data: "0xb927fe5e0000000000000000000000000000000000000000db72e07d8a92f3d9d30e3843",
       //   abi: await resolveContractAbi({
-      //     address: ENTRYPOINT_ADDRESS_v0_7,
+      //     address: smartWalletAddress,
       //     client,
       //     chain,
       //   }),
