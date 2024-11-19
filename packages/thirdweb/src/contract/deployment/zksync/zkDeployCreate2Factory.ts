@@ -17,7 +17,7 @@ import { prepareZkDeployContractTransaction } from "./zkDeployContract.js";
 /**
  * @internal
  */
-export async function prepareZkDeployCreate2FactoryTransaction(
+async function prepareZkDeployCreate2FactoryTransaction(
   options: ClientAndChainAndAccount,
 ) {
   const create2Signer = privateKeyToAccount({

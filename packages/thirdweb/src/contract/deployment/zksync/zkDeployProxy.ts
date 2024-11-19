@@ -9,51 +9,7 @@ import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-va
 import { randomBytesHex } from "../../../utils/random.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
 import type { ThirdwebContract } from "../../contract.js";
-import {
-  prepareZkDeployContractDeterministicTransaction,
-  zkDeployContractDeterministic,
-} from "./zkDeployDeterministic.js";
-
-/**
- * @internal
- */
-export async function prepareZkDeployProxyTransaction(
-  options: ClientAndChainAndAccount & {
-    cloneFactoryContract: ThirdwebContract;
-    initializeTransaction: PreparedTransaction;
-    salt?: string;
-  },
-) {
-  const implementationAddress = await resolvePromisedValue(
-    options.initializeTransaction.to,
-  );
-  if (!implementationAddress) {
-    throw new Error("initializeTransaction must have a 'to' field set");
-  }
-  const deployed = await isContractDeployed({
-    address: implementationAddress,
-    chain: options.chain,
-    client: options.client,
-  });
-  if (!deployed) {
-    throw new Error(
-      `Implementation contract at ${implementationAddress} is not deployed`,
-    );
-  }
-  // deploy tw proxy of the implementation
-  return prepareZkDeployContractDeterministicTransaction({
-    client: options.client,
-    chain: options.chain,
-    account: options.account,
-    abi: twProxyAbi,
-    bytecode: twProxyBytecode,
-    params: {
-      _logic: implementationAddress,
-      _data: await encode(options.initializeTransaction),
-    },
-    salt: options.salt || randomBytesHex(32),
-  });
-}
+import { zkDeployContractDeterministic } from "./zkDeployDeterministic.js";
 
 /**
  * @internal
