@@ -3,79 +3,25 @@
   "globalEnv": ["CI", "TW_SECRET_KEY"],
   "tasks": {
     "build": {
-      "outputs": ["dist/**"],
-      "dependsOn": ["^build"]
-    },
-    "postbuild": {
-      "dependsOn": ["^postbuild"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [
+        "build/**",
+        ".vercel/**",
         "dist/**",
         ".next/**",
-        "public/robots.txt",
-        "public/sitemap*.xml",
-        "searchIndex.json"
-      ]
-    },
-    "bench": {
-      "cache": false,
-      "dependsOn": []
+        "!.next/cache/**"
+      ],
+      "dependsOn": ["^build"]
     },
     "typedoc": {
       "outputs": ["typedoc/**"],
       "dependsOn": ["^build"]
     },
-    "thirdweb-dashboard#build": {
-      "env": [
-        "SENTRY_AUTH_TOKEN",
-        "MORALIS_API_KEY",
-        "ETHERSCAN_KEY",
-        "SSR_ALCHEMY_KEY",
-        "BEEHIIV_API_KEY",
-        "GITHUB_API_TOKEN",
-        "LUMA_API_KEY",
-        "HUBSPOT_ACCESS_TOKEN",
-        "API_ROUTES_CLIENT_ID",
-        "DASHBOARD_SECRET_KEY",
-        "SIMPLEHASH_API_KEY",
-        "NEYNAR_API_KEY",
-        "THIRDWEB_ENGINE_URL",
-        "THIRDWEB_ACCESS_TOKEN",
-        "THIRDWEB_ENGINE_ACCESS_TOKEN",
-        "DEGEN_THIRDWEB_ENGINE_WALLET",
-        "THIRDWEB_ENGINE_WALLET",
-        "UNTHREAD_TRIAGE_CHANNEL_ID",
-        "UNTHREAD_EMAIL_INBOX_ID",
-        "UNTHREAD_FREE_TIER_ID",
-        "UNTHREAD_GROWTH_TIER_ID",
-        "UNTHREAD_PRO_TIER_ID",
-        "REDIS_URL",
-        "UNTHREAD_API_KEY",
-        "CHAINSAW_API_KEY",
-        "ANALYTICS_SERVICE_URL",
-        "ANALYTICS_SERVICE_API_KEY",
-        "DISABLE_FAUCET_CHAIN_IDS",
-        "API_SERVER_SECRET",
-        "TURNSTILE_SECRET_KEY",
-        "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
-        "NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET"
-      ],
-      "outputs": [".next/**", "!.next/cache/**"],
-      "dependsOn": ["^build"]
-    },
     "portal#build": {
-      "outputs": [".next/**", "!.next/cache/**", "searchIndex.json"],
       "dependsOn": ["^build", "thirdweb#typedoc"]
     },
     "portal#dev": {
       "dependsOn": ["^build", "thirdweb#typedoc"]
-    },
-    "playground-web#build": {
-      "outputs": [".next/**", "!.next/cache/**"],
-      "dependsOn": ["^build"]
-    },
-    "wallet-ui#build": {
-      "outputs": [".next/**", "!.next/cache/**"],
-      "dependsOn": ["^build"]
     },
     "thirdweb#update-version": {
       "inputs": ["$TURBO_DEFAULT$", "package.json"],
@@ -89,20 +35,13 @@
     "storybook": {
       "inputs": ["$TURBO_DEFAULT$", "src/**"]
     },
-    "test:legacy": {
-      "outputs": ["coverage/**"],
-      "inputs": ["$TURBO_DEFAULT$", "src/**", "test/**"],
-      "dependsOn": ["^build"]
-    },
     "e2e": {
       "outputs": [],
       "inputs": ["$TURBO_DEFAULT$", "src/**", "fixtures/**"],
       "dependsOn": ["^build"]
     },
-    "e2e:legacy": {
-      "outputs": [],
-      "inputs": ["$TURBO_DEFAULT$", "src/**", "fixtures/**"],
-      "dependsOn": ["^build"]
+    "bench": {
+      "cache": false
     },
     "lint": {
       "cache": false,
@@ -120,11 +59,9 @@
       "cache": false
     },
     "dev": {
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
-    },
-    "thirdweb-dashboard#dev": {
-      "dependsOn": ["^build"]
     },
     "clean": {
       "cache": false
