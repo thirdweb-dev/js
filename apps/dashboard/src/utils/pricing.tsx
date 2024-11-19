@@ -36,7 +36,7 @@ export const TEAM_PLANS: Record<
     title: "Growth",
     subTitle: "Everything in Starter, plus:",
     trialPeriodDays: 0,
-    description: "Ideal for production-grade applications.",
+    description: "Ideal for scaling, production-grade applications.",
     features: [
       ["10,000 monthly active wallets", "then $0.02/wallet"],
       "Production grade infrastructure",

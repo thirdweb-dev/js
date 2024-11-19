@@ -46,19 +46,14 @@ export function PlanInfoCard(props: {
             </p>
           )}
         </div>
-        <div>
+
+        <div className="flex flex-row gap-2">
+          {/* manage team billing */}
           <BillingPortalButton teamSlug={team.slug} variant="outline">
             Manage Billing
           </BillingPortalButton>
-        </div>
 
-        {isActualFreePlan && (
-          <div>
-            {/* manage team billing */}
-            <BillingPortalButton teamSlug={team.slug} variant="outline">
-              Manage Billing
-            </BillingPortalButton>
-
+          {isActualFreePlan && (
             <Button asChild variant="outline">
               <TrackedLinkTW
                 category="account"
@@ -70,8 +65,8 @@ export function PlanInfoCard(props: {
                 View Pricing
               </TrackedLinkTW>
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <Separator />
@@ -116,17 +111,18 @@ function BillingInfo({
       {planSubscription && (
         <SubscriptionOverview
           subscription={planSubscription}
-          title="Monthly Plan Cost"
+          title="Plan Cost"
         />
       )}
 
-      <Separator className="my-4" />
-
       {usageSubscription && (
-        <SubscriptionOverview
-          subscription={usageSubscription}
-          title="On-Demand Charges"
-        />
+        <>
+          <Separator className="my-4" />
+          <SubscriptionOverview
+            subscription={usageSubscription}
+            title="On-Demand Charges"
+          />
+        </>
       )}
 
       <Separator className="my-4" />
