@@ -1,0 +1,38 @@
+import { Callout, DocImage, createMetadata, Steps, Step } from "@doc";
+import CreateEcosystemWallet from "../assets/create-ecosystem-wallet.png";
+import EcosystemWalletPermissions from "../assets/ecosystem-wallet-permissions.png";
+import AddAPartner from "../assets/add-partner.png";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Ecosystem Wallet",
+		icon: "wallets",
+	},
+	title: "Managing Ecosystem Permissions - Ecosystem Wallet | thirdweb",
+	description: "Ecosystem Wallet - Own your own web3 identity stack",
+});
+
+# Managing Ecosystem Permissions
+
+There are two permission options depending on whether you’d like an open or exclusive ecosystem wallet. You can manage these permissions from the Permissions page in your Ecosystem Wallet Dashboard.
+
+<DocImage src={EcosystemWalletPermissions} />
+
+### Anyone
+
+If you want to allow anyone to integrate your ecosystem wallet, no other changes are required. You can protect your ecosystem against malicious actors by adding unwanted domains to your blocklist.
+
+### Allowlist
+
+If you’re looking to create an ecosystem wallet for select partners, you can head to the Ecosystem Wallet dashboard, navigate to Permissions, and select “Allowlist”.
+
+**Add Applications to Your Allowlist**
+
+For each application on your allowlist, you'll need to specify a name, a list of allowed domains, and an optional bundle ID (for mobile applications). The list of domains will determine where a partner will be able to display your ecosystem as a login option. Once a partner is added, a **Partner ID** will be generated.
+
+<Callout title="Adding Your Own App as a Partner" variant="info">
+	You'll need to add your own domains and bundle IDs to your allowlist in order
+	to login through your ecosystem wallet in your app.
+</Callout>
+
+<DocImage src={AddAPartner} />

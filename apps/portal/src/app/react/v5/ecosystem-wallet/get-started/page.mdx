@@ -3,9 +3,11 @@ import {
 	TabsList,
 	TabsTrigger,
 	TabsContent,
+	Callout,
 	DocImage,
 	createMetadata,
 } from "@doc";
+import EcosystemSocialConfig from './social-config.png'
 
 export const metadata = createMetadata({
 	title: "Connect users with Ecosystem Wallets",
@@ -60,6 +62,22 @@ const LoginComponent = () => {
 	})}>Connect</button>;
 };
 ```
+
+## Configuring auth strategies
+
+You can configure the allowed auth strategies on [your dashboard](https://thirdweb.com/team/~/~/ecosystem).
+
+<DocImage src={EcosystemSocialConfig}/>
+
+For prebuilt UIs, the enabled auth strategies are automatically read from your dashbaord configurations.
+
+For custom UIs, you can configure the auth options when connecting the wallet. See [using your own UI](#using-your-own-ui) for an example. 
+
+<Callout variant="warning" title="Using disabled auth strategies">
+	Note that while you're allowed to pass any auth strategy today, we recommend only passing the strategies that are enabled on your dashboard. We might enforce this in the future.
+</Callout>
+
+
 
 ## Passing a partner ID
 

@@ -12,7 +12,6 @@ import {
   ContractModularContractIcon,
   ContractPublishIcon,
   DotNetIcon,
-  EcosystemWalletsIcon,
   InfraEngineIcon,
   InfraInsightIcon,
   PayIcon,
@@ -20,7 +19,6 @@ import {
   TypeScriptIcon,
   UnityIcon,
   WalletsAuthIcon,
-  WalletsConnectIcon,
   WalletsInAppIcon,
   WalletsSmartIcon,
 } from "@/icons";
@@ -227,27 +225,7 @@ function WalletsSection() {
     <section className="my-12">
       <SectionTitle id="connect" title="Connect" />
       <div className="mb-6 border-b" />
-      <SectionTitle id="connect-quickstart" title="Get Started" level={5} />
-      <Grid>
-        <SDKCardIndex
-          href="/typescript/v5"
-          title="TypeScript"
-          icon={TypeScriptIcon}
-        />
-        <SDKCardIndex href="/react/v5" title="React" icon={ReactIcon} />
-        <SDKCardIndex
-          href="/react-native/v5"
-          title="React Native"
-          icon={ReactIcon}
-        />
-        <SDKCardIndex href="/dotnet" title=".NET" icon={DotNetIcon} />
-        <SDKCardIndex href="/unity" title="Unity" icon={UnityIcon} />
-        <SDKCardIndex
-          href="/unreal-engine"
-          title="Unreal Engine"
-          icon={UnrealEngineIcon}
-        />
-      </Grid>
+
       <SectionTitle id="connect-learn" title="Learn" level={5} />
 
       <Grid>
@@ -258,28 +236,16 @@ function WalletsSection() {
           icon={ConnectOverviewIcon}
         />
         <ArticleCardIndex
-          href="/connect/sign-in/overview"
-          title="Sign-In"
-          description="Flexible user sign-up flow with wallet and social sign-in methods"
-          icon={WalletsConnectIcon}
+          href="/connect/wallet/overview"
+          title="Wallets"
+          description="Flexible solutions for external, in-app, and ecosystem wallets. Suitable every use case."
+          icon={WalletsInAppIcon}
         />
         <ArticleCardIndex
           href="/connect/account-abstraction/overview"
           title="Account abstraction"
           description="Complete toolkit for Account Abstraction"
           icon={WalletsSmartIcon}
-        />
-        <ArticleCardIndex
-          title="In-App Wallet"
-          description="Email & social login wallets for your customers"
-          href="/connect/in-app-wallet/overview"
-          icon={WalletsInAppIcon}
-        />
-        <ArticleCardIndex
-          title="Ecosystem Wallet"
-          description="Managed in-app wallet service for unified login across all of your apps and games"
-          href="/connect/ecosystems/overview"
-          icon={EcosystemWalletsIcon}
         />
         <ArticleCardIndex
           href="/connect/auth"
@@ -298,6 +264,32 @@ function WalletsSection() {
           title="Blockchain API"
           description="Performant, and reliable blockchain API"
           icon={CodeIcon}
+        />
+      </Grid>
+
+      <SectionTitle
+        id="connect-quickstart"
+        title="Platform API Reference"
+        level={5}
+      />
+      <Grid>
+        <SDKCardIndex
+          href="/typescript/v5"
+          title="TypeScript"
+          icon={TypeScriptIcon}
+        />
+        <SDKCardIndex href="/react/v5" title="React" icon={ReactIcon} />
+        <SDKCardIndex
+          href="/react-native/v5"
+          title="React Native"
+          icon={ReactIcon}
+        />
+        <SDKCardIndex href="/dotnet" title=".NET" icon={DotNetIcon} />
+        <SDKCardIndex href="/unity" title="Unity" icon={UnityIcon} />
+        <SDKCardIndex
+          href="/unreal-engine"
+          title="Unreal Engine"
+          icon={UnrealEngineIcon}
         />
       </Grid>
     </section>

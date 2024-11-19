@@ -1,0 +1,125 @@
+import { Callout } from "@doc";
+import { createMetadata, ArticleIconCard } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Pregenerate Wallets",
+		icon: "wallets",
+	},
+	title: "Pregenerate Wallets | thirdweb",
+	description: "Learn how to pregenerate wallets for improved user onboarding",
+});
+
+# Pregenerate Wallets
+
+## What is Wallet Pregeneration?
+
+Wallet pregeneration is a technique where you create wallets for users before they actually sign up or authenticate. This allows you to:
+
+1. Pre assign wallets to users before they sign up
+2. Reduce the time users spend waiting during the onboarding process
+3. Pre-fund wallets with tokens or NFTs before users claim them
+4. Create smoother user experiences for gaming and other applications
+
+## Why Use Wallet Pregeneration?
+
+### Pre-funding Capability
+You can distribute assets to wallets before users claim them, enabling:
+- Pre-loaded game assets
+- Welcome bonus tokens
+- Promotional NFTs
+- Airdrops
+
+### Better User Experience
+- Users don't have to wait for wallet to be created during signup
+- Reduced failed wallet creation due to network issues
+
+To pregenerate an in-app or ecosystem wallet wallet, you can make a `POST` request to the following endpoint:
+
+```
+https://in-app-wallet.thirdweb.com/api/v1/pregenerate
+```
+
+## Request Body
+
+The request body should be a JSON object with the following parameters:
+
+- `strategy`: The strategy for wallet generation
+- `email` or `phone` or `userId`: The user identifier associated with the wallet to be generated
+
+### Email based wallets
+
+```
+{ strategy: "email", email: "user@example.com" }
+```
+
+When the user logs in with any method associated with that email (including google, facebook, discord auth), they will get access to the same pregenerated wallet.
+
+### Phone based wallets
+
+```
+{ strategy: "phone", phone: "+1321123321" }
+```
+
+### Custom user id based wallets
+
+```
+{ strategy: "custom_auth_endpoint", userId: "some_user_id" }
+```
+
+{/* TODO: update link when custom auth documentation has been updated */}
+Use this when [bringing your own authentication method](/connect/in-app-wallet/custom-auth/configuration). When the user logs in, if the user ids you provide from the auth endpoint match, they will get access to the same pregenerated wallet.
+
+## Headers
+
+You need to include the following headers:
+
+- `Content-Type`: Must be set to `application/json`
+- `x-secret-key`: Your secret key for authentication
+- `x-ecosystem-id` (optional): Your ecosystem ID
+- `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
+
+## Example curl Command
+
+Here's an example curl command to pregenerate a thirdweb wallet for the user `user@example.com`:
+
+```bash
+curl -X POST 'https://embedded-wallet.thirdweb.com/api/v1/pregenerate' \
+  -H 'x-ecosystem-id: ecosystem.example-eco-123' \
+  -H 'x-ecosystem-partner-id: 1415d24e-c7b0-4fce-846e-740841ef2c32' \
+  -H 'x-secret-key: 9f8e7d6c5b4a3f2e1d0c9b8a7ffge434b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e7' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "strategy": "email",
+    "email": "user@example.com"
+  }'
+```
+
+Replace the header values with your actual client ID, ecosystem ID, and secret key.
+
+<Callout variant='info' title='Pregeneration for ecosystems'>
+For ecosystem wallets, the secret key have to be from the same account as the ecosystem owner. If this is an issue, please reach out to us.
+</Callout>
+
+
+## Response Format
+
+A successful API call returns a JSON object in the following format:
+
+```json
+{
+  "wallet": {
+      "address": "string",
+      "createdAt": "string",
+  }
+}
+```
+
+
+## What's Next
+
+Pre-generating is independent and doesn't change the user's experience. 
+
+Your users can continue to login as per usual. When they do, they will be assigned the pregenerated wallet.
+
+For more information on signing in, see [Sign In](/connect/wallet/sign-in-methods/overview).

@@ -150,14 +150,14 @@ export default async function Page(props: PageProps) {
         </TabsContent>
         <TabsContent value="tab-3">
           <Paragraph>
-            You can add this wallet in the
+            You can add this wallet in the{" "}
             <DocLink href="/react/v5/ConnectButton" target="_blank">
               ConnectButton
-            </DocLink>
-            or
+            </DocLink>{" "}
+            or{" "}
             <DocLink href="/react/v5/ConnectEmbed" target="_blank">
               ConnectEmbed
-            </DocLink>
+            </DocLink>{" "}
             component to get a pre-built UI for connecting the wallet.
             <Heading level={3} id="connect-component">
               Example

@@ -1,0 +1,59 @@
+import { Callout, DocImage, createMetadata, Step, Steps } from "@doc";
+import ManageWallet from './manage-wallet.png'
+import ExportKey from './export-key.png'
+import ConfirmReveal from './confirm-reveal.png'
+import ExportedKey from './exported-key.png'
+
+export const metadata = createMetadata({
+	image: {
+		title: "Export private key of thirdweb Wallet",
+		icon: "wallets",
+	},
+	title: "Export private key | thirdweb",
+	description:
+		"Learn how to export private keys for thirdweb wallets",
+});
+
+# Export Private Key
+
+Learn how to export the private key for a thirdweb wallet using the Connect modal. 
+
+<Callout variant="info" title="Headless private key export">
+    Note that we don't allow exporting private key headlessly today. This is to ensure the security of the users assets.
+</Callout>
+
+<Steps>
+
+  <Step title="Login">
+    Login to your wallet on the application.
+  </Step>
+
+  <Step title="Manage">
+    Select "Manage Wallet".
+    <DocImage src={ManageWallet} />
+  </Step>
+
+  <Step title="Export">
+    Choose "Export Private Key" and confirm the action to reveal the private key.
+    <DocImage src={ExportKey} />
+  </Step>
+
+  <Step title="Confirm">
+	Confirm you want to reveal your private key.
+    <Callout variant="warning" title="Secure Private Keys">
+      Revealing private keys can compromise your assets and security. Keep them safe and confidential at all times.
+    </Callout>
+    <DocImage src={ConfirmReveal} />
+  </Step>
+
+  <Step title="Reveal">
+    Copy the exported private key directly from the modal.
+    <DocImage src={ExportedKey} />
+  </Step>
+
+</Steps>
+
+
+<Callout variant="info" title="Advanced Configuration">
+    As an advanced option, to hide the export private key option from the modal, set the `hidePrivateKeyOption` to `true` when initializing the typescript or react SDK.
+</Callout>
