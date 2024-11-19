@@ -75,9 +75,10 @@ export function PlanInfoCard(props: {
         {isActualFreePlan ? (
           <div className="flex flex-col items-center py-8 text-center max-sm:gap-4">
             <CircleAlertIcon className="mb-3 text-muted-foreground lg:size-6" />
-            <p>Your plan includes a fixed amount of free usage</p>
+            <p>Your plan includes a fixed amount of free usage.</p>
             <p>
-              To unlock additional usage, Upgrade your plan to Starer or Growth
+              To unlock additional usage, upgrade your plan to Starter or
+              Growth.
             </p>
           </div>
         ) : (
@@ -101,18 +102,10 @@ function BillingInfo({
     (subscription) => subscription.type === "USAGE",
   );
 
-  // only plan and usage subscriptions are considered for now
-  const totalUsd = getAllSubscriptionsTotal(
-    subscriptions.filter((sub) => sub.type === "PLAN" || sub.type === "USAGE"),
-  );
-
   return (
     <div>
       {planSubscription && (
-        <SubscriptionOverview
-          subscription={planSubscription}
-          title="Plan Cost"
-        />
+        <SubscriptionOverview subscription={planSubscription} />
       )}
 
       {usageSubscription && (
@@ -124,20 +117,13 @@ function BillingInfo({
           />
         </>
       )}
-
-      <Separator className="my-4" />
-
-      <div className="flex items-center justify-between gap-6">
-        <h5 className="font-medium text-lg">Total Upcoming Bill</h5>
-        <p className="text-foreground">{totalUsd}</p>
-      </div>
     </div>
   );
 }
 
 function SubscriptionOverview(props: {
   subscription: TeamSubscription;
-  title: string;
+  title?: string;
 }) {
   const { subscription } = props;
 
@@ -145,7 +131,9 @@ function SubscriptionOverview(props: {
     <div>
       <div className="flex items-center justify-between gap-6">
         <div>
-          <h5 className="font-medium text-lg">{props.title} </h5>
+          {props.title && (
+            <h5 className="font-medium text-lg">{props.title}</h5>
+          )}
           <p className="text-muted-foreground text-sm lg:text-base">
             {format(
               new Date(props.subscription.currentPeriodStart),
@@ -159,7 +147,7 @@ function SubscriptionOverview(props: {
           </p>
         </div>
 
-        <p className="text-muted-foreground">
+        <p className="text-foreground">
           {formatCurrencyAmount(
             subscription.upcomingInvoice.amount || 0,
             subscription.upcomingInvoice.currency,
@@ -168,21 +156,6 @@ function SubscriptionOverview(props: {
       </div>
     </div>
   );
-}
-
-function getAllSubscriptionsTotal(subscriptions: TeamSubscription[]) {
-  let totalCents = 0;
-  let currency = "USD";
-
-  for (const subscription of subscriptions) {
-    const amount = subscription.upcomingInvoice.amount;
-    currency = subscription.upcomingInvoice.currency;
-    if (amount) {
-      totalCents += amount;
-    }
-  }
-
-  return formatCurrencyAmount(totalCents, currency);
 }
 
 function formatCurrencyAmount(centsAmount: number, currency: string) {

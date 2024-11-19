@@ -7,6 +7,7 @@ import type {
   UsageBillableByService,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { InAppWalletUsersChartCardUI } from "components/embedded-wallets/Analytics/InAppWalletUsersChartCard";
+import { subMonths } from "date-fns";
 import Link from "next/link";
 import { Suspense, useMemo } from "react";
 import { toPercent, toSize } from "utils/number";
@@ -14,6 +15,7 @@ import { TotalSponsoredChartCardUI } from "../../../../_components/TotalSponsore
 import { UsageCard } from "./UsageCard";
 
 type UsageProps = {
+  // TODO - remove when we have all the data available from team
   usage: UsageBillableByService;
   subscriptions: TeamSubscription[];
   account: Account;
@@ -26,6 +28,7 @@ export const Usage: React.FC<UsageProps> = ({
   account,
   team,
 }) => {
+  // TODO - get this from team instead of account
   const storageMetrics = useMemo(() => {
     if (!usageData) {
       return {};
@@ -36,18 +39,18 @@ export const Usage: React.FC<UsageProps> = ({
     const percent = toPercent(consumedBytes, limitBytes);
 
     return {
-      total: `${toSize(consumedBytes, "MB")} / ${toSize(
-        limitBytes,
-      )} (${percent}%)`,
+      total: `${toSize(Math.min(consumedBytes, limitBytes), "MB")} of ${toSize(limitBytes)} included storage used`,
       progress: percent,
       ...(usageData.billableUsd.storage > 0
         ? {
             overage: usageData.billableUsd.storage,
           }
         : {}),
+      totalUsage: `Total Usage: ${toSize(consumedBytes, "MB")}`,
     };
   }, [usageData]);
 
+  // TODO - get this from team instead of account
   const rpcMetrics = useMemo(() => {
     if (!usageData) {
       return {};
@@ -80,23 +83,30 @@ export const Usage: React.FC<UsageProps> = ({
 
   const usageSub = subscriptions.find((sub) => sub.type === "USAGE");
 
+  // we don't have `usageSub` for free plan - so we use "1 month ago" as the period
+  // even free plan can have usage data
+
+  const currentPeriodStart = usageSub?.currentPeriodStart
+    ? new Date(usageSub.currentPeriodStart)
+    : subMonths(new Date(), 1);
+
+  const currentPeriodEnd = usageSub?.currentPeriodEnd
+    ? new Date(usageSub.currentPeriodEnd)
+    : new Date();
+
   return (
     <div className="flex grow flex-col gap-8">
-      {usageSub && (
-        <>
-          <InAppWalletUsersChartCard
-            accountId={account.id}
-            from={new Date(usageSub.currentPeriodStart)}
-            to={new Date(usageSub.currentPeriodEnd)}
-          />
+      <InAppWalletUsersChartCard
+        accountId={account.id}
+        from={currentPeriodStart}
+        to={currentPeriodEnd}
+      />
 
-          <TotalSponsoredCard
-            accountId={account.id}
-            from={new Date(usageSub.currentPeriodStart)}
-            to={new Date(usageSub.currentPeriodEnd)}
-          />
-        </>
-      )}
+      <TotalSponsoredCard
+        accountId={account.id}
+        from={currentPeriodStart}
+        to={currentPeriodEnd}
+      />
 
       <UsageCard
         {...rpcMetrics}

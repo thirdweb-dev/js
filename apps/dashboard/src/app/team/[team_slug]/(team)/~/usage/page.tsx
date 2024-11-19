@@ -40,6 +40,7 @@ export default async function Page(props: {
 
   return (
     <Usage
+      // TODO - remove accountUsage when we have all the data available from team
       usage={accountUsage}
       subscriptions={subscriptions}
       account={account}

@@ -1,6 +1,9 @@
 import type { UserOpStats } from "@/api/analytics";
+import { cn } from "@/lib/utils";
 import { defineChain } from "thirdweb";
 import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
+import { EmptyAccountAbstractionChartContent } from "../../../../../components/smart-wallets/AccountAbstractionAnalytics/SponsoredTransactionsChartCard";
+import { BarChart } from "../../../components/Analytics/BarChart";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";
 
 export async function TotalSponsoredChartCardUI({
@@ -81,19 +84,33 @@ export async function TotalSponsoredChartCardUI({
     },
   };
 
+  if (onlyMainnet) {
+    const filteredData = timeSeriesData.filter((d) => d.mainnet > 0);
+    return (
+      <div className={cn("rounded-lg border p-4 lg:p-6", className)}>
+        <h3 className="mb-1 font-semibold text-xl tracking-tight">
+          {title || "Total Sponsored"}
+        </h3>
+        <p className="text-muted-foreground"> {description}</p>
+        <BarChart
+          isCurrency
+          chartConfig={chartConfig}
+          data={filteredData}
+          activeKey="mainnet"
+          emptyChartContent={<EmptyAccountAbstractionChartContent />}
+        />
+      </div>
+    );
+  }
+
   return (
     <CombinedBarChartCard
       isCurrency
       title={title || "Total Sponsored"}
-      description={description}
       chartConfig={chartConfig}
       data={timeSeriesData}
-      hideTabs={onlyMainnet}
       activeChart={
-        onlyMainnet
-          ? "mainnet"
-          : ((searchParams?.totalSponsored as keyof typeof chartConfig) ??
-            "mainnet")
+        (searchParams?.totalSponsored as keyof typeof chartConfig) ?? "mainnet"
       }
       queryKey="totalSponsored"
       existingQueryParams={searchParams}

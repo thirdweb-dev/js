@@ -30,8 +30,6 @@ export function CombinedBarChartCard<
       : undefined,
   existingQueryParams,
   className,
-  hideTabs,
-  description,
 }: {
   title?: string;
   chartConfig: CombinedBarChartConfig<K>;
@@ -43,8 +41,6 @@ export function CombinedBarChartCard<
   trendFn?: (d: typeof data, key: K) => number | undefined;
   existingQueryParams?: { [key: string]: string | string[] | undefined };
   className?: string;
-  hideTabs?: boolean;
-  description?: string;
 }) {
   return (
     <Card className={className}>
@@ -52,50 +48,45 @@ export function CombinedBarChartCard<
         {title && (
           <div className="flex flex-1 flex-col justify-center gap-1 p-6">
             <CardTitle className="font-semibold text-lg">{title}</CardTitle>
-            {description && (
-              <p className="text-muted-foreground text-sm"> {description}</p>
-            )}
           </div>
         )}
 
-        {!hideTabs && (
-          <div className="max-md:no-scrollbar overflow-x-auto border-t">
-            <div className="flex flex-nowrap">
-              {Object.keys(chartConfig).map((chart: string) => {
-                const key = chart as K;
-                return (
-                  <Link
-                    href={{
-                      query: {
-                        ...existingQueryParams,
-                        [queryKey]: key,
-                      },
-                    }}
-                    prefetch
-                    scroll={false}
-                    key={chart}
+        <div className="max-md:no-scrollbar overflow-x-auto border-t">
+          <div className="flex flex-nowrap">
+            {Object.keys(chartConfig).map((chart: string) => {
+              const key = chart as K;
+              return (
+                <Link
+                  href={{
+                    query: {
+                      ...existingQueryParams,
+                      [queryKey]: key,
+                    },
+                  }}
+                  prefetch
+                  scroll={false}
+                  key={chart}
+                  data-active={activeChart === chart}
+                  className="relative z-30 flex min-w-[200px] flex-1 flex-col justify-center gap-1 border-l first:border-l-0 hover:bg-muted/50"
+                >
+                  <Stat
+                    label={chartConfig[key].label}
+                    value={
+                      isCurrency
+                        ? toUSD(aggregateFn(data, key) ?? 0)
+                        : (aggregateFn(data, key) ?? 0)
+                    }
+                    trend={trendFn(data, key) || undefined}
+                  />
+                  <div
+                    className="absolute right-0 bottom-0 left-0 h-0 bg-foreground transition-all duration-300 ease-out data-[active=true]:h-[3px]"
                     data-active={activeChart === chart}
-                    className="relative z-30 flex min-w-[200px] flex-1 flex-col justify-center gap-1 border-l first:border-l-0 hover:bg-muted/50"
-                  >
-                    <Stat
-                      label={chartConfig[key].label}
-                      value={
-                        isCurrency
-                          ? toUSD(aggregateFn(data, key) ?? 0)
-                          : (aggregateFn(data, key) ?? 0)
-                      }
-                      trend={trendFn(data, key) || undefined}
-                    />
-                    <div
-                      className="absolute right-0 bottom-0 left-0 h-0 bg-foreground transition-all duration-300 ease-out data-[active=true]:h-[3px]"
-                      data-active={activeChart === chart}
-                    />
-                  </Link>
-                );
-              })}
-            </div>
+                  />
+                </Link>
+              );
+            })}
           </div>
-        )}
+        </div>
       </CardHeader>
       <CardContent className="px-2 sm:p-6 sm:pl-0">
         <BarChart

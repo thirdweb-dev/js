@@ -129,7 +129,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
               }
             : undefined
         }
-        team={team}
+        teamSlug={team.slug}
       />
 
       {/* Growth */}
@@ -161,11 +161,12 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
         canTrialGrowth={team.growthTrialEligible || false}
         // upsell growth plan if user is on free plan
         highlighted={validTeamPlan === "free"}
-        team={team}
+        teamSlug={team.slug}
       />
 
       <PricingCard
         billingPlan="pro"
+        teamSlug={team.slug}
         current={validTeamPlan === "pro"}
         cta={
           proCta

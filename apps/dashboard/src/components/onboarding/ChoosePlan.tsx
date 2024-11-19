@@ -1,12 +1,15 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { PricingCard } from "components/homepage/sections/PricingCard";
 import { ArrowRightIcon } from "lucide-react";
+import { useParams } from "next/navigation";
 import { TitleAndDescription } from "./Title";
 
 function OnboardingChoosePlan(props: {
   skipPlan: () => void;
   canTrialGrowth: boolean;
 }) {
+  const params = useParams<{ team_slug: string }>();
   return (
     <div>
       <TitleAndDescription
@@ -27,17 +30,20 @@ function OnboardingChoosePlan(props: {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <PricingCard
           billingPlan="starter"
+          teamSlug={params?.team_slug ?? undefined}
           cta={{
             title: "Get started for free",
-            href: "/team/~/billing/subscribe/plan:starter",
+            href: "/team/~/~/settings/billing",
             tracking: {
               category: "account",
             },
           }}
+          onClick={props.skipPlan}
         />
 
         <PricingCard
           billingPlan="growth"
+          teamSlug={params?.team_slug ?? undefined}
           cta={{
             title: "Claim your 1-month free",
             hint: "Your free trial will end after 30 days.",
@@ -45,10 +51,11 @@ function OnboardingChoosePlan(props: {
               category: "account",
               label: "growthPlan",
             },
-            href: "/team/~/billing/subscribe/plan:growth",
+            href: "/team/~/~/settings/billing",
             variant: "default",
           }}
           canTrialGrowth={props.canTrialGrowth}
+          onClick={props.skipPlan}
         />
       </div>
     </div>

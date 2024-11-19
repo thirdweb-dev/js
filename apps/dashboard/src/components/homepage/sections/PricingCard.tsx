@@ -12,7 +12,7 @@ import { FeatureItem } from "./FeatureItem";
 type ButtonProps = React.ComponentProps<typeof Button>;
 
 type PricingCardProps = {
-  team?: Team;
+  teamSlug: string | undefined;
   billingPlan: Exclude<Team["billingPlan"], "free">;
   cta?: {
     hint?: string;
@@ -30,16 +30,18 @@ type PricingCardProps = {
   current?: boolean;
   canTrialGrowth?: boolean;
   activeTrialEndsAt?: string;
+  onClick?: () => void;
 };
 
 export const PricingCard: React.FC<PricingCardProps> = ({
-  team,
+  teamSlug,
   billingPlan,
   cta,
   highlighted = false,
   current = false,
   canTrialGrowth = false,
   activeTrialEndsAt,
+  onClick,
 }) => {
   const plan = TEAM_PLANS[billingPlan];
   const isCustomPrice = typeof plan.price === "string";
@@ -122,11 +124,12 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
       {cta && (
         <div className="flex flex-col gap-3">
-          {team && billingPlan !== "pro" ? (
+          {teamSlug && billingPlan !== "pro" ? (
             <CheckoutButton
               variant={cta.variant || "outline"}
-              teamSlug={team.slug}
+              teamSlug={teamSlug}
               sku={billingPlan === "starter" ? "plan:starter" : "plan:growth"}
+              onClick={onClick}
             >
               {cta.title}
             </CheckoutButton>
@@ -137,6 +140,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                 label={cta.tracking?.label}
                 category={cta.tracking?.category}
                 target={cta.target}
+                onClick={onClick}
               >
                 {cta.title}
               </TrackedLinkTW>
