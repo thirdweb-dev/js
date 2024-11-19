@@ -27,12 +27,9 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import {
-  type PreparedTransaction,
-  prepareContractCall,
-  sendAndConfirmTransaction,
-} from "thirdweb";
+import { type PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
 import { MintableERC721, MintableERC1155 } from "thirdweb/modules";
+import { grantRoles, hasAllRoles } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import type { NFTMetadataInputLimited } from "types/modified-types";
 import { parseAttributes } from "utils/parseAttributes";
@@ -79,10 +76,10 @@ function MintableModule(props: ModuleInstanceProps) {
       contract: contract,
     },
   );
-  const hasMinterRole = useReadContract({
+  const hasMinterRole = useReadContract(hasAllRoles, {
     contract: contract,
-    method: "function hasAllRoles(address user, uint256 roles) returns (bool)",
-    params: [ownerAccount?.address || "", MINTER_ROLE],
+    user: ownerAccount?.address || "",
+    roles: MINTER_ROLE,
   });
 
   const isBatchMetadataInstalled = !!props.allModuleContractInfo.find(
@@ -97,10 +94,10 @@ function MintableModule(props: ModuleInstanceProps) {
       }
 
       if (!hasMinterRole.data) {
-        const grantRoleTx = prepareContractCall({
+        const grantRoleTx = grantRoles({
           contract,
-          method: "function grantRole(address user, uint256 role) public",
-          params: [ownerAccount.address || "", MINTER_ROLE],
+          user: ownerAccount.address,
+          roles: MINTER_ROLE,
         });
 
         await sendAndConfirmTransaction({
