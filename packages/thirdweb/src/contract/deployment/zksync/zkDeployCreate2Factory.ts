@@ -12,7 +12,44 @@ import type { ClientAndChainAndAccount } from "../../../utils/types.js";
 import { toWei } from "../../../utils/units.js";
 import { privateKeyToAccount } from "../../../wallets/private-key.js";
 import { getWalletBalance } from "../../../wallets/utils/getWalletBalance.js";
-import { zkDeployContract } from "./zkDeployContract.js";
+import { prepareZkDeployContractTransaction } from "./zkDeployContract.js";
+
+/**
+ * @internal
+ */
+export async function prepareZkDeployCreate2FactoryTransaction(
+  options: ClientAndChainAndAccount,
+) {
+  const create2Signer = privateKeyToAccount({
+    client: options.client,
+    privateKey: PUBLISHED_PRIVATE_KEY,
+  });
+
+  const valueToSend = toWei("0.01");
+  const balance = await getWalletBalance({
+    address: create2Signer.address,
+    chain: options.chain,
+    client: options.client,
+  });
+
+  if (balance.value < valueToSend) {
+    return prepareTransaction({
+      chain: options.chain,
+      client: options.client,
+      to: create2Signer.address,
+      value: valueToSend,
+    });
+  }
+
+  return prepareZkDeployContractTransaction({
+    client: options.client,
+    chain: options.chain,
+    account: create2Signer,
+    abi: parseAbi(singletonFactoryAbi),
+    bytecode: singletonFactoryBytecode,
+    deploymentType: "create2",
+  });
+}
 
 /**
  * @internal
@@ -36,37 +73,11 @@ export async function zkDeployCreate2Factory(
     );
   }
 
-  const create2Signer = privateKeyToAccount({
-    client: options.client,
-    privateKey: PUBLISHED_PRIVATE_KEY,
-  });
+  const transaction = await prepareZkDeployCreate2FactoryTransaction(options);
 
-  const valueToSend = toWei("0.01");
-  const balance = await getWalletBalance({
-    address: create2Signer.address,
-    chain: options.chain,
-    client: options.client,
-  });
-
-  if (balance.value < valueToSend) {
-    await sendAndConfirmTransaction({
-      account: options.account,
-      transaction: prepareTransaction({
-        chain: options.chain,
-        client: options.client,
-        to: create2Signer.address,
-        value: valueToSend,
-      }),
-    });
-  }
-
-  await zkDeployContract({
-    client: options.client,
-    chain: options.chain,
-    account: create2Signer,
-    abi: parseAbi(singletonFactoryAbi),
-    bytecode: singletonFactoryBytecode,
-    deploymentType: "create2",
+  await sendAndConfirmTransaction({
+    account: options.account,
+    transaction,
   });
 
   return ZKSYNC_SINGLETON_FACTORY;

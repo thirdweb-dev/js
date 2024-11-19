@@ -22,6 +22,72 @@ import { zkDeployCreate2Factory } from "./zkDeployCreate2Factory.js";
 /**
  * @internal
  */
+export async function prepareZkDeployContractDeterministicTransaction(
+  options: ClientAndChainAndAccount & {
+    abi: Abi;
+    bytecode: Hex;
+    params?: Record<string, unknown>;
+    salt?: string;
+  },
+) {
+  const constructorAbi = options.abi.find(
+    (x) => "type" in x && x.type === "constructor",
+  ) || { inputs: [] };
+  const encodedArgs = encodeAbiParameters(
+    constructorAbi.inputs,
+    normalizeFunctionParams(constructorAbi as AbiConstructor, options.params),
+  );
+  const create2FactoryAddress = await zkDeployCreate2Factory({
+    client: options.client,
+    chain: options.chain,
+    account: options.account,
+  });
+  const bytecode = ensureBytecodePrefix(options.bytecode);
+  const bytecodeHash = uint8ArrayToHex(hashBytecode(bytecode));
+
+  // check if bytecodehash is known
+  const knownCodesStorageContract = getContract({
+    address: KNOWN_CODES_STORAGE,
+    chain: options.chain,
+    client: options.client,
+  });
+  const marker = await readContract({
+    contract: knownCodesStorageContract,
+    method: "function getMarker(bytes32 _hash) view returns (uint256 marker)",
+    params: [bytecodeHash],
+  });
+  // if not known, publish the bytecodehash
+  if (marker !== 1n) {
+    await zkDeployContract({
+      client: options.client,
+      chain: options.chain,
+      account: options.account,
+      abi: options.abi,
+      bytecode,
+      params: options.params,
+    });
+  }
+
+  // deploy with create2 factory
+  const factory = getContract({
+    address: create2FactoryAddress,
+    chain: options.chain,
+    client: options.client,
+    abi: parseAbi(singletonFactoryAbi),
+  });
+
+  const salt = options?.salt ? keccakId(options.salt) : keccakId("thirdweb");
+
+  return prepareContractCall({
+    contract: factory,
+    method: "deploy",
+    params: [salt, bytecodeHash, encodedArgs],
+  });
+}
+
+/**
+ * @internal
+ */
 export async function zkDeployContractDeterministic(
   options: ClientAndChainAndAccount & {
     abi: Abi;
@@ -30,6 +96,7 @@ export async function zkDeployContractDeterministic(
     salt?: string;
   },
 ) {
+  // We have to keep the full address prediction logic in this function to preserve the behavior of just returning the address if the contract is already deployed.
   const constructorAbi = options.abi.find(
     (x) => "type" in x && x.type === "constructor",
   ) || { inputs: [] };
@@ -79,27 +146,12 @@ export async function zkDeployContractDeterministic(
       });
     }
 
-    console.log(
-      `deploying contract via create2 factory at: ${predictedAddress}`,
-    );
-
-    // deploy with create2 factory
-    const factory = getContract({
-      address: create2FactoryAddress,
-      chain: options.chain,
-      client: options.client,
-      abi: parseAbi(singletonFactoryAbi),
-    });
-
-    const salt = options?.salt ? keccakId(options.salt) : keccakId("thirdweb");
+    const transaction =
+      await prepareZkDeployContractDeterministicTransaction(options);
 
     await sendAndConfirmTransaction({
       account: options.account,
-      transaction: prepareContractCall({
-        contract: factory,
-        method: "deploy",
-        params: [salt, bytecodeHash, encodedArgs],
-      }),
+      transaction,
     });
   }
 

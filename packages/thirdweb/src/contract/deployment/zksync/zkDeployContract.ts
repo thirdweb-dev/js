@@ -8,7 +8,41 @@ import { normalizeFunctionParams } from "../../../utils/abi/normalizeFunctionPar
 import { CONTRACT_DEPLOYER_ADDRESS } from "../../../utils/any-evm/zksync/constants.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
-import { zkDeployContractDeterministic } from "./zkDeployDeterministic.js";
+import { prepareZkDeployContractDeterministicTransaction } from "./zkDeployDeterministic.js";
+
+/**
+ * @internal
+ */
+export async function prepareZkDeployContractTransaction(
+  options: ClientAndChainAndAccount & {
+    abi: Abi;
+    bytecode: Hex;
+    params?: Record<string, unknown>;
+    salt?: string;
+    deploymentType?: "create" | "create2";
+  },
+) {
+  const data = encodeDeployData({
+    abi: options.abi,
+    bytecode: options.bytecode,
+    deploymentType: options.deploymentType ?? "create",
+    args: normalizeFunctionParams(
+      options.abi.find((abi) => abi.type === "constructor"),
+      options.params,
+    ),
+  });
+
+  return prepareTransaction({
+    chain: options.chain,
+    client: options.client,
+    to: CONTRACT_DEPLOYER_ADDRESS,
+    data,
+    eip712: {
+      factoryDeps: [options.bytecode],
+      // TODO (zksync): allow passing in a paymaster
+    },
+  });
+}
 
 /**
  * @internal
@@ -22,33 +56,15 @@ export async function zkDeployContract(
     deploymentType?: "create" | "create2";
   },
 ) {
-  if (options.salt !== undefined) {
-    // if a salt is provided, use the deterministic deployer
-    return zkDeployContractDeterministic(options);
-  }
-
-  const data = encodeDeployData({
-    abi: options.abi,
-    bytecode: options.bytecode,
-    deploymentType: options.deploymentType ?? "create",
-    args: normalizeFunctionParams(
-      options.abi.find((abi) => abi.type === "constructor"),
-      options.params,
-    ),
-  });
+  // if a salt is provided, use the deterministic deployer
+  const transaction =
+    options.salt !== undefined
+      ? await prepareZkDeployContractDeterministicTransaction(options)
+      : await prepareZkDeployContractTransaction(options);
 
   const receipt = await sendAndConfirmTransaction({
     account: options.account,
-    transaction: prepareTransaction({
-      chain: options.chain,
-      client: options.client,
-      to: CONTRACT_DEPLOYER_ADDRESS,
-      data,
-      eip712: {
-        factoryDeps: [options.bytecode],
-        // TODO (zksync): allow passing in a paymaster
-      },
-    }),
+    transaction,
   });
 
   const events = parseEventLogs({
