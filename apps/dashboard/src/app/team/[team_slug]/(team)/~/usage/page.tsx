@@ -1,3 +1,5 @@
+import { getTeamBySlug } from "@/api/team";
+import { getTeamSubscriptions } from "@/api/team-subscription";
 import { redirect } from "next/navigation";
 import { getAccount } from "../../../../../account/settings/getAccount";
 import { getAccountUsage } from "./getAccountUsage";
@@ -12,13 +14,23 @@ export default async function Page(props: {
   const account = await getAccount();
 
   if (!account) {
-    return redirect(
+    redirect(
       `/login?next=${encodeURIComponent(`/team/${params.team_slug}/~/usage`)}`,
     );
   }
 
-  const accountUsage = await getAccountUsage();
-  if (!accountUsage) {
+  const team = await getTeamBySlug(params.team_slug);
+
+  if (!team) {
+    redirect("/team");
+  }
+
+  const [accountUsage, subscriptions] = await Promise.all([
+    getAccountUsage(),
+    getTeamSubscriptions(team.slug),
+  ]);
+
+  if (!accountUsage || !subscriptions) {
     return (
       <div className="flex min-h-[350px] items-center justify-center rounded-lg border p-4 text-destructive-text">
         Something went wrong. Please try again later.
@@ -27,9 +39,11 @@ export default async function Page(props: {
   }
 
   return (
-    <div className="flex grow flex-col gap-4">
-      <h1 className="font-semibold text-3xl tracking-tight">Overview</h1>
-      <Usage usage={accountUsage} />
-    </div>
+    <Usage
+      usage={accountUsage}
+      subscriptions={subscriptions}
+      account={account}
+      team={team}
+    />
   );
 }

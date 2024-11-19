@@ -245,6 +245,7 @@ function UsersChartCard({
 
   return (
     <CombinedBarChartCard
+      className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
       title="Users"
       chartConfig={chartConfig}
       activeChart={chartKey}
@@ -383,6 +384,7 @@ async function TotalSponsoredCard({
       isCurrency
       title="Total Sponsored"
       chartConfig={chartConfig}
+      className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
       data={timeSeriesData}
       activeChart={
         (searchParams?.totalSponsored as keyof typeof chartConfig) ?? "mainnet"

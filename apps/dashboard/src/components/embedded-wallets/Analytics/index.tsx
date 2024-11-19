@@ -4,7 +4,7 @@ import {
 } from "components/analytics/date-range-selector";
 import { getInAppWalletUsage } from "data/analytics/wallets/in-app";
 import { RangeSelector } from "../../analytics/range-selector";
-import { InAppWalletUsersChartCard } from "./InAppWalletUsersChartCard";
+import { InAppWalletUsersChartCardUI } from "./InAppWalletUsersChartCard";
 
 export async function InAppWalletAnalytics({
   clientId,
@@ -29,9 +29,11 @@ export async function InAppWalletAnalytics({
       <div className="h-6" />
 
       <div className="flex flex-col gap-4 lg:gap-6">
-        <InAppWalletUsersChartCard
+        <InAppWalletUsersChartCardUI
           inAppWalletStats={stats || []}
           isPending={false}
+          title="Unique Users"
+          description="The total number of active in-app wallet users on your project."
         />
       </div>
     </div>

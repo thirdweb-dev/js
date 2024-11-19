@@ -6,16 +6,12 @@ import { YourFilesSection } from "./your-files";
 
 export default function Page() {
   return (
-    <div>
-      <h1 className="font-semibold text-3xl tracking-tight">Storage</h1>
-      <div className="h-6" />
-      <div className="flex flex-col gap-14">
-        <YourFilesSection />
-        <GatewaySection />
-        <CLISection />
-        <SDKSection />
-        <GuidesSection />
-      </div>
+    <div className="flex flex-col gap-14">
+      <YourFilesSection />
+      <GatewaySection />
+      <CLISection />
+      <SDKSection />
+      <GuidesSection />
     </div>
   );
 }
