@@ -358,6 +358,20 @@ export const sidebar: SideBar = {
                 icon: <CodeIcon />,
               })),
             },
+            {
+              name: "Token",
+              isCollapsible: true,
+              links: [
+                "TokenProvider",
+                "TokenName",
+                "TokenSymbol",
+                "TokenIcon",
+              ].map((name) => ({
+                name,
+                href: `${slug}/${name}`,
+                icon: <CodeIcon />,
+              })),
+            },
           ],
         },
         {

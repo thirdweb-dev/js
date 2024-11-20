@@ -235,3 +235,21 @@ export {
   AccountAvatar,
   type AccountAvatarProps,
 } from "../react/web/ui/prebuilt/Account/avatar.js";
+
+// Token
+export {
+  TokenProvider,
+  type TokenProviderProps,
+} from "../react/web/ui/prebuilt/Token/provider.js";
+export {
+  TokenName,
+  type TokenNameProps,
+} from "../react/web/ui/prebuilt/Token/name.js";
+export {
+  TokenSymbol,
+  type TokenSymbolProps,
+} from "../react/web/ui/prebuilt/Token/symbol.js";
+export {
+  TokenIcon,
+  type TokenIconProps,
+} from "../react/web/ui/prebuilt/Token/icon.js";
