@@ -13,9 +13,10 @@ export type Team = {
   deletedAt?: string;
   bannedAt?: string;
   image?: string;
-  billingPlan: "pro" | "growth" | "free";
+  billingPlan: "pro" | "growth" | "free" | "starter";
   billingStatus: "validPayment" | (string & {}) | null;
   billingEmail: string | null;
+  growthTrialEligible: boolean | null;
 };
 
 export async function getTeamBySlug(slug: string) {

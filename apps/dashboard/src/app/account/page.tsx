@@ -1,7 +1,6 @@
 import { getTeams } from "@/api/team";
 import { getMembers } from "@/api/team-members";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 import { redirect } from "next/navigation";
 import { AccountTeamsUI } from "./overview/AccountTeamsUI";
 import { getAccount } from "./settings/getAccount";
@@ -40,7 +39,6 @@ export default async function Page() {
 
   return (
     <div className="container grow py-8">
-      <BillingAlerts className="mb-10" />
       <AccountTeamsUI
         teamsWithRole={teamsWithRole}
         client={getThirdwebClient()}

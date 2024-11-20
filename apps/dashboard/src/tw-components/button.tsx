@@ -121,7 +121,7 @@ export const LinkButton = reactForwardRef<HTMLButtonElement, LinkButtonProps>(
 
 LinkButton.displayName = "LinkButton";
 
-export interface TrackedLinkButtonProps extends LinkButtonProps {
+interface TrackedLinkButtonProps extends LinkButtonProps {
   category: string;
   label?: string;
 }

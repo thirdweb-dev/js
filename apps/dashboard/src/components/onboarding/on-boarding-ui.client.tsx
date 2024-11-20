@@ -5,10 +5,9 @@ import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Suspense, lazy, useState } from "react";
 import { ChakraProviderSetup } from "../../@/components/ChakraProviderSetup";
 import { useTrack } from "../../hooks/analytics/useTrack";
-import { LazyOnboardingBilling } from "./LazyOnboardingBilling";
-import { OnboardingModal } from "./Modal";
+import { TWModal } from "./Modal";
 import type { OnboardingState } from "./types";
-import { skipBilling } from "./utils";
+import { useSkipOnboarding } from "./useSkipOnboarding";
 
 const OnboardingConfirmEmail = lazy(() => import("./ConfirmEmail"));
 const OnboardingLinkWallet = lazy(() => import("./LinkWallet"));
@@ -24,6 +23,7 @@ function OnboardingUI(props: {
   const trackEvent = useTrack();
   const { account, state, setState, onOpenChange } = props;
   const [updatedEmail, setUpdatedEmail] = useState<string | undefined>();
+  const skipOnboarding = useSkipOnboarding();
 
   const handleSave = (email?: string) => {
     // if account is not ready yet we cannot do anything here
@@ -41,8 +41,9 @@ function OnboardingUI(props: {
         nextStep = "confirmLinking";
         break;
       case "confirming":
+        // after confirming, only show plan if user has not skipped onboarding earlier or trial period has ended
         nextStep =
-          skipBilling(account) || account?.trialPeriodEndedAt
+          account.onboardSkipped || account?.trialPeriodEndedAt
             ? "skipped"
             : "plan";
         break;
@@ -50,9 +51,6 @@ function OnboardingUI(props: {
         nextStep = "skipped";
         break;
       case "plan":
-        nextStep = "billing";
-        break;
-      case "billing":
         nextStep = "skipped";
         break;
       default:
@@ -95,7 +93,7 @@ function OnboardingUI(props: {
 
   return (
     <ChakraProviderSetup>
-      <OnboardingModal
+      <TWModal
         isOpen={!!state}
         wide={state === "plan"}
         onOpenChange={onOpenChange}
@@ -142,17 +140,16 @@ function OnboardingUI(props: {
 
         {state === "plan" && (
           <Suspense fallback={<Loading />}>
-            <OnboardingChoosePlan onSave={handleSave} />
+            <OnboardingChoosePlan
+              skipPlan={() => {
+                setState("skipped");
+                skipOnboarding();
+              }}
+              canTrialGrowth={!account.trialPeriodEndedAt}
+            />
           </Suspense>
         )}
-
-        {state === "billing" && (
-          <LazyOnboardingBilling
-            onSave={handleSave}
-            onCancel={() => setState("skipped")}
-          />
-        )}
-      </OnboardingModal>
+      </TWModal>
     </ChakraProviderSetup>
   );
 }

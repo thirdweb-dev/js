@@ -18,9 +18,6 @@ export enum PageId {
   // thirdweb.com
   OSS = "oss-page",
 
-  // thirdweb..com/pricing
-  Pricing = "pricing-page",
-
   // thirdweb..com/privacy
   Privacy = "privacy-page",
 

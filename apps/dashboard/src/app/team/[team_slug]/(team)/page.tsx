@@ -8,7 +8,6 @@ import { notFound, redirect } from "next/navigation";
 
 import type {
   InAppWalletStats,
-  UserOpStats,
   WalletStats,
   WalletUserStats,
 } from "@/api/analytics";
@@ -19,11 +18,6 @@ import {
   getLastNDaysRange,
 } from "components/analytics/date-range-selector";
 
-import {
-  type ChainMetadata,
-  defineChain,
-  getChainMetadata,
-} from "thirdweb/chains";
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
 import { AnalyticsHeader } from "../../components/Analytics/AnalyticsHeader";
 import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChartCard";
@@ -34,6 +28,7 @@ import { getTeamBySlug } from "@/api/team";
 import { getAccount } from "app/account/settings/getAccount";
 import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
 import { Changelog, type ChangelogItem } from "components/dashboard/Changelog";
+import { TotalSponsoredChartCardUI } from "./_components/TotalSponsoredCard";
 
 // revalidate every 5 minutes
 export const revalidate = 300;
@@ -170,13 +165,12 @@ export default async function TeamOverviewPage(props: {
                 )}
               </div>
               {userOpUsage.length > 0 ? (
-                <div className="">
-                  <TotalSponsoredCard
-                    searchParams={searchParams}
-                    data={userOpUsageTimeSeries}
-                    aggregatedData={userOpUsage}
-                  />
-                </div>
+                <TotalSponsoredChartCardUI
+                  searchParams={searchParams}
+                  data={userOpUsageTimeSeries}
+                  aggregatedData={userOpUsage}
+                  className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
+                />
               ) : (
                 <EmptyStateCard
                   metric="Sponsored Transactions"
@@ -257,6 +251,7 @@ function UsersChartCard({
 
   return (
     <CombinedBarChartCard
+      className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
       title="Users"
       chartConfig={chartConfig}
       activeChart={
@@ -318,100 +313,6 @@ function AuthMethodDistributionCard({ data }: { data: InAppWalletStats[] }) {
         value: uniqueWalletsConnected,
         label: authenticationMethod,
       }))}
-    />
-  );
-}
-
-async function TotalSponsoredCard({
-  data,
-  aggregatedData,
-  searchParams,
-}: {
-  data: UserOpStats[];
-  aggregatedData: UserOpStats[];
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const chains = await Promise.all(
-    data.map(
-      (item) =>
-        // eslint-disable-next-line no-restricted-syntax
-        item.chainId && getChainMetadata(defineChain(Number(item.chainId))),
-    ),
-  ).then((chains) => chains.filter((c) => c) as ChainMetadata[]);
-
-  // Process data to combine by date and chain type
-  const dateMap = new Map<string, { mainnet: number; testnet: number }>();
-  for (const item of data) {
-    const chain = chains.find((c) => c.chainId === Number(item.chainId));
-
-    const existing = dateMap.get(item.date) || { mainnet: 0, testnet: 0 };
-    if (chain?.testnet) {
-      existing.testnet += item.sponsoredUsd;
-    } else {
-      existing.mainnet += item.sponsoredUsd;
-    }
-    dateMap.set(item.date, existing);
-  }
-
-  // Convert to array and sort by date
-  const timeSeriesData = Array.from(dateMap.entries())
-    .map(([date, values]) => ({
-      date,
-      mainnet: values.mainnet,
-      testnet: values.testnet,
-      total: values.mainnet + values.testnet,
-    }))
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-  const processedAggregatedData = {
-    mainnet: aggregatedData
-      .filter(
-        (d) => !chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-    testnet: aggregatedData
-      .filter(
-        (d) => chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-    total: aggregatedData.reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-  };
-
-  const chartConfig = {
-    mainnet: {
-      label: "Mainnet Chains",
-      color: "hsl(var(--chart-1))",
-    },
-    testnet: {
-      label: "Testnet Chains",
-      color: "hsl(var(--chart-2))",
-    },
-    total: {
-      label: "All Chains",
-      color: "hsl(var(--chart-3))",
-    },
-  };
-
-  return (
-    <CombinedBarChartCard
-      isCurrency
-      title="Total Sponsored"
-      chartConfig={chartConfig}
-      data={timeSeriesData}
-      activeChart={
-        (searchParams?.totalSponsored as keyof typeof chartConfig) ?? "mainnet"
-      }
-      queryKey="totalSponsored"
-      existingQueryParams={searchParams}
-      aggregateFn={(_data, key) => processedAggregatedData[key]}
-      // Get the trend from the last two COMPLETE periods
-      trendFn={(data, key) =>
-        data.filter((d) => (d[key] as number) > 0).length >= 3
-          ? ((data[data.length - 2]?.[key] as number) ?? 0) /
-              ((data[data.length - 3]?.[key] as number) ?? 0) -
-            1
-          : undefined
-      }
     />
   );
 }

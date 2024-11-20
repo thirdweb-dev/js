@@ -8,6 +8,8 @@ type CombinedBarChartConfig<K extends string> = {
   [key in K]: { label: string; color: string };
 };
 
+// TODO - don't reload page on tab change -> make this a client component, load all the charts at once on server and switch between them on client
+
 export function CombinedBarChartCard<
   T extends string,
   K extends Exclude<T, "date">,
@@ -27,6 +29,7 @@ export function CombinedBarChartCard<
         1
       : undefined,
   existingQueryParams,
+  className,
 }: {
   title?: string;
   chartConfig: CombinedBarChartConfig<K>;
@@ -37,15 +40,17 @@ export function CombinedBarChartCard<
   aggregateFn?: (d: typeof data, key: K) => number | undefined;
   trendFn?: (d: typeof data, key: K) => number | undefined;
   existingQueryParams?: { [key: string]: string | string[] | undefined };
+  className?: string;
 }) {
   return (
-    <Card className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0">
+    <Card className={className}>
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0">
         {title && (
           <div className="flex flex-1 flex-col justify-center gap-1 p-6">
             <CardTitle className="font-semibold text-lg">{title}</CardTitle>
           </div>
         )}
+
         <div className="max-md:no-scrollbar overflow-x-auto border-t">
           <div className="flex flex-nowrap">
             {Object.keys(chartConfig).map((chart: string) => {
