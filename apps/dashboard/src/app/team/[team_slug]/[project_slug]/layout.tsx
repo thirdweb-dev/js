@@ -1,5 +1,5 @@
 import { getProjects } from "@/api/projects";
-import { getTeams } from "@/api/team";
+import { getTeamNebulaWaitList, getTeams } from "@/api/team";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { notFound, redirect } from "next/navigation";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
@@ -34,6 +34,9 @@ export default async function TeamLayout(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
+  const isOnNebulaWaitList = (await getTeamNebulaWaitList(team.slug))
+    ?.onWaitlist;
+
   return (
     <div className="flex grow flex-col">
       <div className="bg-muted/50">
@@ -57,6 +60,18 @@ export default async function TeamLayout(props: {
             {
               path: `/team/${params.team_slug}/${params.project_slug}/contracts`,
               name: "Contracts",
+            },
+            ...(isOnNebulaWaitList
+              ? [
+                  {
+                    path: `/team/${params.team_slug}/${params.project_slug}/nebula`,
+                    name: "Nebula",
+                  },
+                ]
+              : []),
+            {
+              path: `/team/${params.team_slug}/${params.project_slug}/insight`,
+              name: "Insight",
             },
             {
               path: `/team/${params.team_slug}/${params.project_slug}/settings`,

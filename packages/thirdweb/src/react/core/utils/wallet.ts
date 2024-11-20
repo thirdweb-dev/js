@@ -77,7 +77,8 @@ export function useEnsAvatar(options: {
 }
 
 /**
- * @internal
+ * @internal This hook is only being used in our react-native package
+ * It can be removed once we migrate the RN UI code to our headless components (AccountProvider, AccountName etc.)
  */
 export function useConnectedWalletDetails(
   client: ThirdwebClient,

@@ -48,7 +48,7 @@ const testAddress1 = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 const claimCondition = {
   availableSupply: BigInt(100),
   maxMintPerWallet: BigInt(10),
-  pricePerUnit: 10n,
+  pricePerUnit: 10000000000000000000n,
   // we get checksummed NATIVE_TOKEN_ADDRESS from claim condition query for native token
   currency: checksumAddress(NATIVE_TOKEN_ADDRESS),
   // last week
@@ -64,6 +64,8 @@ function Component() {
   const [isClaimConditionLoading, setIsClaimConditionLoading] = useState(false);
   const [isPrimarySaleRecipientLoading, setIsPrimarySaleRecipientLoading] =
     useState(false);
+  const [tokenId, setTokenId] = useState("");
+  const [noClaimConditionSet, setNoClaimConditionSet] = useState(false);
 
   async function updatePrimarySaleRecipientStub(
     values: PrimarySaleRecipientFormValues,
@@ -80,12 +82,6 @@ function Component() {
   async function mintStub(values: MintFormValues) {
     console.log("submitting", values);
     await new Promise((resolve) => setTimeout(resolve, 1000));
-  }
-
-  async function getClaimConditionErc1155Stub() {
-    console.log("claim condition in stub: ", claimCondition);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    return claimCondition;
   }
 
   const removeMutation = useMutation({
@@ -142,6 +138,13 @@ function Component() {
               id="isPrimarySaleRecipientLoading"
               label="Primary Sale Recipient Section Loading"
             />
+
+            <CheckboxWithLabel
+              value={noClaimConditionSet}
+              onChange={setNoClaimConditionSet}
+              id="noClaimConditionSet"
+              label="No Claim Condition Set"
+            />
           </div>
 
           <ClaimableModuleUI
@@ -156,14 +159,16 @@ function Component() {
               setPrimarySaleRecipient: updatePrimarySaleRecipientStub,
             }}
             claimConditionSection={{
-              data: isClaimConditionLoading
-                ? undefined
-                : {
-                    claimCondition,
-                    tokenDecimals: 18,
-                  },
+              data:
+                isClaimConditionLoading || (!isErc721 && !tokenId)
+                  ? undefined
+                  : {
+                      claimCondition,
+                      tokenDecimals: 18,
+                    },
+              isLoading: false,
               setClaimCondition: updateClaimConditionStub,
-              getClaimConditionErc1155: getClaimConditionErc1155Stub,
+              tokenId,
             }}
             mintSection={{
               mint: mintStub,
@@ -175,6 +180,9 @@ function Component() {
             isOwnerAccount={isOwner}
             isErc721={isErc721}
             contractChainId={1}
+            setTokenId={setTokenId}
+            isValidTokenId={true}
+            noClaimConditionSet={noClaimConditionSet}
           />
 
           <Toaster richColors />

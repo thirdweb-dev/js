@@ -25,10 +25,6 @@ export const toSize = (value: number | bigint, defaultUnit?: string) => {
   return formatted;
 };
 
-export const toNumber = (value: number) => {
-  return new Intl.NumberFormat(undefined).format(value);
-};
-
 export const toPercent = (num1: number, num2: number) => {
   return Math.round(((num1 / num2) * 100 * 10) / 10);
 };

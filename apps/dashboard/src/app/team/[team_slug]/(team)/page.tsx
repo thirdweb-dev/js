@@ -8,7 +8,6 @@ import { notFound, redirect } from "next/navigation";
 
 import type {
   InAppWalletStats,
-  UserOpStats,
   WalletStats,
   WalletUserStats,
 } from "@/api/analytics";
@@ -19,11 +18,6 @@ import {
   getLastNDaysRange,
 } from "components/analytics/date-range-selector";
 
-import {
-  type ChainMetadata,
-  defineChain,
-  getChainMetadata,
-} from "thirdweb/chains";
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
 import { AnalyticsHeader } from "../../components/Analytics/AnalyticsHeader";
 import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChartCard";
@@ -31,22 +25,28 @@ import { EmptyState } from "../../components/Analytics/EmptyState";
 import { PieChartCard } from "../../components/Analytics/PieChartCard";
 
 import { getTeamBySlug } from "@/api/team";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { getAccount } from "app/account/settings/getAccount";
 import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
 import { Changelog, type ChangelogItem } from "components/dashboard/Changelog";
+import { Suspense } from "react";
+import { TotalSponsoredChartCardUI } from "./_components/TotalSponsoredCard";
 
 // revalidate every 5 minutes
 export const revalidate = 300;
 
+type SearchParams = {
+  usersChart?: string;
+  from?: string;
+  to?: string;
+  type?: string;
+  interval?: string;
+};
+
 export default async function TeamOverviewPage(props: {
-  params: { team_slug: string };
-  searchParams: {
-    usersChart?: string;
-    from?: string;
-    to?: string;
-    type?: string;
-    interval?: string;
-  };
+  params: Promise<{ team_slug: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const changelog = await getChangelog();
   const [params, searchParams] = await Promise.all([
@@ -71,6 +71,43 @@ export default async function TeamOverviewPage(props: {
   if (!account) {
     redirect("/login");
   }
+
+  return (
+    <div className="flex grow flex-col">
+      <div className="border-b">
+        <AnalyticsHeader
+          title="Team Overview"
+          interval={interval}
+          range={range}
+        />
+      </div>
+      <div className="flex grow flex-col justify-between gap-10 md:container md:pt-8 md:pb-16 xl:flex-row">
+        <Suspense fallback={<GenericLoadingPage />}>
+          <OverviewPageContent
+            account={account}
+            range={range}
+            interval={interval}
+            searchParams={searchParams}
+          />
+        </Suspense>
+        <div className="shrink-0 max-md:container max-xl:hidden lg:w-[320px]">
+          <h2 className="mb-4 font-semibold text-lg tracking-tight">
+            Latest changes
+          </h2>
+          <Changelog changelog={changelog} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function OverviewPageContent(props: {
+  account: Account;
+  range: Range;
+  interval: "day" | "week";
+  searchParams: SearchParams;
+}) {
+  const { account, range, interval, searchParams } = props;
 
   const [
     walletConnections,
@@ -121,78 +158,56 @@ export default async function TeamOverviewPage(props: {
     inAppWalletUsage.length === 0 &&
     userOpUsage.length === 0;
 
+  if (isEmpty) {
+    return <EmptyState />;
+  }
+
   return (
-    <div>
-      <div className="w-full border-border-800 border-b px-6 dark:bg-muted/50">
-        <AnalyticsHeader
-          title="Team Overview"
-          interval={interval}
-          range={range}
+    <div className="flex grow flex-col gap-6">
+      {walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) ? (
+        <div className="">
+          <UsersChartCard
+            userStats={walletUserStatsTimeSeries}
+            searchParams={searchParams}
+          />
+        </div>
+      ) : (
+        <EmptyStateCard
+          metric="Connect"
+          link="https://portal.thirdweb.com/connect/quickstart"
         />
+      )}
+      <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
+        {walletConnections.length > 0 ? (
+          <WalletDistributionCard data={walletConnections} />
+        ) : (
+          <EmptyStateCard
+            metric="Connect"
+            link="https://portal.thirdweb.com/connect/quickstart"
+          />
+        )}
+        {inAppWalletUsage.length > 0 ? (
+          <AuthMethodDistributionCard data={inAppWalletUsage} />
+        ) : (
+          <EmptyStateCard
+            metric="In-App Wallets"
+            link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
+          />
+        )}
       </div>
-      <div className="flex flex-col justify-between gap-16 md:container md:pt-8 md:pb-16 xl:flex-row">
-        <div className="grow">
-          {isEmpty ? (
-            <div className="container p-6">
-              <EmptyState />
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) ? (
-                <div className="">
-                  <UsersChartCard
-                    userStats={walletUserStatsTimeSeries}
-                    searchParams={searchParams}
-                  />
-                </div>
-              ) : (
-                <EmptyStateCard
-                  metric="Connect"
-                  link="https://portal.thirdweb.com/connect/quickstart"
-                />
-              )}
-              <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
-                {walletConnections.length > 0 ? (
-                  <WalletDistributionCard data={walletConnections} />
-                ) : (
-                  <EmptyStateCard
-                    metric="Connect"
-                    link="https://portal.thirdweb.com/connect/quickstart"
-                  />
-                )}
-                {inAppWalletUsage.length > 0 ? (
-                  <AuthMethodDistributionCard data={inAppWalletUsage} />
-                ) : (
-                  <EmptyStateCard
-                    metric="In-App Wallets"
-                    link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
-                  />
-                )}
-              </div>
-              {userOpUsage.length > 0 ? (
-                <div className="">
-                  <TotalSponsoredCard
-                    searchParams={searchParams}
-                    data={userOpUsageTimeSeries}
-                    aggregatedData={userOpUsage}
-                  />
-                </div>
-              ) : (
-                <EmptyStateCard
-                  metric="Sponsored Transactions"
-                  link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
-                />
-              )}
-            </div>
-          )}
-        </div>
-        <div className="shrink-0 max-md:container max-xl:hidden lg:w-[320px]">
-          <h2 className="mb-4 font-semibold text-lg tracking-tight">
-            Latest changes
-          </h2>
-          <Changelog changelog={changelog} />
-        </div>
-      </div>
+      {userOpUsage.length > 0 ? (
+        <TotalSponsoredChartCardUI
+          searchParams={searchParams}
+          data={userOpUsageTimeSeries}
+          aggregatedData={userOpUsage}
+          className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
+        />
+      ) : (
+        <EmptyStateCard
+          metric="Sponsored Transactions"
+          link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
+        />
+      )}
     </div>
   );
 }
@@ -257,6 +272,7 @@ function UsersChartCard({
 
   return (
     <CombinedBarChartCard
+      className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
       title="Users"
       chartConfig={chartConfig}
       activeChart={
@@ -318,100 +334,6 @@ function AuthMethodDistributionCard({ data }: { data: InAppWalletStats[] }) {
         value: uniqueWalletsConnected,
         label: authenticationMethod,
       }))}
-    />
-  );
-}
-
-async function TotalSponsoredCard({
-  data,
-  aggregatedData,
-  searchParams,
-}: {
-  data: UserOpStats[];
-  aggregatedData: UserOpStats[];
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const chains = await Promise.all(
-    data.map(
-      (item) =>
-        // eslint-disable-next-line no-restricted-syntax
-        item.chainId && getChainMetadata(defineChain(Number(item.chainId))),
-    ),
-  ).then((chains) => chains.filter((c) => c) as ChainMetadata[]);
-
-  // Process data to combine by date and chain type
-  const dateMap = new Map<string, { mainnet: number; testnet: number }>();
-  for (const item of data) {
-    const chain = chains.find((c) => c.chainId === Number(item.chainId));
-
-    const existing = dateMap.get(item.date) || { mainnet: 0, testnet: 0 };
-    if (chain?.testnet) {
-      existing.testnet += item.sponsoredUsd;
-    } else {
-      existing.mainnet += item.sponsoredUsd;
-    }
-    dateMap.set(item.date, existing);
-  }
-
-  // Convert to array and sort by date
-  const timeSeriesData = Array.from(dateMap.entries())
-    .map(([date, values]) => ({
-      date,
-      mainnet: values.mainnet,
-      testnet: values.testnet,
-      total: values.mainnet + values.testnet,
-    }))
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-  const processedAggregatedData = {
-    mainnet: aggregatedData
-      .filter(
-        (d) => !chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-    testnet: aggregatedData
-      .filter(
-        (d) => chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-    total: aggregatedData.reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-  };
-
-  const chartConfig = {
-    mainnet: {
-      label: "Mainnet Chains",
-      color: "hsl(var(--chart-1))",
-    },
-    testnet: {
-      label: "Testnet Chains",
-      color: "hsl(var(--chart-2))",
-    },
-    total: {
-      label: "All Chains",
-      color: "hsl(var(--chart-3))",
-    },
-  };
-
-  return (
-    <CombinedBarChartCard
-      isCurrency
-      title="Total Sponsored"
-      chartConfig={chartConfig}
-      data={timeSeriesData}
-      activeChart={
-        (searchParams?.totalSponsored as keyof typeof chartConfig) ?? "mainnet"
-      }
-      queryKey="totalSponsored"
-      existingQueryParams={searchParams}
-      aggregateFn={(_data, key) => processedAggregatedData[key]}
-      // Get the trend from the last two COMPLETE periods
-      trendFn={(data, key) =>
-        data.filter((d) => (d[key] as number) > 0).length >= 3
-          ? ((data[data.length - 2]?.[key] as number) ?? 0) /
-              ((data[data.length - 3]?.[key] as number) ?? 0) -
-            1
-          : undefined
-      }
     />
   );
 }

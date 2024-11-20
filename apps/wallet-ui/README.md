@@ -1,1 +1,1 @@
-# thirdweb Wallet UI
+# thirdweb Ecosystem Portal

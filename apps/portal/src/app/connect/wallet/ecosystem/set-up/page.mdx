@@ -1,0 +1,99 @@
+import { Callout, DocImage, createMetadata, Steps, Step } from "@doc";
+import CreateEcosystemWallet from "./assets/ecosystem-info.png";
+import EcosystemWalletPermissions from "./assets/ecosystem-wallet-permissions.png";
+import AddAPartner from "./assets/add-partner.png";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Ecosystem Wallet",
+		icon: "wallets",
+	},
+	title: "Get Started - Ecosystem Wallet | thirdweb",
+	description: "Ecosystem Wallet - Own your own web3 identity stack",
+});
+
+# Get Started
+
+Learn how to spin up your first ecosystem wallet, brand your wallet, and integrate your first ecosystem partner.
+
+<Steps>
+<Step title='Get your Client ID'>
+On the thirdweb dashboard, navigate to settings to create an API Key to obtain a Client ID.
+</Step>
+<Step title='Deploy Your Instance'>
+
+Visit the [Ecosystem Wallets dashboard](https://thirdweb.com/team/~/~/ecosystem/create) and enter the name of your ecosystem and choose your logo.
+
+<Callout variant="info">
+	Your ecosystem name is immutable and will appear wherever your wallet is
+	available, so choose carefully.
+</Callout>
+
+When your ecosystem wallet is deployed, you'll receive an **Ecosystem ID** derived from your ecosystem name. You will use this ID to specify your wallet during integration (see Step 4 below).
+
+<DocImage src={CreateEcosystemWallet} />
+</Step>
+
+<Step title='Set Ecosystem Permissions'>
+
+There are two permission options depending on whether you’d like an open or exclusive ecosystem wallet.
+
+<DocImage src={EcosystemWalletPermissions} />
+
+#### Option 1: Anyone Permissions
+
+If you want to allow anyone to integrate your ecosystem wallet, no other changes are required. You can protect your ecosystem against malicious actors by adding unwanted domains to your blocklist.
+
+#### Option 2: Allowlist Permissions
+
+If you’re looking to create an ecosystem wallet for select partners, you can head to the Ecosystem Wallet dashboard, navigate to Permissions, and select “Allowlist”. All apps and games, added to your ecosystem, including your own app, will receive a unique Partner ID.
+
+**Add Applications to Your Allowlist**
+
+For each application on your allowlist, you'll need to specify a name, a list of allowed domains, wallet signing settings, and an optional bundle ID (for mobile applications). The list of domains will determine where a partner will be able to display your ecosystem as a login option. Once a partner is added, a **Partner ID** will be generated.
+
+<Callout title="Adding Your Own App as a Partner" variant="info">
+	You'll need to add your own domains and bundle IDs to your allowlist in order
+	to login through your ecosystem wallet in your app.
+</Callout>
+
+<DocImage src={AddAPartner} />
+</Step>
+
+<Step title='Integrating Your Ecosystem Wallet'>
+
+Once you've set up your ecosystem wallet, you can specify it using your **Ecosystem ID**.
+
+```ts
+import { ecosystemWallet } from "thirdweb/wallets";
+
+// Create a wallet for a non-gated "Anyone" ecosystem
+const wallet = ecosystemWallet("ecosystem.your-ecosystem-id");
+```
+
+If you set your ecosystem wallet to Allowlist, you'll also need to specify your **Partner ID**.
+
+```ts
+import { ecosystemWallet } from "thirdweb/wallets";
+
+// Create a wallet for "Allowlist" ecosystems restricted to partners
+const wallet = ecosystemWallet("ecosystem.your-ecosystem-id", {
+	partnerId: "...",
+});
+```
+
+Once you've instantiated your ecosystem wallet, you can add it to your Sign In flow.
+
+```tsx
+<ConnectButton
+	client={THIRDWEB_CLIENT}
+	wallets={[wallet]} // Pass a non-gated or restricted wallet to the ConnectButton
+	{...props}
+/>
+```
+
+You and your partners can integrate your ecosystem wallet either as a full login system or as a single login option. You can read more in our [integrating partners guide](/connect/ecosystems/integrating-partners).
+
+</Step>
+
+</Steps>

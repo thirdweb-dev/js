@@ -109,6 +109,22 @@ export const sidebar: SideBar = {
               href: `${slug}/${name}`,
               icon: <CodeIcon />,
             })),
+            {
+              name: "Account",
+              isCollapsible: true,
+              links: [
+                "AccountProvider",
+                "AccountAddress",
+                "AccountAvatar",
+                "AccountName",
+                "AccountBlobbie",
+                "AccountBalance",
+              ].map((name) => ({
+                name,
+                href: `${slug}/${name}`,
+                icon: <CodeIcon />,
+              })),
+            },
           ],
         },
         {
@@ -320,13 +336,43 @@ export const sidebar: SideBar = {
       links: [
         {
           name: "UI Components",
-          links: ["ClaimButton", "TransactionButton", "MediaRenderer"].map(
-            (name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            }),
-          ),
+          links: [
+            ...["ClaimButton", "TransactionButton", "MediaRenderer"].map(
+              (name) => ({
+                name,
+                href: `${slug}/${name}`,
+                icon: <CodeIcon />,
+              }),
+            ),
+            {
+              name: "NFT",
+              isCollapsible: true,
+              links: [
+                "NFTProvider",
+                "NFTMedia",
+                "NFTName",
+                "NFTDescription",
+              ].map((name) => ({
+                name,
+                href: `${slug}/${name}`,
+                icon: <CodeIcon />,
+              })),
+            },
+            {
+              name: "Token",
+              isCollapsible: true,
+              links: [
+                "TokenProvider",
+                "TokenName",
+                "TokenSymbol",
+                "TokenIcon",
+              ].map((name) => ({
+                name,
+                href: `${slug}/${name}`,
+                icon: <CodeIcon />,
+              })),
+            },
+          ],
         },
         {
           name: "Reading State",

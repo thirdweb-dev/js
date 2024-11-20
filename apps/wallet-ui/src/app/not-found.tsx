@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+
 export default function NotFound() {
   return (
     <div className="flex h-screen w-screen items-center justify-center">

@@ -1,3 +1,5 @@
+import { sluggerContext } from "@/contexts/slugger";
+import invariant from "tiny-invariant";
 import type { FunctionSignature } from "typedoc-better-json";
 import { CodeBlock, InlineCode } from "../../../../components/Document/Code";
 import { DocLink } from "../../../../components/Document/DocLink";
@@ -12,6 +14,9 @@ export function TypedocSummary(props: {
   summary: NonNullable<FunctionSignature["summary"]>;
   className?: string;
 }) {
+  const slugger = sluggerContext.get();
+  invariant(slugger, "slugger context not set");
+
   return (
     <>
       {props.summary.map((s) => {
@@ -74,7 +79,10 @@ export function TypedocSummary(props: {
 
           case "heading": {
             return (
-              <Heading level={s.depth} id="">
+              <Heading
+                level={s.depth}
+                id={slugger.slug(s.children[0]?.value, false)}
+              >
                 <TypedocSummary summary={s.children} />
               </Heading>
             );

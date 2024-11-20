@@ -61,6 +61,7 @@ export type ModalState =
  *
  * Refer to the [`ConnectEmbedProps`](https://portal.thirdweb.com/references/typescript/v5/ConnectEmbedProps) type for more details
  * @component
+ * @walletConnection
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const theme = parseTheme(props.theme);

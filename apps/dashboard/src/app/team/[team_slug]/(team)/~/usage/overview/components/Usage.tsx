@@ -1,29 +1,34 @@
-import type { UsageBillableByService } from "@3rdweb-sdk/react/hooks/useApi";
-import { useMemo } from "react";
-import { toNumber, toPercent, toSize } from "utils/number";
+import { getInAppWalletUsage, getUserOpUsage } from "@/api/analytics";
+import type { Team } from "@/api/team";
+import type { TeamSubscription } from "@/api/team-subscription";
+import { Button } from "@/components/ui/button";
+import type {
+  Account,
+  UsageBillableByService,
+} from "@3rdweb-sdk/react/hooks/useApi";
+import { InAppWalletUsersChartCardUI } from "components/embedded-wallets/Analytics/InAppWalletUsersChartCard";
+import { subMonths } from "date-fns";
+import Link from "next/link";
+import { Suspense, useMemo } from "react";
+import { toPercent, toSize } from "utils/number";
+import { TotalSponsoredChartCardUI } from "../../../../_components/TotalSponsoredCard";
 import { UsageCard } from "./UsageCard";
 
-interface UsageProps {
+type UsageProps = {
+  // TODO - remove when we have all the data available from team
   usage: UsageBillableByService;
-}
+  subscriptions: TeamSubscription[];
+  account: Account;
+  team: Team;
+};
 
-export const Usage: React.FC<UsageProps> = ({ usage: usageData }) => {
-  const bundlerMetrics = useMemo(() => {
-    const metric = {
-      title: "Total sponsored fees",
-      total: 0,
-    };
-
-    if (!usageData) {
-      return metric;
-    }
-
-    return {
-      title: metric.title,
-      total: usageData.billableUsd.bundler,
-    };
-  }, [usageData]);
-
+export const Usage: React.FC<UsageProps> = ({
+  usage: usageData,
+  subscriptions,
+  account,
+  team,
+}) => {
+  // TODO - get this from team instead of account
   const storageMetrics = useMemo(() => {
     if (!usageData) {
       return {};
@@ -34,47 +39,20 @@ export const Usage: React.FC<UsageProps> = ({ usage: usageData }) => {
     const percent = toPercent(consumedBytes, limitBytes);
 
     return {
-      total: `${toSize(consumedBytes, "MB")} / ${toSize(
-        limitBytes,
-      )} (${percent}%)`,
+      total: `${toSize(Math.min(consumedBytes, limitBytes), "MB")} of ${toSize(limitBytes)} included storage used`,
       progress: percent,
-      ...(usageData.billableUsd.storage > 0
-        ? {
-            overage: usageData.billableUsd.storage,
-          }
-        : {}),
+      totalUsage: `Total Usage: ${toSize(consumedBytes, "MB")}`,
     };
   }, [usageData]);
 
-  const walletsMetrics = useMemo(() => {
-    if (!usageData) {
-      return {};
-    }
-
-    const numOfWallets = usageData.usage.embeddedWallets.countWalletAddresses;
-    const limitWallets = usageData.limits.embeddedWallets;
-    const percent = toPercent(numOfWallets, limitWallets);
-
-    return {
-      total: `${toNumber(numOfWallets)} / ${toNumber(
-        limitWallets,
-      )} (${percent}%)`,
-      progress: percent,
-      ...(usageData.billableUsd.embeddedWallets > 0
-        ? {
-            overage: usageData.billableUsd.embeddedWallets,
-          }
-        : {}),
-    };
-  }, [usageData]);
-
+  // TODO - get this from team instead of account
   const rpcMetrics = useMemo(() => {
     if (!usageData) {
       return {};
     }
 
     return {
-      title: "Unlimited requests",
+      title: "Unlimited Requests",
       total: (
         <span className="text-muted-foreground">
           {usageData.rateLimits.rpc} Requests Per Second
@@ -89,7 +67,7 @@ export const Usage: React.FC<UsageProps> = ({ usage: usageData }) => {
     }
 
     return {
-      title: "Unlimited requests",
+      title: "Unlimited Requests",
       total: (
         <span className="text-muted-foreground">
           {usageData.rateLimits.storage} Requests Per Second
@@ -98,35 +76,177 @@ export const Usage: React.FC<UsageProps> = ({ usage: usageData }) => {
     };
   }, [usageData]);
 
+  const usageSub = subscriptions.find((sub) => sub.type === "USAGE");
+
+  // we don't have `usageSub` for free plan - so we use "1 month ago" as the period
+  // even free plan can have usage data
+
+  const currentPeriodStart = usageSub?.currentPeriodStart
+    ? new Date(usageSub.currentPeriodStart)
+    : subMonths(new Date(), 1);
+
+  const currentPeriodEnd = usageSub?.currentPeriodEnd
+    ? new Date(usageSub.currentPeriodEnd)
+    : new Date();
+
   return (
-    <div className="flex grow flex-col gap-12">
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-        <UsageCard
-          {...rpcMetrics}
-          name="RPC"
-          tooltip="RPC usage is calculated by requests per second."
-        />
-        <UsageCard
-          {...gatewayMetrics}
-          name="Storage Gateway"
-          tooltip="Storage gateway usage is calculated by GB per file size."
-        />
-        <UsageCard
-          {...storageMetrics}
-          name="Storage Pinning"
-          tooltip="Storage pinning usage is calculated by GB per file size."
-        />
-        <UsageCard
-          {...walletsMetrics}
-          name="Email Wallets"
-          tooltip="Email wallet (with managed recovery code) usage is calculated by monthly active wallets (i.e. active as defined by at least 1 user log-in via email or social within the billing period month)."
-        />
-        <UsageCard
-          {...bundlerMetrics}
-          name="Account Abstraction"
-          tooltip="(Gasless, Paymaster, Bundler) usage is calculated by sponsored network fees."
-        />
-      </div>
+    <div className="flex grow flex-col gap-8">
+      <InAppWalletUsersChartCard
+        accountId={account.id}
+        from={currentPeriodStart}
+        to={currentPeriodEnd}
+      />
+
+      <TotalSponsoredCard
+        accountId={account.id}
+        from={currentPeriodStart}
+        to={currentPeriodEnd}
+      />
+
+      <UsageCard
+        {...rpcMetrics}
+        name="RPC"
+        description="Amount of RPC requests allowed per second in your plan"
+      />
+
+      <UsageCard
+        {...gatewayMetrics}
+        name="Storage Gateway"
+        description="Amount of storage gateway requests allowed per second in your plan"
+      />
+
+      <UsageCard
+        {...storageMetrics}
+        name="Storage Pinning"
+        description="Amount of IPFS Storage pinning allowed in your plan"
+      >
+        <Button
+          variant="outline"
+          className="top-6 right-6 mt-6 md:absolute md:mt-0"
+          asChild
+          size="sm"
+        >
+          <Link href={`/team/${team.slug}/~/usage/storage`}>
+            View Pinned Files
+          </Link>
+        </Button>
+      </UsageCard>
     </div>
   );
 };
+
+type ChartCardProps = {
+  from: Date;
+  to: Date;
+  accountId: string;
+};
+
+function InAppWalletUsersChartCard(props: ChartCardProps) {
+  const title = "In-App Wallets";
+  const description =
+    "Number of unique users interacting with your apps using in-app wallets every day";
+
+  return (
+    <Suspense
+      fallback={
+        <InAppWalletUsersChartCardUI
+          inAppWalletStats={[]}
+          isPending={true}
+          title={title}
+          description={description}
+        />
+      }
+    >
+      <AsyncInAppWalletUsersChartCard
+        {...props}
+        title={title}
+        description={description}
+      />
+    </Suspense>
+  );
+}
+
+async function AsyncInAppWalletUsersChartCard(
+  props: ChartCardProps & {
+    title: string;
+    description: string;
+  },
+) {
+  const inAppWalletUsage = await getInAppWalletUsage({
+    period: "day",
+    from: props.from,
+    to: props.to,
+    accountId: props.accountId,
+  }).catch(() => null);
+
+  return (
+    <InAppWalletUsersChartCardUI
+      inAppWalletStats={inAppWalletUsage || []}
+      isPending={false}
+      title={props.title}
+      description={props.description}
+    />
+  );
+}
+
+function TotalSponsoredCard(props: ChartCardProps) {
+  const title = "Total Sponsored";
+  const description =
+    "Total amount of USD sponsored across all mainnets with account abstraction";
+
+  return (
+    <Suspense
+      fallback={
+        <TotalSponsoredChartCardUI
+          data={[]}
+          aggregatedData={[]}
+          className="bg-muted/50"
+          onlyMainnet
+          description={description}
+          title={title}
+        />
+      }
+    >
+      <AsyncTotalSponsoredChartCard
+        {...props}
+        title={title}
+        description={description}
+      />
+    </Suspense>
+  );
+}
+
+async function AsyncTotalSponsoredChartCard(
+  props: ChartCardProps & {
+    description: string;
+    title: string;
+  },
+) {
+  const { accountId, from, to } = props;
+  const [userOpUsageTimeSeries, userOpUsage] = await Promise.all([
+    // User operations usage
+    getUserOpUsage({
+      accountId: accountId,
+      from: from,
+      to: to,
+      period: "week",
+    }),
+    getUserOpUsage({
+      accountId: accountId,
+      from: from,
+      to: to,
+      period: "all",
+    }),
+  ]);
+
+  return (
+    <TotalSponsoredChartCardUI
+      data={userOpUsageTimeSeries}
+      aggregatedData={userOpUsage}
+      className="bg-muted/50"
+      onlyMainnet
+      description={props.description}
+      title={props.title}
+    />
+  );
+}

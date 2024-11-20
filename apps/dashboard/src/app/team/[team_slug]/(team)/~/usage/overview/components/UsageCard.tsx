@@ -1,6 +1,3 @@
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { CircleHelpIcon } from "lucide-react";
 import type { JSX } from "react";
 import { toUSD } from "utils/number";
 
@@ -10,7 +7,9 @@ interface UsageCardProps {
   title?: string;
   total?: string | number | JSX.Element;
   progress?: number;
-  tooltip?: string;
+  description: string;
+  children?: JSX.Element;
+  totalUsage?: string;
 }
 
 export const UsageCard: React.FC<UsageCardProps> = ({
@@ -19,29 +18,28 @@ export const UsageCard: React.FC<UsageCardProps> = ({
   total,
   overage,
   progress,
-  tooltip,
+  description,
+  children,
+  totalUsage,
 }) => {
   return (
-    <div className="relative flex min-h-[150px] flex-col rounded-lg border border-border bg-muted/50 p-4">
-      <h3 className="pr-10 font-medium text-lg">{name}</h3>
-      {tooltip && (
-        <ToolTipLabel label={tooltip}>
-          <CircleHelpIcon className="absolute top-4 right-4 size-5 text-muted-foreground hover:text-foreground" />
-        </ToolTipLabel>
-      )}
+    <div className="relative flex min-h-[190px] flex-col rounded-lg border border-border bg-muted/50 p-4 lg:p-6">
+      <h3 className="mb-1 font-semibold text-xl tracking-tight">{name}</h3>
+      <p className="text-muted-foreground"> {description}</p>
 
       <div className="h-6" />
 
       <div className="mt-auto flex flex-col gap-1.5">
-        {title && <p className="text-foreground text-sm">{title}</p>}
+        {title && <p className="text-foreground">{title}</p>}
 
         {total !== undefined && (
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground">
             {typeof total === "number" ? toUSD(total) : total}
           </p>
         )}
 
         {progress !== undefined && <Progress value={progress} />}
+        {totalUsage && <p className="mt-2 text-foreground">{totalUsage}</p>}
 
         {overage && (
           <p className="mt-2 text-muted-foreground text-sm">
@@ -50,6 +48,8 @@ export const UsageCard: React.FC<UsageCardProps> = ({
           </p>
         )}
       </div>
+
+      {children}
     </div>
   );
 };
@@ -60,14 +60,7 @@ function Progress(props: {
   return (
     <div className="rounded-full bg-muted">
       <div
-        className={cn(
-          "h-2 rounded-full",
-          props.value > 90
-            ? "bg-red-600"
-            : props.value > 50
-              ? "bg-yellow-600"
-              : "bg-blue-600",
-        )}
+        className={"h-2 rounded-full bg-blue-600"}
         style={{
           width: `${Math.min(props.value, 100)}%`,
         }}

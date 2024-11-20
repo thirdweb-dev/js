@@ -4,7 +4,11 @@ import TypeDoc from "typedoc";
 const jsonOut = "typedoc/documentation.json";
 
 const app = await TypeDoc.Application.bootstrapWithPlugins({
-  entryPoints: ["src/exports/**/*.ts", "src/extensions/modules/**/index.ts"],
+  entryPoints: [
+    "src/exports/**/*.ts",
+    "src/extensions/modules/**/index.ts",
+    "src/react/web/ui/prebuilt/NFT/index.ts",
+  ],
   exclude: [
     "src/exports/*.native.ts",
     "src/exports/**/*.native.ts",

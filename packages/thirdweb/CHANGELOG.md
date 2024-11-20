@@ -1,5 +1,19 @@
 # thirdweb
 
+## 5.69.0
+
+### Minor Changes
+
+- [#5415](https://github.com/thirdweb-dev/js/pull/5415) [`7b21f1b`](https://github.com/thirdweb-dev/js/commit/7b21f1b632d65a2bc9bc38656e18d220c6201ed9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds steam auth
+
+- [#5415](https://github.com/thirdweb-dev/js/pull/5415) [`7b21f1b`](https://github.com/thirdweb-dev/js/commit/7b21f1b632d65a2bc9bc38656e18d220c6201ed9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds Steam as an authentication option
+
+### Patch Changes
+
+- [#5397](https://github.com/thirdweb-dev/js/pull/5397) [`895b4d1`](https://github.com/thirdweb-dev/js/commit/895b4d145fb0519febdb399abffea36208692d95) Thanks [@MananTank](https://github.com/MananTank)! - Catch localStorage getItem and setItem unhandled errors
+
+- [#5440](https://github.com/thirdweb-dev/js/pull/5440) [`f01de73`](https://github.com/thirdweb-dev/js/commit/f01de732fbf726cc0114dc645414f0ee6a37eb8e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support erc6492 signature verification on zksync
+
 ## 5.68.0
 
 ### Minor Changes
@@ -1041,7 +1055,7 @@
 
   <NFT contract={contract} tokenId={0n}>
     <Suspense fallback={"Loading media..."}>
-      <NFT.Media />
+      <NFTMedia />
     </Suspense>
   </NFT>;
   ```

@@ -47,11 +47,11 @@ async function HeaderAndNav() {
             name: "Contracts",
             exactMatch: true,
           },
+          {
+            path: "/account/settings",
+            name: "Settings",
+          },
           // TODO - enable these links after they are functional
-          // {
-          //   path: "/account/settings",
-          //   name: "Settings",
-          // },
           // {
           //   path: "/account/wallets",
           //   name: "Wallets",

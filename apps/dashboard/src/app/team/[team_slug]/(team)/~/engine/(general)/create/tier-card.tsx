@@ -3,7 +3,11 @@
 import { Button } from "@/components/ui/button";
 import type { EngineTier } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, Spacer } from "@chakra-ui/react";
+import { useTrack } from "hooks/analytics/useTrack";
 import { CheckIcon } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { CheckoutButton } from "../../../../../../../../@/components/billing";
 
 interface EngineTierCardConfig {
   name: string;
@@ -40,25 +44,19 @@ const ENGINE_TIER_CARD_CONFIG: Record<EngineTier, EngineTierCardConfig> = {
   },
 };
 
-export const MONTHLY_PRICE_USD: Record<EngineTier, number> = {
-  STARTER: 99,
-  PREMIUM: 299,
-  ENTERPRISE: 0,
-};
-
 export const EngineTierCard = ({
   tier,
   previousTier,
   isPrimaryCta = false,
-  onClick,
   ctaText,
 }: {
   tier: EngineTier;
   previousTier?: string;
   isPrimaryCta?: boolean;
-  onClick: () => void;
   ctaText?: string;
 }) => {
+  const trackEvent = useTrack();
+  const params = useParams<{ team_slug: string }>();
   const { name, monthlyPriceUsd } = ENGINE_TIER_CARD_CONFIG[tier];
   let features = ENGINE_TIER_CARD_CONFIG[tier].features;
   if (tier === "PREMIUM") {
@@ -68,18 +66,18 @@ export const EngineTierCard = ({
   const defaultCtaText =
     monthlyPriceUsd === "custom" ? "Contact us" : "Deploy now";
 
-  const card = (
+  return (
     <div
-      className="flex flex-col gap-6 rounded-xl border border-border bg-muted/20 p-6"
+      className="flex flex-col gap-6 rounded-xl border border-border bg-muted/50 p-6"
       style={{
-        background: isPrimaryCta
-          ? "linear-gradient(to top, hsl(var(--muted)), hsl(var(--muted)/50%))"
+        backgroundImage: isPrimaryCta
+          ? "linear-gradient(to top, hsl(var(--muted)) 40%, transparent)"
           : undefined,
       }}
     >
       <Flex flexDir="column" gap={4}>
         {/* Name */}
-        <h3 className="font-semibold text-3xl tracking-tight">{name}</h3>
+        <h3 className="font-semibold text-2xl tracking-tight">{name}</h3>
 
         {/* Price */}
         {monthlyPriceUsd === "custom" ? (
@@ -114,11 +112,43 @@ export const EngineTierCard = ({
       <Spacer />
 
       {/* CTA */}
-      <Button onClick={onClick} variant={isPrimaryCta ? "default" : "outline"}>
-        {ctaText ?? defaultCtaText}
-      </Button>
+      {tier === "ENTERPRISE" ? (
+        <Button
+          onClick={() => {
+            trackEvent({
+              category: "engine",
+              action: "click",
+              label: "clicked-cloud-hosted",
+              tier,
+            });
+          }}
+          variant={isPrimaryCta ? "default" : "outline"}
+          asChild
+        >
+          <Link href="/contact-us">{ctaText ?? defaultCtaText}</Link>
+        </Button>
+      ) : (
+        <CheckoutButton
+          sku={
+            tier === "STARTER"
+              ? "product:engine_standard"
+              : "product:engine_premium"
+          }
+          redirectPath={`/team/${params?.team_slug}/~/engine`}
+          teamSlug={params?.team_slug || "~"}
+          onClick={() => {
+            trackEvent({
+              category: "engine",
+              action: "click",
+              label: "clicked-cloud-hosted",
+              tier,
+            });
+          }}
+          variant={isPrimaryCta ? "default" : "outline"}
+        >
+          {ctaText ?? defaultCtaText}
+        </CheckoutButton>
+      )}
     </div>
   );
-
-  return card;
 };

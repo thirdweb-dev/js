@@ -7,6 +7,9 @@ export const ConnectionManagerCtx = createContext<
   ConnectionManager | undefined
 >(undefined);
 
+/**
+ * @internal
+ */
 export function useConnectionManager() {
   const connectionManager = useConnectionManagerCtx("useConnectionManager");
   if (!connectionManager) {

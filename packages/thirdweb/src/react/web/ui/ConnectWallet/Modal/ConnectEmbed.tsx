@@ -177,6 +177,7 @@ import { useSetupScreen } from "./screen.js";
  *
  * @returns A JSX element that renders the <ConnectEmbed> component.
  * @component
+ * @walletConnection
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const activeWallet = useActiveWallet();

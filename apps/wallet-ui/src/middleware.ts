@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { isMultiTenant } from "./lib/utils";
 
 export const config = {
   matcher: [
@@ -12,7 +13,6 @@ export const config = {
     "/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)",
   ],
 };
-
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
 export default async function middleware(req: NextRequest) {
   // Get the request hostname (e.g. demo.thirdweb.com)
@@ -24,6 +24,11 @@ export default async function middleware(req: NextRequest) {
     searchParams.length > 0 ? `?${searchParams}` : ""
   }`;
 
+  // If running development environment, do not rewrite
+  if (isMultiTenant) {
+    return NextResponse.next();
+  }
+
   // keep root application at `/`
   if (hostname === ROOT_DOMAIN || hostname === null) {
     return NextResponse.next();
@@ -31,6 +36,7 @@ export default async function middleware(req: NextRequest) {
 
   // rewrite everything else to `/[ecosystem]/... dynamic route
   const ecosystem = hostname.split(".")[0];
+  const rewriteUrl = new URL(`/${ecosystem}${path}`, req.url);
 
-  return NextResponse.rewrite(new URL(`/${ecosystem}${path}`, req.url));
+  return NextResponse.rewrite(rewriteUrl);
 }

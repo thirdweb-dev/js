@@ -1,52 +1,29 @@
-import { Flex, Tooltip } from "@chakra-ui/react";
-import { CircleCheckIcon, CircleDollarSignIcon } from "lucide-react";
-import { Card, Text } from "tw-components";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { CheckIcon, CircleDollarSignIcon } from "lucide-react";
 
-interface FeatureItemProps {
+type FeatureItemProps = {
   text: string | string[];
-}
+};
 
-export const FeatureItem: React.FC<FeatureItemProps> = ({ text }) => {
+export function FeatureItem({ text }: FeatureItemProps) {
   const titleStr = Array.isArray(text) ? text[0] : text;
 
   return (
-    <Flex gap={2} alignItems="flex-start">
-      <CircleCheckIcon className="size-6 fill-white text-black" />
+    <div className="flex items-center gap-2">
+      <CheckIcon className="size-4 shrink-0 text-green-500" />
       {Array.isArray(text) ? (
-        <Flex alignItems="center" justifyItems="center" gap={2}>
-          <Text>{titleStr}</Text>
-          <Tooltip
-            label={
-              <Card
-                py={2}
-                px={4}
-                bgColor="backgroundHighlight"
-                borderRadius="lg"
-              >
-                <Text size="label.sm" lineHeight={1.5}>
-                  {text[1]}
-                </Text>
-              </Card>
-            }
-            p={0}
-            bg="transparent"
-            boxShadow="none"
-          >
-            <Flex display={{ base: "none", md: "block" }} mb={-0.5}>
-              <CircleDollarSignIcon className="relative size-4 text-blue-500" />
-            </Flex>
-          </Tooltip>
-          <Text
-            className="text-muted-foreground"
-            minW="max-content"
-            display={{ base: "block", md: "none" }}
-          >
-            {text[1]}
-          </Text>
-        </Flex>
+        <div className="flex items-center gap-2">
+          <p className="text-muted-foreground">
+            {titleStr}{" "}
+            <span className="text-muted-foreground md:hidden">{text[1]}</span>
+          </p>
+          <ToolTipLabel label={text[1]}>
+            <CircleDollarSignIcon className="hidden size-4 text-muted-foreground md:block" />
+          </ToolTipLabel>
+        </div>
       ) : (
-        <Text>{titleStr}</Text>
+        <p className="text-muted-foreground">{titleStr}</p>
       )}
-    </Flex>
+    </div>
   );
-};
+}

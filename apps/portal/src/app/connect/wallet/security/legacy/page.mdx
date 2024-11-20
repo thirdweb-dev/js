@@ -1,0 +1,77 @@
+import AppScoped from "../assets/app-scoped.svg";
+import EmbedCreation from "../assets/embed-creation.svg";
+import { DocImage, Callout, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "In-App Wallet Security",
+		icon: "wallets",
+	},
+	title: "In-App Wallet Security",
+	description:
+		"Learn how thirdweb protects your user's private keys using Shamir's Secret Sharing algorithm",
+});
+
+# How it works
+
+## Wallet creation
+
+When a user signs into an application using their email or social logins for the first time, a wallet is generated on the user's device. The corresponding wallet key for this wallet is securely split into three shards using [Shamir's Secret Sharing](https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing) algorithm.
+
+1. **Shard A** is stored securely on the user's device. For web applications, this is stored on the browser, or for mobile apps, it is in a secure enclave.
+2. **Shard B** is encrypted and stored in [Amazon KMS](https://aws.amazon.com/kms/) using a key known to thirdweb. This process uses [hardware security modules](https://en.wikipedia.org/wiki/Hardware_security_module) (HSMs) to protect the confidentiality and integrity of keys. The encrypted string is stored in thirdweb's database.
+3. **Shard C** is encrypted by user authentication and stored in Amazon's KMS using hardware security modules (HSMs) to protect the confidentiality and integrity of keys. Despite the key stored on thirdweb's servers, thirdweb has no way of decrypting and accessing the key.
+
+<DocImage src={EmbedCreation} />
+
+## Recoverability
+
+In-App Wallets are non-custodial, and users can export their private key anytime. Users may recover their wallet from any device by authenticating or signing into an application to receive access to their wallet.
+Threshold secret-sharing cryptography is used to recreate the private key; two of three shards are required.
+If a user loses access to their authentication method (email, social login, or custom authentication), they cannot recover their wallet.
+
+<Callout variant='info'>
+
+thirdweb does not have the ability to access user accounts or reconstruct private keys.
+
+</Callout>
+
+## In-App Wallet Scope
+
+In-App Wallets are scoped to applications per API key. If users use the same email to sign in to a different application using In-App Wallets, the application will manage an entirely different wallet.
+
+### Benefits of single application scoped wallets
+
+- Each application has limited access only to wallets created through their application. It cannot manage wallets from other applications.
+- Users may only view tokens sent or purchased from your application.
+- To improve user experience, saved payment methods and KYC verification are only provided to thirdweb; applications cannot view this information.
+
+Users may view all their application-scoped In-App Wallets in a single view using the [My Wallets](https://ews.thirdweb.com/wallet) dashboard. Learn more about My Wallets.
+
+<DocImage src={AppScoped} />
+
+### Scalability
+
+We support up to 100 wallets generated/second by default and can support higher limits (up to 3,000 wallets generated/second) upon request. [Contact Sales](https://thirdweb.com/contact-us) for more information.
+
+### Security & privacy
+
+#### TLS Encryption
+
+To increase security and privacy, private keys or wallet "seed phrases" are never stored or sent over a network. TLS encryption is used in transit for internal and external communications with thirdweb's back-end and databases. TLS encryption is also required for third-party vendors.
+
+#### AES-256
+
+Data backups and storage are encrypted with AES-256.
+
+#### Threshold secret sharing
+
+Using threshold secret sharing, thirdweb cannot reconstruct a user's private key, thereby providing a non-custodial wallet. Additionally, a customer's assets are safe even if thirdweb or the application developer (you) is compromised. In a compromised situation, an attacker may only be able to access one of three shards, which is inadequate to reconstruct the wallet's private key.
+
+#### GDPR & CCPA
+
+thirdweb complies to GDPR and CCPA compliance frameworks and deletes customer data per request within the required timeframe of each standard (30 days for GDPR and 45 for CCPA).
+
+#### Audit and Bounty Program
+
+HackerOne has audited our in-app wallet private key security architecture, and there is an ongoing bounty program to ensure vulnerabilities are caught. [View the Letter of Attestation.](/pdfs/thirdweb_code_security_audit.pdf)

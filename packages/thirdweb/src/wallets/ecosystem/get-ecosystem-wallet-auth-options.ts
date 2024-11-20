@@ -3,7 +3,7 @@ import { withCache } from "../../utils/promise/withCache.js";
 import type { AuthOption } from "../types.js";
 import type { EcosystemWalletId } from "../wallet-types.js";
 
-export type EcosystemOptions = {
+type EcosystemOptions = {
   name: string;
   imageUrl?: string;
   slug: string;

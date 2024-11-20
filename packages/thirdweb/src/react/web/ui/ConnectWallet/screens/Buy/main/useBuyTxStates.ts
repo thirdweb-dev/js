@@ -58,7 +58,7 @@ export function useTransactionCostAndData(args: {
     ],
     queryFn: async () => {
       if (!account) {
-        throw new Error("No account");
+        throw new Error("No payer account found");
       }
 
       const erc20Value = await resolvePromisedValue(transaction.erc20Value);
@@ -112,7 +112,6 @@ export function useTransactionCostAndData(args: {
           getChainMetadata(transaction.chain),
           getTransactionGasCost(transaction, account?.address),
         ]);
-
       const walletBalance = nativeWalletBalance;
       const transactionValueWei =
         (await resolvePromisedValue(transaction.value)) || 0n;
@@ -129,7 +128,7 @@ export function useTransactionCostAndData(args: {
         transactionValueWei,
       } satisfies TransactionCostAndData;
     },
-    enabled: !!transaction && !!account && !!txQueryKey,
+    enabled: !!transaction && !!txQueryKey,
     refetchInterval: () => {
       if (transaction.erc20Value) {
         // if erc20 value is set, we don't need to poll

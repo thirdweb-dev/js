@@ -27,7 +27,7 @@ export function EmptyChartState({ children }: { children?: React.ReactNode }) {
 
   return (
     <div className="relative z-0 h-full w-full">
-      <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center font-semibold text-base text-muted-foreground">
+      <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center font-medium text-base text-muted-foreground">
         {children ?? "No data available"}
       </div>
       <SkeletonBarChart data={barChartData} />

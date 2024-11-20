@@ -63,12 +63,19 @@ TableFooter.displayName = "TableFooter";
 
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement>
->(({ className, ...props }, ref) => (
+  React.HTMLAttributes<HTMLTableRowElement> & {
+    /**
+     * Contain the absolutely position elements inside the row with position:relative + transform:translate(0)
+     * transform:translate(0) is required because position:relative on tr element does not work on webkit
+     */
+    linkBox?: boolean;
+  }
+>(({ className, linkBox, ...props }, ref) => (
   <tr
     ref={ref}
     className={cn(
       "border-border border-b last:border-0 data-[state=selected]:bg-muted",
+      linkBox && "relative translate-x-0 translate-y-0",
       className,
     )}
     {...props}

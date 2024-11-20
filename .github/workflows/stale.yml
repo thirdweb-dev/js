@@ -11,5 +11,5 @@ jobs:
         with:
           stale-issue-message: 'This issue has been inactive for 30 days. It is now marked as stale and will be closed in 5 days if no further activity occurs.'
           stale-pr-message: 'This PR has been inactive for 30 days. It is now marked as stale and will be closed in 5 days if no further activity occurs.'
-          days-before-stale: 30
-          days-before-close: 5
+          days-before-stale: 7
+          days-before-close: 2

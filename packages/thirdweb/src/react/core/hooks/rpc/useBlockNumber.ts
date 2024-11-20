@@ -18,7 +18,7 @@ export type UseBlockNumberOptions = {
  * @param options - The options for the hook.
  * @returns The latest block number.
  * @example
- * ```jsx
+ * ```ts
  * import { useBlockNumber } from "thirdweb/react";
  * const blockNumber = useBlockNumber({client, chain});
  * ```

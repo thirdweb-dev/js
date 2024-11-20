@@ -8,6 +8,9 @@ let transactionDecorator:
     }) => Promise<{ account: Account; transaction: PreparedTransaction }>)
   | null = null;
 
+/**
+ * @internal
+ */
 export function setTransactionDecorator(
   decoratorFunction: (args: {
     account: Account;
@@ -17,10 +20,16 @@ export function setTransactionDecorator(
   transactionDecorator = decoratorFunction;
 }
 
+/**
+ * @internal
+ */
 export function clearTransactionDecorator() {
   transactionDecorator = null;
 }
 
+/**
+ * @internal
+ */
 export function getTransactionDecorator() {
   return transactionDecorator;
 }

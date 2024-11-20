@@ -1,12 +1,15 @@
-import { redirect } from "next/navigation";
-import { getCurrentUser } from "../../../lib/auth";
+import { getCurrentUser } from "@/lib/auth";
+import { redirect } from "@/lib/redirect";
 
 export default async function Layout({
   children,
-}: { children: React.ReactNode }) {
+  params,
+}: { children: React.ReactNode; params: Promise<{ ecosystem: string }> }) {
+  const { ecosystem } = await params;
+
   const userAddress = await getCurrentUser();
   if (userAddress) {
-    redirect(`/wallet/${userAddress}`);
+    redirect(`/wallet/${userAddress}`, ecosystem);
   }
 
   return (

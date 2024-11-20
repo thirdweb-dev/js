@@ -2,7 +2,6 @@
 
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { useAuthorizedWallets } from "@3rdweb-sdk/react/hooks/useApi";
-import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 import { AuthorizedWalletsTable } from "components/settings/AuthorizedWallets/AuthorizedWalletsTable";
 
 // TODO - remove ChakraProviderSetup after migrating AuthorizedWalletsTable
@@ -13,7 +12,6 @@ export default function Page() {
 
   return (
     <div className="container py-8">
-      <BillingAlerts className="mb-10" />
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-2">
           <div className="flex flex-col justify-between gap-4">

@@ -7,6 +7,7 @@ import {
 } from "@/icons";
 
 const prebuiltSlug = "/contracts/explore/pre-built-contracts";
+const prebuiltModular = "/contracts/explore/pre-built-modular";
 const modularContractsSlug = "/contracts/modular-contracts";
 const deploySlug = "/contracts/deploy";
 const publishSlug = "/contracts/publish";
@@ -38,7 +39,55 @@ export const sidebar: SideBar = {
           href: "/contracts/explore/overview",
         },
         {
-          name: "Pre-built Contracts",
+          name: "Pre-built Modular",
+          links: [
+            {
+              name: "ERC-20",
+              links: [
+                {
+                  name: "Token",
+                  href: `${prebuiltModular}/token`,
+                },
+                {
+                  name: "Token Drop",
+                  href: `${prebuiltModular}/token-drop`,
+                },
+              ],
+            },
+            {
+              name: "ERC-721",
+              links: [
+                {
+                  name: "NFT Collection",
+                  href: `${prebuiltModular}/nft-collection`,
+                },
+                {
+                  name: "NFT Drop",
+                  href: `${prebuiltModular}/nft-drop`,
+                },
+                {
+                  name: "Open Edition",
+                  href: `${prebuiltModular}/open-edition`,
+                },
+              ],
+            },
+            {
+              name: "ERC-1155",
+              links: [
+                {
+                  name: "Edition",
+                  href: `${prebuiltModular}/edition`,
+                },
+                {
+                  name: "Edition Drop",
+                  href: `${prebuiltModular}/edition-drop`,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: "Pre-built Standard",
           links: [
             {
               name: "ERC-20",
@@ -239,7 +288,7 @@ export const sidebar: SideBar = {
                   ],
                 },
                 {
-                  name: "Misc",
+                  name: "Miscellaneous",
                   links: [
                     {
                       name: "TransferableERC20",
@@ -283,7 +332,7 @@ export const sidebar: SideBar = {
                   ],
                 },
                 {
-                  name: "Misc",
+                  name: "Miscellaneous",
                   links: [
                     {
                       name: "RoyaltyERC721",
@@ -327,7 +376,7 @@ export const sidebar: SideBar = {
                   ],
                 },
                 {
-                  name: "Misc",
+                  name: "Miscellaneous",
                   links: [
                     {
                       name: "RoyaltyERC1155",

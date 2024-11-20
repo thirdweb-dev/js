@@ -1,0 +1,244 @@
+import { createMetadata, ArticleIconCard } from "@doc";
+import {
+    ReactIcon,
+    TypeScriptIcon,
+    UnityIcon,
+    DotNetIcon,
+    ExternalLinkIcon,
+    UnrealEngineIcon
+} from "@/icons"
+
+export const metadata = createMetadata({
+	image: {
+		title: "Getting User Profiles",
+		icon: "wallets",
+	},
+	title: "Getting User Profiles | thirdweb",
+	description:
+		"Learn how to retrieve the user profiles linked to a wallet.",
+});
+
+# Getting User Profiles
+
+Once authenticated, you can retrieve the user profiles linked to a wallet. This allows you to access additional information about the user, such as their email address or phone number.
+
+## List of Strategies
+
+Regardless of platform, the response will have a json object in the following shape as some level: 
+
+```json
+{
+	"strategy": "email",
+	"details": {
+		"email": "user@example.com"
+	},
+}
+```
+
+Note that the `email` field above will differ based on the profile type. We list the expected field below in our list of strategies.
+
+
+| Strategy      | Type              | `details` Field |
+| ------------- | ----------------- | --------------- |
+| Email         | `"email"`         | `email`         |
+| Google        | `"google"`        | `email`         |
+| Discord       | `"discord"`       | `email` | `id`  |
+| Apple         | `"apple"`         | `email` | `id`  |
+| Facebook      | `"facebook"`      | `email` | `id`  |
+| Phone         | `"phone"`         | `phone`         |
+| Guest         | `"guest"`         | `id`            |
+| Passkey       | `"passkey"`       | `id`            |
+| Telegram      | `"telegram"`      | `id`            |
+| Farcaster     | `"farcaster"`     | `id`            |
+| Line          | `"line"`          | `id`            |
+| JWT           | `"jwt"`           | `id`            |
+| Auth Endpoint | `"auth_endpoint"` | `id`            |
+| Wallet        | `"wallet"`        | `address`       |
+
+
+
+## Frontend
+
+For frontend, we provide methods to get information around the currently logged in user. 
+
+
+### In App Wallet
+
+<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+    <ArticleIconCard
+        title="TypeScript"
+        icon={TypeScriptIcon}
+        description="Get logged in user profile for in-app wallets in TypeScript"
+        href="/typescript/v5/getProfiles"
+    />
+    <ArticleIconCard
+        title="React"
+        icon={ReactIcon}
+        description="Get logged in user profile for in-app wallets in React"
+        href="/react/v5/useProfiles"
+    />
+    <ArticleIconCard
+        title="React Native"
+        icon={ReactIcon}
+        description="Get logged in user profile for in-app wallets in React Native"
+        href="/react-native/v5/useProfiles"
+    />
+	<ArticleIconCard
+        title=".NET"
+        icon={DotNetIcon}
+        description="Get logged in user profile for in-app wallets in .NET"
+        href="/dotnet/wallets/providers/in-app-wallet#getting-linked-accounts"
+    />
+    <ArticleIconCard
+        title="Unity"
+        icon={UnityIcon}
+        description="Get logged in user profile for in-app wallets in Unity"
+        href="/unity/v5/wallets/in-app-wallet#account-linking"
+    />
+</div>
+
+### Ecosystem Wallet
+
+<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+     <ArticleIconCard
+        title="TypeScript"
+        icon={TypeScriptIcon}
+        description="Get user profile for ecosystem wallets in TypeScript"
+        href="/typescript/v5/getProfiles"
+    />
+    <ArticleIconCard
+        title="React"
+        icon={ReactIcon}
+        description="Get user profile for ecosystem wallets in React"
+        href="/react/v5/useProfiles"
+    />
+    <ArticleIconCard
+        title="React Native"
+        icon={ReactIcon}
+        description="Get user profile for ecosystem wallets in React Native"
+        href="/react-native/v5/useProfiles"
+    />
+	<ArticleIconCard
+        title=".NET"
+        icon={DotNetIcon}
+        description="Get user profile for ecosystem wallets in .NET"
+        href="/dotnet/wallets/providers/ecosystem-wallet#getting-linked-accounts"
+    />
+    <ArticleIconCard
+        title="Unity"
+        icon={UnityIcon}
+        description="Get user profile for ecosystem wallets in Unity"
+        href="/unity/v5/wallets/ecosystem-wallet#account-linking"
+    />
+</div>
+
+
+## Backend 
+
+
+From the backend, you are able to get the details of any user within your in app or ecosystem wallet. 
+
+To get the user details, you can make a `GET` request to the following endpoint:
+
+```
+https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details
+```
+
+### Query Parameters
+
+You can specify the query parameter `queryBy` to query by different user identifiers:
+
+- `queryBy`: The parameter to query by. Can be one of `walletAddress`, `email`, `phone`, `externalWalletAddress`, or `id`.
+
+You can then specify the value to query by, matching the queryBy parameter:
+
+- `walletAddress`: The user's wallet address that thirdweb has generated for them
+- `email`: The user's email address
+- `phone`: The user's phone number
+- `externalWalletAddress`: The user's wallet address that used to login via SIWE
+- `id`: The user's ID (for custom auth)
+
+### Authentication
+
+You need to include your ThirdWeb Client Secret in the Authorization header. 
+
+If you are an ecosystem owner, you have to include the `x-ecosystem-id` header and optionally the `x-ecosystem-partner-id` header if the ecosystem is set to partners only.
+
+### Example curl Command
+
+Here's an example curl command to fetch user details by email:
+
+```bash
+curl -X GET 'https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=email&email=user@example.com' \
+  -H 'x-secret-key: YOUR_THIRD_WEB_CLIENT_SECRET'
+```
+
+Here's an example curl command to fetch user details by address:
+
+```bash
+curl -X GET 'https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=walletAddress&walletAddress=0x123456789abcdef' \
+  -H 'x-secret-key: YOUR_THIRD_WEB_CLIENT_SECRET'
+```
+
+Here's an example curl command to fetch the user details for an ecosystem owner:
+
+```bash
+curl -X GET 'https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=walletAddress&walletAddress=0x123456789abcdef' \
+  -H 'x-secret-key: YOUR_THIRD_WEB_CLIENT_SECRET' \
+  -H 'x-ecosystem-id: ecosystem.YOUR_ECOSYSTEM_ID' \
+  -H 'x-ecosystem-partner-id: YOUR_PARTNER_ID'
+```
+
+In both examples, replace `YOUR_THIRD_WEB_CLIENT_SECRET` with your actual ThirdWeb Client Secret.
+
+Replace `YOUR_ECOSYSTEM_ID` and `YOUR_PARTNER_ID` with your actual ecosystem ID and partner ID respectively. The partner ID can be one you set up for yourself as the ecosystem owner.
+
+### Response Format
+
+The API returns a JSON array with the following structure for each user:
+
+```json
+[
+  {
+    "userId": "string",
+    "walletAddress": "string",
+    "email": "string (optional)",
+    "phone": "string (optional)",
+    "createdAt": "string",
+    "linkedAccounts": [
+      {
+        "type": "string",
+        "details": {
+          "phone": "string",
+          // or
+          "email": "string",
+          // or
+          "address": "string",
+          // or
+          "id": "string",
+          // Additional key-value pairs may be present
+        }
+      }
+    ]
+  }
+]
+```
+
+Note: The `details` object in `linkedAccounts` will contain different fields based on the account type. See the [list of Strategies](#list-of-strategies) above for more information.
+
+Remember to handle the response appropriately in your chosen programming language, including error cases and parsing the JSON response.
+
+### Convenience Methods
+
+If you are using the thirdweb SDK, you can use the `getUser` method to retrieve user details.
+
+ <ArticleIconCard
+	title="getUser"
+	icon={TypeScriptIcon}
+	description="Get user details from your backend for thirdweb wallets in TypeScript"
+	href="/references/typescript/v5/getUser"
+/>
+
+## Linking Additional Identities
+
+If you want to link additional identities to a wallet, see [Linking Multiple Identities](/connect/wallet/user-management/link-multiple-identity).

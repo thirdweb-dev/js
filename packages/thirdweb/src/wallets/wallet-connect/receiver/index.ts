@@ -161,11 +161,19 @@ export async function createWalletConnectClient(
   const {
     wallet,
     requestHandlers,
-    chains,
     onConnect,
     onDisconnect,
     client: thirdwebClient,
   } = options;
+  const chains = (() => {
+    if (options.chains && options.chains.length > 10) {
+      console.warn(
+        "WalletConnect: Can specify no more than 10 chains, truncating to the first 10 provided chains...",
+      );
+      return options.chains.slice(0, 10);
+    }
+    return options.chains;
+  })();
 
   if (walletConnectClientCache.has(thirdwebClient)) {
     return walletConnectClientCache.get(thirdwebClient) as WalletConnectClient;

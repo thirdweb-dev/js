@@ -1,125 +1,187 @@
-import { type AccountPlan, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
-import { SimpleGrid } from "@chakra-ui/react";
+import type { Team } from "@/api/team";
 import { PricingCard } from "components/homepage/sections/PricingCard";
 import { useMemo } from "react";
-import { CONTACT_US_URL } from "utils/pricing";
+import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/getValidTeamPlan";
+import { CONTACT_US_URL } from "../../../../utils/pricing";
+
+// TODO - move this in app router folder in other pr
 
 interface BillingPricingProps {
-  plan: string;
+  team: Team;
   trialPeriodEndedAt: string | undefined;
-  canTrialGrowth: boolean;
-  validPayment: boolean;
-  paymentVerification: boolean;
-  invalidPayment: boolean;
-  loading: boolean;
-  onSelect: (plan: AccountPlan) => void;
 }
 
+type CtaLink = {
+  label: string;
+  href: string;
+  target?: "_blank";
+};
+
 export const BillingPricing: React.FC<BillingPricingProps> = ({
-  plan,
+  team,
   trialPeriodEndedAt,
-  canTrialGrowth,
-  validPayment,
-  paymentVerification,
-  invalidPayment,
-  loading,
-  onSelect,
 }) => {
-  const isPro = plan === accountPlan.pro || plan === accountPlan.enterprise;
+  const validTeamPlan = getValidTeamPlan(team);
+  const starterPlanSubscribeRoute = `/team/${team.slug}/billing/subscribe/plan:starter`;
+  const growthPlanSubscribeRoute = `/team/${team.slug}/billing/subscribe/plan:growth`;
+  const contactUsHref = "/contact-us";
 
-  const freeCtaTitle = useMemo(() => {
-    if (!validPayment) {
-      return "Get started for free";
+  const starterCta: CtaLink | undefined = useMemo(() => {
+    switch (validTeamPlan) {
+      // free > starter
+      case "free": {
+        return {
+          label: "Get started for free",
+          href: starterPlanSubscribeRoute,
+        };
+      }
+
+      // starter > starter
+      case "starter": {
+        return undefined;
+      }
+
+      // growth > starter
+      case "growth": {
+        return {
+          label: "Downgrade",
+          href: starterPlanSubscribeRoute,
+        };
+      }
+
+      // pro > starter
+      case "pro": {
+        return {
+          label: "Contact us",
+          href: contactUsHref,
+          target: "_blank",
+        };
+      }
     }
-    if (plan !== accountPlan.free) {
-      return "Downgrade";
-    }
+  }, [validTeamPlan, starterPlanSubscribeRoute]);
 
-    return undefined;
-  }, [plan, validPayment]);
-
-  const growthCtaTitle = useMemo(() => {
+  const growthCardCta: CtaLink | undefined = useMemo(() => {
     const trialTitle = "Claim your 1-month free";
 
-    if (!validPayment) {
-      return canTrialGrowth ? trialTitle : "Get started";
+    switch (validTeamPlan) {
+      // free > growth
+      case "free": {
+        return {
+          label: team.growthTrialEligible ? trialTitle : "Get started",
+          href: growthPlanSubscribeRoute,
+        };
+      }
+
+      // starter > growth
+      case "starter": {
+        return {
+          label: team.growthTrialEligible ? trialTitle : "Upgrade",
+          href: growthPlanSubscribeRoute,
+        };
+      }
+
+      // growth > growth
+      case "growth": {
+        return undefined;
+      }
+
+      // pro > growth
+      case "pro": {
+        return {
+          label: "Contact us",
+          href: contactUsHref,
+          target: "_blank",
+        };
+      }
     }
-    // pro/enterprise cant change plan
-    if (isPro) {
-      return "Contact us";
+  }, [team, validTeamPlan, growthPlanSubscribeRoute]);
+
+  const proCta: CtaLink | undefined = useMemo(() => {
+    // pro > pro
+    if (validTeamPlan === "pro") {
+      return undefined;
     }
 
-    if (plan === accountPlan.free) {
-      return canTrialGrowth ? trialTitle : "Upgrade";
-    }
-
-    return undefined;
-  }, [validPayment, isPro, plan, canTrialGrowth]);
-
-  const handleSelect = (newPlan: AccountPlan) => {
-    onSelect(newPlan);
-  };
+    // others
+    return {
+      label: "Contact us",
+      href: contactUsHref,
+      target: "_blank",
+    };
+  }, [validTeamPlan]);
 
   return (
-    <SimpleGrid columns={{ base: 1, xl: 3 }} gap={{ base: 6, xl: 8 }}>
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+      {/* Starter */}
       <PricingCard
-        current={plan === accountPlan.free}
-        size="sm"
-        name={accountPlan.free}
-        ctaTitle={freeCtaTitle}
-        ctaProps={{
-          onClick: (e) => {
-            e.preventDefault();
-            handleSelect(accountPlan.free);
-          },
-          isLoading: loading,
-          isDisabled: loading || invalidPayment || paymentVerification,
-          category: "account",
-          label: "freePlan",
-          href: "/pricing",
-        }}
-        onDashboard
-      />
-
-      <PricingCard
-        activeTrialEndsAt={
-          plan === accountPlan.growth ? trialPeriodEndedAt : undefined
+        billingPlan="starter"
+        current={validTeamPlan === "starter"}
+        cta={
+          starterCta
+            ? {
+                title: starterCta.label,
+                href: starterCta.href,
+                target: starterCta.target,
+                tracking: {
+                  category: "account",
+                  label: "starterPlan",
+                },
+              }
+            : undefined
         }
-        current={plan === accountPlan.growth}
-        size="sm"
-        name={accountPlan.growth}
-        ctaTitle={growthCtaTitle}
-        ctaHint="Your free trial will end after 30 days."
-        canTrialGrowth={canTrialGrowth}
-        ctaProps={{
-          onClick: (e) => {
-            e.preventDefault();
-            handleSelect(accountPlan.growth);
-          },
-          isLoading: loading,
-          isDisabled: loading || invalidPayment || paymentVerification,
-          category: "account",
-          label: canTrialGrowth ? "claimGrowthTrial" : "growthPlan",
-          href: "/pricing",
-          variant: "solid",
-          colorScheme: "blue",
-        }}
-        onDashboard
+        teamSlug={team.slug}
+      />
+
+      {/* Growth */}
+      <PricingCard
+        billingPlan="growth"
+        activeTrialEndsAt={
+          validTeamPlan === "growth" ? trialPeriodEndedAt : undefined
+        }
+        current={validTeamPlan === "growth"}
+        cta={
+          growthCardCta
+            ? {
+                title: growthCardCta.label,
+                href: growthCardCta.href,
+                target: growthCardCta.target,
+                tracking: {
+                  category: "account",
+                  label: team.growthTrialEligible
+                    ? "claimGrowthTrial"
+                    : "growthPlan",
+                },
+                variant: "default",
+                hint: team.growthTrialEligible
+                  ? "Your free trial will end after 30 days."
+                  : undefined,
+              }
+            : undefined
+        }
+        canTrialGrowth={team.growthTrialEligible || false}
+        // upsell growth plan if user is on free plan
+        highlighted={validTeamPlan === "free"}
+        teamSlug={team.slug}
       />
 
       <PricingCard
-        current={isPro}
-        size="sm"
-        name={accountPlan.pro}
-        ctaTitle="Contact us"
-        ctaProps={{
-          category: "account",
-          label: "proPlan",
-          href: CONTACT_US_URL,
-          isExternal: true,
-        }}
-        onDashboard
+        billingPlan="pro"
+        teamSlug={team.slug}
+        current={validTeamPlan === "pro"}
+        cta={
+          proCta
+            ? {
+                title: proCta.label,
+                target: proCta.target,
+                href: CONTACT_US_URL,
+                tracking: {
+                  category: "account",
+                  label: "proPlan",
+                },
+              }
+            : undefined
+        }
       />
-    </SimpleGrid>
+    </div>
   );
 };

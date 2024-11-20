@@ -24,10 +24,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { EllipsisIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -42,36 +49,44 @@ type MinimalAccount = Pick<
 
 export function AccountSettingsPageUI(props: {
   account: MinimalAccount;
-  updateAccountImage: (file: File | undefined) => Promise<void>;
+  // TODO - remove hide props these when these fields are functional
+  hideAvatar?: boolean;
+  hideDeleteAccount?: boolean;
+  sendEmail: (email: string) => Promise<void>;
+  updateName: (name: string) => Promise<void>;
+  updateEmailWithOTP: (otp: string) => Promise<void>;
 }) {
   return (
     <div className="flex flex-col gap-8">
-      <AccountAvatarFormControl updateAccountImage={props.updateAccountImage} />
-      <AccountNameFormControl name={props.account.name || ""} />
+      {!props.hideAvatar && <AccountAvatarFormControl />}
+      <AccountNameFormControl
+        name={props.account.name || ""}
+        updateName={(name) => props.updateName(name)}
+      />
       <AccountEmailFormControl
         email={props.account.email || ""}
-        // TODO - is this correct way to check this?
         status={props.account.emailConfirmedAt ? "verified" : "unverified"}
+        sendEmail={props.sendEmail}
+        updateEmailWithOTP={props.updateEmailWithOTP}
       />
 
-      <DeleteAccountCard />
+      {!props.hideDeleteAccount && <DeleteAccountCard />}
     </div>
   );
 }
 
-function AccountAvatarFormControl(props: {
-  updateAccountImage: (file: File | undefined) => Promise<void>;
-}) {
-  const [avatar, setAvatar] = useState<File>(); // TODO: prefill with account avatar
+function AccountAvatarFormControl() {
+  const [avatar, setAvatar] = useState<File>();
 
+  // TODO - implement
   const updateAvatarMutation = useMutation({
-    mutationFn: async (_avatar: File | undefined) => {
-      await props.updateAccountImage(_avatar);
+    mutationFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
     },
   });
 
   function handleSave() {
-    const promises = updateAvatarMutation.mutateAsync(avatar);
+    const promises = updateAvatarMutation.mutateAsync();
     toast.promise(promises, {
       success: "Account avatar updated successfully",
       error: "Failed to update account avatar",
@@ -111,17 +126,13 @@ function AccountAvatarFormControl(props: {
 
 function AccountNameFormControl(props: {
   name: string;
+  updateName: (name: string) => Promise<void>;
 }) {
   const [accountName, setAccountName] = useState(props.name);
   const maxAccountNameLength = 32;
 
-  // TODO - implement
   const updateAccountNameMutation = useMutation({
-    mutationFn: async (name: string) => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      console.log("Updating account name to", name);
-      throw new Error("Not implemented");
-    },
+    mutationFn: props.updateName,
   });
 
   function handleSave() {
@@ -203,9 +214,10 @@ function DeleteAccountCard() {
 function AccountEmailFormControl(props: {
   email: string;
   status: "unverified" | "verfication-sent" | "verified";
+  sendEmail: (email: string) => Promise<void>;
+  updateEmailWithOTP: (otp: string) => Promise<void>;
 }) {
-  // TODO - query for account changes when the email is updated
-
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   return (
     <SettingsCard
       header={{
@@ -230,9 +242,8 @@ function AccountEmailFormControl(props: {
         </div>
 
         {/* End */}
-        <EmailUpdateDialog
-          currentEmail={props.email}
-          trigger={
+        <Dialog open={isEmailModalOpen} onOpenChange={setIsEmailModalOpen}>
+          <DialogTrigger asChild>
             <Button
               size="icon"
               variant="ghost"
@@ -240,8 +251,18 @@ function AccountEmailFormControl(props: {
             >
               <EllipsisIcon className="size-5 text-muted-foreground" />
             </Button>
-          }
-        />
+          </DialogTrigger>
+          <DialogContent className="p-0">
+            <EmailUpdateDialogContent
+              currentEmail={props.email}
+              sendEmail={props.sendEmail}
+              updateEmailWithOTP={props.updateEmailWithOTP}
+              onSuccess={() => {
+                setIsEmailModalOpen(false);
+              }}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     </SettingsCard>
   );
@@ -251,9 +272,36 @@ const emailUpdateFormSchema = z.object({
   email: z.string().min(1, "Email can not be empty").max(100),
 });
 
-function EmailUpdateDialog(props: {
+function EmailUpdateDialogContent(props: {
   currentEmail: string;
-  trigger: React.ReactNode;
+  sendEmail: (email: string) => Promise<void>;
+  updateEmailWithOTP: (otp: string) => Promise<void>;
+  onSuccess: () => void;
+}) {
+  const [isEmailSent, setIsEmailSent] = useState(false);
+
+  if (isEmailSent) {
+    return (
+      <EnterEmailOTP
+        updateEmailWithOTP={props.updateEmailWithOTP}
+        onSuccess={props.onSuccess}
+      />
+    );
+  }
+
+  return (
+    <SendEmailOTP
+      onEmailSent={() => setIsEmailSent(true)}
+      currentEmail={props.currentEmail}
+      sendEmail={props.sendEmail}
+    />
+  );
+}
+
+function SendEmailOTP(props: {
+  onEmailSent: () => void;
+  currentEmail: string;
+  sendEmail: (email: string) => Promise<void>;
 }) {
   const form = useForm<z.infer<typeof emailUpdateFormSchema>>({
     resolver: zodResolver(emailUpdateFormSchema),
@@ -262,71 +310,153 @@ function EmailUpdateDialog(props: {
     },
   });
 
-  // TODO - implement
-  const updateEmailMutation = useMutation({
-    mutationFn: async (_email: string) => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      console.log("Updating account email to", _email);
-      throw new Error("Not implemented");
-    },
+  const [showSendError, setShowSendError] = useState(false);
+  const sendEmail = useMutation({
+    mutationFn: props.sendEmail,
   });
 
   function onSubmit(values: z.infer<typeof emailUpdateFormSchema>) {
-    const promises = updateEmailMutation.mutateAsync(values.email);
-    toast.promise(promises, {
-      success: "Email updated successfully",
-      error: "Failed to update email",
+    sendEmail.mutateAsync(values.email, {
+      onSuccess: () => {
+        props.onEmailSent();
+      },
+      onError: (e) => {
+        console.error(e);
+        setShowSendError(true);
+      },
     });
   }
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{props.trigger}</DialogTrigger>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-4 p-6 pb-10">
+          <DialogHeader className="pr-10">
+            <DialogTitle className="text-2xl">Update Email</DialogTitle>
+            <DialogDescription>
+              A confirmation email will be sent to verify email address
+            </DialogDescription>
+          </DialogHeader>
 
-      <DialogContent className="p-0">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-4 p-6 pb-10">
-              <DialogHeader className="pr-10">
-                <DialogTitle className="text-2xl">Update Email</DialogTitle>
-                <DialogDescription>
-                  A confirmation email will be sent to verify email address
-                </DialogDescription>
-              </DialogHeader>
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        {...field}
-                        className="selection:bg-foreground/20"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      setShowSendError(false);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+                {showSendError && (
+                  <p className="text-destructive-text">
+                    {sendEmail.error?.message || "Failed to send email"}
+                  </p>
                 )}
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <DialogFooter className="gap-4 border-t bg-muted/50 p-6 lg:gap-1">
+          <DialogClose asChild>
+            <Button variant="outline"> Cancel </Button>
+          </DialogClose>
+          <Button
+            className="min-w-24 gap-2"
+            type="submit"
+            disabled={!form.formState.isDirty}
+          >
+            {sendEmail.isPending && <Spinner className="size-4" />}
+            Update
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
+  );
+}
+
+function EnterEmailOTP(props: {
+  updateEmailWithOTP: (otp: string) => Promise<void>;
+  onSuccess: () => void;
+}) {
+  const [otp, setOtp] = useState("");
+  const [showOTPError, setShowOTPError] = useState(false);
+  const updateEmail = useMutation({
+    mutationFn: props.updateEmailWithOTP,
+    onSuccess: () => {
+      props.onSuccess();
+      toast.success("Email updated successfully");
+    },
+    onError: () => {
+      setShowOTPError(true);
+    },
+  });
+
+  return (
+    <div>
+      <div className="flex flex-col p-6 pb-10">
+        <DialogHeader className="pr-10">
+          <DialogTitle className="text-2xl">Update Email</DialogTitle>
+          <DialogDescription>
+            Enter the OTP sent to new email address
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="h-6" />
+
+        <InputOTP
+          maxLength={6}
+          pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+          value={otp}
+          onChange={(v) => {
+            setOtp(v);
+            setShowOTPError(false);
+          }}
+          disabled={updateEmail.isPending}
+        >
+          <InputOTPGroup className="w-full">
+            {new Array(6).fill(0).map((_, idx) => (
+              <InputOTPSlot
+                // biome-ignore lint/suspicious/noArrayIndexKey: static list
+                key={idx}
+                index={idx}
+                className={cn("h-12 grow text-lg", {
+                  "border-red-500": showOTPError,
+                })}
               />
-            </div>
+            ))}
+          </InputOTPGroup>
+        </InputOTP>
 
-            <DialogFooter className="gap-4 border-t bg-muted/50 p-6 lg:gap-1">
-              <DialogClose asChild>
-                <Button variant="outline"> Cancel </Button>
-              </DialogClose>
-              <Button className="min-w-24 gap-2" type="submit">
-                {updateEmailMutation.isPending && (
-                  <Spinner className="size-4" />
-                )}
-                {updateEmailMutation.isPending ? "Saving" : "Save"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+        {showOTPError && (
+          <p className="mt-3 text-center text-destructive-text">
+            Failed to verify email with this OTP
+          </p>
+        )}
+      </div>
+
+      <DialogFooter className="gap-4 border-t bg-muted/50 p-6 lg:gap-1">
+        <DialogClose asChild>
+          <Button variant="outline"> Cancel </Button>
+        </DialogClose>
+        <Button
+          className="min-w-24 gap-2"
+          onClick={() => {
+            updateEmail.mutate(otp);
+          }}
+        >
+          {updateEmail.isPending && <Spinner className="size-4" />}
+          Verify
+        </Button>
+      </DialogFooter>
+    </div>
   );
 }

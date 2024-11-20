@@ -24,6 +24,7 @@ import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFia
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
 import { invalidateWalletBalance } from "../../../../../core/providers/invalidateWalletBalance.js";
 import type { SupportedTokens } from "../../../../../core/utils/defaultTokens.js";
+import { ErrorState } from "../../../../wallets/shared/ErrorState.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
 import { ChainName } from "../../../components/ChainName.js";
@@ -105,6 +106,24 @@ export default function BuyScreen(props: BuyScreenProps) {
     isTestMode,
   );
 
+  if (supportedDestinationsQuery.isError) {
+    return (
+      <Container
+        style={{
+          minHeight: "350px",
+        }}
+        fullHeight
+        flex="row"
+        center="both"
+      >
+        <ErrorState
+          title="Something went wrong"
+          onTryAgain={supportedDestinationsQuery.refetch}
+        />
+      </Container>
+    );
+  }
+
   if (!supportedDestinationsQuery.data) {
     return <LoadingScreen />;
   }
@@ -137,9 +156,11 @@ type BuyScreenContentProps = {
  */
 function BuyScreenContent(props: BuyScreenContentProps) {
   const { client, supportedDestinations, connectLocale, payOptions } = props;
+  console.log("BuyScreenContent");
 
   const activeAccount = useActiveAccount();
   const { payer, setPayer } = usePayerSetup();
+  console.log("payer", payer);
 
   const [screen, setScreen] = useState<SelectedScreen>({
     id: "main",
@@ -476,6 +497,8 @@ function BuyScreenContent(props: BuyScreenContentProps) {
       />
     );
   }
+
+  console.log("SCREEN", screen.id);
 
   return (
     <Container animate="fadein">

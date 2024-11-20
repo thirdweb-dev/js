@@ -7,9 +7,31 @@ import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { ConnectEmbed } from "thirdweb/react";
+import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
+
+const wallets = [
+  inAppWallet({
+    auth: {
+      options: [
+        "google",
+        "apple",
+        "facebook",
+        "github",
+        "email",
+        "phone",
+        "passkey",
+      ],
+    },
+  }),
+  createWallet("io.metamask"),
+  createWallet("com.coinbase.wallet"),
+  createWallet("io.rabby"),
+  createWallet("me.rainbow"),
+  createWallet("io.zerion.wallet"),
+];
 
 export default function LoginPage() {
   return (
@@ -74,6 +96,7 @@ function CustomConnectEmmbed() {
           return isLoggedInResult;
         },
       }}
+      wallets={wallets}
       client={client}
       modalSize={isLG ? "wide" : "compact"}
       theme={getSDKTheme(theme === "light" ? "light" : "dark")}

@@ -25,7 +25,7 @@ export interface BatchToReveal {
  * @param options.contract {@link ThirdwebContract} - The NFT contract instance.
  * @returns A promise resolving to an array of unrevealed batches.
  *
- * @note Use the `batchId` and corresponding password for each batch to reveal it with `reveal`. {@see reveal}
+ *  Use the `batchId` and corresponding password for each batch to reveal it with `reveal`. {@see reveal}
  * @extension ERC721
  * @example
  * ```ts

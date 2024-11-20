@@ -13,7 +13,6 @@ import {
 import { useActiveWallet } from "thirdweb/react";
 import { useTrack } from "../../hooks/analytics/useTrack";
 import type { OnboardingState } from "./types";
-import { skipBilling } from "./utils";
 
 const LazyOnboardingUI = lazy(() => import("./on-boarding-ui.client"));
 
@@ -57,11 +56,10 @@ export const Onboarding: React.FC<{
     // user hasn't confirmed email
     if (!account.emailConfirmedAt && !account.unconfirmedEmail) {
       // if its an embedded wallet, try to auto-confirm it
-
       setState("onboarding");
     }
-    // user has changed email and needs to confirm
-    else if (account.unconfirmedEmail) {
+    // user has no confirmed email and they tried confirming an email earlier
+    else if (!account.emailConfirmedAt && account.unconfirmedEmail) {
       setState(
         account.emailConfirmationWalletAddress
           ? "confirmLinking"
@@ -69,21 +67,16 @@ export const Onboarding: React.FC<{
       );
     }
     // skip when going thru claiming trial growth
-    else if (account?.trialPeriodEndedAt) {
+    else if (account?.onboardSkipped) {
       setState("skipped");
     }
     // user hasn't skipped onboarding, has valid email and no valid payment yet
-    else if (!skipBilling(account)) {
+    else if (!account.onboardSkipped) {
       setState("plan");
     }
   }, [account, state, wallet]);
 
   if (!isLoggedIn || !account || state === "skipped" || !state) {
-    return null;
-  }
-
-  if (state === "billing" && !process.env.NEXT_PUBLIC_STRIPE_KEY) {
-    // can't do billing without stripe key
     return null;
   }
 
@@ -95,17 +88,6 @@ export const Onboarding: React.FC<{
       action: "onboardingStateInvalid",
       label: "onboarding",
       data: { state },
-    });
-    return null;
-  }
-
-  if (state === "billing" && skipBilling(account)) {
-    console.error("Billing state is invalid, skipping rendering");
-    trackEvent({
-      category: "account",
-      action: "onboardingStateInvalid",
-      label: "billing",
-      data: { state, skipBilling },
     });
     return null;
   }

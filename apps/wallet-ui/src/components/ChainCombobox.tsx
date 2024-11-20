@@ -14,9 +14,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useRouter } from "@/hooks/useRouter";
 import { cn } from "@/lib/utils";
 import { ChevronsUpDown } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 import React from "react";
 import type { ChainMetadata } from "thirdweb/chains";
 import { ChainIcon } from "./ChainIcon";
@@ -24,6 +25,7 @@ import { ChainIcon } from "./ChainIcon";
 export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
   const router = useRouter();
   const pathname = usePathname();
+  const params = useParams();
   const searchParams = useSearchParams();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(searchParams.get("chainId") ?? "0");
@@ -43,7 +45,7 @@ export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
     const search = current.toString();
     const query = search ? `?${search}` : "";
 
-    router.push(`${pathname}${query}`);
+    router.push(`${pathname}${query}`, params.ecosystem as string);
   };
 
   return (

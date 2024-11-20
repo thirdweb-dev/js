@@ -3,18 +3,20 @@ import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
     title: "IThirdwebWallet.Transfer | Thirdweb .NET SDK",
-    description: "Method to transfer the specified amount of Wei to a given address.",
+    description: "Method to transfer the specified amount of native tokens or ERC20 tokens to a given address.",
 });
 
 # IThirdwebWallet.Transfer
 
-This method transfers a specified amount of Wei (smallest denomination of Ether) to a specified wallet address on a given chain.
+This method transfers a specified amount of Wei (smallest denomination of Ether) or ERC20s to a specified wallet address on a given chain.
 
 ## Usage
 
 ```csharp
 // Transfer Wei
-ThirdwebTransactionReceipt receipt = await wallet.Transfer(chainId, toAddress, weiAmount);
+var receipt = await wallet.Transfer(chainId, toAddress, weiAmount);
+// Transfer ERC20
+var receipt = await wallet.Transfer(chainId, toAddress, weiAmount, erc20ContractAddress);
 ```
 
 <Details summary="Parameters">
@@ -34,6 +36,10 @@ The address to which the Wei will be transferred.
 ### weiAmount (required)
 
 The amount of Wei to transfer. It must be 0 or greater.
+
+### erc20ContractAddress (optional)
+
+The contract address of the ERC20 token to transfer. If not provided, the transfer will be in native tokens.
 
 </Details>
 

@@ -1,0 +1,109 @@
+import { createMetadata, ArticleIconCard, Callout  } from "@doc";
+import {
+    ReactIcon,
+    TypeScriptIcon,
+    UnityIcon,
+    DotNetIcon,
+    ExternalLinkIcon,
+    UnrealEngineIcon
+} from "@/icons"
+
+export const metadata = createMetadata({
+	image: {
+		title: "Linking Multiple Identities",
+		icon: "wallets",
+	},
+	title: "Linking Multiple Identities",
+	description:
+		"Learn how to associate multiple social profiles with a single wallet address.",
+});
+
+# Linking Multiple Identities
+
+thirdweb Wallets allow users to tie the same wallet address to multiple social identities. Developers can programmatically link additional identities at any point in their user journey.
+
+## Link a new identity
+
+When linking two identities, both identities will now be linked to the same wallet.
+
+<Callout variant='info' title='Linking a pre-existing identity'>
+	If the account that is  is already linked to this or another wallet, this will 	throw an error.
+</Callout>
+
+
+### In App Wallet
+
+<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+    <ArticleIconCard
+        title="TypeScript"
+        icon={TypeScriptIcon}
+        description="Linking identities for in-app wallets in TypeScript"
+        href="/typescript/v5/linkProfile"
+    />
+    <ArticleIconCard
+        title="React"
+        icon={ReactIcon}
+        description="Linking identities for in-app wallets in React"
+        href="/react/v5/useLinkProfile"
+    />
+    <ArticleIconCard
+        title="React Native"
+        icon={ReactIcon}
+        description="Linking identities for in-app wallets in React Native"
+        href="/react-native/v5/useLinkProfile"
+    />
+	<ArticleIconCard
+        title=".NET"
+        icon={DotNetIcon}
+        description="Linking identities for in-app wallets in .NET"
+        href="/dotnet/wallets/providers/in-app-wallet#linking-accounts"
+    />
+    <ArticleIconCard
+        title="Unity"
+        icon={UnityIcon}
+        description="Linking identities for in-app wallets in Unity"
+        href="/unity/v5/wallets/in-app-wallet#account-linking"
+    />
+</div>
+
+### Ecosystem Wallet
+
+<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+     <ArticleIconCard
+        title="TypeScript"
+        icon={TypeScriptIcon}
+        description="Linking identities for ecosystem wallets in TypeScript"
+        href="/typescript/v5/linkProfile"
+    />
+    <ArticleIconCard
+        title="React"
+        icon={ReactIcon}
+        description="Linking identities for ecosystem wallets in React"
+        href="/react/v5/useLinkProfile"
+    />
+    <ArticleIconCard
+        title="React Native"
+        icon={ReactIcon}
+        description="Linking identities for ecosystem wallets in React Native"
+        href="/react-native/v5/useLinkProfile"
+    />
+	<ArticleIconCard
+        title=".NET"
+        icon={DotNetIcon}
+        description="Linking identities for ecosystem wallets in .NET"
+        href="/dotnet/wallets/providers/ecosystem-wallet#linking-accounts"
+    />
+    <ArticleIconCard
+        title="Unity"
+        icon={UnityIcon}
+        description="Linking identities for ecosystem wallets in Unity"
+        href="/unity/v5/wallets/ecosystem-wallet#account-linking"
+    />
+</div>
+
+
+## Retrieve Linked Profiles
+
+Once linked, you can retrieve the user profiles via either identity.
+
+For more information, see [Getting User Profiles](/connect/wallet/user-management/get-user-profiles).

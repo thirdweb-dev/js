@@ -78,30 +78,30 @@
       "dependsOn": ["^build"]
     },
     "thirdweb#update-version": {
-      "inputs": ["package.json"],
+      "inputs": ["$TURBO_DEFAULT$", "package.json"],
       "outputs": ["src/version.ts"]
     },
     "test": {
       "outputs": ["coverage/**"],
-      "inputs": ["src/**", "test/**"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "test/**"],
       "dependsOn": ["^build"]
     },
     "storybook": {
-      "inputs": ["src/**"]
+      "inputs": ["$TURBO_DEFAULT$", "src/**"]
     },
     "test:legacy": {
       "outputs": ["coverage/**"],
-      "inputs": ["src/**", "test/**"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "test/**"],
       "dependsOn": ["^build"]
     },
     "e2e": {
       "outputs": [],
-      "inputs": ["src/**", "fixtures/**"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "fixtures/**"],
       "dependsOn": ["^build"]
     },
     "e2e:legacy": {
       "outputs": [],
-      "inputs": ["src/**", "fixtures/**"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "fixtures/**"],
       "dependsOn": ["^build"]
     },
     "lint": {

@@ -46,7 +46,7 @@ This section allows you to define the default preferences for the SDK:
 - `Show Debug Logs`: Whether to show thirdweb SDK debug logs.
 - `Opt Out Usage Analytics`: Whether to opt out of Connect usage analytics, such as the number of wallets connected to your game.
 
-### Misc
+### Miscellaneous
 
 <DocImage src={thirdwebmanager_misc} />
 
@@ -84,6 +84,32 @@ var result = await contract.Read<string>("name");
 ```
 
 Returns a [ThirdwebContract](/dotnet/contracts/create) instance that can be used to interact with a smart contract.
+
+### ConnectWallet
+
+```csharp
+var walletOptions = new WalletOptions(WalletProvider.PrivateKeyWallet, 421614);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(walletOptions);
+var address = await wallet.GetAddress();
+```
+
+Connects a wallet based on the specified `WalletOptions` and returns an `IThirdwebWallet` instance that can be used to interact with the blockchain.
+
+### UpgradeToSmartWallet
+
+```csharp
+var smartWallet = await ThirdwebManager.Instance.UpgradeToSmartWallet(wallet, chainId, smartWalletOptions);
+```
+
+Upgrades the specified wallet to a `SmartWallet`, returning a `SmartWallet` instance.
+
+### LinkAccount
+
+```csharp
+var linkedAccounts = await ThirdwebManager.Instance.LinkAccount(mainWallet, walletToLink, otp, chainId, jwtOrPayload);
+```
+
+Links another `InAppWallet` or `EcosystemWallet` account to the main wallet and returns a list of linked accounts, allowing you to login with either authentication method later.
 
 ### GetActiveWallet
 
@@ -125,43 +151,13 @@ ThirdwebManager.Instance.RemoveWallet("wallet-address");
 
 Removes a wallet from the manager's wallet mapping by its address.
 
-### ConnectWallet
-
-```csharp
-var walletOptions = new WalletOptions(WalletProvider.PrivateKeyWallet, 421614);
-var wallet = await ThirdwebManager.Instance.ConnectWallet(walletOptions);
-var address = await wallet.GetAddress();
-```
-
-Connects a wallet based on the specified `WalletOptions` and returns an `IThirdwebWallet` instance that can be used to interact with the blockchain.
-
-### UpgradeToSmartWallet
-
-```csharp
-var smartWallet = await ThirdwebManager.Instance.UpgradeToSmartWallet(wallet, chainId, smartWalletOptions);
-```
-
-Upgrades the specified wallet to a `SmartWallet`, returning a `SmartWallet` instance.
-
-### LinkAccount
-
-```csharp
-var linkedAccounts = await ThirdwebManager.Instance.LinkAccount(mainWallet, walletToLink, otp, chainId, jwtOrPayload);
-```
-
-Links another `InAppWallet` account to the main wallet and returns a list of linked accounts, allowing you to login with either authentication method later.
-
 ## Child Prefabs
 
-### InAppWalletModal
+### DefaultOTPModal
 
-The `InAppWalletModal` prefab is a simple and customizable OTP verification modal for `InAppWallet` providers. It is used to verify and finalize the user's wallet connection.
+The helper modal that is displayed when using the `ThirdwebManager`'s `ConnectWallet` function with an auth method that requires an OTP, such as Email or Phone login.
 
-It will be automatically activated when connecting to an `InAppWallet` provider.
-
-### EcosystemWalletModal
-
-Similar use case as `InAppWalletModal`, but for `EcosystemWallet` providers.
+It can be replaced with a custom modal that extends `AbstractOTPVerifyModal` to customize the OTP verification process.
 
 ### WalletConnectModal
 

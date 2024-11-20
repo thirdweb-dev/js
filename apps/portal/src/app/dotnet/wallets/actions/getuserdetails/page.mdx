@@ -1,0 +1,24 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "EcosystemWallet.GetUserDetails | Thirdweb .NET SDK",
+	description: "Retrieve information about the connected user wallet and its linked accounts.",
+});
+
+# EcosystemWallet.GetUserDetails
+
+This method returns information about the connected user wallet and its linked accounts.
+
+## Usage
+
+```csharp
+var result = await ecosystemWallet.GetUserDetails();
+```
+
+<Details summary="Return Value">
+
+### UserStatusResponse
+
+The user and linked accounts information, such as the user's address, email and more.
+
+</Details>

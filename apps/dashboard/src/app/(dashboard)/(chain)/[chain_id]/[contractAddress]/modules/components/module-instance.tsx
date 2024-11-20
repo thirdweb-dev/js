@@ -31,7 +31,7 @@ export function ModuleInstance(props: ModuleInstanceProps) {
     return <TransferableModule {...props} />;
   }
 
-  if (props.contractInfo.name.includes("Mintable-ignore")) {
+  if (props.contractInfo.name.includes("Mintable")) {
     return <MintableModule {...props} />;
   }
 
@@ -39,7 +39,7 @@ export function ModuleInstance(props: ModuleInstanceProps) {
     return <RoyaltyModule {...props} />;
   }
 
-  if (props.contractInfo.name.includes("Claimable-ignore")) {
+  if (props.contractInfo.name.includes("Claimable")) {
     return <ClaimableModule {...props} />;
   }
 

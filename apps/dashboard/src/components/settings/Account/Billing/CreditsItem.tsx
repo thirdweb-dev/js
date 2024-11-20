@@ -43,7 +43,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/50 p-4">
+    <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/50 p-4 lg:p-6">
       <div className="relative">
         <div className="absolute top-0 right-0">
           {isOpCredit ? (
@@ -69,10 +69,12 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
           ) : null}
         </div>
 
-        <h3 className="text-foreground">{creditTitle}</h3>
+        <h3 className="text-foreground text-xl tracking-tight">
+          {creditTitle}
+        </h3>
       </div>
 
-      <div className="flex gap-4">
+      <div className="mt-1 flex gap-6">
         <div>
           <h4 className="font-medium text-muted-foreground text-sm">
             Remaining Credits

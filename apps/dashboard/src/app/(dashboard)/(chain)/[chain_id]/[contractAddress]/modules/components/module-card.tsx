@@ -32,7 +32,7 @@ import type { Account } from "thirdweb/wallets";
 import { ModuleInstance } from "./module-instance";
 import { useModuleContractInfo } from "./moduleContractInfo";
 
-export type ModuleCardProps = {
+type ModuleCardProps = {
   moduleAddress: string;
   contract: ContractOptions;
   onRemoveModule: () => void;

@@ -31,6 +31,7 @@ export const socialAuthOptions = [
   "telegram",
   "github",
   "twitch",
+  "steam",
 ] as const;
 export type SocialAuthOption = (typeof socialAuthOptions)[number];
 export type OAuthOption = SocialAuthOption | "guest";

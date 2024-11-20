@@ -40,5 +40,6 @@ export {
   type PrepareDirectDeployTransactionOptions,
 } from "../contract/deployment/deploy-with-abi.js";
 export { prepareAutoFactoryDeployTransaction } from "../contract/deployment/deploy-via-autofactory.js";
+export { prepareMethod } from "../utils/abi/prepare-method.js";
 
 export { getCompilerMetadata } from "../contract/actions/get-compiler-metadata.js";

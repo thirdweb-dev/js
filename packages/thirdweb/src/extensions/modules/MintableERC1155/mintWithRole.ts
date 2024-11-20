@@ -45,11 +45,14 @@ export function mintWithRole(
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
-      const batchOfUris = await uploadOrExtractURIs(
-        [options.nft],
-        options.contract.client,
-      );
-      const baseURI = getBaseUriFromBatch(batchOfUris);
+      let baseURI = "";
+      if (options.nft) {
+        const batchOfUris = await uploadOrExtractURIs(
+          [options.nft],
+          options.contract.client,
+        );
+        baseURI = getBaseUriFromBatch(batchOfUris);
+      }
 
       const tokenId = options.tokenId ?? maxUint256;
       return {

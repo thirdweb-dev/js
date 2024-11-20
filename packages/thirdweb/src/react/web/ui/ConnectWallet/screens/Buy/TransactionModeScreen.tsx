@@ -13,6 +13,7 @@ import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBala
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../../../core/hooks/wallets/useActiveWallet.js";
 import { hasSponsoredTransactionsEnabled } from "../../../../../core/utils/wallet.js";
+import { ErrorState } from "../../../../wallets/shared/ErrorState.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
 import { ChainIcon } from "../../../components/ChainIcon.js";
@@ -54,9 +55,19 @@ export function TransactionModeScreen(props: {
     supportedDestinations,
     onContinue,
   } = props;
-  const { data: chainData } = useChainMetadata(payUiOptions.transaction.chain);
+  const {
+    data: chainData,
+    error: chainDataError,
+    isLoading: chainDataLoading,
+    refetch: chainDataRefetch,
+  } = useChainMetadata(payUiOptions.transaction.chain);
   const metadata = payUiOptions.metadata;
-  const { data: transactionCostAndData } = useTransactionCostAndData({
+  const {
+    data: transactionCostAndData,
+    error: transactionCostAndDataError,
+    isLoading: transactionCostAndDataLoading,
+    refetch: transactionCostAndDataRefetch,
+  } = useTransactionCostAndData({
     transaction: payUiOptions.transaction,
     account: payerAccount,
     supportedDestinations,
@@ -79,6 +90,36 @@ export function TransactionModeScreen(props: {
       enabled: !!transactionCostAndData,
     },
   );
+
+  if (transactionCostAndDataLoading || chainDataLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (transactionCostAndDataError || chainDataError) {
+    return (
+      <Container
+        style={{
+          minHeight: "350px",
+        }}
+        fullHeight
+        flex="row"
+        center="both"
+      >
+        <ErrorState
+          title={
+            transactionCostAndDataError?.message ||
+            chainDataError?.message ||
+            "Something went wrong"
+          }
+          onTryAgain={
+            transactionCostAndDataError
+              ? transactionCostAndDataRefetch
+              : chainDataRefetch
+          }
+        />
+      </Container>
+    );
+  }
 
   if (!transactionCostAndData || !chainData) {
     return <LoadingScreen />;

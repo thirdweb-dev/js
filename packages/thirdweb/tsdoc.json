@@ -76,6 +76,18 @@
     {
       "tagName": "@social",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@client",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@nft",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@account",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -97,6 +109,10 @@
     "@utils": true,
     "@chain": true,
     "@modules": true,
-    "@social": true
+    "@social": true,
+    "@client": true,
+    "@nft": true,
+    "@account": true,
+    "@beta": true
   }
 }

@@ -3,6 +3,7 @@ import {
 	TabsList,
 	TabsTrigger,
 	TabsContent,
+	Callout,
 	DocImage,
 	createMetadata,
 } from "@doc";
@@ -45,6 +46,11 @@ export default function App() {
 ## Choose authentication methods
 
 By default, the connect UI supports multiple social logins as well as email, phone and passkey authentication. You can customize which authentication methods to support which will be reflected in the UI.
+
+<Callout variant="info" title="Authentication Order">
+	By default, email login is displayed before phone number login. To display phone number first, add "phone" before "email" in the providers array
+</Callout>
+
 
 ```tsx
 import { ThirdwebProvider, ConnectButton } from "thirdweb/react";

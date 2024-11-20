@@ -4,6 +4,5 @@ export type OnboardingState =
   | "confirming"
   | "confirmLinking"
   | "plan"
-  | "billing"
   | "skipped"
   | undefined;

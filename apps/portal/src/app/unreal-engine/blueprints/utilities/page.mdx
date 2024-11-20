@@ -1,26 +1,28 @@
 import { createUnrealEngineMetadata } from "../../util";
 import {
 	equalityNode,
-	isValidNode,
-	signMessageNode,
-	toChecksummedAddressNode,
 	isChecksummedAddressNode,
 	isValidAddressNode,
-	isValidPrivateKeyNode,
-	toTextStringNode, zeroAddressNode, oAuthProviderToStringText, stringTextToOAuthProvider,
+	isValidNode,
+	oAuthProviderToStringText,
+	signMessageNode,
+	stringTextToOAuthProvider,
+	toChecksummedAddressNode,
+	toTextStringNode,
+	zeroAddressNode,
 } from "./nodes";
 import { Blueprint } from "../blueprint";
 
 export const metadata = createUnrealEngineMetadata({
-    title: "Utilities",
-    description: "Utility & Helper functions",
+	title: "Utilities",
+	description: "Utility & Helper functions",
 });
 
 # Utilities
 
 ### Sign Message
 Signs a message with the specified wallet handle.
-<Blueprint code={signMessageNode} className='w-full h-32' />
+<Blueprint code={signMessageNode} className='w-full h-48' />
 
 ### To Text/String
 Signs a message with the specified wallet handle.

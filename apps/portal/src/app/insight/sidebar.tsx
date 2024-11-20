@@ -14,6 +14,10 @@ export const sidebar: SideBar = {
       href: `${insightSlug}/get-started`,
     },
     {
+      name: "Supported Chains",
+      href: `${insightSlug}/supported-chains`,
+    },
+    {
       name: "Blueprints",
       href: `${insightSlug}/blueprints`,
     },

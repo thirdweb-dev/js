@@ -1,7 +1,8 @@
-import { equalBytes } from "@noble/curves/abstract/utils";
 import {
   type Signature,
   encodeDeployData,
+  encodeFunctionData,
+  isErc6492Signature,
   serializeSignature,
   universalSignatureValidatorAbi,
   universalSignatureValidatorByteCode,
@@ -12,10 +13,9 @@ import { type ThirdwebContract, getContract } from "../contract/contract.js";
 import { isValidSignature } from "../extensions/erc1271/__generated__/isValidSignature/read/isValidSignature.js";
 import { eth_call } from "../rpc/actions/eth_call.js";
 import { getRpcClient } from "../rpc/rpc.js";
+import { isZkSyncChain } from "../utils/any-evm/zksync/isZkSyncChain.js";
 import { fromBytes } from "../utils/encoding/from-bytes.js";
-import { type Hex, isHex } from "../utils/encoding/hex.js";
-import { toBytes } from "../utils/encoding/to-bytes.js";
-import { isErc6492Signature } from "./is-erc6492-signature.js";
+import { type Hex, hexToBool, isHex } from "../utils/encoding/hex.js";
 import { serializeErc6492Signature } from "./serialize-erc6492-signature.js";
 
 export type VerifyHashParams = {
@@ -29,6 +29,8 @@ export type VerifyHashParams = {
     verificationCalldata: Hex;
   };
 };
+
+const ZKSYNC_VALIDATOR_ADDRESS = "0xfB688330379976DA81eB64Fe4BF50d7401763B9C";
 
 /**
  * @description Verify that an address created the provided signature for a given hash using [ERC-6492](https://eips.ethereum.org/EIPS/eip-6492). This function is interoperable with all wallet types, including EOAs.
@@ -77,7 +79,7 @@ export async function verifyHash({
     );
   })();
 
-  const wrappedSignature = await (async () => {
+  const wrappedSignature: Hex = await (async () => {
     // If no factory is provided, we have to assume its already deployed or is an EOA
     // TODO: Figure out how to automatically tell if our default factory was used
     if (!accountFactory) return signatureHex;
@@ -93,11 +95,31 @@ export async function verifyHash({
     });
   })();
 
-  const verificationData = encodeDeployData({
-    abi: universalSignatureValidatorAbi,
-    args: [address, hash, wrappedSignature],
-    bytecode: universalSignatureValidatorByteCode,
-  });
+  let verificationData: {
+    to?: string;
+    data: Hex;
+  };
+  const zkSyncChain = await isZkSyncChain(chain);
+  if (zkSyncChain) {
+    // zksync chains dont support deploying code with eth_call
+    // need to call a deployed contract instead
+    verificationData = {
+      to: ZKSYNC_VALIDATOR_ADDRESS,
+      data: encodeFunctionData({
+        abi: universalSignatureValidatorAbi,
+        functionName: "isValidSig",
+        args: [address, hash, wrappedSignature],
+      }),
+    };
+  } else {
+    verificationData = {
+      data: encodeDeployData({
+        abi: universalSignatureValidatorAbi,
+        args: [address, hash, wrappedSignature],
+        bytecode: universalSignatureValidatorByteCode,
+      }),
+    };
+  }
 
   const rpcRequest = getRpcClient({
     chain,
@@ -105,12 +127,8 @@ export async function verifyHash({
   });
 
   try {
-    const result = await eth_call(rpcRequest, {
-      data: verificationData,
-    });
-
-    const hexResult = isHex(result) ? toBytes(result) : result;
-    return equalBytes(hexResult, toBytes(true));
+    const result = await eth_call(rpcRequest, verificationData);
+    return hexToBool(result);
   } catch {
     // Some chains do not support the eth_call simulation and will fail, so we fall back to regular EIP1271 validation
     const validEip1271 = await verifyEip1271Signature({
@@ -121,7 +139,10 @@ export async function verifyHash({
         address,
         client,
       }),
-    }).catch(() => false);
+    }).catch((err) => {
+      console.error("Error verifying EIP-1271 signature", err);
+      return false;
+    });
     if (validEip1271) {
       return true;
     }

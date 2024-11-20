@@ -29,8 +29,7 @@ import type { LocaleId } from "./types.js";
  */
 export type PayEmbedProps = {
   /**
-   * Override the default tokens shown in PayEmbed uI
-   * @component
+   * Override the default tokens shown in PayEmbed UI
    * By default, PayEmbed shows a few popular tokens for Pay supported chains
    * @example
    *
@@ -157,6 +156,7 @@ export type PayEmbedProps = {
  *   }}
  *  />
  * ```
+ * @buyCrypto
  */
 export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");

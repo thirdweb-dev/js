@@ -1,0 +1,172 @@
+import { Callout, OpenSourceCard, createMetadata, InstallTabs, ArticleIconCard } from "@doc";
+import {
+    ReactIcon,
+    TypeScriptIcon,
+    UnityIcon,
+    DotNetIcon,
+    ExternalLinkIcon,
+    UnrealEngineIcon
+} from "@/icons"
+
+export const metadata = createMetadata({
+	image: {
+		title: "Get started with thirdweb Wallets",
+		icon: "wallets",
+	},
+	title: "Get started with thirdweb Wallet",
+	description: "Get started with thirdweb Wallet",
+});
+
+# Get Started
+
+thirdweb offers multiple ways to add wallets to your application. Choose the method that best suits your needs:
+
+1. **External Wallets** - Connect to existing wallets like MetaMask, Coinbase Wallet, etc.
+2. **In-App Wallets** - Create wallets with social/email login.
+3. **Ecosystem Wallets** - Create wallets with social/email login that is shareable across various aplications.
+
+These methods can be used independently or together in the same application to provide the best experience for your users.
+
+## Try the demo
+
+We have a playground that lets you see all the various options via our prebuilt UI:
+
+<ArticleIconCard
+    title="Connect demo"
+    icon={ExternalLinkIcon}
+    description="Play around with various wallet connection options"
+    href="https://playground.thirdweb.com/connect/sign-in/button"
+/>
+
+## Integrate into existing project
+
+Install the required package:
+
+<InstallTabs
+	npm="npm i thirdweb"
+	yarn="yarn add thirdweb"
+	pnpm="pnpm i thirdweb"
+	bun="bun i thirdweb"
+/>
+
+## Get your client ID
+
+To use in-app wallets in your applications, you will need a client ID. You can get one for free on [your thirdweb dashboard](https://thirdweb.com/create-api-key).
+
+## Connecting & Creating In-App Wallets
+
+## External Wallets
+
+Connect to popular external wallets:
+
+<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+    <ArticleIconCard
+        title="TypeScript"
+        icon={TypeScriptIcon}
+        description="Connect external wallets in TypeScript"
+        href="/typescript/v5/createWallet"
+    />
+    <ArticleIconCard
+        title="React"
+        icon={ReactIcon}
+        description="Connect external wallets in React"
+        href="/react/v5/connecting-wallets/ui-components"
+    />
+    <ArticleIconCard
+        title="React Native"
+        icon={ReactIcon}
+        description="Connect external wallets in React Native"
+        href="/react-native/v5/ConnectButton"
+    />
+    <ArticleIconCard
+        title="Unity"
+        icon={UnityIcon}
+        description="Connect external wallets in Unity"
+        href="/unity/v5/wallets/walletconnect"
+    />
+</div>
+
+## In-App Wallets
+
+Create in-app wallets with social/email/sms/passkey login via the following guides:
+
+<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+    <ArticleIconCard
+        title="TypeScript"
+        icon={TypeScriptIcon}
+        description="Implement in-app wallets in TypeScript"
+        href="/typescript/v5/inAppWallet"
+    />
+    <ArticleIconCard
+        title="React"
+        icon={ReactIcon}
+        description="Implement in-app wallets in React"
+        href="/react/v5/in-app-wallet/get-started"
+    />
+    {/* TODO: Link to react native getting started for in appw allet */}
+    <ArticleIconCard
+        title="React Native"
+        icon={ReactIcon}
+        description="Implement in-app wallets in React Native"
+        href="/react/v5/in-app-wallet/get-started"
+    />
+      <ArticleIconCard
+        title=".NET"
+        icon={DotNetIcon}
+        description="Connect in-app wallets in .NET"
+        href="/dotnet/wallets/providers/in-app-wallet"
+    />
+    <ArticleIconCard
+        title="Unity"
+        icon={UnityIcon}
+        description="Implement in-app wallets in Unity"
+        href="/unity/v5/wallets/in-app-wallet"
+    />
+    <ArticleIconCard
+        title="Unreal Engine"
+        icon={UnrealEngineIcon}
+        description="Implement in-app wallets in Unreal Engine"
+        href="/unreal-engine/blueprints/in-app-wallet"
+    />
+</div>
+
+## Ecosystem Wallets
+
+If you're looking to set up an ecosystem from scratch, refer to the [set-up guide](/connect/wallet/ecosystem/set-up)
+
+If you're looking to integrate ecosystem wallets in your aplication, refer to the following guides:
+
+<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+    <ArticleIconCard
+        title="TypeScript"
+        icon={TypeScriptIcon}
+        description="Connect ecosystem wallets in TypeScript"
+        href="/typescript/v5/ecosystemWallet"
+    />
+    <ArticleIconCard
+        title="React"
+        icon={ReactIcon}
+        description="Connect ecosystem wallets in React"
+        href="/react/v5/ecosystem-wallet/get-started"
+    />
+    {/* TODO: Add react native specific getting started for ecosystem wallets */}
+    <ArticleIconCard
+        title="React Native"
+        icon={ReactIcon}
+        description="Connect ecosystem wallets in React Native"
+        href="/react/v5/ecosystem-wallet/get-started"
+    />
+     <ArticleIconCard
+        title=".NET"
+        icon={DotNetIcon}
+        description="Connect ecosystem wallets in .NET"
+        href="/dotnet/wallets/providers/ecosystem-wallet"
+    />
+    <ArticleIconCard
+        title="Unity"
+        icon={UnityIcon}
+        description="Connect ecosystem wallets in Unity"
+        href="/unity/v5/wallets/ecosystem-wallet"
+    />
+</div>
+

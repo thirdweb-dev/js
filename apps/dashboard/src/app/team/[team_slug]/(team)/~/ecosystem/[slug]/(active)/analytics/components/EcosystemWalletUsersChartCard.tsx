@@ -154,8 +154,8 @@ export function EcosystemWalletUsersChartCard(props: {
             chartData.every((data) => data[authMethod] === 0),
           ) ? (
           <EmptyChartState>
-            <div className="flex flex-col items-center justify-center">
-              <span className="mb-6 text-lg">
+            <div className="flex flex-col items-center justify-center px-4">
+              <span className="mb-6 text-center text-lg">
                 Connect users to your app with social logins
               </span>
               <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
