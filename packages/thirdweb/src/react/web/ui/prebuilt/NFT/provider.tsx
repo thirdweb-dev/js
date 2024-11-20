@@ -63,7 +63,7 @@ export function useNFTContext() {
  *    <NFTName />
  * </NFTProvider>
  * ```
- * @nft
+ * @nft @beta
  */
 export function NFTProvider(props: React.PropsWithChildren<NFTProviderProps>) {
   return (

@@ -57,7 +57,7 @@ export interface NFTNameProps
  * </NFTProvider>
  * ```
  *
- * @nft
+ * @nft @beta
  */
 export function NFTName({
   loadingComponent,

@@ -12,6 +12,8 @@ import { useNFTContext } from "./provider.js";
  * It is similar to the [`MediaRendererProps`](https://portal.thirdweb.com/references/typescript/v5/MediaRendererProps)
  * (excluding `src`, `poster` and `client`) that you can
  * use to style the NFTMedia
+ *
+ * @beta
  */
 export type NFTMediaProps = Omit<
   MediaRendererProps,
@@ -76,7 +78,7 @@ export type NFTMediaProps = Omit<
  * ```tsx
  * <NFTMedia style={{ borderRadius: "8px" }} className="mx-auto" />
  * ```
- * @nft
+ * @nft @beta
  */
 export function NFTMedia({
   loadingComponent,
