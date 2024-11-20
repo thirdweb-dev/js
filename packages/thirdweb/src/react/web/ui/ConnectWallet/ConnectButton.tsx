@@ -23,6 +23,7 @@ import { Spinner } from "../components/Spinner.js";
 import { Container } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { fadeInAnimation } from "../design-system/animations.js";
+import { AccountProvider } from "../prebuilt/Account/provider.js";
 import { ConnectedWalletDetails } from "./Details.js";
 import ConnectModal from "./Modal/ConnectModal.js";
 import { LockIcon } from "./icons/LockIcon.js";
@@ -532,37 +533,39 @@ function ConnectButtonInner(
   }
 
   return (
-    <ConnectedWalletDetails
-      theme={theme}
-      detailsButton={props.detailsButton}
-      detailsModal={props.detailsModal}
-      supportedTokens={supportedTokens}
-      supportedNFTs={props.supportedNFTs}
-      onDisconnect={(info) => {
-        // logout on explicit disconnect!
-        if (siweAuth.requiresAuth) {
-          siweAuth.doLogout();
-        }
-        props.onDisconnect?.(info);
-      }}
-      chains={props?.chains || []}
-      chain={props.chain}
-      switchButton={props.switchButton}
-      client={props.client}
-      connectLocale={locale}
-      connectOptions={{
-        accountAbstraction: props.accountAbstraction,
-        appMetadata: props.appMetadata,
-        chain: props.chain,
-        chains: props.chains,
-        connectModal: props.connectModal,
-        recommendedWallets: props.recommendedWallets,
-        showAllWallets: props.showAllWallets,
-        walletConnect: props.walletConnect,
-        wallets: props.wallets,
-        hiddenWallets: props.detailsModal?.hiddenWallets,
-      }}
-    />
+    <AccountProvider address={activeAccount.address} client={props.client}>
+      <ConnectedWalletDetails
+        theme={theme}
+        detailsButton={props.detailsButton}
+        detailsModal={props.detailsModal}
+        supportedTokens={supportedTokens}
+        supportedNFTs={props.supportedNFTs}
+        onDisconnect={(info) => {
+          // logout on explicit disconnect!
+          if (siweAuth.requiresAuth) {
+            siweAuth.doLogout();
+          }
+          props.onDisconnect?.(info);
+        }}
+        chains={props?.chains || []}
+        chain={props.chain}
+        switchButton={props.switchButton}
+        client={props.client}
+        connectLocale={locale}
+        connectOptions={{
+          accountAbstraction: props.accountAbstraction,
+          appMetadata: props.appMetadata,
+          chain: props.chain,
+          chains: props.chains,
+          connectModal: props.connectModal,
+          recommendedWallets: props.recommendedWallets,
+          showAllWallets: props.showAllWallets,
+          walletConnect: props.walletConnect,
+          wallets: props.wallets,
+          hiddenWallets: props.detailsModal?.hiddenWallets,
+        }}
+      />
+    </AccountProvider>
   );
 }
 

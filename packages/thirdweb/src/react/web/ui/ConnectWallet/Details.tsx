@@ -15,6 +15,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 import { getLastAuthProvider } from "../../../../react/core/utils/storage.js";
+import { shortenAddress } from "../../../../utils/address.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import { formatNumber } from "../../../../utils/formatNumber.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
@@ -67,10 +68,7 @@ import type {
   SupportedTokens,
 } from "../../../core/utils/defaultTokens.js";
 import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
-import {
-  useConnectedWalletDetails,
-  useWalletInfo,
-} from "../../../core/utils/wallet.js";
+import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { CopyIcon } from "../components/CopyIcon.js";
@@ -86,8 +84,13 @@ import { Button, IconButton } from "../components/buttons.js";
 import { Link, Text } from "../components/text.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
+import { AccountAddress } from "../prebuilt/Account/address.js";
+import { AccountAvatar } from "../prebuilt/Account/avatar.js";
+import { AccountBalance } from "../prebuilt/Account/balance.js";
+import { AccountBlobbie } from "../prebuilt/Account/blobbie.js";
+import { AccountName } from "../prebuilt/Account/name.js";
+import { AccountProvider } from "../prebuilt/Account/provider.js";
 import type { LocaleId } from "../types.js";
-import { Blobbie } from "./Blobbie.js";
 import { MenuButton, MenuLink } from "./MenuButton.js";
 import { ScreenSetupContext, useSetupScreen } from "./Modal/screen.js";
 import {
@@ -140,17 +143,9 @@ export const ConnectedWalletDetails: React.FC<{
   connectOptions: DetailsModalConnectOptions | undefined;
 }> = (props) => {
   const { connectLocale: locale, client } = props;
-
   const setRootEl = useContext(SetRootElementContext);
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
-
-  const { pfp, name, balanceQuery } = useConnectedWalletDetails(
-    client,
-    walletChain,
-    activeAccount,
-    props.detailsButton?.displayBalanceToken,
-  );
 
   function closeModal() {
     setRootEl(null);
@@ -199,8 +194,6 @@ export const ConnectedWalletDetails: React.FC<{
     );
   }
 
-  const avatarSrc = props.detailsButton?.connectedAccountAvatarUrl || pfp;
-
   const combinedClassName = `${TW_CONNECTED_WALLET} ${props.detailsButton?.className || ""}`;
 
   return (
@@ -219,10 +212,10 @@ export const ConnectedWalletDetails: React.FC<{
           height: "35px",
         }}
       >
-        {avatarSrc ? (
+        {props.detailsButton?.connectedAccountAvatarUrl ? (
           <img
             alt=""
-            src={avatarSrc}
+            src={props.detailsButton.connectedAccountAvatarUrl}
             style={{
               height: "100%",
               width: "100%",
@@ -230,7 +223,16 @@ export const ConnectedWalletDetails: React.FC<{
             }}
           />
         ) : (
-          activeAccount && <Blobbie address={activeAccount.address} size={35} />
+          activeAccount && (
+            <AccountAvatar
+              loadingComponent={<AccountBlobbie size={35} />}
+              fallbackComponent={<AccountBlobbie size={35} />}
+              queryOptions={{
+                refetchOnWindowFocus: false,
+                refetchOnMount: false,
+              }}
+            />
+          )
         )}
       </Container>
       <Container
@@ -243,29 +245,47 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       >
         {/* Address */}
-        <Text
-          size="xs"
-          color="primaryText"
-          weight={500}
-          className={`${TW_CONNECTED_WALLET}__address`}
-        >
-          {props.detailsButton?.connectedAccountName ?? name}
-        </Text>
-
-        {/* Balance */}
-        {balanceQuery.data ? (
+        {props.detailsButton?.connectedAccountName ? (
           <Text
-            className={`${TW_CONNECTED_WALLET}__balance`}
             size="xs"
-            color="secondaryText"
-            weight={400}
+            color="primaryText"
+            weight={500}
+            className={`${TW_CONNECTED_WALLET}__address`}
           >
-            {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
-            {balanceQuery.data.symbol}
+            {props.detailsButton.connectedAccountName}
           </Text>
         ) : (
-          <Skeleton height={fontSize.xs} width="70px" />
+          <Text
+            size="xs"
+            color="primaryText"
+            weight={500}
+            className={`${TW_CONNECTED_WALLET}__address`}
+          >
+            <AccountName
+              loadingComponent={<AccountAddress formatFn={shortenAddress} />}
+              fallbackComponent={<AccountAddress formatFn={shortenAddress} />}
+            />
+          </Text>
         )}
+
+        <Text
+          className={`${TW_CONNECTED_WALLET}__balance`}
+          size="xs"
+          color="secondaryText"
+          weight={400}
+        >
+          <AccountBalance
+            chain={walletChain}
+            loadingComponent={<Skeleton height={fontSize.xs} width="70px" />}
+            fallbackComponent={<Skeleton height={fontSize.xs} width="70px" />}
+            formatFn={formatBalanceOnButton}
+            tokenAddress={
+              props.detailsButton?.displayBalanceToken?.[
+                Number(walletChain?.id)
+              ]
+            }
+          />
+        </Text>
       </Container>
     </WalletInfoButton>
   );
@@ -295,12 +315,6 @@ function DetailsModal(props: {
   const { client, locale } = props;
   const walletChain = useActiveWalletChain();
   const activeAccount = useActiveAccount();
-  const { pfp, name, balanceQuery } = useConnectedWalletDetails(
-    client,
-    walletChain,
-    activeAccount,
-    props.displayBalanceToken,
-  );
   const theme = parseTheme(props.theme);
 
   const activeWallet = useActiveWallet();
@@ -363,12 +377,15 @@ function DetailsModal(props: {
         <Text color="primaryText" size="md" multiline>
           {chainNameQuery.name || `Unknown chain #${walletChain?.id}`}
           <Text color="secondaryText" size="xs">
-            {balanceQuery.data ? (
-              formatNumber(Number(balanceQuery.data.displayValue), 9)
-            ) : (
-              <Skeleton height="1em" width="100px" />
-            )}{" "}
-            {balanceQuery.data?.symbol}
+            <AccountBalance
+              fallbackComponent={<Skeleton height="1em" width="100px" />}
+              loadingComponent={<Skeleton height="1em" width="100px" />}
+              formatFn={(num: number) => formatNumber(num, 9)}
+              chain={walletChain}
+              tokenAddress={
+                props.displayBalanceToken?.[Number(walletChain?.id)]
+              }
+            />
           </Text>
         </Text>
       )}
@@ -383,8 +400,6 @@ function DetailsModal(props: {
       />
     </MenuButton>
   );
-
-  const avatarSrc = props.detailsModal?.connectedAccountAvatarUrl ?? pfp;
 
   const { hideSendFunds, hideReceiveFunds, hideBuyFunds } =
     props.detailsModal || {};
@@ -407,9 +422,9 @@ function DetailsModal(props: {
           overflow: "hidden",
         }}
       >
-        {avatarSrc ? (
+        {props.detailsModal?.connectedAccountAvatarUrl ? (
           <img
-            src={avatarSrc}
+            src={props.detailsModal.connectedAccountAvatarUrl}
             style={{
               height: "100%",
               width: "100%",
@@ -419,9 +434,9 @@ function DetailsModal(props: {
           />
         ) : (
           activeAccount && (
-            <Blobbie
-              address={activeAccount.address}
-              size={Number(iconSize.xxl)}
+            <AccountAvatar
+              loadingComponent={<AccountBlobbie size={Number(iconSize.xxl)} />}
+              fallbackComponent={<AccountBlobbie size={Number(iconSize.xxl)} />}
             />
           )
         )}
@@ -496,9 +511,22 @@ function DetailsModal(props: {
               alignItems: "center",
             }}
           >
-            <Text color="primaryText" weight={500} size="md">
-              {props.detailsModal?.connectedAccountName ?? name}
-            </Text>
+            {props.detailsModal?.connectedAccountName ? (
+              <Text color="primaryText" weight={500} size="md">
+                {props.detailsModal.connectedAccountName}
+              </Text>
+            ) : (
+              <Text color="primaryText" weight={500} size="md">
+                <AccountName
+                  loadingComponent={
+                    <AccountAddress formatFn={shortenAddress} />
+                  }
+                  fallbackComponent={
+                    <AccountAddress formatFn={shortenAddress} />
+                  }
+                />
+              </Text>
+            )}
             <IconButton>
               <CopyIcon
                 text={activeAccount?.address || ""}
@@ -964,7 +992,12 @@ function DetailsModal(props: {
               }
             }}
           >
-            {content}
+            <AccountProvider
+              address={activeAccount?.address || ""}
+              client={client}
+            >
+              {content}
+            </AccountProvider>
           </Modal>
         </ScreenSetupContext.Provider>
       </WalletUIStatesProvider>
