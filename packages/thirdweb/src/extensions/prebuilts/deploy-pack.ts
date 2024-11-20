@@ -73,6 +73,7 @@ export type DeployPackContractOptions = Prettify<
  *   },
  * });
  * ```
+ * @extension DEPLOY
  */
 export async function deployPackContract(options: DeployPackContractOptions) {
   const { chain, client, account, params } = options;

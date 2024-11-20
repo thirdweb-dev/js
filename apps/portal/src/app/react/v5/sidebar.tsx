@@ -320,13 +320,29 @@ export const sidebar: SideBar = {
       links: [
         {
           name: "UI Components",
-          links: ["ClaimButton", "TransactionButton", "MediaRenderer"].map(
-            (name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            }),
-          ),
+          links: [
+            ...["ClaimButton", "TransactionButton", "MediaRenderer"].map(
+              (name) => ({
+                name,
+                href: `${slug}/${name}`,
+                icon: <CodeIcon />,
+              }),
+            ),
+            {
+              name: "NFT",
+              isCollapsible: true,
+              links: [
+                "NFTProvider",
+                "NFTMedia",
+                "NFTName",
+                "NFTDescription",
+              ].map((name) => ({
+                name,
+                href: `${slug}/${name}`,
+                icon: <CodeIcon />,
+              })),
+            },
+          ],
         },
         {
           name: "Reading State",

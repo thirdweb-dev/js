@@ -19,7 +19,7 @@ export type GetCapabilitiesResult = Prettify<
 /**
  * Get the capabilities of a wallet based on the [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) specification.
  *
- * @note This function is dependent on the wallet's support for EIP-5792, but will not throw.
+ *  This function is dependent on the wallet's support for EIP-5792, but will not throw.
  * **The returned object contains a `message` field detailing any issues with the wallet's support for EIP-5792.**
  *
  * @param {GetCapabilitiesOptions} options

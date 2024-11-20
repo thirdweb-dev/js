@@ -55,6 +55,7 @@ export type CreateDirectListingButtonProps = Omit<
  * For error handling & callbacks on transaction-sent and transaction-confirmed,
  * please refer to the TransactionButton docs.
  * @component
+ * @transaction
  */
 export function CreateDirectListingButton(
   props: CreateDirectListingButtonProps,

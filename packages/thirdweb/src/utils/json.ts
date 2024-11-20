@@ -14,7 +14,13 @@
  * ```
  * @utils
  */
-export const stringify: typeof JSON.stringify = (value, replacer, space) => {
+export function stringify(
+  // biome-ignore lint/suspicious/noExplicitAny: JSON.stringify signature
+  value: any,
+  // biome-ignore lint/suspicious/noExplicitAny: JSON.stringify signature
+  replacer?: ((this: any, key: string, value: any) => any) | null,
+  space?: string | number,
+) {
   const res = JSON.stringify(
     value,
     (key, value_) => {
@@ -24,4 +30,4 @@ export const stringify: typeof JSON.stringify = (value, replacer, space) => {
     space,
   );
   return res;
-};
+}

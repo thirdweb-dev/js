@@ -21,7 +21,7 @@ export type WaitForBundleOptions = Prettify<{
 /**
  * Waits for the [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) bundle to be confirmed.
  *
- * @note This function is dependent on the wallet's support for EIP-5792 and could fail.
+ *  This function is dependent on the wallet's support for EIP-5792 and could fail.
  *
  * @param options - The options for waiting for the bundle.
  * By default, the max wait time is 100 blocks.

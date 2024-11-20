@@ -239,7 +239,7 @@ export const sidebar: SideBar = {
                   ],
                 },
                 {
-                  name: "Misc",
+                  name: "Miscellaneous",
                   links: [
                     {
                       name: "TransferableERC20",
@@ -283,7 +283,7 @@ export const sidebar: SideBar = {
                   ],
                 },
                 {
-                  name: "Misc",
+                  name: "Miscellaneous",
                   links: [
                     {
                       name: "RoyaltyERC721",
@@ -327,7 +327,7 @@ export const sidebar: SideBar = {
                   ],
                 },
                 {
-                  name: "Misc",
+                  name: "Miscellaneous",
                   links: [
                     {
                       name: "RoyaltyERC1155",

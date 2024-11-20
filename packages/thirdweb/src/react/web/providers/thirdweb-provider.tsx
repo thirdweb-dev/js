@@ -23,6 +23,7 @@ import { ThirdwebProviderCore } from "../../core/providers/thirdweb-provider.js"
  * }
  * ```
  * @component
+ * @walletConnection
  */
 export function ThirdwebProvider(
   props: React.PropsWithChildren<{

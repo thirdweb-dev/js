@@ -11,9 +11,9 @@ import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 /**
  * Embeds another thirdweb-supported site for seamless in-app and ecosystem wallet connection.
  *
- * @note Make sure the embedded site includes <AutoConnect /> and supports frame ancestors, see [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors) for more information.
+ *  Make sure the embedded site includes <AutoConnect /> and supports frame ancestors, see [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors) for more information.
  *
- * @note The embedded site must support the connected wallet (ecosystem or in-app).
+ *  The embedded site must support the connected wallet (ecosystem or in-app).
  *
  * @param {Object} props - The props to pass to the iframe
  * @param {String} props.src - The URL of the site to embed
@@ -26,6 +26,7 @@ import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
  *
  * <SiteEmbed src="https://thirdweb.com" client={thirdwebClient} ecosystem={{ id: "ecosystem.thirdweb" }} />
  * ```
+ * @walletConnection
  */
 export function SiteEmbed({
   src,

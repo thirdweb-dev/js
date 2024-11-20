@@ -1055,7 +1055,7 @@
 
   <NFT contract={contract} tokenId={0n}>
     <Suspense fallback={"Loading media..."}>
-      <NFT.Media />
+      <NFTMedia />
     </Suspense>
   </NFT>;
   ```

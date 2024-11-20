@@ -84,6 +84,11 @@ export async function signEip712Transaction(options: {
   });
 }
 
+/**
+ * Populate a prepared transaction to be serialized as a EIP712 transaction
+ * @param options
+ * @internal
+ */
 export async function populateEip712Transaction(
   options: SendEip712TransactionOptions,
 ): Promise<EIP721TransactionSerializable> {

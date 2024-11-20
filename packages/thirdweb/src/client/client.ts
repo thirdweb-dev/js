@@ -98,6 +98,7 @@ export type ThirdwebClient = {
  *
  * const client = createThirdwebClient({ secretKey: "..." });
  * ```
+ * @client
  */
 export function createThirdwebClient(
   options: CreateThirdwebClientOptions,

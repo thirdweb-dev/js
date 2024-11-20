@@ -83,6 +83,7 @@ import { getDefaultAccountFactory } from "./lib/constants.js";
  *  sponsorGas: true, // enable sponsored transactions
  *  factoryAddress: "0x...", // custom factory address
  * });
+ * ```
  *
  * ## Using v0.7 Entrypoint
  *

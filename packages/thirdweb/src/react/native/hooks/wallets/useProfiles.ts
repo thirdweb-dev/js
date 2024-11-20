@@ -10,7 +10,7 @@ import { useAdminWallet } from "../../../core/hooks/wallets/useAdminWallet.js";
  * Retrieves all linked profiles of the connected in-app or ecosystem account.
  *
  * @returns A React Query result containing the linked profiles for the connected in-app account.
- * @note This hook will only run if the connected wallet supports account linking.
+ *  This hook will only run if the connected wallet supports account linking.
  *
  * @example
  * ```jsx
