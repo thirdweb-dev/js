@@ -59,6 +59,7 @@ export const NFTProviderContext = /* @__PURE__ */ createContext<
  *   </Suspense>
  * </NFT>
  * ```
+ * @beta
  */
 export function NFT(props: React.PropsWithChildren<NFTProviderProps>) {
   return (
@@ -127,6 +128,7 @@ export type NFTMediaProps = Omit<
  * ```tsx
  * <NFT.Media style={{ borderRadius: "8px" }} className="mx-auto" />
  * ```
+ * @beta
  */
 NFT.Media = (props: NFTMediaProps) => {
   const { contract, tokenId } = useNFTContext();
@@ -181,6 +183,7 @@ NFT.Media = (props: NFTMediaProps) => {
  *   </Suspense>
  * </NFT>
  * ```
+ * @beta
  */
 NFT.Name = (props: { className?: string; style?: React.CSSProperties }) => {
   const { contract, tokenId } = useNFTContext();
@@ -225,6 +228,7 @@ NFT.Name = (props: { className?: string; style?: React.CSSProperties }) => {
  *   </Suspense>
  * </NFT>
  * ```
+ * @beta
  */
 NFT.Description = (props: {
   className: string;
