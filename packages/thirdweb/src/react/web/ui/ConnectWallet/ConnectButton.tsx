@@ -187,7 +187,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  *    client={client}
  *    connectModal={{
  *      title: "Sign in to MyApp",
- *      titleIcon: https://example.com/logo.png,
+ *      titleIcon: "https://example.com/logo.png",
  *      size: "compact",
  *    }}
  * />
@@ -269,6 +269,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * @returns A JSX element that renders the <ConnectButton> component.
  *
  * @component
+ * @walletConnection
  */
 export function ConnectButton(props: ConnectButtonProps) {
   const wallets = useMemo(

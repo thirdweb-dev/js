@@ -151,7 +151,7 @@ function DocSidebarNonCollapsible(props: {
         {href ? (
           <Link
             className={cn(
-              "block font-medium text-base text-f-100 hover:text-accent-500",
+              "block font-semibold text-base text-f-100 hover:text-accent-500",
               isCategoryActive && "!text-accent-500",
             )}
             href={href}

@@ -1,5 +1,10 @@
 import type { Chain } from "../../../chains/types.js";
 
+/**
+ * Checks whether the given chain is part of the zksync stack
+ * @param chain
+ * @chain
+ */
 export async function isZkSyncChain(chain: Chain) {
   if (chain.id === 1337 || chain.id === 31337) {
     return false;

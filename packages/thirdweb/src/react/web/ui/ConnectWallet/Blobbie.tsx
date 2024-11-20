@@ -26,6 +26,11 @@ const COLOR_OPTIONS = [
  * @param props The component props.
  * @param props.address The address to generate the gradient with.
  * @param props.size The size of each side of the square avatar (in pixels)
+ * @example
+ * ```tsx
+ * <Blobbie address="0x...." size={24} />
+ * ```
+ * @wallet
  */
 export function Blobbie(props: { address: Address; size: number }) {
   const id = useId();

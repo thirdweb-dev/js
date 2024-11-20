@@ -16,7 +16,7 @@ export type GetCallsStatusOptions = {
 /**
  * Get the status of an [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) bundle.
  *
- * @note This function is dependent on the wallet's support for EIP-5792 and could fail.
+ *  This function is dependent on the wallet's support for EIP-5792 and could fail.
  *
  * @param {GetCallsStatusOptions} options
  * @param {Wallet} options.wallet - The wallet that send the original calls.

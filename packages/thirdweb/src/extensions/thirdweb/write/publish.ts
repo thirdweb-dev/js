@@ -113,6 +113,10 @@ export function publishContract(
   });
 }
 
+/**
+ * Returns the default publisher contract on polygon
+ * @utils
+ */
 export function getContractPublisher(client: ThirdwebClient) {
   return getContract({
     client,

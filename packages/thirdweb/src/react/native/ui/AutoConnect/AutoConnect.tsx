@@ -32,6 +32,7 @@ import { useAutoConnect } from "../../hooks/wallets/useAutoConnect.js";
  * }
  * ```
  * @component
+ * @walletConnection
  */
 export function AutoConnect(props: AutoConnectProps) {
   useAutoConnect(props);

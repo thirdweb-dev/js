@@ -1,8 +1,8 @@
 export const subgroups = {
-  components: "Components",
-  hooks: "Hooks",
+  components: "UI Components",
+  hooks: "React Hooks",
   classes: "Classes",
-  functions: "Functions",
+  functions: "Core Functions",
   variables: "Variables",
   types: "Types",
   enums: "Enums",

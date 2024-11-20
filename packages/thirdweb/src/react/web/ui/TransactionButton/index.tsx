@@ -129,6 +129,7 @@ import { Button } from "../components/buttons.js";
  * </TransactionButton>
  * ```
  * @component
+ * @transaction
  */
 export function TransactionButton(props: TransactionButtonProps) {
   const {

@@ -11,7 +11,7 @@ import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 /**
  * Creates a link to another thirdweb-supported site with wallet connection parameters.
  *
- * @note The target site must support the connected wallet (ecosystem or in-app).
+ *  The target site must support the connected wallet (ecosystem or in-app).
  *
  * @param {Object} props - The props to pass to the anchor tag
  * @param {String} props.href - The URL of the site to link to
@@ -27,6 +27,7 @@ import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
  *   Visit Site
  * </SiteLink>
  * ```
+ * @walletConnection
  */
 export function SiteLink({
   href,

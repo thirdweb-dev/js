@@ -173,10 +173,23 @@ export {
   type CreateDirectListingButtonProps,
 } from "../react/web/ui/prebuilt/thirdweb/CreateDirectListingButton/index.js";
 
+// NFT rendering components
 export {
-  NFT,
+  NFTProvider,
+  type NFTProviderProps,
+} from "../react/web/ui/prebuilt/NFT/provider.js";
+export {
+  NFTName,
+  type NFTNameProps,
+} from "../react/web/ui/prebuilt/NFT/name.js";
+export {
+  NFTDescription,
+  type NFTDescriptionProps,
+} from "../react/web/ui/prebuilt/NFT/description.js";
+export {
+  NFTMedia,
   type NFTMediaProps,
-} from "../react/web/ui/prebuilt/NFT/NFT.js";
+} from "../react/web/ui/prebuilt/NFT/media.js";
 
 export { useConnectionManager } from "../react/core/providers/connection-manager.js";
 

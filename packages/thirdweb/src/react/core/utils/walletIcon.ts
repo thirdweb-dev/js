@@ -62,6 +62,8 @@ export const socialIcons = {
  * const googleIcon = getSocialIcon("google")
  * const appleIcon = getSocialIcon("apple")
  * ```
+ *
+ * @walletUtils
  */
 export function getSocialIcon(provider: AuthOption | ({} & string)): string {
   switch (provider) {

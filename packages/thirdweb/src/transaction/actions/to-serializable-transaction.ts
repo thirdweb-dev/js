@@ -25,7 +25,7 @@ export type ToSerializableTransactionOptions = {
  * @param options - The transaction and additional options for conversion
  * @returns A serializable transaction for inspection or submission to an account.
  *
- * @note For easier transaction sending, {@see sendTransaction}
+ *  For easier transaction sending, {@see sendTransaction}
  * @example
  * ```ts
  * import { prepareTransaction, toSerializableTransaction } from "thirdweb";
