@@ -287,6 +287,8 @@ const ContactUs: ThirdwebNextPage = () => {
                   color="black"
                   {...form.register("products", { required: true })}
                 >
+                  <option value="Nebula">Nebula</option>
+                  <option value="Insight">Insight</option>
                   <option value="Connect">Connect</option>
                   <option value="Engine">Engine</option>
                   <option value="OnChain">OnChain</option>
