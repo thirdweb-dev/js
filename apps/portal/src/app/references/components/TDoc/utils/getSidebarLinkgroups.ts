@@ -41,6 +41,7 @@ const tagsToGroup = {
   "@social": "Social API",
   "@modules": "Modules",
   "@client": "Client",
+  "@account": "Account Components",
 } as const;
 
 type TagKey = keyof typeof tagsToGroup;
@@ -79,6 +80,7 @@ const sidebarGroupOrder: TagKey[] = [
   "@theme",
   "@utils",
   "@others",
+  "@account",
 ];
 
 function findTag(

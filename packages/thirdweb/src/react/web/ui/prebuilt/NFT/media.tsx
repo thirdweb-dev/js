@@ -77,6 +77,7 @@ export type NFTMediaProps = Omit<
  * <NFTMedia style={{ borderRadius: "8px" }} className="mx-auto" />
  * ```
  * @nft
+ * @beta
  */
 export function NFTMedia({
   loadingComponent,

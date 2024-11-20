@@ -43,7 +43,6 @@ export function useNFTContext() {
  * the provided NFT data down to all of its child components through the context API.
  *
  *
- * @component
  * @param {React.PropsWithChildren<NFTProviderProps>} props - The props for the NFT provider
  *
  * @example
@@ -63,7 +62,9 @@ export function useNFTContext() {
  *    <NFTName />
  * </NFTProvider>
  * ```
+ * @component
  * @nft
+ * @beta
  */
 export function NFTProvider(props: React.PropsWithChildren<NFTProviderProps>) {
   return (

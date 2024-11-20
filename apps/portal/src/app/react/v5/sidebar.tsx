@@ -109,6 +109,22 @@ export const sidebar: SideBar = {
               href: `${slug}/${name}`,
               icon: <CodeIcon />,
             })),
+            {
+              name: "Account",
+              isCollapsible: true,
+              links: [
+                "AccountProvider",
+                "AccountAddress",
+                "AccountAvatar",
+                "AccountName",
+                "AccountBlobbie",
+                "AccountBalance",
+              ].map((name) => ({
+                name,
+                href: `${slug}/${name}`,
+                icon: <CodeIcon />,
+              })),
+            },
           ],
         },
         {

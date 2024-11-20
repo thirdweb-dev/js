@@ -212,3 +212,26 @@ export type {
 // Site Embed and Linking
 export { SiteEmbed } from "../react/web/ui/SiteEmbed.js";
 export { SiteLink } from "../react/web/ui/SiteLink.js";
+
+// Account
+export {
+  AccountAddress,
+  type AccountAddressProps,
+} from "../react/web/ui/prebuilt/Account/address.js";
+export {
+  AccountBalance,
+  type AccountBalanceProps,
+} from "../react/web/ui/prebuilt/Account/balance.js";
+export {
+  AccountName,
+  type AccountNameProps,
+} from "../react/web/ui/prebuilt/Account/name.js";
+export { AccountBlobbie } from "../react/web/ui/prebuilt/Account/blobbie.js";
+export {
+  AccountProvider,
+  type AccountProviderProps,
+} from "../react/web/ui/prebuilt/Account/provider.js";
+export {
+  AccountAvatar,
+  type AccountAvatarProps,
+} from "../react/web/ui/prebuilt/Account/avatar.js";

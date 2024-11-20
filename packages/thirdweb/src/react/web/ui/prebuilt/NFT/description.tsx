@@ -60,6 +60,7 @@ export interface NFTDescriptionProps
  *
  * @component
  * @nft
+ * @beta
  */
 export function NFTDescription({
   loadingComponent,
