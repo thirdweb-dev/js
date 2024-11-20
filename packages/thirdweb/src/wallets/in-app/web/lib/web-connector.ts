@@ -110,9 +110,8 @@ export class InAppWebConnector implements InAppConnector {
             },
           });
           if (!result) {
-            console.warn(
-              "Failed to migrate from sharded to enclave wallet, continuing with sharded wallet",
-            );
+            console.error("Failed to migrate from sharded to enclave wallet.");
+            throw new Error("Something went wrong logging into your wallet");
           }
         }
 
