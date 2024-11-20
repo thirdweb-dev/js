@@ -1,13 +1,13 @@
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
+import { formatNumber } from "../../../../../utils/formatNumber.js";
 import {
   fontSize,
   iconSize,
   spacing,
 } from "../../../../core/design-system/index.js";
-import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
-import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useSendToken } from "../../../../core/hooks/wallets/useSendToken.js";
 import {
@@ -17,16 +17,23 @@ import {
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
-import { TokenIcon } from "../../components/TokenIcon.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Input, Label } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
 import { StyledDiv } from "../../design-system/elements.js";
+import { AccountBalance } from "../../prebuilt/Account/balance.js";
+import { TokenIcon } from "../../prebuilt/Token/icon.js";
+import { TokenName } from "../../prebuilt/Token/name.js";
+import { TokenProvider } from "../../prebuilt/Token/provider.js";
+import { TokenSymbol } from "../../prebuilt/Token/symbol.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { TokenSelector } from "./TokenSelector.js";
-import { formatTokenBalance } from "./formatTokenBalance.js";
-import { type ERC20OrNativeToken, NATIVE_TOKEN } from "./nativeToken.js";
+import {
+  type ERC20OrNativeToken,
+  NATIVE_TOKEN,
+  isNativeToken,
+} from "./nativeToken.js";
 
 type TXError = Error & { data?: { message?: string } };
 
@@ -123,17 +130,7 @@ function SendFundsForm(props: {
   const locale = props.connectLocale.sendFundsScreen;
   const tokenAddress =
     props.token && "address" in props.token ? props.token.address : undefined;
-
-  const chain = useActiveWalletChain();
-  const activeAccount = useActiveAccount();
   const activeChain = useActiveWalletChain();
-
-  const balanceQuery = useWalletBalance({
-    chain,
-    tokenAddress: tokenAddress,
-    address: activeAccount?.address,
-    client: props.client,
-  });
 
   const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
   const sendTokenMutation = useSendToken(props.client);
@@ -215,136 +212,156 @@ function SendFundsForm(props: {
     );
   }
 
-  const tokenName =
-    (props.token && "name" in props.token ? props.token.name : undefined) ||
-    balanceQuery?.data?.name;
-
-  const tokenSymbol =
-    (props.token && "symbol" in props.token ? props.token.symbol : undefined) ||
-    balanceQuery?.data?.symbol;
-
   return (
-    <Container p="lg" animate="fadein">
-      <ModalHeader title={locale.title} onBack={props.onBack} />
-      <Spacer y="xl" />
+    <TokenProvider
+      address={
+        isNativeToken(props.token) ? NATIVE_TOKEN_ADDRESS : props.token.address
+      }
+      client={props.client}
+      chain={activeChain}
+    >
+      <Container p="lg" animate="fadein">
+        <ModalHeader title={locale.title} onBack={props.onBack} />
+        <Spacer y="xl" />
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-      >
-        {/* Token  */}
-        <Label htmlFor="token" color="secondaryText">
-          {locale.token}
-        </Label>
-        <Spacer y="sm" />
-        <Button
-          id="token"
-          variant="outline"
-          fullWidth
-          style={{
-            justifyContent: "flex-start",
-            gap: spacing.sm,
-            padding: spacing.sm,
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
           }}
-          onClick={props.onTokenSelect}
         >
-          <TokenIcon
-            token={props.token}
-            chain={activeChain}
-            size="lg"
-            client={props.client}
-          />
+          {/* Token  */}
+          <Label htmlFor="token" color="secondaryText">
+            {locale.token}
+          </Label>
+          <Spacer y="sm" />
+          <Button
+            id="token"
+            variant="outline"
+            fullWidth
+            style={{
+              justifyContent: "flex-start",
+              gap: spacing.sm,
+              padding: spacing.sm,
+            }}
+            onClick={props.onTokenSelect}
+          >
+            <TokenIcon
+              style={{ width: `${iconSize.lg}`, height: `${iconSize.lg}` }}
+            />
 
-          <Container flex="column" gap="xs">
-            {tokenName ? (
+            <Container flex="column" gap="xs">
               <Text size="sm" color="primaryText">
-                {tokenName}
+                <TokenName
+                  loadingComponent={
+                    <Skeleton height={fontSize.xs} width="150px" />
+                  }
+                  fallbackComponent={
+                    <Skeleton height={fontSize.xs} width="150px" />
+                  }
+                />
               </Text>
-            ) : (
-              <Skeleton height={fontSize.xs} width="150px" />
-            )}
 
-            {balanceQuery.data ? (
-              <Text size="xs">{formatTokenBalance(balanceQuery.data)}</Text>
-            ) : (
-              <Skeleton height={fontSize.xs} width="100px" />
-            )}
-          </Container>
-        </Button>
+              <Text size="xs">
+                <AccountBalance
+                  chain={activeChain}
+                  formatFn={(num: number) => formatNumber(num, 5)}
+                  tokenAddress={
+                    isNativeToken(props.token)
+                      ? NATIVE_TOKEN_ADDRESS
+                      : props.token.address
+                  }
+                  loadingComponent={
+                    <Skeleton height={fontSize.xs} width="100px" />
+                  }
+                  fallbackComponent={
+                    <Skeleton height={fontSize.xs} width="100px" />
+                  }
+                />
+              </Text>
+            </Container>
+          </Button>
 
-        <Spacer y="lg" />
+          <Spacer y="lg" />
 
-        {/* Send to  */}
-        <Label htmlFor="receiver" color="secondaryText">
-          {locale.sendTo}
-        </Label>
-        <Spacer y="sm" />
-        <Input
-          required
-          id="receiver"
-          placeholder="0x... or ENS name"
-          variant="outline"
-          value={receiverAddress}
-          onChange={(e) => {
-            setReceiverAddress(e.target.value);
-          }}
-        />
-
-        <Spacer y="lg" />
-
-        {/* Amount  */}
-        <Label htmlFor="amount" color="secondaryText">
-          {locale.amount}
-        </Label>
-        <Spacer y="sm" />
-        <Container relative>
+          {/* Send to  */}
+          <Label htmlFor="receiver" color="secondaryText">
+            {locale.sendTo}
+          </Label>
+          <Spacer y="sm" />
           <Input
             required
-            type="number"
-            id="amount"
+            id="receiver"
+            placeholder="0x... or ENS name"
             variant="outline"
-            value={amount}
+            value={receiverAddress}
             onChange={(e) => {
-              setAmount(e.target.value);
+              setReceiverAddress(e.target.value);
             }}
           />
-          <CurrencyBadge>
-            <Text size="xs"> {tokenSymbol} </Text>
-          </CurrencyBadge>
-        </Container>
 
-        <Spacer y="xxl" />
+          <Spacer y="lg" />
 
-        {/* Submit */}
-        <Button
-          fullWidth
-          variant="accent"
-          type="submit"
-          onClick={async () => {
-            if (!receiverAddress || !amount) {
-              return;
-            }
+          {/* Amount  */}
+          <Label htmlFor="amount" color="secondaryText">
+            {locale.amount}
+          </Label>
+          <Spacer y="sm" />
+          <Container relative>
+            <Input
+              required
+              type="number"
+              id="amount"
+              variant="outline"
+              value={amount}
+              onChange={(e) => {
+                setAmount(e.target.value);
+              }}
+            />
+            <CurrencyBadge>
+              <Text size="xs">
+                <TokenSymbol
+                  symbolResolver={
+                    props.token && "symbol" in props.token
+                      ? props.token.symbol
+                      : undefined
+                  }
+                />
+              </Text>
+            </CurrencyBadge>
+          </Container>
 
-            await sendTokenMutation.mutateAsync({
-              receiverAddress,
-              amount,
-              tokenAddress: tokenAddress,
-            });
-          }}
-          style={{
-            alignItems: "center",
-            gap: spacing.sm,
-            padding: spacing.md,
-          }}
-        >
-          {sendTokenMutation.isPending && (
-            <Spinner size="sm" color="accentButtonText" />
-          )}
-          {sendTokenMutation.isPending ? locale.sending : locale.submitButton}
-        </Button>
-      </form>
-    </Container>
+          <Spacer y="xxl" />
+
+          {/* Submit */}
+          <Button
+            fullWidth
+            variant="accent"
+            type="submit"
+            onClick={async () => {
+              if (!receiverAddress || !amount) {
+                return;
+              }
+
+              await sendTokenMutation.mutateAsync({
+                receiverAddress,
+                amount,
+                tokenAddress: tokenAddress,
+              });
+            }}
+            style={{
+              alignItems: "center",
+              gap: spacing.sm,
+              padding: spacing.md,
+            }}
+          >
+            {sendTokenMutation.isPending && (
+              <Spinner size="sm" color="accentButtonText" />
+            )}
+            {sendTokenMutation.isPending ? locale.sending : locale.submitButton}
+          </Button>
+        </form>
+      </Container>
+    </TokenProvider>
   );
 }
 

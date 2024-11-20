@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { TokenProvider } from "../../../../../../../react/web/ui/prebuilt/Token/provider.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import { spacing } from "../../../../../../core/design-system/index.js";
@@ -37,73 +38,81 @@ export function BuyTxHistoryButton(props: {
         paddingBlock: spacing.sm,
       }}
     >
-      <Container
-        flex="row"
-        center="y"
-        gap="sm"
-        style={{
-          flex: 1,
-        }}
+      <TokenProvider
+        address={props.txInfo.status.quote.toToken.tokenAddress}
+        client={props.client}
+        chain={getCachedChain(props.txInfo.status.quote.toToken.chainId)}
       >
-        <PayTokenIcon
-          client={props.client}
-          chain={getCachedChain(props.txInfo.status.quote.toToken.chainId)}
-          size="md"
-          token={{
-            address: props.txInfo.status.quote.toToken.tokenAddress,
-          }}
-        />
-
-        <div
+        <Container
+          flex="row"
+          center="y"
+          gap="sm"
           style={{
             flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
           }}
         >
-          {/* Row 1 */}
-          <Container
-            flex="row"
-            gap="xs"
-            center="y"
+          <PayTokenIcon
+            client={props.client}
+            chain={getCachedChain(props.txInfo.status.quote.toToken.chainId)}
+            size="md"
+            token={{
+              address: props.txInfo.status.quote.toToken.tokenAddress,
+            }}
+          />
+
+          <div
             style={{
-              justifyContent: "space-between",
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
             }}
           >
-            <Text size="sm" color="primaryText">
-              Buy{" "}
-              {formatNumber(
-                Number(
-                  props.txInfo.type === "swap"
-                    ? props.txInfo.status.quote.toAmount
-                    : props.txInfo.status.quote.estimatedToTokenAmount,
-                ),
-                6,
-              )}{" "}
-              {props.txInfo.status.quote.toToken.symbol}
-            </Text>
-          </Container>
+            {/* Row 1 */}
+            <Container
+              flex="row"
+              gap="xs"
+              center="y"
+              style={{
+                justifyContent: "space-between",
+              }}
+            >
+              <Text size="sm" color="primaryText">
+                Buy{" "}
+                {formatNumber(
+                  Number(
+                    props.txInfo.type === "swap"
+                      ? props.txInfo.status.quote.toAmount
+                      : props.txInfo.status.quote.estimatedToTokenAmount,
+                  ),
+                  6,
+                )}{" "}
+                {props.txInfo.status.quote.toToken.symbol}
+              </Text>
+            </Container>
 
-          <Spacer y="xxs" />
+            <Spacer y="xxs" />
 
-          {/* Row 2 */}
-          <Container
-            flex="row"
-            center="y"
-            gap="xxs"
-            style={{
-              justifyContent: "space-between",
-            }}
-          >
-            <ChainName
-              chain={getCachedChain(props.txInfo.status.quote.toToken.chainId)}
-              size="xs"
-              client={props.client}
-            />
-          </Container>
-        </div>
-      </Container>
+            {/* Row 2 */}
+            <Container
+              flex="row"
+              center="y"
+              gap="xxs"
+              style={{
+                justifyContent: "space-between",
+              }}
+            >
+              <ChainName
+                chain={getCachedChain(
+                  props.txInfo.status.quote.toToken.chainId,
+                )}
+                size="xs"
+                client={props.client}
+              />
+            </Container>
+          </div>
+        </Container>
+      </TokenProvider>
 
       {/* Status */}
       <Container flex="row" gap="xxs" center="y">

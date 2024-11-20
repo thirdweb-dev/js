@@ -1,8 +1,8 @@
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { fontSize } from "../../../../core/design-system/index.js";
-import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
-import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
+import { formatNumber } from "../../../../../utils/formatNumber.js";
+import { fontSize, iconSize } from "../../../../core/design-system/index.js";
 import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
 import {
   type SupportedTokens,
@@ -10,11 +10,13 @@ import {
 } from "../../../../core/utils/defaultTokens.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
-import { TokenIcon } from "../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
+import { AccountBalance } from "../../prebuilt/Account/balance.js";
+import { TokenIcon } from "../../prebuilt/Token/icon.js";
+import { TokenName } from "../../prebuilt/Token/name.js";
+import { TokenProvider } from "../../prebuilt/Token/provider.js";
 import type { ConnectLocale } from "../locale/types.js";
-import { formatTokenBalance } from "./formatTokenBalance.js";
 import {
   type ERC20OrNativeToken,
   NATIVE_TOKEN,
@@ -99,42 +101,48 @@ function TokenInfo(props: {
   chain: Chain;
   client: ThirdwebClient;
 }) {
-  const account = useActiveAccount();
-  const tokenBalanceQuery = useWalletBalance({
-    address: account?.address,
-    chain: props.chain,
-    tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
-    client: props.client,
-  });
-
-  const tokenName = isNativeToken(props.token)
-    ? tokenBalanceQuery.data?.name
-    : props.token.name;
-
   return (
-    <Container flex="row" gap="sm" p="sm">
-      <TokenIcon
-        token={props.token}
-        chain={props.chain}
-        size="lg"
-        client={props.client}
-      />
-
-      <Container flex="column" gap="xxs">
-        {tokenName ? (
+    <TokenProvider
+      address={
+        isNativeToken(props.token) ? NATIVE_TOKEN_ADDRESS : props.token.address
+      }
+      chain={props.chain}
+      client={props.client}
+    >
+      <Container flex="row" gap="sm" p="sm">
+        <TokenIcon
+          style={{ width: `${iconSize.lg}px`, height: `${iconSize.lg}px` }}
+        />
+        <Container flex="column" gap="xxs">
           <Text size="sm" color="primaryText">
-            {tokenName}
+            <TokenName
+              loadingComponent={<Skeleton height={fontSize.md} width="150px" />}
+              fallbackComponent={
+                <Skeleton height={fontSize.md} width="150px" />
+              }
+            />
           </Text>
-        ) : (
-          <Skeleton height={fontSize.md} width="150px" />
-        )}
-
-        {tokenBalanceQuery.data ? (
-          <Text size="xs"> {formatTokenBalance(tokenBalanceQuery.data)}</Text>
-        ) : (
-          <Skeleton height={fontSize.xs} width="100px" />
-        )}
+          <Text size="xs">
+            {/* 
+              We can use AccountBalance here because the Modal is wrapped inside an AccountProvider
+              see: Details.tsx
+            */}
+            <AccountBalance
+              chain={props.chain}
+              formatFn={(num: number) => formatNumber(num, 5)}
+              tokenAddress={
+                isNativeToken(props.token)
+                  ? NATIVE_TOKEN_ADDRESS
+                  : props.token.address
+              }
+              loadingComponent={<Skeleton height={fontSize.xs} width="100px" />}
+              fallbackComponent={
+                <Skeleton height={fontSize.xs} width="100px" />
+              }
+            />
+          </Text>
+        </Container>
       </Container>
-    </Container>
+    </TokenProvider>
   );
 }

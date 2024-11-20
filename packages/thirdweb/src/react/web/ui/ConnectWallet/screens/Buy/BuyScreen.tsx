@@ -12,6 +12,7 @@ import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import type { WalletId } from "../../../../../../wallets/wallet-types.js";
 import {
   type Theme,
+  fontSize,
   spacing,
 } from "../../../../../core/design-system/index.js";
 import type {
@@ -33,13 +34,15 @@ import {
   DrawerOverlay,
   useDrawer,
 } from "../../../components/Drawer.js";
+import { Skeleton } from "../../../components/Skeleton.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { Spinner } from "../../../components/Spinner.js";
 import { SwitchNetworkButton } from "../../../components/SwitchNetwork.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { TokenSymbol } from "../../../components/token/TokenSymbol.js";
+import { TokenProvider } from "../../../prebuilt/Token/provider.js";
+import { TokenSymbol } from "../../../prebuilt/Token/symbol.js";
 import { ConnectButton } from "../../ConnectButton.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { ConnectLocale } from "../../locale/types.js";
@@ -685,18 +688,37 @@ function SelectedTokenInfo(props: {
           </Text>
 
           <Container flex="row" gap="xxs" center="y">
-            <TokenSymbol
-              token={props.selectedToken}
-              chain={props.selectedChain}
-              size="md"
-              color="secondaryText"
-            />
-            <PayTokenIcon
+            <TokenProvider
+              address={
+                isNativeToken(props.selectedToken)
+                  ? NATIVE_TOKEN_ADDRESS
+                  : props.selectedToken.address
+              }
               chain={props.selectedChain}
               client={props.client}
-              size="sm"
-              token={props.selectedToken}
-            />
+            >
+              <Text size="md" color="secondaryText">
+                <TokenSymbol
+                  symbolResolver={
+                    isNativeToken(props.selectedToken)
+                      ? undefined
+                      : props.selectedToken.symbol
+                  }
+                  loadingComponent={
+                    <Skeleton width="70px" height={fontSize.md} />
+                  }
+                  fallbackComponent={
+                    <Skeleton width="70px" height={fontSize.md} />
+                  }
+                />
+              </Text>
+              <PayTokenIcon
+                chain={props.selectedChain}
+                client={props.client}
+                size="sm"
+                token={props.selectedToken}
+              />
+            </TokenProvider>
           </Container>
         </Container>
 
@@ -1138,16 +1160,24 @@ function SwapScreenContent(props: {
       {errorMsg && (
         <div>
           {errorMsg.minAmount && (
-            <Text color="danger" size="sm" center multiline>
-              Minimum amount is {errorMsg.minAmount}{" "}
-              <TokenSymbol
-                token={toToken}
-                chain={toChain}
-                size="sm"
-                inline
-                color="danger"
-              />
-            </Text>
+            <TokenProvider
+              address={
+                isNativeToken(toToken) ? NATIVE_TOKEN_ADDRESS : toToken.address
+              }
+              client={props.client}
+              chain={toChain}
+            >
+              <Text color="danger" size="sm" center multiline>
+                Minimum amount is {errorMsg.minAmount}{" "}
+                <Text color="danger" inline>
+                  <TokenSymbol
+                    symbolResolver={
+                      isNativeToken(toToken) ? undefined : toToken.icon
+                    }
+                  />
+                </Text>
+              </Text>
+            </TokenProvider>
           )}
 
           {errorMsg.msg?.map((msg) => (
@@ -1386,16 +1416,24 @@ function FiatScreenContent(props: {
       {errorMsg && (
         <div>
           {errorMsg.minAmount && (
-            <Text color="danger" size="sm" center multiline>
-              Minimum amount is {errorMsg.minAmount}{" "}
-              <TokenSymbol
-                token={toToken}
-                chain={toChain}
-                size="sm"
-                inline
-                color="danger"
-              />
-            </Text>
+            <TokenProvider
+              address={
+                isNativeToken(toToken) ? NATIVE_TOKEN_ADDRESS : toToken.address
+              }
+              client={props.client}
+              chain={toChain}
+            >
+              <Text color="danger" size="sm" center multiline>
+                Minimum amount is {errorMsg.minAmount}{" "}
+                <Text color="danger" inline>
+                  <TokenSymbol
+                    symbolResolver={
+                      isNativeToken(toToken) ? undefined : toToken.icon
+                    }
+                  />
+                </Text>
+              </Text>
+            </TokenProvider>
           )}
 
           {errorMsg.msg?.map((msg) => (
