@@ -70,6 +70,10 @@ export default async function TeamLayout(props: {
                 ]
               : []),
             {
+              path: `/team/${params.team_slug}/${params.project_slug}/insight`,
+              name: "Insight",
+            },
+            {
               path: `/team/${params.team_slug}/${params.project_slug}/settings`,
               name: "Settings",
             },
