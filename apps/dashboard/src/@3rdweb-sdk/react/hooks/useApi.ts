@@ -29,9 +29,6 @@ export const accountPlan = {
   enterprise: "enterprise",
 } as const;
 
-type AccountStatus = (typeof accountStatus)[keyof typeof accountStatus];
-type AccountPlan = (typeof accountPlan)[keyof typeof accountPlan];
-
 export type AuthorizedWallet = {
   id: string;
   accountId: string;
@@ -47,30 +44,17 @@ export type Account = {
   id: string;
   isStaff: boolean;
   creatorWalletAddress: string;
-  status: AccountStatus;
-  plan: AccountPlan;
   name?: string;
   email?: string;
   advancedEnabled: boolean;
-  currentBillingPeriodStartsAt: string;
-  currentBillingPeriodEndsAt: string;
   emailConfirmedAt?: string;
   unconfirmedEmail?: string;
-  trialPeriodEndedAt?: string;
   emailConfirmationWalletAddress?: string;
-  stripePaymentActionUrl?: string;
   onboardSkipped?: boolean;
-  paymentAttemptCount?: number;
   notificationPreferences?: {
     billing: "email" | "none";
     updates: "email" | "none";
   };
-  recurringPaymentFailures: {
-    subscriptionId: string;
-    subscriptionDescription: string;
-    paymentFailureCode: string;
-    serviceCutoffDate: string;
-  }[];
   // TODO - add image URL
 };
 
@@ -194,33 +178,16 @@ export interface UpdateKeyInput {
   redirectUrls: string[];
 }
 
-interface UsageBundler {
-  chainId: number;
-  sumTransactionFee: string;
-}
-
 interface UsageStorage {
   sumFileSizeBytes: number;
 }
 
-interface UsageEmbeddedWallets {
-  countWalletAddresses: number;
-}
-
 export interface UsageBillableByService {
   usage: {
-    bundler: UsageBundler[];
     storage: UsageStorage;
-    embeddedWallets: UsageEmbeddedWallets;
-  };
-  billableUsd: {
-    bundler: number;
-    storage: number;
-    embeddedWallets: number;
   };
   limits: {
     storage: number;
-    embeddedWallets: number;
   };
   rateLimits: {
     storage: number;

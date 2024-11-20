@@ -1,12 +1,10 @@
 "use client";
-
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   type ApiKeyService,
   accountStatus,
-  useAccount,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
@@ -26,24 +24,20 @@ export function AccountAbstractionPage(props: {
   teamSlug: string;
   projectKey: string;
   apiKeyServices: ApiKeyService[];
+  billingStatus: "validPayment" | (string & {}) | null;
   tab?: string;
 }) {
   const { apiKeyServices } = props;
   const looggedInUserQuery = useLoggedInUser();
-  const accountQuery = useAccount();
   const chain = useActiveWalletChain();
 
   const hasSmartWalletsWithoutBilling = useMemo(() => {
-    if (!accountQuery.data) {
-      return;
-    }
-
     return apiKeyServices.find(
       (s) =>
-        accountQuery.data.status !== accountStatus.validPayment &&
+        props.billingStatus !== accountStatus.validPayment &&
         s.name === "bundler",
     );
-  }, [apiKeyServices, accountQuery.data]);
+  }, [apiKeyServices, props.billingStatus]);
 
   const isOpChain = chain?.id ? isOpChainId(chain.id) : false;
 

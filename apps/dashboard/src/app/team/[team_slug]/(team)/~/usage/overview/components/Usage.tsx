@@ -41,11 +41,6 @@ export const Usage: React.FC<UsageProps> = ({
     return {
       total: `${toSize(Math.min(consumedBytes, limitBytes), "MB")} of ${toSize(limitBytes)} included storage used`,
       progress: percent,
-      ...(usageData.billableUsd.storage > 0
-        ? {
-            overage: usageData.billableUsd.storage,
-          }
-        : {}),
       totalUsage: `Total Usage: ${toSize(consumedBytes, "MB")}`,
     };
   }, [usageData]);

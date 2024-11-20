@@ -42,10 +42,7 @@ function OnboardingUI(props: {
         break;
       case "confirming":
         // after confirming, only show plan if user has not skipped onboarding earlier or trial period has ended
-        nextStep =
-          account.onboardSkipped || account?.trialPeriodEndedAt
-            ? "skipped"
-            : "plan";
+        nextStep = account.onboardSkipped ? "skipped" : "plan";
         break;
       case "confirmLinking":
         nextStep = "skipped";
@@ -145,7 +142,8 @@ function OnboardingUI(props: {
                 setState("skipped");
                 skipOnboarding();
               }}
-              canTrialGrowth={!account.trialPeriodEndedAt}
+              // TODO: what can we do here? assume true for the moment
+              canTrialGrowth={true}
             />
           </Suspense>
         )}

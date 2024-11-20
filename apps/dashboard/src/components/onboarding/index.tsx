@@ -67,7 +67,7 @@ export const Onboarding: React.FC<{
       );
     }
     // skip when going thru claiming trial growth
-    else if (account?.trialPeriodEndedAt) {
+    else if (account?.onboardSkipped) {
       setState("skipped");
     }
     // user hasn't skipped onboarding, has valid email and no valid payment yet
