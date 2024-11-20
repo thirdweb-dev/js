@@ -9,9 +9,11 @@ export function AnalyticsHeader(props: {
   const { title, interval, range } = props;
 
   return (
-    <div className="container flex flex-col items-start gap-6 px-2 py-6 md:h-[120px] md:flex-row md:items-center md:p-6 md:py-0">
+    <div className="container flex flex-col items-start gap-3 py-10 md:flex-row md:items-center">
       <div className="flex-1">
-        <h1 className="font-semibold text-3xl text-foreground">{title}</h1>
+        <h1 className="font-semibold text-2xl tracking-tight md:text-3xl">
+          {title}
+        </h1>
       </div>
       <RangeSelector interval={interval} range={range} />
     </div>

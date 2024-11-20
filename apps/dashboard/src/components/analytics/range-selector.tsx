@@ -73,7 +73,7 @@ export function RangeSelector({
   });
 
   return (
-    <div className="flex flex-col justify-end gap-3 sm:flex-row">
+    <div className="flex justify-end gap-4">
       <DateRangeSelector
         range={localRange}
         setRange={(newRange) => {
