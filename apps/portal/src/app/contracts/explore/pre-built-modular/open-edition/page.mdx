@@ -1,0 +1,90 @@
+import { createMetadata, DocImage, Steps, Step, Callout, ContractDeployCard } from "@doc";
+import openEditionStep1 from './assets/oe_step1.png'
+import openEditionStep2 from './assets/oe_step2.png'
+import openEditionStep3 from './assets/oe_step3.png'
+import openEditionStep4 from './assets/oe_step4.png'
+
+
+
+
+# Deploy a modular Open Edition contract
+
+The Open Edition contract creates NFTs with shared metadata with unique token IDs appended to the NFTs name. Contrary to standard NFT contracts, Open Edition has an unlimited supply and users may continuously mint them increasing accessibility to a broader audience. The Open Edition contract is based on the ERC-721A contract. 
+
+### Claim Settings
+
+This contract does not require limits to the total supply of NFTs. Any settings related to claim phases may still be applied such as price per NFT, allowlists, start and end times to the phases, and NFTs per wallet. 
+
+### Use Cases & Examples
+
+- Timed Drops to allow unlimited purchases of NFTs within a certain window of time
+- Generative art NFTs with each NFT portraying unique artwork different from previous
+- Event specific drops to collect as commemorations, special promotions, and more
+
+### Default Installed Modules
+
+- Claimable
+- OpenEditionMetadata
+- Royalty
+
+### Deploy modular Open Edition contract
+
+Learn how to deploy a modular Open Edition contract through the dashboard. 
+
+<Steps>
+
+
+<Step title="Locate Contract">
+
+Navigate to Explore, locate the [Modular Open Edition contract](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzcyMSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik9wZW5FZGl0aW9uTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkM3MjEifQ%3D%3D&displayName=Modular+Open+Edition), and select the Deploy Now button.
+
+<DocImage src={openEditionStep1} alt="Screenshot of Open Edition Deployment screen" />
+
+</Step>
+
+<Step title="Configure Contract Metadata">
+Fill in the Contract Metadata including Name, Symbol, Description, and Image. 
+
+Contract Metadata serves as your unique identifier.
+
+<DocImage src={openEditionStep2} alt="Screenshot of Open Edition configure metadata" />
+
+</Step>
+
+
+<Step title="Configure Royalties">
+
+Determine a percentage of the revenue from royalties and pass to the percentage field, if desired. 
+    
+The Transfer Validator Address is an address that must enforce royalties in compliance with ERC-721C. [Learn more about the ERC-721C standard.](https://blog.thirdweb.com/guides/deploy-erc721a-nft-collection-royalties-thirdweb-guide-2/)
+
+<DocImage src={openEditionStep3} alt="Screenshot of Open Edition configure royalties" />
+
+</Step>
+
+<Step title="Select Chain">
+Select the preferred chain you want to deploy on and select Deploy Now.
+
+<DocImage src={openEditionStep4} alt="Screenshot of Token Drop select chain screen" />
+
+<Callout variant="info" title="Any EVM Compatible">
+	The Open Edition contract is deployable on any EVM compatible network. [View all available networks.](https://thirdweb.com/chainlist) 
+</Callout>
+If you are signed in with an EOA wallet, you will be prompted to sign the transaction. After that your contract is deployed and you can begin configuring the modules. 
+</Step>
+
+</Steps>
+
+### Modular Contract
+
+This contract is created using the modular contract framework. Modules on this contract are upgradeable. [Learn more about Modular Contracts.](https://portal.thirdweb.com/contracts/modular-contracts/overview)
+
+### Configure Modules
+
+To configure the modules, navigate to the Modules view:
+
+(Coming soon)
+
+<Callout variant='info' title="Install Modules">
+	To install additional modules on this contract, navigate to the Modules view after deploying your contract. 
+</Callout>

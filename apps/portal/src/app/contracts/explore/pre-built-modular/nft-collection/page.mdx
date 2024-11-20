@@ -1,0 +1,88 @@
+import { createMetadata, DocImage, Steps, Step, Callout, ContractDeployCard } from "@doc";
+import collectionStep1 from './assets/nft_collection_step1.png'
+import collectionStep2 from './assets/nft_collection_step2.png'
+import collectionStep3 from './assets/nft_collection_step3.png'
+import collectionTransferable from '../assets/erc721_transferable.png'
+import collectionBatchMetadata from '../assets/erc721_batchmetadata.png'
+import collectionMintable from '../assets/erc721_mintable.png'
+
+# Deploy a modular NFT Collection contract
+
+The NFT Collection contract creates a unique collection of NFTs based on the ERC-721A standard. NFTs are minted to the creator’s wallet as they are added to the collection. NFTs are still transferable, able to be sold on a marketplace, and perform any other actions as defined by ERC-721A. 
+
+For advanced use-cases requiring , NFT Collection includes signature-based minting capabilities. 
+
+### NFT Collection vs NFT Drop
+
+NFT Collection contract does not have lazy minting capabilities or claim conditions. If you’d prefer to define specific settings such as claim limits, start and end times to claim, and more, please refer to the [NFT Drop contract](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzcyMSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkM3MjEifQ%3D%3D&displayName=Modular+NFT+Drop). 
+
+### Use Cases & Examples
+
+- Create a 1-of-many collection of photography, artwork, or other media to be collected or sold on a marketplace
+- Create a 1-of-1 NFT which provide special utility or can be used to gate access to an application
+- Create a community-made collection of NFTs using signature-minting
+
+### Default Installed Modules
+
+- Mintable
+- BatchMetadata
+- Transferable
+
+<Steps>
+
+
+<Step title="Locate Contract">
+
+Navigate to Explore, locate the [Modular NFT Collection contract](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDNzIxIn0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzcyMSJ9&displayName=Modular+NFT+Collection), and select the Deploy Now button.
+
+<DocImage src={collectionStep1} alt="Screenshot NFT Collection contract" />
+
+</Step>
+
+<Step title="Configure Contract Metadata">
+Fill in the Contract Metadata including Name, Symbol, Description, and Image. 
+
+Contract Metadata serves as your unique identifier.
+
+<DocImage src={collectionStep2} alt="Screenshot of NFT Collectionconfigure metadata" />
+
+
+</Step>
+
+<Step title="Select Chain">
+Select the preferred chain you want to deploy on and select Deploy Now.
+
+<DocImage src={collectionStep3} alt="Screenshot of Token select chain screen" />
+
+<Callout variant="info" title="Any EVM Compatible">
+	The NFT Collection contract is deployable on any EVM compatible network. [View all available networks.](https://thirdweb.com/chainlist) 
+</Callout>
+If you are signed in with an EOA wallet, you will be prompted to sign the transaction. After that your contract is deployed and you can begin configuring the modules. 
+</Step>
+
+</Steps>
+
+### Modular Contract
+
+This contract is created using the modular contract framework. Modules on this contract are upgradeable. [Learn more about Modular Contracts.](https://portal.thirdweb.com/contracts/modular-contracts/overview)
+
+### Configure Modules
+
+To configure the modules, navigate to the Modules view:
+
+- Configure the MintableERC721 module to facilitate minting of ERC721 tokens with sales settings
+
+<DocImage src={collectionMintable} alt="Screenshot of ERC721 Mintable module"/>
+
+- Configure BatchMetadataERC721 to upload the NFT metadata 
+
+<DocImage src={collectionBatchMetadata} alt="Screenshot of ERC721 BatchMetadata module"/>
+
+- Configure the Transferable721 Module to restrict transfers, if desired.
+
+<DocImage src={collectionTransferable} alt="Screenshot of ERC721 Transferable module"/>
+
+<Callout variant='info' title="Install Modules">
+	To install additional modules on this contract, navigate to the Modules view after deploying your contract. 
+</Callout>
+

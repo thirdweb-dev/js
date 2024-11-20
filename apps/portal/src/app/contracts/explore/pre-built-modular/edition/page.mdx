@@ -1,0 +1,88 @@
+import { createMetadata, DocImage, Steps, Step, Callout, ContractDeployCard } from "@doc";
+import editionStep1 from './assets/edition_step1.png'
+import editionStep2 from './assets/edition_step2.png'
+import editionStep3 from './assets/edition_step3.png'
+import editionStep4 from './assets/edition_step4.png'
+
+
+# Deploy a modular Edition Drop
+
+The Edition contract also known as “semi-fungible” or “multi” tokens create multiple NFTs from the same asset based on the [ERC-1155 standard](https://eips.ethereum.org/EIPS/eip-1155). NFTs are minted to the creator’s wallet as they are added to the collection. NFTs are still transferable, able to be sold on a marketplace, and perform any other actions as defined by ERC-1155. 
+
+For advanced use cases, Edition enables signature-minting capabilities.
+
+### Edition vs Edition Drop
+
+Edition does not have lazy minting capabilities or claim conditions. If you’d prefer to define specific settings such as claim limits, start and end times to claim, and more, please refer to the [Edition Drop contract](https://thirdweb.com/thirdweb.eth/ERC1155CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzExNTUifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkMxMTU1In0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkMxMTU1In0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlNlcXVlbnRpYWxUb2tlbklkRVJDMTE1NSJ9&displayName=Modular+Edition+Drop). 
+
+### Use Cases & Examples
+
+- Create an NFT Collection with multiple copies of each NFT
+- Airdrop an NFT to an allowlist of addresses using the same assets and metadata
+- Create copies of artwork to be sold on a marketplace
+
+### Default Installed Modules
+
+- Mintable
+- BatchMetadata
+- Transferable
+- SequentialTokenId
+
+### Deploy modular Edition contract
+
+Learn how to deploy a modular Edition contract through the dashboard.
+
+<Steps>
+
+
+<Step title="Locate Contract">
+
+Navigate to Explore, locate the [Modular Edition contract](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDNzIxIn0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzcyMSJ9&displayName=Modular+NFT+Collection), and select the Deploy Now button.
+
+<DocImage src={editionStep1} alt="Screenshot Edition contract" />
+
+</Step>
+
+<Step title="Configure Contract Metadata">
+Fill in the Contract Metadata including Name, Symbol, Description, and Image. 
+
+Contract Metadata serves as your unique identifier.
+
+<DocImage src={editionStep2} alt="Screenshot of Edition  configure metadata" />
+
+</Step>
+
+
+<Step title="Configure Sequential Token Id">
+Input a number you want your tokens to start at for the sequential token id. If you don’t have a preference to change it, you may input 0. 
+
+<DocImage src={editionStep3} alt="Screenshot of Edition  configure sequential token id" />
+
+</Step>
+
+<Step title="Select Chain">
+Select the preferred chain you want to deploy on and select Deploy Now.
+
+<DocImage src={editionStep4} alt="Screenshot of Edition select chain" />
+
+<Callout variant="info" title="Any EVM Compatible">
+	The Edition contract is deployable on any EVM compatible network. [View all available networks.](https://thirdweb.com/chainlist) 
+</Callout>
+If you are signed in with an EOA wallet, you will be prompted to sign the transaction. After that your contract is deployed and you can begin configuring the modules. 
+</Step>
+
+</Steps>
+
+### Modular Contract
+
+This contract is created using the modular contract framework. Modules on this contract are upgradeable. [Learn more about Modular Contracts.](https://portal.thirdweb.com/contracts/modular-contracts/overview)
+
+### Configure Modules
+
+To configure the modules, navigate to the Modules view:
+
+(Coming soon)
+
+<Callout variant='info' title="Install Modules">
+	To install additional modules on this contract, navigate to the Modules view after deploying your contract. 
+</Callout>
