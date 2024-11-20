@@ -3,12 +3,7 @@
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
 import { API_SERVER_URL } from "../constants/env";
 
-export async function joinTeamWaitlist(options: {
-  teamSlug: string;
-  // currently only 'nebula' is supported
-  scope: "nebula";
-}) {
-  const { teamSlug, scope } = options;
+export async function confirmEmailWithOTP(otp: string) {
   const token = await getAuthToken();
 
   if (!token) {
@@ -17,24 +12,28 @@ export async function joinTeamWaitlist(options: {
     };
   }
 
-  const res = await fetch(`${API_SERVER_URL}/v1/teams/${teamSlug}/waitlist`, {
-    method: "POST",
+  const res = await fetch(`${API_SERVER_URL}/v1/account/confirmEmail`, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      scope,
+      confirmationToken: otp,
     }),
   });
 
   if (!res.ok) {
+    const json = await res.json();
+
+    if (json.error) {
+      return {
+        errorMessage: json.error.message,
+      };
+    }
+
     return {
-      errorMessage: "Failed to join waitlist",
+      errorMessage: "Failed to confirm email",
     };
   }
-
-  return {
-    success: true,
-  };
 }

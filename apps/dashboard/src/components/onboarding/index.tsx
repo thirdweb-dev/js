@@ -56,11 +56,10 @@ export const Onboarding: React.FC<{
     // user hasn't confirmed email
     if (!account.emailConfirmedAt && !account.unconfirmedEmail) {
       // if its an embedded wallet, try to auto-confirm it
-
       setState("onboarding");
     }
-    // user has changed email and needs to confirm
-    else if (account.unconfirmedEmail) {
+    // user has no confirmed email and they tried confirming an email earlier
+    else if (!account.emailConfirmedAt && account.unconfirmedEmail) {
       setState(
         account.emailConfirmationWalletAddress
           ? "confirmLinking"
