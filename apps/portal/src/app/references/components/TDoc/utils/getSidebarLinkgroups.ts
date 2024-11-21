@@ -41,7 +41,7 @@ const tagsToGroup = {
   "@social": "Social API",
   "@modules": "Modules",
   "@client": "Client",
-  "@account": "Account Components",
+  "@account": "Account",
 } as const;
 
 type TagKey = keyof typeof tagsToGroup;

@@ -7,7 +7,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 /**
  * Props for the <AccountProvider /> component
  * @component
- * @account
+ * @wallet
  */
 export type AccountProviderProps = {
   /**
@@ -42,7 +42,7 @@ const AccountProviderContext = /* @__PURE__ */ createContext<
  * ```
  *
  * @component
- * @account
+ * @wallet
  * @beta
  */
 export function AccountProvider(

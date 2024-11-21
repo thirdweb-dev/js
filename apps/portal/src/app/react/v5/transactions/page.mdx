@@ -1,8 +1,37 @@
+import { ReactIcon } from "@/icons";
+import { createMetadata } from "@doc";
+import { ArticleIconCard, Stack } from "@doc";
+import { BlocksIcon } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+
+export const metadata = createMetadata({
+	title: "Sending Transactions | thirdweb",
+	description: "How to send transactions in react",
+});
+
 # Transactions
 
 Sending a transaction in react is done via the `useSendTransaction` hook. The hook returns a React Query `mutate` function that you can call with a transaction object created with `prepareContractCall` or `prepareTransaction`.
 
 Note that unlike in TypeScript core, `useSendTransaction` does not require passing the active `Account`, it will used the current active account from the React context.
+
+## Live Playground
+
+Try out the demo for yourself in the [sending transactions playground](https://playground.thirdweb.com/connect/transactions)
+
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com/connect/blockchain-api"
+	description="See the SDK in action on the live playground"
+/>
+</Stack>
+
+## Generic Contract Read
+
+## Sending a generic contract call
 
 ```ts
 import { prepareContractCall, getContract } from "thirdweb";
@@ -28,3 +57,104 @@ const MyComponent = () => {
 	};
 };
 ```
+
+## Using extensions
+
+<Stack>
+<ArticleIconCard
+	title="Understanding Extensions"
+	description="Learn how to use extensions in your project"
+	icon={BlocksIcon}
+	href="/typescript/v5/extensions/use"
+/>
+</Stack>
+
+Extensions are a way to make complex transactions in a type-safe way with a simple API.
+
+```tsx
+import { getContract } from "thirdweb";
+import { useSendTransaction } from "thirdweb/react";
+import { mintTo } from "thirdweb/extensions/erc721";
+
+const contract = getContract({
+	client,
+	chain,
+	address: "0x...",
+});
+
+const MyComponent = () => {
+	const { mutate: sendTransaction, isPending } = useSendTransaction();
+
+	const onClick = async () => {
+		const transaction = mintTo({
+			contract,
+			to: "0x...",
+			nft: {
+				name: "NFT Name",
+				description: "NFT Description",
+				image: "https://example.com/image.png",
+			},
+		});
+		sendTransaction(transaction);
+	};
+};
+```
+
+Check out all the [available extensions](/references/typescript/v5/functions#extensions) for more details.
+
+## API References
+
+Check out the [transaction hooks](https://thirdweb.com/docs/references/typescript/v5/useSendTransaction) reference for more details.
+
+<Stack>
+
+<ArticleIconCard
+	title="useSendTransaction"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useSendTransaction"
+	description="Hook to send transactions"
+/>
+
+<ArticleIconCard
+	title="useWaitForReceipt"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useWaitForReceipt"
+	description="Hook to wait for a transaction receipt"
+/>
+
+<ArticleIconCard
+	title="useSendAndConfirmTransaction"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useSendAndConfirmTransaction"
+	description="Hook to send and confirm transactions"
+/>
+
+<ArticleIconCard
+	title="useSimulateTransaction"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useSimulateTransaction"
+	description="Hook to simulate transactions"
+/>
+
+<ArticleIconCard
+	title="useEstimateGas"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useEstimateGas"
+	description="Hook to estimate gas units of a transaction"
+/>
+
+<ArticleIconCard
+	title="useEstimateGasCost"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useEstimateGasCost"
+	description="Hook to estimate gas cost of a transaction"
+/>
+
+<ArticleIconCard
+	title="useSendBatchTransaction"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useSendBatchTransaction"
+	description="Hook to send a batch of transactions"
+/>
+
+</Stack>
