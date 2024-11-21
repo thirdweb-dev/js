@@ -41,9 +41,7 @@ This guide will show you how to create your own Auth Server that is compatible w
 <Steps>
 
 <Step title="Step 1">
-	Navigate to Wallets > [In-App
-	Wallets](https://thirdweb.com/dashboard/wallets/embedded) in the thirdweb
-	dashboard.
+	Navigate to Your Team > Project > Connect > In-App Wallets Page from the (dashboard)[https://thirdweb.com/team]
 </Step>
 
 <Step title="Step 2">
@@ -107,7 +105,6 @@ const handlePostLogin = async (jwt: string) => {
 			client,
 			strategy: "auth_endpoint",
 			payload: JSON.stringify({ userId: "ANY_RANDOM_ID_HERE" }),
-			encryptionKey: "your-encryption-key",
 		});
 		return wallet;
 	});
@@ -127,7 +124,6 @@ const account = await wallet.connect({
 	client,
 	strategy: "auth_endpoint",
 	payload: JSON.stringify({ userId: "ANY_RANDOM_ID_HERE" }),
-	encryptionKey: "your-encryption-key",
 });
 
 // use the account to send transactions
@@ -135,10 +131,6 @@ const account = await wallet.connect({
 
 </TabsContent>
 </Tabs>
-
-You can set your encryptionKey in either a secret env variable or ask the user to enter a password for it.
-
-** Do not hardcode the encryptionKey in your code. **
 
 A persistent, cross-platform wallet is now created for your user!
 

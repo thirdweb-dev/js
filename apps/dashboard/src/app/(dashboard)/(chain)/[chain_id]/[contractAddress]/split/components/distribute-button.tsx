@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useSplitDistributeFunds } from "@3rdweb-sdk/react/hooks/useSplit";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -7,7 +8,6 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
-import { Button } from "tw-components";
 import type { Balance } from "../ContractSplitPage";
 
 interface DistributeButtonProps {
@@ -90,7 +90,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
 
   if (numTransactions === 0) {
     return (
-      <Button isDisabled colorScheme="primary" {...restButtonProps}>
+      <Button disabled variant="primary" {...restButtonProps}>
         Nothing to distribute
       </Button>
     );

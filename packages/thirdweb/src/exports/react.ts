@@ -173,10 +173,23 @@ export {
   type CreateDirectListingButtonProps,
 } from "../react/web/ui/prebuilt/thirdweb/CreateDirectListingButton/index.js";
 
+// NFT rendering components
 export {
-  NFT,
+  NFTProvider,
+  type NFTProviderProps,
+} from "../react/web/ui/prebuilt/NFT/provider.js";
+export {
+  NFTName,
+  type NFTNameProps,
+} from "../react/web/ui/prebuilt/NFT/name.js";
+export {
+  NFTDescription,
+  type NFTDescriptionProps,
+} from "../react/web/ui/prebuilt/NFT/description.js";
+export {
+  NFTMedia,
   type NFTMediaProps,
-} from "../react/web/ui/prebuilt/NFT/NFT.js";
+} from "../react/web/ui/prebuilt/NFT/media.js";
 
 export { useConnectionManager } from "../react/core/providers/connection-manager.js";
 
@@ -195,3 +208,48 @@ export type {
   FarcasterProfile,
   LensProfile,
 } from "../social/types.js";
+
+// Site Embed and Linking
+export { SiteEmbed } from "../react/web/ui/SiteEmbed.js";
+export { SiteLink } from "../react/web/ui/SiteLink.js";
+
+// Account
+export {
+  AccountAddress,
+  type AccountAddressProps,
+} from "../react/web/ui/prebuilt/Account/address.js";
+export {
+  AccountBalance,
+  type AccountBalanceProps,
+} from "../react/web/ui/prebuilt/Account/balance.js";
+export {
+  AccountName,
+  type AccountNameProps,
+} from "../react/web/ui/prebuilt/Account/name.js";
+export { AccountBlobbie } from "../react/web/ui/prebuilt/Account/blobbie.js";
+export {
+  AccountProvider,
+  type AccountProviderProps,
+} from "../react/web/ui/prebuilt/Account/provider.js";
+export {
+  AccountAvatar,
+  type AccountAvatarProps,
+} from "../react/web/ui/prebuilt/Account/avatar.js";
+
+// Token
+export {
+  TokenProvider,
+  type TokenProviderProps,
+} from "../react/web/ui/prebuilt/Token/provider.js";
+export {
+  TokenName,
+  type TokenNameProps,
+} from "../react/web/ui/prebuilt/Token/name.js";
+export {
+  TokenSymbol,
+  type TokenSymbolProps,
+} from "../react/web/ui/prebuilt/Token/symbol.js";
+export {
+  TokenIcon,
+  type TokenIconProps,
+} from "../react/web/ui/prebuilt/Token/icon.js";

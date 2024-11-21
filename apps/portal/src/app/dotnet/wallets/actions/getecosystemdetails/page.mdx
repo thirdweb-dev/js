@@ -1,0 +1,24 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "EcosystemWallet.GetEcosystemDetails | Thirdweb .NET SDK",
+	description: "Retrieve information about the Ecosystem the wallet is part of.",
+});
+
+# EcosystemWallet.GetEcosystemDetails
+
+This method returns information about the Ecosystem the wallet is part of.
+
+## Usage
+
+```csharp
+var result = await ecosystemWallet.GetEcosystemDetails();
+```
+
+<Details summary="Return Value">
+
+### EcosystemDetails
+
+The Ecosystem details, such as the Ecosystem name, slug, image URL and more.
+
+</Details>

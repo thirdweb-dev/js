@@ -1,0 +1,89 @@
+import { ExternalLink } from "lucide-react";
+import { ArticleIconCard, Stack } from "@doc";
+import { ReactIcon } from "@/icons";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Fund wallets | thirdweb",
+	description: "Let users fund their wallets with crypto or fiat",
+});
+
+# Funding wallets
+
+Let users fund their wallets with crypto or fiat on all the supported chains.
+
+## Live Playground
+
+Try out the demo for yourself in the [fund wallets live playground](https://playground.thirdweb.com/connect/pay)
+
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com/connect/pay"
+	description="See the SDK in action on the live playground"
+/>
+</Stack>
+
+## Usage with UI Components
+
+The easiest way to fund wallets is to use the `PayEmbed` prebuilt UI component. Note that the `ConnectButton` also has a built-in funding flow that can also be customised.
+
+```tsx
+import { PayEmbed } from "thirdweb/react";
+
+function App() {
+  return (
+    <PayEmbed
+      client={client}
+      payOptions={{
+        mode: "fund_wallet",
+        metadata: {
+          name: "Get funds",
+        },
+        prefillBuy: {
+          chain: base,
+          amount: "0.01",
+        },
+        // ... theme, currency, amounts, payment methods, etc.
+      }}
+    />
+  );
+}
+```
+
+Check out the [PayEmbed API reference](/references/typescript/v5/PayEmbed) for more information.
+
+<Stack>
+
+<ArticleIconCard
+	title="PayEmbed"
+	icon={ReactIcon}
+	href="/references/typescript/v5/PayEmbed"
+	description="Prebuilt UI to fund wallets with crypto or fiat"
+/>
+
+</Stack>
+
+
+## Usage with your own UI
+
+If you want more control over the funding flow, you can use the [Buy with Crypto or Fiat hooks](/references/typescript/v5/hooks#buy-crypto) to create your own custom UI.
+
+<Stack>
+
+<ArticleIconCard
+	title="useBuyWithCryptoQuote"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useBuyWithCryptoQuote"
+	description="Get a quote for funding a wallet with crypto from another wallet, chain, or token"
+/>
+
+<ArticleIconCard
+	title="useBuyWithFiatQuote"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useBuyWithFiatQuote"
+	description="Get a quote for funding a wallet with fiat"
+/>
+</Stack>

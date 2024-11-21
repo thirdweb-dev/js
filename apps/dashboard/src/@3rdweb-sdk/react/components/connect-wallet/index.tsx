@@ -4,6 +4,7 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useStore } from "@/lib/reactive";
+import { cn } from "@/lib/utils";
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
@@ -15,7 +16,6 @@ import { usePathname } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import type { Chain } from "thirdweb";
 import {
-  AutoConnect,
   ConnectButton,
   type NetworkSelectorProps,
   useConnectModal,
@@ -34,7 +34,10 @@ import { popularChains } from "../popularChains";
 export const CustomConnectWallet = (props: {
   loginRequired?: boolean;
   connectButtonClassName?: string;
+  signInLinkButtonClassName?: string;
   detailsButtonClassName?: string;
+  loadingButtonClassName?: string;
+  chain?: Chain;
 }) => {
   const thirdwebClient = useThirdwebClient();
   const loginRequired =
@@ -122,11 +125,14 @@ export const CustomConnectWallet = (props: {
   if (isPending) {
     return (
       <>
-        <div className="flex h-[48px] w-[144px] items-center justify-center rounded-lg border border-border bg-muted">
+        <div
+          className={cn(
+            "flex h-[48px] w-[144px] items-center justify-center rounded-lg border border-border bg-muted",
+            props.loadingButtonClassName,
+          )}
+        >
           <Spinner className="size-4" />
         </div>
-        {/* need auto connect here so that we actually connect */}
-        <AutoConnect client={thirdwebClient} />
       </>
     );
   }
@@ -134,15 +140,18 @@ export const CustomConnectWallet = (props: {
   if (!isLoggedIn && loginRequired) {
     return (
       <>
-        <Button asChild variant="default" className="gap-2" size="lg">
+        <Button
+          asChild
+          variant="default"
+          className={props.signInLinkButtonClassName}
+          size="lg"
+        >
           <Link
             href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
           >
             Sign In
           </Link>
         </Button>
-        {/* need auto connect here so that we actually connect */}
-        <AutoConnect client={thirdwebClient} />
       </>
     );
   }
@@ -203,6 +212,7 @@ export const CustomConnectWallet = (props: {
             },
           },
         }}
+        chain={props.chain}
       />
 
       <LazyConfigureNetworkModal

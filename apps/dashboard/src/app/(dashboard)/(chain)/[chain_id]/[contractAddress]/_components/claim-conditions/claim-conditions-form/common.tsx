@@ -1,11 +1,6 @@
 import { Flex, FormControl } from "@chakra-ui/react";
 import type { FieldError } from "react-hook-form";
-import {
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Heading,
-} from "tw-components";
+import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { useClaimConditionsFormContext } from ".";
 
@@ -22,9 +17,7 @@ export const CustomFormControl: ComponentWithChildren<
   return (
     <FormControl isDisabled={props.disabled} isInvalid={!!props.error}>
       {/* label */}
-      <Heading as={FormLabel} size="label.md">
-        {props.label}
-      </Heading>
+      <FormLabel className="font-bold">{props.label}</FormLabel>
 
       {/* input */}
       {props.children}

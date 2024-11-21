@@ -109,7 +109,7 @@ const OP_CTA = {
   description:
     "Successful applicants receive gas grants for use across all supported Optimism Superchain networks. These grants can sponsor gas fees for any onchain activity using our Account Abstraction tools.",
   buttonText: "Apply now",
-  buttonLink: "/dashboard/settings/gas-credits",
+  buttonLink: "/team/~/~/settings/credits",
 } satisfies ChainCTAProps;
 
 const chainMetaRecord = {

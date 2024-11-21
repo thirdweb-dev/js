@@ -74,7 +74,7 @@ export function PayWithCryptoQuoteInfo(props: {
         {balanceQuery.data ? (
           <Container flex="row" gap="3xs" center="y">
             <Text size="xs" color="secondaryText" weight={500}>
-              {formatTokenBalance(balanceQuery.data, false, 3)}
+              {formatTokenBalance(balanceQuery.data, false)}
             </Text>
             <TokenSymbol
               token={props.token}

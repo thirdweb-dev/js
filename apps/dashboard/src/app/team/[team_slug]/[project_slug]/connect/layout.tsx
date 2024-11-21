@@ -1,26 +1,19 @@
+import type { SidebarLink } from "@/components/blocks/Sidebar";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 
-export default function Layout(props: {
-  params: {
+export default async function Layout(props: {
+  params: Promise<{
     team_slug: string;
     project_slug: string;
-  };
+  }>;
   children: React.ReactNode;
 }) {
-  const { team_slug, project_slug } = props.params;
+  const { team_slug, project_slug } = await props.params;
 
-  const links: { label: string; href: string }[] = [
-    {
-      label: "Analytics",
-      href: `/team/${team_slug}/${project_slug}/connect/analytics`,
-    },
+  const links: SidebarLink[] = [
     {
       label: "In-App Wallets",
       href: `/team/${team_slug}/${project_slug}/connect/in-app-wallets`,
-    },
-    {
-      label: "Ecosystem Wallets",
-      href: `/team/${team_slug}/${project_slug}/connect/ecosystem`,
     },
     {
       label: "Account Abstraction",

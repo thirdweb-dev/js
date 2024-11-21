@@ -25,7 +25,7 @@ export type TeamMember = {
 };
 
 export async function getMembers(teamSlug: string) {
-  const token = getAuthToken();
+  const token = await getAuthToken();
 
   if (!token) {
     return undefined;

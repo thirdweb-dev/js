@@ -7,7 +7,7 @@ import { useActiveWallet } from "./useActiveWallet.js";
 /**
  * A hook to get a call bundle's current status according to [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792).
  *
- * @note This function is dependent on the wallet's support for EIP-5792 and could throw an error if it's not supported.
+ * This function is dependent on the wallet's support for EIP-5792 and could throw an error if it's not supported.
  *
  * @returns a React Query object.
  * @beta

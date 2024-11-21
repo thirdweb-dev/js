@@ -13,15 +13,22 @@ export function useLocalStorage<TType>(
   // FIXME: ideally we do not need localstorage like this, alernatively we move this into use-query and use-mutation to invalidate etc
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    const item = window.localStorage.getItem(key);
-
-    _setValue(item ? JSON.parse(item) : initialValue);
+    try {
+      const item = window.localStorage.getItem(key);
+      _setValue(item ? JSON.parse(item) : initialValue);
+    } catch {
+      // ignore
+    }
   }, [key, initialValue]);
 
   const setValue = (value_: TType) => {
     _setValue(value_);
     if (isBrowser()) {
-      window.localStorage.setItem(key, JSON.stringify(value_));
+      try {
+        window.localStorage.setItem(key, JSON.stringify(value_));
+      } catch {
+        // ignore
+      }
     }
   };
 

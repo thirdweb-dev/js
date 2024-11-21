@@ -69,14 +69,14 @@ export function DatePickerWithRange(props: {
         <DynamicHeight>
           <div>
             {!isValid && (
-              <p className="flex items-center justify-center gap-2 pt-2 text-center text-destructive-text text-sm">
+              <p className="flex items-center justify-center gap-2 py-2 text-center text-destructive-text text-sm">
                 <CalendarX2Icon className="h-4 w-4" />
                 Invalid date range
               </p>
             )}
             {props.header}
 
-            <div className="px-4">
+            <div className={cn("px-4", !props.header && "py-4")}>
               <TabButtons
                 tabClassName="!text-sm"
                 activeTabClassName="!bg-inverted !text-inverted-foreground"

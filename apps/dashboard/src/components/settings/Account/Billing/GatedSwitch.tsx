@@ -24,7 +24,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
             To access this feature, you need to upgrade to the{" "}
             <TrackedLinkTW
               target="_blank"
-              href="/dashboard/settings/billing"
+              href="/team/~/~/settings/billing"
               category="advancedFeature"
               label={trackingLabel}
               className="text-link-foreground hover:text-foreground"

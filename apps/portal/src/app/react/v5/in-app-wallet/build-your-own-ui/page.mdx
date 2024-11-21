@@ -133,23 +133,23 @@ import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
 
 const { connect } = useConnect();
 
-const preLogin = async (phonNumber: string) => {
+const preLogin = async (phoneNumber: string) => {
 	// send phone number verification code
 	await preAuthenticate({
 		client,
 		strategy: "phone",
-		phonNumber, // ex: +1234567890
+		phoneNumber, // ex: +1234567890
 	});
 };
 
-const handleLogin = async (phonNumber: string, verificationCode: string) => {
+const handleLogin = async (phoneNumber: string, verificationCode: string) => {
 	// verify phone number and connect
 	await connect(() => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
 			strategy: "phone",
-			phonNumber,
+			phoneNumber,
 			verificationCode,
 		});
 		return wallet;

@@ -2,21 +2,26 @@ import { DeployFormForPublishInfo } from "../../../components/publish-based-depl
 import { moduleFromBase64 } from "../../../utils/module-base-64";
 
 type Props = {
-  params: {
+  params: Promise<{
     publisher: string;
     contract_id: string;
-  };
-  searchParams: {
-    module?: string[];
-  };
+  }>;
+  searchParams: Promise<{
+    module?: string[] | string;
+  }>;
 };
 
-export default function PublishedContractDeployPage({
-  params,
-  searchParams,
-}: Props) {
-  const modules = searchParams.module
-    ?.map((m) => moduleFromBase64(m))
-    .filter((m) => m !== null);
+export default async function PublishedContractDeployPage(props: Props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+  const moduleParam =
+    typeof searchParams.module === "string"
+      ? [searchParams.module]
+      : searchParams.module;
+
+  const modules =
+    moduleParam?.map((m) => moduleFromBase64(m)).filter((m) => m !== null) ||
+    [];
+
   return <DeployFormForPublishInfo {...params} modules={modules} />;
 }

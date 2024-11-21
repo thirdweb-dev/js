@@ -75,7 +75,8 @@ export function TrendingContractSection(props: {
             <TableBody>
               {props.topContracts.map((contract, index) => (
                 <TableRow
-                  className="relative hover:bg-muted/50"
+                  linkBox
+                  className="hover:bg-muted/50"
                   key={`${contract.chainMetadata.chainId}${contract.contractAddress}${index}`}
                 >
                   {/* Rank */}

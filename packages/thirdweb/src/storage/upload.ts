@@ -49,6 +49,7 @@ type UploadReturnType<TFiles extends UploadableFile[]> = TFiles extends {
  *    },
  *  ],
  * });
+ * ```
  *
  * ### Uploading files
  *

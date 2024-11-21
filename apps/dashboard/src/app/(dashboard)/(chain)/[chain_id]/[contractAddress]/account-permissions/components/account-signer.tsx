@@ -1,9 +1,10 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Badge } from "@/components/ui/badge";
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { formatDistance } from "date-fns/formatDistance";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useActiveAccount } from "thirdweb/react";
-import { Badge, Card, Heading, Text } from "tw-components";
+import { Card, Heading, Text } from "tw-components";
 
 export type AccountSignerType = {
   signer: string;
@@ -45,19 +46,9 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({
               <WalletAddress shortenAddress={isMobile} address={signer} />
             </Heading>
             <div className="flex flex-row gap-2">
-              {isAdmin ? (
-                <Badge borderRadius="lg" p={1.5}>
-                  Admin Key
-                </Badge>
-              ) : (
-                <Badge borderRadius="lg" p={1.5}>
-                  Scoped key
-                </Badge>
-              )}
+              {isAdmin ? <Badge>Admin Key</Badge> : <Badge>Scoped key</Badge>}
               {signer === address && (
-                <Badge colorScheme="green" borderRadius="lg" p={1.5}>
-                  Currently connected
-                </Badge>
+                <Badge variant="success">Currently connected</Badge>
               )}
             </div>
           </Flex>

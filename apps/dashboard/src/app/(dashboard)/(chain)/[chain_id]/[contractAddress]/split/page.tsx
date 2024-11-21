@@ -6,12 +6,13 @@ import { ContractSplitPage } from "./ContractSplitPage";
 import { ContractSplitPageClient } from "./ContractSplitPage.client";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     contractAddress: string;
     chain_id: string;
-  };
+  }>;
 }) {
-  const info = await getContractPageParamsInfo(props.params);
+  const params = await props.params;
+  const info = await getContractPageParamsInfo(params);
 
   if (!info) {
     notFound();
@@ -24,7 +25,7 @@ export default async function Page(props: {
   const { isSplitSupported } = await getContractPageMetadata(contract);
 
   if (!isSplitSupported) {
-    redirect(`/${props.params.chain_id}/${props.params.contractAddress}`);
+    redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
   return <ContractSplitPage contract={contract} />;

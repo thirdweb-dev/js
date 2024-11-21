@@ -293,7 +293,7 @@ const Contracts: ThirdwebNextPage = () => {
             image={require("../../public/assets/contracts/full-chargeback-protection.png")}
             mobileImage={require("../../public/assets/contracts/mobile-full-chargeback-protection.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="/dashboard/contracts/deploy"
+            href="/team/~/~/contracts"
             colSpan={2}
           />
           <LandingCardWithImage
@@ -302,7 +302,7 @@ const Contracts: ThirdwebNextPage = () => {
             image={require("../../public/assets/contracts/onchain-insights.png")}
             mobileImage={require("../../public/assets/contracts/mobile-onchain-insights.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="/dashboard/contracts/deploy"
+            href="/team/~/~/contracts"
             colSpan={1}
           />
         </LandingGridSection>

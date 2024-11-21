@@ -1,3 +1,5 @@
+"use client";
+
 import { useAccount, useAccountCredits } from "@3rdweb-sdk/react/hooks/useApi";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
 import { useTrack } from "hooks/analytics/useTrack";

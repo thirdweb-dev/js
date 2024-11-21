@@ -51,39 +51,43 @@ export async function getRequiredTransactions(
       | DeployTransactionResult[]
       | null
     )[] = await Promise.all([
-      getDeployedCreate2Factory({
-        chain,
-        client,
-      }).then((c) =>
-        c || isZkSync
-          ? null
-          : ({ type: "infra", contractId: "Create2Factory" } as const),
-      ),
-      getDeployedInfraContract({
-        chain,
-        client,
-        contractId: "Forwarder",
-      }).then((c) =>
-        c || isZkSync
-          ? null
-          : ({ type: "infra", contractId: "Forwarder" } as const),
-      ),
-      getDeployedInfraContract({
-        chain,
-        client,
-        contractId: "TWCloneFactory",
-        constructorParams: {
-          _trustedForwarder: await computePublishedContractAddress({
+      isZkSync
+        ? null
+        : getDeployedCreate2Factory({
+            chain,
+            client,
+          }).then((c) =>
+            c
+              ? null
+              : ({ type: "infra", contractId: "Create2Factory" } as const),
+          ),
+      isZkSync
+        ? null
+        : getDeployedInfraContract({
             chain,
             client,
             contractId: "Forwarder",
-          }),
-        },
-      }).then((c) =>
-        c || isZkSync
-          ? null
-          : ({ type: "infra", contractId: "TWCloneFactory" } as const),
-      ),
+          }).then((c) =>
+            c ? null : ({ type: "infra", contractId: "Forwarder" } as const),
+          ),
+      isZkSync
+        ? null
+        : getDeployedInfraContract({
+            chain,
+            client,
+            contractId: "TWCloneFactory",
+            constructorParams: {
+              _trustedForwarder: await computePublishedContractAddress({
+                chain,
+                client,
+                contractId: "Forwarder",
+              }),
+            },
+          }).then((c) =>
+            c
+              ? null
+              : ({ type: "infra", contractId: "TWCloneFactory" } as const),
+          ),
       // TODO (deploy): add WETH contract check for implementations that need it (check implementation constructor params)
       getTransactionsForImplementation({
         chain,

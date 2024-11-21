@@ -1,6 +1,7 @@
 "use client";
 
 import type { Team } from "@/api/team";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { usePathname } from "next/navigation";
@@ -24,9 +25,10 @@ export function SettingsLayout(props: {
   const links = getTeamSettingsLinks(props.team.slug);
   const activeLink = links.find((link) => pathname === link.href);
   const accountQuery = useAccount();
+  const client = useThirdwebClient();
 
   return (
-    <div>
+    <div className="flex grow flex-col">
       {/* Huge page title  */}
       <div className="border-border border-b py-10">
         <div className="container">
@@ -46,10 +48,14 @@ export function SettingsLayout(props: {
       </div>
 
       <div className="container flex grow gap-8 lg:min-h-[900px] [&>*]:py-8 lg:[&>*]:py-10">
-        <TeamSettingsSidebar team={props.team} account={accountQuery.data} />
+        <TeamSettingsSidebar
+          team={props.team}
+          account={accountQuery.data}
+          client={client}
+        />
         <div
           className={cn(
-            "grow",
+            "flex grow flex-col",
             // if showing full nav on mobile - hide the page content
             showFullNavOnMobile && "max-sm:hidden",
           )}

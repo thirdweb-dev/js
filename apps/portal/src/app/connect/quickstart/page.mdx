@@ -17,7 +17,7 @@ npm i thirdweb
 
 <Step title="Get Your Client ID">
 
-Log in to the [thirdweb dashboard](https://thirdweb.com/dashboard). Navigate to the **Settings** page and create an API key to get your **Client ID**.
+Log in to the [thirdweb dashboard](https://thirdweb.com/team/~/~/projects). Create a new project to get your **Client ID**.
 
 </Step>
 
@@ -59,7 +59,7 @@ export default function MyComponent() {
   // 1. get wallet address
   const account = useActiveAccount();
   console.log("wallet address", account?.address);
-  
+
   // 2. get wallet balance
   const { data: balance, isLoading } = useWalletBalance({
     client,
@@ -74,7 +74,7 @@ export default function MyComponent() {
 
 <Step title="Send a Transaction">
 
-[Extensions](/typescript/v5/extensions/use) are the easiest way to prepare transactions. 
+[Extensions](/typescript/v5/extensions/use) are the easiest way to prepare transactions.
 
 1. Import the Extension you want to use
 2. Define your contract with `getContract` on your target chains
@@ -107,9 +107,9 @@ export default function MyComponent() {
 
 
 
-<Step title="You're Ready to build"> 
+<Step title="You're Ready to build">
 
-Congratulations, you've connected a wallet and sent a transaction from your application! You can now explore all the other accessible features in [the full React documentation.](/react/v5)   
+Congratulations, you've connected a wallet and sent a transaction from your application! You can now explore all the other accessible features in [the full React documentation.](/react/v5)
 
 </Step>
 </Steps>

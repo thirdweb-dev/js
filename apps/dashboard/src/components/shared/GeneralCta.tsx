@@ -15,7 +15,7 @@ interface GeneralCtaProps extends Omit<LinkButtonProps, "href"> {
 export const GeneralCta: React.FC<GeneralCtaProps> = ({
   size = "md",
   title = "Start building",
-  href = "/dashboard",
+  href = "/team",
   ...props
 }) => {
   const trackEvent = useTrack();

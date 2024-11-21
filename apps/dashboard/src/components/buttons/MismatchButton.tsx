@@ -59,6 +59,11 @@ import { useV5DashboardChain } from "../../lib/v5-adapter";
 const GAS_FREE_CHAINS = [
   75513, // Geek verse testnet
   75512, // Geek verse mainnet
+  531050104, // sophon testnet
+  37111, // lens sepolia
+  4457845, // zero testnet
+  978658, // treasure topaz
+  300, // zksync sepolia
 ];
 
 function useNetworkMismatchAdapter(desiredChainId: number) {
@@ -94,10 +99,19 @@ export const MismatchButton = forwardRef<
 
   const chainId = activeWalletChain?.id;
 
-  const eventRef = useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>();
+  const eventRef =
+    useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>(undefined);
+
   if (!wallet || !chainId) {
     return (
-      <CustomConnectWallet borderRadius="md" colorScheme="primary" {...props} />
+      <CustomConnectWallet
+        borderRadius="md"
+        colorScheme="primary"
+        {...props}
+        signInLinkButtonClassName={
+          props.size === "sm" ? "!py-2 !h-auto" : undefined
+        }
+      />
     );
   }
   const notEnoughBalance =
@@ -105,6 +119,7 @@ export const MismatchButton = forwardRef<
   return (
     <>
       <Popover
+        // @ts-expect-error - this works fine
         initialFocusRef={initialFocusRef}
         isLazy
         isOpen={isOpen}
@@ -389,7 +404,7 @@ function GetFundsFromFaucet(props: {
 }
 
 const MismatchNotice: React.FC<{
-  initialFocusRef: React.RefObject<HTMLButtonElement>;
+  initialFocusRef: React.RefObject<HTMLButtonElement | null>;
   onClose: (hasSwitched: boolean) => void;
   desiredChainId: number;
 }> = ({ initialFocusRef, onClose, desiredChainId }) => {

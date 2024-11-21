@@ -16,7 +16,7 @@ export type GetUserResult = {
 
 /**
  * Gets user based on the provided query parameters.
- * @note This function is only available on the server (a secret key is required in the client).
+ *  This function is only available on the server (a secret key is required in the client).
  *
  * @param options - The options for the get user function.
  * @param options.client - The Thirdweb client with a secret key included.

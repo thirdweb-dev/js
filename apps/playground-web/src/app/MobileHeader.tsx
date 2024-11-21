@@ -46,7 +46,6 @@ export function MobileHeader() {
           Playground
         </span>
       </Link>
-
       <Button
         variant="outline"
         className="!h-auto p-2"
@@ -60,7 +59,6 @@ export function MobileHeader() {
           <XIcon className="size-6" />
         )}
       </Button>
-
       {isOpen && (
         <div className="fade-in-0 slide-in-from-top-5 fixed top-[75px] right-0 bottom-0 left-0 z-50 flex animate-in flex-col gap-6 overflow-auto bg-background p-6 duration-200">
           <Sidebar links={navLinks} />

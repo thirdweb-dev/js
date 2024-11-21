@@ -4,7 +4,6 @@ import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import PlausibleProvider from "next-plausible";
-import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { UnlimitedWalletsBanner } from "../components/notices/AnnouncementBanner";
@@ -45,10 +44,6 @@ export const metadata: Metadata = {
   },
 };
 
-const PostHogPageView = dynamic(() => import("./components/posthog-pageview"), {
-  ssr: false,
-});
-
 export default function RootLayout({
   children,
 }: {
@@ -70,7 +65,6 @@ export default function RootLayout({
             fontSans.variable,
           )}
         >
-          <PostHogPageView />
           <UnlimitedWalletsBanner />
           <AppRouterProviders>{children}</AppRouterProviders>
           <Toaster richColors />

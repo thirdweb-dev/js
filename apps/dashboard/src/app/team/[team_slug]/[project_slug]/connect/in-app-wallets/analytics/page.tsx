@@ -1,38 +1,16 @@
-import type { Range } from "components/analytics/date-range-selector";
-import { InAppWalletAnalytics } from "components/embedded-wallets/Analytics";
+import { redirect } from "next/navigation";
 
-export default function Page({
-  params,
-  searchParams,
-}: {
-  params: { team_slug: string; project_slug: string };
-  searchParams: {
-    from?: string;
-    to?: string;
-    type?: string;
-    interval?: string;
-  };
+// This is a redirect to preserve old links
+
+export default async function Page(props: {
+  params: Promise<{
+    team_slug: string;
+    project_slug: string;
+  }>;
 }) {
-  const range =
-    searchParams.from && searchParams.to
-      ? {
-          type: searchParams.type ?? "last-120",
-          from: new Date(searchParams.from),
-          to: new Date(searchParams.to),
-        }
-      : undefined;
-
-  const interval: "day" | "week" = ["day", "week"].includes(
-    searchParams.interval ?? "",
-  )
-    ? (searchParams.interval as "day" | "week")
-    : "week";
-
-  return (
-    <InAppWalletAnalytics
-      clientId={params.project_slug}
-      interval={interval}
-      range={range as Range}
-    />
+  const params = await props.params;
+  // Default to the users tab
+  redirect(
+    `/team/${params.team_slug}/${params.project_slug}/connect/in-app-wallets`,
   );
 }

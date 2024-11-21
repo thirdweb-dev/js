@@ -9,7 +9,6 @@ import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "../../../../../wallets/__generated__/wallet-ids.js";
-import { COINBASE } from "../../../../../wallets/constants.js";
 import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { getInstalledWalletProviders } from "../../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
@@ -197,27 +196,6 @@ export function AnyWalletConnectUI(props: {
     );
   }
 
-  // coinbase wallet sdk
-  if (props.wallet.id === COINBASE) {
-    return (
-      <Suspense fallback={<LoadingScreen />}>
-        <CoinbaseSDKWalletConnectUI
-          locale={locale}
-          onGetStarted={() => {
-            setScreen("get-started");
-          }}
-          onBack={props.onBack}
-          done={props.done}
-          wallet={props.wallet as Wallet<typeof COINBASE>}
-          walletInfo={walletInfo.data}
-          chain={props.chain}
-          client={props.client}
-          size={props.size}
-        />
-      </Suspense>
-    );
-  }
-
   // wallet connect
   if (walletInfo.data.mobile.native || walletInfo.data.mobile.universal) {
     return (
@@ -289,6 +267,27 @@ export function AnyWalletConnectUI(props: {
           meta={props.meta}
           walletConnect={props.walletConnect}
           connectLocale={props.connectLocale}
+        />
+      </Suspense>
+    );
+  }
+
+  // any other known wallet
+  if (props.wallet.id) {
+    return (
+      <Suspense fallback={<LoadingScreen />}>
+        <CoinbaseSDKWalletConnectUI
+          locale={locale}
+          onGetStarted={() => {
+            setScreen("get-started");
+          }}
+          onBack={props.onBack}
+          done={props.done}
+          wallet={props.wallet}
+          walletInfo={walletInfo.data}
+          chain={props.chain}
+          client={props.client}
+          size={props.size}
         />
       </Suspense>
     );

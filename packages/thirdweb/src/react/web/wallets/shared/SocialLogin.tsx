@@ -125,7 +125,7 @@ export function SocialLogin(props: {
       ) {
         setAuthError(ewLocale.maxAccountsExceeded);
       }
-      console.error(`Error sign in with ${props.socialAuth}`, e);
+      console.error(`Error signing in with ${props.socialAuth}`, e);
     }
   };
 

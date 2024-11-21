@@ -1,18 +1,12 @@
 import { Blueprint } from "../blueprint";
 import {
-	createAuthEndpointWalletNode,
-	createEmailWalletNode,
-	createGuestWalletNode,
-	createJwtWalletNode,
-	createOAuthWalletNode,
-	createPhoneWalletNode, disconnectNode,
+	createWalletNode,
+	disconnectNode,
 	fetchOAuthLoginLinkNode,
 	isConnectedNode,
+	linkWalletNode,
 	sendOtpNode,
-	signInWithGuestNode,
-	signInWithJwtNode,
-	signInWithOAuthNode,
-	verifyOtpNode,
+	signInNode,
 } from "./nodes";
 import { createUnrealEngineMetadata } from "../../util";
 
@@ -23,63 +17,29 @@ export const metadata = createUnrealEngineMetadata({
 
 # In-App Wallets
 
+### Create Wallet
+Creates an in-app wallet based on inputs.
+<Blueprint code={createWalletNode} className='w-full h-48' />
+
+### Sign In
+Sign in, passing the required input if OTP, JWT, or Auth Endpoint
+<Blueprint code={signInNode} className='w-full h-40' />
+
+### Link Wallet
+Link a new auth method with a created - but never signed in - wallet
+<Blueprint code={linkWalletNode} className='w-full h-40' />
+
 ## OTP
-
-### Create Email Wallet
-Creates an in-app email wallet.
-<Blueprint code={createEmailWalletNode} className='w-full h-48' />
-
-### Create Phone Wallet
-Creates an in-app phone wallet.
-<Blueprint code={createPhoneWalletNode} className='w-full h-48' />
 
 ### Send OTP
 Sends an OTP for the in-app wallet.
 <Blueprint code={sendOtpNode} className='w-full h-40' />
 
-### Verify OTP
-Verifies an OTP for the in-app wallet.
-<Blueprint code={verifyOtpNode} className='w-full h-40' />
-
 ## OAuth
-
-### Create OAuth Wallet
-Creates an in-app OAuth wallet using the specified provider.
-<Blueprint code={createOAuthWalletNode} className='w-full h-48' />
 
 ### Fetch OAuth login link
 Fetches the OAuth login link for the in-app wallet.
 <Blueprint code={fetchOAuthLoginLinkNode} className='w-full h-40' />
-
-### Sign In With OAuth
-Sign in with the OAuth payload from your login flow.
-<Blueprint code={signInWithOAuthNode} className='w-full h-32' />
-
-## Custom
-
-### Create JWT Wallet
-Creates an in-app JWT wallet.
-<Blueprint code={createJwtWalletNode} className='w-full h-48' />
-
-### Sign In With JWT
-Sign in with the OAuth payload from your login flow.
-<Blueprint code={signInWithJwtNode} className='w-full h-32' />
-
-### Create Auth Endpoint Wallet
-Creates an in-app Auth Endpoint wallet.
-<Blueprint code={createAuthEndpointWalletNode} className='w-full h-48' />
-
-### Sign In With Auth Endpoint
-Sign in with the OAuth payload from your login flow.
-<Blueprint code={signInWithJwtNode} className='w-full h-32' />
-
-### Create Guest Wallet
-Creates an in-app Guest wallet.
-<Blueprint code={createGuestWalletNode} className='w-full h-48' />
-
-### Sign In With Guest
-Sign in with the OAuth payload from your login flow.
-<Blueprint code={signInWithGuestNode} className='w-full h-32' />
 
 ## Utilities
 

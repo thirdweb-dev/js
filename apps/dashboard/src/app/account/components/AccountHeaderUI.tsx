@@ -4,6 +4,7 @@ import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
+import type { ThirdwebClient } from "thirdweb";
 import { SecondaryNav } from "../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../components/MobileBurgerMenuButton";
 import { ThirdwebMiniLogo } from "../../components/ThirdwebMiniLogo";
@@ -17,6 +18,7 @@ export type AccountHeaderCompProps = {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   createProject: () => void;
   account: Pick<Account, "email" | "id"> | undefined;
+  client: ThirdwebClient;
 };
 
 export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
@@ -41,21 +43,24 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
           >
             {/* TODO - set account Image  */}
             <GradientAvatar
-              id={props.account?.id}
-              src={props.account ? "" : undefined}
+              id={props.account?.id || "default"}
+              src={""}
               className="size-6"
+              client={props.client}
             />
             <span> My Account </span>
           </Link>
 
-          <TeamAndProjectSelectorPopoverButton
-            currentProject={undefined}
-            currentTeam={undefined}
-            teamsAndProjects={props.teamsAndProjects}
-            focus="team-selection"
-            createProject={props.createProject}
-            account={props.account}
-          />
+          {props.teamsAndProjects.length > 0 && (
+            <TeamAndProjectSelectorPopoverButton
+              currentProject={undefined}
+              currentTeam={undefined}
+              teamsAndProjects={props.teamsAndProjects}
+              focus="team-selection"
+              createProject={props.createProject}
+              account={props.account}
+            />
+          )}
         </div>
       </div>
 
@@ -63,6 +68,7 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
         account={props.account}
         logout={props.logout}
         connectButton={props.connectButton}
+        client={props.client}
       />
     </header>
   );
@@ -89,16 +95,19 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
               id={props.account?.id}
               src={props.account ? "" : undefined}
               className="size-6"
+              client={props.client}
             />
             <span> My Account </span>
           </Link>
 
-          <TeamSelectorMobileMenuButton
-            currentTeam={undefined}
-            teamsAndProjects={props.teamsAndProjects}
-            upgradeTeamLink={undefined}
-            account={props.account}
-          />
+          {props.teamsAndProjects.length > 0 && (
+            <TeamSelectorMobileMenuButton
+              currentTeam={undefined}
+              teamsAndProjects={props.teamsAndProjects}
+              upgradeTeamLink={undefined}
+              account={props.account}
+            />
+          )}
         </div>
       </div>
 

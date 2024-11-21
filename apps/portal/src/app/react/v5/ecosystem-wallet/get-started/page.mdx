@@ -3,9 +3,16 @@ import {
 	TabsList,
 	TabsTrigger,
 	TabsContent,
+	Callout,
 	DocImage,
 	createMetadata,
+	ArticleIconCard,
+	Stack,
+	AuthList,
 } from "@doc";
+import { ExternalLink} from "lucide-react";
+import EcosystemSocialConfig from './social-config.png'
+import { TypeScriptIcon } from "@/icons";
 
 export const metadata = createMetadata({
 	title: "Connect users with Ecosystem Wallets",
@@ -19,54 +26,76 @@ export const metadata = createMetadata({
 
 # Connect Users to your Ecosystem
 
-## Using the Connect UI components
+Ecosystem wallets inherit all the functionality of [in-app wallets](/react/v5/in-app-wallet/get-started), but instead of being scoped to a single app, they can be used across multiple applications.
 
-If you're building a [React website](/typescript/react/v5/ConnectButton), [React Native app](/react-native/v5/), or [Unity game](/unity/ConnectWallet) you can use the prebuilt connect UI components to authenticate users and connect their wallets accross your ecosystem.
+Head over to the [thirdweb dashboard](https://thirdweb.com/team) to create an ecosystem and obtain your ecosystem id.
 
-```jsx
-import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
-import { inAppWallet } from "thirdweb/wallets";
+## Available auth methods
 
-const client = createThirdwebClient({ clientId });
-const wallets = [ecosystemWallet("ecosystem.your-ecosystem-id")];
+<AuthList />
 
-export default function App() {
-	return (
-		<ThirdwebProvider>
-			<ConnectButton client={client} wallets={wallets} />
-		</ThirdwebProvider>
-	);
-}
-```
+## Live Playground
 
-## Using your own UI
+Try out ecosystem wallets for yourself in the [in-app wallet live playground](https://playground.thirdweb.com/connect/in-app-wallet/ecosystem)
 
-You can also build your own UI using the low-level hooks and functions. Remember to wrap your app in a `ThirdwebProvider` to ensure that the wallet is available to all components in your app.
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com/connect/in-app-wallet/ecosystem"
+	description="See the SDK in action on the live playground"
+/>
+
+</Stack>
+
+## Configure ecosystem wallets
+
+The only difference with in-app wallets is how you create an ecosystem wallet using the `ecosystemWallet()` function and passing your ecosystem id.
 
 ```tsx
 import { ecosystemWallet } from "thirdweb/wallets";
 
 const wallet = ecosystemWallet("ecosystem.your-ecosystem-id");
-
-const LoginComponent = () => {
-	const { connect, isLoading } = useConnect();
-
-	return <button onClick={() => connect(async () => {
-		await wallet.connect({
-			client,
-			strategy: "discord", // or any supported auth strategy
-		})
-		return wallet;
-	})}>Connect</button>;
-};
 ```
+
+## Configuring auth strategies
+
+You can configure the allowed auth strategies on [your dashboard](https://thirdweb.com/team/~/~/ecosystem).
+
+<DocImage src={EcosystemSocialConfig}/>
+
+For prebuilt UIs, the enabled auth strategies are automatically read from your dashbaord configurations.
+
+For custom UIs, you can configure the auth options when connecting the wallet. See [using your own UI](#using-your-own-ui) for an example. 
+
+<Callout variant="warning" title="Using disabled auth strategies">
+	Note that while you're allowed to pass any auth strategy today, we recommend only passing the strategies that are enabled on your dashboard. We might enforce this in the future.
+</Callout>
 
 ## Passing a partner ID
 
-For closed ecosystems, you can pass a valid `partnerId` to the `ecosystemWallet` provided by the ecosystem owner.
+For closed ecosystems, you can invite partners to your ecosystem. Partners will have to pass a valid `partnerId` to the `ecosystemWallet()` function in order to connect to your ecosystem.
 
 ```tsx
 const wallet = ecosystemWallet("ecosystem.your-ecosystem-id", {
 	partnerId: "your-partner-id",
 });
 ```
+
+For more information, refer to the [ecosystemWallet API reference](/references/typescript/v5/ecosystemWallet).
+
+<Stack>
+
+<ArticleIconCard
+	title="ecosystemWallet API reference"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/ecosystemWallet"
+	description="Learn more about the ecosystemWallet function"
+/>
+
+</Stack>
+
+## Using ecosystem wallets
+
+Refer to the [in-app wallets](/react/v5/in-app-wallet/get-started) documentation to add your ecosystem wallet to the connect UI components or build your own UI.

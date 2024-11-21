@@ -58,10 +58,7 @@ export function ProjectSelectorUI(props: {
                     variant="ghost"
                     asChild
                   >
-                    {/* TODO - when we have overview page, remove /connect */}
-                    <Link
-                      href={`/team/${team.slug}/${project.slug}/connect/analytics`}
-                    >
+                    <Link href={`/team/${team.slug}/${project.slug}`}>
                       <div className="flex items-center gap-2">
                         {/* TODO - set Image */}
                         <ProjectAvatar src="" className="size-6" />

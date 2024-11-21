@@ -1,0 +1,134 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Insight Blueprints | thirdweb Infrastructure",
+	description:
+		"Learn what are Insight Blueprints and how to use them",
+  image: {
+    title: "Insight",
+    icon: "insight",
+  },
+});
+
+# Blueprints
+
+A blueprint is an API that provides access to on-chain data in a user-friendly format. There's no need for ABIs, decoding, RPC, or web3 knowledge to fetch blockchain data. Every chain exposes the default blueprints below
+
+## Events Blueprint
+
+Blockchain events offers developers a powerful way to track and analyze blockchain events emitted by smart contracts. This endpoint provides access to detailed event information, such as the address of the contract that generated the event, the transaction that triggered it, and when and where the event occurred on the blockchain. By offering data points like event topics, block numbers, and transaction hashes, developers can easily filter and search for specific event types, such as token transfers or contract executions. With precise timestamps and block references, the Events Blueprint ensures that developers have real-time access to critical on-chain activity, enabling them to build responsive, high-performance applications that can monitor, analyze, and react to blockchain events seamlessly. Whether working on DeFi, NFTs, or general dApps, this endpoint helps unlock the full potential of blockchain data in any project.
+
+### Blueprint details
+
+| Name        | Description | Example     |
+| ----------- | ----------- | ----------- |
+| Address  | The `address` is the identifier of the smart contract or account that emitted the event. It tells you who or what generated the event. | If the event is related to an ERC-20 token transfer, the address would be the smart contract address of the token. For instance, if you’re tracking events for the USDT token, the address would be the contract address of USDT on Ethereum. |
+| Chain ID | The `chain_id` is a unique identifier for the blockchain network where the event occurred. Different blockchain networks (e.g., Ethereum, Binance Smart Chain, Polygon) have their own unique chain IDs. | Ethereum’s mainnet has a chain_id of 1, while Binance Smart Chain has a chain_id of 56. This field ensures you know which network the event is coming from, which is crucial when interacting with multiple EVM chains.
+| Data    | The `data` field contains additional information specific to the event. In many cases, it’s the raw output of the smart contract event. | In an ERC-20 Transfer event, the data might include the number of tokens transferred in raw hexadecimal format. For instance, if 1000 USDT were transferred, this value would be encoded in the event’s data field.
+| Log Index | The `log_index` is the order of the log (event) in the list of all events within the block. It helps you pinpoint exactly where this event is located in the block. | If multiple events occurred within the same block (e.g., multiple token transfers), the log_index tells you the sequence of this particular event. For example, it might be the 3rd event in the block.
+| Topics | The `topics` array contains indexed parameters of the event, often used for filtering or categorizing events. The first topic contains the event signature (the function name), while the remaining topics contain indexed event arguments. | In an ERC-20 Transfer event, the first topic would be the hash of the event signature `Transfer(address,address,uint256)`. The second topic would be the sender’s address, and the third would be the receiver’s address. This allows filtering to track all Transfer events for a specific address.
+| Transaction Hash | The `transaction_hash` is the unique identifier for the transaction that triggered the event. It helps you link the event to the specific transaction that caused it. | If you transfer 1 ETH to another wallet, the transaction hash might be 0x5c7b6f... which uniquely identifies that transaction. Using this hash, you can look up the transaction in any block explorer (e.g., Etherscan) to see all the details.
+| Transaction Index | The `transaction_index` tells you the position of the transaction within the block. This helps you identify where in the block this particular transaction was placed relative to others. | If multiple transactions occurred within the same block (e.g., multiple token transfers), the transaction_index tells you the sequence of this particular transaction. For example, it might be the 3rd transaction in the block. | If a block contains 100 transactions, the transaction_index might indicate that this event was triggered by the 45th transaction in the block. This is useful for debugging or tracing the order of execution.
+| Block Hash | A `block_hash` is the unique identifier of a block, generated after the block is confirmed. It’s like a tamper-proof record of all the transactions and events in that block. | If you wanted to verify that a particular transaction or event was part of a block, you could use the block hash to check its integrity. Think of it as a digital signature for the entire block, such as 0x91d… representing all transactions within that specific block.
+| Block Number | The `block_number` indicates the position of the block in the blockchain. It tells you when (in terms of blockchain sequence) the event occurred. | Block number 12,345,678 on Ethereum might contain transactions from a particular moment, such as the transfer of 10 ETH between two accounts. You can think of block numbers like page numbers in a ledger.
+| Block Timestamp | The `block_timestamp` is the exact time when the block was mined and added to the blockchain. | If block 12,345,678 was mined on July 1, 2023, at 12:30 PM UTC, the timestamp will reflect this exact moment. This helps you pinpoint when an event, such as a token transfer, actually happened in real time.
+
+## Transactions Blueprint
+
+Transaction data equips developers with the tools they need to interact with blockchain data efficiently and effectively. By providing clear, actionable insights into each transaction, the API helps streamline tasks like monitoring smart contract interactions, tracking asset transfers, and debugging. Developers can rely on this endpoint to access essential transaction details, enabling faster troubleshooting and more informed decision-making. Whether building DeFi platforms, dApps, or blockchain-based analytics tools, transaction data is the essence for all interactions with any chains.
+
+### Blueprint details
+
+| Name        | Description | Example     |
+| ----------- | ----------- | ----------- |
+| From Address  | This is the address that initiated the transaction. It represents the sender who paid for the gas to execute the transaction. | If a user sends 1 ETH from their wallet, the `from_address` will be the sender’s Ethereum address, such as `0xabc123...`.
+| To Address | This is the recipient of the transaction. It could be another wallet or a smart contract. | If sending ETH to a friend, their wallet address, like `0xdef456...`, would be the `to_address`. In the case of interacting with a DeFi platform, the address of the smart contract being called would be the `to_address`.
+| Hash | The unique identifier (hash) of the transaction. This hash can be used to look up and verify the transaction on the blockchain. | A transaction might have a hash like `0x5c7b6f...`. You can use this hash to check the transaction status on a block explorer like Etherscan.
+| Value | This is the amount of cryptocurrency (in wei) being transferred in the transaction. | If transferring 1 ETH, the `value` would be 1,000,000,000,000,000,000 wei (1 ETH = 10^18 wei).
+| Gas | This is the maximum amount of gas units the sender is willing to pay for the transaction to be processed. It limits how much work the transaction can perform on the blockchain. | A simple ETH transfer might require 21,000 gas, while calling a complex smart contract function could require significantly more, such as 100,000 gas.
+| Gas Price | The price per gas unit the sender is willing to pay, expressed in wei (the smallest unit of ETH). The total transaction cost is calculated as `gas` * `gas_price`. | If the `gas_price` is 100 gwei (1 gwei = 1 billion wei), the sender will pay `100 gwei * 21,000 gas` for a basic ETH transfer.
+| Max Fee Per Gas | This is the maximum amount of gas fees (in wei) the sender is willing to pay for each gas unit. It was introduced in EIP-1559 to provide a cap on gas costs. | If `max_fee_per_gas` is set to 200 gwei, the sender is ensuring that they will never pay more than this for each gas unit, even during periods of high network congestion.
+| Max Priority Fee Per Gas | This is the maximum additional fee the sender is willing to pay to incentivize miners to prioritize their transaction. Also introduced in EIP-1559. | A transaction might specify a `max_priority_fee_per_gas` of 2 gwei, which acts as a "tip" for miners to get their transaction included faster in a block.
+| Data | The `data` field contains additional information required by a transaction, such as the input parameters for interacting with a smart contract. | In a call to a DeFi contract's `swap` function, the `data` field will include the encoded function call and arguments (e.g., token amount, recipient address).
+| Nonce | The `nonce` is the number of transactions sent from the sender’s address. It ensures that transactions are processed in the correct order and prevents double-spending. | If the sender has sent 5 transactions before, the nonce will be 5. This helps in tracking the sequence of transactions and ensuring that each one is processed correctly. | If the `nonce` is 12, it means this is the 13th transaction (starting from 0) sent from the `from_address`
+| Transaction Index | The position of the transaction within the block. It indicates the order in which the transaction was included relative to other transactions | If the `transaction_index` is 5, this was the 6th transaction included in the block.
+| Transaction Type | The type of transaction, typically either legacy (type `0x0` ) or one of the newer types introduced in EIP-1559 (e.g., type `0x2` for transactions that use the new gas fee mechanism). | A `transaction_type` of `0x2` indicates the transaction follows the new EIP-1559 rules for gas fees.
+| Access List | The `access_list` is an optional field introduced in EIP-2930 that specifies which addresses and storage slots the transaction intends to interact with. It’s used to optimize gas costs by pre-declaring the data access needed. | When a transaction interacts with a smart contract, the `access_list` may declare the contract address and storage slots the transaction intends to read from or write to. For example, interacting with a DeFi smart contract could include its contract address and the storage slots holding user balances.
+| Chain ID | The `chain_id` identifies the blockchain network on which the transaction was conducted. It prevents replay attacks across different networks. | On Ethereum mainnet, the chain ID is `1`, while on Base Mainnet, the chain ID is `8453` . This field tells you which network the transaction belongs to.
+| Block Hash | This is the unique identifier (or "fingerprint") of the block that includes this transaction. The hash ensures that the block hasn't been altered. | If the transaction is included in block `12,345,678`, the block's hash might look like `0xabc123...`, and this hash can be used to reference that particular block on the blockchain.
+| Block Number | The `block_number` indicates the specific position of the block in the blockchain that contains the transaction. | If a transaction is included in block `12,345,678`, this number can be used to quickly locate the block and all the transactions it contains.
+| Block Timestamp | This is the exact time when the block containing the transaction was mined and added to the blockchain. | If the transaction was confirmed on July 1, 2023, at 12:30 PM UTC, the block timestamp will reflect this moment. It's useful for analyzing when specific activities (like token transfers) occurred.
+| r, s, v | These are the cryptographic components of the transaction signature. They prove that the transaction was signed by the private key associated with the sender's address. | The `r`, `s`, and `v` values are produced during the signing process and are necessary to verify the authenticity of the transaction on the blockchain.
+
+
+## Tokens Blueprint
+
+Tokens on blockchain can be of different standards, but ones of the most widely used ones are:
+- ERC-20 for fungible tokens
+- ERC-721 and ERC-1155 for NFTs
+
+This blueprint provides access to such tokens’ balances information for a given owner address.
+
+### Blueprint details
+
+#### ERC-20 balances of an address
+
+```yaml
+GET /v1/{clientId}/tokens/erc20/:ownerAddress
+```
+
+Path Parameters:
+- `ownerAddress` *(required)*: The address of the owner of the tokens.
+- `clientId` *(required)*: The thirdweb client ID of your project.
+
+Successful response schema:
+```json
+[
+  {
+    "tokenAddress": "…",
+    "balance": "…"
+  }
+]
+```
+
+#### ERC-721 tokens of an address
+
+```yaml
+GET /v1/{clientId}/tokens/erc721/:ownerAddress
+```
+
+Path Parameters:
+- `ownerAddress` *(required)*: The address of the owner of the tokens.
+- `clientId` *(required)*: The thirdweb client ID of your project.
+
+Successful response schema:
+```json
+[
+  {
+    "collectionAddress": "…",
+    "tokenId": "…",
+    "balance": "…"
+  }
+]
+```
+
+#### ERC-1155 tokens of an address
+
+```yaml
+GET /v1/{clientId}/tokens/erc1155/:ownerAddress
+```
+
+Path Parameters:
+- `ownerAddress` *(required)*: The address of the owner of the tokens.
+- `clientId` *(required)*: The thirdweb client ID of your project.
+
+Successful response schema:
+```json
+[
+  {
+    "collectionAddress": "…",
+    "tokenId": "…",
+    "balance": "…"
+  }
+]
+```

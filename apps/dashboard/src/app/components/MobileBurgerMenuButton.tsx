@@ -8,8 +8,8 @@ import {
   LogOutIcon,
   MenuIcon,
   Moon,
-  SettingsIcon,
   Sun,
+  UserRoundIcon,
   XIcon,
 } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -96,8 +96,8 @@ export function MobileBurgerMenuButton(
                   href="/account"
                   className="flex items-center gap-2 text-base text-muted-foreground hover:text-foreground "
                 >
-                  <SettingsIcon className="size-4" />
-                  Account Settings
+                  <UserRoundIcon className="size-4" />
+                  My Account
                 </Link>
 
                 <Button
@@ -154,7 +154,7 @@ export function MobileBurgerMenuButton(
               href="/trending"
               className="text-muted-foreground hover:text-foreground "
             >
-              Popular Contracts
+              Trending Contracts
             </Link>
 
             <Link

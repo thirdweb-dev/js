@@ -30,10 +30,17 @@ export async function zkDeployCreate2Factory(
     return ZKSYNC_SINGLETON_FACTORY;
   }
 
+  if (!PUBLISHED_PRIVATE_KEY) {
+    throw new Error(
+      `Unable to deploy create2 factory on chain ${options.chain.id} - please contact us via https://thirdweb.com/support to enable this chain`,
+    );
+  }
+
   const create2Signer = privateKeyToAccount({
     client: options.client,
     privateKey: PUBLISHED_PRIVATE_KEY,
   });
+
   const valueToSend = toWei("0.01");
   const balance = await getWalletBalance({
     address: create2Signer.address,
@@ -56,9 +63,10 @@ export async function zkDeployCreate2Factory(
   await zkDeployContract({
     client: options.client,
     chain: options.chain,
-    account: options.account,
+    account: create2Signer,
     abi: parseAbi(singletonFactoryAbi),
     bytecode: singletonFactoryBytecode,
+    deploymentType: "create2",
   });
 
   return ZKSYNC_SINGLETON_FACTORY;

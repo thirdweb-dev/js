@@ -13,6 +13,7 @@ import {
   Flex,
   Menu,
   MenuButton,
+  MenuItem,
   MenuList,
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -26,6 +27,7 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
+import { toast } from "sonner";
 import {
   NATIVE_TOKEN_ADDRESS,
   type ThirdwebContract,
@@ -38,7 +40,7 @@ import {
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import invariant from "tiny-invariant";
-import { Button, Heading, MenuItem, Text } from "tw-components";
+import { Button, Heading, Text } from "tw-components";
 import * as z from "zod";
 import { ZodError } from "zod";
 import {
@@ -152,7 +154,7 @@ interface ClaimsConditionFormContextData {
   field: ControlledField;
   phaseIndex: number;
   formDisabled: boolean;
-  tokenDecimals: number;
+  tokenDecimals: number | undefined;
   isMultiPhase: boolean;
   isActive: boolean;
   dropType: DropType;
@@ -210,7 +212,6 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
       enabled: isErc20,
     },
   });
-  const tokenDecimalsData = tokenDecimals.data ?? 0;
   const saveClaimPhaseNotification = useTxNotifications(
     "Saved claim phases",
     "Failed to save claim phases",
@@ -219,7 +220,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
   const claimConditionsQuery = useReadContract(getClaimPhasesInLegacyFormat, {
     contract,
     ...(isErc20
-      ? { type: "erc20" }
+      ? { type: "erc20", decimals: tokenDecimals.data }
       : isErc721
         ? { type: "erc721" }
         : { type: "erc1155", tokenId: BigInt(tokenId || 0) }),
@@ -259,7 +260,11 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
       );
   }, [claimConditionsQuery.data, isMultiPhase]);
 
-  const isFetchingData = claimConditionsQuery.isFetching || sendTx.isPending;
+  const isFetchingData =
+    claimConditionsQuery.isFetching ||
+    sendTx.isPending ||
+    // Need to make sure the tokenDecimals.data is present when interacting with ERC20 claim conditions
+    (isErc20 && tokenDecimals.isLoading);
 
   const canEditForm = isAdmin && !isFetchingData;
 
@@ -353,13 +358,17 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
       action: "set-claim-conditions",
       label: "attempt",
     });
-
+    if (isErc20 && !tokenDecimals.data) {
+      return toast.error(
+        `Could not fetch token decimals for contract ${contract.address}`,
+      );
+    }
     try {
       const tx = setClaimPhasesTx(
         {
           contract,
           ...(isErc20
-            ? { type: "erc20" }
+            ? { type: "erc20", decimals: tokenDecimals.data }
             : isErc721
               ? { type: "erc721" }
               : { type: "erc1155", tokenId: BigInt(tokenId || 0) }),
@@ -445,10 +454,19 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
     };
   }, [claimConditionsQuery.data, controlledFields, isMultiPhase]);
 
-  if (isFetchingData) {
+  if (claimConditionsQuery.isPending) {
     return (
       <div className="flex h-[400px] w-full items-center justify-center rounded-lg border border-border">
         <Spinner className="size-10" />
+      </div>
+    );
+  }
+
+  // Do not proceed if fails to load the tokenDecimals.data - for ERC20 drop contracts specifically
+  if (isErc20 && tokenDecimals.data === undefined) {
+    return (
+      <div className="flex h-[400px] w-full items-center justify-center rounded-lg border border-border">
+        Failed to load token decimals
       </div>
     );
   }
@@ -492,8 +510,9 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
               <Fragment key={`snapshot_${field.id}_${index}`}>
                 <SnapshotUpload
                   dropType={dropType}
-                  isOpen={openSnapshotIndex === index}
-                  onClose={() => setOpenSnapshotIndex(-1)}
+                  snapshotIndex={openSnapshotIndex}
+                  index={index}
+                  setOpenSnapshotIndex={setOpenSnapshotIndex}
                   value={snapshotValue}
                   setSnapshot={(snapshot) =>
                     form.setValue(`phases.${index}.snapshot`, snapshot)
@@ -508,7 +527,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                     phaseIndex: index,
                     formDisabled: !canEditForm,
                     isErc20,
-                    tokenDecimals: tokenDecimalsData,
+                    tokenDecimals: tokenDecimals.data,
                     dropType,
                     setOpenSnapshotIndex,
                     isAdmin,

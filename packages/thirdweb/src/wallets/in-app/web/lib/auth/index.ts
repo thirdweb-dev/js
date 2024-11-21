@@ -194,6 +194,7 @@ export async function authenticateWithRedirect(
  * ```ts
  * import { linkProfile } from "thirdweb/wallets";
  *
+ * // optionally specify the ecosystem if you're linking an ecosystem wallet
  * await linkProfile({ client, strategy: "discord" });
  * ```
  * @wallet

@@ -14,6 +14,7 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { EllipsisIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { TeamPlanBadge } from "../../components/TeamPlanBadge";
 import { getValidTeamPlan } from "../../team/components/TeamHeader/getValidTeamPlan";
 import { SearchInput } from "../components/SearchInput";
@@ -23,6 +24,7 @@ export function AccountTeamsUI(props: {
     team: Team;
     role: TeamAccountRole;
   }[];
+  client: ThirdwebClient;
 }) {
   const [teamSearchValue, setTeamSearchValue] = useState("");
   const teamsToShow = !teamSearchValue
@@ -69,7 +71,7 @@ export function AccountTeamsUI(props: {
               key={v.team.id}
               className="border-border border-b p-4 last:border-b-0"
             >
-              <TeamRow team={v.team} role={v.role} />
+              <TeamRow team={v.team} role={v.role} client={props.client} />
             </li>
           );
         })}
@@ -96,6 +98,7 @@ export function AccountTeamsUI(props: {
 function TeamRow(props: {
   team: Team;
   role: TeamAccountRole;
+  client: ThirdwebClient;
 }) {
   const plan = getValidTeamPlan(props.team);
 
@@ -103,8 +106,12 @@ function TeamRow(props: {
     <div className="flex items-center justify-between gap-2">
       {/* start */}
       <div className="flex items-center gap-4">
-        {/* TODO - set image  */}
-        <GradientAvatar className="size-8" src={""} id={props.team.id} />
+        <GradientAvatar
+          className="size-8"
+          src={props.team.image}
+          id={props.team.id}
+          client={props.client}
+        />
 
         <div>
           <div className="flex items-center gap-3">

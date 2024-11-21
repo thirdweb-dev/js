@@ -31,7 +31,7 @@ const ErrorContext = createContext<ErrorContext>({
 // We have decided to not export this class from v5 because that area need to be reworked
 // so this type is created as a workaround
 // @internal
-type TransactionError = {
+export type TransactionError = {
   message: string;
   info?: {
     from: string;
@@ -86,7 +86,7 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
             {/* Header */}
             <DialogHeader>
               <div className="mb-1 flex justify-start">
-                <div className="rounded-xl bg-destructive p-2 text-destructive-text">
+                <div className="rounded-xl border border-border p-2 text-destructive-text">
                   <CircleAlertIcon className="size-6" />
                 </div>
               </div>

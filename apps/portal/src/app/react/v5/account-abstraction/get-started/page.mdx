@@ -6,9 +6,11 @@ import {
 	createMetadata,
 	Steps,
 	Step,
+	Stack,
 } from "@doc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { WalletsSmartIcon } from "@/icons";
+import { WalletsSmartIcon, TypeScriptIcon } from "@/icons";
+import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
@@ -20,33 +22,14 @@ export const metadata = createMetadata({
 		"Getting started to add ERC-4337 Account Abstraction support to your application easily.",
 });
 
-# Getting Started
+# ERC-4337 Smart Accounts
 
-Getting started to add ERC-4337 compatible smart accounts to your application easily.
-
-Once set, your application will:
+Convert any wallet to a ERC-4337 smart account to your application.
 
 - Let users **connect to their smart account** using any personal wallet, including in-app wallets for easy onboarding.
 - Automatically **deploy individual account contracts** for your users when they do their first onchain transaction.
-- **Handle all transaction gas costs** via the thirdweb paymaster.
+- **Sponsor gas costs for all transactions** via the thirdweb paymaster.
 
-<Steps>
-<Step title="Get a free API key">
-
-You will require an API key to use thirdweb's infrastructure services such as the bundler and paymaster.
-
-Obtain an API key from the [thirdweb dashboard Settings page](https://thirdweb.com/create-api-key).
-
-The API key lets you access thirdweb's bundler and paymaster infrastructure, which is required for smart accounts to operate and optionally enable [gasless transactions](/glossary/gasless-transactions).
-
-Learn more about creating an API key and restricting which contracts the smart account can interact with [here](/api-keys).
-
-</Step>
-<Step title="Connect smart accounts in your application">
-
-The easiest way to get started with account abstraction is to use the [ConnectButton](/connect/sign-in/ConnectButton) component. Simply add the `accountAbstraction` property with the desired chain and whether to sponsor gas for your users.
-
-With this property, all connected wallets will be automatically converted to smart accounts. The connected wallet will be the admin wallet of the smart account.
 
 <Callout title="Sponsored transactions" variant="info">
 
@@ -54,6 +37,27 @@ To set up sponsored transactions, set the `sponsorGas` option to `true` in the s
 All transactions performed with the smart account will then be sponsored by your application. Testnet transactions are free, but you need a valid credit card on file for mainnet transactions.
 
 </Callout>
+
+## Live Playground
+
+Try out in-app wallets for yourself in the [in-app wallet live playground](https://playground.thirdweb.com/connect/account-abstraction/connect)
+
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com/connect/account-abstraction/connect"
+	description="See the SDK in action on the live playground"
+/>
+
+</Stack>
+
+## Usage with Connect UI components
+
+The easiest way to get started with account abstraction is to use the [ConnectButton](/connect/sign-in/ConnectButton) component. Simply add the `accountAbstraction` property with the desired chain and whether to sponsor gas for your users.
+
+With this property, all connected wallets will be automatically converted to smart accounts. The connected wallet will be the admin wallet of the smart account.
 
 ```tsx
 import { createThirdwebClient } from "thirdweb";
@@ -77,56 +81,90 @@ return (
   );
 }
 ```
-</Step>
-<Step title="Executing Transactions with Smart Accounts">
 
-Once setup, you can use the rest of the Connect [React SDK](/react/latest) to deploy contracts, perform transactions, and manipulate smart accounts like any other wallet.
+You can also make it so *only* in-app wallets get converted to smart accounts, by configuring the in-app wallet individually. Other external wallets will not be converted to smart accounts with this setup.
 
 ```tsx
-import { getContract } from "thirdweb";
-import { useActiveAccount, TransactionButton } from "thirdweb/react";
-import { claimTo } from "thirdweb/extensions/erc721";
+import { createThirdwebClient } from "thirdweb";
+import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
 
-const contract = getContract({ client, chain, address: "0x..." });
+const client = createThirdwebClient({
+clientId: "YOUR_CLIENT_ID",
+});
 
-// The ThirdwebProvider setup above already handles the connection to the smart account
-// Within the provider, you can use the SDK normally to interact with the blockchain
-export default function MyComponent() {
-	// Get the connected smart account
-	const smartAccount = useActiveAccount();
-	// Mint a new NFT
-	return (
-		<TransactionButton
-			transaction={() => {
-				if (!account) return;
-				return claimTo({
-					contract,
-					to: account.address,
-					quantity: 1n,
-				});
-			}}
-		>
-			Mint NFT
-		</TransactionButton>
-	);
+const wallets = [inAppWallet({
+	// only configure smart accounts for in-app wallets
+	smartAccount: {
+		chain: sepolia,
+        sponsorGas: true
+	}
+}), 
+// other external wallets will not become smart accounts
+createWallet("io.metamask"), 
+createWallet("rainbow.me"),
+];
+
+export default function App() {
+return (
+    <ThirdwebProvider>
+      <ConnectButton
+	    client={client}
+	    wallets={wallets}
+	  />
+    </ThirdwebProvider>
+  );
 }
 ```
 
-</Step>
-</Steps>
-
-### Build your own UI
+## Usage with your own UI
 
 You can also use the connection hooks and functions to connect to your smart accounts and build your fully custom UI.
 
-See the [Build your own UI](/react/v5/account-abstraction/build-your-own-ui) guide for more information.
+```tsx
+import { useConnect } from "thirdweb/react";
+import { inAppWallet } from "thirdweb/wallets";
+import { sepolia } from "thirdweb/chains";
 
-### Demos
+function App() {
+	// 1. set the `accountAbstraction` configuration to convert wallets to smart accounts
+	const { connect } = useConnect({
+		client,
+		accountAbstraction: {
+			chain: sepolia, // the chain where your smart accounts will be or is deployed
+			sponsorGas: true, // enable or disable sponsored transactions
+		},
+	});
 
-Learn by example with these open-source demos:
+	const connectToSmartAccount = async () => {
+		// 2. connect with the admin wallet of the smart account
+		connect(async () => {
+			const wallet = inAppWallet(); // or any other wallet
+			await wallet.connect({
+				client,
+				chain: sepolia,
+				strategy: "google",
+			});
+			return wallet;
+		});
+	};
 
-<OpenSourceCard
-	title="Account Abstraction Demos"
-	description="A reference implementation to create and interact with smart accounts."
-	href={"https://github.com/thirdweb-example/account-abstraction"}
+	return <button onClick={() => connectToSmartAccount()}>Connect</button>;
+}
+```
+
+<Callout title="Auto connection of smart accounts" variant="info">
+When building your own UI, remember to also pass the `accountAbstraction` prop to `useAutoConnect` to always reconnect to the smart account on page reload. 
+</Callout>
+
+Refer to the [Smart Wallet API reference](/references/typescript/v5/smartWallet) for more advanced configuration of your smart accounts.
+
+<Stack>
+
+<ArticleIconCard
+	title="Smart Wallet API reference"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/smartWallet"
+	description="More advanced configuration of your smart accounts"
 />
+
+</Stack>

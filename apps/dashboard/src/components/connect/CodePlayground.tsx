@@ -1,3 +1,5 @@
+import type { CodeEnvironment } from "@/components/blocks/code-segment.client";
+import { CodeClient } from "@/components/ui/code/code.client";
 import {
   Flex,
   List,
@@ -7,13 +9,12 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChakraNextImage } from "components/Image";
-import type { CodeEnvironment } from "components/contract-tabs/code/types";
 import { Aurora } from "components/homepage/Aurora";
 import { connectPlaygroundData } from "components/product-pages/common/connect/data";
-import { themes } from "prism-react-renderer";
 import { useState } from "react";
-import { Button, Card, CodeBlock } from "tw-components";
+import { Button, Card } from "tw-components";
 import {
   COMMANDS,
   formatSnippet,
@@ -22,6 +23,8 @@ import ConnectPlaygroundButton, {
   type CodeOptions,
 } from "./ConnectPlaygroundButton";
 import ConnectPlaygroundTab from "./ConnectPlaygroundTab";
+
+const queryClient = new QueryClient();
 
 const CodePlayground = ({
   TRACKING_CATEGORY,
@@ -124,6 +127,7 @@ const CodePlayground = ({
         position="relative"
         zIndex={3}
         mt="-2px"
+        flexShrink={0}
       >
         <Tabs
           colorScheme="gray"
@@ -292,6 +296,7 @@ const CodePlayground = ({
         p={0}
         position="relative"
         zIndex={3}
+        minW={0}
       >
         <Flex
           background="rgba(0,0,0,0.6)"
@@ -318,33 +323,21 @@ const CodePlayground = ({
           ))}
         </Flex>
 
-        <Card
-          p={0}
-          background="rgba(0,0,0,0.6)"
-          boxShadow="0 0 1px 1px hsl(0deg 0% 100% / 15%)"
-          position="relative"
-          border="none"
-          flex={1}
-          w="full"
-          margin="0 auto"
-        >
-          <CodeBlock
-            darkTheme={themes.dracula}
+        <QueryClientProvider client={queryClient}>
+          <CodeClient
+            loadingClassName="min-h-[490px]"
             code={code}
-            language={
+            lang={
               environment === "react" || environment === "react-native"
                 ? "jsx"
                 : environment === "unity"
                   ? "cpp"
                   : environment
             }
-            backgroundColor="transparent"
-            borderWidth={0}
-            pt={6}
-            pb={{ base: 12, md: 6 }}
-            mt={4}
+            scrollableClassName="h-full pt-6 pb-12 md:pb-6"
+            className="h-full"
           />
-        </Card>
+        </QueryClientProvider>
       </Flex>
     </Flex>
   );

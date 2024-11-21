@@ -1,4 +1,4 @@
-import { Details, ArticleIconCard, Stack, GithubTemplateCard, Callout } from "@doc";
+import { Details, ArticleIconCard, Stack, GithubTemplateCard, Callout, InstallTabs } from "@doc";
 import {
 	ZapIcon,
 	ScrollTextIcon,
@@ -10,6 +10,7 @@ import {
 	PlugZapIcon,
 	ComponentIcon,
 	CableIcon,
+	ExternalLink
 } from "lucide-react";
 import { TypeScriptIcon } from "@/icons";
 import Link from "next/link";
@@ -17,7 +18,16 @@ import { Button } from "@/components/ui/button";
 
 # React SDK
 
-`thirdweb/react` exports various Components and Hooks to easily connect wallets & interact with smart contracts
+On top of the core typescript API, `thirdweb/react` exports various Components and Hooks to easily connect wallets & interact with smart contracts
+
+## Installation
+
+<InstallTabs
+	npm="npm i thirdweb"
+	yarn="yarn add thirdweb"
+	pnpm="pnpm i thirdweb"
+	bun="bun i thirdweb"
+/>
 
 ## Quickstart
 
@@ -52,7 +62,7 @@ Follow this [guide](/react/v5/getting-started) to get started with the React SDK
 You can quickly create a new project with the thirdweb CLI
 
 ```bash
-npx thirdweb create app --legacy-peer-deps
+npx thirdweb create app
 ```
 
 or clone the the Next.js or Vite starter repo:
@@ -71,52 +81,33 @@ or clone the the Next.js or Vite starter repo:
 />
 </Stack>
 
-## Usage
+## Live Playground
 
-Many of the components and hooks in the React SDK use a [`client`](/typescript/v5/core/client) to interface with the core SDK and your private RPC endpoints. You'll need to create a `clientId` in the [Dashboard](https://thirdweb.com/create-api-key) to generate this client.
+You can interact with the React SDK in the [Live Playground](https://playground.thirdweb.com/).
 
 <Stack>
 
 <ArticleIconCard
-	title="TypeScript"
-	icon={TypeScriptIcon}
-	href="/typescript/v5/client"
-	description="Follow the TypeScript docs for functions and types"
-/>
-
-<ArticleIconCard
-	title="ThirdwebProvider"
-	icon={FolderTreeIcon}
-	href="/react/v5/ThirdwebProvider"
-	description="Setup the ThirdwebProvider"
-/>
-
-<ArticleIconCard
-	title="Connecting Wallets"
-	icon={PlugZapIcon}
-	href="/react/v5/connecting-wallets"
-	description="Connect wallets using ConnectButton, ConnectEmbed or useConnect hook"
-/>
-
-<ArticleIconCard
-	title="Supported Wallets"
-	icon={WalletIcon}
-	href="/typescript/v5/supported-wallets"
-	description="See all 350+ wallets supported by the Connect SDK"
-/>
-
-<ArticleIconCard
-	title="UI Components"
-	icon={ComponentIcon}
-	href="/react/v5/connecting-wallets/ui-components"
-	description="UI components for wallet connection and transactions"
-/>
-
-<ArticleIconCard
-	title="Hooks"
-	icon={CableIcon}
-	href="/react/v5/connecting-wallets/hooks"
-	description="Hooks for wallet connection and transactions"
+	title="Live Playground"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com"
+	description="See the SDK in action on the live playground"
 />
 
 </Stack>
+
+## API Reference
+
+Browse the full API reference for detailed information on each function, hook and component.
+
+<Stack>
+
+<ArticleIconCard
+	title="API Reference"
+	icon={CodeIcon}
+	href="/references/typescript/v5"
+	description="See the SDK in action on the live playground"
+/>
+
+</Stack>
+

@@ -279,7 +279,7 @@ export function SwapConfirmationScreen(props: {
                   fromAmount: props.quote.swapDetails.fromAmountWei,
                   toToken: props.quote.swapDetails.toToken.tokenAddress,
                   toAmount: props.quote.swapDetails.toAmountWei,
-                  chainId: props.quote.swapDetails.toToken.chainId,
+                  chainId: props.quote.swapDetails.fromToken.chainId,
                   dstChainId: props.quote.swapDetails.toToken.chainId,
                 });
 

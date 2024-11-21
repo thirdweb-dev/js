@@ -81,6 +81,7 @@ export function coinbaseWalletSDK(args: {
         client: options.client,
         walletType: COINBASE,
         walletAddress: account.address,
+        chainId: chain.id,
       });
       // return account
       return account;
@@ -100,6 +101,7 @@ export function coinbaseWalletSDK(args: {
         client: options.client,
         walletType: COINBASE,
         walletAddress: account.address,
+        chainId: chain.id,
       });
       // return account
       return account;

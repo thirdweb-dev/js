@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import Image from "next/image";
+import exploreFeatureImage from "../../../../public/assets/landingpage/explore-featured.png";
+import heroIcon1 from "../../../../public/assets/product-pages/publish/hero-icon-1.png";
+import heroIcon2 from "../../../../public/assets/product-pages/publish/hero-icon-2.png";
 
 export const PublishUpsellCard: React.FC = () => {
   return (
@@ -16,11 +19,7 @@ export const PublishUpsellCard: React.FC = () => {
         </p>
 
         <div className="flex gap-2">
-          <Image
-            className="hidden size-6 md:block"
-            src={require("../../../../public/assets/product-pages/publish/hero-icon-1.png")}
-            alt=""
-          />
+          <Image className="hidden size-6 md:block" src={heroIcon1} alt="" />
 
           <p className="text-muted-foreground">
             <span className="font-semibold text-foreground">
@@ -32,11 +31,7 @@ export const PublishUpsellCard: React.FC = () => {
         </div>
 
         <div className="flex gap-2">
-          <Image
-            className="hidden size-6 md:block"
-            src={require("../../../../public/assets/product-pages/publish/hero-icon-2.png")}
-            alt=""
-          />
+          <Image className="hidden size-6 md:block" src={heroIcon2} alt="" />
           <p className="text-muted-foreground">
             <span className="font-semibold text-foreground">
               Shareable landing page.{" "}
@@ -73,7 +68,7 @@ export const PublishUpsellCard: React.FC = () => {
       <Image
         className="hidden w-[40%] grayscale invert md:block dark:filter-none"
         draggable={false}
-        src={require("../../../../public/assets/landingpage/explore-featured.png")}
+        src={exploreFeatureImage}
         alt=""
       />
     </div>

@@ -1,0 +1,86 @@
+import { createMetadata, DocImage, Steps, Step, Callout, ContractDeployCard } from "@doc";
+import editionDropStep1 from './assets/edition_drop_step1.png'
+import editionDropStep2 from './assets/edition_drop_step2.png'
+import editionDropStep3 from './assets/edition_drop_step3.png'
+import editionDropStep4 from './assets/edition_drop_step4.png'
+
+# Deploy a modular Edition Drop contract
+
+The Edition Drop contract also known as “semi-fungible” or “multi” tokens create multiple NFTs from the same asset based on the [ERC-1155 standard](https://eips.ethereum.org/EIPS/eip-1155). 
+
+Edition Drop includes settings called claim conditions which allow deployers to set a prices for tokens per claim phase and limits on how many tokens to be released. 
+
+### Edition Drop vs Edition
+
+The Edition Drop contract allows users to claim tokens based on specific settings set using Claim Conditions. If you do not need to set limits or special settings on how to claim, refer to the Edition contract.
+
+### Use Cases & Examples
+
+- Create NFT Memberships such as Early Access Cards for users to claim
+- Release a limited in-game item
+- Create badges, certificates, or passes for real world assets and events
+
+### Default Installed Modules
+
+- Claimable
+- BatchMetadata
+- Royalty
+- SequentialTokenId
+
+### Deploy modular Edition Drop contract
+
+Learn how to deploy a modular Edition Drop contract through the dashboard. 
+
+<Steps>
+
+<Step title="Locate Contract">
+
+Navigate to Explore, locate the [Modular Edition Drop contract](https://thirdweb.com/thirdweb.eth/ERC1155CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDMTE1NSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkMxMTU1In0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzExNTUifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlNlcXVlbnRpYWxUb2tlbklkRVJDMTE1NSJ9&displayName=Modular+Edition), and select the Deploy Now button.
+
+<DocImage src={editionDropStep1} alt="Screenshot Edition Drop contract" />
+
+</Step>
+
+<Step title="Configure Contract Metadata">
+Fill in the Contract Metadata including Name, Symbol, Description, and Image. 
+
+Contract Metadata serves as your unique identifier.
+
+<DocImage src={editionDropStep2} alt="Screenshot of Edition Drop configure metadata" />
+
+</Step>
+
+
+<Step title="Configure Sequential Token Id">
+Input a number you want your tokens to start at for the sequential token id. If you don’t have a preference to change it, you may input 0. 
+
+<DocImage src={editionDropStep3} alt="Screenshot of Edition Drop configure sequential token id" />
+
+</Step>
+
+<Step title="Select Chain">
+Select the preferred chain you want to deploy on and select Deploy Now.
+
+<DocImage src={editionDropStep4} alt="Screenshot of Edition Drop select chain" />
+
+<Callout variant="info" title="Any EVM Compatible">
+	The Edition Drop contract is deployable on any EVM compatible network. [View all available networks.](https://thirdweb.com/chainlist) 
+</Callout>
+If you are signed in with an EOA wallet, you will be prompted to sign the transaction. After that your contract is deployed and you can begin configuring the modules. 
+</Step>
+
+</Steps>
+
+### Modular Contract
+
+This contract is created using the modular contract framework. Modules on this contract are upgradeable. [Learn more about Modular Contracts.](https://portal.thirdweb.com/contracts/modular-contracts/overview)
+
+### Configure Modules
+
+To configure the modules, navigate to the Modules view:
+
+(Coming soon)
+
+<Callout variant='info' title="Install Modules">
+	To install additional modules on this contract, navigate to the Modules view after deploying your contract. 
+</Callout>

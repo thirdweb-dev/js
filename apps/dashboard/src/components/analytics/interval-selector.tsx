@@ -17,7 +17,7 @@ export function IntervalSelector(props: {
         props.setIntervalType(value);
       }}
     >
-      <SelectTrigger className="w-auto hover:bg-muted">
+      <SelectTrigger className="w-auto hover:bg-muted md:w-[120px]">
         <SelectValue placeholder="Select" />
       </SelectTrigger>
       <SelectContent position="popper">

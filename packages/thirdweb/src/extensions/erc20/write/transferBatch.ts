@@ -53,34 +53,88 @@ export function transferBatch(
   return multicall({
     contract: options.contract,
     asyncParams: async () => {
+      const content = await optimizeTransferContent(options);
       return {
-        data: await Promise.all(
-          options.batch.map(async (transfer) => {
-            let amount: bigint;
-            if ("amount" in transfer) {
-              // if we need to parse the amount from ether to gwei then we pull in the decimals extension
-              const { decimals } = await import("../read/decimals.js");
-              // it's OK to call this multiple times because the call is cached
-              // if this fails we fall back to `18` decimals
-              const d = await decimals(options).catch(() => 18);
-              // turn ether into gwei
-              amount = toUnits(transfer.amount.toString(), d);
-            } else {
-              amount = transfer.amountWei;
-            }
-            return encodeTransfer({
-              to: transfer.to,
-              value: amount,
-              overrides: {
-                erc20Value: {
-                  amountWei: amount,
-                  tokenAddress: options.contract.address,
-                },
+        data: content.map((item) => {
+          return encodeTransfer({
+            to: item.to,
+            value: item.amountWei,
+            overrides: {
+              erc20Value: {
+                amountWei: item.amountWei,
+                tokenAddress: options.contract.address,
               },
-            });
-          }),
-        ),
+            },
+          });
+        }),
       };
     },
   });
+}
+
+/**
+ * Records with the same recipient (`to`) can be packed into one transaction
+ * For example, the data below:
+ * ```ts
+ * [
+ *   {
+ *     to: "wallet-a",
+ *     amount: 1,
+ *   },
+ *   {
+ *     to: "wallet-A",
+ *     amountWei: 1000000000000000000n,
+ *   },
+ * ]
+ * ```
+ *
+ * can be packed to:
+ * ```ts
+ * [
+ *   {
+ *     to: "wallet-a",
+ *     amountWei: 2000000000000000000n,
+ *   },
+ * ]
+ * ```
+ * @internal
+ */
+export async function optimizeTransferContent(
+  options: BaseTransactionOptions<TransferBatchParams>,
+): Promise<Array<{ to: string; amountWei: bigint }>> {
+  const groupedRecords = await options.batch.reduce(
+    async (accPromise, record) => {
+      const acc = await accPromise;
+      let amountInWei: bigint;
+      if ("amount" in record) {
+        // it's OK to call this multiple times because the call is cached
+        const { decimals } = await import("../read/decimals.js");
+        // if this fails we fall back to `18` decimals
+        const d = await decimals(options).catch(() => undefined);
+        if (d === undefined) {
+          throw new Error(
+            `Failed to get the decimals for contract: ${options.contract.address}`,
+          );
+        }
+        amountInWei = toUnits(record.amount.toString(), d);
+      } else {
+        amountInWei = record.amountWei;
+      }
+      const existingRecord = acc.find(
+        (r) => r.to.toLowerCase() === record.to.toLowerCase(),
+      );
+      if (existingRecord) {
+        existingRecord.amountWei = existingRecord.amountWei + amountInWei;
+      } else {
+        acc.push({
+          to: record.to,
+          amountWei: amountInWei,
+        });
+      }
+
+      return acc;
+    },
+    Promise.resolve([] as { to: string; amountWei: bigint }[]),
+  );
+  return groupedRecords;
 }

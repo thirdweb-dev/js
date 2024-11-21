@@ -1,195 +1,156 @@
-import { type AccountPlan, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
-import { Box, type CardProps, Flex } from "@chakra-ui/react";
-import {
-  Badge,
-  Card,
-  Heading,
-  Text,
-  TrackedLinkButton,
-  type TrackedLinkButtonProps,
-} from "tw-components";
-import { PLANS } from "utils/pricing";
+import type { Team } from "@/api/team";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { cn } from "@/lib/utils";
+import type React from "react";
+import { TEAM_PLANS } from "utils/pricing";
+import { CheckoutButton } from "../../../@/components/billing";
 import { remainingDays } from "../../../utils/date-utils";
 import { FeatureItem } from "./FeatureItem";
-import { UpgradeModal } from "./UpgradeModal";
 
-interface PricingCardProps {
-  name: AccountPlan;
-  ctaProps: TrackedLinkButtonProps;
-  ctaTitle?: string;
+type ButtonProps = React.ComponentProps<typeof Button>;
+
+const PRO_CONTACT_US_URL =
+  "https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro";
+
+type PricingCardProps = {
+  teamSlug: string;
+  billingPlan: Exclude<Team["billingPlan"], "free">;
+  cta?: {
+    hint?: string;
+    title: string;
+    tracking: {
+      category: string;
+      label?: string;
+    };
+    variant?: ButtonProps["variant"];
+  };
   ctaHint?: string;
-  onDashboard?: boolean;
-  cardProps?: CardProps;
   highlighted?: boolean;
   current?: boolean;
   canTrialGrowth?: boolean;
-  size?: "sm" | "lg";
   activeTrialEndsAt?: string;
-}
+};
 
 export const PricingCard: React.FC<PricingCardProps> = ({
-  name,
-  ctaTitle,
-  ctaHint,
-  ctaProps,
-  cardProps,
-  onDashboard,
-  size = "lg",
+  teamSlug,
+  billingPlan,
+  cta,
   highlighted = false,
   current = false,
   canTrialGrowth = false,
   activeTrialEndsAt,
 }) => {
-  const plan = PLANS[name];
+  const plan = TEAM_PLANS[billingPlan];
   const isCustomPrice = typeof plan.price === "string";
 
   const remainingTrialDays =
     (activeTrialEndsAt ? remainingDays(activeTrialEndsAt) : 0) || 0;
 
-  const content = (
-    <Card
-      w="full"
-      as={Flex}
-      gap={10}
-      flexDir="column"
-      p={{ base: 6, md: 10 }}
-      zIndex={999}
-      background={highlighted ? "black" : "transparent"}
-      borderColor={current ? "blue.500" : "gray.900"}
-      {...cardProps}
+  return (
+    <div
+      className={cn(
+        "z-[999] flex w-full flex-col gap-6 rounded-xl border border-border bg-muted/50 p-4 md:p-6",
+        current && "border-blue-500",
+      )}
+      style={
+        highlighted
+          ? {
+              backgroundImage:
+                "linear-gradient(to top, hsl(var(--muted)) 30%, transparent)",
+            }
+          : undefined
+      }
     >
-      <Flex flexDir="column" gap={6}>
-        <Flex flexDir="column" gap={3}>
-          <div className="flex flex-row gap-2">
-            <Heading
-              as="h3"
-              size={size === "lg" ? "title.lg" : "title.sm"}
-              textTransform="capitalize"
-            >
+      <div className="flex flex-col gap-5">
+        {/* Title + Desc */}
+        <div>
+          <div className="mb-2 flex flex-row items-center gap-2">
+            <h3 className="font-semibold text-2xl capitalize tracking-tight">
               {plan.title}
-            </Heading>
-            {current && (
-              <Badge
-                borderRadius="md"
-                size="label.sm"
-                px={3}
-                py={1.5}
-                textTransform="capitalize"
-              >
-                Current plan
-              </Badge>
-            )}
+            </h3>
+            {current && <Badge className="capitalize">Current plan</Badge>}
           </div>
-          <Text maxW={320} h={12}>
+          <p className="max-w-[320px] text-muted-foreground">
             {plan.description}
-          </Text>
-        </Flex>
-        <Flex direction="column" gap={0.5}>
-          <Flex alignItems={{ base: "center", md: "flex-end" }} gap={2}>
-            <Heading
-              size={size === "lg" ? "title.2xl" : "title.md"}
-              lineHeight={1}
-            >
+          </p>
+        </div>
+
+        {/* Price */}
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-3xl text-foreground tracking-tight">
               {isCustomPrice ? (
                 plan.price
               ) : canTrialGrowth ? (
                 <>
-                  <Box as="span" textDecor="line-through" opacity={0.4}>
+                  <span className="text-muted-foreground line-through">
                     ${plan.price}
-                  </Box>{" "}
+                  </span>{" "}
                   $0
                 </>
               ) : (
                 `$${plan.price}`
               )}
-            </Heading>
+            </span>
 
-            {!isCustomPrice && <Text size="body.lg">/ month</Text>}
-          </Flex>
+            {!isCustomPrice && (
+              <span className="text-muted-foreground">/ month</span>
+            )}
+          </div>
+
           {remainingTrialDays > 0 && (
-            <Text size="body.sm" fontStyle="italic">
+            <p className="text-muted-foreground text-sm">
               Your free trial will{" "}
               {remainingTrialDays > 1
                 ? `end in ${remainingTrialDays} days.`
                 : "end today."}
-            </Text>
+            </p>
           )}
-        </Flex>
-      </Flex>
-      <Flex
-        flexDir="column"
-        gap={3}
-        grow={1}
-        alignItems="flex-start"
-        className="!text-foreground"
-      >
+        </div>
+      </div>
+
+      <div className="flex grow flex-col items-start gap-2.5 text-foreground">
         {plan.subTitle && (
-          <Text className="!text-foreground" fontWeight="medium">
-            {plan.subTitle}
-          </Text>
+          <p className="font-medium text-foreground">{plan.subTitle}</p>
         )}
 
         {plan.features.map((f) => (
           <FeatureItem key={Array.isArray(f) ? f[0] : f} text={f} />
         ))}
-      </Flex>
-      {name === accountPlan.growth && onDashboard ? (
-        <UpgradeModal
-          name={name}
-          ctaProps={ctaProps}
-          ctaTitle={ctaTitle}
-          ctaHint={ctaHint}
-          canTrialGrowth={canTrialGrowth}
-        />
-      ) : (
-        <Flex flexDir="column" gap={3} position="relative" mb={3}>
-          {ctaTitle && (
-            <>
-              <TrackedLinkButton
-                variant="outline"
-                py={6}
-                label={ctaProps.label ?? name}
-                size={size === "lg" ? "md" : "sm"}
-                {...ctaProps}
-              >
-                {ctaTitle}
-              </TrackedLinkButton>
-              {ctaHint && (
-                <Text
-                  textAlign="center"
-                  size="body.sm"
-                  w="full"
-                  position={{ base: "static", xl: "absolute" }}
-                  top={ctaTitle ? 14 : -9}
-                >
-                  {ctaHint}
-                </Text>
-              )}
-            </>
-          )}
-        </Flex>
-      )}
-    </Card>
-  );
-
-  if (highlighted) {
-    return (
-      <div className="-m-2 relative flex items-center justify-center p-2">
-        <Box
-          position="absolute"
-          bgGradient="linear(to-b, #4DABEE, #692AC1)"
-          top={0}
-          left={0}
-          bottom={0}
-          right={0}
-          borderRadius="3xl"
-          overflow="visible"
-          filter="blur(8px)"
-        />
-        {content}
       </div>
-    );
-  }
 
-  return content;
+      {cta && (
+        <div className="flex flex-col gap-3">
+          {billingPlan !== "pro" ? (
+            <CheckoutButton
+              variant={cta.variant || "outline"}
+              teamSlug={teamSlug}
+              sku={billingPlan === "starter" ? "plan:starter" : "plan:growth"}
+            >
+              {cta.title}
+            </CheckoutButton>
+          ) : (
+            <Button variant={cta.variant || "outline"} asChild>
+              <TrackedLinkTW
+                href={PRO_CONTACT_US_URL}
+                label={cta.tracking?.label}
+                category={cta.tracking?.category}
+                target="_blank"
+              >
+                {cta.title}
+              </TrackedLinkTW>
+            </Button>
+          )}
+
+          {cta.hint && (
+            <p className="text-center text-muted-foreground text-sm">
+              {cta.hint}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
 };

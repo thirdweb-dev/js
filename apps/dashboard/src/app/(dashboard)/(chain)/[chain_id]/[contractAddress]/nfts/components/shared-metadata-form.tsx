@@ -7,20 +7,17 @@ import {
   AccordionItem,
   AccordionPanel,
   Divider,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
   FormControl,
   Input,
   Textarea,
-  useModalContext,
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { setSharedMetadata } from "thirdweb/extensions/erc721";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
@@ -38,10 +35,11 @@ const SHARED_METADATA_FORM_ID = "shared-metadata-form";
 
 export const SharedMetadataForm: React.FC<{
   contract: ThirdwebContract;
-}> = ({ contract }) => {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}> = ({ contract, setOpen }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
-  const { mutate, isPending } = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTransaction();
   const {
     setValue,
     register,
@@ -55,13 +53,6 @@ export const SharedMetadataForm: React.FC<{
       customAnimationUrl: string;
     }
   >();
-
-  const modalContext = useModalContext();
-  const { onSuccess, onError } = useTxNotifications(
-    "NFT Metadata set successfully",
-    "Failed to set NFT Metadata",
-    contract,
-  );
 
   const setFile = (file: File) => {
     if (file.type.includes("image")) {
@@ -125,43 +116,39 @@ export const SharedMetadataForm: React.FC<{
 
   return (
     <>
-      <DrawerHeader>
-        <Heading>Set NFT Metadata</Heading>
-      </DrawerHeader>
-      <DrawerBody>
-        <form
-          className="flex flex-col gap-6"
-          id={SHARED_METADATA_FORM_ID}
-          onSubmit={handleSubmit((data) => {
-            if (!address) {
-              onError("Please connect your wallet.");
-              return;
-            }
+      <form
+        className="mt-6 flex flex-col gap-6"
+        id={SHARED_METADATA_FORM_ID}
+        onSubmit={handleSubmit((data) => {
+          if (!address) {
+            toast.error("Please connect your wallet.");
+            return;
+          }
 
-            const dataWithCustom = {
-              ...data,
-              image: data.image || data.customImage,
-              animation_url: data.animation_url || data.customAnimationUrl,
-            };
+          const dataWithCustom = {
+            ...data,
+            image: data.image || data.customImage,
+            animation_url: data.animation_url || data.customAnimationUrl,
+          };
 
-            trackEvent({
-              category: "nft",
-              action: "set-shared-metadata",
-              label: "attempt",
-            });
+          trackEvent({
+            category: "nft",
+            action: "set-shared-metadata",
+            label: "attempt",
+          });
+          try {
             const transaction = setSharedMetadata({
               contract,
               nft: parseAttributes(dataWithCustom),
             });
-            mutate(transaction, {
+            const promise = sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
                 trackEvent({
                   category: "nft",
                   action: "set-shared-metadata",
                   label: "success",
                 });
-                onSuccess();
-                modalContext.onClose();
+                setOpen(false);
               },
               // biome-ignore lint/suspicious/noExplicitAny: FIXME
               onError: (error: any) => {
@@ -171,118 +158,126 @@ export const SharedMetadataForm: React.FC<{
                   label: "error",
                   error,
                 });
-                onError(error);
               },
             });
-          })}
-        >
-          <div className="flex flex-col gap-2">
-            <Heading size="subtitle.md">Metadata</Heading>
-            <Divider />
+
+            toast.promise(promise, {
+              loading: "Setting shared metadata",
+              error: "Error setting NFT metadata",
+              success: "Shared metadata updated successfully",
+            });
+          } catch (err) {
+            console.error(err);
+            toast.error("Failed to set shared metadata");
+          }
+        })}
+      >
+        <div className="flex flex-col gap-2">
+          <Heading size="subtitle.md">Metadata</Heading>
+          <Divider />
+        </div>
+        <FormControl isRequired isInvalid={!!errors.name}>
+          <FormLabel>Name</FormLabel>
+          <Input autoFocus {...register("name")} />
+          <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={!!mediaFileError}>
+          <FormLabel>Media</FormLabel>
+          <div>
+            <FileInput
+              previewMaxWidth="200px"
+              value={mediaFileUrl as File | string}
+              showUploadButton
+              showPreview={true}
+              setValue={setFile}
+              className="rounded border border-border transition-all duration-200"
+              selectOrUpload="Upload"
+              helperText="Media"
+            />
           </div>
-          <FormControl isRequired isInvalid={!!errors.name}>
-            <FormLabel>Name</FormLabel>
-            <Input autoFocus {...register("name")} />
-            <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!mediaFileError}>
-            <FormLabel>Media</FormLabel>
-            <div>
-              <FileInput
-                previewMaxWidth="200px"
-                value={mediaFileUrl as File | string}
-                showUploadButton
-                showPreview={true}
-                setValue={setFile}
-                className="rounded border border-border transition-all duration-200"
-                selectOrUpload="Upload"
-                helperText="Media"
-              />
-            </div>
+          <FormHelperText>
+            You can upload image, audio, video, html, text, pdf, and 3d model
+            files here.
+          </FormHelperText>
+          <FormErrorMessage>
+            {mediaFileError?.message as unknown as string}
+          </FormErrorMessage>
+        </FormControl>
+        {showCoverImageUpload && (
+          <FormControl isInvalid={!!errors.image}>
+            <FormLabel>Cover Image</FormLabel>
+            <FileInput
+              previewMaxWidth="200px"
+              accept={{ "image/*": [] }}
+              value={imageUrl}
+              showUploadButton
+              setValue={(file) => setValue("image", file)}
+              className="rounded border border-border transition-all"
+            />
             <FormHelperText>
-              You can upload image, audio, video, html, text, pdf, and 3d model
-              files here.
+              You can optionally upload an image as the cover of your NFT.
             </FormHelperText>
             <FormErrorMessage>
-              {mediaFileError?.message as unknown as string}
+              {errors?.image?.message as unknown as string}
             </FormErrorMessage>
           </FormControl>
-          {showCoverImageUpload && (
-            <FormControl isInvalid={!!errors.image}>
-              <FormLabel>Cover Image</FormLabel>
-              <FileInput
-                previewMaxWidth="200px"
-                accept={{ "image/*": [] }}
-                value={imageUrl}
-                showUploadButton
-                setValue={(file) => setValue("image", file)}
-                className="rounded border border-border transition-all"
-              />
-              <FormHelperText>
-                You can optionally upload an image as the cover of your NFT.
-              </FormHelperText>
-              <FormErrorMessage>
-                {errors?.image?.message as unknown as string}
-              </FormErrorMessage>
-            </FormControl>
-          )}
-          <FormControl isInvalid={!!errors.description}>
-            <FormLabel>Description</FormLabel>
-            <Textarea {...register("description")} />
-            <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
-          </FormControl>
-          <Accordion
-            allowToggle={!(errors.background_color || errors.external_url)}
-            index={
-              errors.background_color || errors.external_url ? [0] : undefined
-            }
-          >
-            <AccordionItem>
-              <AccordionButton px={0} justifyContent="space-between">
-                <Heading size="subtitle.md">Advanced Options</Heading>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel className="flex flex-col gap-6 px-0">
-                <FormControl isInvalid={!!errors.customImage}>
-                  <FormLabel>Image URL</FormLabel>
-                  <Input max="6" {...register("customImage")} />
-                  <FormHelperText>
-                    If you already have your NFT image preuploaded, you can set
-                    the URL or URI here.
-                  </FormHelperText>
-                  <FormErrorMessage>
-                    {errors?.customImage?.message}
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl isInvalid={!!errors.customAnimationUrl}>
-                  <FormLabel>Animation URL</FormLabel>
-                  <Input max="6" {...register("customAnimationUrl")} />
-                  <FormHelperText>
-                    If you already have your NFT Animation URL preuploaded, you
-                    can set the URL or URI here.
-                  </FormHelperText>
-                  <FormErrorMessage>
-                    {errors?.customAnimationUrl?.message}
-                  </FormErrorMessage>
-                </FormControl>
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        </form>
-      </DrawerBody>
-      <DrawerFooter>
+        )}
+        <FormControl isInvalid={!!errors.description}>
+          <FormLabel>Description</FormLabel>
+          <Textarea {...register("description")} />
+          <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
+        </FormControl>
+        <Accordion
+          allowToggle={!(errors.background_color || errors.external_url)}
+          index={
+            errors.background_color || errors.external_url ? [0] : undefined
+          }
+        >
+          <AccordionItem>
+            <AccordionButton px={0} justifyContent="space-between">
+              <Heading size="subtitle.md">Advanced Options</Heading>
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel className="flex flex-col gap-6 px-0">
+              <FormControl isInvalid={!!errors.customImage}>
+                <FormLabel>Image URL</FormLabel>
+                <Input max="6" {...register("customImage")} />
+                <FormHelperText>
+                  If you already have your NFT image preuploaded, you can set
+                  the URL or URI here.
+                </FormHelperText>
+                <FormErrorMessage>
+                  {errors?.customImage?.message}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors.customAnimationUrl}>
+                <FormLabel>Animation URL</FormLabel>
+                <Input max="6" {...register("customAnimationUrl")} />
+                <FormHelperText>
+                  If you already have your NFT Animation URL preuploaded, you
+                  can set the URL or URI here.
+                </FormHelperText>
+                <FormErrorMessage>
+                  {errors?.customAnimationUrl?.message}
+                </FormErrorMessage>
+              </FormControl>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </form>
+      <div className="mt-8 flex flex-row justify-end gap-3">
         <Button
-          isDisabled={isPending}
+          isDisabled={sendAndConfirmTx.isPending}
           variant="outline"
           mr={3}
-          onClick={modalContext.onClose}
+          onClick={() => setOpen(false)}
         >
           Cancel
         </Button>
         <TransactionButton
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={isPending}
+          isLoading={sendAndConfirmTx.isPending}
           form={SHARED_METADATA_FORM_ID}
           type="submit"
           colorScheme="primary"
@@ -290,7 +285,7 @@ export const SharedMetadataForm: React.FC<{
         >
           Set NFT Metadata
         </TransactionButton>
-      </DrawerFooter>
+      </div>
     </>
   );
 };

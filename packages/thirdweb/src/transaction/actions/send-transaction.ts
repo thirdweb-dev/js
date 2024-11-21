@@ -1,3 +1,4 @@
+import { getTransactionDecorator } from "../../utils/config.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { addTransactionToStore } from "../transaction-store.js";
@@ -138,14 +139,22 @@ export interface SendTransactionOptions {
 export async function sendTransaction(
   options: SendTransactionOptions,
 ): Promise<WaitForReceiptOptions> {
-  const { account, transaction, gasless } = options;
+  let { account, transaction, gasless } = options;
+
+  const decorator = getTransactionDecorator();
+  if (decorator) {
+    const { account: decoratedAccount, transaction: decoratedTransaction } =
+      await decorator({ account, transaction });
+    account = decoratedAccount;
+    transaction = decoratedTransaction;
+  }
 
   if (account.onTransactionRequested) {
     await account.onTransactionRequested(transaction);
   }
 
   // if zksync transaction params are set, send with eip712
-  if (options.transaction.eip712) {
+  if (transaction.eip712) {
     const { sendEip712Transaction } = await import(
       "./zksync/send-eip712-transaction.js"
     );

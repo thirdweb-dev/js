@@ -82,7 +82,7 @@ const InteractLanding: ThirdwebNextPage = () => {
           titleWithGradient="made simple"
           subtitle="Easily upload and pin files to IPFS, without the complexity of decentralized file management. Ultra-fast upload speeds with industry-leading infrastructure."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="/dashboard/infrastructure/storage"
+          ctaLink="/team/~/~/usage/storage"
           contactUsTitle="Book Demo"
           gradient="linear(to-r, #9786DF, #9786DF)"
           image={require("../../public/assets/product-pages/hero/desktop-hero-storage.png")}
@@ -149,7 +149,7 @@ const InteractLanding: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="/dashboard/infrastructure/storage"
+          ctaLink="/team/~/~/usage/storage"
           gradient="linear(to-r, #BFA3DA, #84309C, #C735B0)"
         />
       </Container>

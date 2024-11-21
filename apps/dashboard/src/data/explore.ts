@@ -94,10 +94,9 @@ const MARKETS = {
 const MODULAR_CONTRACTS = {
   id: "modular-contracts",
   name: "modular",
-  displayName: "Modular Contracts (Beta)",
+  displayName: "Modular Contracts",
   description:
     "Collection of highly customizable and upgradeable smart contracts built with the modular contracts framework.",
-  isBeta: true,
   contracts: [
     // erc721 drop
     [

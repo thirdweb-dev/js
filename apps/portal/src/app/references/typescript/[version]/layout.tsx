@@ -5,7 +5,7 @@ import { createMetadata } from "@doc";
 export default getTDocLayout({
   getDoc: fetchTypeScriptDoc,
   packageSlug: "typescript",
-  sdkTitle: "TypeScript SDK",
+  sdkTitle: "Connect SDK",
 });
 
 export const metadata = createMetadata({

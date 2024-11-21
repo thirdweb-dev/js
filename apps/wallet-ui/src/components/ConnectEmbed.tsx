@@ -1,8 +1,10 @@
 "use client";
+import { useRouter } from "@/hooks/useRouter";
 import { generatePayload, getCurrentUser, login, logout } from "@/lib/auth";
 import { client } from "@/lib/client";
+import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "next-themes";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import type { VerifyLoginPayloadParams } from "thirdweb/auth";
 import { ConnectEmbed as ThirdwebConnectEmbed } from "thirdweb/react";
 import { ecosystemWallet } from "thirdweb/wallets";
@@ -12,6 +14,18 @@ export function ConnectEmbed() {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
+
+  const { data: userAddress } = useQuery({
+    queryKey: ["userAddress"],
+    queryFn: getCurrentUser,
+  });
+
+  if (userAddress) {
+    router.push(
+      `/wallet/${userAddress}?${searchParams.toString()}`,
+      params.ecosystem as string,
+    );
+  }
 
   return (
     <ThirdwebConnectEmbed
@@ -26,6 +40,7 @@ export function ConnectEmbed() {
           if (success) {
             router.push(
               `/wallet/${loginParams.payload.address}?${searchParams.toString()}`,
+              params.ecosystem as string,
             );
           }
         },

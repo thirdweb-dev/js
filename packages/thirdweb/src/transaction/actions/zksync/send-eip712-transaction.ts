@@ -1,9 +1,10 @@
 import { hexToBytes, toRlp } from "viem";
 import { eth_sendRawTransaction } from "../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../rpc/rpc.js";
-import { toBigInt } from "../../../utils/bigint.js";
+import { type Address, getAddress } from "../../../utils/address.js";
+import { replaceBigInts, toBigInt } from "../../../utils/bigint.js";
 import { concatHex } from "../../../utils/encoding/helpers/concat-hex.js";
-import { type Hex, numberToHex, toHex } from "../../../utils/encoding/hex.js";
+import { type Hex, toHex } from "../../../utils/encoding/hex.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../../prepare-transaction.js";
@@ -83,61 +84,17 @@ export async function signEip712Transaction(options: {
   });
 }
 
+/**
+ * Populate a prepared transaction to be serialized as a EIP712 transaction
+ * @param options
+ * @internal
+ */
 export async function populateEip712Transaction(
   options: SendEip712TransactionOptions,
 ): Promise<EIP721TransactionSerializable> {
   const { account, transaction } = options;
-  let [data, to, value, gas, maxFeePerGas, maxPriorityFeePerGas, eip712] =
-    await Promise.all([
-      encode(transaction),
-      resolvePromisedValue(transaction.to),
-      resolvePromisedValue(transaction.value),
-      resolvePromisedValue(transaction.gas),
-      resolvePromisedValue(transaction.maxFeePerGas),
-      resolvePromisedValue(transaction.maxPriorityFeePerGas),
-      resolvePromisedValue(transaction.eip712),
-    ]);
-  let gasPerPubdata = eip712?.gasPerPubdata;
-  if (!gas || !maxFeePerGas || !maxPriorityFeePerGas) {
-    // fetch fees and gas
-    const rpc = getRpcClient(transaction);
-    const result = (await rpc({
-      // biome-ignore lint/suspicious/noExplicitAny: TODO add to RPC method types
-      method: "zks_estimateFee" as any,
-      params: [
-        {
-          from: account.address,
-          to,
-          data,
-          value: value ? numberToHex(value) : undefined,
-          gasPerPubdata,
-          eip712Meta: {
-            ...eip712,
-            gasPerPubdata: gasPerPubdata ? toHex(gasPerPubdata) : toHex(50000n),
-            factoryDeps: eip712?.factoryDeps?.map((dep) =>
-              Array.from(hexToBytes(dep)),
-            ),
-          },
-          type: "0x71",
-          // biome-ignore lint/suspicious/noExplicitAny: TODO add to RPC method types
-        } as any,
-      ],
-    })) as {
-      gas_limit: string;
-      max_fee_per_gas: string;
-      max_priority_fee_per_gas: string;
-      gas_per_pubdata_limit: string;
-    };
-    gas = toBigInt(result.gas_limit) * 2n; // overestimating to avoid issues when not accounting for paymaster extra gas ( we should really pass the paymaster input above for better accuracy )
-    const baseFee = toBigInt(result.max_fee_per_gas);
-    maxFeePerGas = baseFee * 2n; // bumping the base fee per gas to ensure fast inclusion
-    maxPriorityFeePerGas = toBigInt(result.max_priority_fee_per_gas) || 1n;
-    gasPerPubdata = toBigInt(result.gas_per_pubdata_limit) * 2n; // doubling for fast inclusion;
-    if (gasPerPubdata < 50000n) {
-      // enforce a minimum gas per pubdata limit
-      gasPerPubdata = 50000n;
-    }
-  }
+  const { gas, maxFeePerGas, maxPriorityFeePerGas, gasPerPubdata } =
+    await getZkGasFees({ transaction, from: getAddress(account.address) });
 
   // serialize the transaction (with fees, gas, nonce)
   const serializableTransaction = await toSerializableTransaction({
@@ -202,4 +159,77 @@ function serializeTransactionEIP712(
 
   // @ts-ignore - TODO: fix types
   return concatHex(["0x71", toRlp(serializedTransaction)]);
+}
+
+export async function getZkGasFees(args: {
+  transaction: PreparedTransaction;
+  from?: Address;
+}) {
+  const { transaction, from } = args;
+  let [gas, maxFeePerGas, maxPriorityFeePerGas, eip712] = await Promise.all([
+    resolvePromisedValue(transaction.gas),
+    resolvePromisedValue(transaction.maxFeePerGas),
+    resolvePromisedValue(transaction.maxPriorityFeePerGas),
+    resolvePromisedValue(transaction.eip712),
+  ]);
+  let gasPerPubdata = eip712?.gasPerPubdata;
+  if (!gas || !maxFeePerGas || !maxPriorityFeePerGas) {
+    const rpc = getRpcClient(transaction);
+    const params = await formatTransaction({ transaction, from });
+    const result = (await rpc({
+      // biome-ignore lint/suspicious/noExplicitAny: TODO add to RPC method types
+      method: "zks_estimateFee" as any,
+      // biome-ignore lint/suspicious/noExplicitAny: TODO add to RPC method types
+      params: [replaceBigInts(params, toHex)] as any,
+    })) as {
+      gas_limit: string;
+      max_fee_per_gas: string;
+      max_priority_fee_per_gas: string;
+      gas_per_pubdata_limit: string;
+    };
+    gas = toBigInt(result.gas_limit) * 2n; // overestimating to avoid issues when not accounting for paymaster extra gas ( we should really pass the paymaster input above for better accuracy )
+    const baseFee = toBigInt(result.max_fee_per_gas);
+    maxFeePerGas = baseFee * 2n; // bumping the base fee per gas to ensure fast inclusion
+    maxPriorityFeePerGas = toBigInt(result.max_priority_fee_per_gas) || 1n;
+    gasPerPubdata = toBigInt(result.gas_per_pubdata_limit) * 2n; // doubling for fast inclusion;
+    if (gasPerPubdata < 50000n) {
+      // enforce a minimum gas per pubdata limit
+      gasPerPubdata = 50000n;
+    }
+  }
+  return {
+    gas,
+    maxFeePerGas,
+    maxPriorityFeePerGas,
+    gasPerPubdata,
+  };
+}
+
+async function formatTransaction(args: {
+  transaction: PreparedTransaction;
+  from?: Address;
+}) {
+  const { transaction, from } = args;
+  const [data, to, value, eip712] = await Promise.all([
+    encode(transaction),
+    resolvePromisedValue(transaction.to),
+    resolvePromisedValue(transaction.value),
+    resolvePromisedValue(transaction.eip712),
+  ]);
+  const gasPerPubdata = eip712?.gasPerPubdata;
+  return {
+    from,
+    to,
+    data,
+    value,
+    gasPerPubdata,
+    eip712Meta: {
+      ...eip712,
+      gasPerPubdata: gasPerPubdata || 50000n,
+      factoryDeps: eip712?.factoryDeps?.map((dep) =>
+        Array.from(hexToBytes(dep)),
+      ),
+    },
+    type: "0x71",
+  };
 }

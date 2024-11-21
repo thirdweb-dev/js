@@ -144,6 +144,9 @@ export type {
   WalletConnectSession,
 } from "../wallets/wallet-connect/receiver/types.js";
 
+// eip1193
+export * as EIP1193 from "../adapters/eip1193/index.js";
+
 // WEB ONLY EXPORTS
 
 // injected

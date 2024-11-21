@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  type CodeEnvironment,
+  CodeSegment,
+} from "@/components/blocks/code-segment.client";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -29,7 +33,13 @@ import type { AbiEvent, AbiFunction } from "abitype";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { SearchIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  lazy,
+  useMemo,
+  useState,
+} from "react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
@@ -43,10 +53,11 @@ import {
   COMMANDS,
   formatSnippet,
 } from "../../contract-ui/tabs/code/components/code-overview";
-import { CodeSegment } from "../contract-tabs/code/CodeSegment";
-import type { CodeEnvironment } from "../contract-tabs/code/types";
 import { InteractiveAbiFunction } from "./interactive-abi-function";
 
+const ContractFunctionComment = lazy(
+  () => import("./contract-function-comment"),
+);
 interface ContractFunctionProps {
   fn: AbiFunction | AbiEvent;
   contract: ThirdwebContract;
@@ -136,7 +147,6 @@ function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
           />
         )}
       </Flex>
-
       {isFunction && (
         <InteractiveAbiFunction
           key={JSON.stringify(fn)}
@@ -158,6 +168,7 @@ function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
           />
         </>
       )}
+      <ContractFunctionComment contract={contract} functionName={fn.name} />
     </Flex>
   );
 }

@@ -7,30 +7,21 @@ import type {
 import { createInAppWallet } from "../core/wallet/in-app-core.js";
 
 /**
- * Creates an [Ecosystem Wallet](https://portal.thirdweb.com/connect/ecosystems/overview) based on various authentication methods.
- *
- * Available authentication methods:
- * - Email
- * - Phone
- * - Passkey
- * - Google
- * - Apple
- * - Facebook
- * - Discord
- * - LINE
- * - X
- * - Farcaster
+ * Creates an [Ecosystem Wallet](https://portal.thirdweb.com/connect/ecosystems/overview) based on various authentication methods. Full list of available authentication methods [here](/connect/wallet/sign-in-methods/overview).
  *
  * Can also be configured to use Account Abstraction to directly connect to a ERC4337 smart account based on those authentication methods.
  *
- * Refer to [inAppWallet](https://portal.thirdweb.com/references/typescript/v5/inAppWallet) for detailed usage examples.
+ * Refer to [inAppWallet](/typescript/v5/inAppWallet) for detailed usage examples.
  *
  * @param createOptions - configuration options
  * Refer to [EcosystemWalletCreationOptions](https://portal.thirdweb.com/references/typescript/v5/EcosystemWalletCreationOptions) for more details.
  * @returns The created ecosystem wallet.
- * @example
  *
- * ### Connect to an ecosystem wallet
+ *
+ * @example
+ * ### Logging into an ecosystem wallet
+ *
+ * Below is the general code snippet needed to connect via a given auth strategy to an ecosystem wallet. For more variants on the various auth strategies, refer to [inAppWallet](/typescript/v5/inAppWallet).
  *
  * ```ts
  * import { ecosystemWallet } from "thirdweb/wallets";
@@ -44,7 +35,7 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * });
  * ```
  *
- * [View all connection options](https://portal.thirdweb.com/references/typescript/v5/EcosystemWalletConnectionOptions)
+ * [View all connection options](https://portal.thirdweb.com/references/typescript/v5/EcosystemWalletConnectionOptions).
  *
  * ### Connect to a restricted ecosystem wallet with your designated partner ID
  *
@@ -57,7 +48,6 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * });
  * ```
  *
- * Refer to [inAppWallet](https://portal.thirdweb.com/references/typescript/v5/inAppWallet) for more usage examples.
  *
  * @wallet
  */

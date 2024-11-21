@@ -4,30 +4,48 @@ import {
 	ArticleIconCard,
 	Stack,
 	createMetadata,
+	Callout,
 } from "@doc";
-import { Layers2Icon } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Enable Gasless Transactions with In-App Wallet",
+		title: "Sponsored Transactions | thirdweb",
 		icon: "wallets",
 	},
-	title: "Enable Gasless Transactions | thirdweb In-App Wallet",
+	title: "Sponsor Transactions with Account Abstraction",
 	description:
 		"By using account abstraction you can create a truly seamless user experience with gasless transactions, batched transactions, and full account recovery.",
 });
 
 # Sponsor Transactions
 
-By combining [Account abstraction](/connect/account-abstraction) and [In-App Wallet](/connect/in-app-wallet/overview), you can create a truly seamless user experience:
+By using [Account abstraction](/connect/account-abstraction) or [In-App Wallets](/connect/in-app-wallet/overview), you can sponsor all gas costs for your users transactions.
 
-- Gasless transactions sponsored by your application
-- Batched transactions
-- Full account recovery the user "account"
+<Callout title="Sponsored transactions" variant="info">
 
-## Configure in-app wallet for sponsored transactions
+To set up sponsored transactions, set the `sponsorGas` option to `true` in the smart account configuration.
+All transactions performed with the smart account will then be sponsored by your application. Testnet transactions are free, but you need a valid credit card on file for mainnet transactions.
 
-To enable account abstraction in your app, you need to add the `smartAccount` prop with the `inAppWallet` creation.
+</Callout>
+
+## Live Playground
+
+Try out the demo for yourself in the [sponsored transactions playground](https://playground.thirdweb.com/connect/account-abstraction/sponsor)
+
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com/connect/account-abstraction/sponsor"
+	description="See the SDK in action on the live playground"
+/>
+</Stack>
+
+## Sponsor transactions for all in-app wallets
+
+To enable account abstraction for in-app wallets, you need to add the `smartAccount` prop with the `inAppWallet` creation.
 
 ```jsx
 import { ConnectButton } from "thirdweb/react";
@@ -56,3 +74,67 @@ export default function App() {
 This will create an in-app wallet and a smart account for the user. The smart account will be initialized with the in-app wallet as the owner.
 
 You can sponsor transactions simply by passing `sponsrGas: true` to the `smartAccount` prop. This will allow the smart account to send transactions without the user needing to hold any ETH.
+
+## Sponsor transactions for all connected wallets
+
+To sponsor transactions for all connected wallets, you can use the `sponsorGas` prop on the `ConnectButton` or `useConnect` hook.
+
+```jsx
+import { createThirdwebClient } from "thirdweb";
+import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
+ 
+const client = createThirdwebClient({
+  clientId: "YOUR_CLIENT_ID",
+});
+ 
+export default function App() {
+  return (
+    <ThirdwebProvider>
+      <ConnectButton
+        client={client}
+        accountAbstraction={{
+          chain: sepolia, // the chain where your smart accounts will be or is deployed
+          sponsorGas: true, // enable or disable sponsored transactions
+        }}
+      />
+    </ThirdwebProvider>
+  );
+}
+```
+
+or with the `useConnect` hook:
+
+```jsx
+import { useConnect } from "thirdweb/react";
+import { inAppWallet } from "thirdweb/wallets";
+import { sepolia } from "thirdweb/chains";
+ 
+function App() {
+  // 1. set the `accountAbstraction` configuration to convert wallets to smart accounts
+  const { connect } = useConnect({
+    client,
+    accountAbstraction: {
+      chain: sepolia, // the chain where your smart accounts will be or is deployed
+      sponsorGas: true, // enable or disable sponsored transactions
+    },
+  });
+ 
+  const connectToSmartAccount = async () => {
+    // 2. connect with the admin wallet of the smart account
+    connect(async () => {
+      const wallet = createWallet("io.metamask"); // or any other wallet
+      await wallet.connect({
+        client,
+        chain: sepolia,
+      });
+      return wallet;
+    });
+  };
+ 
+  return (
+    <button onClick={() => connectToSmartAccount()}>Connect</button>
+  );
+}
+```
+
+Once connected, all transactions sent via the `useSendTransaction` hook or the `TransactionButton` component will be sponsored.

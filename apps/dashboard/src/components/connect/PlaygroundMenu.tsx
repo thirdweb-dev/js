@@ -1,7 +1,7 @@
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { type BoxProps, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import type { StaticImageData } from "next/image";
-import { useRouter } from "next/router";
 import { Card, Text } from "tw-components";
 
 interface PlaygroundMenuProps extends BoxProps {
@@ -22,7 +22,7 @@ export const PlaygroundMenu: React.FC<PlaygroundMenuProps> = ({
   onClick,
   ...rest
 }) => {
-  const router = useRouter();
+  const router = useDashboardRouter();
 
   return (
     <Card

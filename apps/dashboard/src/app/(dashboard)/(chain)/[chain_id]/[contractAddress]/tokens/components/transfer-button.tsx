@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -12,7 +13,7 @@ import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Send } from "lucide-react";
+import { SendIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,12 +24,7 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import {
-  Button,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-} from "tw-components";
+import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface TokenTransferButtonProps {
   contract: ThirdwebContract;
@@ -57,17 +53,17 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
-          colorScheme="primary"
-          leftIcon={<Send size={16} />}
+          variant="primary"
           {...restButtonProps}
-          isDisabled={!hasBalance}
+          disabled={!hasBalance}
+          className="gap-2"
         >
-          Transfer
+          <SendIcon size={16} /> Transfer
         </Button>
       </SheetTrigger>
       <SheetContent className="z-[10000]">
         <SheetHeader>
-          <SheetTitle>Transfer tokens</SheetTitle>
+          <SheetTitle className="text-left">Transfer tokens</SheetTitle>
         </SheetHeader>
         <form className="mt-10">
           <div className="flex flex-col gap-6">

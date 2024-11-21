@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { getContract } from "thirdweb";
-import { polygon, sepolia } from "thirdweb/chains";
+import { base, sepolia } from "thirdweb/chains";
 import { transfer } from "thirdweb/extensions/erc20";
 import { claimTo, getNFT } from "thirdweb/extensions/erc1155";
 import {
@@ -16,8 +16,8 @@ import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
 
 const nftContract = getContract({
-  address: "0x827c1c3889923015C1FC31BF677D00FbE6F01D52",
-  chain: polygon,
+  address: "0xf0d0CBf84005Dd4eC81364D1f5D7d896Bd53D1B8",
+  chain: base,
   client: THIRDWEB_CLIENT,
 });
 
@@ -35,7 +35,7 @@ export function PayTransactionPreview() {
   const { theme } = useTheme();
   const { data: nft } = useReadContract(getNFT, {
     contract: nftContract,
-    tokenId: 0n,
+    tokenId: 1n,
   });
 
   return (
@@ -51,7 +51,7 @@ export function PayTransactionPreview() {
             transaction: claimTo({
               contract: nftContract,
               quantity: 1n,
-              tokenId: 0n,
+              tokenId: 1n,
               to: account?.address || "",
             }),
             metadata: nft?.metadata,

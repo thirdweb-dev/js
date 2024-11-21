@@ -1,0 +1,127 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "FAQ for thirdweb Wallet",
+	description: "Frequently asked questions about thirdweb's Wallet",
+	image: {
+		title: "FAQs for thirdweb Wallet",
+		icon: "wallets",
+	},
+});
+
+# General FAQs
+
+### Which blockchains are supported?
+
+Our thirdweb In-App Wallet is fully EVM compatible and supports all EVM chains.
+
+### Do I need to build separate flows for in-app wallets and external wallets (e.g. MetaMask)?
+
+No! Since our SDK provides the wallet `signer`, you can build a unified experience with the same code to handle how all your users' wallets interact with signatures and smart contracts.
+
+However, you will need to provide a separate flow to create in-app wallets as you would with any wallet provider (WalletConnect, Coinbase Wallet, etc.).
+
+### How do I troubleshoot unexpected console error messages?
+
+Make sure that you are developing on a [secure origin](https://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features/), which includes `localhost` and any site on `https://`. thirdweb uses cryptography libraries that are unsupported on `http://`.
+
+If you continue to run into a console error, please contact us with more details.
+
+### What is thirdweb's ability to scale?
+
+thirdweb can create up to 300 wallets/second by default and can support higher limits (up to 3,000 wallets/second) upon request.
+
+### What login options does thirdweb support?
+
+We support a lot of authentication options out of the box. For a full list, check out the [playground](https://playground.thirdweb.com/connect/sign-in/button). We also support custom authentication if you want to integrate thirdweb into your own auth system.
+
+### Do you support gasless transactions?
+
+Yes, you can easily use account abstraction with in-app wallets to enable sponsored (gasless) transactions.
+
+### Does thirdweb Wallets product use smart contract wallets?
+
+Thirdweb wallets can be used as a signer to a smart contract account (account abstraction), but it can also be used as a standalone EOA.
+
+### Is there a way to display the logged-in email address in the Connect component, similar to the wallet address?
+
+Yes, we show the email by default in the details modal after you connect. To display the email anywhere else using React or React Native, [check out the code snippets for all platforms](/connect/in-app-wallet/how-to/interact-with-wallets#get-the-user-email).
+
+### What happens if thirdweb ceases to exist? Will my users be able to access their wallets?
+
+In the event that thirdweb ceases to exist, we have committed to keeping our in-app wallet service running for a period of at least 12 months after the shutdown announcement. During this time users will be able to access their wallet and transfer their assets out, or export their private key which they can then import into a different client.
+
+### How will my users recover their accounts in case they lose access to their auth?
+
+Currently, users will rely on the built-in recovery of their auth method. Refer to the [How to recover your Google Account or Gmail](https://support.google.com/accounts/answer/7682439?hl=en) article as an example for social and email auths.
+
+Users can also link their account to a different auth method (e.g. email, phone, or social). All linked methods will be able to be used to access their accounts, providing an alternate recovery method in the case where one is lost.
+
+# In App Wallet FAQs
+
+### How do users connect to their in-app wallet in a third-party app?
+
+Users can access it by doing a manual connection via wallet connect. They will then have to use the connect button or embed and select manage wallet -> connect an App.
+
+### How is pricing calculated for in-app wallets?
+
+In-app wallets are billed based on "monthly active wallets". An active wallet is defined as a wallet where a user logs in during the billing period. In-app wallets are completely free up to 1,000 monthly active wallets, and $0.02 per wallet after that.
+
+# Ecosystem Wallet FAQs
+
+### What is an Ecosystem Wallet?
+
+An ecosystem wallet is a managed in-app wallet service that allows you to create a branded wallet and login system, manage your partners, and allow any number of partners to spin up in-app wallets. End users that create in-app wallets through your partner applications (either with email, phone number, passkey, or socials) will receive **one account and wallet address** that they can access across the entire ecosystem.
+
+### How do Ecosystem Wallets work?
+
+Ecosystem Wallets are a fully managed and containerized in-app wallet backend service that is white labeled to your application. By giving you access to this backend service, you can power any application with in-app wallets just like thirdweb does for over 70,000 developers.
+
+### What is an Ecosystem Partner?
+
+Ecosystem partners are games or applications that you have permissioned to spin up in-app wallets underneath your brand. They will have access to the same account (funds, assets, etc.) for any end users that 1) use your branded login system or 2) log in with your wallet.
+
+You can manage ecosystem partners in the Permissions tab of your Ecosystem Wallet dashboard.
+
+### Which login providers can display my Ecosystem Wallet?
+
+thirdweb Connect, with WalletConnect and any wagmi- or viem-based login providers coming soon.
+
+### How can Partners integrate my Ecosystem Wallet?
+
+Partners can integrate your Ecosystem Wallet in three different ways:
+
+**Login System**
+
+Partners can install thirdweb SDK and use the Partner ID you created for them to display your branded sign in flow. All login options in this sign in flow will create an in-app wallet.
+
+**Branded Wallet Connector**
+
+Partners can add your wallet as a wallet connector option in their existing sign in flow on any domains they've whitelisted by calling the follow endpoint from their application.
+
+**WalletConnect (Coming Soon)**
+
+Partners using WalletConnect will automatically display your wallet as a WalletConnect option on any domains they've whitelisted.
+
+### What is the difference between Anyone and Allowlist scopes for Ecosystem Wallet?
+
+The **Anyone** scope allows any developer to integrate your ecosystem wallet, even if you have not given them permission. Any developer with thirdweb Connect, for example, would now display your wallet as a login option.
+
+The **Allowlist** scope allows developers that you have explicitly added to your list of Partners to display your wallet as a login option.
+
+You can manage scope in the Permissions tab of your Ecosystem Wallet dashboard.
+
+### How does billing work for Ecosystem Wallets?
+
+As the ecosystem admin, you will be billed $250 monthly for your Ecosystem Wallet. This allows any application or game in your ecosystem generate in-app wallets. Each month, we allow you and your ecosystem partners to generate 30,000 wallets for free. Once you’ve generated 30,000 wallets, you will be charged $0.02 per in-app wallet. At the end of each month, we will provide you with an invoice with a usage breakdown across all partners.
+
+# Security FAQs
+
+### How is the private key managed?
+
+You can learn more about the architecture of how thirdweb wallets are created and stored [here](/connect/wallet/security)
+
+### What happens if thirdweb or my database gets breached?
+
+Using enclave, your customers' assets are safe even if thirdweb or you are compromised. This is because the attacker will only be able to access the encrypted keys, and that is not enough to reconstruct the private key.
+

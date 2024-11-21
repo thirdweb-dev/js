@@ -74,6 +74,7 @@ function usePlaygroundWallets() {
     passkey: true,
     phone: true,
     twitch: false,
+    steam: false,
     facebook: false,
     apple: false,
     github: false,

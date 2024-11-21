@@ -20,30 +20,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Desktop: Story = {
-  args: {
-    wording: "project",
-  },
+  args: {},
 };
 
 export const Mobile: Story = {
-  args: {
-    wording: "project",
-  },
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
-};
-
-export const DesktopAPIKeyWording: Story = {
-  args: {
-    wording: "api-key",
-  },
-};
-
-export const MobileAPIKeyWording: Story = {
-  args: {
-    wording: "api-key",
-  },
+  args: {},
   parameters: {
     viewport: mobileViewport("iphone14"),
   },
@@ -52,9 +33,7 @@ export const MobileAPIKeyWording: Story = {
 const apiKeyStub = createApiKeyStub();
 apiKeyStub.secret = undefined;
 
-function Story(props: {
-  wording: "project" | "api-key";
-}) {
+function Story() {
   const updateMutation = useMutation({
     mutationFn: async (inputs: UpdateKeyInput) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -72,7 +51,6 @@ function Story(props: {
     <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
       <ProjectGeneralSettingsPageUI
         apiKey={apiKeyStub}
-        wording={props.wording}
         updateMutation={updateMutation}
         deleteMutation={deleteMutation}
         paths={{

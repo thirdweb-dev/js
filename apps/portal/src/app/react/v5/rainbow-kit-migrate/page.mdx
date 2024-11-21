@@ -62,7 +62,7 @@ Learn how to migrate to thirdweb's ConnectButton component from [RainbowKit](htt
 	</Step>
 	<Step title="Swap ConnectButton component">
 		Import `createThirdwebClient` and `ConnectButton` from thirdweb and add them to your application. Modify the `ConnectButton` component
-    by adding the [`client`](/typescript/v5/client) prop. 
+    by adding the [`client`](/typescript/v5/client) prop.
 
     ```jsx
     import { ConnectButton } from "thirdweb/react";
@@ -85,10 +85,10 @@ Learn how to migrate to thirdweb's ConnectButton component from [RainbowKit](htt
       );
     };
     ```
-    <Callout variant="info" title="Client ID">Get a free client ID to use in your application from [thirdweb's dashboard](https://thirdweb.com/dashboard/settings/api-keys).</Callout>
+    <Callout variant="info" title="Client ID">Get a free client ID to use in your application by creating a project in [thirdweb's dashboard](https://thirdweb.com/team/~/~/projects).</Callout>
 	</Step>
-  <Step title="Customize"> 
-    To customize your ConnectButton component, view the cheatsheet below or [view the customization documentation](https://portal.thirdweb.com/connect/sign-in/customization). 
+  <Step title="Customize">
+    To customize your ConnectButton component, view the cheatsheet below or [view the customization documentation](https://portal.thirdweb.com/connect/sign-in/customization).
   </Step>
   <Step title="(Optional) Adapters">
     If you are using Wagmi, Viem, or Ethers in your application, use thirdweb adapters to continue using contracts, providers, and wallets from these libraries.
@@ -160,7 +160,7 @@ const App = () => {
 ```jsx
 
 import { ThirdwebProvider } from "thirdweb/react";
-  
+
 const App = () => {
   return (
     <ThirdwebProvider>
@@ -204,8 +204,8 @@ export const YourApp = () => {
 #### RainbowKit
 
 ```jsx
-<RainbowKitProvider 
-  locale="zh-CN" 
+<RainbowKitProvider
+  locale="zh-CN"
   {...etc}>
   {/* Your App */}
 </RainbowKitProvider>
@@ -227,8 +227,8 @@ export const YourApp = () => {
 #### RainbowKit
 
 ```jsx
-<RainbowKitProvider 
-  modalSize="compact" 
+<RainbowKitProvider
+  modalSize="compact"
   {...etc}>
   {/* Your App */}
 </RainbowKitProvider>
@@ -252,8 +252,8 @@ export const YourApp = () => {
 ```jsx
 import { ...etc, darkTheme } from '@rainbow-me/rainbowkit';
 
-<RainbowKitProvider 
-  theme={darkTheme()} 
+<RainbowKitProvider
+  theme={darkTheme()}
   {...etc}>
   {/* Your App */}
 </RainbowKitProvider>

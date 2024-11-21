@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ResultItem } from "app/team/[team_slug]/[project_slug]/engine/(instance)/[engineId]/metrics/components/StatusCodes";
+import type { ResultItem } from "app/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/metrics/components/StatusCodes";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import type { EngineBackendWalletType } from "lib/engine";
 import { useState } from "react";
@@ -116,7 +116,8 @@ type EngineFeature =
   | "KEYPAIR_AUTH"
   | "CONTRACT_SUBSCRIPTIONS"
   | "IP_ALLOWLIST"
-  | "HETEROGENEOUS_WALLET_TYPES";
+  | "HETEROGENEOUS_WALLET_TYPES"
+  | "SMART_BACKEND_WALLETS";
 
 interface EngineSystemHealth {
   status: string;

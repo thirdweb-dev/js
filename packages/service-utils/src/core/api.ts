@@ -20,6 +20,7 @@ export type CoreServiceConfig = {
   serviceApiKey: string;
   serviceAction?: string;
   useWalletAuth?: boolean;
+  includeUsage?: boolean;
 };
 
 type Usage = {
@@ -85,8 +86,8 @@ export async function fetchKeyMetadataFromApi(
   clientId: string,
   config: CoreServiceConfig,
 ): Promise<ApiResponse> {
-  const { apiUrl, serviceScope, serviceApiKey } = config;
-  const url = `${apiUrl}/v1/keys/use?clientId=${clientId}&scope=${serviceScope}&includeUsage=true`;
+  const { apiUrl, serviceScope, serviceApiKey, includeUsage = true } = config;
+  const url = `${apiUrl}/v1/keys/use?clientId=${clientId}&scope=${serviceScope}&includeUsage=${includeUsage}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -111,10 +112,10 @@ export async function fetchAccountFromApi(
   config: CoreServiceConfig,
   useWalletAuth: boolean,
 ): Promise<ApiAccountResponse> {
-  const { apiUrl, serviceApiKey } = config;
+  const { apiUrl, serviceApiKey, includeUsage = true } = config;
   const url = useWalletAuth
-    ? `${apiUrl}/v1/wallet/me?includeUsage=true`
-    : `${apiUrl}/v1/account/me?includeUsage=true`;
+    ? `${apiUrl}/v1/wallet/me?includeUsage=${includeUsage}`
+    : `${apiUrl}/v1/account/me?includeUsage=${includeUsage}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {

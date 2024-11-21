@@ -42,6 +42,7 @@ export function TransactionModal(props: ModalProps) {
         client: props.client,
         walletAddress: account.address,
         walletType: wallet.id,
+        dstChainId: props.tx.chain.id,
         event: "open_pay_transaction_modal",
       });
     },

@@ -1,4 +1,4 @@
-import { PlainTextCodeBlock } from "@/components/ui/code";
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ExternalLinkIcon } from "lucide-react";
 

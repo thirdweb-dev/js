@@ -6,18 +6,20 @@ import { ContractEditModulesPage } from "./ContractEditModulesPage";
 import { ContractEditModulesPageClient } from "./ContractEditModulesPage.client";
 
 export default async function Page(props: {
-  params: {
+  params: Promise<{
     contractAddress: string;
     chain_id: string;
-  };
+  }>;
 }) {
-  const info = await getContractPageParamsInfo(props.params);
+  const params = await props.params;
+  const info = await getContractPageParamsInfo(params);
 
   if (!info) {
     notFound();
   }
 
   const { contract } = info;
+
   if (contract.chain.id === localhost.id) {
     return <ContractEditModulesPageClient contract={contract} />;
   }
@@ -25,7 +27,7 @@ export default async function Page(props: {
   const { isModularCore } = await getContractPageMetadata(contract);
 
   if (!isModularCore) {
-    redirect(`/${props.params.chain_id}/${props.params.contractAddress}`);
+    redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
   return <ContractEditModulesPage contract={contract} />;

@@ -2,6 +2,7 @@
 
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { PaginationButtons } from "@/components/pagination-buttons";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -9,8 +10,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useEmbeddedWallets } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
-import { Spinner } from "@chakra-ui/react";
+import {
+  useAllEmbeddedWallets,
+  useEmbeddedWallets,
+} from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
@@ -104,22 +107,28 @@ export const InAppWalletUsersPageContent = (props: {
     users: [],
     totalPages: 1,
   };
+  const { mutateAsync: getAllEmbeddedWallets, isPending } =
+    useAllEmbeddedWallets();
 
-  // TODO: Make the download CSV grab all data instead of merely what's on the current page
-  const downloadCSV = useCallback(() => {
-    if (wallets.length === 0) {
+  const downloadCSV = useCallback(async () => {
+    if (wallets.length === 0 || !getAllEmbeddedWallets) {
       return;
     }
+    const usersWallets = await getAllEmbeddedWallets({
+      clientId: props.clientId,
+      totalPages,
+    });
     const csv = Papa.unparse(
-      wallets.map((row) => ({
-        user_identifier: getUserIdentifier(row.linkedAccounts),
-        address: row.wallets[0]?.address || "",
-        created: format(
-          new Date(row.wallets[0]?.createdAt ?? ""),
-          "MMM dd, yyyy",
-        ),
-        login_methods: row.linkedAccounts.map((acc) => acc.type).join(", "),
-      })),
+      usersWallets.map((row) => {
+        return {
+          user_identifier: getUserIdentifier(row.linkedAccounts),
+          address: row.wallets[0]?.address || "Uninitialized",
+          created: row.wallets[0]?.createdAt
+            ? format(new Date(row.wallets[0].createdAt), "MMM dd, yyyy")
+            : "Wallet not created yet",
+          login_methods: row.linkedAccounts.map((acc) => acc.type).join(", "),
+        };
+      }),
     );
     const csvUrl = URL.createObjectURL(
       new Blob([csv], { type: "text/csv;charset=utf-8;" }),
@@ -128,7 +137,7 @@ export const InAppWalletUsersPageContent = (props: {
     tempLink.href = csvUrl;
     tempLink.setAttribute("download", "download.csv");
     tempLink.click();
-  }, [wallets]);
+  }, [wallets, props.clientId, totalPages, getAllEmbeddedWallets]);
 
   return (
     <div>
@@ -136,11 +145,13 @@ export const InAppWalletUsersPageContent = (props: {
         {/* Top section */}
         <div className="flex items-center justify-between">
           <Button
-            disabled={wallets.length === 0}
+            disabled={wallets.length === 0 || isPending}
             variant="outline"
             onClick={downloadCSV}
             size="sm"
+            className="gap-2"
           >
+            {isPending && <Spinner className="size-4" />}
             Download as .csv
           </Button>
 

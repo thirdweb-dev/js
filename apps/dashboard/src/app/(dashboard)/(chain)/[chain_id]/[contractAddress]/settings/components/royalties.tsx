@@ -10,8 +10,7 @@ import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import {
   getDefaultRoyaltyInfo,
   setDefaultRoyaltyInfo,
@@ -46,7 +45,7 @@ const CommonRoyaltySchema = z.object({
    * @internal
    * @remarks used by OpenSea "seller_fee_basis_points"
    */
-  seller_fee_basis_points: BasisPointsSchema.default(0),
+  seller_fee_basis_points: BasisPointsSchema,
 
   /**
    * The address of the royalty recipient. All royalties will be sent
@@ -54,7 +53,7 @@ const CommonRoyaltySchema = z.object({
    * @internal
    * @remarks used by OpenSea "fee_recipient"
    */
-  fee_recipient: AddressOrEnsSchema.default(ZERO_ADDRESS),
+  fee_recipient: AddressOrEnsSchema,
 });
 
 export const SettingsRoyalties = ({
@@ -97,14 +96,6 @@ export const SettingsRoyalties = ({
             action: "set-royalty",
             label: "attempt",
           });
-          // In the v4 hook we defaulted recipient to address_zero and bps to `0`
-          // but let's actually throw an error here for better transparency
-          if (!d.seller_fee_basis_points) {
-            return toast.error("Please enter valid basis points.");
-          }
-          if (!d.fee_recipient) {
-            return toast.error("Please enter a valid royalty fee recipient.");
-          }
           const transaction = setDefaultRoyaltyInfo({
             contract,
             royaltyRecipient: d.fee_recipient,

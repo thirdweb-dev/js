@@ -1,6 +1,7 @@
 "use client";
 
 import type { Team } from "@/api/team";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { upload } from "thirdweb/storage";
@@ -12,10 +13,12 @@ export function TeamGeneralSettingsPage(props: {
   authToken: string;
 }) {
   const router = useDashboardRouter();
+  const client = useThirdwebClient();
 
   return (
     <TeamGeneralSettingsPageUI
       team={props.team}
+      client={client}
       updateTeamField={async (teamValue) => {
         await updateTeam({
           teamId: props.team.id,
@@ -46,6 +49,8 @@ export function TeamGeneralSettingsPage(props: {
             image: uri,
           },
         });
+
+        router.refresh();
       }}
     />
   );

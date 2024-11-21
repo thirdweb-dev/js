@@ -10,6 +10,7 @@ import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { CheckIcon, CirclePlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { SearchInput } from "./SearchInput";
 import { getValidTeamPlan } from "./getValidTeamPlan";
 
@@ -19,6 +20,7 @@ export function TeamSelectionUI(props: {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   upgradeTeamLink: string | undefined;
   account: Pick<Account, "email" | "id"> | undefined;
+  client: ThirdwebClient;
 }) {
   const { setHoveredTeam, currentTeam, teamsAndProjects } = props;
   const teamPlan = currentTeam ? getValidTeamPlan(currentTeam) : undefined;
@@ -55,6 +57,7 @@ export function TeamSelectionUI(props: {
                 src={""}
                 className="size-4"
                 id={props.account?.id}
+                client={props.client}
               />
               My Account
             </Link>
@@ -90,6 +93,7 @@ export function TeamSelectionUI(props: {
                           src={team.image || ""}
                           className="size-4"
                           id={team.id}
+                          client={props.client}
                         />
 
                         <span className="truncate"> {team.name} </span>
@@ -119,7 +123,6 @@ export function TeamSelectionUI(props: {
           </ul>
         </div>
       </ScrollShadow>
-
       {/* Bottom */}
       {teamPlan && teamPlan !== "pro" && props.upgradeTeamLink && (
         <div className="border-border border-t p-2">

@@ -39,7 +39,7 @@ export function authorizeClient(
       return {
         authorized: false,
         errorMessage:
-          "Incorrect key provided. You can view your active API keys at https://thirdweb.com/dashboard/settings",
+          "Incorrect key provided. You can view your active API keys at https://thirdweb.com/create-api-key",
         errorCode: "SECRET_INVALID",
         status: 401,
       };

@@ -1,9 +1,5 @@
-import {
-  type AccountPlan,
-  accountPlan,
-  accountStatus,
-  useAccount,
-} from "@3rdweb-sdk/react/hooks/useApi";
+import { Badge } from "@/components/ui/badge";
+import { type Account, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Alert,
   AlertDescription,
@@ -11,15 +7,15 @@ import {
   Box,
   Flex,
   SimpleGrid,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import { useEffect, useMemo, useState } from "react";
-import { Badge, Button, Card, Heading, Text } from "tw-components";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Button, Card, Heading, Text } from "tw-components";
+import type { Team } from "../../@/api/team";
+import { getValidTeamPlan } from "../../app/team/components/TeamHeader/getValidTeamPlan";
 import { ApplyForOpCreditsForm } from "./ApplyForOpCreditsForm";
-import { LazyOnboardingBilling } from "./LazyOnboardingBilling";
-import { OnboardingModal } from "./Modal";
 import { PlanCard } from "./PlanCard";
 
 export type CreditsRecord = {
@@ -32,14 +28,20 @@ export type CreditsRecord = {
   ctaHref?: string;
 };
 
-export const PlanToCreditsRecord: Record<AccountPlan, CreditsRecord> = {
-  [accountPlan.free]: {
+export const PlanToCreditsRecord: Record<Team["billingPlan"], CreditsRecord> = {
+  free: {
+    title: "Free",
+    upTo: true,
+    credits: "$250",
+    color: "#3b394b",
+  },
+  starter: {
     title: "Starter",
     upTo: true,
     credits: "$250",
     color: "#3b394b",
   },
-  [accountPlan.growth]: {
+  growth: {
     title: "Growth",
     upTo: true,
     credits: "$2,500",
@@ -51,9 +53,9 @@ export const PlanToCreditsRecord: Record<AccountPlan, CreditsRecord> = {
       "Custom Branding",
     ],
     ctaTitle: "Upgrade for $99",
-    ctaHref: "/dashboard/settings/billing",
+    ctaHref: "/team/~/~/settings/billing",
   },
-  [accountPlan.pro]: {
+  pro: {
     title: "Pro",
     credits: "$3,000+",
     color: "#282B6F",
@@ -65,22 +67,23 @@ export const PlanToCreditsRecord: Record<AccountPlan, CreditsRecord> = {
     ctaTitle: "Contact Us",
     ctaHref: "https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro",
   },
-  [accountPlan.enterprise]: {
-    title: "Enterprise",
-    credits: "Custom",
-    color: "#000000",
-  },
 };
 
-export const ApplyForOpCreditsModal: React.FC = () => {
-  const paymentMethodModalState = useDisclosure();
+export function ApplyForOpCredits(props: {
+  team: Team;
+  account: Account;
+}) {
+  const { account, team } = props;
+  const validTeamPlan = getValidTeamPlan(team);
+  const hasValidPaymentMethod = validTeamPlan !== "free";
+
   const [page, setPage] = useState<"eligible" | "form">("eligible");
-  const [hasAddedPaymentMethod, setHasAddedPaymentMethod] = useState(false);
-  const account = useAccount();
+
   const [hasAppliedForOpGrant] = useLocalStorage(
-    `appliedForOpGrant-${account?.data?.id || ""}`,
+    `appliedForOpGrant-${team.id}`,
     false,
   );
+
   const trackEvent = useTrack();
 
   // TODO: find better way to track impressions
@@ -93,18 +96,9 @@ export const ApplyForOpCreditsModal: React.FC = () => {
     });
   }, [trackEvent]);
 
-  const hasValidPayment = useMemo(() => {
-    return (
-      !!(account?.data?.status === accountStatus.validPayment) ||
-      hasAddedPaymentMethod
-    );
-  }, [account?.data?.status, hasAddedPaymentMethod]);
-
-  const isFreePlan = account.data?.plan === accountPlan.free;
-  const isProPlan = account.data?.plan === accountPlan.pro;
-
-  const creditsRecord =
-    PlanToCreditsRecord[account.data?.plan || accountPlan.free];
+  const isStarterPlan = validTeamPlan === "starter";
+  const isProPlan = validTeamPlan === "pro";
+  const creditsRecord = PlanToCreditsRecord[validTeamPlan];
 
   return (
     <>
@@ -114,13 +108,10 @@ export const ApplyForOpCreditsModal: React.FC = () => {
             <Card position="relative">
               <Box position="absolute">
                 <Badge
-                  borderRadius="full"
-                  size="label.sm"
-                  px={3}
-                  bgColor={creditsRecord.color}
-                  color="#fff"
-                  textTransform="capitalize"
-                  fontWeight="bold"
+                  className="rounded-full px-3 font-bold text-white capitalize"
+                  style={{
+                    backgroundColor: creditsRecord.color,
+                  }}
                 >
                   {creditsRecord.title}
                 </Badge>
@@ -138,7 +129,7 @@ export const ApplyForOpCreditsModal: React.FC = () => {
               </Flex>
             </Card>
             <Flex gap={4} flexDir="column">
-              {!hasValidPayment && (
+              {!hasValidPaymentMethod && (
                 <Alert
                   status="info"
                   borderRadius="lg"
@@ -154,21 +145,12 @@ export const ApplyForOpCreditsModal: React.FC = () => {
                       You need to add a payment method to be able to claim
                       credits. This is to prevent abuse, you will not be
                       charged.{" "}
-                      <Text
-                        as="span"
-                        onClick={() => {
-                          paymentMethodModalState.onOpen();
-                          trackEvent({
-                            category: "op-sponsorship",
-                            action: "add-payment-method",
-                            label: "open",
-                          });
-                        }}
-                        color="blue.500"
-                        cursor="pointer"
+                      <Link
+                        className="text-link-foreground hover:text-foreground"
+                        href={`/team/${props.team.slug}/~/settings/billing`}
                       >
-                        Add a payment method
-                      </Text>
+                        Upgrade to Starter plan to get started
+                      </Link>
                       .
                     </AlertDescription>
                   </Flex>
@@ -178,7 +160,7 @@ export const ApplyForOpCreditsModal: React.FC = () => {
                 colorScheme="primary"
                 onClick={() => setPage("form")}
                 w="full"
-                isDisabled={!hasValidPayment || hasAppliedForOpGrant}
+                isDisabled={!hasValidPaymentMethod || hasAppliedForOpGrant}
               >
                 {hasAppliedForOpGrant ? "Already applied" : "Apply Now"}
               </Button>
@@ -189,10 +171,10 @@ export const ApplyForOpCreditsModal: React.FC = () => {
                   Or upgrade and get access to more credits:
                 </Text>
                 <SimpleGrid
-                  columns={{ base: 1, md: isFreePlan ? 2 : 1 }}
+                  columns={{ base: 1, md: isStarterPlan ? 2 : 1 }}
                   gap={4}
                 >
-                  {isFreePlan && (
+                  {isStarterPlan && (
                     <PlanCard
                       creditsRecord={PlanToCreditsRecord[accountPlan.growth]}
                     />
@@ -214,30 +196,10 @@ export const ApplyForOpCreditsModal: React.FC = () => {
           onClose={() => {
             setPage("eligible");
           }}
+          plan={validTeamPlan}
+          account={account}
         />
       )}
-      {/* // Add Payment Method Modal */}
-      <OnboardingModal isOpen={paymentMethodModalState.isOpen}>
-        <LazyOnboardingBilling
-          onSave={() => {
-            setHasAddedPaymentMethod(true);
-            paymentMethodModalState.onClose();
-            trackEvent({
-              category: "op-sponsorship",
-              action: "add-payment-method",
-              label: "success",
-            });
-          }}
-          onCancel={() => {
-            paymentMethodModalState.onClose();
-            trackEvent({
-              category: "op-sponsorship",
-              action: "add-payment-method",
-              label: "cancel",
-            });
-          }}
-        />
-      </OnboardingModal>
     </>
   );
-};
+}

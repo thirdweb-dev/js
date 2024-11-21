@@ -9,7 +9,7 @@ export type UnpinOptions = {
 
 /**
  * Unpins a file from IPFS.
- * @note For security purposes, this method requires a secret key to be set in the ThirdwebClient instance.
+ *  For security purposes, this method requires a secret key to be set in the ThirdwebClient instance.
  * @param options - The options for unpinning the file.
  * @param options.client - The Thirdweb client instance.
  * @param options.cid - The content identifier (CID) of the file to unpin.

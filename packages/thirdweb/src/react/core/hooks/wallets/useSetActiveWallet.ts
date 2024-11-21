@@ -9,10 +9,10 @@ import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
  * ```jsx
  * import { useSetActiveWallet } from "thirdweb/react";
  *
- * const setActiveAccount = useSetActiveWallet();
+ * const setActiveWallet = useSetActiveWallet();
  *
  * // later in your code
- * await setActiveAccount(account);
+ * await setActiveWallet(wallet);
  * ```
  * @walletConnection
  */

@@ -1,0 +1,8 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "next": true,
+  "ignore": ["src/components/ui/**"],
+  "ignoreBinaries": ["biome"],
+  "ignoreDependencies": ["thirdweb"],
+  "project": ["src/**"]
+}

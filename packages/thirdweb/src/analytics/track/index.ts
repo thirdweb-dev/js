@@ -1,9 +1,8 @@
 import type { ThirdwebClient } from "../../client/client.js";
+import { getThirdwebBaseUrl } from "../../utils/domains.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { stringify } from "../../utils/json.js";
 import type { Ecosystem } from "../../wallets/in-app/core/wallet/types.js";
-
-const ANALYTICS_ENDPOINT = "https://c.thirdweb.com/event";
 
 /**
  * @internal
@@ -23,7 +22,7 @@ export async function track({
     ...data,
   };
 
-  return fetch(ANALYTICS_ENDPOINT, {
+  return fetch(`${getThirdwebBaseUrl("analytics")}/event`, {
     method: "POST",
     body: stringify(event),
   }).catch(() => {});

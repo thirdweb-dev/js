@@ -86,6 +86,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   return (
     <Popover
       returnFocusOnClose={false}
+      // @ts-expect-error - this works fine
       initialFocusRef={initialFocusRef}
       isLazy
       isOpen={walletRequiresExternalConfirmation && isPending}
@@ -180,7 +181,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
 
 interface ExternalApprovalNoticeProps {
   walletId?: WalletId;
-  initialFocusRef: React.RefObject<HTMLButtonElement>;
+  initialFocusRef: React.RefObject<HTMLButtonElement | null>;
 }
 
 const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({

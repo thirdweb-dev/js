@@ -1,57 +1,33 @@
-import { Image, Skeleton } from "@chakra-ui/react";
-import { ChakraNextImage, type ChakraNextImageProps } from "components/Image";
+/* eslint-disable @next/next/no-img-element */
 import { replaceIpfsUrl } from "lib/sdk";
 import type { StaticImageData } from "next/image";
-import { useFetchDeployMetadata } from "../hooks";
-import type { ContractId } from "../types";
+import Image from "next/image";
+import type { FetchDeployMetadataResult } from "thirdweb/contract";
+import generalContractIcon from "../../../../public/assets/tw-icons/general.png";
 
-interface ContractIdImageProps
-  extends Omit<ChakraNextImageProps, "src" | "alt" | "boxSize"> {
-  contractId: ContractId;
-  boxSize?: number;
-}
+type ContractIdImageProps = {
+  deployedMetadataResult: FetchDeployMetadataResult;
+};
 
 export const ContractIdImage: React.FC<ContractIdImageProps> = ({
-  contractId,
-  boxSize = 8,
-  ...imgProps
+  deployedMetadataResult,
 }) => {
-  const deployMetadataResultQuery = useFetchDeployMetadata(contractId);
-
-  const logo = deployMetadataResultQuery.data?.logo;
+  const logo = deployedMetadataResult.logo;
 
   const img =
-    deployMetadataResultQuery.data?.image !== "custom"
-      ? deployMetadataResultQuery.data?.image ||
-        require("../../../../public/assets/tw-icons/general.png")
-      : require("../../../../public/assets/tw-icons/general.png");
+    deployedMetadataResult.image !== "custom"
+      ? deployedMetadataResult.image || generalContractIcon
+      : generalContractIcon;
 
-  const isStaticImage = img && typeof img !== "string";
+  if (logo) {
+    return (
+      <img alt="" className="size-8 rounded-full" src={replaceIpfsUrl(logo)} />
+    );
+  }
 
-  return (
-    <Skeleton isLoaded={deployMetadataResultQuery.isSuccess}>
-      {logo ? (
-        <Image
-          alt=""
-          boxSize={boxSize}
-          src={replaceIpfsUrl(logo)}
-          borderRadius="full"
-        />
-      ) : isStaticImage ? (
-        <ChakraNextImage
-          {...imgProps}
-          boxSize={boxSize}
-          src={img as StaticImageData}
-          alt={deployMetadataResultQuery.data?.name || "Contract Image"}
-        />
-      ) : (
-        <Image
-          {...imgProps}
-          boxSize={boxSize}
-          src={img as string}
-          alt={deployMetadataResultQuery.data?.name || "Contract Image"}
-        />
-      )}
-    </Skeleton>
-  );
+  if (typeof img !== "string") {
+    return <Image className="size-8" src={img as StaticImageData} alt={""} />;
+  }
+
+  return <img className="size-8" src={img} alt={""} />;
 };

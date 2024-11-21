@@ -3,18 +3,68 @@ import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
+import { scroll } from "../chains/chain-definitions/scroll.js";
 import { getRpcClient, prepareTransaction } from "../exports/thirdweb.js";
 import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
 import { avalanche } from "./chain-definitions/avalanche.js";
 import { ethereum } from "./chain-definitions/ethereum.js";
+import type { LegacyChain } from "./types.js";
+
 import {
+  CUSTOM_CHAIN_MAP,
+  cacheChains,
+  convertLegacyChain,
   defineChain,
   getCachedChain,
   getChainDecimals,
   getChainNativeCurrencyName,
   getChainSymbol,
 } from "./utils.js";
+
+const legacyChain: LegacyChain = {
+  chain: "ETH",
+  chainId: 1,
+  ens: {
+    registry: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+  },
+  explorers: [
+    {
+      name: "etherscan",
+      url: "https://etherscan.io",
+      standard: "EIP3091",
+    },
+  ],
+  faucets: [],
+  features: [
+    {
+      name: "EIP155",
+    },
+    {
+      name: "EIP1559",
+    },
+  ],
+  icon: {
+    url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+    width: 512,
+    height: 512,
+    format: "png",
+  },
+  infoURL: "https://ethereum.org",
+  name: "Ethereum Mainnet",
+  nativeCurrency: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+  },
+  networkId: 1,
+  redFlags: [],
+  rpc: ["https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
+  shortName: "eth",
+  slip44: 60,
+  slug: "ethereum",
+  testnet: false,
+};
 
 describe("defineChain", () => {
   it("should convert viem chain to thirdweb chain", () => {
@@ -113,5 +163,78 @@ describe("defineChain", () => {
     expect(avalancheResult).toBe("Avalanche");
     const ethResult = await getChainNativeCurrencyName(ethereum);
     expect(ethResult).toBe("Ether");
+  });
+
+  it("getChainSymbol should work for chain object without symbol", async () => {
+    const chain = defineChain(1);
+    expect(await getChainSymbol(chain)).toBe("ETH");
+  });
+
+  it("getChainDecimals should work for chain object without decimals", async () => {
+    const chain = defineChain(1);
+    expect(await getChainDecimals(chain)).toBe(18);
+  });
+
+  it("getChainDecimals should return `18` if fails to resolve chain decimals", async () => {
+    const nonExistentChain = defineChain(-1);
+    expect(await getChainDecimals(nonExistentChain)).toBe(18);
+  });
+
+  it("getChainNativeCurrencyName should work for chain object without nativeCurrency", async () => {
+    const chain = defineChain(1);
+    expect(await getChainNativeCurrencyName(chain)).toBe("Ether");
+  });
+
+  it("should convert LegacyChain", () => {
+    expect(convertLegacyChain(legacyChain)).toStrictEqual({
+      id: 1,
+      name: "Ethereum Mainnet",
+      rpc: "https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+      blockExplorers: [
+        {
+          name: "etherscan",
+          url: "https://etherscan.io",
+          apiUrl: "https://etherscan.io",
+        },
+      ],
+      nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+      faucets: [],
+      icon: {
+        url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+        width: 512,
+        height: 512,
+        format: "png",
+      },
+      testnet: undefined,
+    });
+  });
+
+  it("`defineChain` should work with Legacy chain", () => {
+    expect(defineChain(legacyChain)).toStrictEqual({
+      id: 1,
+      name: "Ethereum Mainnet",
+      rpc: "https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+      blockExplorers: [
+        {
+          name: "etherscan",
+          url: "https://etherscan.io",
+          apiUrl: "https://etherscan.io",
+        },
+      ],
+      nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+      faucets: [],
+      icon: {
+        url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+        width: 512,
+        height: 512,
+        format: "png",
+      },
+      testnet: undefined,
+    });
+  });
+
+  it("should cache chains properly", () => {
+    cacheChains([scroll]);
+    expect(CUSTOM_CHAIN_MAP.get(scroll.id)).toStrictEqual(scroll);
   });
 });

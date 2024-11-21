@@ -1,0 +1,84 @@
+import { createMetadata, DocImage, Steps, Step, Callout, ContractDeployCard } from "@doc";
+import tokenStep1 from './assets/token_step1.png'
+import tokenStep2 from './assets/token_step2.png'
+import tokenStep3 from './assets/token_step3.png'
+import tokenTransferable from '../assets/erc20_transferable.png'
+
+
+# Deploy a modular Token Contract
+
+The modular Token contract creates digital currencies and is compliant with the ERC-20 standard. This contract defines a common set of 
+rules for tokens including how they can be transferred, how transactions are approved, and how data about token balances is accessed.
+
+### Token vs Token Drop
+
+The Token contract does not allow users to claim tokens under the criteria of claim conditions. If you would prefer 
+to set limits such as when and how your users can claim tokens defined through allowlists, release dates, and claim limits, 
+please refer to the [Token Drop contract](https://thirdweb.com/thirdweb.eth/ERC20CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzIwIn0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzIwIn0%3D&displayName=Modular+Token+Drop).
+
+
+### Use Cases
+
+- Sell NFTs on a marketplace in a custom token
+- Create custom cryptocurrencies used as a digital currency, for payments, trading, stable-coins, ICOs, and more
+- Reward users with tokens for specific actions completed in games or other applications
+- Grant governance rights by using tokens to vote on protocol upgrades, decisions, allocations of treasury resources
+
+### Default Installed Modules
+
+- Transferable
+- Mintable
+
+### Deploy modular Token
+Learn how to deploy a modular Token contract through the dashboard. 
+
+<Steps>
+
+
+<Step title="Locate Contract">
+
+Navigate to Explore, locate the [Modular Token contract](https://thirdweb.com/thirdweb.eth/ERC20CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDMjAifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzIwIn0%3D&displayName=Modular+Token), and select the Deploy Now button.
+
+<DocImage src={tokenStep1} alt="Screenshot of Token Deployment screen" />
+
+</Step>
+
+<Step title="Configure Contract Metadata">
+Fill in the Contract Metadata including Name, Symbol, Description, and Image. 
+
+Contract Metadata serves as your unique identifier.
+
+<DocImage src={tokenStep2} alt="Screenshot of Token configure metadata" />
+
+
+</Step>
+
+<Step title="Select Chain">
+Select the preferred chain you want to deploy on and select Deploy Now.
+
+<DocImage src={tokenStep3} alt="Screenshot of Token select chain screen" />
+
+<Callout variant="info" title="Any EVM Compatible">
+	The Token contract is deployable on any EVM compatible network. [View all available networks.](https://thirdweb.com/chainlist) 
+</Callout>
+If you are signed in with an EOA wallet, you will be prompted to sign the transaction. After that your contract is deployed and you can begin configuring the modules. 
+</Step>
+
+</Steps>
+
+### Modular Contract
+
+This contract is created using the modular contract framework. Modules on this contract are upgradeable. [Learn more about Modular Contracts.](https://portal.thirdweb.com/contracts/modular-contracts/overview)
+
+### Configure Modules
+
+To configure the modules, navigate to the Modules view:
+
+- Configure the Transferable Module to restrict transfers, if desired.
+
+<DocImage src={tokenTransferable} alt="Screenshot of ERC20 Transferable module"/>
+
+
+<Callout variant='info' title="Install Modules">
+	To install additional modules on this contract, navigate to the Modules view after deploying your contract. 
+</Callout>

@@ -5,13 +5,13 @@ import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { useMutation } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
 import { useState } from "react";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 
 type UpdateTeamField = (team: Partial<Team>) => Promise<void>;
 
@@ -19,6 +19,7 @@ export function TeamGeneralSettingsPageUI(props: {
   team: Team;
   updateTeamImage: (file: File | undefined) => Promise<void>;
   updateTeamField: UpdateTeamField;
+  client: ThirdwebClient;
 }) {
   const hasPermissionToDelete = false; // TODO
   return (
@@ -31,10 +32,10 @@ export function TeamGeneralSettingsPageUI(props: {
         team={props.team}
         updateTeamField={props.updateTeamField}
       />
-      {/* THIS IS NOT WORKING - CAN"T UPDATE IMAGE */}
       <TeamAvatarFormControl
         updateTeamImage={props.updateTeamImage}
         avatar={props.team.image}
+        client={props.client}
       />
       <TeamIdCard team={props.team} />
       <LeaveTeamCard enabled={false} teamName={props.team.name} />
@@ -150,10 +151,10 @@ function TeamSlugFormControl(props: {
 function TeamAvatarFormControl(props: {
   updateTeamImage: (file: File | undefined) => Promise<void>;
   avatar: string | undefined;
+  client: ThirdwebClient;
 }) {
-  const client = useThirdwebClient();
   const teamAvatarUrl = resolveSchemeWithErrorHandler({
-    client: client,
+    client: props.client,
     uri: props.avatar,
   });
 

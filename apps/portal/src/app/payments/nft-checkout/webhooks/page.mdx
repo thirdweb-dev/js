@@ -143,7 +143,7 @@ Do not provide a `localhost` URL to test your local server. We recommend testing
 
 To ensure the request came from thirdweb, each webhook request signs the payload and provides this signature in the `x-thirdweb-signature` header.
 
-To verify this signature, create a **SHA-256 HMAC hash** with your **thirdweb payments secret key** that can be found in the thirdweb dashboard [payments settings](https://thirdweb.com/dashboard/payments/settings) and the **body payload as the message** (as a JSON-encoded string).
+To verify this signature, create a **SHA-256 HMAC hash** with your **thirdweb payments secret key** that can be found in your Team > Project > Connect > Pay > Settings in [dashboard](https://thirdweb.com/team) and the **body payload as the message** (as a JSON-encoded string).
 
 ### Example implementation
 

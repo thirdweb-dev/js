@@ -37,6 +37,7 @@ import {
   GITHUB_ICON,
   GOOGLE_ICON,
   LINE_ICON,
+  STEAM_ICON,
   TELEGRAM_ICON,
   TWITCH_ICON,
   X_ICON,
@@ -65,6 +66,7 @@ const socialIcons = {
   telegram: TELEGRAM_ICON,
   github: GITHUB_ICON,
   twitch: TWITCH_ICON,
+  steam: STEAM_ICON,
 };
 
 type InAppWalletFormUIProps = {

@@ -6,9 +6,10 @@ import {
 } from "../../../utils/any-evm/zksync/constants.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
+import { randomBytesHex } from "../../../utils/random.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
 import type { ThirdwebContract } from "../../contract.js";
-import { zkDeployContract } from "./zkDeployContract.js";
+import { zkDeployContractDeterministic } from "./zkDeployDeterministic.js";
 
 /**
  * @internal
@@ -38,7 +39,7 @@ export async function zkDeployProxy(
     );
   }
   // deploy tw proxy of the implementation
-  const proxyAddress = await zkDeployContract({
+  const proxyAddress = await zkDeployContractDeterministic({
     client: options.client,
     chain: options.chain,
     account: options.account,
@@ -48,7 +49,7 @@ export async function zkDeployProxy(
       _logic: implementationAddress,
       _data: await encode(options.initializeTransaction),
     },
-    salt: options.salt,
+    salt: options.salt || randomBytesHex(32),
   });
 
   // return address of proxy

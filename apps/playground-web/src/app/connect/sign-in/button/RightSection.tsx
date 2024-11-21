@@ -41,7 +41,11 @@ export function RightSection(props: {
   // fake login for playground
   const playgroundAuth: ConnectButtonProps["auth"] = {
     async doLogin() {
-      localStorage.setItem("playground-loggedin", "true");
+      try {
+        localStorage.setItem("playground-loggedin", "true");
+      } catch {
+        // ignore
+      }
     },
     async doLogout() {
       localStorage.removeItem("playground-loggedin");
@@ -59,7 +63,11 @@ export function RightSection(props: {
       };
     },
     async isLoggedIn() {
-      return !!localStorage.getItem("playground-loggedin");
+      try {
+        return !!localStorage.getItem("playground-loggedin");
+      } catch {
+        return false;
+      }
     },
   };
 

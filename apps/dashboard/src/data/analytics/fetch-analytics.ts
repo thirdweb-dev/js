@@ -1,28 +1,31 @@
 import "server-only";
 
-export async function fetchAnalytics(input: string | URL, init?: RequestInit) {
+export async function fetchAnalytics(
+  input: string | URL,
+  init?: RequestInit,
+): Promise<Response> {
   const [pathname, searchParams] = input.toString().split("?");
   if (!pathname) {
     throw new Error("Invalid input, no pathname provided");
   }
 
   // create a new URL object for the analytics server
-  const API_SERVER_URL = new URL(
+  const ANALYTICS_SERVICE_URL = new URL(
     process.env.ANALYTICS_SERVICE_URL || "https://analytics.thirdweb.com",
   );
-  API_SERVER_URL.pathname = pathname;
+  ANALYTICS_SERVICE_URL.pathname = pathname;
   for (const param of searchParams?.split("&") || []) {
     const [key, value] = param.split("=");
     if (!key || !value) {
-      return;
+      throw new Error("Invalid input, no key or value provided");
     }
-    API_SERVER_URL.searchParams.append(
+    ANALYTICS_SERVICE_URL.searchParams.append(
       decodeURIComponent(key),
       decodeURIComponent(value),
     );
   }
 
-  return await fetch(API_SERVER_URL, {
+  return fetch(ANALYTICS_SERVICE_URL, {
     ...init,
     headers: {
       "content-type": "application/json",

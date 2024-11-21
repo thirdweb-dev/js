@@ -3,7 +3,7 @@ import { BadgeContainer, mobileViewport } from "../../../stories/utils";
 import { SettingsCard } from "./SettingsCard";
 
 const meta = {
-  title: "blocks/SettingsCard",
+  title: "Blocks/Cards/SettingsCard",
   component: Story,
   parameters: {
     nextjs: {

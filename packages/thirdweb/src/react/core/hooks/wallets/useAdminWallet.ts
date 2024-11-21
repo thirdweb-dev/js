@@ -5,6 +5,7 @@ import { useConnectedWallets } from "./useConnectedWallets.js";
  * Get the admin wallet for the active wallet
  * Useful for smart wallets to get the underlying personal account
  * @returns The admin wallet for the active wallet, or the active wallet if it doesn't have an admin account
+ * @walletConnection
  */
 export function useAdminWallet() {
   const activeWallet = useActiveWallet();

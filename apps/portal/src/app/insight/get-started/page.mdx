@@ -1,0 +1,135 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Getting started with Insight | thirdweb Infrastructure",
+	description:
+		"Learn how to use thirdweb Insight to query blockchain events",
+  image: {
+    title: "Insight",
+    icon: "insight",
+  },
+});
+
+# Get Started
+
+In this guide we will learn how to use the events blueprint in insight.
+
+## Pre-requisites
+
+- [Create a project](https://thirdweb.com/team) and navigate to the project settings to get a clientId
+- Use insight API with the base URL below
+
+```
+https://<chain-id>.insight.thirdweb.com
+```
+
+## Basic Usage
+```typescript
+const getUsdtTransfers = async () => {
+ try {
+   const response = await fetch('https://1.insight.thirdweb.com/v1/<client-id>/events/0xdAC17F958D2ee523a2206206994597C13D831ec7/Transfer(address,address,uint256)?limit=5');
+   const transfersInfo = await response.json();
+   return transfersInfo
+ } catch (error) {
+   console.error('Error:', error);
+ }
+};
+```
+
+Once you execute the query above you will receive a result similar to this:
+
+```json
+{
+    "meta": {
+        "chain_id": 1,
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "signature": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+        "page": 0,
+        "limit": 5,
+        "total_items": 5,
+        "total_pages": 0
+    },
+    "data": [
+        {
+            "chain_id": 1,
+            "block_number": 14705663,
+            "block_hash": "0x8f7014ff29e3ea83ee03354bd968741d01b92d4c3ddf02bfa5121465b8240736",
+            "block_timestamp": 1651594686,
+            "transaction_hash": "0xf5009000b57b761900010bf7f365c12ce34438ac3afdef9778b46055c26353b3",
+            "transaction_index": 193,
+            "log_index": 278,
+            "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "data": "0x0000000000000000000000000000000000000000000000000000000005f5e100",
+            "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x000000000000000000000000b8418cdb539069e075b4c6c6675114879ffd441b",
+                "0x000000000000000000000000515ea78a0ff34aef46a5e323d759935e05de4827"
+            ]
+        },
+        {
+            "chain_id": 1,
+            "block_number": 14705664,
+            "block_hash": "0x916d67589f2bc37600faf055309fd9f654d0c0030df35d31c04e22fef8d24ff2",
+            "block_timestamp": 1651594701,
+            "transaction_hash": "0x0999f86751fe5b8f2bc5446e38abf3f0e01ee1c7ff5ce6288abbea506ac3cebf",
+            "transaction_index": 41,
+            "log_index": 120,
+            "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "data": "0x0000000000000000000000000000000000000000000000000000000014dc9380",
+            "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000005041ed759dd4afc3a72b8192c143f72f4724081a",
+                "0x0000000000000000000000000f69fce36dc680512d836526fc1abb9cd6bdcdd4"
+            ]
+        },
+        {
+            "chain_id": 1,
+            "block_number": 14705664,
+            "block_hash": "0x916d67589f2bc37600faf055309fd9f654d0c0030df35d31c04e22fef8d24ff2",
+            "block_timestamp": 1651594701,
+            "transaction_hash": "0x0f25b357155dca3186700e69a7586ee0153f1d7d75304a158aab9be210b31a56",
+            "transaction_index": 72,
+            "log_index": 133,
+            "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "data": "0x0000000000000000000000000000000000000000000000000000000643e6c140",
+            "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000007b29bee9cb744122edcd7e8223efcdf8d8d8e0a4",
+                "0x0000000000000000000000001724aabcef350d3f3433804e6167d4c4137aab01"
+            ]
+        },
+        {
+            "chain_id": 1,
+            "block_number": 14705664,
+            "block_hash": "0x916d67589f2bc37600faf055309fd9f654d0c0030df35d31c04e22fef8d24ff2",
+            "block_timestamp": 1651594701,
+            "transaction_hash": "0x10da03bea7828722c92c86704522c7e1ce7dd2947d633ec6c1fb36680cb256e5",
+            "transaction_index": 145,
+            "log_index": 229,
+            "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "data": "0x00000000000000000000000000000000000000000000000000000000163d3a0d",
+            "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x00000000000000000000000056eddb7aa87536c09ccc2793473599fd21a8b17f",
+                "0x0000000000000000000000002b38e18192a442ed923addb4739e0a7724945d3c"
+            ]
+        },
+        {
+            "chain_id": 1,
+            "block_number": 14705664,
+            "block_hash": "0x916d67589f2bc37600faf055309fd9f654d0c0030df35d31c04e22fef8d24ff2",
+            "block_timestamp": 1651594701,
+            "transaction_hash": "0x20967f489b5237c0c6ffcbf7afcd921303e0db9e49382f9dc37809874e674b8b",
+            "transaction_index": 188,
+            "log_index": 295,
+            "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "data": "0x0000000000000000000000000000000000000000000000000000000011b9e2b6",
+            "topics": [
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                "0x0000000000000000000000003cd751e6b0078be393132286c442345e5dc49699",
+                "0x0000000000000000000000000e6eeff72188094c78b2478b693bbdbf9b13aaac"
+            ]
+        }
+    ]
+}
+```

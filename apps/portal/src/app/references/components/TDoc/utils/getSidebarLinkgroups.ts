@@ -26,7 +26,7 @@ const tagsToGroup = {
   "@connectWallet": "Connect Wallet",
   "@appURI": "App URI",
   "@storage": "Storage",
-  "@others": "Others",
+  "@others": "Miscellaneous",
   "@wallet": "Wallets",
   "@walletConfig": "WalletConfig",
   "@theme": "Theme",
@@ -40,20 +40,26 @@ const tagsToGroup = {
   "@chain": "Chain",
   "@social": "Social API",
   "@modules": "Modules",
+  "@client": "Client",
+  "@account": "Account",
 } as const;
 
 type TagKey = keyof typeof tagsToGroup;
 
 const sidebarGroupOrder: TagKey[] = [
+  "@client",
   "@wallet",
   "@abstractWallet",
   "@locale",
-  "@chain",
-  "@contract",
   "@networkConnection",
   "@walletConfig",
   "@walletConnection",
   "@walletUtils",
+  "@chain",
+  "@contract",
+  "@transaction",
+  "@social",
+  "@auth",
   "@nft",
   "@buyCrypto",
   "@nftDrop",
@@ -64,19 +70,17 @@ const sidebarGroupOrder: TagKey[] = [
   "@metadata",
   "@permissionControl",
   "@platformFees",
-  "@auth",
   "@storage",
   "@smartWallet",
   "@connectWallet",
   "@appURI",
   "@extension",
-  "@transaction",
   "@rpc",
-  "@utils",
-  "@social",
   "@modules",
   "@theme",
+  "@utils",
   "@others",
+  "@account",
 ];
 
 function findTag(
@@ -191,6 +195,7 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
           name: name,
           href: getLink(`${path}/${key}`),
           links: [{ name: "Extensions", links: extensionLinkGroups }],
+          isCollapsible: false,
         });
       } else {
         linkGroups
@@ -245,7 +250,12 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
 
     // sort into groups
     for (const d of nonExtensions) {
-      const [tag] = getCustomTag(d) || [];
+      let [tag] = getCustomTag(d) || [];
+      // for ungrouped functions - put it in utils
+      // useful for re-exports that we can't tag
+      if (!tag) {
+        tag = "@others";
+      }
 
       if (tag) {
         if (!groups[tag]) {
@@ -254,16 +264,6 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
         groups[tag]?.push(d);
       } else {
         ungroupedLinks.push(d);
-      }
-    }
-
-    // If a group only has one item, do not create a group for it and add it to noGroups
-    for (const _tag in groups) {
-      const tag = _tag as TagKey;
-      const links = groups[tag];
-      if (links && links.length === 1 && links[0]) {
-        ungroupedLinks.push(links[0]);
-        delete groups[tag];
       }
     }
 
@@ -314,6 +314,7 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
         name: name,
         links: links,
         href: getLink(`${path}/${key}`),
+        isCollapsible: false,
       });
     }
   }
@@ -326,24 +327,8 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
     createSubGroups("hooks", doc.hooks);
   }
 
-  if (doc.classes) {
-    createSubGroups("classes", doc.classes);
-  }
-
   if (doc.functions) {
     createSubGroups("functions", doc.functions);
-  }
-
-  if (doc.variables) {
-    createSubGroups("variables", doc.variables);
-  }
-
-  if (doc.types) {
-    createSubGroups("types", doc.types);
-  }
-
-  if (doc.enums) {
-    createSubGroups("enums", doc.enums);
   }
 
   return linkGroups;

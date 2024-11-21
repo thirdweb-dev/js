@@ -51,7 +51,6 @@ export function ProjectGeneralSettingsPage(props: {
   apiKey: ApiKey;
   paths: EditProjectUIPaths;
   onKeyUpdated: (() => void) | undefined;
-  wording: "project" | "api-key";
 }) {
   const updateMutation = useUpdateApiKey();
   const deleteMutation = useRevokeApiKey();
@@ -59,7 +58,6 @@ export function ProjectGeneralSettingsPage(props: {
   return (
     <ProjectGeneralSettingsPageUI
       apiKey={props.apiKey}
-      wording={props.wording}
       updateMutation={updateMutation}
       deleteMutation={deleteMutation}
       paths={props.paths}
@@ -79,7 +77,6 @@ type DeleteMutation = UseMutationResult<unknown, unknown, string, unknown>;
 
 interface EditApiKeyProps {
   apiKey: ApiKey;
-  wording: "project" | "api-key";
   updateMutation: UpdateMutation;
   deleteMutation: DeleteMutation;
   paths: EditProjectUIPaths;
@@ -91,7 +88,7 @@ type UpdateAPIForm = UseFormReturn<ApiKeyValidationSchema>;
 export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
   props,
 ) => {
-  const { apiKey, wording, updateMutation, deleteMutation } = props;
+  const { apiKey, updateMutation, deleteMutation } = props;
   const trackEvent = useTrack();
   const router = useDashboardRouter();
   const form = useForm<ApiKeyValidationSchema>({
@@ -174,9 +171,7 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
 
       updateMutation.mutate(formattedValues, {
         onSuccess: () => {
-          toast.success(
-            `${wording === "project" ? "Project" : "API Key"} updated successfully`,
-          );
+          toast.success("Project updated successfully");
           trackEvent({
             category: "api-keys",
             action: "edit",
@@ -186,9 +181,7 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
           props.onKeyUpdated?.();
         },
         onError: (err) => {
-          toast.error(
-            `Failed to update ${wording === "project" ? "Project" : "API Key"}`,
-          );
+          toast.error("Failed to update project");
           trackEvent({
             category: "api-keys",
             action: "edit",
@@ -218,7 +211,6 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
             form={form}
             updateMutation={updateMutation}
             handleSubmit={handleSubmit}
-            wording={wording}
           />
 
           <APIKeyDetails apiKey={apiKey} />
@@ -227,14 +219,12 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
             form={form}
             updateMutation={updateMutation}
             handleSubmit={handleSubmit}
-            wording={wording}
           />
 
           <AllowedBundleIDsSetting
             form={form}
             updateMutation={updateMutation}
             handleSubmit={handleSubmit}
-            wording={wording}
           />
 
           <EnabledServicesSetting
@@ -242,7 +232,6 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
             apiKey={apiKey}
             updateMutation={updateMutation}
             handleSubmit={handleSubmit}
-            wording={wording}
             paths={props.paths}
           />
 
@@ -253,7 +242,6 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
             onDeleteSuccessful={() => {
               router.replace(props.paths.afterDeleteRedirectTo);
             }}
-            wording={wording}
           />
         </div>
       </form>
@@ -265,18 +253,16 @@ function ProjectNameSetting(props: {
   form: UpdateAPIForm;
   updateMutation: UpdateMutation;
   handleSubmit: () => void;
-  wording: "project" | "api-key";
 }) {
-  const { form, updateMutation, handleSubmit, wording } = props;
+  const { form, updateMutation, handleSubmit } = props;
   const isNameDirty = form.getFieldState("name").isDirty;
 
   return (
     <SettingsCard
       header={{
-        title: wording === "project" ? "Project Name" : "Display Name",
-        description: `Assign a name to identify your ${
-          wording === "project" ? "project" : "API Key"
-        } on thirdweb dashboard`,
+        title: "Project Name",
+        description:
+          "Assign a name to identify your project on thirdweb dashboard",
       }}
       noPermissionText={undefined}
       errorText={form.getFieldState("name").error?.message}
@@ -289,7 +275,7 @@ function ProjectNameSetting(props: {
     >
       <Input
         autoFocus
-        placeholder={wording === "project" ? "My Project" : "My API Key"}
+        placeholder="My Project"
         type="text"
         {...form.register("name")}
         className="max-w-[350px] bg-background"
@@ -302,7 +288,6 @@ function AllowedDomainsSetting(props: {
   form: UpdateAPIForm;
   updateMutation: UpdateMutation;
   handleSubmit: () => void;
-  wording: "project" | "api-key";
 }) {
   const { form, handleSubmit, updateMutation } = props;
   const isDomainsDirty = form.getFieldState("domains").isDirty;
@@ -408,7 +393,6 @@ function AllowedBundleIDsSetting(props: {
   form: UpdateAPIForm;
   updateMutation: UpdateMutation;
   handleSubmit: () => void;
-  wording: "project" | "api-key";
 }) {
   const { form, handleSubmit, updateMutation } = props;
   const isBundleIdsDirty = form.getFieldState("bundleIds").isDirty;
@@ -484,11 +468,10 @@ function EnabledServicesSetting(props: {
   form: UpdateAPIForm;
   updateMutation: UpdateMutation;
   handleSubmit: () => void;
-  wording: "project" | "api-key";
   apiKey: ApiKey;
   paths: EditApiKeyProps["paths"];
 }) {
-  const { form, handleSubmit, updateMutation, wording } = props;
+  const { form, handleSubmit, updateMutation } = props;
 
   const { fields, update } = useFieldArray({
     control: form.control,
@@ -514,9 +497,7 @@ function EnabledServicesSetting(props: {
     <SettingsCard
       header={{
         title: "Enabled Services",
-        description: `thirdweb services enabled for this ${
-          wording === "project" ? "project" : "API Key"
-        }`,
+        description: "thirdweb services enabled for this project",
       }}
       noPermissionText={undefined}
       errorText={undefined}
@@ -685,10 +666,9 @@ function DeleteProject(props: {
   id: string;
   name: string;
   deleteMutation: UseMutationResult<unknown, unknown, string, unknown>;
-  wording: "project" | "api-key";
   onDeleteSuccessful: () => void;
 }) {
-  const { id, name, deleteMutation, wording, onDeleteSuccessful } = props;
+  const { id, name, deleteMutation, onDeleteSuccessful } = props;
   const trackEvent = useTrack();
 
   const handleRevoke = () => {
@@ -700,9 +680,7 @@ function DeleteProject(props: {
 
     deleteMutation.mutate(id, {
       onSuccess: () => {
-        toast.success(
-          `${wording === "api-key" ? "API Key" : "Project"} deleted successfully`,
-        );
+        toast.success("Project deleted successfully");
         onDeleteSuccessful();
         trackEvent({
           category: "api-keys",
@@ -712,9 +690,7 @@ function DeleteProject(props: {
       },
       onError: (err) => {
         // onError(err);
-        toast.error(
-          `Failed to delete ${wording === "project" ? "Project" : "API Key"}`,
-        );
+        toast.error("Failed to delete project");
         trackEvent({
           category: "api-keys",
           action: "revoke",
@@ -731,16 +707,14 @@ function DeleteProject(props: {
   return (
     <DangerSettingCard
       buttonOnClick={() => handleRevoke()}
-      buttonLabel={wording === "project" ? "Delete project" : "Delete key"}
+      buttonLabel="Delete project"
       confirmationDialog={{
-        title: `Delete ${
-          wording === "api-key" ? "API Key" : "Project"
-        } "${name}"?`,
+        title: `Delete project "${name}"?`,
         description: description,
       }}
       description={description}
       isPending={deleteMutation.isPending}
-      title={wording === "project" ? "Delete Project" : "Delete API Key"}
+      title="Delete Project"
     />
   );
 }

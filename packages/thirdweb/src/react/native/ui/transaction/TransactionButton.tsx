@@ -25,6 +25,7 @@ import { ThemedSpinner } from "../components/spinner.js";
  * </TransactionButton>
  * ```
  * @component
+ * @transaction
  */
 export function TransactionButton(props: TransactionButtonProps) {
   const {

@@ -83,6 +83,7 @@ import { getDefaultAccountFactory } from "./lib/constants.js";
  *  sponsorGas: true, // enable sponsored transactions
  *  factoryAddress: "0x...", // custom factory address
  * });
+ * ```
  *
  * ## Using v0.7 Entrypoint
  *
@@ -167,6 +168,7 @@ export function smartWallet(
         client: options.client,
         walletType: "smart",
         walletAddress: account.address,
+        chainId: chain.id,
       });
       // return account
       return account;
@@ -187,6 +189,7 @@ export function smartWallet(
         client: options.client,
         walletType: "smart",
         walletAddress: account.address,
+        chainId: chain.id,
       });
       // return account
       emitter.emit("accountChanged", account);

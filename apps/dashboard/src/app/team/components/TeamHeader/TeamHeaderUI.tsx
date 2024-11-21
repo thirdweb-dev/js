@@ -5,6 +5,7 @@ import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
 import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
+import type { ThirdwebClient } from "thirdweb";
 import { SecondaryNav } from "../../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../../components/MobileBurgerMenuButton";
 import { TeamPlanBadge } from "../../../components/TeamPlanBadge";
@@ -23,6 +24,7 @@ export type TeamHeaderCompProps = {
   logout: () => void;
   connectButton: React.ReactNode;
   createProject: () => void;
+  client: ThirdwebClient;
 };
 
 export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
@@ -52,6 +54,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
               id={currentTeam.id}
               src={currentTeam.image || ""}
               className="size-6"
+              client={props.client}
             />
             <span> {currentTeam.name} </span>
             <TeamPlanBadge plan={teamPlan} />
@@ -97,6 +100,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
         account={props.account}
         logout={props.logout}
         connectButton={props.connectButton}
+        client={props.client}
       />
     </header>
   );
@@ -131,6 +135,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
               id={currentTeam.id}
               src={currentTeam.image || ""}
               className="size-6"
+              client={props.client}
             />
 
             {!props.currentProject && (

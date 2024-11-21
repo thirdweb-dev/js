@@ -2,7 +2,10 @@ import { useContext } from "react";
 import { describe, expect, it } from "vitest";
 import { render, screen, waitFor } from "~test/react-render.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
-import { NFT, NFTProviderContext, getNFTInfo } from "./NFT.js";
+import { getNFTInfo } from "./hooks.js";
+import { NFTMedia } from "./media.js";
+import { NFTName } from "./name.js";
+import { NFTProvider, NFTProviderContext } from "./provider.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("NFT prebuilt component", () => {
   it("should fetch the NFT metadata", async () => {
@@ -42,9 +45,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFT prebuilt component", () => {
 
   it("should render children correctly", () => {
     render(
-      <NFT contract={DOODLES_CONTRACT} tokenId={0n}>
+      <NFTProvider contract={DOODLES_CONTRACT} tokenId={0n}>
         <div>Child Component</div>
-      </NFT>,
+      </NFTProvider>,
     );
 
     expect(screen.getByText("Child Component")).toBeInTheDocument();
@@ -64,9 +67,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFT prebuilt component", () => {
       );
     }
     render(
-      <NFT contract={DOODLES_CONTRACT} tokenId={0n}>
+      <NFTProvider contract={DOODLES_CONTRACT} tokenId={0n}>
         <NFTConsumer />
-      </NFT>,
+      </NFTProvider>,
     );
 
     expect(screen.getByText(/Contract:/)).toBeInTheDocument();
@@ -75,9 +78,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFT prebuilt component", () => {
 
   it("should render the NFT image", () => {
     render(
-      <NFT contract={DOODLES_CONTRACT} tokenId={0n}>
-        <NFT.Media />
-      </NFT>,
+      <NFTProvider contract={DOODLES_CONTRACT} tokenId={0n}>
+        <NFTMedia />
+      </NFTProvider>,
     );
 
     waitFor(() => expect(screen.getByRole("img")).toBeInTheDocument());
@@ -85,9 +88,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFT prebuilt component", () => {
 
   it("should render the NFT name", () => {
     render(
-      <NFT contract={DOODLES_CONTRACT} tokenId={1n}>
-        <NFT.Name />
-      </NFT>,
+      <NFTProvider contract={DOODLES_CONTRACT} tokenId={1n}>
+        <NFTName />
+      </NFTProvider>,
     );
 
     waitFor(() => expect(screen.getByText("Doodle #1")).toBeInTheDocument());
@@ -95,9 +98,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFT prebuilt component", () => {
 
   it("should render the NFT description", () => {
     render(
-      <NFT contract={DOODLES_CONTRACT} tokenId={1n}>
-        <NFT.Name />
-      </NFT>,
+      <NFTProvider contract={DOODLES_CONTRACT} tokenId={1n}>
+        <NFTName />
+      </NFTProvider>,
     );
 
     waitFor(() =>

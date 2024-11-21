@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
 import type {
   InAppWalletStats,
   UserOpStats,
   WalletStats,
-} from "@3rdweb-sdk/react/hooks/useApi";
+} from "@/api/analytics";
+import { Button } from "@/components/ui/button";
 import type { Range } from "components/analytics/date-range-selector";
 import { Stat } from "components/analytics/stat";
 import { InAppWalletsSummary } from "components/embedded-wallets/Analytics/Summary";

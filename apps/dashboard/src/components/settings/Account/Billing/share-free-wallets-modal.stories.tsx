@@ -5,7 +5,7 @@ import { mobileViewport } from "../../../../stories/utils";
 import { ShareFreeWalletsModal } from "./share-free-wallets-modal.client";
 
 const meta = {
-  title: "Billing/coupons/ShareFreeWalletsModal",
+  title: "Billing/Coupons/ShareFreeWalletsModal",
   component: Variants,
   parameters: {
     layout: "centered",

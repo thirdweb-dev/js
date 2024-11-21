@@ -1,0 +1,149 @@
+import { ArticleIconCard, AuthList, Callout, DocImage } from "@doc";
+import {UserIcon} from 'lucide-react'
+import {
+    ReactIcon,
+    TypeScriptIcon,
+    UnityIcon,
+    DotNetIcon,
+    ExternalLinkIcon,
+    UnrealEngineIcon,
+    EcosystemWalletsIcon,
+    WalletsConnectIcon
+} from "@/icons"
+import EcosystemSocialConfig from '../assets/social-config.png'
+import { getSocialIcon } from "thirdweb/wallets/in-app";
+
+# Sign-In Methods
+
+thirdweb supports a bunch of various traditional authentication methods. 
+
+From social logins via the [OAuth 2.0 Protocol](https://oauth.net/2/), to email and SMS, to passkeys.
+
+For all login methods, thirdweb generates a non-custodial [wallet](/connect/wallet/security) behind the scenes. Thirdweb wallets enable your users to interact with your application, as well as store tokens and assets they receive while interacting with your application.
+
+## Supported Methods
+
+<AuthList/>
+
+## Enable Sign-In options
+
+### In-App Wallets
+
+To enable a given sign-in method for the thirdweb wallet, refer to the following guides:
+
+<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+    <ArticleIconCard
+        title="TypeScript"
+        icon={TypeScriptIcon}
+        description="Configure sign-in options for in-app wallets in TypeScript"
+        href="/typescript/v5/inAppWallet#example"
+    />
+    <ArticleIconCard
+        title="React"
+        icon={ReactIcon}
+        description="Configure sign-in options for in-app wallets in React"
+        href="/react/v5/in-app-wallet/get-started#choose-authentication-methods"
+    />
+    {/* TODO: Link to react native getting started for in app wallet */}
+    <ArticleIconCard
+        title="React Native"
+        icon={ReactIcon}
+        description="Configure sign-in options for in-app wallets in React Native"
+        href="/react/v5/in-app-wallet/get-started#choose-authentication-methods"
+    />
+	<ArticleIconCard
+        title=".NET"
+        icon={DotNetIcon}
+        description="Configure sign-in options for in-app wallets in .NET"
+        href="/dotnet/wallets/providers/in-app-wallet#login-methods"
+    />
+    <ArticleIconCard
+        title="Unity"
+        icon={UnityIcon}
+        description="Configure sign-in options for in-app wallets in Unity"
+        href="/unity/v5/wallets/in-app-wallet#login-methods"
+    />
+    <ArticleIconCard
+        title="Unreal Engine"
+        icon={UnrealEngineIcon}
+        description="Configure sign-in options for in-app wallets in Unreal Engine"
+        href="/unreal-engine/blueprints/in-app-wallet#otp"
+    />
+</div>
+
+### Ecosystem Wallets
+
+In order to configure sign-in options within your ecosystem, first configure the allowed sign-in methods on [your dashboard](https://thirdweb.com/team/~/~/ecosystem). 
+
+<DocImage src={EcosystemSocialConfig}/>
+
+Once configured, refer to the following guides to use the various login options within your ecosystem:
+
+<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+    <ArticleIconCard
+        title="TypeScript"
+        icon={TypeScriptIcon}
+        description="Configure sign-in options for ecosystem wallets in TypeScript"
+        href="/typescript/v5/ecosystemWallet#example"
+    />
+    <ArticleIconCard
+        title="React"
+        icon={ReactIcon}
+        description="Configure sign-in options for ecosystem wallets in React"
+        href="/react/v5/ecosystem-wallet/get-started#configuring-auth-strategies"
+    />
+    {/* TODO: Add react native specific getting started for ecosystem wallets */}
+    <ArticleIconCard
+        title="React Native"
+        icon={ReactIcon}
+        description="Configure sign-in options for ecosystem wallets in React Native"
+        href="/react/v5/ecosystem-wallet/get-started#configuring-auth-strategies"
+    />
+     <ArticleIconCard
+        title=".NET"
+        icon={DotNetIcon}
+        description="Configure sign-in options for ecosystem wallets in .NET"
+        href="/dotnet/wallets/providers/ecosystem-wallet#login-methods"
+    />
+    <ArticleIconCard
+        title="Unity"
+        icon={UnityIcon}
+        description="Configure sign-in options for ecosystem wallets in Unity"
+        href="/unity/v5/wallets/ecosystem-wallet#login-methods"
+    />
+</div>
+
+<Callout variant="warning" title="Using disabled auth strategies">
+	Note that while you're allowed to pass any auth strategy today, we recommend only passing the strategies that are enabled on your dashboard. We might enforce this in the future.
+</Callout>
+
+
+## Other Sign-In options
+
+Most authentication option are that straight forward. However, some options require additional setup or nuances. See below for more information on these options:
+
+<div className="flex flex-col space-y-4">
+    <ArticleIconCard
+        href="/wallet/sign-in-methods/guest"
+        icon={UserIcon}
+        title="Guest Mode"
+        description="Learn more about guest mode"
+    />
+    <ArticleIconCard
+        href="/wallet/sign-in-methods/external-wallets"
+        icon={WalletsConnectIcon}
+        title="External Wallet"
+        description="Learn more about external wallet authentication"
+    />
+    <ArticleIconCard
+        href="/wallet/sign-in-methods/custom-auth/overview"
+        icon={EcosystemWalletsIcon}
+        title="Custom Authentication"
+        description="Learn more about custom authentication with your own auth system"
+    />
+</div>
+
+## Interacting with your App
+
+Once a user signed in and their wallet is generated, you can use the **[Wallet Connection functions](/typescript/v5/functions#wallets)** to get information about the connected wallet like getting the address, account, and more.
+

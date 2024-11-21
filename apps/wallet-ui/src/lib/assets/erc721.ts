@@ -3,7 +3,7 @@ import type { Erc721Token } from "@/types/Erc721Token";
 import { chainIdToName, nameToChainId } from "@/util/simplehash";
 import type { Address } from "thirdweb";
 
-export type GetErc721TokensParams = {
+type GetErc721TokensParams = {
   owner: Address;
   chainIds: number[];
   limit?: number;

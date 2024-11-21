@@ -1,7 +1,7 @@
 export const otherLinks: { name: string; href: string }[] = [
   {
     name: "Dashboard",
-    href: "https://thirdweb.com/dashboard",
+    href: "https://thirdweb.com/team",
   },
   {
     name: "Docs",

@@ -14,7 +14,7 @@ To get started, install the thirdweb SDK using your preferred package manager.
 
 <Step title="Create a thirdweb client">
 
-Get an API key from https://thirdweb.com/dashboard/settings/api-keys and add it to your `.env`.
+Get a client id from https://thirdweb.com/create-api-key by creating a new project and add it to your `.env`.
 
 ```shell
 THIRDWEB_SECRET_KEY=[YOUR SECRET KEY]
@@ -34,7 +34,7 @@ const client = createThirdwebClient({
 
 <Callout variant="warning" title="Client Id vs Secret Key">
 	Client Id is used for **client side usage** and is restricted by the domain restrictions you set on your API key, it is a public identifier which can be used on the frontend safely.
-    
+
     Secret key is used for **server side or script usage** and is not restricted by the domain restrictions. Never expose your secret key in client side code.
 </Callout>
 
@@ -43,7 +43,7 @@ const client = createThirdwebClient({
 
 <Step title="Read Contract State">
 
-A client is all your need to start reading blockchain data. 
+A client is all your need to start reading blockchain data.
 
 1. Import the extensions you want to use.
 2. Define a contract with `getContract` at a given address and chain.
@@ -122,21 +122,21 @@ With the account created and funded, you can now send a transaction.
 import { getContract, sendTransaction } from "thirdweb";
 // 1. Import the extension you want to use
 import { transfer } from "thirdweb/extensions/erc20";
- 
+
 // 2. Define the contract
 const contract = getContract({
     client,
     address: "0x1234...",
     chain: sepolia,
 });
- 
+
 // 3. Call the extension function to prepare the transaction
 const transaction = transfer({
   contract,
   to: "0x1234...",
   amount: "0.01",
 });
- 
+
 // 4. Send the transaction
 const result = await sendTransaction({
   transaction,

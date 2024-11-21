@@ -53,8 +53,8 @@ npm i thirdweb
 
 <Step title="Set up the custom JSON Web Keys link through dashboard">
 
-1. Navigate to Wallets > [In-App Wallets](https://thirdweb.com/dashboard/wallets/embedded)
-2. To use in-app wallets, choose an existing API key or create a new one. Learn more about API keys.
+1. Navigate to your Team > Project > Connect > In-App Wallets in [thirdweb dashboard](https://thirdweb.com/team)
+2. To use in-app wallets, choose an existing Project or create a new one.
 
    <DocImage src={ewCreateKey} />
 
@@ -153,16 +153,11 @@ const connectInApp = async (jwt: string) => {
 			client,
 			strategy: "jwt",
 			jwt: await getFirebaseJWT(),
-			encryptionKey: "your-encryption-key",
 		});
 		return wallet;
 	});
 };
 ```
-
-You can set your `encryptionKey` in either a secret env variable or ask the user to enter a password for it.
-
-** Do not hardcode the `encryptionKey` in your code. **
 
 After the connectInApp function returns, the ThirdwebProvider will have connected a wallet thereby granting access to all hooks and functionalities.
 

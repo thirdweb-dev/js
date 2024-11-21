@@ -2,14 +2,23 @@ import type { AsyncStorage } from "./AsyncStorage.js";
 
 export const webLocalStorage: AsyncStorage = {
   async getItem(key: string) {
-    if (typeof window !== "undefined" && window.localStorage) {
-      return localStorage.getItem(key);
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        return localStorage.getItem(key);
+      }
+    } catch {
+      // ignore
     }
+
     return null;
   },
   async setItem(key: string, value: string) {
-    if (typeof window !== "undefined" && window.localStorage) {
-      localStorage.setItem(key, value);
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        localStorage.setItem(key, value);
+      }
+    } catch {
+      // ignore
     }
   },
   async removeItem(key: string) {

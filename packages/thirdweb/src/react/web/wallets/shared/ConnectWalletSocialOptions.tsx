@@ -117,6 +117,7 @@ export const ConnectWalletSocialOptions = (
     telegram: "Telegram",
     github: "GitHub",
     twitch: "Twitch",
+    steam: "Steam",
   };
 
   const { data: ecosystemAuthOptions, isLoading } = useQuery({
@@ -214,6 +215,7 @@ export const ConnectWalletSocialOptions = (
       client: props.client,
       ecosystem: ecosystemInfo,
       strategy: "guest" as const,
+      chain: props.chain,
     };
     const connectPromise = (async () => {
       const result = await wallet.connect(connectOptions);

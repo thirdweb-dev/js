@@ -1,6 +1,7 @@
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { InAppWalletsSummary } from "components/embedded-wallets/Analytics/Summary";
 import { getInAppWalletUsage } from "data/analytics/wallets/in-app";
+import { subDays } from "date-fns";
 import { TRACKING_CATEGORY } from "../_constants";
 
 export async function InAppWalletsHeader({ clientId }: { clientId: string }) {
@@ -13,7 +14,7 @@ export async function InAppWalletsHeader({ clientId }: { clientId: string }) {
 
   const monthlyStatsPromise = getInAppWalletUsage({
     clientId,
-    from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    from: subDays(new Date(), 30),
     to: new Date(),
     period: "month",
   });

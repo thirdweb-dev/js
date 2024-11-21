@@ -17,7 +17,7 @@ interface LandingCTAButtonsProps {
 }
 
 export const LandingCTAButtons: React.FC<LandingCTAButtonsProps> = ({
-  ctaLink = "/dashboard",
+  ctaLink = "/team",
   ctaText = "Get Started",
   contactUsTitle = "Contact Us",
   contactUsBg,

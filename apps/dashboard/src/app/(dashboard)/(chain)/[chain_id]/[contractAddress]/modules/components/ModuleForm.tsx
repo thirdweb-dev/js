@@ -61,6 +61,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
   const client = useThirdwebClient();
   const form = useForm<FormData>({
     defaultValues: {
+      publisherAddress: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024", // thirdweb publisher address
       version: "latest",
     },
   });

@@ -19,6 +19,7 @@ import {
   LINE_ICON,
   PASSKEY_ICON,
   PHONE_ICON,
+  STEAM_ICON,
   TELEGRAM_ICON,
   TWITCH_ICON,
   WALLET_ICON,
@@ -110,6 +111,8 @@ export function getAuthProviderImage(authProvider: string | null): string {
       return GITHUB_ICON;
     case "twitch":
       return TWITCH_ICON;
+    case "steam":
+      return STEAM_ICON;
     case "guest":
       return GUEST_ICON;
     default:

@@ -6,6 +6,16 @@
       "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
+    "postbuild": {
+      "dependsOn": ["^postbuild"],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "public/robots.txt",
+        "public/sitemap*.xml",
+        "searchIndex.json"
+      ]
+    },
     "bench": {
       "cache": false,
       "dependsOn": []
@@ -45,7 +55,9 @@
         "ANALYTICS_SERVICE_API_KEY",
         "DISABLE_FAUCET_CHAIN_IDS",
         "API_SERVER_SECRET",
-        "TURNSTILE_SECRET_KEY"
+        "TURNSTILE_SECRET_KEY",
+        "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
+        "NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET"
       ],
       "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]
@@ -66,30 +78,30 @@
       "dependsOn": ["^build"]
     },
     "thirdweb#update-version": {
-      "inputs": ["package.json"],
+      "inputs": ["$TURBO_DEFAULT$", "package.json"],
       "outputs": ["src/version.ts"]
     },
     "test": {
       "outputs": ["coverage/**"],
-      "inputs": ["src/**", "test/**"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "test/**"],
       "dependsOn": ["^build"]
     },
     "storybook": {
-      "inputs": ["src/**"]
+      "inputs": ["$TURBO_DEFAULT$", "src/**"]
     },
     "test:legacy": {
       "outputs": ["coverage/**"],
-      "inputs": ["src/**", "test/**"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "test/**"],
       "dependsOn": ["^build"]
     },
     "e2e": {
       "outputs": [],
-      "inputs": ["src/**", "fixtures/**"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "fixtures/**"],
       "dependsOn": ["^build"]
     },
     "e2e:legacy": {
       "outputs": [],
-      "inputs": ["src/**", "fixtures/**"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "fixtures/**"],
       "dependsOn": ["^build"]
     },
     "lint": {

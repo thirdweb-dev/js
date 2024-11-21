@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { BadgeContainer } from "../../../stories/utils";
 
 const meta = {
-  title: "Shadcn/select",
+  title: "Shadcn/Select",
   component: Component,
   parameters: {
     layout: "centered",

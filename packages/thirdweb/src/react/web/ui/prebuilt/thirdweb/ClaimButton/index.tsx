@@ -106,6 +106,7 @@ import type {
  *
  * For error handling & callbacks on transaction-sent and transaction-confirmed,
  * please refer to the TransactionButton docs.
+ * @transaction
  */
 export function ClaimButton(props: ClaimButtonProps) {
   const { children, contractAddress, client, chain, claimParams, payModal } =

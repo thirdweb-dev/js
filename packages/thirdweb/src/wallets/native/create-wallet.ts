@@ -169,6 +169,7 @@ export function createWallet<const ID extends WalletId>(
               client: options.client,
               walletType: id,
               walletAddress: account.address,
+              chainId: chain.id,
             });
             // return account
             return account;
@@ -202,6 +203,7 @@ export function createWallet<const ID extends WalletId>(
               client: wcOptions.client,
               walletType: id,
               walletAddress: account.address,
+              chainId: chain.id,
             });
             return account;
           }

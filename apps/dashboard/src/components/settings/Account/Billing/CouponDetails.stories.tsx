@@ -5,7 +5,7 @@ import { mobileViewport } from "../../../../stories/utils";
 import { CouponDetailsCardUI } from "./CouponCard";
 
 const meta = {
-  title: "billing/Coupons/CouponDetails",
+  title: "Billing/Coupons/CouponDetails",
   component: Story,
   parameters: {
     nextjs: {

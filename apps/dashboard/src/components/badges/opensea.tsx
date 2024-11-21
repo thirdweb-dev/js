@@ -1,17 +1,10 @@
+import { Badge } from "@/components/ui/badge";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { Badge, type BadgeProps } from "tw-components";
 
-export const OpenSeaPropertyBadge: React.FC<BadgeProps> = (props) => {
+export const OpenSeaPropertyBadge: React.FC = () => {
   return (
     <ToolTipLabel label="This property is supported on OpenSea">
-      <Badge
-        {...props}
-        borderRadius="full"
-        variant="outline"
-        colorScheme="opensea"
-      >
-        OpenSea
-      </Badge>
+      <Badge>OpenSea</Badge>
     </ToolTipLabel>
   );
 };

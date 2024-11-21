@@ -1,118 +1,62 @@
-import {
-  type AccountPlan,
-  accountPlan,
-  useUpdateAccountPlan,
-} from "@3rdweb-sdk/react/hooks/useApi";
+"use client";
+import { Button } from "@/components/ui/button";
 import { PricingCard } from "components/homepage/sections/PricingCard";
-import { useTrack } from "hooks/analytics/useTrack";
+import { ArrowRightIcon } from "lucide-react";
 import { TitleAndDescription } from "./Title";
 
-interface OnboardingChoosePlanProps {
-  onSave: () => void;
-}
-
-const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
-  onSave,
-}) => {
-  const trackEvent = useTrack();
-  const mutation = useUpdateAccountPlan();
-
-  const handleSave = (plan: AccountPlan) => {
-    trackEvent({
-      category: "account",
-      action: "choosePlan",
-      label: "attempt",
-    });
-
-    // free is default, so no need to update account
-    if (plan === accountPlan.free) {
-      trackEvent({
-        category: "account",
-        action: "choosePlan",
-        label: "success",
-        data: {
-          plan,
-        },
-      });
-
-      onSave();
-      return;
-    }
-
-    mutation.mutate(
-      {
-        plan,
-      },
-      {
-        onSuccess: () => {
-          onSave();
-
-          trackEvent({
-            category: "account",
-            action: "choosePlan",
-            label: "success",
-            data: {
-              plan,
-            },
-          });
-        },
-        onError: (error) => {
-          trackEvent({
-            category: "account",
-            action: "choosePlan",
-            label: "error",
-            error,
-          });
-        },
-      },
-    );
-  };
-
+export function OnboardingChoosePlan(props: {
+  skipPlan: () => Promise<void>;
+  canTrialGrowth: boolean;
+  teamSlug: string;
+}) {
   return (
-    <>
+    <div>
       <TitleAndDescription
         heading="Choose your plan"
         description="Get started for free with our Starter plan or subscribe to Growth plan to unlock higher rate limits and advanced features."
       />
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+
+      <div className="h-4" />
+
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-4">
         <PricingCard
-          size="sm"
-          name={accountPlan.free}
-          ctaTitle="Get started for free"
-          ctaProps={{
-            category: "account",
-            onClick: (e) => {
-              e.preventDefault();
-              handleSave(accountPlan.free);
+          billingPlan="starter"
+          teamSlug={props.teamSlug}
+          cta={{
+            title: "Get started for free",
+            tracking: {
+              category: "account",
             },
-            label: "freePlan",
-            href: "/",
           }}
-          onDashboard
         />
 
         <PricingCard
-          size="sm"
-          ctaTitle="Claim your 1-month free"
-          name={accountPlan.growth}
-          ctaHint="Your free trial will end after 30 days."
-          canTrialGrowth={true}
-          ctaProps={{
-            category: "account",
-            label: "growthPlan",
-            onClick: (e) => {
-              e.preventDefault();
-              handleSave(accountPlan.growth);
+          billingPlan="growth"
+          teamSlug={props.teamSlug}
+          cta={{
+            title: "Claim your 1-month free",
+            hint: "Your free trial will end after 30 days.",
+            tracking: {
+              category: "account",
+              label: "growthPlan",
             },
-            href: "/",
-            variant: "solid",
-            colorScheme: "blue",
+            variant: "default",
           }}
-          onDashboard
+          canTrialGrowth={props.canTrialGrowth}
         />
       </div>
-    </>
-  );
-};
 
-export default OnboardingChoosePlan;
+      <div className="h-3" />
+
+      <div className="flex justify-end">
+        <Button
+          variant="ghost"
+          onClick={props.skipPlan}
+          className="inline-flex translate-x-2 items-center gap-2 text-muted-foreground"
+        >
+          Continue with Free Plan <ArrowRightIcon className="size-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}

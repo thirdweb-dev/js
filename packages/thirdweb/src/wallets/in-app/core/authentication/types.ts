@@ -34,8 +34,8 @@ export type SocialAuthArgsType = {
 
 export type SingleStepAuthArgsType =
   | SocialAuthArgsType
-  | { strategy: "jwt"; jwt: string; encryptionKey: string }
-  | { strategy: "auth_endpoint"; payload: string; encryptionKey: string }
+  | { strategy: "jwt"; jwt: string; encryptionKey?: string }
+  | { strategy: "auth_endpoint"; payload: string; encryptionKey?: string }
   | {
       /**
        * @deprecated
@@ -101,6 +101,7 @@ export type AuthProvider =
   | "X"
   | "Line"
   | "Twitch"
+  | "Steam"
   | "GitHub"
   | "Farcaster"
   | "Telegram";

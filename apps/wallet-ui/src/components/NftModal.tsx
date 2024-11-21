@@ -1,4 +1,5 @@
 "use client";
+import { Image } from "@/components/ui/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2, OctagonXIcon } from "lucide-react";
@@ -120,7 +121,7 @@ export function NftModal({
       </DialogTrigger>
       <DialogContent className="gap-0 overflow-hidden rounded-xl p-0 sm:w-[425px] md:rounded-xl">
         <div className="relative h-[425px] w-full">
-          <img
+          <Image
             src={data.image_url || data.collection.image_url}
             alt={data.name}
             className="h-full w-full object-cover object-center"

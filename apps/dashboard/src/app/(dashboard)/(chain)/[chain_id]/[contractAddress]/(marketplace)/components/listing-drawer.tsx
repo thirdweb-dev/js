@@ -1,6 +1,8 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Flex, GridItem, SimpleGrid, usePrevious } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
@@ -9,7 +11,8 @@ import type {
   EnglishAuction,
 } from "thirdweb/extensions/marketplace";
 import { useActiveAccount } from "thirdweb/react";
-import { Badge, Card, CodeBlock, Heading, Text } from "tw-components";
+
+import { CodeClient } from "@/components/ui/code/code.client";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { CancelTab } from "./cancel-tab";
 import { LISTING_STATUS } from "./types";
@@ -51,18 +54,20 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
             height="150px"
           />
           <Flex flexDir="column" gap={2} w="70%">
-            <Heading size="title.lg">{renderData.asset.metadata.name}</Heading>
-            <Text size="label.md" noOfLines={6}>
+            <p className="font-bold text-lg">
               {renderData.asset.metadata.name}
-            </Text>
+            </p>
+            <p className="line-clamp-6 truncate text-base leading-normal">
+              {renderData.asset.metadata.name}
+            </p>
           </Flex>
         </div>
 
         <Flex flexDir="column" gap={4}>
-          <Card as={Flex} flexDir="column" gap={3}>
+          <Card className="flex flex-col gap-3 p-4">
             <SimpleGrid rowGap={3} columns={12} placeItems="center left">
               <GridItem colSpan={3}>
-                <Heading size="label.md">Asset contract address</Heading>
+                <p className="font-bold">Asset contract address</p>
               </GridItem>
               <GridItem colSpan={9}>
                 <CopyAddressButton
@@ -71,7 +76,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                 />
               </GridItem>
               <GridItem colSpan={3}>
-                <Heading size="label.md">Token ID</Heading>
+                <p className="font-bold">Token ID</p>
               </GridItem>
               <GridItem colSpan={9}>
                 <CopyTextButton
@@ -82,13 +87,13 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                 />
               </GridItem>
               <GridItem colSpan={3}>
-                <Heading size="label.md">Seller</Heading>
+                <p className="font-bold">Seller</p>
               </GridItem>
               <GridItem colSpan={9}>
                 <WalletAddress address={renderData.creatorAddress} />
               </GridItem>
               <GridItem colSpan={3}>
-                <Heading size="label.md">Listing ID</Heading>
+                <p className="font-bold">Listing ID</p>
               </GridItem>
               <GridItem colSpan={9}>
                 <CopyTextButton
@@ -99,49 +104,37 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                 />
               </GridItem>
               <GridItem colSpan={3}>
-                <Heading size="label.md">Type</Heading>
+                <p className="font-bold">Type</p>
               </GridItem>
-              <GridItem colSpan={9}>
-                <Text fontFamily="mono" size="body.md">
-                  {renderData.asset.type}
-                </Text>
-              </GridItem>
+              <GridItem colSpan={9}>{renderData.asset.type}</GridItem>
               <GridItem colSpan={3}>
-                <Heading size="label.md">Status</Heading>
+                <p className="font-bold">Status</p>
               </GridItem>
               <GridItem colSpan={9}>
-                <Badge
-                  size="label.sm"
-                  variant="subtle"
-                  textTransform="capitalize"
-                >
+                <Badge className="uppercase">
                   {LISTING_STATUS[renderData.status]}
                 </Badge>
               </GridItem>
               <GridItem colSpan={3}>
-                <Heading size="label.md">Quantity</Heading>
+                <p className="font-bold">Quantity</p>
               </GridItem>
               <GridItem colSpan={9}>
-                <Text fontFamily="mono" size="body.md">
-                  {(renderData.quantity || 0n).toString()}{" "}
-                  {/* For listings that are completed, the `quantity` would be `0`
+                {(renderData.quantity || 0n).toString()}{" "}
+                {/* For listings that are completed, the `quantity` would be `0`
                     So we show this text to make it clear */}
-                  {LISTING_STATUS[renderData.status] === "Completed"
-                    ? "(Sold out)"
-                    : ""}
-                </Text>
+                {LISTING_STATUS[renderData.status] === "Completed"
+                  ? "(Sold out)"
+                  : ""}
               </GridItem>
 
               {renderData.type === "direct-listing" && (
                 <>
                   <GridItem colSpan={3}>
-                    <Heading size="label.md">Price</Heading>
+                    <p className="font-bold">Price</p>
                   </GridItem>
                   <GridItem colSpan={9}>
-                    <Text fontFamily="mono" size="body.md">
-                      {renderData.currencyValuePerToken.displayValue}{" "}
-                      {renderData.currencyValuePerToken.symbol}
-                    </Text>
+                    {renderData.currencyValuePerToken.displayValue}{" "}
+                    {renderData.currencyValuePerToken.symbol}
                   </GridItem>
                 </>
               )}
@@ -153,16 +146,13 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
             </SimpleGrid>
           </Card>
           {data?.asset.metadata.properties ? (
-            <Card as={Flex} flexDir="column" gap={4}>
-              <Heading size="label.md">Attributes</Heading>
-              <CodeBlock
+            <Card className="flex flex-col gap-3 p-4">
+              <p className="font-bold">Attributes</p>
+              <CodeClient
                 code={
                   JSON.stringify(data.asset.metadata.properties, null, 2) || ""
                 }
-                language="json"
-                canCopy={false}
-                wrap={false}
-                overflow="auto"
+                lang="json"
               />
             </Card>
           ) : null}

@@ -26,3 +26,4 @@ export { createMetadata } from "./metadata";
 export { ConnectCard } from "./Cards/ConnectCard";
 export { FeatureCard } from "./FeatureCard";
 export { AAChainList } from "./AAChainList";
+export { AuthList } from "./AuthList";

@@ -1,6 +1,4 @@
 "use client";
-
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
@@ -765,18 +763,13 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   );
                 })}
 
-              {isModular &&
-                (modules?.length ? (
-                  <ModularContractDefaultModulesFieldset
-                    form={form}
-                    modules={modules}
-                    isTWPublisher={isTWPublisher}
-                  />
-                ) : (
-                  <div className="flex min-h-[250px] items-center justify-center">
-                    <Spinner className="size-8" />
-                  </div>
-                ))}
+              {isModular && modules && modules.length > 0 && (
+                <ModularContractDefaultModulesFieldset
+                  form={form}
+                  modules={modules}
+                  isTWPublisher={isTWPublisher}
+                />
+              )}
 
               {advancedParams.length > 0 && (
                 <Accordion allowToggle>
@@ -924,15 +917,15 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   }
                 />
                 <span>
-                  Import so I can find it in the list of my contracts at{" "}
+                  Import so I can find it in the list of{" "}
                   <TrackedLinkTW
                     className="text-link-foreground hover:text-foreground"
-                    href="/dashboard"
+                    href="/team/~/~/contracts"
                     target="_blank"
                     category="custom-contract"
                     label="visit-dashboard"
                   >
-                    /dashboard
+                    my contracts
                   </TrackedLinkTW>
                 </span>
               </CheckboxWithLabel>

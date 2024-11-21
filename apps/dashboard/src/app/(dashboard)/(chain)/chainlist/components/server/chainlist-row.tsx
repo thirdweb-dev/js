@@ -14,6 +14,8 @@ import { products } from "../../../components/server/products";
 import type { ChainSupportedService } from "../../../types/chain";
 import { getChainMetadata } from "../../../utils";
 
+import type { JSX } from "react";
+
 type ChainListRowProps = {
   favoriteButton: JSX.Element;
   chainId: number;
@@ -37,7 +39,7 @@ export async function ChainListRow({
 }: ChainListRowProps) {
   const chainMetadata = await getChainMetadata(chainId);
   return (
-    <TableRow className="relative hover:bg-muted/50">
+    <TableRow linkBox className="hover:bg-muted/50">
       <TableCell>{favoriteButton}</TableCell>
       {/* Name */}
       <TableCell>
@@ -119,6 +121,9 @@ function pidToHref(pid: (typeof products)[number]["id"]) {
     }
     case "rpc-edge": {
       return "https://portal.thirdweb.com/infrastructure/rpc-edge/overview";
+    }
+    case "insight": {
+      return "https://portal.thirdweb.com/insight";
     }
   }
 }

@@ -2,6 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
+import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
+import { ClientScopedStorage } from "../../../../wallets/in-app/core/authentication/client-scoped-storage.js";
 import { getUrlToken } from "../../../../wallets/in-app/web/lib/get-url-token.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
@@ -43,8 +45,25 @@ export function useAutoConnectCore(
       getStoredActiveWalletId(storage),
     ]);
 
-    const { authResult, walletId, authProvider } = getUrlToken();
-    if (authResult && walletId) {
+    const { authResult, walletId, authProvider, authCookie } = getUrlToken();
+    const wallet = wallets.find((w) => w.id === walletId);
+
+    // If an auth cookie is found and this site supports the wallet, we'll set the auth cookie in the client storage
+    if (authCookie && wallet) {
+      const clientStorage = new ClientScopedStorage({
+        storage,
+        clientId: props.client.clientId,
+        ecosystem: isEcosystemWallet(wallet)
+          ? {
+              id: wallet.id,
+              partnerId: wallet.getConfig()?.partnerId,
+            }
+          : undefined,
+      });
+      await clientStorage.saveAuthCookie(authCookie);
+    }
+
+    if (walletId) {
       lastActiveWalletId = walletId;
       lastConnectedWalletIds = lastConnectedWalletIds?.includes(walletId)
         ? lastConnectedWalletIds

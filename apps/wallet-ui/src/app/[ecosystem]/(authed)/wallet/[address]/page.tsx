@@ -2,13 +2,18 @@ import { AutoConnectWalletConnect } from "@/components/AutoConnectWalletConnect"
 import NftGallery from "@/components/NftGallery";
 import { getAddress } from "thirdweb";
 
-export default function Page({
-  params: { address },
-  searchParams: { chainId, uri },
-}: {
-  params: { address: string };
-  searchParams: { chainId?: string; uri?: string };
+export default async function Page(props: {
+  params: Promise<{ address: string }>;
+  searchParams: Promise<{ chainId?: string; uri?: string }>;
 }) {
+  const [searchParams, params] = await Promise.all([
+    props.searchParams,
+    props.params,
+  ]);
+
+  const { chainId, uri } = searchParams;
+  const { address } = params;
+
   return (
     <>
       <AutoConnectWalletConnect uri={uri} />

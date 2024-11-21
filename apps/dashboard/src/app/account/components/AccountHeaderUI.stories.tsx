@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ThirdwebProvider } from "thirdweb/react";
 import { teamsAndProjectsStub } from "../../../stories/stubs";
@@ -9,7 +10,7 @@ import {
 } from "./AccountHeaderUI";
 
 const meta = {
-  title: "Account/Account Header",
+  title: "Headers/AccountHeader",
   component: Variants,
   parameters: {
     nextjs: {
@@ -36,6 +37,8 @@ export const Mobile: Story = {
   },
 };
 
+const client = getThirdwebClient();
+
 function Variants(props: {
   type: "mobile" | "desktop";
 }) {
@@ -55,6 +58,7 @@ function Variants(props: {
               id: "foo",
               email: "foo@example.com",
             }}
+            client={client}
           />
         </BadgeContainer>
 
@@ -65,6 +69,7 @@ function Variants(props: {
             connectButton={<ConnectButtonStub />}
             createProject={() => {}}
             account={undefined}
+            client={client}
           />
         </BadgeContainer>
       </div>

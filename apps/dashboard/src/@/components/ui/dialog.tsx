@@ -35,40 +35,43 @@ const DialogContent = React.forwardRef<
     dialogOverlayClassName?: string;
     dialogCloseClassName?: string;
   }
->(({ className, children, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay className={props.dialogOverlayClassName} />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        "fixed grid w-full gap-4 rounded-t-xl border border-border bg-background p-6 shadow-lg duration-300 md:max-w-lg md:rounded-lg",
-        // on mobile - put the dialog at the bottom of the screen, animate - slide up and fade in
-        "right-0 bottom-0 left-0",
-        "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
-        // on desktop - vertically and horizontally center the dialog, animate - zoom and fade in
-        "md:top-[50%] md:bottom-auto md:left-[50%] md:translate-x-[-50%] md:translate-y-[-50%] ",
-        "md:data-[state=closed]:zoom-out-95 md:data-[state=open]:zoom-in-95 ",
-        "md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=closed]:slide-out-to-top-[48%] ",
-        "md:data-[state=open]:slide-in-from-left-1/2 md:data-[state=open]:slide-in-from-top-[48%] ",
-        "data-[state=closed]:animate-out data-[state=open]:animate-in",
-        "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      <DialogPrimitive.Close
+>(({ className, children, ...props }, ref) => {
+  const { dialogOverlayClassName, dialogCloseClassName, ...restProps } = props;
+  return (
+    <DialogPortal>
+      <DialogOverlay className={dialogOverlayClassName} />
+      <DialogPrimitive.Content
+        ref={ref}
         className={cn(
-          "absolute top-4 right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
-          props.dialogCloseClassName,
+          "fixed grid w-full gap-4 rounded-t-xl border border-border bg-background p-6 shadow-lg duration-300 md:max-w-lg md:rounded-lg",
+          // on mobile - put the dialog at the bottom of the screen, animate - slide up and fade in
+          "right-0 bottom-0 left-0",
+          "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+          // on desktop - vertically and horizontally center the dialog, animate - zoom and fade in
+          "md:top-[50%] md:bottom-auto md:left-[50%] md:translate-x-[-50%] md:translate-y-[-50%] ",
+          "md:data-[state=closed]:zoom-out-95 md:data-[state=open]:zoom-in-95 ",
+          "md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=closed]:slide-out-to-top-[48%] ",
+          "md:data-[state=open]:slide-in-from-left-1/2 md:data-[state=open]:slide-in-from-top-[48%] ",
+          "data-[state=closed]:animate-out data-[state=open]:animate-in",
+          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+          className,
         )}
+        {...restProps}
       >
-        <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
-  </DialogPortal>
-));
+        {children}
+        <DialogPrimitive.Close
+          className={cn(
+            "absolute top-4 right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+            dialogCloseClassName,
+          )}
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  );
+});
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({

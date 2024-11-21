@@ -1,8 +1,10 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { useMutation } from "@tanstack/react-query";
 import { AccountForm } from "components/settings/Account/AccountForm";
 import { useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
-import { Button } from "tw-components";
 import { TitleAndDescription } from "./Title";
 
 type OnboardingGeneralProps = {
@@ -11,7 +13,7 @@ type OnboardingGeneralProps = {
   onDuplicate: (email: string) => void;
 };
 
-const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
+export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
   account,
   onSave,
   onDuplicate,
@@ -20,16 +22,23 @@ const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
   const activeWallet = useActiveWallet();
   const { disconnect } = useDisconnect();
 
-  async function handleDisconnect() {
-    if (activeWallet) {
-      disconnect(activeWallet);
-    }
+  async function handleLogout() {
     await fetch("/api/auth/logout", {
       method: "POST",
-    }).catch((err) => {
-      console.error("Failed to log out", err);
-    });
+    })
+      .catch((err) => {
+        console.error("Failed to log out", err);
+      })
+      .then(() => {
+        if (activeWallet) {
+          disconnect(activeWallet);
+        }
+      });
   }
+
+  const logoutMutation = useMutation({
+    mutationFn: handleLogout,
+  });
 
   return (
     <div>
@@ -52,53 +61,32 @@ const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
           buttonText={!existing ? "Get Started for Free" : "Login"}
           trackingCategory="onboarding"
           padded={false}
-          buttonProps={{
-            w: "full",
-            size: "lg",
-            fontSize: "md",
-          }}
           onSave={onSave}
           onDuplicateError={onDuplicate}
         />
 
-        <div className="flex w-full flex-col justify-center gap-2">
-          {!existing ? (
-            <>
-              <Button
-                variant="outline"
-                onClick={() => setExisting(true)}
-                w="full"
-                size="lg"
-                fontSize="md"
-              >
-                I have a thirdweb account
-              </Button>
-              <Button
-                variant="link"
-                onClick={handleDisconnect}
-                w="full"
-                size="sm"
-                pt={4}
-                pb={2}
-              >
-                Log out
-              </Button>
-            </>
-          ) : (
+        {!existing ? (
+          <>
+            <Button variant="primary" onClick={() => setExisting(true)}>
+              I have a thirdweb account
+            </Button>
             <Button
               variant="outline"
-              onClick={() => setExisting(false)}
-              w="full"
-              size="lg"
-              fontSize="md"
+              onClick={() => {
+                logoutMutation.mutate();
+              }}
+              className="gap-2"
             >
-              I don&apos;t have an account
+              {logoutMutation.isPending && <Spinner className="size-4" />}
+              Log out
             </Button>
-          )}
-        </div>
+          </>
+        ) : (
+          <Button variant="outline" onClick={() => setExisting(false)}>
+            I don&apos;t have an account
+          </Button>
+        )}
       </div>
     </div>
   );
 };
-
-export default OnboardingGeneral;

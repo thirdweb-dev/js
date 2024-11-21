@@ -32,9 +32,10 @@ import { ChainHeader } from "./components/server/chain-header";
 
 // TODO: improve the behavior when clicking "Get started with thirdweb", currently just redirects to the dashboard
 
-export async function generateMetadata({
-  params,
-}: { params: { chain_id: string } }): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Promise<{ chain_id: string }>;
+}): Promise<Metadata> {
+  const params = await props.params;
   const chain = await getChain(params.chain_id);
   const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
   const title = `${sanitizedChainName}: RPC and Chain Settings`;
@@ -54,13 +55,12 @@ export async function generateMetadata({
 }
 
 // this is the dashboard layout file
-export default async function ChainPageLayout({
-  children,
-  params,
-}: {
+export default async function ChainPageLayout(props: {
   children: React.ReactNode;
-  params: { chain_id: string };
+  params: Promise<{ chain_id: string }>;
 }) {
+  const params = await props.params;
+  const { children } = props;
   const chain = await getChain(params.chain_id);
 
   if (params.chain_id !== chain.slug) {
@@ -205,7 +205,7 @@ export default async function ChainPageLayout({
                   }
                 />
                 <Button variant="primary">
-                  <Link href="https://thirdweb.com/dashboard" target="_blank">
+                  <Link href="/team" target="_blank">
                     Get started
                   </Link>
                 </Button>

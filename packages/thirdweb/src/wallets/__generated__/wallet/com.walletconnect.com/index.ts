@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.walletconnect.com",
   name: "SampleW",
   homepage: "https://walletconnect.com",
-  image_id: "361c7dfd-e4a1-46ce-e42a-241443ed5700",
+  image_id: "b81aaf2d-3548-4e65-46cd-fd59fbb6b300",
   app: {
     browser: null,
     ios: null,

@@ -67,7 +67,6 @@ const handlePostLogin = async (jwt: string) => {
 			client,
 			strategy: "jwt",
 			jwt,
-			encryptionKey: "your-encryption-key",
 		});
 		return wallet;
 	});
@@ -87,7 +86,6 @@ const account = await wallet.connect({
 	client,
 	strategy: "jwt",
 	jwt,
-	encryptionKey: "your-encryption-key",
 });
 
 // use the account to send transactions
@@ -95,10 +93,6 @@ const account = await wallet.connect({
 
 </TabsContent>
 </Tabs>
-
-You can set your `encryptionKey` in either a secret env variable or ask the user to enter a password for it.
-
-** Do not hardcode the `encryptionKey` in your code. **
 
 ## Generic auth
 
@@ -159,7 +153,6 @@ const handlePostLogin = async (jwt: string) => {
 			strategy: "auth_endpoint",
 			// This is the payload that is sent to the auth endpoint
 			payload,
-			encryptionKey: "your-encryption-key",
 		});
 		return wallet;
 	});
@@ -182,7 +175,6 @@ const account = await wallet.connect({
 	strategy: "auth_endpoint",
 	// This is the payload that is sent to the auth endpoint
 	payload,
-	encryptionKey: "your-encryption-key",
 });
 
 // use the account to send transactions
@@ -190,7 +182,3 @@ const account = await wallet.connect({
 
 </TabsContent>
 </Tabs>
-
-You can set your `encryptionKey` in either a secret env variable or ask the user to enter a password for it.
-
-**Do not hardcode the `encryptionKey` in your code. Use environment variables, server returned keys or user derived keys.**

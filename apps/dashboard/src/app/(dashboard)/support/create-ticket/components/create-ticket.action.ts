@@ -71,7 +71,7 @@ export async function createTicketAction(
   _previousState: State,
   formData: FormData,
 ) {
-  const cookieManager = cookies();
+  const cookieManager = await cookies();
   const activeAccount = cookieManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const token = activeAccount
     ? cookieManager.get(COOKIE_PREFIX_TOKEN + activeAccount)?.value

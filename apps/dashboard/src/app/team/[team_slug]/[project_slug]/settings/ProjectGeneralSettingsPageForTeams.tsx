@@ -27,7 +27,6 @@ export function ProjectGeneralSettingsPageForTeams(props: {
       onKeyUpdated={() => {
         router.refresh();
       }}
-      wording="project"
     />
   );
 }

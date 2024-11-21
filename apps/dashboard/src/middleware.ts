@@ -48,6 +48,11 @@ export async function middleware(request: NextRequest) {
   // remove '/' in front and then split by '/'
   const paths = pathname.slice(1).split("/");
 
+  // if it's the homepage and we have an auth cookie, redirect to the dashboard
+  if (paths.length === 1 && paths[0] === "" && authCookie) {
+    return redirect(request, "/team");
+  }
+
   // if the first section of the path is a number, check if it's a valid chain_id and re-write it to the slug
   const possibleChainId = Number(paths[0]);
 
@@ -99,11 +104,15 @@ export async function middleware(request: NextRequest) {
   if (paths[0] === "team" && paths[1] === "~") {
     // TODO - need an API to get the first team to avoid fetching all teams
     const teams = await getTeams();
-    const firstTeam = teams[0];
+    const firstTeam = teams?.[0];
     if (firstTeam) {
       const modifiedPaths = [...paths];
       modifiedPaths[1] = firstTeam.slug;
-      return redirect(request, `/${modifiedPaths.join("/")}`);
+      return redirect(
+        request,
+        `/${modifiedPaths.join("/")}`,
+        request.nextUrl.searchParams.toString(),
+      );
     }
   }
   // END /<address>/... case

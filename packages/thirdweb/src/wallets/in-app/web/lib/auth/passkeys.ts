@@ -1,4 +1,4 @@
-import { client } from "@passwordless-id/webauthn";
+import { client, parsers } from "@passwordless-id/webauthn";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { webLocalStorage } from "../../../../../utils/storage/webStorage.js";
 import {
@@ -25,22 +25,26 @@ export class PasskeyWebClient implements PasskeyClient {
     rp: RpInfo;
   }): Promise<RegisterResult> {
     const { name, challenge, rp } = args;
-    const registration = await client.register(name, challenge, {
-      authenticatorType: "auto",
+    const registration = await client.register({
+      user: name,
+      challenge,
       userVerification: "required",
       domain: rp.id,
       attestation: true,
-      debug: false,
     });
-    const clientDataB64 = base64UrlToBase64(registration.clientData);
+    const clientDataB64 = base64UrlToBase64(
+      registration.response.clientDataJSON,
+    );
     const clientDataParsed = JSON.parse(base64ToString(clientDataB64));
     return {
-      authenticatorData: registration.authenticatorData,
-      credentialId: registration.credential.id,
-      clientData: registration.clientData,
+      authenticatorData: registration.response.authenticatorData,
+      credentialId: registration.id,
+      clientData: registration.response.clientDataJSON,
       credential: {
-        publicKey: registration.credential.publicKey,
-        algorithm: registration.credential.algorithm,
+        publicKey: registration.response.publicKey,
+        algorithm: parsers.getAlgoName(
+          registration.response.publicKeyAlgorithm,
+        ),
       },
       origin: clientDataParsed.origin,
     };
@@ -52,22 +56,19 @@ export class PasskeyWebClient implements PasskeyClient {
     rp: RpInfo;
   }): Promise<AuthenticateResult> {
     const { credentialId, challenge, rp } = args;
-    const result = await client.authenticate(
-      credentialId ? [credentialId] : [],
+    const result = await client.authenticate({
+      allowCredentials: credentialId ? [credentialId] : [],
       challenge,
-      {
-        authenticatorType: "auto",
-        userVerification: "required",
-        domain: rp.id,
-      },
-    );
-    const clientDataB64 = base64UrlToBase64(result.clientData);
+      userVerification: "required",
+      domain: rp.id,
+    });
+    const clientDataB64 = base64UrlToBase64(result.response.clientDataJSON);
     const clientDataParsed = JSON.parse(base64ToString(clientDataB64));
     return {
-      authenticatorData: result.authenticatorData,
-      credentialId: result.credentialId,
-      clientData: result.clientData,
-      signature: result.signature,
+      authenticatorData: result.response.authenticatorData,
+      credentialId: result.id,
+      clientData: result.response.clientDataJSON,
+      signature: result.response.signature,
       origin: clientDataParsed.origin,
     };
   }

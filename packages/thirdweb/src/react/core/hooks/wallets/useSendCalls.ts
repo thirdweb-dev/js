@@ -24,8 +24,8 @@ import { useActiveWallet } from "./useActiveWallet.js";
  *
  * When calls are sent, all contracts that are interacted with will have their corresponding reads revalidated via React Query.
  *
- * @note This hook is dependent on the wallet's support for EIP-5792 and could fail.
- * @note The mutatuon function will use your currently connected wallet by default, but you can pass it a specific wallet to use if you'd like.
+ *  This hook is dependent on the wallet's support for EIP-5792 and could fail.
+ *  The mutatuon function will use your currently connected wallet by default, but you can pass it a specific wallet to use if you'd like.
  *
  * @returns A React Query mutatuon object to interact with {@link sendCalls}
  * @throws an error if the wallet does not support EIP-5792.
@@ -76,7 +76,7 @@ import { useActiveWallet } from "./useActiveWallet.js";
  * });
  * ```
  *
- * @note We recommend proxying any paymaster calls via an API route you setup and control.
+ *  We recommend proxying any paymaster calls via an API route you setup and control.
  * @extension EIP5792
  */
 export function useSendCalls({

@@ -2,12 +2,12 @@ import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
   ContractDeployIcon,
   ContractExploreIcon,
-  ContractInteractIcon,
   ContractModularContractIcon,
   ContractPublishIcon,
 } from "@/icons";
 
 const prebuiltSlug = "/contracts/explore/pre-built-contracts";
+const prebuiltModular = "/contracts/explore/pre-built-modular";
 const modularContractsSlug = "/contracts/modular-contracts";
 const deploySlug = "/contracts/deploy";
 const publishSlug = "/contracts/publish";
@@ -17,7 +17,6 @@ const coreContractsSlug = "/contracts/modular-contracts/core-contracts";
 
 // TODO: Deprecate links that start with the following slugs
 const buildSlug = "/contracts/build";
-const interactSlug = "/contracts/interact";
 const extensionsSlug = "/contracts/build/extensions";
 const baseContractsSlug = "/contracts/build/base-contracts";
 
@@ -40,7 +39,55 @@ export const sidebar: SideBar = {
           href: "/contracts/explore/overview",
         },
         {
-          name: "Pre-built Contracts",
+          name: "Pre-built Modular",
+          links: [
+            {
+              name: "ERC-20",
+              links: [
+                {
+                  name: "Token",
+                  href: `${prebuiltModular}/token`,
+                },
+                {
+                  name: "Token Drop",
+                  href: `${prebuiltModular}/token-drop`,
+                },
+              ],
+            },
+            {
+              name: "ERC-721",
+              links: [
+                {
+                  name: "NFT Collection",
+                  href: `${prebuiltModular}/nft-collection`,
+                },
+                {
+                  name: "NFT Drop",
+                  href: `${prebuiltModular}/nft-drop`,
+                },
+                {
+                  name: "Open Edition",
+                  href: `${prebuiltModular}/open-edition`,
+                },
+              ],
+            },
+            {
+              name: "ERC-1155",
+              links: [
+                {
+                  name: "Edition",
+                  href: `${prebuiltModular}/edition`,
+                },
+                {
+                  name: "Edition Drop",
+                  href: `${prebuiltModular}/edition-drop`,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: "Pre-built Standard",
           links: [
             {
               name: "ERC-20",
@@ -241,7 +288,7 @@ export const sidebar: SideBar = {
                   ],
                 },
                 {
-                  name: "Misc",
+                  name: "Miscellaneous",
                   links: [
                     {
                       name: "TransferableERC20",
@@ -285,7 +332,7 @@ export const sidebar: SideBar = {
                   ],
                 },
                 {
-                  name: "Misc",
+                  name: "Miscellaneous",
                   links: [
                     {
                       name: "RoyaltyERC721",
@@ -329,7 +376,7 @@ export const sidebar: SideBar = {
                   ],
                 },
                 {
-                  name: "Misc",
+                  name: "Miscellaneous",
                   links: [
                     {
                       name: "RoyaltyERC1155",
@@ -744,32 +791,6 @@ export const sidebar: SideBar = {
         {
           name: "CLI Reference",
           href: `${deploySlug}/reference`,
-        },
-      ],
-    },
-    { separator: true },
-    // interact
-    {
-      name: "Interact",
-      icon: <ContractInteractIcon />,
-      isCollapsible: false,
-      links: [
-        {
-          name: "Overview",
-          href: `${interactSlug}/overview`,
-        },
-        {
-          name: "References",
-          links: [
-            {
-              name: "TypeScript",
-              href: "/typescript/v5",
-            },
-            {
-              name: "Unity",
-              href: "/unity",
-            },
-          ],
         },
       ],
     },

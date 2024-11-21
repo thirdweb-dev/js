@@ -40,6 +40,7 @@ function getOauthLoginPath(
     case "telegram":
     case "github":
     case "twitch":
+    case "steam":
     case "line":
     case "x":
     case "guest":

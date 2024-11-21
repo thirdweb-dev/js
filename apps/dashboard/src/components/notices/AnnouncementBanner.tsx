@@ -3,16 +3,30 @@ import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { ChevronRightIcon, XIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+
+function shouldHideAnnouncement(pathname: string) {
+  const paths = pathname.slice(1).split("/");
+
+  // hide on /login
+  if (paths.length === 1 && paths[0] === "login") {
+    return true;
+  }
+
+  return false;
+}
 
 function AnnouncementBanner(props: {
   href: string;
   label: string;
   trackingLabel: string;
 }) {
+  const pathname = usePathname();
+
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
     useLocalStorage(`dismissed-${props.trackingLabel}`, false, true);
 
-  if (hasDismissedAnnouncement) {
+  if (hasDismissedAnnouncement || shouldHideAnnouncement(pathname || "")) {
     return null;
   }
 
@@ -53,7 +67,7 @@ function AnnouncementBanner(props: {
 export function UnlimitedWalletsBanner() {
   return (
     <AnnouncementBanner
-      href="/dashboard/settings/billing?coupon=FREEWALLETS24"
+      href="/team/~/~/settings/billing?coupon=FREEWALLETS24"
       label='Claim 12 months of free in-app wallets. Use code "FREEWALLETS24". Redeem offer by December 31st!'
       trackingLabel="unlimited-wallets"
     />

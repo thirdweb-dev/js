@@ -59,6 +59,7 @@ export {
   type StoredTransaction,
   getTransactionStore,
 } from "../transaction/transaction-store.js";
+export { populateEip712Transaction } from "../transaction/actions/zksync/send-eip712-transaction.js";
 
 //types & utils
 export {

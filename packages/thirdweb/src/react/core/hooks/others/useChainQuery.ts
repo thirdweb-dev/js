@@ -144,13 +144,13 @@ function getQueryOptions(chain?: Chain) {
 }
 
 /**
- * @description Retrieves metadata for a chain such as name, icon, available faucets, block explorers, etc.
+ * Retrieves metadata for a chain such as name, icon, available faucets, block explorers, etc.
  *
  * @param chain - Chain to retrieve metadata for, see [defineChain](https://portal.thirdweb.com/references/typescript/v5/defineChain) for how to create a chain from a chain ID.
- * @returns A React Query result containing the chain metadata, @see {@link ChainMetadata}.
+ * @returns A React Query result containing the chain metadata
  *
  * @example
- * ```jsx
+ * ```
  * import { useChainMetadata } from "thirdweb/react";
  *
  * const { data: chainMetadata } = useChainMetadata(defineChain(11155111));

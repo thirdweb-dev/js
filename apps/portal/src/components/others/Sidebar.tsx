@@ -60,7 +60,6 @@ export function DocSidebar(props: ReferenceSideBarProps) {
       {props.header || (
         <p className="py-5 font-semibold text-f-100 text-lg">{props.name}</p>
       )}
-
       <ul className="styled-scrollbar transform-gpu overflow-y-scroll pr-3 pb-10">
         {props.links.map((link, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: TODO - fix this
@@ -152,7 +151,7 @@ function DocSidebarNonCollapsible(props: {
         {href ? (
           <Link
             className={cn(
-              "block font-medium text-base text-f-100 hover:text-accent-500",
+              "block font-semibold text-base text-f-100 hover:text-accent-500",
               isCategoryActive && "!text-accent-500",
             )}
             href={href}
@@ -163,7 +162,6 @@ function DocSidebarNonCollapsible(props: {
           <div className="font-semibold text-base">{name}</div>
         )}
       </div>
-
       <ul className="flex flex-col">
         {links.map((link, i) => {
           return (

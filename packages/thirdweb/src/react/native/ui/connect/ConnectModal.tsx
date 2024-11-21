@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { type JSX, useCallback, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { Chain } from "../../../../chains/types.js";
@@ -61,6 +61,7 @@ export type ModalState =
  *
  * Refer to the [`ConnectEmbedProps`](https://portal.thirdweb.com/references/typescript/v5/ConnectEmbedProps) type for more details
  * @component
+ * @walletConnection
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const theme = parseTheme(props.theme);
