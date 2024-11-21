@@ -29,5 +29,5 @@ export const Mobile: Story = {
 };
 
 function Story() {
-  return <NebulaWaitListPageUI />;
+  return <NebulaWaitListPageUI teamId="foo" />;
 }

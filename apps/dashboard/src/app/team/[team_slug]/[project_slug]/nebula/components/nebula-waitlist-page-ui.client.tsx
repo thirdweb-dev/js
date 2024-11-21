@@ -3,7 +3,7 @@ import { OrbitIcon } from "lucide-react";
 import Link from "next/link";
 import { ShareButton } from "./share-button.client";
 
-export function NebulaWaitListPageUI() {
+export function NebulaWaitListPageUI(props: { teamId: string }) {
   return (
     <div className="flex grow flex-col">
       {/* Header */}
@@ -22,7 +22,15 @@ export function NebulaWaitListPageUI() {
         <CenteredCard
           title="You're on the waitlist"
           description="You should receive access to Nebula soon!"
-          footer={<ShareButton />}
+          footer={
+            <div className="flex flex-col items-center gap-3">
+              <ShareButton teamId={props.teamId} />
+              <p className="text-balance text-center text-muted-foreground">
+                Share this invite link and get moved up the list when your
+                friends sign up!
+              </p>
+            </div>
+          }
         />
       </div>
     </div>
@@ -82,7 +90,7 @@ function CenteredCard(props: {
               {props.description}
             </p>
 
-            <div className="h-6" />
+            <div className="h-10" />
 
             {props.footer}
           </div>
