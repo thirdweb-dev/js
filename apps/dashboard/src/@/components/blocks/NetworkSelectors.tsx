@@ -72,7 +72,10 @@ export function MultiNetworkSelector(props: {
       onSelectedValuesChange={(chainIds) => {
         props.onChange(chainIds.map(Number));
       }}
-      placeholder="Select Chains"
+      placeholder={
+        allChains.length === 0 ? "Loading Chains..." : "Select Chains"
+      }
+      disabled={allChains.length === 0}
       overrideSearchFn={searchFn}
       renderOption={renderOption}
     />
