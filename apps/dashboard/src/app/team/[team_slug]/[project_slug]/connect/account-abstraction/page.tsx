@@ -1,7 +1,8 @@
 import { getProject } from "@/api/projects";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { getTeamBySlug } from "../../../../../../@/api/team";
 import { getAbsoluteUrl } from "../../../../../../lib/vercel-utils";
 import { getAPIKeyForProjectId } from "../../../../../api/lib/getAPIKeys";
 import { AccountAbstractionPage } from "./AccountAbstractionPage";
@@ -11,7 +12,15 @@ export default async function Page(props: {
   searchParams: Promise<{ tab?: string }>;
 }) {
   const { team_slug, project_slug } = await props.params;
-  const project = await getProject(team_slug, project_slug);
+
+  const [team, project] = await Promise.all([
+    getTeamBySlug(team_slug),
+    getProject(team_slug, project_slug),
+  ]);
+
+  if (!team) {
+    redirect("/team");
+  }
 
   if (!project) {
     notFound();
@@ -28,6 +37,7 @@ export default async function Page(props: {
       <AccountAbstractionPage
         projectSlug={project.slug}
         teamSlug={team_slug}
+        billingStatus={team.billingStatus}
         projectKey={project.publishableKey}
         apiKeyServices={apiKey.services || []}
         tab={(await props.searchParams).tab}

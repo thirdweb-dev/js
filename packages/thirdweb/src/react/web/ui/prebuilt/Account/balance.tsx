@@ -14,7 +14,7 @@ import { useAccountContext } from "./provider.js";
 /**
  * Props for the AccountBalance component
  * @component
- * @account
+ * @wallet
  */
 export interface AccountBalanceProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
@@ -143,7 +143,7 @@ export interface AccountBalanceProps
  * ```
  *
  * @component
- * @account
+ * @wallet
  * @beta
  */
 export function AccountBalance({

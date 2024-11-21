@@ -5,7 +5,6 @@ import { ThemeProvider } from "next-themes";
 import { useMemo } from "react";
 import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
 import { CustomConnectWallet } from "../@3rdweb-sdk/react/components/connect-wallet";
-import { Onboarding } from "../components/onboarding";
 import { OpCreditsGrantedModalWrapper } from "../components/onboarding/OpCreditsGrantedModalWrapper";
 import { PosthogIdentifier } from "../components/wallets/PosthogIdentifier";
 import { isSanctionedAddress } from "../data/eth-sanctioned-addresses";
@@ -23,7 +22,6 @@ export function AppRouterProviders(props: { children: React.ReactNode }) {
         <TWAutoConnect />
         <OpCreditsGrantedModalWrapper />
         <PosthogIdentifier />
-        <Onboarding />
         <ThemeProvider
           attribute="class"
           disableTransitionOnChange

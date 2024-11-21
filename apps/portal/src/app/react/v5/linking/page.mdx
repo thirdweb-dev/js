@@ -1,0 +1,51 @@
+import { createMetadata } from "@doc";
+import { ExternalLink } from "lucide-react";
+import { ArticleIconCard, Stack, AuthList } from "@doc";
+import { ReactIcon } from "@/icons";
+export const metadata = createMetadata({
+	title: "Link Profiles | thirdweb",
+	description: "Link profiles to your account",
+});
+
+# Link Profiles
+
+When using [in-app wallets](/react/v5/in-app-wallet/get-started) or [ecosystem wallets](/react/v5/ecosystem-wallets/get-started), you can link profiles to your account. This allows users to login with a frictionless method like guest, passkey or email, then later link their wallet or social profile to their account.
+
+Once linked, users can login to their account with any of their linked profiles.
+
+## Live Playground
+
+Try out the demo for yourself in the [link profiles live playground](https://playground.thirdweb.com/connect/in-app-wallet)
+
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com/connect/in-app-wallet"
+	description="See the SDK in action on the live playground"
+/>
+</Stack>
+
+## Available auth methods
+
+<AuthList />
+
+## Usage with UI Components
+
+When using [`ConnectButton`](/references/typescript/v5/ConnectButton) or [`useWalletDetailsModal`](/references/typescript/v5/useWalletDetailsModal), users can link a new profile by clicking the "Manage Wallet" button, as long as they are connected with an in-app or ecosystem wallet.
+
+## Usage with your own UI
+
+You can use the [`useLinkProfile`](/references/typescript/v5/useLinkProfile) function to link a new profile to your account. This can be useful if you want to use a custom UI for the linking flow.
+
+<Stack>
+
+<ArticleIconCard
+	title="useLinkProfile"
+	icon={ReactIcon}
+	href="/references/typescript/v5/useLinkProfile"
+	description="Hook to link a new profile to your account"
+/>
+</Stack>
+

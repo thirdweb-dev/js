@@ -74,7 +74,7 @@ export const POST = async (req: NextRequest) => {
   const account: { data: Account } = await accountRes.json();
 
   // Make sure the logged-in account has verified its email
-  if (account.data.status === "noCustomer") {
+  if (!account.data.email) {
     return NextResponse.json(
       {
         error: "Account owner hasn't verified email",

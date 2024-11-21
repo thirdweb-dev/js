@@ -4,7 +4,7 @@ import { useAccountContext } from "./provider.js";
 
 /**
  * @component
- * @account
+ * @wallet
  */
 export interface AccountAddressProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
@@ -51,7 +51,7 @@ export interface AccountAddressProps
  * ```
  *
  * @component
- * @account
+ * @wallet
  * @beta
  */
 export function AccountAddress({

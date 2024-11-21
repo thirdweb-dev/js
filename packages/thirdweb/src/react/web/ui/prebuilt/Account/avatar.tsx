@@ -16,7 +16,7 @@ import { useAccountContext } from "./provider.js";
 /**
  * Props for the AccountAvatar component
  * @component
- * @account
+ * @wallet
  */
 export interface AccountAvatarProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src">,
@@ -150,7 +150,7 @@ export interface AccountAvatarProps
  * ```
  * @returns An <img /> if the avatar is resolved successfully
  * @component
- * @account
+ * @wallet
  * @beta
  */
 export function AccountAvatar({

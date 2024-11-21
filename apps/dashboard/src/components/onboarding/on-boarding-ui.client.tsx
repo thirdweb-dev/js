@@ -1,163 +1,134 @@
 "use client";
-
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { Suspense, lazy, useState } from "react";
-import { ChakraProviderSetup } from "../../@/components/ChakraProviderSetup";
+import { useState } from "react";
 import { useTrack } from "../../hooks/analytics/useTrack";
-import { TWModal } from "./Modal";
-import type { OnboardingState } from "./types";
+import { OnboardingChoosePlan } from "./ChoosePlan";
+import { OnboardingConfirmEmail } from "./ConfirmEmail";
+import { OnboardingGeneral } from "./General";
+import { OnboardingLinkWallet } from "./LinkWallet";
+import type { OnboardingScreen } from "./types";
 import { useSkipOnboarding } from "./useSkipOnboarding";
-
-const OnboardingConfirmEmail = lazy(() => import("./ConfirmEmail"));
-const OnboardingLinkWallet = lazy(() => import("./LinkWallet"));
-const OnboardingGeneral = lazy(() => import("./General"));
-const OnboardingChoosePlan = lazy(() => import("./ChoosePlan"));
 
 function OnboardingUI(props: {
   account: Account;
-  state: OnboardingState;
-  onOpenChange?: (open: boolean) => void;
-  setState: (state: OnboardingState) => void;
+  onComplete: () => void;
 }) {
+  const { account } = props;
+  const [screen, setScreen] = useState<OnboardingScreen>({ id: "onboarding" });
+
   const trackEvent = useTrack();
-  const { account, state, setState, onOpenChange } = props;
   const [updatedEmail, setUpdatedEmail] = useState<string | undefined>();
   const skipOnboarding = useSkipOnboarding();
 
-  const handleSave = (email?: string) => {
-    // if account is not ready yet we cannot do anything here
-    if (!account) {
-      return;
-    }
-
-    let nextStep: OnboardingState = undefined;
-
-    switch (state) {
-      case "onboarding":
-        nextStep = "confirming";
-        break;
-      case "linking":
-        nextStep = "confirmLinking";
-        break;
-      case "confirming":
-        // after confirming, only show plan if user has not skipped onboarding earlier or trial period has ended
-        nextStep =
-          account.onboardSkipped || account?.trialPeriodEndedAt
-            ? "skipped"
-            : "plan";
-        break;
-      case "confirmLinking":
-        nextStep = "skipped";
-        break;
-      case "plan":
-        nextStep = "skipped";
-        break;
-      default:
-      // ignore, already undefined
-    }
-
+  function trackOnboardingStep(params: {
+    nextStep: OnboardingScreen["id"];
+    email?: string;
+  }) {
     trackEvent({
       category: "account",
       action: "onboardingStep",
       label: "next",
       data: {
-        email: email || account.unconfirmedEmail || updatedEmail,
-        currentStep: state,
-        nextStep,
+        email: params.email || account.unconfirmedEmail || updatedEmail,
+        currentStep: screen,
+        nextStep: params.nextStep,
       },
     });
-
-    setState(nextStep);
-  };
+  }
 
   const handleDuplicateEmail = (email: string) => {
-    // if account is not ready yet we cannot do anything here
-    if (!account) {
-      return;
-    }
-
-    trackEvent({
-      category: "account",
-      action: "onboardingStep",
-      label: "next",
-      data: {
-        email,
-        currentStep: state,
-        nextStep: "linking",
-      },
+    setScreen({
+      id: "linking",
     });
-
-    setState("linking");
+    trackOnboardingStep({
+      nextStep: "linking",
+      email,
+    });
   };
 
   return (
-    <ChakraProviderSetup>
-      <TWModal
-        isOpen={!!state}
-        wide={state === "plan"}
-        onOpenChange={onOpenChange}
-      >
-        {state === "onboarding" && (
-          <Suspense fallback={<Loading />}>
-            <OnboardingGeneral
-              account={account}
-              onSave={(email) => {
-                setUpdatedEmail(email);
-                handleSave(email);
-              }}
-              onDuplicate={(email) => {
-                setUpdatedEmail(email);
-                handleDuplicateEmail(email);
-              }}
-            />
-          </Suspense>
-        )}
+    <div
+      className={cn(
+        "relative w-screen rounded-lg border border-border bg-background p-4 lg:p-6",
+        screen.id === "plan" ? "max-w-[750px]" : "max-w-[500px]",
+      )}
+    >
+      {screen.id === "onboarding" && (
+        <OnboardingGeneral
+          account={account}
+          onSave={(email) => {
+            setUpdatedEmail(email);
+            setScreen({
+              id: "confirming",
+            });
+            trackOnboardingStep({
+              nextStep: "confirming",
+              email,
+            });
+          }}
+          onDuplicate={(email) => {
+            setUpdatedEmail(email);
+            handleDuplicateEmail(email);
+          }}
+        />
+      )}
 
-        {state === "linking" && (
-          <Suspense fallback={<Loading />}>
-            <OnboardingLinkWallet
-              onSave={handleSave}
-              onBack={() => {
-                setUpdatedEmail(undefined);
-                setState("onboarding");
-              }}
-              email={updatedEmail as string}
-            />
-          </Suspense>
-        )}
+      {screen.id === "linking" && (
+        <OnboardingLinkWallet
+          onSave={() => {
+            setScreen({
+              id: "confirmLinking",
+            });
+            trackOnboardingStep({
+              nextStep: "confirmLinking",
+            });
+          }}
+          onBack={() => {
+            setUpdatedEmail(undefined);
+            setScreen({
+              id: "onboarding",
+            });
+          }}
+          email={updatedEmail as string}
+        />
+      )}
 
-        {(state === "confirming" || state === "confirmLinking") && (
-          <Suspense fallback={<Loading />}>
-            <OnboardingConfirmEmail
-              linking={state === "confirmLinking"}
-              onSave={handleSave}
-              onBack={() => setState("onboarding")}
-              email={(account.unconfirmedEmail || updatedEmail) as string}
-            />
-          </Suspense>
-        )}
+      {/* TODO - separate the confirming and  confirmLinking into separate components  */}
+      {(screen.id === "confirming" || screen.id === "confirmLinking") && (
+        <OnboardingConfirmEmail
+          linking={screen.id === "confirmLinking"}
+          onComplete={props.onComplete}
+          onEmailConfirm={(res) => {
+            if (screen.id === "confirmLinking") {
+              props.onComplete();
+            } else if (screen.id === "confirming") {
+              if (account.onboardSkipped) {
+                props.onComplete();
+              } else {
+                setScreen({ id: "plan", team: res.team });
+              }
+            }
+          }}
+          onBack={() =>
+            setScreen({
+              id: "onboarding",
+            })
+          }
+          email={(account.unconfirmedEmail || updatedEmail) as string}
+        />
+      )}
 
-        {state === "plan" && (
-          <Suspense fallback={<Loading />}>
-            <OnboardingChoosePlan
-              skipPlan={() => {
-                setState("skipped");
-                skipOnboarding();
-              }}
-              canTrialGrowth={!account.trialPeriodEndedAt}
-            />
-          </Suspense>
-        )}
-      </TWModal>
-    </ChakraProviderSetup>
-  );
-}
-
-function Loading() {
-  return (
-    <div className="flex h-[200px] items-center justify-center">
-      <Spinner className="size-5" />
+      {screen.id === "plan" && (
+        <OnboardingChoosePlan
+          teamSlug={screen.team.slug}
+          skipPlan={async () => {
+            await skipOnboarding().catch(() => {});
+            props.onComplete();
+          }}
+          canTrialGrowth={true}
+        />
+      )}
     </div>
   );
 }

@@ -1,8 +1,5 @@
 import type { Team } from "../@/api/team";
 
-export const CONTACT_US_URL =
-  "https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro";
-
 type NonFreeTeamPlan = Exclude<Team["billingPlan"], "free">;
 
 export const TEAM_PLANS: Record<

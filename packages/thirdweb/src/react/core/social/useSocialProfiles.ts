@@ -10,7 +10,7 @@ import { getSocialProfiles } from "../../../social/profiles.js";
  * @returns A React Query result containing the social profiles.
  *
  * @example
- * ```ts
+ * ```tsx
  * import { useSocialProfiles } from "thirdweb/react";
  * const { data: profiles } = useSocialProfiles({
  *   client,

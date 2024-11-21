@@ -14,7 +14,7 @@ import { useAccountContext } from "./provider.js";
 /**
  * Props for the AccountName component
  * @component
- * @account
+ * @wallet
  */
 export interface AccountNameProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children">,
@@ -123,7 +123,7 @@ export interface AccountNameProps
  * ```
  *
  * @component
- * @account
+ * @wallet
  * @beta
  */
 export function AccountName({

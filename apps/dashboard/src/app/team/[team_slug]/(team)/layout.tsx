@@ -1,7 +1,7 @@
 import { getProjects } from "@/api/projects";
 import { getTeamNebulaWaitList, getTeams } from "@/api/team";
 import { TabPathLinks } from "@/components/ui/tabs";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 
 export default async function TeamLayout(props: {
@@ -10,6 +10,11 @@ export default async function TeamLayout(props: {
 }) {
   const params = await props.params;
   const teams = await getTeams();
+
+  if (!teams) {
+    redirect("/login");
+  }
+
   const team = teams.find((t) => t.slug === params.team_slug);
   const teamsAndProjects = await Promise.all(
     teams.map(async (team) => ({

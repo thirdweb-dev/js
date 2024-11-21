@@ -1,18 +1,24 @@
 import { getProjects } from "@/api/projects";
-import { getTeams } from "@/api/team";
+import { type Team, getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
 import type React from "react";
 import { TabPathLinks } from "../../@/components/ui/tabs";
 import { TWAutoConnect } from "../components/autoconnect";
+import { loginRedirect } from "../login/loginRedirect";
 import { AccountHeader } from "./components/AccountHeader";
 
 export default async function AccountLayout(props: {
   children: React.ReactNode;
 }) {
+  const teams = await getTeams();
+  if (!teams) {
+    loginRedirect("/account");
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className="flex grow flex-col">
-        <HeaderAndNav />
+        <HeaderAndNav teams={teams} />
         {props.children}
       </div>
       <TWAutoConnect />
@@ -21,11 +27,11 @@ export default async function AccountLayout(props: {
   );
 }
 
-async function HeaderAndNav() {
-  const teams = await getTeams();
-
+async function HeaderAndNav(props: {
+  teams: Team[];
+}) {
   const teamsAndProjects = await Promise.all(
-    teams.map(async (team) => ({
+    props.teams.map(async (team) => ({
       team,
       projects: await getProjects(team.slug),
     })),
@@ -47,11 +53,11 @@ async function HeaderAndNav() {
             name: "Contracts",
             exactMatch: true,
           },
+          {
+            path: "/account/settings",
+            name: "Settings",
+          },
           // TODO - enable these links after they are functional
-          // {
-          //   path: "/account/settings",
-          //   name: "Settings",
-          // },
           // {
           //   path: "/account/wallets",
           //   name: "Wallets",

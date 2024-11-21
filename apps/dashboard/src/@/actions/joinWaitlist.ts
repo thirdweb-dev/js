@@ -12,7 +12,9 @@ export async function joinTeamWaitlist(options: {
   const token = await getAuthToken();
 
   if (!token) {
-    throw new Error("No Auth token");
+    return {
+      errorMessage: "You are not authorized to perform this action",
+    };
   }
 
   const res = await fetch(`${API_SERVER_URL}/v1/teams/${teamSlug}/waitlist`, {
@@ -27,8 +29,12 @@ export async function joinTeamWaitlist(options: {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to join waitlist");
+    return {
+      errorMessage: "Failed to join waitlist",
+    };
   }
 
-  return true;
+  return {
+    success: true,
+  };
 }

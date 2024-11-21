@@ -2,7 +2,6 @@ import type { Team } from "@/api/team";
 import { PricingCard } from "components/homepage/sections/PricingCard";
 import { useMemo } from "react";
 import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/getValidTeamPlan";
-import { CONTACT_US_URL } from "../../../../utils/pricing";
 
 // TODO - move this in app router folder in other pr
 
@@ -13,8 +12,6 @@ interface BillingPricingProps {
 
 type CtaLink = {
   label: string;
-  href: string;
-  target?: "_blank";
 };
 
 export const BillingPricing: React.FC<BillingPricingProps> = ({
@@ -22,8 +19,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
   trialPeriodEndedAt,
 }) => {
   const validTeamPlan = getValidTeamPlan(team);
-  const starterPlanSubscribeRoute = `/team/${team.slug}/billing/subscribe/plan:starter`;
-  const growthPlanSubscribeRoute = `/team/${team.slug}/billing/subscribe/plan:growth`;
   const contactUsHref = "/contact-us";
 
   const starterCta: CtaLink | undefined = useMemo(() => {
@@ -32,7 +27,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       case "free": {
         return {
           label: "Get started for free",
-          href: starterPlanSubscribeRoute,
         };
       }
 
@@ -45,7 +39,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       case "growth": {
         return {
           label: "Downgrade",
-          href: starterPlanSubscribeRoute,
         };
       }
 
@@ -53,12 +46,11 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       case "pro": {
         return {
           label: "Contact us",
-          href: contactUsHref,
           target: "_blank",
         };
       }
     }
-  }, [validTeamPlan, starterPlanSubscribeRoute]);
+  }, [validTeamPlan]);
 
   const growthCardCta: CtaLink | undefined = useMemo(() => {
     const trialTitle = "Claim your 1-month free";
@@ -68,7 +60,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       case "free": {
         return {
           label: team.growthTrialEligible ? trialTitle : "Get started",
-          href: growthPlanSubscribeRoute,
         };
       }
 
@@ -76,7 +67,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       case "starter": {
         return {
           label: team.growthTrialEligible ? trialTitle : "Upgrade",
-          href: growthPlanSubscribeRoute,
         };
       }
 
@@ -89,12 +79,11 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       case "pro": {
         return {
           label: "Contact us",
-          href: contactUsHref,
           target: "_blank",
         };
       }
     }
-  }, [team, validTeamPlan, growthPlanSubscribeRoute]);
+  }, [team, validTeamPlan]);
 
   const proCta: CtaLink | undefined = useMemo(() => {
     // pro > pro
@@ -106,7 +95,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
     return {
       label: "Contact us",
       href: contactUsHref,
-      target: "_blank",
     };
   }, [validTeamPlan]);
 
@@ -120,8 +108,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
           starterCta
             ? {
                 title: starterCta.label,
-                href: starterCta.href,
-                target: starterCta.target,
                 tracking: {
                   category: "account",
                   label: "starterPlan",
@@ -143,8 +129,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
           growthCardCta
             ? {
                 title: growthCardCta.label,
-                href: growthCardCta.href,
-                target: growthCardCta.target,
                 tracking: {
                   category: "account",
                   label: team.growthTrialEligible
@@ -172,8 +156,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
           proCta
             ? {
                 title: proCta.label,
-                target: proCta.target,
-                href: CONTACT_US_URL,
                 tracking: {
                   category: "account",
                   label: "proPlan",

@@ -14,9 +14,7 @@ import {
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItemButton } from "@/components/ui/radio-group";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { accountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -49,7 +47,6 @@ export function CreateEcosystemForm(props: {
   const [formDataToBeConfirmed, setFormDataToBeConfirmed] = useState<
     z.infer<typeof formSchema> | undefined
   >();
-  const { data: billingAccountInfo } = useAccount();
 
   const router = useDashboardRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -164,31 +161,16 @@ export function CreateEcosystemForm(props: {
               )}
             />
           </div>
-          {billingAccountInfo?.status !== accountStatus.validPayment ? (
-            <ToolTipLabel label="Please update your payment method to create an ecosystem">
-              {/* Allows the button to be disabled but the tooltip still works */}
-              <div className="w-full">
-                <Button
-                  type="submit"
-                  disabled={true}
-                  variant="primary"
-                  className="w-full opacity-50"
-                >
-                  Create
-                </Button>
-              </div>
-            </ToolTipLabel>
-          ) : (
-            <Button
-              type="submit"
-              variant="primary"
-              className="w-full"
-              disabled={isPending}
-            >
-              {isPending && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
-              Create
-            </Button>
-          )}
+
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-full"
+            disabled={isPending}
+          >
+            {isPending && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
+            Create
+          </Button>
         </form>
       </Form>
       <ConfirmationDialog

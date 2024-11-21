@@ -13,16 +13,17 @@ import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CanClaimResponseType } from "app/api/testnet-faucet/can-claim/CanClaimResponseType";
-import { Onboarding } from "components/onboarding";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { toUnits } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { useActiveAccount, useWalletBalance } from "thirdweb/react";
 import { z } from "zod";
+import { isOnboardingComplete } from "../../../../../../login/isOnboardingRequired";
 
 function formatTime(seconds: number) {
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
@@ -52,6 +53,7 @@ export function FaucetButton({
   chain: ChainMetadata;
   amount: number;
 }) {
+  const pathname = usePathname();
   const client = useThirdwebClient();
   const address = useActiveAccount()?.address;
   const chainId = chain.chainId;
@@ -118,7 +120,6 @@ export function FaucetButton({
 
   const accountQuery = useAccount();
   const userQuery = useLoggedInUser();
-  const [showOnboarding, setShowOnBoarding] = useState(false);
 
   const canClaimFaucetQuery = useQuery({
     queryKey: ["testnet-faucet-can-claim", chainId],
@@ -145,7 +146,8 @@ export function FaucetButton({
     return (
       <CustomConnectWallet
         loginRequired={true}
-        connectButtonClassName="!w-full !rounded !bg-primary !text-primary-foreground !px-4 !py-2 !text-sm"
+        loadingButtonClassName="!w-full"
+        signInLinkButtonClassName="!w-full !h-auto !rounded !bg-primary !text-primary-foreground !px-4 !py-2 !text-sm hover:!bg-primary/80"
       />
     );
   }
@@ -201,23 +203,17 @@ export function FaucetButton({
     );
   }
 
-  // Email verification is required to claim from the faucet
-  if (
-    !accountQuery.data.emailConfirmedAt &&
-    !accountQuery.data.unconfirmedEmail
-  ) {
+  if (!isOnboardingComplete(accountQuery.data)) {
     return (
-      <>
-        <Button
-          variant="outline"
-          className="!opacity-100 w-full"
-          onClick={() => setShowOnBoarding(true)}
+      <Button asChild className="w-full">
+        <Link
+          href={
+            pathname ? `/login?next=${encodeURIComponent(pathname)}` : "/login"
+          }
         >
           Verify your Email
-        </Button>
-        {/* We will show the modal only if the user click on it, because this is a public page */}
-        {showOnboarding && <Onboarding onOpenChange={setShowOnBoarding} />}
-      </>
+        </Link>
+      </Button>
     );
   }
 

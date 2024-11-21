@@ -1,0 +1,169 @@
+import { ExternalLink } from "lucide-react";
+import { Stack, ArticleIconCard } from "@doc";
+import { TypeScriptIcon } from "@/icons";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Sign in with Ethereum",
+	description: "Authenticate users with your backend securely by proving they own a given Ethereum address.",
+});
+
+# Sign in with Ethereum
+
+Authenticate users with your backend securely by proving they own a given Ethereum address.
+
+SIWE (Sign-In with Ethereum) allows anyone to integrate passwordless web3-native authentication and authorization into their applications. Users can then login using any wallet (in-app, external, or smart wallet).
+
+This allows developers to create a familiar, secure authentication flow that works with traditional backends while leveraging the features of a web3 application.
+
+## Live Playground
+
+Try out SIWE auth for yourself in the [auth live playground](https://playground.thirdweb.com/connect/auth)
+
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com/connect/connect/auth"
+	description="See the SDK in action on the live playground"
+/>
+
+</Stack>
+
+## Configuring thirdweb auth
+
+In your backend, configure the auth object with the `createAuth` function.
+
+```tsx
+import { createThirdwebClient } from "thirdweb";
+import { createAuth } from "thirdweb/auth";
+ 
+const client = createThirdwebClient({
+  secretKey, // always use secret key for backend code
+});
+ 
+const thirdwebAuth = createAuth({
+  domain: "localhost:3000", // your domain
+  client,
+  // your backend wallet to sign login payloads
+  adminAccount: privateKeyToAccount({ client, privateKey }),
+});
+```
+
+The `createAuth` helper returns an object with all the functions you will need to authenticate users. Check out the [createAuth API reference](https://portal.thirdweb.com/auth/siwe) for more details.
+
+<Stack>
+
+<ArticleIconCard
+	title="createAuth"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/createAuth"
+	description="See the SDK in action on the live playground"
+/>
+
+</Stack>
+
+Your backend can use those functions to expose a SIWE compliant login flow to your frontend.
+
+Here's an example using server actions and a JWT for session management:
+
+```tsx
+export async function generatePayload(params) {
+    // generates a SIWE compliant login payload to return to the client
+    return thirdwebAuth.generatePayload(params);
+}
+
+export async function login(params) {
+    // verify the user's signature
+    const verifiedPayload = await thirdwebAuth.verifyPayload(params);
+    if (verifiedPayload.valid) {
+        // generate a JWT for the client (or use your own method to store the user session)
+        const jwt = await thirdwebAuth.generateJWT({ payload: verifiedPayload });
+        // set the JWT in cookies, or return it to the client to use as needed
+        setJWTCookie(jwt);
+        return true;
+    } else {
+        // the payload is not valid, you can return an error message to the client
+        return false;
+    }
+}
+
+export async function getUser() {
+    // check if the user is logged in with cookies, storage, or your method of choice
+    const jwt = getJWTCookie();
+    const { valid, parsedJWT } = await thirdwebAuth.verifyJWT({ jwt });
+    if (valid) {
+      return authResult.parsedJWT.sub; // sub is the user's address
+    }
+    return null;
+}
+
+export async function logout() {
+    // logout the user, delete cookies, etc.
+}
+```
+
+## Usage with UI components
+
+You can then add a SIWE step to the connection flow of the `ConnectWallet` or `ConnectEmbed` UI component by configuring the `auth` option. This will automatically trigger the wallet to sign the login payload returned by `getLoginPayload` and trigger the `doLogin` function you implemented in your backend.
+
+```tsx
+import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
+import {
+  generatePayload,
+  getUser,
+  login,
+  logout,
+} from "@/server/actions/auth";
+
+export default function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  return (
+    // The ThirdwebProvider should be at the root of your application, but the ConnectButton can be anywhere
+    <ThirdwebProvider>
+      <ConnectButton
+        client={client}
+        auth={{
+          getLoginPayload: async (params) => {
+            // here you should call your backend, using generatePayload to return
+            // a SIWE compliant login payload to the client
+            return generatePayload(params);
+          },
+          doLogin: async (params) => {
+            // here you should call your backend to verify the signed payload passed in params
+            // this will verify that the signature matches the intended wallet
+            return login(params);
+          },
+          isLoggedIn: async () => {
+            // here you should ask you backend if the user is logged in
+            // can use cookies, storage, or your method of choice
+            const user = await getUser();
+            return !!user;
+          },
+          doLogout: async () => {
+            // here you should call your backend to logout the user if needed
+            // and delete any local auth tokens
+            return logout();
+          },
+        }}
+      />
+    </ThirdwebProvider>
+  );
+}
+```
+
+## Using your own UI
+
+You can use the [`signLoginPayload`](/references/typescript/v5/signLoginPayload) function to trigger the signing of the login payload yourself. This can be useful if you want to use a custom UI for the login flow. You can get the active account that will sign the payload from the [`useActiveAccount`](/references/typescript/v5/useActiveAccount) hook.
+
+<Stack>
+
+<ArticleIconCard
+	title="signLoginPayload"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/signLoginPayload"
+	description="See the SDK in action on the live playground"
+/>
+
+</Stack>

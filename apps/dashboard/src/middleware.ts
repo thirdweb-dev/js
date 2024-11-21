@@ -104,7 +104,7 @@ export async function middleware(request: NextRequest) {
   if (paths[0] === "team" && paths[1] === "~") {
     // TODO - need an API to get the first team to avoid fetching all teams
     const teams = await getTeams();
-    const firstTeam = teams[0];
+    const firstTeam = teams?.[0];
     if (firstTeam) {
       const modifiedPaths = [...paths];
       modifiedPaths[1] = firstTeam.slug;
