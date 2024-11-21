@@ -217,7 +217,7 @@ export function TransferConfirmationScreen(
                       client,
                       chain,
                       to: receiverAddress,
-                      value: toWei(tokenAmount),
+                      value: toWei(tokenAmount, chain),
                     })
                   : transfer({
                       contract: getContract({

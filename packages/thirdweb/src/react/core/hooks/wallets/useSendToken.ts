@@ -79,7 +79,7 @@ export function useSendToken(client: ThirdwebClient) {
           chain: activeChain,
           client,
           to,
-          value: toWei(amount),
+          value: toWei(amount, activeChain),
         });
 
         await sendTransaction({

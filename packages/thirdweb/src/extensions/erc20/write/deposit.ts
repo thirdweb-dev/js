@@ -29,7 +29,9 @@ export type DepositParams =
  */
 export function deposit(options: BaseTransactionOptions<DepositParams>) {
   const value =
-    "amountWei" in options ? options.amountWei : toWei(options.amount);
+    "amountWei" in options
+      ? options.amountWei
+      : toWei(options.amount, options.contract.chain);
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, [], []] as const,

@@ -1,3 +1,5 @@
+import type { Chain } from "../chains/types.js";
+
 /**
  * Converts a given number of units to a string representation with a specified number of decimal places.
  * @param units - The number of units to convert.
@@ -125,10 +127,22 @@ export function toUnits(tokens: string, decimals: number): bigint {
  * toWei('1')
  * // 1000000000000000000n
  * ```
+ *
+ * For chains with varying decimals, you can provide the chain.
+ * ```ts
+ * import { toWei } from "thirdweb/utils";
+ * toWei('1', defineChain(295))
+ * // 10000000n
+ * ```
  * @utils
  */
-export function toWei(tokens: string) {
-  return toUnits(tokens, 18);
+export function toWei(tokens: string, chain?: Chain) {
+  switch (chain?.id) {
+    case 295:
+      return toUnits(tokens, 8);
+    default:
+      return toUnits(tokens, 18);
+  }
 }
 
 /**

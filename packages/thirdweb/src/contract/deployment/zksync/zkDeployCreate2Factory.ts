@@ -41,7 +41,7 @@ export async function zkDeployCreate2Factory(
     privateKey: PUBLISHED_PRIVATE_KEY,
   });
 
-  const valueToSend = toWei("0.01");
+  const valueToSend = toWei("0.01", options.chain);
   const balance = await getWalletBalance({
     address: create2Signer.address,
     chain: options.chain,
