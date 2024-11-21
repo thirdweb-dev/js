@@ -11,14 +11,15 @@ import { FeatureItem } from "./FeatureItem";
 
 type ButtonProps = React.ComponentProps<typeof Button>;
 
+const PRO_CONTACT_US_URL =
+  "https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro";
+
 type PricingCardProps = {
-  teamSlug: string | undefined;
+  teamSlug: string;
   billingPlan: Exclude<Team["billingPlan"], "free">;
   cta?: {
     hint?: string;
     title: string;
-    href: string;
-    target?: "_blank";
     tracking: {
       category: string;
       label?: string;
@@ -30,7 +31,6 @@ type PricingCardProps = {
   current?: boolean;
   canTrialGrowth?: boolean;
   activeTrialEndsAt?: string;
-  onClick?: () => void;
 };
 
 export const PricingCard: React.FC<PricingCardProps> = ({
@@ -41,7 +41,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   current = false,
   canTrialGrowth = false,
   activeTrialEndsAt,
-  onClick,
 }) => {
   const plan = TEAM_PLANS[billingPlan];
   const isCustomPrice = typeof plan.price === "string";
@@ -124,23 +123,21 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
       {cta && (
         <div className="flex flex-col gap-3">
-          {teamSlug && billingPlan !== "pro" ? (
+          {billingPlan !== "pro" ? (
             <CheckoutButton
               variant={cta.variant || "outline"}
               teamSlug={teamSlug}
               sku={billingPlan === "starter" ? "plan:starter" : "plan:growth"}
-              onClick={onClick}
             >
               {cta.title}
             </CheckoutButton>
           ) : (
             <Button variant={cta.variant || "outline"} asChild>
               <TrackedLinkTW
-                href={cta.href}
+                href={PRO_CONTACT_US_URL}
                 label={cta.tracking?.label}
                 category={cta.tracking?.category}
-                target={cta.target}
-                onClick={onClick}
+                target="_blank"
               >
                 {cta.title}
               </TrackedLinkTW>

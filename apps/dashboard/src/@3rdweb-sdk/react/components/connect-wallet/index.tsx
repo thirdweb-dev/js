@@ -4,6 +4,7 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useStore } from "@/lib/reactive";
+import { cn } from "@/lib/utils";
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
@@ -35,6 +36,7 @@ export const CustomConnectWallet = (props: {
   connectButtonClassName?: string;
   signInLinkButtonClassName?: string;
   detailsButtonClassName?: string;
+  loadingButtonClassName?: string;
   chain?: Chain;
 }) => {
   const thirdwebClient = useThirdwebClient();
@@ -123,7 +125,12 @@ export const CustomConnectWallet = (props: {
   if (isPending) {
     return (
       <>
-        <div className="flex h-[48px] w-[144px] items-center justify-center rounded-lg border border-border bg-muted">
+        <div
+          className={cn(
+            "flex h-[48px] w-[144px] items-center justify-center rounded-lg border border-border bg-muted",
+            props.loadingButtonClassName,
+          )}
+        >
           <Spinner className="size-4" />
         </div>
       </>

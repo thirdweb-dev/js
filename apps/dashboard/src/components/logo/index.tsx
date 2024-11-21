@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export const IconLogo: React.FC<{ extraClass?: string; color?: string }> = ({
+const IconLogo: React.FC<{ extraClass?: string; color?: string }> = ({
   color,
   extraClass,
 }) => {

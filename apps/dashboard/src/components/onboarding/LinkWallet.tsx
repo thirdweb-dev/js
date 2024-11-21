@@ -1,7 +1,9 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Button, TrackedLink } from "tw-components";
 import { shortenString } from "utils/usedapp-external";
 import { TitleAndDescription } from "./Title";
 
@@ -11,7 +13,7 @@ interface OnboardingLinkWalletProps {
   onBack: () => void;
 }
 
-const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
+export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
   email,
   onSave,
   onBack,
@@ -69,52 +71,51 @@ const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
         description={
           <>
             We&apos;ve noticed that there is another account associated with{" "}
-            <strong>{email}</strong>. Would you like to link your wallet{" "}
-            <strong>{shortenString(user?.address ?? "")}</strong> to the
-            existing account? Once you agree, we will email you the details.{" "}
-            <TrackedLink
+            <span className="text-foreground">{email}</span>. Would you like to
+            link your wallet{" "}
+            <span className="font-mono text-foreground">
+              {shortenString(user?.address ?? "")}
+            </span>{" "}
+            to the existing account?
+            <div className="h-2" />
+            Once you agree, we will email you the details.{" "}
+            <TrackedLinkTW
               href="https://portal.thirdweb.com/account/billing/account-info"
-              color="blue.500"
               category="account"
               label="learn-wallet-linking"
-              isExternal
+              target="_blank"
+              className="underline hover:text-foreground"
             >
               Learn more about wallet linking
-            </TrackedLink>
+            </TrackedLinkTW>
             .
           </>
         }
       />
+
+      <div className="h-8" />
+
       <form>
-        <div className="flex w-full flex-col gap-8">
-          <div className="flex flex-col gap-3">
-            <Button
-              w="full"
-              size="lg"
-              fontSize="md"
-              colorScheme="blue"
-              type="button"
-              onClick={handleSubmit}
-              isLoading={updateMutation.isPending}
-              isDisabled={updateMutation.isPending}
-            >
-              Yes, link them
-            </Button>
-            <Button
-              w="full"
-              size="lg"
-              fontSize="md"
-              variant="outline"
-              onClick={onBack}
-              isDisabled={updateMutation.isPending}
-            >
-              Use another email
-            </Button>
-          </div>
+        <div className="flex flex-col gap-3">
+          <Button
+            type="button"
+            onClick={handleSubmit}
+            disabled={updateMutation.isPending}
+            className="gap-2"
+          >
+            {updateMutation.isPending && <Spinner className="size-4" />}
+            {updateMutation.isPending ? "Linking" : "Yes, link them"}
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            onClick={onBack}
+            disabled={updateMutation.isPending}
+          >
+            Use another email
+          </Button>
         </div>
       </form>
     </>
   );
 };
-
-export default OnboardingLinkWallet;

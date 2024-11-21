@@ -12,6 +12,11 @@ export async function TeamHeader() {
   }
 
   const teams = await getTeams();
+
+  if (!teams) {
+    return <TeamHeaderLoggedOut />;
+  }
+
   const teamsAndProjects = await Promise.all(
     teams.map(async (team) => ({
       team,

@@ -2,7 +2,7 @@ import { getTeamBySlug } from "@/api/team";
 import { getTeamSubscriptions } from "@/api/team-subscription";
 import { redirect } from "next/navigation";
 import { Billing } from "../../../../../../../components/settings/Account/Billing";
-import { getAccount } from "../../../../../../account/settings/getAccount";
+import { getValidAccount } from "../../../../../../account/settings/getAccount";
 
 export default async function Page(props: {
   params: Promise<{
@@ -10,13 +10,10 @@ export default async function Page(props: {
   }>;
 }) {
   const params = await props.params;
+  const pagePath = `/team/${params.team_slug}/settings/billing`;
 
-  const account = await getAccount();
-  if (!account) {
-    redirect(
-      `/login?next=${encodeURIComponent(`/team/${params.team_slug}/settings/billing`)}`,
-    );
-  }
+  // ensure that user is logged in and onboarded
+  await getValidAccount(pagePath);
 
   const team = await getTeamBySlug(params.team_slug);
 

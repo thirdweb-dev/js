@@ -1,21 +1,14 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { type Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { type ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  Button,
-  type ButtonProps,
-  Checkbox,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  Text,
-} from "tw-components";
 import {
   type AccountValidationSchema,
   accountValidationSchema,
@@ -24,10 +17,8 @@ import {
 interface AccountFormProps {
   account: Account;
   horizontal?: boolean;
-  previewEnabled?: boolean;
   showSubscription?: boolean;
   hideName?: boolean;
-  buttonProps?: ButtonProps;
   buttonText?: string;
   padded?: boolean;
   trackingCategory?: string;
@@ -40,18 +31,14 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   account,
   onSave,
   onDuplicateError,
-  buttonProps,
   buttonText = "Save",
   horizontal = false,
-  previewEnabled = false,
   hideName = false,
   showSubscription = false,
   disableUnchanged = false,
   padded = true,
 }) => {
-  const [isSubscribing, setIsSubscribing] = useState(
-    showSubscription && !!account.email?.length,
-  );
+  const [isSubscribing, setIsSubscribing] = useState(true);
   const trackEvent = useTrack();
   const form = useForm<AccountValidationSchema>({
     resolver: zodResolver(accountValidationSchema),
@@ -66,11 +53,6 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   });
 
   const updateMutation = useUpdateAccount();
-
-  const { onSuccess, onError } = useTxNotifications(
-    "Billing account saved.",
-    "Failed to save your billing account.",
-  );
 
   const handleSubmit = form.handleSubmit((values) => {
     const formData = {
@@ -94,7 +76,6 @@ export const AccountForm: React.FC<AccountFormProps> = ({
         if (onSave) {
           onSave(values.email);
         }
-        onSuccess();
 
         trackEvent({
           category: "account",
@@ -111,10 +92,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           error?.message.match(/email address already exists/)
         ) {
           onDuplicateError(values.email);
-        } else {
-          onError(error);
         }
-
         trackEvent({
           category: "account",
           action: "update",
@@ -136,107 +114,65 @@ export const AccountForm: React.FC<AccountFormProps> = ({
         )}
       >
         <div
-          className={cn("flex w-full", horizontal ? "gap-4" : "flex-col gap-6")}
+          className={cn("flex w-full", horizontal ? "gap-4" : "flex-col gap-4")}
         >
-          <FormControl
+          <FormFieldSetup
             isRequired
-            isInvalid={!!form.getFieldState("email", form.formState).error}
+            htmlFor="email"
+            errorMessage={
+              form.getFieldState("email", form.formState).error?.message
+            }
+            label="Email"
           >
-            <FormLabel>Email</FormLabel>
-
-            {previewEnabled ? (
-              <Flex
-                borderRadius="md"
-                borderColor="borderColor"
-                borderWidth={1}
-                h={10}
-                px={3}
-                alignItems="center"
-              >
-                <Heading size="subtitle.sm">{form.getValues("email")}</Heading>
-              </Flex>
-            ) : (
-              <Input
-                placeholder="you@company.com"
-                type="email"
-                {...form.register("email")}
-              />
-            )}
-
-            {form.getFieldState("email", form.formState).error && (
-              <FormErrorMessage size="body.sm">
-                {form.getFieldState("email", form.formState).error?.message}
-              </FormErrorMessage>
-            )}
-          </FormControl>
+            <Input
+              placeholder="you@company.com"
+              type="email"
+              {...form.register("email")}
+              id="email"
+            />
+          </FormFieldSetup>
 
           {!hideName && (
-            <FormControl
-              isInvalid={!!form.getFieldState("name", form.formState).error}
+            <FormFieldSetup
+              errorMessage={
+                form.getFieldState("name", form.formState).error?.message
+              }
+              label="Name"
+              htmlFor="name"
+              isRequired={false}
             >
-              <FormLabel>Name</FormLabel>
-
-              {previewEnabled ? (
-                <Flex
-                  borderRadius="md"
-                  borderColor="borderColor"
-                  borderWidth={1}
-                  h={10}
-                  px={3}
-                  alignItems="center"
-                >
-                  <Heading size="subtitle.sm">{form.getValues("name")}</Heading>
-                </Flex>
-              ) : (
-                <Input
-                  placeholder="Company Inc."
-                  type="text"
-                  {...form.register("name")}
-                />
-              )}
-
-              {form.getFieldState("name", form.formState).error && (
-                <FormErrorMessage size="body.sm">
-                  {form.getFieldState("name", form.formState).error?.message}
-                </FormErrorMessage>
-              )}
-            </FormControl>
+              <Input
+                placeholder="Company Inc."
+                type="text"
+                {...form.register("name")}
+                id="name"
+              />
+            </FormFieldSetup>
           )}
 
           {showSubscription && (
-            <Checkbox
-              defaultChecked
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setIsSubscribing(e.target.checked)
-              }
-            >
-              <Text>Subscribe to new features and key product updates</Text>
-            </Checkbox>
+            <CheckboxWithLabel>
+              <Checkbox
+                checked={isSubscribing}
+                onCheckedChange={(v) => setIsSubscribing(!!v)}
+              />
+              Subscribe to new features and key product updates
+            </CheckboxWithLabel>
           )}
         </div>
 
-        <div
-          className={cn(
-            "flex w-full flex-row items-center gap-2",
-            "justify-end",
-          )}
+        <Button
+          type="button"
+          onClick={handleSubmit}
+          disabled={
+            updateMutation.isPending ||
+            (disableUnchanged && !form.formState.isDirty)
+          }
+          className="w-full gap-2"
         >
-          {!previewEnabled && (
-            <Button
-              {...buttonProps}
-              type="button"
-              onClick={handleSubmit}
-              colorScheme={buttonProps?.variant ? undefined : "blue"}
-              isDisabled={
-                updateMutation.isPending ||
-                (disableUnchanged && !form.formState.isDirty)
-              }
-              isLoading={updateMutation.isPending}
-            >
-              {buttonText}
-            </Button>
-          )}
-        </div>
+          {updateMutation.isPending && <Spinner className="size-4" />}
+          {buttonText}
+        </Button>
       </div>
     </form>
   );

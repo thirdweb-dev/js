@@ -4,7 +4,7 @@ import {
   getWalletConnections,
   getWalletUsers,
 } from "@/api/analytics";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import type {
   InAppWalletStats,
@@ -27,7 +27,7 @@ import { PieChartCard } from "../../components/Analytics/PieChartCard";
 import { getTeamBySlug } from "@/api/team";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { getAccount } from "app/account/settings/getAccount";
+import { getValidAccount } from "app/account/settings/getAccount";
 import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
 import { Changelog, type ChangelogItem } from "components/dashboard/Changelog";
 import { Suspense } from "react";
@@ -54,8 +54,13 @@ export default async function TeamOverviewPage(props: {
     props.searchParams,
   ]);
 
+  const account = await getValidAccount(`/team/${params.team_slug}`);
   const team = await getTeamBySlug(params.team_slug);
-  const account = await getAccount();
+
+  if (!team) {
+    redirect("/team");
+  }
+
   const interval = (searchParams.interval as "day" | "week") ?? "week";
   const rangeType = (searchParams.type as DurationId) || "last-120";
   const range: Range = {
@@ -63,14 +68,6 @@ export default async function TeamOverviewPage(props: {
     to: new Date(searchParams.to ?? getLastNDaysRange("last-120").to),
     type: rangeType,
   };
-
-  if (!team) {
-    notFound();
-  }
-
-  if (!account) {
-    redirect("/login");
-  }
 
   return (
     <div className="flex grow flex-col">

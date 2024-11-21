@@ -1,4 +1,5 @@
 import type { UserOpStats } from "@/api/analytics";
+import type { Team } from "@/api/team";
 import {
   type Query,
   useMutation,
@@ -495,7 +496,7 @@ export function useConfirmEmail() {
         throw new Error(json.error.message);
       }
 
-      return json.data;
+      return json.data as { team: Team; account: Account };
     },
     onSuccess: async () => {
       // invalidate related cache, since could be relinking account

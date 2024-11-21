@@ -1,7 +1,7 @@
 import { getTeamBySlug } from "@/api/team";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { redirect } from "next/navigation";
-import { getAccount } from "../../../../../../account/settings/getAccount";
+import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { SettingsGasCreditsPage } from "./SettingsCreditsPage";
 
 export default async function Page(props: {
@@ -10,15 +10,9 @@ export default async function Page(props: {
   }>;
 }) {
   const params = await props.params;
-
-  const account = await getAccount();
-
-  if (!account) {
-    return redirect(
-      `/login?next=${encodeURIComponent(`/team/${params.team_slug}/~/settings/credits`)}`,
-    );
-  }
-
+  const account = await getValidAccount(
+    `/team/${params.team_slug}/~/settings/credits`,
+  );
   const team = await getTeamBySlug(params.team_slug);
 
   if (!team) {
