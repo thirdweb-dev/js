@@ -3,6 +3,7 @@ import {
   type TypedData,
   type TypedDataDefinition,
   type TypedDataDomain,
+  encodePacked,
   hashTypedData,
   maxUint96,
 } from "viem";
@@ -354,9 +355,9 @@ async function createSmartAccount(
         });
         if (isModularFactory) {
           // add validator address
-          sig = encodeAbiParameters(
-            [{ type: "address" }, { type: "bytes" }],
-            [ZERO_ADDRESS, sig],
+          sig = encodePacked(
+            ["address", "bytes"],
+            ["0x6DF8ea6FF6Ca55f367CDA45510CA40dC78993DEC", sig],
           );
         }
       } else {
