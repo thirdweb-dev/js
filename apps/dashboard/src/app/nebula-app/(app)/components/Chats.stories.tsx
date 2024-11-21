@@ -1,9 +1,12 @@
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
-import { mobileViewport } from "../../../stories/utils";
-import { MarkdownRenderer } from "./markdown-renderer";
+import { Toaster } from "sonner";
+import { accountStub, randomLorem } from "../../../../stories/stubs";
+import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
+import { Chats } from "./Chats";
 
 const meta = {
-  title: "blocks/MarkdownRenderer",
+  title: "Nebula/Chats",
   component: Story,
   parameters: {
     nextjs: {
@@ -17,12 +20,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Desktop: Story = {
   args: {},
-};
-
-export const DisableCodeHighlight: Story = {
-  args: {
-    disableCodeHighlight: true,
-  },
 };
 
 export const Mobile: Story = {
@@ -132,31 +129,88 @@ function example() {
 | Row 4 Cell 1 | Row 4 Cell 2     | Row 4 Cell 3 | Row 4 Cell 4     | Row 4 Cell 5 |
 | Row 5 Cell 1 | Row 5 Cell 2     | Row 5 Cell 3 | Row 5 Cell 4     | Row 5 Cell 5 |
 
-
-### Task List
-- [ ] Task 1
-- [x] Task 2 (completed)
-
-### Escaping special characters
-\\*This text is not italicized.\\*
-
-### Strikethrough
-~~This is strikethrough text.~~
-
-
 `;
 
-function Story(props: {
-  disableCodeHighlight?: boolean;
-}) {
+const responseWithCodeMarkdown = `
+${randomLorem(20)}
+
+${markdownExample}
+`;
+
+function Story() {
   return (
-    <div className="container max-w-[800px] py-10">
-      <MarkdownRenderer
-        markdownText={markdownExample}
-        code={{
-          disableCodeHighlight: props.disableCodeHighlight,
-        }}
-      />
+    <div className="container flex max-w-[800px] flex-col gap-14 py-10">
+      <BadgeContainer label="User + Presence">
+        <Chats
+          authToken="xxxxx"
+          isChatStreaming={false}
+          sessionId="xxxxx"
+          account={accountStub()}
+          messages={[
+            {
+              text: randomLorem(10),
+              type: "user",
+            },
+            {
+              text: randomLorem(20),
+              type: "presence",
+            },
+          ]}
+          client={getThirdwebClient()}
+        />
+      </BadgeContainer>
+
+      <BadgeContainer label="User + Error">
+        <Chats
+          client={getThirdwebClient()}
+          authToken="xxxxx"
+          isChatStreaming={false}
+          sessionId="xxxxx"
+          account={accountStub()}
+          messages={[
+            {
+              text: randomLorem(10),
+              type: "user",
+            },
+            {
+              text: randomLorem(20),
+              type: "error",
+            },
+          ]}
+        />
+      </BadgeContainer>
+
+      <BadgeContainer label="User + Assistant responses">
+        <Chats
+          client={getThirdwebClient()}
+          authToken="xxxxx"
+          isChatStreaming={false}
+          sessionId="xxxxx"
+          account={accountStub()}
+          messages={[
+            {
+              text: randomLorem(10),
+              type: "user",
+            },
+            {
+              text: randomLorem(40),
+              type: "assistant",
+              request_id: "xxxxx",
+            },
+            {
+              text: randomLorem(50),
+              type: "assistant",
+              request_id: undefined,
+            },
+            {
+              text: responseWithCodeMarkdown,
+              type: "assistant",
+              request_id: undefined,
+            },
+          ]}
+        />
+      </BadgeContainer>
+      <Toaster richColors />
     </div>
   );
 }
