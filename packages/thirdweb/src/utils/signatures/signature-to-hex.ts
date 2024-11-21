@@ -1,6 +1,7 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
-import type { Signature } from "viem";
 import { type Hex, hexToBigInt } from "../encoding/hex.js";
+
+// We can't migrate this to Ox without breaking changes
 
 /**
  * Converts a signature to a hex string.
@@ -25,7 +26,12 @@ import { type Hex, hexToBigInt } from "../encoding/hex.js";
  * ```
  * @utils
  */
-export function signatureToHex(signature: Signature): Hex {
+export function signatureToHex(signature: {
+  r: Hex;
+  s: Hex;
+  v?: bigint;
+  yParity?: number;
+}): Hex {
   const { r, s, v, yParity } = signature;
   const yParity_ = (() => {
     if (yParity === 0 || yParity === 1) return yParity;
