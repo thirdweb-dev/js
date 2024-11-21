@@ -171,10 +171,22 @@ function useUnderline<El extends HTMLElement>() {
     }
 
     update();
+    let resizeObserver: ResizeObserver | undefined = undefined;
+
+    if (containerRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        setTimeout(() => {
+          update();
+        }, 100);
+      });
+      resizeObserver.observe(containerRef.current);
+    }
+
     // add event listener for resize
     window.addEventListener("resize", update);
     return () => {
       window.removeEventListener("resize", update);
+      resizeObserver?.disconnect();
     };
   }, [activeTabEl]);
 

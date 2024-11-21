@@ -12,6 +12,7 @@ export type CodeProps = {
   scrollableClassName?: string;
   keepPreviousDataOnCodeChange?: boolean;
   copyButtonClassName?: string;
+  ignoreFormattingErrors?: boolean;
 };
 
 export const CodeClient: React.FC<CodeProps> = ({
@@ -21,10 +22,14 @@ export const CodeClient: React.FC<CodeProps> = ({
   scrollableClassName,
   keepPreviousDataOnCodeChange = false,
   copyButtonClassName,
+  ignoreFormattingErrors,
 }) => {
   const codeQuery = useQuery({
     queryKey: ["html", code],
-    queryFn: () => getCodeHtml(code, lang),
+    queryFn: () =>
+      getCodeHtml(code, lang, {
+        ignoreFormattingErrors: ignoreFormattingErrors,
+      }),
     placeholderData: keepPreviousDataOnCodeChange
       ? keepPreviousData
       : undefined,
