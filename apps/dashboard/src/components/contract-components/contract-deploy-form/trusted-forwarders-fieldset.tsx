@@ -34,9 +34,7 @@ export const TrustedForwardersFieldset: React.FC<
               </span>
 
               <span className="block text-muted-foreground text-sm">
-                You can provide your own forwarder, or click the button below to
-                use default forwarders provided by thirdweb. Leave empty if not
-                needed.
+                You can provide your own forwarder.
               </span>
             </FormHelperText>
           </div>
