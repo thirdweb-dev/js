@@ -39,7 +39,7 @@ export async function NebulaWaitListPage(props: {
     }
   }
 
-  return <NebulaWaitListPageUI />;
+  return <NebulaWaitListPageUI teamId={team.id} />;
 }
 
 function UnexpectedErrorPage(props: {

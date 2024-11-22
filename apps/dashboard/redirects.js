@@ -265,6 +265,12 @@ async function redirects() {
       destination: "/account-abstraction",
       permanent: false,
     },
+    // redirect /solutions/chains to /solutions/ecosystem
+    {
+      source: "/solutions/chains",
+      destination: "/solutions/ecosystem",
+      permanent: false,
+    },
     ...legacyDashboardToTeamRedirects,
   ];
 }
