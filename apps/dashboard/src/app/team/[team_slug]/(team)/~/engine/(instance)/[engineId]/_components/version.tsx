@@ -26,6 +26,7 @@ import {
   useEngineSystemHealth,
   useEngineUpdateDeployment,
 } from "@3rdweb-sdk/react/hooks/useEngine";
+import { formatDistanceToNow } from "date-fns";
 import {
   CircleArrowDownIcon,
   CloudDownloadIcon,
@@ -37,24 +38,27 @@ import invariant from "tiny-invariant";
 
 export const EngineVersionBadge = ({
   instance,
+  teamId,
 }: {
   instance: EngineInstance;
+  teamId: string;
 }) => {
-  const teamId = "DEBUG - UNIMPLEMENTED";
-
   const healthQuery = useEngineSystemHealth(instance.url);
   const publicConfigurationQuery = useEngineGetDeploymentPublicConfiguration({
     teamId,
   });
   const [isModalOpen, setModalOpen] = useState(false);
 
-  if (!healthQuery.data || !publicConfigurationQuery.data) {
+  if (
+    !healthQuery.data ||
+    publicConfigurationQuery.data.serverVersions?.length === 0
+  ) {
     return null;
   }
 
+  const serverVersions = publicConfigurationQuery.data.serverVersions;
   const currentVersion = healthQuery.data.engineVersion ?? "N/A";
-  const hasNewerVersion =
-    publicConfigurationQuery.data.serverVersions.latest !== currentVersion;
+  const hasNewerVersion = serverVersions[0].name !== currentVersion;
 
   // Hide the change version modal unless owner.
   if (!instance.deploymentId) {
@@ -98,7 +102,8 @@ export const EngineVersionBadge = ({
         onOpenChange={setModalOpen}
         instance={instance}
         currentVersion={currentVersion}
-        serverVersions={publicConfigurationQuery.data.serverVersions}
+        serverVersions={serverVersions}
+        teamId={teamId}
       />
     </>
   );
@@ -109,12 +114,20 @@ const ChangeVersionModal = (props: {
   onOpenChange: (open: boolean) => void;
   instance: EngineInstance;
   currentVersion: string;
-  serverVersions: { latest: string; recent: string[] };
+  serverVersions: { name: string; createdAt: string }[];
+  teamId: string;
 }) => {
-  const teamId = "DEBUG - UNIMPLEMENTED";
-  const { open, onOpenChange, instance, currentVersion, serverVersions } =
-    props;
-  const [selectedVersion, setSelectedVersion] = useState(serverVersions.latest);
+  const {
+    open,
+    onOpenChange,
+    instance,
+    currentVersion,
+    serverVersions,
+    teamId,
+  } = props;
+  const [selectedVersion, setSelectedVersion] = useState(
+    serverVersions[0]?.name,
+  );
   const updateDeploymentMutation = useEngineUpdateDeployment();
 
   if (!instance.deploymentId) {
@@ -188,26 +201,27 @@ const ChangeVersionModal = (props: {
             </SelectTrigger>
             <SelectContent className="z-[10001]">
               <SelectGroup>
-                <SelectItem
-                  value={serverVersions.latest}
-                  id={serverVersions.latest}
-                >
-                  {serverVersions.latest}
-                  <Badge className="ml-2">latest</Badge>
-                </SelectItem>
-                {serverVersions.recent.map((version) => {
-                  const isCurrentVersion = version === currentVersion;
+                {serverVersions.map(({ name, createdAt }, idx) => {
+                  const isCurrentVersion = name === currentVersion;
+                  const isLatestVersion = idx === 0;
                   return (
                     <SelectItem
-                      key={version}
-                      value={version}
-                      id={version}
+                      key={name}
+                      value={name}
+                      id={name}
                       disabled={isCurrentVersion}
                     >
-                      {version}
-                      {isCurrentVersion && (
+                      <span>{name}</span>
+                      <span className="ml-4 text-muted-foreground">
+                        {formatDistanceToNow(new Date(createdAt), {
+                          addSuffix: true,
+                        })}
+                      </span>
+                      {isCurrentVersion ? (
                         <Badge className="ml-2">current</Badge>
-                      )}
+                      ) : isLatestVersion ? (
+                        <Badge className="ml-2">latest</Badge>
+                      ) : null}
                     </SelectItem>
                   );
                 })}

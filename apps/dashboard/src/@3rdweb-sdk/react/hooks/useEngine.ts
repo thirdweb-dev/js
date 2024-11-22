@@ -195,31 +195,19 @@ interface GetDeploymentPublicConfigurationInput {
   teamId: string;
 }
 
+interface DeploymentPublicConfigurationResponse {
+  serverVersions: {
+    name: string;
+    createdAt: string;
+  }[];
+}
+
 export function useEngineGetDeploymentPublicConfiguration(
   input: GetDeploymentPublicConfigurationInput,
 ) {
-  return useQuery({
+  return useQuery<DeploymentPublicConfigurationResponse>({
     queryKey: engineKeys.deployment(),
     queryFn: async () => {
-      // DEBUG
-      return {
-        serverVersions: {
-          latest: "v2.1.0",
-          recent: [
-            "v2.0.35",
-            "v2.0.34",
-            "v2.0.33",
-            "v2.0.32",
-            "v2.0.31",
-            "v2.0.30",
-            "v2.0.29",
-            "v2.0.28",
-            "v2.0.27",
-            "v2.0.26",
-          ],
-        },
-      };
-
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/teams/${input.teamId}/engine/deployments/public-configuration`,
         { method: "GET" },
@@ -229,12 +217,7 @@ export function useEngineGetDeploymentPublicConfiguration(
       }
 
       const json = await res.json();
-      return json.data as {
-        serverVersions: {
-          latest: string;
-          recent: string[];
-        };
-      };
+      return json.data as DeploymentPublicConfigurationResponse;
     },
   });
 }

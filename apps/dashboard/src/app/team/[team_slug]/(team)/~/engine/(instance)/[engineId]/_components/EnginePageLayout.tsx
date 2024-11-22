@@ -261,7 +261,7 @@ function RenderEngineInstanceHeader(props: {
             )}
           </div>
         </div>
-        <EngineVersionBadge instance={instance} />
+        <EngineVersionBadge instance={instance} teamId={instance.accountId} />
       </div>
 
       <div className="h-5" />
