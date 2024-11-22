@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.70.1
+
+### Patch Changes
+
+- [#5482](https://github.com/thirdweb-dev/js/pull/5482) [`b5baeae`](https://github.com/thirdweb-dev/js/commit/b5baeae821fffeb2dfb23269715066a0110b00c2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose utilities to decode errors and function data
+
+- [#5493](https://github.com/thirdweb-dev/js/pull/5493) [`d9a63a6`](https://github.com/thirdweb-dev/js/commit/d9a63a6d351459e1cae9c1e3cb9d005ac165a5d9) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix props not getting passed to TokenIcon
+
+- [#5498](https://github.com/thirdweb-dev/js/pull/5498) [`6b6f617`](https://github.com/thirdweb-dev/js/commit/6b6f61705d4561f44338d08e379c71e64a05ed6b) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - enable private key export for enclave wallets upon initial login
+
 ## 5.70.0
 
 ### Minor Changes
