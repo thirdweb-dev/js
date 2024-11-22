@@ -1,11 +1,13 @@
+"use client";
+
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMutation } from "@tanstack/react-query";
-import { AccountForm } from "components/settings/Account/AccountForm";
 import { useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
-import { doLogout } from "../../app/login/auth-actions";
+import { doLogout } from "../auth-actions";
+import { AccountForm } from "./AccountForm";
 import { TitleAndDescription } from "./Title";
 
 type OnboardingGeneralProps = {

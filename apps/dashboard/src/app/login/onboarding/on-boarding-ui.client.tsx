@@ -1,14 +1,21 @@
 "use client";
+import type { Team } from "@/api/team";
 import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
-import { useTrack } from "../../hooks/analytics/useTrack";
 import { OnboardingChoosePlan } from "./ChoosePlan";
 import { OnboardingConfirmEmail } from "./ConfirmEmail";
 import { OnboardingGeneral } from "./General";
 import { OnboardingLinkWallet } from "./LinkWallet";
-import type { OnboardingScreen } from "./types";
 import { useSkipOnboarding } from "./useSkipOnboarding";
+
+type OnboardingScreen =
+  | { id: "onboarding" }
+  | { id: "linking" }
+  | { id: "confirming" }
+  | { id: "confirmLinking" }
+  | { id: "plan"; team: Team };
 
 function OnboardingUI(props: {
   account: Account;

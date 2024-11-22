@@ -1,6 +1,7 @@
 "use client";
+
+import { PricingCard } from "@/components/blocks/pricing-card";
 import { Button } from "@/components/ui/button";
-import { PricingCard } from "components/homepage/sections/PricingCard";
 import { ArrowRightIcon } from "lucide-react";
 import { TitleAndDescription } from "./Title";
 

@@ -15,10 +15,10 @@ import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
-import { isOnboardingComplete } from "./isOnboardingRequired";
+import { isOnboardingComplete } from "./onboarding/isOnboardingRequired";
 
 const LazyOnboardingUI = lazy(
-  () => import("../../components/onboarding/on-boarding-ui.client"),
+  () => import("./onboarding/on-boarding-ui.client"),
 );
 
 const wallets = [

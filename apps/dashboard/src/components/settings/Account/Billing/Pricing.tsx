@@ -1,5 +1,5 @@
 import type { Team } from "@/api/team";
-import { PricingCard } from "components/homepage/sections/PricingCard";
+import { PricingCard } from "@/components/blocks/pricing-card";
 import { useMemo } from "react";
 import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/getValidTeamPlan";
 

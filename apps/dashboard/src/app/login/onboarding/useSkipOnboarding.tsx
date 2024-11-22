@@ -1,5 +1,7 @@
+"use client";
+
 import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { useTrack } from "../../hooks/analytics/useTrack";
+import { useTrack } from "hooks/analytics/useTrack";
 
 export function useSkipOnboarding() {
   const mutation = useUpdateAccount();

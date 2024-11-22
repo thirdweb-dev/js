@@ -1,3 +1,6 @@
+"use client";
+
+import type { Team } from "@/api/team";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,10 +16,6 @@ import {
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  type EmailConfirmationValidationSchema,
-  emailConfirmationValidationSchema,
-} from "components/settings/Account/validations";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
@@ -24,8 +23,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { shortenString } from "utils/usedapp-external";
-import type { Team } from "../../@/api/team";
 import { TitleAndDescription } from "./Title";
+import {
+  type EmailConfirmationValidationSchema,
+  emailConfirmationValidationSchema,
+} from "./validations";
 
 interface OnboardingConfirmEmailProps {
   email: string;
