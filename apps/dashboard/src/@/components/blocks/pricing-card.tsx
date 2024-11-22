@@ -32,6 +32,7 @@ type PricingCardProps = {
   current?: boolean;
   canTrialGrowth?: boolean;
   activeTrialEndsAt?: string;
+  redirectPath: string;
 };
 
 export const PricingCard: React.FC<PricingCardProps> = ({
@@ -42,6 +43,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   current = false,
   canTrialGrowth = false,
   activeTrialEndsAt,
+  redirectPath,
 }) => {
   const plan = TEAM_PLANS[billingPlan];
   const isCustomPrice = typeof plan.price === "string";
@@ -129,6 +131,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               variant={cta.variant || "outline"}
               teamSlug={teamSlug}
               sku={billingPlan === "starter" ? "plan:starter" : "plan:growth"}
+              redirectPath={redirectPath}
             >
               {cta.title}
             </CheckoutButton>

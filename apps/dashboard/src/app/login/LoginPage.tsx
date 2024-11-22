@@ -151,7 +151,11 @@ function PageContent(props: {
   if (screen.id === "onboarding") {
     return (
       <Suspense fallback={<LoadingCard />}>
-        <LazyOnboardingUI account={screen.account} onComplete={onComplete} />
+        <LazyOnboardingUI
+          account={screen.account}
+          onComplete={onComplete}
+          redirectPath={props.nextPath || "/team"}
+        />
       </Suspense>
     );
   }

@@ -20,6 +20,8 @@ type OnboardingScreen =
 function OnboardingUI(props: {
   account: Account;
   onComplete: () => void;
+  // path to redirect from stripe
+  redirectPath: string;
 }) {
   const { account } = props;
   const [screen, setScreen] = useState<OnboardingScreen>({ id: "onboarding" });
@@ -128,6 +130,7 @@ function OnboardingUI(props: {
 
       {screen.id === "plan" && (
         <OnboardingChoosePlan
+          redirectPath={props.redirectPath}
           teamSlug={screen.team.slug}
           skipPlan={async () => {
             await skipOnboarding().catch(() => {});

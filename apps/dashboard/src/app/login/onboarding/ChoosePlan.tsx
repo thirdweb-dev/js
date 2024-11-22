@@ -9,6 +9,7 @@ export function OnboardingChoosePlan(props: {
   skipPlan: () => Promise<void>;
   canTrialGrowth: boolean;
   teamSlug: string;
+  redirectPath: string;
 }) {
   return (
     <div>
@@ -29,6 +30,7 @@ export function OnboardingChoosePlan(props: {
               category: "account",
             },
           }}
+          redirectPath={props.redirectPath}
         />
 
         <PricingCard
@@ -45,6 +47,7 @@ export function OnboardingChoosePlan(props: {
           }}
           canTrialGrowth={props.canTrialGrowth}
           highlighted
+          redirectPath={props.redirectPath}
         />
       </div>
 

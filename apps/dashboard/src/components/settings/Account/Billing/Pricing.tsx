@@ -18,6 +18,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
   team,
   trialPeriodEndedAt,
 }) => {
+  const pagePath = `/team/${team.slug}/~/settings/billing`;
   const validTeamPlan = getValidTeamPlan(team);
   const contactUsHref = "/contact-us";
 
@@ -102,6 +103,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
     <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
       {/* Starter */}
       <PricingCard
+        redirectPath={pagePath}
         billingPlan="starter"
         current={validTeamPlan === "starter"}
         cta={
@@ -120,6 +122,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
 
       {/* Growth */}
       <PricingCard
+        redirectPath={pagePath}
         billingPlan="growth"
         activeTrialEndsAt={
           validTeamPlan === "growth" ? trialPeriodEndedAt : undefined
@@ -149,6 +152,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       />
 
       <PricingCard
+        redirectPath={pagePath}
         billingPlan="pro"
         teamSlug={team.slug}
         current={validTeamPlan === "pro"}
