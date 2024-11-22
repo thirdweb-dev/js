@@ -160,5 +160,5 @@ export function TokenIcon({
     return fallbackComponent || null;
   }
 
-  return <img src={iconQuery.data} alt={restProps.alt} />;
+  return <img src={iconQuery.data} {...restProps} alt={restProps.alt} />;
 }
