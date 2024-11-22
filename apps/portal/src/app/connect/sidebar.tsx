@@ -180,6 +180,10 @@ export const sidebar: SideBar = {
               ],
             },
             {
+              name: "Migrate to thirdweb",
+              href: `${walletSlug}/migrate-to-thirdweb`,
+            },
+            {
               name: "FAQ",
               href: `${walletSlug}/faq`,
             },
