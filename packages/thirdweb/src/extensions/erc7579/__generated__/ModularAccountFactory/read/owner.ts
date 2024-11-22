@@ -5,27 +5,27 @@ import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
-export const FN_SELECTOR = "0x0a664dba" as const;
+export const FN_SELECTOR = "0x8da5cb5b" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
     type: "address",
-    name: "hook",
+    name: "result",
   },
 ] as const;
 
 /**
- * Checks if the `getActiveHook` method is supported by the given contract.
+ * Checks if the `owner` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
- * @returns A boolean indicating if the `getActiveHook` method is supported.
+ * @returns A boolean indicating if the `owner` method is supported.
  * @extension ERC7579
  * @example
  * ```ts
- * import { isGetActiveHookSupported } from "thirdweb/extensions/erc7579";
- * const supported = isGetActiveHookSupported(["0x..."]);
+ * import { isOwnerSupported } from "thirdweb/extensions/erc7579";
+ * const supported = isOwnerSupported(["0x..."]);
  * ```
  */
-export function isGetActiveHookSupported(availableSelectors: string[]) {
+export function isOwnerSupported(availableSelectors: string[]) {
   return detectMethod({
     availableSelectors,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
@@ -33,36 +33,36 @@ export function isGetActiveHookSupported(availableSelectors: string[]) {
 }
 
 /**
- * Decodes the result of the getActiveHook function call.
+ * Decodes the result of the owner function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC7579
  * @example
  * ```ts
- * import { decodeGetActiveHookResult } from "thirdweb/extensions/erc7579";
- * const result = decodeGetActiveHookResultResult("...");
+ * import { decodeOwnerResult } from "thirdweb/extensions/erc7579";
+ * const result = decodeOwnerResultResult("...");
  * ```
  */
-export function decodeGetActiveHookResult(result: Hex) {
+export function decodeOwnerResult(result: Hex) {
   return decodeAbiParameters(FN_OUTPUTS, result)[0];
 }
 
 /**
- * Calls the "getActiveHook" function on the contract.
- * @param options - The options for the getActiveHook function.
+ * Calls the "owner" function on the contract.
+ * @param options - The options for the owner function.
  * @returns The parsed result of the function call.
  * @extension ERC7579
  * @example
  * ```ts
- * import { getActiveHook } from "thirdweb/extensions/erc7579";
+ * import { owner } from "thirdweb/extensions/erc7579";
  *
- * const result = await getActiveHook({
+ * const result = await owner({
  *  contract,
  * });
  *
  * ```
  */
-export async function getActiveHook(options: BaseTransactionOptions) {
+export async function owner(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

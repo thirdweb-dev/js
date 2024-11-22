@@ -86,7 +86,7 @@ export async function estimateUserOpGas(
     params: [
       hexlifyUserOp(args.userOp),
       args.options.entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6,
-      stateOverrides,
+      stateOverrides ?? {},
     ],
   });
 

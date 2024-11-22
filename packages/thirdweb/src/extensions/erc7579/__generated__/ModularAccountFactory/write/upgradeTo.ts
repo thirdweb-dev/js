@@ -9,42 +9,37 @@ import { once } from "../../../../../utils/promise/once.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
- * Represents the parameters for the "singleInitMSA" function.
+ * Represents the parameters for the "upgradeTo" function.
  */
-export type SingleInitMSAParams = WithOverrides<{
-  validator: AbiParameterToPrimitiveType<{
+export type UpgradeToParams = WithOverrides<{
+  newImplementation: AbiParameterToPrimitiveType<{
     type: "address";
-    name: "validator";
+    name: "newImplementation";
   }>;
-  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 }>;
 
-export const FN_SELECTOR = "0x6b0d5cc4" as const;
+export const FN_SELECTOR = "0x3659cfe6" as const;
 const FN_INPUTS = [
   {
     type: "address",
-    name: "validator",
-  },
-  {
-    type: "bytes",
-    name: "data",
+    name: "newImplementation",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
 
 /**
- * Checks if the `singleInitMSA` method is supported by the given contract.
+ * Checks if the `upgradeTo` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
- * @returns A boolean indicating if the `singleInitMSA` method is supported.
+ * @returns A boolean indicating if the `upgradeTo` method is supported.
  * @extension ERC7579
  * @example
  * ```ts
- * import { isSingleInitMSASupported } from "thirdweb/extensions/erc7579";
+ * import { isUpgradeToSupported } from "thirdweb/extensions/erc7579";
  *
- * const supported = isSingleInitMSASupported(["0x..."]);
+ * const supported = isUpgradeToSupported(["0x..."]);
  * ```
  */
-export function isSingleInitMSASupported(availableSelectors: string[]) {
+export function isUpgradeToSupported(availableSelectors: string[]) {
   return detectMethod({
     availableSelectors,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
@@ -52,60 +47,57 @@ export function isSingleInitMSASupported(availableSelectors: string[]) {
 }
 
 /**
- * Encodes the parameters for the "singleInitMSA" function.
- * @param options - The options for the singleInitMSA function.
+ * Encodes the parameters for the "upgradeTo" function.
+ * @param options - The options for the upgradeTo function.
  * @returns The encoded ABI parameters.
  * @extension ERC7579
  * @example
  * ```ts
- * import { encodeSingleInitMSAParams } from "thirdweb/extensions/erc7579";
- * const result = encodeSingleInitMSAParams({
- *  validator: ...,
- *  data: ...,
+ * import { encodeUpgradeToParams } from "thirdweb/extensions/erc7579";
+ * const result = encodeUpgradeToParams({
+ *  newImplementation: ...,
  * });
  * ```
  */
-export function encodeSingleInitMSAParams(options: SingleInitMSAParams) {
-  return encodeAbiParameters(FN_INPUTS, [options.validator, options.data]);
+export function encodeUpgradeToParams(options: UpgradeToParams) {
+  return encodeAbiParameters(FN_INPUTS, [options.newImplementation]);
 }
 
 /**
- * Encodes the "singleInitMSA" function into a Hex string with its parameters.
- * @param options - The options for the singleInitMSA function.
+ * Encodes the "upgradeTo" function into a Hex string with its parameters.
+ * @param options - The options for the upgradeTo function.
  * @returns The encoded hexadecimal string.
  * @extension ERC7579
  * @example
  * ```ts
- * import { encodeSingleInitMSA } from "thirdweb/extensions/erc7579";
- * const result = encodeSingleInitMSA({
- *  validator: ...,
- *  data: ...,
+ * import { encodeUpgradeTo } from "thirdweb/extensions/erc7579";
+ * const result = encodeUpgradeTo({
+ *  newImplementation: ...,
  * });
  * ```
  */
-export function encodeSingleInitMSA(options: SingleInitMSAParams) {
+export function encodeUpgradeTo(options: UpgradeToParams) {
   // we do a "manual" concat here to avoid the overhead of the "concatHex" function
   // we can do this because we know the specific formats of the values
   return (FN_SELECTOR +
-    encodeSingleInitMSAParams(options).slice(
+    encodeUpgradeToParams(options).slice(
       2,
     )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
- * Prepares a transaction to call the "singleInitMSA" function on the contract.
- * @param options - The options for the "singleInitMSA" function.
+ * Prepares a transaction to call the "upgradeTo" function on the contract.
+ * @param options - The options for the "upgradeTo" function.
  * @returns A prepared transaction object.
  * @extension ERC7579
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";
- * import { singleInitMSA } from "thirdweb/extensions/erc7579";
+ * import { upgradeTo } from "thirdweb/extensions/erc7579";
  *
- * const transaction = singleInitMSA({
+ * const transaction = upgradeTo({
  *  contract,
- *  validator: ...,
- *  data: ...,
+ *  newImplementation: ...,
  *  overrides: {
  *    ...
  *  }
@@ -115,11 +107,11 @@ export function encodeSingleInitMSA(options: SingleInitMSAParams) {
  * await sendTransaction({ transaction, account });
  * ```
  */
-export function singleInitMSA(
+export function upgradeTo(
   options: BaseTransactionOptions<
-    | SingleInitMSAParams
+    | UpgradeToParams
     | {
-        asyncParams: () => Promise<SingleInitMSAParams>;
+        asyncParams: () => Promise<UpgradeToParams>;
       }
   >,
 ) {
@@ -132,7 +124,7 @@ export function singleInitMSA(
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
       const resolvedOptions = await asyncOptions();
-      return [resolvedOptions.validator, resolvedOptions.data] as const;
+      return [resolvedOptions.newImplementation] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
     accessList: async () => (await asyncOptions()).overrides?.accessList,

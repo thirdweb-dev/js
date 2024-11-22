@@ -58,10 +58,6 @@ export async function getPaymasterAndData(args: {
     params: [hexlifyUserOp(userOp), entrypoint],
   };
 
-  if (DEBUG) {
-    console.debug("Paymaster body:", body);
-  }
-
   // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
   const fetchWithHeaders = getClientFetch(client);
   const response = await fetchWithHeaders(paymasterUrl, {
