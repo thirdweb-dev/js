@@ -14,10 +14,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
-  type DeleteDeploymentInput,
+  type DeleteCloudHostedInput,
   type EditEngineInstanceInput,
   type EngineInstance,
-  useEngineDeleteDeployment,
+  useEngineDeleteCloudHosted,
   useEngineEditInstance,
   type useEngineInstances,
   useEngineRemoveFromDashboard,
@@ -384,20 +384,17 @@ function DeleteSubscriptionModalContent(props: {
     "Instance must have a deploymentId to be cancelled.",
   );
 
-  const teamId = "DEBUG - UNIMPLEMENTED";
-
-  const deleteDeploymentMutation = useEngineDeleteDeployment();
+  const deleteCloudHosted = useEngineDeleteCloudHosted();
   const [ackDeletion, setAckDeletion] = useState(false);
-  const form = useForm<DeleteDeploymentInput>({
+  const form = useForm<DeleteCloudHostedInput>({
     defaultValues: {
-      teamId,
       deploymentId: instance.deploymentId,
     },
     reValidateMode: "onChange",
   });
 
-  const onSubmit = (data: DeleteDeploymentInput) => {
-    deleteDeploymentMutation.mutate(data, {
+  const onSubmit = (data: DeleteCloudHostedInput) => {
+    deleteCloudHosted.mutate(data, {
       onSuccess: () => {
         toast.success("Deleting Engine. Please check again in a few minutes.", {
           dismissible: true,
@@ -494,14 +491,12 @@ function DeleteSubscriptionModalContent(props: {
             variant="destructive"
             disabled={
               !ackDeletion ||
-              deleteDeploymentMutation.isPending ||
+              deleteCloudHosted.isPending ||
               !form.formState.isValid
             }
             className="gap-2"
           >
-            {deleteDeploymentMutation.isPending && (
-              <Spinner className="size-4" />
-            )}
+            {deleteCloudHosted.isPending && <Spinner className="size-4" />}
             Permanently Delete Engine
           </Button>
         </DialogFooter>

@@ -206,7 +206,7 @@ export function useEngineGetDeploymentPublicConfiguration(
   input: GetDeploymentPublicConfigurationInput,
 ) {
   return useQuery<DeploymentPublicConfigurationResponse>({
-    queryKey: engineKeys.deployment(),
+    queryKey: engineKeys.deploymentPublicConfiguration(),
     queryFn: async () => {
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/teams/${input.teamId}/engine/deployments/public-configuration`,
@@ -278,26 +278,24 @@ export function useEngineRemoveFromDashboard() {
   });
 }
 
-export interface DeleteDeploymentInput {
-  teamId: string;
+export interface DeleteCloudHostedInput {
   deploymentId: string;
   reason: "USING_SELF_HOSTED" | "TOO_EXPENSIVE" | "MISSING_FEATURES" | "OTHER";
   feedback: string;
 }
 
-export function useEngineDeleteDeployment() {
+export function useEngineDeleteCloudHosted() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
-      teamId,
       deploymentId,
       reason,
       feedback,
-    }: DeleteDeploymentInput) => {
+    }: DeleteCloudHostedInput) => {
       const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/teams/${teamId}/engine/deployments/${deploymentId}/delete`,
+        `${THIRDWEB_API_HOST}/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
         {
           method: "POST",
           headers: {

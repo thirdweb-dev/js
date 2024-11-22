@@ -4,8 +4,6 @@ export async function fetchAnalytics(
   input: string | URL,
   init?: RequestInit,
 ): Promise<Response> {
-  return;
-
   const [pathname, searchParams] = input.toString().split("?");
   if (!pathname) {
     throw new Error("Invalid input, no pathname provided");
