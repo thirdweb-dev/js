@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { AccountForm } from "components/settings/Account/AccountForm";
 import { useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
+import { doLogout } from "../../app/login/auth-actions";
 import { TitleAndDescription } from "./Title";
 
 type OnboardingGeneralProps = {
@@ -23,17 +24,10 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
   const { disconnect } = useDisconnect();
 
   async function handleLogout() {
-    await fetch("/api/auth/logout", {
-      method: "POST",
-    })
-      .catch((err) => {
-        console.error("Failed to log out", err);
-      })
-      .then(() => {
-        if (activeWallet) {
-          disconnect(activeWallet);
-        }
-      });
+    await doLogout();
+    if (activeWallet) {
+      disconnect(activeWallet);
+    }
   }
 
   const logoutMutation = useMutation({
@@ -60,7 +54,6 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
           account={account}
           buttonText={!existing ? "Get Started for Free" : "Login"}
           trackingCategory="onboarding"
-          padded={false}
           onSave={onSave}
           onDuplicateError={onDuplicate}
         />

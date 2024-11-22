@@ -12,13 +12,13 @@ export function OnboardingChoosePlan(props: {
   return (
     <div>
       <TitleAndDescription
-        heading="Choose your plan"
-        description="Get started for free with our Starter plan or subscribe to Growth plan to unlock higher rate limits and advanced features."
+        heading="Choose your Plan"
+        description="Get started for free with our Starter plan or subscribe to Growth plan to unlock higher rate limits and advanced features"
       />
 
       <div className="h-4" />
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-4">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
         <PricingCard
           billingPlan="starter"
           teamSlug={props.teamSlug}
@@ -43,14 +43,15 @@ export function OnboardingChoosePlan(props: {
             variant: "default",
           }}
           canTrialGrowth={props.canTrialGrowth}
+          highlighted
         />
       </div>
 
-      <div className="h-3" />
+      <div className="h-4" />
 
-      <div className="flex justify-end">
+      <div className="flex justify-center">
         <Button
-          variant="ghost"
+          variant="link"
           onClick={props.skipPlan}
           className="inline-flex translate-x-2 items-center gap-2 text-muted-foreground"
         >

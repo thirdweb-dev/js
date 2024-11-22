@@ -50,8 +50,8 @@ function OnboardingUI(props: {
   return (
     <div
       className={cn(
-        "relative w-screen rounded-lg border border-border bg-background p-4 lg:p-6",
-        screen.id === "plan" ? "max-w-[750px]" : "max-w-[500px]",
+        "relative w-full rounded-xl border border-border bg-background p-6 shadow-lg",
+        screen.id === "plan" ? "lg:max-w-[750px]" : "lg:w-[500px]",
       )}
     >
       {screen.id === "onboarding" && (

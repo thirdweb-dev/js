@@ -3,7 +3,6 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { type Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -32,11 +31,9 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   onSave,
   onDuplicateError,
   buttonText = "Save",
-  horizontal = false,
   hideName = false,
   showSubscription = false,
   disableUnchanged = false,
-  padded = true,
 }) => {
   const [isSubscribing, setIsSubscribing] = useState(true);
   const trackEvent = useTrack();
@@ -106,16 +103,8 @@ export const AccountForm: React.FC<AccountFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <div
-        className={cn(
-          "flex w-full flex-col items-start rounded-xl bg-background",
-          horizontal ? "gap-6" : "gap-8",
-          padded ? "border border-border p-6" : "p-0",
-        )}
-      >
-        <div
-          className={cn("flex w-full", horizontal ? "gap-4" : "flex-col gap-4")}
-        >
+      <div className="flex w-full flex-col items-start gap-8 rounded-xl">
+        <div className="flex w-full flex-col gap-4">
           <FormFieldSetup
             isRequired
             htmlFor="email"
