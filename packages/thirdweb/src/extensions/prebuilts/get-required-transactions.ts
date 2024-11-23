@@ -209,6 +209,17 @@ async function getTransactionsForMaketplaceV3(options: {
   return transactions;
 }
 
+/**
+ * Gets the default constructor parameters required for contract implementation deployment
+ * @param args - The arguments object
+ * @param args.chain - The blockchain network configuration
+ * @param args.client - The ThirdwebClient instance
+ * @returns An object containing default constructor parameters:
+ * - On zkSync chains: returns an empty object since no parameters are needed
+ * - On other chains: returns `trustedForwarder` and `nativeTokenWrapper` addresses
+ *
+ * @internal
+ */
 export async function getAllDefaultConstructorParamsForImplementation(args: {
   chain: Chain;
   client: ThirdwebClient;
