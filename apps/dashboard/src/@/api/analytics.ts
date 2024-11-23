@@ -126,3 +126,21 @@ export async function getWalletUsers(
   const json = await res.json();
   return json.data as WalletUserStats[];
 }
+
+export async function isProjectActive(
+  params: AnalyticsQueryParams,
+): Promise<boolean> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(`v1/active?${searchParams.toString()}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (res?.status !== 200) {
+    console.error("Failed to fetch project active status");
+    return false;
+  }
+
+  const json = await res.json();
+  return json.data.isActive as boolean;
+}

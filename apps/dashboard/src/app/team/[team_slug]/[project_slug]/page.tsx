@@ -19,6 +19,7 @@ import {
   getUserOpUsage,
   getWalletConnections,
   getWalletUsers,
+  isProjectActive,
 } from "@/api/analytics";
 import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
 import {
@@ -66,6 +67,8 @@ export default async function ProjectOverviewPage(props: PageProps) {
     notFound();
   }
 
+  const isActive = await isProjectActive({ clientId: project.publishableKey });
+
   // Fetch all analytics data in parallel
   const [
     walletConnections,
@@ -110,12 +113,6 @@ export default async function ProjectOverviewPage(props: PageProps) {
     }),
   ]);
 
-  const isEmpty =
-    !walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) &&
-    walletConnections.length === 0 &&
-    inAppWalletUsage.length === 0 &&
-    userOpUsage.length === 0;
-
   return (
     <div className="md:pb-16">
       <div className="w-full border-border-800 border-b px-6 dark:bg-muted/50">
@@ -125,7 +122,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
           range={range}
         />
       </div>
-      {isEmpty ? (
+      {!isActive ? (
         <div className="container p-6">
           <EmptyState />
         </div>
@@ -151,14 +148,12 @@ export default async function ProjectOverviewPage(props: PageProps) {
               link="https://portal.thirdweb.com/connect/quickstart"
             />
           )}
-          <div>
-            <RpcMethodBarChartCard
-              from={range.from}
-              to={range.to}
-              period={interval}
-              clientId={project.publishableKey}
-            />
-          </div>
+          <RpcMethodBarChartCard
+            from={range.from}
+            to={range.to}
+            period={interval}
+            clientId={project.publishableKey}
+          />
           <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
             {walletConnections.length > 0 ? (
               <WalletDistributionCard data={walletConnections} />
