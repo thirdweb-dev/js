@@ -1,7 +1,7 @@
-import type { UserOpStats } from "@/api/analytics";
 import { cn } from "@/lib/utils";
 import { defineChain } from "thirdweb";
 import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
+import type { UserOpStats } from "types/analytics";
 import { EmptyAccountAbstractionChartContent } from "../../../../../components/smart-wallets/AccountAbstractionAnalytics/SponsoredTransactionsChartCard";
 import { BarChart } from "../../../components/Analytics/BarChart";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";

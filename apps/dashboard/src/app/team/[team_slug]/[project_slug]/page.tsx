@@ -2,17 +2,17 @@ import { notFound } from "next/navigation";
 
 import { getProject } from "@/api/projects";
 
-import type {
-  InAppWalletStats,
-  UserOpStats,
-  WalletStats,
-  WalletUserStats,
-} from "@/api/analytics";
 import {
   type DurationId,
   type Range,
   getLastNDaysRange,
 } from "components/analytics/date-range-selector";
+import type {
+  InAppWalletStats,
+  UserOpStats,
+  WalletStats,
+  WalletUserStats,
+} from "types/analytics";
 
 import {
   getInAppWalletUsage,
@@ -31,6 +31,7 @@ import { AnalyticsHeader } from "../../components/Analytics/AnalyticsHeader";
 import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChartCard";
 import { EmptyState } from "../../components/Analytics/EmptyState";
 import { PieChartCard } from "../../components/Analytics/PieChartCard";
+import { RpcMethodBarChartCard } from "./components/RpcMethodBarChartCard";
 
 interface PageParams {
   team_slug: string;
@@ -150,6 +151,14 @@ export default async function ProjectOverviewPage(props: PageProps) {
               link="https://portal.thirdweb.com/connect/quickstart"
             />
           )}
+          <div>
+            <RpcMethodBarChartCard
+              from={range.from}
+              to={range.to}
+              period={interval}
+              clientId={project.publishableKey}
+            />
+          </div>
           <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
             {walletConnections.length > 0 ? (
               <WalletDistributionCard data={walletConnections} />

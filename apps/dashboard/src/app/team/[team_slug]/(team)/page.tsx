@@ -10,7 +10,7 @@ import type {
   InAppWalletStats,
   WalletStats,
   WalletUserStats,
-} from "@/api/analytics";
+} from "types/analytics";
 
 import {
   type DurationId,

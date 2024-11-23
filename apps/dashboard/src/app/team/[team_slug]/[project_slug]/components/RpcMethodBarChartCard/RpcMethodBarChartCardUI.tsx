@@ -1,3 +1,12 @@
+"use client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { formatTickerNumber } from "lib/format-utils";
 import {
   Bar,
   CartesianGrid,
@@ -5,33 +14,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import {
-  AnalyticsQueryParams,
-  getRpcMethodUsage,
-  RpcMethodStats,
-} from "@/api/analytics";
-import { EmptyState } from "./EmptyState";
-import { formatTickerNumber } from "lib/format-utils";
+import type { RpcMethodStats } from "types/analytics";
+import { EmptyStateCard } from "../../../../components/Analytics/EmptyStateCard";
 
-const chartConfig = {
-  evmMethod: { label: "EVM Method", color: "hsl(var(--chart-1))" },
-  count: { label: "Count", color: "hsl(var(--chart-2))" },
-};
-
-export async function RpcMethodBarChartCard(props: AnalyticsQueryParams) {
-  const rawData = await getRpcMethodUsage(props);
-
-  return <RpcMethodBarChartCardUI rawData={rawData} />;
-}
-
-// Split the UI out for storybook mocking
 export function RpcMethodBarChartCardUI({
   rawData,
 }: { rawData: RpcMethodStats[] }) {
@@ -46,6 +31,28 @@ export function RpcMethodBarChartCardUI({
       );
       dateData[method] = methodData?.count ?? 0;
     }
+
+    // If we have too many methods to display well, add "other" and group the lowest keys for each time period
+    if (uniqueMethods.length > 5) {
+      // If we haven't added "other" as a key yet, add it
+      if (!uniqueMethods.includes("Other")) {
+        uniqueMethods.push("Other");
+      }
+
+      // Sort the methods by their count for the time period
+      const sortedMethods = uniqueMethods
+        .filter((m) => m !== "Other")
+        .sort(
+          (a, b) =>
+            ((dateData[b] as number) ?? 0) - ((dateData[a] as number) ?? 0),
+        );
+
+      dateData.Other = 0;
+      for (const method of sortedMethods.slice(5, sortedMethods.length)) {
+        dateData.Other += (dateData[method] as number) ?? 0;
+        delete dateData[method];
+      }
+    }
     return dateData;
   });
 
@@ -56,8 +63,13 @@ export function RpcMethodBarChartCardUI({
     };
   }
 
-  if (rawData.length === 0 || rawData.every((d) => d.count === 0)) {
-    return <EmptyState />;
+  if (
+    data.length === 0 ||
+    data.every((date) =>
+      Object.keys(date).every((k) => k === "date" || date[k] === 0),
+    )
+  ) {
+    return <EmptyStateCard metric="RPC" link="https://portal.thirdweb.com/" />;
   }
 
   return (
@@ -69,9 +81,7 @@ export function RpcMethodBarChartCardUI({
       </CardHeader>
       <CardContent className="px-2 sm:p-6 sm:pl-0">
         <ChartContainer
-          config={{
-            ...chartConfig,
-          }}
+          config={config}
           className="aspect-auto h-[250px] w-full pt-6"
         >
           <RechartsBarChart
@@ -106,7 +116,6 @@ export function RpcMethodBarChartCardUI({
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  className="w-[200px]"
                   labelFormatter={(value) => {
                     return new Date(value).toLocaleDateString("en-US", {
                       month: "short",
@@ -125,8 +134,13 @@ export function RpcMethodBarChartCardUI({
                 key={method}
                 stackId="a"
                 dataKey={method}
-                radius={4}
-                fill={`hsl(var(--chart-${idx}))`}
+                radius={[
+                  idx === uniqueMethods.length - 1 ? 4 : 0,
+                  idx === uniqueMethods.length - 1 ? 4 : 0,
+                  idx === 0 ? 4 : 0,
+                  idx === 0 ? 4 : 0,
+                ]}
+                fill={`hsl(var(--chart-${idx + 1}))`}
               />
             ))}
           </RechartsBarChart>

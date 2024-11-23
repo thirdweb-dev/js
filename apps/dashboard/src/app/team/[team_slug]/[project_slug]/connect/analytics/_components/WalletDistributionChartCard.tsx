@@ -1,6 +1,5 @@
 "use client";
 
-import type { WalletStats } from "@/api/analytics";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
@@ -26,6 +25,7 @@ import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { DocLink } from "components/shared/DocLink";
 import { useMemo, useState } from "react";
 import { Pie, PieChart } from "recharts";
+import type { WalletStats } from "types/analytics";
 import {
   formatTickerNumber,
   formatWalletType,
