@@ -20,7 +20,7 @@ export interface InAppWalletStats {
   uniqueWalletsConnected: number;
 }
 
-export interface EcosystemWalletStats extends InAppWalletStats {}
+export interface EcosystemWalletStats extends InAppWalletStats { }
 
 export interface UserOpStats {
   date: string;
@@ -30,7 +30,13 @@ export interface UserOpStats {
   chainId?: string;
 }
 
-interface AnalyticsQueryParams {
+export interface RpcMethodStats {
+  date: string;
+  evmMethod: string;
+  count: number;
+}
+
+export interface AnalyticsQueryParams {
   clientId?: string;
   accountId?: string;
   from?: Date;
@@ -113,6 +119,27 @@ export async function getUserOpUsage(
 
   const json = await res.json();
   return json.data as UserOpStats[];
+}
+
+export async function getRpcMethodUsage(
+  params: AnalyticsQueryParams,
+): Promise<RpcMethodStats[]> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v1/rpc/evm-methods?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    },
+  );
+
+  if (res?.status !== 200) {
+    console.error("Failed to fetch RPC method usage");
+    return [];
+  }
+
+  const json = await res.json();
+  return json.data as RpcMethodStats[];
 }
 
 export async function getWalletUsers(
