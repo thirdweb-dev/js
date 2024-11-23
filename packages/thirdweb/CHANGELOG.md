@@ -1,5 +1,43 @@
 # thirdweb
 
+## 5.71.0
+
+### Minor Changes
+
+- [#5501](https://github.com/thirdweb-dev/js/pull/5501) [`ac42c45`](https://github.com/thirdweb-dev/js/commit/ac42c4538ef41cc842d2fd723471c21d865ee411) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Added new deployment utility functions to help manage infrastructure contracts and initialization:
+
+  - `getInitializeTransaction`: Prepare initialization transaction for contract deployment
+  - `getOrDeployInfraForPublishedContract`: Get or deploy required infrastructure for published contracts
+
+  ```typescript
+  import {
+    getInitializeTransaction,
+    getOrDeployInfraForPublishedContract,
+  } from "thirdweb";
+
+  // Get initialization transaction
+  const initTx = await getInitializeTransaction({
+    client,
+    chain,
+    account,
+    implementationContract,
+    deployMetadata,
+    initializeParams: {
+      name: "My Contract",
+      symbol: "CNTRCT",
+    },
+  });
+
+  // Get or deploy infrastructure
+  const infra = await getOrDeployInfraForPublishedContract({
+    chain,
+    client,
+    account,
+    contractId: "MyContract",
+    constructorParams: params,
+  });
+  ```
+
 ## 5.70.1
 
 ### Patch Changes
