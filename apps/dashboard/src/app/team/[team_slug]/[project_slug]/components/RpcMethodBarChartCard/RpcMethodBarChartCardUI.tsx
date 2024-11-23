@@ -7,6 +7,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { formatTickerNumber } from "lib/format-utils";
+import { useMemo } from "react";
 import {
   Bar,
   CartesianGrid,
@@ -20,41 +21,51 @@ import { EmptyStateCard } from "../../../../components/Analytics/EmptyStateCard"
 export function RpcMethodBarChartCardUI({
   rawData,
 }: { rawData: RpcMethodStats[] }) {
-  const uniqueMethods = Array.from(new Set(rawData.map((d) => d.evmMethod)));
-  const uniqueDates = Array.from(new Set(rawData.map((d) => d.date)));
+  const uniqueMethods = useMemo(
+    () => Array.from(new Set(rawData.map((d) => d.evmMethod))),
+    [rawData],
+  );
+  const uniqueDates = useMemo(
+    () => Array.from(new Set(rawData.map((d) => d.date))),
+    [rawData],
+  );
 
-  const data = uniqueDates.map((date) => {
-    const dateData: { [key: string]: string | number } = { date };
-    for (const method of uniqueMethods) {
-      const methodData = rawData.find(
-        (d) => d.date === date && d.evmMethod === method,
-      );
-      dateData[method] = methodData?.count ?? 0;
-    }
+  const data = useMemo(
+    () =>
+      uniqueDates.map((date) => {
+        const dateData: { [key: string]: string | number } = { date };
+        for (const method of uniqueMethods) {
+          const methodData = rawData.find(
+            (d) => d.date === date && d.evmMethod === method,
+          );
+          dateData[method] = methodData?.count ?? 0;
+        }
 
-    // If we have too many methods to display well, add "other" and group the lowest keys for each time period
-    if (uniqueMethods.length > 5) {
-      // If we haven't added "other" as a key yet, add it
-      if (!uniqueMethods.includes("Other")) {
-        uniqueMethods.push("Other");
-      }
+        // If we have too many methods to display well, add "other" and group the lowest keys for each time period
+        if (uniqueMethods.length > 5) {
+          // If we haven't added "other" as a key yet, add it
+          if (!uniqueMethods.includes("Other")) {
+            uniqueMethods.push("Other");
+          }
 
-      // Sort the methods by their count for the time period
-      const sortedMethods = uniqueMethods
-        .filter((m) => m !== "Other")
-        .sort(
-          (a, b) =>
-            ((dateData[b] as number) ?? 0) - ((dateData[a] as number) ?? 0),
-        );
+          // Sort the methods by their count for the time period
+          const sortedMethods = uniqueMethods
+            .filter((m) => m !== "Other")
+            .sort(
+              (a, b) =>
+                ((dateData[b] as number) ?? 0) - ((dateData[a] as number) ?? 0),
+            );
 
-      dateData.Other = 0;
-      for (const method of sortedMethods.slice(5, sortedMethods.length)) {
-        dateData.Other += (dateData[method] as number) ?? 0;
-        delete dateData[method];
-      }
-    }
-    return dateData;
-  });
+          dateData.Other = 0;
+          for (const method of sortedMethods.slice(5, sortedMethods.length)) {
+            dateData.Other += (dateData[method] as number) ?? 0;
+            delete dateData[method];
+          }
+        }
+        return dateData;
+      }),
+    [uniqueDates, uniqueMethods, rawData],
+  );
 
   const config: ChartConfig = {};
   for (const method of uniqueMethods) {
