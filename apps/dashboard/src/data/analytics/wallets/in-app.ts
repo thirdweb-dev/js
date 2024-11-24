@@ -1,4 +1,4 @@
-import type { InAppWalletStats } from "@/api/analytics";
+import type { InAppWalletStats } from "types/analytics";
 import { fetchAnalytics } from "../fetch-analytics";
 
 export async function getInAppWalletUsage(args: {

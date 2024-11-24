@@ -1,42 +1,12 @@
 import { fetchAnalytics } from "data/analytics/fetch-analytics";
-
-export interface WalletStats {
-  date: string;
-  uniqueWalletsConnected: number;
-  totalConnections: number;
-  walletType: string;
-}
-
-export interface WalletUserStats {
-  date: string;
-  newUsers: number;
-  returningUsers: number;
-  totalUsers: number;
-}
-
-export interface InAppWalletStats {
-  date: string;
-  authenticationMethod: string;
-  uniqueWalletsConnected: number;
-}
-
-export interface EcosystemWalletStats extends InAppWalletStats {}
-
-export interface UserOpStats {
-  date: string;
-  successful: number;
-  failed: number;
-  sponsoredUsd: number;
-  chainId?: string;
-}
-
-interface AnalyticsQueryParams {
-  clientId?: string;
-  accountId?: string;
-  from?: Date;
-  to?: Date;
-  period?: "day" | "week" | "month" | "year" | "all";
-}
+import type {
+  AnalyticsQueryParams,
+  InAppWalletStats,
+  RpcMethodStats,
+  UserOpStats,
+  WalletStats,
+  WalletUserStats,
+} from "types/analytics";
 
 function buildSearchParams(params: AnalyticsQueryParams): URLSearchParams {
   const searchParams = new URLSearchParams();
@@ -115,6 +85,27 @@ export async function getUserOpUsage(
   return json.data as UserOpStats[];
 }
 
+export async function getRpcMethodUsage(
+  params: AnalyticsQueryParams,
+): Promise<RpcMethodStats[]> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v1/rpc/evm-methods?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    },
+  );
+
+  if (res?.status !== 200) {
+    console.error("Failed to fetch RPC method usage");
+    return [];
+  }
+
+  const json = await res.json();
+  return json.data as RpcMethodStats[];
+}
+
 export async function getWalletUsers(
   params: AnalyticsQueryParams,
 ): Promise<WalletUserStats[]> {
@@ -134,4 +125,22 @@ export async function getWalletUsers(
 
   const json = await res.json();
   return json.data as WalletUserStats[];
+}
+
+export async function isProjectActive(
+  params: AnalyticsQueryParams,
+): Promise<boolean> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(`v1/active?${searchParams.toString()}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (res?.status !== 200) {
+    console.error("Failed to fetch project active status");
+    return false;
+  }
+
+  const json = await res.json();
+  return json.data.isActive as boolean;
 }

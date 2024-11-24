@@ -1,6 +1,6 @@
-import type { UserOpStats } from "@/api/analytics";
 import { Stat } from "components/analytics/stat";
 import { ActivityIcon, CoinsIcon } from "lucide-react";
+import type { UserOpStats } from "types/analytics";
 
 export function AccountAbstractionSummary(props: {
   aggregateUserOpUsageQuery?: UserOpStats;

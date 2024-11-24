@@ -1,6 +1,6 @@
-import type { InAppWalletStats } from "@/api/analytics";
 import type { Meta, StoryObj } from "@storybook/react";
 import type { InAppWalletAuth } from "thirdweb/wallets";
+import type { InAppWalletStats } from "types/analytics";
 import { BadgeContainer, mobileViewport } from "../../../stories/utils";
 import { InAppWalletUsersChartCardUI } from "./InAppWalletUsersChartCard";
 
