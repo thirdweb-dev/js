@@ -33,7 +33,6 @@ import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { EngineBackendWalletOptions } from "lib/engine";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import {
@@ -46,8 +45,10 @@ import {
 import QRCode from "qrcode";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { getAddress } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
+import invariant from "tiny-invariant";
 import { FormHelperText, FormLabel, LinkButton, Text } from "tw-components";
 import { prettyPrintCurrency } from "./utils";
 
@@ -246,25 +247,19 @@ const EditModal = ({
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
 }) => {
-  const { mutate: updateBackendWallet } =
-    useEngineUpdateBackendWallet(instanceUrl);
+  const updateBackendWallet = useEngineUpdateBackendWallet(instanceUrl);
   const trackEvent = useTrack();
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully updated backend wallet.",
-    "Failed to update backend wallet.",
-  );
 
   const [label, setLabel] = useState(backendWallet.label ?? "");
 
-  const onClick = () => {
-    updateBackendWallet(
+  const onClick = async () => {
+    const promise = updateBackendWallet.mutateAsync(
       {
         walletAddress: backendWallet.address,
         label,
       },
       {
         onSuccess: () => {
-          onSuccess();
           disclosure.onClose();
           trackEvent({
             category: "engine",
@@ -274,7 +269,6 @@ const EditModal = ({
           });
         },
         onError: (error) => {
-          onError(error);
           trackEvent({
             category: "engine",
             action: "update-backend-wallet",
@@ -285,6 +279,11 @@ const EditModal = ({
         },
       },
     );
+
+    toast.promise(promise, {
+      success: "Successfully updated backend wallet.",
+      error: "Failed to update backend wallet.",
+    });
   };
 
   return (
@@ -401,39 +400,39 @@ const SendFundsModal = ({
 }) => {
   const chain = useActiveChainAsDashboardChain();
   const form = useForm<SendFundsInput>();
-  const { mutate: sendTokens } = useEngineSendTokens(instanceUrl);
+  const sendTokens = useEngineSendTokens(instanceUrl);
   const { data: backendWalletBalance } = useEngineBackendWalletBalance(
     instanceUrl,
     fromWallet.address,
   );
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully sent a request to send funds.",
-    "Failed to send tokens.",
-  );
   const toWalletDisclosure = useDisclosure();
-
-  const onSubmit = async (data: SendFundsInput) => {
-    if (!chain) {
-      return;
-    }
-
-    try {
-      await sendTokens({
-        chainId: chain.chainId,
-        fromAddress: fromWallet.address,
-        toAddress: data.toAddress,
-        amount: data.amount,
-      });
-      onSuccess();
-      disclosure.onClose();
-    } catch (e) {
-      onError(e);
-    }
-  };
 
   if (!backendWalletBalance) {
     return null;
   }
+
+  const onSubmit = async (data: SendFundsInput) => {
+    invariant(chain, "chain is required");
+
+    const promise = sendTokens.mutateAsync(
+      {
+        chainId: chain.chainId,
+        fromAddress: fromWallet.address,
+        toAddress: data.toAddress,
+        amount: data.amount,
+      },
+      {
+        onSuccess: () => {
+          disclosure.onClose();
+        },
+      },
+    );
+
+    toast.promise(promise, {
+      success: "Successfully sent a request to send funds.",
+      error: "Failed to send tokens.",
+    });
+  };
 
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
@@ -544,24 +543,18 @@ function DeleteModal({
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
 }) {
-  const { mutate: deleteBackendWallet } =
-    useEngineDeleteBackendWallet(instanceUrl);
+  const deleteBackendWallet = useEngineDeleteBackendWallet(instanceUrl);
   const trackEvent = useTrack();
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully deleted backend wallet.",
-    "Failed to delete backend wallet.",
-  );
 
   const isLocalWallet =
     backendWallet.type === "local" || backendWallet.type === "smart:local";
   const [ackDeletion, setAckDeletion] = useState(false);
 
   const onClick = () => {
-    deleteBackendWallet(
+    const promise = deleteBackendWallet.mutateAsync(
       { walletAddress: backendWallet.address },
       {
         onSuccess: () => {
-          onSuccess();
           disclosure.onClose();
           trackEvent({
             category: "engine",
@@ -571,7 +564,6 @@ function DeleteModal({
           });
         },
         onError: (error) => {
-          onError(error);
           trackEvent({
             category: "engine",
             action: "delete-backend-wallet",
@@ -582,6 +574,11 @@ function DeleteModal({
         },
       },
     );
+
+    toast.promise(promise, {
+      success: "Successfully deleted backend wallet.",
+      error: "Failed to delete backend wallet.",
+    });
   };
 
   return (

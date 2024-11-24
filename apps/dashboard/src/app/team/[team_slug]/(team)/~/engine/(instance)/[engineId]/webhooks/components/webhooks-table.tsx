@@ -26,9 +26,9 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { MailQuestion, TrashIcon } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Card, FormLabel, Text } from "tw-components";
 import { shortenString } from "utils/usedapp-external";
 
@@ -182,19 +182,14 @@ function DeleteWebhookModal({
   disclosure,
   instanceUrl,
 }: DeleteWebhookModalProps) {
-  const { mutate: deleteWebhook } = useEngineDeleteWebhook(instanceUrl);
+  const deleteWebhook = useEngineDeleteWebhook(instanceUrl);
   const trackEvent = useTrack();
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully deleted webhook.",
-    "Failed to delete webhook.",
-  );
 
   const onDelete = () => {
-    deleteWebhook(
+    const promise = deleteWebhook.mutateAsync(
       { id: webhook.id },
       {
         onSuccess: () => {
-          onSuccess();
           disclosure.onClose();
           trackEvent({
             category: "engine",
@@ -204,7 +199,6 @@ function DeleteWebhookModal({
           });
         },
         onError: (error) => {
-          onError(error);
           trackEvent({
             category: "engine",
             action: "delete-webhook",
@@ -215,6 +209,11 @@ function DeleteWebhookModal({
         },
       },
     );
+
+    toast.promise(promise, {
+      success: "Successfully deleted webhook.",
+      error: "Failed to delete webhook.",
+    });
   };
 
   return (
@@ -225,7 +224,7 @@ function DeleteWebhookModal({
         <ModalCloseButton />
         <ModalBody>
           <div className="flex flex-col gap-4">
-            <Text>Are you sure you want to delete this webook?</Text>
+            <Text>Are you sure you want to delete this webhook?</Text>
             <FormControl>
               <FormLabel>Name</FormLabel>
               <Text>{webhook.name}</Text>
