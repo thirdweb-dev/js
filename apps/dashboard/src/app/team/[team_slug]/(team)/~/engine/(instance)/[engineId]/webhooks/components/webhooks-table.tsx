@@ -312,6 +312,7 @@ function TestWebhookModal({
           </div>
         </ModalBody>
       </ModalContent>
+      <ModalFooter />
     </Modal>
   );
 }
