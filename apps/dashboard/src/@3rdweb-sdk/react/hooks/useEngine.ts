@@ -192,7 +192,7 @@ export function useEngineQueueMetrics(
 }
 
 interface GetDeploymentPublicConfigurationInput {
-  teamId: string;
+  teamSlug: string;
 }
 
 interface DeploymentPublicConfigurationResponse {
@@ -209,7 +209,7 @@ export function useEngineGetDeploymentPublicConfiguration(
     queryKey: engineKeys.deploymentPublicConfiguration(),
     queryFn: async () => {
       const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/teams/${input.teamId}/engine/deployments/public-configuration`,
+        `${THIRDWEB_API_HOST}/v1/teams/${input.teamSlug}/engine/deployments/public-configuration`,
         { method: "GET" },
       );
       if (!res.ok) {
@@ -223,7 +223,7 @@ export function useEngineGetDeploymentPublicConfiguration(
 }
 
 interface UpdateDeploymentInput {
-  teamId: string;
+  teamSlug: string;
   deploymentId: string;
   serverVersion: string;
 }
@@ -232,7 +232,7 @@ export function useEngineUpdateDeployment() {
   return useMutation({
     mutationFn: async (input: UpdateDeploymentInput) => {
       const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/teams/${input.teamId}/engine/deployments/${input.deploymentId}`,
+        `${THIRDWEB_API_HOST}/v1/teams/${input.teamSlug}/engine/deployments/${input.deploymentId}`,
         {
           method: "PUT",
           headers: {

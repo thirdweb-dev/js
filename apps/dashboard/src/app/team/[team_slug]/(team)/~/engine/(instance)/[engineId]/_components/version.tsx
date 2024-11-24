@@ -27,38 +27,32 @@ import {
   useEngineUpdateDeployment,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { formatDistanceToNow } from "date-fns";
-import {
-  CircleArrowDownIcon,
-  CloudDownloadIcon,
-  TriangleAlertIcon,
-} from "lucide-react";
+import { CircleArrowUpIcon, TriangleAlertIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import invariant from "tiny-invariant";
 
 export const EngineVersionBadge = ({
   instance,
-  teamId,
+  teamSlug,
 }: {
   instance: EngineInstance;
-  teamId: string;
+  teamSlug: string;
 }) => {
   const healthQuery = useEngineSystemHealth(instance.url);
   const publicConfigurationQuery = useEngineGetDeploymentPublicConfiguration({
-    teamId,
+    teamSlug,
   });
   const [isModalOpen, setModalOpen] = useState(false);
 
-  if (
-    !healthQuery.data ||
-    publicConfigurationQuery.data.serverVersions?.length === 0
-  ) {
+  if (!healthQuery.data || !publicConfigurationQuery.data) {
     return null;
   }
 
   const serverVersions = publicConfigurationQuery.data.serverVersions;
+  const latestVersion = serverVersions[0];
   const currentVersion = healthQuery.data.engineVersion ?? "N/A";
-  const hasNewerVersion = serverVersions[0].name !== currentVersion;
+  const hasNewerVersion = latestVersion?.name !== currentVersion;
 
   // Hide the change version modal unless owner.
   if (!instance.deploymentId) {
@@ -75,11 +69,9 @@ export const EngineVersionBadge = ({
         label={
           hasNewerVersion
             ? "An update is available"
-            : "You are on the latest version"
+            : "Engine is on the latest update"
         }
-        leftIcon={
-          <CircleArrowDownIcon className="size-4 text-link-foreground" />
-        }
+        leftIcon={<CircleArrowUpIcon className="size-4 text-link-foreground" />}
       >
         <Button
           variant="outline"
@@ -103,7 +95,7 @@ export const EngineVersionBadge = ({
         instance={instance}
         currentVersion={currentVersion}
         serverVersions={serverVersions}
-        teamId={teamId}
+        teamSlug={teamSlug}
       />
     </>
   );
@@ -115,7 +107,7 @@ const ChangeVersionModal = (props: {
   instance: EngineInstance;
   currentVersion: string;
   serverVersions: { name: string; createdAt: string }[];
-  teamId: string;
+  teamSlug: string;
 }) => {
   const {
     open,
@@ -123,7 +115,7 @@ const ChangeVersionModal = (props: {
     instance,
     currentVersion,
     serverVersions,
-    teamId,
+    teamSlug,
   } = props;
   const [selectedVersion, setSelectedVersion] = useState(
     serverVersions[0]?.name,
@@ -162,11 +154,12 @@ const ChangeVersionModal = (props: {
   }
 
   const onClickUpdate = async () => {
+    invariant(selectedVersion, "No version selected.");
     invariant(instance.deploymentId, "Engine is missing deploymentId.");
 
     try {
       const promise = updateDeploymentMutation.mutateAsync({
-        teamId,
+        teamSlug,
         deploymentId: instance.deploymentId,
         serverVersion: selectedVersion,
       });
@@ -271,11 +264,12 @@ const ChangeVersionModal = (props: {
             onClick={onClickUpdate}
             variant="primary"
             className="gap-2"
+            disabled={selectedVersion === currentVersion}
           >
             {updateDeploymentMutation.isPending ? (
               <Spinner className="size-4" />
             ) : (
-              <CloudDownloadIcon className="size-4" />
+              <CircleArrowUpIcon className="size-4" />
             )}
             Update to {selectedVersion}
           </Button>
