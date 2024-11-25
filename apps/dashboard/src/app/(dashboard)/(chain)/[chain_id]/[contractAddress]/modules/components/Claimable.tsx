@@ -73,6 +73,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
   const [tokenId, setTokenId] = useState<string>("");
 
   const isErc721 = props.contractInfo.name === "ClaimableERC721";
+  const isErc20 = props.contractInfo.name === "ClaimableERC20";
   const isValidTokenId = positiveIntegerRegex.test(tokenId);
 
   const primarySaleRecipientQuery = useReadContract(
@@ -241,6 +242,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
       }}
       isOwnerAccount={!!ownerAccount}
       isErc721={isErc721}
+      isErc20={isErc20}
       contractChainId={props.contract.chain.id}
       setTokenId={setTokenId}
       isValidTokenId={isValidTokenId}
@@ -256,6 +258,7 @@ export function ClaimableModuleUI(
   props: Omit<ModuleCardUIProps, "children" | "updateButton"> & {
     isOwnerAccount: boolean;
     isErc721: boolean;
+    isErc20: boolean;
     contractChainId: number;
     setTokenId: Dispatch<SetStateAction<string>>;
     isValidTokenId: boolean;
@@ -295,7 +298,7 @@ export function ClaimableModuleUI(
         <Accordion type="single" collapsible className="-mx-1">
           <AccordionItem value="metadata" className="border-none">
             <AccordionTrigger className="border-border border-t px-1">
-              Mint NFT
+              Mint {props.isErc20 ? "Token" : "NFT"}
             </AccordionTrigger>
             <AccordionContent className="px-1">
               <MintNFTSection
@@ -835,7 +838,7 @@ function MintNFTSection(props: {
             name="quantity"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>quantity</FormLabel>
+                <FormLabel>Quantity</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
