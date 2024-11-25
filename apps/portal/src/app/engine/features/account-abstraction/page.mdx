@@ -1,4 +1,4 @@
-import { createMetadata } from "@doc";
+import { createMetadata, Callout } from "@doc";
 
 export const metadata = createMetadata({
 	title: "Account Abstraction | thirdweb Engine",
@@ -7,6 +7,19 @@ export const metadata = createMetadata({
 });
 
 # Account Abstraction
+
+<Callout variant="info" title="Looking to use account abstraction for your backend operations?">
+Consider using [Smart Backend Wallets](/engine/features/backend-wallets#smart-backend-wallets) instead. They combine EOA and smart account management into a single wallet, with automatic deployment and simplified integration:
+
+- No need to deploy or manage account factories
+- No separate account and backend wallet addresses to track
+- Works with all existing Engine endpoints without modification
+- Built-in transaction batching and recovery
+- Automatic gas management with paymaster
+
+Smart backend wallets are recommended when you need account abstraction for your own backend operations. Use the approach described below when you need to manage smart accounts for your users.
+
+</Callout>
 
 Use Engine to deploy, manage, and transact with smart accounts on behalf of your users.
 
