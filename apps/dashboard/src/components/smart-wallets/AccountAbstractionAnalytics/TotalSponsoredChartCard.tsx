@@ -1,6 +1,5 @@
 "use client";
 
-import type { UserOpStats } from "@/api/analytics";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
@@ -23,6 +22,7 @@ import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import type { UserOpStats } from "types/analytics";
 import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { formatTickerNumber } from "../../../lib/format-utils";
 

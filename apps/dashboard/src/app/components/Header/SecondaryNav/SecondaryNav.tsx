@@ -39,6 +39,7 @@ export function SecondaryNavLinks() {
       <Link
         href="https://portal.thirdweb.com/"
         className="text-muted-foreground text-sm hover:text-foreground"
+        target="_blank"
       >
         Docs
       </Link>

@@ -1,24 +1,26 @@
 "use client";
+
+import { TextDivider } from "@/components/TextDivider";
+import { PricingCard } from "@/components/blocks/pricing-card";
 import { Button } from "@/components/ui/button";
-import { PricingCard } from "components/homepage/sections/PricingCard";
-import { ArrowRightIcon } from "lucide-react";
 import { TitleAndDescription } from "./Title";
 
 export function OnboardingChoosePlan(props: {
   skipPlan: () => Promise<void>;
   canTrialGrowth: boolean;
   teamSlug: string;
+  redirectPath: string;
 }) {
   return (
     <div>
       <TitleAndDescription
-        heading="Choose your plan"
-        description="Get started for free with our Starter plan or subscribe to Growth plan to unlock higher rate limits and advanced features."
+        heading="Choose your Plan"
+        description="Get started for free with our Starter plan or subscribe to Growth plan to unlock higher rate limits and advanced features"
       />
 
       <div className="h-4" />
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-4">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-5">
         <PricingCard
           billingPlan="starter"
           teamSlug={props.teamSlug}
@@ -28,6 +30,7 @@ export function OnboardingChoosePlan(props: {
               category: "account",
             },
           }}
+          redirectPath={props.redirectPath}
         />
 
         <PricingCard
@@ -43,20 +46,25 @@ export function OnboardingChoosePlan(props: {
             variant: "default",
           }}
           canTrialGrowth={props.canTrialGrowth}
+          highlighted
+          redirectPath={props.redirectPath}
         />
       </div>
 
-      <div className="h-3" />
+      <TextDivider text="OR" className="my-4" />
 
-      <div className="flex justify-end">
-        <Button
-          variant="ghost"
-          onClick={props.skipPlan}
-          className="inline-flex translate-x-2 items-center gap-2 text-muted-foreground"
-        >
-          Continue with Free Plan <ArrowRightIcon className="size-4" />
-        </Button>
-      </div>
+      <Button
+        variant="outline"
+        onClick={props.skipPlan}
+        className="relative h-auto w-full items-center gap-2 rounded-xl bg-muted/50 py-2.5"
+      >
+        <span className="flex flex-col gap-0.5">
+          <span className="text-base text-foreground">Skip for now</span>
+          <span className="text-muted-foreground text-sm">
+            You will have limited access to services
+          </span>
+        </span>
+      </Button>
     </div>
   );
 }

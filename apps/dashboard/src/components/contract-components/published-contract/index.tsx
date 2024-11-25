@@ -131,10 +131,8 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
               <Divider />
 
               <MarkdownRenderer
-                px={6}
-                pt={2}
-                pb={5}
                 markdownText={publishedContract?.changelog}
+                className="px-6 pt-2 pb-5"
               />
             </Card>
           )}

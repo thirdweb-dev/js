@@ -1,5 +1,4 @@
 "use client";
-import type { InAppWalletStats } from "@/api/analytics";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
@@ -21,6 +20,7 @@ import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import type { InAppWalletStats } from "types/analytics";
 import { formatTickerNumber } from "../../../lib/format-utils";
 
 type ChartData = Record<string, number> & {

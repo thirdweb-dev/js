@@ -278,7 +278,22 @@ async function directDeploy(options: {
   });
 }
 
-async function getInitializeTransaction(options: {
+/**
+ * Prepares the initialization transaction for a contract deployment
+ * @param options - The options for generating the initialize transaction
+ * @param options.client - The ThirdwebClient instance
+ * @param options.chain - The blockchain network configuration
+ * @param options.account - The account performing the initialization
+ * @param options.implementationContract - The contract implementation to initialize
+ * @param options.deployMetadata - The metadata for the contract deployment
+ * @param options.initializeParams - Optional parameters to pass to the initialize function
+ * @param options.modules - Optional array of modules to install during initialization
+ * @param options.modules[].deployMetadata - The metadata for the module contract
+ * @param options.modules[].initializeParams - Optional parameters for module initialization
+ * @returns The prepared transaction for contract initialization
+ * @contract
+ */
+export async function getInitializeTransaction(options: {
   client: ThirdwebClient;
   chain: Chain;
   account: Account;

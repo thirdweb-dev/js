@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getRawAccount } from "../account/settings/getAccount";
 import { LoginAndOnboardingPage } from "./LoginPage";
-import { isOnboardingComplete } from "./isOnboardingRequired";
+import { isOnboardingComplete } from "./onboarding/isOnboardingRequired";
 
 export default async function Page(props: {
   searchParams: Promise<{

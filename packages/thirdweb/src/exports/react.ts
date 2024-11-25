@@ -253,3 +253,17 @@ export {
   TokenIcon,
   type TokenIconProps,
 } from "../react/web/ui/prebuilt/Token/icon.js";
+
+// Chain
+export {
+  ChainProvider,
+  type ChainProviderProps,
+} from "../react/web/ui/prebuilt/Chain/provider.js";
+export {
+  ChainName,
+  type ChainNameProps,
+} from "../react/web/ui/prebuilt/Chain/name.js";
+export {
+  ChainIcon,
+  type ChainIconProps,
+} from "../react/web/ui/prebuilt/Chain/icon.js";

@@ -44,6 +44,18 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
   }
 
   const cookieStore = await cookies();
+  const utmCookies = cookieStore
+    .getAll()
+    .filter((cookie) => {
+      return cookie.name.startsWith("utm_");
+    })
+    .reduce(
+      (acc, cookie) => {
+        acc[cookie.name] = cookie.value;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
 
   // forward the request to the API server
   const res = await fetch(`${API_SERVER_URL}/v2/siwe/login`, {
@@ -53,7 +65,7 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
       "x-service-api-key": THIRDWEB_API_SECRET,
     },
     // set the createAccount flag to true to create a new account if it does not exist
-    body: JSON.stringify({ ...payload, createAccount: true }),
+    body: JSON.stringify({ ...payload, createAccount: true, utm: utmCookies }),
   });
 
   // if the request failed, log the error and throw an error

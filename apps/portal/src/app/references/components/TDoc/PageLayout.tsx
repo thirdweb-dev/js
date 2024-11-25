@@ -20,7 +20,10 @@ import { getSidebarLinkGroups } from "./utils/getSidebarLinkgroups";
 import { fetchAllSlugs, getSlugToDocMap } from "./utils/slugs";
 import { nameToSubgroupSlug, subgroups } from "./utils/subgroups";
 
-type PageProps = { params: Promise<{ version: string; slug?: string[] }> };
+type PageProps = {
+  params: Promise<{ version: string; slug?: string[] }>;
+};
+
 type LayoutProps = {
   params: Promise<{ version: string }>;
   children: React.ReactNode;
@@ -100,7 +103,9 @@ export function getTDocPage(options: {
   }
 
   // statically generate pages for latest version
-  async function generateStaticParams(): Promise<PageProps["params"][]> {
+  async function generateStaticParams(): Promise<
+    Awaited<PageProps["params"]>[]
+  > {
     const versions = await getVersions();
 
     const returnVal = await Promise.all(
@@ -125,8 +130,7 @@ export function getTDocPage(options: {
         }),
     );
 
-    const paths = returnVal.flat();
-    return paths.map((p) => Promise.resolve(p));
+    return returnVal.flat();
   }
 
   async function generateMetadata(props: PageProps): Promise<Metadata> {

@@ -1,13 +1,14 @@
 import type { Team } from "@/api/team";
+import { CheckoutButton } from "@/components/billing";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
+import { CheckIcon, CircleDollarSignIcon } from "lucide-react";
 import type React from "react";
 import { TEAM_PLANS } from "utils/pricing";
-import { CheckoutButton } from "../../../@/components/billing";
 import { remainingDays } from "../../../utils/date-utils";
-import { FeatureItem } from "./FeatureItem";
 
 type ButtonProps = React.ComponentProps<typeof Button>;
 
@@ -31,6 +32,7 @@ type PricingCardProps = {
   current?: boolean;
   canTrialGrowth?: boolean;
   activeTrialEndsAt?: string;
+  redirectPath: string;
 };
 
 export const PricingCard: React.FC<PricingCardProps> = ({
@@ -41,6 +43,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   current = false,
   canTrialGrowth = false,
   activeTrialEndsAt,
+  redirectPath,
 }) => {
   const plan = TEAM_PLANS[billingPlan];
   const isCustomPrice = typeof plan.price === "string";
@@ -128,6 +131,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               variant={cta.variant || "outline"}
               teamSlug={teamSlug}
               sku={billingPlan === "starter" ? "plan:starter" : "plan:growth"}
+              redirectPath={redirectPath}
             >
               {cta.title}
             </CheckoutButton>
@@ -154,3 +158,30 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     </div>
   );
 };
+
+type FeatureItemProps = {
+  text: string | string[];
+};
+
+function FeatureItem({ text }: FeatureItemProps) {
+  const titleStr = Array.isArray(text) ? text[0] : text;
+
+  return (
+    <div className="flex items-center gap-2">
+      <CheckIcon className="size-4 shrink-0 text-green-500" />
+      {Array.isArray(text) ? (
+        <div className="flex items-center gap-2">
+          <p className="text-muted-foreground">
+            {titleStr}{" "}
+            <span className="text-muted-foreground md:hidden">{text[1]}</span>
+          </p>
+          <ToolTipLabel label={text[1]}>
+            <CircleDollarSignIcon className="hidden size-4 text-muted-foreground md:block" />
+          </ToolTipLabel>
+        </div>
+      ) : (
+        <p className="text-muted-foreground">{titleStr}</p>
+      )}
+    </div>
+  );
+}

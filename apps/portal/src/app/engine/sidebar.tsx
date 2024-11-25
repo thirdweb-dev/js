@@ -53,6 +53,10 @@ export const sidebar: SideBar = {
           href: `${engineSlug}/features/preventing-duplicate-transactions`,
         },
         {
+          name: "Custom Chains",
+          href: `${engineSlug}/features/custom-chains`,
+        },
+        {
           name: "Account Abstraction",
           href: `${engineSlug}/features/account-abstraction`,
         },

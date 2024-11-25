@@ -1,5 +1,4 @@
 "use client";
-import type { EcosystemWalletStats } from "@/api/analytics";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
@@ -21,6 +20,7 @@ import { format } from "date-fns";
 import { formatTickerNumber } from "lib/format-utils";
 import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import type { EcosystemWalletStats } from "types/analytics";
 
 type ChartData = Record<string, number> & {
   time: string; // human readable date

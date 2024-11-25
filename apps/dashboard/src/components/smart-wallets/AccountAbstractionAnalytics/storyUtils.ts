@@ -1,4 +1,4 @@
-import type { UserOpStats } from "@/api/analytics";
+import type { UserOpStats } from "types/analytics";
 
 export function createUserOpStatsStub(days: number): UserOpStats[] {
   const stubbedData: UserOpStats[] = [];

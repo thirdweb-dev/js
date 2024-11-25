@@ -1,8 +1,3 @@
-import type {
-  InAppWalletStats,
-  UserOpStats,
-  WalletStats,
-} from "@/api/analytics";
 import { Button } from "@/components/ui/button";
 import type { Range } from "components/analytics/date-range-selector";
 import { Stat } from "components/analytics/stat";
@@ -12,6 +7,11 @@ import { differenceInDays } from "date-fns";
 import { ArrowRightIcon, CableIcon, WalletCardsIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
+import type {
+  InAppWalletStats,
+  UserOpStats,
+  WalletStats,
+} from "types/analytics";
 import { DateRangeSelector } from "../../../../../../components/analytics/date-range-selector";
 import { IntervalSelector } from "../../../../../../components/analytics/interval-selector";
 import { DailyConnectionsChartCard } from "./_components/DailyConnectionsChartCard";
