@@ -21,7 +21,7 @@ Smart backend wallets are the recommended way to perform blockchain operations w
 
 Smart backend wallets inherit smart account benefits and offer several advantages over traditional EOAs:
 
-- **Gas Management**: Built-in paymaster eliminates the need to maintain gas tokens. This means you never need to hold crypto or top up for gas.
+- **Gas Management**: Built-in paymaster eliminates the need to maintain gas tokens. This means you never need to hold crypto or top up gas.
 - **Better Nonce Management**: Smart accounts use multi-dimensional nonces, which are more efficient than EOAs.
 - **Simple Integration**: Works with all existing Engine endpoints without any code changes.
 
@@ -54,7 +54,8 @@ For AWS and Google Cloud KMS options, follow the setup instructions in the respe
 
 ### Pricing
 
-Smart backend wallets have no additional costs to use with your Engine instance. Transactions sent from smart backend wallets follow the [same billing model as regular account abstraction transactions with thirdweb](/connect/account-abstraction/infrastructure#pricing--billing). (Smart accounts need to be deployed on each chain which costs gas that is paid by the user.)
+Smart backend wallets have no additional costs to use with your Engine instance. Transactions sent from smart backend wallets follow the [same billing model as regular account abstraction transactions with thirdweb](/connect/account-abstraction/infrastructure#pricing--billing).
+Smart accounts need to be deployed on each chain. This costs gas and is billed to your account like any other transaction.
 
 ## Local wallet
 
