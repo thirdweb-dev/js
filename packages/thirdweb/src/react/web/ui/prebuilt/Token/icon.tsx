@@ -7,6 +7,11 @@ import { getContractMetadata } from "../../../../../extensions/common/read/getCo
 import { resolveScheme } from "../../../../../utils/ipfs.js";
 import { useTokenContext } from "./provider.js";
 
+/**
+ * Props for the TokenIcon component
+ * @component
+ * @token
+ */
 export interface TokenIconProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
   /**
