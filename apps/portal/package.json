@@ -38,7 +38,7 @@
     "node-html-parser": "^6.1.13",
     "posthog-js": "1.67.1",
     "prettier": "^3.3.2",
-    "react": "19.0.0-rc-69d4b800-20241021",
+    "react": "19.0.0-rc.1",
     "react-dom": "19.0.0-rc-69d4b800-20241021",
     "react-html-parser": "2.0.2",
     "remark-gfm": "3.0.1",
