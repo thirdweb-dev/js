@@ -80,7 +80,7 @@ export function AppFooter(props: AppFooterProps) {
         <div className="grid grid-flow-col grid-cols-2 grid-rows-5 gap-2 md:flex md:flex-row md:justify-between">
           <Link
             className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
-            href="/"
+            href="/home"
           >
             Home
           </Link>
