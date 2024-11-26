@@ -49,7 +49,6 @@ describe("sendEip712Transaction", () => {
         platformFeeRecipient: TEST_ACCOUNT_A.address, // platformFeeRecipient
       },
     });
-    console.log("deployed address", address);
     expect(address).toBeDefined();
     expect(address.length).toBe(42);
   });

@@ -43,13 +43,7 @@ export async function uploadBatchMobile(
         );
       }, 30000);
 
-      xhr.upload.addEventListener("loadstart", () => {
-        console.log(`[${Date.now()}] [IPFS] Started`);
-      });
-
       xhr.upload.addEventListener("progress", (event) => {
-        console.log(`[IPFS] Progress Event ${event.loaded}/${event.total}`);
-
         clearTimeout(timer);
 
         if (event.loaded < event.total) {
@@ -61,15 +55,10 @@ export async function uploadBatchMobile(
               ),
             );
           }, 30000);
-        } else {
-          console.log(
-            `[${Date.now()}] [IPFS] Uploaded files. Waiting for response.`,
-          );
         }
       });
 
       xhr.addEventListener("load", () => {
-        console.log(`[${Date.now()}] [IPFS] Load`);
         clearTimeout(timer);
 
         if (xhr.status >= 200 && xhr.status < 300) {
@@ -102,7 +91,6 @@ export async function uploadBatchMobile(
       });
 
       xhr.addEventListener("error", () => {
-        console.log("[IPFS] Load");
         clearTimeout(timer);
 
         if (

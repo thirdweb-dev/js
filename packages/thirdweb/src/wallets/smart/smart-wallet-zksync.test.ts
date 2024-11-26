@@ -145,7 +145,6 @@ describe.runIf(process.env.TW_SECRET_KEY).todo(
         }),
         account: account,
       });
-      console.log(tx.transactionHash);
       expect(tx.transactionHash.length).toBe(66);
     });
 
@@ -168,7 +167,6 @@ describe.runIf(process.env.TW_SECRET_KEY).todo(
         }),
         account: account,
       });
-      console.log(tx.transactionHash);
       expect(tx.transactionHash.length).toBe(66);
     });
   },

@@ -79,10 +79,6 @@ export async function zkDeployContractDeterministic(
       });
     }
 
-    console.log(
-      `deploying contract via create2 factory at: ${predictedAddress}`,
-    );
-
     // deploy with create2 factory
     const factory = getContract({
       address: create2FactoryAddress,

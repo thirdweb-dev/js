@@ -5,19 +5,39 @@
     "rules": {
       "nursery": {
         "noProcessEnv": "warn"
-      }
-    }
-  },
-  "overrides": [{
-    "include": ["src/**/*.test.ts","src/**/*.test.tsx", "src/stories/**"],
-    "linter": {
-      "rules": {
-        "nursery": {
-          "noProcessEnv": "off"
+      },
+      "suspicious": {
+        "noConsole": {
+          "level": "error",
+          "options": {
+            "allow": ["error", "warn"]
+          }
         }
       }
     }
-  }],
+  },
+  "overrides": [
+    {
+      "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/stories/**"],
+      "linter": {
+        "rules": {
+          "nursery": {
+            "noProcessEnv": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": ["src/cli/bin.ts", "src/cli/commands/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    }
+  ],
   "files": {
     "ignore": [
       "src/crypto/aes/lib/md5.ts",
