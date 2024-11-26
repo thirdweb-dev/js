@@ -288,7 +288,7 @@ function TestWebhookModal({
         <ModalHeader>Test Webhook</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 pb-2">
             <FormItem>
               <FormLabel>URL</FormLabel>
               <span className="font-mono">{webhook.url}</span>
@@ -312,7 +312,6 @@ function TestWebhookModal({
           </div>
         </ModalBody>
       </ModalContent>
-      <ModalFooter />
     </Modal>
   );
 }
