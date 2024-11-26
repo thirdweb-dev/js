@@ -15,8 +15,8 @@ type DetectExtensionOptions = {
  * ```ts
  * import { detectMethod } from "thirdweb/utils/extensions/detect.js";
  * const hasDecimals = await detectMethod({
- *  contract,
  *  method: "function decimals() view returns (uint8)",
+ *  availableSelectors: ["0x313ce567"],
  * });
  * ```
  * @contract
