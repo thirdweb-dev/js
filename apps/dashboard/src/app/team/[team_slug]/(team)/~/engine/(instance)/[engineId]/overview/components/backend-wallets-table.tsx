@@ -371,6 +371,7 @@ const ReceiveFundsModal = ({
               address={backendWallet.address}
               shortenAddress={false}
             />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={qrCodeBase64Query.data}
               alt="QR code for receiving funds"

@@ -16,7 +16,6 @@ import Head from "next/head";
 import { PageId } from "page-id";
 import { Heading, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
-import connectLottie from "../../public/assets/product-pages/connect/connect-lottie.json";
 
 const TRACKING_CATEGORY = "connect-wallet-landing";
 
@@ -175,7 +174,6 @@ const ConnectLanding: ThirdwebNextPage = () => {
             ctaLink="https://playground.thirdweb.com/connect/sign-in/button"
             contactUsTitle="Book Demo"
             gradient="linear(to-r, #4490FF, #4490FF)"
-            lottie={connectLottie}
             image={require("../../public/assets/product-pages/hero/desktop-hero-connect-wallet.png")}
             mobileImage={require("../../public/assets/product-pages/hero/mobile-hero-connect-wallet.png")}
             contactUsBg="#0E0E0E"
