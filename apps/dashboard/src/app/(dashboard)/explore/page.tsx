@@ -5,12 +5,16 @@ import { EXPLORE_PAGE_DATA } from "data/explore";
 import type { Metadata } from "next";
 import { Fragment } from "react";
 
+const title = "List of smart contracts for EVM Developers";
+const description =
+  "A list of Ethereum smart contract templates for web3 developers, including the most popular evm smart contracts for dapps, NFTs and more.";
+
 export const metadata: Metadata = {
-  title: "Explore | Smart Contracts",
-  description:
-    "Browse a large collection of ready-to-deploy contracts that have been built by thirdweb and other contract developers. Find a contract for your specific app's or game's needs.",
+  title,
+  description,
   openGraph: {
-    title: "thirdweb Explore: Smart Contracts & Protocols",
+    title,
+    description,
   },
 };
 
