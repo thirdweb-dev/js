@@ -7,14 +7,14 @@
       "dependsOn": ["^build"]
     },
     "postbuild": {
-      "dependsOn": ["^postbuild"],
       "outputs": [
         "dist/**",
         ".next/**",
         "public/robots.txt",
         "public/sitemap*.xml",
         "searchIndex.json"
-      ]
+      ],
+      "inputs": ["$TURBO_DEFAULT$", ".next/**"]
     },
     "bench": {
       "cache": false,
