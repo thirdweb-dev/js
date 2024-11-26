@@ -39,10 +39,3 @@ export const BASE_URL = isProd
   : (process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL}`
       : "http://localhost:3000") || "https://thirdweb-dev.com";
-
-export function getAbsoluteUrlFromPath(path: string) {
-  const url = new URL(BASE_URL);
-
-  url.pathname = path;
-  return url;
-}

@@ -8,7 +8,11 @@ import {
 } from "../actions/billing";
 import { Button, type ButtonProps } from "./ui/button";
 
-type CheckoutButtonProps = RedirectCheckoutOptions & ButtonProps;
+type CheckoutButtonProps = Omit<RedirectCheckoutOptions, "redirectUrl"> &
+  ButtonProps & {
+    redirectPath: string;
+  };
+
 export function CheckoutButton({
   onClick,
   teamSlug,
@@ -27,7 +31,7 @@ export function CheckoutButton({
           teamSlug,
           sku,
           metadata,
-          redirectPath,
+          redirectUrl: getRedirectUrl(redirectPath),
         });
       }}
     >
@@ -36,7 +40,10 @@ export function CheckoutButton({
   );
 }
 
-type BillingPortalButtonProps = BillingPortalOptions & ButtonProps;
+type BillingPortalButtonProps = Omit<BillingPortalOptions, "redirectUrl"> &
+  ButtonProps & {
+    redirectPath: string;
+  };
 export function BillingPortalButton({
   onClick,
   teamSlug,
@@ -51,11 +58,17 @@ export function BillingPortalButton({
         onClick?.(e);
         await redirectToBillingPortal({
           teamSlug,
-          redirectPath,
+          redirectUrl: getRedirectUrl(redirectPath),
         });
       }}
     >
       {children}
     </Button>
   );
+}
+
+function getRedirectUrl(path: string) {
+  const url = new URL(window.location.origin);
+  url.pathname = path;
+  return url.toString();
 }

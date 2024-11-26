@@ -1,7 +1,7 @@
 "use server";
 
 import "server-only";
-import { API_SERVER_URL, getAbsoluteUrlFromPath } from "@/constants/env";
+import { API_SERVER_URL } from "@/constants/env";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
 import type { ProductSKU } from "../lib/billing";
@@ -9,7 +9,7 @@ import type { ProductSKU } from "../lib/billing";
 export type RedirectCheckoutOptions = {
   teamSlug: string;
   sku: ProductSKU;
-  redirectPath?: string;
+  redirectUrl: string;
   metadata?: Record<string, string>;
 };
 export async function redirectToCheckout(
@@ -34,10 +34,7 @@ export async function redirectToCheckout(
       method: "POST",
       body: JSON.stringify({
         sku: options.sku,
-        redirectTo: getAbsoluteUrlFromPath(
-          options.redirectPath ||
-            `/team/${options.teamSlug}/~/settings/billing`,
-        ).toString(),
+        redirectTo: options.redirectUrl,
         metadata: options.metadata || {},
       }),
       headers: {
@@ -64,7 +61,7 @@ export async function redirectToCheckout(
 
 export type BillingPortalOptions = {
   teamSlug: string | undefined;
-  redirectPath?: string;
+  redirectUrl: string;
 };
 export async function redirectToBillingPortal(
   options: BillingPortalOptions,
@@ -86,10 +83,7 @@ export async function redirectToBillingPortal(
     {
       method: "POST",
       body: JSON.stringify({
-        redirectTo: getAbsoluteUrlFromPath(
-          options.redirectPath ||
-            `/team/${options.teamSlug}/~/settings/billing`,
-        ).toString(),
+        redirectTo: options.redirectUrl,
       }),
       headers: {
         "Content-Type": "application/json",
