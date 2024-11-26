@@ -83,7 +83,7 @@ export function useEngineInstances() {
 export type BackendWallet = {
   address: string;
   label?: string;
-  type: string;
+  type: EngineBackendWalletType;
   awsKmsKeyId?: string | null;
   awsKmsArn?: string | null;
   gcpKmsKeyId?: string | null;
@@ -980,6 +980,39 @@ export function useEngineImportBackendWallet(instance: string) {
   });
 }
 
+interface DeleteBackendWalletInput {
+  walletAddress: string;
+}
+export function useEngineDeleteBackendWallet(instance: string) {
+  const token = useLoggedInUser().user?.jwt ?? null;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (input: DeleteBackendWalletInput) => {
+      invariant(instance, "instance is required");
+
+      const res = await fetch(
+        `${instance}backend-wallet/${input.walletAddress}`,
+        {
+          method: "DELETE",
+          headers: getEngineRequestHeaders(token),
+        },
+      );
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
+      return json.result;
+    },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.backendWallets(instance),
+      });
+    },
+  });
+}
+
 export function useEngineGrantPermissions(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
@@ -1177,16 +1210,15 @@ export function useEngineCreateWebhook(instance: string) {
   });
 }
 
-type RevokeWebhookInput = {
+type DeleteWebhookInput = {
   id: number;
 };
-
-export function useEngineRevokeWebhook(instance: string) {
+export function useEngineDeleteWebhook(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (input: RevokeWebhookInput) => {
+    mutationFn: async (input: DeleteWebhookInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}webhooks/revoke`, {
@@ -1195,11 +1227,44 @@ export function useEngineRevokeWebhook(instance: string) {
         body: JSON.stringify(input),
       });
       const json = await res.json();
-
       if (json.error) {
         throw new Error(json.error.message);
       }
+      return json.result;
+    },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.webhooks(instance),
+      });
+    },
+  });
+}
 
+interface TestWebhookInput {
+  id: number;
+}
+interface TestWebhookResponse {
+  ok: boolean;
+  status: number;
+  body: string;
+}
+export function useEngineTestWebhook(instance: string) {
+  const token = useLoggedInUser().user?.jwt ?? null;
+  const queryClient = useQueryClient();
+
+  return useMutation<TestWebhookResponse, Error, TestWebhookInput>({
+    mutationFn: async (input: TestWebhookInput) => {
+      invariant(instance, "instance is required");
+
+      const res = await fetch(`${instance}webhooks/${input.id}/test`, {
+        method: "POST",
+        headers: getEngineRequestHeaders(token),
+        body: JSON.stringify({}),
+      });
+      const json = await res.json();
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
       return json.result;
     },
     onSuccess: () => {

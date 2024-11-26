@@ -1,7 +1,12 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { FormItem } from "@/components/ui/form";
 import {
   type EngineWebhook,
-  useEngineRevokeWebhook,
+  useEngineDeleteWebhook,
+  useEngineTestWebhook,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
@@ -14,16 +19,17 @@ import {
   ModalHeader,
   ModalOverlay,
   Tooltip,
+  type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { Trash2Icon } from "lucide-react";
+import { MailQuestion, TrashIcon } from "lucide-react";
 import { useState } from "react";
-import { Button, Card, FormLabel, Text } from "tw-components";
+import { toast } from "sonner";
+import { Card, FormLabel, Text } from "tw-components";
 import { shortenString } from "utils/usedapp-external";
 
 export function beautifyString(str: string): string {
@@ -113,99 +119,14 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
   isPending,
   isFetched,
 }) => {
-  const [webhookToRevoke, setWebhookToRevoke] = useState<EngineWebhook>();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: revokeWebhook } = useEngineRevokeWebhook(instanceUrl);
-  const trackEvent = useTrack();
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully deleted webhook",
-    "Failed to delete webhook",
-  );
-
-  const onDelete = (webhook: EngineWebhook) => {
-    setWebhookToRevoke(webhook);
-    onOpen();
-  };
-
-  const onRevoke = () => {
-    if (!webhookToRevoke) {
-      return;
-    }
-
-    revokeWebhook(
-      {
-        id: webhookToRevoke.id,
-      },
-      {
-        onSuccess: () => {
-          onSuccess();
-          onClose();
-          trackEvent({
-            category: "engine",
-            action: "revoke-webhook",
-            label: "success",
-            instance: instanceUrl,
-          });
-        },
-        onError: (error) => {
-          onError(error);
-          trackEvent({
-            category: "engine",
-            action: "revoke-webhook",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
-        },
-      },
-    );
-  };
+  const [selectedWebhook, setSelectedWebhook] = useState<EngineWebhook>();
+  const deleteDisclosure = useDisclosure();
+  const testDisclosure = useDisclosure();
 
   const activeWebhooks = webhooks.filter((webhook) => webhook.active);
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent className="!bg-background rounded-lg border border-border">
-          <ModalHeader>Delete webhook</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {webhookToRevoke && (
-              <div className="flex flex-col gap-4">
-                <Text>Are you sure you want to delete this webook?</Text>
-                <FormControl>
-                  <FormLabel>Name</FormLabel>
-                  <Text>{webhookToRevoke?.name}</Text>
-                </FormControl>
-                <FormControl>
-                  <FormLabel>URL</FormLabel>
-                  <Text>{webhookToRevoke?.url}</Text>
-                </FormControl>
-                <FormControl>
-                  <FormLabel>Created at</FormLabel>
-                  <Text>
-                    {format(
-                      new Date(webhookToRevoke?.createdAt ?? ""),
-                      "PP pp z",
-                    )}
-                  </Text>
-                </FormControl>
-              </div>
-            )}
-          </ModalBody>
-
-          <ModalFooter as={Flex} gap={3}>
-            <Button type="button" onClick={onClose} variant="ghost">
-              Cancel
-            </Button>
-            <Button type="submit" colorScheme="red" onClick={onRevoke}>
-              Delete
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
       <TWTable
         title="webhooks"
         data={activeWebhooks}
@@ -214,13 +135,183 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
         isFetched={isFetched}
         onMenuClick={[
           {
-            icon: <Trash2Icon className="size-4" />,
+            icon: <MailQuestion className="size-4" />,
+            text: "Test webhook",
+            onClick: (row) => {
+              setSelectedWebhook(row);
+              testDisclosure.onOpen();
+            },
+          },
+          {
+            icon: <TrashIcon className="size-4" />,
             text: "Delete",
-            onClick: onDelete,
+            onClick: (row) => {
+              setSelectedWebhook(row);
+              deleteDisclosure.onOpen();
+            },
             isDestructive: true,
           },
         ]}
       />
+
+      {selectedWebhook && deleteDisclosure.isOpen && (
+        <DeleteWebhookModal
+          webhook={selectedWebhook}
+          disclosure={deleteDisclosure}
+          instanceUrl={instanceUrl}
+        />
+      )}
+      {selectedWebhook && testDisclosure.isOpen && (
+        <TestWebhookModal
+          webhook={selectedWebhook}
+          disclosure={testDisclosure}
+          instanceUrl={instanceUrl}
+        />
+      )}
     </>
   );
 };
+
+interface DeleteWebhookModalProps {
+  webhook: EngineWebhook;
+  disclosure: UseDisclosureReturn;
+  instanceUrl: string;
+}
+function DeleteWebhookModal({
+  webhook,
+  disclosure,
+  instanceUrl,
+}: DeleteWebhookModalProps) {
+  const deleteWebhook = useEngineDeleteWebhook(instanceUrl);
+  const trackEvent = useTrack();
+
+  const onDelete = () => {
+    const promise = deleteWebhook.mutateAsync(
+      { id: webhook.id },
+      {
+        onSuccess: () => {
+          disclosure.onClose();
+          trackEvent({
+            category: "engine",
+            action: "delete-webhook",
+            label: "success",
+            instance: instanceUrl,
+          });
+        },
+        onError: (error) => {
+          trackEvent({
+            category: "engine",
+            action: "delete-webhook",
+            label: "error",
+            instance: instanceUrl,
+            error,
+          });
+        },
+      },
+    );
+
+    toast.promise(promise, {
+      success: "Successfully deleted webhook.",
+      error: "Failed to delete webhook.",
+    });
+  };
+
+  return (
+    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent className="!bg-background rounded-lg border border-border">
+        <ModalHeader>Delete Webhook</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <div className="flex flex-col gap-4">
+            <Text>Are you sure you want to delete this webhook?</Text>
+            <FormControl>
+              <FormLabel>Name</FormLabel>
+              <Text>{webhook.name}</Text>
+            </FormControl>
+            <FormControl>
+              <FormLabel>URL</FormLabel>
+              <Text>{webhook.url}</Text>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Created at</FormLabel>
+              <Text>
+                {format(new Date(webhook.createdAt ?? ""), "PP pp z")}
+              </Text>
+            </FormControl>
+          </div>
+        </ModalBody>
+
+        <ModalFooter as={Flex} gap={3}>
+          <Button onClick={disclosure.onClose} variant="outline">
+            Cancel
+          </Button>
+          <Button type="submit" variant="destructive" onClick={onDelete}>
+            Delete
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+}
+
+interface TestWebhookModalProps {
+  webhook: EngineWebhook;
+  disclosure: UseDisclosureReturn;
+  instanceUrl: string;
+}
+function TestWebhookModal({
+  webhook,
+  disclosure,
+  instanceUrl,
+}: TestWebhookModalProps) {
+  const { mutate: testWebhook, isPending } = useEngineTestWebhook(instanceUrl);
+  const [status, setStatus] = useState<number | undefined>();
+  const [body, setBody] = useState<string | undefined>();
+
+  const onTest = () => {
+    testWebhook(
+      { id: webhook.id },
+      {
+        onSuccess: (result) => {
+          setStatus(result.status);
+          setBody(result.body);
+        },
+      },
+    );
+  };
+
+  return (
+    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent className="!bg-background rounded-lg border border-border">
+        <ModalHeader>Test Webhook</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <div className="flex flex-col gap-4 pb-2">
+            <FormItem>
+              <FormLabel>URL</FormLabel>
+              <span className="font-mono">{webhook.url}</span>
+            </FormItem>
+
+            <Button type="submit" onClick={onTest} disabled={isPending}>
+              {isPending && <Spinner className="mr-2 size-4" />}
+              Send Request
+            </Button>
+
+            {status && (
+              <div>
+                <Badge variant={status <= 299 ? "success" : "destructive"}>
+                  {status}
+                </Badge>
+              </div>
+            )}
+            <div className="max-h-[12rem] overflow-y-auto font-mono text-sm">
+              {body ?? "Send a request to see the response."}
+            </div>
+          </div>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}
