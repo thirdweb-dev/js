@@ -2,23 +2,24 @@ import { notFound } from "next/navigation";
 
 import { getProject } from "@/api/projects";
 
-import type {
-  InAppWalletStats,
-  UserOpStats,
-  WalletStats,
-  WalletUserStats,
-} from "@/api/analytics";
 import {
   type DurationId,
   type Range,
   getLastNDaysRange,
 } from "components/analytics/date-range-selector";
+import type {
+  InAppWalletStats,
+  UserOpStats,
+  WalletStats,
+  WalletUserStats,
+} from "types/analytics";
 
 import {
   getInAppWalletUsage,
   getUserOpUsage,
   getWalletConnections,
   getWalletUsers,
+  isProjectActive,
 } from "@/api/analytics";
 import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
 import {
@@ -31,6 +32,7 @@ import { AnalyticsHeader } from "../../components/Analytics/AnalyticsHeader";
 import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChartCard";
 import { EmptyState } from "../../components/Analytics/EmptyState";
 import { PieChartCard } from "../../components/Analytics/PieChartCard";
+import { RpcMethodBarChartCard } from "./components/RpcMethodBarChartCard";
 
 interface PageParams {
   team_slug: string;
@@ -64,6 +66,8 @@ export default async function ProjectOverviewPage(props: PageProps) {
   if (!project) {
     notFound();
   }
+
+  const isActive = await isProjectActive({ clientId: project.publishableKey });
 
   // Fetch all analytics data in parallel
   const [
@@ -109,12 +113,6 @@ export default async function ProjectOverviewPage(props: PageProps) {
     }),
   ]);
 
-  const isEmpty =
-    !walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) &&
-    walletConnections.length === 0 &&
-    inAppWalletUsage.length === 0 &&
-    userOpUsage.length === 0;
-
   return (
     <div className="md:pb-16">
       <div className="w-full border-border-800 border-b px-6 dark:bg-muted/50">
@@ -124,7 +122,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
           range={range}
         />
       </div>
-      {isEmpty ? (
+      {!isActive ? (
         <div className="container p-6">
           <EmptyState />
         </div>
@@ -150,6 +148,12 @@ export default async function ProjectOverviewPage(props: PageProps) {
               link="https://portal.thirdweb.com/connect/quickstart"
             />
           )}
+          <RpcMethodBarChartCard
+            from={range.from}
+            to={range.to}
+            period={interval}
+            clientId={project.publishableKey}
+          />
           <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
             {walletConnections.length > 0 ? (
               <WalletDistributionCard data={walletConnections} />

@@ -1,9 +1,7 @@
 import { CreateEcosystemForm } from "./components/client/create-ecosystem-form.client";
 import { EcosystemWalletPricingCard } from "./components/pricing-card";
 
-export function EcosystemCreatePage(props: {
-  ecosystemLayoutPath: string;
-}) {
+export async function EcosystemCreatePage(props: { teamSlug: string }) {
   return (
     <div className="flex w-full flex-col gap-6 md:mx-auto md:max-w-lg lg:max-w-4xl">
       <header className="flex flex-col gap-1">
@@ -19,9 +17,7 @@ export function EcosystemCreatePage(props: {
           <EcosystemWalletPricingCard />
         </section>
         <section className="mb-12 lg:px-4">
-          <CreateEcosystemForm
-            ecosystemLayoutPath={props.ecosystemLayoutPath}
-          />
+          <CreateEcosystemForm teamSlug={props.teamSlug} />
         </section>
       </main>
     </div>

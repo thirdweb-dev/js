@@ -1,5 +1,5 @@
-import type { WalletStats } from "@/api/analytics";
 import type { WalletId } from "thirdweb/wallets";
+import type { WalletStats } from "types/analytics";
 
 const walletsToPickFrom: WalletId[] = [
   "io.metamask",

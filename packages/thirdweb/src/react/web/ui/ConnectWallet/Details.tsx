@@ -882,6 +882,7 @@ function DetailsModal(props: {
         }}
         wallet={activeWallet}
         client={client}
+        connectLocale={locale}
       />
     );
   } else if (screen === "manage-wallet") {

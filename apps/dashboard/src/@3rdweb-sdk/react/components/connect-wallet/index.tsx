@@ -21,6 +21,7 @@ import {
   useConnectModal,
 } from "thirdweb/react";
 import { useFavoriteChainIds } from "../../../../app/(dashboard)/(chain)/components/client/star-button";
+import { doLogout } from "../../../../app/login/auth-actions";
 import { LazyConfigureNetworkModal } from "../../../../components/configure-networks/LazyConfigureNetworkModal";
 import { useAllChainsData } from "../../../../hooks/chains/allChains";
 import {
@@ -174,10 +175,7 @@ export const CustomConnectWallet = (props: {
         }}
         onDisconnect={async () => {
           try {
-            // log out the user
-            await fetch("/api/auth/logout", {
-              method: "POST",
-            });
+            await doLogout();
           } catch (err) {
             console.error("Failed to log out", err);
           }

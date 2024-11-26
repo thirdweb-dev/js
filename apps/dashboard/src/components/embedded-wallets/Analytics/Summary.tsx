@@ -1,6 +1,6 @@
-import type { InAppWalletStats } from "@/api/analytics";
 import { Stat } from "components/analytics/stat";
 import { ActivityIcon, UserIcon } from "lucide-react";
+import type { InAppWalletStats } from "types/analytics";
 
 export function InAppWalletsSummary(props: {
   allTimeStats: InAppWalletStats[] | undefined;

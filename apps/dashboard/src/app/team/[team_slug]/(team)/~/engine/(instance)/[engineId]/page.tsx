@@ -6,7 +6,7 @@ export default async function Page(props: EngineInstancePageProps) {
   return (
     <EngineOverviewPage
       engineId={params.engineId}
-      team_slug={params.team_slug}
+      teamSlug={params.team_slug}
     />
   );
 }

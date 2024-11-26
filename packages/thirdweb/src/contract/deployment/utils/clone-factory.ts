@@ -2,6 +2,10 @@ import type { ClientAndChain } from "../../../utils/types.js";
 import { getDeployedInfraContract } from "./infra.js";
 
 /**
+ * Retrieves the deployed clone factory contract instance if available
+ * @param args - Client and chain information required to locate the contract
+ * @returns Promise that resolves to the clone factory contract instance if deployed, null otherwise
+ *
  * @internal
  */
 export async function getDeployedCloneFactoryContract(args: ClientAndChain) {

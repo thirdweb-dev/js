@@ -61,6 +61,7 @@ const claimCondition = {
 function Component() {
   const [isOwner, setIsOwner] = useState(true);
   const [isErc721, setIsErc721] = useState(false);
+  const [isErc20, setIsErc20] = useState(false);
   const [isClaimConditionLoading, setIsClaimConditionLoading] = useState(false);
   const [isPrimarySaleRecipientLoading, setIsPrimarySaleRecipientLoading] =
     useState(false);
@@ -126,6 +127,13 @@ function Component() {
             />
 
             <CheckboxWithLabel
+              value={isErc20}
+              onChange={setIsErc20}
+              id="isErc20"
+              label="isErc20"
+            />
+
+            <CheckboxWithLabel
               value={isClaimConditionLoading}
               onChange={setIsClaimConditionLoading}
               id="isClaimConditionLoading"
@@ -179,6 +187,7 @@ function Component() {
             }}
             isOwnerAccount={isOwner}
             isErc721={isErc721}
+            isErc20={isErc20}
             contractChainId={1}
             setTokenId={setTokenId}
             isValidTokenId={true}

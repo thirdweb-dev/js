@@ -34,14 +34,14 @@ export const THIRDWEB_ACCESS_TOKEN = process.env.THIRDWEB_ACCESS_TOKEN;
 // Comma-separated list of chain IDs to disable faucet for.
 export const DISABLE_FAUCET_CHAIN_IDS = process.env.DISABLE_FAUCET_CHAIN_IDS;
 
+export const BASE_URL = isProd
+  ? "https://thirdweb.com"
+  : (process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL}`
+      : "http://localhost:3000") || "https://thirdweb-dev.com";
+
 export function getAbsoluteUrlFromPath(path: string) {
-  const url = new URL(
-    isProd
-      ? "https://thirdweb.com"
-      : (process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL
-          ? `https://${process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL}`
-          : "http://localhost:3000") || "https://thirdweb-dev.com",
-  );
+  const url = new URL(BASE_URL);
 
   url.pathname = path;
   return url;

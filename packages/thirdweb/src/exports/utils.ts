@@ -138,11 +138,17 @@ export { isBytes } from "viem";
 // abi
 // ------------------------------------------------
 export { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
+export { decodeError } from "../utils/abi/decodeError.js";
+export { decodeFunctionData } from "../utils/abi/decodeFunctionData.js";
+export { decodeFunctionResult } from "../utils/abi/decodeFunctionResult.js";
 
 /**
  * @utils
  */
-export { encodePacked } from "viem";
+export {
+  encodePacked,
+  decodeAbiParameters,
+} from "viem";
 
 // Useful helpers
 export { setThirdwebDomains } from "../utils/domains.js";

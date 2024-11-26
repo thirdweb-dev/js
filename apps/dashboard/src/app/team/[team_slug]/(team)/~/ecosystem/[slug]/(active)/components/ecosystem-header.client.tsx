@@ -1,5 +1,4 @@
 "use client";
-import type { EcosystemWalletStats } from "@/api/analytics";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -24,6 +23,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import type { EcosystemWalletStats } from "types/analytics";
 import { useEcosystemList } from "../../../hooks/use-ecosystem-list";
 import type { Ecosystem } from "../../../types";
 import { EcosystemWalletsSummary } from "../analytics/components/Summary";

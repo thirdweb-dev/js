@@ -28,6 +28,16 @@ type GetDeployedInfraParams = Prettify<
 >;
 
 /**
+ * Retrieves a deployed infrastructure contract instance for the specified contract ID
+ * @param options - Configuration options for locating the infrastructure contract
+ * @param options.client - ThirdwebClient instance
+ * @param options.chain - Target blockchain network
+ * @param options.contractId - Identifier for the infrastructure contract (e.g. "WETH9", "Forwarder")
+ * @param options.constructorParams - Optional constructor parameters for contract initialization
+ * @param options.publisher - Optional custom publisher address
+ * @param options.version - Optional specific contract version to retrieve
+ * @returns Promise that resolves to the contract instance if deployed, null otherwise
+ *
  * @internal
  */
 export async function getDeployedInfraContract(

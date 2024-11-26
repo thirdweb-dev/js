@@ -1,0 +1,108 @@
+import { Callout, createMetadata, DocImage } from "@doc";
+import addCustomChain1 from "../../assets/add-custom-chain-1.png";
+import addCustomChain2 from "../../assets/add-custom-chain-2.png";
+import addCustomChain3 from "../../assets/add-custom-chain-3.png";
+import addCustomChain4 from "../../assets/add-custom-chain-4.png";
+
+export const metadata = createMetadata({
+	title: "Custom Chains | thirdweb Engine",
+	description: "Engine supports custom chains and chain overrides.",
+});
+
+# Custom Chains
+
+Engine supports all [public EVM chains](https://thirdweb.com/chainlist) and your own custom chains.
+
+You can define chain overrides allowing Engine to look up a chain ID's RPC URL, currency, and other metadata.
+
+## Use Cases
+
+- Allow Engine to interact with your private or custom EVM chain.
+- Bring your own RPC URL for an existing EVM chain.
+
+## Add a custom chain
+
+When adding a chain override, Engine will use the provided chain metadata for the given chain ID.
+
+<Callout variant='info' title="How to override a chain RPC URL">
+
+To override a chain's RPC URL, provide the same chain ID as an existing chain and a new RPC URL.
+
+</Callout>
+
+**Endpoint**
+
+`POST /configuration/chains`
+
+**Headers**
+
+- `Authorization: Bearer <engine_access_token>`
+- `Content-Type: application/json`
+
+**Body**
+```json
+{
+  "chainOverrides": [
+    {
+      "name": "My Custom Chain",
+      "chain": "ETH",
+      "rpc": [
+        "https://my-custom-rpc-url.com"
+      ],
+      "nativeCurrency": {
+        "name": "Ether",
+        "symbol": "ETH",
+        "decimals": 18
+      },
+      "chainId": 678,
+      "slug": "my-custom-chain"
+    }
+  ]
+}
+```
+
+Reference: [`POST /configuration/chains`](https://engine-api.thirdweb.com/reference#tag/configuration/POST/configuration/chains)
+
+## View custom chains
+
+Call Engine to [get a chain's metadata](https://engine-api.thirdweb.com/reference#tag/chain/GET/chain/get) or [view all chain overrides](https://engine-api.thirdweb.com/reference#tag/configuration/GET/configuration/chains).
+
+## Limitations
+
+- **When calling the Engine API for a custom chain, provide the chain ID and not the chain slug.** Chain slugs are only supported for public chains.
+- Since Engine may be unable to resolve the ABI for your contract automatically, provide the ABI manually to call contract methods. We recommend providing the full function signature:
+
+				```json
+				POST /contract/:chainId/:address/write
+				{
+					"functionName": "function setTokenURI(string uri)",
+					"args": ["ipfs://..."]
+				}
+				```
+
+	- Due to this reason, extension endpoints like `erc721/transfer` may not be supported for custom chains.
+
+## Add custom chains to the thirdweb dashboard
+
+While you may interact with your custom chain from the Engine dashboard, the UI may not support your custom chain yet. To add it to the dashboard, follow these steps:
+
+<DocImage
+	src={addCustomChain1}
+	alt="Add custom chain"
+	className="max-w-[300px] mx-auto"
+/>
+<DocImage
+	src={addCustomChain2}
+	alt="Add custom chain"
+	className="max-w-[300px] mx-auto"
+/>
+<DocImage
+	src={addCustomChain3}
+	alt="Add custom chain"
+	className="max-w-[300px] mx-auto"
+/>
+<DocImage
+	src={addCustomChain4}
+	alt="Add custom chain"
+	className="max-w-[500px] mx-auto"
+/>

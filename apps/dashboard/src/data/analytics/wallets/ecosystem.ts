@@ -1,4 +1,4 @@
-import type { EcosystemWalletStats } from "@/api/analytics";
+import type { EcosystemWalletStats } from "types/analytics";
 import { fetchAnalytics } from "../fetch-analytics";
 
 export async function getEcosystemWalletUsage(args: {

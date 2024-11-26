@@ -191,32 +191,48 @@ export function useEngineQueueMetrics(
   });
 }
 
-export function useEngineLatestVersion() {
-  return useQuery({
-    queryKey: engineKeys.latestVersion(),
+interface GetDeploymentPublicConfigurationInput {
+  teamSlug: string;
+}
+
+interface DeploymentPublicConfigurationResponse {
+  serverVersions: {
+    name: string;
+    createdAt: string;
+  }[];
+}
+
+export function useEngineGetDeploymentPublicConfiguration(
+  input: GetDeploymentPublicConfigurationInput,
+) {
+  return useQuery<DeploymentPublicConfigurationResponse>({
+    queryKey: engineKeys.deploymentPublicConfiguration(),
     queryFn: async () => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/latest-version`, {
-        method: "GET",
-      });
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/teams/${input.teamSlug}/engine/deployments/public-configuration`,
+        { method: "GET" },
+      );
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
+
       const json = await res.json();
-      return json.data.version as string;
+      return json.data as DeploymentPublicConfigurationResponse;
     },
   });
 }
 
-interface UpdateVersionInput {
+interface UpdateDeploymentInput {
+  teamSlug: string;
   deploymentId: string;
   serverVersion: string;
 }
 
-export function useEngineUpdateServerVersion() {
+export function useEngineUpdateDeployment() {
   return useMutation({
-    mutationFn: async (input: UpdateVersionInput) => {
+    mutationFn: async (input: UpdateDeploymentInput) => {
       const res = await fetch(
-        `${THIRDWEB_API_HOST}/v2/engine/deployments/${input.deploymentId}/infrastructure`,
+        `${THIRDWEB_API_HOST}/v1/teams/${input.teamSlug}/engine/deployments/${input.deploymentId}`,
         {
           method: "PUT",
           headers: {

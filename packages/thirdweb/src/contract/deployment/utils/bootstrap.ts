@@ -22,7 +22,19 @@ import {
 } from "./infra.js";
 
 /**
- * @internal
+ * Gets or deploys the infrastructure contracts needed for a published contract deployment
+ * @param args - The arguments object
+ * @param args.chain - The blockchain network configuration
+ * @param args.client - The ThirdwebClient instance
+ * @param args.account - The account performing the deployment
+ * @param args.contractId - The ID of the contract to deploy
+ * @param args.constructorParams - Optional constructor parameters for the implementation contract
+ * @param args.publisher - Optional publisher address, defaults to thirdweb
+ * @param args.version - Optional version of the contract to deploy
+ * @returns An object containing:
+ * - cloneFactoryContract: The factory contract used for creating clones
+ * - implementationContract: The deployed implementation contract
+ * @contract
  */
 export async function getOrDeployInfraForPublishedContract(
   args: ClientAndChainAndAccount & {

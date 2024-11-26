@@ -106,37 +106,3 @@ Here's an example of a 2-hour timeout:
   }
 }
 ```
-
-### How do I customize my RPC?
-
-Use [Update Chain Configuration](https://thirdweb-engine.apidocumentation.com/reference#tag/configuration/POST/configuration/chains) to override a chain's settings.
-
-**Example**
-
-`POST /configuration/chains`
-
-Headers
-
-```text
-Content-Type: application/json
-Authorization: Bearer <access_token>
-```
-
-Body
-
-```json
-[
-	{
-		"name": "Polygon Mainnet",
-		"chain": "Polygon",
-		"slug": "polygon",
-		"chainId": 137,
-		"rpc": ["https://<custom_rpc_url>"],
-		"nativeCurrency": {
-			"name": "MATIC",
-			"symbol": "MATIC",
-			"decimals": 18
-		}
-	}
-]
-```

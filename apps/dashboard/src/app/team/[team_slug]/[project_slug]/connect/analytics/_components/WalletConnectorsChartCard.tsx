@@ -1,6 +1,5 @@
 "use client";
 
-import type { WalletStats } from "@/api/analytics";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
@@ -27,6 +26,7 @@ import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import type { WalletStats } from "types/analytics";
 import {
   formatTickerNumber,
   formatWalletType,

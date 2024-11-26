@@ -1,4 +1,3 @@
-import type { UserOpStats } from "@/api/analytics";
 import type { Team } from "@/api/team";
 import {
   type Query,
@@ -9,6 +8,7 @@ import {
 import { THIRDWEB_ANALYTICS_API_HOST, THIRDWEB_API_HOST } from "constants/urls";
 import { useAllChainsData } from "hooks/chains/allChains";
 import invariant from "tiny-invariant";
+import type { UserOpStats } from "types/analytics";
 import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
 import { useLoggedInUser } from "./useLoggedInUser";
 

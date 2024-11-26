@@ -8,7 +8,7 @@ export async function fetchChangeLogs() {
     key: GHOST_THIRDWEB_BLOG_KEY,
     fields: ["title", "slug", "published_at"].join(","),
     filter: "tag:changelog",
-    limit: "50",
+    limit: "20",
     order: "published_at DESC",
     include: ["authors", "tags"].join(","),
   })
