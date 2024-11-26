@@ -38,11 +38,7 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
               </AccordionButton>
               <AccordionPanel>
                 {isExpanded && (
-                  <CodeClient
-                    code={JSON.stringify(abi, null, 2)}
-                    lang="json"
-                    loadingClassName="min-h-[500px]"
-                  />
+                  <CodeClient code={JSON.stringify(abi, null, 2)} lang="json" />
                 )}
               </AccordionPanel>
             </>
@@ -67,11 +63,7 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
               </AccordionButton>
               <AccordionPanel>
                 {isExpanded && (
-                  <CodeClient
-                    code={signature.source.trim()}
-                    lang="solidity"
-                    loadingClassName="min-h-[500px]"
-                  />
+                  <CodeClient code={signature.source.trim()} lang="solidity" />
                 )}
               </AccordionPanel>
             </>

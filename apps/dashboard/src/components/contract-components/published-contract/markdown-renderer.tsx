@@ -90,10 +90,12 @@ export const MarkdownRenderer: React.FC<{
             if (props?.className) {
               if (disableCodeHighlight) {
                 return (
-                  <PlainTextCodeBlock
-                    {...cleanedProps(props)}
-                    code={onlyText(props.children).trim()}
-                  />
+                  <div className="mb-4">
+                    <PlainTextCodeBlock
+                      {...cleanedProps(props)}
+                      code={onlyText(props.children).trim()}
+                    />
+                  </div>
                 );
               }
               const language = props.className.replace("language-", "");

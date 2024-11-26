@@ -529,11 +529,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
 
         <Card className="flex w-full flex-col gap-2 md:w-1/2">
           <Heading size="title.sm">Embed Code</Heading>
-          <CodeClient
-            code={embedCode}
-            lang="html"
-            loadingClassName="min-h-[190px]"
-          />
+          <CodeClient code={embedCode} lang="html" />
           <Button
             className="w-auto gap-2"
             variant="outline"

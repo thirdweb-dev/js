@@ -1,19 +1,17 @@
 "use client";
-
-import { cn } from "@/lib/utils";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { BundledLanguage } from "shiki";
-import { Spinner } from "../../ui/Spinner/Spinner";
 import { RenderCode } from "./RenderCode";
 import { getCodeHtml } from "./getCodeHtml";
+import { PlainTextCodeBlock } from "./plaintext-code";
 
 export type CodeProps = {
   code: string;
   lang: BundledLanguage;
   className?: string;
   scrollableClassName?: string;
-  loadingClassName?: string;
   keepPreviousDataOnCodeChange?: boolean;
+  copyButtonClassName?: string;
 };
 
 export const CodeClient: React.FC<CodeProps> = ({
@@ -21,8 +19,8 @@ export const CodeClient: React.FC<CodeProps> = ({
   lang,
   className,
   scrollableClassName,
-  loadingClassName,
   keepPreviousDataOnCodeChange = false,
+  copyButtonClassName,
 }) => {
   const codeQuery = useQuery({
     queryKey: ["html", code],
@@ -35,14 +33,12 @@ export const CodeClient: React.FC<CodeProps> = ({
 
   if (!codeQuery.data) {
     return (
-      <div
-        className={cn(
-          "flex min-h-[200px] items-center justify-center rounded-lg border border-border",
-          loadingClassName,
-        )}
-      >
-        <Spinner className="size-8" />
-      </div>
+      <PlainTextCodeBlock
+        code={code}
+        className={className}
+        scrollableClassName={scrollableClassName}
+        copyButtonClassName={copyButtonClassName}
+      />
     );
   }
 
@@ -52,6 +48,7 @@ export const CodeClient: React.FC<CodeProps> = ({
       html={codeQuery.data.html}
       className={className}
       scrollableClassName={scrollableClassName}
+      copyButtonClassName={copyButtonClassName}
     />
   );
 };

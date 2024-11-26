@@ -109,7 +109,6 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
         <>
           <CodeClient
             code={code}
-            loadingClassName="min-h-[450px] rounded-none border-none"
             className="rounded-none border-none"
             lang={
               isInstallCommand
