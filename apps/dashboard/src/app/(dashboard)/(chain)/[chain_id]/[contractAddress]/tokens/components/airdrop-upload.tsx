@@ -45,7 +45,12 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   } = useCsvUpload<AirdropAddressInput>({ csvParser });
   const paginationPortalRef = useRef<HTMLDivElement>(null);
   const onSave = () => {
-    setAirdrop(normalizeQuery.data.result);
+    setAirdrop(
+      normalizeQuery.data.result.map((o) => ({
+        address: o.resolvedAddress,
+        quantity: o.quantity,
+      })),
+    );
     onClose();
   };
 

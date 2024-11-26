@@ -68,7 +68,16 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
   const paginationPortalRef = useRef<HTMLDivElement>(null);
 
   const onSave = () => {
-    setSnapshot(normalizeQuery.data.result);
+    // Make sure we are not passing ENS values to the claim-condition extension
+    // we should use the `resolvedAddress` value instead
+    setSnapshot(
+      normalizeQuery.data.result.map((o) => ({
+        address: o.resolvedAddress,
+        maxClaimable: o.maxClaimable,
+        price: o.price,
+        currencyAddress: o.currencyAddress,
+      })),
+    );
     setOpenSnapshotIndex(-1);
   };
 
