@@ -660,7 +660,7 @@ function DetailsModal(props: {
 
           {/* View Funds */}
           {/* Hide the View Funds button if the assetTabs props is set to an empty array */}
-          {(props.assetTabs === undefined || props.assetTabs.length) && (
+          {(props.assetTabs === undefined || props.assetTabs.length > 0) && (
             <MenuButton
               onClick={() => {
                 setScreen("view-assets");
