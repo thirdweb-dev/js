@@ -156,11 +156,9 @@ type BuyScreenContentProps = {
  */
 function BuyScreenContent(props: BuyScreenContentProps) {
   const { client, supportedDestinations, connectLocale, payOptions } = props;
-  console.log("BuyScreenContent");
 
   const activeAccount = useActiveAccount();
   const { payer, setPayer } = usePayerSetup();
-  console.log("payer", payer);
 
   const [screen, setScreen] = useState<SelectedScreen>({
     id: "main",
@@ -497,8 +495,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
       />
     );
   }
-
-  console.log("SCREEN", screen.id);
 
   return (
     <Container animate="fadein">

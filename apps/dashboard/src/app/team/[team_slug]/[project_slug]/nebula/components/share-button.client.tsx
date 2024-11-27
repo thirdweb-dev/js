@@ -5,16 +5,21 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { CheckIcon, ShareIcon } from "lucide-react";
 import { useState } from "react";
 
-export function ShareButton() {
+export function ShareButton(props: {
+  teamId: string;
+}) {
   const [isCopied, setIsCopied] = useState(false);
 
   return (
-    <ToolTipLabel label="Copy link for joining waitlist">
+    <ToolTipLabel label="Copy Invite Link">
       <Button
         variant="outline"
         className="gap-2"
         onClick={() => {
-          navigator.clipboard.writeText("https://thirdweb.com/team/~/~/nebula");
+          const url = new URL("https://thirdweb.com/nebula");
+          url.searchParams.append("utm_content", props.teamId);
+          url.searchParams.append("utm_campaign", "nebula");
+          navigator.clipboard.writeText(url.href);
           setIsCopied(true);
           setTimeout(() => setIsCopied(false), 1000);
         }}

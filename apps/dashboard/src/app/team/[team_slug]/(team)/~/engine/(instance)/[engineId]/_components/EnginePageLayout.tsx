@@ -119,6 +119,7 @@ export function WithEngineInstance(props: {
         instance={sandboxEngine}
         content={props.content}
         rootPath={rootPath}
+        teamSlug={props.teamSlug}
       />
     );
   }
@@ -128,6 +129,7 @@ export function WithEngineInstance(props: {
       content={props.content}
       engineId={props.engineId}
       rootPath={rootPath}
+      teamSlug={props.teamSlug}
     />
   );
 }
@@ -136,6 +138,7 @@ function QueryAndRenderInstanceHeader(props: {
   engineId: string;
   content: React.FC<{ instance: EngineInstance }>;
   rootPath: string;
+  teamSlug: string;
 }) {
   const instancesQuery = useEngineInstances();
   const instance = instancesQuery.data?.find((x) => x.id === props.engineId);
@@ -157,6 +160,7 @@ function QueryAndRenderInstanceHeader(props: {
       instance={instance}
       content={props.content}
       rootPath={props.rootPath}
+      teamSlug={props.teamSlug}
     />
   );
 }
@@ -165,6 +169,7 @@ function EnsurePermissionAndRenderInstance(props: {
   content: React.FC<{ instance: EngineInstance }>;
   instance: EngineInstance;
   rootPath: string;
+  teamSlug: string;
 }) {
   const permissionQuery = useHasEnginePermission({
     instanceUrl: props.instance.url,
@@ -210,6 +215,7 @@ function EnsurePermissionAndRenderInstance(props: {
       rootPath={props.rootPath}
       instance={props.instance}
       content={props.content}
+      teamSlug={props.teamSlug}
     />
   );
 }
@@ -218,6 +224,7 @@ function RenderEngineInstanceHeader(props: {
   instance: EngineInstance;
   content: React.FC<{ instance: EngineInstance }>;
   rootPath: string;
+  teamSlug: string;
 }) {
   const { instance } = props;
 
@@ -261,7 +268,7 @@ function RenderEngineInstanceHeader(props: {
             )}
           </div>
         </div>
-        <EngineVersionBadge instance={instance} />
+        <EngineVersionBadge instance={instance} teamSlug={props.teamSlug} />
       </div>
 
       <div className="h-5" />

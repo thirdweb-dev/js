@@ -65,7 +65,8 @@ function RoyaltyModule(props: ModuleInstanceProps) {
       const setRoyaltyForTokenTx = setRoyaltyInfoForToken({
         contract: contract,
         recipient: values.recipient,
-        bps: Number(values.bps),
+        // BPS is 10_000 so we need to multiply by 100
+        bps: Number(values.percentage) * 100,
         tokenId: BigInt(values.tokenId),
       });
 
@@ -108,14 +109,14 @@ function RoyaltyModule(props: ModuleInstanceProps) {
       if (!ownerAccount) {
         throw new Error("Not an owner account");
       }
-      const [defaultRoyaltyRecipient, defaultRoyaltyBps] =
+      const [defaultRoyaltyRecipient, defaultRoyaltyPercentage] =
         defaultRoyaltyInfoQuery.data || [];
 
       if (
         values.recipient &&
-        values.bps &&
+        values.percentage &&
         (values.recipient !== defaultRoyaltyRecipient ||
-          Number(values.bps) !== defaultRoyaltyBps)
+          Number(values.percentage) * 100 !== defaultRoyaltyPercentage)
       ) {
         const setDefaultRoyaltyInfo = isErc721
           ? RoyaltyERC721.setDefaultRoyaltyInfo
@@ -124,7 +125,7 @@ function RoyaltyModule(props: ModuleInstanceProps) {
         const setSaleConfigTx = setDefaultRoyaltyInfo({
           contract: contract,
           royaltyRecipient: values.recipient,
-          royaltyBps: Number(values.bps),
+          royaltyBps: Number(values.percentage) * 100,
         });
 
         await sendAndConfirmTransaction({
@@ -250,10 +251,12 @@ const royaltyInfoFormSchema = z.object({
   }),
 
   recipient: addressSchema,
-  bps: z
+  percentage: z
     .string()
-    .min(1, { message: "Invalid BPS" })
-    .refine((v) => Number(v) >= 0, { message: "Invalid BPS" }),
+    .min(1, { message: "Invalid percentage" })
+    .refine((v) => Number(v) === 0 || (Number(v) >= 0.01 && Number(v) <= 100), {
+      message: "Invalid percentage",
+    }),
 });
 
 export type RoyaltyInfoFormValues = z.infer<typeof royaltyInfoFormSchema>;
@@ -267,7 +270,7 @@ function RoyaltyInfoPerTokenSection(props: {
     values: {
       tokenId: "",
       recipient: "",
-      bps: "",
+      percentage: "",
     },
     reValidateMode: "onChange",
   });
@@ -321,12 +324,17 @@ function RoyaltyInfoPerTokenSection(props: {
 
           <FormField
             control={form.control}
-            name="bps"
+            name="percentage"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>BPS</FormLabel>
+                <FormLabel>Percentage</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <div className="flex items-center">
+                    <Input {...field} className="rounded-r-none border-r-0" />
+                    <div className="h-10 rounded-lg rounded-l-none border border-input px-3 py-2">
+                      %
+                    </div>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -355,9 +363,12 @@ function RoyaltyInfoPerTokenSection(props: {
 
 const defaultRoyaltyFormSchema = z.object({
   recipient: addressSchema,
-  bps: z.string().refine((v) => v.length === 0 || Number(v) >= 0, {
-    message: "Invalid BPS",
-  }),
+  percentage: z
+    .string()
+    .min(1, { message: "Invalid percentage" })
+    .refine((v) => Number(v) === 0 || (Number(v) >= 0.01 && Number(v) <= 100), {
+      message: "Invalid percentage",
+    }),
 });
 
 export type DefaultRoyaltyFormValues = z.infer<typeof defaultRoyaltyFormSchema>;
@@ -367,14 +378,16 @@ function DefaultRoyaltyInfoSection(props: {
   update: (values: DefaultRoyaltyFormValues) => Promise<void>;
   contractChainId: number;
 }) {
-  const [defaultRoyaltyRecipient, defaultRoyaltyBps] =
+  const [defaultRoyaltyRecipient, defaultRoyaltyPercentage] =
     props.defaultRoyaltyInfo || [];
 
   const form = useForm<DefaultRoyaltyFormValues>({
     resolver: zodResolver(defaultRoyaltyFormSchema),
     values: {
       recipient: defaultRoyaltyRecipient || "",
-      bps: defaultRoyaltyBps ? String(defaultRoyaltyBps) : "",
+      percentage: defaultRoyaltyPercentage
+        ? String(defaultRoyaltyPercentage / 100)
+        : "",
     },
     reValidateMode: "onChange",
   });
@@ -414,12 +427,17 @@ function DefaultRoyaltyInfoSection(props: {
 
           <FormField
             control={form.control}
-            name="bps"
+            name="percentage"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Default Royalty BPS</FormLabel>
+                <FormLabel>Default Royalty Percentage</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <div className="flex items-center">
+                    <Input {...field} className="rounded-r-none border-r-0" />
+                    <div className="h-10 rounded-lg rounded-l-none border border-input px-3 py-2">
+                      %
+                    </div>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

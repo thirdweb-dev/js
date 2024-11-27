@@ -96,6 +96,19 @@ const communitySections = [
   },
 ];
 
+// NOTE: don't dynamically generate this - keep the duplications
+const galleryImages = [
+  require("../../../public/assets/community/gallery/1.png"),
+  require("../../../public/assets/community/gallery/2.png"),
+  require("../../../public/assets/community/gallery/3.png"),
+  require("../../../public/assets/community/gallery/4.png"),
+  require("../../../public/assets/community/gallery/5.png"),
+  require("../../../public/assets/community/gallery/6.png"),
+  require("../../../public/assets/community/gallery/7.png"),
+  require("../../../public/assets/community/gallery/8.png"),
+  require("../../../public/assets/community/gallery/9.png"),
+];
+
 const Community: ThirdwebNextPage = () => {
   const trackEvent = useTrack();
   useForceDarkTheme();
@@ -296,9 +309,7 @@ const Community: ThirdwebNextPage = () => {
               <ChakraNextImage
                 // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 key={i}
-                src={require(
-                  `../../../public/assets/community/gallery/${i + 1}.png`,
-                )}
+                src={galleryImages[i]}
                 alt="thirdweb gallery image"
                 width="350"
                 height="350"

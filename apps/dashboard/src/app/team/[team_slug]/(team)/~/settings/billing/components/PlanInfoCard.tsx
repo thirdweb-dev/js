@@ -49,7 +49,11 @@ export function PlanInfoCard(props: {
 
         <div className="flex flex-row gap-2">
           {/* manage team billing */}
-          <BillingPortalButton teamSlug={team.slug} variant="outline">
+          <BillingPortalButton
+            teamSlug={team.slug}
+            variant="outline"
+            redirectPath={`/team/${team.slug}/~/settings/billing`}
+          >
             Manage Billing
           </BillingPortalButton>
 

@@ -83,7 +83,7 @@ export function useEngineInstances() {
 export type BackendWallet = {
   address: string;
   label?: string;
-  type: string;
+  type: EngineBackendWalletType;
   awsKmsKeyId?: string | null;
   awsKmsArn?: string | null;
   gcpKmsKeyId?: string | null;
@@ -191,32 +191,48 @@ export function useEngineQueueMetrics(
   });
 }
 
-export function useEngineLatestVersion() {
-  return useQuery({
-    queryKey: engineKeys.latestVersion(),
+interface GetDeploymentPublicConfigurationInput {
+  teamSlug: string;
+}
+
+interface DeploymentPublicConfigurationResponse {
+  serverVersions: {
+    name: string;
+    createdAt: string;
+  }[];
+}
+
+export function useEngineGetDeploymentPublicConfiguration(
+  input: GetDeploymentPublicConfigurationInput,
+) {
+  return useQuery<DeploymentPublicConfigurationResponse>({
+    queryKey: engineKeys.deploymentPublicConfiguration(),
     queryFn: async () => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/latest-version`, {
-        method: "GET",
-      });
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/teams/${input.teamSlug}/engine/deployments/public-configuration`,
+        { method: "GET" },
+      );
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
+
       const json = await res.json();
-      return json.data.version as string;
+      return json.data as DeploymentPublicConfigurationResponse;
     },
   });
 }
 
-interface UpdateVersionInput {
+interface UpdateDeploymentInput {
+  teamSlug: string;
   deploymentId: string;
   serverVersion: string;
 }
 
-export function useEngineUpdateServerVersion() {
+export function useEngineUpdateDeployment() {
   return useMutation({
-    mutationFn: async (input: UpdateVersionInput) => {
+    mutationFn: async (input: UpdateDeploymentInput) => {
       const res = await fetch(
-        `${THIRDWEB_API_HOST}/v2/engine/deployments/${input.deploymentId}/infrastructure`,
+        `${THIRDWEB_API_HOST}/v1/teams/${input.teamSlug}/engine/deployments/${input.deploymentId}`,
         {
           method: "PUT",
           headers: {
@@ -964,6 +980,39 @@ export function useEngineImportBackendWallet(instance: string) {
   });
 }
 
+interface DeleteBackendWalletInput {
+  walletAddress: string;
+}
+export function useEngineDeleteBackendWallet(instance: string) {
+  const token = useLoggedInUser().user?.jwt ?? null;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (input: DeleteBackendWalletInput) => {
+      invariant(instance, "instance is required");
+
+      const res = await fetch(
+        `${instance}backend-wallet/${input.walletAddress}`,
+        {
+          method: "DELETE",
+          headers: getEngineRequestHeaders(token),
+        },
+      );
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
+      return json.result;
+    },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.backendWallets(instance),
+      });
+    },
+  });
+}
+
 export function useEngineGrantPermissions(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
@@ -1161,16 +1210,15 @@ export function useEngineCreateWebhook(instance: string) {
   });
 }
 
-type RevokeWebhookInput = {
+type DeleteWebhookInput = {
   id: number;
 };
-
-export function useEngineRevokeWebhook(instance: string) {
+export function useEngineDeleteWebhook(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (input: RevokeWebhookInput) => {
+    mutationFn: async (input: DeleteWebhookInput) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}webhooks/revoke`, {
@@ -1179,11 +1227,44 @@ export function useEngineRevokeWebhook(instance: string) {
         body: JSON.stringify(input),
       });
       const json = await res.json();
-
       if (json.error) {
         throw new Error(json.error.message);
       }
+      return json.result;
+    },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.webhooks(instance),
+      });
+    },
+  });
+}
 
+interface TestWebhookInput {
+  id: number;
+}
+interface TestWebhookResponse {
+  ok: boolean;
+  status: number;
+  body: string;
+}
+export function useEngineTestWebhook(instance: string) {
+  const token = useLoggedInUser().user?.jwt ?? null;
+  const queryClient = useQueryClient();
+
+  return useMutation<TestWebhookResponse, Error, TestWebhookInput>({
+    mutationFn: async (input: TestWebhookInput) => {
+      invariant(instance, "instance is required");
+
+      const res = await fetch(`${instance}webhooks/${input.id}/test`, {
+        method: "POST",
+        headers: getEngineRequestHeaders(token),
+        body: JSON.stringify({}),
+      });
+      const json = await res.json();
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
       return json.result;
     },
     onSuccess: () => {

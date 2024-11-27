@@ -7,6 +7,7 @@ import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 import { Suspense, lazy, useState } from "react";
 import { ConnectEmbed, useActiveWalletConnectionStatus } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
@@ -14,10 +15,10 @@ import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
-import { isOnboardingComplete } from "./isOnboardingRequired";
+import { isOnboardingComplete } from "./onboarding/isOnboardingRequired";
 
 const LazyOnboardingUI = lazy(
-  () => import("../../components/onboarding/on-boarding-ui.client"),
+  () => import("./onboarding/on-boarding-ui.client"),
 );
 
 const wallets = [
@@ -46,20 +47,39 @@ export function LoginAndOnboardingPage(props: {
   nextPath: string | undefined;
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
       <div className="border-b bg-background">
         <header className="container flex w-full flex-row items-center justify-between px-6 py-4">
           <div className="flex shrink-0 items-center gap-3">
             <ThirdwebMiniLogo className="size-7 md:size-8" />
             <h1 className="font-medium text-lg tracking-tight md:text-xl">
-              Get started with thirdweb
+              Get started <span className="max-sm:hidden">with thirdweb</span>
             </h1>
           </div>
-          <ColorModeToggle />
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/support"
+              target="_blank"
+              className="px-2 text-muted-foreground text-sm hover:text-foreground"
+            >
+              Support
+            </Link>
+
+            <Link
+              href="https://portal.thirdweb.com/"
+              className="px-2 text-muted-foreground text-sm hover:text-foreground"
+              target="_blank"
+            >
+              Docs
+            </Link>
+
+            <ColorModeToggle />
+          </div>
         </header>
       </div>
 
-      <main className="z-10 flex grow flex-col items-center justify-center gap-6 py-12">
+      <main className="container z-10 flex grow flex-col items-center justify-center gap-6 py-12">
         <ClientOnly ssr={<LoadingCard />}>
           <PageContent nextPath={props.nextPath} account={props.account} />
         </ClientOnly>
@@ -69,7 +89,13 @@ export function LoginAndOnboardingPage(props: {
       <img
         alt=""
         src="/assets/login/background.svg"
-        className="-bottom-12 -right-12 fixed lg:right-0 lg:bottom-0"
+        className="-bottom-12 -right-12 pointer-events-none fixed lg:right-0 lg:bottom-0"
+      />
+
+      <Aurora
+        color="hsl(var(--foreground)/9%)"
+        pos={{ top: "55%", left: "50%" }}
+        size={{ width: "1400px", height: "1300px" }}
       />
     </div>
   );
@@ -77,7 +103,7 @@ export function LoginAndOnboardingPage(props: {
 
 function LoadingCard() {
   return (
-    <div className="flex min-h-[450px] w-[calc(100vw-60px)] max-w-[500px] items-center justify-center rounded-lg border border-border bg-background">
+    <div className="flex min-h-[450px] w-full items-center justify-center rounded-xl border border-border bg-background shadow-lg lg:w-[500px]">
       <Spinner className="size-10" />
     </div>
   );
@@ -125,7 +151,11 @@ function PageContent(props: {
   if (screen.id === "onboarding") {
     return (
       <Suspense fallback={<LoadingCard />}>
-        <LazyOnboardingUI account={screen.account} onComplete={onComplete} />
+        <LazyOnboardingUI
+          account={screen.account}
+          onComplete={onComplete}
+          redirectPath={props.nextPath || "/team"}
+        />
       </Suspense>
     );
   }
@@ -202,3 +232,25 @@ function isValidRedirectPath(encodedPath: string): boolean {
     return false;
   }
 }
+
+type AuroraProps = {
+  size: { width: string; height: string };
+  pos: { top: string; left: string };
+  color: string;
+};
+
+const Aurora: React.FC<AuroraProps> = ({ color, pos, size }) => {
+  return (
+    <div
+      className="pointer-events-none absolute"
+      style={{
+        top: pos.top,
+        left: pos.left,
+        width: size.width,
+        height: size.height,
+        transform: "translate(-50%, -50%)",
+        backgroundImage: `radial-gradient(ellipse at center, ${color}, transparent 60%)`,
+      }}
+    />
+  );
+};

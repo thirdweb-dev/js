@@ -9,6 +9,7 @@ import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useCallback, useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { LazyCreateAPIKeyDialog } from "../../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
+import { doLogout } from "../../../login/auth-actions";
 import {
   type TeamHeaderCompProps,
   TeamHeaderDesktopUI,
@@ -30,9 +31,7 @@ export function TeamHeaderLoggedIn(props: {
   const logout = useCallback(async () => {
     // log out the user
     try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-      });
+      await doLogout();
       if (activeWallet) {
         disconnect(activeWallet);
       }

@@ -237,8 +237,7 @@ export function TransferableModuleUI(
 
               {isRestricted && (
                 <div className="w-full">
-                  {/* Warning - TODO add later  */}
-                  {/* {formFields.fields.length === 0 && (
+                  {formFields.fields.length === 0 && (
                     <Alert variant="warning">
                       <CircleAlertIcon className="size-5 max-sm:hidden" />
                       <AlertTitle className="max-sm:!pl-0">
@@ -246,9 +245,15 @@ export function TransferableModuleUI(
                         contract
                       </AlertTitle>
                     </Alert>
-                  )} */}
+                  )}
 
                   <div className="flex flex-col gap-3">
+                    {formFields.fields.length > 0 && (
+                      <p className="text-muted-foreground text-sm">
+                        Accounts that may override the transfer restrictions
+                      </p>
+                    )}
+
                     {/* Addresses */}
                     {formFields.fields.map((fieldItem, index) => (
                       <div

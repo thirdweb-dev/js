@@ -465,7 +465,7 @@ function DeleteSubscriptionModalContent(props: {
         <div className="h-4" />
 
         <Alert variant="destructive">
-          <TriangleAlertIcon className="!text-destructive-text size-5" />
+          <TriangleAlertIcon className="!text-destructive-text size-4" />
           <AlertTitle>This action is irreversible!</AlertTitle>
 
           <AlertDescription className="!pl-0 pt-2">

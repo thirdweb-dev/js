@@ -17,7 +17,6 @@ import {
   formatUserOperationReceipt,
 } from "../types.js";
 import {
-  DEBUG,
   ENTRYPOINT_ADDRESS_v0_6,
   MANAGED_ACCOUNT_GAS_BUFFER,
   getDefaultBundlerUrl,
@@ -267,10 +266,6 @@ async function sendBundlerRequest(args: {
 }) {
   const { options, operation, params } = args;
 
-  if (DEBUG) {
-    console.debug(`>>> sending ${operation} with payload:`, params);
-  }
-
   const bundlerUrl = options.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
   const fetchWithHeaders = getClientFetch(options.client);
   const response = await fetchWithHeaders(bundlerUrl, {
@@ -299,10 +294,6 @@ async function sendBundlerRequest(args: {
 Status: ${response.status}
 Code: ${code}`,
     );
-  }
-
-  if (DEBUG) {
-    console.debug(`<<< ${operation} result:`, res);
   }
 
   return res.result;

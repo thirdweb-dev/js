@@ -8,11 +8,7 @@ import type {
   UserOperationV06,
   UserOperationV07,
 } from "../types.js";
-import {
-  DEBUG,
-  ENTRYPOINT_ADDRESS_v0_6,
-  getDefaultBundlerUrl,
-} from "./constants.js";
+import { ENTRYPOINT_ADDRESS_v0_6, getDefaultBundlerUrl } from "./constants.js";
 import { hexlifyUserOp } from "./utils.js";
 
 /**
@@ -78,10 +74,6 @@ export async function getPaymasterAndData(args: {
 Status: ${response.status}
 Code: ${code}`,
     );
-  }
-
-  if (DEBUG) {
-    console.debug("Paymaster result:", res);
   }
 
   if (res.result) {

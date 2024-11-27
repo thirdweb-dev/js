@@ -1,15 +1,19 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { FormItem } from "@/components/ui/form";
 import {
   type BackendWallet,
   useEngineBackendWalletBalance,
+  useEngineDeleteBackendWallet,
   useEngineSendTokens,
   useEngineUpdateBackendWallet,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
   FormControl,
-  Image,
   Input,
   InputGroup,
   InputRightAddon,
@@ -29,21 +33,23 @@ import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { EngineBackendWalletOptions } from "lib/engine";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
-import { DownloadIcon, PencilIcon, UploadIcon } from "lucide-react";
+import {
+  DownloadIcon,
+  PencilIcon,
+  TrashIcon,
+  TriangleAlertIcon,
+  UploadIcon,
+} from "lucide-react";
 import QRCode from "qrcode";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { getAddress } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
-import {
-  Button,
-  FormHelperText,
-  FormLabel,
-  LinkButton,
-  Text,
-} from "tw-components";
+import invariant from "tiny-invariant";
+import { FormHelperText, FormLabel, LinkButton, Text } from "tw-components";
 import { prettyPrintCurrency } from "./utils";
 
 interface BackendWalletsTableProps {
@@ -150,6 +156,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
   const editDisclosure = useDisclosure();
   const receiveDisclosure = useDisclosure();
   const sendDisclosure = useDisclosure();
+  const deleteDisclosure = useDisclosure();
   const columns = setColumns(instanceUrl);
   const [selectedBackendWallet, setSelectedBackendWallet] =
     useState<BackendWallet>();
@@ -187,6 +194,15 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
               sendDisclosure.onOpen();
             },
           },
+          {
+            icon: <TrashIcon className="size-4" />,
+            text: "Delete",
+            onClick: (wallet) => {
+              setSelectedBackendWallet(wallet);
+              deleteDisclosure.onOpen();
+            },
+            isDestructive: true,
+          },
         ]}
       />
 
@@ -211,6 +227,13 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
           instanceUrl={instanceUrl}
         />
       )}
+      {selectedBackendWallet && deleteDisclosure.isOpen && (
+        <DeleteModal
+          backendWallet={selectedBackendWallet}
+          disclosure={deleteDisclosure}
+          instanceUrl={instanceUrl}
+        />
+      )}
     </>
   );
 };
@@ -224,25 +247,19 @@ const EditModal = ({
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
 }) => {
-  const { mutate: updatePermissions } =
-    useEngineUpdateBackendWallet(instanceUrl);
+  const updateBackendWallet = useEngineUpdateBackendWallet(instanceUrl);
   const trackEvent = useTrack();
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully updated backend wallet",
-    "Failed to update backend wallet",
-  );
 
   const [label, setLabel] = useState(backendWallet.label ?? "");
 
-  const onClick = () => {
-    updatePermissions(
+  const onClick = async () => {
+    const promise = updateBackendWallet.mutateAsync(
       {
         walletAddress: backendWallet.address,
         label,
       },
       {
         onSuccess: () => {
-          onSuccess();
           disclosure.onClose();
           trackEvent({
             category: "engine",
@@ -252,7 +269,6 @@ const EditModal = ({
           });
         },
         onError: (error) => {
-          onError(error);
           trackEvent({
             category: "engine",
             action: "update-backend-wallet",
@@ -263,6 +279,11 @@ const EditModal = ({
         },
       },
     );
+
+    toast.promise(promise, {
+      success: "Successfully updated backend wallet.",
+      error: "Failed to update backend wallet.",
+    });
   };
 
   return (
@@ -275,7 +296,10 @@ const EditModal = ({
           <div className="flex flex-col gap-4">
             <FormControl>
               <FormLabel>Wallet Address</FormLabel>
-              <Text>{backendWallet.address}</Text>
+              <WalletAddress
+                address={backendWallet.address}
+                shortenAddress={false}
+              />
             </FormControl>
             <FormControl>
               <FormLabel>Label</FormLabel>
@@ -290,10 +314,10 @@ const EditModal = ({
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} variant="outline">
             Cancel
           </Button>
-          <Button type="submit" colorScheme="blue" onClick={onClick}>
+          <Button type="submit" onClick={onClick}>
             Save
           </Button>
         </ModalFooter>
@@ -347,11 +371,11 @@ const ReceiveFundsModal = ({
               address={backendWallet.address}
               shortenAddress={false}
             />
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={qrCodeBase64Query.data}
-              alt="Receive funds to your backend wallet"
-              rounded="lg"
-              w={200}
+              alt="QR code for receiving funds"
+              className="mx-auto flex w-[200px] rounded-lg"
             />
           </div>
         </ModalBody>
@@ -364,7 +388,6 @@ interface SendFundsInput {
   toAddress: string;
   amount: number;
 }
-
 const SendFundsModal = ({
   fromWallet,
   backendWallets,
@@ -378,39 +401,39 @@ const SendFundsModal = ({
 }) => {
   const chain = useActiveChainAsDashboardChain();
   const form = useForm<SendFundsInput>();
-  const { mutate: sendTokens } = useEngineSendTokens(instanceUrl);
+  const sendTokens = useEngineSendTokens(instanceUrl);
   const { data: backendWalletBalance } = useEngineBackendWalletBalance(
     instanceUrl,
     fromWallet.address,
   );
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully sent a request to send funds.",
-    "Failed to send tokens.",
-  );
   const toWalletDisclosure = useDisclosure();
-
-  const onSubmit = async (data: SendFundsInput) => {
-    if (!chain) {
-      return;
-    }
-
-    try {
-      await sendTokens({
-        chainId: chain.chainId,
-        fromAddress: fromWallet.address,
-        toAddress: data.toAddress,
-        amount: data.amount,
-      });
-      onSuccess();
-      disclosure.onClose();
-    } catch (e) {
-      onError(e);
-    }
-  };
 
   if (!backendWalletBalance) {
     return null;
   }
+
+  const onSubmit = async (data: SendFundsInput) => {
+    invariant(chain, "chain is required");
+
+    const promise = sendTokens.mutateAsync(
+      {
+        chainId: chain.chainId,
+        fromAddress: fromWallet.address,
+        toAddress: data.toAddress,
+        amount: data.amount,
+      },
+      {
+        onSuccess: () => {
+          disclosure.onClose();
+        },
+      },
+    );
+
+    toast.promise(promise, {
+      success: "Successfully sent a request to send funds.",
+      error: "Failed to send tokens.",
+    });
+  };
 
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
@@ -426,7 +449,10 @@ const SendFundsModal = ({
           <div className="flex flex-col gap-4">
             <FormControl>
               <FormLabel>From</FormLabel>
-              <Text fontFamily="mono">{fromWallet.address}</Text>
+              <WalletAddress
+                address={fromWallet.address}
+                shortenAddress={false}
+              />
             </FormControl>
             <FormControl isRequired>
               <FormLabel>To</FormLabel>
@@ -457,7 +483,6 @@ const SendFundsModal = ({
                     toWalletDisclosure.onToggle();
                   }}
                   variant="link"
-                  size="xs"
                 >
                   {toWalletDisclosure.isOpen
                     ? "Or send to a backend wallet"
@@ -498,14 +523,10 @@ const SendFundsModal = ({
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} variant="outline">
             Cancel
           </Button>
-          <Button
-            type="submit"
-            colorScheme="blue"
-            isDisabled={!form.formState.isValid}
-          >
+          <Button type="submit" disabled={!form.formState.isValid}>
             Send
           </Button>
         </ModalFooter>
@@ -513,3 +534,114 @@ const SendFundsModal = ({
     </Modal>
   );
 };
+
+function DeleteModal({
+  backendWallet,
+  disclosure,
+  instanceUrl,
+}: {
+  backendWallet: BackendWallet;
+  disclosure: UseDisclosureReturn;
+  instanceUrl: string;
+}) {
+  const deleteBackendWallet = useEngineDeleteBackendWallet(instanceUrl);
+  const trackEvent = useTrack();
+
+  const isLocalWallet =
+    backendWallet.type === "local" || backendWallet.type === "smart:local";
+  const [ackDeletion, setAckDeletion] = useState(false);
+
+  const onClick = () => {
+    const promise = deleteBackendWallet.mutateAsync(
+      { walletAddress: backendWallet.address },
+      {
+        onSuccess: () => {
+          disclosure.onClose();
+          trackEvent({
+            category: "engine",
+            action: "delete-backend-wallet",
+            label: "success",
+            instance: instanceUrl,
+          });
+        },
+        onError: (error) => {
+          trackEvent({
+            category: "engine",
+            action: "delete-backend-wallet",
+            label: "error",
+            instance: instanceUrl,
+            error,
+          });
+        },
+      },
+    );
+
+    toast.promise(promise, {
+      success: "Successfully deleted backend wallet.",
+      error: "Failed to delete backend wallet.",
+    });
+  };
+
+  return (
+    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent className="!bg-background rounded-lg border border-border">
+        <ModalHeader>Delete Backend Wallet</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <div className="flex flex-col gap-4">
+            <FormItem>
+              <FormLabel>Wallet Type</FormLabel>
+              <div>
+                {
+                  EngineBackendWalletOptions.find(
+                    (opt) => opt.key === backendWallet.type,
+                  )?.name
+                }
+              </div>
+            </FormItem>
+            <FormItem>
+              <FormLabel>Wallet Address</FormLabel>
+              <WalletAddress
+                address={backendWallet.address}
+                shortenAddress={false}
+              />
+            </FormItem>
+          </div>
+
+          {isLocalWallet && (
+            <Alert variant="warning" className="mt-4">
+              <TriangleAlertIcon className="!text-warning-text size-4" />
+              <AlertTitle>This action is irreversible.</AlertTitle>
+
+              <AlertDescription className="!pl-0 pt-2">
+                <CheckboxWithLabel>
+                  <Checkbox
+                    checked={ackDeletion}
+                    onCheckedChange={(checked) => setAckDeletion(!!checked)}
+                  />
+                  I understand that access to this backend wallet and any
+                  remaining funds will be lost.
+                </CheckboxWithLabel>
+              </AlertDescription>
+            </Alert>
+          )}
+        </ModalBody>
+
+        <ModalFooter as={Flex} gap={3}>
+          <Button onClick={disclosure.onClose} variant="outline">
+            Close
+          </Button>
+          <Button
+            type="submit"
+            variant="destructive"
+            onClick={onClick}
+            disabled={isLocalWallet && !ackDeletion}
+          >
+            Delete
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+}

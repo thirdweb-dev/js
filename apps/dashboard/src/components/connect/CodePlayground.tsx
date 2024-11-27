@@ -325,7 +325,6 @@ const CodePlayground = ({
 
         <QueryClientProvider client={queryClient}>
           <CodeClient
-            loadingClassName="min-h-[490px]"
             code={code}
             lang={
               environment === "react" || environment === "react-native"

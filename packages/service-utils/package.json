@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.4.49",
+  "version": "0.4.50",
   "type": "module",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -50,9 +50,9 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20241112.0",
-    "@types/node": "20.14.9",
-    "typescript": "5.6.3",
-    "vitest": "2.1.5"
+    "@types/node": "22.10.0",
+    "typescript": "5.7.2",
+    "vitest": "2.1.6"
   },
   "scripts": {
     "format": "biome format ./src --write",

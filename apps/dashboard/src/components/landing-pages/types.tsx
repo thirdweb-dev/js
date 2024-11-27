@@ -5,8 +5,6 @@ import type { HeadingSizes } from "theme/typography";
 export type LandingDesktopMobileImageProps = ChakraNextImageProps & {
   image?: StaticImageData;
   mobileImage?: StaticImageData;
-  // biome-ignore lint/complexity/noBannedTypes: FIXME
-  lottie?: {};
 };
 
 export interface LandingSectionHeadingProps {

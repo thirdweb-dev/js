@@ -1,6 +1,5 @@
 "use client";
 
-import type { WalletStats } from "@/api/analytics";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import {
   type ChartConfig,
@@ -35,6 +34,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import type { WalletStats } from "types/analytics";
 import { formatTickerNumber } from "../../../../../../../lib/format-utils";
 
 type ChartToShow = "uniqueWallets" | "totalWallets";

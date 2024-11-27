@@ -111,7 +111,8 @@ export const engineKeys = {
     ] as const,
   health: (instance: string) =>
     [...engineKeys.all, instance, "health"] as const,
-  latestVersion: () => [...engineKeys.all, "latestVersion"] as const,
+  deploymentPublicConfiguration: () =>
+    [...engineKeys.all, "deploymentPublicConfiguration"] as const,
   systemMetrics: (engineId: string) =>
     [...engineKeys.all, engineId, "systemMetrics"] as const,
   queueMetrics: (engineId: string) =>

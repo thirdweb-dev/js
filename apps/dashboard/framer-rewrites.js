@@ -17,6 +17,7 @@ module.exports = [
   "/solutions/gaming",
   "/solutions/consumer-apps",
   "/solutions/defi",
+  "/solutions/ecosystem",
   // -- campaigns --
   "/unlimited-wallets",
 ];

@@ -54,3 +54,6 @@ export {
   type DeployPackContractOptions,
   deployPackContract,
 } from "../extensions/prebuilts/deploy-pack.js";
+
+export { getInitializeTransaction } from "../extensions/prebuilts/deploy-published.js";
+export { getOrDeployInfraForPublishedContract } from "../contract/deployment/utils/bootstrap.js";

@@ -1,0 +1,14 @@
+[
+  "constructor()",
+  "function cancel(uint256 tokenId)",
+  "function initialize(address _defaultAdmin, string _name, string _symbol, string _contractURI, address[] _trustedForwarders, address _saleRecipient, address _royaltyRecipient, uint128 _royaltyBps, uint128 _platformFeeBps, address _platformFeeRecipient)",
+  "function mintTo(address _to, string _uri) returns (uint256 tokenIdMinted)",
+  "function mintWithSignature((address to, address royaltyRecipient, uint256 royaltyBps, address primarySaleRecipient, uint256 quantity, uint256 pricePerToken, address currency, uint128 validityStartTimestamp, uint128 validityEndTimestamp, string uri) _req, bytes _signature) payable returns (address signer)",
+  "function nextTokenIdToMint() view returns (uint256)",
+  "function revoke(uint256 tokenId)",
+  "function supportsInterface(bytes4 interfaceId) view returns (bool)",
+  "function tokenURI(uint256 _tokenId) view returns (string)",
+  "function totalMinted() view returns (uint256)",
+  "event TokensMinted(address indexed mintedTo, uint256 indexed tokenIdMinted, string uri)",
+  "event TokensMintedWithSignature(address indexed signer, address indexed mintedTo, uint256 indexed tokenIdMinted, (address to, address royaltyRecipient, uint256 royaltyBps, address primarySaleRecipient, uint256 quantity, uint256 pricePerToken, address currency, uint128 validityStartTimestamp, uint128 validityEndTimestamp, string uri) mintRequest)"
+]

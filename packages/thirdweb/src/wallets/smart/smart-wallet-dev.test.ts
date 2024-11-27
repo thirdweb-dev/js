@@ -77,13 +77,10 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         to: smartAccount.address,
         value: 0n,
       });
-
-      console.log("Sending transaction...");
       const receipt = await sendTransaction({
         transaction: tx,
         account: smartAccount,
       });
-      console.log("Transaction sent:", receipt.transactionHash);
       expect(receipt.transactionHash).toBeDefined();
     });
 
@@ -127,7 +124,6 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
           platformFeeRecipient: smartAccount.address, // platformFeeRecipient
         },
       });
-      console.log("deployed address", address);
       expect(address).toBeDefined();
       expect(address.length).toBe(42);
     });

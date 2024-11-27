@@ -6,6 +6,7 @@ import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
+import { initialize as initLoyaltyCard } from "../erc721/__generated__/LoyaltyCard/write/initialize.js";
 import { initialize as initDropERC721 } from "./__generated__/DropERC721/write/initialize.js";
 import { initialize as initOpenEditionERC721 } from "./__generated__/OpenEditionERC721/write/initialize.js";
 import { initialize as initTokenERC721 } from "./__generated__/TokenERC721/write/initialize.js";
@@ -16,7 +17,8 @@ import { initialize as initTokenERC721 } from "./__generated__/TokenERC721/write
 export type ERC721ContractType =
   | "DropERC721"
   | "TokenERC721"
-  | "OpenEditionERC721";
+  | "OpenEditionERC721"
+  | "LoyaltyCard";
 
 /**
  * @extension DEPLOY
@@ -166,6 +168,20 @@ async function getInitializeTransaction(options: {
         royaltyRecipient: params.royaltyRecipient || accountAddress,
         royaltyBps: params.royaltyBps || 0n,
         trustedForwarders: params.trustedForwarders || [],
+      });
+    case "LoyaltyCard":
+      return initLoyaltyCard({
+        contract: implementationContract,
+        defaultAdmin: params.defaultAdmin || accountAddress,
+        name: params.name || "",
+        symbol: params.symbol || "",
+        contractURI,
+        royaltyRecipient: params.royaltyRecipient || accountAddress,
+        royaltyBps: params.royaltyBps || 0n,
+        trustedForwarders: params.trustedForwarders || [],
+        saleRecipient: params.saleRecipient || accountAddress,
+        platformFeeBps: params.platformFeeBps || 0n,
+        platformFeeRecipient: params.platformFeeRecipient || accountAddress,
       });
   }
 }

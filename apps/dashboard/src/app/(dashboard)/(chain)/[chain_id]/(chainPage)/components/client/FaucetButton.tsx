@@ -23,7 +23,7 @@ import { toUnits } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { useActiveAccount, useWalletBalance } from "thirdweb/react";
 import { z } from "zod";
-import { isOnboardingComplete } from "../../../../../../login/isOnboardingRequired";
+import { isOnboardingComplete } from "../../../../../../login/onboarding/isOnboardingRequired";
 
 function formatTime(seconds: number) {
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });

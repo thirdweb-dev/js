@@ -1,15 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import {
-  type EngineInstance,
-  useEngineLatestVersion,
-  useEngineSystemHealth,
-  useEngineUpdateServerVersion,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { CircleArrowDownIcon, CloudDownloadIcon } from "lucide-react";
-import { useState } from "react";
-
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -18,40 +10,68 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import {
+  type EngineInstance,
+  useEngineGetDeploymentPublicConfiguration,
+  useEngineSystemHealth,
+  useEngineUpdateDeployment,
+} from "@3rdweb-sdk/react/hooks/useEngine";
+import { formatDistanceToNow } from "date-fns";
+import { CircleArrowUpIcon, TriangleAlertIcon } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import invariant from "tiny-invariant";
 
 export const EngineVersionBadge = ({
   instance,
+  teamSlug,
 }: {
   instance: EngineInstance;
+  teamSlug: string;
 }) => {
   const healthQuery = useEngineSystemHealth(instance.url);
-  const latestVersionQuery = useEngineLatestVersion();
+  const publicConfigurationQuery = useEngineGetDeploymentPublicConfiguration({
+    teamSlug,
+  });
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const currentVersion = healthQuery.data?.engineVersion ?? "...";
-  const latestVersion = latestVersionQuery.data;
-  const isStale = latestVersion && currentVersion !== latestVersion;
+  if (!healthQuery.data || !publicConfigurationQuery.data) {
+    return null;
+  }
 
-  if (!isStale) {
+  const serverVersions = publicConfigurationQuery.data.serverVersions;
+  const latestVersion = serverVersions[0];
+  const currentVersion = healthQuery.data.engineVersion ?? "N/A";
+  const hasNewerVersion = latestVersion?.name !== currentVersion;
+
+  // Hide the change version modal unless owner.
+  if (!instance.deploymentId) {
     return (
-      <ToolTipLabel label="Latest Version">
-        <Button variant="outline" asChild className="hover:bg-transparent">
-          <div>{currentVersion}</div>
-        </Button>
-      </ToolTipLabel>
+      <Button variant="outline" asChild className="hover:bg-transparent">
+        <div>{currentVersion}</div>
+      </Button>
     );
   }
 
   return (
     <>
       <ToolTipLabel
-        label="New version is available"
-        leftIcon={
-          <CircleArrowDownIcon className="size-4 text-link-foreground" />
+        label={
+          hasNewerVersion
+            ? "An update is available"
+            : "Engine is on the latest update"
         }
+        leftIcon={<CircleArrowUpIcon className="size-4 text-link-foreground" />}
       >
         <Button
           variant="outline"
@@ -60,36 +80,50 @@ export const EngineVersionBadge = ({
         >
           {currentVersion}
 
-          {/* Notification Dot */}
-          <span className="-top-1 -right-1 absolute">
-            <PulseDot />
-          </span>
+          {/* Notification dot if an update is available */}
+          {hasNewerVersion && (
+            <span className="-top-1 -right-1 absolute">
+              <PulseDot />
+            </span>
+          )}
         </Button>
       </ToolTipLabel>
 
-      {latestVersion && (
-        <UpdateVersionModal
-          open={isModalOpen}
-          onOpenChange={setModalOpen}
-          latestVersion={latestVersion}
-          instance={instance}
-        />
-      )}
+      <ChangeVersionModal
+        open={isModalOpen}
+        onOpenChange={setModalOpen}
+        instance={instance}
+        currentVersion={currentVersion}
+        serverVersions={serverVersions}
+        teamSlug={teamSlug}
+      />
     </>
   );
 };
 
-const UpdateVersionModal = (props: {
+const ChangeVersionModal = (props: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  latestVersion: string;
   instance: EngineInstance;
+  currentVersion: string;
+  serverVersions: { name: string; createdAt: string }[];
+  teamSlug: string;
 }) => {
-  const { open, onOpenChange, latestVersion, instance } = props;
-  const updateEngineServerMutation = useEngineUpdateServerVersion();
+  const {
+    open,
+    onOpenChange,
+    instance,
+    currentVersion,
+    serverVersions,
+    teamSlug,
+  } = props;
+  const [selectedVersion, setSelectedVersion] = useState(
+    serverVersions[0]?.name,
+  );
+  const updateDeploymentMutation = useEngineUpdateDeployment();
 
   if (!instance.deploymentId) {
-    // For self-hosted, show a prompt to the Github release page.
+    // Self-hosted modal: prompt to update manually.
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
@@ -98,7 +132,7 @@ const UpdateVersionModal = (props: {
         >
           <DialogHeader>
             <DialogTitle className="mb-6 pr-4 font-semibold text-2xl tracking-tight">
-              Update your self-hosted Engine to {latestVersion}
+              Update your self-hosted Engine
             </DialogTitle>
             <DialogDescription>
               View the{" "}
@@ -119,17 +153,19 @@ const UpdateVersionModal = (props: {
     );
   }
 
-  const onClick = async () => {
+  const onClickUpdate = async () => {
+    invariant(selectedVersion, "No version selected.");
     invariant(instance.deploymentId, "Engine is missing deploymentId.");
 
     try {
-      const promise = updateEngineServerMutation.mutateAsync({
+      const promise = updateDeploymentMutation.mutateAsync({
+        teamSlug,
         deploymentId: instance.deploymentId,
-        serverVersion: latestVersion,
+        serverVersion: selectedVersion,
       });
       toast.promise(promise, {
-        success: `Upgrading your Engine to ${latestVersion}. Please confirm after a few minutes.`,
-        error: "Unexpected error updating your Engine.",
+        success: `Updating your Engine to ${selectedVersion}.`,
+        error: "Unexpected error updating Engine.",
       });
       await promise;
     } finally {
@@ -137,6 +173,7 @@ const UpdateVersionModal = (props: {
     }
   };
 
+  // For cloud-hosted, prompt the user to select a version to update to.
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -144,13 +181,75 @@ const UpdateVersionModal = (props: {
         dialogOverlayClassName="z-[10000]"
       >
         <DialogHeader>
-          <DialogTitle>Update Engine to {latestVersion}?</DialogTitle>
-
-          <DialogDescription>
-            It is recommended to pause traffic to Engine before performing this
-            upgrade. There is &lt; 1 minute of expected downtime.
-          </DialogDescription>
+          <DialogTitle>Update Engine version</DialogTitle>
         </DialogHeader>
+
+        <DialogDescription>
+          <Select
+            onValueChange={(value) => setSelectedVersion(value)}
+            value={selectedVersion}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="z-[10001]">
+              <SelectGroup>
+                {serverVersions.map(({ name, createdAt }, idx) => {
+                  const isCurrentVersion = name === currentVersion;
+                  const isLatestVersion = idx === 0;
+                  return (
+                    <SelectItem
+                      key={name}
+                      value={name}
+                      id={name}
+                      disabled={isCurrentVersion}
+                    >
+                      <span>{name}</span>
+                      <span className="ml-4 text-muted-foreground">
+                        {formatDistanceToNow(new Date(createdAt), {
+                          addSuffix: true,
+                        })}
+                      </span>
+                      {isCurrentVersion ? (
+                        <Badge className="ml-2">current</Badge>
+                      ) : isLatestVersion ? (
+                        <Badge className="ml-2">latest</Badge>
+                      ) : null}
+                    </SelectItem>
+                  );
+                })}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          <div className="h-4" />
+
+          {currentVersion.startsWith("v") && (
+            <div>
+              <TrackedLinkTW
+                href={`https://github.com/thirdweb-dev/engine/compare/${currentVersion}...${selectedVersion}`}
+                category="engine"
+                label="clicked-engine-releases"
+                target="_blank"
+                className="text-link-foreground hover:text-foreground"
+              >
+                View changes: {currentVersion} &rarr; {selectedVersion}
+              </TrackedLinkTW>
+            </div>
+          )}
+
+          <div className="h-4" />
+
+          <Alert variant="warning">
+            <TriangleAlertIcon className="!text-warning-text size-4" />
+            <AlertTitle>There may be up to 1 minute of downtime.</AlertTitle>
+
+            <AlertDescription className="!pl-0 pt-2">
+              We recommended pausing traffic to Engine before performing this
+              version update.
+            </AlertDescription>
+          </Alert>
+        </DialogDescription>
 
         <DialogFooter className="mt-5">
           <Button
@@ -162,16 +261,17 @@ const UpdateVersionModal = (props: {
           </Button>
           <Button
             type="submit"
-            onClick={onClick}
+            onClick={onClickUpdate}
             variant="primary"
             className="gap-2"
+            disabled={selectedVersion === currentVersion}
           >
-            {updateEngineServerMutation.isPending ? (
+            {updateDeploymentMutation.isPending ? (
               <Spinner className="size-4" />
             ) : (
-              <CloudDownloadIcon className="size-4" />
+              <CircleArrowUpIcon className="size-4" />
             )}
-            Update
+            Update to {selectedVersion}
           </Button>
         </DialogFooter>
       </DialogContent>

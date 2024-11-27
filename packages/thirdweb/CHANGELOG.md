@@ -1,5 +1,101 @@
 # thirdweb
 
+## 5.71.0
+
+### Minor Changes
+
+- [#5501](https://github.com/thirdweb-dev/js/pull/5501) [`ac42c45`](https://github.com/thirdweb-dev/js/commit/ac42c4538ef41cc842d2fd723471c21d865ee411) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Added new deployment utility functions to help manage infrastructure contracts and initialization:
+
+  - `getInitializeTransaction`: Prepare initialization transaction for contract deployment
+  - `getOrDeployInfraForPublishedContract`: Get or deploy required infrastructure for published contracts
+
+  ```typescript
+  import {
+    getInitializeTransaction,
+    getOrDeployInfraForPublishedContract,
+  } from "thirdweb";
+
+  // Get initialization transaction
+  const initTx = await getInitializeTransaction({
+    client,
+    chain,
+    account,
+    implementationContract,
+    deployMetadata,
+    initializeParams: {
+      name: "My Contract",
+      symbol: "CNTRCT",
+    },
+  });
+
+  // Get or deploy infrastructure
+  const infra = await getOrDeployInfraForPublishedContract({
+    chain,
+    client,
+    account,
+    contractId: "MyContract",
+    constructorParams: params,
+  });
+  ```
+
+## 5.70.1
+
+### Patch Changes
+
+- [#5482](https://github.com/thirdweb-dev/js/pull/5482) [`b5baeae`](https://github.com/thirdweb-dev/js/commit/b5baeae821fffeb2dfb23269715066a0110b00c2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose utilities to decode errors and function data
+
+- [#5493](https://github.com/thirdweb-dev/js/pull/5493) [`d9a63a6`](https://github.com/thirdweb-dev/js/commit/d9a63a6d351459e1cae9c1e3cb9d005ac165a5d9) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix props not getting passed to TokenIcon
+
+- [#5498](https://github.com/thirdweb-dev/js/pull/5498) [`6b6f617`](https://github.com/thirdweb-dev/js/commit/6b6f61705d4561f44338d08e379c71e64a05ed6b) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - enable private key export for enclave wallets upon initial login
+
+## 5.70.0
+
+### Minor Changes
+
+- [#5388](https://github.com/thirdweb-dev/js/pull/5388) [`901c3a1`](https://github.com/thirdweb-dev/js/commit/901c3a102b81d52297b25a72600f4a3a22dabc14) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add headless UI component: Account (Name, Image, Address, Balance)
+
+- [#5374](https://github.com/thirdweb-dev/js/pull/5374) [`0e5d120`](https://github.com/thirdweb-dev/js/commit/0e5d120909c19398b8ce3cc73d11a5fb2fd85782) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - # Breaking change
+
+  We are making the following changes to the NFT component to provide better performance and fine-grain control over their internal fetching logic.
+  Moreover, you no longer have to wrap React.Suspense around said components!
+
+  ### Old
+
+  ```tsx
+  <NFT>
+    <React.Suspense fallback={"Loading stuff..."}>
+      <NFT.Media />
+      <NFT.Name />
+      <NFT.Description />
+    </React.Suspense>
+  </NFT>
+  ```
+
+  ### New
+
+  The new version comes with 2 new props: `loadingComponent` and `fallbackComponent`.
+  Basically, `loadingComponent` takes in a component and show it _while the internal fetching is being done_
+  `fallbackComponent` takes in a component and show it _once the data is failed to be resolved_
+
+  ```tsx
+  <NFTProvider contract={contract} tokenId={0n}>
+      <NFTMedia
+        loadingComponent={<span>Loading NFT Image</span>}
+        fallbackComponent={<span>Failed to load NFT</span>}
+      />
+      <NFTDescription
+        loadingComponent={<span>Loading NFT Description</span>}
+        fallbackComponent={<span>Failed to load NFT Description</span>}
+      />
+  </NFT>
+  ```
+
+### Patch Changes
+
+- [#5463](https://github.com/thirdweb-dev/js/pull/5463) [`f368793`](https://github.com/thirdweb-dev/js/commit/f368793375d099eec53569330af7a083e558e483) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes PayEmbed error state appearing on certain errors
+
+- [#5464](https://github.com/thirdweb-dev/js/pull/5464) [`b5227c9`](https://github.com/thirdweb-dev/js/commit/b5227c9a8fb4b4b4114c79077c2c1ba38fbad55f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to override transaction values in createNewPack
+
 ## 5.69.0
 
 ### Minor Changes

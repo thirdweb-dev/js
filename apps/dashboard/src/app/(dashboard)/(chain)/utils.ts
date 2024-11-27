@@ -22,6 +22,8 @@ import plumeBanner from "./temp-assets/plumeBanner.png";
 import plumeCTA from "./temp-assets/plumeCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
+import shidoBanner from "./temp-assets/shidoBanner.png";
+import shidoCta from "./temp-assets/shidoCta.png";
 import soneiumBanner from "./temp-assets/soneiumBanner.png";
 import superpositionBanner from "./temp-assets/superpositionBanner.png";
 import superpositionCTA from "./temp-assets/superpositionCTA.png";
@@ -404,6 +406,18 @@ const chainMetaRecord = {
     about:
       "Soneium, an Ethereum layer-2 developed by Sony Block Solutions Labs. This versatile chain is a general-purpose blockchain platform that aims to evoke emotion, empower creativity, and meet diverse needs to go mainstream. Soneium will be simplifying blockchain experiences while empowering developers, creators, and communities. Built on accessibility, scalability, and efficiency, it aims to solve real-world problems across industries globally. Soneium will change the way we interact with the internet, opening up a world of innovative applications and unlimited potential for users worldwide.",
     cta: OP_CTA,
+  },
+  //Shido
+  9008: {
+    headerImgUrl: shidoBanner.src,
+    about:
+      "Shido Network is a superfast EVM chain with the lowest fees. Seamlessly interoperable with Cosmos, EVM and WASM. Bringing you the future of DeFi, unlocking unified liquidity through chain abstraction.",
+    cta: {
+      backgroundImageUrl: shidoCta.src,
+      title: "Endless scalability with Shido Network",
+      buttonLink: "https://shido.io/",
+      buttonText: "Learn more",
+    },
   },
 } satisfies Record<number, ExtraChainMetadata>;
 // END TEMPORARY

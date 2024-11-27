@@ -8,8 +8,6 @@ import { deployERC721Contract } from "./deploy-erc721.js";
 
 const account = TEST_ACCOUNT_B;
 
-// skip this test suite if there is no secret key available to test with
-// TODO: remove reliance on secret key during unit tests entirely
 describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
   it("should deploy ERC721 open edition", async () => {
     const address = await deployERC721Contract({
@@ -21,6 +19,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
         name: "OE",
       },
     });
+
     expect(address).toBeDefined();
     const deployedName = await name({
       contract: getContract({
@@ -30,5 +29,74 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
       }),
     });
     expect(deployedName).toBe("OE");
+  });
+
+  it("should deploy ERC721 drop", async () => {
+    const address = await deployERC721Contract({
+      client: TEST_CLIENT,
+      chain: ANVIL_CHAIN,
+      account,
+      type: "DropERC721",
+      params: {
+        name: "Drop",
+        symbol: "DRP",
+      },
+    });
+
+    expect(address).toBeDefined();
+    const deployedName = await name({
+      contract: getContract({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        address,
+      }),
+    });
+    expect(deployedName).toBe("Drop");
+  });
+
+  it("should deploy ERC721 token", async () => {
+    const address = await deployERC721Contract({
+      client: TEST_CLIENT,
+      chain: ANVIL_CHAIN,
+      account,
+      type: "TokenERC721",
+      params: {
+        name: "Token",
+        symbol: "TKN",
+      },
+    });
+
+    expect(address).toBeDefined();
+    const deployedName = await name({
+      contract: getContract({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        address,
+      }),
+    });
+    expect(deployedName).toBe("Token");
+  });
+
+  it("should deploy ERC721 loyalty card", async () => {
+    const address = await deployERC721Contract({
+      client: TEST_CLIENT,
+      chain: ANVIL_CHAIN,
+      account,
+      type: "LoyaltyCard",
+      params: {
+        name: "Loyalty",
+        symbol: "LOY",
+      },
+    });
+
+    expect(address).toBeDefined();
+    const deployedName = await name({
+      contract: getContract({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        address,
+      }),
+    });
+    expect(deployedName).toBe("Loyalty");
   });
 });
