@@ -221,6 +221,7 @@ export {
 export {
   AccountBalance,
   type AccountBalanceProps,
+  type AccountBalanceInfo,
 } from "../react/web/ui/prebuilt/Account/balance.js";
 export {
   AccountName,

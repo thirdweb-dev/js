@@ -1,54 +1,106 @@
 import { describe, expect, it } from "vitest";
-import { ANVIL_CHAIN } from "~test/chains.js";
-import { render, screen, waitFor } from "~test/react-render.js";
+import { VITALIK_WALLET } from "~test/addresses.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
-import { getWalletBalance } from "../../../../../wallets/utils/getWalletBalance.js";
-import { AccountBalance } from "./balance.js";
-import { AccountProvider } from "./provider.js";
+import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
+import {
+  formatAccountFiatBalance,
+  formatAccountTokenBalance,
+  loadAccountBalance,
+} from "./balance.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("AccountBalance component", () => {
-  it("format the balance properly", async () => {
-    const roundTo1Decimal = (num: number): number => Math.round(num * 10) / 10;
-    const balance = await getWalletBalance({
-      chain: ANVIL_CHAIN,
+  it("`loadAccountBalance` should fetch the native balance properly", async () => {
+    const result = await loadAccountBalance({
       client: TEST_CLIENT,
-      address: TEST_ACCOUNT_A.address,
+      chain: ethereum,
+      address: VITALIK_WALLET,
     });
 
-    render(
-      <AccountProvider address={TEST_ACCOUNT_A.address} client={TEST_CLIENT}>
-        <AccountBalance chain={ANVIL_CHAIN} formatFn={roundTo1Decimal} />
-      </AccountProvider>,
-    );
+    expect(Number.isNaN(result.balance)).toBe(false);
+    expect(result.symbol).toBe("ETH");
+  });
 
-    waitFor(() =>
-      expect(
-        screen.getByText(roundTo1Decimal(Number(balance.displayValue)), {
-          exact: true,
-          selector: "span",
-        }),
-      ).toBeInTheDocument(),
+  it("`loadAccountBalance` should fetch the token balance properly", async () => {
+    const result = await loadAccountBalance({
+      client: TEST_CLIENT,
+      chain: ethereum,
+      address: VITALIK_WALLET,
+      // USDC
+      tokenAddress: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    });
+
+    expect(Number.isNaN(result.balance)).toBe(false);
+    expect(result.symbol).toBe("USDC");
+  });
+
+  it("`loadAccountBalance` should fetch the fiat balance properly", async () => {
+    const result = await loadAccountBalance({
+      client: TEST_CLIENT,
+      chain: ethereum,
+      address: VITALIK_WALLET,
+      showInFiat: "USD",
+    });
+
+    expect(Number.isNaN(result.balance)).toBe(false);
+    expect(result.symbol).toBe("$");
+  });
+
+  it("`loadAccountBalance` should throw if `chain` is not passed", async () => {
+    await expect(() =>
+      loadAccountBalance({ client: TEST_CLIENT, address: VITALIK_WALLET }),
+    ).rejects.toThrowError("chain is required");
+  });
+
+  it("`loadAccountBalance` should throw if `tokenAddress` is mistakenly passed as native token", async () => {
+    await expect(() =>
+      loadAccountBalance({
+        client: TEST_CLIENT,
+        address: VITALIK_WALLET,
+        tokenAddress: NATIVE_TOKEN_ADDRESS,
+        chain: ethereum,
+      }),
+    ).rejects.toThrowError(
+      `Invalid tokenAddress - cannot be ${NATIVE_TOKEN_ADDRESS}`,
     );
   });
 
-  it("should fallback properly if failed to load", () => {
-    render(
-      <AccountProvider address={TEST_ACCOUNT_A.address} client={TEST_CLIENT}>
-        <AccountBalance
-          chain={undefined}
-          fallbackComponent={<span>oops</span>}
-        />
-      </AccountProvider>,
-    );
+  it("`loadAccountBalance` should throw if `address` is not a valid evm address", async () => {
+    await expect(() =>
+      loadAccountBalance({
+        client: TEST_CLIENT,
+        address: "haha",
+        chain: ethereum,
+      }),
+    ).rejects.toThrowError("Invalid wallet address. Expected an EVM address");
+  });
 
-    waitFor(() =>
-      expect(
-        screen.getByText("oops", {
-          exact: true,
-          selector: "span",
-        }),
-      ).toBeInTheDocument(),
+  it("`loadAccountBalance` should throw if `tokenAddress` is passed but is not a valid evm address", async () => {
+    await expect(() =>
+      loadAccountBalance({
+        client: TEST_CLIENT,
+        address: VITALIK_WALLET,
+        tokenAddress: "haha",
+        chain: ethereum,
+      }),
+    ).rejects.toThrowError(
+      "Invalid tokenAddress. Expected an EVM contract address",
     );
+  });
+
+  it("`formatAccountTokenBalance` should display a rounded-up value + symbol", () => {
+    expect(
+      formatAccountTokenBalance({
+        balance: 1.1999,
+        symbol: "ETH",
+        decimals: 1,
+      }),
+    ).toBe("1.2 ETH");
+  });
+
+  it("`formatAccountFiatBalance` should display fiat symbol followed by a rounded-up fiat value", () => {
+    expect(
+      formatAccountFiatBalance({ balance: 55.001, symbol: "$", decimals: 0 }),
+    ).toBe("$55");
   });
 });

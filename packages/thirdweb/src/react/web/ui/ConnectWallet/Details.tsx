@@ -17,7 +17,6 @@ import { getContract } from "../../../../contract/contract.js";
 import { getLastAuthProvider } from "../../../../react/core/utils/storage.js";
 import { shortenAddress } from "../../../../utils/address.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
-import { formatNumber } from "../../../../utils/formatNumber.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Ecosystem } from "../../../../wallets/in-app/core/wallet/types.js";
@@ -86,7 +85,12 @@ import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
 import { AccountAddress } from "../prebuilt/Account/address.js";
 import { AccountAvatar } from "../prebuilt/Account/avatar.js";
-import { AccountBalance } from "../prebuilt/Account/balance.js";
+import {
+  AccountBalance,
+  type AccountBalanceInfo,
+  formatAccountFiatBalance,
+  formatAccountTokenBalance,
+} from "../prebuilt/Account/balance.js";
 import { AccountBlobbie } from "../prebuilt/Account/blobbie.js";
 import { AccountName } from "../prebuilt/Account/name.js";
 import { AccountProvider } from "../prebuilt/Account/provider.js";
@@ -231,6 +235,11 @@ export const ConnectedWalletDetails: React.FC<{
                 refetchOnWindowFocus: false,
                 refetchOnMount: false,
               }}
+              style={{
+                height: "100%",
+                width: "100%",
+                objectFit: "cover",
+              }}
             />
           )
         )}
@@ -273,17 +282,34 @@ export const ConnectedWalletDetails: React.FC<{
           size="xs"
           color="secondaryText"
           weight={400}
+          style={{
+            display: "flex",
+            gap: "2px",
+            alignItems: "center",
+          }}
         >
           <AccountBalance
             chain={walletChain}
-            loadingComponent={<Skeleton height={fontSize.xs} width="70px" />}
-            fallbackComponent={<Skeleton height={fontSize.xs} width="70px" />}
-            formatFn={formatBalanceOnButton}
+            loadingComponent={<Skeleton height={fontSize.xs} width="50px" />}
+            fallbackComponent={<Skeleton height={fontSize.xs} width="50px" />}
             tokenAddress={
               props.detailsButton?.displayBalanceToken?.[
                 Number(walletChain?.id)
               ]
             }
+          />
+          <AccountBalance
+            chain={walletChain}
+            tokenAddress={
+              props.detailsButton?.displayBalanceToken?.[
+                Number(walletChain?.id)
+              ]
+            }
+            showInFiat="USD"
+            formatFn={(props: AccountBalanceInfo) =>
+              ` (${formatAccountFiatBalance({ ...props, decimals: 0 })})`
+            }
+            loadingComponent={<Skeleton height={fontSize.xs} width="20px" />}
           />
         </Text>
       </Container>
@@ -378,13 +404,26 @@ function DetailsModal(props: {
           {chainNameQuery.name || `Unknown chain #${walletChain?.id}`}
           <Text color="secondaryText" size="xs">
             <AccountBalance
-              fallbackComponent={<Skeleton height="1em" width="100px" />}
-              loadingComponent={<Skeleton height="1em" width="100px" />}
-              formatFn={(num: number) => formatNumber(num, 9)}
+              fallbackComponent={<Skeleton height="1em" width="70px" />}
+              loadingComponent={<Skeleton height="1em" width="70px" />}
               chain={walletChain}
               tokenAddress={
                 props.displayBalanceToken?.[Number(walletChain?.id)]
               }
+              formatFn={(props: AccountBalanceInfo) =>
+                formatAccountTokenBalance({ ...props, decimals: 9 })
+              }
+            />{" "}
+            <AccountBalance
+              loadingComponent={<Skeleton height="1em" width="30px" />}
+              chain={walletChain}
+              tokenAddress={
+                props.displayBalanceToken?.[Number(walletChain?.id)]
+              }
+              formatFn={(props: AccountBalanceInfo) =>
+                ` (${formatAccountFiatBalance({ ...props, decimals: 3 })})`
+              }
+              showInFiat="USD"
             />
           </Text>
         </Text>
@@ -437,6 +476,11 @@ function DetailsModal(props: {
             <AccountAvatar
               loadingComponent={<AccountBlobbie size={Number(iconSize.xxl)} />}
               fallbackComponent={<AccountBlobbie size={Number(iconSize.xxl)} />}
+              style={{
+                height: "100%",
+                width: "100%",
+                objectFit: "cover",
+              }}
             />
           )
         )}
@@ -1004,10 +1048,6 @@ function DetailsModal(props: {
       </WalletUIStatesProvider>
     </CustomThemeProvider>
   );
-}
-
-function formatBalanceOnButton(num: number) {
-  return formatNumber(num, num < 1 ? 5 : 4);
 }
 
 const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {

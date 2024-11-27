@@ -7,6 +7,7 @@ import { getContract } from "../../contract/contract.js";
 import { isAddress } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { getPayConvertFiatToCryptoEndpoint } from "../utils/definitions.js";
+import type { SupportedFiatCurrency } from "./type.js";
 
 /**
  * Props for the `convertFiatToCrypto` function
@@ -18,7 +19,7 @@ export type ConvertFiatToCryptoParams = {
    * The fiat symbol. e.g: "USD"
    * Currently only USD is supported.
    */
-  from: "USD";
+  from: SupportedFiatCurrency;
   /**
    * The total amount of fiat to convert
    * e.g: If you want to convert 2 cents to USD, enter `0.02`
