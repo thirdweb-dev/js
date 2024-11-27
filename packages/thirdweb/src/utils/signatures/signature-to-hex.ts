@@ -1,8 +1,7 @@
-import * as ox__Hex from "ox/Hex";
-import * as ox__Signature from "ox/Signature";
-import type { Hex } from "../encoding/hex.js";
+import { secp256k1 } from "@noble/curves/secp256k1";
+import { type Hex, hexToBigInt } from "../encoding/hex.js";
 
-// We can't migrate this to Ox without breaking changes
+// We can't migrate this to Ox without breaking changes since Ox does not support pre-EIP1559 signatures
 
 /**
  * Converts a signature to a hex string.
@@ -33,9 +32,14 @@ export function signatureToHex(signature: {
   v?: bigint;
   yParity?: number;
 }): Hex {
-  return ox__Signature.toHex({
-    r: ox__Hex.toBigInt(signature.r),
-    s: ox__Hex.toBigInt(signature.s),
-    yParity: (signature.yParity ?? signature.v === 28n) ? 1 : 0,
-  });
+  const { r, s, v, yParity } = signature;
+  const yParity_ = (() => {
+    if (yParity === 0 || yParity === 1) return yParity;
+    if (v && (v === 27n || v === 28n || v >= 35n)) return v % 2n === 0n ? 1 : 0;
+    throw new Error("Invalid `v` or `yParity` value");
+  })();
+  return `0x${new secp256k1.Signature(
+    hexToBigInt(r),
+    hexToBigInt(s),
+  ).toCompactHex()}${yParity_ === 0 ? "1b" : "1c"}`;
 }

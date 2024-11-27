@@ -9,8 +9,8 @@ import type { Prettify } from "../type-utils.js";
 type Message = Prettify<
   | string
   | {
-    raw: Hex | Uint8Array;
-  }
+      raw: Hex | Uint8Array;
+    }
 >;
 export type SignMessageOptions = {
   message: Message;
@@ -66,7 +66,10 @@ export function signMessage(
         : ox__Hex.fromString(options.message),
     );
 
-    const signature = ox__Secp256k1.sign({ payload, privateKey: options.privateKey }),
+    const signature = ox__Secp256k1.sign({
+      payload,
+      privateKey: options.privateKey,
+    });
     return ox__Signature.toHex(signature);
   }
   if ("account" in options) {
