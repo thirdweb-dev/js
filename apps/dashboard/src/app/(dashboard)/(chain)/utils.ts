@@ -319,7 +319,7 @@ const chainMetaRecord = {
     about:
       "Etherlink is powered by a Smart Rollup, an enshrined, optimistic rollup technology implemented by Tezos. Smoothly deploy any EVM codebase enabling seamless interaction across interoperable chains with subsecond block times and (nearly) free transactions.",
     cta: {
-      backgroundImageUrl: etherlinkBanner.src,
+      backgroundImageUrl: etherlinkCTA.src,
       title: "The fast, fair and (nearly) free L2",
       buttonLink: "https://www.etherlink.com",
       buttonText: "Learn More",
