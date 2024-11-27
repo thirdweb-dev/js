@@ -50,4 +50,19 @@ describe("ConnectButton", () => {
     );
     expect(screen.getByText("Sign In")).toBeInTheDocument();
   });
+
+  it("should render with fiat balance props", () => {
+    render(
+      <ConnectButton
+        client={TEST_CLIENT}
+        detailsButton={{
+          showBalanceInFiat: "USD",
+        }}
+        detailsModal={{
+          showBalanceInFiat: "USD",
+        }}
+      />,
+    );
+    expect(screen.getByText("Connect Wallet")).toBeInTheDocument();
+  });
 });
