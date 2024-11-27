@@ -1,0 +1,15 @@
+[
+  "constructor(address _nativeTokenWrapper)",
+  "event TokensWrapped(address indexed wrapper, address indexed recipientOfWrappedToken, uint256 indexed tokenIdOfWrappedToken, (address assetContract, uint8 tokenType, uint256 tokenId, uint256 amount)[] wrappedContents)",
+  "event TokensUnwrapped(address indexed unwrapper, address indexed recipientOfWrappedContents, uint256 indexed tokenIdOfWrappedToken)",
+  "function contractType() pure returns (bytes32)",
+  "function contractVersion() pure returns (uint8)",
+  "function getWrappedContents(uint256 _tokenId) view returns ((address assetContract, uint8 tokenType, uint256 tokenId, uint256 amount)[] contents)",
+  "function initialize(address _defaultAdmin, string _name, string _symbol, string _contractURI, address[] _trustedForwarders, address _royaltyRecipient, uint256 _royaltyBps)",
+  "function nextTokenIdToMint() view returns (uint256)",
+  "function supportsInterface(bytes4 interfaceId) view returns (bool)",
+  "function tokenURI(uint256 _tokenId) view returns (string)",
+  "function unwrap(uint256 _tokenId, address _recipient)",
+  "function wrap((address assetContract, uint8 tokenType, uint256 tokenId, uint256 amount)[] _tokensToWrap, string _uriForWrappedToken, address _recipient) payable returns (uint256 tokenId)",
+  "receive() external payable"
+]

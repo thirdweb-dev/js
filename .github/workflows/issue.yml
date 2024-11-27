@@ -21,16 +21,18 @@ jobs:
               repo: context.repo.repo,
               pull_number: context.issue.number
             });
-            
+
             const body = pr.data.body || '';
+            const branchName = pr.data.head.ref;
             const issueRegex = new RegExp(`(${process.env.VALID_ISSUE_PREFIXES})-\\d+`, 'i');
-            
-            if (!issueRegex.test(body)) {
+            const branchIssueRegex = new RegExp(`(${process.env.VALID_ISSUE_PREFIXES.toLowerCase()})-\\d+`, 'i');
+
+            if (!issueRegex.test(body) && !branchIssueRegex.test(branchName)) {
               core.setFailed(
-                `No valid issue reference found. PR body must contain an issue ID with one of these prefixes: ${process.env.VALID_ISSUE_PREFIXES}`
+                `No valid issue reference found. PR body or branch name must contain an issue ID with one of these prefixes: ${process.env.VALID_ISSUE_PREFIXES}`
               );
               return;
             }
-            
-            const matches = body.match(issueRegex);
+
+            const matches = body.match(issueRegex) || branchName.match(branchIssueRegex);
             console.log(`Found issue reference: ${matches[0]}`);
