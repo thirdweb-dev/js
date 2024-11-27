@@ -1,13 +1,12 @@
-import type { Hex } from "../encoding/hex.js";
-import * as ox__TypedData from "ox/TypedData";
 import * as ox__Secp256k1 from "ox/Secp256k1";
-import * as ox__Hex from "ox/Hex";
 import * as ox__Signature from "ox/Signature";
+import * as ox__TypedData from "ox/TypedData";
+import type { Hex } from "../encoding/hex.js";
 
 export type SignTypedDataOptions<
   typedData extends
-  | ox__TypedData.TypedData
-  | Record<string, unknown> = ox__TypedData.TypedData,
+    | ox__TypedData.TypedData
+    | Record<string, unknown> = ox__TypedData.TypedData,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
 > = ox__TypedData.Definition<typedData, primaryType> & {
   privateKey: Hex;
@@ -39,7 +38,7 @@ export function signTypedData<
 
   const signature = ox__Secp256k1.sign({
     payload,
-    privateKey: ox__Hex.fromString(privateKey),
+    privateKey,
   });
 
   return ox__Signature.toHex(signature);

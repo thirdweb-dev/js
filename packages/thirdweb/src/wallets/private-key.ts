@@ -69,13 +69,11 @@ export function privateKeyToAccount(
   const privateKey = `0x${options.privateKey.replace(/^0x/, "")}` satisfies Hex;
 
   const publicKey = toHex(secp256k1.getPublicKey(privateKey.slice(2), false));
-  const address = publicKeyToAddress(publicKey); // TODO: Implement publicKeyToAddress natively (will need checksumAddress downstream)
+  const address = publicKeyToAddress(publicKey);
 
   const account = {
     address,
     sendTransaction: async (
-      // TODO: figure out how we would pass our "chain" object in here?
-      // maybe we *do* actually have to take in a tx object instead of the raw tx?
       tx: TransactionSerializable & { chainId: number },
     ) => {
       const rpcRequest = getRpcClient({
