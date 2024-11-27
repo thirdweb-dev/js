@@ -5,7 +5,7 @@ coverage:
         target: auto
     patch:
       packages:
-        target: auto
+        target: 80%
         flags:
           - packages
       
