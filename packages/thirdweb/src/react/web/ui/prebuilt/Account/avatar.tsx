@@ -164,7 +164,12 @@ export function AccountAvatar({
 }: AccountAvatarProps) {
   const { address, client } = useAccountContext();
   const avatarQuery = useQuery({
-    queryKey: ["account-avatar", address],
+    queryKey: [
+      "account-avatar",
+      address,
+      { socialType },
+      { resolverAddress, resolverChain },
+    ],
     queryFn: async (): Promise<string> => {
       const [socialData, ensName] = await Promise.all([
         getSocialProfiles({ address, client }),
