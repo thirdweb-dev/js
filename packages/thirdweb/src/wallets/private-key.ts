@@ -1,10 +1,6 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
-import type {
-  SignableMessage,
-  TransactionSerializable,
-  TypedData,
-  TypedDataDefinition,
-} from "viem";
+import type * as ox__TypedData from "ox/TypedData";
+import type { SignableMessage, TransactionSerializable } from "viem";
 import { publicKeyToAddress } from "viem/utils";
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
@@ -99,10 +95,10 @@ export function privateKeyToAccount(
       });
     },
     signTypedData: async <
-      const typedData extends TypedData | Record<string, unknown>,
+      const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
       primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
     >(
-      _typedData: TypedDataDefinition<typedData, primaryType>,
+      _typedData: ox__TypedData.Definition<typedData, primaryType>,
     ) => {
       return signTypedData({
         ..._typedData,

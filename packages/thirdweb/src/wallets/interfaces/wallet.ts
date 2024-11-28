@@ -1,11 +1,6 @@
 import type { Address } from "abitype";
-import type {
-  Hex,
-  SignableMessage,
-  TransactionSerializable,
-  TypedData,
-  TypedDataDefinition,
-} from "viem";
+import type * as ox__TypedData from "ox/TypedData";
+import type { Hex, SignableMessage, TransactionSerializable } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type {
   EIP712TransactionOptions,
@@ -191,10 +186,10 @@ export type Account = {
    * ```
    */
   signTypedData: <
-    const typedData extends TypedData | Record<string, unknown>,
+    const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
     primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
   >(
-    _typedData: TypedDataDefinition<typedData, primaryType>,
+    _typedData: ox__TypedData.Definition<typedData, primaryType>,
   ) => Promise<Hex>;
 
   // OPTIONAL
