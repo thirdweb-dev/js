@@ -5,7 +5,7 @@ This directory contains the end-to-end (E2E) testing setup for the project.
 ## Adding a test
 
 1. create a new file in this directory with the `.spec.ts` extension
-2. copy the paterns from the existing tests
+2. copy the patterns from the existing tests
 
 ## Running the tests locally
 
