@@ -1,5 +1,14 @@
+"use client";
+
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
@@ -42,7 +51,7 @@ const testAddress1 = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 
 function Component() {
   const [isOwner, setIsOwner] = useState(true);
-  const [isErc721, setIsErc721] = useState(false);
+  const [name, setName] = useState("MintableERC721");
   const [isBatchMetadataInstalled, setIsBatchMetadataInstalled] =
     useState(false);
   async function updatePrimaryRecipientStub(values: UpdateFormValues) {
@@ -91,18 +100,22 @@ function Component() {
             />
 
             <CheckboxWithLabel
-              value={isErc721}
-              onChange={setIsErc721}
-              id="isErc721"
-              label="isErc721"
-            />
-
-            <CheckboxWithLabel
               value={isBatchMetadataInstalled}
               onChange={setIsBatchMetadataInstalled}
               id="isBatchMetadataInstalled"
               label="isBatchMetadataInstalled"
             />
+
+            <Select value={name} onValueChange={(v) => setName(v)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="MintableERC721">MintableERC721</SelectItem>
+                <SelectItem value="MintableERC1155">MintableERC1155</SelectItem>
+                <SelectItem value="MintableERC20">MintableERC20</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <BadgeContainer label="Empty Primary Sale Recipient">
@@ -118,7 +131,7 @@ function Component() {
                 isPending: removeMutation.isPending,
               }}
               isOwnerAccount={isOwner}
-              isErc721={isErc721}
+              name={name}
               isBatchMetadataInstalled={isBatchMetadataInstalled}
               contractChainId={1}
             />
@@ -137,7 +150,7 @@ function Component() {
                 isPending: removeMutation.isPending,
               }}
               isOwnerAccount={isOwner}
-              isErc721={isErc721}
+              name={name}
               isBatchMetadataInstalled={isBatchMetadataInstalled}
               contractChainId={1}
             />
@@ -156,7 +169,7 @@ function Component() {
                 isPending: removeMutation.isPending,
               }}
               isOwnerAccount={isOwner}
-              isErc721={isErc721}
+              name={name}
               isBatchMetadataInstalled={isBatchMetadataInstalled}
               contractChainId={1}
             />

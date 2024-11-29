@@ -1,5 +1,12 @@
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { subDays } from "date-fns";
@@ -60,8 +67,7 @@ const claimCondition = {
 
 function Component() {
   const [isOwner, setIsOwner] = useState(true);
-  const [isErc721, setIsErc721] = useState(false);
-  const [isErc20, setIsErc20] = useState(false);
+  const [name, setName] = useState("ClaimableERC721");
   const [isClaimConditionLoading, setIsClaimConditionLoading] = useState(false);
   const [isPrimarySaleRecipientLoading, setIsPrimarySaleRecipientLoading] =
     useState(false);
@@ -119,19 +125,16 @@ function Component() {
               label="Is Owner"
             />
 
-            <CheckboxWithLabel
-              value={isErc721}
-              onChange={setIsErc721}
-              id="isErc721"
-              label="isErc721"
-            />
-
-            <CheckboxWithLabel
-              value={isErc20}
-              onChange={setIsErc20}
-              id="isErc20"
-              label="isErc20"
-            />
+            <Select value={name} onValueChange={(v) => setName(v)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="MintableERC721">MintableERC721</SelectItem>
+                <SelectItem value="MintableERC1155">MintableERC1155</SelectItem>
+                <SelectItem value="MintableERC20">MintableERC20</SelectItem>
+              </SelectContent>
+            </Select>
 
             <CheckboxWithLabel
               value={isClaimConditionLoading}
@@ -168,10 +171,12 @@ function Component() {
             }}
             claimConditionSection={{
               data:
-                isClaimConditionLoading || (!isErc721 && !tokenId)
+                isClaimConditionLoading ||
+                (name === "MintableERC1155" && !tokenId)
                   ? undefined
                   : {
                       claimCondition,
+                      currencyDecimals: 18,
                       tokenDecimals: 18,
                     },
               isLoading: false,
@@ -186,8 +191,7 @@ function Component() {
               isPending: removeMutation.isPending,
             }}
             isOwnerAccount={isOwner}
-            isErc721={isErc721}
-            isErc20={isErc20}
+            name={name}
             contractChainId={1}
             setTokenId={setTokenId}
             isValidTokenId={true}
