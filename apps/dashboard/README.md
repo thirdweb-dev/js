@@ -36,4 +36,4 @@ To define env vars please create a `.env` file based on the `.env.example` templ
 ### Data fetching
 - Use RSC wherever possible.
 - Write data fetching code in its own function in the same file as the component it is used in, not exported.
-- If the same data fetching function is used in multiple components, place it in a file in an `api` folder at the lowest level possible (just like components). If you need to do this you probable aren't organizing your components properly.
+- If the same data fetching function is used in multiple components, place it in a file in an `api` folder at the lowest level possible (just like components). If you need to do this you probably aren't organizing your components properly.
