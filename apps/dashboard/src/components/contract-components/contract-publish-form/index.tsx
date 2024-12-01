@@ -190,7 +190,7 @@ export function ContractPublishForm(props: {
 
   return (
     <FormProvider {...form}>
-      <Box w="100%">
+      <div className="w-full">
         <Flex
           as="form"
           id="contract-release-form"
@@ -324,18 +324,22 @@ export function ContractPublishForm(props: {
               </IconButton>
             </div>
           )}
+
           {fieldsetToShow === "landing" && (
             <LandingFieldset
               latestVersion={latestVersion}
               placeholderVersion={placeholderVersion}
             />
           )}
+
           {fieldsetToShow === "contractParams" && (
             <ContractParamsFieldset deployParams={deployParams} />
           )}
+
           {fieldsetToShow === "implParams" && implDeployParams?.length > 0 && (
             <ImplementationParamsFieldset implParams={implDeployParams} />
           )}
+
           {fieldsetToShow === "factory" && (
             <Flex flexDir="column" gap={24}>
               <FactoryFieldset
@@ -344,11 +348,13 @@ export function ContractPublishForm(props: {
               />
             </Flex>
           )}
+
           {fieldsetToShow === "networks" && (
             <Flex flexDir="column" gap={24}>
               <NetworksFieldset fromStandard />
             </Flex>
           )}
+
           <Flex flexDir="column" gap={6}>
             <Divider />
             <Flex
@@ -455,7 +461,7 @@ export function ContractPublishForm(props: {
             </Flex>
           </Flex>
         </Flex>
-      </Box>
+      </div>
     </FormProvider>
   );
 }

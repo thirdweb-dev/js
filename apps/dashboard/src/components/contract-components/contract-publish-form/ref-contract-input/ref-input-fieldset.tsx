@@ -1,8 +1,7 @@
-import { Box, Flex, Icon } from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
 import type { AbiParameter } from "abitype";
 import { PlusIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Button, Text } from "tw-components";
 import { RefContractInput } from "./ref-input";
 
 interface RefInputFieldsetProps {
@@ -18,29 +17,26 @@ export const RefInputFieldset: React.FC<RefInputFieldsetProps> = ({
     name: `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts`,
     control: form.control,
   });
+  const hideAddButton = param.type === "address" && fields.length >= 1;
 
   return (
-    <Flex gap={8} direction="column" as="fieldset">
-      <Flex gap={2} direction="column">
-        <Text>Set ref contract for this param.</Text>
-      </Flex>
-      <Flex flexDir="column" gap={4}>
-        {fields.map((item, index) => (
-          <RefContractInput
-            key={item.id}
-            remove={remove}
-            index={index}
-            param={param}
-          />
-        ))}
-        <Box>
+    <div className="flex flex-col gap-4">
+      {fields.map((item, index) => (
+        <RefContractInput
+          key={item.id}
+          remove={remove}
+          index={index}
+          param={param}
+        />
+      ))}
+
+      {!hideAddButton && (
+        <div>
           <Button
             type="button"
             size="sm"
-            colorScheme="primary"
-            borderRadius="md"
-            leftIcon={<Icon as={PlusIcon} />}
-            isDisabled={param.type === "address" && fields.length >= 1}
+            variant="outline"
+            className="gap-2"
             onClick={() =>
               append({
                 contractId: "",
@@ -50,10 +46,14 @@ export const RefInputFieldset: React.FC<RefInputFieldsetProps> = ({
               })
             }
           >
-            Add Ref
+            <PlusIcon className="size-4" />
+            Add Reference
           </Button>
-        </Box>
-      </Flex>
-    </Flex>
+          <p className="mt-2 text-muted-foreground text-sm">
+            Set Reference contract for this parameter
+          </p>
+        </div>
+      )}
+    </div>
   );
 };
