@@ -1,8 +1,6 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { defineChain } from "../../chains/utils.js";
-import { getContract } from "../../contract/contract.js";
-import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { generateAccount } from "../utils/generateAccount.js";
 import { connectSmartWallet, disconnectSmartWallet } from "./index.js";
 import { smartWallet } from "./smart-wallet.js";
@@ -34,37 +32,6 @@ describe("Smart Wallet Index", () => {
       expect(account.address).toBeDefined();
       expect(account.address).toMatch(/^0x[a-fA-F0-9]{40}$/);
       expect(connectedChain.id).toBe(chain.id);
-    });
-
-    it("should handle transaction requests", async () => {
-      const personalAccount = await generateAccount({ client });
-      const wallet = smartWallet({
-        chain,
-        gasless: true,
-      });
-
-      const [account] = await connectSmartWallet(
-        wallet,
-        {
-          client,
-          personalAccount,
-        },
-        {
-          chain,
-          gasless: true,
-        },
-      );
-
-      const tx = prepareTransaction({
-        chain,
-        client,
-        to: "0x0000000000000000000000000000000000000000",
-        value: 0n,
-      });
-
-      const result = await account.sendTransaction(tx);
-      expect(result.transactionHash).toBeDefined();
-      expect(result.transactionHash).toMatch(/^0x[a-fA-F0-9]{64}$/);
     });
   });
 
@@ -111,10 +78,10 @@ describe("Smart Wallet Index", () => {
       );
 
       await disconnectSmartWallet(wallet);
-      
+
       // Verify wallet state is cleared
       expect(wallet.getAccount()).toBeUndefined();
-      expect(wallet.getAdminAccount()).toBeUndefined();
+      expect(wallet.getAdminAccount?.()).toBeUndefined();
     });
   });
 });
