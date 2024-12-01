@@ -1,4 +1,4 @@
-import { type TypedData, type TypedDataDefinition, hashTypedData } from "viem";
+import * as ox__TypedData from "ox/TypedData";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { isHex } from "../../utils/encoding/hex.js";
 import { isValidSignature } from "./__generated__/isValidSignature/read/isValidSignature.js";
@@ -7,11 +7,11 @@ import { isValidSignature } from "./__generated__/isValidSignature/read/isValidS
  * @extension ERC1271
  */
 export type CheckContractWalletSignTypedDataOptions<
-  typedData extends TypedData | Record<string, unknown>,
+  typedData extends ox__TypedData.TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
 > = {
   contract: ThirdwebContract;
-  data: TypedDataDefinition<typedData, primaryType>;
+  data: ox__TypedData.Definition<typedData, primaryType>;
   signature: string;
 };
 const MAGIC_VALUE = "0x1626ba7e";
@@ -42,7 +42,7 @@ const MAGIC_VALUE = "0x1626ba7e";
  * @returns A promise that resolves with a boolean indicating if the signature is valid.
  */
 export async function checkContractWalletSignedTypedData<
-  typedData extends TypedData | Record<string, unknown>,
+  typedData extends ox__TypedData.TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
 >(options: CheckContractWalletSignTypedDataOptions<typedData, primaryType>) {
   if (!isHex(options.signature)) {
@@ -50,7 +50,11 @@ export async function checkContractWalletSignedTypedData<
   }
   const result = await isValidSignature({
     contract: options.contract,
-    hash: hashTypedData(options.data),
+    hash: ox__TypedData.hashStruct({
+      primaryType: options.data.primaryType,
+      data: options.data.message as Record<string, unknown>,
+      types: options.data.types as ox__TypedData.Definition["types"],
+    }),
     signature: options.signature,
   });
   return result === MAGIC_VALUE;

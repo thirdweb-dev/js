@@ -1,25 +1,29 @@
-import type { TypedData } from "abitype";
-import type { TypedDataDefinition } from "viem";
-import { type Hex, hexToNumber, isHex } from "../../encoding/hex.js";
+import * as ox__Hex from "ox/Hex";
+import type * as ox__TypedData from "ox/TypedData";
+import type { Hex } from "../../encoding/hex.js";
 
-type UnknownDomain = unknown & { chainId?: unknown }; // TODO: create our own typed data types so this is cleaner
-type HexDomain = unknown & { chainId: Hex }; // TODO: create our own typed data types so this is cleaner
+type UnknownDomain = unknown & { chainId?: unknown };
+type HexDomain = unknown & { chainId: Hex };
 
 /**
  * @internal
  */
 export function parseTypedData<
-  typedData extends TypedData | Record<string, unknown> = TypedData,
+  typedData extends
+    | ox__TypedData.TypedData
+    | Record<string, unknown> = ox__TypedData.TypedData,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
 >(
-  typedData: TypedDataDefinition<typedData, primaryType>,
-): TypedDataDefinition<typedData, primaryType> {
+  typedData: ox__TypedData.Definition<typedData, primaryType>,
+): ox__TypedData.Definition<typedData, primaryType> {
   const domain = typedData.domain as UnknownDomain;
-  if (domain?.chainId !== undefined && isHex(domain.chainId)) {
+  if (domain?.chainId !== undefined && ox__Hex.validate(domain.chainId)) {
     typedData.domain = {
       ...(typedData.domain as HexDomain),
-      chainId: hexToNumber((typedData.domain as unknown as HexDomain).chainId),
-    } as unknown as TypedDataDefinition<typedData, primaryType>["domain"];
+      chainId: ox__Hex.toNumber(
+        (typedData.domain as unknown as HexDomain).chainId,
+      ),
+    } as unknown as ox__TypedData.Definition<typedData, primaryType>["domain"];
   }
   return typedData;
 }

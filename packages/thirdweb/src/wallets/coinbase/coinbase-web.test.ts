@@ -1,6 +1,7 @@
 import type { ProviderInterface } from "@coinbase/wallet-sdk";
+import * as ox__Hex from "ox/Hex";
+import * as ox__TypedData from "ox/TypedData";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import {} from "../../chains/utils.js";
 import { COINBASE } from "../constants.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import {
@@ -39,6 +40,21 @@ vi.mock("../../chains/utils.js", () => ({
 
 vi.mock("../../utils/normalizeChainId.js", () => ({
   normalizeChainId: vi.fn((chainId) => Number(chainId)),
+}));
+
+vi.mock("ox/Hex", async () => {
+  const actualModule = await vi.importActual("ox/Hex");
+  return {
+    ...actualModule,
+    validate: vi.fn(() => true),
+    toNumber: vi.fn((hex) => Number.parseInt(hex, 16)),
+  };
+});
+
+vi.mock("ox/TypedData", () => ({
+  extractEip712DomainTypes: vi.fn(() => []),
+  validate: vi.fn(),
+  serialize: vi.fn(() => "serializedData"),
 }));
 
 describe("Coinbase Web", () => {
@@ -101,5 +117,60 @@ describe("Coinbase Web", () => {
 
     expect(account.address).toBe("0x123");
     expect(chain.id).toBe(1);
+  });
+
+  test("signMessage uses ox__Hex for validation", async () => {
+    const account = {
+      address: "0x123",
+      signMessage: async ({ message }: { message: string }) => {
+        const messageToSign = `0x${ox__Hex.fromString(message)}`;
+        const res = await provider.request({
+          method: "personal_sign",
+          params: [messageToSign, account.address],
+        });
+        expect(ox__Hex.validate(res)).toBe(true);
+        return res;
+      },
+    };
+
+    provider.request = vi.fn().mockResolvedValue("0xsignature");
+    const signature = await account.signMessage({ message: "hello" });
+    expect(signature).toBe("0xsignature");
+  });
+
+  test("signTypedData uses ox__TypedData for serialization", async () => {
+    const account = {
+      address: "0x123",
+      // biome-ignore lint/suspicious/noExplicitAny: Inside tests
+      signTypedData: async (typedData: any) => {
+        const { domain, message, primaryType } = typedData;
+        const types = {
+          EIP712Domain: ox__TypedData.extractEip712DomainTypes(domain),
+          ...typedData.types,
+        };
+        ox__TypedData.validate({ domain, message, primaryType, types });
+        const stringifiedData = ox__TypedData.serialize({
+          domain: domain ?? {},
+          message,
+          primaryType,
+          types,
+        });
+        const res = await provider.request({
+          method: "eth_signTypedData_v4",
+          params: [account.address, stringifiedData],
+        });
+        expect(ox__Hex.validate(res)).toBe(true);
+        return res;
+      },
+    };
+
+    provider.request = vi.fn().mockResolvedValue("0xsignature");
+    const signature = await account.signTypedData({
+      domain: {},
+      message: {},
+      primaryType: "EIP712Domain",
+      types: {},
+    });
+    expect(signature).toBe("0xsignature");
   });
 });

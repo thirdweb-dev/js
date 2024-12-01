@@ -1,12 +1,7 @@
 import type { ProviderInterface } from "@coinbase/wallet-sdk";
 import type { Address } from "abitype";
-import {
-  type SignTypedDataParameters,
-  getTypesForEIP712Domain,
-  isHex,
-  serializeTypedData,
-  validateTypedData,
-} from "viem";
+import * as ox__Hex from "ox/Hex";
+import * as ox__TypedData from "ox/TypedData";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { SendTransactionOption } from "../interfaces/wallet.js";
 import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
@@ -338,29 +333,30 @@ function createAccount({
         method: "personal_sign",
         params: [messageToSign, account.address],
       });
-      if (!isHex(res)) {
+      if (!ox__Hex.validate(res)) {
         throw new Error("Invalid signature returned");
       }
       return res;
     },
-    async signTypedData(_typedData) {
+    async signTypedData(typedData) {
       if (!account.address) {
         throw new Error("Provider not setup");
       }
-      const typedData = parseTypedData(_typedData);
-      const { domain, message, primaryType } =
-        typedData as unknown as SignTypedDataParameters;
+
+      const { domain, message, primaryType } = parseTypedData(
+        typedData,
+      ) as ox__TypedData.Definition;
 
       const types = {
-        EIP712Domain: getTypesForEIP712Domain({ domain }),
+        EIP712Domain: ox__TypedData.extractEip712DomainTypes(domain),
         ...typedData.types,
       };
 
       // Need to do a runtime validation check on addresses, byte ranges, integer ranges, etc
       // as we can't statically check this with TypeScript.
-      validateTypedData({ domain, message, primaryType, types });
+      ox__TypedData.validate({ domain, message, primaryType, types });
 
-      const stringifiedData = serializeTypedData({
+      const stringifiedData = ox__TypedData.serialize({
         domain: domain ?? {},
         message,
         primaryType,
@@ -371,7 +367,7 @@ function createAccount({
         method: "eth_signTypedData_v4",
         params: [account.address, stringifiedData],
       });
-      if (!isHex(res)) {
+      if (!ox__Hex.validate(res)) {
         throw new Error("Invalid signed payload returned");
       }
       return res;

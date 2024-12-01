@@ -1,6 +1,6 @@
-import { secp256k1 } from "@noble/curves/secp256k1";
-import type { Signature } from "viem";
-import { type Hex, hexToBigInt } from "../encoding/hex.js";
+import * as ox__Hex from "ox/Hex";
+import * as ox__Signature from "ox/Signature";
+import type { Hex } from "../encoding/hex.js";
 
 /**
  * Converts a signature to a hex string.
@@ -25,15 +25,31 @@ import { type Hex, hexToBigInt } from "../encoding/hex.js";
  * ```
  * @utils
  */
-export function signatureToHex(signature: Signature): Hex {
+export function signatureToHex(signature: {
+  r: Hex;
+  s: Hex;
+  v?: bigint | number | Hex | undefined;
+  yParity?: bigint | number | Hex | undefined;
+}): Hex {
   const { r, s, v, yParity } = signature;
-  const yParity_ = (() => {
-    if (yParity === 0 || yParity === 1) return yParity;
-    if (v && (v === 27n || v === 28n || v >= 35n)) return v % 2n === 0n ? 1 : 0;
-    throw new Error("Invalid `v` or `yParity` value");
-  })();
-  return `0x${new secp256k1.Signature(
-    hexToBigInt(r),
-    hexToBigInt(s),
-  ).toCompactHex()}${yParity_ === 0 ? "1b" : "1c"}`;
+  return ox__Signature.toHex(
+    ox__Signature.from(
+      typeof yParity !== "undefined"
+        ? {
+            r,
+            s,
+            yParity: !ox__Hex.validate(yParity)
+              ? ox__Hex.fromNumber(yParity)
+              : yParity,
+          }
+        : {
+            r,
+            s,
+            v:
+              !ox__Hex.validate(v) && typeof v !== "undefined"
+                ? ox__Hex.fromNumber(v)
+                : v,
+          },
+    ),
+  );
 }

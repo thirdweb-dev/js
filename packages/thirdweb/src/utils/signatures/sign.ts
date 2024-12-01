@@ -1,5 +1,4 @@
-import { secp256k1 } from "@noble/curves/secp256k1";
-import type { Signature } from "viem";
+import * as ox__Secp256k1 from "ox/Secp256k1";
 
 import { type Hex, toHex } from "../encoding/hex.js";
 
@@ -28,12 +27,12 @@ export type SignOptions = {
  * ```
  * @utils
  */
-export function sign({ hash, privateKey }: SignOptions): Signature {
-  const { r, s, recovery } = secp256k1.sign(hash.slice(2), privateKey.slice(2));
+export function sign({ hash, privateKey }: SignOptions) {
+  const { r, s, yParity } = ox__Secp256k1.sign({ payload: hash, privateKey });
   return {
     r: toHex(r, { size: 32 }),
     s: toHex(s, { size: 32 }),
-    v: recovery ? 28n : 27n,
-    yParity: recovery,
+    v: yParity === 1 ? 28n : 27n,
+    yParity,
   };
 }

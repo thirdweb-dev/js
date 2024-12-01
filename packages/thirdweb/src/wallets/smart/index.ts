@@ -1,11 +1,5 @@
-import {
-  type SignableMessage,
-  type TypedData,
-  type TypedDataDefinition,
-  type TypedDataDomain,
-  hashTypedData,
-  maxUint96,
-} from "viem";
+import * as ox__TypedData from "ox/TypedData";
+import { type SignableMessage, maxUint96 } from "viem";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -140,7 +134,6 @@ export async function connectSmartWallet(
     chain: chain,
   });
 
-  // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
   const accountAddress = await predictAddress({
     factoryContract,
     adminAddress: personalAccount.address,
@@ -334,9 +327,9 @@ async function createSmartAccount(
       );
     },
     async signTypedData<
-      const typedData extends TypedData | Record<string, unknown>,
+      const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
       primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
-    >(_typedData: TypedDataDefinition<typedData, primaryType>) {
+    >(_typedData: ox__TypedData.Definition<typedData, primaryType>) {
       const typedData = parseTypedData(_typedData);
       const [
         { isContractDeployed },
@@ -353,7 +346,7 @@ async function createSmartAccount(
       ]);
       const isSelfVerifyingContract =
         (
-          typedData.domain as TypedDataDomain
+          typedData.domain as ox__TypedData.Domain
         )?.verifyingContract?.toLowerCase() ===
         accountContract.address?.toLowerCase();
 
@@ -376,7 +369,11 @@ async function createSmartAccount(
         });
       }
 
-      const originalMsgHash = hashTypedData(typedData);
+      const originalMsgHash = ox__TypedData.hashStruct({
+        ...typedData,
+        types: typedData.types as ox__TypedData.Definition["types"],
+        data: typedData.message as Record<string, unknown>,
+      });
       // check if the account contract supports EIP721 domain separator based signing
       let factorySupports712 = false;
       try {
@@ -554,9 +551,9 @@ function createZkSyncAccount(args: {
       return connectionOptions.personalAccount.signMessage({ message });
     },
     async signTypedData<
-      const typedData extends TypedData | Record<string, unknown>,
+      const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
       primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
-    >(_typedData: TypedDataDefinition<typedData, primaryType>) {
+    >(_typedData: ox__TypedData.Definition<typedData, primaryType>) {
       const typedData = parseTypedData(_typedData);
       return connectionOptions.personalAccount.signTypedData(typedData);
     },
