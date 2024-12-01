@@ -5,7 +5,7 @@ import * as ox__TransactionEnvelopeEip2930 from "ox/TransactionEnvelopeEip2930";
 import * as ox__TransactionEnvelopeLegacy from "ox/TransactionEnvelopeLegacy";
 import type { Hex } from "../utils/encoding/hex.js";
 
-export type SerializableTransaction = {
+type SerializableTransaction = {
   type?: string | undefined;
   r?: Hex;
   s?: Hex;
@@ -19,7 +19,7 @@ export type SerializableTransaction = {
   maxFeePerGas?: bigint | undefined;
   maxPriorityFeePerGas?: bigint | undefined;
   data?: Hex | undefined;
-  to?: Hex | undefined;
+  to?: string | null | undefined; // Must allow null for backwards compatibility
   nonce?: number | bigint | undefined;
   value?: bigint | undefined;
   gasLimit?: bigint | undefined;
