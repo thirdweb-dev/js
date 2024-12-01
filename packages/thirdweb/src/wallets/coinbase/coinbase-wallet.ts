@@ -67,7 +67,7 @@ export function coinbaseWalletSDK(args: {
     getAccount: () => account,
     autoConnect: async (options) => {
       const { autoConnectCoinbaseWalletSDK } = await import(
-        "./coinbaseWebSDK.js"
+        "./coinbase-web.js"
       );
       const provider = await args.providerFactory();
       const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
@@ -87,7 +87,7 @@ export function coinbaseWalletSDK(args: {
       return account;
     },
     connect: async (options) => {
-      const { connectCoinbaseWalletSDK } = await import("./coinbaseWebSDK.js");
+      const { connectCoinbaseWalletSDK } = await import("./coinbase-web.js");
       const provider = await args.providerFactory();
       const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
         await connectCoinbaseWalletSDK(options, emitter, provider);
