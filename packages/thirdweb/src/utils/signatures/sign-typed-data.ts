@@ -1,7 +1,7 @@
 import type { TypedData } from "abitype";
 import { type TypedDataDefinition, hashTypedData } from "viem";
 import type { Hex } from "../encoding/hex.js";
-import { parseTypedData } from "./helpers/parseTypedData.js";
+import { parseTypedData } from "./helpers/parse-typed-data.js";
 import { sign } from "./sign.js";
 import { signatureToHex } from "./signature-to-hex.js";
 

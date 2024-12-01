@@ -25,7 +25,7 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
 import { COINBASE } from "../constants.js";
 import type {
   GetCallsStatusResponse,

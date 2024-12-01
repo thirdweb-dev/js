@@ -24,7 +24,7 @@ import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
 import type { Hex } from "../../utils/encoding/hex.js";
-import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
 import type {
   Account,
   SendTransactionOption,
