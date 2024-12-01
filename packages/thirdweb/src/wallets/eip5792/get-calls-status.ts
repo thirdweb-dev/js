@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../../client/client.js";
-import { isCoinbaseSDKWallet } from "../coinbase/coinbaseWebSDK.js";
+import { isCoinbaseSDKWallet } from "../coinbase/coinbase-web.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
@@ -64,7 +64,7 @@ export async function getCallsStatus({
 
   if (isCoinbaseSDKWallet(wallet)) {
     const { coinbaseSDKWalletGetCallsStatus } = await import(
-      "../coinbase/coinbaseWebSDK.js"
+      "../coinbase/coinbase-web.js"
     );
     return coinbaseSDKWalletGetCallsStatus({ wallet, bundleId });
   }

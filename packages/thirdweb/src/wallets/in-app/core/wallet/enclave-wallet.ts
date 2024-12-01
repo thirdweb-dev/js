@@ -6,7 +6,7 @@ import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTrans
 import { getRpcClient } from "../../../../rpc/rpc.js";
 import { getAddress } from "../../../../utils/address.js";
 import { type Hex, toHex } from "../../../../utils/encoding/hex.js";
-import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
+import { parseTypedData } from "../../../../utils/signatures/helpers/parse-typed-data.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type {
   Account,

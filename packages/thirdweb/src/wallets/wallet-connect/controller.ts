@@ -25,7 +25,7 @@ import {
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
 import { stringify } from "../../utils/json.js";
-import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
 import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
 import {
   getSavedConnectParamsFromStorage,

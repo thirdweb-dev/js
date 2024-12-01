@@ -66,8 +66,6 @@ export type UploadMetadataFormValues = z.infer<typeof uploadMetadataFormSchema>;
 function BatchMetadataModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
 
-  const isErc721 = props.contractInfo.name === "BatchMetadataERC721";
-
   const uploadMetadata = useCallback(
     async (values: UploadMetadataFormValues) => {
       if (!ownerAccount) {
@@ -75,9 +73,10 @@ function BatchMetadataModule(props: ModuleInstanceProps) {
       }
 
       const nft = parseAttributes(values);
-      const uploadMetadata = isErc721
-        ? BatchMetadataERC721.uploadMetadata
-        : BatchMetadataERC1155.uploadMetadata;
+      const uploadMetadata =
+        props.contractInfo.name === "BatchMetadataERC721"
+          ? BatchMetadataERC721.uploadMetadata
+          : BatchMetadataERC1155.uploadMetadata;
       const uploadMetadataTx = uploadMetadata({
         contract,
         metadatas: [nft],
@@ -88,7 +87,7 @@ function BatchMetadataModule(props: ModuleInstanceProps) {
         transaction: uploadMetadataTx,
       });
     },
-    [contract, ownerAccount, isErc721],
+    [contract, ownerAccount, props.contractInfo.name],
   );
 
   return (

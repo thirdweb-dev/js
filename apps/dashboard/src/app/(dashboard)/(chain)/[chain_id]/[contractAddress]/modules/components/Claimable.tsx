@@ -46,7 +46,11 @@ import {
   toTokens,
 } from "thirdweb";
 import { decimals } from "thirdweb/extensions/erc20";
-import { ClaimableERC721, ClaimableERC1155 } from "thirdweb/modules";
+import {
+  ClaimableERC20,
+  ClaimableERC721,
+  ClaimableERC1155,
+} from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { z } from "zod";
 import { addressSchema } from "../zod-schemas";
@@ -72,26 +76,34 @@ function ClaimableModule(props: ModuleInstanceProps) {
   const account = useActiveAccount();
   const [tokenId, setTokenId] = useState<string>("");
 
-  const isErc721 = props.contractInfo.name === "ClaimableERC721";
-  const isErc20 = props.contractInfo.name === "ClaimableERC20";
   const isValidTokenId = positiveIntegerRegex.test(tokenId);
 
   const primarySaleRecipientQuery = useReadContract(
-    isErc721 ? ClaimableERC721.getSaleConfig : ClaimableERC1155.getSaleConfig,
+    props.contractInfo.name === "ClaimableERC721"
+      ? ClaimableERC721.getSaleConfig
+      : props.contractInfo.name === "ClaimableERC20"
+        ? ClaimableERC20.getSaleConfig
+        : ClaimableERC1155.getSaleConfig,
     {
       contract: contract,
     },
   );
 
   const claimConditionQuery = useReadContract(
-    isErc721
+    props.contractInfo.name === "ClaimableERC721"
       ? ClaimableERC721.getClaimCondition
-      : ClaimableERC1155.getClaimCondition,
+      : props.contractInfo.name === "ClaimableERC20"
+        ? ClaimableERC20.getClaimCondition
+        : ClaimableERC1155.getClaimCondition,
     {
       tokenId: positiveIntegerRegex.test(tokenId) ? BigInt(tokenId) : 0n,
       contract: contract,
       queryOptions: {
-        enabled: isErc721 || (!!tokenId && isValidTokenId),
+        enabled:
+          ["ClaimableERC721", "ClaimableERC20"].includes(
+            props.contractInfo.name,
+          ) ||
+          (!!tokenId && isValidTokenId),
       },
     },
   );
@@ -116,10 +128,16 @@ function ClaimableModule(props: ModuleInstanceProps) {
     claimConditionQuery.data &&
     claimConditionQuery.data?.currency !== ZERO_ADDRESS;
 
-  const tokenDecimalsQuery = useReadContract(decimals, {
+  const currencyDecimalsQuery = useReadContract(decimals, {
     contract: currencyContract,
     queryOptions: {
       enabled: shouldFetchTokenDecimals,
+    },
+  });
+  const tokenDecimalsQuery = useReadContract(decimals, {
+    contract: contract,
+    queryOptions: {
+      enabled: props.contractInfo.name === "ClaimableERC20",
     },
   });
 
@@ -130,8 +148,14 @@ function ClaimableModule(props: ModuleInstanceProps) {
       }
 
       let mintTx: PreparedTransaction;
-      if (isErc721) {
+      if (props.contractInfo.name === "ClaimableERC721") {
         mintTx = ClaimableERC721.mint({
+          contract,
+          to: values.recipient,
+          quantity: values.quantity,
+        });
+      } else if (props.contractInfo.name === "ClaimableERC20") {
+        mintTx = ClaimableERC20.mint({
           contract,
           to: values.recipient,
           quantity: values.quantity,
@@ -152,7 +176,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
         transaction: mintTx,
       });
     },
-    [contract, account, isErc721],
+    [contract, account, props.contractInfo.name],
   );
 
   const setClaimCondition = useCallback(
@@ -162,8 +186,17 @@ function ClaimableModule(props: ModuleInstanceProps) {
       }
 
       let setClaimConditionTx: PreparedTransaction;
-      if (isErc721) {
+      if (props.contractInfo.name === "ClaimableERC721") {
         setClaimConditionTx = ClaimableERC721.setClaimCondition({
+          ...values,
+          contract,
+          allowList:
+            values.allowList && values.allowList.length > 0
+              ? values.allowList.map(({ address }) => address)
+              : undefined,
+        });
+      } else if (props.contractInfo.name === "ClaimableERC20") {
+        setClaimConditionTx = ClaimableERC20.setClaimCondition({
           ...values,
           contract,
           allowList:
@@ -190,7 +223,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
         transaction: setClaimConditionTx,
       });
     },
-    [contract, ownerAccount, isErc721],
+    [contract, ownerAccount, props.contractInfo.name],
   );
 
   const setPrimarySaleRecipient = useCallback(
@@ -198,9 +231,12 @@ function ClaimableModule(props: ModuleInstanceProps) {
       if (!ownerAccount) {
         throw new Error("Not an owner account");
       }
-      const setSaleConfig = isErc721
-        ? ClaimableERC721.setSaleConfig
-        : ClaimableERC1155.setSaleConfig;
+      const setSaleConfig =
+        props.contractInfo.name === "ClaimableERC721"
+          ? ClaimableERC721.setSaleConfig
+          : props.contractInfo.name === "ClaimableERC20"
+            ? ClaimableERC20.setSaleConfig
+            : ClaimableERC1155.setSaleConfig;
       const setSaleConfigTx = setSaleConfig({
         contract: contract,
         primarySaleRecipient: values.primarySaleRecipient,
@@ -211,7 +247,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
         transaction: setSaleConfigTx,
       });
     },
-    [contract, ownerAccount, isErc721],
+    [contract, ownerAccount, props.contractInfo.name],
   );
 
   return (
@@ -228,9 +264,10 @@ function ClaimableModule(props: ModuleInstanceProps) {
           // claim conditions data is present
           claimConditionQuery.data &&
           // token decimals is fetched if it should be fetched
-          (shouldFetchTokenDecimals ? tokenDecimalsQuery.isFetched : true)
+          (shouldFetchTokenDecimals ? currencyDecimalsQuery.isFetched : true)
             ? {
                 claimCondition: claimConditionQuery.data,
+                currencyDecimals: currencyDecimalsQuery.data,
                 tokenDecimals: tokenDecimalsQuery.data,
               }
             : undefined,
@@ -238,11 +275,10 @@ function ClaimableModule(props: ModuleInstanceProps) {
         tokenId,
         isLoading:
           claimConditionQuery.isLoading ||
-          (!!shouldFetchTokenDecimals && tokenDecimalsQuery.isLoading),
+          (!!shouldFetchTokenDecimals && currencyDecimalsQuery.isLoading),
       }}
       isOwnerAccount={!!ownerAccount}
-      isErc721={isErc721}
-      isErc20={isErc20}
+      name={props.contractInfo.name}
       contractChainId={props.contract.chain.id}
       setTokenId={setTokenId}
       isValidTokenId={isValidTokenId}
@@ -257,8 +293,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
 export function ClaimableModuleUI(
   props: Omit<ModuleCardUIProps, "children" | "updateButton"> & {
     isOwnerAccount: boolean;
-    isErc721: boolean;
-    isErc20: boolean;
+    name: string;
     contractChainId: number;
     setTokenId: Dispatch<SetStateAction<string>>;
     isValidTokenId: boolean;
@@ -282,6 +317,7 @@ export function ClaimableModuleUI(
       data:
         | {
             claimCondition: ClaimConditionValue;
+            currencyDecimals: number | undefined;
             tokenDecimals: number | undefined;
           }
         | undefined;
@@ -298,12 +334,12 @@ export function ClaimableModuleUI(
         <Accordion type="single" collapsible className="-mx-1">
           <AccordionItem value="metadata" className="border-none">
             <AccordionTrigger className="border-border border-t px-1">
-              Mint {props.isErc20 ? "Token" : "NFT"}
+              Mint {props.name === "ClaimableERC20" ? "Token" : "NFT"}
             </AccordionTrigger>
             <AccordionContent className="px-1">
               <MintNFTSection
                 mint={props.mintSection.mint}
-                isErc721={props.isErc721}
+                name={props.name}
                 contractChainId={props.contractChainId}
               />
             </AccordionContent>
@@ -314,7 +350,7 @@ export function ClaimableModuleUI(
               Claim Conditions
             </AccordionTrigger>
             <AccordionContent className="px-1">
-              {!props.isErc721 && (
+              {props.name === "ClaimableERC1155" && (
                 <div className="flex flex-col gap-6">
                   <div className="flex-1 space-y-1">
                     <Label>Token ID</Label>
@@ -330,28 +366,29 @@ export function ClaimableModuleUI(
 
               <div className="h-6" />
 
-              {props.isValidTokenId &&
-                props.claimConditionSection.data &&
-                !props.claimConditionSection.isLoading && (
+              {props.name !== "ClaimableERC1155" || props.isValidTokenId ? (
+                props.claimConditionSection.data ? (
                   <ClaimConditionSection
                     isOwnerAccount={props.isOwnerAccount}
                     claimCondition={
                       props.claimConditionSection.data.claimCondition
                     }
                     update={props.claimConditionSection.setClaimCondition}
-                    isErc721={props.isErc721}
+                    name={props.name}
                     chainId={props.contractChainId}
                     noClaimConditionSet={props.noClaimConditionSet}
+                    currencyDecimals={
+                      props.claimConditionSection.data?.currencyDecimals
+                    }
                     tokenDecimals={
                       props.claimConditionSection.data?.tokenDecimals
                     }
                     tokenId={props.claimConditionSection.tokenId}
                   />
-                )}
-              {props.isValidTokenId &&
-                props.claimConditionSection.isLoading && (
+                ) : (
                   <Skeleton className="h-[350px]" />
-                )}
+                )
+              ) : null}
             </AccordionContent>
           </AccordionItem>
 
@@ -423,9 +460,10 @@ function ClaimConditionSection(props: {
   claimCondition: ClaimConditionValue;
   update: (values: ClaimConditionFormValues) => Promise<void>;
   isOwnerAccount: boolean;
-  isErc721: boolean;
+  name: string;
   chainId: number;
-  tokenDecimals?: number;
+  currencyDecimals?: number;
+  tokenDecimals?: number | undefined;
   tokenId: string;
   noClaimConditionSet: boolean;
 }) {
@@ -445,18 +483,28 @@ function ClaimConditionSection(props: {
           : claimCondition?.currency,
       // default case is zero state, so 0 // 10 ** 18 still results in 0
       pricePerToken: Number(
-        toTokens(claimCondition?.pricePerUnit, props.tokenDecimals || 18),
+        toTokens(claimCondition?.pricePerUnit, props.currencyDecimals || 18),
       ),
       maxClaimableSupply:
         claimCondition?.availableSupply.toString() === "0" ||
         claimCondition?.availableSupply.toString() === MAX_UINT_256
           ? ""
-          : claimCondition?.availableSupply.toString() || "",
+          : props.name === "ClaimableERC20"
+            ? toTokens(
+                claimCondition?.availableSupply,
+                props.tokenDecimals || 18,
+              )
+            : claimCondition?.availableSupply.toString() || "",
       maxClaimablePerWallet:
         claimCondition?.maxMintPerWallet.toString() === "0" ||
         claimCondition?.maxMintPerWallet.toString() === MAX_UINT_256
           ? ""
-          : claimCondition?.maxMintPerWallet.toString() || "",
+          : props.name === "ClaimableERC20"
+            ? toTokens(
+                claimCondition?.maxMintPerWallet,
+                props.tokenDecimals || 18,
+              )
+            : claimCondition?.maxMintPerWallet.toString() || "",
       startTime: claimCondition?.startTimestamp
         ? fromUnixTime(claimCondition?.startTimestamp)
         : defaultStartDate,
@@ -487,7 +535,7 @@ function ClaimConditionSection(props: {
 
   const onSubmit = async () => {
     const values = form.getValues();
-    if (!props.isErc721 && !values.tokenId) {
+    if (props.name === "ClaimableERC1155" && !values.tokenId) {
       form.setError("tokenId", { message: "Token ID is required" });
       return;
     }
@@ -782,7 +830,7 @@ export type MintFormValues = z.infer<typeof mintFormSchema>;
 
 function MintNFTSection(props: {
   mint: (values: MintFormValues) => Promise<void>;
-  isErc721: boolean;
+  name: string;
   contractChainId: number;
 }) {
   const form = useForm<MintFormValues>({
@@ -808,7 +856,7 @@ function MintNFTSection(props: {
 
   const onSubmit = async () => {
     const values = form.getValues();
-    if (!props.isErc721 && !values.tokenId) {
+    if (props.name === "ClaimableERC1155" && !values.tokenId) {
       form.setError("tokenId", { message: "Token ID is required" });
       return;
     }
@@ -847,7 +895,7 @@ function MintNFTSection(props: {
             )}
           />
 
-          {!props.isErc721 && (
+          {props.name === "ClaimableERC1155" && (
             <FormField
               control={form.control}
               name="tokenId"

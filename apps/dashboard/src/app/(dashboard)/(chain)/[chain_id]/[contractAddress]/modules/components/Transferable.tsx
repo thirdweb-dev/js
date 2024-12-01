@@ -22,7 +22,11 @@ import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { sendAndConfirmTransaction } from "thirdweb";
-import { TransferableERC721, TransferableERC1155 } from "thirdweb/modules";
+import {
+  TransferableERC20,
+  TransferableERC721,
+  TransferableERC1155,
+} from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import { z } from "zod";
 import { addressSchema } from "../zod-schemas";
@@ -43,12 +47,12 @@ export type TransferableModuleFormValues = z.infer<typeof formSchema>;
 function TransferableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
 
-  const isErc721 = props.contractInfo.name === "TransferableERC721";
-
   const isTransferEnabledQuery = useReadContract(
-    isErc721
+    props.contractInfo.name === "TransferableERC721"
       ? TransferableERC721.isTransferEnabled
-      : TransferableERC1155.isTransferEnabled,
+      : props.contractInfo.name === "TransferableERC20"
+        ? TransferableERC20.isTransferEnabled
+        : TransferableERC1155.isTransferEnabled,
     {
       contract,
     },
@@ -64,9 +68,12 @@ function TransferableModule(props: ModuleInstanceProps) {
       const transferEnabled = !values.isRestricted;
 
       if (isTransferEnabledQuery.data !== transferEnabled) {
-        const setTransferable = isErc721
-          ? TransferableERC721.setTransferable
-          : TransferableERC1155.setTransferable;
+        const setTransferable =
+          props.contractInfo.name === "TransferableERC721"
+            ? TransferableERC721.setTransferable
+            : props.contractInfo.name === "TransferableERC20"
+              ? TransferableERC20.setTransferable
+              : TransferableERC1155.setTransferable;
         const setTransferableTx = setTransferable({
           contract,
           enableTransfer: transferEnabled,
@@ -80,9 +87,12 @@ function TransferableModule(props: ModuleInstanceProps) {
 
       await Promise.all(
         values.allowList.map(async ({ address }) => {
-          const setTransferableFor = isErc721
-            ? TransferableERC721.setTransferableFor
-            : TransferableERC1155.setTransferableFor;
+          const setTransferableFor =
+            props.contractInfo.name === "TransferableERC721"
+              ? TransferableERC721.setTransferableFor
+              : props.contractInfo.name === "TransferableERC20"
+                ? TransferableERC20.setTransferableFor
+                : TransferableERC1155.setTransferableFor;
           const setTransferableForTx = setTransferableFor({
             contract,
             enableTransfer: true,
@@ -96,7 +106,12 @@ function TransferableModule(props: ModuleInstanceProps) {
         }),
       );
     },
-    [contract, ownerAccount, isTransferEnabledQuery.data, isErc721],
+    [
+      contract,
+      ownerAccount,
+      isTransferEnabledQuery.data,
+      props.contractInfo.name,
+    ],
   );
 
   return (
