@@ -44,7 +44,7 @@ Visit [the thirdweb developer portal](https://portal.thirdweb.com/typescript/v5?
 
 ## Migrating from previous versions
 
-Follow the [migration guide](https://portal.thirdweb.com/typescript/v5/migrate?ref=github.com) to learn how to progrssively upgrade to the unified thirdweb SDK from previous versions.
+Follow the [migration guide](https://portal.thirdweb.com/typescript/v5/migrate?ref=github.com) to learn how to progressively upgrade to the unified thirdweb SDK from previous versions.
 
 ## Starter kits
 
