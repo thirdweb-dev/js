@@ -159,7 +159,7 @@ describe("session_request", () => {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
-            "0x7b7806017c0666b88ff1a51a2af716b808c4974bdb31a4fb734fe2d16c121766363847d2556eb466d1cd04b26541aa5a2a1f5be4154cfd9bef8137dfb7b711ff01",
+            "0x7b7806017c0666b88ff1a51a2af716b808c4974bdb31a4fb734fe2d16c121766363847d2556eb466d1cd04b26541aa5a2a1f5be4154cfd9bef8137dfb7b711ff1c",
         },
       });
     });
@@ -239,7 +239,7 @@ describe("session_request", () => {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
-            "0x7b7806017c0666b88ff1a51a2af716b808c4974bdb31a4fb734fe2d16c121766363847d2556eb466d1cd04b26541aa5a2a1f5be4154cfd9bef8137dfb7b711ff01",
+            "0x7b7806017c0666b88ff1a51a2af716b808c4974bdb31a4fb734fe2d16c121766363847d2556eb466d1cd04b26541aa5a2a1f5be4154cfd9bef8137dfb7b711ff1c",
         },
       });
     });
@@ -323,7 +323,7 @@ describe("session_request", () => {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
-            "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e59200",
+            "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e5921b",
         },
       });
     });
@@ -347,7 +347,7 @@ describe("session_request", () => {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
-            "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e59200",
+            "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e5921b",
         },
       });
     });
@@ -378,7 +378,7 @@ describe("session_request", () => {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
-            "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e59200",
+            "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e5921b",
         },
       });
     });
@@ -402,7 +402,7 @@ describe("session_request", () => {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
-            "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e59200",
+            "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e5921b",
         },
       });
     });
