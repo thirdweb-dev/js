@@ -2,7 +2,6 @@
 
 import { useWalletNFTs } from "@3rdweb-sdk/react";
 import type { ThirdwebContract } from "thirdweb";
-import { Text } from "tw-components";
 import { NFTCards } from "../../_components/NFTCards";
 
 interface NftsOwnedProps {
@@ -35,8 +34,8 @@ export const NftsOwned: React.FC<NftsOwnedProps> = ({ contract }) => {
       trackingCategory="account_nfts_owned"
     />
   ) : isWalletNFTsLoading ? null : error ? (
-    <Text>Failed to fetch NFTs for this account: {error}</Text>
+    <p>Failed to fetch NFTs for this account: {error}</p>
   ) : (
-    <Text>This account doesn&apos;t own any NFTs.</Text>
+    <p>This account doesn&apos;t own any NFTs.</p>
   );
 };

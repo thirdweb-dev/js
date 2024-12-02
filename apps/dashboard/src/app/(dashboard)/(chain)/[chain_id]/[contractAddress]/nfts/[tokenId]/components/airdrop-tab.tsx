@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -18,7 +19,6 @@ import type { ThirdwebContract } from "thirdweb";
 import { multicall } from "thirdweb/extensions/common";
 import { balanceOf, encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { Button, Text } from "tw-components";
 import {
   type AirdropAddressInput,
   AirdropUpload,
@@ -118,12 +118,8 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
             <Flex direction={{ base: "column", md: "row" }} gap={4}>
               <Sheet open={open} onOpenChange={setOpen}>
                 <SheetTrigger asChild>
-                  <Button
-                    colorScheme="primary"
-                    borderRadius="md"
-                    rightIcon={<UploadIcon className="size-5" />}
-                  >
-                    Upload addresses
+                  <Button variant="primary" className="rounded-md">
+                    Upload addresses <UploadIcon className="mr-2 size-5" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
@@ -149,18 +145,18 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
                 color={addresses.length === 0 ? "orange.500" : "green.500"}
               >
                 {addresses.length > 0 && (
-                  <Text size="body.sm" color="inherit">
+                  <p>
                     ● <strong>{addresses.length} addresses</strong> ready to be
                     airdropped
-                  </Text>
+                  </p>
                 )}
               </Flex>
             </Flex>
           </div>
-          <Text>
+          <p>
             You can airdrop to a maximum of 250 addresses at a time. If you have
             more, please do it in multiple transactions.
-          </Text>
+          </p>
           <TransactionButton
             txChainID={contract.chain.id}
             transactionCount={1}

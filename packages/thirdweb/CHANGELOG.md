@@ -1,5 +1,43 @@
 # thirdweb
 
+## 5.72.0
+
+### Minor Changes
+
+- [#5495](https://github.com/thirdweb-dev/js/pull/5495) [`d1845f3`](https://github.com/thirdweb-dev/js/commit/d1845f3d6096d81e24bdb3cff38d19efd652ada1) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add headless components: ChainProvider, ChainIcon & ChainName
+
+- [#5529](https://github.com/thirdweb-dev/js/pull/5529) [`7488102`](https://github.com/thirdweb-dev/js/commit/7488102d20604a1d8cfd4653a34aa9a975f5c7f1) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds LoyaltyCard extensions and support for ERC721 deployment.
+
+  ```ts
+  import { deployERC721Contract } from "thirdweb/deploys";
+
+  const loyaltyCardContractAddress = await deployERC721Contract({
+    chain: "your-chain-id", // replace with your chain ID
+    client: yourThirdwebClient, // replace with your Thirdweb client instance
+    account: yourAccount, // replace with your account details
+    type: "LoyaltyCard",
+    params: {
+      name: "MyLoyaltyCard",
+      symbol: "LOYAL",
+      description: "A loyalty card NFT contract",
+      image: "path/to/image.png", // replace with your image path
+      defaultAdmin: "0xYourAdminAddress", // replace with your admin address
+      royaltyRecipient: "0xYourRoyaltyRecipient", // replace with your royalty recipient address
+      royaltyBps: 500n, // 5% royalty
+      trustedForwarders: ["0xTrustedForwarderAddress"], // replace with your trusted forwarder addresses
+      saleRecipient: "0xYourSaleRecipient", // replace with your sale recipient address
+      platformFeeBps: 200n, // 2% platform fee
+      platformFeeRecipient: "0xYourPlatformFeeRecipient", // replace with your platform fee recipient address
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#5517](https://github.com/thirdweb-dev/js/pull/5517) [`480fb4e`](https://github.com/thirdweb-dev/js/commit/480fb4e8ec02b79fdb8b00d709994c50ef929a28) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix UI issue when assetTabs is set to an empty array
+
+- [#5548](https://github.com/thirdweb-dev/js/pull/5548) [`9337925`](https://github.com/thirdweb-dev/js/commit/93379251b79375784c1aac292dcaa209a1580b5e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix tx cost estimation for pay transaction modal
+
 ## 5.71.0
 
 ### Minor Changes

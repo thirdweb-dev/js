@@ -1,4 +1,5 @@
 import { createMetadata, Details } from "@doc";
+import { Callout } from "@doc";
 
 export const metadata = createMetadata({
 	title: "Backend Wallets | thirdweb Engine",
@@ -11,6 +12,50 @@ export const metadata = createMetadata({
 Engine performs blockchain actions using backend wallets that you own and manage.
 
 There are multiple options for securing backend wallets.
+
+## Smart Backend Wallets
+
+Smart backend wallets are the recommended way to perform blockchain operations with Engine. Each smart backend wallet consists of an EOA (managed internally by Engine) and a smart account (using thirdweb's default account implementation).
+
+### Benefits
+
+Smart backend wallets inherit smart account benefits and offer several advantages over traditional EOAs:
+
+- **Gas Management**: Built-in paymaster eliminates the need to maintain gas tokens. This means you never need to hold crypto or top up gas.
+- **Better Nonce Management**: Smart accounts use multi-dimensional nonces, which are more efficient than EOAs.
+- **Simple Integration**: Works with all existing Engine endpoints without any code changes.
+
+### How it works
+
+The smart account is automatically deployed the first time you send a transaction on a chain. You don't need to think about deploying or managing the smart account - Engine handles everything behind the scenes. All transactions are sent as UserOperations to the EntryPoint contract on chain.
+
+<Details summary="How are Smart Backend Wallets different from existing engine AA features?">
+	Unlike the [previous account abstraction implementation in
+	Engine](account-abstraction) where you had to manage both the account address
+	(`x-account-address`) and the backend wallet address
+	(`x-backend-wallet-address`) separately, smart backend wallets simplify this.
+	The backend wallet address is now the smart account address itself.
+</Details>
+
+<Details summary="When not to use Smart Backend Wallets?">
+	At this time, Smart Backend Wallets do not allow for importing a smart
+	account. In use cases where you need to import a smart account (such as with
+	session keys), you should use [Engine AA features that utilise the
+	`x-account-address` header](account-abstraction).
+</Details>
+
+### Configuration Types
+
+- `smart:local` - Smart account backed by a local key
+- `smart:aws-kms` - Smart account backed by AWS KMS
+- `smart:gcp-kms` - Smart account backed by Google Cloud KMS
+
+For AWS and Google Cloud KMS options, follow the setup instructions in the respective sections below.
+
+### Pricing
+
+Smart backend wallets have no additional costs to use with your Engine instance. Transactions sent from smart backend wallets follow the [same billing model as regular account abstraction transactions with thirdweb](/connect/account-abstraction/infrastructure#pricing--billing).
+Smart accounts need to be deployed on each chain. This costs gas and is billed to your account like any other transaction.
 
 ## Local wallet
 
@@ -31,7 +76,7 @@ An [AWS KMS Wallet](/references/wallets/v2/AwsKmsWallet) is a wallet securely st
    - `kms:Sign`
    - `kms:CreateAlias`
    - `kms:Verify`
-1. On the user page, navigate to **Security credentials > Access keys**. 
+1. On the user page, navigate to **Security credentials > Access keys**.
 1. Select **Create access key** to get an **Access Key** and **Secret Key**.
 1. In the dashboard, navigate to **Configuration > Backend Wallets**.
 1. Select **AWS KMS** and provide the following:
@@ -49,7 +94,6 @@ An [AWS KMS Wallet](/references/wallets/v2/AwsKmsWallet) is a wallet securely st
 1. Select **Import** and provide the following:
    - AWS KMS Key ID (example: `0489da75-9830-4a5a-97e3-e4a6df7775b3`)
    - AWS KMS ARN (example: `arn:aws:kms:us-west-1:632186309261:key/0489da75-9830-4a5a-97e3-e4a6df7775b3`)
-
 
 ## Google Cloud KMS wallet
 
@@ -71,6 +115,7 @@ An [AWS KMS Wallet](/references/wallets/v2/AwsKmsWallet) is a wallet securely st
    This is the Project ID of the GCP project where the key was created.
 
    **Where to find**:
+
    - Navigate to the Google Cloud Console.
    - Click on the project dropdown at the top of the page.
    - The Project ID is displayed under your project's name.
@@ -82,6 +127,7 @@ An [AWS KMS Wallet](/references/wallets/v2/AwsKmsWallet) is a wallet securely st
    This is the location where the keyring was created (e.g., us-central1, europe-west1).
 
    **Where to find**:
+
    - In the Google Cloud Console, go to **Security > Cryptographic Keys**.
    - Click on the keyring that contains your key.
    - The location is displayed in the Location field.
@@ -93,6 +139,7 @@ An [AWS KMS Wallet](/references/wallets/v2/AwsKmsWallet) is a wallet securely st
    This is the ID of the keyring where your key is stored.
 
    **Where to find**:
+
    - In the Google Cloud Console, go to **Security > Cryptographic Keys**.
    - Select the keyring that contains your key.
    - The KeyRing ID is displayed in the list or the URL.
@@ -104,6 +151,7 @@ An [AWS KMS Wallet](/references/wallets/v2/AwsKmsWallet) is a wallet securely st
    This is the email associated with the service account used for accessing the KMS key.
 
    **Where to find**:
+
    - In the Google Cloud Console, go to **IAM & Admin > Service Accounts**.
    - Find the service account you are using. its email will be in the format: `name@project.iam.gserviceaccount.com`
 
@@ -114,6 +162,7 @@ An [AWS KMS Wallet](/references/wallets/v2/AwsKmsWallet) is a wallet securely st
    This is the private key of the service account that is used for authenticating API requests.
 
    **Where to find**:
+
    - Open the JSON file downloaded above.
    - Copy the value of the `private_key` field.
 

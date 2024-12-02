@@ -9,8 +9,8 @@ import { ProductLearnMoreCard } from "components/product-pages/common/ProductLea
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { getAbsoluteUrl } from "lib/vercel-utils";
+import Link from "next/link";
 import { PageId } from "page-id";
-import { Link } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
 const SDK_GUIDES = [
@@ -61,7 +61,7 @@ const Web3SDK: ThirdwebNextPage = () => {
         title="Powerful SDKs for every stack"
         description="Build web3 applications that can interact with your smart contracts using our powerful SDKs and CLI."
         buttonText="Get started"
-        buttonLink="https://portal.thirdweb.com/contracts/interact/overview"
+        buttonLink="https://portal.thirdweb.com/contracts"
         image={require("../../public/assets/product-pages/sdk/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #5BFF40 100.01%)"
       >
@@ -135,27 +135,30 @@ const Web3SDK: ThirdwebNextPage = () => {
                 Interact with your contracts from your app in the programming
                 language that you’re familiar with our{" "}
                 <Link
-                  color="blue.500"
+                  className="text-link-foreground hover:text-foreground"
                   href="https://portal.thirdweb.com/typescript/v5/react"
                 >
                   React
                 </Link>
                 ,{" "}
                 <Link
-                  color="blue.500"
+                  className="text-link-foreground hover:text-foreground"
                   href="https://portal.thirdweb.com/react-native/latest"
                 >
                   ReactNative
                 </Link>
                 ,{" "}
                 <Link
-                  color="blue.500"
+                  className="text-link-foreground hover:text-foreground"
                   href="https://portal.thirdweb.com/typescript/latest"
                 >
                   TypeScript
                 </Link>
                 ,{" "}
-                <Link color="blue.500" href="https://portal.thirdweb.com/unity">
+                <Link
+                  className="text-link-foreground hover:text-foreground"
+                  href="https://portal.thirdweb.com/unity"
+                >
                   Unity
                 </Link>{" "}
                 SDKs.

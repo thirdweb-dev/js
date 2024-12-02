@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import { Container, Flex } from "@chakra-ui/react";
 import { LandingEndCTA } from "components/landing-pages/end-cta";
 import { LandingGridSection } from "components/landing-pages/grid-section";
@@ -8,7 +9,6 @@ import { LandingLayout } from "components/landing-pages/layout";
 import { LandingSectionHeading } from "components/landing-pages/section-heading";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
-import { Card } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "rpc-edge-landing";
@@ -95,31 +95,31 @@ const RPCEdgeLanding: ThirdwebNextPage = () => {
           />
         </LandingGridSection>
         <LandingGridSection desktopColumns={5}>
-          <Card p={8}>
+          <Card className="bg-transparent p-8">
             <LandingIconSectionItem
               icon={require("../../public/assets/product-pages-icons/infra/icon-verified.svg")}
               title="High data reliability"
             />
           </Card>
-          <Card p={8}>
+          <Card className="bg-transparent p-8">
             <LandingIconSectionItem
               icon={require("../../public/assets/product-pages-icons/infra/icon-automatic-file-upload.svg")}
               title="High request-per-second throughput"
             />
           </Card>
-          <Card p={8}>
+          <Card className="bg-transparent p-8">
             <LandingIconSectionItem
               icon={require("../../public/assets/product-pages-icons/infra/icon-efficient.svg")}
               title="High uptime (99.9% infrastructure SLAs)"
             />
           </Card>
-          <Card p={8}>
+          <Card className="bg-transparent p-8">
             <LandingIconSectionItem
               icon={require("../../public/assets/product-pages-icons/infra/icon-global.svg")}
               title="Intelligent routing with global edge"
             />
           </Card>
-          <Card p={8}>
+          <Card className="bg-transparent p-8">
             <LandingIconSectionItem
               icon={require("../../public/assets/product-pages-icons/infra/icon-evm.svg")}
               title="Any EVM Chain"
@@ -135,21 +135,21 @@ const RPCEdgeLanding: ThirdwebNextPage = () => {
             />
           }
         >
-          <Card p={8}>
+          <Card className="bg-transparent p-8">
             <LandingIconSectionItem
               icon={require("../../public/assets/product-pages-icons/infra/icon-game.svg")}
               title="Massively-Multiplayer Games"
               description="Scale to millions of users across the world with global RPC edge caching."
             />
           </Card>
-          <Card p={8}>
+          <Card className="bg-transparent p-8">
             <LandingIconSectionItem
               icon={require("../../public/assets/product-pages-icons/infra/icon-protocol.svg")}
               title="DeFi Protocols"
               description="Build decentralized finance platforms with maximum security — such as onchain exchanges, lending protocols, and staking platforms."
             />
           </Card>
-          <Card p={8}>
+          <Card className="bg-transparent p-8">
             <LandingIconSectionItem
               icon={require("../../public/assets/product-pages-icons/infra/icon-marketplace.svg")}
               title="Brand Activations"

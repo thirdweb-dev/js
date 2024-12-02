@@ -66,3 +66,13 @@ export type {
   PayTokenInfo,
   PayOnChainTransactionDetails,
 } from "../pay/utils/commonTypes.js";
+
+export {
+  convertFiatToCrypto,
+  type ConvertFiatToCryptoParams,
+} from "../pay/convert/fiatToCrypto.js";
+
+export {
+  convertCryptoToFiat,
+  type ConvertCryptoToFiatParams,
+} from "../pay/convert/cryptoToFiat.js";

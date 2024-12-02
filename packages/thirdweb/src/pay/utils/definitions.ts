@@ -76,3 +76,9 @@ export const getPaySupportedSources = () =>
  */
 export const getPayBuyHistoryEndpoint = () =>
   `${getPayBaseUrl()}/wallet/history/v1`;
+
+export const getPayConvertFiatToCryptoEndpoint = () =>
+  `${getPayBaseUrl()}/convert/fiat-to-crypto/v1`;
+
+export const getPayConvertCryptoToFiatEndpoint = () =>
+  `${getPayBaseUrl()}/convert/crypto-to-fiat/v1`;

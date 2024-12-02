@@ -76,5 +76,7 @@ export const usageEventSchema = z.object({
   onRampId: z.string().optional(),
   evmRequestParams: z.string().optional(),
   providerIp: z.string().optional(),
+  promptTokens: z.number().int().nonnegative().optional(),
+  completionTokens: z.number().int().nonnegative().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;

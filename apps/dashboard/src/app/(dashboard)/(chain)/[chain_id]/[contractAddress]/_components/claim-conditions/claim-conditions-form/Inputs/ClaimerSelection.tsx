@@ -1,6 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { Box, Flex, Select } from "@chakra-ui/react";
 import { UploadIcon } from "lucide-react";
-import { Button, Text } from "tw-components";
 import { useClaimConditionsFormContext } from "..";
 import { CustomFormControl } from "../common";
 
@@ -115,13 +115,13 @@ export const ClaimerSelection = () => {
           >
             {/* disable the "Edit" button when form is disabled, but not when it's a "See" button */}
             <Button
-              colorScheme="purple"
-              isDisabled={disabledSnapshotButton}
-              borderRadius="md"
+              variant="primary"
+              disabled={disabledSnapshotButton}
+              className="gap-2 rounded-md"
               onClick={() => setOpenIndex(phaseIndex)}
-              rightIcon={<UploadIcon className="size-4" />}
             >
               {isAdmin ? "Edit" : "See"} Claimer Snapshot
+              <UploadIcon className="size-4" />
             </Button>
 
             <Flex
@@ -136,14 +136,14 @@ export const ClaimerSelection = () => {
               }}
               ml={2}
             >
-              <Text size="body.sm" color="inherit">
+              <p>
                 ●{" "}
                 <strong>
                   {field.snapshot?.length} address
                   {field.snapshot?.length === 1 ? "" : "es"}
                 </strong>{" "}
                 in snapshot
-              </Text>
+              </p>
             </Flex>
           </Flex>
         ) : (

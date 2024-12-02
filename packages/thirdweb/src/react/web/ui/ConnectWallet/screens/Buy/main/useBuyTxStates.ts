@@ -4,10 +4,9 @@ import { getChainMetadata } from "../../../../../../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import { getContract } from "../../../../../../../contract/contract.js";
 import { getCurrencyMetadata } from "../../../../../../../extensions/erc20/read/getCurrencyMetadata.js";
-import { getGasPrice } from "../../../../../../../gas/get-gas-price.js";
 import { encode } from "../../../../../../../transaction/actions/encode.js";
-import { estimateGasCost } from "../../../../../../../transaction/actions/estimate-gas-cost.js";
 import type { PreparedTransaction } from "../../../../../../../transaction/prepare-transaction.js";
+import { getTransactionGasCost } from "../../../../../../../transaction/utils.js";
 import type { Hex } from "../../../../../../../utils/encoding/hex.js";
 import { resolvePromisedValue } from "../../../../../../../utils/promise/resolve-promised-value.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
@@ -137,31 +136,4 @@ export function useTransactionCostAndData(args: {
       return 30_000;
     },
   });
-}
-
-async function getTransactionGasCost(tx: PreparedTransaction, from?: string) {
-  try {
-    const gasCost = await estimateGasCost({
-      transaction: tx,
-      from,
-    });
-
-    const bufferCost = gasCost.wei / 10n;
-
-    // Note: get tx.value AFTER estimateGasCost
-    // add 10% extra gas cost to the estimate to ensure user buys enough to cover the tx cost
-    return gasCost.wei + bufferCost;
-  } catch {
-    if (from) {
-      // try again without passing from
-      return await getTransactionGasCost(tx);
-    }
-    // fallback if both fail, use the tx value + 2M * gas price
-    const gasPrice = await getGasPrice({
-      client: tx.client,
-      chain: tx.chain,
-    });
-
-    return 2_000_000n * gasPrice;
-  }
 }
