@@ -1,6 +1,5 @@
 "use server";
 
-import "server-only";
 import { API_SERVER_URL } from "@/constants/env";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";

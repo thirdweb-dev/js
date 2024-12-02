@@ -1,5 +1,4 @@
 "use server";
-import "server-only";
 
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { API_SERVER_URL } from "@/constants/env";
