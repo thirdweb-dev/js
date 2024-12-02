@@ -61,7 +61,7 @@ const Web3SDK: ThirdwebNextPage = () => {
         title="Powerful SDKs for every stack"
         description="Build web3 applications that can interact with your smart contracts using our powerful SDKs and CLI."
         buttonText="Get started"
-        buttonLink="https://portal.thirdweb.com/contracts/interact/overview"
+        buttonLink="https://portal.thirdweb.com/contracts"
         image={require("../../public/assets/product-pages/sdk/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #5BFF40 100.01%)"
       >
