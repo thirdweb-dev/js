@@ -1,7 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import type { StaticImageData } from "next/image";
-import { Text } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 
 interface AmbassadorProps {
@@ -41,7 +40,7 @@ export const AmbassadorCard: ComponentWithChildren<AmbassadorProps> = ({
         lineHeight={1.6}
         textAlign="center"
       >
-        <Text size="body.lg">{children}</Text>
+        <p>{children}</p>
       </Flex>
     </Flex>
   );

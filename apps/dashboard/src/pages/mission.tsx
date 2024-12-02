@@ -12,7 +12,6 @@ import ReasonSection from "components/mission/ReasonSection";
 import ReasonWeb3Section from "components/mission/ReasonWeb3Section";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
-import { Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "mission";
@@ -108,16 +107,9 @@ const Mission: ThirdwebNextPage = () => {
                 maxW="80%"
               />
 
-              <Text
-                size="body.xl"
-                fontWeight={600}
-                textAlign="center"
-                mt={{ base: "28px", md: "32px" }}
-                color="#fff"
-                fontSize={{ base: "20px", md: "32px" }}
-              >
+              <p className="mt-7 text-center font-semibold text-[28px] text-white md:mt-8 md:text-[32px]">
                 solves for both.
-              </Text>
+              </p>
             </Box>
           </Container>
         </Container>

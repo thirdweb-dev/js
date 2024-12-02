@@ -3,7 +3,6 @@ import {
   useEngineSystemHealth,
   useEngineSystemMetrics,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Text } from "tw-components";
 
 interface EngineSystemProps {
   instance: EngineInstance;
@@ -17,7 +16,7 @@ export const EngineSystem: React.FC<EngineSystemProps> = ({ instance }) => {
   }
 
   return (
-    <Text fontSize="x-small" fontFamily="mono" opacity={0.5} gap={0}>
+    <p className="gap-0 font-mono text-xs opacity-50">
       Version: {healthQuery.data.engineVersion ?? "..."}
       <br />
       Enabled: {healthQuery.data.features?.join(", ")}
@@ -25,6 +24,6 @@ export const EngineSystem: React.FC<EngineSystemProps> = ({ instance }) => {
       CPU: {metricsQuery.data?.data?.cpu?.toFixed(2) ?? "..."}%
       <br />
       Memory: {metricsQuery.data?.data?.memory?.toFixed(0) ?? "..."}MB
-    </Text>
+    </p>
   );
 };
