@@ -112,7 +112,7 @@
     "@storybook/addon-onboarding": "8.4.5",
     "@storybook/addon-viewport": "8.4.5",
     "@storybook/blocks": "8.4.5",
-    "@storybook/nextjs": "8.4.5",
+    "@storybook/nextjs": "8.4.6",
     "@storybook/react": "8.4.5",
     "@storybook/test": "8.4.5",
     "@types/color": "4.2.0",
