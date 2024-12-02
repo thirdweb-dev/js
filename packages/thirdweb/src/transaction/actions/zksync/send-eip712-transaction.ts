@@ -173,7 +173,11 @@ export async function getZkGasFees(args: {
     resolvePromisedValue(transaction.eip712),
   ]);
   let gasPerPubdata = eip712?.gasPerPubdata;
-  if (!gas || !maxFeePerGas || !maxPriorityFeePerGas) {
+  if (
+    gas === undefined ||
+    maxFeePerGas === undefined ||
+    maxPriorityFeePerGas === undefined
+  ) {
     const rpc = getRpcClient(transaction);
     const params = await formatTransaction({ transaction, from });
     const result = (await rpc({
