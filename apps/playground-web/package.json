@@ -49,7 +49,7 @@
     "@types/node": "22.10.0",
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
-    "eslint": "8.57.0",
+    "eslint": "9.16.0",
     "eslint-config-next": "15.0.3",
     "eslint-plugin-react-compiler": "19.0.0-beta-df7b47d-20241124",
     "postcss": "8.4.49",
