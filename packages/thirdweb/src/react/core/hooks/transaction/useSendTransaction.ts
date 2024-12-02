@@ -1,14 +1,13 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
 import type { Chain } from "../../../../chains/types.js";
-import { getGasPrice } from "../../../../gas/get-gas-price.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
 import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
-import { estimateGasCost } from "../../../../transaction/actions/estimate-gas-cost.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
+import { getTransactionGasCost } from "../../../../transaction/utils.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { getTokenBalance } from "../../../../wallets/utils/getTokenBalance.js";
@@ -215,7 +214,7 @@ export function useSendTransactionCore(args: {
                     tokenAddress: _erc20Value.tokenAddress,
                   })
                 : undefined,
-              getTotalTxCostForBuy(tx, account.address),
+              getTransactionGasCost(tx, account.address),
             ]);
 
             const gasSponsored = hasSponsoredTransactionsEnabled(wallet);
@@ -247,40 +246,4 @@ export function useSendTransactionCore(args: {
       });
     },
   });
-}
-
-async function getTotalTxCostForBuy(tx: PreparedTransaction, from?: string) {
-  try {
-    const gasCost = await estimateGasCost({
-      transaction: tx,
-      from,
-    });
-
-    const bufferCost = gasCost.wei / 10n;
-
-    // Note: get tx.value AFTER estimateGasCost
-    const txValue = await resolvePromisedValue(tx.value);
-
-    // add 10% extra gas cost to the estimate to ensure user buys enough to cover the tx cost
-    return gasCost.wei + bufferCost + (txValue || 0n);
-  } catch {
-    if (from) {
-      // try again without passing from
-      return await getTotalTxCostForBuy(tx);
-    }
-    // fallback if both fail, use the tx value + 2M * gas price
-    const value = await resolvePromisedValue(tx.value);
-
-    const gasPrice = await getGasPrice({
-      client: tx.client,
-      chain: tx.chain,
-    });
-
-    const buffer = 2_000_000n * gasPrice;
-
-    if (!value) {
-      return 0n + buffer;
-    }
-    return value + buffer;
-  }
 }
