@@ -209,16 +209,24 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   const apiKeys = useApiKeys();
   const createKeyMutation = useCreateApiKey();
 
-  const validApiKey = (apiKeys.data || []).find(
-    (apiKey) =>
-      (apiKey.domains.includes("*") ||
-        apiKey.domains.includes("embed.ipfscdn.io") ||
-        apiKey.domains.includes("*.ipfscdn.io")) &&
+  const validApiKey = (apiKeys.data || []).find((apiKey) => {
+    const allowedHosts = ["embed.ipfscdn.io", "*.ipfscdn.io"];
+    const isValidDomain = apiKey.domains.includes("*") || apiKey.domains.some((domain) => {
+      try {
+        const url = new URL(domain);
+        return allowedHosts.includes(url.host);
+      } catch (e) {
+        return false;
+      }
+    });
+    return (
+      isValidDomain &&
       (apiKey.services || [])
         .find((service) => service.name === "storage")
         ?.actions.includes("read") &&
-      !!(apiKey.services || []).find((service) => service.name === "rpc"),
-  );
+      !!(apiKey.services || []).find((service) => service.name === "rpc")
+    );
+  });
 
   const chainId = contract.chain.id;
   const { idToChain } = useAllChainsData();
