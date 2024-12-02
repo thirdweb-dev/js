@@ -1,5 +1,6 @@
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { InlineCode } from "@/components/ui/inline-code";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -11,8 +12,6 @@ import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { getTemplateValuesForType } from "lib/deployment/template-values";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import {} from "tw-components";
-import { InlineCode } from "../../../@/components/ui/inline-code";
 import { DecodedInputArrayFieldset } from "./decoded-bytes-input/decoded-input-array-fieldset";
 import { RefInputFieldset } from "./ref-contract-input/ref-input-fieldset";
 
@@ -25,15 +24,19 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
   const form = useFormContext();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const [isCustomInputEnabled, setIsCustomInputEnabled] = useState(
+  const [isCustomInputEnabledArray, setIsCustomInputEnabledArray] = useState(
     Array(deployParams.length).fill(false),
   );
 
-  const handleToggleCustomInput = (index: number) => {
-    const updated = [...isCustomInputEnabled];
-    updated[index] = !updated[index];
-    // Clear values accordingly when toggling between input types
-    if (updated[index]) {
+  const handleCustomInputEnabledArrayChange = (
+    index: number,
+    newValue: boolean,
+  ) => {
+    const newIsCustomInputEnabledArray = [...isCustomInputEnabledArray];
+    newIsCustomInputEnabledArray[index] = newValue;
+    setIsCustomInputEnabledArray(newIsCustomInputEnabledArray);
+
+    if (newValue) {
       form.setValue(
         `constructorParams.${deployParams[index]?.name || "*"}.defaultValue`,
         "",
@@ -59,8 +62,6 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
         },
       );
     }
-
-    setIsCustomInputEnabled(updated);
   };
 
   return (
@@ -201,15 +202,17 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                     <div className="flex items-center gap-3 text-sm">
                       Advanced Input
                       <Switch
-                        checked={isCustomInputEnabled[idx]}
-                        onCheckedChange={() => handleToggleCustomInput(idx)}
+                        checked={isCustomInputEnabledArray[idx]}
+                        onCheckedChange={(v) =>
+                          handleCustomInputEnabledArrayChange(idx, v)
+                        }
                       />
                     </div>
                   )}
                 </div>
 
                 {/* Inputs */}
-                {!isCustomInputEnabled[idx] ? (
+                {!isCustomInputEnabledArray[idx] ? (
                   <FormControl>
                     <SolidityInput
                       className="!bg-background !text-sm placeholder:!text-sm"
@@ -236,7 +239,7 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
 
                 {/* Checkboxes */}
                 {paramTemplateValues.length > 0 &&
-                  !isCustomInputEnabled[idx] &&
+                  !isCustomInputEnabledArray[idx] &&
                   paramTemplateValues[0]?.helperText && (
                     <CheckboxWithLabel className="text-foreground">
                       <Checkbox

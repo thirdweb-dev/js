@@ -34,7 +34,10 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
 
   // Toggle function to handle custom input visibility and reset fields
   const handleToggleCustomInput = (newVal: boolean) => {
-    const path = `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}`;
+    setIsCustomAddress(newVal);
+    const path =
+      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}` as const;
+
     if (newVal) {
       form.setValue(`${path}.dynamicValue.type`, selectedType);
       form.resetField(`${path}.defaultValue`);
@@ -42,8 +45,6 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
       form.setValue(`${path}.dynamicValue.type`, "");
       form.resetField(`${path}.dynamicValue`);
     }
-
-    setIsCustomAddress(newVal);
   };
 
   const showAdvancedInputToggle =

@@ -27,7 +27,6 @@ import type { ThirdwebContract } from "thirdweb";
 import { getNFT as getErc721NFT } from "thirdweb/extensions/erc721";
 import { getNFT as getErc1155NFT } from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
-import {} from "tw-components";
 import { Button, Card, Heading, Text } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { shortenString } from "utils/usedapp-external";
