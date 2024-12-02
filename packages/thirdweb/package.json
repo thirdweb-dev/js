@@ -331,7 +331,7 @@
     "@size-limit/preset-big-lib": "11.1.6",
     "@storybook/addon-essentials": "8.4.5",
     "@storybook/addon-interactions": "8.4.5",
-    "@storybook/addon-links": "8.4.5",
+    "@storybook/addon-links": "8.4.6",
     "@storybook/addon-onboarding": "8.4.5",
     "@storybook/react": "8.4.5",
     "@storybook/react-vite": "8.4.5",
