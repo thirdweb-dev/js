@@ -210,7 +210,7 @@
     "@radix-ui/react-focus-scope": "1.1.0",
     "@radix-ui/react-icons": "1.3.2",
     "@radix-ui/react-tooltip": "1.1.4",
-    "@tanstack/react-query": "5.61.4",
+    "@tanstack/react-query": "5.62.1",
     "@walletconnect/ethereum-provider": "2.17.2",
     "@walletconnect/sign-client": "2.17.2",
     "abitype": "1.0.6",
