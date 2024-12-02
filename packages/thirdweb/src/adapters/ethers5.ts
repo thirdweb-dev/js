@@ -40,7 +40,7 @@ function assertEthers5(
 ): asserts ethers is typeof ethers5 {
   if (!isEthers5(ethers)) {
     throw new Error(
-      "You seem to be using ethers@6, please use the `ethers6Adapter()",
+      "You seem to be using ethers@6, please use the `ethers6Adapter()`",
     );
   }
 }
@@ -280,6 +280,7 @@ export function toEthersProvider(
   client: ThirdwebClient,
   chain: Chain,
 ): ethers5.providers.Provider {
+  assertEthers5(ethers);
   const url = getRpcUrlForChain({ chain, client });
   const headers: HeadersInit = {
     "Content-Type": "application/json",
@@ -624,8 +625,7 @@ function alignTxToEthers(
     gasLimit: gas,
     to,
     type,
-    accessList: tx.accessList as ethers5.utils.AccessListish | undefined,
-  };
+  } as ethers5.ethers.utils.Deferrable<ethers5.ethers.providers.TransactionRequest>;
 }
 
 async function alignTxFromEthers(

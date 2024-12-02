@@ -49,6 +49,34 @@ describe("getKeylessTransaction", () => {
     );
   });
 
+  it("should throw if yParity is explicitly undefined", async () => {
+    const invalidSignature = {
+      r: mockSignature.r,
+      s: mockSignature.s,
+      yParity: undefined,
+    };
+
+    await expect(
+      getKeylessTransaction({
+        transaction: mockTransaction,
+        // biome-ignore lint/suspicious/noExplicitAny: Testing invalid data
+        signature: invalidSignature as any,
+      }),
+    ).rejects.toThrow();
+  });
+
+  it("should throw if a signature is not recoverable", async () => {
+    const invalidSignature = { ...mockSignature, v: undefined };
+
+    await expect(
+      getKeylessTransaction({
+        transaction: mockTransaction,
+        // biome-ignore lint/suspicious/noExplicitAny: Testing invalid data
+        signature: invalidSignature as any,
+      }),
+    ).rejects.toThrow();
+  });
+
   it("should throw an error if the transaction is invalid", async () => {
     const invalidTransaction = { ...mockTransaction, value: "invalid" };
 
