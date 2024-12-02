@@ -1,15 +1,16 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
 import type * as ox__TypedData from "ox/TypedData";
-import type { SignableMessage, TransactionSerializable } from "viem";
 import { publicKeyToAddress } from "viem/utils";
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { signTransaction } from "../transaction/actions/sign-transaction.js";
+import type { SerializableTransaction } from "../transaction/serialize-transaction.js";
 import { type Hex, toHex } from "../utils/encoding/hex.js";
 import { signMessage } from "../utils/signatures/sign-message.js";
 import { signTypedData } from "../utils/signatures/sign-typed-data.js";
+import type { Prettify } from "../utils/type-utils.js";
 import type { Account } from "./interfaces/wallet.js";
 
 export type PrivateKeyToAccountOptions = {
@@ -42,6 +43,13 @@ export type PrivateKeyToAccountOptions = {
   privateKey: string;
 };
 
+type Message = Prettify<
+  | string
+  | {
+      raw: Hex | Uint8Array;
+    }
+>;
+
 /**
  * Get an `Account` object from a private key.
  * @param options - The options for `privateKeyToAccount`
@@ -70,7 +78,7 @@ export function privateKeyToAccount(
   const account = {
     address,
     sendTransaction: async (
-      tx: TransactionSerializable & { chainId: number },
+      tx: SerializableTransaction & { chainId: number },
     ) => {
       const rpcRequest = getRpcClient({
         client: client,
@@ -88,7 +96,7 @@ export function privateKeyToAccount(
         transactionHash,
       };
     },
-    signMessage: async ({ message }: { message: SignableMessage }) => {
+    signMessage: async ({ message }: { message: Message }) => {
       return signMessage({
         message,
         privateKey,
@@ -105,7 +113,7 @@ export function privateKeyToAccount(
         privateKey,
       });
     },
-    signTransaction: async (tx: TransactionSerializable) => {
+    signTransaction: async (tx: SerializableTransaction) => {
       return signTransaction({
         transaction: tx,
         privateKey,

@@ -6,6 +6,7 @@ import type {
   EIP712TransactionOptions,
   PreparedTransaction,
 } from "../../transaction/prepare-transaction.js";
+import type { SerializableTransaction } from "../../transaction/serialize-transaction.js";
 import type { SendTransactionResult } from "../../transaction/types.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 import type {
@@ -15,7 +16,7 @@ import type {
   WalletId,
 } from "../wallet-types.js";
 
-export type SendTransactionOption = TransactionSerializable & {
+export type SendTransactionOption = SerializableTransaction & {
   chainId: number;
   eip712?: EIP712TransactionOptions;
 };

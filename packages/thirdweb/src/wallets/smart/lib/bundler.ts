@@ -1,7 +1,8 @@
-import { type TransactionSerializable, decodeErrorResult } from "viem";
+import { decodeErrorResult } from "viem";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { userOperationRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationRevertReason.js";
 import { postOpRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint_v07/events/PostOpRevertReason.js";
+import type { SerializableTransaction } from "../../../transaction/serialize-transaction.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import { type Hex, hexToBigInt } from "../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../utils/fetch.js";
@@ -217,7 +218,7 @@ export async function getUserOpReceiptRaw(
  */
 export async function getZkPaymasterData(args: {
   options: BundlerOptions;
-  transaction: TransactionSerializable;
+  transaction: SerializableTransaction;
 }): Promise<PmTransactionData> {
   const res = await sendBundlerRequest({
     options: args.options,
@@ -233,7 +234,7 @@ export async function getZkPaymasterData(args: {
 
 export async function broadcastZkTransaction(args: {
   options: BundlerOptions;
-  transaction: TransactionSerializable;
+  transaction: SerializableTransaction;
   signedTransaction: Hex;
 }): Promise<{ transactionHash: Hex }> {
   const res = await sendBundlerRequest({

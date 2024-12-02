@@ -1,4 +1,3 @@
-import type { TransactionSerializable } from "viem";
 import { hashBytecode } from "viem/zksync";
 import type { Address } from "../../../utils/address.js";
 import { toHex } from "../../../utils/encoding/hex.js";
@@ -6,8 +5,9 @@ import type {
   EIP712SerializedTransaction,
   EIP712TransactionOptions,
 } from "../../prepare-transaction.js";
+import type { SerializableTransaction } from "../../serialize-transaction.js";
 
-export type EIP721TransactionSerializable = TransactionSerializable & {
+export type EIP721TransactionSerializable = SerializableTransaction & {
   from: Address;
 } & EIP712TransactionOptions;
 export const gasPerPubdataDefault = 50000n;

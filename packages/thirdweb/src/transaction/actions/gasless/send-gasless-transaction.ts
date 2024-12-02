@@ -1,6 +1,6 @@
-import type { TransactionSerializable } from "viem";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../../prepare-transaction.js";
+import type { SerializableTransaction } from "../../serialize-transaction.js";
 import { addTransactionToStore } from "../../transaction-store.js";
 import type { WaitForReceiptOptions } from "../wait-for-tx-receipt.js";
 import type { GaslessOptions } from "./types.js";
@@ -10,7 +10,7 @@ type SendGaslessTransactionOptions = {
   // TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
   // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
   transaction: PreparedTransaction<any>;
-  serializableTransaction: TransactionSerializable;
+  serializableTransaction: SerializableTransaction;
   gasless: GaslessOptions;
 };
 

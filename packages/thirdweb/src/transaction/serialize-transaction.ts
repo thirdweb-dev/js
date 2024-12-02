@@ -5,12 +5,12 @@ import * as ox__TransactionEnvelopeEip2930 from "ox/TransactionEnvelopeEip2930";
 import * as ox__TransactionEnvelopeLegacy from "ox/TransactionEnvelopeLegacy";
 import type { Hex } from "../utils/encoding/hex.js";
 
-type SerializableTransaction = {
+export type SerializableTransaction = {
   type?: string | undefined;
-  r?: Hex;
-  s?: Hex;
-  v?: bigint;
-  yParity?: number;
+  r?: Hex | bigint;
+  s?: Hex | bigint;
+  v?: bigint | number;
+  yParity?: bigint | number;
   accessList?:
     | ox__TransactionEnvelopeEip2930.TransactionEnvelopeEip2930["accessList"]
     | undefined;
@@ -22,12 +22,16 @@ type SerializableTransaction = {
   to?: string | null | undefined; // Must allow null for backwards compatibility
   nonce?: number | bigint | undefined;
   value?: bigint | undefined;
+  gas?: bigint | undefined;
   gasLimit?: bigint | undefined;
 };
 
 export type SerializeTransactionOptions = {
   transaction: SerializableTransaction;
-  signature?: ox__Signature.Signature | undefined;
+  signature?:
+    | ox__Signature.Signature<true, Hex>
+    | ox__Signature.Legacy<Hex, bigint>
+    | undefined;
 };
 
 /**
@@ -59,7 +63,26 @@ export function serializeTransaction(
 
   // This is to maintain compatibility with our old interface (including the signature in the transaction object)
   const signature = (() => {
-    if (options.signature) return options.signature;
+    if (options.signature) {
+      if (
+        "v" in options.signature &&
+        typeof options.signature.v !== "undefined"
+      ) {
+        return ox__Signature.fromLegacy({
+          r: ox__Hex.toBigInt(options.signature.r),
+          s: ox__Hex.toBigInt(options.signature.s),
+          v: Number(options.signature.v),
+        });
+      }
+
+      return {
+        r: ox__Hex.toBigInt(options.signature.r),
+        s: ox__Hex.toBigInt(options.signature.s),
+        // We force the Signature type here because we filter for legacy type above
+        yParity: (options.signature as unknown as ox__Signature.Signature)
+          .yParity,
+      };
+    }
     if (
       typeof transaction.v === "undefined" &&
       typeof transaction.yParity === "undefined"
@@ -72,13 +95,19 @@ export function serializeTransaction(
     }
 
     return {
-      r: ox__Hex.toBigInt(transaction.r),
-      s: ox__Hex.toBigInt(transaction.s),
+      r:
+        typeof transaction.r === "bigint"
+          ? transaction.r
+          : ox__Hex.toBigInt(transaction.r),
+      s:
+        typeof transaction.s === "bigint"
+          ? transaction.s
+          : ox__Hex.toBigInt(transaction.s),
       yParity:
         typeof transaction.v !== "undefined" &&
         typeof transaction.yParity === "undefined"
           ? ox__Signature.vToYParity(Number(transaction.v))
-          : (transaction.yParity as number),
+          : Number(transaction.yParity),
     };
   })();
 
