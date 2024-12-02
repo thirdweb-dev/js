@@ -1,6 +1,6 @@
 import type { Address } from "abitype";
 import type * as ox__TypedData from "ox/TypedData";
-import type { Hex, SignableMessage, TransactionSerializable } from "viem";
+import type { Hex, SignableMessage } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type {
   EIP712TransactionOptions,
@@ -218,7 +218,7 @@ export type Account = {
    * }
    * ```
    */
-  signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
+  signTransaction?: (tx: SerializableTransaction) => Promise<Hex>;
   /**
    * Send the given array of transactions to the blockchain in a single batch
    *
