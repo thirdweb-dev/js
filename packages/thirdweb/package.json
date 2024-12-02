@@ -202,7 +202,7 @@
     "@coinbase/wallet-sdk": "4.2.3",
     "@emotion/react": "11.13.5",
     "@emotion/styled": "11.13.5",
-    "@google/model-viewer": "2.1.1",
+    "@google/model-viewer": "4.0.0",
     "@noble/curves": "1.7.0",
     "@noble/hashes": "1.6.1",
     "@passwordless-id/webauthn": "^2.1.2",
