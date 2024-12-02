@@ -343,7 +343,7 @@
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@viem/anvil": "0.0.10",
     "@vitejs/plugin-react": "^4.3.4",
-    "@vitest/coverage-v8": "2.1.6",
+    "@vitest/coverage-v8": "2.1.8",
     "@vitest/ui": "2.1.6",
     "cross-spawn": "7.0.6",
     "dotenv-mono": "^1.3.14",
