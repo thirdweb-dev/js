@@ -1,8 +1,7 @@
-import { Box, Flex, Icon } from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
 import type { AbiParameter } from "abitype";
 import { PlusIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Button, Text } from "tw-components";
 import { RefBytesContractInput } from "./ref-bytes-input";
 
 interface RefBytesInputFieldsetProps {
@@ -24,42 +23,41 @@ export const RefBytesInputFieldset: React.FC<RefBytesInputFieldsetProps> = ({
   });
 
   return (
-    <Flex gap={8} direction="column" as="fieldset">
-      <Flex gap={2} direction="column">
-        <Text>Set ref contract for this param.</Text>
-      </Flex>
-      <Flex flexDir="column" gap={4}>
-        {fields.map((item, index) => (
-          <RefBytesContractInput
-            key={item.id}
-            remove={remove}
-            index={index}
-            param={param}
-            paramIndex={paramIndex}
-            setIndex={setIndex}
-          />
-        ))}
-        <Box>
-          <Button
-            type="button"
-            size="sm"
-            colorScheme="primary"
-            borderRadius="md"
-            leftIcon={<Icon as={PlusIcon} />}
-            isDisabled={param.type === "address" && fields.length >= 1}
-            onClick={() =>
-              append({
-                contractId: "",
-                version: "",
-                publisherAddress: "",
-                salt: "",
-              })
-            }
-          >
-            Add Ref
-          </Button>
-        </Box>
-      </Flex>
-    </Flex>
+    <div className="flex flex-col gap-5">
+      {fields.map((item, index) => (
+        <RefBytesContractInput
+          key={item.id}
+          remove={remove}
+          index={index}
+          param={param}
+          paramIndex={paramIndex}
+          setIndex={setIndex}
+          className="border-border border-b pb-6"
+        />
+      ))}
+
+      <div>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          className="gap-2"
+          onClick={() =>
+            append({
+              contractId: "",
+              version: "",
+              publisherAddress: "",
+              salt: "",
+            })
+          }
+        >
+          <PlusIcon className="size-4" />
+          Add Reference
+        </Button>
+        <p className="mt-2 text-muted-foreground text-sm">
+          Add reference contracts for this parameter
+        </p>
+      </div>
+    </div>
   );
 };

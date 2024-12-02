@@ -1,32 +1,30 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { Input } from "@/components/ui/input";
 import {
-  Divider,
-  Flex,
-  FormControl,
-  Icon,
-  IconButton,
-  Input,
   Select,
-} from "@chakra-ui/react";
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import type { AbiParameter } from "abitype";
-import { TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { Checkbox } from "tw-components";
-import {} from "../../hooks";
 import { RefBytesInputFieldset } from "./ref-bytes-input-fieldset";
 
 interface DecodedInputProps {
   param: AbiParameter;
   paramIndex: number;
   setIndex: number;
-  removeParam: (index: number) => void;
+  className?: string;
 }
 
 export const DecodedInput: React.FC<DecodedInputProps> = ({
   param,
   paramIndex,
   setIndex,
-  removeParam,
+  className,
 }) => {
   const form = useFormContext();
   const [isCustomAddress, setIsCustomAddress] = useState(false);
@@ -35,102 +33,93 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
   );
 
   // Toggle function to handle custom input visibility and reset fields
-  const handleToggleCustomInput = () => {
-    setIsCustomAddress(() => {
-      const updated = !isCustomAddress;
+  const handleToggleCustomInput = (newVal: boolean) => {
+    const path = `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}`;
+    if (newVal) {
+      form.setValue(`${path}.dynamicValue.type`, selectedType);
+      form.resetField(`${path}.defaultValue`);
+    } else {
+      form.setValue(`${path}.dynamicValue.type`, "");
+      form.resetField(`${path}.dynamicValue`);
+    }
 
-      const path = `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}`;
-      if (updated) {
-        form.setValue(`${path}.dynamicValue.type`, selectedType);
-        form.resetField(`${path}.defaultValue`);
-      } else {
-        form.setValue(`${path}.dynamicValue.type`, "");
-        form.resetField(`${path}.dynamicValue`);
-      }
-
-      return updated;
-    });
+    setIsCustomAddress(newVal);
   };
 
+  const showAdvancedInputToggle =
+    selectedType === "address" || selectedType === "address[]";
+
   return (
-    <Flex flexDir="column" gap={2}>
-      <Flex
-        w="full"
-        gap={{ base: 4, md: 2 }}
-        flexDir={{ base: "column", md: "row" }}
+    <div className={className}>
+      {/* Type */}
+      <FormFieldSetup
+        isRequired={true}
+        label="Parameter Type"
+        errorMessage={
+          form.getFieldState(
+            `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.type`,
+            form.formState,
+          ).error?.message
+        }
       >
-        <FormControl
-          as={Flex}
-          flexDir="column"
-          gap={1}
-          isInvalid={
-            !!form.getFieldState(
+        <Select
+          {...form.register(
+            `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.type`,
+          )}
+          onValueChange={(v) => {
+            form.setValue(
               `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.type`,
-              form.formState,
-            ).error
-          }
+              v,
+            );
+          }}
         >
-          {/* <Input
-            placeholder="param type"
-            {...form.register(
-              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.publisherAddress`,
-            )}
-          /> */}
-          <Select
-            placeholder="Select type"
-            {...form.register(
-              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.type`,
-            )}
-          >
-            <option value="uint256">uint256</option>
-            <option value="address">address</option>
-            <option value="bytes32">bytes32</option>
-            <option value="bool">bool</option>
-          </Select>
-        </FormControl>
-        {/* <FormControl as={Flex} flexDir="column" gap={1}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="uint256"> uint256 </SelectItem>
+            <SelectItem value="address">address</SelectItem>
+            <SelectItem value="bytes32">bytes32</SelectItem>
+            <SelectItem value="bool">bool</SelectItem>
+          </SelectContent>
+        </Select>
+      </FormFieldSetup>
+
+      <div className="h-5" />
+
+      {/* Value */}
+      <div className="flex justify-between gap-4">
+        <h5>Parameter Value</h5>
+        {showAdvancedInputToggle && (
+          <div className="flex items-center gap-3 text-sm">
+            Advanced Input
+            <Switch
+              checked={isCustomAddress}
+              onCheckedChange={(v) => handleToggleCustomInput(!!v)}
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="h-2" />
+
+      <div>
+        {isCustomAddress ? (
+          <RefBytesInputFieldset
+            param={param}
+            setIndex={setIndex}
+            paramIndex={paramIndex}
+          />
+        ) : (
           <Input
             placeholder="Enter value"
             {...form.register(
               `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.defaultValue`,
             )}
+            disabled={selectedType === "address" && isCustomAddress}
           />
-        </FormControl> */}
-
-        <FormControl as={Flex} flexDir="column" gap={1}>
-          {isCustomAddress ? (
-            <RefBytesInputFieldset
-              param={param}
-              setIndex={setIndex}
-              paramIndex={paramIndex}
-            />
-          ) : (
-            <Input
-              placeholder="Enter value"
-              {...form.register(
-                `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.defaultValue`,
-              )}
-              isDisabled={selectedType === "address" && isCustomAddress}
-            />
-          )}
-        </FormControl>
-        <IconButton
-          icon={<Icon as={TrashIcon} boxSize={5} />}
-          aria-label="Remove row"
-          onClick={() => removeParam(paramIndex)}
-          alignSelf="end"
-        />
-      </Flex>
-
-      {(selectedType === "address" || selectedType === "address[]") && (
-        <Checkbox
-          isChecked={isCustomAddress}
-          onChange={() => handleToggleCustomInput()}
-        >
-          Use Dynamic Input
-        </Checkbox>
-      )}
-      <Divider />
-    </Flex>
+        )}
+      </div>
+    </div>
   );
 };

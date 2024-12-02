@@ -1,17 +1,18 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-  Divider,
-  Flex,
-  FormControl,
-  Icon,
-  IconButton,
-  Input,
   Select,
-  Skeleton,
-} from "@chakra-ui/react";
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { SkeletonContainer } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import type { AbiParameter } from "abitype";
 import { TrashIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { FormLabel } from "tw-components";
 import { useAllVersions, usePublishedContractsQuery } from "../../hooks";
 
 interface RefBytesContractInputProps {
@@ -20,6 +21,7 @@ interface RefBytesContractInputProps {
   paramIndex: number;
   setIndex: number;
   remove: (index: number) => void;
+  className?: string;
 }
 
 export const RefBytesContractInput: React.FC<RefBytesContractInputProps> = ({
@@ -28,6 +30,7 @@ export const RefBytesContractInput: React.FC<RefBytesContractInputProps> = ({
   paramIndex,
   setIndex,
   remove,
+  className,
 }) => {
   const form = useFormContext();
 
@@ -47,113 +50,155 @@ export const RefBytesContractInput: React.FC<RefBytesContractInputProps> = ({
   );
 
   return (
-    <Flex flexDir="column" gap={2}>
-      <Flex
-        w="full"
-        gap={{ base: 4, md: 2 }}
-        flexDir={{ base: "column", md: "row" }}
-      >
-        <FormControl
-          as={Flex}
-          flexDir="column"
-          gap={1}
-          isInvalid={
-            !!form.getFieldState(
+    <div className={cn("flex flex-col items-end gap-4 lg:flex-row", className)}>
+      <div className="grid grow grid-cols-1 gap-4 lg:grid-cols-4">
+        <FormFieldSetup
+          label="Publisher"
+          isRequired={true}
+          errorMessage={
+            form.getFieldState(
               `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.publisherAddress`,
               form.formState,
-            ).error
+            ).error?.message
           }
         >
-          <FormLabel textTransform="capitalize">Publisher</FormLabel>
           <Input
             placeholder="Address or ENS"
+            className="truncate"
             {...form.register(
               `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.publisherAddress`,
             )}
           />
-        </FormControl>
-        <FormControl as={Flex} flexDir="column" gap={1}>
-          <FormLabel textTransform="capitalize">Contract Name</FormLabel>
-          <Skeleton
-            isLoaded={
-              !!publishedContractsQuery.data ||
-              !publishedContractsQuery.isFetching
-            }
-            borderRadius="lg"
-          >
-            <Select
-              isDisabled={(publishedContractsQuery?.data || []).length === 0}
-              {...form.register(
-                `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.contractId`,
-              )}
-              placeholder={
-                publishedContractsQuery.isFetched &&
-                (publishedContractsQuery?.data || []).length === 0
-                  ? "No extensions found"
-                  : "Select extension"
-              }
-            >
-              {publishedContractsQuery?.data?.map(({ contractId }) => (
-                <option key={contractId} value={contractId}>
-                  {contractId}
-                </option>
-              ))}
-            </Select>
-          </Skeleton>
-        </FormControl>
+        </FormFieldSetup>
 
-        <FormControl as={Flex} flexDir="column" gap={1}>
-          <FormLabel textTransform="capitalize">Contract Version</FormLabel>
-          <Skeleton
-            isLoaded={!!allVersions.data || !allVersions.isFetching}
-            borderRadius="lg"
-          >
-            <Select
-              w="full"
-              isDisabled={!allVersions.data}
-              {...form.register(
-                `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.version`,
-              )}
-              borderRadius="lg"
-            >
-              <option value="">Always latest</option>
-              {allVersions?.data?.map(({ version }) => (
-                <option key={version} value={version}>
-                  {version}
-                </option>
-              ))}
-            </Select>
-          </Skeleton>
-        </FormControl>
-
-        <FormControl
-          as={Flex}
-          flexDir="column"
-          gap={1}
-          isInvalid={
-            !!form.getFieldState(
-              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.salt`,
+        <FormFieldSetup
+          label="Contract Name"
+          isRequired={true}
+          errorMessage={
+            form.getFieldState(
+              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.contractId`,
               form.formState,
-            ).error
+            ).error?.message
           }
         >
-          <FormLabel textTransform="capitalize">Salt</FormLabel>
+          <SkeletonContainer
+            className="block"
+            loadedData={!publishedContractsQuery.isFetching ? true : undefined}
+            skeletonData={false}
+            render={() => {
+              return (
+                <Select
+                  disabled={(publishedContractsQuery?.data || []).length === 0}
+                  {...form.register(
+                    `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.contractId`,
+                  )}
+                  onValueChange={(v) => {
+                    form.setValue(
+                      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.contractId`,
+                      v,
+                    );
+                  }}
+                >
+                  <SelectTrigger className="min-w-[180px]">
+                    <SelectValue
+                      placeholder={
+                        publishedContractsQuery.isFetched &&
+                        (publishedContractsQuery?.data || []).length === 0
+                          ? "No extensions found"
+                          : "Select extension"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {publishedContractsQuery?.data?.map(({ contractId }) => (
+                      <SelectItem key={contractId} value={contractId}>
+                        {contractId}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              );
+            }}
+          />
+        </FormFieldSetup>
+
+        <FormFieldSetup
+          label="Contract Version"
+          isRequired={false}
+          errorMessage={
+            form.getFieldState(
+              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.version`,
+              form.formState,
+            ).error?.message
+          }
+        >
+          <SkeletonContainer
+            className="block"
+            loadedData={!allVersions.isFetching ? true : undefined}
+            skeletonData={false}
+            render={() => {
+              return (
+                <Select
+                  disabled={!allVersions.data}
+                  {...form.register(
+                    `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.version`,
+                  )}
+                  onValueChange={(v) => {
+                    form.setValue(
+                      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.version`,
+                      v === "latest" ? "" : v,
+                    );
+                  }}
+                >
+                  <SelectTrigger className="min-w-[180px]">
+                    <SelectValue placeholder="Latest Version" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectItem value="latest">Latest Version</SelectItem>
+                    {allVersions?.data?.map(({ version }) => {
+                      if (!version) return null;
+                      return (
+                        <SelectItem key={version} value={version}>
+                          {version}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              );
+            }}
+          />
+        </FormFieldSetup>
+
+        <FormFieldSetup
+          isRequired={false}
+          label="Salt"
+          errorMessage={
+            form.getFieldState(
+              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.salt`,
+              form.formState,
+            ).error?.message
+          }
+        >
           <Input
+            className="truncate"
             placeholder="Salt (optional)"
             {...form.register(
               `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.salt`,
             )}
           />
-        </FormControl>
+        </FormFieldSetup>
+      </div>
 
-        <IconButton
-          icon={<Icon as={TrashIcon} boxSize={5} />}
-          aria-label="Remove row"
-          onClick={() => remove(index)}
-          alignSelf="end"
-        />
-      </Flex>
-      <Divider />
-    </Flex>
+      <Button
+        aria-label="Remove"
+        onClick={() => remove(index)}
+        variant="outline"
+        className="self-end text-destructive-text"
+      >
+        <TrashIcon className="size-4" />
+      </Button>
+    </div>
   );
 };

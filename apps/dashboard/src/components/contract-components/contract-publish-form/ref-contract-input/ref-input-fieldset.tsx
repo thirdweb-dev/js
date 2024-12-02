@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { AbiParameter } from "abitype";
 import { PlusIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -20,13 +21,14 @@ export const RefInputFieldset: React.FC<RefInputFieldsetProps> = ({
   const hideAddButton = param.type === "address" && fields.length >= 1;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       {fields.map((item, index) => (
         <RefContractInput
           key={item.id}
           remove={remove}
           index={index}
           param={param}
+          className={cn(!hideAddButton && "border-border border-b pb-5")}
         />
       ))}
 

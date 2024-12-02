@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SkeletonContainer } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import type { AbiParameter } from "abitype";
 import { TrashIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
@@ -18,12 +19,14 @@ interface RefContractInputProps {
   param: AbiParameter;
   index: number;
   remove: (index: number) => void;
+  className?: string;
 }
 
 export const RefContractInput: React.FC<RefContractInputProps> = ({
   param,
   index,
   remove,
+  className,
 }) => {
   const form = useFormContext();
 
@@ -43,10 +46,10 @@ export const RefContractInput: React.FC<RefContractInputProps> = ({
   );
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row">
+    <div className={cn("flex flex-col gap-4 lg:flex-row", className)}>
       <div className="grid grow grid-cols-1 gap-4 lg:grid-cols-4">
         <FormFieldSetup
-          isRequired={false}
+          isRequired={true}
           label="Publisher"
           errorMessage={
             form.getFieldState(
@@ -56,6 +59,7 @@ export const RefContractInput: React.FC<RefContractInputProps> = ({
           }
         >
           <Input
+            className="truncate"
             placeholder="Address or ENS"
             {...form.register(
               `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.publisherAddress`,
@@ -175,6 +179,7 @@ export const RefContractInput: React.FC<RefContractInputProps> = ({
           }
         >
           <Input
+            className="truncate"
             placeholder="Salt (optional)"
             {...form.register(
               `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.salt`,
