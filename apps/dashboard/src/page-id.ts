@@ -39,9 +39,6 @@ export enum PageId {
   // thirdweb.com/auth
   AuthLanding = "auth-landing",
 
-  // thirdweb.com/cointracts
-  ContractsLanding = "contracts-landing",
-
   // thirdweb.com/grant/superchain
   GrantSuperChain = "grant-superchain",
 
