@@ -70,6 +70,7 @@
       "dependsOn": ["^build", "thirdweb#typedoc"]
     },
     "playground-web#build": {
+      "env": ["ENGINE_ACCESS_TOKEN", "ENGINE_BACKEND_WALLET", "ENGINE_URL"],
       "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]
     },
