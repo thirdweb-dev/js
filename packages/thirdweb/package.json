@@ -351,7 +351,7 @@
     "ethers6": "npm:ethers@6",
     "expo-linking": "7.0.3",
     "expo-web-browser": "13.0.3",
-    "happy-dom": "15.11.6",
+    "happy-dom": "15.11.7",
     "knip": "5.38.0",
     "msw": "2.6.6",
     "prettier": "3.3.3",
