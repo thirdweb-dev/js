@@ -1,4 +1,5 @@
 "use server";
+import "server-only";
 import { API_SERVER_URL, BASE_URL } from "@/constants/env";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { redirect } from "next/navigation";
