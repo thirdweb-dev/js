@@ -318,7 +318,7 @@ function ContractsSection() {
           title="Interact"
           description="Add smart contract interactions in your app"
           icon={ContractInteractIcon}
-          href="/contracts/interact/overview"
+          href="/contracts"
         />
         <ArticleCardIndex
           title="Explore"

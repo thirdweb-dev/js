@@ -7,7 +7,6 @@ import {
   AccordionPanel,
 } from "@chakra-ui/react";
 import type { Abi } from "abitype";
-import { Heading } from "tw-components";
 import type { SourceFile } from "../types";
 
 interface SourcesAccordionProps {
@@ -33,7 +32,7 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
           {({ isExpanded }) => (
             <>
               <AccordionButton justifyContent="space-between" py={2}>
-                <Heading size="label.md">ABI</Heading>
+                <p className="font-semibold">ABI</p>
                 <AccordionIcon />
               </AccordionButton>
               <AccordionPanel>
@@ -58,7 +57,7 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
           {({ isExpanded }) => (
             <>
               <AccordionButton justifyContent="space-between" py={2}>
-                <Heading size="label.md">{signature.filename}</Heading>
+                <p className="font-semibold">{signature.filename}</p>
                 <AccordionIcon />
               </AccordionButton>
               <AccordionPanel>

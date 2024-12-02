@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Tooltip } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import type { ThirdwebContract } from "thirdweb";
@@ -9,7 +11,6 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import { Button, Card, Text } from "tw-components";
 
 interface CreateAccountButtonProps {
   contract: ThirdwebContract;
@@ -51,8 +52,8 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
     return (
       <Tooltip
         label={
-          <Card py={2} px={4} bgColor="backgroundHighlight">
-            <Text>You can only initialize one account per EOA.</Text>
+          <Card className="bg-card px-4 py-2">
+            <p>You can only initialize one account per EOA.</p>
           </Card>
         }
         bg="transparent"
@@ -62,7 +63,7 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
         placement="right"
         shouldWrapChildren
       >
-        <Button colorScheme="primary" isDisabled>
+        <Button variant="primary" disabled>
           Account Created
         </Button>
       </Tooltip>

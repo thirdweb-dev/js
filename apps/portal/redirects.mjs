@@ -798,9 +798,9 @@ const contractRedirects = {
   "/publish/getting-started": "/contracts/publish/publish-contract",
   "/publish/deployment-options": "/contracts/publish/publish-options",
   "/publish/get-featured-on-explore": "/contracts/publish/overview",
-  "/sdk": "/contracts/interact/overview",
-  "/sdk/how-it-works": "/contracts/interact/overview",
-  "/sdk/getting-started": "/contracts/interact/overview",
+  "/sdk": "/contracts",
+  "/sdk/how-it-works": "/contracts",
+  "/sdk/getting-started": "/contracts",
   //design documentation
   "/contracts/design/Drop": "/contracts/design-docs/drop",
   "/contracts/design/Marketplace": "/contracts/design-docs/marketplace",
@@ -808,6 +808,7 @@ const contractRedirects = {
   "/contracts/design/Multiwrap": "/contracts/design-docs/multiwrap",
   "/contracts/design/Pack": "/contracts/design-docs/pack",
   "/contracts/design/SignatureDrop": "/contracts",
+  "/interact": "/contracts",
 };
 
 const infrastructureRedirects = {
