@@ -334,7 +334,7 @@
     "@storybook/addon-links": "8.4.5",
     "@storybook/addon-onboarding": "8.4.5",
     "@storybook/react": "8.4.5",
-    "@storybook/react-vite": "8.4.5",
+    "@storybook/react-vite": "8.4.6",
     "@storybook/test": "8.4.5",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.0",
