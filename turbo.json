@@ -6,16 +6,6 @@
       "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
-    "postbuild": {
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "public/robots.txt",
-        "public/sitemap*.xml",
-        "searchIndex.json"
-      ],
-      "inputs": ["$TURBO_DEFAULT$", ".next/**"]
-    },
     "bench": {
       "cache": false,
       "dependsOn": []
