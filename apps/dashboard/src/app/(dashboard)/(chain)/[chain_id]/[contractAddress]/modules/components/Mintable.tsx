@@ -314,8 +314,7 @@ function PrimarySalesSection(props: {
             className="min-w-24"
             disabled={updateMutation.isPending || !props.isOwnerAccount}
             type="submit"
-            isLoading={updateMutation.isPending}
-            colorScheme="primary"
+            isPending={updateMutation.isPending}
             transactionCount={1}
             txChainID={props.contractChainId}
           >
@@ -529,8 +528,7 @@ function MintNFTSection(props: {
               className="min-w-24"
               disabled={mintMutation.isPending}
               type="submit"
-              isLoading={mintMutation.isPending}
-              colorScheme="primary"
+              isPending={mintMutation.isPending}
               txChainID={props.contractChainId}
               transactionCount={1}
             >

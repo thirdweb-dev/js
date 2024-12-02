@@ -62,7 +62,7 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {
             },
           );
         }}
-        isLoading={delgateMutation.isPending}
+        isPending={delgateMutation.isPending}
       >
         Delegate Tokens
       </TransactionButton>

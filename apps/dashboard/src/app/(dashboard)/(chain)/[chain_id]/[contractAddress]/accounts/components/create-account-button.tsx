@@ -73,7 +73,6 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   return (
     <TransactionButton
       txChainID={contract.chain.id}
-      colorScheme="primary"
       onClick={() => {
         const tx = ERC4337Ext.createAccount({
           contract,
@@ -82,9 +81,9 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
         });
         sendTxMutation.mutate(tx);
       }}
-      isLoading={sendTxMutation.isPending}
+      isPending={sendTxMutation.isPending}
       transactionCount={1}
-      isDisabled={isAccountDeployedQuery.data}
+      disabled={isAccountDeployedQuery.data}
       {...restButtonProps}
     >
       Create Account

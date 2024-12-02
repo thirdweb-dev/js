@@ -1,4 +1,3 @@
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -7,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { subDays } from "date-fns";
@@ -16,7 +16,6 @@ import { mobileViewport } from "stories/utils";
 import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
 import { ThirdwebProvider } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
-import { CustomConnectWallet } from "../../../../../../../@3rdweb-sdk/react/components/connect-wallet";
 import {
   type ClaimConditionFormValues,
   type ClaimConditionValue,
@@ -108,100 +107,97 @@ function Component() {
     version: "1.0.0",
   };
 
-  // Todo - remove chakra provider after converting Transaction Button
   return (
-    <ChakraProviderSetup>
-      <ThirdwebProvider>
-        <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-          <div>
-            <CustomConnectWallet loginRequired={false} />
-          </div>
+    <ThirdwebProvider>
+      <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+        <div>
+          <CustomConnectWallet loginRequired={false} />
+        </div>
 
-          <div className="flex flex-wrap items-center gap-5">
-            <CheckboxWithLabel
-              value={isOwner}
-              onChange={setIsOwner}
-              id="isOwner"
-              label="Is Owner"
-            />
-
-            <Select value={name} onValueChange={(v) => setName(v)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="MintableERC721">MintableERC721</SelectItem>
-                <SelectItem value="MintableERC1155">MintableERC1155</SelectItem>
-                <SelectItem value="MintableERC20">MintableERC20</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <CheckboxWithLabel
-              value={isClaimConditionLoading}
-              onChange={setIsClaimConditionLoading}
-              id="isClaimConditionLoading"
-              label="Claim Condition Section Loading"
-            />
-
-            <CheckboxWithLabel
-              value={isPrimarySaleRecipientLoading}
-              onChange={setIsPrimarySaleRecipientLoading}
-              id="isPrimarySaleRecipientLoading"
-              label="Primary Sale Recipient Section Loading"
-            />
-
-            <CheckboxWithLabel
-              value={noClaimConditionSet}
-              onChange={setNoClaimConditionSet}
-              id="noClaimConditionSet"
-              label="No Claim Condition Set"
-            />
-          </div>
-
-          <ClaimableModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            primarySaleRecipientSection={{
-              data: isPrimarySaleRecipientLoading
-                ? undefined
-                : {
-                    primarySaleRecipient: testAddress1,
-                  },
-              setPrimarySaleRecipient: updatePrimarySaleRecipientStub,
-            }}
-            claimConditionSection={{
-              data:
-                isClaimConditionLoading ||
-                (name === "MintableERC1155" && !tokenId)
-                  ? undefined
-                  : {
-                      claimCondition,
-                      currencyDecimals: 18,
-                      tokenDecimals: 18,
-                    },
-              isLoading: false,
-              setClaimCondition: updateClaimConditionStub,
-              tokenId,
-            }}
-            mintSection={{
-              mint: mintStub,
-            }}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-            name={name}
-            contractChainId={1}
-            setTokenId={setTokenId}
-            isValidTokenId={true}
-            noClaimConditionSet={noClaimConditionSet}
+        <div className="flex flex-wrap items-center gap-5">
+          <CheckboxWithLabel
+            value={isOwner}
+            onChange={setIsOwner}
+            id="isOwner"
+            label="Is Owner"
           />
 
-          <Toaster richColors />
+          <Select value={name} onValueChange={(v) => setName(v)}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="MintableERC721">MintableERC721</SelectItem>
+              <SelectItem value="MintableERC1155">MintableERC1155</SelectItem>
+              <SelectItem value="MintableERC20">MintableERC20</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <CheckboxWithLabel
+            value={isClaimConditionLoading}
+            onChange={setIsClaimConditionLoading}
+            id="isClaimConditionLoading"
+            label="Claim Condition Section Loading"
+          />
+
+          <CheckboxWithLabel
+            value={isPrimarySaleRecipientLoading}
+            onChange={setIsPrimarySaleRecipientLoading}
+            id="isPrimarySaleRecipientLoading"
+            label="Primary Sale Recipient Section Loading"
+          />
+
+          <CheckboxWithLabel
+            value={noClaimConditionSet}
+            onChange={setNoClaimConditionSet}
+            id="noClaimConditionSet"
+            label="No Claim Condition Set"
+          />
         </div>
-      </ThirdwebProvider>
-    </ChakraProviderSetup>
+
+        <ClaimableModuleUI
+          contractInfo={contractInfo}
+          moduleAddress="0x0000000000000000000000000000000000000000"
+          primarySaleRecipientSection={{
+            data: isPrimarySaleRecipientLoading
+              ? undefined
+              : {
+                  primarySaleRecipient: testAddress1,
+                },
+            setPrimarySaleRecipient: updatePrimarySaleRecipientStub,
+          }}
+          claimConditionSection={{
+            data:
+              isClaimConditionLoading ||
+              (name === "MintableERC1155" && !tokenId)
+                ? undefined
+                : {
+                    claimCondition,
+                    currencyDecimals: 18,
+                    tokenDecimals: 18,
+                  },
+            isLoading: false,
+            setClaimCondition: updateClaimConditionStub,
+            tokenId,
+          }}
+          mintSection={{
+            mint: mintStub,
+          }}
+          uninstallButton={{
+            onClick: async () => removeMutation.mutateAsync(),
+            isPending: removeMutation.isPending,
+          }}
+          isOwnerAccount={isOwner}
+          name={name}
+          contractChainId={1}
+          setTokenId={setTokenId}
+          isValidTokenId={true}
+          noClaimConditionSet={noClaimConditionSet}
+        />
+
+        <Toaster richColors />
+      </div>
+    </ThirdwebProvider>
   );
 }
 

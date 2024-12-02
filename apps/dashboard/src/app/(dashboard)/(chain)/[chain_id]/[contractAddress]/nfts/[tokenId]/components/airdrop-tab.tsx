@@ -118,8 +118,8 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
             <Flex direction={{ base: "column", md: "row" }} gap={4}>
               <Sheet open={open} onOpenChange={setOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="primary" className="rounded-md">
-                    Upload addresses <UploadIcon className="mr-2 size-5" />
+                  <Button variant="primary" className="gap-2">
+                    Upload addresses <UploadIcon className="size-4" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
@@ -160,12 +160,12 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
           <TransactionButton
             txChainID={contract.chain.id}
             transactionCount={1}
-            isLoading={sendAndConfirmTx.isPending}
+            isPending={sendAndConfirmTx.isPending}
             type="submit"
-            colorScheme="primary"
-            disabled={!!address && addresses.length === 0}
-            alignSelf="flex-end"
-            isDisabled={!formState.isDirty}
+            disabled={
+              (!!address && addresses.length === 0) || !formState.isDirty
+            }
+            className="self-end"
           >
             Airdrop
           </TransactionButton>

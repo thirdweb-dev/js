@@ -91,26 +91,31 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
       <TransactionButton
         transactionCount={1}
         type="button"
-        isLoading={sendTxMutation.isPending}
+        isPending={sendTxMutation.isPending}
         onClick={handleResetClaimEligibility}
-        loadingText="Resetting..."
         size="sm"
         txChainID={contract.chain.id}
       >
-        Reset Eligibility
-        <ToolTipLabel
-          label={
-            <>
-              This {`contract's`} claim eligibility stores who has already
-              claimed {isErc20 ? "tokens" : "NFTs"} from this contract and
-              carries across claim phases. Resetting claim eligibility will
-              reset this state permanently, and wallets that have already
-              claimed to their limit will be able to claim again.
-            </>
-          }
-        >
-          <CircleHelpIcon className="ml-2 size-4 text-muted-foreground" />
-        </ToolTipLabel>
+        {sendTxMutation.isPending ? (
+          "Resetting Eligibility"
+        ) : (
+          <div className="flex items-center gap-2">
+            Reset Eligibility
+            <ToolTipLabel
+              label={
+                <span className="text-left">
+                  This {`contract's`} claim eligibility stores who has already
+                  claimed {isErc20 ? "tokens" : "NFTs"} from this contract and
+                  carries across claim phases. Resetting claim eligibility will
+                  reset this state permanently, and wallets that have already
+                  claimed to their limit will be able to claim again.
+                </span>
+              }
+            >
+              <CircleHelpIcon className="size-4" />
+            </ToolTipLabel>
+          </div>
+        )}
       </TransactionButton>
     </AdminOnly>
   );

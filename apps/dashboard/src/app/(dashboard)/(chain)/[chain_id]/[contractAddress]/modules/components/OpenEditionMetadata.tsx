@@ -212,8 +212,7 @@ function SetSharedMetadataSection(props: {
               className="min-w-24"
               disabled={setSharedMetadataMutation.isPending}
               type="submit"
-              isLoading={setSharedMetadataMutation.isPending}
-              colorScheme="primary"
+              isPending={setSharedMetadataMutation.isPending}
               transactionCount={1}
               txChainID={props.contractChainId}
             >

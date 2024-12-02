@@ -98,10 +98,9 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
             txChainID={contract.chain.id}
             transactionCount={1}
             form={BURN_FORM_ID}
-            isLoading={sendConfirmation.isPending}
+            isPending={sendConfirmation.isPending}
             type="submit"
-            colorScheme="primary"
-            isDisabled={!form.formState.isDirty}
+            disabled={!form.formState.isDirty}
             onClick={form.handleSubmit((data) => {
               if (address) {
                 trackEvent({

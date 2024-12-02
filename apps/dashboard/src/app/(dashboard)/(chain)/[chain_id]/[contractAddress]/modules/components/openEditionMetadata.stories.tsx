@@ -1,12 +1,11 @@
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Checkbox } from "@/components/ui/checkbox";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
-import { CustomConnectWallet } from "../../../../../../../@3rdweb-sdk/react/components/connect-wallet";
 import {
   OpenEditionMetadataModuleUI,
   type SetSharedMetadataFormValues,
@@ -63,45 +62,43 @@ function Component() {
 
   return (
     <ThirdwebProvider>
-      <ChakraProviderSetup>
-        <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-          <div>
-            <CustomConnectWallet loginRequired={false} />
-          </div>
-
-          <div className="flex gap-2">
-            <Checkbox
-              id="terms1"
-              checked={isOwner}
-              onCheckedChange={(v) => setIsOwner(!!v)}
-            />
-            <div className="grid gap-1.5 leading-none">
-              <label
-                htmlFor="terms1"
-                className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Is Owner
-              </label>
-            </div>
-          </div>
-
-          <BadgeContainer label="Default">
-            <OpenEditionMetadataModuleUI
-              contractInfo={contractInfo}
-              moduleAddress="0x0000000000000000000000000000000000000000"
-              setSharedMetadata={setSharedMetadataStub}
-              uninstallButton={{
-                onClick: async () => removeMutation.mutateAsync(),
-                isPending: removeMutation.isPending,
-              }}
-              isOwnerAccount={isOwner}
-              contractChainId={1}
-            />
-          </BadgeContainer>
-
-          <Toaster richColors />
+      <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+        <div>
+          <CustomConnectWallet loginRequired={false} />
         </div>
-      </ChakraProviderSetup>
+
+        <div className="flex gap-2">
+          <Checkbox
+            id="terms1"
+            checked={isOwner}
+            onCheckedChange={(v) => setIsOwner(!!v)}
+          />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="terms1"
+              className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Is Owner
+            </label>
+          </div>
+        </div>
+
+        <BadgeContainer label="Default">
+          <OpenEditionMetadataModuleUI
+            contractInfo={contractInfo}
+            moduleAddress="0x0000000000000000000000000000000000000000"
+            setSharedMetadata={setSharedMetadataStub}
+            uninstallButton={{
+              onClick: async () => removeMutation.mutateAsync(),
+              isPending: removeMutation.isPending,
+            }}
+            isOwnerAccount={isOwner}
+            contractChainId={1}
+          />
+        </BadgeContainer>
+
+        <Toaster richColors />
+      </div>
     </ThirdwebProvider>
   );
 }

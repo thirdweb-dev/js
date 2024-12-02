@@ -104,10 +104,9 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({ contract }) => {
           <TransactionButton
             txChainID={contract.chain.id}
             transactionCount={1}
-            isLoading={sendTx.isPending}
+            isPending={sendTx.isPending}
             form={PROPOSAL_FORM_ID}
             type="submit"
-            colorScheme="primary"
           >
             Submit
           </TransactionButton>

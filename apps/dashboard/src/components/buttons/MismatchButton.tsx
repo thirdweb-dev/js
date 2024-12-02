@@ -2,7 +2,7 @@
 
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button as ButtonShadcn } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,20 +10,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import {
-  Box,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
-  useBreakpointValue,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaucetButton } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
 import { GiftIcon } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
 import type {
@@ -33,10 +28,11 @@ import type {
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ExternalLinkIcon, TriangleAlertIcon, UnplugIcon } from "lucide-react";
+import { ExternalLinkIcon, UnplugIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
+import type React from "react";
+import { forwardRef, useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import { prepareTransaction, sendTransaction, toWei } from "thirdweb";
 import { type Chain, type ChainMetadata, localhost } from "thirdweb/chains";
@@ -45,12 +41,10 @@ import {
   useActiveAccount,
   useActiveWallet,
   useActiveWalletChain,
-  useActiveWalletConnectionStatus,
   useSwitchActiveWalletChain,
   useWalletBalance,
 } from "thirdweb/react";
 import { privateKeyToAccount } from "thirdweb/wallets";
-import { Button, type ButtonProps, Card, Heading, Text } from "tw-components";
 import { getFaucetClaimAmount } from "../../app/api/testnet-faucet/claim/claim-amount";
 import { THIRDWEB_API_HOST } from "../../constants/urls";
 import { useAllChainsData } from "../../hooks/chains/allChains";
@@ -76,10 +70,15 @@ function useNetworkMismatchAdapter(desiredChainId: number) {
   return walletChainId !== desiredChainId;
 }
 
+type MistmatchButtonProps = React.ComponentProps<typeof Button> & {
+  desiredChainId: number;
+};
+
 export const MismatchButton = forwardRef<
   HTMLButtonElement,
-  ButtonProps & { desiredChainId: number }
->(({ children, isDisabled, onClick, loadingText, type, ...props }, ref) => {
+  MistmatchButtonProps
+>((props, ref) => {
+  const { desiredChainId, ...buttonProps } = props;
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const activeWalletChain = useActiveWalletChain();
@@ -92,9 +91,8 @@ export const MismatchButton = forwardRef<
     client,
   });
 
-  const initialFocusRef = useRef<HTMLButtonElement>(null);
-  const networksMismatch = useNetworkMismatchAdapter(props.desiredChainId);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const networksMismatch = useNetworkMismatchAdapter(desiredChainId);
+  const [isMismatchPopoverOpen, setIsMismatchPopoverOpen] = useState(false);
   const trackEvent = useTrack();
 
   const chainId = activeWalletChain?.id;
@@ -103,35 +101,42 @@ export const MismatchButton = forwardRef<
     useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>(undefined);
 
   if (!wallet || !chainId) {
+    const connectWalletButtonClassName = cn(
+      props.className,
+      props.size === "sm" && "!py-2 !h-auto",
+    );
+
     return (
       <CustomConnectWallet
-        borderRadius="md"
-        colorScheme="primary"
-        {...props}
-        signInLinkButtonClassName={
-          props.size === "sm" ? "!py-2 !h-auto" : undefined
-        }
+        signInLinkButtonClassName={connectWalletButtonClassName}
+        connectButtonClassName={connectWalletButtonClassName}
+        loadingButtonClassName={connectWalletButtonClassName}
       />
     );
   }
   const notEnoughBalance =
     (evmBalance.data?.value || 0n) === 0n && !GAS_FREE_CHAINS.includes(chainId);
+
   return (
     <>
       <Popover
-        // @ts-expect-error - this works fine
-        initialFocusRef={initialFocusRef}
-        isLazy
-        isOpen={isOpen}
-        onOpen={networksMismatch ? onOpen : undefined}
-        onClose={onClose}
+        open={isMismatchPopoverOpen}
+        onOpenChange={(v) => {
+          if (v) {
+            if (networksMismatch) {
+              setIsMismatchPopoverOpen(true);
+            }
+          } else {
+            setIsMismatchPopoverOpen(false);
+          }
+        }}
       >
-        <PopoverTrigger>
+        <PopoverTrigger asChild>
           <Button
-            isLoading={evmBalance.isPending}
-            {...props}
-            type={networksMismatch || notEnoughBalance ? "button" : type}
-            loadingText={loadingText}
+            {...buttonProps}
+            type={
+              networksMismatch || notEnoughBalance ? "button" : buttonProps.type
+            }
             onClick={(e) => {
               e.stopPropagation();
 
@@ -150,45 +155,25 @@ export const MismatchButton = forwardRef<
                 return;
               }
 
-              if (onClick) {
-                return onClick(e);
+              if (buttonProps.onClick) {
+                return buttonProps.onClick(e);
               }
             }}
             ref={ref}
-            isDisabled={isDisabled}
           >
-            {children}
+            {buttonProps.children}
           </Button>
         </PopoverTrigger>
-        <Card
-          maxW={{ base: "xs", md: "sm" }}
-          w="auto"
-          as={PopoverContent}
-          bg="backgroundCardHighlight"
-          mx={6}
-          boxShadow="0px 0px 2px 0px var(--popper-arrow-shadow-color)"
-        >
-          <PopoverArrow bg="backgroundCardHighlight" />
-          <PopoverBody>
-            {networksMismatch && (
-              <MismatchNotice
-                desiredChainId={props.desiredChainId}
-                initialFocusRef={initialFocusRef}
-                onClose={(hasSwitched) => {
-                  onClose();
-                  if (hasSwitched && onClick) {
-                    // wait for the network switch to be finished - 100ms should be fine?
-                    setTimeout(() => {
-                      if (eventRef.current) {
-                        onClick(eventRef.current);
-                      }
-                    }, 100);
-                  }
-                }}
-              />
-            )}
-          </PopoverBody>
-        </Card>
+        <PopoverContent className="min-w-[350px]" side="top" sideOffset={10}>
+          <MismatchNotice
+            desiredChainId={desiredChainId}
+            onClose={(hasSwitched) => {
+              if (hasSwitched) {
+                setIsMismatchPopoverOpen(false);
+              }
+            }}
+          />
+        </PopoverContent>
       </Popover>
 
       {/* Not Enough Funds */}
@@ -335,13 +320,13 @@ function NoFundsDialogContent(props: {
                 (x) => x.enabled && x.service === "pay",
               ) ? (
               // pay case
-              <ButtonShadcn
+              <Button
                 variant="primary"
                 className="w-full"
                 onClick={props.openPayModal}
               >
                 Buy Funds
-              </ButtonShadcn>
+              </Button>
             ) : // no funds options available
             null}
           </div>
@@ -349,11 +334,11 @@ function NoFundsDialogContent(props: {
       </div>
       {/* Footer */}
       <div className="flex justify-between gap-4 border-border border-t p-6">
-        <ButtonShadcn variant="outline" onClick={props.onCloseModal}>
+        <Button variant="outline" onClick={props.onCloseModal}>
           Close
-        </ButtonShadcn>
+        </Button>
 
-        <ButtonShadcn variant="outline" asChild>
+        <Button variant="outline" asChild>
           <Link
             href="https://portal.thirdweb.com/glossary/gas"
             target="_blank"
@@ -361,7 +346,7 @@ function NoFundsDialogContent(props: {
           >
             Learn about Gas <ExternalLinkIcon className="size-4" />
           </Link>
-        </ButtonShadcn>
+        </Button>
       </div>
     </div>
   );
@@ -404,13 +389,11 @@ function GetFundsFromFaucet(props: {
 }
 
 const MismatchNotice: React.FC<{
-  initialFocusRef: React.RefObject<HTMLButtonElement | null>;
   onClose: (hasSwitched: boolean) => void;
   desiredChainId: number;
-}> = ({ initialFocusRef, onClose, desiredChainId }) => {
+}> = ({ onClose, desiredChainId }) => {
   const connectedChainId = useActiveWalletChain()?.id;
   const switchNetwork = useSwitchActiveWalletChain();
-  const connectionStatus = useActiveWalletConnectionStatus();
   const activeWallet = useActiveWallet();
   const actuallyCanAttemptSwitch =
     activeWallet && activeWallet.id !== "global.safe";
@@ -418,14 +401,16 @@ const MismatchNotice: React.FC<{
   const walletConnectedNetworkInfo = connectedChainId
     ? idToChain.get(connectedChainId)
     : undefined;
-  const isMobile = useBreakpointValue({ base: true, md: false });
   const chain = desiredChainId ? idToChain.get(desiredChainId) : undefined;
   const chainV5 = useV5DashboardChain(desiredChainId);
+  const switchNetworkMutation = useMutation({
+    mutationFn: switchNetwork,
+  });
 
   const onSwitchWallet = useCallback(async () => {
     if (actuallyCanAttemptSwitch && desiredChainId && chainV5) {
       try {
-        await switchNetwork(chainV5);
+        await switchNetworkMutation.mutateAsync(chainV5);
         onClose(true);
       } catch {
         //  failed to switch network
@@ -437,61 +422,53 @@ const MismatchNotice: React.FC<{
     actuallyCanAttemptSwitch,
     desiredChainId,
     onClose,
-    switchNetwork,
+    switchNetworkMutation,
   ]);
-
-  const shortenedName = useMemo(() => {
-    const limit = isMobile ? 10 : 19;
-
-    if (!chain?.name) {
-      return undefined;
-    }
-    return chain.name.length > limit
-      ? `${chain.name.slice(0, limit)}...`
-      : undefined;
-  }, [chain?.name, isMobile]);
 
   return (
     <div className="flex flex-col gap-4">
-      <Heading size="label.lg">
-        <div className="flex flex-row items-center gap-2">
-          <TriangleAlertIcon className="size-6" />
-          <span>Network Mismatch</span>
-        </div>
-      </Heading>
+      <div>
+        <h3 className="mb-1 font-semibold text-lg tracking-tight">
+          Network Mismatch
+        </h3>
 
-      <Text>
-        Your wallet is connected to the{" "}
-        <Box as="strong" textTransform="capitalize">
-          {walletConnectedNetworkInfo?.name}
-        </Box>{" "}
-        network but this action requires you to connect to the{" "}
-        <Box as="strong" textTransform="capitalize">
-          {chain?.name}
-        </Box>{" "}
-        network.
-      </Text>
+        <p className="text-muted-foreground">
+          Your wallet is connected to the{" "}
+          <span className="font-medium capitalize">
+            {walletConnectedNetworkInfo?.name ||
+              `Chain ID #${connectedChainId}`}
+          </span>{" "}
+          network but this action requires you to connect to the{" "}
+          <span className="font-medium capitalize">
+            {chain?.name || `Chain ID #${desiredChainId}`}
+          </span>{" "}
+          network.
+        </p>
+      </div>
 
       <Button
-        ref={actuallyCanAttemptSwitch ? initialFocusRef : undefined}
-        leftIcon={<UnplugIcon className="size-4" />}
         size="sm"
         onClick={onSwitchWallet}
-        isLoading={connectionStatus === "connecting"}
-        isDisabled={!actuallyCanAttemptSwitch}
-        colorScheme="orange"
-        textTransform="capitalize"
-        noOfLines={1}
+        disabled={!actuallyCanAttemptSwitch}
+        variant="primary"
+        className="gap-2 capitalize"
       >
-        Switch wallet {chain ? `to ${shortenedName || chain.name}` : ""}
+        {switchNetworkMutation.isPending ? (
+          <Spinner className="size-4 shrink-0" />
+        ) : (
+          <UnplugIcon className="size-4 shrink-0" />
+        )}
+        <span className="line-clamp-1 block truncate">
+          Switch {chain ? `to ${chain.name}` : "chain"}
+        </span>
       </Button>
 
       {!actuallyCanAttemptSwitch && (
-        <Text size="body.sm" fontStyle="italic">
+        <p className="text-muted-foreground">
           Your connected wallet does not support programmatic switching.
           <br />
           Please manually switch the network in your wallet.
-        </Text>
+        </p>
       )}
     </div>
   );
@@ -526,8 +503,8 @@ const GetLocalHostTestnetFunds: React.FC = () => {
   };
 
   return (
-    <ButtonShadcn variant="primary" onClick={requestFunds} className="w-full">
+    <Button variant="primary" onClick={requestFunds} className="w-full">
       Get Funds from Localhost
-    </ButtonShadcn>
+    </Button>
   );
 };

@@ -235,7 +235,6 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
           });
 
           toast.promise(promise, {
-            loading: "Updating NFT metadata",
             error: "Failed to update NFT metadata",
             success: "NFT metadata updated successfully",
           });
@@ -389,11 +388,10 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         <TransactionButton
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={sendAndConfirmTx.isPending}
+          isPending={sendAndConfirmTx.isPending}
           form={UPDATE_METADATA_FORM_ID}
           type="submit"
-          colorScheme="primary"
-          isDisabled={!isDirty && imageUrl === nft?.metadata.image}
+          disabled={!isDirty && imageUrl === nft?.metadata.image}
         >
           Update NFT
         </TransactionButton>

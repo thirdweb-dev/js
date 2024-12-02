@@ -31,7 +31,7 @@ export const CancelTab: React.FC<CancelTabProps> = ({
       <TransactionButton
         txChainID={contract.chain.id}
         transactionCount={1}
-        isLoading={cancelQuery.isPending}
+        isPending={cancelQuery.isPending}
         onClick={() => {
           trackEvent({
             category: "marketplace",
@@ -64,8 +64,7 @@ export const CancelTab: React.FC<CancelTabProps> = ({
             error: "Failed to cancel",
           });
         }}
-        colorScheme="primary"
-        alignSelf="flex-end"
+        className="self-end"
       >
         Cancel {isAuction ? "Auction" : "Listing"}
       </TransactionButton>

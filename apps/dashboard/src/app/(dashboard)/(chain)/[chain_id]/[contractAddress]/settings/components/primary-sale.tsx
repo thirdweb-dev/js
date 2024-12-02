@@ -143,18 +143,15 @@ export const SettingsPrimarySale = ({
         <AdminOnly contract={contract}>
           <TransactionButton
             txChainID={contract.chain.id}
-            colorScheme="primary"
             transactionCount={1}
-            isDisabled={query.isPending || !form.formState.isDirty}
+            disabled={query.isPending || !form.formState.isDirty}
             type="submit"
-            isLoading={mutation.isPending}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
+            isPending={mutation.isPending}
+            className="!rounded-t-none rounded-xl"
           >
-            Update Primary Sale Settings
+            {mutation.isPending
+              ? "Updating Primary Sale Settings"
+              : "Update Primary Sale Settings"}
           </TransactionButton>
         </AdminOnly>
       </Flex>

@@ -139,37 +139,41 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
             txChainID={contract.chain.id}
             size="sm"
             transactionCount={1}
-            rightIcon={<CheckIcon />}
             onClick={() => castVote(1)}
-            colorScheme="green"
-            isDisabled={sendTx.isPending && voteType !== 1}
-            isLoading={sendTx.isPending && voteType === 1}
+            disabled={sendTx.isPending && voteType !== 1}
+            isPending={sendTx.isPending && voteType === 1}
           >
-            Approve
+            <div className="flex items-center gap-2">
+              <CheckIcon className="size-4" />
+              Approve
+            </div>
           </TransactionButton>
           <TransactionButton
             txChainID={contract.chain.id}
             size="sm"
             transactionCount={1}
-            rightIcon={<XIcon />}
             onClick={() => castVote(0)}
-            colorScheme="red"
-            isDisabled={sendTx.isPending && voteType !== 0}
-            isLoading={sendTx.isPending && voteType === 0}
+            variant="destructive"
+            disabled={sendTx.isPending && voteType !== 0}
+            isPending={sendTx.isPending && voteType === 0}
           >
-            Against
+            <div className="flex items-center gap-2">
+              <XIcon className="size-4" />
+              Against
+            </div>
           </TransactionButton>
           <TransactionButton
             txChainID={contract.chain.id}
-            colorScheme="blackAlpha"
             size="sm"
             transactionCount={1}
-            rightIcon={<MinusIcon />}
             onClick={() => castVote(2)}
-            isDisabled={sendTx.isPending && voteType !== 2}
-            isLoading={sendTx.isPending && voteType === 2}
+            disabled={sendTx.isPending && voteType !== 2}
+            isPending={sendTx.isPending && voteType === 2}
           >
-            Abstain
+            <div className="flex items-center gap-2">
+              <MinusIcon className="size-4" />
+              Abstain
+            </div>
           </TransactionButton>
         </Flex>
       ) : (

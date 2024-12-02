@@ -1,17 +1,17 @@
 "use client";
-import { ToolTipLabel } from "@/components/ui/tooltip";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import {
-  Center,
-  Flex,
   Popover,
-  PopoverArrow,
-  PopoverBody,
   PopoverContent,
   PopoverTrigger,
-} from "@chakra-ui/react";
+} from "@/components/ui/popover";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
-import { ArrowLeftRightIcon, InfoIcon } from "lucide-react";
+import { ArrowLeftRightIcon, ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useActiveAccount,
@@ -19,47 +19,35 @@ import {
   useActiveWalletChain,
 } from "thirdweb/react";
 import type { WalletId } from "thirdweb/wallets";
-import {
-  Button,
-  type ButtonProps,
-  Card,
-  Heading,
-  LinkButton,
-  Text,
-} from "tw-components";
 import { MismatchButton } from "./MismatchButton";
 
-interface TransactionButtonProps extends Omit<ButtonProps, "leftIcon"> {
-  transactionCount: number;
-  isLoading: boolean;
+type ButtonProps = React.ComponentProps<typeof Button>;
+
+type TransactionButtonProps = Omit<ButtonProps, "variant"> & {
+  transactionCount: number | undefined; // support for unknown number of tx count
+  isPending: boolean;
   isGasless?: boolean;
-  upsellTestnet?: boolean;
   txChainID: number;
-}
-
-function useWalletRequiresExternalConfirmation() {
-  const activeWallet = useActiveWallet();
-
-  return (
-    activeWallet &&
-    (activeWallet.id === "walletConnect" || activeWallet.id === "global.safe")
-  );
-}
+  variant?: "destructive" | "primary";
+};
 
 export const TransactionButton: React.FC<TransactionButtonProps> = ({
   children,
   transactionCount,
-  isLoading: isPending,
-  size,
-  colorScheme,
-  variant,
+  isPending,
   isGasless,
   txChainID,
+  variant,
   ...restButtonProps
 }) => {
   const activeWallet = useActiveWallet();
+
+  // all wallets except inApp (aka - embedded) requires external confirmation - either from mobile app or extension
   const walletRequiresExternalConfirmation =
-    useWalletRequiresExternalConfirmation();
+    activeWallet &&
+    activeWallet.id !== "inApp" &&
+    activeWallet.id !== "embedded";
+
   const initialFocusRef = useRef<HTMLButtonElement>(null);
 
   const chain = useActiveChainAsDashboardChain();
@@ -68,113 +56,69 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     [chain],
   );
 
-  const numberWidth = useMemo(() => {
-    // for each digit of transaction count add 8.3px
-    return Math.floor(transactionCount.toString().length * 8.3);
-  }, [transactionCount]);
-
-  const address = useActiveAccount()?.address;
-
-  const isConnected = useMemo(() => {
-    return !!address;
-  }, [address]);
-
   const ButtonComponent = useMemo(() => {
     return isGasless ? Button : MismatchButton;
   }, [isGasless]);
 
+  const txCountDivWidth = 60;
+  const disabled = isChainDeprecated || restButtonProps.disabled || isPending;
+
   return (
-    <Popover
-      returnFocusOnClose={false}
-      // @ts-expect-error - this works fine
-      initialFocusRef={initialFocusRef}
-      isLazy
-      isOpen={walletRequiresExternalConfirmation && isPending}
-    >
-      <PopoverTrigger>
+    <Popover open={walletRequiresExternalConfirmation && isPending}>
+      <PopoverTrigger asChild>
         <ButtonComponent
+          variant={variant || "primary"}
           desiredChainId={txChainID}
-          borderRadius="md"
-          position="relative"
-          role="group"
-          colorScheme={colorScheme}
-          isLoading={isPending}
-          size={size}
-          variant={variant}
           {...restButtonProps}
-          overflow="hidden"
-          boxSizing="border-box"
-          pl={
-            isPending || !isConnected
-              ? undefined
-              : `calc(${52 + numberWidth}px + var(--chakra-space-${
-                  size === "sm" ? 3 : size === "lg" ? 6 : size === "xs" ? 2 : 4
-                }))`
-          }
-          isDisabled={isChainDeprecated || restButtonProps.isDisabled}
+          disabled={disabled}
+          className={cn(
+            "relative justify-start overflow-hidden",
+            restButtonProps.className,
+          )}
+          style={{
+            paddingLeft: transactionCount
+              ? `${txCountDivWidth + 16}px`
+              : undefined,
+            ...restButtonProps.style,
+          }}
         >
-          {children}
-          <ToolTipLabel
-            label={
-              isChainDeprecated
-                ? "This chain is deprecated so you cannot execute transactions on it"
-                : `This action will trigger ${transactionCount} ${transactionCount > 1 ? "transactions" : "transaction"}`
-            }
-          >
-            {/* to be completed */}
-            <Center
-              _groupHover={{
-                bg:
-                  variant === "solid" || !variant
-                    ? `${colorScheme}.800`
-                    : `${colorScheme}.200`,
-              }}
-              transitionProperty="var(--chakra-transition-property-common)"
-              transitionDuration="var(--chakra-transition-duration-normal)"
-              as="span"
-              bg={
-                variant === "solid" || !variant
-                  ? `${colorScheme}.700`
-                  : `${colorScheme}.100`
+          {transactionCount && (
+            <ToolTipLabel
+              label={
+                disabled
+                  ? undefined
+                  : isChainDeprecated
+                    ? "This chain is deprecated so you cannot execute transactions on it"
+                    : `This action will trigger ${transactionCount} ${transactionCount > 1 ? "transactions" : "transaction"}`
               }
-              position="absolute"
-              top={0}
-              bottom={0}
-              left={0}
-              px={size === "sm" ? 3 : size === "lg" ? 6 : size === "xs" ? 2 : 4}
             >
-              <Flex
-                as="span"
-                color="whiteAlpha.900"
-                justify="center"
-                gap={1}
-                align="center"
+              <div
+                className="absolute top-0 bottom-0 left-0 flex items-center justify-center gap-1 bg-black/30"
+                style={{
+                  width: `${txCountDivWidth}px`,
+                }}
               >
-                <Text color="inherit" size="label.md" fontFamily="mono">
+                <span className="font-medium font-mono">
                   {transactionCount}
-                </Text>
+                </span>
                 <ArrowLeftRightIcon className="size-3" />
-              </Flex>
-            </Center>
-          </ToolTipLabel>
+              </div>
+            </ToolTipLabel>
+          )}
+
+          <span className="flex grow items-center justify-center gap-3">
+            {children}
+            {isPending && <Spinner className="size-4" />}
+          </span>
         </ButtonComponent>
       </PopoverTrigger>
-      <Card
-        maxW="sm"
-        w="auto"
-        as={PopoverContent}
-        bg="backgroundCardHighlight"
-        mx={6}
-        boxShadow="0px 0px 2px 0px var(--popper-arrow-shadow-color)"
-      >
-        <PopoverArrow bg="backgroundCardHighlight" />
-        <PopoverBody>
-          <ExternalApprovalNotice
-            walletId={activeWallet?.id}
-            initialFocusRef={initialFocusRef}
-          />
-        </PopoverBody>
-      </Card>
+
+      <PopoverContent className="min-w-[300px]" sideOffset={10} side="top">
+        <ExternalApprovalNotice
+          walletId={activeWallet?.id}
+          initialFocusRef={initialFocusRef}
+        />
+      </PopoverContent>
     </Popover>
   );
 };
@@ -190,7 +134,6 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
 }) => {
   const address = useActiveAccount()?.address;
   const chainId = useActiveWalletChain()?.id || -1;
-
   const [showHint, setShowHint] = useState(false);
 
   // legitimate usecase!
@@ -205,61 +148,55 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
   if (walletId === "global.safe") {
     const isChainIdSupported = chainId in CHAIN_ID_TO_GNOSIS;
     return (
-      <div className="flex flex-col gap-4">
-        <Heading size="label.lg">
-          <div className="flex flex-row items-center gap-2">
-            <InfoIcon className="size-6 text-primary-foreground" />
-            <span>Execute Transaction</span>
-          </div>
-        </Heading>
-        <Text>
+      <div className="flex flex-col gap-2">
+        <h4 className="text-foreground">Execute Transaction</h4>
+
+        <p className="text-muted-foreground text-sm">
           You will need to execute this transaction in your Safe to continue.
-        </Text>
+        </p>
 
         {showHint && (
-          <Text fontStyle="italic" size="body.sm">
+          <p className="text-muted-foreground text-sm">
             Once you have approved and executed the transaction in your Gnosis
             Safe this action will continue automatically.
-          </Text>
+          </p>
         )}
 
-        <LinkButton
-          isDisabled={!isChainIdSupported}
-          ref={initialFocusRef}
-          colorScheme="primary"
-          size="sm"
-          href={`https://app.safe.global/${
-            CHAIN_ID_TO_GNOSIS[chainId as keyof typeof CHAIN_ID_TO_GNOSIS]
-          }:${address}/transactions/queue`}
-          isExternal
-        >
-          Go To Safe
-        </LinkButton>
-      </div>
-    );
-  }
-  if (walletId === "walletConnect") {
-    return (
-      <div className="flex flex-col gap-4">
-        <Heading size="label.lg">
-          <div className="flex flex-row items-center gap-2">
-            <InfoIcon className="size-6 text-primary-foreground" />
-            <span>Approve Transaction</span>
-          </div>
-        </Heading>
-        <Text>
-          You will need to approve this transaction in your connected wallet.
-        </Text>
-
-        {showHint && (
-          <Text fontStyle="italic" size="body.sm">
-            Once you have approved the transaction in your connected wallet this
-            action will continue automatically.
-          </Text>
+        {isChainIdSupported && (
+          <Button
+            ref={initialFocusRef}
+            asChild
+            size="sm"
+            className="mt-2 gap-2"
+          >
+            <Link
+              href={`https://app.safe.global/${
+                CHAIN_ID_TO_GNOSIS[chainId as keyof typeof CHAIN_ID_TO_GNOSIS]
+              }:${address}/transactions/queue`}
+              target="_blank"
+            >
+              Go To Safe <ExternalLinkIcon className="size-4" />
+            </Link>
+          </Button>
         )}
       </div>
     );
   }
 
-  return null;
+  return (
+    <div className="flex flex-col gap-2">
+      <h4 className="text-foreground">Approve Transaction</h4>
+
+      <p className="text-muted-foreground text-sm">
+        You will need to approve this transaction in your connected wallet.
+      </p>
+
+      {showHint && (
+        <p className="text-muted-foreground text-sm">
+          Once you have approved the transaction in your connected wallet this
+          action will continue automatically.
+        </p>
+      )}
+    </div>
+  );
 };

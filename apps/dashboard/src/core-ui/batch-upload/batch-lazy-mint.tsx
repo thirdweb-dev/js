@@ -259,16 +259,15 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
               <Box maxW={{ base: "100%", md: "61%" }}>
                 <TransactionButton
                   txChainID={props.chainId}
-                  mt={4}
-                  colorScheme="primary"
+                  className="mt-4 w-full"
                   transactionCount={1}
-                  isDisabled={!nftMetadatas.length}
+                  disabled={!nftMetadatas.length}
                   type="submit"
-                  isLoading={form.formState.isSubmitting}
-                  loadingText={`Uploading ${nftMetadatas.length} NFTs...`}
-                  w="full"
+                  isPending={form.formState.isSubmitting}
                 >
-                  Upload {nftMetadatas.length} NFTs
+                  {form.formState.isSubmitting
+                    ? `Uploading ${nftMetadatas.length} NFTs`
+                    : `Upload ${nftMetadatas.length} NFTs`}
                 </TransactionButton>
                 {props.children}
               </Box>

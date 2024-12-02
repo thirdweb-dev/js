@@ -125,14 +125,12 @@ export function Permissions({
           </Button>
           <TransactionButton
             txChainID={contract.chain.id}
-            colorScheme="primary"
             transactionCount={1}
-            isDisabled={!form.formState.isDirty}
+            disabled={!form.formState.isDirty}
             type="submit"
-            isLoading={sendTx.isPending}
-            loadingText="Saving permissions ..."
+            isPending={sendTx.isPending}
           >
-            Update permissions
+            {sendTx.isPending ? "Updating permissions" : "Update permissions"}
           </TransactionButton>
         </ButtonGroup>
       </Flex>

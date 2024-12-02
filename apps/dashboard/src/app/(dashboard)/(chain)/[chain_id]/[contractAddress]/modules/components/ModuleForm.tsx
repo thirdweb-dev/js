@@ -385,11 +385,10 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
           <TransactionButton
             txChainID={contract.chain.id}
             transactionCount={1}
-            isLoading={installMutation.isPending}
+            isPending={installMutation.isPending}
             type="submit"
-            colorScheme="primary"
-            alignSelf="flex-end"
-            isDisabled={
+            className="self-end"
+            disabled={
               !formState.isValid ||
               isModuleCompatibleQuery.data === false ||
               isModuleCompatibleQuery.isFetching
