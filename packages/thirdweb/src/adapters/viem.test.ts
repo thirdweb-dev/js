@@ -1,4 +1,4 @@
-import { type Account as ViemAccount, zeroAddress } from "viem";
+import type { Account as ViemAccount } from "viem";
 import { privateKeyToAccount as viemPrivateKeyToAccount } from "viem/accounts";
 import { beforeAll, describe, expect, test } from "vitest";
 import { USDT_ABI } from "~test/abis/usdt.js";
@@ -6,7 +6,7 @@ import {
   USDT_CONTRACT_ADDRESS,
   USDT_CONTRACT_WITH_ABI,
 } from "~test/test-contracts.js";
-import { ANVIL_PKEY_A } from "~test/test-wallets.js";
+import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
 
 import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
@@ -87,6 +87,7 @@ describe("walletClient.toViem", () => {
     if (!walletClient.account) {
       throw new Error("Account not found");
     }
+
     const txHash = await walletClient.sendTransaction({
       account: walletClient.account,
       chain: {
@@ -101,8 +102,8 @@ describe("walletClient.toViem", () => {
           decimals: ANVIL_CHAIN.nativeCurrency?.decimals || 18,
         },
       },
-      to: zeroAddress,
-      value: 0n,
+      to: TEST_ACCOUNT_B.address,
+      value: 10n,
     });
     expect(txHash).toBeDefined();
     expect(txHash.slice(0, 2)).toBe("0x");
