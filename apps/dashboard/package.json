@@ -74,7 +74,7 @@
     "nextjs-toploader": "^1.6.12",
     "papaparse": "^5.4.1",
     "pluralize": "^8.0.0",
-    "posthog-js": "1.67.1",
+    "posthog-js": "1.194.2",
     "qrcode": "^1.5.3",
     "react": "19.0.0-rc-69d4b800-20241021",
     "react-children-utilities": "^2.10.0",
