@@ -18,7 +18,7 @@
   "dependencies": {
     "@dirtycajunrice/klee": "^1.0.5",
     "@mdx-js/loader": "^2.3.0",
-    "@mdx-js/react": "^2.3.0",
+    "@mdx-js/react": "^3.1.0",
     "@next/mdx": "15.0.3",
     "@radix-ui/react-dialog": "1.1.2",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
