@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.51
+
+### Patch Changes
+
+- [#5542](https://github.com/thirdweb-dev/js/pull/5542) [`8aa454c`](https://github.com/thirdweb-dev/js/commit/8aa454cbbbc2079749fa8250102ab0307d1b33af) Thanks [@arcoraven](https://github.com/arcoraven)! - feat: add promptTokens and completionTokens fields to usage
+
 ## 0.4.50
 
 ### Patch Changes
