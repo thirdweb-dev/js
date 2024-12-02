@@ -329,7 +329,7 @@
     "@mobile-wallet-protocol/client": "0.1.2",
     "@react-native-async-storage/async-storage": "2.1.0",
     "@size-limit/preset-big-lib": "11.1.6",
-    "@storybook/addon-essentials": "8.4.5",
+    "@storybook/addon-essentials": "8.4.6",
     "@storybook/addon-interactions": "8.4.5",
     "@storybook/addon-links": "8.4.5",
     "@storybook/addon-onboarding": "8.4.5",
