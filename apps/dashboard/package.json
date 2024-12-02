@@ -89,7 +89,7 @@
     "recharts": "^2.13.3",
     "remark-gfm": "^4.0.0",
     "server-only": "^0.0.1",
-    "shiki": "1.22.2",
+    "shiki": "1.24.0",
     "sonner": "^1.7.0",
     "spdx-correct": "^3.2.0",
     "swagger-ui-react": "^5.18.2",

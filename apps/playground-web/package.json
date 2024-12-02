@@ -39,7 +39,7 @@
     "react-dom": "19.0.0-rc-69d4b800-20241021",
     "react-pick-color": "^2.0.0",
     "server-only": "^0.0.1",
-    "shiki": "1.22.2",
+    "shiki": "1.24.0",
     "tailwind-merge": "^2.5.5",
     "thirdweb": "workspace:*",
     "timeago.js": "^4.0.2",
