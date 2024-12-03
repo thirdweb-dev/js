@@ -11,8 +11,13 @@ import { useSetActiveWalletConnectionStatus } from "./useSetActiveWalletConnecti
  * @returns A function that lets you connect a wallet.
  * @example
  * ```jsx
+ * import { createThirdwebClient } from "thirdweb";
  * import { useConnect } from "thirdweb/react";
  * import { createWallet } from "thirdweb/wallets";
+ *
+ * const client = createThirdwebClient({
+ *   clientId: "YOUR_CLIENT_ID",
+ * });
  *
  * function Example() {
  *   const { connect, isConnecting, error } = useConnect();
@@ -23,7 +28,9 @@ import { useSetActiveWalletConnectionStatus } from "./useSetActiveWalletConnecti
  *           // instantiate wallet
  *           const wallet = createWallet("io.metamask");
  *           // connect wallet
- *           await wallet.connect();
+ *           await wallet.connect({
+ *             client,
+ *           });
  *           // return the wallet
  *           return wallet;
  *         })
