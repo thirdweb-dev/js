@@ -36,7 +36,7 @@ const DesireSection = () => {
             iconWidth="102px"
             icon={require("../../../public/assets/product-pages/mission/icon-control.svg")}
             title="Give control to developers"
-            description="Developers should have full control over their stack. thirdweb is designed to to allow developers to assemble and reassemble different parts of our tools and provide their own configurations. thirdweb has no servers, and every contract or app is owned by the developer."
+            description="Developers should have full control over their stack. thirdweb is designed to allow developers to assemble and reassemble different parts of our tools and provide their own configurations. thirdweb has no servers, and every contract or app is owned by the developer."
           />
 
           <LandingIconSectionItem
