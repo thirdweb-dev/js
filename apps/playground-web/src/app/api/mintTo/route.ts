@@ -1,23 +1,9 @@
 import { Engine } from "@thirdweb-dev/engine";
-import * as dotenv from "dotenv";
 import { type NextRequest, NextResponse } from "next/server";
-
-dotenv.config();
 
 const CHAIN_ID = "84532";
 const CONTRACT_ADDRESS = "0x8CD193648f5D4E8CD9fD0f8d3865052790A680f6";
 const BACKEND_WALLET_ADDRESS = process.env.ENGINE_BACKEND_WALLET as string;
-
-// Add logging for environment variables
-console.log("Environment Variables:");
-console.log("CHAIN_ID:", CHAIN_ID);
-console.log("BACKEND_WALLET_ADDRESS:", BACKEND_WALLET_ADDRESS);
-console.log("CONTRACT_ADDRESS:", CONTRACT_ADDRESS);
-console.log("ENGINE_URL:", process.env.ENGINE_URL);
-console.log(
-  "ACCESS_TOKEN:",
-  process.env.ENGINE_ACCESS_TOKEN ? "Set" : "Not Set",
-);
 
 const engine = new Engine({
   url: process.env.ENGINE_URL as string,
