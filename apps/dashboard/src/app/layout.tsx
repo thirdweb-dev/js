@@ -17,6 +17,10 @@ const fontSans = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://thirdweb.com"),
+  alternates: {
+    canonical: "./",
+  },
   title: "thirdweb: The complete web3 development platform",
   description:
     "Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum & 700+ EVM chains. Try now.",
