@@ -908,12 +908,22 @@ function DetailsModal(props: {
       />
     );
   } else if (screen === "linked-profiles") {
+    let ecosystem: Ecosystem | undefined;
+    if (activeWallet && isEcosystemWallet(activeWallet)) {
+      const ecosystemWallet = activeWallet as Wallet<EcosystemWalletId>;
+      const partnerId = ecosystemWallet.getConfig()?.partnerId;
+      ecosystem = {
+        id: ecosystemWallet.id,
+        partnerId,
+      };
+    }
     content = (
       <LinkedProfilesScreen
         onBack={() => setScreen("manage-wallet")}
         client={client}
         locale={locale}
         setScreen={setScreen}
+        ecosystem={ecosystem}
       />
     );
   } else if (screen === "link-profile") {
