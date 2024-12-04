@@ -291,6 +291,12 @@ async function redirects() {
       destination: "https://portal.thirdweb.com/connect/blockchain-api",
       permanent: false,
     },
+    // redirect `/events` to homepage
+    {
+      source: "/events",
+      destination: "/",
+      permanent: false,
+    },
     ...legacyDashboardToTeamRedirects,
   ];
 }
