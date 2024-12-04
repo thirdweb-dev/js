@@ -113,7 +113,12 @@ export async function getUser({
       email: item.email,
       phone: item.phone,
       createdAt: item.createdAt,
-      profiles: item.linkedAccounts,
+      profiles: item.linkedAccounts.map((profile) => {
+        return {
+          type: (profile.type as string) === "siwe" ? "wallet" : profile.type,
+          details: profile.details,
+        };
+      }),
     }))[0] || null
   );
 }
