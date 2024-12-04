@@ -83,6 +83,13 @@ Code: ${code}`,
         paymasterAndData: res.result,
       };
     }
+    // check for policy errors
+    if (res.result.policyId && res.result.reason) {
+      console.warn(
+        `Paymaster policy rejected this transaction with reason: ${res.result.reason} (policyId: ${res.result.policyId})`,
+      );
+    }
+
     return {
       paymasterAndData: res.result.paymasterAndData,
       verificationGasLimit: res.result.verificationGasLimit

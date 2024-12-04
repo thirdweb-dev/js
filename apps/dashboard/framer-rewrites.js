@@ -8,6 +8,8 @@ module.exports = [
   "/connect/sign-in",
   // -- nebula
   "/nebula",
+  // --insight
+  "/insight",
   // -- contracts
   "/contracts",
   "/contracts/modular-contracts",

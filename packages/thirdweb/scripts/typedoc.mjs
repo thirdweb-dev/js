@@ -4,7 +4,11 @@ import { Application } from "typedoc";
 const jsonOut = "typedoc/documentation.json";
 
 const app = await Application.bootstrapWithPlugins({
-  entryPoints: ["src/exports/**/*.ts", "src/extensions/modules/**/index.ts"],
+  entryPoints: [
+    "src/exports/**/*.ts",
+    "src/extensions/modules/**/index.ts",
+    "src/adapters/eip1193/index.ts",
+  ],
   exclude: [
     "src/exports/*.native.ts",
     "src/exports/**/*.native.ts",

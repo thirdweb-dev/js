@@ -20,7 +20,7 @@ apps/ @jnsdls @joaquim-verges
 apps/dashboard/ @jnsdls @MananTank @joaquim-verges
 apps/playground-web/ @joaquim-verges @gregfromstl @jnsdls @joaquim-verges
 apps/wallet-ui/ @gregfromstl @jnsdls @joaquim-verges @MananTank
-apps/portal/ @gregfromstl @jnsdls @joaquim-verges @MananTank
+apps/portal/ @thirdweb-dev/product @thirdweb-dev/platform @thirdweb-dev/infra
 
 # .github folder + .changeset + turbo config is owned by jonas for now
 scripts/ @jnsdls @joaquim-verges

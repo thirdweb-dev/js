@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-adapter
 
+## 1.5.2
+
+### Patch Changes
+
+- [#5594](https://github.com/thirdweb-dev/js/pull/5594) [`b7c8854`](https://github.com/thirdweb-dev/js/commit/b7c885432726eeaf3401217573f2cff0f5247ff7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support for Expo 52 and React Native 0.76
+
 ## 1.5.1
 
 ### Patch Changes

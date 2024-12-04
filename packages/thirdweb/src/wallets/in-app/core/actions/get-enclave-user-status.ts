@@ -37,7 +37,7 @@ export async function getUserStatus({
       return undefined;
     }
     const result = await response.json();
-    throw new Error(`Failed to get user status: ${result.error}`);
+    throw new Error(`Failed to get user status: ${result.message}`);
   }
 
   return (await response.json()) as UserStatus;
