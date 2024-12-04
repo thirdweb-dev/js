@@ -327,6 +327,13 @@ export type ConnectButton_detailsModalOptions = {
    * Note: Not all tokens are resolvable to a fiat value. In that case, nothing will be shown.
    */
   showBalanceInFiat?: SupportedFiatCurrency;
+
+  /**
+   *
+   * @param screen The screen's name that was last shown when user closed the modal
+   * @returns
+   */
+  onClose?: (screen: string) => void;
 };
 
 /**
