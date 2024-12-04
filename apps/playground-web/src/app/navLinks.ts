@@ -111,4 +111,30 @@ export const navLinks: SidebarLink[] = [
     name: "Blockchain API",
     href: "/connect/blockchain-api",
   },
+  {
+    name: "Headless UI",
+    expanded: true,
+    links: [
+      {
+        name: "Account",
+        href: "/connect/ui",
+      },
+      {
+        name: "NFT",
+        href: "/connect/ui/nft",
+      },
+      {
+        name: "Token",
+        href: "/connect/ui/Token",
+      },
+      {
+        name: "Transaction",
+        href: "/connect/ui/transaction",
+      },
+      {
+        name: "Chain",
+        href: "/connect/ui/chain",
+      },
+    ],
+  },
 ];
