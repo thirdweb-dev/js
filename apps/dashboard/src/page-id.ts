@@ -46,9 +46,6 @@ export enum PageId {
   //  general product pages
   // ---------------------------------------------------------------------------
 
-  // thirdweb.com/events
-  Events = "events",
-
   // thirdweb..com/mission
   Mission = "mission",
 
