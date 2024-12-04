@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,6 +14,7 @@ export function TeamHeaderLoggedOutDesktopUI(props: {
   className?: string;
 }) {
   const pathname = usePathname();
+  const router = useDashboardRouter();
   return (
     <header
       className={cn(
@@ -31,12 +33,17 @@ export function TeamHeaderLoggedOutDesktopUI(props: {
       <div className="flex items-center gap-6">
         <SecondaryNavLinks />
 
-        <Button size="sm" variant="primary" className="rounded-lg" asChild>
-          <Link
-            href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
-          >
-            Sign in
-          </Link>
+        <Button
+          size="sm"
+          variant="primary"
+          className="rounded-lg"
+          onClick={() => {
+            router.push(
+              `/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`,
+            );
+          }}
+        >
+          Sign in
         </Button>
       </div>
     </header>
@@ -47,6 +54,7 @@ export function TeamHeaderLoggedOutMobileUI(props: {
   className?: string;
 }) {
   const pathname = usePathname();
+  const router = useDashboardRouter();
 
   return (
     <header
@@ -60,12 +68,17 @@ export function TeamHeaderLoggedOutMobileUI(props: {
       </Link>
 
       <div className="flex items-center gap-3">
-        <Button size="sm" variant="primary" className="rounded-lg" asChild>
-          <Link
-            href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
-          >
-            Sign in
-          </Link>
+        <Button
+          size="sm"
+          variant="primary"
+          className="rounded-lg"
+          onClick={() => {
+            router.push(
+              `/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`,
+            );
+          }}
+        >
+          Sign in
         </Button>
         <MobileBurgerMenuButton type="loggedOut" />
       </div>

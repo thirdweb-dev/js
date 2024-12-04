@@ -3,6 +3,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useStore } from "@/lib/reactive";
 import { cn } from "@/lib/utils";
 import { getSDKTheme } from "app/components/sdk-component-theme";
@@ -43,6 +44,7 @@ export const CustomConnectWallet = (props: {
   const thirdwebClient = useThirdwebClient();
   const loginRequired =
     props.loginRequired === undefined ? true : props.loginRequired;
+  const router = useDashboardRouter();
 
   const { theme } = useTheme();
   const t = theme === "light" ? "light" : "dark";
@@ -142,16 +144,16 @@ export const CustomConnectWallet = (props: {
     return (
       <>
         <Button
-          asChild
           variant="default"
           className={props.signInLinkButtonClassName}
           size="lg"
+          onClick={() => {
+            router.push(
+              `/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`,
+            );
+          }}
         >
-          <Link
-            href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
-          >
-            Sign In
-          </Link>
+          Sign In
         </Button>
       </>
     );

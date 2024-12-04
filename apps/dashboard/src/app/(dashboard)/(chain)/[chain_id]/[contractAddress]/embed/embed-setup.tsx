@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useApiKeys, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl, Input, Select } from "@chakra-ui/react";
 import { LazyCreateAPIKeyDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
@@ -294,6 +295,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   const [showCreateAPIKeyModal, setShowCreateAPIKeyModal] = useState(false);
   const activeAccount = useActiveAccount();
   const pathname = usePathname();
+  const router = useDashboardRouter();
 
   return (
     <Flex gap={8} direction="column">
@@ -377,14 +379,17 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
           <FormControl>
             <FormLabel>Client ID</FormLabel>
             {!activeAccount ? (
-              <Button asChild className="w-full">
-                <Link
-                  href={`/login${
-                    pathname ? `?next=${encodeURIComponent(pathname)}` : ""
-                  }`}
-                >
-                  Sign in to create a client ID
-                </Link>
+              <Button
+                className="w-full"
+                onClick={() => {
+                  router.push(
+                    `/login${
+                      pathname ? `?next=${encodeURIComponent(pathname)}` : ""
+                    }`,
+                  );
+                }}
+              >
+                Sign in to create a client ID
               </Button>
             ) : validApiKey ? (
               <Input
