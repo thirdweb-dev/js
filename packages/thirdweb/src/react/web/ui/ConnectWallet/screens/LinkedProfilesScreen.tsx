@@ -107,7 +107,7 @@ export function LinkedProfilesScreen(props: {
               ?.filter((profile) => profile.type !== "guest")
               .map((profile) => (
                 <LinkedProfile
-                  key={`${profile.type}-${getProfileDisplayName(profile)}`}
+                  key={`${JSON.stringify(profile)}`}
                   enableUnlinking={connectedProfiles.length > 1}
                   profile={profile}
                   client={props.client}
