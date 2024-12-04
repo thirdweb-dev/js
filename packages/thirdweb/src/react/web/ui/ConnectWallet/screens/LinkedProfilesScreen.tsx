@@ -2,10 +2,14 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { useActiveWallet } from "../../../../../react/core/hooks/wallets/useActiveWallet.js";
 import { shortenAddress } from "../../../../../utils/address.js";
+import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Profile } from "../../../../../wallets/in-app/core/authentication/types.js";
 import type { Ecosystem } from "../../../../../wallets/in-app/core/wallet/types.js";
 import { unlinkProfile } from "../../../../../wallets/in-app/web/lib/auth/index.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
 import { useSocialProfiles } from "../../../../core/social/useSocialProfiles.js";
 import { getSocialIcon } from "../../../../core/utils/walletIcon.js";
@@ -51,7 +55,6 @@ export function LinkedProfilesScreen(props: {
   setScreen: (screen: WalletDetailsModalScreen) => void;
   locale: ConnectLocale;
   client: ThirdwebClient;
-  ecosystem?: Ecosystem;
 }) {
   const { data: connectedProfiles, isLoading } = useProfiles({
     client: props.client,
@@ -122,13 +125,12 @@ function LinkedProfile({
   profile,
   enableUnlinking,
   client,
-  ecosystem,
 }: {
   profile: Profile;
   enableUnlinking: boolean;
   client: ThirdwebClient;
-  ecosystem?: Ecosystem;
 }) {
+  const activeWallet = useActiveWallet();
   const { data: socialProfiles } = useSocialProfiles({
     client,
     address: profile.details.address,
@@ -136,6 +138,21 @@ function LinkedProfile({
   const queryClient = useQueryClient();
   const { mutate: unlinkProfileMutation, isPending } = useMutation({
     mutationFn: async () => {
+      let ecosystem: Ecosystem | undefined;
+
+      if (!activeWallet) {
+        throw new Error("No active wallet found");
+      }
+
+      if (isEcosystemWallet(activeWallet)) {
+        const ecosystemWallet = activeWallet as Wallet<EcosystemWalletId>;
+        const partnerId = ecosystemWallet.getConfig()?.partnerId;
+        ecosystem = {
+          id: ecosystemWallet.id,
+          partnerId,
+        };
+      }
+
       await unlinkProfile({
         client,
         ecosystem,
