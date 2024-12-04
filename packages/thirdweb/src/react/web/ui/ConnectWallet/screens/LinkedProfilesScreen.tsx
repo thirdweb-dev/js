@@ -131,9 +131,7 @@ function LinkedProfile({
 }) {
   const { data: socialProfiles } = useSocialProfiles({
     client,
-    address: profile.details.address
-      ? "0x225f137127d9067788314bc7fcc1f36746a3c3B5"
-      : undefined,
+    address: profile.details.address,
   });
   const queryClient = useQueryClient();
   const { mutate: unlinkProfileMutation, isPending } = useMutation({
