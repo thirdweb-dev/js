@@ -16,7 +16,14 @@ import { isTransferFromSupported } from "../__generated__/IERC20/write/transferF
  * @example
  * ```ts
  * import { isERC20 } from "thirdweb/extensions/erc20";
- * const result = await isERC20({ contract });
+ * import { resolveContractAbi } from "thirdweb/contract";
+ *
+ * const abi = await resolveContractAbi(contract);
+ * const selectors = abi
+ *   .filter((f) => f.type === "function")
+ *   .map((f) => toFunctionSelector(f));
+ *
+ * const result = await isERC20(selectors);
  * ```
  */
 export function isERC20(availableSelectors: string[]) {
