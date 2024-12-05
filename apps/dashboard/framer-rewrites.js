@@ -5,6 +5,7 @@ module.exports = [
   "/pricing",
   // -- product landing pages --
   // -- connect
+  "/connect",
   "/connect/sign-in",
   // -- nebula
   "/nebula",

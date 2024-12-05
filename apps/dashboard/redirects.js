@@ -228,8 +228,6 @@ async function redirects() {
       destination: "/explore",
       permanent: false,
     },
-
-    // framer redirects
     {
       source: "/deploy",
       destination: "/contracts/deployment-tool",

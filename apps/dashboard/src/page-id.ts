@@ -33,9 +33,6 @@ export enum PageId {
   // thirdweb.com/embedded-wallets
   EmbeddedWalletsLanding = "embedded-wallets-landing",
 
-  // thirdweb.com/connec
-  ConnectLanding = "connect-landing",
-
   // thirdweb.com/auth
   AuthLanding = "auth-landing",
 
