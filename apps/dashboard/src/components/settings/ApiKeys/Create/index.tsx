@@ -156,8 +156,8 @@ function CreateAPIKeyForm(props: {
     const formattedValues = {
       name: values.name,
       domains: toArrFromList(values.domains),
-      // enable all services
-      services: SERVICES.map((srv) => ({
+      // enable all services (except insight)
+      services: SERVICES.filter((s) => s.name !== "insight").map((srv) => ({
         name: srv.name,
         targetAddresses: ["*"],
         enabled: true,
