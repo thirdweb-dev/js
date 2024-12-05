@@ -5,9 +5,7 @@ import { celo } from "../../chains/chain-definitions/celo.js";
 import { defineChain } from "../../chains/utils.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
-import type { Address } from "../../utils/address.js";
 import { privateKeyToAccount } from "../private-key.js";
-import { getWalletBalance } from "../utils/getWalletBalance.js";
 import { TokenPaymaster } from "./lib/constants.js";
 import { smartWallet } from "./smart-wallet.js";
 
@@ -39,17 +37,6 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         client: TEST_CLIENT,
         personalAccount,
       });
-      const smartWalletAddress = smartAccount.address as Address;
-      console.log("smartWalletAddress", smartWalletAddress);
-      console.log(
-        "balance before",
-        await getWalletBalance({
-          address: smartAccount.address,
-          chain: chain,
-          client,
-          tokenAddress: tokenPaymaster.tokenAddress,
-        }),
-      );
       const tx = prepareTransaction({
         client,
         chain,
@@ -61,15 +48,6 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         account: smartAccount,
       });
       expect(receipt.transactionHash).toBeDefined();
-      console.log(
-        "balance after",
-        await getWalletBalance({
-          address: smartAccount.address,
-          chain: chain,
-          client,
-          tokenAddress: tokenPaymaster.tokenAddress,
-        }),
-      );
     });
 
     it.skip("should send a transaction with base celo", async () => {
@@ -91,17 +69,6 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         client: TEST_CLIENT,
         personalAccount,
       });
-      const smartWalletAddress = smartAccount.address as Address;
-      console.log("smartWalletAddress", smartWalletAddress);
-      console.log(
-        "balance before",
-        await getWalletBalance({
-          address: smartAccount.address,
-          chain: chain,
-          client,
-          tokenAddress: tokenPaymaster.tokenAddress,
-        }),
-      );
       const tx = prepareTransaction({
         client,
         chain,
@@ -113,15 +80,6 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         account: smartAccount,
       });
       expect(receipt.transactionHash).toBeDefined();
-      console.log(
-        "balance after",
-        await getWalletBalance({
-          address: smartAccount.address,
-          chain: chain,
-          client,
-          tokenAddress: tokenPaymaster.tokenAddress,
-        }),
-      );
     });
 
     it("should send a transaction with base lisk", async () => {
@@ -143,17 +101,6 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         client: TEST_CLIENT,
         personalAccount,
       });
-      const smartWalletAddress = smartAccount.address as Address;
-      console.log("smartWalletAddress", smartWalletAddress);
-      console.log(
-        "balance before",
-        await getWalletBalance({
-          address: smartAccount.address,
-          chain: chain,
-          client,
-          tokenAddress: tokenPaymaster.tokenAddress,
-        }),
-      );
       const tx = prepareTransaction({
         client,
         chain,
@@ -165,15 +112,6 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         account: smartAccount,
       });
       expect(receipt.transactionHash).toBeDefined();
-      console.log(
-        "balance after",
-        await getWalletBalance({
-          address: smartAccount.address,
-          chain: chain,
-          client,
-          tokenAddress: tokenPaymaster.tokenAddress,
-        }),
-      );
     });
   },
 );

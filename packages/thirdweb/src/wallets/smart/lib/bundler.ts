@@ -72,8 +72,13 @@ export async function estimateUserOpGas(
     userOp: UserOperationV06 | UserOperationV07;
     options: BundlerOptions;
   },
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  stateOverrides?: any,
+  stateOverrides?: {
+    [x: string]: {
+      stateDiff: {
+        [x: string]: `0x${string}`;
+      };
+    };
+  },
 ): Promise<EstimationResult> {
   const res = await sendBundlerRequest({
     ...args,

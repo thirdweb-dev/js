@@ -18,7 +18,7 @@ export const ENTRYPOINT_ADDRESS_v0_7 =
 
 export const MANAGED_ACCOUNT_GAS_BUFFER = 50000n;
 
-export type PAYMASTERS = "BASE_USDC" | "CELO_CUSD" | "LISK_LSK";
+type PAYMASTERS = "BASE_USDC" | "CELO_CUSD" | "LISK_LSK";
 export const TokenPaymaster: Record<PAYMASTERS, TokenPaymasterConfig> = {
   BASE_USDC: {
     chainId: 8453,

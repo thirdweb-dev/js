@@ -118,7 +118,7 @@ import { getDefaultAccountFactory } from "./lib/constants.js";
  *    accountAddress: "0x...", // override account address
  *    accountSalt: "0x...", // override account salt
  *    entrypointAddress: "0x...", // override entrypoint address
- *    erc20Paymaster: "BASE_USDC", // enable erc20 paymaster
+ *    tokenPaymaster: TokenPaymaster.BASE_USDC, // enable erc20 paymaster
  *    bundlerUrl: "https://...", // override bundler url
  *    paymaster: (userOp) => { ... }, // override paymaster
  *    ...
