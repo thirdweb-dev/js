@@ -7,6 +7,8 @@ export function PlainTextCodeBlock(props: {
   className?: string;
   scrollableClassName?: string;
   codeClassName?: string;
+  scrollableContainerClassName?: string;
+  shadowColor?: string;
 }) {
   return (
     <CodeBlockContainer
@@ -14,6 +16,8 @@ export function PlainTextCodeBlock(props: {
       className={props.className}
       copyButtonClassName={props.copyButtonClassName}
       scrollableClassName={props.scrollableClassName}
+      scrollableContainerClassName={props.scrollableContainerClassName}
+      shadowColor={props.shadowColor}
     >
       <code className={cn("block whitespace-pre", props.codeClassName)}>
         {props.code}

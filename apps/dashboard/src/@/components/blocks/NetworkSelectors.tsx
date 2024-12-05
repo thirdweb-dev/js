@@ -82,6 +82,8 @@ export function MultiNetworkSelector(props: {
 export function SingleNetworkSelector(props: {
   chainId: number | undefined;
   onChange: (chainId: number) => void;
+  className?: string;
+  popoverContentClassName?: string;
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
@@ -137,9 +139,11 @@ export function SingleNetworkSelector(props: {
       onValueChange={(chainId) => {
         props.onChange(Number(chainId));
       }}
-      placeholder="Select Chain"
+      placeholder={allChains.length ? "Select Chain" : "Loading Chains..."}
       overrideSearchFn={searchFn}
       renderOption={renderOption}
+      className={props.className}
+      popoverContentClassName={props.popoverContentClassName}
     />
   );
 }
