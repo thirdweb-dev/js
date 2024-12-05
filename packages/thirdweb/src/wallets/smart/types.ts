@@ -8,6 +8,13 @@ import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 
+export type TokenPaymasterConfig = {
+  chainId: number;
+  paymasterAddress: string;
+  tokenAddress: string;
+  balanceStorageSlot: number;
+};
+
 export type SmartWalletOptions = Prettify<
   {
     chain: Chain; // TODO consider making default chain optional
@@ -17,24 +24,25 @@ export type SmartWalletOptions = Prettify<
       accountAddress?: string;
       accountSalt?: string;
       entrypointAddress?: string;
-      erc20Paymaster?: {
-        address: string;
-        token: string;
-      };
+      tokenPaymaster?:
+        | "BASE_USDC"
+        | "CELO_CUSD"
+        | "LISK_LSK"
+        | TokenPaymasterConfig;
       paymaster?: (
-        userOp: UserOperationV06 | UserOperationV07,
+        userOp: UserOperationV06 | UserOperationV07
       ) => Promise<PaymasterResult>;
       predictAddress?: (factoryContract: ThirdwebContract) => Promise<string>;
       createAccount?: (
-        factoryContract: ThirdwebContract,
+        factoryContract: ThirdwebContract
       ) => PreparedTransaction;
       execute?: (
         accountContract: ThirdwebContract,
-        transaction: SendTransactionOption,
+        transaction: SendTransactionOption
       ) => PreparedTransaction;
       executeBatch?: (
         accountContract: ThirdwebContract,
-        transactions: SendTransactionOption[],
+        transactions: SendTransactionOption[]
       ) => PreparedTransaction;
       getAccountNonce?: (accountContract: ThirdwebContract) => Promise<bigint>;
     };
@@ -204,7 +212,7 @@ export type UserOperationReceipt = {
 };
 
 export function formatUserOperationReceipt(
-  userOpReceiptRaw: UserOperationReceipt,
+  userOpReceiptRaw: UserOperationReceipt
 ) {
   const { receipt: transactionReceipt } = userOpReceiptRaw;
 

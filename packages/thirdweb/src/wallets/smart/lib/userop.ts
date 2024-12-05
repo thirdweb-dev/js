@@ -1,4 +1,4 @@
-import { concat } from "viem";
+import { concat, encodePacked, keccak256, toBytes, toHex } from "viem";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import {
@@ -23,6 +23,7 @@ import type {
   BundlerOptions,
   PaymasterResult,
   SmartWalletOptions,
+  TokenPaymasterConfig,
   UserOperationV06,
   UserOperationV07,
 } from "../types.js";
@@ -361,15 +362,41 @@ async function populateUserOp_v0_7(args: {
         paymasterResult.paymasterVerificationGasLimit;
     } else {
       // otherwise fallback to bundler for gas limits
-      const estimates = await estimateUserOpGas({
-        userOp: partialOp,
-        options: bundlerOptions,
-      });
+      const stateOverrides = overrides?.tokenPaymaster
+        ? {
+            [(overrides.tokenPaymaster as TokenPaymasterConfig).tokenAddress]: {
+              stateDiff: {
+                [keccak256(
+                  encodePacked(
+                    ["address", "uint256"],
+                    [
+                      accountContract.address,
+                      BigInt(
+                        (overrides?.tokenPaymaster as TokenPaymasterConfig)
+                          .balanceStorageSlot,
+                      ),
+                    ],
+                  ),
+                )]: toBytes(toHex(BigInt(2) * BigInt(96) - BigInt(1)), {
+                  size: 32,
+                }),
+              },
+            },
+          }
+        : {};
+      const estimates = await estimateUserOpGas(
+        {
+          userOp: partialOp,
+          options: bundlerOptions,
+        },
+        stateOverrides,
+      );
       partialOp.callGasLimit = estimates.callGasLimit;
       partialOp.verificationGasLimit = estimates.verificationGasLimit;
       partialOp.preVerificationGas = estimates.preVerificationGas;
-      partialOp.paymasterPostOpGasLimit =
-        paymasterResult.paymasterPostOpGasLimit || 0n;
+      partialOp.paymasterPostOpGasLimit = overrides?.tokenPaymaster
+        ? 500_000n
+        : paymasterResult.paymasterPostOpGasLimit || 0n;
       partialOp.paymasterVerificationGasLimit =
         paymasterResult.paymasterVerificationGasLimit || 0n;
       // need paymaster to re-sign after estimates

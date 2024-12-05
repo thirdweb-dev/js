@@ -22,7 +22,6 @@ import type { PreparedTransaction } from "../../transaction/prepare-transaction.
 import { readContract } from "../../transaction/read-contract.js";
 import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
-import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type {
@@ -45,7 +44,11 @@ import {
   prepareBatchExecute,
   prepareExecute,
 } from "./lib/calls.js";
-import { getDefaultAccountFactory } from "./lib/constants.js";
+import {
+  ENTRYPOINT_ADDRESS_v0_6,
+  getDefaultAccountFactory,
+  getEntryPointVersion,
+} from "./lib/constants.js";
 import {
   clearAccountDeploying,
   createUnsignedUserOp,
@@ -58,6 +61,7 @@ import type {
   SmartAccountOptions,
   SmartWalletConnectionOptions,
   SmartWalletOptions,
+  TokenPaymasterConfig,
   UserOperationV06,
   UserOperationV07,
 } from "./types.js";
@@ -196,12 +200,50 @@ export async function disconnectSmartWallet(
 async function createSmartAccount(
   options: SmartAccountOptions,
 ): Promise<Account> {
+  let erc20Paymaster = options.overrides?.tokenPaymaster;
+  if (erc20Paymaster && typeof erc20Paymaster === "string") {
+    if (
+      getEntryPointVersion(
+        options.overrides?.entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
+      ) !== "v0.7"
+    ) {
+      throw new Error(
+        "Token paymaster is only supported for entrypoint version v0.7",
+      );
+    }
+    switch (erc20Paymaster) {
+      case "BASE_USDC":
+        erc20Paymaster = {
+          chainId: 8453,
+          paymasterAddress: "0x2222f2738BE6bB7aA0Bfe4AEeAf2908172CF5539",
+          tokenAddress: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          balanceStorageSlot: 9,
+        };
+        break;
+      case "CELO_CUSD":
+        erc20Paymaster = {
+          chainId: 42220,
+          paymasterAddress: "0x3feA3c5744D715ff46e91C4e5C9a94426DfF2aF9",
+          tokenAddress: "0x765DE816845861e75A25fCA122bb6898B8B1282a",
+          balanceStorageSlot: 9,
+        };
+        break;
+      case "LISK_LSK":
+        erc20Paymaster = {
+          chainId: 1135,
+          paymasterAddress: "0x9eb8cf7fBa5ed9EeDCC97a0d52254cc0e9B1AC25",
+          tokenAddress: "0xac485391EB2d7D88253a7F1eF18C37f4242D1A24",
+          balanceStorageSlot: 9,
+        };
+        break;
+    }
+  }
+
   const { accountContract } = options;
   const account: Account = {
     address: getAddress(accountContract.address),
     async sendTransaction(transaction: SendTransactionOption) {
       // if erc20 paymaster - check allowance and approve if needed
-      const erc20Paymaster = options.overrides?.erc20Paymaster;
       let paymasterOverride:
         | undefined
         | ((
@@ -215,12 +257,7 @@ async function createSmartAccount(
         });
         const paymasterCallback = async (): Promise<PaymasterResult> => {
           return {
-            paymasterAndData: concatHex([
-              erc20Paymaster.address as Hex,
-              erc20Paymaster?.token as Hex,
-            ]),
-            // for 0.7 compatibility
-            paymaster: erc20Paymaster.address as Hex,
+            paymaster: erc20Paymaster.paymasterAddress as Hex,
             paymasterData: "0x",
           };
         };
@@ -436,13 +473,10 @@ async function createSmartAccount(
 async function approveERC20(args: {
   accountContract: ThirdwebContract;
   options: SmartAccountOptions;
-  erc20Paymaster: {
-    address: string;
-    token: string;
-  };
+  erc20Paymaster: TokenPaymasterConfig;
 }) {
   const { accountContract, erc20Paymaster, options } = args;
-  const tokenAddress = erc20Paymaster.token;
+  const tokenAddress = erc20Paymaster.tokenAddress;
   const tokenContract = getContract({
     address: tokenAddress,
     chain: accountContract.chain,
@@ -451,7 +485,7 @@ async function approveERC20(args: {
   const accountAllowance = await allowance({
     contract: tokenContract,
     owner: accountContract.address,
-    spender: erc20Paymaster.address,
+    spender: erc20Paymaster.paymasterAddress,
   });
 
   if (accountAllowance > 0n) {
@@ -460,7 +494,7 @@ async function approveERC20(args: {
 
   const approveTx = approve({
     contract: tokenContract,
-    spender: erc20Paymaster.address,
+    spender: erc20Paymaster.paymasterAddress,
     amountWei: maxUint96 - 1n,
   });
   const transaction = await toSerializableTransaction({
@@ -478,7 +512,7 @@ async function approveERC20(args: {
       ...options,
       overrides: {
         ...options.overrides,
-        erc20Paymaster: undefined,
+        tokenPaymaster: undefined,
       },
     },
   });
