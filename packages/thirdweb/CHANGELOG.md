@@ -1,5 +1,38 @@
 # thirdweb
 
+## 5.74.0
+
+### Minor Changes
+
+- [#5634](https://github.com/thirdweb-dev/js/pull/5634) [`d1aa380`](https://github.com/thirdweb-dev/js/commit/d1aa3805bfbf22b6a01404c3a01fe1ad02cd9815) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - ERC20 Token Paymaster support
+
+  You can now use ERC20 Token Paymasters with Smart Wallets.
+
+  ```typescript
+  import { base } from "thirdweb/chains";
+  import { TokenPaymaster, smartWallet } from "thirdweb/wallets";
+
+  const wallet = smartWallet({
+    chain: base,
+    sponsorGas: true, // only sponsor gas for the first ERC20 approval
+    overrides: {
+      tokenPaymaster: TokenPaymaster.BASE_USDC,
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#5593](https://github.com/thirdweb-dev/js/pull/5593) [`68ad62f`](https://github.com/thirdweb-dev/js/commit/68ad62f1d5c319392a7598d747a1400341bcc170) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - update `type` in `getUser` `Profiles` to match tyepscript types
+
+- [#5621](https://github.com/thirdweb-dev/js/pull/5621) [`279cb6f`](https://github.com/thirdweb-dev/js/commit/279cb6f9a737107b49d2ddcdb465e5941cbf9b42) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Feature: Propagate failed sign in error message to the UI
+
+- [#5596](https://github.com/thirdweb-dev/js/pull/5596) [`c893239`](https://github.com/thirdweb-dev/js/commit/c893239582d3362716f3daa7511f35b34b3cf790) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - add fallback chain for ecosystem smart accounts
+
+- [#5620](https://github.com/thirdweb-dev/js/pull/5620) [`13d63ab`](https://github.com/thirdweb-dev/js/commit/13d63ab06221cf9d7030779e54186b6925362356) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Hides Sign in with Wallet button when linking a profile
+
+- [#5618](https://github.com/thirdweb-dev/js/pull/5618) [`33c23e7`](https://github.com/thirdweb-dev/js/commit/33c23e789e577bd6463e135cec4e25cfcfc9964a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Removed the auth prop from useConnectModal as it is currently not supported
+
 ## 5.73.0
 
 ### Minor Changes
