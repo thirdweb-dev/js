@@ -28,6 +28,13 @@ export const PublisherAvatar: React.FC<PublisherAvatarProps> = ({
     client,
   });
 
+  if (
+    !(isPending || ensQuery.isPending || publisherProfile.isPending) &&
+    !publisherImageUrl
+  ) {
+    return null;
+  }
+
   return (
     <MaskedAvatar
       isPending={isPending || ensQuery.isPending || publisherProfile.isPending}

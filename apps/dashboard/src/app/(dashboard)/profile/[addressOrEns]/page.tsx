@@ -44,42 +44,13 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     return notFound();
   }
 
-  const publisherProfile = await fetchPublisherProfile(
-    resolvedInfo.address,
-  ).catch(() => null);
-
-  if (!publisherProfile) {
-    return notFound();
-  }
-
   const displayName = shortenIfAddress(
     resolvedInfo.ensName || resolvedInfo.address,
   ).replace("deployer.thirdweb.eth", "thirdweb.eth");
 
-  // TODO - move this to opengraph-image.tsx
-  // this is not working even on prod
-  // const ogImageLink = ProfileOG.toUrl({
-  //   displayName,
-  //   bio: publisherProfile.bio,
-  //   avatar: publisherProfile.avatar,
-  // });
-
   return {
     title: displayName,
     description: `Visit ${displayName}'s profile. See their published contracts and deploy them in one click.`,
-    // openGraph: {
-    //   title: displayName,
-    //   images: ogImageLink
-    //     ? [
-    //         {
-    //           url: ogImageLink.toString(),
-    //           alt: `${displayName}'s profile on thirdweb.com`,
-    //           width: 1200,
-    //           height: 630,
-    //         },
-    //       ]
-    //     : undefined,
-    // },
   };
 }
 
