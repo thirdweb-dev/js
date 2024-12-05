@@ -295,6 +295,12 @@ async function redirects() {
       destination: "/",
       permanent: false,
     },
+    // redirect /community to /community/ambassadors
+    {
+      source: "/community",
+      destination: "/community/ambassadors",
+      permanent: false,
+    },
     ...legacyDashboardToTeamRedirects,
   ];
 }

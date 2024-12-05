@@ -64,6 +64,5 @@ export enum PageId {
   //  community pages
   // ---------------------------------------------------------------------------
   Ambassadors = "ambassadors",
-  Community = "community",
   StartupProgram = "startup-program",
 }
