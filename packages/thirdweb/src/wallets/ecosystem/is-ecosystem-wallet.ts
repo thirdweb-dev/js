@@ -10,7 +10,7 @@ export function isEcosystemWallet(wallet: string): wallet is EcosystemWalletId;
 /**
  * Checks if the given wallet is an ecosystem wallet.
  *
- * @param {string} walletId - The wallet ID to check.
+ * @param {Wallet | string} wallet - The wallet or wallet ID to check.
  * @returns {boolean} True if the wallet is an ecosystem wallet, false otherwise.
  * @internal
  */
