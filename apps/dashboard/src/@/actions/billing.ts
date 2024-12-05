@@ -12,6 +12,7 @@ export type RedirectCheckoutOptions = {
   redirectUrl: string;
   metadata?: Record<string, string>;
 };
+
 export async function redirectToCheckout(
   options: RedirectCheckoutOptions,
 ): Promise<{ status: number }> {
@@ -59,10 +60,13 @@ export async function redirectToCheckout(
   redirect(json.result);
 }
 
+export type RedirectBillingCheckoutAction = typeof redirectToCheckout;
+
 export type BillingPortalOptions = {
   teamSlug: string | undefined;
   redirectUrl: string;
 };
+
 export async function redirectToBillingPortal(
   options: BillingPortalOptions,
 ): Promise<{ status: number }> {
@@ -109,3 +113,5 @@ export async function redirectToBillingPortal(
   // redirect to the stripe billing portal
   redirect(json.result);
 }
+
+export type BillingBillingPortalAction = typeof redirectToBillingPortal;

@@ -1,5 +1,6 @@
 "use client";
 
+import type { RedirectBillingCheckoutAction } from "@/actions/billing";
 import { TextDivider } from "@/components/TextDivider";
 import { PricingCard } from "@/components/blocks/pricing-card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ export function OnboardingChoosePlan(props: {
   canTrialGrowth: boolean;
   teamSlug: string;
   redirectPath: string;
+  redirectToCheckout: RedirectBillingCheckoutAction;
 }) {
   return (
     <div>
@@ -31,6 +33,7 @@ export function OnboardingChoosePlan(props: {
             },
           }}
           redirectPath={props.redirectPath}
+          redirectToCheckout={props.redirectToCheckout}
         />
 
         <PricingCard
@@ -48,6 +51,7 @@ export function OnboardingChoosePlan(props: {
           canTrialGrowth={props.canTrialGrowth}
           highlighted
           redirectPath={props.redirectPath}
+          redirectToCheckout={props.redirectToCheckout}
         />
       </div>
 

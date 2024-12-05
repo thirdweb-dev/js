@@ -1,3 +1,4 @@
+import { redirectToBillingPortal, redirectToCheckout } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
 import { PlanInfoCard } from "../../../../app/team/[team_slug]/(team)/~/settings/billing/components/PlanInfoCard";
@@ -21,7 +22,11 @@ export const Billing: React.FC<BillingProps> = ({ team, subscriptions }) => {
 
   return (
     <div className="flex flex-col gap-12">
-      <PlanInfoCard team={team} subscriptions={subscriptions} />
+      <PlanInfoCard
+        team={team}
+        subscriptions={subscriptions}
+        redirectToBillingPortal={redirectToBillingPortal}
+      />
 
       <div>
         <h2 className="font-semibold text-2xl tracking-tight">
@@ -31,6 +36,7 @@ export const Billing: React.FC<BillingProps> = ({ team, subscriptions }) => {
         <BillingPricing
           team={team}
           trialPeriodEndedAt={planSubscription?.trialEnd ?? undefined}
+          redirectToCheckout={redirectToCheckout}
         />
       </div>
 

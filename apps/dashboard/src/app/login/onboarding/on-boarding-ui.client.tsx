@@ -1,4 +1,5 @@
 "use client";
+import type { RedirectBillingCheckoutAction } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
@@ -22,6 +23,7 @@ function OnboardingUI(props: {
   onComplete: () => void;
   // path to redirect from stripe
   redirectPath: string;
+  redirectToCheckout: RedirectBillingCheckoutAction;
 }) {
   const { account } = props;
   const [screen, setScreen] = useState<OnboardingScreen>({ id: "onboarding" });
@@ -137,6 +139,7 @@ function OnboardingUI(props: {
             props.onComplete();
           }}
           canTrialGrowth={true}
+          redirectToCheckout={props.redirectToCheckout}
         />
       )}
     </div>

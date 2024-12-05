@@ -1,10 +1,11 @@
 import { Checkbox } from "@/components/ui/checkbox";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
-import { ThirdwebProvider } from "thirdweb/react";
+import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import {
   type TransferableModuleFormValues,
   TransferableModuleUI,
@@ -78,6 +79,10 @@ function Component() {
               Is Owner
             </label>
           </div>
+        </div>
+
+        <div>
+          <ConnectButton client={getThirdwebClient()} />
         </div>
 
         <BadgeContainer label="Empty AllowList, Not Restricted">

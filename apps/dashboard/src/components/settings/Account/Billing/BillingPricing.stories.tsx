@@ -28,12 +28,15 @@ export const Mobile: Story = {
 };
 
 function Story() {
+  const redirectToBillingPortalStub = async () => ({ status: 200 });
+
   return (
     <div className="container flex max-w-[1132px] flex-col gap-12 py-10">
       <BadgeContainer label="Free">
         <BillingPricing
           team={teamStub("foo", "free")}
           trialPeriodEndedAt={undefined}
+          redirectToCheckout={redirectToBillingPortalStub}
         />
       </BadgeContainer>
 
@@ -41,6 +44,7 @@ function Story() {
         <BillingPricing
           team={teamStub("foo", "starter")}
           trialPeriodEndedAt={undefined}
+          redirectToCheckout={redirectToBillingPortalStub}
         />
       </BadgeContainer>
 
@@ -48,6 +52,7 @@ function Story() {
         <BillingPricing
           team={teamStub("foo", "growth")}
           trialPeriodEndedAt={undefined}
+          redirectToCheckout={redirectToBillingPortalStub}
         />
       </BadgeContainer>
 
@@ -55,6 +60,7 @@ function Story() {
         <BillingPricing
           team={teamStub("foo", "pro")}
           trialPeriodEndedAt={undefined}
+          redirectToCheckout={redirectToBillingPortalStub}
         />
       </BadgeContainer>
     </div>

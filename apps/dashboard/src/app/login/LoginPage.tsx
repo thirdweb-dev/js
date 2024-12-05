@@ -1,5 +1,6 @@
 "use client";
 
+import { redirectToCheckout } from "@/actions/billing";
 import { getRawAccountAction } from "@/actions/getAccount";
 import { ColorModeToggle } from "@/components/color-mode-toggle";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -155,6 +156,7 @@ function PageContent(props: {
           account={screen.account}
           onComplete={onComplete}
           redirectPath={props.nextPath || "/team"}
+          redirectToCheckout={redirectToCheckout}
         />
       </Suspense>
     );
