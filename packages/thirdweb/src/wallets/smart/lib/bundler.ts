@@ -67,16 +67,26 @@ export async function bundleUserOp(args: {
  * ```
  * @walletUtils
  */
-export async function estimateUserOpGas(args: {
-  userOp: UserOperationV06 | UserOperationV07;
-  options: BundlerOptions;
-}): Promise<EstimationResult> {
+export async function estimateUserOpGas(
+  args: {
+    userOp: UserOperationV06 | UserOperationV07;
+    options: BundlerOptions;
+  },
+  stateOverrides?: {
+    [x: string]: {
+      stateDiff: {
+        [x: string]: `0x${string}`;
+      };
+    };
+  },
+): Promise<EstimationResult> {
   const res = await sendBundlerRequest({
     ...args,
     operation: "eth_estimateUserOperationGas",
     params: [
       hexlifyUserOp(args.userOp),
       args.options.entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6,
+      stateOverrides,
     ],
   });
 

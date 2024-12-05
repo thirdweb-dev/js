@@ -8,6 +8,13 @@ import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 
+export type TokenPaymasterConfig = {
+  chainId: number;
+  paymasterAddress: string;
+  tokenAddress: string;
+  balanceStorageSlot: bigint;
+};
+
 export type SmartWalletOptions = Prettify<
   {
     chain: Chain; // TODO consider making default chain optional
@@ -17,10 +24,7 @@ export type SmartWalletOptions = Prettify<
       accountAddress?: string;
       accountSalt?: string;
       entrypointAddress?: string;
-      erc20Paymaster?: {
-        address: string;
-        token: string;
-      };
+      tokenPaymaster?: TokenPaymasterConfig;
       paymaster?: (
         userOp: UserOperationV06 | UserOperationV07,
       ) => Promise<PaymasterResult>;

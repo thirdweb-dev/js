@@ -22,7 +22,6 @@ import type { PreparedTransaction } from "../../transaction/prepare-transaction.
 import { readContract } from "../../transaction/read-contract.js";
 import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
-import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type {
@@ -45,7 +44,12 @@ import {
   prepareBatchExecute,
   prepareExecute,
 } from "./lib/calls.js";
-import { getDefaultAccountFactory } from "./lib/constants.js";
+import {
+  ENTRYPOINT_ADDRESS_v0_6,
+  ENTRYPOINT_ADDRESS_v0_7,
+  getDefaultAccountFactory,
+  getEntryPointVersion,
+} from "./lib/constants.js";
 import {
   clearAccountDeploying,
   createUnsignedUserOp,
@@ -58,6 +62,7 @@ import type {
   SmartAccountOptions,
   SmartWalletConnectionOptions,
   SmartWalletOptions,
+  TokenPaymasterConfig,
   UserOperationV06,
   UserOperationV07,
 } from "./types.js";
@@ -114,6 +119,17 @@ export async function connectSmartWallet(
         entrypointAddress,
       };
     }
+  }
+
+  if (
+    options.overrides?.tokenPaymaster &&
+    !options.overrides?.entrypointAddress
+  ) {
+    // if token paymaster is set, but no entrypoint address, set the entrypoint address to v0.7
+    options.overrides = {
+      ...options.overrides,
+      entrypointAddress: ENTRYPOINT_ADDRESS_v0_7,
+    };
   }
 
   const factoryAddress =
@@ -196,12 +212,24 @@ export async function disconnectSmartWallet(
 async function createSmartAccount(
   options: SmartAccountOptions,
 ): Promise<Account> {
+  const erc20Paymaster = options.overrides?.tokenPaymaster;
+  if (erc20Paymaster) {
+    if (
+      getEntryPointVersion(
+        options.overrides?.entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
+      ) !== "v0.7"
+    ) {
+      throw new Error(
+        "Token paymaster is only supported for entrypoint version v0.7",
+      );
+    }
+  }
+
   const { accountContract } = options;
   const account: Account = {
     address: getAddress(accountContract.address),
     async sendTransaction(transaction: SendTransactionOption) {
       // if erc20 paymaster - check allowance and approve if needed
-      const erc20Paymaster = options.overrides?.erc20Paymaster;
       let paymasterOverride:
         | undefined
         | ((
@@ -215,12 +243,7 @@ async function createSmartAccount(
         });
         const paymasterCallback = async (): Promise<PaymasterResult> => {
           return {
-            paymasterAndData: concatHex([
-              erc20Paymaster.address as Hex,
-              erc20Paymaster?.token as Hex,
-            ]),
-            // for 0.7 compatibility
-            paymaster: erc20Paymaster.address as Hex,
+            paymaster: erc20Paymaster.paymasterAddress as Hex,
             paymasterData: "0x",
           };
         };
@@ -436,13 +459,10 @@ async function createSmartAccount(
 async function approveERC20(args: {
   accountContract: ThirdwebContract;
   options: SmartAccountOptions;
-  erc20Paymaster: {
-    address: string;
-    token: string;
-  };
+  erc20Paymaster: TokenPaymasterConfig;
 }) {
   const { accountContract, erc20Paymaster, options } = args;
-  const tokenAddress = erc20Paymaster.token;
+  const tokenAddress = erc20Paymaster.tokenAddress;
   const tokenContract = getContract({
     address: tokenAddress,
     chain: accountContract.chain,
@@ -451,7 +471,7 @@ async function approveERC20(args: {
   const accountAllowance = await allowance({
     contract: tokenContract,
     owner: accountContract.address,
-    spender: erc20Paymaster.address,
+    spender: erc20Paymaster.paymasterAddress,
   });
 
   if (accountAllowance > 0n) {
@@ -460,7 +480,7 @@ async function approveERC20(args: {
 
   const approveTx = approve({
     contract: tokenContract,
-    spender: erc20Paymaster.address,
+    spender: erc20Paymaster.paymasterAddress,
     amountWei: maxUint96 - 1n,
   });
   const transaction = await toSerializableTransaction({
@@ -478,7 +498,7 @@ async function approveERC20(args: {
       ...options,
       overrides: {
         ...options.overrides,
-        erc20Paymaster: undefined,
+        tokenPaymaster: undefined,
       },
     },
   });

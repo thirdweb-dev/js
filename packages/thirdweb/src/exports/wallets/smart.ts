@@ -35,4 +35,5 @@ export {
   ENTRYPOINT_ADDRESS_v0_7,
   DEFAULT_ACCOUNT_FACTORY_V0_6,
   DEFAULT_ACCOUNT_FACTORY_V0_7,
+  TokenPaymaster,
 } from "../../wallets/smart/lib/constants.js";
