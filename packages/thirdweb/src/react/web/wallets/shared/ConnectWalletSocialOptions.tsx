@@ -474,7 +474,7 @@ export const ConnectWalletSocialOptions = (
       )}
 
       {/* SIWE login */}
-      {siweEnabled && (
+      {siweEnabled && !props.isLinking && (
         <WalletTypeRowButton
           client={props.client}
           icon={OutlineWalletIcon}
