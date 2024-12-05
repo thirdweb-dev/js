@@ -34,7 +34,7 @@ interface AirdropTabProps {
  */
 const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
   const address = useActiveAccount()?.address;
-  const { handleSubmit, setValue, watch, reset, formState } = useForm<{
+  const { handleSubmit, setValue, watch, reset } = useForm<{
     addresses: AirdropAddressInput[];
   }>({
     defaultValues: { addresses: [] },
@@ -162,9 +162,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
             transactionCount={1}
             isPending={sendAndConfirmTx.isPending}
             type="submit"
-            disabled={
-              (!!address && addresses.length === 0) || !formState.isDirty
-            }
+            disabled={!!address && addresses.length === 0}
             className="self-end"
           >
             Airdrop
