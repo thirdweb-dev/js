@@ -391,12 +391,14 @@ const chainMetaRecord = {
     headerImgUrl: liskBanner.src,
     about:
       "Lisk is focused on serving builders in high-growth markets like Africa and Southeast Asia. When you build on Lisk, you become part of the strongest Ethereum collective, alongside Coinbase, Sony, World, Kraken and Uniswap -- the OP Superchain.",
-    cta: {
-      backgroundImageUrl: liskCTA.src,
-      title: "Ready to reshape the world?",
-      buttonLink: "https://lisk.com",
-      buttonText: "Learn more",
-    },
+    // cta: {
+    //   backgroundImageUrl: liskCTA.src,
+    //   title: "Ready to reshape the world?",
+    //   buttonLink: "https://lisk.com",
+    //   buttonText: "Learn more",
+    // },
+    cta: OP_CTA,
+    gasSponsored: true,
   },
   //0G-Newton-Testnet
   16600: {
