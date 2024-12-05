@@ -4,7 +4,7 @@ import type { CreateWalletArgs } from "../../wallet-types.js";
 import { createInAppWallet } from "../core/wallet/in-app-core.js";
 
 /**
- * Creates an app scoped wallet for users based on various authentication methods. Full list of available authentication methods [here](https://portal.thirdweb.com/connect/wallet/sign-in-methods/overview).
+ * Creates an app scoped wallet for users based on various authentication methods. Full list of available authentication methods [here](https://portal.thirdweb.com/connect/wallet/sign-in-methods/configure).
  *
  * Can also be configured to use Account Abstraction to directly connect to a ERC4337 smart account based on those authentication methods.
  *
@@ -27,7 +27,7 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * });
  * ```
  *
- * [View all available social auth methods](https://portal.thirdweb.com/connect/wallet/sign-in-methods/overview)
+ * [View all available social auth methods](https://portal.thirdweb.com/connect/wallet/sign-in-methods/configure)
  *
  * ### Login with email
  *

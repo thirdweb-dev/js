@@ -958,6 +958,10 @@ const otherRedirects = {
   "/connect/connect": "/connect/sign-in",
   "/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server":
     "/connect/in-app-wallet/guides/get-in-app-wallet-details-on-server",
+  "/connect/ecosystems/:path*": "/connect/wallet/overview",
+  "/wallet/get-started/overview": "/connect/wallet/overview",
+  "/connect/wallet/sign-in-methods/overview":
+    "/connect/wallet/sign-in-methods/configure",
 };
 
 const v5RestructuredRedirects = {

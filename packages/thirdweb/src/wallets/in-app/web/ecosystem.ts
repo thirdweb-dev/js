@@ -7,7 +7,7 @@ import type {
 import { createInAppWallet } from "../core/wallet/in-app-core.js";
 
 /**
- * Creates an [Ecosystem Wallet](https://portal.thirdweb.com/connect/ecosystems/overview) based on various authentication methods. Full list of available authentication methods [here](/connect/wallet/sign-in-methods/overview).
+ * Creates an [Ecosystem Wallet](https://portal.thirdweb.com/connect/wallet/overview) based on various authentication methods. Full list of available authentication methods [here](/connect/wallet/sign-in-methods/configure).
  *
  * Can also be configured to use Account Abstraction to directly connect to a ERC4337 smart account based on those authentication methods.
  *
