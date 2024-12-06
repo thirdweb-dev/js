@@ -159,7 +159,7 @@ type ParsedCompilerMetadata = {
   zk_version?: string;
 };
 
-type DynamicParams = {
+export type DynamicParams = {
   type: "address" | "address[]" | "bytes" | "bytes[]";
 
   // use for address types

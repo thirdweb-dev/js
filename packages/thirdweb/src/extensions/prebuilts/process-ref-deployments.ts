@@ -3,23 +3,7 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { deployPublishedContract } from "./deploy-published.js";
 import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
-
-export type DynamicParams = {
-    type: "address" | "address[]" | "bytes" | "bytes[]";
-    refContracts: {
-      publisherAddress: string;
-      version: string;
-      contractId: string;
-      salt?: string;
-    }[];
-    paramsToEncode: Array<
-      Array<{
-        type: string;
-        defaultValue?: string;
-        dynamicValue?: DynamicParams;
-      }>
-    >;
-  }
+import type { DynamicParams } from "src/utils/any-evm/deploy-metadata.js";
   
   export type ImplementationConstructorParam = {
     defaultValue?: string;
@@ -35,7 +19,7 @@ export type DynamicParams = {
   
   export async function processRefDeployments(
     options: ProcessRefDeploymentsOptions,
-  ): Promise<string> {
+  ): Promise<string | string[]> {
     const { client, account, chain, paramValue } = options;
   
     try {
@@ -53,6 +37,9 @@ export type DynamicParams = {
           const contracts = dynamicValue.refContracts;
   
           if (dynamicValue.type === "address") {
+            if (!contracts || contracts.length === 0) {
+                throw new Error("Invalid or empty param value");
+            }
             const salt =
               contracts[0]?.salt && contracts[0]?.salt.length > 0
                 ? contracts[0]?.salt
@@ -72,6 +59,9 @@ export type DynamicParams = {
           }
   
           if (dynamicValue.type === "address[]") {
+            if (!contracts || contracts.length === 0) {
+                throw new Error("Invalid or empty param value");
+            }
             const addressArray = [];
   
             for (const c of contracts) {
@@ -90,10 +80,13 @@ export type DynamicParams = {
               );
             }
   
-            return JSON.stringify(addressArray);
+            return addressArray;
           }
   
           if (dynamicValue.type === "bytes") {
+            if (!dynamicValue.paramsToEncode) {
+                throw new Error("Invalid or empty param value");
+            }
             const paramsToEncode = dynamicValue.paramsToEncode[0];
   
             if (paramsToEncode) {
@@ -118,7 +111,7 @@ export type DynamicParams = {
   
               return encodeAbiParameters(
                 types.map((t) => {
-                  return { name: "", type: t };
+                  return { type: t };
                 }),
                 values,
               );
@@ -126,6 +119,9 @@ export type DynamicParams = {
           }
   
           if (dynamicValue.type === "bytes[]") {
+            if (!dynamicValue.paramsToEncode) {
+                throw new Error("Invalid or empty param value");
+            }
             const bytesArray = [];
             const paramArray = dynamicValue.paramsToEncode;
   
@@ -155,7 +151,7 @@ export type DynamicParams = {
                 bytesArray.push(
                   encodeAbiParameters(
                     types.map((t) => {
-                      return { name: "", type: t };
+                      return { type: t };
                     }),
                     values,
                   ),
@@ -163,18 +159,14 @@ export type DynamicParams = {
               }
             }
   
-            return JSON.stringify(bytesArray);
+            return bytesArray;
           }
+        } else {
+            throw new Error("Invalid or empty param value");
         }
       }
       // biome-ignore lint/suspicious/noExplicitAny: catch multiple errors
     } catch (e: any) {
-      const err = "error" in e ? e.error?.message : e?.message;
-  
-      if (err.toString().includes("Contract already deployed")) {
-        return paramValue as string;
-      }
-  
       throw e;
     }
   
