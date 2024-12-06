@@ -1,0 +1,182 @@
+import type { Chain } from "../../chains/types.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { deployPublishedContract } from "./deploy-published.js";
+import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
+
+export type DynamicParams = {
+    type: "address" | "address[]" | "bytes" | "bytes[]";
+    refContracts: {
+      publisherAddress: string;
+      version: string;
+      contractId: string;
+      salt?: string;
+    }[];
+    decodedBytes: Array<
+      Array<{
+        type: string;
+        defaultValue?: string;
+        dynamicValue?: DynamicParams;
+      }>
+    >;
+  }
+  
+  export type ImplementationConstructorParam = {
+    defaultValue?: string;
+    dynamicValue?: DynamicParams;
+  }
+  
+  export type ProcessRefDeploymentsOptions = {
+    client: ThirdwebClient;
+    chain: Chain;
+    account: Account;
+    paramValue: string | ImplementationConstructorParam;
+  };
+  
+  export async function processRefDeployments(
+    options: ProcessRefDeploymentsOptions,
+  ): Promise<string> {
+    const { client, account, chain, paramValue } = options;
+  
+    try {
+      if (typeof paramValue === "object") {
+        if (
+          "defaultValue" in paramValue &&
+          paramValue.defaultValue &&
+          paramValue.defaultValue.length > 0
+        ) {
+          return paramValue.defaultValue;
+        }
+  
+        if ("dynamicValue" in paramValue && paramValue.dynamicValue) {
+          const dynamicValue = paramValue.dynamicValue;
+          const contracts = dynamicValue.refContracts;
+  
+          if (dynamicValue.type === "address") {
+            const salt =
+              contracts[0]?.salt && contracts[0]?.salt.length > 0
+                ? contracts[0]?.salt
+                : undefined;
+  
+            const addr = await deployPublishedContract({
+              client,
+              chain,
+              account,
+              contractId: contracts[0]?.contractId as string,
+              publisher: contracts[0]?.publisherAddress,
+              version: contracts[0]?.version,
+              salt,
+            });
+  
+            return addr;
+          }
+  
+          if (dynamicValue.type === "address[]") {
+            const addressArray = [];
+  
+            for (const c of contracts) {
+              const salt = c?.salt && c?.salt.length > 0 ? c?.salt : undefined;
+  
+              addressArray.push(
+                await deployPublishedContract({
+                  client,
+                  chain,
+                  account,
+                  contractId: c.contractId,
+                  publisher: c.publisherAddress,
+                  version: c.version,
+                  salt,
+                }),
+              );
+            }
+  
+            return JSON.stringify(addressArray);
+          }
+  
+          if (dynamicValue.type === "bytes") {
+            const decodedBytes = dynamicValue.decodedBytes[0];
+  
+            if (decodedBytes) {
+              const types = [];
+              const values = [];
+              for (const v of decodedBytes) {
+                types.push(v.type);
+  
+                if (v.defaultValue) {
+                  values.push(v.defaultValue);
+                } else if (v.dynamicValue) {
+                  values.push(
+                    await processRefDeployments({
+                      client,
+                      account,
+                      chain,
+                      paramValue: v,
+                    }),
+                  );
+                }
+              }
+  
+              return encodeAbiParameters(
+                types.map((t) => {
+                  return { name: "", type: t };
+                }),
+                values,
+              );
+            }
+          }
+  
+          if (dynamicValue.type === "bytes[]") {
+            const bytesArray = [];
+            const decodedBytesArray = dynamicValue.decodedBytes;
+  
+            for (const a of decodedBytesArray) {
+              const decodedBytes = a;
+  
+              if (decodedBytes) {
+                const types = [];
+                const values = [];
+                for (const v of decodedBytes) {
+                  types.push(v.type);
+  
+                  if (v.defaultValue) {
+                    values.push(v.defaultValue);
+                  } else if (v.dynamicValue) {
+                    values.push(
+                      await processRefDeployments({
+                        client,
+                        account,
+                        chain,
+                        paramValue: v,
+                      }),
+                    );
+                  }
+                }
+  
+                bytesArray.push(
+                  encodeAbiParameters(
+                    types.map((t) => {
+                      return { name: "", type: t };
+                    }),
+                    values,
+                  ),
+                );
+              }
+            }
+  
+            return JSON.stringify(bytesArray);
+          }
+        }
+      }
+      // biome-ignore lint/suspicious/noExplicitAny: catch multiple errors
+    } catch (e: any) {
+      const err = "error" in e ? e.error?.message : e?.message;
+  
+      if (err.toString().includes("Contract already deployed")) {
+        return paramValue as string;
+      }
+  
+      throw e;
+    }
+  
+    return paramValue as string;
+  }
