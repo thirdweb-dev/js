@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { PlusIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -28,12 +27,12 @@ export const ExternalLinksFieldset = () => {
   }, [fields, append]);
 
   return (
-    <Flex gap={8} direction="column" as="fieldset">
-      <Flex gap={2} direction="column">
+    <fieldset className="flex flex-col gap-8">
+      <div className="flex flex-col gap-2">
         <Heading size="title.md">Resources</Heading>
         <Text>Provide links to docs, usage guides etc. for the contract.</Text>
-      </Flex>
-      <Flex flexDir="column" gap={4}>
+      </div>
+      <div className="flex flex-col gap-4">
         {fields.map((item, index) => (
           <ExternalLinksInput key={item.id} remove={remove} index={index} />
         ))}
@@ -54,7 +53,7 @@ export const ExternalLinksFieldset = () => {
             Add Resource
           </Button>
         </div>
-      </Flex>
-    </Flex>
+      </div>
+    </fieldset>
   );
 };

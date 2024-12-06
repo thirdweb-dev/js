@@ -1,5 +1,4 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Flex } from "@chakra-ui/react";
 import type { Abi } from "abitype";
 import { getContractFunctionsFromAbi } from "components/contract-components/getContractFunctionsFromAbi";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
@@ -33,7 +32,7 @@ export const ContractExplorerPage: React.FC<ContractExplorePageProps> = ({
 
   const functions = getContractFunctionsFromAbi(abi);
   return (
-    <Flex direction="column" h="70vh">
+    <div className="flex h-[70vh] flex-col">
       {functions && functions.length > 0 ? (
         <ContractFunctionsOverview
           onlyFunctions
@@ -41,18 +40,16 @@ export const ContractExplorerPage: React.FC<ContractExplorePageProps> = ({
           contract={contract}
         />
       ) : (
-        <div className="flex items-center justify-center">
-          <Flex direction="column" textAlign="center" gap={2}>
-            <h2 className="font-semibold text-2xl tracking-tight">
-              No callable functions discovered in ABI.
-            </h2>
-            <p className="text-muted-foreground text-sm">
-              Please note that proxy contracts are not yet supported in the
-              explorer, check back soon for full proxy support.
-            </p>
-          </Flex>
+        <div className="flex flex-col items-center justify-center gap-2 text-center">
+          <h2 className="font-semibold text-2xl tracking-tight">
+            No callable functions discovered in ABI.
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Please note that proxy contracts are not yet supported in the
+            explorer, check back soon for full proxy support.
+          </p>
         </div>
       )}
-    </Flex>
+    </div>
   );
 };

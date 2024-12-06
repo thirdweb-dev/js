@@ -4,7 +4,6 @@ import {
   tokensDelegated,
   votingTokenDecimals,
 } from "@3rdweb-sdk/react/hooks/useVote";
-import { Flex } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { CheckIcon, MinusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
@@ -81,22 +80,19 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
 
   return (
     <Card key={proposal.proposalId.toString()}>
-      <Flex mb="8px">
-        <Flex
-          paddingY="0px"
-          paddingX="16px"
-          borderRadius="25px"
-          bg={
+      <div
+        className="mb-2 rounded-md bg-gray-500 px-4 py-0"
+        style={{
+          background:
             ProposalStateToMetadataMap[
               proposal.stateLabel as keyof typeof VoteExt.ProposalState
-            ] || "gray.500"
-          }
-        >
-          <Text color="white">
-            {`${proposal.stateLabel?.charAt(0).toUpperCase()}${proposal.stateLabel?.slice(1)}`}
-          </Text>
-        </Flex>
-      </Flex>
+            ] || undefined,
+        }}
+      >
+        <Text color="white">
+          {`${proposal.stateLabel?.charAt(0).toUpperCase()}${proposal.stateLabel?.slice(1)}`}
+        </Text>
+      </div>
       <Text>
         <strong>Proposal:</strong> {proposal.description}
       </Text>
@@ -134,7 +130,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
       !hasVotedQuery.data &&
       !hasVotedQuery.isPending &&
       tokensDelegatedQuery.data ? (
-        <Flex mt="24px" gap={2}>
+        <div className="mt-6 flex gap-2">
           <TransactionButton
             txChainID={contract.chain.id}
             size="sm"
@@ -175,7 +171,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
               Abstain
             </div>
           </TransactionButton>
-        </Flex>
+        </div>
       ) : (
         canExecuteQuery.data && (
           <Button
