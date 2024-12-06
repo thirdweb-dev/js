@@ -1,5 +1,40 @@
 # thirdweb
 
+## 5.75.0
+
+### Minor Changes
+
+- [#5598](https://github.com/thirdweb-dev/js/pull/5598) [`16e5347`](https://github.com/thirdweb-dev/js/commit/16e534714e65af831553d47496d9018dfc73995c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Update underlying APIs to use Ox for transaction serialization
+
+### Patch Changes
+
+- [#5639](https://github.com/thirdweb-dev/js/pull/5639) [`ed0886a`](https://github.com/thirdweb-dev/js/commit/ed0886a89f06f4c4065e37aa791d99eff2ce59d1) Thanks [@jnsdls](https://github.com/jnsdls)! - default account components to not retry on failure
+
+- [#5640](https://github.com/thirdweb-dev/js/pull/5640) [`5070e76`](https://github.com/thirdweb-dev/js/commit/5070e76d35d88868c56df86ab673527b159b0d9c) Thanks [@jnsdls](https://github.com/jnsdls)! - accept `react 19` as peer explicitly
+
+- [#5487](https://github.com/thirdweb-dev/js/pull/5487) [`5574c15`](https://github.com/thirdweb-dev/js/commit/5574c15ec887c963a148cb54f04e5c0b5d3cff8e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - BETA support for 7579 modular smart accounts
+
+  You can now create modular smart wallets using the 7579 preset.
+
+  Keep in mind that this is in BETA, and there might be breaking API changes.
+
+  ```typescript
+  import { sepolia } from "thirdweb/chains";
+  import { smartWallet, Config } from "thirdweb/wallets/smart";
+   const modularSmartWallet = smartWallet(
+    Config.erc7579({
+      chain: sepolia,
+      sponsorGas: true,
+      factoryAddress: "0x...", // the 7579 factory address
+      validatorAddress: "0x...", // the default validator module address
+    }),
+  });
+  ```
+
+- [#5630](https://github.com/thirdweb-dev/js/pull/5630) [`0aa2416`](https://github.com/thirdweb-dev/js/commit/0aa24165ce66f837d3c22d6e1841de984e335863) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add erc20Value to buyFromListing transaction
+
+- [#5641](https://github.com/thirdweb-dev/js/pull/5641) [`d1716fc`](https://github.com/thirdweb-dev/js/commit/d1716fc793d8cc57908192674f3aefe8ee66a5f8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support ERC6492 for smart account signatures
+
 ## 5.74.0
 
 ### Minor Changes
