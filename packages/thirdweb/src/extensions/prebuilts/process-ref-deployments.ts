@@ -12,7 +12,7 @@ export type DynamicParams = {
       contractId: string;
       salt?: string;
     }[];
-    decodedBytes: Array<
+    paramsToEncode: Array<
       Array<{
         type: string;
         defaultValue?: string;
@@ -94,12 +94,12 @@ export type DynamicParams = {
           }
   
           if (dynamicValue.type === "bytes") {
-            const decodedBytes = dynamicValue.decodedBytes[0];
+            const paramsToEncode = dynamicValue.paramsToEncode[0];
   
-            if (decodedBytes) {
+            if (paramsToEncode) {
               const types = [];
               const values = [];
-              for (const v of decodedBytes) {
+              for (const v of paramsToEncode) {
                 types.push(v.type);
   
                 if (v.defaultValue) {
@@ -127,15 +127,15 @@ export type DynamicParams = {
   
           if (dynamicValue.type === "bytes[]") {
             const bytesArray = [];
-            const decodedBytesArray = dynamicValue.decodedBytes;
+            const paramArray = dynamicValue.paramsToEncode;
   
-            for (const a of decodedBytesArray) {
-              const decodedBytes = a;
+            for (const a of paramArray) {
+              const paramsToEncode = a;
   
-              if (decodedBytes) {
+              if (paramsToEncode) {
                 const types = [];
                 const values = [];
-                for (const v of decodedBytes) {
+                for (const v of paramsToEncode) {
                   types.push(v.type);
   
                   if (v.defaultValue) {

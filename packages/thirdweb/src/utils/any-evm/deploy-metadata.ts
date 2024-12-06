@@ -171,7 +171,7 @@ type DynamicParams = {
   }>;
 
   // use for bytes
-  decodedBytes?: Array<
+  paramsToEncode?: Array<
     Array<{
       type: string;
       defaultValue?: string;

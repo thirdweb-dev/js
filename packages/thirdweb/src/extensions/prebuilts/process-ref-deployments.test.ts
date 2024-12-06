@@ -26,7 +26,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "MultiSig",
-        version: "0.0.3",
+        version: "0.0.4",
         salt: "tw",
         publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
       });
@@ -44,7 +44,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "MintFeeManagerCore",
-        version: "0.0.23",
+        version: "0.0.25",
         salt: "tw",
         publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
       });
@@ -53,7 +53,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "ClaimableERC721",
-        version: "0.0.12",
+        version: "0.0.13",
         salt: "tw",
         publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
       });
@@ -94,7 +94,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         expect(owner.toLowerCase()).to.eq(multisigAddress);
         expect(modules.length).to.eq(1);
         expect(modules[0]?.implementation.toLowerCase()).to.eq(mintfeeManagerModuleAddress);
-        expect(feeRecipient.toLowerCase()).to.eq("0x000000000000000000000000000000000000dead");
+        expect(feeRecipient.toLowerCase()).to.eq(multisigAddress);
         expect(fee).to.eq(5n);
     });
   },

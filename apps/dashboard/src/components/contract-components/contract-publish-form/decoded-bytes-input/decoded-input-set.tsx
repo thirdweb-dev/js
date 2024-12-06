@@ -23,7 +23,7 @@ export const DecodedInputSet: React.FC<DecodedInputSetProps> = ({
   const form = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
-    name: `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}`,
+    name: `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}`,
     control: form.control,
   });
 

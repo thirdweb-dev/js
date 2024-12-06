@@ -18,7 +18,7 @@ export const RefBytesInputFieldset: React.FC<RefBytesInputFieldsetProps> = ({
   const form = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
-    name: `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts`,
+    name: `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts`,
     control: form.control,
   });
 

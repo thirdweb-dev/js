@@ -29,14 +29,14 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
   const form = useFormContext();
   const [isCustomAddress, setIsCustomAddress] = useState(false);
   const selectedType = form.watch(
-    `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.type`,
+    `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.type`,
   );
 
   // Toggle function to handle custom input visibility and reset fields
   const handleToggleCustomInput = (newVal: boolean) => {
     setIsCustomAddress(newVal);
     const path =
-      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}` as const;
+      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}` as const;
 
     if (newVal) {
       form.setValue(`${path}.dynamicValue.type`, selectedType);
@@ -58,18 +58,18 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
         label="Parameter Type"
         errorMessage={
           form.getFieldState(
-            `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.type`,
+            `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.type`,
             form.formState,
           ).error?.message
         }
       >
         <Select
           {...form.register(
-            `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.type`,
+            `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.type`,
           )}
           onValueChange={(v) => {
             form.setValue(
-              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.type`,
+              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.type`,
               v,
             );
           }}
@@ -115,7 +115,7 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
           <Input
             placeholder="Enter value"
             {...form.register(
-              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.defaultValue`,
+              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.defaultValue`,
             )}
             disabled={selectedType === "address" && isCustomAddress}
           />

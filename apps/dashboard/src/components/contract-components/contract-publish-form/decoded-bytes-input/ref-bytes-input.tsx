@@ -36,16 +36,16 @@ export const RefBytesContractInput: React.FC<RefBytesContractInputProps> = ({
 
   const publishedContractsQuery = usePublishedContractsQuery(
     form.watch(
-      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.publisherAddress`,
+      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.publisherAddress`,
     ),
   );
 
   const allVersions = useAllVersions(
     form.watch(
-      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.publisherAddress`,
+      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.publisherAddress`,
     ),
     form.watch(
-      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.contractId`,
+      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.contractId`,
     ),
   );
 
@@ -57,7 +57,7 @@ export const RefBytesContractInput: React.FC<RefBytesContractInputProps> = ({
           isRequired={true}
           errorMessage={
             form.getFieldState(
-              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.publisherAddress`,
+              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.publisherAddress`,
               form.formState,
             ).error?.message
           }
@@ -66,7 +66,7 @@ export const RefBytesContractInput: React.FC<RefBytesContractInputProps> = ({
             placeholder="Address or ENS"
             className="truncate"
             {...form.register(
-              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.publisherAddress`,
+              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.publisherAddress`,
             )}
           />
         </FormFieldSetup>
@@ -90,11 +90,11 @@ export const RefBytesContractInput: React.FC<RefBytesContractInputProps> = ({
                 <Select
                   disabled={(publishedContractsQuery?.data || []).length === 0}
                   {...form.register(
-                    `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.contractId`,
+                    `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.contractId`,
                   )}
                   onValueChange={(v) => {
                     form.setValue(
-                      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.contractId`,
+                      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.contractId`,
                       v,
                     );
                   }}
@@ -141,11 +141,11 @@ export const RefBytesContractInput: React.FC<RefBytesContractInputProps> = ({
                 <Select
                   disabled={!allVersions.data}
                   {...form.register(
-                    `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.version`,
+                    `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.version`,
                   )}
                   onValueChange={(v) => {
                     form.setValue(
-                      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.version`,
+                      `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.version`,
                       v === "latest" ? "" : v,
                     );
                   }}
@@ -176,7 +176,7 @@ export const RefBytesContractInput: React.FC<RefBytesContractInputProps> = ({
           label="Salt"
           errorMessage={
             form.getFieldState(
-              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.salt`,
+              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.salt`,
               form.formState,
             ).error?.message
           }
@@ -185,7 +185,7 @@ export const RefBytesContractInput: React.FC<RefBytesContractInputProps> = ({
             className="truncate"
             placeholder="Salt (optional)"
             {...form.register(
-              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.decodedBytes.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.salt`,
+              `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts.${index}.salt`,
             )}
           />
         </FormFieldSetup>
