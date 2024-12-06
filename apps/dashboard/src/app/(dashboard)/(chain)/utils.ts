@@ -269,6 +269,11 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
+  //Arena Z Mainnet
+  7897: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
   // B3 Mainnet
   8333: {
     headerImgUrl: thirdwebBanner.src,
