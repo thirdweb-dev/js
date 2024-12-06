@@ -28,4 +28,7 @@ module.exports = [
   // -- TPP --
   "/trusted-partner-program",
   "/trusted-partner-program/:partner_slug",
+  // -- legal --
+  "/terms",
+  "/privacy-policy",
 ];

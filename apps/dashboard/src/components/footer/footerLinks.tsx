@@ -82,11 +82,11 @@ export const COMPANY: FooterLinkInfo[] = [
   {
     name: "Privacy Policy",
     label: "privacy",
-    link: "/privacy",
+    link: "/privacy-policy",
   },
   {
     name: "Terms of Service",
     label: "terms",
-    link: "/tos",
+    link: "/terms",
   },
 ];
