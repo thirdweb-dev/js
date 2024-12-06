@@ -163,8 +163,8 @@ export const CustomConnectWallet = (props: {
         theme={getSDKTheme(t)}
         client={thirdwebClient}
         connectModal={{
-          privacyPolicyUrl: "/privacy",
-          termsOfServiceUrl: "/tos",
+          privacyPolicyUrl: "/privacy-policy",
+          termsOfServiceUrl: "/terms",
           showThirdwebBranding: false,
           welcomeScreen: () => <ConnectWalletWelcomeScreen theme={t} />,
         }}
@@ -308,8 +308,8 @@ export function useCustomConnectModal() {
           url: "https://thirdweb.com",
         },
         chain: options?.chain,
-        privacyPolicyUrl: "/privacy",
-        termsOfServiceUrl: "/tos",
+        privacyPolicyUrl: "/privacy-policy",
+        termsOfServiceUrl: "/terms",
         showThirdwebBranding: false,
         welcomeScreen: () => (
           <ConnectWalletWelcomeScreen

@@ -301,6 +301,24 @@ async function redirects() {
       destination: "/community/ambassadors",
       permanent: false,
     },
+    // redirect `/tos` to `/terms`
+    {
+      source: "/tos",
+      destination: "/terms",
+      permanent: false,
+    },
+    // redirect `/privacy` to `/privacy-policy`
+    {
+      source: "/privacy",
+      destination: "/privacy-policy",
+      permanent: false,
+    },
+    // redirect `/mission` to `/home`
+    {
+      source: "/mission",
+      destination: "/home",
+      permanent: false,
+    },
     ...legacyDashboardToTeamRedirects,
   ];
 }

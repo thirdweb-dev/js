@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { Card, Text } from "tw-components";
 
 interface NftPropertyProps {
@@ -8,7 +7,7 @@ interface NftPropertyProps {
 
 export const NftProperty: React.FC<NftPropertyProps> = ({ property }) => {
   return (
-    <Card as={Flex} flexDir="column" gap={2}>
+    <Card className="flex flex-col gap-2">
       {property?.trait_type && (
         <Text
           size="label.sm"

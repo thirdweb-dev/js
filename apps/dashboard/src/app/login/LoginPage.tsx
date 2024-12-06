@@ -216,8 +216,8 @@ function CustomConnectEmbed(props: {
       modalSize="wide"
       theme={getSDKTheme(theme === "light" ? "light" : "dark")}
       className="shadow-lg"
-      privacyPolicyUrl="/privacy"
-      termsOfServiceUrl="/tos"
+      privacyPolicyUrl="/privacy-policy"
+      termsOfServiceUrl="/terms"
     />
   );
 }

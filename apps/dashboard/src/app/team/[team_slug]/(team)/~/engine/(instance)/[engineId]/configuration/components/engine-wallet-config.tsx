@@ -5,7 +5,6 @@ import {
   type EngineInstance,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex } from "@chakra-ui/react";
 import {
   EngineBackendWalletOptions,
   type EngineBackendWalletType,
@@ -42,8 +41,8 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
   const isGcpKmsConfigured = !!walletConfig?.gcpKmsKeyRingId;
 
   return (
-    <Flex flexDir="column" gap={4}>
-      <Flex flexDir="column" gap={2}>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         <Heading size="title.md">Backend Wallets</Heading>
         <p className="text-muted-foreground">
           Create backend wallets on the{" "}
@@ -55,7 +54,7 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
           </Link>{" "}
           tab. To use other wallet types, configure them below.
         </p>
-      </Flex>
+      </div>
 
       <TabButtons
         tabs={EngineBackendWalletOptions.map(({ key, name }) => ({
@@ -78,6 +77,6 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
       />
 
       {tabContent[activeTab]}
-    </Flex>
+    </div>
   );
 };
