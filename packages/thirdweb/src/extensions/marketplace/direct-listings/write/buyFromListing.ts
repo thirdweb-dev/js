@@ -66,6 +66,12 @@ export function buyFromListing(
             ? listing.pricePerToken * options.quantity
             : 0n,
           extraGas: 50_000n, // add extra gas to account for router call
+          erc20Value: isNativeTokenAddress(listing.currencyContractAddress)
+            ? undefined
+            : {
+                amountWei: listing.pricePerToken * options.quantity,
+                tokenAddress: listing.currencyContractAddress,
+              },
         },
       };
     },
