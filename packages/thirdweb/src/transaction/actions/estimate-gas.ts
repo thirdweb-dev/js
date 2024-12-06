@@ -3,7 +3,7 @@ import { roundUpGas } from "../../gas/op-gas-fee-reducer.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
-import { extractError as parseEstimationError } from "../extract-error.js";
+import { extractError } from "../extract-error.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 
 export type EstimateGasOptions = Prettify<
@@ -83,7 +83,7 @@ export async function estimateGas(
         }
         return gas;
       } catch (error) {
-        throw await parseEstimationError({
+        throw await extractError({
           error,
           contract: options.transaction.__contract,
         });
@@ -120,7 +120,7 @@ export async function estimateGas(
       }
       return gas;
     } catch (error) {
-      throw await parseEstimationError({
+      throw await extractError({
         error,
         contract: options.transaction.__contract,
       });

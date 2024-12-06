@@ -2,7 +2,7 @@ import { Img } from "@/components/blocks/Img";
 import { cn } from "@/lib/utils";
 import hexagon from "./hexagon.png";
 
-export interface MaskedAvatarProps {
+interface MaskedAvatarProps {
   src: string;
   isPending?: boolean;
   alt?: string;

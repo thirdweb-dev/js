@@ -54,6 +54,8 @@ export type FromEip1193AdapterOptions = {
  *   value: 1000000000000000000n
  * });
  * ```
+ *
+ * @extension EIP1193
  */
 export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
   const id: WalletId = options.walletId ?? "adapter";

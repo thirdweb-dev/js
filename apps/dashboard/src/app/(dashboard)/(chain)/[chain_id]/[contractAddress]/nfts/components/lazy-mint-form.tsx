@@ -323,11 +323,10 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
         <TransactionButton
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={sendAndConfirmTx.isPending}
+          isPending={sendAndConfirmTx.isPending}
           form={LAZY_MINT_FORM_ID}
           type="submit"
-          colorScheme="primary"
-          isDisabled={!isDirty}
+          disabled={!isDirty}
         >
           Lazy Mint NFT
         </TransactionButton>

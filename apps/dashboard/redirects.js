@@ -228,8 +228,6 @@ async function redirects() {
       destination: "/explore",
       permanent: false,
     },
-
-    // framer redirects
     {
       source: "/deploy",
       destination: "/contracts/deployment-tool",
@@ -269,6 +267,38 @@ async function redirects() {
     {
       source: "/solutions/chains",
       destination: "/solutions/ecosystem",
+      permanent: false,
+    },
+    // redirect /storage to portal
+    {
+      source: "/storage",
+      destination:
+        "https://portal.thirdweb.com/infrastructure/storage/overview",
+      permanent: false,
+    },
+    // redirect /rpc to portal
+    {
+      source: "/rpc-edge",
+      destination:
+        "https://portal.thirdweb.com/infrastructure/rpc-edge/overview",
+      permanent: false,
+    },
+    // redirect /sdk to portal
+    {
+      source: "/sdk",
+      destination: "https://portal.thirdweb.com/connect/blockchain-api",
+      permanent: false,
+    },
+    // redirect `/events` to homepage
+    {
+      source: "/events",
+      destination: "/",
+      permanent: false,
+    },
+    // redirect /community to /community/ambassadors
+    {
+      source: "/community",
+      destination: "/community/ambassadors",
       permanent: false,
     },
     ...legacyDashboardToTeamRedirects,

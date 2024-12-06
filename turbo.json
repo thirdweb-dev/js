@@ -6,16 +6,6 @@
       "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
-    "postbuild": {
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "public/robots.txt",
-        "public/sitemap*.xml",
-        "searchIndex.json"
-      ],
-      "inputs": ["$TURBO_DEFAULT$", ".next/**"]
-    },
     "bench": {
       "cache": false,
       "dependsOn": []
@@ -70,6 +60,7 @@
       "dependsOn": ["^build", "thirdweb#typedoc"]
     },
     "playground-web#build": {
+      "env": ["ENGINE_ACCESS_TOKEN", "ENGINE_BACKEND_WALLET", "ENGINE_URL"],
       "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]
     },

@@ -1,5 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
+import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { defineChain } from "../../chains/utils.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
@@ -12,7 +13,6 @@ import type { Address } from "../../utils/address.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { setThirdwebDomains } from "../../utils/domains.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
-import { generateAccount } from "../utils/generateAccount.js";
 import { smartWallet } from "./smart-wallet.js";
 
 let wallet: Wallet;
@@ -41,9 +41,10 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         storage: "storage.thirdweb-dev.com",
         bundler: "bundler.thirdweb-dev.com",
       });
-      personalAccount = await generateAccount({
-        client,
-      });
+      personalAccount = TEST_ACCOUNT_A;
+      // personalAccount = await generateAccount({
+      //   client,
+      // });
       wallet = smartWallet({
         chain,
         gasless: true,

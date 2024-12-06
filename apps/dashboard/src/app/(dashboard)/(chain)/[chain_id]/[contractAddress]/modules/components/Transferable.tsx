@@ -191,8 +191,7 @@ export function TransferableModuleUI(
                   !props.isOwnerAccount ||
                   !form.formState.isDirty
                 }
-                isLoading={updateMutation.isPending}
-                colorScheme="primary"
+                isPending={updateMutation.isPending}
                 transactionCount={
                   // if already restricted, only need to send the allowlist txs
                   // else - need to send one more

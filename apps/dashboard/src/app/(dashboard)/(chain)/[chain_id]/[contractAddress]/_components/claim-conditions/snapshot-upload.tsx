@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/sheet";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Box, Flex, Link } from "@chakra-ui/react";
 import { useCsvUpload } from "hooks/useCsvUpload";
 import { CircleAlertIcon, DownloadIcon, UploadIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useRef } from "react";
@@ -159,13 +158,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
               columns={columns}
             />
           ) : (
-            <Flex
-              flexGrow={1}
-              align="center"
-              overflow="auto"
-              gap={8}
-              flexDir="column"
-            >
+            <div className="flex grow flex-col items-center gap-8 overflow-auto">
               <div className="relative aspect-[21/9] w-full">
                 <div
                   className={cn(
@@ -204,14 +197,14 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                         addresses and their <InlineCode code="maxClaimable" />.
                         (amount each wallet is allowed to claim)
                         <br />
-                        <Link
+                        <a
+                          className="text-link-foreground hover:text-foreground"
                           download
-                          color="blue.500"
                           href="/snapshot-with-maxclaimable.csv"
                         >
                           <DownloadIcon className="inline size-3" /> Example
                           snapshot
-                        </Link>
+                        </a>
                       </li>
                       <li>
                         You may optionally add <InlineCode code="price" /> and
@@ -219,14 +212,14 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                         This lets you override the currency and price you would
                         like to charge per wallet you specified
                         <br />
-                        <Link
+                        <a
                           download
-                          color="blue.500"
+                          className="text-link-foreground hover:text-foreground"
                           href="/snapshot-with-overrides.csv"
                         >
                           <DownloadIcon className="inline size-3" /> Example
                           snapshot
-                        </Link>
+                        </a>
                       </li>
                     </>
                   ) : (
@@ -235,10 +228,14 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                         Files <em>must</em> contain one .csv file with a list of
                         addresses.
                         <br />
-                        <Link download color="blue.500" href="/snapshot.csv">
+                        <a
+                          download
+                          className="text-link-foreground hover:text-foreground"
+                          href="/snapshot.csv"
+                        >
                           <DownloadIcon className="inline size-3" /> Example
                           snapshot
-                        </Link>
+                        </a>
                       </li>
                       <li>
                         You may optionally add a{" "}
@@ -247,14 +244,14 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                         claim) If not specified, the default value is the one
                         you have set on your claim phase.
                         <br />
-                        <Link
+                        <a
                           download
-                          color="blue.500"
+                          className="text-link-foreground hover:text-foreground"
                           href="/snapshot-with-maxclaimable.csv"
                         >
                           <DownloadIcon className="inline size-3" /> Example
                           snapshot
-                        </Link>
+                        </a>
                       </li>
                       <li>
                         You may optionally add <InlineCode code="price" /> and
@@ -266,14 +263,14 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                           define a price override.
                         </strong>
                         <br />
-                        <Link
+                        <a
                           download
-                          color="blue.500"
+                          className="text-link-foreground hover:text-foreground"
                           href="/snapshot-with-overrides.csv"
                         >
                           <DownloadIcon className="inline size-3" /> Example
                           snapshot
-                        </Link>
+                        </a>
                       </li>
                     </>
                   )}
@@ -287,25 +284,12 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                   </li>
                 </UnorderedList>
               </div>
-            </Flex>
+            </div>
           )}
-          <Flex
-            align="center"
-            justify="space-between"
-            p={{ base: 0, md: 4 }}
-            flexDir={{ base: "column", md: "row" }}
-            mt={{ base: 4, md: 0 }}
-            borderTop="1px solid"
-            borderTopColor="borderColor"
-          >
-            <Box ref={paginationPortalRef} />
+          <div className="mt-4 flex flex-col items-center justify-between border-t p-0 md:mt-0 md:flex-row md:p-4">
+            <div ref={paginationPortalRef} />
             {!isDisabled && (
-              <Flex
-                gap={2}
-                align="center"
-                mt={{ base: 4, md: 0 }}
-                w={{ base: "100%", md: "auto" }}
-              >
+              <div className="mt-4 flex w-full flex-row items-center gap-2 md:mt-0 md:w-auto">
                 <Button
                   className="w-full rounded-md md:w-auto"
                   disabled={isDisabled || rawData.length === 0}
@@ -336,9 +320,9 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                     Next
                   </Button>
                 )}
-              </Flex>
+              </div>
             )}
-          </Flex>
+          </div>
         </div>
       </SheetContent>
     </Sheet>

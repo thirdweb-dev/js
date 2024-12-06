@@ -347,11 +347,10 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
         <TransactionButton
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={sendAndConfirmTx.isPending}
+          isPending={sendAndConfirmTx.isPending}
           form={MINT_FORM_ID}
           type="submit"
-          colorScheme="primary"
-          isDisabled={!isDirty}
+          disabled={!isDirty}
         >
           Mint NFT
         </TransactionButton>

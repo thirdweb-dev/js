@@ -1,3 +1,4 @@
+import type { RedirectBillingCheckoutAction } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
 import { useMemo } from "react";
@@ -8,6 +9,7 @@ import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/get
 interface BillingPricingProps {
   team: Team;
   trialPeriodEndedAt: string | undefined;
+  redirectToCheckout: RedirectBillingCheckoutAction;
 }
 
 type CtaLink = {
@@ -17,6 +19,7 @@ type CtaLink = {
 export const BillingPricing: React.FC<BillingPricingProps> = ({
   team,
   trialPeriodEndedAt,
+  redirectToCheckout,
 }) => {
   const pagePath = `/team/${team.slug}/~/settings/billing`;
   const validTeamPlan = getValidTeamPlan(team);
@@ -118,6 +121,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
             : undefined
         }
         teamSlug={team.slug}
+        redirectToCheckout={redirectToCheckout}
       />
 
       {/* Growth */}
@@ -149,6 +153,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
         // upsell growth plan if user is on free plan
         highlighted={validTeamPlan === "free"}
         teamSlug={team.slug}
+        redirectToCheckout={redirectToCheckout}
       />
 
       <PricingCard
@@ -167,6 +172,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
               }
             : undefined
         }
+        redirectToCheckout={redirectToCheckout}
       />
     </div>
   );

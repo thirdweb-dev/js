@@ -50,6 +50,8 @@ export type ToEip1193ProviderOptions = {
  *   console.log("Active accounts:", accounts);
  * });
  * ```
+ *
+ * @extension EIP1193
  */
 export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
   const { chain, client, wallet, connectOverride } = options;

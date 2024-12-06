@@ -507,12 +507,11 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 Simulate
               </Button>
               <TransactionButton
-                isDisabled={
+                disabled={
                   !abiFunction || txSimulation.isPending || mutationLoading
                 }
-                colorScheme="primary"
                 transactionCount={1}
-                isLoading={mutationLoading}
+                isPending={mutationLoading}
                 form={formId}
                 onClick={handleContractWrite}
                 txChainID={contract.chain.id}

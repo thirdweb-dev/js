@@ -160,6 +160,7 @@ export function AccountName({
       }
       return formatFn ? formatFn(name) : name;
     },
+    retry: false,
     ...queryOptions,
   });
 

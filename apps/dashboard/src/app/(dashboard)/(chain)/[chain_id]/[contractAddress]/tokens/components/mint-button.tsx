@@ -124,11 +124,10 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
             <TransactionButton
               txChainID={contract.chain.id}
               transactionCount={1}
-              isLoading={sendAndConfirmTransaction.isPending}
+              isPending={sendAndConfirmTransaction.isPending}
               form={MINT_FORM_ID}
               type="submit"
-              colorScheme="primary"
-              isDisabled={!form.formState.isDirty}
+              disabled={!form.formState.isDirty}
             >
               Mint Tokens
             </TransactionButton>

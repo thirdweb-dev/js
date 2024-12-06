@@ -160,9 +160,9 @@ export function ModuleCard(props: ModuleCardProps) {
               <TransactionButton
                 txChainID={contract.chain.id}
                 transactionCount={1}
-                isLoading={uninstallMutation.isPending}
+                isPending={uninstallMutation.isPending}
                 type="submit"
-                colorScheme="red"
+                variant="destructive"
                 className="flex"
               >
                 Uninstall

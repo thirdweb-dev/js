@@ -65,27 +65,3 @@ export const CommonContractSchema = z
     defaultAdmin: AddressOrEnsSchema.optional(),
   })
   .catchall(z.unknown());
-
-// @internal
-const ProfileSchemaInput = z.object({
-  name: z.string().optional(),
-  bio: z.string().optional(),
-  avatar: FileOrStringSchema.optional(),
-  website: z.string().optional(),
-  twitter: z.string().optional(),
-  telegram: z.string().optional(),
-  facebook: z.string().optional(),
-  github: z.string().optional(),
-  medium: z.string().optional(),
-  linkedin: z.string().optional(),
-  reddit: z.string().optional(),
-  discord: z.string().optional(),
-});
-
-// @internal
-const ProfileSchemaOutput = ProfileSchemaInput.extend({
-  avatar: z.string().optional(),
-});
-
-export type ProfileMetadataInput = z.infer<typeof ProfileSchemaInput>;
-export type ProfileMetadata = z.infer<typeof ProfileSchemaOutput>;

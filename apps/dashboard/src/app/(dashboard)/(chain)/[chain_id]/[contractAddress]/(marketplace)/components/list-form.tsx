@@ -537,11 +537,10 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         </Button>
         <TransactionButton
           txChainID={contract.chain.id}
-          isLoading={isFormLoading}
+          isPending={isFormLoading}
           transactionCount={2}
           form={LIST_FORM_ID}
           type="submit"
-          colorScheme="primary"
         >
           {actionText}
         </TransactionButton>

@@ -101,10 +101,9 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
             txChainID={contract.chain.id}
             transactionCount={1}
             form={TRANSFER_FORM_ID}
-            isLoading={sendConfirmation.isPending}
+            isPending={sendConfirmation.isPending}
             type="submit"
-            colorScheme="primary"
-            isDisabled={!form.formState.isDirty}
+            disabled={!form.formState.isDirty}
             onClick={form.handleSubmit((d) => {
               trackEvent({
                 category: "token",

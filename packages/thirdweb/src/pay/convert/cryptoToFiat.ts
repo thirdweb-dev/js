@@ -51,7 +51,7 @@ export type ConvertCryptoToFiatParams = {
  *   fromAmount: 1,
  * });
  *
- * // Result: 3404.11
+ * // Result: `{ result: 3404.11 }`
  * ```
  * @buyCrypto
  * @returns a number representing the price (in selected fiat) of "x" token, with "x" being the `fromAmount`.

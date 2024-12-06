@@ -84,9 +84,8 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({ contract }) => {
             txChainID={contract.chain.id}
             transactionCount={1}
             form={CLAIM_FORM_ID}
-            isLoading={formState.isSubmitting}
+            isPending={formState.isSubmitting}
             type="submit"
-            colorScheme="primary"
             onClick={handleSubmit(async (d) => {
               try {
                 trackEvent({

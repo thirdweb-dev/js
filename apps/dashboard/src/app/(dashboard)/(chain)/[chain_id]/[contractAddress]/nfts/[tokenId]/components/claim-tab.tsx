@@ -53,7 +53,6 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
           if (approveTx) {
             const approvalPromise = sendAndConfirmTx.mutateAsync(approveTx);
             toast.promise(approvalPromise, {
-              loading: "Approving ERC20 token for this claim",
               success: "Approved succesfully",
               error: "Failed to approve ERC20",
             });
@@ -122,10 +121,9 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
         <TransactionButton
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={form.formState.isSubmitting}
+          isPending={form.formState.isSubmitting}
           type="submit"
-          colorScheme="primary"
-          alignSelf="flex-end"
+          className="self-end"
         >
           Claim
         </TransactionButton>

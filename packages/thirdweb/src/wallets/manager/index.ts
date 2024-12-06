@@ -128,37 +128,56 @@ export function createConnectionManager(storage: AsyncStorage) {
       throw new Error("Can not set a wallet without an account as active");
     }
 
-    const personalWallet = wallet;
-    let activeWallet = personalWallet;
-    const isInAppSmartAccount = hasSmartAccount(wallet);
-    if (options?.accountAbstraction && !isInAppSmartAccount) {
-      activeWallet = smartWallet(options.accountAbstraction);
-      await activeWallet.connect({
-        personalAccount: wallet.getAccount(),
-        client: options.client,
-      });
-    }
+    const activeWallet = await (async () => {
+      if (options?.accountAbstraction && !hasSmartAccount(wallet)) {
+        return await handleSmartWalletConnection(
+          account,
+          options.client,
+          options.accountAbstraction,
+        );
+      } else {
+        return wallet;
+      }
+    })();
 
     // add personal wallet to connected wallets list
-    addConnectedWallet(personalWallet);
+    addConnectedWallet(wallet);
 
-    if (personalWallet.id !== "smart") {
-      await storage.setItem(LAST_ACTIVE_EOA_ID, personalWallet.id);
+    if (wallet.id !== "smart") {
+      await storage.setItem(LAST_ACTIVE_EOA_ID, wallet.id);
     }
+
+    handleSetActiveWallet(activeWallet);
+
+    wallet.subscribe("accountChanged", async () => {
+      // We reimplement connect here to prevent memory leaks
+      const newWallet = await handleConnection(wallet, options);
+      options?.onConnect?.(newWallet);
+    });
 
     return activeWallet;
   };
 
+  const handleSmartWalletConnection = async (
+    signer: Account,
+    client: ThirdwebClient,
+    options: SmartWalletOptions,
+  ) => {
+    const wallet = smartWallet(options);
+
+    await wallet.connect({
+      personalAccount: signer,
+      client: client,
+      chain: options.chain,
+    });
+
+    return wallet;
+  };
+
   const connect = async (wallet: Wallet, options?: ConnectManagerOptions) => {
-    // connectedWallet can be either wallet or smartWallet based on
+    // connectedWallet can be either wallet or smartWallet
     const connectedWallet = await handleConnection(wallet, options);
     options?.onConnect?.(connectedWallet);
-    handleSetActiveWallet(connectedWallet);
-    wallet.subscribe("accountChanged", async () => {
-      const newConnectedWallet = await handleConnection(wallet, options);
-      options?.onConnect?.(newConnectedWallet);
-      handleSetActiveWallet(newConnectedWallet);
-    });
     return connectedWallet;
   };
 

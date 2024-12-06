@@ -131,10 +131,9 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
               )}
               <TransactionButton
                 transactionCount={1}
-                isLoading={sendTransaction.isPending}
+                isPending={sendTransaction.isPending}
                 type="submit"
-                colorScheme="primary"
-                alignSelf="flex-end"
+                className="self-end"
                 txChainID={contract.chain.id}
               >
                 Airdrop

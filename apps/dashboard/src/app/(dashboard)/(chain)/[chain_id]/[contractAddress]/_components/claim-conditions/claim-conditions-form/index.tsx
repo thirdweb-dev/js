@@ -646,16 +646,15 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                   hasRemovedPhases ||
                   !isMultiPhase ? (
                     <TransactionButton
-                      colorScheme="primary"
                       txChainID={contract.chain.id}
                       transactionCount={1}
-                      isDisabled={claimConditionsQuery.isPending}
+                      disabled={claimConditionsQuery.isPending}
                       type="submit"
-                      isLoading={sendTx.isPending}
-                      loadingText="Saving..."
-                      size="md"
+                      isPending={sendTx.isPending}
                     >
-                      Save Phases
+                      {claimConditionsQuery.isPending
+                        ? "Saving Phases"
+                        : "Save Phases"}
                     </TransactionButton>
                   ) : null}
                 </Flex>

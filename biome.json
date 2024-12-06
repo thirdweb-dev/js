@@ -29,7 +29,8 @@
         "noRestrictedGlobals": {
           "options": { "deniedGlobals": ["Buffer"] },
           "level": "error"
-        }
+        },
+        "noUselessElse": "off"
       }
     }
   },

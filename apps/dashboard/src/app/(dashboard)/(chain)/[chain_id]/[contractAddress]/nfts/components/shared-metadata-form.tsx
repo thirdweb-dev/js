@@ -277,11 +277,10 @@ export const SharedMetadataForm: React.FC<{
         <TransactionButton
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={sendAndConfirmTx.isPending}
+          isPending={sendAndConfirmTx.isPending}
           form={SHARED_METADATA_FORM_ID}
           type="submit"
-          colorScheme="primary"
-          isDisabled={!isDirty}
+          disabled={!isDirty}
         >
           Set NFT Metadata
         </TransactionButton>

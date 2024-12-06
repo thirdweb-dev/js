@@ -316,7 +316,7 @@ export class IFrameWallet implements IWebWallet {
                 parsedTypedData.types as SignerProcedureTypes["signTypedDataV4"]["types"],
               message:
                 parsedTypedData.message as SignerProcedureTypes["signTypedDataV4"]["message"],
-              chainId: chainId || 1,
+              chainId: Number.parseInt(BigInt(chainId || 1).toString()),
               partnerId,
               rpcEndpoint: `https://${chainId}.${RPC_URL}`, // TODO (ew) shouldnt be needed
             },

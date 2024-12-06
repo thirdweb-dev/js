@@ -1,4 +1,5 @@
-import type { Address } from "abitype";
+import type { Address, TypedData } from "abitype";
+import type { SignableMessage, TypedDataDefinition } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
@@ -7,6 +8,13 @@ import type { TransactionReceipt } from "../../transaction/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
+
+export type TokenPaymasterConfig = {
+  chainId: number;
+  paymasterAddress: string;
+  tokenAddress: string;
+  balanceStorageSlot: bigint;
+};
 
 export type SmartWalletOptions = Prettify<
   {
@@ -17,16 +25,17 @@ export type SmartWalletOptions = Prettify<
       accountAddress?: string;
       accountSalt?: string;
       entrypointAddress?: string;
-      erc20Paymaster?: {
-        address: string;
-        token: string;
-      };
+      tokenPaymaster?: TokenPaymasterConfig;
       paymaster?: (
         userOp: UserOperationV06 | UserOperationV07,
       ) => Promise<PaymasterResult>;
-      predictAddress?: (factoryContract: ThirdwebContract) => Promise<string>;
+      predictAddress?: (
+        factoryContract: ThirdwebContract,
+        admin: string,
+      ) => Promise<string>;
       createAccount?: (
         factoryContract: ThirdwebContract,
+        admin: string,
       ) => PreparedTransaction;
       execute?: (
         accountContract: ThirdwebContract,
@@ -37,6 +46,21 @@ export type SmartWalletOptions = Prettify<
         transactions: SendTransactionOption[],
       ) => PreparedTransaction;
       getAccountNonce?: (accountContract: ThirdwebContract) => Promise<bigint>;
+      signMessage?: (options: {
+        adminAccount: Account;
+        accountContract: ThirdwebContract;
+        factoryContract: ThirdwebContract;
+        message: SignableMessage;
+      }) => Promise<Hex>;
+      signTypedData?: <
+        const typedData extends TypedData | Record<string, unknown>,
+        primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
+      >(options: {
+        adminAccount: Account;
+        accountContract: ThirdwebContract;
+        factoryContract: ThirdwebContract;
+        typedData: TypedDataDefinition<typedData, primaryType>;
+      }) => Promise<Hex>;
     };
   } & (
     | {

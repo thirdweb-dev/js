@@ -13,7 +13,7 @@ type EcosystemOptions = {
 };
 
 type SmartAccountOptions = {
-  chainIds: number[];
+  defaultChainId: number;
   sponsorGas: boolean;
   accountFactoryAddress: string;
 };

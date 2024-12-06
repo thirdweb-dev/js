@@ -183,18 +183,15 @@ export const SettingsRoyalties = ({
         <AdminOnly contract={contract}>
           <TransactionButton
             txChainID={contract.chain.id}
-            colorScheme="primary"
             transactionCount={1}
-            isDisabled={query.isPending || !form.formState.isDirty}
+            disabled={query.isPending || !form.formState.isDirty}
             type="submit"
-            isLoading={mutation.isPending}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
+            isPending={mutation.isPending}
+            className="!rounded-t-none rounded-xl"
           >
-            Update Royalty Settings
+            {mutation.isPending
+              ? "Updating Royalty Settings"
+              : "Update Royalty Settings"}
           </TransactionButton>
         </AdminOnly>
       </Flex>

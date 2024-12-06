@@ -48,11 +48,10 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
       <TransactionButton
         txChainID={v5Chain.id}
         transactionCount={1}
-        isLoading={isPending}
-        isDisabled={
+        isPending={isPending}
+        disabled={
           amount.length === 0 || Number.parseFloat(amount) <= 0 || !address
         }
-        colorScheme="primary"
         onClick={() => {
           if (!address) {
             throw new Error("Invalid address");

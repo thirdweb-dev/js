@@ -1,5 +1,93 @@
 # thirdweb
 
+## 5.74.0
+
+### Minor Changes
+
+- [#5634](https://github.com/thirdweb-dev/js/pull/5634) [`d1aa380`](https://github.com/thirdweb-dev/js/commit/d1aa3805bfbf22b6a01404c3a01fe1ad02cd9815) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - ERC20 Token Paymaster support
+
+  You can now use ERC20 Token Paymasters with Smart Wallets.
+
+  ```typescript
+  import { base } from "thirdweb/chains";
+  import { TokenPaymaster, smartWallet } from "thirdweb/wallets";
+
+  const wallet = smartWallet({
+    chain: base,
+    sponsorGas: true, // only sponsor gas for the first ERC20 approval
+    overrides: {
+      tokenPaymaster: TokenPaymaster.BASE_USDC,
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#5593](https://github.com/thirdweb-dev/js/pull/5593) [`68ad62f`](https://github.com/thirdweb-dev/js/commit/68ad62f1d5c319392a7598d747a1400341bcc170) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - update `type` in `getUser` `Profiles` to match tyepscript types
+
+- [#5621](https://github.com/thirdweb-dev/js/pull/5621) [`279cb6f`](https://github.com/thirdweb-dev/js/commit/279cb6f9a737107b49d2ddcdb465e5941cbf9b42) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Feature: Propagate failed sign in error message to the UI
+
+- [#5596](https://github.com/thirdweb-dev/js/pull/5596) [`c893239`](https://github.com/thirdweb-dev/js/commit/c893239582d3362716f3daa7511f35b34b3cf790) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - add fallback chain for ecosystem smart accounts
+
+- [#5620](https://github.com/thirdweb-dev/js/pull/5620) [`13d63ab`](https://github.com/thirdweb-dev/js/commit/13d63ab06221cf9d7030779e54186b6925362356) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Hides Sign in with Wallet button when linking a profile
+
+- [#5618](https://github.com/thirdweb-dev/js/pull/5618) [`33c23e7`](https://github.com/thirdweb-dev/js/commit/33c23e789e577bd6463e135cec4e25cfcfc9964a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Removed the auth prop from useConnectModal as it is currently not supported
+
+## 5.73.0
+
+### Minor Changes
+
+- [#5457](https://github.com/thirdweb-dev/js/pull/5457) [`57fa96b`](https://github.com/thirdweb-dev/js/commit/57fa96b268671f19c7f57fa2208fb83e2b0e75b5) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add 2 new Pay functions: convertFiatToCrypto and convertCryptoToFiat
+
+  Examples:
+
+  ### Convert fiat (USD) to crypto
+
+  ```ts
+  import { convertFiatToCrypto } from "thirdweb/pay";
+  import { ethereum } from "thirdweb/chains";
+
+  // Convert 2 cents to ETH
+  const result = await convertFiatToCrypto({
+    from: "USD",
+    // the token address. For native token, use NATIVE_TOKEN_ADDRESS
+    to: "0x...",
+    // the chain (of the chain where the token belong to)
+    chain: ethereum,
+    // 2 cents
+    fromAmount: 0.02,
+  });
+  // Result: 0.0000057 (a number)
+  ```
+
+  ### Convert crypto to fiat (USD)
+
+  ```ts
+  import { convertCryptoToFiat } from "thirdweb/pay";
+
+  // Get Ethereum price
+  const result = convertCryptoToFiat({
+    fromTokenAddress: NATIVE_TOKEN_ADDRESS,
+    to: "USD",
+    chain: ethereum,
+    fromAmount: 1,
+  });
+
+  // Result: 3404.11 (number)
+  ```
+
+### Patch Changes
+
+- [#5594](https://github.com/thirdweb-dev/js/pull/5594) [`b7c8854`](https://github.com/thirdweb-dev/js/commit/b7c885432726eeaf3401217573f2cff0f5247ff7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support for Expo 52 and React Native 0.76
+
+- [#5595](https://github.com/thirdweb-dev/js/pull/5595) [`9b45aae`](https://github.com/thirdweb-dev/js/commit/9b45aae699c6f927816a415cabd61bb30bef72b1) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Display error message when failing to fetch account status from endpoint outside of unauthorized requests
+
+- [#5592](https://github.com/thirdweb-dev/js/pull/5592) [`c3d7b66`](https://github.com/thirdweb-dev/js/commit/c3d7b662c402f96696141070ea42b2e10d94e1f8) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Properly updates active smart wallet when switching signer account on EOA wallet
+
+- [#5577](https://github.com/thirdweb-dev/js/pull/5577) [`b117cb1`](https://github.com/thirdweb-dev/js/commit/b117cb19279a7807fc956e77ae144788112eec7f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show warning when sponsorship policy rejects a transaction
+
+- [#5531](https://github.com/thirdweb-dev/js/pull/5531) [`1e9a6c7`](https://github.com/thirdweb-dev/js/commit/1e9a6c7d8ae28012956b688f6e0af6f94c075181) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle 0 value for maxPriorityFeePerGas in 712 transactions
+
 ## 5.72.0
 
 ### Minor Changes

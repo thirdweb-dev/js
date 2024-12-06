@@ -347,8 +347,7 @@ function RoyaltyInfoPerTokenSection(props: {
               className="min-w-24"
               disabled={setRoyaltyInfoForTokenMutation.isPending}
               type="submit"
-              isLoading={setRoyaltyInfoForTokenMutation.isPending}
-              colorScheme="primary"
+              isPending={setRoyaltyInfoForTokenMutation.isPending}
               transactionCount={1}
               txChainID={props.contractChainId}
             >
@@ -450,9 +449,8 @@ function DefaultRoyaltyInfoSection(props: {
               className="min-w-24"
               disabled={updateMutation.isPending}
               type="submit"
-              colorScheme="primary"
               transactionCount={1}
-              isLoading={updateMutation.isPending}
+              isPending={updateMutation.isPending}
               txChainID={props.contractChainId}
             >
               Update
@@ -527,8 +525,7 @@ function TransferValidatorSection(props: {
             className="min-w-24 gap-2"
             disabled={updateMutation.isPending}
             type="submit"
-            colorScheme="primary"
-            isLoading={updateMutation.isPending}
+            isPending={updateMutation.isPending}
             transactionCount={1}
             txChainID={props.contractChainId}
           >

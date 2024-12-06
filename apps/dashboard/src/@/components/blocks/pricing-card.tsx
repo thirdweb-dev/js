@@ -1,5 +1,4 @@
 import type { Team } from "@/api/team";
-import { CheckoutButton } from "@/components/billing";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
@@ -9,6 +8,8 @@ import { CheckIcon, CircleDollarSignIcon } from "lucide-react";
 import type React from "react";
 import { TEAM_PLANS } from "utils/pricing";
 import { remainingDays } from "../../../utils/date-utils";
+import type { RedirectBillingCheckoutAction } from "../../actions/billing";
+import { CheckoutButton } from "../billing";
 
 type ButtonProps = React.ComponentProps<typeof Button>;
 
@@ -33,6 +34,7 @@ type PricingCardProps = {
   canTrialGrowth?: boolean;
   activeTrialEndsAt?: string;
   redirectPath: string;
+  redirectToCheckout: RedirectBillingCheckoutAction;
 };
 
 export const PricingCard: React.FC<PricingCardProps> = ({
@@ -44,6 +46,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   canTrialGrowth = false,
   activeTrialEndsAt,
   redirectPath,
+  redirectToCheckout,
 }) => {
   const plan = TEAM_PLANS[billingPlan];
   const isCustomPrice = typeof plan.price === "string";
@@ -132,6 +135,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               teamSlug={teamSlug}
               sku={billingPlan === "starter" ? "plan:starter" : "plan:growth"}
               redirectPath={redirectPath}
+              redirectToCheckout={redirectToCheckout}
             >
               {cta.title}
             </CheckoutButton>

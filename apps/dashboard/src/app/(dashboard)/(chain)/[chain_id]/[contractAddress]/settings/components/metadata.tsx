@@ -329,18 +329,15 @@ export const SettingsMetadata = ({
         <AdminOnly contract={contract}>
           <TransactionButton
             txChainID={contract.chain.id}
-            colorScheme="primary"
             transactionCount={1}
-            isDisabled={metadata.isPending || !formState.isDirty}
+            disabled={metadata.isPending || !formState.isDirty}
             type="submit"
-            isLoading={sendTransaction.isPending}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
+            isPending={sendTransaction.isPending}
+            className="!rounded-t-none rounded-xl"
           >
-            Update Metadata
+            {sendTransaction.isPending
+              ? "Updating Metadata"
+              : "Update Metadata"}
           </TransactionButton>
         </AdminOnly>
       </Flex>

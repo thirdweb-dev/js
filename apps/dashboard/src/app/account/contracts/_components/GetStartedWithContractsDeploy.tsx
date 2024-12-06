@@ -4,7 +4,6 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { ImportModal } from "components/contract-components/import-contract/modal";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { useTrack } from "hooks/analytics/useTrack";
-import Image from "next/image";
 import { useMemo, useState } from "react";
 
 export function GetStartedWithContractsDeploy() {
@@ -116,15 +115,6 @@ const DeployOptions = () => {
           });
         }}
       >
-        <Image
-          width={32}
-          height={32}
-          className="size-8"
-          alt=""
-          src={`/assets/dashboard/contracts/${activeTab}.${
-            activeTab === "import" ? "svg" : "png"
-          }`}
-        />
         <div>
           <h4 className="text-start font-semibold text-lg">
             {activeTabContent.title}

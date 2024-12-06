@@ -176,18 +176,15 @@ export const SettingsPlatformFees = ({
         <AdminOnly contract={contract}>
           <TransactionButton
             txChainID={contract.chain.id}
-            colorScheme="primary"
             transactionCount={1}
-            isDisabled={platformFeesQuery.isPending || !form.formState.isDirty}
+            disabled={platformFeesQuery.isPending || !form.formState.isDirty}
             type="submit"
-            isLoading={sendAndConfirmTx.isPending}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
+            isPending={sendAndConfirmTx.isPending}
+            className="!rounded-t-none rounded-xl"
           >
-            Update Platform Fee Settings
+            {sendAndConfirmTx.isPending
+              ? "Updating Platform Fee Settings"
+              : "Update Platform Fee Settings"}
           </TransactionButton>
         </AdminOnly>
       </Flex>

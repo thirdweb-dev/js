@@ -130,11 +130,10 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
           )}
           <TransactionButton
             transactionCount={1}
-            isLoading={isPending}
-            isDisabled={checking1155 || checking721 || isPending || !account}
+            isPending={isPending}
+            disabled={checking1155 || checking721 || isPending || !account}
             type="submit"
-            colorScheme="primary"
-            alignSelf="flex-end"
+            className="self-end"
             txChainID={contract.chain.id}
           >
             Burn

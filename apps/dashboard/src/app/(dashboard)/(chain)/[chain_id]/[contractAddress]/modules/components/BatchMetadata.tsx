@@ -264,10 +264,9 @@ function UploadMetadataNFTSection(props: {
               className="min-w-24"
               disabled={uploadMetadataMutation.isPending}
               type="submit"
-              isLoading={uploadMetadataMutation.isPending}
+              isPending={uploadMetadataMutation.isPending}
               txChainID={props.contractChainId}
               transactionCount={1}
-              colorScheme="primary"
             >
               Upload
             </TransactionButton>

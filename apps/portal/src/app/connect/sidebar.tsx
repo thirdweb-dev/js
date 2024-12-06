@@ -1,19 +1,9 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
-import {
-  DotNetIcon,
-  PayIcon,
-  ReactIcon,
-  TypeScriptIcon,
-  UnityIcon,
-  WalletsAuthIcon,
-  WalletsInAppIcon,
-  WalletsSmartIcon,
-} from "@/icons";
-import { CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
+import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
+import { ExternalLink, ZapIcon } from "lucide-react";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 
 // TODO: move the following two slugs to walletSlug with updated docs
-const connectSlug = "/connect/sign-in";
 const inAppSlug = "/connect/in-app-wallet";
 
 const walletSlug = "/connect/wallet";
@@ -49,150 +39,99 @@ export const sidebar: SideBar = {
       icon: <ExternalLink />,
     },
     { separator: true },
+    // Connect\
     {
-      name: "Learn",
+      name: "Onboard Users",
+      expanded: true,
       isCollapsible: false,
       links: [
-        // Connect\
         {
-          name: "Wallets",
-          icon: <WalletsInAppIcon />,
+          name: "Overview",
+          href: `${walletSlug}/overview`,
+        },
+        {
+          name: "Security",
+          href: `${walletSlug}/security`,
+        },
+        {
+          name: "Get Started",
+          href: `${walletSlug}/get-started`,
+        },
+        {
+          name: "External Wallets",
+          href: `${walletSlug}/sign-in-methods/external-wallets`,
+        },
+        {
+          name: "In-App Wallets",
           links: [
             {
-              name: "Overview",
-              href: `${walletSlug}/overview`,
+              name: "Sign-In Methods",
+              href: `${walletSlug}/sign-in-methods/configure`,
             },
-            {
-              name: "Security",
-              href: `${walletSlug}/security`,
-            },
-            {
-              name: "Get Started",
-              href: `${walletSlug}/get-started`,
-            },
-
             {
               name: "Pregenerate Wallets",
               href: `${walletSlug}/pregenerate-wallets`,
             },
             {
-              name: "Sign-In Methods",
+              name: "Guest Mode",
+              href: `${walletSlug}/sign-in-methods/guest`,
+            },
+            {
+              name: "Custom Authentication",
               links: [
                 {
-                  name: "Configure",
-                  href: `${walletSlug}/sign-in-methods/configure`,
+                  name: "Overview",
+                  href: `${inAppSlug}/custom-auth/overview`,
                 },
                 {
-                  name: "Guest Mode",
-                  href: `${walletSlug}/sign-in-methods/guest`,
+                  name: "Configuration",
+                  href: `${inAppSlug}/custom-auth/configuration`,
                 },
                 {
-                  name: "External Wallets",
-                  href: `${walletSlug}/sign-in-methods/external-wallets`,
-                },
-                {
-                  name: "Custom Authentication",
+                  name: "Integration guides",
                   links: [
                     {
-                      name: "Overview",
-                      href: `${inAppSlug}/custom-auth/overview`,
+                      name: "Custom auth server (OIDC Auth)",
+                      href: `${inAppSlug}/custom-auth/custom-jwt-auth-server`,
                     },
                     {
-                      name: "Configuration",
-                      href: `${inAppSlug}/custom-auth/configuration`,
+                      name: "Custom auth server (Generic Auth)",
+                      href: `${inAppSlug}/custom-auth/custom-auth-server`,
                     },
                     {
-                      name: "Integration guides",
-                      links: [
-                        {
-                          name: "Custom auth server (OIDC Auth)",
-                          href: `${inAppSlug}/custom-auth/custom-jwt-auth-server`,
-                        },
-                        {
-                          name: "Custom auth server (Generic Auth)",
-                          href: `${inAppSlug}/custom-auth/custom-auth-server`,
-                        },
-                        {
-                          name: "Firebase Auth",
-                          href: `${inAppSlug}/custom-auth/firebase-auth`,
-                        },
-                      ],
+                      name: "Firebase Auth",
+                      href: `${inAppSlug}/custom-auth/firebase-auth`,
                     },
                   ],
                 },
               ],
             },
-
+          ],
+        },
+        {
+          name: "Ecosystem Wallets",
+          links: [
             {
-              name: "User Management",
-              links: [
-                {
-                  name: "Get User Profiles",
-                  href: `${walletSlug}/user-management/get-user-profiles`,
-                },
-                {
-                  name: "Export Private Keys",
-                  href: `${walletSlug}/user-management/export-private-key`,
-                },
-                {
-                  name: "Link Multiple Identity",
-                  href: `${walletSlug}/user-management/link-multiple-identity`,
-                },
-                // TODO:
-                // {
-                //   name: "Deleting User Details",
-                //   href: `${walletSlug}/user-management/deleting-user-details`,
-                // },
-              ],
+              name: "Set-up",
+              href: `${walletSlug}/ecosystem/set-up`,
             },
             {
-              name: "Customization",
-              links: [
-                {
-                  name: "Prebuilt UI",
-                  href: `${connectSlug}/customization`,
-                },
-                // {
-                //   name: "Emails and SMS",
-                //   href: `${connectSlug}/customization#compact-modal`,
-                // },
-              ],
+              name: "Ecosystem Portal",
+              href: `${walletSlug}/ecosystem/portal`,
             },
             {
-              name: "Ecosystem",
-              links: [
-                {
-                  name: "Set-up",
-                  href: `${walletSlug}/ecosystem/set-up`,
-                },
-                {
-                  name: "Ecosystem Portal",
-                  href: `${walletSlug}/ecosystem/portal`,
-                },
-                {
-                  name: "Managing Ecosystem Permissions",
-                  href: `${walletSlug}/ecosystem/permissions`,
-                },
-                {
-                  name: "Integrating with Partners",
-                  href: `${walletSlug}/ecosystem/integrating-partners`,
-                },
-              ],
+              name: "Managing Ecosystem Permissions",
+              href: `${walletSlug}/ecosystem/permissions`,
             },
             {
-              name: "Migrate to thirdweb",
-              href: `${walletSlug}/migrate-to-thirdweb`,
-            },
-            {
-              name: "FAQ",
-              href: `${walletSlug}/faq`,
+              name: "Integrating with Partners",
+              href: `${walletSlug}/ecosystem/integrating-partners`,
             },
           ],
         },
         //Account abstraction
         {
           name: "Account Abstraction",
-          icon: <WalletsSmartIcon />,
           links: [
             {
               name: "Overview",
@@ -245,24 +184,6 @@ export const sidebar: SideBar = {
               name: "Sponsorship rules",
               href: `${aAslug}/sponsorship-rules`,
             },
-            {
-              name: "Gasless",
-              isCollapsible: true,
-              links: [
-                {
-                  name: "Engine",
-                  href: `${aAslug}/gasless/engine`,
-                },
-                {
-                  name: "Biconomy",
-                  href: `${aAslug}/gasless/biconomy`,
-                },
-                {
-                  name: "OpenZeppelin",
-                  href: `${aAslug}/gasless/openzeppelin`,
-                },
-              ],
-            },
             // {
             // 	name: "References",
             // 	isCollapsible: true,
@@ -292,10 +213,26 @@ export const sidebar: SideBar = {
             },
           ],
         },
-        // Auth
         {
-          name: "Auth (SIWE)",
-          icon: <WalletsAuthIcon />,
+          name: "Migrate to thirdweb",
+          href: `${walletSlug}/migrate-to-thirdweb`,
+        },
+        {
+          name: "FAQ",
+          href: `${walletSlug}/faq`,
+        },
+      ],
+    },
+    { separator: true },
+    // User identity
+    {
+      name: "User Identity",
+      isCollapsible: false,
+      links: [
+        // Auth
+        // TODO move to TS reference
+        {
+          name: "Sign In with Ethereum",
           links: [
             {
               name: "Get Started",
@@ -322,10 +259,35 @@ export const sidebar: SideBar = {
             },
           ],
         },
+        {
+          name: "Get User Profiles",
+          href: `${walletSlug}/user-management/get-user-profiles`,
+        },
+        {
+          name: "Link Multiple Identities",
+          href: `${walletSlug}/user-management/link-multiple-identity`,
+        },
+        {
+          name: "Export Private Keys",
+          href: `${walletSlug}/user-management/export-private-key`,
+        },
+        // TODO:
+        // {
+        //   name: "Deleting User Details",
+        //   href: `${walletSlug}/user-management/deleting-user-details`,
+        // },
+      ],
+    },
+    { separator: true },
+    // Blockchain API
+    // TODO Overview page?
+    {
+      name: "Onchain Interactions",
+      isCollapsible: false,
+      links: [
         // Pay
         {
-          name: "Pay",
-          icon: <PayIcon />,
+          name: "Bridge & Swap",
           links: [
             {
               name: "Overview",
@@ -409,11 +371,8 @@ export const sidebar: SideBar = {
             },
           ],
         },
-        // Blockchain API
         {
-          name: "Blockchain API",
-          icon: <CodeIcon />,
-          href: "/connect/blockchain-api",
+          name: "API References",
           links: [
             {
               name: "TypeScript",
@@ -446,43 +405,6 @@ export const sidebar: SideBar = {
               icon: <UnrealEngineIcon />,
             },
           ],
-        },
-      ],
-    },
-    { separator: true },
-    {
-      name: "Platform API References",
-      isCollapsible: false,
-      links: [
-        {
-          name: "TypeScript",
-          href: "/typescript/v5",
-          icon: <TypeScriptIcon />,
-        },
-        {
-          name: "React",
-          href: "/react/v5",
-          icon: <ReactIcon />,
-        },
-        {
-          name: "React Native",
-          href: "/react-native/v5",
-          icon: <ReactIcon />,
-        },
-        {
-          name: "Dotnet",
-          href: "/dotnet",
-          icon: <DotNetIcon />,
-        },
-        {
-          name: "Unity",
-          href: "/unity",
-          icon: <UnityIcon />,
-        },
-        {
-          name: "Unreal Engine",
-          href: "/unreal-engine",
-          icon: <UnrealEngineIcon />,
         },
       ],
     },

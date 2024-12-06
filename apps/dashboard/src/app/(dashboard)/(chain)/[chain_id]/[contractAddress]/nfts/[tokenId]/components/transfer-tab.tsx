@@ -121,11 +121,10 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
           <TransactionButton
             txChainID={contract.chain.id}
             transactionCount={1}
-            isLoading={isPending || checking1155}
+            isPending={isPending || checking1155}
             type="submit"
-            colorScheme="primary"
-            alignSelf="flex-end"
-            isDisabled={
+            className="self-end"
+            disabled={
               !form.formState.isDirty || checking1155 || isPending || !account
             }
           >

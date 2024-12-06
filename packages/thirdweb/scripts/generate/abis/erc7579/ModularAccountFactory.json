@@ -1,0 +1,23 @@
+[
+  "constructor(address _entrypoint, address _owner, address _accountImplementation)",
+  "function accountImplementation() view returns (address)",
+  "function addStake(uint32 unstakeDelaySec) payable",
+  "function createAccountWithModules(address owner, bytes salt, (uint256 moduleTypeId, address module, bytes initData)[] modules) payable returns (address)",
+  "function entrypoint() view returns (address)",
+  "function getAddress(address owner, bytes salt) view returns (address account)",
+  "function implementation() view returns (address result)",
+  "function owner() view returns (address result)",
+  "function renounceOwnership()",
+  "function transferOwnership(address newOwner)",
+  "function unlockStake()",
+  "function upgradeTo(address newImplementation)",
+  "function withdraw(address to, address token, uint256 amount)",
+  "function withdrawStake(address to)",
+  "event OwnershipTransferred(address indexed oldOwner, address indexed newOwner)",
+  "event Upgraded(address indexed implementation)",
+  "error InitializationFailed()",
+  "error InvalidModule(address module)",
+  "error NewImplementationHasNoCode()",
+  "error NewOwnerIsZeroAddress()",
+  "error Unauthorized()"
+]

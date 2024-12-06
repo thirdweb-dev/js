@@ -129,11 +129,10 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
             <TransactionButton
               txChainID={contract.chain.id}
               transactionCount={1}
-              isLoading={sendTxMutation.isPending}
+              isPending={sendTxMutation.isPending}
               form={REVEAL_FORM_ID}
               type="submit"
-              colorScheme="primary"
-              isDisabled={!isDirty}
+              disabled={!isDirty}
             >
               Reveal NFTs
             </TransactionButton>

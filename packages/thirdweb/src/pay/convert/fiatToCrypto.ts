@@ -54,7 +54,7 @@ export type ConvertFiatToCryptoParams = {
  *   fromAmount: 0.02,
  * });
  * ```
- * Result: `0.0000057` (a number)
+ * Result: `{ result: 0.0000057 }`
  * @buyCrypto
  */
 export async function convertFiatToCrypto(

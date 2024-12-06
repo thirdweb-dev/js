@@ -5,9 +5,14 @@ module.exports = [
   "/pricing",
   // -- product landing pages --
   // -- connect
+  "/connect",
   "/connect/sign-in",
+  // -- nebula
   "/nebula",
+  // --insight
+  "/insight",
   // -- contracts
+  "/contracts",
   "/contracts/modular-contracts",
   "/contracts/explore",
   "/contracts/deployment-tool",
@@ -20,4 +25,7 @@ module.exports = [
   "/solutions/ecosystem",
   // -- campaigns --
   "/unlimited-wallets",
+  // -- TPP --
+  "/trusted-partner-program",
+  "/trusted-partner-program/:partner_slug",
 ];

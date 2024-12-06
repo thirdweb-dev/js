@@ -66,6 +66,7 @@ export async function predictAddress(args: {
   factoryContract: ThirdwebContract;
   predictAddressOverride?: (
     factoryContract: ThirdwebContract,
+    admin: string,
   ) => Promise<string>;
   adminAddress: string;
   accountSalt?: string;
@@ -79,7 +80,7 @@ export async function predictAddress(args: {
     accountAddress,
   } = args;
   if (predictAddress) {
-    return predictAddress(factoryContract);
+    return predictAddress(factoryContract, adminAddress);
   }
   if (accountAddress) {
     return accountAddress;
@@ -109,6 +110,7 @@ export function prepareCreateAccount(args: {
   accountSalt?: string;
   createAccountOverride?: (
     factoryContract: ThirdwebContract,
+    admin: string,
   ) => PreparedTransaction;
 }): PreparedTransaction {
   const {
@@ -118,7 +120,7 @@ export function prepareCreateAccount(args: {
     accountSalt,
   } = args;
   if (createAccount) {
-    return createAccount(factoryContract);
+    return createAccount(factoryContract, adminAddress);
   }
   const saltHex =
     accountSalt && isHex(accountSalt)

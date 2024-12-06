@@ -6,10 +6,11 @@ import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-base-64";
+import { replaceDeployerAddress } from "lib/publisher-utils";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
-import { ContractPublisher, replaceDeployerAddress } from "../publisher";
+import { ContractPublisher } from "../publisher";
 
 interface ContractCardProps {
   publisher: string;

@@ -720,10 +720,9 @@ function ClaimConditionSection(props: {
                   className="min-w-24"
                   disabled={updateMutation.isPending || !props.isOwnerAccount}
                   type="submit"
-                  isLoading={updateMutation.isPending}
+                  isPending={updateMutation.isPending}
                   txChainID={props.chainId}
                   transactionCount={1}
-                  colorScheme="primary"
                 >
                   Update
                 </TransactionButton>
@@ -805,10 +804,9 @@ function PrimarySaleRecipientSection(props: {
               !form.formState.isDirty
             }
             type="submit"
-            isLoading={updateMutation.isPending}
+            isPending={updateMutation.isPending}
             txChainID={props.contractChainId}
             transactionCount={1}
-            colorScheme="primary"
           >
             Update
           </TransactionButton>
@@ -917,10 +915,9 @@ function MintNFTSection(props: {
               className="min-w-24 gap-2"
               disabled={mintMutation.isPending}
               type="submit"
-              isLoading={mintMutation.isPending}
+              isPending={mintMutation.isPending}
               txChainID={props.contractChainId}
               transactionCount={1}
-              colorScheme="primary"
             >
               Mint
             </TransactionButton>

@@ -88,10 +88,9 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
             txChainID={contract.chain.id}
             transactionCount={1}
             form={CLAIM_FORM_ID}
-            isLoading={form.formState.isSubmitting}
+            isPending={form.formState.isSubmitting}
             type="submit"
-            colorScheme="primary"
-            isDisabled={!form.formState.isDirty || isPending}
+            disabled={!form.formState.isDirty || isPending}
             onClick={form.handleSubmit(async (d) => {
               try {
                 if (!d.to) {
