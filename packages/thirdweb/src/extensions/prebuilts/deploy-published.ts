@@ -19,7 +19,10 @@ import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metad
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { getAllDefaultConstructorParamsForImplementation } from "./get-required-transactions.js";
-import { processRefDeployments, type ImplementationConstructorParam } from "./process-ref-deployments.js";
+import {
+  type ImplementationConstructorParam,
+  processRefDeployments,
+} from "./process-ref-deployments.js";
 
 /**
  * @extension DEPLOY
