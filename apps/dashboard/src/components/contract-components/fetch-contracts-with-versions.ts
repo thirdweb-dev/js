@@ -1,14 +1,11 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
-import type { ProfileMetadata } from "constants/schemas";
 import { isAddress } from "thirdweb";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import {
   getContractPublisher,
   getPublishedContractVersions,
-  getPublisherProfileUri,
 } from "thirdweb/extensions/thirdweb";
-import { download } from "thirdweb/storage";
 
 export function mapThirdwebPublisher(publisher: string) {
   if (publisher === "thirdweb.eth") {
@@ -16,34 +13,6 @@ export function mapThirdwebPublisher(publisher: string) {
   }
 
   return publisher;
-}
-
-export async function fetchPublisherProfile(publisherAddress: string) {
-  const client = getThirdwebClient();
-
-  const profileUri = await getPublisherProfileUri({
-    contract: getContractPublisher(client),
-    publisher: isAddress(publisherAddress)
-      ? publisherAddress
-      : await resolveAddress({
-          client,
-          name: mapThirdwebPublisher(publisherAddress),
-        }),
-  });
-
-  if (!profileUri) {
-    return null;
-  }
-
-  try {
-    const res = await download({
-      client,
-      uri: profileUri,
-    });
-    return res.json() as Promise<ProfileMetadata>;
-  } catch {
-    return null;
-  }
 }
 
 export async function fetchPublishedContractVersions(

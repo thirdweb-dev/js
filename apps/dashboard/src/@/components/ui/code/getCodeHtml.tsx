@@ -25,10 +25,6 @@ export async function getCodeHtml(code: string, lang: BundledLanguage) {
       }).catch((e) => {
         console.error(e);
         console.error("Failed to format code");
-        console.log({
-          code,
-          lang,
-        });
         return code;
       })
     : code;

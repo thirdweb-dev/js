@@ -179,6 +179,7 @@ export function AccountBalance({
         tokenAddress,
       });
     },
+    retry: false,
     ...queryOptions,
   });
 

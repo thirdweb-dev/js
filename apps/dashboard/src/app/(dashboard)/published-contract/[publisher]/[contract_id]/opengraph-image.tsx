@@ -1,6 +1,8 @@
-import { fetchPublisherProfile } from "components/contract-components/fetch-contracts-with-versions";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { format } from "date-fns/format";
+import { resolveEns } from "lib/ens";
 import { correctAndUniqueLicenses } from "lib/licenses";
+import { getSocialProfiles } from "thirdweb/social";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 import { publishedContractOGImageTemplate } from "./utils/publishedContractOGImageTemplate";
 
@@ -17,15 +19,28 @@ export default async function Image(props: {
     contract_id: string;
   };
 }) {
+  const client = getThirdwebClient();
   const { publisher, contract_id } = props.params;
 
-  const [publishedContracts, publisherProfile] = await Promise.all([
+  const [publishedContracts, socialProfiles] = await Promise.all([
     getPublishedContractsWithPublisherMapping({
       publisher: publisher,
       contract_id: contract_id,
     }),
-    fetchPublisherProfile(publisher),
+    getSocialProfiles({
+      address: (await resolveEns(publisher)).address || publisher,
+      client,
+    }),
   ]);
+
+  const publisherProfile = (() => {
+    const name = socialProfiles.find((p) => p.name)?.name || publisher;
+    const avatar = socialProfiles.find((p) => p.avatar)?.avatar;
+    return {
+      name,
+      avatar,
+    };
+  })();
 
   if (!publishedContracts) {
     return null;

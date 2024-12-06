@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { replaceDeployerAddress } from "components/explore/publisher";
 import { useTrack } from "hooks/analytics/useTrack";
+import { replaceDeployerAddress } from "lib/publisher-utils";
 import { replaceIpfsUrl } from "lib/sdk";
 import { ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";

@@ -38,7 +38,6 @@ function Story(props: {
   const [isOpen, setIsOpen] = useState(true);
   const mutation = useMutation({
     mutationFn: async (input: CreateKeyInput) => {
-      console.log("Creating API key with", input);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const apiKey = createApiKeyStub();
       apiKey.name = input.name || apiKey.name;

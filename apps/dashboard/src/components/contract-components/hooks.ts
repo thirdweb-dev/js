@@ -12,31 +12,9 @@ import { isAddress } from "thirdweb/utils";
 import {
   type PublishedContractWithVersion,
   fetchPublishedContractVersions,
-  fetchPublisherProfile,
 } from "./fetch-contracts-with-versions";
 import { fetchPublishedContracts } from "./fetchPublishedContracts";
 import { fetchPublishedContractsFromDeploy } from "./fetchPublishedContractsFromDeploy";
-
-function publisherProfileQuery(publisherAddress?: string) {
-  return queryOptions({
-    queryKey: ["releaser-profile", publisherAddress],
-    queryFn: () => {
-      if (!publisherAddress) {
-        throw new Error("publisherAddress is not defined");
-      }
-      return fetchPublisherProfile(publisherAddress);
-    },
-    enabled: !!publisherAddress,
-    // 24h
-    gcTime: 60 * 60 * 24 * 1000,
-    // 1h
-    staleTime: 60 * 60 * 1000,
-  });
-}
-
-export function usePublisherProfile(publisherAddress?: string) {
-  return useQuery(publisherProfileQuery(publisherAddress));
-}
 
 export function useAllVersions(
   publisherAddress: string | undefined,

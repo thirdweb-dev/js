@@ -28,7 +28,6 @@ export function SyncChainStores() {
         storageKey={TW_LOCAL_CHAIN_STORE}
         store={chainOverridesStore}
         onLoaded={() => {
-          console.log("chain overrides loaded");
           isChainOverridesLoadedStore.setValue(true);
         }}
       />

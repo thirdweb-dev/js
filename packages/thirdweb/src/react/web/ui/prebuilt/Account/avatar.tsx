@@ -206,6 +206,7 @@ export function AccountAvatar({
 
       throw new Error("Failed to resolve social + ens avatar");
     },
+    retry: false,
     ...queryOptions,
   });
 
