@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": ["src"],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.test-d.ts",
+    "src/**/*.bench.ts",
+    "src/**/*.macro.ts"
+  ],
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "rootDir": "./src"
+  }
+}
