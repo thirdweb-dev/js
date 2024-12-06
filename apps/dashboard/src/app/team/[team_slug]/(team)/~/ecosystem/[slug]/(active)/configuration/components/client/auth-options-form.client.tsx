@@ -86,9 +86,11 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
             .optional(),
           useSmartAccount: z.boolean(),
           sponsorGas: z.boolean(),
-          defaultChainId: z.coerce.number({
-            invalid_type_error: "Please enter a valid chain ID",
-          }),
+          defaultChainId: z.coerce
+            .number({
+              invalid_type_error: "Please enter a valid chain ID",
+            })
+            .optional(),
           accountFactoryType: z.enum(["v0.6", "v0.7", "custom"]),
           customAccountFactoryAddress: z.string().optional(),
         })
@@ -106,6 +108,18 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
           {
             message: "Please enter a valid custom account factory address",
             path: ["customAccountFactoryAddress"],
+          },
+        )
+        .refine(
+          (data) => {
+            if (data.useSmartAccount && (data.defaultChainId ?? 0) <= 0) {
+              return false;
+            }
+            return true;
+          },
+          {
+            message: "Please enter a valid chain ID",
+            path: ["defaultChainId"],
           },
         )
         .refine(
