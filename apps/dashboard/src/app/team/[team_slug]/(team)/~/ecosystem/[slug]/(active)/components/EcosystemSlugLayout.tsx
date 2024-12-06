@@ -33,14 +33,14 @@ export async function EcosystemLayoutSlug({
   }
 
   const allTimeStatsPromise = getEcosystemWalletUsage({
-    ecosystemId: ecosystem.id,
+    ecosystemSlug: ecosystem.slug,
     from: new Date(2022, 0, 1),
     to: new Date(),
     period: "all",
   });
 
   const monthlyStatsPromise = getEcosystemWalletUsage({
-    ecosystemId: ecosystem.id,
+    ecosystemSlug: ecosystem.slug,
     from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     to: new Date(),
     period: "month",

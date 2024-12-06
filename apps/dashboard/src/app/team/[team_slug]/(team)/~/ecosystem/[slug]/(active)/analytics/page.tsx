@@ -22,7 +22,7 @@ export default async function Page(props: {
   const ecosystem = await getEcosystem(params.slug);
   return (
     <EcosystemAnalyticsPage
-      ecosystemId={ecosystem.id}
+      ecosystemSlug={ecosystem.slug}
       interval={searchParams.interval || "week"}
       range={searchParams.range}
     />
