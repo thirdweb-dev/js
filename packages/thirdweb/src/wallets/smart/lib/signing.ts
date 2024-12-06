@@ -1,57 +1,41 @@
+import type { Hex } from "ox";
 import type {
   SignableMessage,
   TypedData,
   TypedDataDefinition,
   TypedDataDomain,
 } from "viem";
+import { serializeErc6492Signature } from "../../../auth/serialize-erc6492-signature.js";
+import { verifyHash } from "../../../auth/verify-hash.js";
 import {
-  verifyEip1271Signature,
-  verifyHash,
-} from "../../../auth/verify-hash.js";
-import type { ThirdwebContract } from "../../../contract/contract.js";
+  type ThirdwebContract,
+  getContract,
+} from "../../../contract/contract.js";
+import { encode } from "../../../transaction/actions/encode.js";
 import { readContract } from "../../../transaction/read-contract.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
-import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import { hashMessage } from "../../../utils/hashing/hashMessage.js";
 import { hashTypedData } from "../../../utils/hashing/hashTypedData.js";
-import type { Account } from "../../interfaces/wallet.js";
 import type { SmartAccountOptions } from "../types.js";
+import { prepareCreateAccount } from "./calls.js";
 
 export async function deployAndSignMessage({
-  account,
   accountContract,
+  factoryContract,
   options,
   message,
 }: {
-  account: Account;
   accountContract: ThirdwebContract;
+  factoryContract: ThirdwebContract;
   options: SmartAccountOptions;
   message: SignableMessage;
 }) {
-  const isDeployed = await isContractDeployed(accountContract);
-  if (!isDeployed) {
-    await _deployAccount({
-      options,
-      account,
-      accountContract,
-    });
-    // the bundler and rpc might not be in sync, so while the bundler has a transaction hash for the deployment,
-    // the rpc might not have it yet, so we wait until the rpc confirms the contract is deployed
-    await confirmContractDeployment({
-      accountContract,
-    });
-  }
-
   const originalMsgHash = hashMessage(message);
-  // check if the account contract supports EIP721 domain separator or modular based signing
-  const is712Factory = await readContract({
-    contract: accountContract,
-    method:
-      "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
-    params: [originalMsgHash],
-  })
-    .then((res) => res !== "0x")
-    .catch(() => false);
+  const is712Factory = await checkFor712Factory({
+    factoryContract,
+    accountContract,
+    originalMsgHash,
+  });
 
   let sig: `0x${string}`;
   if (is712Factory) {
@@ -75,17 +59,36 @@ export async function deployAndSignMessage({
     sig = await options.personalAccount.signMessage({ message });
   }
 
-  const isValid = await verifyEip1271Signature({
-    contract: accountContract,
-    hash: originalMsgHash,
+  const deployTx = prepareCreateAccount({
+    factoryContract,
+    adminAddress: options.personalAccount.address,
+    accountSalt: options.overrides?.accountSalt,
+    createAccountOverride: options.overrides?.createAccount,
+  });
+  if (!deployTx) {
+    throw new Error("Create account override not provided");
+  }
+  const initCode = await encode(deployTx);
+  const erc6492Sig = serializeErc6492Signature({
+    address: factoryContract.address,
+    data: initCode,
     signature: sig,
   });
 
+  // check if the signature is valid
+  const isValid = await verifyHash({
+    hash: originalMsgHash,
+    signature: erc6492Sig,
+    address: accountContract.address,
+    chain: accountContract.chain,
+    client: accountContract.client,
+  });
+
   if (isValid) {
-    return sig;
+    return erc6492Sig;
   }
   throw new Error(
-    "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
+    "Unable to verify signature on smart account, please make sure the admin wallet has permissions and the signature is valid.",
   );
 }
 
@@ -93,13 +96,13 @@ export async function deployAndSignTypedData<
   const typedData extends TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
 >({
-  account,
   accountContract,
+  factoryContract,
   options,
   typedData,
 }: {
-  account: Account;
   accountContract: ThirdwebContract;
+  factoryContract: ThirdwebContract;
   options: SmartAccountOptions;
   typedData: TypedDataDefinition<typedData, primaryType>;
 }) {
@@ -112,38 +115,16 @@ export async function deployAndSignTypedData<
     return options.personalAccount.signTypedData(typedData);
   }
 
-  const isDeployed = await isContractDeployed(accountContract);
-  if (!isDeployed) {
-    await _deployAccount({
-      options,
-      account,
-      accountContract,
-    });
-    // the bundler and rpc might not be in sync, so while the bundler has a transaction hash for the deployment,
-    // the rpc might not have it yet, so we wait until the rpc confirms the contract is deployed
-    await confirmContractDeployment({
-      accountContract,
-    });
-  }
-
   const originalMsgHash = hashTypedData(typedData);
   // check if the account contract supports EIP721 domain separator based signing
-  let factorySupports712 = false;
-  try {
-    // this will throw if the contract does not support it (old factories)
-    await readContract({
-      contract: accountContract,
-      method:
-        "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
-      params: [originalMsgHash],
-    });
-    factorySupports712 = true;
-  } catch {
-    // ignore
-  }
+  const is712Factory = await checkFor712Factory({
+    factoryContract,
+    accountContract,
+    originalMsgHash,
+  });
 
   let sig: `0x${string}`;
-  if (factorySupports712) {
+  if (is712Factory) {
     const wrappedMessageHash = encodeAbiParameters(
       [{ type: "bytes32" }],
       [originalMsgHash],
@@ -163,44 +144,37 @@ export async function deployAndSignTypedData<
     sig = await options.personalAccount.signTypedData(typedData);
   }
 
+  const deployTx = prepareCreateAccount({
+    factoryContract,
+    adminAddress: options.personalAccount.address,
+    accountSalt: options.overrides?.accountSalt,
+    createAccountOverride: options.overrides?.createAccount,
+  });
+  if (!deployTx) {
+    throw new Error("Create account override not provided");
+  }
+  const initCode = await encode(deployTx);
+  const erc6492Sig = serializeErc6492Signature({
+    address: factoryContract.address,
+    data: initCode,
+    signature: sig,
+  });
+
+  // check if the signature is valid
   const isValid = await verifyHash({
     hash: originalMsgHash,
-    signature: sig,
+    signature: erc6492Sig,
     address: accountContract.address,
-    chain: options.chain,
-    client: options.client,
+    chain: accountContract.chain,
+    client: accountContract.client,
   });
 
   if (isValid) {
-    return sig;
+    return erc6492Sig;
   }
   throw new Error(
-    "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
+    "Unable to verify signature on smart account, please make sure the admin wallet has permissions and the signature is valid.",
   );
-}
-
-async function _deployAccount(args: {
-  options: SmartAccountOptions;
-  account: Account;
-  accountContract: ThirdwebContract;
-}) {
-  const { options, account, accountContract } = args;
-  const [{ sendTransaction }, { prepareTransaction }] = await Promise.all([
-    import("../../../transaction/actions/send-transaction.js"),
-    import("../../../transaction/prepare-transaction.js"),
-  ]);
-  const dummyTx = prepareTransaction({
-    client: options.client,
-    chain: options.chain,
-    to: accountContract.address,
-    value: 0n,
-    gas: 50000n, // force gas to avoid simulation error
-  });
-  const deployResult = await sendTransaction({
-    transaction: dummyTx,
-    account,
-  });
-  return deployResult;
 }
 
 export async function confirmContractDeployment(args: {
@@ -221,5 +195,39 @@ export async function confirmContractDeployment(args: {
     }
     await new Promise((resolve) => setTimeout(resolve, 500));
     isDeployed = await isContractDeployed(accountContract);
+  }
+}
+
+async function checkFor712Factory({
+  factoryContract,
+  accountContract,
+  originalMsgHash,
+}: {
+  factoryContract: ThirdwebContract;
+  accountContract: ThirdwebContract;
+  originalMsgHash: Hex.Hex;
+}) {
+  try {
+    const implementationAccount = await readContract({
+      contract: factoryContract,
+      method: "function accountImplementation() public view returns (address)",
+    });
+    // check if the account contract supports EIP721 domain separator or modular based signing
+    const is712Factory = await readContract({
+      contract: getContract({
+        address: implementationAccount,
+        chain: accountContract.chain,
+        client: accountContract.client,
+      }),
+      method:
+        "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
+      params: [originalMsgHash],
+    })
+      .then((res) => res !== "0x")
+      .catch(() => false);
+
+    return is712Factory;
+  } catch {
+    return false;
   }
 }

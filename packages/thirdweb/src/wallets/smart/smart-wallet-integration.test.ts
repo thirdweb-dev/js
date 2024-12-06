@@ -2,18 +2,17 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { typedData } from "../../../test/src/typed-data.js";
 import { verifySignature } from "../../auth/verify-signature.js";
+import { verifyTypedData } from "../../auth/verify-typed-data.js";
 import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { parseEventLogs } from "../../event/actions/parse-logs.js";
 import { baseSepolia } from "../../exports/chains.js";
-
 import {
   addAdmin,
   adminUpdatedEvent,
 } from "../../exports/extensions/erc4337.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
-import { checkContractWalletSignature } from "../../extensions/erc1271/checkContractWalletSignature.js";
 import { setContractURI } from "../../extensions/marketplace/__generated__/IMarketplace/write/setContractURI.js";
 import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
@@ -78,6 +77,32 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         adminAddress: personalAccount.address,
       });
       expect(predictedAddress).toEqual(smartWalletAddress);
+    });
+
+    it("can sign a msg", async () => {
+      const signature = await smartAccount.signMessage({
+        message: "hello world",
+      });
+      const isValid = await verifySignature({
+        message: "hello world",
+        signature,
+        address: smartWalletAddress,
+        chain,
+        client,
+      });
+      expect(isValid).toEqual(true);
+    });
+
+    it("can sign typed data", async () => {
+      const signature = await smartAccount.signTypedData(typedData.basic);
+      const isValid = await verifyTypedData({
+        signature,
+        address: smartWalletAddress,
+        chain,
+        client,
+        ...typedData.basic,
+      });
+      expect(isValid).toEqual(true);
     });
 
     it("should revert on unsuccessful transactions", async () => {
@@ -169,19 +194,20 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         client,
       });
       expect(isValidV1).toEqual(true);
-      const isValidV2 = await checkContractWalletSignature({
-        message,
-        signature,
-        contract: accountContract,
-      });
-      expect(isValidV2).toEqual(true);
 
       // sign typed data
       const signatureTyped = await smartAccount.signTypedData({
         ...typedData.basic,
         primaryType: "Mail",
       });
-      expect(signatureTyped.length).toBe(132);
+      const isValidV2 = await verifyTypedData({
+        signature: signatureTyped,
+        address: smartWalletAddress,
+        chain,
+        client,
+        ...typedData.basic,
+      });
+      expect(isValidV2).toEqual(true);
 
       // add admin
       const newAdmin = await generateAccount({ client });
@@ -230,23 +256,22 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         client,
       });
       expect(isValidV1).toEqual(true);
-      const isValidV2 = await verifySignature({
-        message,
-        signature,
-        address: newAccount.address,
-        chain,
-        client,
-      });
-      expect(isValidV2).toEqual(true);
 
       // sign typed data
       const signatureTyped = await newAccount.signTypedData({
         ...typedData.basic,
         primaryType: "Mail",
       });
-      expect(signatureTyped.length).toBe(132);
+      const isValidV2 = await verifyTypedData({
+        signature: signatureTyped,
+        address: newAccount.address,
+        chain,
+        client,
+        ...typedData.basic,
+      });
+      expect(isValidV2).toEqual(true);
 
-      // add admin
+      // add admin pre-deployment
       const newAdmin = await generateAccount({ client });
       const receipt = await sendAndConfirmTransaction({
         account: newAccount,
@@ -264,8 +289,8 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         events: [adminUpdatedEvent()],
         logs: receipt.logs,
       });
-      expect(logs[0]?.args.signer).toBe(newAdmin.address);
-      expect(logs[0]?.args.isAdmin).toBe(true);
+      expect(logs.map((l) => l.args.signer)).toContain(newAdmin.address);
+      expect(logs.map((l) => l.args.isAdmin)).toContain(true);
 
       // should not be able to switch chains since factory not deployed elsewhere
       await expect(
