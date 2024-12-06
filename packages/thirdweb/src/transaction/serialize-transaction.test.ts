@@ -1,18 +1,10 @@
-import { assertType, describe, expect, test } from "vitest";
+import * as ox__Hex from "ox/Hex";
+import * as ox__TransactionEnvelopeEip1559 from "ox/TransactionEnvelopeEip1559";
+import * as ox__TransactionEnvelopeEip2930 from "ox/TransactionEnvelopeEip2930";
+import * as ox__TransactionEnvelopeLegacy from "ox/TransactionEnvelopeLegacy";
+import { describe, expect, test } from "vitest";
 
-import {
-  type TransactionSerializable,
-  type TransactionSerializableBase,
-  type TransactionSerializableEIP1559,
-  type TransactionSerializableEIP2930,
-  type TransactionSerializableLegacy,
-  type TransactionSerializedEIP1559,
-  type TransactionSerializedEIP2930,
-  type TransactionSerializedLegacy,
-  parseTransaction,
-} from "viem";
-
-import { checksumAddress } from "../utils/address.js";
+import { type Address, checksumAddress } from "../utils/address.js";
 import { fromGwei, toWei } from "../utils/units.js";
 import { serializeTransaction } from "./serialize-transaction.js";
 
@@ -24,7 +16,7 @@ const BASE_TRANSACTION = {
   to: checksumAddress(TEST_ACCOUNT_B.address),
   nonce: 785,
   value: toWei("1"),
-} as const satisfies TransactionSerializableBase;
+} as const;
 
 describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
   const baseEip1559 = {
@@ -32,21 +24,23 @@ describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
     chainId: 1,
     maxFeePerGas: fromGwei("2"),
     maxPriorityFeePerGas: fromGwei("2"),
-  } as const satisfies TransactionSerializableEIP1559;
+  } as const;
 
   test("default", () => {
-    const serialized = serializeTransaction<TransactionSerializableEIP1559>({
+    const serialized = serializeTransaction({
       transaction: baseEip1559,
     });
-    assertType<TransactionSerializedEIP1559>(serialized);
     expect(serialized).toEqual(
       "0x02ef0182031184773594008477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c0",
     );
 
-    const tx = parseTransaction(serialized);
+    const tx = ox__TransactionEnvelopeEip1559.deserialize(
+      serialized as ox__TransactionEnvelopeEip1559.Serialized,
+    );
     // The parsed transaction to address is not guaranteed to be checksummed, but our input address is
     expect({ ...tx, to: tx.to ? checksumAddress(tx.to) : undefined }).toEqual({
       ...baseEip1559,
+      nonce: BigInt(baseEip1559.nonce),
       type: "eip1559",
     });
   });
@@ -58,18 +52,22 @@ describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
     } as const;
     const serialized = serializeTransaction({ transaction: args });
     expect(serialized).toEqual("0x02c90180808080808080c0");
-    expect(parseTransaction(serialized)).toEqual(args);
+
+    const tx = ox__TransactionEnvelopeEip1559.deserialize(
+      serialized as ox__TransactionEnvelopeEip1559.Serialized,
+    );
+    expect(tx).toEqual(args);
   });
 
   test("default (all zeros)", () => {
     const baseEip1559Zero = {
-      to: TEST_ACCOUNT_B.address,
+      to: TEST_ACCOUNT_B.address as Address,
       nonce: 0,
       chainId: 1,
       maxFeePerGas: 0n,
       maxPriorityFeePerGas: 0n,
       value: 0n,
-    } satisfies TransactionSerializableEIP1559;
+    };
 
     const serialized = serializeTransaction({
       transaction: baseEip1559Zero,
@@ -78,7 +76,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
     expect(serialized).toEqual(
       "0x02dd01808080809470997970c51812dc3a010c7d01b50e0d17dc79c88080c0",
     );
-    const tx = parseTransaction(serialized);
+    const tx = ox__TransactionEnvelopeEip1559.deserialize(
+      serialized as ox__TransactionEnvelopeEip1559.Serialized,
+    );
     expect({ ...tx, to: tx.to ? checksumAddress(tx.to) : undefined }).toEqual({
       chainId: 1,
       to: TEST_ACCOUNT_B.address,
@@ -95,7 +95,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
       transaction: args,
     });
     expect(serialized).toEqual("0x02c90180800180808080c0");
-    expect(parseTransaction(serialized)).toEqual({ ...args, type: "eip1559" });
+    expect(
+      ox__TransactionEnvelopeEip1559.deserialize(
+        serialized as ox__TransactionEnvelopeEip1559.Serialized,
+      ),
+    ).toEqual({
+      ...args,
+      type: "eip1559",
+    });
   });
 
   test("args: gas", () => {
@@ -109,7 +116,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
     expect(serialized).toEqual(
       "0x02f101820311847735940084773594008252099470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c0",
     );
-    expect(parseTransaction(serialized).gas).toEqual(args.gas);
+    expect(
+      ox__TransactionEnvelopeEip1559.deserialize(
+        serialized as ox__TransactionEnvelopeEip1559.Serialized,
+      ).gas,
+    ).toEqual(args.gas);
   });
 
   test("args: accessList", () => {
@@ -121,31 +132,39 @@ describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
           storageKeys: [
             "0x0000000000000000000000000000000000000000000000000000000000000001",
             "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
-          ],
+          ] as const,
         },
       ],
-    } satisfies TransactionSerializableEIP1559;
-    const serialized = serializeTransaction<TransactionSerializableEIP1559>({
+    };
+    const serialized = serializeTransaction({
       transaction: args,
     });
     expect(serialized).toEqual(
       "0x02f88b0182031184773594008477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080f85bf859940000000000000000000000000000000000000000f842a00000000000000000000000000000000000000000000000000000000000000001a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
     );
-    expect(parseTransaction(serialized).accessList).toEqual(args.accessList);
+    expect(
+      ox__TransactionEnvelopeEip1559.deserialize(
+        serialized as ox__TransactionEnvelopeEip1559.Serialized,
+      ).accessList,
+    ).toEqual(args.accessList);
   });
 
   test("args: data", () => {
     const args = {
       ...baseEip1559,
       data: "0x1234",
-    } satisfies TransactionSerializableEIP1559;
+    } as const;
     const serialized = serializeTransaction({
       transaction: args,
     });
     expect(serialized).toEqual(
       "0x02f10182031184773594008477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a7640000821234c0",
     );
-    expect(parseTransaction(serialized).data).toEqual(args.data);
+    expect(
+      ox__TransactionEnvelopeEip1559.deserialize(
+        serialized as ox__TransactionEnvelopeEip1559.Serialized,
+      ).data,
+    ).toEqual(args.data);
   });
 
   test("signed", async () => {
@@ -162,7 +181,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
     expect(serialized).toEqual(
       "0x02f8720182031184773594008477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c001a0ce18214ff9d06ecaacb61811f9d6dc2be922e8cebddeaf6df0b30d5c498f6d33a05f0487c6dbbf2139f7c705d8054dbb16ecac8ae6256ce2c4c6f2e7ef35b3a496",
     );
-    expect(parseTransaction(serialized).yParity).toEqual(1);
+    expect(
+      ox__TransactionEnvelopeEip1559.deserialize(
+        serialized as ox__TransactionEnvelopeEip1559.Serialized,
+      ).yParity,
+    ).toEqual(1);
   });
 
   test("signature", () => {
@@ -270,19 +293,21 @@ describe("eip2930", () => {
       },
     ],
     gasPrice: fromGwei("2"),
-  } as const satisfies TransactionSerializableEIP2930;
+  } as const;
 
   test("default", () => {
-    const serialized = serializeTransaction<TransactionSerializableEIP2930>({
+    const serialized = serializeTransaction({
       transaction: BASE_EIP2930_TRANSACTION,
     });
-    assertType<TransactionSerializedEIP2930>(serialized);
     expect(serialized).toEqual(
       "0x01f863018203118477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080f838f7941234512345123451234512345123451234512345e1a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
     );
-    const tx = parseTransaction(serialized);
+    const tx = ox__TransactionEnvelopeEip2930.deserialize(
+      serialized as ox__TransactionEnvelopeEip2930.Serialized,
+    );
     expect({ ...tx, to: tx.to ? checksumAddress(tx.to) : undefined }).toEqual({
       ...BASE_EIP2930_TRANSACTION,
+      nonce: BigInt(BASE_EIP2930_TRANSACTION.nonce),
       type: "eip2930",
     });
   });
@@ -295,7 +320,7 @@ describe("eip2930", () => {
       value: 0n,
       gasPrice: 0n,
       accessList: [],
-    } satisfies TransactionSerializableEIP2930;
+    };
 
     const serialized = serializeTransaction({
       transaction: baseEip2930Zero,
@@ -305,7 +330,9 @@ describe("eip2930", () => {
       "0x01dc018080809470997970c51812dc3a010c7d01b50e0d17dc79c88080c0",
     );
 
-    const tx = parseTransaction(serialized);
+    const tx = ox__TransactionEnvelopeEip2930.deserialize(
+      serialized as ox__TransactionEnvelopeEip2930.Serialized,
+    );
     expect({ ...tx, to: tx.to ? checksumAddress(tx.to) : undefined }).toEqual({
       chainId: 1,
       to: checksumAddress(TEST_ACCOUNT_B.address),
@@ -325,26 +352,34 @@ describe("eip2930", () => {
         },
       ],
       gasPrice: fromGwei("2"),
-    } satisfies TransactionSerializableEIP2930;
-    const serialized = serializeTransaction<TransactionSerializableEIP2930>({
+    } as const;
+    const serialized = serializeTransaction({
       transaction: args,
     });
     expect(serialized).toEqual(
       "0x01f8450180847735940080808080f838f7940000000000000000000000000000000000000000e1a00000000000000000000000000000000000000000000000000000000000000001",
     );
-    expect(parseTransaction(serialized).accessList).toEqual(args.accessList);
+    expect(
+      ox__TransactionEnvelopeEip2930.deserialize(
+        serialized as ox__TransactionEnvelopeEip2930.Serialized,
+      ).accessList,
+    ).toEqual(args.accessList);
   });
 
   test("minimal (w/ type)", () => {
     const args = {
       chainId: 1,
       type: "eip2930",
-    } satisfies TransactionSerializableEIP2930;
+    };
     const serialized = serializeTransaction({
       transaction: args,
     });
     expect(serialized).toEqual("0x01c801808080808080c0");
-    expect(parseTransaction(serialized).type).toEqual("eip2930");
+    expect(
+      ox__TransactionEnvelopeEip2930.deserialize(
+        serialized as ox__TransactionEnvelopeEip2930.Serialized,
+      ).type,
+    ).toEqual("eip2930");
   });
 
   test("args: gas", () => {
@@ -356,19 +391,27 @@ describe("eip2930", () => {
     expect(serialized).toEqual(
       "0x01f8650182031184773594008252099470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080f838f7941234512345123451234512345123451234512345e1a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
     );
-    expect(parseTransaction(serialized).gas).toEqual(args.gas);
+    expect(
+      ox__TransactionEnvelopeEip2930.deserialize(
+        serialized as ox__TransactionEnvelopeEip2930.Serialized,
+      ).gas,
+    ).toEqual(args.gas);
   });
 
   test("args: data", () => {
     const args = {
       ...BASE_EIP2930_TRANSACTION,
       data: "0x1234",
-    } satisfies TransactionSerializableEIP2930;
+    } as const;
     const serialized = serializeTransaction({ transaction: args });
     expect(serialized).toEqual(
       "0x01f865018203118477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a7640000821234f838f7941234512345123451234512345123451234512345e1a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
     );
-    expect(parseTransaction(serialized).data).toEqual(args.data);
+    expect(
+      ox__TransactionEnvelopeEip2930.deserialize(
+        serialized as ox__TransactionEnvelopeEip2930.Serialized,
+      ).data,
+    ).toEqual(args.data);
   });
 
   test("signed", async () => {
@@ -384,10 +427,14 @@ describe("eip2930", () => {
     expect(serialized).toEqual(
       "0x01f8a6018203118477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080f838f7941234512345123451234512345123451234512345e1a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe01a0dc7b3483c0b183823f07d77247c60678d861080acdc4fb8b9fd131770b475c40a040f16567391132746735aff4d5a3fa5ae42ff3d5d538e341870e0259dc40741a",
     );
-    const tx = parseTransaction(serialized);
+    const tx = ox__TransactionEnvelopeEip2930.deserialize(
+      serialized as ox__TransactionEnvelopeEip2930.Serialized,
+    );
     expect({ ...tx, to: tx.to ? checksumAddress(tx.to) : undefined }).toEqual({
       ...BASE_EIP2930_TRANSACTION,
-      ...signature,
+      nonce: BigInt(BASE_EIP2930_TRANSACTION.nonce),
+      r: ox__Hex.toBigInt(signature.r),
+      s: ox__Hex.toBigInt(signature.s),
       type: "eip2930",
       yParity: 1,
     });
@@ -490,16 +537,19 @@ describe("legacy", () => {
   };
 
   test("default", () => {
-    const serialized = serializeTransaction<TransactionSerializableLegacy>({
+    const serialized = serializeTransaction({
       transaction: BASE_LEGACY_TRANSACTION,
     });
-    assertType<TransactionSerializedLegacy>(serialized);
+
     expect(serialized).toEqual(
       "0xe88203118477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080",
     );
-    const tx = parseTransaction(serialized);
+    const tx = ox__TransactionEnvelopeLegacy.deserialize(
+      serialized as ox__TransactionEnvelopeLegacy.Serialized,
+    );
     expect({ ...tx, to: tx.to ? checksumAddress(tx.to) : undefined }).toEqual({
       ...BASE_LEGACY_TRANSACTION,
+      nonce: BigInt(BASE_LEGACY_TRANSACTION.nonce),
       type: "legacy",
     });
   });
@@ -510,7 +560,7 @@ describe("legacy", () => {
       nonce: 0,
       value: 0n,
       gasPrice: 0n,
-    } satisfies TransactionSerializableLegacy;
+    };
 
     const serialized = serializeTransaction({
       transaction: baseLegacyZero,
@@ -520,7 +570,9 @@ describe("legacy", () => {
       "0xda8080809470997970c51812dc3a010c7d01b50e0d17dc79c88080",
     );
 
-    const tx = parseTransaction(serialized);
+    const tx = ox__TransactionEnvelopeLegacy.deserialize(
+      serialized as ox__TransactionEnvelopeLegacy.Serialized,
+    );
     expect({ ...tx, to: tx.to ? checksumAddress(tx.to) : undefined }).toEqual({
       to: checksumAddress(TEST_ACCOUNT_B.address),
       type: "legacy",
@@ -530,23 +582,27 @@ describe("legacy", () => {
   test("minimal (w/ gasPrice)", () => {
     const args = {
       gasPrice: fromGwei("2"),
-    } satisfies TransactionSerializableLegacy;
+    };
     const serialized = serializeTransaction({
       transaction: args,
     });
     expect(serialized).toEqual("0xca80847735940080808080");
-    expect(parseTransaction(serialized).gasPrice).toEqual(args.gasPrice);
+    expect(
+      ox__TransactionEnvelopeLegacy.deserialize(serialized).gasPrice,
+    ).toEqual(args.gasPrice);
   });
 
   test("minimal (w/ type)", () => {
     const args = {
       type: "legacy",
-    } satisfies TransactionSerializableLegacy;
+    };
     const serialized = serializeTransaction({
       transaction: args,
     });
     expect(serialized).toEqual("0xc6808080808080");
-    expect(parseTransaction(serialized).type).toEqual(args.type);
+    expect(ox__TransactionEnvelopeLegacy.deserialize(serialized).type).toEqual(
+      args.type,
+    );
   });
 
   test("args: gas", () => {
@@ -560,33 +616,39 @@ describe("legacy", () => {
     expect(serialized).toEqual(
       "0xea82031184773594008252099470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080",
     );
-    expect(parseTransaction(serialized).gas).toEqual(args.gas);
+    expect(ox__TransactionEnvelopeLegacy.deserialize(serialized).gas).toEqual(
+      args.gas,
+    );
   });
 
   test("args: data", () => {
     const args = {
       ...BASE_LEGACY_TRANSACTION,
       data: "0x1234",
-    } satisfies TransactionSerializableLegacy;
+    } as const;
     const serialized = serializeTransaction({
       transaction: args,
     });
     expect(serialized).toEqual(
       "0xea8203118477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a7640000821234",
     );
-    expect(parseTransaction(serialized).data).toEqual(args.data);
+    expect(ox__TransactionEnvelopeLegacy.deserialize(serialized).data).toEqual(
+      args.data,
+    );
   });
 
   test("args: chainId", () => {
     const args = {
       ...BASE_LEGACY_TRANSACTION,
       chainId: 69,
-    } satisfies TransactionSerializableLegacy;
+    } as const;
     const serialized = serializeTransaction({ transaction: args });
     expect(serialized).toEqual(
       "0xeb8203118477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080458080",
     );
-    expect(parseTransaction(serialized).chainId).toEqual(args.chainId);
+    expect(
+      ox__TransactionEnvelopeLegacy.deserialize(serialized).chainId,
+    ).toEqual(args.chainId);
   });
 
   test("signed", async () => {
@@ -602,10 +664,13 @@ describe("legacy", () => {
     expect(serialized).toEqual(
       "0xf86b8203118477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a7640000801ca06cb0e8d21e5baf998fb9a05f47acd83692dc148f90b81b332a152f020da0ae98a0344e49bacb1ef7af7c2ffed9e88d3f0ae0aa4945c9da0a660a03717dd5621f98",
     );
-    const tx = parseTransaction(serialized);
+    const tx = ox__TransactionEnvelopeLegacy.deserialize(serialized);
     expect({ ...tx, to: tx.to ? checksumAddress(tx.to) : undefined }).toEqual({
       ...BASE_LEGACY_TRANSACTION,
-      ...signature,
+      nonce: BigInt(BASE_LEGACY_TRANSACTION.nonce),
+      r: ox__Hex.toBigInt(signature.r),
+      s: ox__Hex.toBigInt(signature.s),
+      v: 28,
       yParity: 1,
       type: "legacy",
     });
@@ -653,13 +718,15 @@ describe("legacy", () => {
     expect(serialized).toEqual(
       "0xf86c8203118477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a76400008081ada02f43314322cf4c5dd645b028aa0b0dadff0fb73c41a6f0620ff1dfb11601ac30a066f37a65e139fa4b6df33a42ab5ccaeaa7a109382e7430caefd1deee63962626",
     );
-    const tx = parseTransaction(serialized);
+    const tx = ox__TransactionEnvelopeLegacy.deserialize(serialized);
     expect({ ...tx, to: tx.to ? checksumAddress(tx.to) : undefined }).toEqual({
       ...args,
-      ...signature,
+      nonce: BigInt(args.nonce),
+      r: ox__Hex.toBigInt(signature.r),
+      s: ox__Hex.toBigInt(signature.s),
       yParity: 0,
       type: "legacy",
-      v: 173n,
+      v: 173,
     });
   });
 
@@ -685,165 +752,4 @@ test("cannot infer type from transaction object", () => {
       transaction: { chainId: 1, data: "0x1234", nonce: 69 },
     }),
   ).toThrow();
-});
-
-describe("miscellaneous", () => {
-  test("https://github.com/wevm/viem/issues/1433", () => {
-    expect(
-      serializeTransaction({
-        transaction: {
-          blockHash: null,
-          blockNumber: null,
-          from: "0xc702b9950e44f7d321fa16ee88bf8e1a561249ba",
-          gas: 51627n,
-          gasPrice: 3000000000n,
-          hash: "0x3eaa88a766e82cbe53c95218ab4c3cf316325802b5f75d086b5121007b918e92",
-          input:
-            "0xa9059cbb00000000000000000000000082fc882199816bcec06baf848eaec51c2f96c85b000000000000000000000000000000000000000000000000eccae3078bacd15d",
-          nonce: 117,
-          to: "0x55d398326f99059ff775485246999027b3197955",
-          transactionIndex: null,
-          value: 0n,
-          type: "legacy",
-          v: 84475n,
-          r: "0x73b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bf",
-          s: "0x354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23",
-          chainId: undefined,
-          typeHex: "0x0",
-        } as TransactionSerializable,
-      }),
-    ).toMatchInlineSnapshot(
-      '"0xf8667584b2d05e0082c9ab9455d398326f99059ff775485246999027b31979558080830149fba073b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bfa0354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23"',
-    );
-
-    expect(
-      serializeTransaction({
-        transaction: {
-          blockHash: null,
-          blockNumber: null,
-          from: "0xc702b9950e44f7d321fa16ee88bf8e1a561249ba",
-          gas: 51627n,
-          gasPrice: 3000000000n,
-          hash: "0x3eaa88a766e82cbe53c95218ab4c3cf316325802b5f75d086b5121007b918e92",
-          input:
-            "0xa9059cbb00000000000000000000000082fc882199816bcec06baf848eaec51c2f96c85b000000000000000000000000000000000000000000000000eccae3078bacd15d",
-          nonce: 117,
-          to: "0x55d398326f99059ff775485246999027b3197955",
-          transactionIndex: null,
-          value: 0n,
-          type: "legacy",
-          v: 84476n,
-          r: "0x73b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bf",
-          s: "0x354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23",
-          chainId: undefined,
-          typeHex: "0x0",
-        } as TransactionSerializable,
-      }),
-    ).toMatchInlineSnapshot(
-      '"0xf8667584b2d05e0082c9ab9455d398326f99059ff775485246999027b31979558080830149fca073b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bfa0354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23"',
-    );
-
-    expect(
-      serializeTransaction({
-        transaction: {
-          blockHash: null,
-          blockNumber: null,
-          from: "0xc702b9950e44f7d321fa16ee88bf8e1a561249ba",
-          gas: 51627n,
-          gasPrice: 3000000000n,
-          hash: "0x3eaa88a766e82cbe53c95218ab4c3cf316325802b5f75d086b5121007b918e92",
-          input:
-            "0xa9059cbb00000000000000000000000082fc882199816bcec06baf848eaec51c2f96c85b000000000000000000000000000000000000000000000000eccae3078bacd15d",
-          nonce: 117,
-          to: "0x55d398326f99059ff775485246999027b3197955",
-          transactionIndex: null,
-          value: 0n,
-          type: "legacy",
-          v: 35n,
-          r: "0x73b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bf",
-          s: "0x354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23",
-          chainId: undefined,
-          typeHex: "0x0",
-        } as TransactionSerializable,
-      }),
-    ).toMatchInlineSnapshot(
-      '"0xf8637584b2d05e0082c9ab9455d398326f99059ff775485246999027b319795580801ba073b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bfa0354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23"',
-    );
-
-    expect(
-      serializeTransaction({
-        transaction: {
-          blockHash: null,
-          blockNumber: null,
-          from: "0xc702b9950e44f7d321fa16ee88bf8e1a561249ba",
-          gas: 51627n,
-          gasPrice: 3000000000n,
-          hash: "0x3eaa88a766e82cbe53c95218ab4c3cf316325802b5f75d086b5121007b918e92",
-          input:
-            "0xa9059cbb00000000000000000000000082fc882199816bcec06baf848eaec51c2f96c85b000000000000000000000000000000000000000000000000eccae3078bacd15d",
-          nonce: 117,
-          to: "0x55d398326f99059ff775485246999027b3197955",
-          transactionIndex: null,
-          value: 0n,
-          type: "legacy",
-          v: 36n,
-          r: "0x73b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bf",
-          s: "0x354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23",
-          chainId: undefined,
-          typeHex: "0x0",
-        } as TransactionSerializable,
-      }),
-    ).toMatchInlineSnapshot(
-      '"0xf8637584b2d05e0082c9ab9455d398326f99059ff775485246999027b319795580801ca073b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bfa0354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23"',
-    );
-  });
-
-  test("https://github.com/wevm/viem/issues/1849", async () => {
-    const tx = {
-      blockHash:
-        "0xbfafd5da42c7e715149a1fbcc20c40bcf5f62e013f60af9cdf07c27142b6a0ff",
-      blockNumber: 19295009n,
-      gas: 421374n,
-      gasPrice: 20701311233n,
-      input:
-        "0x3a2b7b980000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000726000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000065d96f1b00000000000000000000000000000000000000000000000000000000000000030b010c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000001e00000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000c23190af48df1c00000000000000000000000000000000000000000000000000000000000001000000000000000000000000002648f5592c09a260c601acde44e7f8f2944944fb0000000000000000000000000000000000000000000000000f43fc2c04ee000000000000000000000000000000000000000000000000000000c23190af48df1c00000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002bbe33f57f41a20b2f00dec91dcc1169597f36221f002710c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000023a03a3f85888a471f4effcafa03431511e388560000000000000000000000000000000000000000000000000000000000000000",
-      nonce: 38,
-      to: "0x2648f5592c09a260c601acde44e7f8f2944944fb",
-      transactionIndex: 74,
-      value: 57108134443873424n,
-      type: "legacy",
-      chainId: 1,
-      v: 38n,
-      r: "0x5abc283bf902f90884f800b2f810febd5e90f8d5077d89e150631bbcc547b7d1",
-      s: "0x5acc7718573bcd268256c996f2ae1bdd2bd97019992f44d5806b1cc843cde2e7",
-      typeHex: "0x0",
-    } as const;
-
-    const serialized = serializeTransaction({
-      transaction: { ...tx, data: tx.input },
-    });
-
-    expect(keccak256(serialized)).toEqual(
-      "0x6ed21df69b02678dfb290ef2a43d490303562eb387f70795766b37bfa9d09bd2",
-    );
-  });
-
-  test("Successfully handles hex as bigint", () => {
-    const transaction = {
-      to: "0x0000000000000000000000000000000000000000",
-      chainId: 31337,
-      data: "0x",
-      gas: 21001n,
-      nonce: 0,
-      accessList: undefined,
-      value: "0x0",
-      maxFeePerGas: 3100000000n,
-      maxPriorityFeePerGas: 1100000000n,
-    } as unknown as TransactionSerializable;
-
-    const signed = serializeTransaction({ transaction });
-    expect(signed).toMatchInlineSnapshot(
-      `"0x02ec827a6980844190ab0084b8c63f008252099400000000000000000000000000000000000000008330783080c0"`,
-    );
-  });
 });

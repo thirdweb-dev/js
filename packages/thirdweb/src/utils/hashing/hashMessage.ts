@@ -1,13 +1,14 @@
-import { type ByteArray, type SignableMessage, concat } from "viem";
+import { Bytes as ox__Bytes } from "ox";
 import type { Hex } from "../encoding/hex.js";
 import { stringToBytes, toBytes } from "../encoding/to-bytes.js";
+import type { SignableMessage } from "../types.js";
 import { keccak256 } from "./keccak256.js";
 
 const presignMessagePrefix = "\x19Ethereum Signed Message:\n";
 type To = "hex" | "bytes";
 
 type HashMessage<TTo extends To> =
-  | (TTo extends "bytes" ? ByteArray : never)
+  | (TTo extends "bytes" ? ox__Bytes.Bytes : never)
   | (TTo extends "hex" ? Hex : never);
 
 /**
@@ -38,5 +39,5 @@ export function hashMessage<TTo extends To = "hex">(
   const prefixBytes = stringToBytes(
     `${presignMessagePrefix}${messageBytes.length}`,
   );
-  return keccak256(concat([prefixBytes, messageBytes]), to_);
+  return keccak256(ox__Bytes.concat(prefixBytes, messageBytes), to_);
 }

@@ -1,14 +1,15 @@
-import type { TypedData } from "abitype";
-import { type TypedDataDefinition, hashTypedData } from "viem";
+import * as ox__Hex from "ox/Hex";
+import * as ox__Secp256k1 from "ox/Secp256k1";
+import * as ox__Signature from "ox/Signature";
+import * as ox__TypedData from "ox/TypedData";
 import type { Hex } from "../encoding/hex.js";
-import { parseTypedData } from "./helpers/parseTypedData.js";
-import { sign } from "./sign.js";
-import { signatureToHex } from "./signature-to-hex.js";
 
 export type SignTypedDataOptions<
-  typedData extends TypedData | Record<string, unknown> = TypedData,
+  typedData extends
+    | ox__TypedData.TypedData
+    | Record<string, unknown> = ox__TypedData.TypedData,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
-> = TypedDataDefinition<typedData, primaryType> & {
+> = ox__TypedData.Definition<typedData, primaryType> & {
   privateKey: Hex;
 };
 
@@ -28,17 +29,22 @@ export type SignTypedDataOptions<
  * @utils
  */
 export function signTypedData<
-  const typedData extends TypedData | Record<string, unknown>,
+  const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain",
 >(options: SignTypedDataOptions<typedData, primaryType>): Hex {
   const { privateKey, ...typedData } =
     options as unknown as SignTypedDataOptions;
 
-  const parsedTypeData = parseTypedData(typedData);
+  if (typeof typedData.domain?.chainId === "string") {
+    typedData.domain.chainId = ox__Hex.toNumber(typedData.domain.chainId);
+  }
 
-  const signature = sign({
-    hash: hashTypedData(parsedTypeData), // TODO: Implement native hashTypedData
+  const payload = ox__TypedData.getSignPayload(typedData);
+
+  const signature = ox__Secp256k1.sign({
+    payload,
     privateKey,
   });
-  return signatureToHex(signature);
+
+  return ox__Signature.toHex(signature);
 }

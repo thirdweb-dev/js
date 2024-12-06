@@ -1,5 +1,5 @@
 import type { ProviderInterface } from "@coinbase/wallet-sdk";
-import type { CoinbaseWalletCreationOptions } from "./coinbaseWebSDK.js";
+import type { CoinbaseWalletCreationOptions } from "./coinbase-web.js";
 
 let _provider: ProviderInterface | undefined;
 

@@ -2,7 +2,7 @@ import type { Abi } from "abitype";
 import * as universalethers from "ethers";
 import type * as ethers5 from "ethers5";
 import type * as ethers6 from "ethers6";
-import type { AccessList, Hex, TransactionSerializable } from "viem";
+import type { AccessList, Hex } from "viem";
 import type { Chain } from "../chains/types.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
@@ -10,6 +10,7 @@ import { type ThirdwebContract, getContract } from "../contract/contract.js";
 import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
+import type { SerializableTransaction } from "../transaction/serialize-transaction.js";
 import { toHex } from "../utils/encoding/hex.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 
@@ -39,7 +40,7 @@ function assertEthers5(
 ): asserts ethers is typeof ethers5 {
   if (!isEthers5(ethers)) {
     throw new Error(
-      "You seem to be using ethers@6, please use the `ethers6Adapter()",
+      "You seem to be using ethers@6, please use the `ethers6Adapter()`",
     );
   }
 }
@@ -279,6 +280,7 @@ export function toEthersProvider(
   client: ThirdwebClient,
   chain: Chain,
 ): ethers5.providers.Provider {
+  assertEthers5(ethers);
   const url = getRpcUrlForChain({ chain, client });
   const headers: HeadersInit = {
     "Content-Type": "application/json",
@@ -588,7 +590,7 @@ export async function toEthersSigner(
  * @internal
  */
 function alignTxToEthers(
-  tx: TransactionSerializable,
+  tx: SerializableTransaction,
 ): ethers5.ethers.utils.Deferrable<ethers5.ethers.providers.TransactionRequest> {
   const { to: viemTo, type: viemType, gas, ...rest } = tx;
   // massage "to" to fit ethers
@@ -623,8 +625,7 @@ function alignTxToEthers(
     gasLimit: gas,
     to,
     type,
-    accessList: tx.accessList as ethers5.utils.AccessListish | undefined,
-  };
+  } as ethers5.ethers.utils.Deferrable<ethers5.ethers.providers.TransactionRequest>;
 }
 
 async function alignTxFromEthers(

@@ -1,15 +1,18 @@
+import * as ox__Hash from "ox/Hash";
+import * as ox__Hex from "ox/Hex";
+import * as ox__Signature from "ox/Signature";
+import { recoverAddress } from "viem";
 import {
-  type Signature,
-  type TransactionSerializable,
-  recoverAddress,
+  type SerializableTransaction,
   serializeTransaction,
-  signatureToHex,
-} from "viem";
-import { keccak256 } from "../hashing/keccak256.js";
+} from "../../transaction/serialize-transaction.js";
+import type { Hex } from "../encoding/hex.js";
 
 type GetKeylessTransactionOptions = {
-  transaction: TransactionSerializable;
-  signature: Signature;
+  transaction: SerializableTransaction;
+  signature:
+    | ox__Signature.Signature<true, Hex>
+    | ox__Signature.Legacy<Hex, bigint>;
 };
 
 /**
@@ -23,20 +26,46 @@ export async function getKeylessTransaction(
   options: GetKeylessTransactionOptions,
 ) {
   // 1. Create serialized txn string
-  const hash = keccak256(serializeTransaction(options.transaction));
+  const hash = ox__Hash.keccak256(
+    serializeTransaction({ transaction: options.transaction }),
+  );
+
+  const yParity = (() => {
+    if (
+      "yParity" in options.signature &&
+      typeof options.signature.yParity !== "undefined"
+    ) {
+      return options.signature.yParity;
+    }
+
+    if (
+      "v" in options.signature &&
+      typeof options.signature.v !== "undefined"
+    ) {
+      return ox__Signature.vToYParity(Number(options.signature.v));
+    }
+
+    throw new Error(
+      "Invalid recovered signature provided with transaction, missing v or yParity",
+    );
+  })();
 
   // 2. Determine signer address from custom signature + txn
   const address = await recoverAddress({
     hash,
-    signature: signatureToHex(options.signature),
+    signature: ox__Signature.toHex({
+      r: ox__Hex.toBigInt(options.signature.r),
+      s: ox__Hex.toBigInt(options.signature.s),
+      yParity,
+    }),
   });
 
   // 3. Create the signed serialized txn string.
   // To be sent directly to the chain using a provider.
-  const transaction = serializeTransaction(
-    options.transaction,
-    options.signature,
-  );
+  const transaction = serializeTransaction({
+    transaction: options.transaction,
+    signature: options.signature,
+  });
 
   return {
     signerAddress: address,

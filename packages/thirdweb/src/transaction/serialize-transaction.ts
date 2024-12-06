@@ -1,15 +1,37 @@
-import {
-  type GetTransactionType,
-  type SerializedTransactionReturnType,
-  type Signature,
-  type TransactionSerializable,
-  type TransactionType,
-  serializeTransaction as _serializeTransaction,
-} from "viem";
+import * as ox__Hex from "ox/Hex";
+import * as ox__Signature from "ox/Signature";
+import * as ox__TransactionEnvelopeEip1559 from "ox/TransactionEnvelopeEip1559";
+import * as ox__TransactionEnvelopeEip2930 from "ox/TransactionEnvelopeEip2930";
+import * as ox__TransactionEnvelopeLegacy from "ox/TransactionEnvelopeLegacy";
+import type { Hex } from "../utils/encoding/hex.js";
+
+export type SerializableTransaction = {
+  type?: string | undefined;
+  r?: Hex | bigint;
+  s?: Hex | bigint;
+  v?: bigint | number;
+  yParity?: bigint | number;
+  accessList?:
+    | ox__TransactionEnvelopeEip2930.TransactionEnvelopeEip2930["accessList"]
+    | undefined;
+  chainId?: number | undefined;
+  gasPrice?: bigint | undefined;
+  maxFeePerGas?: bigint | undefined;
+  maxPriorityFeePerGas?: bigint | undefined;
+  data?: Hex | undefined;
+  to?: string | null | undefined; // Must allow null for backwards compatibility
+  nonce?: number | bigint | undefined;
+  value?: bigint | undefined;
+  gas?: bigint | undefined;
+  gasLimit?: bigint | undefined;
+};
 
 export type SerializeTransactionOptions = {
-  transaction: TransactionSerializable;
-  signature?: Signature | undefined;
+  transaction: SerializableTransaction;
+  signature?:
+    | ox__Signature.Signature<true, Hex>
+    | ox__Signature.Legacy<Hex, bigint>
+    | undefined;
 };
 
 /**
@@ -32,18 +54,39 @@ export type SerializeTransactionOptions = {
  * });
  * ```
  */
-export function serializeTransaction<
-  const transaction extends TransactionSerializable,
-  _transactionType extends TransactionType = GetTransactionType<transaction>,
->(
+export function serializeTransaction(
   options: SerializeTransactionOptions,
-): SerializedTransactionReturnType<transaction, _transactionType> {
+): Hex {
   const { transaction } = options;
+
+  const type = getTransactionEnvelopeType(transaction);
 
   // This is to maintain compatibility with our old interface (including the signature in the transaction object)
   const signature = (() => {
-    if (options.signature) return options.signature;
-    if (transaction.v === undefined && transaction.yParity === undefined) {
+    if (options.signature) {
+      if (
+        "v" in options.signature &&
+        typeof options.signature.v !== "undefined"
+      ) {
+        return ox__Signature.fromLegacy({
+          r: ox__Hex.toBigInt(options.signature.r),
+          s: ox__Hex.toBigInt(options.signature.s),
+          v: Number(options.signature.v),
+        });
+      }
+
+      return {
+        r: ox__Hex.toBigInt(options.signature.r),
+        s: ox__Hex.toBigInt(options.signature.s),
+        // We force the Signature type here because we filter for legacy type above
+        yParity: (options.signature as unknown as ox__Signature.Signature)
+          .yParity,
+      };
+    }
+    if (
+      typeof transaction.v === "undefined" &&
+      typeof transaction.yParity === "undefined"
+    ) {
       return undefined;
     }
 
@@ -52,12 +95,78 @@ export function serializeTransaction<
     }
 
     return {
-      v: transaction.v,
-      r: transaction.r,
-      s: transaction.s,
-      yParity: transaction.yParity,
+      r:
+        typeof transaction.r === "bigint"
+          ? transaction.r
+          : ox__Hex.toBigInt(transaction.r),
+      s:
+        typeof transaction.s === "bigint"
+          ? transaction.s
+          : ox__Hex.toBigInt(transaction.s),
+      yParity:
+        typeof transaction.v !== "undefined" &&
+        typeof transaction.yParity === "undefined"
+          ? ox__Signature.vToYParity(Number(transaction.v))
+          : Number(transaction.yParity),
     };
   })();
 
-  return _serializeTransaction(transaction, signature as Signature | undefined); // Trust the options type-checking did its job and that the converted signature mirrors that type
+  if (type === "eip1559") {
+    const typedTransaction =
+      transaction as ox__TransactionEnvelopeEip1559.TransactionEnvelopeEip1559;
+    ox__TransactionEnvelopeEip1559.assert(typedTransaction);
+
+    return ox__TransactionEnvelopeEip1559.serialize(typedTransaction, {
+      signature,
+    });
+  }
+
+  if (type === "legacy") {
+    const typedTransaction =
+      transaction as ox__TransactionEnvelopeLegacy.TransactionEnvelopeLegacy;
+    ox__TransactionEnvelopeLegacy.assert(typedTransaction);
+
+    return ox__TransactionEnvelopeLegacy.serialize(typedTransaction, {
+      signature,
+    });
+  }
+
+  if (type === "eip2930") {
+    const typedTransaction =
+      transaction as ox__TransactionEnvelopeEip2930.TransactionEnvelopeEip2930;
+    ox__TransactionEnvelopeEip2930.assert(typedTransaction);
+
+    return ox__TransactionEnvelopeEip2930.serialize(typedTransaction, {
+      signature,
+    });
+  }
+
+  throw new Error("Invalid transaction type");
+}
+
+/**
+ * @internal
+ */
+function getTransactionEnvelopeType(
+  transactionEnvelope: SerializableTransaction,
+) {
+  if (typeof transactionEnvelope.type !== "undefined") {
+    return transactionEnvelope.type;
+  }
+
+  if (
+    typeof transactionEnvelope.maxFeePerGas !== "undefined" ||
+    typeof transactionEnvelope.maxPriorityFeePerGas !== "undefined"
+  ) {
+    return "eip1559";
+  }
+
+  if (typeof transactionEnvelope.gasPrice !== "undefined") {
+    if (typeof transactionEnvelope.accessList !== "undefined") {
+      return "eip2930";
+    }
+    return "legacy";
+  }
+
+  throw new Error("Invalid transaction type");
 }

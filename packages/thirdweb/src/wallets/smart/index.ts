@@ -1,9 +1,4 @@
-import {
-  type SignableMessage,
-  type TypedData,
-  type TypedDataDefinition,
-  maxUint96,
-} from "viem";
+import type * as ox__TypedData from "ox/TypedData";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -21,7 +16,8 @@ import { readContract } from "../../transaction/read-contract.js";
 import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { Hex } from "../../utils/encoding/hex.js";
-import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
+import { type SignableMessage, maxUint96 } from "../../utils/types.js";
 import type {
   Account,
   SendTransactionOption,
@@ -150,7 +146,6 @@ export async function connectSmartWallet(
     chain: chain,
   });
 
-  // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
   const accountAddress = await predictAddress({
     factoryContract,
     adminAddress: personalAccount.address,
@@ -291,9 +286,9 @@ async function createSmartAccount(
       });
     },
     async signTypedData<
-      const typedData extends TypedData | Record<string, unknown>,
+      const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
       primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
-    >(typedData: TypedDataDefinition<typedData, primaryType>) {
+    >(typedData: ox__TypedData.Definition<typedData, primaryType>) {
       if (options.overrides?.signTypedData) {
         return options.overrides.signTypedData({
           adminAccount: options.personalAccount,
@@ -436,9 +431,9 @@ function createZkSyncAccount(args: {
       return connectionOptions.personalAccount.signMessage({ message });
     },
     async signTypedData<
-      const typedData extends TypedData | Record<string, unknown>,
+      const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
       primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
-    >(_typedData: TypedDataDefinition<typedData, primaryType>) {
+    >(_typedData: ox__TypedData.Definition<typedData, primaryType>) {
       const typedData = parseTypedData(_typedData);
       return connectionOptions.personalAccount.signTypedData(typedData);
     },
