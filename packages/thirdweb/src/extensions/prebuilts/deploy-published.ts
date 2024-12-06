@@ -147,7 +147,7 @@ export async function deployContractfromDeployMetadata(
     salt,
   } = options;
 
-  const processedImplParams: Record<string, string> = {};
+  const processedImplParams: Record<string, string | string[]> = {};
   for (const key in implementationConstructorParams) {
     processedImplParams[key] = await processRefDeployments({
       client,
@@ -159,7 +159,7 @@ export async function deployContractfromDeployMetadata(
     });
   }
 
-  const processedInitializeParams: Record<string, string> = {};
+  const processedInitializeParams: Record<string, string | string[]> = {};
   for (const key in initializeParams) {
     processedInitializeParams[key] = await processRefDeployments({
       client,
