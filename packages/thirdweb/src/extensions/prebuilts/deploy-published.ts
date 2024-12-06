@@ -129,7 +129,7 @@ export type DeployContractfromDeployMetadataOptions = {
   salt?: string;
 };
 
-interface DynamicParams {
+type DynamicParams = {
   type: "address" | "address[]" | "bytes" | "bytes[]";
   refContracts: {
     publisherAddress: string;
@@ -146,7 +146,7 @@ interface DynamicParams {
   >;
 }
 
-interface ImplementationConstructorParam {
+type ImplementationConstructorParam = {
   defaultValue?: string;
   dynamicValue?: DynamicParams;
 }
