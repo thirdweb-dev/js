@@ -30,6 +30,9 @@ export type {
   PaymasterResult,
 } from "../../wallets/smart/types.js";
 
+// all preset configs
+export * as Config from "../../wallets/smart/presets/index.js";
+
 export {
   ENTRYPOINT_ADDRESS_v0_6,
   ENTRYPOINT_ADDRESS_v0_7,

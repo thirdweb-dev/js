@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
@@ -7,11 +7,15 @@ import {
   TEST_ACCOUNT_B,
   TEST_ACCOUNT_C,
 } from "../../../../test/src/test-wallets.js";
-import { getContract } from "../../../contract/contract.js";
+import {
+  type ThirdwebContract,
+  getContract,
+} from "../../../contract/contract.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { setApprovalForAll as setApprovalForAll721 } from "../../../extensions/erc721/__generated__/IERC721A/write/setApprovalForAll.js";
 import { mintTo as mintToErc1155 } from "../../../extensions/erc1155/write/mintTo.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
+import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 import { balanceOf as balanceOfErc721 } from "../../erc721/__generated__/IERC721A/read/balanceOf.js";
 import { mintTo as mintToErc721 } from "../../erc721/write/mintTo.js";
 import { balanceOf as balanceOfErc1155 } from "../../erc1155/__generated__/IERC1155/read/balanceOf.js";
@@ -32,7 +36,11 @@ const chain = ANVIL_CHAIN;
 const client = TEST_CLIENT;
 
 describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
-  it("should work with ERC721 and ERC1155", async () => {
+  let marketplaceContract: ThirdwebContract;
+  let erc721Contract: ThirdwebContract;
+  let erc1155Contract: ThirdwebContract;
+
+  beforeAll(async () => {
     const marketplaceAddress = await deployMarketplaceContract({
       account: TEST_ACCOUNT_A,
       chain,
@@ -63,17 +71,17 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
       },
     });
 
-    const marketplaceContract = getContract({
+    marketplaceContract = getContract({
       address: marketplaceAddress,
       chain,
       client,
     });
-    const erc721Contract = getContract({
+    erc721Contract = getContract({
       address: erc721Address,
       chain,
       client,
     });
-    const erc1155Contract = getContract({
+    erc1155Contract = getContract({
       address: erc1155Address,
       chain,
       client,
@@ -119,9 +127,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
         }),
       }),
     ]);
-
     // ---- set up completed ---- //
+  }, 120_000);
 
+  it("should work with ERC721", async () => {
     // listings should be 0 length to start
     const [allListings, totalListingCount] = await Promise.all([
       getAllListings({
@@ -244,14 +253,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
     expect(nftBalanceOfAccountAAfterPurchase).toBe(1n);
     // expect the seller to no longer have the nft
     expect(nftBalanceOfAccountBAfterPurchase).toBe(0n);
+  }, 120_000);
 
+  it("should work with ERC1155", async () => {
     /**
      * ============ now do the same tests but for ERC1155 =============
      */
 
     // this should fail because we're listing more than we have
     await expect(
-      sendAndConfirmTransaction({
+      sendTransaction({
         transaction: createListing({
           contract: marketplaceContract,
           assetContractAddress: erc1155Contract.address,
@@ -284,7 +295,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
       logs: receipt1155.logs,
     });
 
-    expect(listingEvents.length).toBe(1);
+    expect(listingEvents1155.length).toBe(1);
 
     // biome-ignore lint/style/noNonNullAssertion: OK in tests
     const listingEvent1155 = listingEvents1155[0]!;
@@ -384,5 +395,5 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
     expect(nft1155BalanceOfAccountAAfterPurchase).toBe(1n);
     // expect the seller to have one less 1155 token
     expect(nft1155BalanceOfAccountCAfterPurchase).toBe(99n);
-  });
+  }, 120_000);
 });

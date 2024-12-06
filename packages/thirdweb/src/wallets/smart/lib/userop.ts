@@ -632,6 +632,7 @@ async function getAccountInitCode(options: {
   accountSalt?: string;
   createAccountOverride?: (
     factoryContract: ThirdwebContract,
+    adminAddress: string,
   ) => PreparedTransaction;
 }): Promise<Hex> {
   const { factoryContract, adminAddress, accountSalt, createAccountOverride } =
@@ -651,7 +652,7 @@ async function getAccountNonce(options: {
   client: ThirdwebClient;
   entrypointAddress?: string;
   getNonceOverride?: (accountContract: ThirdwebContract) => Promise<bigint>;
-}) {
+}): Promise<bigint> {
   const {
     accountContract,
     chain,
@@ -662,7 +663,7 @@ async function getAccountNonce(options: {
   if (getNonceOverride) {
     return getNonceOverride(accountContract);
   }
-  return getNonce({
+  return await getNonce({
     contract: getContract({
       address: entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
       chain,

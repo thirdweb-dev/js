@@ -153,7 +153,7 @@ export async function verifyHash({
 }
 
 const EIP_1271_MAGIC_VALUE = "0x1626ba7e";
-async function verifyEip1271Signature({
+export async function verifyEip1271Signature({
   hash,
   signature,
   contract,

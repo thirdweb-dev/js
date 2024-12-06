@@ -1,0 +1,13 @@
+[
+  "function accountId() view returns (string accountImplementationId)",
+  "function execute(bytes32 mode, bytes executionCalldata) payable",
+  "function executeFromExecutor(bytes32 mode, bytes executionCalldata) payable returns (bytes[] returnData)",
+  "function installModule(uint256 moduleTypeId, address module, bytes initData) payable",
+  "function isModuleInstalled(uint256 moduleTypeId, address module, bytes additionalContext) view returns (bool)",
+  "function isValidSignature(bytes32 hash, bytes data) view returns (bytes4)",
+  "function supportsExecutionMode(bytes32 encodedMode) view returns (bool)",
+  "function supportsModule(uint256 moduleTypeId) view returns (bool)",
+  "function uninstallModule(uint256 moduleTypeId, address module, bytes deInitData) payable",
+  "event ModuleInstalled(uint256 moduleTypeId, address module)",
+  "event ModuleUninstalled(uint256 moduleTypeId, address module)"
+]
