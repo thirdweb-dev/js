@@ -5,6 +5,7 @@ import { verifySignature } from "../../auth/verify-signature.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { parseEventLogs } from "../../event/actions/parse-logs.js";
 
+import { verifyTypedData } from "../../auth/verify-typed-data.js";
 import { sepolia } from "../../chains/chain-definitions/sepolia.js";
 import {
   addAdmin,
@@ -12,7 +13,6 @@ import {
 } from "../../exports/extensions/erc4337.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
-import { checkContractWalletSignature } from "../../extensions/erc1271/checkContractWalletSignature.js";
 import { setContractURI } from "../../extensions/marketplace/__generated__/IMarketplace/write/setContractURI.js";
 import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
@@ -79,6 +79,32 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
       });
       expect(predictedAddress).toEqual(smartWalletAddress);
+    });
+
+    it("can sign a msg", async () => {
+      const signature = await smartAccount.signMessage({
+        message: "hello world",
+      });
+      const isValid = await verifySignature({
+        message: "hello world",
+        signature,
+        address: smartWalletAddress,
+        chain,
+        client,
+      });
+      expect(isValid).toEqual(true);
+    });
+
+    it("can sign typed data", async () => {
+      const signature = await smartAccount.signTypedData(typedData.basic);
+      const isValid = await verifyTypedData({
+        signature,
+        address: smartWalletAddress,
+        chain,
+        client,
+        ...typedData.basic,
+      });
+      expect(isValid).toEqual(true);
     });
 
     it("should revert on unsuccessful transactions", async () => {
@@ -171,19 +197,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         client,
       });
       expect(isValidV1).toEqual(true);
-      const isValidV2 = await checkContractWalletSignature({
-        message,
-        signature,
-        contract: accountContract,
-      });
-      expect(isValidV2).toEqual(true);
 
       // sign typed data
       const signatureTyped = await smartAccount.signTypedData({
         ...typedData.basic,
         primaryType: "Mail",
       });
-      expect(signatureTyped.length).toBe(132);
+      const isValidV2 = await verifyTypedData({
+        signature: signatureTyped,
+        address: smartWalletAddress,
+        chain,
+        client,
+        ...typedData.basic,
+      });
+      expect(isValidV2).toEqual(true);
 
       // add admin
       const newAdmin = await generateAccount({ client });

@@ -284,8 +284,8 @@ async function createSmartAccount(
 
       const { deployAndSignMessage } = await import("./lib/signing.js");
       return deployAndSignMessage({
-        account,
         accountContract,
+        factoryContract: options.factoryContract,
         options,
         message,
       });
@@ -305,8 +305,8 @@ async function createSmartAccount(
 
       const { deployAndSignTypedData } = await import("./lib/signing.js");
       return deployAndSignTypedData({
-        account,
         accountContract,
+        factoryContract: options.factoryContract,
         options,
         typedData,
       });
