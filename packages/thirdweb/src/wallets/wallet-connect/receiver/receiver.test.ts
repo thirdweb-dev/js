@@ -27,7 +27,7 @@ const URI_MOCK =
 
 const DEFAULT_METADATA = getDefaultAppMetadata();
 
-const listeners: Record<string, (event?: unknown) => Promise<void>> = {};
+const listeners: Record<string, (_event?: unknown) => Promise<void>> = {};
 
 const signClientMock = {
   on: vi.fn((event, listener) => {

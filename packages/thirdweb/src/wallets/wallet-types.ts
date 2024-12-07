@@ -134,7 +134,7 @@ export type WalletAutoConnectionOption<T extends WalletId> =
  * @example
  * ```ts
  * type X = WalletCreationOptions<'io.metamask'>
- * ````
+ * ```
  */
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions
