@@ -204,3 +204,6 @@ export type {
   AbiConstructor,
   AbiFallback,
 } from "abitype";
+
+export { shortenLargeNumber } from "../utils/shortenLargeNumber.js";
+export { formatNumber } from "../utils/formatNumber.js";

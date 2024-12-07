@@ -107,9 +107,9 @@ export function SendFunds(props: {
 }
 
 /**
- * @internal
+ * @internal Exported for tests
  */
-function SendFundsForm(props: {
+export function SendFundsForm(props: {
   onTokenSelect: () => void;
   token: ERC20OrNativeToken;
   receiverAddress: string;
@@ -321,6 +321,7 @@ function SendFundsForm(props: {
           fullWidth
           variant="accent"
           type="submit"
+          className="tw-sendfunds-screen-send-button"
           onClick={async () => {
             if (!receiverAddress || !amount) {
               return;
