@@ -1,5 +1,5 @@
-import type { Address, TypedData } from "abitype";
-import type { SignableMessage, TypedDataDefinition } from "viem";
+import type * as ox__Address from "ox/Address";
+import type * as ox__TypedData from "ox/TypedData";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
@@ -7,6 +7,7 @@ import type { PreparedTransaction } from "../../transaction/prepare-transaction.
 import type { TransactionReceipt } from "../../transaction/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
+import type { SignableMessage } from "../../utils/types.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 
 export type TokenPaymasterConfig = {
@@ -53,13 +54,15 @@ export type SmartWalletOptions = Prettify<
         message: SignableMessage;
       }) => Promise<Hex>;
       signTypedData?: <
-        const typedData extends TypedData | Record<string, unknown>,
+        const typedData extends
+          | ox__TypedData.TypedData
+          | Record<string, unknown>,
         primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
       >(options: {
         adminAccount: Account;
         accountContract: ThirdwebContract;
         factoryContract: ThirdwebContract;
-        typedData: TypedDataDefinition<typedData, primaryType>;
+        typedData: ox__TypedData.Definition<typedData, primaryType>;
       }) => Promise<Hex>;
     };
   } & (
@@ -101,7 +104,7 @@ export type SmartWalletConnectionOptions = {
 };
 
 export type UserOperationV06 = {
-  sender: Address;
+  sender: ox__Address.Address;
   nonce: bigint;
   initCode: Hex;
   callData: Hex;
@@ -145,7 +148,7 @@ export type PackedUserOperation = {
 };
 
 export type UserOperationV06Hexed = {
-  sender: Address;
+  sender: ox__Address.Address;
   nonce: Hex;
   initCode: Hex;
   callData: Hex;
@@ -210,7 +213,7 @@ export type GasPriceResult = {
 };
 
 export type PmTransactionData = {
-  paymaster: Address;
+  paymaster: ox__Address.Address;
   paymasterInput: Hex;
 };
 
@@ -218,10 +221,10 @@ export type UserOperationReceipt = {
   receipt: TransactionReceipt;
   logs: TransactionReceipt["logs"];
   userOpHash: Hex;
-  entryPoint: Address;
-  sender: Address;
+  entryPoint: ox__Address.Address;
+  sender: ox__Address.Address;
   nonce: bigint;
-  paymaster: Address;
+  paymaster: ox__Address.Address;
   actualGasUsed: bigint;
   actualGasCost: bigint;
   success: boolean;

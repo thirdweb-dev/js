@@ -102,9 +102,9 @@ const superchains = [
   {
     id: "Arena-Z",
     name: "ArenaZ",
-    link: "/arena-z-testnet",
+    link: "/arena-z",
     src: require("../../../public/assets/grant/superchain/icon-arena-z.png"),
-    isComingSoon: true,
+    isComingSoon: false,
   },
   {
     id: "campNetworkv2",

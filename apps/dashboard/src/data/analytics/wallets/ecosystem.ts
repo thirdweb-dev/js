@@ -2,12 +2,12 @@ import type { EcosystemWalletStats } from "types/analytics";
 import { fetchAnalytics } from "../fetch-analytics";
 
 export async function getEcosystemWalletUsage(args: {
-  ecosystemId: string;
+  ecosystemSlug: string;
   from?: Date;
   to?: Date;
   period?: "day" | "week" | "month" | "year" | "all";
 }) {
-  const { ecosystemId, from, to, period } = args;
+  const { ecosystemSlug, from, to, period } = args;
 
   const searchParams = new URLSearchParams();
   if (from) {
@@ -20,7 +20,7 @@ export async function getEcosystemWalletUsage(args: {
     searchParams.append("period", period);
   }
   const res = await fetchAnalytics(
-    `v1/wallets/ecosystem/${ecosystemId}?${searchParams.toString()}`,
+    `v1/wallets/ecosystem/${ecosystemSlug}?${searchParams.toString()}`,
     {
       method: "GET",
       headers: {
@@ -30,7 +30,7 @@ export async function getEcosystemWalletUsage(args: {
   );
 
   if (res?.status !== 200) {
-    console.error("Failed to fetch in-app wallet stats");
+    console.error("Failed to fetch ecosystem wallet stats");
     return null;
   }
 

@@ -117,7 +117,7 @@ export {
 export type {
   CoinbaseWalletCreationOptions,
   CoinbaseSDKWalletConnectionOptions,
-} from "../wallets/coinbase/coinbaseWebSDK.js";
+} from "../wallets/coinbase/coinbase-web.js";
 
 export type {
   WalletEmitter,

@@ -16,7 +16,7 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
 import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";

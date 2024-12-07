@@ -4,6 +4,7 @@ import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { Flex, Skeleton } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceDeployerAddress } from "lib/publisher-utils";
+import { ZERO_ADDRESS } from "thirdweb";
 import {
   AccountAddress,
   AccountAvatar,
@@ -41,7 +42,11 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
           Published by
         </Heading>
 
-        <AccountProvider address={ensQuery.data?.address || ""} client={client}>
+        <AccountProvider
+          // passing zero address during loading time to prevent the component from crashing
+          address={ensQuery.data?.address || ZERO_ADDRESS}
+          client={client}
+        >
           <div className="flex items-center gap-4">
             <Link
               href={replaceDeployerAddress(

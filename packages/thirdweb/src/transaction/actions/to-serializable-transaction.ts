@@ -1,10 +1,10 @@
-import type { TransactionSerializable } from "viem";
 import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
+import type { SerializableTransaction } from "../serialize-transaction.js";
 import { encode } from "./encode.js";
 import { estimateGas } from "./estimate-gas.js";
 
@@ -112,5 +112,5 @@ export async function toSerializableTransaction(
     accessList,
     value,
     ...feeData,
-  } satisfies TransactionSerializable;
+  } satisfies SerializableTransaction;
 }

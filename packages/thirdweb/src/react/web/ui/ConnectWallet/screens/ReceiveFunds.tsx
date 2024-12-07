@@ -70,7 +70,12 @@ export function ReceiveFunds(props: {
 
       <Spacer y="lg" />
 
-      <Text multiline center balance>
+      <Text
+        multiline
+        center
+        balance
+        className="receive_fund_screen_instruction"
+      >
         {locale.instruction}
       </Text>
     </Container>

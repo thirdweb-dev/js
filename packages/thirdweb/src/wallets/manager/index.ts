@@ -125,27 +125,26 @@ export function createConnectionManager(storage: AsyncStorage) {
   ) => {
     const account = wallet.getAccount();
     if (!account) {
-      throw new Error("Can not set a wallet without an account as active");
+      throw new Error("Cannot set a wallet without an account as active");
     }
 
     const activeWallet = await (async () => {
       if (options?.accountAbstraction && !hasSmartAccount(wallet)) {
         return await handleSmartWalletConnection(
-          account,
+          wallet,
           options.client,
           options.accountAbstraction,
+          onWalletDisconnect,
         );
       } else {
         return wallet;
       }
     })();
 
-    // add personal wallet to connected wallets list
-    addConnectedWallet(wallet);
+    await storage.setItem(LAST_ACTIVE_EOA_ID, wallet.id);
 
-    if (wallet.id !== "smart") {
-      await storage.setItem(LAST_ACTIVE_EOA_ID, wallet.id);
-    }
+    // add personal wallet to connected wallets list even if it's not the active one
+    addConnectedWallet(wallet);
 
     handleSetActiveWallet(activeWallet);
 
@@ -158,22 +157,6 @@ export function createConnectionManager(storage: AsyncStorage) {
     return activeWallet;
   };
 
-  const handleSmartWalletConnection = async (
-    signer: Account,
-    client: ThirdwebClient,
-    options: SmartWalletOptions,
-  ) => {
-    const wallet = smartWallet(options);
-
-    await wallet.connect({
-      personalAccount: signer,
-      client: client,
-      chain: options.chain,
-    });
-
-    return wallet;
-  };
-
   const connect = async (wallet: Wallet, options?: ConnectManagerOptions) => {
     // connectedWallet can be either wallet or smartWallet
     const connectedWallet = await handleConnection(wallet, options);
@@ -184,7 +167,7 @@ export function createConnectionManager(storage: AsyncStorage) {
   const handleSetActiveWallet = (activeWallet: Wallet) => {
     const account = activeWallet.getAccount();
     if (!account) {
-      throw new Error("Can not set a wallet without an account as active");
+      throw new Error("Cannot set a wallet without an account as active");
     }
 
     // also add it to connected wallets if it's not already there
@@ -357,11 +340,9 @@ export async function getStoredActiveWalletId(
     if (value) {
       return value as WalletId;
     }
+  } catch {}
 
-    return null;
-  } catch {
-    return null;
-  }
+  return null;
 }
 
 /**
@@ -375,9 +356,41 @@ export async function getLastConnectedChain(
     if (value) {
       return JSON.parse(value) as Chain;
     }
+  } catch {}
 
-    return null;
-  } catch {
-    return null;
-  }
+  return null;
 }
+
+/**
+ * @internal
+ */
+export const handleSmartWalletConnection = async (
+  eoaWallet: Wallet,
+  client: ThirdwebClient,
+  options: SmartWalletOptions,
+  onWalletDisconnect: (wallet: Wallet) => void,
+) => {
+  const signer = eoaWallet.getAccount();
+  if (!signer) {
+    throw new Error("Cannot set a wallet without an account as active");
+  }
+
+  const wallet = smartWallet(options);
+
+  await wallet.connect({
+    personalAccount: signer,
+    client: client,
+    chain: options.chain,
+  });
+
+  // Disconnect the active wallet when the EOA disconnects if it the active wallet is a smart wallet
+  const disconnectUnsub = eoaWallet.subscribe("disconnect", () => {
+    handleDisconnect();
+  });
+  const handleDisconnect = () => {
+    disconnectUnsub();
+    onWalletDisconnect(wallet);
+  };
+
+  return wallet;
+};

@@ -35,4 +35,20 @@ describe.runIf(process.env.TW_SECRET_KEY)("AccountProvider component", () => {
       }),
     ).toBeInTheDocument();
   });
+
+  it("should throw an error if no address is provided", () => {
+    expect(() => {
+      render(
+        <AccountProvider
+          // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
+          address={undefined as any}
+          client={TEST_CLIENT}
+        >
+          <AccountAddress />
+        </AccountProvider>,
+      );
+    }).toThrowError(
+      "AccountProvider: No address passed. Ensure an address is always provided to the AccountProvider",
+    );
+  });
 });

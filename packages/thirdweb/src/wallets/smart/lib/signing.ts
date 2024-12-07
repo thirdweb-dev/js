@@ -1,10 +1,4 @@
-import type { Hex } from "ox";
-import type {
-  SignableMessage,
-  TypedData,
-  TypedDataDefinition,
-  TypedDataDomain,
-} from "viem";
+import type * as ox__TypedData from "ox/TypedData";
 import { serializeErc6492Signature } from "../../../auth/serialize-erc6492-signature.js";
 import { verifyHash } from "../../../auth/verify-hash.js";
 import {
@@ -14,8 +8,10 @@ import {
 import { encode } from "../../../transaction/actions/encode.js";
 import { readContract } from "../../../transaction/read-contract.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
+import type { Hex } from "../../../utils/encoding/hex.js";
 import { hashMessage } from "../../../utils/hashing/hashMessage.js";
 import { hashTypedData } from "../../../utils/hashing/hashTypedData.js";
+import type { SignableMessage } from "../../../utils/types.js";
 import type { SmartAccountOptions } from "../types.js";
 import { prepareCreateAccount } from "./calls.js";
 
@@ -93,7 +89,7 @@ export async function deployAndSignMessage({
 }
 
 export async function deployAndSignTypedData<
-  const typedData extends TypedData | Record<string, unknown>,
+  const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
 >({
   accountContract,
@@ -104,10 +100,12 @@ export async function deployAndSignTypedData<
   accountContract: ThirdwebContract;
   factoryContract: ThirdwebContract;
   options: SmartAccountOptions;
-  typedData: TypedDataDefinition<typedData, primaryType>;
+  typedData: ox__TypedData.Definition<typedData, primaryType>;
 }) {
   const isSelfVerifyingContract =
-    (typedData.domain as TypedDataDomain)?.verifyingContract?.toLowerCase() ===
+    (
+      typedData.domain as ox__TypedData.Domain
+    )?.verifyingContract?.toLowerCase() ===
     accountContract.address?.toLowerCase();
 
   if (isSelfVerifyingContract) {
@@ -205,7 +203,7 @@ async function checkFor712Factory({
 }: {
   factoryContract: ThirdwebContract;
   accountContract: ThirdwebContract;
-  originalMsgHash: Hex.Hex;
+  originalMsgHash: Hex;
 }) {
   try {
     const implementationAccount = await readContract({

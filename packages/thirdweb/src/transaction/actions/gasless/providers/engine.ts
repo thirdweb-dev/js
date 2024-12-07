@@ -1,10 +1,10 @@
 import type { Address } from "abitype";
-import type { TransactionSerializable } from "viem";
 import { getContract } from "../../../../contract/contract.js";
 import { stringify } from "../../../../utils/json.js";
 import type { Account } from "../../../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../../../prepare-transaction.js";
 import { readContract } from "../../../read-contract.js";
+import type { SerializableTransaction } from "../../../serialize-transaction.js";
 import {
   type WaitForReceiptOptions,
   waitForReceipt,
@@ -28,7 +28,7 @@ type SendengineTransactionOptions = {
   // TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
   // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
   transaction: PreparedTransaction<any>;
-  serializableTransaction: TransactionSerializable;
+  serializableTransaction: SerializableTransaction;
   gasless: EngineOptions;
 };
 

@@ -9,7 +9,7 @@ import type {
 import type {
   CoinbaseSDKWalletConnectionOptions,
   CoinbaseWalletCreationOptions,
-} from "./coinbase/coinbaseWebSDK.js";
+} from "./coinbase/coinbase-web.js";
 import type { COINBASE } from "./constants.js";
 import type {
   EcosystemWalletAutoConnectOptions,

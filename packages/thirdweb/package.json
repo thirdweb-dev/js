@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.74.0",
+  "version": "5.75.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -127,24 +127,60 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
-      "auth": ["./dist/types/exports/auth.d.ts"],
-      "chains": ["./dist/types/exports/chains.d.ts"],
-      "contract": ["./dist/types/exports/contract.d.ts"],
-      "deploys": ["./dist/types/exports/deploys.d.ts"],
-      "event": ["./dist/types/exports/event.d.ts"],
-      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
-      "pay": ["./dist/types/exports/pay.d.ts"],
-      "react": ["./dist/types/exports/react.d.ts"],
-      "react-native": ["./dist/types/exports/react-native.d.ts"],
-      "rpc": ["./dist/types/exports/rpc.d.ts"],
-      "storage": ["./dist/types/exports/storage.d.ts"],
-      "transaction": ["./dist/types/exports/transaction.d.ts"],
-      "utils": ["./dist/types/exports/utils.d.ts"],
-      "wallets": ["./dist/types/exports/wallets.d.ts"],
-      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
-      "modules": ["./dist/types/exports/modules.d.ts"],
-      "social": ["./dist/types/exports/social.d.ts"]
+      "adapters/*": [
+        "./dist/types/exports/adapters/*.d.ts"
+      ],
+      "auth": [
+        "./dist/types/exports/auth.d.ts"
+      ],
+      "chains": [
+        "./dist/types/exports/chains.d.ts"
+      ],
+      "contract": [
+        "./dist/types/exports/contract.d.ts"
+      ],
+      "deploys": [
+        "./dist/types/exports/deploys.d.ts"
+      ],
+      "event": [
+        "./dist/types/exports/event.d.ts"
+      ],
+      "extensions/*": [
+        "./dist/types/exports/extensions/*.d.ts"
+      ],
+      "pay": [
+        "./dist/types/exports/pay.d.ts"
+      ],
+      "react": [
+        "./dist/types/exports/react.d.ts"
+      ],
+      "react-native": [
+        "./dist/types/exports/react-native.d.ts"
+      ],
+      "rpc": [
+        "./dist/types/exports/rpc.d.ts"
+      ],
+      "storage": [
+        "./dist/types/exports/storage.d.ts"
+      ],
+      "transaction": [
+        "./dist/types/exports/transaction.d.ts"
+      ],
+      "utils": [
+        "./dist/types/exports/utils.d.ts"
+      ],
+      "wallets": [
+        "./dist/types/exports/wallets.d.ts"
+      ],
+      "wallets/*": [
+        "./dist/types/exports/wallets/*.d.ts"
+      ],
+      "modules": [
+        "./dist/types/exports/modules.d.ts"
+      ],
+      "social": [
+        "./dist/types/exports/social.d.ts"
+      ]
     }
   },
   "browser": {
@@ -174,14 +210,13 @@
     "@radix-ui/react-focus-scope": "1.1.0",
     "@radix-ui/react-icons": "1.3.2",
     "@radix-ui/react-tooltip": "1.1.4",
-    "@tanstack/react-query": "5.62.2",
+    "@tanstack/react-query": "5.62.3",
     "@walletconnect/ethereum-provider": "2.17.2",
     "@walletconnect/sign-client": "2.17.2",
     "abitype": "1.0.7",
     "fuse.js": "7.0.0",
     "input-otp": "^1.4.1",
     "mipd": "0.0.7",
-    "ox": "0.4.0",
     "uqr": "0.1.2",
     "viem": "2.21.54"
   },
@@ -194,6 +229,7 @@
     "ethers": "^5 || ^6",
     "expo-linking": "^6",
     "expo-web-browser": "^13 || ^14",
+    "ox": "0.4.0",
     "react": "^18 || ^19",
     "react-native": "*",
     "react-native-aes-gcm-crypto": "^0.2",
@@ -273,6 +309,7 @@
     "test:watch": "vitest -c ./test/vitest.config.ts dev",
     "test": "vitest run -c ./test/vitest.config.ts --coverage",
     "test:cov": "vitest dev -c ./test/vitest.config.ts --coverage",
+    "test:ui": "vitest dev -c ./test/vitest.config.ts --coverage --ui",
     "test:dev": "vitest run -c ./test/vitest.config.ts",
     "test:react": "vitest run -c ./test/vitest.config.ts dev --ui src/react",
     "typedoc": "bun run scripts/typedoc.mjs",
@@ -305,7 +342,7 @@
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/cross-spawn": "^6.0.6",
-    "@types/react": "19.0.0",
+    "@types/react": "19.0.1",
     "@viem/anvil": "0.0.10",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-v8": "2.1.8",
@@ -318,15 +355,15 @@
     "expo-web-browser": "14.0.1",
     "happy-dom": "15.11.7",
     "knip": "5.39.2",
-    "msw": "2.6.6",
+    "msw": "2.6.7",
     "prettier": "3.3.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-native": "0.76.3",
+    "react-native": "0.76.4",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-passkey": "3.0.0",
     "react-native-quick-crypto": "0.7.8",
-    "react-native-svg": "15.9.0",
+    "react-native-svg": "15.10.1",
     "rimraf": "6.0.1",
     "sharp": "^0.33.5",
     "size-limit": "11.1.6",

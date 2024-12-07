@@ -8,7 +8,7 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import { getAddress } from "../../../../utils/address.js";
 import { getThirdwebDomains } from "../../../../utils/domains.js";
 import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
-import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
+import { parseTypedData } from "../../../../utils/signatures/helpers/parse-typed-data.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type {
   Account,
