@@ -309,6 +309,7 @@
     "test:watch": "vitest -c ./test/vitest.config.ts dev",
     "test": "vitest run -c ./test/vitest.config.ts --coverage",
     "test:cov": "vitest dev -c ./test/vitest.config.ts --coverage",
+    "test:ui": "vitest dev -c ./test/vitest.config.ts --coverage --ui",
     "test:dev": "vitest run -c ./test/vitest.config.ts",
     "test:react": "vitest run -c ./test/vitest.config.ts dev --ui src/react",
     "typedoc": "bun run scripts/typedoc.mjs",

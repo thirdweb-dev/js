@@ -9,7 +9,7 @@ import {
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { type JSX, useContext, useEffect, useState } from "react";
+import { type JSX, useCallback, useContext, useEffect, useState } from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
@@ -291,7 +291,10 @@ export const ConnectedWalletDetails: React.FC<{
   );
 };
 
-function DetailsModal(props: {
+/**
+ * @internal
+ */
+export function DetailsModal(props: {
   client: ThirdwebClient;
   locale: ConnectLocale;
   detailsModal?: ConnectButton_detailsModalOptions;
@@ -330,18 +333,24 @@ function DetailsModal(props: {
     wallets: activeWallet ? [activeWallet] : [],
   });
 
-  function closeModal() {
+  const closeModal = useCallback(() => {
     setIsOpen(false);
     onModalUnmount(() => {
       props.closeModal();
     });
-  }
+  }, [props.closeModal]);
 
   function handleDisconnect(info: { wallet: Wallet; account: Account }) {
     setIsOpen(false);
     props.closeModal();
     props.onDisconnect(info);
   }
+
+  useEffect(() => {
+    if (!activeAccount) {
+      closeModal();
+    }
+  }, [activeAccount, closeModal]);
 
   const networkSwitcherButton = (
     <MenuButton
@@ -691,20 +700,6 @@ function DetailsModal(props: {
             <Text color="primaryText">{props.locale.manageWallet.title}</Text>
           </MenuButton>
 
-          {/* Switch to Personal Wallet  */}
-          {/* {personalWallet &&
-            !props.detailsModal?.hideSwitchToPersonalWallet && (
-              <AccountSwitcher
-                wallet={personalWallet}
-                name={locale.personalWallet}
-              />
-            )} */}
-
-          {/* Switch to Smart Wallet */}
-          {/* {smartWallet && (
-            <AccountSwitcher name={locale.smartWallet} wallet={smartWallet} />
-          )} */}
-
           {/* Request Testnet funds */}
           {(props.detailsModal?.showTestnetFaucet ?? false) &&
             (chainFaucetsQuery.faucets.length > 0 ||
@@ -993,12 +988,11 @@ function DetailsModal(props: {
               }
             }}
           >
-            <AccountProvider
-              address={activeAccount?.address || ""}
-              client={client}
-            >
-              {content}
-            </AccountProvider>
+            {activeAccount?.address && (
+              <AccountProvider address={activeAccount.address} client={client}>
+                {content}
+              </AccountProvider>
+            )}
           </Modal>
         </ScreenSetupContext.Provider>
       </WalletUIStatesProvider>
