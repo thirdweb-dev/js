@@ -160,8 +160,6 @@ export async function processRefDeployments(
 
         return bytesArray;
       }
-    } else {
-      throw new Error("Invalid or empty param value");
     }
   }
 
