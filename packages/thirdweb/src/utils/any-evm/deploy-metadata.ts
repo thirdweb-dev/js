@@ -207,7 +207,7 @@ export type ExtendedMetadata = {
         factoryAddresses?: Record<string, string>;
       }
     | undefined;
-  deployType?: "standard" | "autoFactory" | "customFactory";
+  deployType?: "standard" | "autoFactory" | "customFactory" | "crosschain";
   routerType?: "none" | "plugin" | "dynamic" | "modular";
   networksForDeployment?: {
     allNetworks?: boolean;

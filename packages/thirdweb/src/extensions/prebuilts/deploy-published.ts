@@ -2,6 +2,7 @@ import type { AbiFunction } from "abitype";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { deployViaAutoFactoryWithImplementationParams } from "../../contract/deployment/deploy-via-autofactory.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
 import { getOrDeployInfraContractFromMetadata } from "../../contract/deployment/utils/bootstrap.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
@@ -120,6 +121,7 @@ export type DeployContractfromDeployMetadataOptions = {
   account: Account;
   deployMetadata: FetchDeployMetadataResult;
   initializeParams?: Record<string, unknown>;
+  initializeData?: `0x${string}`;
   implementationConstructorParams?: Record<string, unknown>;
   modules?: {
     deployMetadata: FetchDeployMetadataResult;
@@ -139,6 +141,7 @@ export async function deployContractfromDeployMetadata(
     account,
     chain,
     initializeParams,
+    initializeData,
     deployMetadata,
     implementationConstructorParams,
     modules,
@@ -163,7 +166,7 @@ export async function deployContractfromDeployMetadata(
         import("../../contract/deployment/deploy-via-autofactory.js"),
         import("../../contract/deployment/utils/bootstrap.js"),
       ]);
-      const { cloneFactoryContract, implementationContract } =
+      const { cloneFactoryContract: _, implementationContract } =
         await getOrDeployInfraForPublishedContract({
           chain,
           client,
@@ -181,19 +184,64 @@ export async function deployContractfromDeployMetadata(
       const initializeTransaction = await getInitializeTransaction({
         client,
         chain,
-        deployMetadata: deployMetadata,
+        deployMetadata,
         implementationContract,
         initializeParams,
         account,
         modules,
       });
 
-      return deployViaAutoFactory({
+      // TODO: remove this once the modified version of TWCloneFactory
+      // has been published under the thirdweb wallet
+      const modifiedCloneFactoryContract = getContract({
+        client,
+        address: "0xB83db4b940e4796aA1f53DBFC824B9B1865835D5", // only deployed on OP and zora testnets
+        chain,
+      });
+
+      return await deployViaAutoFactory({
         client,
         chain,
         account,
-        cloneFactoryContract,
+        cloneFactoryContract: modifiedCloneFactoryContract,
         initializeTransaction,
+        salt,
+      });
+    }
+    case "crosschain": {
+      const { getOrDeployInfraForPublishedContract } = await import(
+        "../../contract/deployment/utils/bootstrap.js"
+      );
+      const { cloneFactoryContract: _, implementationContract } =
+        await getOrDeployInfraForPublishedContract({
+          chain,
+          client,
+          account,
+          contractId: deployMetadata.name,
+          constructorParams:
+            implementationConstructorParams ||
+            (await getAllDefaultConstructorParamsForImplementation({
+              chain,
+              client,
+            })),
+          publisher: deployMetadata.publisher,
+        });
+
+      // TODO: remove this once the modified version of TWCloneFactory
+      // has been published under the thirdweb wallet
+      const modifiedCloneFactoryContract = getContract({
+        client,
+        address: "0xB83db4b940e4796aA1f53DBFC824B9B1865835D5", // only deployed on OP and zora testnets
+        chain,
+      });
+
+      return await deployViaAutoFactoryWithImplementationParams({
+        client,
+        chain,
+        account,
+        cloneFactoryContract: modifiedCloneFactoryContract,
+        implementationAddress: implementationContract.address,
+        initializeData,
         salt,
       });
     }
