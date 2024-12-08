@@ -41,7 +41,9 @@ export async function signTypedData<
   );
 
   if (!response.ok) {
-    throw new Error("Failed to sign typed data");
+    throw new Error(
+      `Failed to sign typed data - ${response.status} ${response.statusText}`,
+    );
   }
 
   const signedTypedData = (await response.json()) as {

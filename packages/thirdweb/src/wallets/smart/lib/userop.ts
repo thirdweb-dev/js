@@ -103,7 +103,9 @@ export async function waitForUserOpReceipt(
     }
     await new Promise((resolve) => setTimeout(resolve, interval));
   }
-  throw new Error("Timeout waiting for userOp to be mined");
+  throw new Error(
+    `Timeout waiting for userOp to be mined on chain ${args.chain.id} with UserOp hash: ${args.userOpHash}`,
+  );
 }
 
 /**
