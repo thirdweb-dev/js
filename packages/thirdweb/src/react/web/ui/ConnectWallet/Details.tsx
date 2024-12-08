@@ -1084,6 +1084,9 @@ export function DetailsModal(props: {
             setOpen={(_open) => {
               if (!_open) {
                 closeModal();
+                if (props.detailsModal?.onClose) {
+                  props.detailsModal?.onClose(screen);
+                }
               }
             }}
           >
@@ -1614,12 +1617,19 @@ export type UseWalletDetailsModalOptions = {
    * Note: Not all tokens are resolvable to a fiat value. In that case, nothing will be shown.
    */
   showBalanceInFiat?: SupportedFiatCurrency;
+
+  /**
+   * The callback function for when the modal is closed
+   * @param screen The name of the screen that was being shown when user closed the modal
+   */
+  onClose?: (screen: string) => void;
 };
 
 /**
  * Hook to open the Wallet Details Modal that shows various information about the connected wallet and allows users to perform various actions like sending funds, receiving funds, switching networks, Buying tokens, etc.
  *
  * @example
+ * ### Basic usage
  * ```tsx
  * import { createThirdwebClient } from "thirdweb";
  * import { useWalletDetailsModal } from "thirdweb/react";
@@ -1638,6 +1648,15 @@ export type UseWalletDetailsModalOptions = {
  *   return <button onClick={handleClick}> Show Wallet Details </button>
  * }
  * ```
+ *
+ * ### Callback for when the modal is closed
+ * ```tsx
+ * detailsModal.open({
+ *   client,
+ *   onClose: (screen: string) => console.log({ screen })
+ * });
+ * ```
+ *
  * @wallet
  */
 export function useWalletDetailsModal() {
@@ -1672,6 +1691,7 @@ export function useWalletDetailsModal() {
               hideReceiveFunds: props.hideReceiveFunds,
               hideSendFunds: props.hideSendFunds,
               assetTabs: props.assetTabs,
+              onClose: props.onClose,
             }}
             displayBalanceToken={props.displayBalanceToken}
             theme={props.theme || "dark"}
