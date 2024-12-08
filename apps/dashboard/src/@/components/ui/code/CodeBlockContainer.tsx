@@ -11,7 +11,9 @@ export function CodeBlockContainer(props: {
   children: React.ReactNode;
   className?: string;
   scrollableClassName?: string;
+  scrollableContainerClassName?: string;
   copyButtonClassName?: string;
+  shadowColor?: string;
 }) {
   const { hasCopied, onCopy } = useClipboard(props.codeToCopy);
 
@@ -24,8 +26,11 @@ export function CodeBlockContainer(props: {
     >
       <ScrollShadow
         scrollableClassName={cn("p-4", props.scrollableClassName)}
-        className="text-xs md:text-sm [&_*]:leading-relaxed"
-        shadowColor="hsl(var(--muted))"
+        className={cn(
+          "text-xs md:text-sm [&_*]:leading-relaxed",
+          props.scrollableContainerClassName,
+        )}
+        shadowColor={props.shadowColor || "hsl(var(--muted))"}
       >
         {props.children}
       </ScrollShadow>
