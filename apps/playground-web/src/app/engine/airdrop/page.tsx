@@ -15,6 +15,7 @@ export default function Page() {
               address!
             </>
           }
+          deployLink="https://thirdweb.com/team/~/~/engine/create?utm_source=playground"
           docsLink="https://thirdweb-engine.apidocumentation.com/reference#tag/erc20/POST/contract/{chain}/{contractAddress}/erc20/mint-batch-to?utm_source=playground"
           heroLink="/airdrop.avif"
         />

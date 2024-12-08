@@ -14,6 +14,7 @@ export default function Page() {
               transaction or backend wallet events.
             </>
           }
+          deployLink="https://thirdweb.com/team/~/~/engine/create?utm_source=playground"
           docsLink="https://portal.thirdweb.com/engine/features/webhooks?utm_source=playground"
           heroLink="/webhooks.avif"
         />

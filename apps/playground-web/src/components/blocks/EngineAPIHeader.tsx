@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 export function EngineAPIHeader(props: {
   title: string;
   description: React.ReactNode;
+  deployLink: string;
   docsLink: string;
   heroLink: string;
 }) {
@@ -27,6 +28,11 @@ export function EngineAPIHeader(props: {
 
         <div className="flex flex-col gap-3 md:flex-row">
           <Button asChild size="lg">
+            <Link target="_blank" href={props.deployLink}>
+              Deploy an Instance
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg">
             <Link target="_blank" href={props.docsLink}>
               View docs
             </Link>
@@ -37,14 +43,6 @@ export function EngineAPIHeader(props: {
               href="https://thirdweb.com/contact-us?utm_source=playground"
             >
               Book a Demo
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="lg">
-            <Link
-              target="_blank"
-              href="https://thirdweb.com/team/~/~/engine/create?utm_source=playground"
-            >
-              Deploy an Instance
             </Link>
           </Button>
         </div>
