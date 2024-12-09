@@ -1,48 +1,13 @@
-import { useContext } from "react";
-import { describe, expect, it } from "vitest";
-import { render, screen, waitFor } from "~test/react-render.js";
+import { type FC, useContext } from "react";
+import { describe, expect, it, vi } from "vitest";
+import { render, renderHook, screen, waitFor } from "~test/react-render.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
-import { getNFTInfo } from "./hooks.js";
+import { NFTDescription } from "./description.js";
 import { NFTMedia } from "./media.js";
 import { NFTName } from "./name.js";
-import { NFTProvider, NFTProviderContext } from "./provider.js";
+import { NFTProvider, NFTProviderContext, useNFTContext } from "./provider.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("NFT prebuilt component", () => {
-  it("should fetch the NFT metadata", async () => {
-    const nft = await getNFTInfo({
-      contract: DOODLES_CONTRACT,
-      tokenId: 1n,
-    });
-    expect(nft.metadata).toStrictEqual({
-      attributes: [
-        {
-          trait_type: "face",
-          value: "holographic beard",
-        },
-        {
-          trait_type: "hair",
-          value: "white bucket cap",
-        },
-        {
-          trait_type: "body",
-          value: "purple sweater with satchel",
-        },
-        {
-          trait_type: "background",
-          value: "grey",
-        },
-        {
-          trait_type: "head",
-          value: "gradient 2",
-        },
-      ],
-      description:
-        "A community-driven collectibles project featuring art by Burnt Toast. Doodles come in a joyful range of colors, traits and sizes with a collection size of 10,000. Each Doodle allows its owner to vote for experiences and activations paid for by the Doodles Community Treasury. Burnt Toast is the working alias for Scott Martin, a Canadian–based illustrator, designer, animator and muralist.",
-      image: "ipfs://QmTDxnzcvj2p3xBrKcGv1wxoyhAn2yzCQnZZ9LmFjReuH9",
-      name: "Doodle #1",
-    });
-  });
-
+describe.runIf(process.env.TW_SECRET_KEY)("NFTProvider", () => {
   it("should render children correctly", () => {
     render(
       <NFTProvider contract={DOODLES_CONTRACT} tokenId={0n}>
@@ -99,7 +64,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFT prebuilt component", () => {
   it("should render the NFT description", () => {
     render(
       <NFTProvider contract={DOODLES_CONTRACT} tokenId={1n}>
-        <NFTName />
+        <NFTDescription />
       </NFTProvider>,
     );
 
@@ -110,5 +75,32 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFT prebuilt component", () => {
         ),
       ).toBeInTheDocument(),
     );
+  });
+
+  it("useNFTContext should return the context value when used within NFTProvider", () => {
+    const wrapper: FC = ({ children }: React.PropsWithChildren) => (
+      <NFTProvider contract={DOODLES_CONTRACT} tokenId={0n}>
+        {children}
+      </NFTProvider>
+    );
+
+    const { result } = renderHook(() => useNFTContext(), { wrapper });
+
+    expect(result.current.contract).toStrictEqual(DOODLES_CONTRACT);
+    expect(result.current.tokenId).toBe(0n);
+  });
+
+  it("useNFTContext should throw an error when used outside of NFTProvider", () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    expect(() => {
+      renderHook(() => useNFTContext());
+    }).toThrow(
+      "NFTProviderContext not found. Make sure you are using NFTMedia, NFTDescription, etc. inside a <NFTProvider /> component",
+    );
+
+    consoleErrorSpy.mockRestore();
   });
 });

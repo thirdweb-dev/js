@@ -1,10 +1,10 @@
 "use client";
 
-import type { UseQueryOptions } from "@tanstack/react-query";
+import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
-import type { NFT } from "../../../../../utils/nft/parseNft.js";
-import { useNftInfo } from "./hooks.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { useNFTContext } from "./provider.js";
+import { getNFTInfo } from "./utils.js";
 
 export interface NFTDescriptionProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
@@ -13,7 +13,12 @@ export interface NFTDescriptionProps
   /**
    * Optional `useQuery` params
    */
-  queryOptions?: Omit<UseQueryOptions<NFT>, "queryFn" | "queryKey">;
+  queryOptions?: Omit<UseQueryOptions<string>, "queryFn" | "queryKey">;
+  /**
+   * This prop can be a string or a (async) function that resolves to a string, representing the description of the NFT
+   * This is particularly useful if you already have a way to fetch the data.
+   */
+  descriptionResolver?: string | (() => string) | (() => Promise<string>);
 }
 
 /**
@@ -58,6 +63,21 @@ export interface NFTDescriptionProps
  * </NFTProvider>
  * ```
  *
+ * ### Override the description with the `descriptionResolver` prop
+ * If you already have the url, you can skip the network requests and pass it directly to the NFTDescription
+ * ```tsx
+ * <NFTDescription descriptionResolver="The desc of the NFT" />
+ * ```
+ *
+ * You can also pass in your own custom (async) function that retrieves the description
+ * ```tsx
+ * const getDescription = async () => {
+ *   // ...
+ *   return description;
+ * };
+ *
+ * <NFTDescription descriptionResolver={getDescription} />
+ * ```
  * @component
  * @nft
  * @beta
@@ -66,22 +86,61 @@ export function NFTDescription({
   loadingComponent,
   fallbackComponent,
   queryOptions,
+  descriptionResolver,
   ...restProps
 }: NFTDescriptionProps) {
   const { contract, tokenId } = useNFTContext();
-  const nftQuery = useNftInfo({
-    contract,
-    tokenId,
-    queryOptions,
+  const descQuery = useQuery({
+    queryKey: [
+      "_internal_nft_description_",
+      contract.chain.id,
+      tokenId.toString(),
+      {
+        resolver:
+          typeof descriptionResolver === "string"
+            ? descriptionResolver
+            : typeof descriptionResolver === "function"
+              ? descriptionResolver.toString()
+              : undefined,
+      },
+    ],
+    queryFn: async (): Promise<string> =>
+      fetchNftDescription({ descriptionResolver, contract, tokenId }),
+    ...queryOptions,
   });
 
-  if (nftQuery.isLoading) {
+  if (descQuery.isLoading) {
     return loadingComponent || null;
   }
 
-  if (!nftQuery.data?.metadata?.description) {
+  if (!descQuery.data) {
     return fallbackComponent || null;
   }
 
-  return <span {...restProps}>{nftQuery.data.metadata.description}</span>;
+  return <span {...restProps}>{descQuery.data}</span>;
+}
+
+/**
+ * @internal Exported for tests
+ */
+export async function fetchNftDescription(props: {
+  descriptionResolver?: string | (() => string) | (() => Promise<string>);
+  contract: ThirdwebContract;
+  tokenId: bigint;
+}): Promise<string> {
+  const { descriptionResolver, contract, tokenId } = props;
+  if (typeof descriptionResolver === "string") {
+    return descriptionResolver;
+  }
+  if (typeof descriptionResolver === "function") {
+    return descriptionResolver();
+  }
+  const nft = await getNFTInfo({ contract, tokenId }).catch(() => undefined);
+  if (!nft) {
+    throw new Error("Failed to resolve NFT info");
+  }
+  if (typeof nft.metadata.description !== "string") {
+    throw new Error("Failed to resolve NFT description");
+  }
+  return nft.metadata.description;
 }

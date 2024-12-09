@@ -1,13 +1,25 @@
-import type { UseQueryOptions } from "@tanstack/react-query";
+import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
-import type { NFT } from "../../../../../utils/nft/parseNft.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { MediaRenderer } from "../../MediaRenderer/MediaRenderer.js";
 import type { MediaRendererProps } from "../../MediaRenderer/types.js";
-import { useNftInfo } from "./hooks.js";
 import { useNFTContext } from "./provider.js";
+import { getNFTInfo } from "./utils.js";
 
 /**
  * @component
+ * @beta
+ * @wallet
+ */
+export type NFTMediaInfo = {
+  src: string;
+  poster: string | undefined;
+};
+
+/**
+ * @component
+ * @beta
+ * @wallet
  * The props for the <NFTMedia /> component
  * It is similar to the [`MediaRendererProps`](https://portal.thirdweb.com/references/typescript/v5/MediaRendererProps)
  * (excluding `src`, `poster` and `client`) that you can
@@ -22,7 +34,16 @@ export type NFTMediaProps = Omit<
   /**
    * Optional `useQuery` params
    */
-  queryOptions?: Omit<UseQueryOptions<NFT>, "queryFn" | "queryKey">;
+  queryOptions?: Omit<UseQueryOptions<NFTMediaInfo>, "queryFn" | "queryKey">;
+  /**
+   * This prop can be a string or a (async) function that resolves to a string, representing the media url of the NFT
+   * This is particularly useful if you already have a way to fetch the image.
+   * In case of function, the function must resolve to an object of type `NFTMediaInfo`
+   */
+  mediaResolver?:
+    | NFTMediaInfo
+    | (() => NFTMediaInfo)
+    | (() => Promise<NFTMediaInfo>);
 };
 
 /**
@@ -76,6 +97,26 @@ export type NFTMediaProps = Omit<
  * ```tsx
  * <NFTMedia style={{ borderRadius: "8px" }} className="mx-auto" />
  * ```
+ *
+ * ### Override the media with the `mediaResolver` prop
+ * If you already have the url, you can skip the network requests and pass it directly to the NFTMedia
+ * ```tsx
+ * <NFTMedia mediaResolver={{
+ *   src: "/cat_video.mp4",
+ *   // Poster is applicable to medias that are videos and audios
+ *   poster: "/cat-image.png",
+ * }} />
+ * ```
+ *
+ * You can also pass in your own custom (async) function that retrieves the media url
+ * ```tsx
+ * const getMedia = async () => {
+ *   const url = getNFTMedia(props);
+ *   return url;
+ * };
+ *
+ * <NFTMedia mediaResolver={getMedia} />
+ * ```
  * @nft
  * @beta
  */
@@ -83,37 +124,82 @@ export function NFTMedia({
   loadingComponent,
   fallbackComponent,
   queryOptions,
+  mediaResolver,
   ...mediaRendererProps
 }: NFTMediaProps) {
   const { contract, tokenId } = useNFTContext();
-  const nftQuery = useNftInfo({
-    contract,
-    tokenId,
-    queryOptions,
+  const mediaQuery = useQuery({
+    queryKey: [
+      "_internal_nft_media_",
+      contract.chain.id,
+      tokenId.toString(),
+      {
+        resolver:
+          typeof mediaResolver === "object"
+            ? mediaResolver
+            : typeof mediaResolver === "function"
+              ? mediaResolver.toString()
+              : undefined,
+      },
+    ],
+    queryFn: async (): Promise<NFTMediaInfo> =>
+      fetchNftMedia({ mediaResolver, contract, tokenId }),
+    ...queryOptions,
   });
 
-  if (nftQuery.isLoading) {
+  if (mediaQuery.isLoading) {
     return loadingComponent || null;
   }
 
-  if (!nftQuery.data) {
-    return fallbackComponent || null;
-  }
-
-  const animation_url = nftQuery.data.metadata.animation_url;
-  const image =
-    nftQuery.data.metadata.image || nftQuery.data.metadata.image_url;
-
-  if (!animation_url && !image) {
+  if (!mediaQuery.data) {
     return fallbackComponent || null;
   }
 
   return (
     <MediaRenderer
       client={contract.client}
-      src={animation_url || image}
-      poster={image}
+      src={mediaQuery.data.src}
+      poster={mediaQuery.data.poster}
       {...mediaRendererProps}
     />
   );
+}
+
+/**
+ * @internal Exported for tests only
+ */
+export async function fetchNftMedia(props: {
+  mediaResolver?:
+    | NFTMediaInfo
+    | (() => NFTMediaInfo)
+    | (() => Promise<NFTMediaInfo>);
+  contract: ThirdwebContract;
+  tokenId: bigint;
+}): Promise<{ src: string; poster: string | undefined }> {
+  const { mediaResolver, contract, tokenId } = props;
+  if (typeof mediaResolver === "object") {
+    return mediaResolver;
+  }
+  if (typeof mediaResolver === "function") {
+    return mediaResolver();
+  }
+  const nft = await getNFTInfo({ contract, tokenId }).catch(() => undefined);
+  if (!nft) {
+    throw new Error("Failed to resolve NFT info");
+  }
+  const animation_url = nft.metadata.animation_url;
+  const image = nft.metadata.image || nft.metadata.image_url;
+  if (animation_url) {
+    return {
+      src: animation_url,
+      poster: image || undefined,
+    };
+  }
+  if (image) {
+    return {
+      src: image,
+      poster: undefined,
+    };
+  }
+  throw new Error("Failed to resolve NFT media");
 }
