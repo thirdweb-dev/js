@@ -348,25 +348,20 @@ async function switchChain(provider: EIP1193Provider, chain: Chain) {
       method: "wallet_switchEthereumChain",
       params: [{ chainId: hexChainId }],
     });
-    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
-  } catch (e: any) {
+  } catch {
     // if chain does not exist, add the chain
-    if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {
-      const apiChain = await getChainMetadata(chain);
-      await provider.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: hexChainId,
-            chainName: apiChain.name,
-            nativeCurrency: apiChain.nativeCurrency,
-            rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
-            blockExplorerUrls: apiChain.explorers?.map((x) => x.url),
-          },
-        ],
-      });
-    } else {
-      throw e;
-    }
+    const apiChain = await getChainMetadata(chain);
+    await provider.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: hexChainId,
+          chainName: apiChain.name,
+          nativeCurrency: apiChain.nativeCurrency,
+          rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
+          blockExplorerUrls: apiChain.explorers?.map((x) => x.url),
+        },
+      ],
+    });
   }
 }

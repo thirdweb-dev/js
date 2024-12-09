@@ -1,9 +1,11 @@
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 
-export default function Layout(props: {
-  children: React.ReactNode;
+export default async function Layout(props: {
+  children?: React.ReactNode;
+  params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
-  const layoutPath = "/account/contracts";
+  const params = await props.params;
+  const layoutPath = `/team/${params.team_slug}/${params.project_slug}/contracts`;
 
   return (
     <SidebarLayout

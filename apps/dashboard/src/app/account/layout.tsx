@@ -51,7 +51,6 @@ async function HeaderAndNav(props: {
           {
             path: "/account/contracts",
             name: "Contracts",
-            exactMatch: true,
           },
           {
             path: "/account/settings",
