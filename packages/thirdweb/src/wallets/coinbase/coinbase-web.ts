@@ -463,11 +463,7 @@ export async function connectCoinbaseWalletSDK(
       ? options.chain
       : getCachedChain(chainId);
   // Switch to chain if provided
-  if (
-    connectedChainId &&
-    options?.chain &&
-    connectedChainId !== options?.chain.id
-  ) {
+  if (chainId && options?.chain && chainId !== options?.chain.id) {
     await switchChainCoinbaseWalletSDK(provider, options.chain);
     chain = options.chain;
   }
