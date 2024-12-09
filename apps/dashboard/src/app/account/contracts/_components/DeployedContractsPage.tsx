@@ -8,12 +8,11 @@ import { getSortedDeployedContracts } from "./getSortedDeployedContracts";
 
 export function DeployedContractsPage(props: {
   address: string;
-  className?: string;
 }) {
   return (
-    <div className={props.className}>
+    <div className="flex grow flex-col">
       <DeployedContractsPageHeader />
-      <div className="h-6" />
+      <div className="h-8" />
       <Suspense fallback={<Loading />}>
         <DeployedContractsPageAsync {...props} />
       </Suspense>
