@@ -3,6 +3,7 @@
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
 import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { getFunctionId } from "../../../../../utils/function-id.js";
 import { useNFTContext } from "./provider.js";
 import { getNFTInfo } from "./utils.js";
 
@@ -100,7 +101,7 @@ export function NFTDescription({
           typeof descriptionResolver === "string"
             ? descriptionResolver
             : typeof descriptionResolver === "function"
-              ? descriptionResolver.toString()
+              ? getFunctionId(descriptionResolver)
               : undefined,
       },
     ],

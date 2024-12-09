@@ -4,6 +4,7 @@ import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type React from "react";
 import type { JSX } from "react";
 import { getChainMetadata } from "../../../../../chains/utils.js";
+import { getFunctionId } from "../../../../../utils/function-id.js";
 import { useChainContext } from "./provider.js";
 
 /**
@@ -155,7 +156,18 @@ export function ChainName({
 }: ChainNameProps) {
   const { chain } = useChainContext();
   const nameQuery = useQuery({
-    queryKey: ["_internal_chain_name_", chain.id] as const,
+    queryKey: [
+      "_internal_chain_name_",
+      chain.id,
+      {
+        resolver:
+          typeof nameResolver === "string"
+            ? nameResolver
+            : typeof nameResolver === "function"
+              ? getFunctionId(nameResolver)
+              : undefined,
+      },
+    ] as const,
     queryFn: async () => {
       if (typeof nameResolver === "string") {
         return nameResolver;
