@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { OrbitIcon } from "lucide-react";
 import Link from "next/link";
+import { NebulaIcon } from "../../../../../nebula-app/(app)/icons/NebulaIcon";
 import { ShareButton } from "./share-button.client";
 
 export function NebulaWaitListPageUI(props: { teamId: string }) {
@@ -74,7 +74,7 @@ function CenteredCard(props: {
             {/* Icon */}
             <div className="rounded-xl border p-1">
               <div className="rounded-lg border bg-muted/50 p-2">
-                <OrbitIcon className="size-5 text-muted-foreground" />
+                <NebulaIcon className="size-5 text-muted-foreground" />
               </div>
             </div>
 

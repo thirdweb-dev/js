@@ -36,7 +36,7 @@ export async function getRawAccount() {
  * If there's no account or account onboarding not complete, redirect to login page
  * @param pagePath - the path of the current page to redirect back to after login/onboarding
  */
-export async function getValidAccount(pagePath: string) {
+export async function getValidAccount(pagePath?: string) {
   const account = await getRawAccount();
 
   // enforce login & onboarding
