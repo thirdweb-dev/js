@@ -200,7 +200,7 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                     param.type === "bytes" ||
                     param.type === "bytes[]") && (
                     <div className="flex items-center gap-3 text-sm">
-                      Advanced Input
+                      Dynamic Input
                       <Switch
                         checked={isCustomInputEnabledArray[idx]}
                         onCheckedChange={(v) =>

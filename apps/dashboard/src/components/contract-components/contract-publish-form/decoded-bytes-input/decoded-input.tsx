@@ -47,7 +47,7 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
     }
   };
 
-  const showAdvancedInputToggle =
+  const showDynamicInputToggle =
     selectedType === "address" || selectedType === "address[]";
 
   return (
@@ -78,10 +78,11 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
             <SelectValue placeholder="Select type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="uint256"> uint256 </SelectItem>
             <SelectItem value="address">address</SelectItem>
-            <SelectItem value="bytes32">bytes32</SelectItem>
             <SelectItem value="bool">bool</SelectItem>
+            <SelectItem value="bytes32">bytes32</SelectItem>
+            <SelectItem value="string">string</SelectItem>
+            <SelectItem value="uint256"> uint256 </SelectItem>
           </SelectContent>
         </Select>
       </FormFieldSetup>
@@ -91,9 +92,9 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
       {/* Value */}
       <div className="flex justify-between gap-4">
         <h5>Parameter Value</h5>
-        {showAdvancedInputToggle && (
+        {showDynamicInputToggle && (
           <div className="flex items-center gap-3 text-sm">
-            Advanced Input
+            Dynamic Input
             <Switch
               checked={isCustomAddress}
               onCheckedChange={(v) => handleToggleCustomInput(!!v)}
