@@ -376,7 +376,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
           if (
             shouldHide(paramKey) ||
-            !extraMetadataParam?.hidden ||
+            extraMetadataParam?.hidden !== true ||
             extraMetadataParam?.dynamicValue
           ) {
             return null;
@@ -778,7 +778,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
                   if (
                     shouldHide(paramKey) ||
-                    extraMetadataParam?.hidden ||
+                    extraMetadataParam?.hidden === true ||
                     extraMetadataParam?.dynamicValue
                   ) {
                     return null;
