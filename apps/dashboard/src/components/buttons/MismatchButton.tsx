@@ -108,7 +108,7 @@ export const MismatchButton = forwardRef<
         <Link
           href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
         >
-          Sign In
+          Connect Wallet
         </Link>
       </Button>
     );

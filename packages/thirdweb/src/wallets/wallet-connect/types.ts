@@ -160,7 +160,7 @@ export type WCConnectOptions = {
        * })
        * ```
        */
-      onDisplayUri?: (uri: string) => void;
+      onDisplayUri?: (_uri: string) => void;
     }
   >;
 };

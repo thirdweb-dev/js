@@ -230,10 +230,10 @@ import { privateKeyToAccount } from "thirdweb/wallets";
 import { client } from "@/lib/client";
 import { cookies } from "next/headers";
 
-const privateKey = process.env.THIRDWEB_ADMIN_PRIVATE_KEY || "";
+const privateKey = process.env.AUTH_PRIVATE_KEY || "";
 
 if (!privateKey) {
-	throw new Error("Missing THIRDWEB_ADMIN_PRIVATE_KEY in .env file.");
+	throw new Error("Missing AUTH_PRIVATE_KEY in .env file.");
 }
 
 const thirdwebAuth = createAuth({

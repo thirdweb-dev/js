@@ -38,7 +38,9 @@ export async function signTransaction({
   );
 
   if (!response.ok) {
-    throw new Error("Failed to sign transaction");
+    throw new Error(
+      `Failed to sign transaction - ${response.status} ${response.statusText}`,
+    );
   }
 
   const signedTransaction = (await response.json()) as {

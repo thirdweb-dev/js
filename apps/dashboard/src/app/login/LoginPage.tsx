@@ -123,11 +123,7 @@ function PageContent(props: {
     | {
         id: "complete";
       }
-  >(
-    props.account
-      ? { id: "onboarding", account: props.account }
-      : { id: "login" },
-  );
+  >({ id: "login" });
 
   const router = useDashboardRouter();
   const connectionStatus = useActiveWalletConnectionStatus();

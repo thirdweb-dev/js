@@ -14,6 +14,7 @@ export default function Page() {
               sponsor the gas so your users only need a wallet address!
             </>
           }
+          deployLink="https://thirdweb.com/team/~/~/engine/create?utm_source=playground"
           docsLink="https://thirdweb-engine.apidocumentation.com/reference#tag/erc1155/POST/contract/{chain}/{contractAddress}/erc1155/mint-to?utm_source=playground"
           heroLink="/minting.avif"
         />

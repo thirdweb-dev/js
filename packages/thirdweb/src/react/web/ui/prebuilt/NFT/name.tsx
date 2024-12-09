@@ -1,8 +1,8 @@
-import type { UseQueryOptions } from "@tanstack/react-query";
+import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
-import type { NFT } from "../../../../../utils/nft/parseNft.js";
-import { useNftInfo } from "./hooks.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { useNFTContext } from "./provider.js";
+import { getNFTInfo } from "./utils.js";
 
 export interface NFTNameProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
@@ -11,7 +11,12 @@ export interface NFTNameProps
   /**
    * Optional `useQuery` params
    */
-  queryOptions?: Omit<UseQueryOptions<NFT>, "queryFn" | "queryKey">;
+  queryOptions?: Omit<UseQueryOptions<string>, "queryFn" | "queryKey">;
+  /**
+   * This prop can be a string or a (async) function that resolves to a string, representing the name of the NFT
+   * This is particularly useful if you already have a way to fetch the name of the NFT.
+   */
+  nameResolver?: string | (() => string) | (() => Promise<string>);
 }
 
 /**
@@ -56,6 +61,22 @@ export interface NFTNameProps
  * </NFTProvider>
  * ```
  *
+ * ### Override the name with the `nameResolver` prop
+ * If you already have the name, you can skip the network requests and pass it directly to the NFTName
+ * ```tsx
+ * <NFTName nameResolver="Doodles #1" />
+ * ```
+ *
+ * You can also pass in your own custom (async) function that retrieves the name
+ * ```tsx
+ * const getName = async () => {
+ *   // ...
+ *   return name;
+ * };
+ *
+ * <NFTName nameResolver={getName} />
+ * ```
+ *
  * @nft
  * @component
  * @beta
@@ -64,22 +85,61 @@ export function NFTName({
   loadingComponent,
   fallbackComponent,
   queryOptions,
+  nameResolver,
   ...restProps
 }: NFTNameProps) {
   const { contract, tokenId } = useNFTContext();
 
-  const nftQuery = useNftInfo({
-    contract,
-    tokenId,
-    queryOptions,
+  const nameQuery = useQuery({
+    queryKey: [
+      "_internal_nft_name_",
+      contract.chain.id,
+      tokenId.toString(),
+      {
+        resolver:
+          typeof nameResolver === "string"
+            ? nameResolver
+            : typeof nameResolver === "function"
+              ? nameResolver.toString()
+              : undefined,
+      },
+    ],
+    queryFn: async (): Promise<string> =>
+      fetchNftName({ nameResolver, contract, tokenId }),
+    ...queryOptions,
   });
 
-  if (nftQuery.isLoading) {
+  if (nameQuery.isLoading) {
     return loadingComponent || null;
   }
 
-  if (!nftQuery.data?.metadata?.name) {
+  if (!nameQuery.data) {
     return fallbackComponent || null;
   }
-  return <span {...restProps}>{nftQuery.data.metadata.name}</span>;
+  return <span {...restProps}>{nameQuery.data}</span>;
+}
+
+/**
+ * @internal Exported for tests
+ */
+export async function fetchNftName(props: {
+  nameResolver?: string | (() => string) | (() => Promise<string>);
+  contract: ThirdwebContract;
+  tokenId: bigint;
+}): Promise<string> {
+  const { nameResolver, contract, tokenId } = props;
+  if (typeof nameResolver === "string") {
+    return nameResolver;
+  }
+  if (typeof nameResolver === "function") {
+    return nameResolver();
+  }
+  const nft = await getNFTInfo({ contract, tokenId }).catch(() => undefined);
+  if (!nft) {
+    throw new Error("Failed to resolve NFT info");
+  }
+  if (typeof nft.metadata.name !== "string") {
+    throw new Error("Failed to resolve NFT name");
+  }
+  return nft.metadata.name;
 }

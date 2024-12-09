@@ -150,7 +150,7 @@ export const CustomConnectWallet = (props: {
           <Link
             href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
           >
-            Sign In
+            Connect Wallet
           </Link>
         </Button>
       </>
