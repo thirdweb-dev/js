@@ -42,7 +42,7 @@ export async function processRefDeployments(
         const salt =
           contracts[0]?.salt && contracts[0]?.salt.length > 0
             ? contracts[0]?.salt
-            : undefined;
+            : "thirdweb";
 
         const addr = await deployPublishedContract({
           client,
@@ -64,7 +64,7 @@ export async function processRefDeployments(
         const addressArray = [];
 
         for (const c of contracts) {
-          const salt = c?.salt && c?.salt.length > 0 ? c?.salt : undefined;
+          const salt = c?.salt && c?.salt.length > 0 ? c?.salt : "thirdweb";
 
           addressArray.push(
             await deployPublishedContract({
