@@ -1,13 +1,13 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
-import { getAuthToken } from "../../../api/lib/getAuthToken";
+import { getRawAccount } from "../../../account/settings/getAccount";
 import { TeamHeaderLoggedOut } from "./TeamHeaderLoggedOut";
 import { TeamHeaderLoggedIn } from "./team-header-logged-in.client";
 
 export async function TeamHeader() {
-  const authToken = await getAuthToken();
+  const account = await getRawAccount();
 
-  if (!authToken) {
+  if (!account) {
     return <TeamHeaderLoggedOut />;
   }
 
@@ -34,6 +34,7 @@ export async function TeamHeader() {
       currentTeam={firstTeam}
       teamsAndProjects={teamsAndProjects}
       currentProject={undefined}
+      account={account}
     />
   );
 }

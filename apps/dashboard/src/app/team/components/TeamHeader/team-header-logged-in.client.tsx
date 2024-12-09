@@ -5,7 +5,7 @@ import type { Team } from "@/api/team";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useCallback, useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { LazyCreateAPIKeyDialog } from "../../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
@@ -20,10 +20,10 @@ export function TeamHeaderLoggedIn(props: {
   currentTeam: Team;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   currentProject: Project | undefined;
+  account: Pick<Account, "email" | "id">;
 }) {
   const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] =
     useState(false);
-  const myAccountQuery = useAccount();
   const activeWallet = useActiveWallet();
   const { disconnect } = useDisconnect();
   const router = useDashboardRouter();
@@ -45,7 +45,7 @@ export function TeamHeaderLoggedIn(props: {
     currentProject: props.currentProject,
     currentTeam: props.currentTeam,
     teamsAndProjects: props.teamsAndProjects,
-    account: myAccountQuery.data,
+    account: props.account,
     logout: logout,
     connectButton: <CustomConnectWallet />,
     createProject: () => setIsCreateProjectDialogOpen(true),
