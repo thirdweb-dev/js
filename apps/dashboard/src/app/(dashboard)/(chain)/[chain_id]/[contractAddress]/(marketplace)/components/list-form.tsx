@@ -23,16 +23,10 @@ import { isSimpleHashSupported } from "lib/wallet/nfts/simpleHash";
 import type { WalletNFT } from "lib/wallet/nfts/types";
 import { CircleAlertIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
-import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import {
-  NATIVE_TOKEN_ADDRESS,
-  type ThirdwebContract,
-  getContract,
-  toUnits,
-  toWei,
-} from "thirdweb";
+import { NATIVE_TOKEN_ADDRESS, getContract, toUnits, toWei } from "thirdweb";
 import { decimals } from "thirdweb/extensions/erc20";
 import {
   isApprovedForAll as isApprovedForAll721,
@@ -51,6 +45,7 @@ import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { type CreateListingsFormProps, auctionTimes } from "./list-form-shared";
 
 const LIST_FORM_ID = "marketplace-list-form";
 
@@ -72,23 +67,6 @@ type ListForm =
       buyoutPricePerToken: string;
       reservePricePerToken: string;
     });
-
-type CreateListingsFormProps = {
-  contract: ThirdwebContract;
-  actionText: string;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  type?: "direct-listings" | "english-auctions";
-};
-
-const auctionTimes = [
-  { label: "1 day", value: 60 * 60 * 24 },
-  { label: "3 days", value: 60 * 60 * 24 * 3 },
-  { label: "7 days", value: 60 * 60 * 24 * 7 },
-  { label: "1 month", value: 60 * 60 * 24 * 30 },
-  { label: "3 months", value: 60 * 60 * 24 * 30 * 3 },
-  { label: "6 months", value: 60 * 60 * 24 * 30 * 6 },
-  { label: "1 year", value: 60 * 60 * 24 * 365 },
-];
 
 export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   contract,
