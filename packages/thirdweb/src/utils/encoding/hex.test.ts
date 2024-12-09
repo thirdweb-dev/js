@@ -2,6 +2,11 @@ import { describe, expect, it } from "vitest";
 import { numberToHex } from "./hex.js";
 
 describe("hex.ts", () => {
+  it("should convert number with no padding", () => {
+    const result = numberToHex(1);
+    expect(result).toBe("0x1");
+  });
+
   it("should convert", () => {
     const result = numberToHex(100n, { size: 32, signed: false });
     expect(result).toBe(

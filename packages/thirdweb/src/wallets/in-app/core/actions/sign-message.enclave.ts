@@ -43,7 +43,9 @@ export async function signMessage({
   );
 
   if (!response.ok) {
-    throw new Error("Failed to sign message");
+    throw new Error(
+      `Failed to sign message - ${response.status} ${response.statusText}`,
+    );
   }
 
   const signedMessage = (await response.json()) as {
