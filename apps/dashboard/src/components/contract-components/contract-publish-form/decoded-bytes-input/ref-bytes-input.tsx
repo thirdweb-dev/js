@@ -104,8 +104,8 @@ export const RefBytesContractInput: React.FC<RefBytesContractInputProps> = ({
                       placeholder={
                         publishedContractsQuery.isFetched &&
                         (publishedContractsQuery?.data || []).length === 0
-                          ? "No extensions found"
-                          : "Select extension"
+                          ? "No contracts found"
+                          : "Select contract"
                       }
                     />
                   </SelectTrigger>
