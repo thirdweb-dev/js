@@ -26,15 +26,29 @@ import { CircleAlertIcon, ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
-import { ZERO_ADDRESS } from "thirdweb";
+import {
+  ZERO_ADDRESS,
+  eth_getTransactionCount,
+  getContract,
+  getRpcClient,
+  sendTransaction,
+  waitForReceipt,
+} from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import {
   deployContractfromDeployMetadata,
   deployMarketplaceContract,
   getRequiredTransactions,
 } from "thirdweb/deploys";
+import { installPublishedModule } from "thirdweb/modules";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
+import {
+  type AbiFunction,
+  concatHex,
+  encodeAbiParameters,
+  padHex,
+} from "thirdweb/utils";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
 import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
 import { addContractToMultiChainRegistry } from "../utils";
@@ -173,6 +187,10 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const isAccountFactory =
     !isFactoryDeployment &&
     (metadata?.name.includes("AccountFactory") || false);
+
+  const isSuperchainInterop = !!modules?.find(
+    (m) => m.name === "SuperChainInterop",
+  );
 
   const parsedDeployParams = useMemo(
     () => ({
@@ -430,24 +448,89 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         _contractURI,
       };
 
-      const salt = params.deployDeterministic
-        ? params.signerAsSalt
-          ? activeAccount.address.concat(params.saltForCreate2)
-          : params.saltForCreate2
-        : undefined;
+      const salt = isSuperchainInterop
+        ? concatHex(["0x0101", padHex("0x", { size: 30 })]).toString()
+        : params.deployDeterministic
+          ? params.signerAsSalt
+            ? activeAccount.address.concat(params.saltForCreate2)
+            : params.saltForCreate2
+          : undefined;
 
-      return await deployContractfromDeployMetadata({
+      const moduleDeployData = modules?.map((m) => ({
+        deployMetadata: m,
+        initializeParams: params.moduleData[m.name],
+      }));
+
+      const coreContractAddress = await deployContractfromDeployMetadata({
         account: activeAccount,
         chain: walletChain,
         client: thirdwebClient,
         deployMetadata: metadata,
         initializeParams,
         salt,
-        modules: modules?.map((m) => ({
-          deployMetadata: m,
-          initializeParams: params.moduleData[m.name],
-        })),
+        isSuperchainInterop,
+        modules: isSuperchainInterop
+          ? // remove modules for superchain interop in order to deploy deterministically deploy just the core contract
+            []
+          : moduleDeployData,
       });
+      const coreContract = getContract({
+        client: thirdwebClient,
+        address: coreContractAddress,
+        chain: walletChain,
+      });
+
+      const rpcRequest = getRpcClient({
+        client: thirdwebClient,
+        chain: walletChain,
+      });
+      const currentNonce = await eth_getTransactionCount(rpcRequest, {
+        address: activeAccount.address,
+      });
+
+      if (isSuperchainInterop && moduleDeployData) {
+        for (const [i, m] of moduleDeployData.entries()) {
+          let moduleData: `0x${string}` | undefined;
+
+          const moduleInstallParams = m.deployMetadata.abi.find(
+            (abiType) =>
+              (abiType as AbiFunction).name === "encodeBytesOnInstall",
+          ) as AbiFunction | undefined;
+
+          if (m.initializeParams && moduleInstallParams) {
+            moduleData = encodeAbiParameters(
+              (
+                moduleInstallParams.inputs as { name: string; type: string }[]
+              ).map((p) => ({
+                name: p.name,
+                type: p.type,
+              })),
+              Object.values(m.initializeParams),
+            );
+          }
+
+          const installTransaction = installPublishedModule({
+            contract: coreContract,
+            account: activeAccount,
+            moduleName: m.deployMetadata.name,
+            publisher: m.deployMetadata.publisher,
+            version: m.deployMetadata.version,
+            moduleData,
+            nonce: currentNonce + i,
+          });
+
+          const txResult = await sendTransaction({
+            transaction: installTransaction,
+            account: activeAccount,
+          });
+
+          await waitForReceipt(txResult);
+          // can't handle parallel transactions, so wait a bit
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+      }
+
+      return coreContractAddress;
     },
   });
 
