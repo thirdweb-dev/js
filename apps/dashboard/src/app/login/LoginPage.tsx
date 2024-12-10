@@ -53,9 +53,6 @@ export function LoginAndOnboardingPage(props: {
         <header className="container flex w-full flex-row items-center justify-between px-6 py-4">
           <div className="flex shrink-0 items-center gap-3">
             <ThirdwebMiniLogo className="size-7 md:size-8" />
-            <h1 className="font-medium text-lg tracking-tight md:text-xl">
-              Get started <span className="max-sm:hidden">with thirdweb</span>
-            </h1>
           </div>
 
           <div className="flex items-center gap-3">
