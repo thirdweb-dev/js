@@ -1,8 +1,6 @@
 import { keccak256 } from "../../hashing/keccak256.js";
 import { toBytes } from "../to-bytes.js";
 
-
-///
 /**
  * Generates a 256-bit hash of a given role string in bytes form using the keccak256 algorithm.
  *
