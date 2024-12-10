@@ -60,6 +60,12 @@ function WalletsSection() {
           description="Performant, and reliable blockchain API"
           icon={CodeIcon}
         />
+        <ArticleCardIndex
+          href="/connect/ui"
+          title="Headless UI"
+          description="Modular & composable set of UIs for your web3 applications"
+          icon={CodeIcon}
+        />
       </div>
     </section>
   );
