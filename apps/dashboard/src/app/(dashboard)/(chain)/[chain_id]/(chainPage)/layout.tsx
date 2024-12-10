@@ -189,7 +189,7 @@ export default async function ChainPageLayout(props: {
 
             {/* description */}
             {chainMetadata?.about && (
-              <p className="mb-2 text-muted-foreground text-sm lg:text-base">
+              <p className="mb-2 whitespace-pre-line text-muted-foreground text-sm lg:text-base">
                 {chainMetadata.about}
               </p>
             )}
