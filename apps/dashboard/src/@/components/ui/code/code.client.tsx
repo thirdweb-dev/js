@@ -12,6 +12,8 @@ export type CodeProps = {
   scrollableClassName?: string;
   keepPreviousDataOnCodeChange?: boolean;
   copyButtonClassName?: string;
+  scrollableContainerClassName?: string;
+  shadowColor?: string;
 };
 
 export const CodeClient: React.FC<CodeProps> = ({
@@ -21,6 +23,8 @@ export const CodeClient: React.FC<CodeProps> = ({
   scrollableClassName,
   keepPreviousDataOnCodeChange = false,
   copyButtonClassName,
+  scrollableContainerClassName,
+  shadowColor,
 }) => {
   const codeQuery = useQuery({
     queryKey: ["html", code],
@@ -38,6 +42,8 @@ export const CodeClient: React.FC<CodeProps> = ({
         className={className}
         scrollableClassName={scrollableClassName}
         copyButtonClassName={copyButtonClassName}
+        scrollableContainerClassName={scrollableContainerClassName}
+        shadowColor={shadowColor}
       />
     );
   }
@@ -49,6 +55,8 @@ export const CodeClient: React.FC<CodeProps> = ({
       className={className}
       scrollableClassName={scrollableClassName}
       copyButtonClassName={copyButtonClassName}
+      scrollableContainerClassName={scrollableContainerClassName}
+      shadowColor={shadowColor}
     />
   );
 };
