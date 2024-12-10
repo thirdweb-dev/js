@@ -52,6 +52,7 @@ function Story(props: {
         onOpenChange={setIsOpen}
         createKeyMutation={mutation}
         prefill={props.prefill}
+        enableNebulaServiceByDefault={false}
       />
 
       <Button

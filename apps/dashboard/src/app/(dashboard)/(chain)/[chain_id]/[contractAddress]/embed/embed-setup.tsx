@@ -313,6 +313,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
           });
           apiKeys.refetch();
         }}
+        enableNebulaServiceByDefault={false}
       />
 
       <Flex gap={8} direction={{ base: "column", md: "row" }}>

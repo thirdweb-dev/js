@@ -51,6 +51,7 @@ export function ProjectGeneralSettingsPage(props: {
   apiKey: ApiKey;
   paths: EditProjectUIPaths;
   onKeyUpdated: (() => void) | undefined;
+  showNebulaSettings: boolean;
 }) {
   const updateMutation = useUpdateApiKey();
   const deleteMutation = useRevokeApiKey();
@@ -62,6 +63,7 @@ export function ProjectGeneralSettingsPage(props: {
       deleteMutation={deleteMutation}
       paths={props.paths}
       onKeyUpdated={props.onKeyUpdated}
+      showNebulaSettings={props.showNebulaSettings}
     />
   );
 }
@@ -81,6 +83,7 @@ interface EditApiKeyProps {
   deleteMutation: DeleteMutation;
   paths: EditProjectUIPaths;
   onKeyUpdated: (() => void) | undefined;
+  showNebulaSettings: boolean;
 }
 
 type UpdateAPIForm = UseFormReturn<ApiKeyValidationSchema>;
@@ -233,6 +236,7 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
             updateMutation={updateMutation}
             handleSubmit={handleSubmit}
             paths={props.paths}
+            showNebulaSettings={props.showNebulaSettings}
           />
 
           <DeleteProject
@@ -470,6 +474,7 @@ function EnabledServicesSetting(props: {
   handleSubmit: () => void;
   apiKey: ApiKey;
   paths: EditApiKeyProps["paths"];
+  showNebulaSettings: boolean;
 }) {
   const { form, handleSubmit, updateMutation } = props;
 
@@ -512,7 +517,10 @@ function EnabledServicesSetting(props: {
         <div className="flex flex-col">
           {fields.map((srv, idx) => {
             const service = getServiceByName(srv.name as ServiceName);
-            const hidden = HIDDEN_SERVICES.includes(service.name);
+            const hidden =
+              (service.name === "nebula" && !props.showNebulaSettings) ||
+              HIDDEN_SERVICES.includes(service.name);
+
             const serviceName = getServiceByName(service.name as ServiceName);
             const shouldShow = !hidden && serviceName;
 

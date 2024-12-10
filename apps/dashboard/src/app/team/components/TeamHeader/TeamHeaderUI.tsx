@@ -23,7 +23,7 @@ export type TeamHeaderCompProps = {
   account: Pick<Account, "email" | "id"> | undefined;
   logout: () => void;
   connectButton: React.ReactNode;
-  createProject: () => void;
+  createProject: (team: Team) => void;
   client: ThirdwebClient;
 };
 

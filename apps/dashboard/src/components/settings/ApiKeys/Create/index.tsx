@@ -53,6 +53,7 @@ export type CreateAPIKeyDialogProps = {
   onOpenChange: (open: boolean) => void;
   onCreateAndComplete?: () => void;
   prefill?: CreateAPIKeyPrefillOptions;
+  enableNebulaServiceByDefault: boolean;
 };
 
 const CreateAPIKeyDialog = (props: CreateAPIKeyDialogProps) => {
@@ -76,6 +77,7 @@ export const CreateAPIKeyDialogUI = (props: {
     unknown
   >;
   prefill?: CreateAPIKeyPrefillOptions;
+  enableNebulaServiceByDefault: boolean;
 }) => {
   const [screen, setScreen] = useState<
     { id: "create" } | { id: "api-details"; key: ApiKey }
@@ -107,6 +109,7 @@ export const CreateAPIKeyDialogUI = (props: {
                 setScreen({ id: "api-details", key });
               }}
               prefill={props.prefill}
+              enableNebulaServiceByDefault={props.enableNebulaServiceByDefault}
             />
           )}
 
@@ -135,6 +138,7 @@ function CreateAPIKeyForm(props: {
   >;
   onAPIKeyCreated: (key: ApiKey) => void;
   prefill?: CreateAPIKeyPrefillOptions;
+  enableNebulaServiceByDefault: boolean;
 }) {
   const [showAlert, setShowAlert] = useState<"no-domain" | "any-domain">();
 
@@ -153,11 +157,15 @@ function CreateAPIKeyForm(props: {
     name: string;
     domains: string;
   }) {
+    const servicesToEnableByDefault = props.enableNebulaServiceByDefault
+      ? SERVICES
+      : SERVICES.filter((srv) => srv.name !== "nebula");
+
     const formattedValues = {
       name: values.name,
       domains: toArrFromList(values.domains),
       // enable all services
-      services: SERVICES.map((srv) => ({
+      services: servicesToEnableByDefault.map((srv) => ({
         name: srv.name,
         targetAddresses: ["*"],
         enabled: true,

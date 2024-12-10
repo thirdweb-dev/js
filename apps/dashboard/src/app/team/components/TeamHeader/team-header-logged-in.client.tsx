@@ -22,8 +22,9 @@ export function TeamHeaderLoggedIn(props: {
   currentProject: Project | undefined;
   account: Pick<Account, "email" | "id">;
 }) {
-  const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] =
-    useState(false);
+  const [createProjectDialogState, setCreateProjectDialogState] = useState<
+    { team: Team; isOpen: true } | { isOpen: false }
+  >({ isOpen: false });
   const activeWallet = useActiveWallet();
   const { disconnect } = useDisconnect();
   const router = useDashboardRouter();
@@ -48,7 +49,12 @@ export function TeamHeaderLoggedIn(props: {
     account: props.account,
     logout: logout,
     connectButton: <CustomConnectWallet />,
-    createProject: () => setIsCreateProjectDialogOpen(true),
+    createProject: (team: Team) => {
+      setCreateProjectDialogState({
+        isOpen: true,
+        team,
+      });
+    },
     client: getThirdwebClient(),
   };
 
@@ -58,12 +64,20 @@ export function TeamHeaderLoggedIn(props: {
       <TeamHeaderMobileUI {...headerProps} className="lg:hidden" />
 
       <LazyCreateAPIKeyDialog
-        open={isCreateProjectDialogOpen}
-        onOpenChange={setIsCreateProjectDialogOpen}
+        open={createProjectDialogState.isOpen}
+        onOpenChange={() =>
+          setCreateProjectDialogState({
+            isOpen: false,
+          })
+        }
         onCreateAndComplete={() => {
           // refresh projects
           router.refresh();
         }}
+        enableNebulaServiceByDefault={
+          createProjectDialogState.isOpen &&
+          createProjectDialogState.team.enabledScopes.includes("nebula")
+        }
       />
     </div>
   );
