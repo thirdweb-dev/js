@@ -57,7 +57,7 @@ export interface AccountNameProps
   /**
    * Optional `useQuery` params
    */
-  queryOptions?: Omit<UseQueryOptions<string>, "queryKey" | "queryFn">;
+  queryOptions?: Omit<UseQueryOptions<string>, "queryFn" | "queryKey">;
 }
 
 /**
@@ -138,7 +138,12 @@ export function AccountName({
 }: AccountNameProps) {
   const { address, client } = useAccountContext();
   const nameQuery = useQuery({
-    queryKey: ["account-name", address],
+    queryKey: [
+      "account-name",
+      address,
+      { socialType },
+      { resolverAddress, resolverChain },
+    ],
     queryFn: async () => {
       const [socialData, ensName] = await Promise.all([
         getSocialProfiles({ address, client }),
