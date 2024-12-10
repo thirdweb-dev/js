@@ -33,6 +33,8 @@ function getProfileDisplayName(profile: Profile) {
     case (profile.type as string) === "cognito" &&
       profile.details.email !== undefined:
       return profile.details.email;
+    case (profile.type as string).toLowerCase() === "custom_auth_endpoint":
+      return "Custom Profile";
     default:
       return profile.type.slice(0, 1).toUpperCase() + profile.type.slice(1);
   }
