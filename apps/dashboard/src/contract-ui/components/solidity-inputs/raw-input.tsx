@@ -1,5 +1,4 @@
-import { Flex, Textarea, type TextareaProps } from "@chakra-ui/react";
-import { FormHelperText } from "tw-components";
+import { Textarea, type TextareaProps } from "@chakra-ui/react";
 import type { SolidityInputWithTypeProps } from ".";
 import { formatHint, validateSolidityInput } from "./helpers";
 
@@ -48,7 +47,7 @@ export const SolidityRawInput: React.FC<SolidityInputWithTypeProps> = ({
   };
 
   return (
-    <Flex flexDir="column">
+    <div className="flex flex-col">
       <Textarea
         fontFamily="mono"
         placeholder={solidityType}
@@ -56,10 +55,10 @@ export const SolidityRawInput: React.FC<SolidityInputWithTypeProps> = ({
         value={form.watch(inputName)}
         onChange={handleChange}
       />
-      <FormHelperText>
+      <div className="mt-2 text-muted-foreground text-sm">
         Input should be passed in JSON format - Ex:{" "}
         {formatHint(solidityType, solidityComponents)}
-      </FormHelperText>
-    </Flex>
+      </div>
+    </div>
   );
 };
