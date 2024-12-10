@@ -22,8 +22,30 @@ export const config = {
 };
 
 export async function middleware(request: NextRequest) {
-  let cookiesToSet: Record<string, string> | undefined = undefined;
   const { pathname } = request.nextUrl;
+
+  // nebula subdomain handling
+  const host = request.headers.get("host");
+  const subdomain = host?.split(".")[0];
+  const paths = pathname.slice(1).split("/");
+
+  // nebula.thirdweb.com -> render page at app/nebula-app
+  if (subdomain === "nebula" && host) {
+    const newPaths = ["nebula-app", ...paths];
+    return rewrite(request, `/${newPaths.join("/")}`, undefined);
+  }
+
+  // requesting page at app/nebula-app on thirdweb.com -> redirect to nebula.thirdweb.com
+  if (paths[0] === "nebula-app") {
+    const newPaths = paths.slice(1);
+    const url = new URL(request.nextUrl.href);
+    url.host = `nebula.${host}`;
+    url.pathname = `/${newPaths.join("/")}`;
+
+    return NextResponse.redirect(url.href);
+  }
+
+  let cookiesToSet: Record<string, string> | undefined = undefined;
   const activeAccount = request.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const authCookie = activeAccount
     ? request.cookies.get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))
@@ -73,7 +95,6 @@ export async function middleware(request: NextRequest) {
   }
 
   // remove '/' in front and then split by '/'
-  const paths = pathname.slice(1).split("/");
 
   // if it's the homepage and we have an auth cookie, redirect to the dashboard
   if (paths.length === 1 && paths[0] === "" && authCookie) {

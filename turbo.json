@@ -47,7 +47,8 @@
         "API_SERVER_SECRET",
         "TURNSTILE_SECRET_KEY",
         "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
-        "NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET"
+        "NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET",
+        "NEXT_PUBLIC_NEBULA_URL"
       ],
       "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]

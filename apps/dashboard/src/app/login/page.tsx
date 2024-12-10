@@ -1,5 +1,6 @@
 import { getRawAccount } from "../account/settings/getAccount";
 import { LoginAndOnboardingPage } from "./LoginPage";
+import { isValidEncodedRedirectPath } from "./isValidEncodedRedirectPath";
 
 export default async function Page(props: {
   searchParams: Promise<{
@@ -15,5 +16,10 @@ export default async function Page(props: {
   // if the user is already logged in, wallet is connected and onboarding is complete
   // user will be redirected to the next path on the client side without having to do anything
 
-  return <LoginAndOnboardingPage account={account} nextPath={nextPath} />;
+  const redirectPath =
+    nextPath && isValidEncodedRedirectPath(nextPath) ? nextPath : "/team";
+
+  return (
+    <LoginAndOnboardingPage account={account} redirectPath={redirectPath} />
+  );
 }

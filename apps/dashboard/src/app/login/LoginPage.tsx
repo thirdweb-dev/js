@@ -45,7 +45,7 @@ const wallets = [
 
 export function LoginAndOnboardingPage(props: {
   account: Account | undefined;
-  nextPath: string | undefined;
+  redirectPath: string;
 }) {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
@@ -79,7 +79,10 @@ export function LoginAndOnboardingPage(props: {
 
       <main className="container z-10 flex grow flex-col items-center justify-center gap-6 py-12">
         <ClientOnly ssr={<LoadingCard />}>
-          <PageContent nextPath={props.nextPath} account={props.account} />
+          <PageContent
+            redirectPath={props.redirectPath}
+            account={props.account}
+          />
         </ClientOnly>
       </main>
 
@@ -108,7 +111,7 @@ function LoadingCard() {
 }
 
 function PageContent(props: {
-  nextPath: string | undefined;
+  redirectPath: string;
   account: Account | undefined;
 }) {
   const [screen, setScreen] = useState<
@@ -127,11 +130,7 @@ function PageContent(props: {
 
   function onComplete() {
     setScreen({ id: "complete" });
-    if (props.nextPath && isValidRedirectPath(props.nextPath)) {
-      router.replace(props.nextPath);
-    } else {
-      router.replace("/team");
-    }
+    router.replace(props.redirectPath);
   }
 
   if (connectionStatus === "connecting") {
@@ -148,7 +147,7 @@ function PageContent(props: {
         <LazyOnboardingUI
           account={screen.account}
           onComplete={onComplete}
-          redirectPath={props.nextPath || "/team"}
+          redirectPath={props.redirectPath}
           redirectToCheckout={redirectToCheckout}
         />
       </Suspense>
@@ -213,19 +212,6 @@ function CustomConnectEmbed(props: {
       termsOfServiceUrl="/terms"
     />
   );
-}
-
-function isValidRedirectPath(encodedPath: string): boolean {
-  try {
-    // Decode the URI component
-    const decodedPath = decodeURIComponent(encodedPath);
-    // ensure the path always starts with a _single_ slash
-    // double slash could be interpreted as `//example.com` which is not allowed
-    return decodedPath.startsWith("/") && !decodedPath.startsWith("//");
-  } catch {
-    // If decoding fails, return false
-    return false;
-  }
 }
 
 type AuroraProps = {

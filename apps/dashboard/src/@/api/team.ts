@@ -2,6 +2,17 @@ import "server-only";
 import { API_SERVER_URL } from "@/constants/env";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
 
+type EnabledTeamScope =
+  | "pay"
+  | "storage"
+  | "rpc"
+  | "bundler"
+  | "insight"
+  | "embeddedWallets"
+  | "relayer"
+  | "chainsaw"
+  | "nebula";
+
 export type Team = {
   id: string;
   name: string;
@@ -15,6 +26,7 @@ export type Team = {
   billingStatus: "validPayment" | (string & {}) | null;
   billingEmail: string | null;
   growthTrialEligible: boolean | null;
+  enabledScopes: EnabledTeamScope[];
 };
 
 export async function getTeamBySlug(slug: string) {

@@ -11,6 +11,7 @@ export function ScrollShadow(props: {
   scrollableClassName?: string;
   disableTopShadow?: boolean;
   shadowColor?: string;
+  shadowClassName?: string;
 }) {
   const scrollableEl = useRef<HTMLDivElement>(null);
   const shadowTopEl = useRef<HTMLDivElement>(null);
@@ -94,7 +95,11 @@ export function ScrollShadow(props: {
       }
     >
       <div
-        className={cn(styles.scrollShadowTop, styles.scrollShadowY)}
+        className={cn(
+          styles.scrollShadowTop,
+          styles.scrollShadowY,
+          props.shadowClassName,
+        )}
         ref={shadowTopEl}
         style={{
           opacity: "0",
@@ -102,21 +107,33 @@ export function ScrollShadow(props: {
         }}
       />
       <div
-        className={cn(styles.scrollShadowBottom, styles.scrollShadowY)}
+        className={cn(
+          styles.scrollShadowBottom,
+          styles.scrollShadowY,
+          props.shadowClassName,
+        )}
         ref={shadowBottomEl}
         style={{
           opacity: "0",
         }}
       />
       <div
-        className={cn(styles.scrollShadowLeft, styles.scrollShadowX)}
+        className={cn(
+          styles.scrollShadowLeft,
+          styles.scrollShadowX,
+          props.shadowClassName,
+        )}
         ref={shadowLeftEl}
         style={{
           opacity: "0",
         }}
       />
       <div
-        className={cn(styles.scrollShadowRight, styles.scrollShadowX)}
+        className={cn(
+          styles.scrollShadowRight,
+          styles.scrollShadowX,
+          props.shadowClassName,
+        )}
         ref={shadowRightEl}
         style={{
           opacity: "0",

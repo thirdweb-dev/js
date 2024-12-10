@@ -16,15 +16,28 @@ function isPrettierSupportedLang(lang: BundledLanguage) {
   );
 }
 
-export async function getCodeHtml(code: string, lang: BundledLanguage) {
+export async function getCodeHtml(
+  code: string,
+  lang: BundledLanguage,
+  options?: {
+    ignoreFormattingErrors?: boolean;
+  },
+) {
   const formattedCode = isPrettierSupportedLang(lang)
     ? await format(code, {
         parser: "babel-ts",
         plugins: [parserBabel, estree],
         printWidth: 60,
       }).catch((e) => {
-        console.error(e);
-        console.error("Failed to format code");
+        if (!options?.ignoreFormattingErrors) {
+          console.error(e);
+          console.error("Failed to format code");
+          console.log({
+            code,
+            lang,
+          });
+        }
+
         return code;
       })
     : code;
