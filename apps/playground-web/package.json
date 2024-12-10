@@ -39,7 +39,7 @@
     "react-dom": "19.0.0",
     "react-pick-color": "^2.0.0",
     "server-only": "^0.0.1",
-    "shiki": "1.24.0",
+    "shiki": "1.24.1",
     "tailwind-merge": "^2.5.5",
     "thirdweb": "workspace:*",
     "timeago.js": "^4.0.2",
@@ -48,7 +48,7 @@
   "devDependencies": {
     "@types/node": "22.10.1",
     "@types/react": "19.0.1",
-    "@types/react-dom": "19.0.1",
+    "@types/react-dom": "19.0.2",
     "eslint": "8.57.0",
     "eslint-config-next": "15.0.4",
     "eslint-plugin-react-compiler": "19.0.0-beta-df7b47d-20241124",
