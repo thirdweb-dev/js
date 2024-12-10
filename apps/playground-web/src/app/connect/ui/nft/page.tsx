@@ -32,7 +32,7 @@ export default function Page() {
               their perfect user interface.
             </>
           }
-          docsLink="https://portal.thirdweb.com/react/v5/connecting-wallets/ui-components"
+          docsLink="https://portal.thirdweb.com/react/v5/components/onchain#nfts"
           heroLink="/headless-ui-header.png"
         />
         <section className="space-y-8">
