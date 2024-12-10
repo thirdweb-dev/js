@@ -201,7 +201,7 @@
 	"dependencies": {
 		"@coinbase/wallet-sdk": "4.2.4",
 		"@emotion/react": "11.13.5",
-		"@emotion/styled": "11.13.5",
+		"@emotion/styled": "11.14.0",
 		"@google/model-viewer": "2.1.1",
 		"@noble/curves": "1.7.0",
 		"@noble/hashes": "1.6.1",
