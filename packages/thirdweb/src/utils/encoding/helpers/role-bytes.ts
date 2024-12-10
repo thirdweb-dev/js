@@ -1,20 +1,16 @@
-import { type Hex, isHex } from "../hex.js";
+import { keccak256 } from "../../hashing/keccak256.js";
+import { toBytes } from "../to-bytes.js";
 
+
+///
 /**
- * Calculates the byte size of a Hex string or Uint8Array.
- * If the value is a Hex string, it accounts for the leading "0x" prefix.
- * @param value The Hex string or Uint8Array.
- * @returns The byte size of the value.
+ * Generates a 256-bit hash of a given role string in bytes form using the keccak256 algorithm.
+ *
+ * @param {string} role - The role string to be converted into bytes and hashed.
+ * @returns {`0x${string}`} A 256-bit hash of the input role as a byte array.
  * @example
- * ```ts
- * import { byteSize } from "thirdweb/utils";
- * const size = byteSize("0x1a4");
- * console.log(size); // 2
- * ```
+ *   const AdminRole = roleBytes("ADMIN_ROLE");
  */
-export function byteSize(value: Hex | Uint8Array) {
-  if (isHex(value, { strict: false })) {
-    return Math.ceil((value.length - 2) / 2);
-  }
-  return value.length;
+export const roleBytes = (role: string) => {
+  return keccak256(toBytes(role));
 }
