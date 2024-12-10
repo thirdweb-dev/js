@@ -130,7 +130,7 @@
     "checkly": "^4.14.0",
     "eslint": "8.57.0",
     "eslint-config-biome": "1.9.4",
-    "eslint-plugin-react-compiler": "19.0.0-beta-df7b47d-20241124",
+    "eslint-plugin-react-compiler": "19.0.0-beta-37ed2a7-20241206",
     "eslint-plugin-storybook": "^0.11.1",
     "knip": "5.39.2",
     "next-sitemap": "^4.2.3",
