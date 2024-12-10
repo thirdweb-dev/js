@@ -1,5 +1,108 @@
 # thirdweb
 
+## 5.76.0
+
+### Minor Changes
+
+- [#5533](https://github.com/thirdweb-dev/js/pull/5533) [`43fbcac`](https://github.com/thirdweb-dev/js/commit/43fbcac25e9383743f1f42af9da7fe1c1eae12b4) Thanks [@kien-ngo](https://github.com/kien-ngo)! - The Connected-details button now shows USD value next to the token balance.
+
+  ### Breaking change to the AccountBalance
+
+  The formatFn props now takes in an object of type `AccountBalanceInfo`. The old `formatFn` was inflexible because it only allowed you to format the balance value.
+  With this new version, you have access to both the balance and symbol.
+
+  ```tsx
+  import { AccountBalance, type AccountBalanceInfo } from "thirdweb/react";
+
+  <AccountBalance
+    // Show the symbol in lowercase, before the balance
+    formatFn={(props: AccountBalanceInfo) =>
+      `${props.symbol.toLowerCase()} ${props.balance}`
+    }
+  />;
+  ```
+
+  AccountBalance now supports showing the token balance in fiat value (only USD supported at the moment)
+
+  ```tsx
+  <AccountBalance showBalanceInFiat="USD" />
+  ```
+
+  The `formatFn` prop now takes in an object of type `AccountBalanceInfo` and outputs a string
+
+  ```tsx
+  import { AccountBalance, type AccountBalanceInfo } from "thirdweb/react";
+
+  <AccountBalance
+    formatFn={(props: AccountBalanceInfo) =>
+      `${props.balance}---${props.symbol.toLowerCase()}`
+    }
+  />;
+
+  // Result: 11.12---eth
+  ```
+
+  ### ConnectButton also supports displaying balance in fiat since it uses AccountBalance internally
+
+  ```tsx
+  <ConnectButton
+    // Show USD value on the button
+    detailsButton={{
+      showBalanceInFiat: "USD",
+    }}
+    // Show USD value on the modal
+    detailsModal={{
+      showBalanceInFiat: "USD",
+    }}
+  />
+  ```
+
+  ### Export utils functions:
+
+  formatNumber: Round up a number to a certain decimal place
+
+  ```tsx
+  import { formatNumber } from "thirdweb/utils";
+  const value = formatNumber(12.1214141, 1); // 12.1
+  ```
+
+  shortenLargeNumber: Shorten the string for large value. Mainly used for the AccountBalance's `formatFn`
+
+  ```tsx
+  import { shortenLargeNumber } from "thirdweb/utils";
+  const numStr = shortenLargeNumber(1_000_000_000);
+  ```
+
+  ### Fix to ConnectButton
+
+  The social image of the Details button now display correctly for non-square image.
+
+  ### Massive test coverage improvement for the Connected-button components
+
+- [#5655](https://github.com/thirdweb-dev/js/pull/5655) [`f69d1aa`](https://github.com/thirdweb-dev/js/commit/f69d1aad2d154a05ebc61a1d7545bd9e5aab17be) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve NFT Components
+  - Add custom resolver methods to NFTMedia, NFTName and NFTDescription
+  - Add caching for the NFT-info-getter method to improve performance
+  - Small fix to handle falsy values for NFT media src, name and description
+  - Improve test coverage by extracting internal logics and testing them
+
+### Patch Changes
+
+- [#5660](https://github.com/thirdweb-dev/js/pull/5660) [`d5a68c8`](https://github.com/thirdweb-dev/js/commit/d5a68c85111809bf39e57f5fb39b5458c1f3fe9a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Correctly cleans the "Custom Auth" profile type label
+
+- [#5672](https://github.com/thirdweb-dev/js/pull/5672) [`3b53732`](https://github.com/thirdweb-dev/js/commit/3b5373293202b8ff13cc1502bef3cc9dffaa5afa) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix ox hardset version
+
+- [#5653](https://github.com/thirdweb-dev/js/pull/5653) [`df734ba`](https://github.com/thirdweb-dev/js/commit/df734baf97ec2e976fedb124ecfbac7119c0bc5f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - More helpful error messages for enclave and userop errors
+
+- [#5656](https://github.com/thirdweb-dev/js/pull/5656) [`f680496`](https://github.com/thirdweb-dev/js/commit/f680496ccb1c639fab644fb54e9a962627cf3228) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix connecting to cb wallet browser extension when already on the same chain
+
+- [#5671](https://github.com/thirdweb-dev/js/pull/5671) [`dcd5822`](https://github.com/thirdweb-dev/js/commit/dcd5822ee707fa52f1c3e02c75992485f83922f0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow signature minting for LoyaltyCard contracts by passing the contractType
+
+- [#5673](https://github.com/thirdweb-dev/js/pull/5673) [`c55f02f`](https://github.com/thirdweb-dev/js/commit/c55f02fa75a7f8959bbe69eac6cebfc7927ed865) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - always include gas price information even if it's 0 for enclave wallets
+
+- [#5617](https://github.com/thirdweb-dev/js/pull/5617) [`c48e0c9`](https://github.com/thirdweb-dev/js/commit/c48e0c9320830aa69c0e9567d985ed8a94eeaaf1) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Disconnect smart account when account signer is disconnected
+
+- [#5668](https://github.com/thirdweb-dev/js/pull/5668) [`485dcc6`](https://github.com/thirdweb-dev/js/commit/485dcc6020089a80d994c24882f389c24a0af039) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix add chain not triggering for certain wallets
+
 ## 5.75.0
 
 ### Minor Changes
