@@ -30,6 +30,7 @@ interface SelectWithSearchProps
     searchTerm: string,
   ) => boolean;
   renderOption?: (option: { value: string; label: string }) => React.ReactNode;
+  popoverContentClassName?: string;
 }
 
 export const SelectWithSearch = React.forwardRef<
@@ -37,7 +38,18 @@ export const SelectWithSearch = React.forwardRef<
   SelectWithSearchProps
 >(
   (
-    { options, onValueChange, placeholder, className, value, ...props },
+    {
+      options,
+      onValueChange,
+      placeholder,
+      className,
+      value,
+      renderOption,
+      overrideSearchFn,
+      popoverContentClassName,
+      searchPlaceholder,
+      ...props
+    },
     ref,
   ) => {
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
@@ -49,7 +61,6 @@ export const SelectWithSearch = React.forwardRef<
 
     // show 50 initially and then 20 more when reaching the end
     const { itemsToShow, lastItemRef } = useShowMore<HTMLButtonElement>(50, 20);
-    const { overrideSearchFn } = props;
 
     const optionsToShow = useMemo(() => {
       const filteredOptions: {
@@ -122,7 +133,7 @@ export const SelectWithSearch = React.forwardRef<
         </PopoverTrigger>
 
         <PopoverContent
-          className="z-[10001] p-0"
+          className={cn("z-[10001] p-0", popoverContentClassName)}
           align="center"
           sideOffset={10}
           onEscapeKeyDown={() => setIsPopoverOpen(false)}
@@ -136,7 +147,7 @@ export const SelectWithSearch = React.forwardRef<
             {/* Search */}
             <div className="relative">
               <Input
-                placeholder={props.searchPlaceholder || "Search"}
+                placeholder={searchPlaceholder || "Search"}
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 className="!h-auto rounded-b-none border-0 border-border border-b py-3 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -175,9 +186,7 @@ export const SelectWithSearch = React.forwardRef<
                       </div>
 
                       <div className="min-w-0 grow">
-                        {props.renderOption
-                          ? props.renderOption(option)
-                          : option.label}
+                        {renderOption ? renderOption(option) : option.label}
                       </div>
                     </Button>
                   );
