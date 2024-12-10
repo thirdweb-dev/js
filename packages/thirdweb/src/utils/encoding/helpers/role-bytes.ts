@@ -11,4 +11,4 @@ import { toBytes } from "../to-bytes.js";
  */
 export const roleBytes = (role: string): `0x${string}` => {
   return keccak256(toBytes(role));
-}
+};
