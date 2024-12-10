@@ -21,7 +21,7 @@ const connectWalletLocalPtBr: ConnectLocale = {
   transactions: "Transações",
   payTransactions: "Transações Fiat",
   walletTransactions: "Transações de Carteira",
-  viewAllTransactions: "Ver todas as transações", 
+  viewAllTransactions: "Ver todas as transações",
   currentNetwork: "Rede atual",
   switchAccount: "Trocar conta",
   requestTestnetFunds: "Solicitar fundos para Testnet",
