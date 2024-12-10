@@ -9,6 +9,6 @@ import { toBytes } from "../to-bytes.js";
  * @example
  *   const AdminRole = roleBytes("ADMIN_ROLE");
  */
-export const roleBytes = (role: string) => {
+export const roleBytes = (role: string): `0x${string}` => {
   return keccak256(toBytes(role));
 }
