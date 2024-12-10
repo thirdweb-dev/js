@@ -162,7 +162,7 @@ export class EnclaveWallet implements IWebWallet {
         chainId: toHex(tx.chainId),
       };
 
-      if (tx.maxFeePerGas) {
+      if (typeof tx.maxFeePerGas === "bigint") {
         transaction.maxFeePerGas = toHex(tx.maxFeePerGas);
         transaction.maxPriorityFeePerGas =
           typeof tx.maxPriorityFeePerGas === "bigint"
