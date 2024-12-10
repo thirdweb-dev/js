@@ -25,7 +25,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@chakra-ui/styled-system": "^2.9.2",
     "@chakra-ui/theme-tools": "^2.1.2",
-    "@emotion/react": "11.13.5",
+    "@emotion/react": "11.14.0",
     "@emotion/styled": "11.13.5",
     "@hookform/resolvers": "^3.9.1",
     "@marsidev/react-turnstile": "^1.1.0",
