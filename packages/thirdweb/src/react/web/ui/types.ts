@@ -7,4 +7,5 @@ export type LocaleId =
   | "tl_PH"
   | "vi_VN"
   | "de_DE"
-  | "fr_FR";
+  | "fr_FR"
+  | "pt_BR";
