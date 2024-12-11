@@ -2,6 +2,7 @@
 
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Alert, AlertTitle } from "@/components/ui/alert";
+import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { CircleSlash } from "lucide-react";
 import type { ContractOptions } from "thirdweb";
 import type { Account } from "thirdweb/wallets";
@@ -16,6 +17,7 @@ export const InstalledModulesTable = (props: {
   };
   refetchModules: () => void;
   ownerAccount: Account | undefined;
+  twAccount: TWAccount | undefined;
 }) => {
   const { installedModules, ownerAccount } = props;
 
@@ -57,6 +59,7 @@ export const InstalledModulesTable = (props: {
               contract={props.contract}
               onRemoveModule={props.refetchModules}
               ownerAccount={ownerAccount}
+              twAccount={props.twAccount}
             />
           ))}
         </div>

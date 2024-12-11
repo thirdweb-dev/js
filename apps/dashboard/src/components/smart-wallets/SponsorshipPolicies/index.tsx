@@ -1,12 +1,11 @@
 "use client";
 
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
+  type Account,
   type ApiKeyService,
   type ApiKeyServicePolicy,
   type ApiKeyServicePolicyLimits,
-  useAccount,
   usePolicies,
   useUpdatePolicies,
 } from "@3rdweb-sdk/react/hooks/useApi";
@@ -43,6 +42,7 @@ import { z } from "zod";
 type AccountAbstractionSettingsPageProps = {
   apiKeyServices: ApiKeyService[];
   trackingCategory: string;
+  twAccount: Account;
 };
 
 const aaSettingsFormSchema = z.object({
@@ -105,7 +105,6 @@ export function AccountAbstractionSettingsPage(
   const { mutate: updatePolicy, isPending: updatingPolicy } =
     useUpdatePolicies();
   const trackEvent = useTrack();
-  const dashboardAccountQuery = useAccount();
 
   const transformedQueryData = useMemo(
     () => ({
@@ -159,14 +158,6 @@ export function AccountAbstractionSettingsPage(
     "Sponsorship rules updated",
     "Failed to update sponsorship rules",
   );
-
-  if (!dashboardAccountQuery.data) {
-    return (
-      <div className="flex h-[400px] items-center justify-center">
-        <Spinner className="size-4" />
-      </div>
-    );
-  }
 
   return (
     <Flex flexDir="column" gap={8}>
@@ -539,10 +530,10 @@ export function AccountAbstractionSettingsPage(
               </div>
 
               <GatedSwitch
-                upgradeRequired={!dashboardAccountQuery.data.advancedEnabled}
+                upgradeRequired={!props.twAccount.advancedEnabled}
                 checked={
                   form.watch("serverVerifier").enabled &&
-                  dashboardAccountQuery.data.advancedEnabled
+                  props.twAccount.advancedEnabled
                 }
                 onCheckedChange={(checked) => {
                   form.setValue(

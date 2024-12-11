@@ -20,19 +20,24 @@ import { LocalConfig } from "./local-config";
 interface EngineWalletConfigProps {
   instance: EngineInstance;
   teamSlug: string;
+  authToken: string;
 }
 
 export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
   instance,
   teamSlug,
+  authToken,
 }) => {
-  const { data: walletConfig } = useEngineWalletConfig(instance.url);
+  const { data: walletConfig } = useEngineWalletConfig({
+    instanceUrl: instance.url,
+    authToken,
+  });
 
   const tabContent: Partial<Record<EngineBackendWalletType, React.ReactNode>> =
     {
       local: <LocalConfig />,
-      "aws-kms": <KmsAwsConfig instance={instance} />,
-      "gcp-kms": <KmsGcpConfig instance={instance} />,
+      "aws-kms": <KmsAwsConfig instance={instance} authToken={authToken} />,
+      "gcp-kms": <KmsGcpConfig instance={instance} authToken={authToken} />,
     } as const;
 
   const [activeTab, setActiveTab] = useState<EngineBackendWalletType>("local");

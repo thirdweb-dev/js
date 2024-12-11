@@ -16,6 +16,7 @@ import { mobileViewport } from "stories/utils";
 import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
+import { accountStub } from "../../../../../../../stories/stubs";
 import {
   type ClaimConditionFormValues,
   type ClaimConditionValue,
@@ -156,6 +157,7 @@ function Component() {
         </div>
 
         <ClaimableModuleUI
+          twAccount={accountStub()}
           contractInfo={contractInfo}
           moduleAddress="0x0000000000000000000000000000000000000000"
           primarySaleRecipientSection={{

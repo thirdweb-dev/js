@@ -9,6 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input, Select } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -23,12 +24,14 @@ import { FormErrorMessage, FormLabel } from "tw-components";
 
 interface NFTRevealButtonProps {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
 const REVEAL_FORM_ID = "reveal-form";
 
 export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
   contract,
+  twAccount,
 }) => {
   const batchesQuery = useReadContract(getBatchesToReveal, {
     contract,
@@ -127,6 +130,7 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
           </form>
           <div className="mt-4 flex justify-end">
             <TransactionButton
+              twAccount={twAccount}
               txChainID={contract.chain.id}
               transactionCount={1}
               isPending={sendTxMutation.isPending}

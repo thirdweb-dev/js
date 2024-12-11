@@ -1,6 +1,9 @@
 "use client";
 
-import { useAccount, useAccountCredits } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  type Account,
+  useAccountCredits,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
@@ -8,14 +11,15 @@ import { Suspense, lazy, useMemo } from "react";
 
 const OpCreditsGrantedModal = lazy(() => import("./OpCreditsGrantedModal"));
 
-export const OpCreditsGrantedModalWrapper = () => {
+export const OpCreditsGrantedModalWrapper = (props: {
+  twAccount: Account;
+}) => {
   const trackEvent = useTrack();
   const { data: credits } = useAccountCredits();
-  const { data: account } = useAccount();
 
   const opCredit = credits?.find((credit) => credit.name.startsWith("OP -"));
   const [sawYouGotCredits, setSawYouGotCredits] = useLocalStorage(
-    `sawYouGotCredits-${account?.id}`,
+    `sawYouGotCredits-${props.twAccount.id}`,
     false,
   );
 

@@ -1,16 +1,16 @@
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useQuery } from "@tanstack/react-query";
 import type { Ecosystem, Partner } from "../../../types";
 
-export function usePartners({ ecosystem }: { ecosystem: Ecosystem }) {
-  const { user } = useLoggedInUser();
-
+export function usePartners({
+  ecosystem,
+  authToken,
+}: { ecosystem: Ecosystem; authToken: string }) {
   const partnersQuery = useQuery({
     queryKey: ["ecosystem", ecosystem.id, "partners"],
     queryFn: async () => {
       const res = await fetch(`${ecosystem.url}/${ecosystem.id}/partners`, {
         headers: {
-          Authorization: `Bearer ${user?.jwt}`,
+          Authorization: `Bearer ${authToken}`,
         },
       });
 
@@ -24,12 +24,11 @@ export function usePartners({ ecosystem }: { ecosystem: Ecosystem }) {
 
       return (await res.json()) as Partner[];
     },
-    enabled: !!user?.jwt,
     retry: false,
   });
 
   return {
-    isPending: user?.jwt ? partnersQuery.isPending : false,
+    isPending: partnersQuery.isPending,
     partners: (partnersQuery.data ?? []) satisfies Partner[],
   };
 }

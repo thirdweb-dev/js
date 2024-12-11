@@ -1,10 +1,8 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useStore } from "@/lib/reactive";
-import { cn } from "@/lib/utils";
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
@@ -18,6 +16,7 @@ import type { Chain } from "thirdweb";
 import {
   ConnectButton,
   type NetworkSelectorProps,
+  useActiveAccount,
   useConnectModal,
 } from "thirdweb/react";
 import { useFavoriteChainIds } from "../../../../app/(dashboard)/(chain)/components/client/star-button";
@@ -29,7 +28,6 @@ import {
   addRecentlyUsedChainId,
   recentlyUsedChainIdsStore,
 } from "../../../../stores/chainStores";
-import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
 
 export const CustomConnectWallet = (props: {
@@ -37,8 +35,8 @@ export const CustomConnectWallet = (props: {
   connectButtonClassName?: string;
   signInLinkButtonClassName?: string;
   detailsButtonClassName?: string;
-  loadingButtonClassName?: string;
   chain?: Chain;
+  isLoggedIn: boolean;
 }) => {
   const thirdwebClient = useThirdwebClient();
   const loginRequired =
@@ -120,25 +118,11 @@ export const CustomConnectWallet = (props: {
   ]);
 
   // ensures login status on pages that need it
-  const { isPending, isLoggedIn } = useLoggedInUser();
+  const { isLoggedIn } = props;
   const pathname = usePathname();
+  const account = useActiveAccount();
 
-  if (isPending) {
-    return (
-      <>
-        <div
-          className={cn(
-            "flex h-[48px] w-[144px] items-center justify-center rounded-lg border border-border bg-muted",
-            props.loadingButtonClassName,
-          )}
-        >
-          <Spinner className="size-4" />
-        </div>
-      </>
-    );
-  }
-
-  if (!isLoggedIn && loginRequired) {
+  if ((!isLoggedIn || !account) && loginRequired) {
     return (
       <>
         <Button

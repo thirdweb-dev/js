@@ -331,7 +331,7 @@ export function ChatPageContent(props: {
                 authToken={props.authToken}
                 sessionId={sessionId}
                 className="min-w-0 pt-10 pb-32"
-                account={props.account}
+                twAccount={props.account}
                 client={client}
               />
               {/* Scroll anchor */}

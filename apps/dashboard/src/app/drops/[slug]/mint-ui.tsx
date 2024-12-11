@@ -222,6 +222,7 @@ export function NftMint(props: Props) {
           ) : (
             <CustomConnectWallet
               loginRequired={false}
+              isLoggedIn={true}
               connectButtonClassName="!w-full !rounded !bg-primary !text-primary-foreground !px-4 !py-2 !text-sm"
               chain={props.contract.chain}
             />

@@ -49,7 +49,10 @@ type AuthOptionsFormData = {
   customAccountFactoryAddress: string;
 };
 
-export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
+export function AuthOptionsForm({
+  ecosystem,
+  authToken,
+}: { ecosystem: Ecosystem; authToken: string }) {
   const form = useForm<AuthOptionsFormData>({
     defaultValues: {
       authOptions: ecosystem.authOptions || [],
@@ -141,16 +144,21 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
     name: "customHeaders",
   });
 
-  const { mutateAsync: updateEcosystem, isPending } = useUpdateEcosystem({
-    onError: (error) => {
-      const message =
-        error instanceof Error ? error.message : "Failed to update ecosystem";
-      toast.error(message);
+  const { mutateAsync: updateEcosystem, isPending } = useUpdateEcosystem(
+    {
+      authToken,
     },
-    onSuccess: () => {
-      toast.success("Ecosystem options updated");
+    {
+      onError: (error) => {
+        const message =
+          error instanceof Error ? error.message : "Failed to update ecosystem";
+        toast.error(message);
+      },
+      onSuccess: () => {
+        toast.success("Ecosystem options updated");
+      },
     },
-  });
+  );
 
   const onSubmit = (data: AuthOptionsFormData) => {
     let customAuthOptions: Ecosystem["customAuthOptions"] | null = null;

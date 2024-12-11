@@ -10,6 +10,7 @@ import { Button, Heading, Text } from "tw-components";
 
 interface EngineCorsConfigProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 interface CorsForm {
@@ -18,10 +19,16 @@ interface CorsForm {
 
 export const EngineCorsConfig: React.FC<EngineCorsConfigProps> = ({
   instanceUrl,
+  authToken,
 }) => {
-  const { data: existingUrls } = useEngineCorsConfiguration(instanceUrl);
-  const { mutateAsync: setCorsConfig } =
-    useEngineSetCorsConfiguration(instanceUrl);
+  const { data: existingUrls } = useEngineCorsConfiguration({
+    instanceUrl,
+    authToken,
+  });
+  const { mutateAsync: setCorsConfig } = useEngineSetCorsConfiguration({
+    instanceUrl,
+    authToken,
+  });
 
   const { onSuccess, onError } = useTxNotifications(
     "CORS URLs updated successfully.",

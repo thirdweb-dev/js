@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { fetchTopContracts } from "lib/search";
 import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
+import { getRawAccount } from "../../../../account/settings/getAccount";
 import { TrendingContractSection } from "../../../trending/components/trending-table";
 import { getChain, getChainMetadata } from "../../utils";
 import { BuyFundsSection } from "./components/server/BuyFundsSection";
@@ -20,11 +21,14 @@ export default async function Page(props: {
   const chainMetadata = await getChainMetadata(chain.chainId);
   const isDeprecated = chain.status === "deprecated";
 
-  const topContracts = await fetchTopContracts({
-    chainId: chain.chainId,
-    perPage: 3,
-    timeRange: "month",
-  });
+  const [account, topContracts] = await Promise.all([
+    getRawAccount(),
+    fetchTopContracts({
+      chainId: chain.chainId,
+      perPage: 3,
+      timeRange: "month",
+    }),
+  ]);
 
   return (
     <div className="flex flex-col gap-10">
@@ -48,7 +52,7 @@ export default async function Page(props: {
 
       {/* Faucet / Buy Funds */}
       {chain.testnet ? (
-        <FaucetSection chain={chain} />
+        <FaucetSection chain={chain} twAccount={account} />
       ) : chain.services.find((c) => c.service === "pay" && c.enabled) ? (
         <BuyFundsSection chain={chain} />
       ) : null}

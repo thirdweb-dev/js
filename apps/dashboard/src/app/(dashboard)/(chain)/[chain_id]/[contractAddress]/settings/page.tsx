@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { localhost } from "thirdweb/chains";
+import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { ContractSettingsPage } from "./ContractSettingsPage";
@@ -19,16 +20,24 @@ export default async function Page(props: {
   }
 
   const { contract } = info;
+
   if (contract.chain.id === localhost.id) {
-    return <ContractSettingsPageClient contract={contract} />;
+    const account = await getRawAccount();
+    return (
+      <ContractSettingsPageClient contract={contract} twAccount={account} />
+    );
   }
 
-  const { functionSelectors } = await getContractPageMetadata(info.contract);
+  const [account, metadata] = await Promise.all([
+    getRawAccount(),
+    getContractPageMetadata(info.contract),
+  ]);
 
   return (
     <ContractSettingsPage
       contract={info.contract}
-      functionSelectors={functionSelectors}
+      functionSelectors={metadata.functionSelectors}
+      twAccount={account}
     />
   );
 }

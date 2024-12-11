@@ -32,6 +32,7 @@ interface AdminsTableProps {
   admins: EngineAdmin[];
   isPending: boolean;
   isFetched: boolean;
+  authToken: string;
 }
 
 const columnHelper = createColumnHelper<EngineAdmin>();
@@ -67,6 +68,7 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
   admins,
   isPending,
   isFetched,
+  authToken,
 }) => {
   const editDisclosure = useDisclosure();
   const removeDisclosure = useDisclosure();
@@ -106,6 +108,7 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
           admin={selectedAdmin}
           disclosure={editDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
       {selectedAdmin && removeDisclosure.isOpen && (
@@ -113,6 +116,7 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
           admin={selectedAdmin}
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
     </>
@@ -123,12 +127,17 @@ const EditModal = ({
   admin,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   admin: EngineAdmin;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) => {
-  const { mutate: updatePermissions } = useEngineGrantPermissions(instanceUrl);
+  const { mutate: updatePermissions } = useEngineGrantPermissions({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated admin",
@@ -210,12 +219,17 @@ const RemoveModal = ({
   admin,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   admin: EngineAdmin;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) => {
-  const { mutate: revokePermissions } = useEngineRevokePermissions(instanceUrl);
+  const { mutate: revokePermissions } = useEngineRevokePermissions({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed admin",

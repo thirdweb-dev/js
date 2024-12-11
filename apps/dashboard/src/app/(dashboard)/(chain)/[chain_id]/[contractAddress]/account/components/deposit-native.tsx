@@ -1,6 +1,7 @@
 "use client";
 
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useV5DashboardChain } from "lib/v5-adapter";
@@ -14,12 +15,14 @@ interface DepositNativeProps {
   address: string;
   symbol: string;
   chain: StoredChain;
+  twAccount: Account | undefined;
 }
 
 export const DepositNative: React.FC<DepositNativeProps> = ({
   address,
   symbol,
   chain,
+  twAccount,
 }) => {
   const client = useThirdwebClient();
   const { mutate: transfer, isPending } = useSendAndConfirmTransaction();
@@ -46,6 +49,7 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
         value={amount}
       />
       <TransactionButton
+        twAccount={twAccount}
         txChainID={v5Chain.id}
         transactionCount={1}
         isPending={isPending}

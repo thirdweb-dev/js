@@ -34,6 +34,7 @@ interface TransactionsTableProps {
   isPending: boolean;
   isFetched: boolean;
   instanceUrl: string;
+  authToken: string;
 }
 
 type EngineStatus =
@@ -94,6 +95,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   isPending,
   isFetched,
   instanceUrl,
+  authToken,
 }) => {
   const { idToChain } = useAllChainsData();
   const transactionDisclosure = useDisclosure();
@@ -272,6 +274,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
         <TransactionDetailsDrawer
           transaction={selectedTransaction}
           instanceUrl={instanceUrl}
+          authToken={authToken}
           onClickPrevious={
             idx > 0
               ? () => setSelectedTransaction(transactions[idx - 1] || null)
@@ -295,12 +298,14 @@ const TransactionDetailsDrawer = ({
   onClickPrevious,
   onClickNext,
   setSelectedTransaction,
+  authToken,
 }: {
   transaction: Transaction;
   instanceUrl: string;
   onClickPrevious?: () => void;
   onClickNext?: () => void;
   setSelectedTransaction: Dispatch<SetStateAction<Transaction | null>>;
+  authToken: string;
 }) => {
   const { idToChain } = useAllChainsData();
   const errorMessageDisclosure = useDisclosure();
@@ -445,6 +450,7 @@ const TransactionDetailsDrawer = ({
           <TransactionTimeline
             transaction={transaction}
             instanceUrl={instanceUrl}
+            authToken={authToken}
           />
 
           <Divider />

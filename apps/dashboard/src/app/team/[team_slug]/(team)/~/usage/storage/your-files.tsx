@@ -15,12 +15,12 @@ import {
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { DASHBOARD_STORAGE_URL } from "@/constants/env";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { formatDistance } from "date-fns/formatDistance";
 import { PinOffIcon } from "lucide-react";
 import { useState } from "react";
+import { useActiveAccount } from "thirdweb/react";
 import { toSize } from "utils/number";
 
 interface PinnedFilesResponse {
@@ -46,58 +46,52 @@ const pageSize = 10;
 function usePinnedFilesQuery({
   page,
   pageSize,
+  authToken,
 }: {
   page: number;
   pageSize: number;
+  authToken: string;
 }) {
-  const user = useLoggedInUser();
-
+  const address = useActiveAccount()?.address;
   const offset = page * pageSize;
 
   return useQuery({
     queryKey: [
       PINNED_FILES_QUERY_KEY_ROOT,
       {
-        userAddress: user.user?.address,
+        userAddress: address,
         __page_size__: pageSize,
         __offset__: offset,
       },
     ],
     queryFn: async () => {
-      if (!user.isLoggedIn) {
-        throw new Error("User is not logged in");
-      }
-      if (!user.user?.jwt) {
-        throw new Error("No token");
-      }
       const res = await fetch(
         `${DASHBOARD_STORAGE_URL}/ipfs/pinned?limit=${pageSize}${
           offset ? `&offset=${offset}` : ""
         }`,
         {
           headers: {
-            Authorization: `Bearer ${user.user.jwt}`,
+            Authorization: `Bearer ${authToken}`,
           },
         },
       );
       return (await res.json()) as PinnedFilesResponse;
     },
-    enabled: user.isLoggedIn && !!user.user?.address && !!user.user.jwt,
+    enabled: !!address,
   });
 }
 
-function useUnpinFileMutation() {
-  const token = useLoggedInUser().user?.jwt ?? null;
+function useUnpinFileMutation(params: {
+  authToken: string;
+}) {
+  const { authToken } = params;
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ cid }: { cid: string }) => {
-      if (!token) {
-        throw new Error("No token");
-      }
       const res = await fetch(`${DASHBOARD_STORAGE_URL}/ipfs/pinned/${cid}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authToken}`,
         },
       });
       return res.json();
@@ -111,8 +105,13 @@ function useUnpinFileMutation() {
   });
 }
 
-const UnpinButton: React.FC<{ cid: string }> = ({ cid }) => {
-  const unpinMutation = useUnpinFileMutation();
+const UnpinButton: React.FC<{ cid: string; authToken: string }> = ({
+  cid,
+  authToken,
+}) => {
+  const unpinMutation = useUnpinFileMutation({
+    authToken,
+  });
   return (
     <ToolTipLabel label="Unpin File">
       <Button
@@ -130,11 +129,14 @@ const UnpinButton: React.FC<{ cid: string }> = ({ cid }) => {
   );
 };
 
-export const YourFilesSection: React.FC = () => {
+export const YourFilesSection = (props: {
+  authToken: string;
+}) => {
   const [page, setPage] = useState(1);
   const pinnedFilesQuery = usePinnedFilesQuery({
     page: page - 1,
     pageSize: pageSize,
+    authToken: props.authToken,
   });
 
   const showPagination = pinnedFilesQuery.data
@@ -196,7 +198,10 @@ export const YourFilesSection: React.FC = () => {
                   </ToolTipLabel>
                 </TableCell>
                 <TableCell>
-                  <UnpinButton cid={pinnedFile.ipfsHash} />
+                  <UnpinButton
+                    cid={pinnedFile.ipfsHash}
+                    authToken={props.authToken}
+                  />
                 </TableCell>
               </TableRow>
             ))}

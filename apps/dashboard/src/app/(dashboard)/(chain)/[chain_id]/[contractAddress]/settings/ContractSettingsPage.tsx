@@ -1,4 +1,5 @@
 "use client";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import * as CommonExt from "thirdweb/extensions/common";
@@ -13,6 +14,7 @@ interface ContractSettingsPageProps {
   isPrimarySaleSupported: boolean;
   isRoyaltiesSupported: boolean;
   isPlatformFeesSupported: boolean;
+  twAccount: Account | undefined;
 }
 
 const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
@@ -21,6 +23,7 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
   isPrimarySaleSupported,
   isRoyaltiesSupported,
   isPlatformFeesSupported,
+  twAccount,
 }) => {
   return (
     <Flex direction="column" gap={4}>
@@ -30,6 +33,7 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
             <GridItem order={isContractMetadataSupported ? 0 : 100}>
               <SettingsMetadata
                 contract={contract}
+                twAccount={twAccount}
                 detectedState={
                   isContractMetadataSupported ? "enabled" : "disabled"
                 }
@@ -41,6 +45,7 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
               <SettingsPrimarySale
                 contract={contract}
                 detectedState={isPrimarySaleSupported ? "enabled" : "disabled"}
+                twAccount={twAccount}
               />
             </GridItem>
           )}
@@ -50,6 +55,7 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
               <SettingsRoyalties
                 contract={contract}
                 detectedState={isRoyaltiesSupported ? "enabled" : "disabled"}
+                twAccount={twAccount}
               />
             </GridItem>
           )}
@@ -59,6 +65,7 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
               <SettingsPlatformFees
                 contract={contract}
                 detectedState={isPlatformFeesSupported ? "enabled" : "disabled"}
+                twAccount={twAccount}
               />
             </GridItem>
           )}
@@ -71,8 +78,9 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
 export function ContractSettingsPage(props: {
   contract: ThirdwebContract;
   functionSelectors: string[];
+  twAccount: Account | undefined;
 }) {
-  const { functionSelectors, contract } = props;
+  const { functionSelectors, contract, twAccount } = props;
   return (
     <ContractSettingsPageInner
       contract={contract}
@@ -92,6 +100,7 @@ export function ContractSettingsPage(props: {
         CommonExt.isGetPlatformFeeInfoSupported(functionSelectors),
         CommonExt.isSetPlatformFeeInfoSupported(functionSelectors),
       ].every(Boolean)}
+      twAccount={twAccount}
     />
   );
 }

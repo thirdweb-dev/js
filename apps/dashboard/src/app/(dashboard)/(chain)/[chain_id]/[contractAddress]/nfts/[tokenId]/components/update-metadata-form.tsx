@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Accordion,
   AccordionButton,
@@ -52,6 +53,7 @@ type UpdateNftMetadataForm = {
    * else (NFT Collection, Edition) -> use `setTokenURI`
    */
   useUpdateMetadata: boolean;
+  twAccount: Account | undefined;
 };
 
 export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
@@ -59,6 +61,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
   nft,
   useUpdateMetadata,
   setOpen,
+  twAccount,
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
@@ -386,6 +389,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
           Cancel
         </Button>
         <TransactionButton
+          twAccount={twAccount}
           txChainID={contract.chain.id}
           transactionCount={1}
           isPending={sendAndConfirmTx.isPending}

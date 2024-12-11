@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Box,
   Divider,
@@ -61,20 +62,25 @@ const ContractFunctionComment = lazy(
 interface ContractFunctionProps {
   fn: AbiFunction | AbiEvent;
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
 const ContractFunction: React.FC<{
   fn: AbiFunction | AbiEvent;
   contract?: ThirdwebContract;
-}> = ({ fn, contract }) => {
+  twAccount: Account | undefined;
+}> = ({ fn, contract, twAccount }) => {
   if (!contract) {
     return <ContractFunctionInputs fn={fn} />;
   }
 
-  return <ContractFunctionInner contract={contract} fn={fn} />;
+  return (
+    <ContractFunctionInner contract={contract} fn={fn} twAccount={twAccount} />
+  );
 };
 
-function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
+function ContractFunctionInner(props: ContractFunctionProps) {
+  const { contract, fn } = props;
   const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
   const functionSelectorQuery = useContractFunctionSelectors(contract);
   const functionSelectors = functionSelectorQuery.data || [];
@@ -152,6 +158,7 @@ function ContractFunctionInner({ contract, fn }: ContractFunctionProps) {
           key={JSON.stringify(fn)}
           contract={contract}
           abiFunction={fn}
+          twAccount={props.twAccount}
         />
       )}
 
@@ -264,6 +271,7 @@ function ContractFunctionInputs(props: {
 interface ContractFunctionsPanelProps {
   fnsOrEvents: (AbiFunction | AbiEvent)[];
   contract?: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
 type ExtensionFunctions = {
@@ -274,6 +282,7 @@ type ExtensionFunctions = {
 export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   fnsOrEvents,
   contract,
+  twAccount,
 }) => {
   // TODO: clean this up
   const functionsWithExtension = useMemo(() => {
@@ -484,7 +493,11 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
         colSpan={{ base: 12, md: 8 }}
       >
         {selectedFunction && (
-          <ContractFunction fn={selectedFunction} contract={contract} />
+          <ContractFunction
+            fn={selectedFunction}
+            contract={contract}
+            twAccount={twAccount}
+          />
         )}
       </GridItem>
     </SimpleGrid>

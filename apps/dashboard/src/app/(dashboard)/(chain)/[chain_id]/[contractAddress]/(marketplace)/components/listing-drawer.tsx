@@ -13,6 +13,7 @@ import type {
 import { useActiveAccount } from "thirdweb/react";
 
 import { CodeClient } from "@/components/ui/code/code.client";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { CancelTab } from "./cancel-tab";
 import { LISTING_STATUS } from "./types";
@@ -22,6 +23,7 @@ interface NFTDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   data: DirectListing | EnglishAuction | null;
+  twAccount: Account | undefined;
 }
 
 export const ListingDrawer: React.FC<NFTDrawerProps> = ({
@@ -29,6 +31,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
   isOpen,
   onClose,
   data,
+  twAccount,
 }) => {
   const address = useActiveAccount()?.address;
   const prevData = usePrevious(data);
@@ -162,6 +165,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
             contract={contract}
             id={renderData.id.toString()}
             isAuction={renderData.type === "english-auction"}
+            twAccount={twAccount}
           />
         )}
       </SheetContent>

@@ -18,14 +18,19 @@ import { Button, Checkbox, Text } from "tw-components";
 
 interface AddAccessTokenButtonProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
   instanceUrl,
+  authToken,
 }) => {
   const [accessToken, setAccessToken] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: createAccessToken } = useEngineCreateAccessToken(instanceUrl);
+  const { mutate: createAccessToken } = useEngineCreateAccessToken({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
   const [hasStoredToken, setHasStoredToken] = useState<boolean>(false);
 

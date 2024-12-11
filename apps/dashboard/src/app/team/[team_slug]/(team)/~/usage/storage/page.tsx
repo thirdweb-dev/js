@@ -1,13 +1,26 @@
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import Link from "next/link";
+import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
+import { loginRedirect } from "../../../../../../login/loginRedirect";
 import { GuidesSection } from "./components/GuideSection";
 import { SDKSection } from "./components/SDKSection";
 import { YourFilesSection } from "./your-files";
 
-export default function Page() {
+export default async function Page(props: {
+  params: Promise<{
+    team_slug: string;
+  }>;
+}) {
+  const params = await props.params;
+  const authToken = await getAuthToken();
+
+  if (!authToken) {
+    loginRedirect(`/team/${params.team_slug}/~/usage/storage`);
+  }
+
   return (
     <div className="flex flex-col gap-14">
-      <YourFilesSection />
+      <YourFilesSection authToken={authToken} />
       <GatewaySection />
       <CLISection />
       <SDKSection />

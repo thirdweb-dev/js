@@ -17,12 +17,14 @@ import { KeypairsTable } from "./keypairs-table";
 
 interface EngineAccessTokensProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 type AccessTokenType = "standard" | "keypair";
 
 export const EngineAccessTokens: React.FC<EngineAccessTokensProps> = ({
   instanceUrl,
+  authToken,
 }) => {
   const [selected, setSelected] = useState<AccessTokenType>("standard");
   const { isSupported: supportsKeyPairAuth } = useHasEngineFeature(
@@ -66,9 +68,15 @@ export const EngineAccessTokens: React.FC<EngineAccessTokensProps> = ({
       )}
 
       {selected === "standard" ? (
-        <StandardAccessTokensPanel instanceUrl={instanceUrl} />
+        <StandardAccessTokensPanel
+          instanceUrl={instanceUrl}
+          authToken={authToken}
+        />
       ) : selected === "keypair" ? (
-        <KeypairAuthenticationPanel instanceUrl={instanceUrl} />
+        <KeypairAuthenticationPanel
+          instanceUrl={instanceUrl}
+          authToken={authToken}
+        />
       ) : null}
     </Flex>
   );
@@ -76,10 +84,15 @@ export const EngineAccessTokens: React.FC<EngineAccessTokensProps> = ({
 
 const StandardAccessTokensPanel = ({
   instanceUrl,
+  authToken,
 }: {
   instanceUrl: string;
+  authToken: string;
 }) => {
-  const accessTokens = useEngineAccessTokens(instanceUrl);
+  const accessTokens = useEngineAccessTokens({
+    instanceUrl,
+    authToken,
+  });
 
   return (
     <>
@@ -100,8 +113,9 @@ const StandardAccessTokensPanel = ({
         accessTokens={accessTokens.data ?? []}
         isPending={accessTokens.isPending}
         isFetched={accessTokens.isFetched}
+        authToken={authToken}
       />
-      <AddAccessTokenButton instanceUrl={instanceUrl} />
+      <AddAccessTokenButton instanceUrl={instanceUrl} authToken={authToken} />
 
       <Flex direction="column" gap={2} mt={16}>
         <Heading size="title.md">Authenticate with your access token</Heading>
@@ -123,10 +137,15 @@ const StandardAccessTokensPanel = ({
 
 const KeypairAuthenticationPanel = ({
   instanceUrl,
+  authToken,
 }: {
   instanceUrl: string;
+  authToken: string;
 }) => {
-  const keypairs = useEngineKeypairs(instanceUrl);
+  const keypairs = useEngineKeypairs({
+    instanceUrl,
+    authToken,
+  });
 
   return (
     <>
@@ -150,8 +169,9 @@ const KeypairAuthenticationPanel = ({
         keypairs={keypairs.data || []}
         isPending={keypairs.isPending}
         isFetched={keypairs.isFetched}
+        authToken={authToken}
       />
-      <AddKeypairButton instanceUrl={instanceUrl} />
+      <AddKeypairButton instanceUrl={instanceUrl} authToken={authToken} />
 
       <Flex direction="column" gap={2} mt={16}>
         <Heading size="title.md">Authenticate with your access token</Heading>

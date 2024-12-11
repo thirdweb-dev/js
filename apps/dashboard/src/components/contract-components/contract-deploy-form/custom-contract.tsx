@@ -5,7 +5,6 @@ import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Accordion,
   AccordionButton,
@@ -138,7 +137,6 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
-  useLoggedInUser();
   const { onError } = useTxNotifications(
     "Successfully deployed contract",
     "Failed to deploy contract",

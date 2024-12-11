@@ -11,6 +11,7 @@ import {
   ErrorProvider,
   type TransactionError,
 } from "../../../../../../../contexts/error-handler";
+import { accountStub } from "../../../../../../../stories/stubs";
 import {
   BatchMetadataModuleUI,
   type UploadMetadataFormValues,
@@ -96,6 +97,7 @@ function Component() {
 
           <BadgeContainer label="Default">
             <BatchMetadataModuleUI
+              twAccount={accountStub()}
               contractInfo={contractInfo}
               moduleAddress="0x0000000000000000000000000000000000000000"
               uploadMetadata={uploadMetadataStub}

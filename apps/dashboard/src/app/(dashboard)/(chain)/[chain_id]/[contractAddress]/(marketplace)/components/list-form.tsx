@@ -1,6 +1,7 @@
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
@@ -78,6 +79,7 @@ type CreateListingsFormProps = {
   actionText: string;
   setOpen: Dispatch<SetStateAction<boolean>>;
   type?: "direct-listings" | "english-auctions";
+  twAccount: Account | undefined;
 };
 
 const auctionTimes = [
@@ -95,6 +97,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   type,
   actionText,
   setOpen,
+  twAccount,
 }) => {
   const trackEvent = useTrack();
   const chainId = contract.chain.id;
@@ -536,6 +539,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
           Cancel
         </Button>
         <TransactionButton
+          twAccount={twAccount}
           txChainID={contract.chain.id}
           isPending={isFormLoading}
           transactionCount={2}

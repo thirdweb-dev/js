@@ -14,6 +14,7 @@ import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
+import { accountStub } from "../../../../../../../stories/stubs";
 import {
   type MintFormValues,
   MintableModuleUI,
@@ -79,6 +80,8 @@ function Component() {
     version: "1.0.0",
   };
 
+  const twAccount = accountStub();
+
   return (
     <ThirdwebProvider>
       <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
@@ -115,6 +118,7 @@ function Component() {
 
         <BadgeContainer label="Empty Primary Sale Recipient">
           <MintableModuleUI
+            twAccount={twAccount}
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
@@ -134,6 +138,7 @@ function Component() {
 
         <BadgeContainer label="Filled Primary Sale Recipient">
           <MintableModuleUI
+            twAccount={twAccount}
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
@@ -153,6 +158,7 @@ function Component() {
 
         <BadgeContainer label="Pending">
           <MintableModuleUI
+            twAccount={twAccount}
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={true}

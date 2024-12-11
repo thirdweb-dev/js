@@ -3,6 +3,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import {
   Alert,
@@ -186,6 +187,7 @@ interface ClaimConditionsFormProps {
   isColumn?: true;
   isErc20: boolean;
   isMultiPhase: boolean;
+  twAccount: Account | undefined;
 }
 
 export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
@@ -194,6 +196,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
   isColumn,
   isErc20,
   isMultiPhase,
+  twAccount,
 }) => {
   // assume 1155 if we have a tokenId
   const isErc1155 = tokenId !== undefined;
@@ -627,6 +630,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
 
               {controlledFields.some((field) => field.fromSdk) && (
                 <ResetClaimEligibility
+                  twAccount={twAccount}
                   isErc20={isErc20}
                   contract={contract}
                   tokenId={tokenId}
@@ -646,6 +650,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                   hasRemovedPhases ||
                   !isMultiPhase ? (
                     <TransactionButton
+                      twAccount={twAccount}
                       txChainID={contract.chain.id}
                       transactionCount={1}
                       disabled={claimConditionsQuery.isPending}

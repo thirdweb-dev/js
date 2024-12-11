@@ -7,10 +7,17 @@ import { AdminsTable } from "./admins-table";
 
 interface EngineAdminsProps {
   instanceUrl: string;
+  authToken: string;
 }
 
-export const EngineAdmins: React.FC<EngineAdminsProps> = ({ instanceUrl }) => {
-  const admins = useEnginePermissions(instanceUrl);
+export const EngineAdmins: React.FC<EngineAdminsProps> = ({
+  instanceUrl,
+  authToken,
+}) => {
+  const admins = useEnginePermissions({
+    instanceUrl,
+    authToken,
+  });
 
   return (
     <div className="flex flex-col gap-4">
@@ -33,8 +40,9 @@ export const EngineAdmins: React.FC<EngineAdminsProps> = ({ instanceUrl }) => {
         admins={admins.data || []}
         isPending={admins.isPending}
         isFetched={admins.isFetched}
+        authToken={authToken}
       />
-      <AddAdminButton instanceUrl={instanceUrl} />
+      <AddAdminButton instanceUrl={instanceUrl} authToken={authToken} />
     </div>
   );
 };

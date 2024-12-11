@@ -9,13 +9,17 @@ import { ContractSubscriptionTable } from "./contract-subscriptions-table";
 
 interface EngineContractSubscriptionsProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 export const EngineContractSubscriptions: React.FC<
   EngineContractSubscriptionsProps
-> = ({ instanceUrl }) => {
+> = ({ instanceUrl, authToken }) => {
   const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
-  const contractSubscriptionsQuery = useEngineContractSubscription(instanceUrl);
+  const contractSubscriptionsQuery = useEngineContractSubscription({
+    instanceUrl,
+    authToken,
+  });
 
   return (
     <Flex flexDir="column" gap={4}>
@@ -55,8 +59,12 @@ export const EngineContractSubscriptions: React.FC<
         isPending={contractSubscriptionsQuery.isPending}
         isFetched={contractSubscriptionsQuery.isFetched}
         autoUpdate={autoUpdate}
+        authToken={authToken}
       />
-      <AddContractSubscriptionButton instanceUrl={instanceUrl} />
+      <AddContractSubscriptionButton
+        instanceUrl={instanceUrl}
+        authToken={authToken}
+      />
     </Flex>
   );
 };

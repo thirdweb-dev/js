@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { Heading } from "tw-components";
@@ -10,11 +11,13 @@ import { NftsOwned } from "./components/nfts-owned";
 interface AccountPageProps {
   contract: ThirdwebContract;
   chainMetadata: ChainMetadata;
+  twAccount: Account | undefined;
 }
 
 export const AccountPage: React.FC<AccountPageProps> = ({
   contract,
   chainMetadata,
+  twAccount,
 }) => {
   const symbol = chainMetadata.nativeCurrency.symbol || "Native Token";
 
@@ -30,6 +33,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({
 
       {chainMetadata && (
         <DepositNative
+          twAccount={twAccount}
           address={contract.address}
           symbol={symbol}
           chain={chainMetadata}

@@ -1,6 +1,7 @@
 "use client";
 
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Flex,
   FormControl,
@@ -65,9 +66,11 @@ const SocialUrlSchema = z.record(z.string(), z.string());
 export const SettingsMetadata = ({
   contract,
   detectedState,
+  twAccount,
 }: {
   contract: ThirdwebContract;
   detectedState: ExtensionDetectedState;
+  twAccount: Account | undefined;
 }) => {
   const trackEvent = useTrack();
   const metadata = useReadContract(getContractMetadata, { contract });
@@ -328,6 +331,7 @@ export const SettingsMetadata = ({
 
         <AdminOnly contract={contract}>
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
             transactionCount={1}
             disabled={metadata.isPending || !formState.isDirty}

@@ -2,7 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
-import { useApiKeys, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  type Account,
+  useApiKeys,
+  useCreateApiKey,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl, Input, Select } from "@chakra-ui/react";
 import { LazyCreateAPIKeyDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -22,6 +26,7 @@ import { Card, FormHelperText, FormLabel, Heading, Text } from "tw-components";
 interface EmbedSetupProps {
   contract: ThirdwebContract;
   ercOrMarketplace: string;
+  twAccount: Account | undefined;
 }
 
 // MAKE SURE THIS IS v1 embed hashes!!
@@ -203,10 +208,13 @@ function configureChain(
 export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   contract,
   ercOrMarketplace,
+  twAccount,
 }) => {
   const trackEvent = useTrack();
 
-  const apiKeys = useApiKeys();
+  const apiKeys = useApiKeys({
+    isLoggedIn: !!twAccount,
+  });
   const createKeyMutation = useCreateApiKey();
 
   const validApiKey = (apiKeys.data || []).find(

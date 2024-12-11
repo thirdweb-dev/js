@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import {
@@ -12,12 +13,14 @@ import { MarketplaceTable } from "../../components/marketplace-table";
 
 interface DirectListingsTableProps {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
 const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
 
 export const DirectListingsTable: React.FC<DirectListingsTableProps> = ({
   contract,
+  twAccount,
 }) => {
   const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_STATE);
   const getAllQueryResult = useReadContract(getAllListings, {
@@ -40,6 +43,7 @@ export const DirectListingsTable: React.FC<DirectListingsTableProps> = ({
       totalCountQuery={totalCountQuery}
       queryParams={queryParams}
       setQueryParams={setQueryParams}
+      twAccount={twAccount}
     />
   );
 };

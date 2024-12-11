@@ -1,5 +1,5 @@
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useQuery } from "@tanstack/react-query";
+import { useActiveAccount } from "thirdweb/react";
 
 type AggregatedData = {
   succeeded: {
@@ -60,10 +60,9 @@ export function usePayVolume(options: {
   to: Date;
   intervalType: "day" | "week";
 }) {
-  const { user } = useLoggedInUser();
-
+  const address = useActiveAccount()?.address;
   return useQuery({
-    queryKey: ["usePayVolume", user?.address, options],
+    queryKey: ["usePayVolume", address, options],
     queryFn: async () => {
       const searchParams = new URLSearchParams();
       searchParams.append("intervalType", options.intervalType);
@@ -89,7 +88,6 @@ export function usePayVolume(options: {
 
       return resJSON.result.data;
     },
-    enabled: !!user?.jwt,
     retry: false,
   });
 }

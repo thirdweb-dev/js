@@ -14,7 +14,13 @@ export function UpdatePartnerModal({
   children,
   ecosystem,
   partner,
-}: { children: React.ReactNode; ecosystem: Ecosystem; partner: Partner }) {
+  authToken,
+}: {
+  children: React.ReactNode;
+  ecosystem: Ecosystem;
+  partner: Partner;
+  authToken: string;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -28,6 +34,7 @@ export function UpdatePartnerModal({
           ecosystem={ecosystem}
           partner={partner}
           onSuccess={() => setOpen(false)}
+          authToken={authToken}
         />
       </DialogContent>
     </Dialog>

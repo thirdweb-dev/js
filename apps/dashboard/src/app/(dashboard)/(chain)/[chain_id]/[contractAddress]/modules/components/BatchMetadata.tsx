@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -105,6 +106,7 @@ export function BatchMetadataModuleUI(
     isOwnerAccount: boolean;
     uploadMetadata: (values: UploadMetadataFormValues) => Promise<void>;
     contractChainId: number;
+    twAccount: Account | undefined;
   },
 ) {
   return (
@@ -119,6 +121,7 @@ export function BatchMetadataModuleUI(
             <AccordionContent className="px-1">
               {props.isOwnerAccount && (
                 <UploadMetadataNFTSection
+                  twAccount={props.twAccount}
                   uploadMetadata={props.uploadMetadata}
                   contractChainId={props.contractChainId}
                 />
@@ -162,6 +165,7 @@ export function BatchMetadataModuleUI(
 function UploadMetadataNFTSection(props: {
   uploadMetadata: (values: UploadMetadataFormValues) => Promise<void>;
   contractChainId: number;
+  twAccount: Account | undefined;
 }) {
   const form = useForm<UploadMetadataFormValues>({
     resolver: zodResolver(uploadMetadataFormSchema),
@@ -260,6 +264,7 @@ function UploadMetadataNFTSection(props: {
 
           <div className="flex justify-end">
             <TransactionButton
+              twAccount={props.twAccount}
               size="sm"
               className="min-w-24"
               disabled={uploadMetadataMutation.isPending}

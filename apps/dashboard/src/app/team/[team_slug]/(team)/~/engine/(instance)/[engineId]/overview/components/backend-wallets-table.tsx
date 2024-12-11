@@ -43,7 +43,7 @@ import {
   UploadIcon,
 } from "lucide-react";
 import QRCode from "qrcode";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getAddress } from "thirdweb";
@@ -57,63 +57,32 @@ interface BackendWalletsTableProps {
   instanceUrl: string;
   isPending: boolean;
   isFetched: boolean;
+  authToken: string;
 }
 
 interface BackendWalletDashboard extends BackendWallet {
   balance: string;
+  authToken: string;
 }
 
 const columnHelper = createColumnHelper<BackendWalletDashboard>();
 
-const setColumns = (instanceUrl: string) => [
-  columnHelper.accessor("address", {
-    header: "Address",
-    cell: (cell) => {
-      const address = cell.getValue();
-      return <WalletAddress address={getAddress(address)} />;
-    },
-  }),
-  columnHelper.accessor("label", {
-    header: "Label",
-    cell: (cell) => {
-      return (
-        <Text isTruncated maxW={300}>
-          {cell.getValue()}
-        </Text>
-      );
-    },
-  }),
-  columnHelper.accessor("type", {
-    header: "Type",
-    cell: (cell) => {
-      return <Badge variant="outline">{cell.getValue()}</Badge>;
-    },
-  }),
-  columnHelper.accessor("address", {
-    header: "Balance",
-    cell: (cell) => {
-      const address = cell.getValue();
-      return (
-        <BackendWalletBalanceCell instanceUrl={instanceUrl} address={address} />
-      );
-    },
-    id: "balance",
-  }),
-];
-
 interface BackendWalletBalanceCellProps {
   instanceUrl: string;
   address: string;
+  authToken: string;
 }
 
 const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
   instanceUrl,
   address,
+  authToken,
 }) => {
-  const { data: backendWalletBalance } = useEngineBackendWalletBalance(
-    instanceUrl,
+  const { data: backendWalletBalance } = useEngineBackendWalletBalance({
+    instanceUrl: instanceUrl,
     address,
-  );
+    authToken,
+  });
   const chain = useActiveChainAsDashboardChain();
   if (!chain || !backendWalletBalance) {
     return;
@@ -152,12 +121,55 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
   instanceUrl,
   isPending,
   isFetched,
+  authToken,
 }) => {
   const editDisclosure = useDisclosure();
   const receiveDisclosure = useDisclosure();
   const sendDisclosure = useDisclosure();
   const deleteDisclosure = useDisclosure();
-  const columns = setColumns(instanceUrl);
+
+  const columns = useMemo(() => {
+    return [
+      columnHelper.accessor("address", {
+        header: "Address",
+        cell: (cell) => {
+          const address = cell.getValue();
+          return <WalletAddress address={getAddress(address)} />;
+        },
+      }),
+      columnHelper.accessor("label", {
+        header: "Label",
+        cell: (cell) => {
+          return (
+            <Text isTruncated maxW={300}>
+              {cell.getValue()}
+            </Text>
+          );
+        },
+      }),
+      columnHelper.accessor("type", {
+        header: "Type",
+        cell: (cell) => {
+          return <Badge variant="outline">{cell.getValue()}</Badge>;
+        },
+      }),
+      columnHelper.accessor("address", {
+        header: "Balance",
+        cell: (cell) => {
+          const address = cell.getValue();
+          return (
+            <BackendWalletBalanceCell
+              instanceUrl={instanceUrl}
+              address={address}
+              authToken={authToken}
+            />
+          );
+        },
+        id: "balance",
+      }),
+    ];
+  }, [instanceUrl, authToken]);
+
   const [selectedBackendWallet, setSelectedBackendWallet] =
     useState<BackendWallet>();
 
@@ -211,6 +223,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
           backendWallet={selectedBackendWallet}
           disclosure={editDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
       {selectedBackendWallet && receiveDisclosure.isOpen && (
@@ -225,6 +238,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
           backendWallets={wallets}
           disclosure={sendDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
       {selectedBackendWallet && deleteDisclosure.isOpen && (
@@ -232,6 +246,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
           backendWallet={selectedBackendWallet}
           disclosure={deleteDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
     </>
@@ -242,12 +257,17 @@ const EditModal = ({
   backendWallet,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   backendWallet: BackendWallet;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) => {
-  const updateBackendWallet = useEngineUpdateBackendWallet(instanceUrl);
+  const updateBackendWallet = useEngineUpdateBackendWallet({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
 
   const [label, setLabel] = useState(backendWallet.label ?? "");
@@ -393,19 +413,25 @@ const SendFundsModal = ({
   backendWallets,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   fromWallet: BackendWallet;
   backendWallets: BackendWallet[];
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) => {
   const chain = useActiveChainAsDashboardChain();
   const form = useForm<SendFundsInput>();
-  const sendTokens = useEngineSendTokens(instanceUrl);
-  const { data: backendWalletBalance } = useEngineBackendWalletBalance(
+  const sendTokens = useEngineSendTokens({
     instanceUrl,
-    fromWallet.address,
-  );
+    authToken,
+  });
+  const { data: backendWalletBalance } = useEngineBackendWalletBalance({
+    instanceUrl,
+    address: fromWallet.address,
+    authToken,
+  });
   const toWalletDisclosure = useDisclosure();
 
   if (!backendWalletBalance) {
@@ -539,12 +565,17 @@ function DeleteModal({
   backendWallet,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   backendWallet: BackendWallet;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) {
-  const deleteBackendWallet = useEngineDeleteBackendWallet(instanceUrl);
+  const deleteBackendWallet = useEngineDeleteBackendWallet({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
 
   const isLocalWallet =

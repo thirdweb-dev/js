@@ -5,6 +5,7 @@ import { CodeClient } from "@/components/ui/code/code.client";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import { InlineCode } from "@/components/ui/inline-code";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   ButtonGroup,
   Divider,
@@ -131,6 +132,7 @@ function formatContractCall(
 interface InteractiveAbiFunctionProps {
   abiFunction: AbiFunction;
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
 function useAsyncRead(contract: ThirdwebContract, functionName: string) {
@@ -203,10 +205,11 @@ ${(err as Error).message || ""}`);
   });
 }
 
-export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
-  abiFunction,
-  contract,
-}) => {
+export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
+  props,
+) => {
+  const { abiFunction, contract } = props;
+
   const formId = useId();
   const form = useForm({
     defaultValues: {
@@ -515,6 +518,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 form={formId}
                 onClick={handleContractWrite}
                 txChainID={contract.chain.id}
+                twAccount={props.twAccount}
               >
                 Execute
               </TransactionButton>

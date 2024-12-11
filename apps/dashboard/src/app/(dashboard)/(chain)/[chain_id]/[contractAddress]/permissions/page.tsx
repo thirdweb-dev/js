@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { localhost } from "thirdweb/chains";
+import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { ContractPermissionsPage } from "./ContractPermissionsPage";
@@ -18,12 +19,15 @@ export default async function Page(props: {
     notFound();
   }
 
+  const account = await getRawAccount();
+
   const { contract } = info;
   if (contract.chain.id === localhost.id) {
     return (
       <ContractPermissionsPageClient
         contract={contract}
         chainMetadata={info.chainMetadata}
+        twAccount={account}
       />
     );
   }
@@ -36,6 +40,7 @@ export default async function Page(props: {
       contract={contract}
       chainSlug={info.chainMetadata.slug}
       detectedPermissionEnumerable={isPermissionsEnumerableSupported}
+      twAccount={account}
     />
   );
 }

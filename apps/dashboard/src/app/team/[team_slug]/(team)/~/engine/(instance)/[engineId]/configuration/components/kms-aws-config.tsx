@@ -17,13 +17,21 @@ import { useForm } from "react-hook-form";
 
 interface KmsAwsConfigProps {
   instance: EngineInstance;
+  authToken: string;
 }
 
-export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({ instance }) => {
-  const { mutate: setAwsKmsConfig, isPending } = useEngineSetWalletConfig(
-    instance.url,
-  );
-  const { data: awsConfig } = useEngineWalletConfig(instance.url);
+export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({
+  instance,
+  authToken,
+}) => {
+  const { mutate: setAwsKmsConfig, isPending } = useEngineSetWalletConfig({
+    instanceUrl: instance.url,
+    authToken,
+  });
+  const { data: awsConfig } = useEngineWalletConfig({
+    instanceUrl: instance.url,
+    authToken,
+  });
   const { isSupported: supportsMultipleWalletTypes } = useHasEngineFeature(
     instance.url,
     "HETEROGENEOUS_WALLET_TYPES",

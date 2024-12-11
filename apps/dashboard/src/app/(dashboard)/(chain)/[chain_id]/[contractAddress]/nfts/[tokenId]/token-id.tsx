@@ -8,6 +8,7 @@ import { CodeClient } from "@/components/ui/code/code.client";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Box,
   ButtonGroup,
@@ -53,6 +54,7 @@ interface TokenIdPageProps {
   tokenId: string;
   contract: ThirdwebContract;
   isErc721: boolean;
+  twAccount: Account | undefined;
 }
 
 // TODO: verify the entire nft object with zod schema and display an error message
@@ -61,6 +63,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   contract,
   tokenId,
   isErc721,
+  twAccount,
 }) => {
   const [tab, setTab] = useState("Details");
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -71,6 +74,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   const tabs = useNFTDrawerTabs({
     contract,
     tokenId,
+    twAccount,
   });
 
   const client = useThirdwebClient();

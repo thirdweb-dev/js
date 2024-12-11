@@ -32,6 +32,7 @@ interface AccessTokensTableProps {
   accessTokens: AccessToken[];
   isPending: boolean;
   isFetched: boolean;
+  authToken: string;
 }
 
 const columnHelper = createColumnHelper<AccessToken>();
@@ -80,6 +81,7 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
   accessTokens,
   isPending,
   isFetched,
+  authToken,
 }) => {
   const editDisclosure = useDisclosure();
   const removeDisclosure = useDisclosure();
@@ -119,6 +121,7 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
           accessToken={selectedAccessToken}
           disclosure={editDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
       {selectedAccessToken && removeDisclosure.isOpen && (
@@ -126,6 +129,7 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
           accessToken={selectedAccessToken}
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
     </>
@@ -136,12 +140,17 @@ const EditModal = ({
   accessToken,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   accessToken: AccessToken;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) => {
-  const { mutate: updateAccessToken } = useEngineUpdateAccessToken(instanceUrl);
+  const { mutate: updateAccessToken } = useEngineUpdateAccessToken({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated access token",
@@ -222,12 +231,17 @@ const RemoveModal = ({
   accessToken,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   accessToken: AccessToken;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) => {
-  const { mutate: deleteAccessToken } = useEngineRevokeAccessToken(instanceUrl);
+  const { mutate: deleteAccessToken } = useEngineRevokeAccessToken({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully deleted access token",

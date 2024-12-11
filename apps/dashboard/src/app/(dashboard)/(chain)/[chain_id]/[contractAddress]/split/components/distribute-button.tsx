@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useSplitDistributeFunds } from "@3rdweb-sdk/react/hooks/useSplit";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -14,6 +15,7 @@ interface DistributeButtonProps {
   balances: Balance[];
   balancesisPending: boolean;
   balancesIsError: boolean;
+  twAccount: Account | undefined;
 }
 
 export const DistributeButton: React.FC<DistributeButtonProps> = ({
@@ -21,6 +23,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
   balances,
   balancesisPending,
   balancesIsError,
+  twAccount,
   ...restButtonProps
 }) => {
   const trackEvent = useTrack();
@@ -74,6 +77,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
   if (balancesIsError) {
     return (
       <TransactionButton
+        twAccount={twAccount}
         isPending={mutation.isPending}
         onClick={distributeFunds}
         txChainID={contract.chain.id}
@@ -96,6 +100,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
 
   return (
     <TransactionButton
+      twAccount={twAccount}
       transactionCount={numTransactions}
       isPending={mutation.isPending}
       onClick={distributeFunds}

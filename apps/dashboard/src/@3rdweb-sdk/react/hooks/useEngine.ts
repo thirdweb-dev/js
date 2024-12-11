@@ -8,7 +8,6 @@ import { useState } from "react";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { engineKeys } from "../cache-keys";
-import { useLoggedInUser } from "./useLoggedInUser";
 
 export type EngineTier = "STARTER" | "PREMIUM" | "ENTERPRISE";
 
@@ -48,11 +47,11 @@ const getEngineRequestHeaders = (token: string | null): HeadersInit => {
   };
 };
 
+// TODO - add authToken in queryKey instead
 export function useEngineInstances() {
-  const { user, isLoggedIn } = useLoggedInUser();
-
+  const address = useActiveAccount()?.address;
   return useQuery({
-    queryKey: engineKeys.instances(user?.address as string),
+    queryKey: engineKeys.instances(address || ""),
     queryFn: async (): Promise<EngineInstance[]> => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine`, {
         method: "GET",
@@ -75,7 +74,7 @@ export function useEngineInstances() {
         };
       });
     },
-    enabled: !!user?.address && isLoggedIn,
+    enabled: !!address,
   });
 }
 
@@ -93,22 +92,24 @@ export type BackendWallet = {
   gcpKmsResourcePath?: string | null;
 };
 
-export function useEngineBackendWallets(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
-
+export function useEngineBackendWallets(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   return useQuery({
-    queryKey: [engineKeys.backendWallets(instance)],
+    queryKey: [engineKeys.backendWallets(instanceUrl), authToken],
     queryFn: async () => {
-      const res = await fetch(`${instance}backend-wallet/get-all?limit=50`, {
+      const res = await fetch(`${instanceUrl}backend-wallet/get-all?limit=50`, {
         method: "GET",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
 
       const json = await res.json();
 
       return (json.result as BackendWallet[]) || [];
     },
-    enabled: !!instance && !!token,
+    enabled: !!instanceUrl,
   });
 }
 
@@ -169,24 +170,25 @@ interface EngineSystemQueueMetrics {
   };
 }
 
-export function useEngineQueueMetrics(
-  instanceUrl: string,
-  pollInterval: number | false = false,
-) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineQueueMetrics(params: {
+  instanceUrl: string;
+  pollInterval: number | false;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
+  const pollInterval = params.pollInterval || false;
 
   return useQuery({
-    queryKey: engineKeys.queueMetrics(instanceUrl),
+    queryKey: [...engineKeys.queueMetrics(instanceUrl), authToken],
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}system/queue`, {
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
       return (await res.json()) as EngineSystemQueueMetrics;
     },
-    enabled: !!instanceUrl && !!token,
     refetchInterval: pollInterval,
   });
 }
@@ -253,7 +255,7 @@ export function useEngineUpdateDeployment() {
 }
 
 export function useEngineRemoveFromDashboard() {
-  const { user } = useLoggedInUser();
+  const address = useActiveAccount()?.address;
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -272,7 +274,7 @@ export function useEngineRemoveFromDashboard() {
 
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.instances(user?.address as string),
+        queryKey: engineKeys.instances(address || ""),
       });
     },
   });
@@ -285,7 +287,7 @@ export interface DeleteCloudHostedInput {
 }
 
 export function useEngineDeleteCloudHosted() {
-  const { user } = useLoggedInUser();
+  const address = useActiveAccount()?.address;
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -313,7 +315,7 @@ export function useEngineDeleteCloudHosted() {
 
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.instances(user?.address as string),
+        queryKey: engineKeys.instances(address || ""),
       });
     },
   });
@@ -326,7 +328,7 @@ export interface EditEngineInstanceInput {
 }
 
 export function useEngineEditInstance() {
-  const { user } = useLoggedInUser();
+  const address = useActiveAccount()?.address;
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -348,7 +350,7 @@ export function useEngineEditInstance() {
 
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.instances(user?.address as string),
+        queryKey: engineKeys.instances(address || ""),
       });
     },
   });
@@ -413,23 +415,26 @@ type TransactionResponse = {
  * @param autoUpdate - If true, refetches every 4 seconds.
  * @returns
  */
-export function useEngineTransactions(instance: string, autoUpdate: boolean) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineTransactions(params: {
+  instanceUrl: string;
+  autoUpdate: boolean;
+  authToken: string;
+}) {
+  const { instanceUrl, autoUpdate, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.transactions(instance),
+    queryKey: engineKeys.transactions(instanceUrl),
     queryFn: async () => {
-      const res = await fetch(`${instance}transaction/get-all`, {
+      const res = await fetch(`${instanceUrl}transaction/get-all`, {
         method: "GET",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
 
       const json = await res.json();
 
       return (json.result as TransactionResponse) || {};
     },
-
-    enabled: !!instance && !!token,
+    enabled: !!instanceUrl,
     refetchInterval: autoUpdate ? 4_000 : false,
   });
 }
@@ -446,21 +451,23 @@ export interface WalletConfigResponse {
   gcpApplicationCredentialEmail?: string | null;
 }
 
-export function useEngineWalletConfig(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
-
+export function useEngineWalletConfig(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   return useQuery<WalletConfigResponse>({
-    queryKey: engineKeys.walletConfig(instance),
+    queryKey: engineKeys.walletConfig(instanceUrl),
     queryFn: async () => {
-      const res = await fetch(`${instance}configuration/wallets`, {
+      const res = await fetch(`${instanceUrl}configuration/wallets`, {
         method: "GET",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
 
       const json = await res.json();
       return json.result;
     },
-    enabled: !!instance && !!token,
+    enabled: !!instanceUrl,
   });
 }
 
@@ -472,23 +479,24 @@ type CurrencyValue = {
   displayValue: string;
 };
 
-export function useEngineBackendWalletBalance(
-  instance: string,
-  address: string,
-) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineBackendWalletBalance(params: {
+  instanceUrl: string;
+  address: string;
+  authToken: string;
+}) {
+  const { instanceUrl, address, authToken } = params;
   const chainId = useActiveWalletChain()?.id;
 
-  invariant(chainId, "chainId is required");
-
   return useQuery({
-    queryKey: engineKeys.backendWalletBalance(address, chainId),
+    queryKey: engineKeys.backendWalletBalance(address, chainId || 1),
     queryFn: async () => {
+      invariant(chainId, "chainId is required");
+
       const res = await fetch(
-        `${instance}backend-wallet/${chainId}/${address}/get-balance`,
+        `${instanceUrl}backend-wallet/${chainId}/${address}/get-balance`,
         {
           method: "GET",
-          headers: getEngineRequestHeaders(token),
+          headers: getEngineRequestHeaders(authToken),
         },
       );
 
@@ -496,7 +504,7 @@ export function useEngineBackendWalletBalance(
 
       return (json.result as CurrencyValue) || {};
     },
-    enabled: !!instance && !!address && !!chainId && !!token,
+    enabled: !!instanceUrl && !!address && !!chainId,
   });
 }
 
@@ -506,16 +514,19 @@ export type EngineAdmin = {
   permissions: "OWNER" | "ADMIN";
 };
 
-export function useEnginePermissions(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEnginePermissions(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const address = useActiveAccount()?.address;
 
   return useQuery({
-    queryKey: engineKeys.permissions(instance),
+    queryKey: engineKeys.permissions(instanceUrl),
     queryFn: async () => {
-      const res = await fetch(`${instance}auth/permissions/get-all`, {
+      const res = await fetch(`${instanceUrl}auth/permissions/get-all`, {
         method: "GET",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
 
       if (res.status !== 200) {
@@ -527,7 +538,7 @@ export function useEnginePermissions(instance: string) {
       return (json.result as EngineAdmin[]) || [];
     },
 
-    enabled: !!instance && !!token && !!address,
+    enabled: !!instanceUrl && !!address,
   });
 }
 
@@ -540,22 +551,24 @@ export type AccessToken = {
   label?: string;
 };
 
-export function useEngineAccessTokens(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
-
+export function useEngineAccessTokens(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   return useQuery({
-    queryKey: engineKeys.accessTokens(instance),
+    queryKey: engineKeys.accessTokens(instanceUrl),
     queryFn: async () => {
-      const res = await fetch(`${instance}auth/access-tokens/get-all`, {
+      const res = await fetch(`${instanceUrl}auth/access-tokens/get-all`, {
         method: "GET",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
 
       const json = await res.json();
 
       return (json.result as AccessToken[]) || [];
     },
-    enabled: !!instance && !!token,
+    enabled: !!instanceUrl,
   });
 }
 
@@ -570,22 +583,25 @@ export type Keypair = {
   updatedAt: string;
 };
 
-export function useEngineKeypairs(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineKeypairs(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.keypairs(instance),
+    queryKey: engineKeys.keypairs(instanceUrl),
     queryFn: async () => {
-      const res = await fetch(`${instance}auth/keypair/get-all`, {
+      const res = await fetch(`${instanceUrl}auth/keypair/get-all`, {
         method: "GET",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
 
       const json = await res.json();
 
       return (json.result as Keypair[]) || [];
     },
-    enabled: !!instance && !!token,
+    enabled: !!instanceUrl,
   });
 }
 
@@ -595,17 +611,20 @@ type AddKeypairInput = {
   algorithm: string;
 };
 
-export function useEngineAddKeypair(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineAddKeypair(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: AddKeypairInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}auth/keypair/add`, {
+      const res = await fetch(`${instanceUrl}auth/keypair/add`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -618,7 +637,7 @@ export function useEngineAddKeypair(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.keypairs(instance),
+        queryKey: engineKeys.keypairs(instanceUrl),
       });
     },
   });
@@ -628,17 +647,20 @@ type RemoveKeypairInput = {
   hash: string;
 };
 
-export function useEngineRemoveKeypair(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineRemoveKeypair(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: RemoveKeypairInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}auth/keypair/remove`, {
+      const res = await fetch(`${instanceUrl}auth/keypair/remove`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -651,7 +673,7 @@ export function useEngineRemoveKeypair(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.keypairs(instance),
+        queryKey: engineKeys.keypairs(instanceUrl),
       });
     },
   });
@@ -666,22 +688,25 @@ export type EngineRelayer = {
   allowedForwarders?: string[];
 };
 
-export function useEngineRelayer(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineRelayer(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.relayers(instance),
+    queryKey: engineKeys.relayers(instanceUrl),
     queryFn: async () => {
-      const res = await fetch(`${instance}relayer/get-all`, {
+      const res = await fetch(`${instanceUrl}relayer/get-all`, {
         method: "GET",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
 
       const json = await res.json();
 
       return (json.result as EngineRelayer[]) || [];
     },
-    enabled: !!instance && !!token,
+    enabled: !!instanceUrl,
   });
 }
 
@@ -693,17 +718,20 @@ export type CreateRelayerInput = {
   allowedForwarders?: string[];
 };
 
-export function useEngineCreateRelayer(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineCreateRelayer(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: CreateRelayerInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}relayer/create`, {
+      const res = await fetch(`${instanceUrl}relayer/create`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -716,7 +744,7 @@ export function useEngineCreateRelayer(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.relayers(instance),
+        queryKey: engineKeys.relayers(instanceUrl),
       });
     },
   });
@@ -726,17 +754,20 @@ type RevokeRelayerInput = {
   id: string;
 };
 
-export function useEngineRevokeRelayer(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineRevokeRelayer(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: RevokeRelayerInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}relayer/revoke`, {
+      const res = await fetch(`${instanceUrl}relayer/revoke`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -749,7 +780,7 @@ export function useEngineRevokeRelayer(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.relayers(instance),
+        queryKey: engineKeys.relayers(instanceUrl),
       });
     },
   });
@@ -764,17 +795,20 @@ export type UpdateRelayerInput = {
   allowedForwarders?: string[];
 };
 
-export function useEngineUpdateRelayer(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineUpdateRelayer(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: UpdateRelayerInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}relayer/update`, {
+      const res = await fetch(`${instanceUrl}relayer/update`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -787,7 +821,7 @@ export function useEngineUpdateRelayer(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.relayers(instance),
+        queryKey: engineKeys.relayers(instanceUrl),
       });
     },
   });
@@ -803,22 +837,25 @@ export interface EngineWebhook {
   id: number;
 }
 
-export function useEngineWebhooks(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineWebhooks(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.webhooks(instance),
+    queryKey: engineKeys.webhooks(instanceUrl),
     queryFn: async () => {
-      const res = await fetch(`${instance}webhooks/get-all`, {
+      const res = await fetch(`${instanceUrl}webhooks/get-all`, {
         method: "GET",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
 
       const json = await res.json();
 
       return (json.result as EngineWebhook[]) || [];
     },
-    enabled: !!instance && !!token,
+    enabled: !!instanceUrl,
   });
 }
 
@@ -839,17 +876,20 @@ export type SetWalletConfigInput =
       gcpApplicationCredentialPrivateKey: string;
     };
 
-export function useEngineSetWalletConfig(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineSetWalletConfig(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation<WalletConfigResponse, void, SetWalletConfigInput>({
     mutationFn: async (input) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}configuration/wallets`, {
+      const res = await fetch(`${instanceUrl}configuration/wallets`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -862,7 +902,7 @@ export function useEngineSetWalletConfig(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.walletConfig(instance),
+        queryKey: engineKeys.walletConfig(instanceUrl),
       });
     },
   });
@@ -873,17 +913,20 @@ export type CreateBackendWalletInput = {
   label?: string;
 };
 
-export function useEngineCreateBackendWallet(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineCreateBackendWallet(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: CreateBackendWalletInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}backend-wallet/create`, {
+      const res = await fetch(`${instanceUrl}backend-wallet/create`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -896,7 +939,7 @@ export function useEngineCreateBackendWallet(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.backendWallets(instance),
+        queryKey: engineKeys.backendWallets(instanceUrl),
       });
     },
   });
@@ -907,17 +950,20 @@ interface UpdateBackendWalletInput {
   label?: string;
 }
 
-export function useEngineUpdateBackendWallet(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineUpdateBackendWallet(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: UpdateBackendWalletInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}backend-wallet/update`, {
+      const res = await fetch(`${instanceUrl}backend-wallet/update`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -930,7 +976,7 @@ export function useEngineUpdateBackendWallet(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.backendWallets(instance),
+        queryKey: engineKeys.backendWallets(instanceUrl),
       });
     },
   });
@@ -951,17 +997,20 @@ export type ImportBackendWalletInput = {
   password?: string;
 };
 
-export function useEngineImportBackendWallet(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineImportBackendWallet(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: ImportBackendWalletInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}backend-wallet/import`, {
+      const res = await fetch(`${instanceUrl}backend-wallet/import`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -974,7 +1023,7 @@ export function useEngineImportBackendWallet(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.backendWallets(instance),
+        queryKey: engineKeys.backendWallets(instanceUrl),
       });
     },
   });
@@ -983,19 +1032,22 @@ export function useEngineImportBackendWallet(instance: string) {
 interface DeleteBackendWalletInput {
   walletAddress: string;
 }
-export function useEngineDeleteBackendWallet(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineDeleteBackendWallet(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: DeleteBackendWalletInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
       const res = await fetch(
-        `${instance}backend-wallet/${input.walletAddress}`,
+        `${instanceUrl}backend-wallet/${input.walletAddress}`,
         {
           method: "DELETE",
-          headers: getEngineRequestHeaders(token),
+          headers: getEngineRequestHeaders(authToken),
         },
       );
       const json = await res.json();
@@ -1007,23 +1059,26 @@ export function useEngineDeleteBackendWallet(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.backendWallets(instance),
+        queryKey: engineKeys.backendWallets(instanceUrl),
       });
     },
   });
 }
 
-export function useEngineGrantPermissions(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineGrantPermissions(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: EngineAdmin) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}auth/permissions/grant`, {
+      const res = await fetch(`${instanceUrl}auth/permissions/grant`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -1036,7 +1091,7 @@ export function useEngineGrantPermissions(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.permissions(instance),
+        queryKey: engineKeys.permissions(instanceUrl),
       });
     },
   });
@@ -1046,17 +1101,20 @@ type RevokePermissionsInput = {
   walletAddress: string;
 };
 
-export function useEngineRevokePermissions(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineRevokePermissions(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: RevokePermissionsInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}auth/permissions/revoke`, {
+      const res = await fetch(`${instanceUrl}auth/permissions/revoke`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -1069,7 +1127,7 @@ export function useEngineRevokePermissions(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.permissions(instance),
+        queryKey: engineKeys.permissions(instanceUrl),
       });
     },
   });
@@ -1079,17 +1137,20 @@ type CreateAccessTokenResponse = AccessToken & {
   accessToken: string;
 };
 
-export function useEngineCreateAccessToken(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineCreateAccessToken(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}auth/access-tokens/create`, {
+      const res = await fetch(`${instanceUrl}auth/access-tokens/create`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify({}),
       });
       const json = await res.json();
@@ -1102,7 +1163,7 @@ export function useEngineCreateAccessToken(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.accessTokens(instance),
+        queryKey: engineKeys.accessTokens(instanceUrl),
       });
     },
   });
@@ -1112,17 +1173,20 @@ type RevokeAccessTokenInput = {
   id: string;
 };
 
-export function useEngineRevokeAccessToken(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineRevokeAccessToken(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: RevokeAccessTokenInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}auth/access-tokens/revoke`, {
+      const res = await fetch(`${instanceUrl}auth/access-tokens/revoke`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -1135,7 +1199,7 @@ export function useEngineRevokeAccessToken(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.accessTokens(instance),
+        queryKey: engineKeys.accessTokens(instanceUrl),
       });
     },
   });
@@ -1146,17 +1210,20 @@ type UpdateAccessTokenInput = {
   label?: string;
 };
 
-export function useEngineUpdateAccessToken(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineUpdateAccessToken(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: UpdateAccessTokenInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}auth/access-tokens/update`, {
+      const res = await fetch(`${instanceUrl}auth/access-tokens/update`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -1169,7 +1236,7 @@ export function useEngineUpdateAccessToken(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.accessTokens(instance),
+        queryKey: engineKeys.accessTokens(instanceUrl),
       });
     },
   });
@@ -1181,17 +1248,20 @@ export type CreateWebhookInput = {
   eventType: string;
 };
 
-export function useEngineCreateWebhook(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineCreateWebhook(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: CreateWebhookInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}webhooks/create`, {
+      const res = await fetch(`${instanceUrl}webhooks/create`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -1204,7 +1274,7 @@ export function useEngineCreateWebhook(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.webhooks(instance),
+        queryKey: engineKeys.webhooks(instanceUrl),
       });
     },
   });
@@ -1213,17 +1283,20 @@ export function useEngineCreateWebhook(instance: string) {
 type DeleteWebhookInput = {
   id: number;
 };
-export function useEngineDeleteWebhook(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineDeleteWebhook(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: DeleteWebhookInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}webhooks/revoke`, {
+      const res = await fetch(`${instanceUrl}webhooks/revoke`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -1234,7 +1307,7 @@ export function useEngineDeleteWebhook(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.webhooks(instance),
+        queryKey: engineKeys.webhooks(instanceUrl),
       });
     },
   });
@@ -1248,17 +1321,20 @@ interface TestWebhookResponse {
   status: number;
   body: string;
 }
-export function useEngineTestWebhook(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineTestWebhook(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
   return useMutation<TestWebhookResponse, Error, TestWebhookInput>({
     mutationFn: async (input: TestWebhookInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}webhooks/${input.id}/test`, {
+      const res = await fetch(`${instanceUrl}webhooks/${input.id}/test`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify({}),
       });
       const json = await res.json();
@@ -1269,7 +1345,7 @@ export function useEngineTestWebhook(instance: string) {
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.webhooks(instance),
+        queryKey: engineKeys.webhooks(instanceUrl),
       });
     },
   });
@@ -1283,19 +1359,22 @@ type SendTokensInput = {
   currencyAddress?: string;
 };
 
-export function useEngineSendTokens(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineSendTokens(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
 
   return useMutation({
     mutationFn: async (input: SendTokensInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
       const res = await fetch(
-        `${instance}backend-wallet/${input.chainId}/transfer`,
+        `${instanceUrl}backend-wallet/${input.chainId}/transfer`,
         {
           method: "POST",
           headers: {
-            ...getEngineRequestHeaders(token),
+            ...getEngineRequestHeaders(authToken),
             "x-backend-wallet-address": input.fromAddress,
           },
           body: JSON.stringify({
@@ -1316,22 +1395,24 @@ export function useEngineSendTokens(instance: string) {
   });
 }
 
-export function useEngineCorsConfiguration(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineCorsConfiguration(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.corsUrls(instance),
+    queryKey: engineKeys.corsUrls(instanceUrl),
     queryFn: async () => {
-      const res = await fetch(`${instance}configuration/cors`, {
+      const res = await fetch(`${instanceUrl}configuration/cors`, {
         method: "GET",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
 
       const json = await res.json();
 
       return (json.result as string[]) || [];
     },
-    enabled: !!instance && !!token,
   });
 }
 
@@ -1339,17 +1420,20 @@ interface SetCorsUrlInput {
   urls: string[];
 }
 
-export function useEngineSetCorsConfiguration(instance: string) {
+export function useEngineSetCorsConfiguration(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
   const queryClient = useQueryClient();
-  const token = useLoggedInUser().user?.jwt ?? null;
+  const { instanceUrl, authToken } = params;
 
   return useMutation({
     mutationFn: async (input: SetCorsUrlInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}configuration/cors`, {
+      const res = await fetch(`${instanceUrl}configuration/cors`, {
         method: "PUT",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -1363,33 +1447,35 @@ export function useEngineSetCorsConfiguration(instance: string) {
 
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.corsUrls(instance),
+        queryKey: engineKeys.corsUrls(instanceUrl),
       });
     },
   });
 }
 
-export function useEngineIpAllowlistConfiguration(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineIpAllowlistConfiguration(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
 
   // don't bother sending requests that bounce
   // if engine instance is not updated to have IP_ALLOWLIST
-  const { data: health } = useEngineSystemHealth(instance);
+  const { data: health } = useEngineSystemHealth(instanceUrl);
 
   return useQuery({
-    queryKey: engineKeys.ipAllowlist(instance),
+    queryKey: engineKeys.ipAllowlist(instanceUrl),
     queryFn: async () => {
-      const res = await fetch(`${instance}configuration/ip-allowlist`, {
+      const res = await fetch(`${instanceUrl}configuration/ip-allowlist`, {
         method: "GET",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
 
       const json = await res.json();
       return (json.result as string[]) || [];
     },
 
-    enabled:
-      !!instance && !!token && health?.features?.includes("IP_ALLOWLIST"),
+    enabled: health?.features?.includes("IP_ALLOWLIST"),
   });
 }
 
@@ -1397,17 +1483,20 @@ interface SetIpAllowlistInput {
   ips: string[];
 }
 
-export function useEngineSetIpAllowlistConfiguration(instance: string) {
+export function useEngineSetIpAllowlistConfiguration(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
   const queryClient = useQueryClient();
-  const token = useLoggedInUser().user?.jwt ?? null;
+  const { instanceUrl, authToken } = params;
 
   return useMutation({
     mutationFn: async (input: SetIpAllowlistInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}configuration/ip-allowlist`, {
+      const res = await fetch(`${instanceUrl}configuration/ip-allowlist`, {
         method: "PUT",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -1421,7 +1510,7 @@ export function useEngineSetIpAllowlistConfiguration(instance: string) {
 
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.ipAllowlist(instance),
+        queryKey: engineKeys.ipAllowlist(instanceUrl),
       });
     },
   });
@@ -1442,21 +1531,22 @@ export interface EngineContractSubscription {
   lastIndexedBlock: string;
 }
 
-export function useEngineContractSubscription(instance: string) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineContractSubscription(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   return useQuery({
-    queryKey: engineKeys.contractSubscriptions(instance),
+    queryKey: engineKeys.contractSubscriptions(instanceUrl),
     queryFn: async () => {
-      const res = await fetch(`${instance}contract-subscriptions/get-all`, {
+      const res = await fetch(`${instanceUrl}contract-subscriptions/get-all`, {
         method: "GET",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
       });
 
       const json = await res.json();
       return json.result as EngineContractSubscription[];
     },
-
-    enabled: !!instance && !!token,
   });
 }
 
@@ -1470,17 +1560,20 @@ export interface AddContractSubscriptionInput {
   filterFunctions: string[];
 }
 
-export function useEngineAddContractSubscription(instance: string) {
+export function useEngineAddContractSubscription(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
-  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useMutation({
     mutationFn: async (input: AddContractSubscriptionInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}contract-subscriptions/add`, {
+      const res = await fetch(`${instanceUrl}contract-subscriptions/add`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -1494,7 +1587,7 @@ export function useEngineAddContractSubscription(instance: string) {
 
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.contractSubscriptions(instance),
+        queryKey: engineKeys.contractSubscriptions(instanceUrl),
       });
     },
   });
@@ -1504,17 +1597,20 @@ interface RemoveContractSubscriptionInput {
   contractSubscriptionId: string;
 }
 
-export function useEngineRemoveContractSubscription(instance: string) {
+export function useEngineRemoveContractSubscription(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
-  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useMutation({
     mutationFn: async (input: RemoveContractSubscriptionInput) => {
-      invariant(instance, "instance is required");
+      invariant(instanceUrl, "instance is required");
 
-      const res = await fetch(`${instance}contract-subscriptions/remove`, {
+      const res = await fetch(`${instanceUrl}contract-subscriptions/remove`, {
         method: "POST",
-        headers: getEngineRequestHeaders(token),
+        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
       });
       const json = await res.json();
@@ -1528,18 +1624,19 @@ export function useEngineRemoveContractSubscription(instance: string) {
 
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: engineKeys.contractSubscriptions(instance),
+        queryKey: engineKeys.contractSubscriptions(instanceUrl),
       });
     },
   });
 }
 
-export function useEngineSubscriptionsLastBlock(
-  instanceUrl: string,
-  chainId: number,
-  autoUpdate: boolean,
-) {
-  const token = useLoggedInUser().user?.jwt ?? null;
+export function useEngineSubscriptionsLastBlock(params: {
+  instanceUrl: string;
+  chainId: number;
+  autoUpdate: boolean;
+  authToken: string;
+}) {
+  const { instanceUrl, chainId, autoUpdate, authToken } = params;
 
   return useQuery({
     queryKey: engineKeys.contractSubscriptionsLastBlock(instanceUrl, chainId),
@@ -1548,15 +1645,15 @@ export function useEngineSubscriptionsLastBlock(
         `${instanceUrl}contract-subscriptions/last-block?chain=${chainId}`,
         {
           method: "GET",
-          headers: getEngineRequestHeaders(token),
+          headers: getEngineRequestHeaders(authToken),
         },
       );
 
       const json = await response.json();
       return json.result.lastBlock as number;
     },
+    enabled: !!instanceUrl,
 
-    enabled: !!instanceUrl && !!token,
     refetchInterval: autoUpdate ? 5_000 : false,
   });
 }
@@ -1608,8 +1705,6 @@ export interface EngineAlertRule {
 }
 
 export function useEngineAlertRules(engineId: string) {
-  const { isLoggedIn } = useLoggedInUser();
-
   return useQuery({
     queryKey: engineKeys.alertRules(engineId),
     queryFn: async () => {
@@ -1624,7 +1719,6 @@ export function useEngineAlertRules(engineId: string) {
       const json = await res.json();
       return json.data as EngineAlertRule[];
     },
-    enabled: isLoggedIn,
   });
 }
 
@@ -1637,8 +1731,6 @@ export interface EngineAlert {
 }
 
 export function useEngineAlerts(engineId: string, limit: number, offset = 0) {
-  const { isLoggedIn } = useLoggedInUser();
-
   return useQuery({
     queryKey: engineKeys.alerts(engineId),
     queryFn: async () => {
@@ -1653,7 +1745,6 @@ export function useEngineAlerts(engineId: string, limit: number, offset = 0) {
       const json = await res.json();
       return json.data as EngineAlert[];
     },
-    enabled: isLoggedIn,
   });
 }
 
@@ -1684,8 +1775,6 @@ export type EngineNotificationChannel = {
 };
 
 export function useEngineNotificationChannels(engineId: string) {
-  const { isLoggedIn } = useLoggedInUser();
-
   return useQuery({
     queryKey: engineKeys.notificationChannels(engineId),
     queryFn: async () => {
@@ -1700,7 +1789,6 @@ export function useEngineNotificationChannels(engineId: string) {
       const json = await res.json();
       return json.data as EngineNotificationChannel[];
     },
-    enabled: isLoggedIn,
   });
 }
 
@@ -1711,13 +1799,10 @@ export interface CreateNotificationChannelInput {
 }
 
 export function useEngineCreateNotificationChannel(engineId: string) {
-  const { isLoggedIn } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (input: CreateNotificationChannelInput) => {
-      invariant(isLoggedIn, "Must be logged in.");
-
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/engine/${engineId}/notification-channels`,
         {
@@ -1744,13 +1829,10 @@ export function useEngineCreateNotificationChannel(engineId: string) {
 }
 
 export function useEngineDeleteNotificationChannel(engineId: string) {
-  const { isLoggedIn } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (notificationChannelId: string) => {
-      invariant(isLoggedIn, "Must be logged in.");
-
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/engine/${engineId}/notification-channels/${notificationChannelId}`,
         {

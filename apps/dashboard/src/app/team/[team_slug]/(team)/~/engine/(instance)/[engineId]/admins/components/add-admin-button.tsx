@@ -24,13 +24,18 @@ import { Button, FormLabel } from "tw-components";
 
 interface AddAdminButtonProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
   instanceUrl,
+  authToken,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: grantPermissions } = useEngineGrantPermissions(instanceUrl);
+  const { mutate: grantPermissions } = useEngineGrantPermissions({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
   const form = useForm<EngineAdmin>({
     defaultValues: {

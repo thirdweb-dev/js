@@ -3,7 +3,6 @@ import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Box, Divider, Flex, IconButton } from "@chakra-ui/react";
 import type { Abi } from "abitype";
 import {
@@ -35,7 +34,6 @@ export function ContractPublishForm(props: {
   jwt: string;
 }) {
   const client = getThirdwebClient(props.jwt);
-  useLoggedInUser();
   const [customFactoryAbi, setCustomFactoryAbi] = useState<Abi>([]);
   const [fieldsetToShow, setFieldsetToShow] = useState<
     "landing" | "factory" | "contractParams" | "implParams" | "networks"
@@ -367,7 +365,7 @@ export function ContractPublishForm(props: {
               {!account ? (
                 <>
                   <Box />
-                  <CustomConnectWallet />
+                  <CustomConnectWallet isLoggedIn={!!props.jwt} />
                 </>
               ) : fieldsetToShow === "landing" &&
                 form.watch("deployType") === "standard" ? (

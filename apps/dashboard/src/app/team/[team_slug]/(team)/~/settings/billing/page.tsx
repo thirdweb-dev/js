@@ -12,10 +12,10 @@ export default async function Page(props: {
   const params = await props.params;
   const pagePath = `/team/${params.team_slug}/settings/billing`;
 
-  // ensure that user is logged in and onboarded
-  await getValidAccount(pagePath);
-
-  const team = await getTeamBySlug(params.team_slug);
+  const [account, team] = await Promise.all([
+    getValidAccount(pagePath),
+    getTeamBySlug(params.team_slug),
+  ]);
 
   if (!team) {
     redirect("/team");
@@ -31,5 +31,7 @@ export default async function Page(props: {
     );
   }
 
-  return <Billing team={team} subscriptions={subscriptions} />;
+  return (
+    <Billing team={team} subscriptions={subscriptions} twAccount={account} />
+  );
 }

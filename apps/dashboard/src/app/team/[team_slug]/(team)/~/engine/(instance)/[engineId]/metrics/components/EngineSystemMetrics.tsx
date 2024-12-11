@@ -15,14 +15,20 @@ import { StatusCodes } from "./StatusCodes";
 interface EngineStatusProps {
   instance: EngineInstance;
   teamSlug: string;
+  authToken: string;
 }
 
 export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
   instance,
   teamSlug,
+  authToken,
 }) => {
   const systemMetricsQuery = useEngineSystemMetrics(instance.id);
-  const queueMetricsQuery = useEngineQueueMetrics(instance.url, 10_000);
+  const queueMetricsQuery = useEngineQueueMetrics({
+    authToken,
+    instanceUrl: instance.url,
+    pollInterval: 10_000,
+  });
 
   let systemMetricsPanel = <Spinner className="h-4 w-4" />;
   if (!systemMetricsQuery.data || systemMetricsQuery.isError) {

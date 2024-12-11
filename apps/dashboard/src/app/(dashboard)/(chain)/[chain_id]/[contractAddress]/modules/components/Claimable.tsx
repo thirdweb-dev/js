@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -323,6 +324,7 @@ export function ClaimableModuleUI(
         | undefined;
       isLoading: boolean;
     };
+    twAccount: Account | undefined;
   },
 ) {
   return (
@@ -341,6 +343,7 @@ export function ClaimableModuleUI(
                 mint={props.mintSection.mint}
                 name={props.name}
                 contractChainId={props.contractChainId}
+                twAccount={props.twAccount}
               />
             </AccordionContent>
           </AccordionItem>
@@ -369,6 +372,7 @@ export function ClaimableModuleUI(
               {props.name !== "ClaimableERC1155" || props.isValidTokenId ? (
                 props.claimConditionSection.data ? (
                   <ClaimConditionSection
+                    twAccount={props.twAccount}
                     isOwnerAccount={props.isOwnerAccount}
                     claimCondition={
                       props.claimConditionSection.data.claimCondition
@@ -402,6 +406,7 @@ export function ClaimableModuleUI(
             <AccordionContent className="px-1">
               {props.primarySaleRecipientSection.data ? (
                 <PrimarySaleRecipientSection
+                  twAccount={props.twAccount}
                   isOwnerAccount={props.isOwnerAccount}
                   primarySaleRecipient={
                     props.primarySaleRecipientSection.data.primarySaleRecipient
@@ -466,6 +471,7 @@ function ClaimConditionSection(props: {
   tokenDecimals?: number | undefined;
   tokenId: string;
   noClaimConditionSet: boolean;
+  twAccount: Account | undefined;
 }) {
   const { idToChain } = useAllChainsData();
   const chain = idToChain.get(props.chainId);
@@ -716,6 +722,7 @@ function ClaimConditionSection(props: {
 
               <div className="flex justify-end">
                 <TransactionButton
+                  twAccount={props.twAccount}
                   size="sm"
                   className="min-w-24"
                   disabled={updateMutation.isPending || !props.isOwnerAccount}
@@ -748,6 +755,7 @@ function PrimarySaleRecipientSection(props: {
   update: (values: PrimarySaleRecipientFormValues) => Promise<void>;
   isOwnerAccount: boolean;
   contractChainId: number;
+  twAccount: Account | undefined;
 }) {
   const form = useForm<PrimarySaleRecipientFormValues>({
     resolver: zodResolver(primarySaleRecipientFormSchema),
@@ -796,6 +804,7 @@ function PrimarySaleRecipientSection(props: {
 
         <div className="flex justify-end">
           <TransactionButton
+            twAccount={props.twAccount}
             size="sm"
             className="min-w-24 gap-2"
             disabled={
@@ -830,6 +839,7 @@ function MintNFTSection(props: {
   mint: (values: MintFormValues) => Promise<void>;
   name: string;
   contractChainId: number;
+  twAccount: Account | undefined;
 }) {
   const form = useForm<MintFormValues>({
     resolver: zodResolver(mintFormSchema),
@@ -918,6 +928,7 @@ function MintNFTSection(props: {
               isPending={mintMutation.isPending}
               txChainID={props.contractChainId}
               transactionCount={1}
+              twAccount={props.twAccount}
             >
               Mint
             </TransactionButton>

@@ -1,4 +1,5 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { Abi } from "abitype";
 import { getContractFunctionsFromAbi } from "components/contract-components/getContractFunctionsFromAbi";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
@@ -10,12 +11,14 @@ interface ContractExplorePageProps {
   contract: ThirdwebContract;
   abi: Abi | undefined;
   chainMetadata: ChainMetadata;
+  twAccount: Account | undefined;
 }
 
 export const ContractExplorerPage: React.FC<ContractExplorePageProps> = ({
   contract,
   abi,
   chainMetadata,
+  twAccount,
 }) => {
   if (!abi) {
     return (
@@ -38,6 +41,7 @@ export const ContractExplorerPage: React.FC<ContractExplorePageProps> = ({
           onlyFunctions
           functions={functions}
           contract={contract}
+          twAccount={twAccount}
         />
       ) : (
         <div className="flex flex-col items-center justify-center gap-2 text-center">

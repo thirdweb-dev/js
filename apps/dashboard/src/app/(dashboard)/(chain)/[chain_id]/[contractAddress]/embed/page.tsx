@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { localhost } from "thirdweb/chains";
+import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { EmbedSetupClient } from "./EmbedSetup.client";
@@ -18,9 +19,11 @@ export default async function Page(props: {
     notFound();
   }
 
+  const account = await getRawAccount();
+
   const { contract } = info;
   if (contract.chain.id === localhost.id) {
-    return <EmbedSetupClient contract={contract} />;
+    return <EmbedSetupClient contract={contract} twAccount={account} />;
   }
 
   const { embedType } = await getContractPageMetadata(contract);
@@ -29,5 +32,11 @@ export default async function Page(props: {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
-  return <EmbedSetup contract={contract} ercOrMarketplace={embedType} />;
+  return (
+    <EmbedSetup
+      contract={contract}
+      ercOrMarketplace={embedType}
+      twAccount={account}
+    />
+  );
 }

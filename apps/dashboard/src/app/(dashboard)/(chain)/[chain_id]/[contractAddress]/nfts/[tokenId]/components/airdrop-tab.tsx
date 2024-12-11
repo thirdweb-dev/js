@@ -9,6 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { UploadIcon } from "lucide-react";
@@ -27,12 +28,17 @@ import {
 interface AirdropTabProps {
   contract: ThirdwebContract;
   tokenId: string;
+  twAccount: Account | undefined;
 }
 
 /**
  * This component must only take in ERC1155 contracts
  */
-const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
+const AirdropTab: React.FC<AirdropTabProps> = ({
+  contract,
+  tokenId,
+  twAccount,
+}) => {
   const address = useActiveAccount()?.address;
   const { handleSubmit, setValue, watch, reset } = useForm<{
     addresses: AirdropAddressInput[];
@@ -155,6 +161,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
             more, please do it in multiple transactions.
           </p>
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
             transactionCount={1}
             isPending={sendAndConfirmTx.isPending}

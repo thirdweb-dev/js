@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Accordion,
   AccordionButton,
@@ -40,12 +41,14 @@ type NFTMintForm = {
   contract: ThirdwebContract;
   isErc721: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  twAccount: Account | undefined;
 };
 
 export const NFTMintForm: React.FC<NFTMintForm> = ({
   contract,
   isErc721,
   setOpen,
+  twAccount,
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
@@ -351,6 +354,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           form={MINT_FORM_ID}
           type="submit"
           disabled={!isDirty}
+          twAccount={twAccount}
         >
           Mint NFT
         </TransactionButton>

@@ -30,10 +30,12 @@ import { Button, FormHelperText, FormLabel } from "tw-components";
 
 interface AddRelayerButtonProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 export const AddRelayerButton: React.FC<AddRelayerButtonProps> = ({
   instanceUrl,
+  authToken,
 }) => {
   const disclosure = useDisclosure();
 
@@ -51,7 +53,11 @@ export const AddRelayerButton: React.FC<AddRelayerButtonProps> = ({
       </Button>
 
       {disclosure.isOpen && (
-        <AddModal instanceUrl={instanceUrl} disclosure={disclosure} />
+        <AddModal
+          instanceUrl={instanceUrl}
+          disclosure={disclosure}
+          authToken={authToken}
+        />
       )}
     </>
   );
@@ -68,12 +74,20 @@ export interface AddModalInput {
 const AddModal = ({
   instanceUrl,
   disclosure,
+  authToken,
 }: {
   instanceUrl: string;
   disclosure: UseDisclosureReturn;
+  authToken: string;
 }) => {
-  const { mutate: createRelayer } = useEngineCreateRelayer(instanceUrl);
-  const { data: backendWallets } = useEngineBackendWallets(instanceUrl);
+  const { mutate: createRelayer } = useEngineCreateRelayer({
+    instanceUrl,
+    authToken,
+  });
+  const { data: backendWallets } = useEngineBackendWallets({
+    instanceUrl,
+    authToken,
+  });
   const { idToChain } = useAllChainsData();
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(

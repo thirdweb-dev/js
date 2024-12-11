@@ -47,6 +47,7 @@ interface RelayersTableProps {
   relayers: EngineRelayer[];
   isPending: boolean;
   isFetched: boolean;
+  authToken: string;
 }
 
 const columnHelper = createColumnHelper<EngineRelayer>();
@@ -56,6 +57,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
   relayers,
   isPending,
   isFetched,
+  authToken,
 }) => {
   const editDisclosure = useDisclosure();
   const removeDisclosure = useDisclosure();
@@ -182,6 +184,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
           relayer={selectedRelayer}
           disclosure={editDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
       {selectedRelayer && removeDisclosure.isOpen && (
@@ -189,6 +192,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
           relayer={selectedRelayer}
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
     </>
@@ -199,13 +203,21 @@ const EditModal = ({
   relayer,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   relayer: EngineRelayer;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) => {
-  const { mutate: updateRelayer } = useEngineUpdateRelayer(instanceUrl);
-  const { data: backendWallets } = useEngineBackendWallets(instanceUrl);
+  const { mutate: updateRelayer } = useEngineUpdateRelayer({
+    instanceUrl,
+    authToken,
+  });
+  const { data: backendWallets } = useEngineBackendWallets({
+    instanceUrl,
+    authToken,
+  });
   const { idToChain } = useAllChainsData();
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
@@ -334,12 +346,17 @@ const RemoveModal = ({
   relayer,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   relayer: EngineRelayer;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) => {
-  const { mutate: revokeRelayer } = useEngineRevokeRelayer(instanceUrl);
+  const { mutate: revokeRelayer } = useEngineRevokeRelayer({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed relayer",

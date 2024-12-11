@@ -48,7 +48,7 @@ export function TeamHeaderLoggedIn(props: {
     teamsAndProjects: props.teamsAndProjects,
     account: props.account,
     logout: logout,
-    connectButton: <CustomConnectWallet />,
+    connectButton: <CustomConnectWallet isLoggedIn={true} />,
     createProject: (team: Team) => {
       setCreateProjectDialogState({
         isOpen: true,

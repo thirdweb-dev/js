@@ -7,12 +7,17 @@ import { RelayersTable } from "./relayers-table";
 
 interface EngineRelayerProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 export const EngineRelayer: React.FC<EngineRelayerProps> = ({
   instanceUrl,
+  authToken,
 }) => {
-  const relayers = useEngineRelayer(instanceUrl);
+  const relayers = useEngineRelayer({
+    instanceUrl,
+    authToken,
+  });
 
   return (
     <div className="flex flex-col gap-4">
@@ -37,8 +42,9 @@ export const EngineRelayer: React.FC<EngineRelayerProps> = ({
         relayers={relayers.data || []}
         isPending={relayers.isPending}
         isFetched={relayers.isFetched}
+        authToken={authToken}
       />
-      <AddRelayerButton instanceUrl={instanceUrl} />
+      <AddRelayerButton instanceUrl={instanceUrl} authToken={authToken} />
     </div>
   );
 };

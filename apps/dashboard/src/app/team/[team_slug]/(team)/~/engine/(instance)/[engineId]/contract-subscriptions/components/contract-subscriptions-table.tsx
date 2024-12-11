@@ -54,6 +54,7 @@ interface ContractSubscriptionTableProps {
   isPending: boolean;
   isFetched: boolean;
   autoUpdate: boolean;
+  authToken: string;
 }
 
 const columnHelper = createColumnHelper<EngineContractSubscription>();
@@ -66,6 +67,7 @@ export const ContractSubscriptionTable: React.FC<
   isPending,
   isFetched,
   autoUpdate,
+  authToken,
 }) => {
   const removeDisclosure = useDisclosure();
   const [selectedContractSub, setSelectedContractSub] =
@@ -205,6 +207,7 @@ export const ContractSubscriptionTable: React.FC<
             instanceUrl={instanceUrl}
             chainId={chainId}
             autoUpdate={autoUpdate}
+            authToken={authToken}
           />
         );
       },
@@ -237,6 +240,7 @@ export const ContractSubscriptionTable: React.FC<
           contractSubscription={selectedContractSub}
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
     </>
@@ -285,16 +289,19 @@ const ChainLastBlock = ({
   instanceUrl,
   chainId,
   autoUpdate,
+  authToken,
 }: {
   instanceUrl: string;
   chainId: number;
   autoUpdate: boolean;
+  authToken: string;
 }) => {
-  const lastBlockQuery = useEngineSubscriptionsLastBlock(
+  const lastBlockQuery = useEngineSubscriptionsLastBlock({
     instanceUrl,
     chainId,
     autoUpdate,
-  );
+    authToken,
+  });
   if (!lastBlockQuery.data) {
     return null;
   }
@@ -325,13 +332,18 @@ const RemoveModal = ({
   contractSubscription,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   contractSubscription: EngineContractSubscription;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) => {
   const { mutate: removeContractSubscription } =
-    useEngineRemoveContractSubscription(instanceUrl);
+    useEngineRemoveContractSubscription({
+      instanceUrl,
+      authToken,
+    });
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed contract subscription.",

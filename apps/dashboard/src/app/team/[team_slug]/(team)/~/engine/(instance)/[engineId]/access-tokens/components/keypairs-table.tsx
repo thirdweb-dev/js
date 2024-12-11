@@ -31,6 +31,7 @@ interface KeypairsTableProps {
   keypairs: Keypair[];
   isPending: boolean;
   isFetched: boolean;
+  authToken: string;
 }
 
 const columnHelper = createColumnHelper<Keypair>();
@@ -81,6 +82,7 @@ export const KeypairsTable: React.FC<KeypairsTableProps> = ({
   keypairs,
   isPending,
   isFetched,
+  authToken,
 }) => {
   const removeDisclosure = useDisclosure();
   const [selectedKeypair, setSelectedKeypair] = useState<Keypair>();
@@ -111,6 +113,7 @@ export const KeypairsTable: React.FC<KeypairsTableProps> = ({
           keypair={selectedKeypair}
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
     </>
@@ -121,12 +124,17 @@ const RemoveModal = ({
   keypair,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   keypair: Keypair;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) => {
-  const { mutate: revokeKeypair } = useEngineRemoveKeypair(instanceUrl);
+  const { mutate: revokeKeypair } = useEngineRemoveKeypair({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed public key",

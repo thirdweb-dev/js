@@ -2,6 +2,7 @@
 
 import { TabLinks } from "@/components/ui/tabs";
 import {
+  type Account,
   type ApiKeyService,
   useUserOpUsageAggregate,
 } from "@3rdweb-sdk/react/hooks/useApi";
@@ -16,6 +17,7 @@ interface SmartWalletsProps {
   clientId: string;
   smartWalletsLayoutSlug: string;
   tab?: string;
+  twAccount: Account;
 }
 
 export const SmartWallets: React.FC<SmartWalletsProps> = ({
@@ -24,6 +26,7 @@ export const SmartWallets: React.FC<SmartWalletsProps> = ({
   clientId,
   smartWalletsLayoutSlug,
   tab = "analytics",
+  twAccount,
 }) => {
   const aggregateUserOpUsageQuery = useUserOpUsageAggregate({
     clientId,
@@ -74,6 +77,7 @@ export const SmartWallets: React.FC<SmartWalletsProps> = ({
         <AccountAbstractionSettingsPage
           apiKeyServices={apiKeyServices}
           trackingCategory={trackingCategory}
+          twAccount={twAccount}
         />
       )}
     </div>

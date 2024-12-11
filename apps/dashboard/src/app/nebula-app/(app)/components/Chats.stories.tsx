@@ -145,7 +145,7 @@ function Story() {
           authToken="xxxxx"
           isChatStreaming={false}
           sessionId="xxxxx"
-          account={accountStub()}
+          twAccount={accountStub()}
           messages={[
             {
               text: randomLorem(10),
@@ -166,7 +166,7 @@ function Story() {
           authToken="xxxxx"
           isChatStreaming={false}
           sessionId="xxxxx"
-          account={accountStub()}
+          twAccount={accountStub()}
           messages={[
             {
               text: randomLorem(10),
@@ -186,7 +186,7 @@ function Story() {
           authToken="xxxxx"
           isChatStreaming={false}
           sessionId="xxxxx"
-          account={accountStub()}
+          twAccount={accountStub()}
           messages={[
             {
               text: randomLorem(10),

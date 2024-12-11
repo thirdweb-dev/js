@@ -7,6 +7,7 @@ import { PublishedContract } from "components/contract-components/published-cont
 import { notFound } from "next/navigation";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
+import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { PublishedActions } from "../../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../../components/contract-header";
 
@@ -64,6 +65,8 @@ export default async function PublishedContractPage(
     return notFound();
   }
 
+  const account = await getRawAccount();
+
   return (
     <>
       <DeployContractHeader
@@ -83,6 +86,7 @@ export default async function PublishedContractPage(
           <PublishedContract
             publishedContract={publishedContract}
             walletOrEns={params.publisher}
+            twAccount={account}
           />
         </SimpleGrid>
       </ChakraProviderSetup>

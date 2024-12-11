@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Accordion,
   AccordionButton,
@@ -36,7 +37,8 @@ const SHARED_METADATA_FORM_ID = "shared-metadata-form";
 export const SharedMetadataForm: React.FC<{
   contract: ThirdwebContract;
   setOpen: Dispatch<SetStateAction<boolean>>;
-}> = ({ contract, setOpen }) => {
+  twAccount: Account | undefined;
+}> = ({ contract, setOpen, twAccount }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
@@ -281,6 +283,7 @@ export const SharedMetadataForm: React.FC<{
           form={SHARED_METADATA_FORM_ID}
           type="submit"
           disabled={!isDirty}
+          twAccount={twAccount}
         >
           Set NFT Metadata
         </TransactionButton>

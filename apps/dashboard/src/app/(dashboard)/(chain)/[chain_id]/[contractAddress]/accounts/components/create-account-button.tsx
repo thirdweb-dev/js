@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Tooltip } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import type { ThirdwebContract } from "thirdweb";
@@ -14,10 +15,12 @@ import {
 
 interface CreateAccountButtonProps {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
 export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   contract,
+  twAccount,
   ...restButtonProps
 }) => {
   const sendTxMutation = useSendAndConfirmTransaction();
@@ -72,6 +75,7 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
 
   return (
     <TransactionButton
+      twAccount={twAccount}
       txChainID={contract.chain.id}
       onClick={() => {
         const tx = ERC4337Ext.createAccount({

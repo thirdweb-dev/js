@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
@@ -12,12 +13,14 @@ interface CancelTabProps {
   id: string;
   contract: ThirdwebContract;
   isAuction?: boolean;
+  twAccount: Account | undefined;
 }
 
 export const CancelTab: React.FC<CancelTabProps> = ({
   id,
   contract,
   isAuction,
+  twAccount,
 }) => {
   const trackEvent = useTrack();
   const { idToChain } = useAllChainsData();
@@ -29,6 +32,7 @@ export const CancelTab: React.FC<CancelTabProps> = ({
   return (
     <div className="flex flex-col gap-3 pt-3">
       <TransactionButton
+        twAccount={twAccount}
         txChainID={contract.chain.id}
         transactionCount={1}
         isPending={cancelQuery.isPending}

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaucetButton } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
 import { GiftIcon } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
@@ -72,13 +73,14 @@ function useNetworkMismatchAdapter(desiredChainId: number) {
 
 type MistmatchButtonProps = React.ComponentProps<typeof Button> & {
   desiredChainId: number;
+  twAccount: Account | undefined;
 };
 
 export const MismatchButton = forwardRef<
   HTMLButtonElement,
   MistmatchButtonProps
 >((props, ref) => {
-  const { desiredChainId, ...buttonProps } = props;
+  const { desiredChainId, twAccount, ...buttonProps } = props;
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const activeWalletChain = useActiveWalletChain();
@@ -101,6 +103,18 @@ export const MismatchButton = forwardRef<
 
   const eventRef =
     useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>(undefined);
+
+  if (!twAccount) {
+    return (
+      <Button className={props.className} size={props.size} asChild>
+        <Link
+          href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
+        >
+          Sign in
+        </Link>
+      </Button>
+    );
+  }
 
   if (!wallet || !chainId) {
     return (
@@ -194,7 +208,7 @@ export const MismatchButton = forwardRef<
           dialogCloseClassName="focus:ring-0"
         >
           <DynamicHeight>
-            {dialog === "no-funds" && (
+            {dialog === "no-funds" && twAccount && (
               <NoFundsDialogContent
                 chain={activeWalletChain}
                 openPayModal={() => {
@@ -206,6 +220,7 @@ export const MismatchButton = forwardRef<
                   setDialog("pay");
                 }}
                 onCloseModal={() => setDialog(undefined)}
+                twAccount={twAccount}
               />
             )}
 
@@ -265,6 +280,7 @@ function NoFundsDialogContent(props: {
   chain: Chain;
   openPayModal: () => void;
   onCloseModal: () => void;
+  twAccount: Account;
 }) {
   const chainWithServiceInfoQuery = useQuery({
     queryKey: ["chain-with-services", props.chain.id],
@@ -314,7 +330,10 @@ function NoFundsDialogContent(props: {
               <GetLocalHostTestnetFunds />
             ) : chainWithServiceInfoQuery.data.testnet ? (
               // faucet case
-              <GetFundsFromFaucet chain={chainWithServiceInfoQuery.data} />
+              <GetFundsFromFaucet
+                twAccount={props.twAccount}
+                chain={chainWithServiceInfoQuery.data}
+              />
             ) : chainWithServiceInfoQuery.data.services.find(
                 (x) => x.enabled && x.service === "pay",
               ) ? (
@@ -353,6 +372,7 @@ function NoFundsDialogContent(props: {
 
 function GetFundsFromFaucet(props: {
   chain: ChainMetadata;
+  twAccount: Account;
 }) {
   const amountToGive = getFaucetClaimAmount(props.chain.chainId);
 
@@ -381,7 +401,11 @@ function GetFundsFromFaucet(props: {
 
         <div className="h-6" />
 
-        <FaucetButton chain={props.chain} amount={amountToGive} />
+        <FaucetButton
+          chain={props.chain}
+          amount={amountToGive}
+          twAccount={props.twAccount}
+        />
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useState } from "react";
 import type { NFT, ThirdwebContract } from "thirdweb";
 import { UpdateNftMetadata } from "./update-metadata-form";
@@ -18,12 +19,14 @@ interface UpdateMetadataTabProps {
    * else (NFT Collection, Edition) -> use `setTokenURI`
    */
   useUpdateMetadata: boolean;
+  twAccount: Account | undefined;
 }
 
 const UpdateMetadataTab: React.FC<UpdateMetadataTabProps> = ({
   contract,
   nft,
   useUpdateMetadata,
+  twAccount,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -37,6 +40,7 @@ const UpdateMetadataTab: React.FC<UpdateMetadataTabProps> = ({
           <SheetTitle className="text-left">Mint NFT</SheetTitle>
         </SheetHeader>
         <UpdateNftMetadata
+          twAccount={twAccount}
           contract={contract}
           nft={nft}
           useUpdateMetadata={useUpdateMetadata}

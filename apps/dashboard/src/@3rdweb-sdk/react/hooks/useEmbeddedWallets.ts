@@ -5,9 +5,9 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { THIRDWEB_EWS_API_HOST } from "constants/urls";
+import { useActiveAccount } from "thirdweb/react";
 import type { WalletUser } from "thirdweb/wallets";
 import { embeddedWalletsKeys } from "../cache-keys";
-import { useLoggedInUser } from "./useLoggedInUser";
 
 const fetchAccountList = ({
   jwt,
@@ -38,28 +38,37 @@ const fetchAccountList = ({
   };
 };
 
-export function useEmbeddedWallets(clientId: string, page: number) {
-  const { user, isLoggedIn } = useLoggedInUser();
+export function useEmbeddedWallets(params: {
+  clientId: string;
+  page: number;
+  authToken: string;
+}) {
+  const { clientId, page, authToken } = params;
+  const address = useActiveAccount()?.address;
 
   return useQuery({
     queryKey: embeddedWalletsKeys.embeddedWallets(
-      user?.address as string,
+      address || "",
       clientId,
       page,
     ),
     queryFn: fetchAccountList({
-      jwt: user?.jwt ?? "",
+      jwt: authToken,
       clientId,
       pageNumber: page,
     }),
     placeholderData: keepPreviousData,
-    enabled: !!user?.address && isLoggedIn && !!clientId,
+    enabled: !!address && !!clientId,
   });
 }
 
-export function useAllEmbeddedWallets() {
+export function useAllEmbeddedWallets(params: {
+  authToken: string;
+}) {
+  const { authToken } = params;
   const queryClient = useQueryClient();
-  const { user } = useLoggedInUser();
+  const address = useActiveAccount()?.address;
+
   return useMutation({
     mutationFn: async ({
       clientId,
@@ -72,12 +81,12 @@ export function useAllEmbeddedWallets() {
           totalPages: number;
         }>({
           queryKey: embeddedWalletsKeys.embeddedWallets(
-            user?.address as string,
+            address || "",
             clientId,
             page,
           ),
           queryFn: fetchAccountList({
-            jwt: user?.jwt ?? "",
+            jwt: authToken,
             clientId,
             pageNumber: page,
           }),

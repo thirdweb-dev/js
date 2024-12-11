@@ -10,6 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -28,6 +29,7 @@ import { FormErrorMessage, FormLabel } from "tw-components";
 
 interface TokenMintButtonProps {
   contract: ThirdwebContract;
+  account: Account | undefined;
 }
 
 const MINT_FORM_ID = "token-mint-form";
@@ -37,6 +39,7 @@ const MINT_FORM_ID = "token-mint-form";
  */
 export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
   contract,
+  account,
   ...restButtonProps
 }) => {
   const [open, setOpen] = useState(false);
@@ -122,6 +125,7 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
           </form>
           <SheetFooter className="mt-10">
             <TransactionButton
+              twAccount={account}
               txChainID={contract.chain.id}
               transactionCount={1}
               isPending={sendAndConfirmTransaction.isPending}

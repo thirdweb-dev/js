@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import { ErrorPage, LoadingPage } from "../_components/page-skeletons";
 import { RedirectToContractOverview } from "../_components/redirect-contract-overview.client";
@@ -8,6 +9,7 @@ import { EmbedSetup } from "./embed-setup";
 
 export function EmbedSetupClient(props: {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }) {
   const metadataQuery = useContractPageMetadata(props.contract);
 
@@ -27,6 +29,7 @@ export function EmbedSetupClient(props: {
     <EmbedSetup
       contract={props.contract}
       ercOrMarketplace={metadataQuery.data.embedType}
+      twAccount={props.twAccount}
     />
   );
 }

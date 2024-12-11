@@ -1,12 +1,11 @@
 "use client";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
+  type Account,
   type ApiKeyService,
   accountStatus,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { SmartWallets } from "components/smart-wallets";
 import { CircleAlertIcon } from "lucide-react";
@@ -26,9 +25,10 @@ export function AccountAbstractionPage(props: {
   apiKeyServices: ApiKeyService[];
   billingStatus: "validPayment" | (string & {}) | null;
   tab?: string;
+  twAccount: Account;
 }) {
   const { apiKeyServices } = props;
-  const looggedInUserQuery = useLoggedInUser();
+
   const chain = useActiveWalletChain();
 
   const hasSmartWalletsWithoutBilling = useMemo(() => {
@@ -60,39 +60,34 @@ export function AccountAbstractionPage(props: {
         </TrackedLinkTW>
       </p>
       <div className="h-6" />
-      {looggedInUserQuery.isPending ? (
-        <div className="flex h-[400px] items-center justify-center rounded-lg border border-border">
-          <Spinner className="size-14" />
-        </div>
-      ) : (
-        <div className="flex flex-col gap-6">
-          {hasSmartWalletsWithoutBilling ? (
-            <SmartWalletsBillingAlert />
-          ) : (
-            isOpChain && (
-              <Alert variant="info">
-                <CircleAlertIcon className="size-4" />
-                <AlertTitle>
-                  Using the gas credits for OP chain paymaster
-                </AlertTitle>
-                <AlertDescription>
-                  Credits will automatically be applied to cover gas fees for
-                  any onchain activity across thirdweb services. <br />
-                  Eligible chains: OP Mainnet, Base, Zora, Frax, Mode.
-                </AlertDescription>
-              </Alert>
-            )
-          )}
+      <div className="flex flex-col gap-6">
+        {hasSmartWalletsWithoutBilling ? (
+          <SmartWalletsBillingAlert />
+        ) : (
+          isOpChain && (
+            <Alert variant="info">
+              <CircleAlertIcon className="size-4" />
+              <AlertTitle>
+                Using the gas credits for OP chain paymaster
+              </AlertTitle>
+              <AlertDescription>
+                Credits will automatically be applied to cover gas fees for any
+                onchain activity across thirdweb services. <br />
+                Eligible chains: OP Mainnet, Base, Zora, Frax, Mode.
+              </AlertDescription>
+            </Alert>
+          )
+        )}
 
-          <SmartWallets
-            smartWalletsLayoutSlug={`/team/${props.teamSlug}/${props.projectSlug}/connect/account-abstraction`}
-            apiKeyServices={apiKeyServices}
-            trackingCategory={TRACKING_CATEGORY}
-            clientId={props.projectKey}
-            tab={props.tab}
-          />
-        </div>
-      )}
+        <SmartWallets
+          smartWalletsLayoutSlug={`/team/${props.teamSlug}/${props.projectSlug}/connect/account-abstraction`}
+          apiKeyServices={apiKeyServices}
+          trackingCategory={TRACKING_CATEGORY}
+          clientId={props.projectKey}
+          tab={props.tab}
+          twAccount={props.twAccount}
+        />
+      </div>
       <div className="h-14" />
       <AAFooterSection trackingCategory={TRACKING_CATEGORY} />
     </div>

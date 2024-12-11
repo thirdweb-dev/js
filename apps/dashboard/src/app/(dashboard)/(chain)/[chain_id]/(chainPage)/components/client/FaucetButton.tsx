@@ -7,8 +7,7 @@ import {
   TURNSTILE_SITE_KEY,
 } from "@/constants/env";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CanClaimResponseType } from "app/api/testnet-faucet/can-claim/CanClaimResponseType";
@@ -48,9 +47,11 @@ const claimFaucetSchema = z.object({
 export function FaucetButton({
   chain,
   amount,
+  twAccount,
 }: {
   chain: ChainMetadata;
   amount: number;
+  twAccount: Account | undefined;
 }) {
   const pathname = usePathname();
   const client = useThirdwebClient();
@@ -116,9 +117,6 @@ export function FaucetButton({
     },
   });
 
-  const accountQuery = useAccount();
-  const userQuery = useLoggedInUser();
-
   const canClaimFaucetQuery = useQuery({
     queryKey: ["testnet-faucet-can-claim", chainId],
     queryFn: async () => {
@@ -140,7 +138,7 @@ export function FaucetButton({
   const form = useForm<z.infer<typeof claimFaucetSchema>>();
 
   // Force users to log in to claim the faucet
-  if (!address || !userQuery.user) {
+  if (!address || !twAccount) {
     return (
       <Button variant="primary" className="w-full" asChild>
         <Link
@@ -152,18 +150,16 @@ export function FaucetButton({
     );
   }
 
-  if (accountQuery.isPending) {
+  if (!isOnboardingComplete(twAccount)) {
     return (
-      <Button variant="outline" className="w-full gap-2">
-        Loading account <Spinner className="size-3" />
-      </Button>
-    );
-  }
-
-  if (!accountQuery.data) {
-    return (
-      <Button variant="outline" className="w-full gap-2" disabled>
-        Failed to load account
+      <Button asChild className="w-full">
+        <Link
+          href={
+            pathname ? `/login?next=${encodeURIComponent(pathname)}` : "/login"
+          }
+        >
+          Verify your Email
+        </Link>
       </Button>
     );
   }
@@ -199,20 +195,6 @@ export function FaucetButton({
 
         {canClaimFaucetQuery.data.type === "unsupported-chain" &&
           "Faucet is empty right now"}
-      </Button>
-    );
-  }
-
-  if (!isOnboardingComplete(accountQuery.data)) {
-    return (
-      <Button asChild className="w-full">
-        <Link
-          href={
-            pathname ? `/login?next=${encodeURIComponent(pathname)}` : "/login"
-          }
-        >
-          Verify your Email
-        </Link>
       </Button>
     );
   }

@@ -18,10 +18,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
 import {
+  type Account,
   type ApiKey,
   type ApiKeyService,
   type UpdateKeyInput,
-  useAccount,
   useUpdateApiKey,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,6 +43,7 @@ type InAppWalletSettingsPageProps = {
     "id" | "name" | "domains" | "bundleIds" | "services" | "redirectUrls"
   >;
   trackingCategory: string;
+  twAccount: Account;
 };
 
 const TRACKING_CATEGORY = "embedded-wallet";
@@ -54,18 +55,9 @@ type UpdateAPIKeyTrackingData = {
 };
 
 export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
-  const { data: dashboardAccount } = useAccount();
   const mutation = useUpdateApiKey();
   const { trackingCategory } = props;
   const trackEvent = useTrack();
-
-  if (!dashboardAccount) {
-    return (
-      <div className="flex h-[500px] items-center justify-center">
-        <Spinner className="size-10" />
-      </div>
-    );
-  }
 
   function handleAPIKeyUpdate(
     newValue: UpdateKeyInput,
@@ -103,7 +95,7 @@ export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
   return (
     <InAppWalletSettingsUI
       {...props}
-      canEditAdvancedFeatures={dashboardAccount.advancedEnabled}
+      canEditAdvancedFeatures={props.twAccount.advancedEnabled}
       updateApiKey={handleAPIKeyUpdate}
       isUpdating={mutation.isPending}
     />

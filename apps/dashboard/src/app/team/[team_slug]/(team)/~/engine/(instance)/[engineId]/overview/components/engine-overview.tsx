@@ -18,17 +18,23 @@ import { TransactionsTable } from "./transactions-table";
 interface EngineOverviewProps {
   instance: EngineInstance;
   teamSlug: string;
+  authToken: string;
 }
 
 export const EngineOverview: React.FC<EngineOverviewProps> = ({
   instance,
   teamSlug,
+  authToken,
 }) => {
   return (
     <div>
-      <BackendWalletsSection instance={instance} teamSlug={teamSlug} />
+      <BackendWalletsSection
+        instance={instance}
+        teamSlug={teamSlug}
+        authToken={authToken}
+      />
       <div className="h-14" />
-      <TransactionsSection instanceUrl={instance.url} />
+      <TransactionsSection instanceUrl={instance.url} authToken={authToken} />
     </div>
   );
 };
@@ -36,10 +42,17 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
 function BackendWalletsSection(props: {
   instance: EngineInstance;
   teamSlug: string;
+  authToken: string;
 }) {
-  const { instance, teamSlug } = props;
-  const backendWallets = useEngineBackendWallets(instance.url);
-  const { data: walletConfig } = useEngineWalletConfig(instance.url);
+  const { instance, teamSlug, authToken } = props;
+  const backendWallets = useEngineBackendWallets({
+    instanceUrl: instance.url,
+    authToken,
+  });
+  const { data: walletConfig } = useEngineWalletConfig({
+    instanceUrl: instance.url,
+    authToken,
+  });
 
   return (
     <section>
@@ -79,11 +92,13 @@ function BackendWalletsSection(props: {
               instance={instance}
               walletConfig={walletConfig}
               teamSlug={teamSlug}
+              authToken={authToken}
             />
             <CreateBackendWalletButton
               instance={instance}
               walletConfig={walletConfig}
               teamSlug={teamSlug}
+              authToken={authToken}
             />
           </div>
         )}
@@ -108,6 +123,7 @@ function BackendWalletsSection(props: {
         wallets={backendWallets.data ?? []}
         isPending={backendWallets.isPending}
         isFetched={backendWallets.isFetched}
+        authToken={authToken}
       />
     </section>
   );
@@ -115,10 +131,15 @@ function BackendWalletsSection(props: {
 
 function TransactionsSection(props: {
   instanceUrl: string;
+  authToken: string;
 }) {
-  const { instanceUrl } = props;
+  const { instanceUrl, authToken } = props;
   const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
-  const transactionsQuery = useEngineTransactions(instanceUrl, autoUpdate);
+  const transactionsQuery = useEngineTransactions({
+    instanceUrl,
+    autoUpdate,
+    authToken,
+  });
 
   return (
     <section>
@@ -152,6 +173,7 @@ function TransactionsSection(props: {
         isPending={transactionsQuery.isPending}
         isFetched={transactionsQuery.isFetched}
         instanceUrl={instanceUrl}
+        authToken={authToken}
       />
     </section>
   );

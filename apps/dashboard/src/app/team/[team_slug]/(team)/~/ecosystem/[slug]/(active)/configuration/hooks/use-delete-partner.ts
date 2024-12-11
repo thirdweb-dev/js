@@ -1,4 +1,3 @@
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   type UseMutationOptions,
   useMutation,
@@ -12,22 +11,21 @@ type DeletePartnerParams = {
 };
 
 export function useDeletePartner(
+  params: {
+    authToken: string;
+  },
   options?: Omit<
     UseMutationOptions<boolean, unknown, DeletePartnerParams>,
     "mutationFn"
   >,
 ) {
+  const { authToken } = params;
   const { onSuccess, ...queryOptions } = options || {};
-  const { isLoggedIn, user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutation({
     // Returns true on success
     mutationFn: async (params: DeletePartnerParams): Promise<boolean> => {
-      if (!isLoggedIn || !user?.jwt) {
-        throw new Error("Please login to delete this partner");
-      }
-
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       const res = await fetch(
@@ -35,7 +33,7 @@ export function useDeletePartner(
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${user.jwt}`,
+            Authorization: `Bearer ${authToken}`,
           },
         },
       );

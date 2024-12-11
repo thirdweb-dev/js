@@ -1,5 +1,6 @@
 "use client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
@@ -59,9 +60,11 @@ const CommonRoyaltySchema = z.object({
 export const SettingsRoyalties = ({
   contract,
   detectedState,
+  twAccount,
 }: {
   contract: ThirdwebContract;
   detectedState: ExtensionDetectedState;
+  twAccount: Account | undefined;
 }) => {
   const trackEvent = useTrack();
   const query = useReadContract(getDefaultRoyaltyInfo, {
@@ -188,6 +191,7 @@ export const SettingsRoyalties = ({
             type="submit"
             isPending={mutation.isPending}
             className="!rounded-t-none rounded-xl"
+            twAccount={twAccount}
           >
             {mutation.isPending
               ? "Updating Royalty Settings"

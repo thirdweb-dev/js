@@ -46,7 +46,7 @@ export function Chats(props: {
   authToken: string;
   sessionId: string | undefined;
   className?: string;
-  account: TWAccount | undefined;
+  twAccount: TWAccount;
   client: ThirdwebClient;
 }) {
   return (
@@ -67,7 +67,7 @@ export function Chats(props: {
               <div className="-translate-y-[2px] relative shrink-0 ">
                 {message.type === "user" ? (
                   <GradientAvatar
-                    id={props.account?.id || "default"}
+                    id={props.twAccount?.id || "default"}
                     // TODO- set account image when available in account object
                     src={""}
                     className="size-8 shrink-0 rounded-lg"
@@ -114,7 +114,10 @@ export function Chats(props: {
                     {message.text}
                   </span>
                 ) : message.type === "send_transaction" ? (
-                  <SendTransactionButton txData={message.data} />
+                  <SendTransactionButton
+                    txData={message.data}
+                    twAccount={props.twAccount}
+                  />
                 ) : (
                   <span className="leading-loose">{message.text}</span>
                 )}
@@ -235,6 +238,7 @@ function MessageActions(props: {
 
 function SendTransactionButton(props: {
   txData: SendTransactionOption | null;
+  twAccount: TWAccount;
 }) {
   const account = useActiveAccount();
   const sendTxMutation = useMutation({
@@ -272,6 +276,7 @@ function SendTransactionButton(props: {
         });
       }}
       className="gap-2"
+      twAccount={props.twAccount}
     >
       Execute Transaction
     </TransactionButton>

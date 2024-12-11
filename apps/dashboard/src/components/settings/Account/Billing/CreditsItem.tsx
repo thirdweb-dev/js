@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { type BillingCredit, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import type { Account, BillingCredit } from "@3rdweb-sdk/react/hooks/useApi";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { formatDistance } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -14,18 +14,19 @@ interface CreditsItemProps {
   credit?: BillingCredit;
   isOpCreditDefault?: boolean;
   onClickApply?: () => void;
+  twAccount: Account;
 }
 
 export const CreditsItem: React.FC<CreditsItemProps> = ({
   credit,
   isOpCreditDefault,
   onClickApply,
+  twAccount,
 }) => {
   const trackEvent = useTrack();
-  const account = useAccount();
 
   const [hasAppliedForOpGrant] = useLocalStorage(
-    `appliedForOpGrant-${account?.data?.id || ""}`,
+    `appliedForOpGrant-${twAccount.id}`,
     false,
   );
 

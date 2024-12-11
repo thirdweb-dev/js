@@ -4,8 +4,8 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useActiveAccount } from "thirdweb/react";
 import { shortenString } from "utils/usedapp-external";
 import { TitleAndDescription } from "./Title";
 
@@ -20,7 +20,7 @@ export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
   onSave,
   onBack,
 }) => {
-  const { user } = useLoggedInUser();
+  const address = useActiveAccount()?.address;
   const trackEvent = useTrack();
   const updateMutation = useUpdateAccount();
 
@@ -75,9 +75,11 @@ export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
             We&apos;ve noticed that there is another account associated with{" "}
             <span className="text-foreground">{email}</span>. Would you like to
             link your wallet{" "}
-            <span className="font-mono text-foreground">
-              {shortenString(user?.address ?? "")}
-            </span>{" "}
+            {address && (
+              <span className="font-mono text-foreground">
+                {shortenString(address)}
+              </span>
+            )}{" "}
             to the existing account?
             <div className="h-2" />
             Once you agree, we will email you the details.{" "}

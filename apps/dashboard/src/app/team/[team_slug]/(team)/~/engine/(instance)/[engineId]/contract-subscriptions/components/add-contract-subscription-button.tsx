@@ -45,11 +45,12 @@ import {
 
 interface AddContractSubscriptionButtonProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 export const AddContractSubscriptionButton: React.FC<
   AddContractSubscriptionButtonProps
-> = ({ instanceUrl }) => {
+> = ({ instanceUrl, authToken }) => {
   const disclosure = useDisclosure();
 
   return (
@@ -66,7 +67,11 @@ export const AddContractSubscriptionButton: React.FC<
       </Button>
 
       {disclosure.isOpen && (
-        <AddModal instanceUrl={instanceUrl} disclosure={disclosure} />
+        <AddModal
+          instanceUrl={instanceUrl}
+          disclosure={disclosure}
+          authToken={authToken}
+        />
       )}
     </>
   );
@@ -85,12 +90,16 @@ interface AddContractSubscriptionForm {
 const AddModal = ({
   instanceUrl,
   disclosure,
+  authToken,
 }: {
   instanceUrl: string;
   disclosure: UseDisclosureReturn;
+  authToken: string;
 }) => {
-  const { mutate: addContractSubscription } =
-    useEngineAddContractSubscription(instanceUrl);
+  const { mutate: addContractSubscription } = useEngineAddContractSubscription({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Created Contract Subscription.",

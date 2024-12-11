@@ -1,6 +1,7 @@
 import { redirectToBillingPortal, redirectToCheckout } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { PlanInfoCard } from "../../../../app/team/[team_slug]/(team)/~/settings/billing/components/PlanInfoCard";
 import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/getValidTeamPlan";
 import { CouponSection } from "./CouponCard";
@@ -12,9 +13,14 @@ import { BillingPricing } from "./Pricing";
 interface BillingProps {
   team: Team;
   subscriptions: TeamSubscription[];
+  twAccount: Account;
 }
 
-export const Billing: React.FC<BillingProps> = ({ team, subscriptions }) => {
+export const Billing: React.FC<BillingProps> = ({
+  team,
+  subscriptions,
+  twAccount,
+}) => {
   const validPayment = team.billingStatus === "validPayment";
   const validPlan = getValidTeamPlan(team);
 
@@ -40,7 +46,7 @@ export const Billing: React.FC<BillingProps> = ({ team, subscriptions }) => {
         />
       </div>
 
-      <CreditsInfoCard />
+      <CreditsInfoCard twAccount={twAccount} />
       <CouponSection teamId={team.id} isPaymentSetup={validPayment} />
     </div>
   );

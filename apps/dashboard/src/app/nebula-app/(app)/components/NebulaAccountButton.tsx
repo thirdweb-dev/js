@@ -120,9 +120,9 @@ export function NebulaAccountButton(props: {
           <div className="[&>*]:!w-full">
             <CustomConnectWallet
               signInLinkButtonClassName="!w-full"
-              loadingButtonClassName="!w-full"
               connectButtonClassName="!w-full"
               detailsButtonClassName="!w-full"
+              isLoggedIn={true}
             />
           </div>
         </div>

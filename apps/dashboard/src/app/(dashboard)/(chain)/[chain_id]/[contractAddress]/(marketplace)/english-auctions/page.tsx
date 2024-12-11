@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { localhost } from "thirdweb/chains";
+import { getRawAccount } from "../../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
 import { ContractEnglishAuctionsPage } from "./ContractEnglishAuctionsPage";
@@ -18,8 +19,15 @@ export default async function Page(props: {
     notFound();
   }
 
+  const twAccount = await getRawAccount();
+
   if (info.chainMetadata.chainId === localhost.id) {
-    return <ContractEnglishAuctionsPageClient contract={info.contract} />;
+    return (
+      <ContractEnglishAuctionsPageClient
+        contract={info.contract}
+        twAccount={twAccount}
+      />
+    );
   }
 
   const { isEnglishAuctionSupported } = await getContractPageMetadata(
@@ -30,5 +38,10 @@ export default async function Page(props: {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
-  return <ContractEnglishAuctionsPage contract={info.contract} />;
+  return (
+    <ContractEnglishAuctionsPage
+      contract={info.contract}
+      twAccount={twAccount}
+    />
+  );
 }

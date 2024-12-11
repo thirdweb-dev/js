@@ -9,6 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -19,12 +20,14 @@ interface CreateListingButtonProps {
   contract: ThirdwebContract;
   createText?: string;
   type?: "direct-listings" | "english-auctions";
+  twAccount: Account | undefined;
 }
 
 export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
   createText = "Create",
   type,
   contract,
+  twAccount,
   ...restButtonProps
 }) => {
   const address = useActiveAccount()?.address;
@@ -43,6 +46,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
             <SheetTitle className="mb-5 text-left">{createText}</SheetTitle>
           </SheetHeader>
           <CreateListingsForm
+            twAccount={twAccount}
             contract={contract}
             type={type}
             actionText={createText}

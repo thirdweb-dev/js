@@ -1,6 +1,7 @@
 "use client";
 
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   tokensDelegated,
   useDelegateMutation,
@@ -13,9 +14,13 @@ import { useActiveAccount, useReadContract } from "thirdweb/react";
 
 interface VoteButtonProps {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
-export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {
+export const DelegateButton: React.FC<VoteButtonProps> = ({
+  contract,
+  twAccount,
+}) => {
   const trackEvent = useTrack();
   const account = useActiveAccount();
   const tokensDelegatedQuery = useReadContract(tokensDelegated, {
@@ -34,6 +39,7 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {
   return (
     <ToolTipLabel label="You need to delegate tokens to this contract before you can make proposals and vote.">
       <TransactionButton
+        twAccount={twAccount}
         txChainID={contract.chain.id}
         transactionCount={1}
         onClick={() => {

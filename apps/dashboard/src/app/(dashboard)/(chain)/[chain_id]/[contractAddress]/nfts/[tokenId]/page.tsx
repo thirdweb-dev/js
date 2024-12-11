@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { localhost } from "thirdweb/chains";
+import { getRawAccount } from "../../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
 import { TokenIdPageClient } from "./TokenIdPage.client";
@@ -23,9 +24,17 @@ export default async function Page(props: {
     redirect(`/${params.chain_id}/${params.contractAddress}/nfts`);
   }
 
+  const account = await getRawAccount();
+
   const { contract } = info;
   if (contract.chain.id === localhost.id) {
-    return <TokenIdPageClient contract={contract} tokenId={params.tokenId} />;
+    return (
+      <TokenIdPageClient
+        contract={contract}
+        tokenId={params.tokenId}
+        twAccount={account}
+      />
+    );
   }
 
   const { supportedERCs } = await getContractPageMetadata(contract);
@@ -39,6 +48,7 @@ export default async function Page(props: {
       contract={contract}
       isErc721={supportedERCs.isERC721}
       tokenId={params.tokenId}
+      twAccount={account}
     />
   );
 }

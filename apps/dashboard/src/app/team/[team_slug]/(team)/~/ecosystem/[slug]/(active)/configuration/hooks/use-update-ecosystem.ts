@@ -1,4 +1,3 @@
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   type UseMutationOptions,
   useMutation,
@@ -7,24 +6,23 @@ import {
 import type { Ecosystem } from "../../../../types";
 
 export function useUpdateEcosystem(
+  params: {
+    authToken: string;
+  },
   options?: Omit<UseMutationOptions<boolean, unknown, Ecosystem>, "mutationFn">,
 ) {
+  const { authToken } = params;
   const { onSuccess, ...queryOptions } = options || {};
-  const { isLoggedIn, user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutation({
     // Returns true if the update was successful
     mutationFn: async (params: Ecosystem): Promise<boolean> => {
-      if (!isLoggedIn || !user?.jwt) {
-        throw new Error("Please login to update this ecosystem");
-      }
-
       const res = await fetch(`${params.url}/${params.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.jwt}`,
+          Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify(params),
       });

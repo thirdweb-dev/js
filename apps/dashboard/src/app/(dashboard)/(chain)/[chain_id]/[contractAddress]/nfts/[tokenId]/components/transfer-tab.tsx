@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -15,12 +16,18 @@ import {
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
+
 interface TransferTabProps {
   contract: ThirdwebContract;
   tokenId: string;
+  twAccount: Account | undefined;
 }
 
-const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
+const TransferTab: React.FC<TransferTabProps> = ({
+  contract,
+  tokenId,
+  twAccount,
+}) => {
   const account = useActiveAccount();
 
   const trackEvent = useTrack();
@@ -119,6 +126,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
             )}
           </div>
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
             transactionCount={1}
             isPending={isPending || checking1155}

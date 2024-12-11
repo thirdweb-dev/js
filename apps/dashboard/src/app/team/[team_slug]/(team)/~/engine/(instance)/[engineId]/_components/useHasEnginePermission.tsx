@@ -1,4 +1,3 @@
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useQuery } from "@tanstack/react-query";
 
 // If it fails to fetch, the server is unreachable.
@@ -6,18 +5,17 @@ import { useQuery } from "@tanstack/react-query";
 
 export function useHasEnginePermission(props: {
   instanceUrl: string;
+  authToken: string;
 }) {
-  const instanceUrl = props.instanceUrl;
-  const token = useLoggedInUser().user?.jwt ?? null;
-
+  const { authToken, instanceUrl } = props;
   return useQuery({
-    queryKey: ["auth/permissions/get-all", instanceUrl, token],
+    queryKey: ["auth/permissions/get-all", instanceUrl, authToken],
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}auth/permissions/get-all`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authToken}`,
         },
       });
 

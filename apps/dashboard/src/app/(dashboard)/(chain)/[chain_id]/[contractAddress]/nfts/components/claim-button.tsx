@@ -8,6 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -25,13 +26,17 @@ const CLAIM_FORM_ID = "nft-claim-form";
 
 interface NFTClaimButtonProps {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
 /**
  * This button is used for claiming NFT Drop contract (erc721) only!
  * For Edition Drop we have a dedicated ClaimTabERC1155 inside each Edition's page
  */
-export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({ contract }) => {
+export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
+  contract,
+  twAccount,
+}) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const { register, handleSubmit, formState } = useForm({
@@ -81,6 +86,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({ contract }) => {
         </form>
         <div className="mt-4 flex justify-end">
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
             transactionCount={1}
             form={CLAIM_FORM_ID}

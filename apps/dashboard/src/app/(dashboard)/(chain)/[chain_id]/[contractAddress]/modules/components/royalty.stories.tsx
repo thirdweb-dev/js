@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
+import { accountStub } from "../../../../../../../stories/stubs";
 import {
   type DefaultRoyaltyFormValues,
   type RoyaltyInfoFormValues,
@@ -74,6 +75,8 @@ function Component() {
     version: "1.0.0",
   };
 
+  const twAccount = accountStub();
+
   return (
     <ThirdwebProvider>
       <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
@@ -104,6 +107,7 @@ function Component() {
             }}
             isOwnerAccount={isOwner}
             contractChainId={1}
+            twAccount={twAccount}
           />
         </BadgeContainer>
 
@@ -122,6 +126,7 @@ function Component() {
             }}
             isOwnerAccount={isOwner}
             contractChainId={1}
+            twAccount={twAccount}
           />
         </BadgeContainer>
 
@@ -140,6 +145,7 @@ function Component() {
             }}
             isOwnerAccount={isOwner}
             contractChainId={1}
+            twAccount={twAccount}
           />
         </BadgeContainer>
 
@@ -159,6 +165,7 @@ function Component() {
             }}
             isOwnerAccount={isOwner}
             contractChainId={1}
+            twAccount={twAccount}
           />
         </BadgeContainer>
 

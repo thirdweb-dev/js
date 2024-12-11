@@ -7,12 +7,17 @@ import { WebhooksTable } from "./webhooks-table";
 
 interface EngineWebhooksProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({
   instanceUrl,
+  authToken,
 }) => {
-  const webhooks = useEngineWebhooks(instanceUrl);
+  const webhooks = useEngineWebhooks({
+    authToken,
+    instanceUrl,
+  });
 
   return (
     <div className="flex flex-col gap-4">
@@ -36,8 +41,9 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({
         webhooks={webhooks.data || []}
         isPending={webhooks.isPending}
         isFetched={webhooks.isFetched}
+        authToken={authToken}
       />
-      <AddWebhookButton instanceUrl={instanceUrl} />
+      <AddWebhookButton instanceUrl={instanceUrl} authToken={authToken} />
     </div>
   );
 };
