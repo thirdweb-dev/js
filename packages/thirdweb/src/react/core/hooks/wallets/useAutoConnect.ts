@@ -131,7 +131,7 @@ export function useAutoConnectCore(
     }
 
     // then connect wallets that were last connected but were not set as active
-    const otherWallets = wallets.filter(
+    const otherWallets = availableWallets.filter(
       (w) =>
         w.id !== lastActiveWalletId && lastConnectedWalletIds.includes(w.id),
     );
