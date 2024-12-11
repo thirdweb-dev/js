@@ -16,7 +16,7 @@ export type AccountHeaderCompProps = {
   logout: () => void;
   connectButton: React.ReactNode;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
-  createProject: () => void;
+  createProject: (team: Team) => void;
   account: Pick<Account, "email" | "id"> | undefined;
   client: ThirdwebClient;
 };

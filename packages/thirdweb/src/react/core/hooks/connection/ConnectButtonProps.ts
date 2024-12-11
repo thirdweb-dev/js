@@ -3,6 +3,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
+import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
 import type { AssetTabs } from "../../../../react/web/ui/ConnectWallet/screens/ViewAssets.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
@@ -320,6 +321,12 @@ export type ConnectButton_detailsModalOptions = {
    * Note: If an empty array is passed, the [View Funds] button will be hidden
    */
   assetTabs?: AssetTabs[];
+
+  /**
+   * Show the token balance's value in fiat.
+   * Note: Not all tokens are resolvable to a fiat value. In that case, nothing will be shown.
+   */
+  showBalanceInFiat?: SupportedFiatCurrency;
 };
 
 /**
@@ -377,6 +384,12 @@ export type ConnectButton_detailsButtonOptions = {
    * Use custom avatar URL for the connected wallet image in the `ConnectButton` details button, overriding ENS avatar or Blobbie icon.
    */
   connectedAccountAvatarUrl?: string;
+
+  /**
+   * Show the token balance's value in fiat.
+   * Note: Not all tokens are resolvable to a fiat value. In that case, nothing will be shown.
+   */
+  showBalanceInFiat?: SupportedFiatCurrency;
 };
 
 /**

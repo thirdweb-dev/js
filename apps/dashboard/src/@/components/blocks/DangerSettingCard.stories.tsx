@@ -28,36 +28,34 @@ export const Mobile: Story = {
 
 function Story() {
   return (
-    <div className="min-h-screen bg-background py-4 text-foreground">
-      <div className="container flex max-w-[1000px] flex-col gap-8 lg:p-10">
-        <BadgeContainer label="Base">
-          <DangerSettingCard
-            title="This is a title"
-            description="This is a description"
-            buttonLabel="Some Action"
-            buttonOnClick={() => {}}
-            isPending={false}
-            confirmationDialog={{
-              title: "This is confirmation title",
-              description: "This is confirmation description",
-            }}
-          />
-        </BadgeContainer>
+    <div className="container flex max-w-[1000px] flex-col gap-8 lg:p-10">
+      <BadgeContainer label="Base">
+        <DangerSettingCard
+          title="This is a title"
+          description="This is a description"
+          buttonLabel="Some Action"
+          buttonOnClick={() => {}}
+          isPending={false}
+          confirmationDialog={{
+            title: "This is confirmation title",
+            description: "This is confirmation description",
+          }}
+        />
+      </BadgeContainer>
 
-        <BadgeContainer label="Loading">
-          <DangerSettingCard
-            title="This is a title"
-            description="This is a description"
-            buttonLabel="Some Action"
-            buttonOnClick={() => {}}
-            isPending={true}
-            confirmationDialog={{
-              title: "This is confirmation title",
-              description: "This is confirmation description",
-            }}
-          />
-        </BadgeContainer>
-      </div>
+      <BadgeContainer label="Loading">
+        <DangerSettingCard
+          title="This is a title"
+          description="This is a description"
+          buttonLabel="Some Action"
+          buttonOnClick={() => {}}
+          isPending={true}
+          confirmationDialog={{
+            title: "This is confirmation title",
+            description: "This is confirmation description",
+          }}
+        />
+      </BadgeContainer>
     </div>
   );
 }

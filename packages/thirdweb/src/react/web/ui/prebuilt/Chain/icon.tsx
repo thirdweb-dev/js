@@ -1,3 +1,5 @@
+"use client";
+
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
 import { getChainMetadata } from "../../../../../chains/utils.js";

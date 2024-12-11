@@ -189,6 +189,7 @@ export {
 export {
   NFTMedia,
   type NFTMediaProps,
+  type NFTMediaInfo,
 } from "../react/web/ui/prebuilt/NFT/media.js";
 
 export { useConnectionManager } from "../react/core/providers/connection-manager.js";
@@ -221,6 +222,7 @@ export {
 export {
   AccountBalance,
   type AccountBalanceProps,
+  type AccountBalanceInfo,
 } from "../react/web/ui/prebuilt/Account/balance.js";
 export {
   AccountName,

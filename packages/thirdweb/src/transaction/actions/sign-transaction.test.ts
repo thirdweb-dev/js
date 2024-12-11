@@ -1,27 +1,20 @@
-import {
-  type TransactionSerializable,
-  type TransactionSerializableBase,
-  type TransactionSerializableEIP1559,
-  type TransactionSerializableEIP2930,
-  type TransactionSerializableLegacy,
-  zeroAddress,
-} from "viem";
 import { describe, expect, test } from "vitest";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
+import { ZERO_ADDRESS } from "../../constants/addresses.js";
 import { fromGwei } from "../../utils/units.js";
 import { signTransaction } from "./sign-transaction.js";
 
 const BASE_TRANSACTION = {
   gas: 21000n,
   nonce: 785,
-} satisfies TransactionSerializableBase;
+} as const;
 
 describe("eip1559", () => {
   const BASE_EIP1559_TRANSACTION = {
     ...BASE_TRANSACTION,
     chainId: 1,
     type: "eip1559",
-  } as const satisfies TransactionSerializableEIP1559;
+  } as const;
 
   test("default", () => {
     const signature = signTransaction({
@@ -69,7 +62,7 @@ describe("eip1559", () => {
         ...BASE_EIP1559_TRANSACTION,
         accessList: [
           {
-            address: zeroAddress,
+            address: ZERO_ADDRESS,
             storageKeys: [
               "0x0000000000000000000000000000000000000000000000000000000000000001",
               "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
@@ -105,7 +98,7 @@ describe("eip2930", () => {
     ...BASE_TRANSACTION,
     chainId: 1,
     type: "eip2930",
-  } as const satisfies TransactionSerializable;
+  } as const;
 
   test("default", () => {
     const signature = signTransaction({
@@ -124,13 +117,13 @@ describe("eip2930", () => {
         gasPrice: fromGwei("2"),
         accessList: [
           {
-            address: zeroAddress,
+            address: ZERO_ADDRESS,
             storageKeys: [
               "0x0000000000000000000000000000000000000000000000000000000000000000",
             ],
           },
         ],
-      } as TransactionSerializableEIP2930,
+      },
       privateKey: ANVIL_PKEY_A,
     });
 
@@ -159,7 +152,7 @@ describe("legacy", () => {
     ...BASE_TRANSACTION,
     gasPrice: fromGwei("2"),
     type: "legacy",
-  } as const satisfies TransactionSerializableLegacy;
+  } as const;
 
   test("default", () => {
     const signature = signTransaction({

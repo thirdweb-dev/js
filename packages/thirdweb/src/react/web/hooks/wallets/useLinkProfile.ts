@@ -1,9 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { AuthArgsType } from "../../../../wallets/in-app/core/authentication/types.js";
 import type { Ecosystem } from "../../../../wallets/in-app/core/wallet/types.js";
 import { linkProfile } from "../../../../wallets/in-app/web/lib/auth/index.js";
-import { useAdminWallet } from "../../../core/hooks/wallets/useAdminWallet.js";
+import { useConnectedWallets } from "../../../core/hooks/wallets/useConnectedWallets.js";
 
 /**
  * Links a web2 or web3 profile to the connected in-app or ecosystem account.
@@ -76,16 +76,25 @@ import { useAdminWallet } from "../../../core/hooks/wallets/useAdminWallet.js";
  * @wallet
  */
 export function useLinkProfile() {
-  const wallet = useAdminWallet();
+  const wallets = useConnectedWallets();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["profiles"],
     mutationFn: async (options: AuthArgsType) => {
-      const ecosystem: Ecosystem | undefined =
-        wallet && isEcosystemWallet(wallet)
-          ? { id: wallet.id, partnerId: wallet.getConfig()?.partnerId }
-          : undefined;
+      const ecosystemWallet = wallets.find((w) => isEcosystemWallet(w));
+      const ecosystem: Ecosystem | undefined = ecosystemWallet
+        ? {
+            id: ecosystemWallet.id,
+            partnerId: ecosystemWallet.getConfig()?.partnerId,
+          }
+        : undefined;
       const optionsWithEcosystem = { ...options, ecosystem } as AuthArgsType;
       return linkProfile(optionsWithEcosystem);
+    },
+    onSuccess() {
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["profiles"] });
+      }, 500);
     },
   });
 }

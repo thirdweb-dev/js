@@ -7,13 +7,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
-import { ThirdwebProvider } from "thirdweb/react";
+import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import {
   type MintFormValues,
   MintableModuleUI,
@@ -83,7 +83,7 @@ function Component() {
     <ThirdwebProvider>
       <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
         <div>
-          <CustomConnectWallet loginRequired={false} />
+          <ConnectButton client={getThirdwebClient()} />
         </div>
 
         <div className="flex flex-wrap items-center gap-5">

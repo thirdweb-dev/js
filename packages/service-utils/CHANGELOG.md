@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.52
+
+### Patch Changes
+
+- [#5670](https://github.com/thirdweb-dev/js/pull/5670) [`e702490`](https://github.com/thirdweb-dev/js/commit/e702490f2ff5e2b7d6b28c06731af880583cf8bc) Thanks [@arcoraven](https://github.com/arcoraven)! - Add modelName, sessionId, requestId to usage
+
 ## 0.4.51
 
 ### Patch Changes

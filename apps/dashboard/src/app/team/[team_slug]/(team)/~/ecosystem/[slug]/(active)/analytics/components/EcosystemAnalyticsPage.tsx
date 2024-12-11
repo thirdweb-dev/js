@@ -7,16 +7,16 @@ import { getEcosystemWalletUsage } from "data/analytics/wallets/ecosystem";
 import { EcosystemWalletUsersChartCard } from "./EcosystemWalletUsersChartCard";
 
 export async function EcosystemAnalyticsPage({
-  ecosystemId,
+  ecosystemSlug,
   interval,
   range,
-}: { ecosystemId: string; interval: "day" | "week"; range?: Range }) {
+}: { ecosystemSlug: string; interval: "day" | "week"; range?: Range }) {
   if (!range) {
     range = getLastNDaysRange("last-120");
   }
 
   const stats = await getEcosystemWalletUsage({
-    ecosystemId,
+    ecosystemSlug,
     from: range.from,
     to: range.to,
     period: interval,

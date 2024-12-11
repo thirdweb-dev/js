@@ -1,5 +1,186 @@
 # thirdweb
 
+## 5.76.1
+
+### Patch Changes
+
+- [#5688](https://github.com/thirdweb-dev/js/pull/5688) [`da5d8ec`](https://github.com/thirdweb-dev/js/commit/da5d8ec53b4d60dd1ad6ed2cd9d638f466b22b3a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Autoconnect previously linked wallets
+
+- [#5682](https://github.com/thirdweb-dev/js/pull/5682) [`5b24faf`](https://github.com/thirdweb-dev/js/commit/5b24faf1f371a2df21f836ad159a2cf1a6e64ec3) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix ecosystem wallet AA detection in Pay modal
+
+- [#5674](https://github.com/thirdweb-dev/js/pull/5674) [`8020bdb`](https://github.com/thirdweb-dev/js/commit/8020bdbf2b811955ba071e4aa59df9153e9ca4e6) Thanks [@devfelipenunes](https://github.com/devfelipenunes)! - This pull request adds the complete Portuguese (Brazil) translation for the wallet connection module. It includes translations for connecting a wallet, sending/receiving funds, network management, and other wallet-related actions. This improves the user experience for Portuguese-speaking users.
+
+## 5.76.0
+
+### Minor Changes
+
+- [#5533](https://github.com/thirdweb-dev/js/pull/5533) [`43fbcac`](https://github.com/thirdweb-dev/js/commit/43fbcac25e9383743f1f42af9da7fe1c1eae12b4) Thanks [@kien-ngo](https://github.com/kien-ngo)! - The Connected-details button now shows USD value next to the token balance.
+
+  ### Breaking change to the AccountBalance
+
+  The formatFn props now takes in an object of type `AccountBalanceInfo`. The old `formatFn` was inflexible because it only allowed you to format the balance value.
+  With this new version, you have access to both the balance and symbol.
+
+  ```tsx
+  import { AccountBalance, type AccountBalanceInfo } from "thirdweb/react";
+
+  <AccountBalance
+    // Show the symbol in lowercase, before the balance
+    formatFn={(props: AccountBalanceInfo) =>
+      `${props.symbol.toLowerCase()} ${props.balance}`
+    }
+  />;
+  ```
+
+  AccountBalance now supports showing the token balance in fiat value (only USD supported at the moment)
+
+  ```tsx
+  <AccountBalance showBalanceInFiat="USD" />
+  ```
+
+  The `formatFn` prop now takes in an object of type `AccountBalanceInfo` and outputs a string
+
+  ```tsx
+  import { AccountBalance, type AccountBalanceInfo } from "thirdweb/react";
+
+  <AccountBalance
+    formatFn={(props: AccountBalanceInfo) =>
+      `${props.balance}---${props.symbol.toLowerCase()}`
+    }
+  />;
+
+  // Result: 11.12---eth
+  ```
+
+  ### ConnectButton also supports displaying balance in fiat since it uses AccountBalance internally
+
+  ```tsx
+  <ConnectButton
+    // Show USD value on the button
+    detailsButton={{
+      showBalanceInFiat: "USD",
+    }}
+    // Show USD value on the modal
+    detailsModal={{
+      showBalanceInFiat: "USD",
+    }}
+  />
+  ```
+
+  ### Export utils functions:
+
+  formatNumber: Round up a number to a certain decimal place
+
+  ```tsx
+  import { formatNumber } from "thirdweb/utils";
+  const value = formatNumber(12.1214141, 1); // 12.1
+  ```
+
+  shortenLargeNumber: Shorten the string for large value. Mainly used for the AccountBalance's `formatFn`
+
+  ```tsx
+  import { shortenLargeNumber } from "thirdweb/utils";
+  const numStr = shortenLargeNumber(1_000_000_000);
+  ```
+
+  ### Fix to ConnectButton
+
+  The social image of the Details button now display correctly for non-square image.
+
+  ### Massive test coverage improvement for the Connected-button components
+
+- [#5655](https://github.com/thirdweb-dev/js/pull/5655) [`f69d1aa`](https://github.com/thirdweb-dev/js/commit/f69d1aad2d154a05ebc61a1d7545bd9e5aab17be) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve NFT Components
+  - Add custom resolver methods to NFTMedia, NFTName and NFTDescription
+  - Add caching for the NFT-info-getter method to improve performance
+  - Small fix to handle falsy values for NFT media src, name and description
+  - Improve test coverage by extracting internal logics and testing them
+
+### Patch Changes
+
+- [#5660](https://github.com/thirdweb-dev/js/pull/5660) [`d5a68c8`](https://github.com/thirdweb-dev/js/commit/d5a68c85111809bf39e57f5fb39b5458c1f3fe9a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Correctly cleans the "Custom Auth" profile type label
+
+- [#5672](https://github.com/thirdweb-dev/js/pull/5672) [`3b53732`](https://github.com/thirdweb-dev/js/commit/3b5373293202b8ff13cc1502bef3cc9dffaa5afa) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix ox hardset version
+
+- [#5653](https://github.com/thirdweb-dev/js/pull/5653) [`df734ba`](https://github.com/thirdweb-dev/js/commit/df734baf97ec2e976fedb124ecfbac7119c0bc5f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - More helpful error messages for enclave and userop errors
+
+- [#5656](https://github.com/thirdweb-dev/js/pull/5656) [`f680496`](https://github.com/thirdweb-dev/js/commit/f680496ccb1c639fab644fb54e9a962627cf3228) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix connecting to cb wallet browser extension when already on the same chain
+
+- [#5671](https://github.com/thirdweb-dev/js/pull/5671) [`dcd5822`](https://github.com/thirdweb-dev/js/commit/dcd5822ee707fa52f1c3e02c75992485f83922f0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow signature minting for LoyaltyCard contracts by passing the contractType
+
+- [#5673](https://github.com/thirdweb-dev/js/pull/5673) [`c55f02f`](https://github.com/thirdweb-dev/js/commit/c55f02fa75a7f8959bbe69eac6cebfc7927ed865) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - always include gas price information even if it's 0 for enclave wallets
+
+- [#5617](https://github.com/thirdweb-dev/js/pull/5617) [`c48e0c9`](https://github.com/thirdweb-dev/js/commit/c48e0c9320830aa69c0e9567d985ed8a94eeaaf1) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Disconnect smart account when account signer is disconnected
+
+- [#5668](https://github.com/thirdweb-dev/js/pull/5668) [`485dcc6`](https://github.com/thirdweb-dev/js/commit/485dcc6020089a80d994c24882f389c24a0af039) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix add chain not triggering for certain wallets
+
+## 5.75.0
+
+### Minor Changes
+
+- [#5598](https://github.com/thirdweb-dev/js/pull/5598) [`16e5347`](https://github.com/thirdweb-dev/js/commit/16e534714e65af831553d47496d9018dfc73995c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Update underlying APIs to use Ox for transaction serialization
+
+### Patch Changes
+
+- [#5639](https://github.com/thirdweb-dev/js/pull/5639) [`ed0886a`](https://github.com/thirdweb-dev/js/commit/ed0886a89f06f4c4065e37aa791d99eff2ce59d1) Thanks [@jnsdls](https://github.com/jnsdls)! - default account components to not retry on failure
+
+- [#5640](https://github.com/thirdweb-dev/js/pull/5640) [`5070e76`](https://github.com/thirdweb-dev/js/commit/5070e76d35d88868c56df86ab673527b159b0d9c) Thanks [@jnsdls](https://github.com/jnsdls)! - accept `react 19` as peer explicitly
+
+- [#5487](https://github.com/thirdweb-dev/js/pull/5487) [`5574c15`](https://github.com/thirdweb-dev/js/commit/5574c15ec887c963a148cb54f04e5c0b5d3cff8e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - BETA support for 7579 modular smart accounts
+
+  You can now create modular smart wallets using the 7579 preset.
+
+  Keep in mind that this is in BETA, and there might be breaking API changes.
+
+  ```typescript
+  import { sepolia } from "thirdweb/chains";
+  import { smartWallet, Config } from "thirdweb/wallets/smart";
+   const modularSmartWallet = smartWallet(
+    Config.erc7579({
+      chain: sepolia,
+      sponsorGas: true,
+      factoryAddress: "0x...", // the 7579 factory address
+      validatorAddress: "0x...", // the default validator module address
+    }),
+  });
+  ```
+
+- [#5630](https://github.com/thirdweb-dev/js/pull/5630) [`0aa2416`](https://github.com/thirdweb-dev/js/commit/0aa24165ce66f837d3c22d6e1841de984e335863) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add erc20Value to buyFromListing transaction
+
+- [#5641](https://github.com/thirdweb-dev/js/pull/5641) [`d1716fc`](https://github.com/thirdweb-dev/js/commit/d1716fc793d8cc57908192674f3aefe8ee66a5f8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support ERC6492 for smart account signatures
+
+## 5.74.0
+
+### Minor Changes
+
+- [#5634](https://github.com/thirdweb-dev/js/pull/5634) [`d1aa380`](https://github.com/thirdweb-dev/js/commit/d1aa3805bfbf22b6a01404c3a01fe1ad02cd9815) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - ERC20 Token Paymaster support
+
+  You can now use ERC20 Token Paymasters with Smart Wallets.
+
+  ```typescript
+  import { base } from "thirdweb/chains";
+  import { TokenPaymaster, smartWallet } from "thirdweb/wallets";
+
+  const wallet = smartWallet({
+    chain: base,
+    sponsorGas: true, // only sponsor gas for the first ERC20 approval
+    overrides: {
+      tokenPaymaster: TokenPaymaster.BASE_USDC,
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#5593](https://github.com/thirdweb-dev/js/pull/5593) [`68ad62f`](https://github.com/thirdweb-dev/js/commit/68ad62f1d5c319392a7598d747a1400341bcc170) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - update `type` in `getUser` `Profiles` to match tyepscript types
+
+- [#5621](https://github.com/thirdweb-dev/js/pull/5621) [`279cb6f`](https://github.com/thirdweb-dev/js/commit/279cb6f9a737107b49d2ddcdb465e5941cbf9b42) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Feature: Propagate failed sign in error message to the UI
+
+- [#5596](https://github.com/thirdweb-dev/js/pull/5596) [`c893239`](https://github.com/thirdweb-dev/js/commit/c893239582d3362716f3daa7511f35b34b3cf790) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - add fallback chain for ecosystem smart accounts
+
+- [#5620](https://github.com/thirdweb-dev/js/pull/5620) [`13d63ab`](https://github.com/thirdweb-dev/js/commit/13d63ab06221cf9d7030779e54186b6925362356) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Hides Sign in with Wallet button when linking a profile
+
+- [#5618](https://github.com/thirdweb-dev/js/pull/5618) [`33c23e7`](https://github.com/thirdweb-dev/js/commit/33c23e789e577bd6463e135cec4e25cfcfc9964a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Removed the auth prop from useConnectModal as it is currently not supported
+
 ## 5.73.0
 
 ### Minor Changes

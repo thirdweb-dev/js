@@ -4,7 +4,7 @@ import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wa
 import type { Profile } from "../../../../wallets/in-app/core/authentication/types.js";
 import type { Ecosystem } from "../../../../wallets/in-app/core/wallet/types.js";
 import { getProfiles } from "../../../../wallets/in-app/web/lib/auth/index.js";
-import { useAdminWallet } from "../../../core/hooks/wallets/useAdminWallet.js";
+import { useConnectedWallets } from "../../../core/hooks/wallets/useConnectedWallets.js";
 
 /**
  * Retrieves all linked profiles of the connected in-app or ecosystem account.
@@ -29,15 +29,24 @@ import { useAdminWallet } from "../../../core/hooks/wallets/useAdminWallet.js";
 export function useProfiles(args: {
   client: ThirdwebClient;
 }): UseQueryResult<Profile[]> {
-  const wallet = useAdminWallet();
+  const wallets = useConnectedWallets();
+  const enabled =
+    wallets.length > 0 &&
+    wallets.some((w) => w.id === "inApp" || isEcosystemWallet(w));
   return useQuery({
-    queryKey: ["profiles", wallet?.id, wallet?.getAccount()?.address],
-    enabled: !!wallet && (wallet.id === "inApp" || isEcosystemWallet(wallet)),
+    queryKey: [
+      "profiles",
+      wallets.map((w) => `${w.id}-${w.getAccount()?.address}`),
+    ],
+    enabled,
     queryFn: async () => {
-      const ecosystem: Ecosystem | undefined =
-        wallet && isEcosystemWallet(wallet)
-          ? { id: wallet.id, partnerId: wallet.getConfig()?.partnerId }
-          : undefined;
+      const ecosystemWallet = wallets.find((w) => isEcosystemWallet(w));
+      const ecosystem: Ecosystem | undefined = ecosystemWallet
+        ? {
+            id: ecosystemWallet.id,
+            partnerId: ecosystemWallet.getConfig()?.partnerId,
+          }
+        : undefined;
       return getProfiles({
         client: args.client,
         ecosystem,

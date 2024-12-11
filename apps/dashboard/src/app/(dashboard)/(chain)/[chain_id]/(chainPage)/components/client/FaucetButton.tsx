@@ -7,7 +7,6 @@ import {
   TURNSTILE_SITE_KEY,
 } from "@/constants/env";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Turnstile } from "@marsidev/react-turnstile";
@@ -66,7 +65,6 @@ export function FaucetButton({
     client,
   });
   const trackEvent = useTrack();
-
   const queryClient = useQueryClient();
 
   const claimMutation = useMutation({
@@ -144,11 +142,13 @@ export function FaucetButton({
   // Force users to log in to claim the faucet
   if (!address || !userQuery.user) {
     return (
-      <CustomConnectWallet
-        loginRequired={true}
-        loadingButtonClassName="!w-full"
-        signInLinkButtonClassName="!w-full !h-auto !rounded !bg-primary !text-primary-foreground !px-4 !py-2 !text-sm hover:!bg-primary/80"
-      />
+      <Button variant="primary" className="w-full" asChild>
+        <Link
+          href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
+        >
+          Connect Wallet
+        </Link>
+      </Button>
     );
   }
 

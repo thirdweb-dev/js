@@ -30,9 +30,13 @@ export type {
   PaymasterResult,
 } from "../../wallets/smart/types.js";
 
+// all preset configs
+export * as Config from "../../wallets/smart/presets/index.js";
+
 export {
   ENTRYPOINT_ADDRESS_v0_6,
   ENTRYPOINT_ADDRESS_v0_7,
   DEFAULT_ACCOUNT_FACTORY_V0_6,
   DEFAULT_ACCOUNT_FACTORY_V0_7,
+  TokenPaymaster,
 } from "../../wallets/smart/lib/constants.js";

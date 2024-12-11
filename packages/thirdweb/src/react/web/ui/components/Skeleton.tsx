@@ -11,6 +11,7 @@ export const Skeleton: React.FC<{
   height: string;
   width?: string;
   color?: keyof Theme["colors"];
+  className?: string;
 }> = (props) => {
   return (
     <SkeletonDiv
@@ -19,6 +20,7 @@ export const Skeleton: React.FC<{
         height: props.height,
         width: props.width || "auto",
       }}
+      className={props.className || ""}
     />
   );
 };

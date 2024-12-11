@@ -18,12 +18,6 @@ export enum PageId {
   // thirdweb.com
   OSS = "oss-page",
 
-  // thirdweb..com/privacy
-  Privacy = "privacy-page",
-
-  // thirdweb..com/tos
-  ToS = "tos-page",
-
   // thirdweb.com/contract-extensions
   // ContractExtensionsLanding = "contract-extensions-landing",
 
@@ -32,9 +26,6 @@ export enum PageId {
 
   // thirdweb.com/embedded-wallets
   EmbeddedWalletsLanding = "embedded-wallets-landing",
-
-  // thirdweb.com/connec
-  ConnectLanding = "connect-landing",
 
   // thirdweb.com/auth
   AuthLanding = "auth-landing",
@@ -46,30 +37,12 @@ export enum PageId {
   //  general product pages
   // ---------------------------------------------------------------------------
 
-  // thirdweb.com/events
-  Events = "events",
-
-  // thirdweb..com/mission
-  Mission = "mission",
-
   // thirdweb.com/404
   PageNotFound = "page-not-found",
-
-  // ---------------------------------------------------------------------------
-  //  "publish" product pages
-  // ---------------------------------------------------------------------------
-
-  // ---------------------------------------------------------------------------
-  //  "deploy" product pages
-  // ---------------------------------------------------------------------------
-
-  // thirdweb.com/:network/:contractAddress (evm)
-  // example: thirdweb.com/goerli/0x2eaDAa60dBB74Ead3E20b23E4C5A0Dd789932846
 
   // ---------------------------------------------------------------------------
   //  community pages
   // ---------------------------------------------------------------------------
   Ambassadors = "ambassadors",
-  Community = "community",
   StartupProgram = "startup-program",
 }

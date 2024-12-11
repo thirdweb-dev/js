@@ -1,6 +1,9 @@
 "use client";
 
 import type { Project } from "@/api/projects";
+import type { Team } from "@/api/team";
+import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
+import { CopyButton } from "@/components/ui/CopyButton";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,13 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { format } from "date-fns";
-import { ChevronDownIcon, SearchIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-
-import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
-import { CopyButton } from "@/components/ui/CopyButton";
 import {
   Select,
   SelectContent,
@@ -23,12 +19,16 @@ import {
 } from "@/components/ui/select";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { LazyCreateAPIKeyDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
+import { format } from "date-fns";
+import { ChevronDownIcon, SearchIcon } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 type SortyById = "name" | "createdAt";
 
 export function TeamProjectsPage(props: {
   projects: Project[];
-  team_slug: string;
+  team: Team;
 }) {
   const { projects } = props;
   const [searchTerm, setSearchTerm] = useState("");
@@ -69,7 +69,7 @@ export function TeamProjectsPage(props: {
           <SelectBy value={sortBy} onChange={setSortBy} />
           <AddNewButton
             createProject={() => setIsCreateProjectDialogOpen(true)}
-            teamMembersSettingsPath={`/team/${props.team_slug}/~/settings/members`}
+            teamMembersSettingsPath={`/team/${props.team.slug}/~/settings/members`}
           />
         </div>
       </div>
@@ -88,7 +88,7 @@ export function TeamProjectsPage(props: {
               <ProjectCard
                 key={project.id}
                 project={project}
-                team_slug={props.team_slug}
+                team_slug={props.team.slug}
               />
             );
           })}
@@ -104,6 +104,9 @@ export function TeamProjectsPage(props: {
           // refresh projects
           router.refresh();
         }}
+        enableNebulaServiceByDefault={props.team.enabledScopes.includes(
+          "nebula",
+        )}
       />
     </div>
   );

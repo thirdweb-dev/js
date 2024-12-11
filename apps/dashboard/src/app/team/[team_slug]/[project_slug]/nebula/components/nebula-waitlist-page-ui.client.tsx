@@ -1,24 +1,31 @@
 import { Button } from "@/components/ui/button";
-import { OrbitIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { NebulaIcon } from "../../../../../nebula-app/(app)/icons/NebulaIcon";
 import { ShareButton } from "./share-button.client";
 
-export function NebulaWaitListPageUI(props: { teamId: string }) {
+export function NebulaWaitListPageUI(props: {
+  teamId: string;
+  className?: string;
+  hideHeader?: boolean;
+}) {
   return (
-    <div className="flex grow flex-col">
+    <div className={cn("flex grow flex-col", props.className)}>
       {/* Header */}
-      <div className="border-b py-10">
-        <div className="container flex items-center justify-between">
-          <h1 className="font-semibold text-3xl tracking-tight"> Nebula </h1>
-          <Button asChild variant="outline">
-            <Link href="/contact-us" target="_blank">
-              Contact Us
-            </Link>
-          </Button>
+      {!props.hideHeader && (
+        <div className="border-b py-10">
+          <div className="container flex items-center justify-between">
+            <h1 className="font-semibold text-3xl tracking-tight"> Nebula </h1>
+            <Button asChild variant="outline">
+              <Link href="/contact-us" target="_blank">
+                Contact Us
+              </Link>
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="container flex grow flex-col overflow-hidden pt-32 pb-48">
+      <div className="container flex grow flex-col overflow-hidden py-32">
         <CenteredCard
           title="You're on the waitlist"
           description="You should receive access to Nebula soon!"
@@ -74,7 +81,7 @@ function CenteredCard(props: {
             {/* Icon */}
             <div className="rounded-xl border p-1">
               <div className="rounded-lg border bg-muted/50 p-2">
-                <OrbitIcon className="size-5 text-muted-foreground" />
+                <NebulaIcon className="size-5 text-muted-foreground" />
               </div>
             </div>
 

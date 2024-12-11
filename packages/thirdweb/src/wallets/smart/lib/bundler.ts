@@ -1,7 +1,8 @@
-import { type TransactionSerializable, decodeErrorResult } from "viem";
+import { decodeErrorResult } from "viem";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { userOperationRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationRevertReason.js";
 import { postOpRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint_v07/events/PostOpRevertReason.js";
+import type { SerializableTransaction } from "../../../transaction/serialize-transaction.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import { type Hex, hexToBigInt } from "../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../utils/fetch.js";
@@ -67,16 +68,26 @@ export async function bundleUserOp(args: {
  * ```
  * @walletUtils
  */
-export async function estimateUserOpGas(args: {
-  userOp: UserOperationV06 | UserOperationV07;
-  options: BundlerOptions;
-}): Promise<EstimationResult> {
+export async function estimateUserOpGas(
+  args: {
+    userOp: UserOperationV06 | UserOperationV07;
+    options: BundlerOptions;
+  },
+  stateOverrides?: {
+    [x: string]: {
+      stateDiff: {
+        [x: string]: `0x${string}`;
+      };
+    };
+  },
+): Promise<EstimationResult> {
   const res = await sendBundlerRequest({
     ...args,
     operation: "eth_estimateUserOperationGas",
     params: [
       hexlifyUserOp(args.userOp),
       args.options.entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6,
+      stateOverrides ?? {},
     ],
   });
 
@@ -217,7 +228,7 @@ export async function getUserOpReceiptRaw(
  */
 export async function getZkPaymasterData(args: {
   options: BundlerOptions;
-  transaction: TransactionSerializable;
+  transaction: SerializableTransaction;
 }): Promise<PmTransactionData> {
   const res = await sendBundlerRequest({
     options: args.options,
@@ -233,7 +244,7 @@ export async function getZkPaymasterData(args: {
 
 export async function broadcastZkTransaction(args: {
   options: BundlerOptions;
-  transaction: TransactionSerializable;
+  transaction: SerializableTransaction;
   signedTransaction: Hex;
 }): Promise<{ transactionHash: Hex }> {
   const res = await sendBundlerRequest({

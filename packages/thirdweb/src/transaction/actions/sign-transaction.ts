@@ -1,11 +1,13 @@
-import type { TransactionSerializable } from "viem";
+import * as ox__Hash from "ox/Hash";
+import * as ox__Secp256k1 from "ox/Secp256k1";
 import type { Hex } from "../../utils/encoding/hex.js";
-import { keccak256 } from "../../utils/hashing/keccak256.js";
-import { sign } from "../../utils/signatures/sign.js";
-import { serializeTransaction } from "../serialize-transaction.js";
+import {
+  type SerializableTransaction,
+  serializeTransaction,
+} from "../serialize-transaction.js";
 
 export type SignTransactionOptions = {
-  transaction: TransactionSerializable;
+  transaction: SerializableTransaction;
   privateKey: Hex;
   // TODO: Add optional custom serializer here
 };
@@ -32,14 +34,10 @@ export function signTransaction({
   transaction,
   privateKey,
 }: SignTransactionOptions): Hex {
-  if (transaction.type === "eip4844") {
-    transaction = { ...transaction, sidecars: false };
-  }
-
   const serializedTransaction = serializeTransaction({ transaction });
 
-  const signature = sign({
-    hash: keccak256(serializedTransaction),
+  const signature = ox__Secp256k1.sign({
+    payload: ox__Hash.keccak256(serializedTransaction),
     privateKey: privateKey,
   });
   return serializeTransaction({

@@ -18,5 +18,5 @@ import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
  */
 export function useAddConnectedWallet() {
   const manager = useConnectionManagerCtx("useAddConnectedWallet");
-  return manager.handleConnection;
+  return manager.addConnectedWallet;
 }

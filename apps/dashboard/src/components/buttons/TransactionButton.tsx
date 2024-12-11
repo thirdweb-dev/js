@@ -71,10 +71,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
           desiredChainId={txChainID}
           {...restButtonProps}
           disabled={disabled}
-          className={cn(
-            "relative justify-start overflow-hidden",
-            restButtonProps.className,
-          )}
+          className={cn("relative overflow-hidden", restButtonProps.className)}
           style={{
             paddingLeft: transactionCount
               ? `${txCountDivWidth + 16}px`

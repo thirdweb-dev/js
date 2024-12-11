@@ -1,5 +1,4 @@
-import { Flex } from "@chakra-ui/react";
-import { Card, Text } from "tw-components";
+import { Card } from "@/components/ui/card";
 
 interface NftPropertyProps {
   // biome-ignore lint/suspicious/noExplicitAny: FIXME
@@ -8,22 +7,17 @@ interface NftPropertyProps {
 
 export const NftProperty: React.FC<NftPropertyProps> = ({ property }) => {
   return (
-    <Card as={Flex} flexDir="column" gap={2}>
+    <Card className="flex flex-col gap-2 p-3">
       {property?.trait_type && (
-        <Text
-          size="label.sm"
-          color="primary.500"
-          textAlign="center"
-          lineHeight={1.2}
-        >
+        <p className="text-center text-link-foreground text-sm leading-[1.2]">
           {property?.trait_type}
-        </Text>
+        </p>
       )}
-      <Text size="label.md" textAlign="center">
+      <p className="text-center text-muted-foreground text-sm">
         {typeof property?.value === "object"
           ? JSON.stringify(property?.value || {})
           : property?.value}
-      </Text>
+      </p>
     </Card>
   );
 };

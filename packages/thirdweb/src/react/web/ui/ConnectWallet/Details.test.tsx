@@ -1,0 +1,587 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { FC } from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { VITALIK_WALLET } from "~test/addresses.js";
+import {
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+  waitFor,
+} from "~test/react-render.js";
+import { TEST_CLIENT } from "~test/test-clients.js";
+import { base } from "../../../../chains/chain-definitions/base.js";
+import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
+import { useActiveAccount } from "../../../../react/core/hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../../react/core/hooks/wallets/useActiveWalletChain.js";
+import { ThirdwebProvider } from "../../providers/thirdweb-provider.js";
+import { AccountProvider } from "../prebuilt/Account/provider.js";
+import {
+  ConnectedToSmartWallet,
+  ConnectedWalletDetails,
+  DetailsModal,
+  InAppWalletUserInfo,
+  SwitchNetworkButton,
+  detailsBtn_formatFiatBalanceForButton,
+  detailsBtn_formatTokenBalanceForButton,
+  useWalletDetailsModal,
+} from "./Details.js";
+import en from "./locale/en.js";
+import { getConnectLocale } from "./locale/getConnectLocale.js";
+
+/**
+ * Tests for the Details button and Details Modal (parts of the ConnectButton component)
+ */
+const queryClient = new QueryClient();
+const client = TEST_CLIENT;
+vi.mock("../../../core/hooks/wallets/useActiveAccount.js", () => ({
+  useActiveAccount: vi.fn(),
+}));
+
+const mockDetailsModalOptions = {};
+const mockSupportedTokens = {};
+const mockSupportedNFTs = {};
+// biome-ignore lint/suspicious/noExplicitAny: Mock
+const mockChains: any[] = [];
+const mockDisplayBalanceToken = {};
+const mockConnectOptions = {};
+// biome-ignore lint/suspicious/noExplicitAny: Mock
+const mockAssetTabs: any[] = [];
+const mockOnDisconnect = vi.fn();
+
+describe("Details button", () => {
+  it("should render (when a wallet is connected)", () => {
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <AccountProvider address={VITALIK_WALLET} client={client}>
+          <ConnectedWalletDetails
+            theme={"dark"}
+            detailsButton={undefined}
+            detailsModal={undefined}
+            supportedTokens={undefined}
+            supportedNFTs={undefined}
+            onDisconnect={() => {}}
+            chains={[]}
+            switchButton={undefined}
+            client={client}
+            connectLocale={en}
+            connectOptions={undefined}
+          />
+        </AccountProvider>
+      </QueryClientProvider>,
+    );
+
+    const elements = container.getElementsByClassName("tw-connected-wallet");
+    expect(!!elements.length).toBe(true);
+  });
+
+  it("should render with showBalanceInFiat", () => {
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <AccountProvider address={VITALIK_WALLET} client={client}>
+          <ConnectedWalletDetails
+            theme={"dark"}
+            detailsButton={{
+              showBalanceInFiat: "USD",
+            }}
+            detailsModal={undefined}
+            supportedTokens={undefined}
+            supportedNFTs={undefined}
+            onDisconnect={() => {}}
+            chains={[]}
+            switchButton={undefined}
+            client={client}
+            connectLocale={en}
+            connectOptions={undefined}
+          />
+        </AccountProvider>
+      </QueryClientProvider>,
+    );
+
+    const elements = container.getElementsByClassName("tw-connected-wallet");
+    expect(!!elements.length).toBe(true);
+  });
+
+  it("should render with custom UI from the `render` prop", () => {
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <AccountProvider address={VITALIK_WALLET} client={client}>
+          <ConnectedWalletDetails
+            theme={"dark"}
+            detailsButton={{
+              render: () => <p className="thirdweb_tw" />,
+            }}
+            detailsModal={undefined}
+            supportedTokens={undefined}
+            supportedNFTs={undefined}
+            onDisconnect={() => {}}
+            chains={[]}
+            switchButton={undefined}
+            client={client}
+            connectLocale={en}
+            connectOptions={undefined}
+          />
+        </AccountProvider>
+      </QueryClientProvider>,
+    );
+
+    const element = container.querySelector("p.thirdweb_tw");
+    expect(element).not.toBe(null);
+  });
+
+  it("should render style properly", () => {
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <AccountProvider address={VITALIK_WALLET} client={client}>
+          <ConnectedWalletDetails
+            theme={"dark"}
+            detailsButton={{
+              style: {
+                color: "red",
+                width: "4444px",
+              },
+            }}
+            detailsModal={undefined}
+            supportedTokens={undefined}
+            supportedNFTs={undefined}
+            onDisconnect={() => {}}
+            chains={[]}
+            switchButton={undefined}
+            client={client}
+            connectLocale={en}
+            connectOptions={undefined}
+          />
+        </AccountProvider>
+      </QueryClientProvider>,
+    );
+    const element = container.querySelector(
+      '[data-test="connected-wallet-details"]',
+    );
+    if (!element) {
+      throw new Error("Details button not rendered properly");
+    }
+    const styles = window.getComputedStyle(element);
+    expect(styles.color).toBe("red");
+    expect(styles.width).toBe("4444px");
+  });
+
+  it("should render the Balance section", () => {
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <AccountProvider address={VITALIK_WALLET} client={client}>
+          <ConnectedWalletDetails
+            theme={"dark"}
+            detailsButton={undefined}
+            detailsModal={undefined}
+            supportedTokens={undefined}
+            supportedNFTs={undefined}
+            onDisconnect={() => {}}
+            chains={[]}
+            switchButton={undefined}
+            client={client}
+            connectLocale={en}
+            connectOptions={undefined}
+          />
+        </AccountProvider>
+      </QueryClientProvider>,
+    );
+
+    const elements = container.getElementsByClassName(
+      "tw-connected-wallet__balance",
+    );
+    expect(!!elements.length).toBe(true);
+  });
+
+  it("should render the Address section if detailsButton.connectedAccountName is not passed", () => {
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <AccountProvider address={VITALIK_WALLET} client={client}>
+          <ConnectedWalletDetails
+            theme={"dark"}
+            detailsButton={undefined}
+            detailsModal={undefined}
+            supportedTokens={undefined}
+            supportedNFTs={undefined}
+            onDisconnect={() => {}}
+            chains={[]}
+            switchButton={undefined}
+            client={client}
+            connectLocale={en}
+            connectOptions={undefined}
+          />
+        </AccountProvider>
+      </QueryClientProvider>,
+    );
+
+    const elements = container.getElementsByClassName(
+      "tw-connected-wallet__address",
+    );
+    expect(!!elements.length).toBe(true);
+  });
+
+  it("should NOT render the Address section if detailsButton.connectedAccountName is passed", () => {
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <AccountProvider address={VITALIK_WALLET} client={client}>
+          <ConnectedWalletDetails
+            theme={"dark"}
+            detailsButton={{
+              connectedAccountName: "test name",
+            }}
+            detailsModal={undefined}
+            supportedTokens={undefined}
+            supportedNFTs={undefined}
+            onDisconnect={() => {}}
+            chains={[]}
+            switchButton={undefined}
+            client={client}
+            connectLocale={en}
+            connectOptions={undefined}
+          />
+        </AccountProvider>
+      </QueryClientProvider>,
+    );
+
+    const elements = container.getElementsByClassName(
+      "tw-connected-wallet__address",
+    );
+    expect(elements.length).toBe(1);
+    expect(elements[0]?.innerHTML).toBe("test name");
+  });
+
+  it("should render a custom img if detailsButton?.connectedAccountAvatarUrl is passed", () => {
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <AccountProvider address={VITALIK_WALLET} client={client}>
+          <ConnectedWalletDetails
+            theme={"dark"}
+            detailsButton={{
+              connectedAccountAvatarUrl: "https://thirdweb.com/cat.png",
+            }}
+            detailsModal={undefined}
+            supportedTokens={undefined}
+            supportedNFTs={undefined}
+            onDisconnect={() => {}}
+            chains={[]}
+            switchButton={undefined}
+            client={client}
+            connectLocale={en}
+            connectOptions={undefined}
+          />
+        </AccountProvider>
+      </QueryClientProvider>,
+    );
+
+    const elements = container.getElementsByTagName("img");
+    expect(elements.length).toBe(1);
+    expect(elements[0]?.src).toBe("https://thirdweb.com/cat.png");
+  });
+
+  it("should render AccountAvatar if no custom image is passed", () => {
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <AccountProvider address={VITALIK_WALLET} client={client}>
+          <ConnectedWalletDetails
+            theme={"dark"}
+            detailsButton={{
+              connectedAccountName: "test name",
+            }}
+            detailsModal={undefined}
+            supportedTokens={undefined}
+            supportedNFTs={undefined}
+            onDisconnect={() => {}}
+            chains={[]}
+            switchButton={undefined}
+            client={client}
+            connectLocale={en}
+            connectOptions={undefined}
+          />
+        </AccountProvider>
+      </QueryClientProvider>,
+    );
+
+    const elements = container.getElementsByClassName(
+      "tw-connected-wallet__account_avatar",
+    );
+    expect(elements.length).toBe(1);
+  });
+
+  it("should render the SwitchNetworkButton if chain is mismatched", () => {
+    vi.mock(
+      "../../../../react/core/hooks/wallets/useActiveWalletChain.js",
+      () => ({
+        useActiveWalletChain: vi.fn(),
+      }),
+    );
+    vi.mocked(useActiveWalletChain).mockReturnValue(base);
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <AccountProvider address={VITALIK_WALLET} client={client}>
+          <ConnectedWalletDetails
+            theme={"dark"}
+            detailsButton={{
+              connectedAccountName: "test name",
+            }}
+            detailsModal={undefined}
+            supportedTokens={undefined}
+            supportedNFTs={undefined}
+            onDisconnect={() => {}}
+            chains={[]}
+            switchButton={{
+              style: {
+                color: "red",
+              },
+              className: "thirdwebSwitchBtn",
+              label: "switchbtn",
+            }}
+            client={client}
+            connectLocale={en}
+            connectOptions={undefined}
+            chain={ethereum}
+          />
+        </AccountProvider>
+      </QueryClientProvider>,
+    );
+    const element = container.querySelector(
+      "button.tw-connect-wallet--switch-network",
+    );
+    expect(element).not.toBe(null);
+    const element2 = container.querySelector("button.thirdwebSwitchBtn");
+    expect(element2).not.toBe(null);
+    expect(element && element.innerHTML === "switchbtn").toBe(true);
+    vi.resetAllMocks();
+  });
+
+  it("should render the fiat value properly", () => {
+    expect(
+      detailsBtn_formatFiatBalanceForButton({ balance: 12.9231, symbol: "$" }),
+    ).toBe(" ($13)");
+  });
+
+  it("should render the token balance properly", () => {
+    expect(
+      detailsBtn_formatTokenBalanceForButton({
+        balance: 12.923111,
+        symbol: "ETH",
+      }),
+    ).toBe("12.9231 ETH");
+  });
+});
+
+const thirdwebWrapper: FC = ({ children }: React.PropsWithChildren) => (
+  <ThirdwebProvider>{children}</ThirdwebProvider>
+);
+
+/**
+ * useWalletDetailsModal
+ */
+describe("useWalletDetailsModal", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should return an object with an open function", () => {
+    const { result } = renderHook(() => useWalletDetailsModal(), {
+      wrapper: thirdwebWrapper,
+    });
+    expect(result.current).toHaveProperty("open");
+    expect(typeof result.current.open).toBe("function");
+  });
+
+  it("should throw an error when opening modal without a connected wallet", () => {
+    const { result } = renderHook(() => useWalletDetailsModal(), {
+      wrapper: thirdwebWrapper,
+    });
+
+    expect(() =>
+      result.current.open({
+        client,
+      }),
+    ).toThrow("Wallet is not connected.");
+  });
+});
+
+/**
+ * SwitchNetworkButton
+ */
+describe("SwitchNetworkButton", () => {
+  it("should render a default button", () => {
+    const { container } = render(
+      <SwitchNetworkButton targetChain={ethereum} connectLocale={en} />,
+    );
+    const element = container.querySelector(
+      "button.tw-connect-wallet--switch-network",
+    );
+    expect(element).not.toBe(null);
+  });
+
+  it("should apply the style properly", () => {
+    const { container } = render(
+      <SwitchNetworkButton
+        targetChain={ethereum}
+        connectLocale={en}
+        style={{ color: "red", width: "4444px" }}
+      />,
+    );
+    const element = container.querySelector(
+      "button.tw-connect-wallet--switch-network",
+    );
+    if (!element) {
+      throw new Error("Failed to render SwitchNetworkButton");
+    }
+    const styles = window.getComputedStyle(element);
+    expect(styles.color).toBe("red");
+    expect(styles.width).toBe("4444px");
+  });
+
+  it("should apply the className properly", () => {
+    const { container } = render(
+      <SwitchNetworkButton
+        targetChain={ethereum}
+        connectLocale={en}
+        className="thirdwebRocks"
+      />,
+    );
+    const element = container.querySelector("button.thirdwebRocks");
+    expect(element).not.toBe(null);
+  });
+
+  it("should render button's text with locale.switchNetwork by default", () => {
+    const { container } = render(
+      <SwitchNetworkButton targetChain={ethereum} connectLocale={en} />,
+    );
+    const element = container.querySelector(
+      "button.tw-connect-wallet--switch-network",
+    );
+    if (!element) {
+      throw new Error("Failed to render SwitchNetworkButton");
+    }
+    expect(element.innerHTML).toBe(en.switchNetwork);
+  });
+
+  it("should render `switchNetworkBtnTitle` properly", () => {
+    const { container } = render(
+      <SwitchNetworkButton
+        targetChain={ethereum}
+        connectLocale={en}
+        switchNetworkBtnTitle="cat"
+      />,
+    );
+    const element = container.querySelector(
+      "button.tw-connect-wallet--switch-network",
+    );
+    if (!element) {
+      throw new Error("Failed to render SwitchNetworkButton");
+    }
+    expect(element.innerHTML).toBe("cat");
+  });
+});
+
+describe("ConnectedToSmartWallet", () => {
+  it("should render nothing since no active wallet exists in default test env", () => {
+    const { container } = render(
+      <ThirdwebProvider>
+        <ConnectedToSmartWallet client={client} connectLocale={en} />
+      </ThirdwebProvider>,
+    );
+    // no smart wallet exists in this env so this component should render null
+    const element = container.querySelector("span");
+    expect(element).toBe(null);
+  });
+});
+
+describe("InAppWalletUserInfo", () => {
+  it("should render a Skeleton since no active wallet exists in default test env", () => {
+    const { container } = render(
+      <ThirdwebProvider>
+        <InAppWalletUserInfo client={client} locale={en} />
+      </ThirdwebProvider>,
+    );
+    // no smart wallet exists in this env so this component should render null
+    const element = container.querySelector(
+      "div.InAppWalletUserInfo__skeleton",
+    );
+    expect(element).not.toBe(null);
+  });
+});
+
+describe("Details Modal", () => {
+  beforeEach(() => {
+    // Mock the animate method
+    HTMLDivElement.prototype.animate = vi.fn().mockReturnValue({
+      onfinish: vi.fn(),
+    });
+  });
+
+  it("should close the modal when activeAccount is falsy", async () => {
+    const closeModalMock = vi.fn();
+    const locale = await getConnectLocale("en_US");
+
+    vi.mocked(useActiveAccount).mockReturnValue(undefined);
+
+    render(
+      <DetailsModal
+        client={TEST_CLIENT}
+        locale={locale}
+        detailsModal={mockDetailsModalOptions}
+        theme="light"
+        supportedTokens={mockSupportedTokens}
+        supportedNFTs={mockSupportedNFTs}
+        closeModal={closeModalMock}
+        onDisconnect={mockOnDisconnect}
+        chains={mockChains}
+        displayBalanceToken={mockDisplayBalanceToken}
+        connectOptions={mockConnectOptions}
+        assetTabs={mockAssetTabs}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(closeModalMock).toHaveBeenCalled();
+    });
+  });
+
+  it("should render the DetailsModal with default props", async () => {
+    const closeModalMock = vi.fn();
+    const locale = await getConnectLocale("en_US");
+
+    render(
+      <DetailsModal
+        client={TEST_CLIENT}
+        locale={locale}
+        theme="light"
+        closeModal={closeModalMock}
+        onDisconnect={mockOnDisconnect}
+        chains={mockChains}
+        connectOptions={mockConnectOptions}
+      />,
+    );
+
+    // Add assertions to check if the modal is rendered correctly
+    expect(screen.getByText("Connect Modal")).toBeInTheDocument();
+  });
+
+  it("should call closeModal when the close button is clicked", async () => {
+    const closeModalMock = vi.fn();
+    const locale = await getConnectLocale("en_US");
+
+    render(
+      <DetailsModal
+        client={TEST_CLIENT}
+        locale={locale}
+        theme="light"
+        closeModal={closeModalMock}
+        onDisconnect={mockOnDisconnect}
+        chains={mockChains}
+        connectOptions={mockConnectOptions}
+      />,
+    );
+
+    // Simulate clicking the close button
+    fireEvent.click(screen.getByRole("button", { name: /close/i }));
+
+    await waitFor(() => {
+      expect(closeModalMock).toHaveBeenCalled();
+    });
+  });
+});

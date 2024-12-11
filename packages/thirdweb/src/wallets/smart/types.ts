@@ -1,4 +1,5 @@
-import type { Address } from "abitype";
+import type * as ox__Address from "ox/Address";
+import type * as ox__TypedData from "ox/TypedData";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
@@ -6,7 +7,15 @@ import type { PreparedTransaction } from "../../transaction/prepare-transaction.
 import type { TransactionReceipt } from "../../transaction/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
+import type { SignableMessage } from "../../utils/types.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
+
+export type TokenPaymasterConfig = {
+  chainId: number;
+  paymasterAddress: string;
+  tokenAddress: string;
+  balanceStorageSlot: bigint;
+};
 
 export type SmartWalletOptions = Prettify<
   {
@@ -17,16 +26,17 @@ export type SmartWalletOptions = Prettify<
       accountAddress?: string;
       accountSalt?: string;
       entrypointAddress?: string;
-      erc20Paymaster?: {
-        address: string;
-        token: string;
-      };
+      tokenPaymaster?: TokenPaymasterConfig;
       paymaster?: (
         userOp: UserOperationV06 | UserOperationV07,
       ) => Promise<PaymasterResult>;
-      predictAddress?: (factoryContract: ThirdwebContract) => Promise<string>;
+      predictAddress?: (
+        factoryContract: ThirdwebContract,
+        admin: string,
+      ) => Promise<string>;
       createAccount?: (
         factoryContract: ThirdwebContract,
+        admin: string,
       ) => PreparedTransaction;
       execute?: (
         accountContract: ThirdwebContract,
@@ -37,6 +47,23 @@ export type SmartWalletOptions = Prettify<
         transactions: SendTransactionOption[],
       ) => PreparedTransaction;
       getAccountNonce?: (accountContract: ThirdwebContract) => Promise<bigint>;
+      signMessage?: (options: {
+        adminAccount: Account;
+        accountContract: ThirdwebContract;
+        factoryContract: ThirdwebContract;
+        message: SignableMessage;
+      }) => Promise<Hex>;
+      signTypedData?: <
+        const typedData extends
+          | ox__TypedData.TypedData
+          | Record<string, unknown>,
+        primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
+      >(options: {
+        adminAccount: Account;
+        accountContract: ThirdwebContract;
+        factoryContract: ThirdwebContract;
+        typedData: ox__TypedData.Definition<typedData, primaryType>;
+      }) => Promise<Hex>;
     };
   } & (
     | {
@@ -77,7 +104,7 @@ export type SmartWalletConnectionOptions = {
 };
 
 export type UserOperationV06 = {
-  sender: Address;
+  sender: ox__Address.Address;
   nonce: bigint;
   initCode: Hex;
   callData: Hex;
@@ -121,7 +148,7 @@ export type PackedUserOperation = {
 };
 
 export type UserOperationV06Hexed = {
-  sender: Address;
+  sender: ox__Address.Address;
   nonce: Hex;
   initCode: Hex;
   callData: Hex;
@@ -186,7 +213,7 @@ export type GasPriceResult = {
 };
 
 export type PmTransactionData = {
-  paymaster: Address;
+  paymaster: ox__Address.Address;
   paymasterInput: Hex;
 };
 
@@ -194,10 +221,10 @@ export type UserOperationReceipt = {
   receipt: TransactionReceipt;
   logs: TransactionReceipt["logs"];
   userOpHash: Hex;
-  entryPoint: Address;
-  sender: Address;
+  entryPoint: ox__Address.Address;
+  sender: ox__Address.Address;
   nonce: bigint;
-  paymaster: Address;
+  paymaster: ox__Address.Address;
   actualGasUsed: bigint;
   actualGasCost: bigint;
   success: boolean;

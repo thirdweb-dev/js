@@ -2,6 +2,7 @@ import { getProjects } from "@/api/projects";
 import { getTeamNebulaWaitList, getTeams } from "@/api/team";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { notFound, redirect } from "next/navigation";
+import { getValidAccount } from "../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 
 export default async function TeamLayout(props: {
@@ -10,7 +11,10 @@ export default async function TeamLayout(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
   const params = await props.params;
-  const teams = await getTeams();
+  const [teams, account] = await Promise.all([
+    getTeams(),
+    getValidAccount(`/team/${params.team_slug}/${params.project_slug}`),
+  ]);
 
   if (!teams) {
     redirect("/login");
@@ -49,6 +53,7 @@ export default async function TeamLayout(props: {
           currentProject={project}
           currentTeam={team}
           teamsAndProjects={teamsAndProjects}
+          account={account}
         />
         <TabPathLinks
           tabContainerClassName="px-4 lg:px-6"

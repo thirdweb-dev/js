@@ -13,7 +13,7 @@ type ProjectSelectorMobileMenuButtonProps = {
   currentProject: Project;
   projects: Project[];
   team: Team;
-  createProject: () => void;
+  createProject: (team: Team) => void;
 };
 
 export function ProjectSelectorMobileMenuButton(
@@ -49,7 +49,7 @@ export function ProjectSelectorMobileMenuButton(
             projects={props.projects}
             team={props.team}
             createProject={() => {
-              props.createProject();
+              props.createProject(props.team);
               setOpen(false);
             }}
           />

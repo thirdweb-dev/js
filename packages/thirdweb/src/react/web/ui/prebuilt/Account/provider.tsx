@@ -1,4 +1,5 @@
 "use client";
+
 import type { Address } from "abitype";
 import type React from "react";
 import { createContext, useContext } from "react";
@@ -48,6 +49,11 @@ const AccountProviderContext = /* @__PURE__ */ createContext<
 export function AccountProvider(
   props: React.PropsWithChildren<AccountProviderProps>,
 ) {
+  if (!props.address) {
+    throw new Error(
+      "AccountProvider: No address passed. Ensure an address is always provided to the AccountProvider",
+    );
+  }
   return (
     <AccountProviderContext.Provider value={props}>
       {props.children}

@@ -1,136 +1,135 @@
-import { beforeEach } from "node:test";
-import {
-  QueryClient,
-  QueryClientProvider,
-  type UseQueryResult,
-} from "@tanstack/react-query";
-import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "~test/react-render.js";
-import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
-import { useSocialProfiles } from "../../../../../react/core/social/useSocialProfiles.js";
-import type { SocialProfile } from "../../../../../social/types.js";
-import { shortenAddress } from "../../../../../utils/address.js";
-import type { Profile } from "../../../../../wallets/in-app/core/authentication/types.js";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { render, screen } from "../../../../../../test/src/react-render.js";
+import { useSocialProfiles } from "../../../../core/social/useSocialProfiles.js";
 import { useProfiles } from "../../../hooks/wallets/useProfiles.js";
-import type { ConnectLocale } from "../locale/types.js";
-import { LinkedProfilesScreen } from "./LinkedProfilesScreen.js";
+import { LinkedProfilesScreen } from "./LinkedProfilesScreen.jsx";
 
+// Mock the hooks
 vi.mock("../../../hooks/wallets/useProfiles");
-vi.mock("../../../../../react/core/social/useSocialProfiles");
+vi.mock("../../../../core/social/useSocialProfiles");
+vi.mock("../../components/Img", () => ({
+  Img: () => <div data-testid="mock-img">Mock Image</div>,
+}));
 
-describe("LinkedProfile component", () => {
-  const locale = {
-    manageWallet: {
-      linkedProfiles: "Linked Profiles",
-      linkProfile: "Link Profile",
-    },
-  } as ConnectLocale;
-  const queryClient = new QueryClient();
+describe("LinkedProfilesScreen", () => {
+  const mockClient = {
+    clientId: "test-client-id",
+    secretKey: undefined,
+  };
+
+  const mockProps = {
+    onBack: vi.fn(),
+    setScreen: vi.fn(),
+    locale: {
+      manageWallet: {
+        linkedProfiles: "Linked Profiles",
+        linkProfile: "Link Profile",
+      },
+      // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+    } as any,
+    client: mockClient,
+  };
+
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.mocked(useSocialProfiles).mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+    } as any);
   });
 
-  it("should render email profile correctly", () => {
-    vi.mocked(useProfiles).mockReturnValue({
-      data: [{ type: "email", details: { email: "user@example.com" } }],
-      isLoading: false,
-    } as UseQueryResult<Profile[]>);
-    vi.mocked(useSocialProfiles).mockReturnValue({
-      data: [],
-      isLoading: false,
-    } as unknown as UseQueryResult<SocialProfile[]>);
+  describe("getProfileDisplayName", () => {
+    it("should display email for email profile type", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [{ type: "email", details: { email: "test@example.com" } }],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <LinkedProfilesScreen
-          onBack={() => {}}
-          setScreen={() => {}}
-          locale={locale}
-          client={TEST_CLIENT}
-        />
-      </QueryClientProvider>,
-    );
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("test@example.com")).toBeInTheDocument();
+    });
 
-    expect(screen.getByText("user@example.com")).toBeInTheDocument();
-  });
+    it("should display email for google profile type", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [{ type: "google", details: { email: "google@example.com" } }],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
 
-  it("should render wallet address profile correctly", () => {
-    vi.mocked(useProfiles).mockReturnValue({
-      data: [{ type: "wallet", details: { address: TEST_ACCOUNT_A.address } }],
-      isLoading: false,
-    } as UseQueryResult<Profile[]>);
-    vi.mocked(useSocialProfiles).mockReturnValue({
-      data: [],
-      isLoading: false,
-    } as unknown as UseQueryResult<SocialProfile[]>);
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("google@example.com")).toBeInTheDocument();
+    });
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <LinkedProfilesScreen
-          onBack={() => {}}
-          setScreen={() => {}}
-          locale={locale}
-          client={TEST_CLIENT}
-        />
-      </QueryClientProvider>,
-    );
+    it("should display phone number for phone profile type", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [{ type: "phone", details: { phone: "+1234567890" } }],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
 
-    expect(
-      screen.getByText(shortenAddress(TEST_ACCOUNT_A.address, 6)),
-    ).toBeInTheDocument();
-  });
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("+1234567890")).toBeInTheDocument();
+    });
 
-  it("should render unlink button when enableUnlinking is true", () => {
-    vi.mocked(useProfiles).mockReturnValue({
-      data: [
-        { type: "email", details: { email: "test@example.com" } },
-        { type: "google", details: { email: "test@example.com" } },
-      ],
-      isLoading: false,
-    } as UseQueryResult<Profile[]>);
-    vi.mocked(useSocialProfiles).mockReturnValue({
-      data: [],
-      isLoading: false,
-    } as unknown as UseQueryResult<SocialProfile[]>);
+    it("should display shortened address when address is present", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [
+          {
+            type: "wallet",
+            details: { address: "0x1234567890abcdef1234567890abcdef12345678" },
+          },
+        ],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <LinkedProfilesScreen
-          onBack={() => {}}
-          setScreen={() => {}}
-          locale={locale}
-          client={TEST_CLIENT}
-        />
-      </QueryClientProvider>,
-    );
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("0x123456...345678")).toBeInTheDocument();
+    });
 
-    expect(screen.getAllByRole("button", { name: "Unlink" })).toHaveLength(2);
-  });
+    it("should display email for cognito profile type", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [{ type: "cognito", details: { email: "cognito@example.com" } }],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
 
-  it("should not render unlink button when enableUnlinking is false", () => {
-    vi.mocked(useProfiles).mockReturnValue({
-      data: [{ type: "email", details: { email: "test@example.com" } }],
-      isLoading: false,
-    } as UseQueryResult<Profile[]>);
-    vi.mocked(useSocialProfiles).mockReturnValue({
-      data: [],
-      isLoading: false,
-    } as unknown as UseQueryResult<SocialProfile[]>);
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("cognito@example.com")).toBeInTheDocument();
+    });
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <LinkedProfilesScreen
-          onBack={() => {}}
-          setScreen={() => {}}
-          locale={locale}
-          client={TEST_CLIENT}
-        />
-      </QueryClientProvider>,
-    );
+    it("should display Custom Profile for custom_auth_endpoint", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [{ type: "Custom_auth_endpoint", details: {} }],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
 
-    expect(
-      screen.queryByRole("button", { name: "Unlink" }),
-    ).not.toBeInTheDocument();
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("Custom Profile")).toBeInTheDocument();
+    });
+
+    it("should capitalize unknown profile types", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [{ type: "unknown", details: {} }],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
+
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("Unknown")).toBeInTheDocument();
+    });
+
+    it("should not display guest profiles", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [{ type: "guest", details: {} }],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
+
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.queryByText("Guest")).not.toBeInTheDocument();
+    });
   });
 });

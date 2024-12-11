@@ -107,14 +107,14 @@ export function AppFooter(props: AppFooterProps) {
           </Link>
           <Link
             className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
-            href="https://thirdweb.com/privacy"
+            href="https://thirdweb.com/privacy-policy"
             target="_blank"
           >
             Privacy Policy
           </Link>
           <Link
             className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
-            href="https://thirdweb.com/tos"
+            href="https://thirdweb.com/terms"
             target="_blank"
           >
             Terms of Service

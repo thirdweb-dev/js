@@ -1,6 +1,9 @@
 import { trackConnect } from "../../../../analytics/track/connect.js";
 import type { Chain } from "../../../../chains/types.js";
-import { getCachedChainIfExists } from "../../../../chains/utils.js";
+import {
+  getCachedChain,
+  getCachedChainIfExists,
+} from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { stringify } from "../../../../utils/json.js";
 import { getEcosystemInfo } from "../../../ecosystem/get-ecosystem-wallet-auth-options.js";
@@ -74,12 +77,16 @@ export function createInAppWallet(args: {
         const ecosystemOptions = await getEcosystemInfo(ecosystem.id);
         const smartAccountOptions = ecosystemOptions?.smartAccountOptions;
         if (smartAccountOptions) {
-          const preferredChain = options.chain;
+          const { defaultChainId } = ecosystemOptions.smartAccountOptions;
+          const preferredChain =
+            options.chain ??
+            (defaultChainId ? getCachedChain(defaultChainId) : undefined);
           if (!preferredChain) {
             throw new Error(
-              "Chain is required for ecosystem smart accounts, pass it via connect() or via UI components",
+              `A chain must be provided either via 'chain' in connect options or 'defaultChainId' in ecosystem configuration. Please pass it via connect() or update the ecosystem configuration.`,
             );
           }
+
           createOptions = {
             ...createOptions,
             smartAccount: {
@@ -123,12 +130,16 @@ export function createInAppWallet(args: {
         const ecosystemOptions = await getEcosystemInfo(ecosystem.id);
         const smartAccountOptions = ecosystemOptions?.smartAccountOptions;
         if (smartAccountOptions) {
-          const preferredChain = options.chain;
+          const { defaultChainId } = ecosystemOptions.smartAccountOptions;
+          const preferredChain =
+            options.chain ??
+            (defaultChainId ? getCachedChain(defaultChainId) : undefined);
           if (!preferredChain) {
             throw new Error(
-              "Chain is required for ecosystem smart accounts, pass it via connect() or via UI components",
+              `A chain must be provided either via 'chain' in connect options or 'defaultChainId' in ecosystem configuration. Please pass it via connect() or update the ecosystem configuration.`,
             );
           }
+
           createOptions = {
             ...createOptions,
             smartAccount: {

@@ -60,6 +60,48 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
     }, 60000);
 
+    it("should generate a mint signature and mint an NFT for LoyaltyContract", async () => {
+      const loyaltyContract = getContract({
+        address: await deployERC721Contract({
+          account: TEST_ACCOUNT_A,
+          chain: ANVIL_CHAIN,
+          client: TEST_CLIENT,
+          params: {
+            name: "Test",
+            symbol: "TST",
+            royaltyRecipient: TEST_ACCOUNT_C.address,
+            saleRecipient: TEST_ACCOUNT_B.address,
+          },
+          type: "LoyaltyCard",
+        }),
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+      });
+      const { payload, signature } = await generateMintSignature({
+        mintRequest: {
+          to: TEST_ACCOUNT_B.address,
+          metadata: {
+            name: "My NFT",
+            description: "This is my NFT",
+            image: "https://example.com/image.png",
+          },
+        },
+        account: TEST_ACCOUNT_A,
+        contract: loyaltyContract,
+        contractType: "LoyaltyCard",
+      });
+      const transaction = mintWithSignature({
+        contract: loyaltyContract,
+        payload,
+        signature,
+      });
+      const { transactionHash } = await sendTransaction({
+        transaction,
+        account: TEST_ACCOUNT_A,
+      });
+      expect(transactionHash.length).toBe(66);
+    });
+
     it("should generate a mint signature and mint an NFT", async () => {
       const { payload, signature } = await generateMintSignature({
         mintRequest: {

@@ -24,9 +24,13 @@ import laosCTA from "./temp-assets/laosCTA.jpg";
 import liskBanner from "./temp-assets/liskBanner.png";
 import liskCTA from "./temp-assets/liskCTA.png";
 
+import creatorBanner from "./temp-assets/creatorBanner.png";
+import creatorCTA from "./temp-assets/creatorCTA.png";
 import lumiaCTA from "./temp-assets/lumia-cta.png";
 import lumiaBanner from "./temp-assets/lumiaBanner.png";
 import mantleBanner from "./temp-assets/mantle.png";
+import metalBanner from "./temp-assets/metalBanner.png";
+import metalCTA from "./temp-assets/metalCTA.png";
 import plumeBanner from "./temp-assets/plumeBanner.png";
 import plumeCTA from "./temp-assets/plumeCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
@@ -269,6 +273,11 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
+  //Arena Z Mainnet
+  7897: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
   // B3 Mainnet
   8333: {
     headerImgUrl: thirdwebBanner.src,
@@ -291,6 +300,18 @@ const chainMetaRecord = {
       title: "",
       buttonLink: "https://www.campnetwork.xyz/",
       buttonText: "Learn more",
+    },
+  },
+  //Creator Mainnet
+  66665: {
+    headerImgUrl: creatorBanner.src,
+    about:
+      "From Builders to Builders, From Idea to Creation ⚡\nCreator is AI Superhero Layer 2 Blockchain 🦇\nBuilt on the OP Stack, leveraging the robust foundation of Optimism 🟡🔴. We adopt the OP Stack's design principles because, as builders, we know they work and align perfectly with our values.\nWhy Creator?\nWe're constructing our Testnet on the Bedrock release of the OP Stack, ensuring a scalable and modular infrastructure that supports innovative and decentralized applications.\nCore Features:\n- Lightning Fast Transactions: Say goodbye to slow speeds with Creator's Layer 2 technology.\n- Low Fees: Lower transaction costs make blockchain accessible to all.\n- Scalable Infrastructure: Creator's network adapts effortlessly as you grow.",
+    cta: {
+      backgroundImageUrl: creatorCTA.src,
+      title: "From Builders to Builders, From Idea to Creation ⚡",
+      buttonLink: "https://www.creatorchain.io/",
+      buttonText: "Learn More",
     },
   },
   //Donatuz
@@ -391,11 +412,25 @@ const chainMetaRecord = {
     headerImgUrl: liskBanner.src,
     about:
       "Lisk is focused on serving builders in high-growth markets like Africa and Southeast Asia. When you build on Lisk, you become part of the strongest Ethereum collective, alongside Coinbase, Sony, World, Kraken and Uniswap -- the OP Superchain.",
+    // cta: {
+    //   backgroundImageUrl: liskCTA.src,
+    //   title: "Ready to reshape the world?",
+    //   buttonLink: "https://lisk.com",
+    //   buttonText: "Learn more",
+    // },
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  //Metal L2
+  1750: {
+    headerImgUrl: metalBanner.src,
+    about:
+      "Metal L2 is a banking-focused Layer 2 blockchain built on the Optimism Superchain, designed to enable direct on-chain fiat deposits through its connection to The Digital Banking Network—an open-source blockchain banking protocol developed by Metallicus",
     cta: {
-      backgroundImageUrl: liskCTA.src,
-      title: "Ready to reshape the world?",
-      buttonLink: "https://lisk.com",
-      buttonText: "Learn more",
+      backgroundImageUrl: metalCTA.src,
+      title: "Connect to The Banking Layer, Metal L2",
+      buttonLink: "https://metall2.com/",
+      buttonText: "Connect Here",
     },
   },
   //0G-Newton-Testnet
@@ -446,8 +481,32 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
-  //treasure
+  //treasure-Ruby
   978657: {
+    headerImgUrl: treasureBanner.src,
+    about:
+      'Treasure is the decentralized game console. Powered by $MAGIC, the Treasure L2 serves as the base layer for the best cryptonative games and projects. Treasure and its network of "Infinity Chains" L3s offers EVM compatibility, massive scale, and decentralized infrastructure enshrined throughout. Combined with a passionate community and builder support, developers on Treasure are equipped with all of the tools they need to not only build great games and products, but also distribute to the masses.',
+    cta: {
+      backgroundImageUrl: treasureCTA.src,
+      title: "Start building on Treasure!",
+      buttonLink: "https://portal.treasure.lol",
+      buttonText: "Learn more",
+    },
+  },
+  //Treasure Topaz
+  978658: {
+    headerImgUrl: treasureBanner.src,
+    about:
+      'Treasure is the decentralized game console. Powered by $MAGIC, the Treasure L2 serves as the base layer for the best cryptonative games and projects. Treasure and its network of "Infinity Chains" L3s offers EVM compatibility, massive scale, and decentralized infrastructure enshrined throughout. Combined with a passionate community and builder support, developers on Treasure are equipped with all of the tools they need to not only build great games and products, but also distribute to the masses.',
+    cta: {
+      backgroundImageUrl: treasureCTA.src,
+      title: "Start building on Treasure!",
+      buttonLink: "https://portal.treasure.lol",
+      buttonText: "Learn more",
+    },
+  },
+  //Treasure Mainnet
+  61166: {
     headerImgUrl: treasureBanner.src,
     about:
       'Treasure is the decentralized game console. Powered by $MAGIC, the Treasure L2 serves as the base layer for the best cryptonative games and projects. Treasure and its network of "Infinity Chains" L3s offers EVM compatibility, massive scale, and decentralized infrastructure enshrined throughout. Combined with a passionate community and builder support, developers on Treasure are equipped with all of the tools they need to not only build great games and products, but also distribute to the masses.',

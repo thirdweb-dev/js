@@ -43,7 +43,9 @@ export function LinkProfileScreen(props: {
           walletConnect={props.walletConnect}
           wallet={activeWallet as Wallet<"inApp">}
           done={() => {
-            queryClient.invalidateQueries({ queryKey: ["profiles"] });
+            setTimeout(() => {
+              queryClient.invalidateQueries({ queryKey: ["profiles"] });
+            }, 500);
             props.onBack();
           }}
           connectLocale={props.locale}
@@ -67,7 +69,9 @@ export function LinkProfileScreen(props: {
         <EcosystemWalletConnectUI
           wallet={activeWallet as Wallet<EcosystemWalletId>}
           done={() => {
-            queryClient.invalidateQueries({ queryKey: ["profiles"] });
+            setTimeout(() => {
+              queryClient.invalidateQueries({ queryKey: ["profiles"] });
+            }, 500);
             props.onBack();
           }}
           connectLocale={props.locale}

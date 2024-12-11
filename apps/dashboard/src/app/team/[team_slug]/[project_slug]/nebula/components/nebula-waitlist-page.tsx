@@ -1,21 +1,15 @@
 import { joinTeamWaitlist } from "@/actions/joinWaitlist";
-import { getTeamBySlug, getTeamNebulaWaitList } from "@/api/team";
+import { type Team, getTeamNebulaWaitList } from "@/api/team";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { NebulaWaitListPageUI } from "./nebula-waitlist-page-ui.client";
 
 export async function NebulaWaitListPage(props: {
-  redirectOnNoTeam: string;
-  teamSlug: string;
+  team: Team;
+  className?: string;
+  hideHeader?: boolean;
 }) {
-  const team = await getTeamBySlug(props.teamSlug);
-
-  if (!team) {
-    redirect(props.redirectOnNoTeam);
-  }
-
-  const nebulaWaitList = await getTeamNebulaWaitList(team.slug);
+  const nebulaWaitList = await getTeamNebulaWaitList(props.team.slug);
 
   // this should never happen
   if (!nebulaWaitList) {
@@ -28,18 +22,24 @@ export async function NebulaWaitListPage(props: {
   if (!nebulaWaitList.onWaitlist) {
     const res = await joinTeamWaitlist({
       scope: "nebula",
-      teamSlug: team.slug,
+      teamSlug: props.team.slug,
     }).catch(() => null);
 
     // this should never happen
     if (!res?.success) {
       return (
-        <UnexpectedErrorPage message="Failed to join Nebula waitlist status for your team" />
+        <UnexpectedErrorPage message="Failed to join Nebula waitlist. Please try again later" />
       );
     }
   }
 
-  return <NebulaWaitListPageUI teamId={team.id} />;
+  return (
+    <NebulaWaitListPageUI
+      teamId={props.team.id}
+      className={props.className}
+      hideHeader={props.hideHeader}
+    />
+  );
 }
 
 function UnexpectedErrorPage(props: {

@@ -2,13 +2,14 @@ import type { Abi } from "abitype";
 import * as universalethers from "ethers";
 import type * as ethers5 from "ethers5";
 import type * as ethers6 from "ethers6";
-import type { AccessList, Hex, TransactionSerializable } from "viem";
+import type { AccessList, Hex } from "viem";
 import type { Chain } from "../chains/types.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { type ThirdwebContract, getContract } from "../contract/contract.js";
 import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
+import type { SerializableTransaction } from "../transaction/serialize-transaction.js";
 import { toHex } from "../utils/encoding/hex.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
@@ -493,7 +494,7 @@ export function toEthersSigner(
  * @returns The aligned transaction object.
  * @internal
  */
-function alignTxToEthers(tx: TransactionSerializable) {
+function alignTxToEthers(tx: SerializableTransaction) {
   const { type: viemType, ...rest } = tx;
 
   // massage "type" to fit ethers

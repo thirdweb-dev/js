@@ -150,7 +150,7 @@ export const CustomConnectWallet = (props: {
           <Link
             href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
           >
-            Sign In
+            Connect Wallet
           </Link>
         </Button>
       </>
@@ -163,8 +163,8 @@ export const CustomConnectWallet = (props: {
         theme={getSDKTheme(t)}
         client={thirdwebClient}
         connectModal={{
-          privacyPolicyUrl: "/privacy",
-          termsOfServiceUrl: "/tos",
+          privacyPolicyUrl: "/privacy-policy",
+          termsOfServiceUrl: "/terms",
           showThirdwebBranding: false,
           welcomeScreen: () => <ConnectWalletWelcomeScreen theme={t} />,
         }}
@@ -308,8 +308,8 @@ export function useCustomConnectModal() {
           url: "https://thirdweb.com",
         },
         chain: options?.chain,
-        privacyPolicyUrl: "/privacy",
-        termsOfServiceUrl: "/tos",
+        privacyPolicyUrl: "/privacy-policy",
+        termsOfServiceUrl: "/terms",
         showThirdwebBranding: false,
         welcomeScreen: () => (
           <ConnectWalletWelcomeScreen

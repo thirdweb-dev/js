@@ -11,7 +11,7 @@ import {
   resolvePromisedValue,
 } from "../../utils/promise/resolve-promised-value.js";
 import type { OneOf } from "../../utils/type-utils.js";
-import { isCoinbaseSDKWallet } from "../coinbase/coinbaseWebSDK.js";
+import { isCoinbaseSDKWallet } from "../coinbase/coinbase-web.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
@@ -181,7 +181,7 @@ export async function sendCalls<const ID extends WalletId>(
 
   if (isCoinbaseSDKWallet(wallet)) {
     const { coinbaseSDKWalletSendCalls } = await import(
-      "../coinbase/coinbaseWebSDK.js"
+      "../coinbase/coinbase-web.js"
     );
     return coinbaseSDKWalletSendCalls({
       wallet,

@@ -1,4 +1,5 @@
 import * as ethers5 from "ethers5";
+import * as ethers6 from "ethers6";
 import { describe, expect, it, test } from "vitest";
 import { USDT_CONTRACT } from "~test/test-contracts.js";
 import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
@@ -10,6 +11,7 @@ import { randomBytesBuffer } from "../utils/random.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
 import {
   fromEthersContract,
+  fromEthersSigner,
   toEthersContract,
   toEthersProvider,
   toEthersSigner,
@@ -148,5 +150,95 @@ describe("ethers5 adapter", () => {
 
     const _decimals = await decimals({ contract: thirdwebContract });
     expect(_decimals).toBe(6);
+  });
+
+  test("toEthersProvider should return a valid provider", async () => {
+    const provider = toEthersProvider(ethers5, TEST_CLIENT, ANVIL_CHAIN);
+    expect(provider).toBeDefined();
+    expect(provider.getBlockNumber).toBeDefined();
+
+    // Test if the provider can fetch the block number
+    const blockNumber = await provider.getBlockNumber();
+    expect(typeof blockNumber).toBe("number");
+  });
+
+  test("toEthersProvider should throw error with invalid ethers version", () => {
+    const invalidEthers = ethers6;
+    expect(() =>
+      // biome-ignore lint/suspicious/noExplicitAny: Testing invalid data
+      toEthersProvider(invalidEthers as any, TEST_CLIENT, ANVIL_CHAIN),
+    ).toThrow(
+      "You seem to be using ethers@6, please use the `ethers6Adapter()`",
+    );
+  });
+});
+
+describe("fromEthersSigner", () => {
+  it("should convert an ethers5 Signer to an Account", async () => {
+    const wallet = new ethers5.Wallet(ANVIL_PKEY_A);
+    const account = await fromEthersSigner(wallet);
+
+    expect(account).toBeDefined();
+    expect(account.address).toBe(await wallet.getAddress());
+  });
+
+  it("should sign a message", async () => {
+    const wallet = new ethers5.Wallet(ANVIL_PKEY_A);
+    const account = await fromEthersSigner(wallet);
+
+    const message = "Hello, world!";
+    const signature = await account.signMessage({ message });
+
+    expect(signature).toBe(await wallet.signMessage(message));
+  });
+
+  it("should sign a transaction", async () => {
+    const wallet = new ethers5.Wallet(
+      ANVIL_PKEY_A,
+      ethers5.getDefaultProvider(),
+    );
+    const account = await fromEthersSigner(wallet);
+
+    const transaction = {
+      to: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+      value: 1n,
+    };
+
+    const signedTransaction = await account.signTransaction?.(transaction);
+
+    expect(signedTransaction).toBe(await wallet.signTransaction(transaction));
+  });
+
+  it("should sign typed data", async () => {
+    const wallet = new ethers5.Wallet(ANVIL_PKEY_A);
+    const account = await fromEthersSigner(wallet);
+
+    const domain = {
+      name: "Ether Mail",
+      version: "1",
+      chainId: 1,
+      verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+    };
+
+    const types = {
+      Person: [
+        { name: "name", type: "string" },
+        { name: "wallet", type: "address" },
+      ],
+    };
+
+    const value = {
+      name: "Alice",
+      wallet: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+    };
+
+    const signature = await account.signTypedData({
+      primaryType: "Person",
+      domain,
+      types,
+      message: value,
+    });
+
+    expect(signature).toBeDefined();
   });
 });

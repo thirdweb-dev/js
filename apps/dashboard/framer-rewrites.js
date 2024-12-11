@@ -5,6 +5,7 @@ module.exports = [
   "/pricing",
   // -- product landing pages --
   // -- connect
+  "/connect",
   "/connect/sign-in",
   // -- nebula
   "/nebula",
@@ -27,4 +28,7 @@ module.exports = [
   // -- TPP --
   "/trusted-partner-program",
   "/trusted-partner-program/:partner_slug",
+  // -- legal --
+  "/terms",
+  "/privacy-policy",
 ];

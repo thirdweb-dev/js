@@ -1,9 +1,9 @@
+import { Card } from "@/components/ui/card";
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { Flex, Select, Spinner } from "@chakra-ui/react";
 import { InfoIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
-import { Card, Heading, Text } from "tw-components";
 import { PermissionEditor } from "./permissions-editor";
 
 interface ContractPermissionProps {
@@ -17,7 +17,6 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
   role,
   description,
   isPending,
-
   contract,
 }) => {
   const {
@@ -33,15 +32,15 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
   const isAdmin = useIsAdmin(contract);
 
   return (
-    <Card position="relative">
+    <Card className="relative p-4">
       <Flex direction="column" gap={3}>
         <div className="mb-3 flex flex-col gap-2">
           <div className="flex flex-row">
             <div className="flex grow flex-col gap-1">
-              <Heading size="subtitle.sm" textTransform="capitalize">
+              <p className="font-semibold text-base capitalize">
                 {role === "minter" ? "Minter / Creator" : role}
-              </Heading>
-              <Text>{description}</Text>
+              </p>
+              <p className="text-muted-foreground">{description}</p>
             </div>
 
             {role === "transfer" && (
@@ -49,7 +48,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                 {isPending || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
-                    <Text>{isPending ? "Loading ..." : "Updating ..."}</Text>
+                    <p>{isPending ? "Loading ..." : "Updating ..."}</p>
                   </Flex>
                 ) : (
                   <Select
@@ -84,7 +83,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                 {isPending || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
-                    <Text>{isPending ? "Loading ..." : "Updating ..."}</Text>
+                    <p>{isPending ? "Loading ..." : "Updating ..."}</p>
                   </Flex>
                 ) : (
                   <Select
@@ -119,7 +118,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                 {isPending || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
-                    <Text>{isPending ? "Loading ..." : "Updating ..."}</Text>
+                    <p>{isPending ? "Loading ..." : "Updating ..."}</p>
                   </Flex>
                 ) : (
                   <Select
@@ -165,8 +164,8 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               padding="10px"
               gap={3}
             >
-              <InfoIcon className="size-6 text-primary-foreground hover:opacity-10" />
-              <Text color="primary.800" _dark={{ color: "primary.100" }}>
+              <InfoIcon className="size-6 text-primary hover:opacity-10 dark:text-primary-foreground" />
+              <p className="text-primary dark:text-primary-foreground">
                 {isRestricted ? (
                   <>
                     The tokens in this contract are currently{" "}
@@ -181,7 +180,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                     transfer their tokens.
                   </>
                 )}
-              </Text>
+              </p>
             </Flex>
           )}
 
@@ -200,8 +199,8 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               padding="10px"
               gap={3}
             >
-              <InfoIcon className="size-6 text-primary-foreground hover:opacity-10" />
-              <Text color="primary.800" _dark={{ color: "primary.100" }}>
+              <InfoIcon className="size-6 text-primary hover:opacity-10 dark:text-primary-foreground" />
+              <p className="text-primary dark:text-primary-foreground">
                 {isRestricted ? (
                   <>
                     Currently, only addresses specified below will be able to
@@ -210,7 +209,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                 ) : (
                   <>This marketplace is open for anyone to create listings.</>
                 )}
-              </Text>
+              </p>
             </Flex>
           )}
 
@@ -229,8 +228,8 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               padding="10px"
               gap={3}
             >
-              <InfoIcon className="size-6 text-primary-foreground hover:opacity-10" />
-              <Text color="primary.800" _dark={{ color: "primary.100" }}>
+              <InfoIcon className="size-6 text-primary hover:opacity-10 dark:text-primary-foreground" />
+              <p className="text-primary dark:text-primary-foreground">
                 {isRestricted ? (
                   <>
                     Currently, only assets from the contracts specified below
@@ -242,7 +241,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                     contract.
                   </>
                 )}
-              </Text>
+              </p>
             </Flex>
           )}
 

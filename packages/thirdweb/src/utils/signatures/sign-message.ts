@@ -1,9 +1,10 @@
+import * as ox__Hex from "ox/Hex";
+import * as ox__PersonalMessage from "ox/PersonalMessage";
+import * as ox__Secp256k1 from "ox/Secp256k1";
+import * as ox__Signature from "ox/Signature";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import type { Hex } from "../encoding/hex.js";
-import { hashMessage } from "../hashing/hashMessage.js";
 import type { Prettify } from "../type-utils.js";
-import { sign } from "./sign.js";
-import { signatureToHex } from "./signature-to-hex.js";
 
 type Message = Prettify<
   | string
@@ -59,9 +60,17 @@ export function signMessage(
   options: SignMessageOptions | { message: Message; account: Account },
 ): Hex | Promise<Hex> {
   if ("privateKey" in options) {
-    const { message, privateKey } = options;
-    const signature = sign({ hash: hashMessage(message), privateKey });
-    return signatureToHex(signature);
+    const payload = ox__PersonalMessage.getSignPayload(
+      typeof options.message === "object"
+        ? options.message.raw
+        : ox__Hex.fromString(options.message),
+    );
+
+    const signature = ox__Secp256k1.sign({
+      payload,
+      privateKey: options.privateKey,
+    });
+    return ox__Signature.toHex(signature);
   }
   if ("account" in options) {
     const { message, account } = options;

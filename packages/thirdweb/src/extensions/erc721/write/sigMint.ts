@@ -15,6 +15,10 @@ import {
   type MintWithSignatureParams,
   mintWithSignature as generatedMintWithSignature,
 } from "../__generated__/ISignatureMintERC721/write/mintWithSignature.js";
+import {
+  type MintWithSignatureParams as MintWithSignatureParamsV2,
+  mintWithSignature as generatedMintWithSignatureV2,
+} from "../__generated__/ISignatureMintERC721_v2/write/mintWithSignature.js";
 
 /**
  * Mints a new ERC721 token with the given minter signature
@@ -38,6 +42,23 @@ import {
  * @returns A promise that resolves to the transaction result.
  */
 export function mintWithSignature(
+  options: BaseTransactionOptions<
+    | { payload: PayloadTypeV2; signature: Hex }
+    | { payload: PayloadType; signature: Hex }
+  >,
+) {
+  const { payload } = options;
+  if ("quantity" in payload) {
+    return mintWithSignatureV2(
+      options as BaseTransactionOptions<MintWithSignatureParamsV2>,
+    );
+  }
+  return mintWithSignatureV1(
+    options as BaseTransactionOptions<MintWithSignatureParams>,
+  );
+}
+
+function mintWithSignatureV1(
   options: BaseTransactionOptions<MintWithSignatureParams>,
 ) {
   const value = isNativeTokenAddress(options.payload.currency)
@@ -51,10 +72,27 @@ export function mintWithSignature(
   });
 }
 
-export type GenerateMintSignatureOptions = {
+function mintWithSignatureV2(
+  options: BaseTransactionOptions<MintWithSignatureParamsV2>,
+) {
+  const value = isNativeTokenAddress(options.payload.currency)
+    ? options.payload.pricePerToken * options.payload.quantity
+    : 0n;
+  return generatedMintWithSignatureV2({
+    ...options,
+    overrides: {
+      value,
+    },
+  });
+}
+
+export type GenerateMintSignatureOptions<
+  T extends "LoyaltyCard" | "TokenERC721" = "TokenERC721",
+> = {
   account: Account;
   contract: ThirdwebContract;
   mintRequest: GeneratePayloadInput;
+  contractType?: T;
 };
 
 /**
@@ -87,10 +125,10 @@ export type GenerateMintSignatureOptions = {
  * @extension ERC721
  * @returns A promise that resolves to the payload and signature.
  */
-export async function generateMintSignature(
-  options: GenerateMintSignatureOptions,
-) {
-  const { mintRequest, account, contract } = options;
+export async function generateMintSignature<
+  T extends "LoyaltyCard" | "TokenERC721" = "TokenERC721",
+>(options: GenerateMintSignatureOptions<T>): Promise<SignPayloadResult<T>> {
+  const { mintRequest, account, contract, contractType } = options;
 
   const currency = mintRequest.currency || NATIVE_TOKEN_ADDRESS;
   const [price, uri, uid] = await Promise.all([
@@ -175,15 +213,70 @@ export async function generateMintSignature(
     royaltyRecipient = mintRequest.royaltyRecipient;
   }
 
+  if (contractType === "LoyaltyCard") {
+    return signPayloadV2({
+      mintRequest,
+      account,
+      contract,
+      uri,
+      currency,
+      uid,
+      price,
+      royaltyRecipient,
+      primarySaleRecipient: saleRecipient,
+      startTime,
+      endTime,
+    }) as Promise<SignPayloadResult<T>>;
+  }
+  return signPayloadV1({
+    mintRequest,
+    account,
+    contract,
+    uri,
+    currency,
+    uid,
+    price,
+    royaltyRecipient,
+    primarySaleRecipient: saleRecipient,
+    startTime,
+    endTime,
+  }) as Promise<SignPayloadResult<T>>;
+}
+
+async function signPayloadV1({
+  mintRequest,
+  account,
+  contract,
+  uri,
+  currency,
+  uid,
+  price,
+  royaltyRecipient,
+  primarySaleRecipient,
+  startTime,
+  endTime,
+}: {
+  mintRequest: GeneratePayloadInput;
+  account: Account;
+  contract: ThirdwebContract;
+  uri: string;
+  currency: Address;
+  uid: Hex;
+  price: bigint;
+  royaltyRecipient: Address;
+  primarySaleRecipient: Address;
+  startTime: Date;
+  endTime: Date;
+}): Promise<{ payload: PayloadType; signature: Hex }> {
   const payload: PayloadType = {
     uri,
     currency,
     uid,
     price,
     to: mintRequest.to,
-    royaltyRecipient: royaltyRecipient,
+    royaltyRecipient,
     royaltyBps: toBigInt(mintRequest.royaltyBps || 0),
-    primarySaleRecipient: saleRecipient,
+    primarySaleRecipient,
     validityStartTimestamp: dateToSeconds(startTime),
     validityEndTimestamp: dateToSeconds(endTime),
   };
@@ -195,17 +288,84 @@ export async function generateMintSignature(
       chainId: contract.chain.id,
       verifyingContract: contract.address,
     },
-    types: { MintRequest: MintRequest721 },
+    types: {
+      MintRequest: MintRequest721,
+    },
     primaryType: "MintRequest",
     message: payload,
   });
   return { payload, signature };
 }
 
+async function signPayloadV2({
+  mintRequest,
+  account,
+  contract,
+  uri,
+  currency,
+  uid,
+  price,
+  royaltyRecipient,
+  primarySaleRecipient,
+  startTime,
+  endTime,
+}: {
+  mintRequest: GeneratePayloadInput;
+  account: Account;
+  contract: ThirdwebContract;
+  uri: string;
+  currency: Address;
+  uid: Hex;
+  price: bigint;
+  royaltyRecipient: Address;
+  primarySaleRecipient: Address;
+  startTime: Date;
+  endTime: Date;
+}): Promise<{ payload: PayloadTypeV2; signature: Hex }> {
+  const payload: PayloadTypeV2 = {
+    uri,
+    currency,
+    uid,
+    quantity: toBigInt(1), // always 1 for 721 NFTs
+    pricePerToken: price,
+    to: mintRequest.to,
+    royaltyRecipient,
+    royaltyBps: toBigInt(mintRequest.royaltyBps || 0),
+    primarySaleRecipient,
+    validityStartTimestamp: dateToSeconds(startTime),
+    validityEndTimestamp: dateToSeconds(endTime),
+  };
+
+  const signature = await account.signTypedData({
+    domain: {
+      name: "SignatureMintERC721",
+      version: "1",
+      chainId: contract.chain.id,
+      verifyingContract: contract.address,
+    },
+    types: {
+      MintRequest: MintRequest721_V2,
+    },
+    primaryType: "MintRequest",
+    message: payload,
+  });
+  return { payload, signature };
+}
+
+type SignPayloadResult<T> = T extends "LoyaltyCard"
+  ? Awaited<ReturnType<typeof signPayloadV2>>
+  : Awaited<ReturnType<typeof signPayloadV1>>;
+
 type PayloadType = AbiParameterToPrimitiveType<{
   type: "tuple";
   name: "payload";
   components: typeof MintRequest721;
+}>;
+
+type PayloadTypeV2 = AbiParameterToPrimitiveType<{
+  type: "tuple";
+  name: "payload";
+  components: typeof MintRequest721_V2;
 }>;
 
 type GeneratePayloadInput = {
@@ -229,6 +389,22 @@ const MintRequest721 = [
   { name: "primarySaleRecipient", type: "address" },
   { name: "uri", type: "string" },
   { name: "price", type: "uint256" },
+  { name: "currency", type: "address" },
+  { name: "validityStartTimestamp", type: "uint128" },
+  { name: "validityEndTimestamp", type: "uint128" },
+  { name: "uid", type: "bytes32" },
+] as const;
+
+// used for LoyaltyCard contract and base sigmint contracts
+// adds quantity to the payload so its the same as 1155
+const MintRequest721_V2 = [
+  { name: "to", type: "address" },
+  { name: "royaltyRecipient", type: "address" },
+  { name: "royaltyBps", type: "uint256" },
+  { name: "primarySaleRecipient", type: "address" },
+  { name: "uri", type: "string" },
+  { name: "quantity", type: "uint256" },
+  { name: "pricePerToken", type: "uint256" },
   { name: "currency", type: "address" },
   { name: "validityStartTimestamp", type: "uint128" },
   { name: "validityEndTimestamp", type: "uint128" },

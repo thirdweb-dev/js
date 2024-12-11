@@ -1,6 +1,4 @@
 "use client";
-
-import { Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 import { TokenAirdropButton } from "./components/airdrop-button";
@@ -25,7 +23,7 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
 }) => {
   if (!isERC20) {
     return (
-      <Card as={Flex} flexDir="column" gap={3}>
+      <Card className="flex flex-col gap-3">
         {/* TODO  extract this out into it's own component and make it better */}
         <Heading size="subtitle.md">No Token extension enabled</Heading>
         <Text>
@@ -46,7 +44,7 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
   }
 
   return (
-    <Flex direction="column" gap={6}>
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <Heading size="title.sm">Contract Tokens</Heading>
         <div className="flex flex-col gap-3 md:flex-row">
@@ -59,6 +57,6 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
       </div>
 
       <TokenSupply contract={contract} />
-    </Flex>
+    </div>
   );
 };

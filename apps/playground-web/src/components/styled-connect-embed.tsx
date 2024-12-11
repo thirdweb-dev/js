@@ -25,7 +25,7 @@ export function StyledConnectEmbed(
 
   return account ? (
     <div className="flex flex-col gap-8">
-      <StyledConnectButton />
+      <StyledConnectButton {...props} />
     </div>
   ) : (
     <ConnectEmbed

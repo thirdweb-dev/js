@@ -129,7 +129,8 @@ export async function verifyHash({
   try {
     const result = await eth_call(rpcRequest, verificationData);
     return hexToBool(result);
-  } catch {
+  } catch (err) {
+    console.error("Error verifying ERC-6492 signature", err);
     // Some chains do not support the eth_call simulation and will fail, so we fall back to regular EIP1271 validation
     const validEip1271 = await verifyEip1271Signature({
       hash,

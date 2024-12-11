@@ -68,25 +68,40 @@ function Story() {
     },
   });
 
+  const redirectToBillingPortalStub = async () => ({ status: 200 });
+
   return (
     <div className="container flex max-w-[1130px] flex-col gap-12 lg:p-10">
       <BadgeContainer label="On-demand Subscriptions with 0 usage">
-        <PlanInfoCard team={team} subscriptions={zeroUsageOnDemandSubs} />
+        <PlanInfoCard
+          team={team}
+          subscriptions={zeroUsageOnDemandSubs}
+          redirectToBillingPortal={redirectToBillingPortalStub}
+        />
       </BadgeContainer>
 
       <BadgeContainer label="Trial Plan - On-demand Subscriptions with 0 usage">
         <PlanInfoCard
           team={team}
           subscriptions={trialPlanZeroUsageOnDemandSubs}
+          redirectToBillingPortal={redirectToBillingPortalStub}
         />
       </BadgeContainer>
 
       <BadgeContainer label="On-demand Subscriptions with 1 usage">
-        <PlanInfoCard team={team} subscriptions={subsWith1Usage} />
+        <PlanInfoCard
+          team={team}
+          subscriptions={subsWith1Usage}
+          redirectToBillingPortal={redirectToBillingPortalStub}
+        />
       </BadgeContainer>
 
       <BadgeContainer label="On-demand Subscriptions with 4 usage">
-        <PlanInfoCard team={team} subscriptions={subsWith4Usage} />
+        <PlanInfoCard
+          team={team}
+          subscriptions={subsWith4Usage}
+          redirectToBillingPortal={redirectToBillingPortalStub}
+        />
       </BadgeContainer>
     </div>
   );

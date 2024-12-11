@@ -60,6 +60,7 @@ function Story() {
           payConfig: "/payConfig",
         }}
         onKeyUpdated={undefined}
+        showNebulaSettings={false}
       />
 
       <Toaster richColors />

@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { defineChain } from "../../chains/utils.js";
+import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
@@ -10,18 +10,16 @@ import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import type { Address } from "../../utils/address.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
-import { setThirdwebDomains } from "../../utils/domains.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
 import { smartWallet } from "./smart-wallet.js";
-
 let wallet: Wallet;
 let smartAccount: Account;
 let smartWalletAddress: Address;
 let personalAccount: Account;
 let accountContract: ThirdwebContract;
 
-const chain = defineChain(531050104);
+const chain = arbitrumSepolia;
 const client = TEST_CLIENT;
 const contract = getContract({
   client,
@@ -29,18 +27,18 @@ const contract = getContract({
   address: "0x6A7a26c9a595E6893C255C9dF0b593e77518e0c3",
 });
 describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
-  "SmartWallet policy tests",
+  "SmartWallet dev tests",
   {
     retry: 0,
     timeout: 240_000,
   },
   () => {
     beforeAll(async () => {
-      setThirdwebDomains({
-        rpc: "rpc.thirdweb-dev.com",
-        storage: "storage.thirdweb-dev.com",
-        bundler: "bundler.thirdweb-dev.com",
-      });
+      // setThirdwebDomains({
+      //   rpc: "rpc.thirdweb-dev.com",
+      //   storage: "storage.thirdweb-dev.com",
+      //   bundler: "bundler.thirdweb-dev.com",
+      // });
       personalAccount = await generateAccount({
         client,
       });
@@ -64,13 +62,14 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
       expect(smartWalletAddress).toHaveLength(42);
     });
 
-    it.skip("can sign a msg", async () => {
-      await smartAccount.signMessage({ message: "hello world" });
-      const isDeployed = await isContractDeployed(accountContract);
-      expect(isDeployed).toEqual(true);
+    it("can sign a msg", async () => {
+      const signature = await smartAccount.signMessage({
+        message: "hello world",
+      });
+      expect(signature.length).toBeGreaterThan(0);
     });
 
-    it.skip("should send a transaction", async () => {
+    it("should send a transaction", async () => {
       const tx = prepareTransaction({
         client,
         chain,
@@ -105,7 +104,7 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
       expect(balance).toEqual(1n);
     });
 
-    it("should deploy a published autofactory contract", async () => {
+    it.skip("should deploy a published autofactory contract", async () => {
       const address = await deployPublishedContract({
         client: TEST_CLIENT,
         chain,

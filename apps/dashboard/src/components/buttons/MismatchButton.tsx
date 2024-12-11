@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/popover";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaucetButton } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
 import { GiftIcon } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
@@ -31,6 +30,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { ExternalLinkIcon, UnplugIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type React from "react";
 import { forwardRef, useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -85,6 +85,8 @@ export const MismatchButton = forwardRef<
   const [dialog, setDialog] = useState<undefined | "no-funds" | "pay">();
   const { theme } = useTheme();
   const client = useThirdwebClient();
+  const pathname = usePathname();
+
   const evmBalance = useWalletBalance({
     address: account?.address,
     chain: activeWalletChain,
@@ -101,17 +103,14 @@ export const MismatchButton = forwardRef<
     useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>(undefined);
 
   if (!wallet || !chainId) {
-    const connectWalletButtonClassName = cn(
-      props.className,
-      props.size === "sm" && "!py-2 !h-auto",
-    );
-
     return (
-      <CustomConnectWallet
-        signInLinkButtonClassName={connectWalletButtonClassName}
-        connectButtonClassName={connectWalletButtonClassName}
-        loadingButtonClassName={connectWalletButtonClassName}
-      />
+      <Button className={props.className} size={props.size} asChild>
+        <Link
+          href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
+        >
+          Connect Wallet
+        </Link>
+      </Button>
     );
   }
   const notEnoughBalance =

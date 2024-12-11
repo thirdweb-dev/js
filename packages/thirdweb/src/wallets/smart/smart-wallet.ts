@@ -6,11 +6,9 @@ import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { createWalletEmitter } from "../wallet-emitter.js";
-import type {
-  CreateWalletArgs,
-  WalletConnectionOption,
-} from "../wallet-types.js";
+import type { WalletConnectionOption } from "../wallet-types.js";
 import { getDefaultAccountFactory } from "./lib/constants.js";
+import type { SmartWalletOptions } from "./types.js";
 
 /**
  * Creates a ERC4337 smart wallet based on a admin account.
@@ -118,7 +116,7 @@ import { getDefaultAccountFactory } from "./lib/constants.js";
  *    accountAddress: "0x...", // override account address
  *    accountSalt: "0x...", // override account salt
  *    entrypointAddress: "0x...", // override entrypoint address
- *    erc20Paymaster: { ... }, // enable erc20 paymaster
+ *    tokenPaymaster: TokenPaymaster.BASE_USDC, // enable erc20 paymaster
  *    bundlerUrl: "https://...", // override bundler url
  *    paymaster: (userOp) => { ... }, // override paymaster
  *    ...
@@ -131,7 +129,7 @@ import { getDefaultAccountFactory } from "./lib/constants.js";
  * @wallet
  */
 export function smartWallet(
-  createOptions: CreateWalletArgs<"smart">[1],
+  createOptions: SmartWalletOptions,
 ): Wallet<"smart"> {
   const emitter = createWalletEmitter<"smart">();
   let account: Account | undefined = undefined;

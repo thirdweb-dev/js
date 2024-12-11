@@ -1,15 +1,20 @@
+"use client";
+
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { Flex, Skeleton } from "@chakra-ui/react";
-import {
-  replaceDeployerAddress,
-  treatAddress,
-} from "components/explore/publisher";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useActiveAccount } from "thirdweb/react";
+import { replaceDeployerAddress } from "lib/publisher-utils";
+import { ZERO_ADDRESS } from "thirdweb";
+import {
+  AccountAddress,
+  AccountAvatar,
+  AccountBlobbie,
+  AccountName,
+  AccountProvider,
+} from "thirdweb/react";
 import { Heading, Link, LinkButton } from "tw-components";
-import { useEns, usePublisherProfile } from "../hooks";
-import { PublisherSocials } from "./PublisherSocials";
-import { EditProfile } from "./edit-profile";
-import { PublisherAvatar } from "./masked-avatar";
+import { shortenIfAddress } from "utils/usedapp-external";
+import { useEns } from "../hooks";
 
 const TRACKING_CATEGORY = "releaser-header";
 
@@ -22,10 +27,7 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
   page,
 }) => {
   const ensQuery = useEns(wallet);
-  const publisherProfile = usePublisherProfile(
-    ensQuery.data?.address || undefined,
-  );
-  const address = useActiveAccount()?.address;
+  const client = useThirdwebClient();
 
   const trackEvent = useTrack();
 
@@ -40,10 +42,16 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
           Published by
         </Heading>
 
-        <Flex gap={4} alignItems="center">
-          <Skeleton isLoaded={publisherProfile.isSuccess}>
+        <AccountProvider
+          // passing zero address during loading time to prevent the component from crashing
+          address={ensQuery.data?.address || ZERO_ADDRESS}
+          client={client}
+        >
+          <div className="flex items-center gap-4">
             <Link
-              href={`/${ensQuery.data?.ensName || wallet}`}
+              href={replaceDeployerAddress(
+                `/${ensQuery.data?.ensName || wallet}`,
+              )}
               onClick={() =>
                 trackEvent({
                   category: TRACKING_CATEGORY,
@@ -52,15 +60,15 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
                 })
               }
             >
-              <PublisherAvatar
-                alt="Publisher avatar"
-                className="size-14"
-                address={ensQuery.data?.ensName || wallet}
+              <AccountAvatar
+                fallbackComponent={
+                  <AccountBlobbie className="size-14 rounded-full" />
+                }
+                loadingComponent={<Skeleton className="size-14 rounded-full" />}
+                className="size-14 rounded-full"
               />
             </Link>
-          </Skeleton>
 
-          <Flex flexDir="column">
             <Link
               href={replaceDeployerAddress(
                 `/${ensQuery.data?.ensName || wallet}`,
@@ -73,19 +81,20 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
                 })
               }
             >
-              <Heading size="subtitle.sm" ml={2}>
-                {treatAddress(
-                  publisherProfile?.data?.name ||
-                    ensQuery.data?.ensName ||
-                    wallet,
-                )}
-              </Heading>
+              <AccountName
+                fallbackComponent={
+                  <AccountAddress
+                    formatFn={(addr) =>
+                      shortenIfAddress(replaceDeployerAddress(addr))
+                    }
+                  />
+                }
+                loadingComponent={<Skeleton className="h-8 w-40" />}
+                formatFn={(name) => replaceDeployerAddress(name)}
+              />
             </Link>
-            {publisherProfile?.data && (
-              <PublisherSocials publisherProfile={publisherProfile.data} />
-            )}
-          </Flex>
-        </Flex>
+          </div>
+        </AccountProvider>
 
         <LinkButton
           variant="outline"
@@ -101,10 +110,6 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
         >
           View all contracts
         </LinkButton>
-
-        {ensQuery.data?.address === address && publisherProfile?.data && (
-          <EditProfile publisherProfile={publisherProfile.data} />
-        )}
       </Flex>
     </Flex>
   );

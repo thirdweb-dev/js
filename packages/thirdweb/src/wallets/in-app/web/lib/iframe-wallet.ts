@@ -8,7 +8,7 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import { getAddress } from "../../../../utils/address.js";
 import { getThirdwebDomains } from "../../../../utils/domains.js";
 import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
-import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
+import { parseTypedData } from "../../../../utils/signatures/helpers/parse-typed-data.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type {
   Account,
@@ -316,7 +316,7 @@ export class IFrameWallet implements IWebWallet {
                 parsedTypedData.types as SignerProcedureTypes["signTypedDataV4"]["types"],
               message:
                 parsedTypedData.message as SignerProcedureTypes["signTypedDataV4"]["message"],
-              chainId: chainId || 1,
+              chainId: Number.parseInt(BigInt(chainId || 1).toString()),
               partnerId,
               rpcEndpoint: `https://${chainId}.${RPC_URL}`, // TODO (ew) shouldnt be needed
             },

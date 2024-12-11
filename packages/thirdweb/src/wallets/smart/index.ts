@@ -1,11 +1,4 @@
-import {
-  type SignableMessage,
-  type TypedData,
-  type TypedDataDefinition,
-  type TypedDataDomain,
-  hashTypedData,
-  maxUint96,
-} from "viem";
+import type * as ox__TypedData from "ox/TypedData";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -22,19 +15,15 @@ import type { PreparedTransaction } from "../../transaction/prepare-transaction.
 import { readContract } from "../../transaction/read-contract.js";
 import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
-import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
 import type { Hex } from "../../utils/encoding/hex.js";
-import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
+import { type SignableMessage, maxUint96 } from "../../utils/types.js";
 import type {
   Account,
   SendTransactionOption,
   Wallet,
 } from "../interfaces/wallet.js";
-import type {
-  CreateWalletArgs,
-  WalletConnectionOption,
-  WalletId,
-} from "../wallet-types.js";
+import type { WalletId } from "../wallet-types.js";
 import {
   broadcastZkTransaction,
   bundleUserOp,
@@ -45,7 +34,12 @@ import {
   prepareBatchExecute,
   prepareExecute,
 } from "./lib/calls.js";
-import { getDefaultAccountFactory } from "./lib/constants.js";
+import {
+  ENTRYPOINT_ADDRESS_v0_6,
+  ENTRYPOINT_ADDRESS_v0_7,
+  getDefaultAccountFactory,
+  getEntryPointVersion,
+} from "./lib/constants.js";
 import {
   clearAccountDeploying,
   createUnsignedUserOp,
@@ -58,6 +52,7 @@ import type {
   SmartAccountOptions,
   SmartWalletConnectionOptions,
   SmartWalletOptions,
+  TokenPaymasterConfig,
   UserOperationV06,
   UserOperationV07,
 } from "./types.js";
@@ -89,8 +84,8 @@ const smartWalletToPersonalAccountMap = new WeakMap<Wallet<"smart">, Account>();
  */
 export async function connectSmartWallet(
   wallet: Wallet<"smart">,
-  connectionOptions: WalletConnectionOption<"smart">,
-  creationOptions: CreateWalletArgs<"smart">[1],
+  connectionOptions: SmartWalletConnectionOptions,
+  creationOptions: SmartWalletOptions,
 ): Promise<[Account, Chain]> {
   const { personalAccount, client, chain: connectChain } = connectionOptions;
 
@@ -114,6 +109,17 @@ export async function connectSmartWallet(
         entrypointAddress,
       };
     }
+  }
+
+  if (
+    options.overrides?.tokenPaymaster &&
+    !options.overrides?.entrypointAddress
+  ) {
+    // if token paymaster is set, but no entrypoint address, set the entrypoint address to v0.7
+    options.overrides = {
+      ...options.overrides,
+      entrypointAddress: ENTRYPOINT_ADDRESS_v0_7,
+    };
   }
 
   const factoryAddress =
@@ -140,7 +146,6 @@ export async function connectSmartWallet(
     chain: chain,
   });
 
-  // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
   const accountAddress = await predictAddress({
     factoryContract,
     adminAddress: personalAccount.address,
@@ -196,12 +201,24 @@ export async function disconnectSmartWallet(
 async function createSmartAccount(
   options: SmartAccountOptions,
 ): Promise<Account> {
+  const erc20Paymaster = options.overrides?.tokenPaymaster;
+  if (erc20Paymaster) {
+    if (
+      getEntryPointVersion(
+        options.overrides?.entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
+      ) !== "v0.7"
+    ) {
+      throw new Error(
+        "Token paymaster is only supported for entrypoint version v0.7",
+      );
+    }
+  }
+
   const { accountContract } = options;
   const account: Account = {
     address: getAddress(accountContract.address),
     async sendTransaction(transaction: SendTransactionOption) {
       // if erc20 paymaster - check allowance and approve if needed
-      const erc20Paymaster = options.overrides?.erc20Paymaster;
       let paymasterOverride:
         | undefined
         | ((
@@ -215,12 +232,7 @@ async function createSmartAccount(
         });
         const paymasterCallback = async (): Promise<PaymasterResult> => {
           return {
-            paymasterAndData: concatHex([
-              erc20Paymaster.address as Hex,
-              erc20Paymaster?.token as Hex,
-            ]),
-            // for 0.7 compatibility
-            paymaster: erc20Paymaster.address as Hex,
+            paymaster: erc20Paymaster.paymasterAddress as Hex,
             paymasterData: "0x",
           };
         };
@@ -256,175 +268,43 @@ async function createSmartAccount(
       });
     },
     async signMessage({ message }: { message: SignableMessage }) {
-      const [
-        { isContractDeployed },
-        { readContract },
-        { encodeAbiParameters },
-        { hashMessage },
-        { checkContractWalletSignature },
-      ] = await Promise.all([
-        import("../../utils/bytecode/is-contract-deployed.js"),
-        import("../../transaction/read-contract.js"),
-        import("../../utils/abi/encodeAbiParameters.js"),
-        import("../../utils/hashing/hashMessage.js"),
-        import("../../extensions/erc1271/checkContractWalletSignature.js"),
-      ]);
-      const isDeployed = await isContractDeployed(accountContract);
-      if (!isDeployed) {
-        await _deployAccount({
-          options,
-          account,
+      if (options.overrides?.signMessage) {
+        return options.overrides.signMessage({
+          adminAccount: options.personalAccount,
+          factoryContract: options.factoryContract,
           accountContract,
-        });
-        // the bundler and rpc might not be in sync, so while the bundler has a transaction hash for the deployment,
-        // the rpc might not have it yet, so we wait until the rpc confirms the contract is deployed
-        await confirmContractDeployment({
-          accountContract,
+          message,
         });
       }
 
-      const originalMsgHash = hashMessage(message);
-      // check if the account contract supports EIP721 domain separator based signing
-      let factorySupports712 = false;
-      try {
-        // this will throw if the contract does not support it (old factories)
-        await readContract({
-          contract: accountContract,
-          method:
-            "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
-          params: [originalMsgHash],
-        });
-        factorySupports712 = true;
-      } catch {
-        // ignore
-      }
-
-      let sig: `0x${string}`;
-      if (factorySupports712) {
-        const wrappedMessageHash = encodeAbiParameters(
-          [{ type: "bytes32" }],
-          [originalMsgHash],
-        );
-        sig = await options.personalAccount.signTypedData({
-          domain: {
-            name: "Account",
-            version: "1",
-            chainId: options.chain.id,
-            verifyingContract: accountContract.address,
-          },
-          primaryType: "AccountMessage",
-          types: { AccountMessage: [{ name: "message", type: "bytes" }] },
-          message: { message: wrappedMessageHash },
-        });
-      } else {
-        sig = await options.personalAccount.signMessage({ message });
-      }
-
-      const isValid = await checkContractWalletSignature({
-        contract: accountContract,
+      const { deployAndSignMessage } = await import("./lib/signing.js");
+      return deployAndSignMessage({
+        accountContract,
+        factoryContract: options.factoryContract,
+        options,
         message,
-        signature: sig,
       });
-
-      if (isValid) {
-        return sig;
-      }
-      throw new Error(
-        "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
-      );
     },
     async signTypedData<
-      const typedData extends TypedData | Record<string, unknown>,
+      const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
       primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
-    >(_typedData: TypedDataDefinition<typedData, primaryType>) {
-      const typedData = parseTypedData(_typedData);
-      const [
-        { isContractDeployed },
-        { readContract },
-        { encodeAbiParameters },
-        { checkContractWalletSignedTypedData },
-      ] = await Promise.all([
-        import("../../utils/bytecode/is-contract-deployed.js"),
-        import("../../transaction/read-contract.js"),
-        import("../../utils/abi/encodeAbiParameters.js"),
-        import(
-          "../../extensions/erc1271/checkContractWalletSignedTypedData.js"
-        ),
-      ]);
-      const isSelfVerifyingContract =
-        (
-          typedData.domain as TypedDataDomain
-        )?.verifyingContract?.toLowerCase() ===
-        accountContract.address?.toLowerCase();
-
-      if (isSelfVerifyingContract) {
-        // if the contract is self-verifying, we can just sign the message with the EOA (ie. adding a session key)
-        return options.personalAccount.signTypedData(typedData);
-      }
-
-      const isDeployed = await isContractDeployed(accountContract);
-      if (!isDeployed) {
-        await _deployAccount({
-          options,
-          account,
+    >(typedData: ox__TypedData.Definition<typedData, primaryType>) {
+      if (options.overrides?.signTypedData) {
+        return options.overrides.signTypedData({
+          adminAccount: options.personalAccount,
+          factoryContract: options.factoryContract,
           accountContract,
-        });
-        // the bundler and rpc might not be in sync, so while the bundler has a transaction hash for the deployment,
-        // the rpc might not have it yet, so we wait until the rpc confirms the contract is deployed
-        await confirmContractDeployment({
-          accountContract,
+          typedData,
         });
       }
 
-      const originalMsgHash = hashTypedData(typedData);
-      // check if the account contract supports EIP721 domain separator based signing
-      let factorySupports712 = false;
-      try {
-        // this will throw if the contract does not support it (old factories)
-        await readContract({
-          contract: accountContract,
-          method:
-            "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
-          params: [originalMsgHash],
-        });
-        factorySupports712 = true;
-      } catch {
-        // ignore
-      }
-
-      let sig: `0x${string}`;
-      if (factorySupports712) {
-        const wrappedMessageHash = encodeAbiParameters(
-          [{ type: "bytes32" }],
-          [originalMsgHash],
-        );
-        sig = await options.personalAccount.signTypedData({
-          domain: {
-            name: "Account",
-            version: "1",
-            chainId: options.chain.id,
-            verifyingContract: accountContract.address,
-          },
-          primaryType: "AccountMessage",
-          types: { AccountMessage: [{ name: "message", type: "bytes" }] },
-          message: { message: wrappedMessageHash },
-        });
-      } else {
-        sig = await options.personalAccount.signTypedData(typedData);
-      }
-
-      const isValid = await checkContractWalletSignedTypedData({
-        contract: accountContract,
-        data: typedData,
-        signature: sig,
+      const { deployAndSignTypedData } = await import("./lib/signing.js");
+      return deployAndSignTypedData({
+        accountContract,
+        factoryContract: options.factoryContract,
+        options,
+        typedData,
       });
-
-      if (isValid) {
-        return sig;
-      }
-      throw new Error(
-        "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
-      );
     },
     async onTransactionRequested(transaction) {
       return options.personalAccount.onTransactionRequested?.(transaction);
@@ -436,13 +316,10 @@ async function createSmartAccount(
 async function approveERC20(args: {
   accountContract: ThirdwebContract;
   options: SmartAccountOptions;
-  erc20Paymaster: {
-    address: string;
-    token: string;
-  };
+  erc20Paymaster: TokenPaymasterConfig;
 }) {
   const { accountContract, erc20Paymaster, options } = args;
-  const tokenAddress = erc20Paymaster.token;
+  const tokenAddress = erc20Paymaster.tokenAddress;
   const tokenContract = getContract({
     address: tokenAddress,
     chain: accountContract.chain,
@@ -451,7 +328,7 @@ async function approveERC20(args: {
   const accountAllowance = await allowance({
     contract: tokenContract,
     owner: accountContract.address,
-    spender: erc20Paymaster.address,
+    spender: erc20Paymaster.paymasterAddress,
   });
 
   if (accountAllowance > 0n) {
@@ -460,7 +337,7 @@ async function approveERC20(args: {
 
   const approveTx = approve({
     contract: tokenContract,
-    spender: erc20Paymaster.address,
+    spender: erc20Paymaster.paymasterAddress,
     amountWei: maxUint96 - 1n,
   });
   const transaction = await toSerializableTransaction({
@@ -478,7 +355,7 @@ async function approveERC20(args: {
       ...options,
       overrides: {
         ...options.overrides,
-        erc20Paymaster: undefined,
+        tokenPaymaster: undefined,
       },
     },
   });
@@ -554,9 +431,9 @@ function createZkSyncAccount(args: {
       return connectionOptions.personalAccount.signMessage({ message });
     },
     async signTypedData<
-      const typedData extends TypedData | Record<string, unknown>,
+      const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
       primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
-    >(_typedData: TypedDataDefinition<typedData, primaryType>) {
+    >(_typedData: ox__TypedData.Definition<typedData, primaryType>) {
       const typedData = parseTypedData(_typedData);
       return connectionOptions.personalAccount.signTypedData(typedData);
     },
@@ -567,30 +444,6 @@ function createZkSyncAccount(args: {
     },
   };
   return account;
-}
-
-async function _deployAccount(args: {
-  options: SmartAccountOptions;
-  account: Account;
-  accountContract: ThirdwebContract;
-}) {
-  const { options, account, accountContract } = args;
-  const [{ sendTransaction }, { prepareTransaction }] = await Promise.all([
-    import("../../transaction/actions/send-transaction.js"),
-    import("../../transaction/prepare-transaction.js"),
-  ]);
-  const dummyTx = prepareTransaction({
-    client: options.client,
-    chain: options.chain,
-    to: accountContract.address,
-    value: 0n,
-    gas: 50000n, // force gas to avoid simulation error
-  });
-  const deployResult = await sendTransaction({
-    transaction: dummyTx,
-    account,
-  });
-  return deployResult;
 }
 
 async function _sendUserOp(args: {
@@ -639,26 +492,6 @@ async function _sendUserOp(args: {
   };
 }
 
-async function confirmContractDeployment(args: {
-  accountContract: ThirdwebContract;
-}) {
-  const { accountContract } = args;
-  const startTime = Date.now();
-  const timeout = 60000; // wait 1 minute max
-  const { isContractDeployed } = await import(
-    "../../utils/bytecode/is-contract-deployed.js"
-  );
-  let isDeployed = await isContractDeployed(accountContract);
-  while (!isDeployed) {
-    if (Date.now() - startTime > timeout) {
-      throw new Error(
-        "Timeout: Smart account deployment not confirmed after 1 minute",
-      );
-    }
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    isDeployed = await isContractDeployed(accountContract);
-  }
-}
 async function getEntrypointFromFactory(
   factoryAddress: string,
   client: ThirdwebClient,

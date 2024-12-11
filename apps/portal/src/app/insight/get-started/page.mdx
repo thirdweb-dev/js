@@ -16,8 +16,9 @@ In this guide we will learn how to use the events blueprint in insight.
 
 ## Pre-requisites
 
-- [Create a project](https://thirdweb.com/team) and navigate to the project settings to get a clientId
-- Use insight API with the base URL below
+- [Create a project](https://thirdweb.com/team) and navigate to the project settings to get a client ID
+- Use insight API with the base URL below.
+- To authenticate use your client ID in the `x-client-id` header or `clientId` query parameter
 
 ```
 https://<chain-id>.insight.thirdweb.com
@@ -27,7 +28,11 @@ https://<chain-id>.insight.thirdweb.com
 ```typescript
 const getUsdtTransfers = async () => {
  try {
-   const response = await fetch('https://1.insight.thirdweb.com/v1/<client-id>/events/0xdAC17F958D2ee523a2206206994597C13D831ec7/Transfer(address,address,uint256)?limit=5');
+   const response = await fetch('https://1.insight.thirdweb.com/v1/events/0xdAC17F958D2ee523a2206206994597C13D831ec7/Transfer(address,address,uint256)?limit=5', {
+    headers: {
+      'x-client-id': <YOUR_THIRDWEB_CLIENT_ID>
+    }
+   });
    const transfersInfo = await response.json();
    return transfersInfo
  } catch (error) {

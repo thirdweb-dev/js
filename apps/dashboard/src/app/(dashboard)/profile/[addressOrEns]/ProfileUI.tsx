@@ -1,62 +1,20 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { fetchPublishedContracts } from "components/contract-components/fetchPublishedContracts";
-import { PublisherSocials } from "components/contract-components/publisher/PublisherSocials";
-import { EditProfile } from "components/contract-components/publisher/edit-profile";
-import { PublisherAvatar } from "components/contract-components/publisher/masked-avatar";
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
-import type { ProfileMetadata } from "constants/schemas";
 import { Suspense } from "react";
-import { shortenIfAddress } from "utils/usedapp-external";
 import { getSortedDeployedContracts } from "../../../account/contracts/_components/getSortedDeployedContracts";
+import { ProfileHeader } from "./components/profile-header";
 import { PublishedContracts } from "./components/published-contracts";
 
 export function ProfileUI(props: {
   profileAddress: string;
   ensName: string | undefined;
-  publisherProfile: ProfileMetadata | null;
-  showEditProfile: boolean;
 }) {
-  const { profileAddress, ensName, publisherProfile, showEditProfile } = props;
-
-  const displayName = shortenIfAddress(ensName || profileAddress).replace(
-    "deployer.thirdweb.eth",
-    "thirdweb.eth",
-  );
+  const { profileAddress, ensName } = props;
 
   return (
     <div className="container pt-8 pb-20">
-      {/* Header */}
-      <div className="flex w-full flex-col items-center justify-between gap-4 border-border border-b pb-6 md:flex-row">
-        <div className="flex w-full items-center gap-4">
-          <PublisherAvatar address={profileAddress} className="size-20" />
-          <div>
-            <h1 className="font-semibold text-4xl tracking-tight">
-              {displayName}
-            </h1>
-
-            {publisherProfile?.bio && (
-              <p className="line-clamp-2 text-muted-foreground">
-                {publisherProfile.bio}
-              </p>
-            )}
-
-            <div className="-translate-x-2 mt-1">
-              {publisherProfile && (
-                <PublisherSocials publisherProfile={publisherProfile} />
-              )}
-            </div>
-          </div>
-        </div>
-
-        {showEditProfile && (
-          <div className="shrink-0">
-            {publisherProfile && (
-              <EditProfile publisherProfile={publisherProfile} />
-            )}
-          </div>
-        )}
-      </div>
-
+      <ProfileHeader profileAddress={profileAddress} />
       <div className="h-8" />
 
       <div>

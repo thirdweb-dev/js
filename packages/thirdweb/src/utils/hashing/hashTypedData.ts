@@ -1,12 +1,6 @@
-import {
-  type AbiParameter,
-  type TypedData,
-  type TypedDataDefinition,
-  concat,
-  getTypesForEIP712Domain,
-  hashDomain,
-  validateTypedData,
-} from "viem";
+import type * as ox__AbiParameters from "ox/AbiParameters";
+import * as ox__Bytes from "ox/Bytes";
+import * as ox__TypedData from "ox/TypedData";
 import { encodeAbiParameters } from "../abi/encodeAbiParameters.js";
 import { type Hex, toHex } from "../encoding/hex.js";
 import { keccak256 } from "./keccak256.js";
@@ -17,15 +11,17 @@ type MessageTypeProperty = {
 };
 
 export type HashTypedDataParams<
-  typedData extends TypedData | Record<string, unknown> = TypedData,
+  typedData extends
+    | ox__TypedData.TypedData
+    | Record<string, unknown> = ox__TypedData.TypedData,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
-> = TypedDataDefinition<typedData, primaryType>;
+> = ox__TypedData.Definition<typedData, primaryType>;
 
 /**
  * @internal
  */
 export function hashTypedData<
-  const typedData extends TypedData | Record<string, unknown>,
+  const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain",
 >(parameters: HashTypedDataParams<typedData, primaryType>): Hex {
   const {
@@ -34,13 +30,13 @@ export function hashTypedData<
     primaryType,
   } = parameters as HashTypedDataParams;
   const types = {
-    EIP712Domain: getTypesForEIP712Domain({ domain }),
+    EIP712Domain: ox__TypedData.extractEip712DomainTypes(domain),
     ...parameters.types,
   };
 
   // Need to do a runtime validation check on addresses, byte ranges, integer ranges, etc
   // as we can't statically check this with TypeScript.
-  validateTypedData({
+  ox__TypedData.validate({
     domain,
     message,
     primaryType,
@@ -50,7 +46,7 @@ export function hashTypedData<
   const parts: Hex[] = ["0x1901"];
   if (domain)
     parts.push(
-      hashDomain({
+      ox__TypedData.hashDomain({
         domain,
         types: types as Record<string, MessageTypeProperty[]>,
       }),
@@ -69,7 +65,7 @@ export function hashTypedData<
     parts.push(hashedStruct);
   }
 
-  return keccak256(concat(parts));
+  return keccak256(ox__Bytes.concat(...parts.map((p) => ox__Bytes.fromHex(p))));
 }
 
 function encodeData({
@@ -81,7 +77,7 @@ function encodeData({
   primaryType: string;
   types: Record<string, MessageTypeProperty[]>;
 }) {
-  const encodedTypes: AbiParameter[] = [{ type: "bytes32" }];
+  const encodedTypes: ox__AbiParameters.Parameter[] = [{ type: "bytes32" }];
   const encodedValues: unknown[] = [hashType({ primaryType, types })];
 
   if (!types[primaryType]) throw new Error("Invalid types");
@@ -168,7 +164,7 @@ function encodeField({
   // biome-ignore lint/suspicious/noExplicitAny: Can't anticipate types of nested values
   value: any;
   // biome-ignore lint/suspicious/noExplicitAny: Can't anticipate types of nested values
-}): [type: AbiParameter, value: any] {
+}): [type: ox__AbiParameters.Parameter, value: any] {
   if (types[type] !== undefined) {
     return [
       { type: "bytes32" },
@@ -186,15 +182,16 @@ function encodeField({
 
   if (type.lastIndexOf("]") === type.length - 1) {
     const parsedType = type.slice(0, type.lastIndexOf("["));
-    // biome-ignore lint/suspicious/noExplicitAny: Can't anticipate types of nested values
-    const typeValuePairs = (value as [AbiParameter, any][]).map((item) =>
-      encodeField({
-        name,
-        type: parsedType,
-        types,
-        value: item,
-      }),
-    );
+    const typeValuePairs =
+      // biome-ignore lint/suspicious/noExplicitAny: Can't anticipate types of nested values
+      (value as [ox__AbiParameters.Parameter, any][]).map((item) =>
+        encodeField({
+          name,
+          type: parsedType,
+          types,
+          value: item,
+        }),
+      );
     return [
       { type: "bytes32" },
       keccak256(

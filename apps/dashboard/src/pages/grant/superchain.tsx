@@ -94,17 +94,23 @@ const superchains = [
     src: require("../../../public/assets/grant/superchain/soneium-icon.png"),
   },
   {
+    id: "lisk",
+    name: "Lisk",
+    link: "/lisk",
+    src: require("../../../public/assets/grant/superchain/icon-lisk.png"),
+  },
+  {
+    id: "Arena-Z",
+    name: "ArenaZ",
+    link: "/arena-z",
+    src: require("../../../public/assets/grant/superchain/icon-arena-z.png"),
+    isComingSoon: false,
+  },
+  {
     id: "campNetworkv2",
     name: "CampNetworkV2",
     link: "/camp-network-testnet-v2?switch",
     src: require("../../../public/assets/grant/superchain/campNetwork-icon.jpg"),
-    isComingSoon: true,
-  },
-  {
-    id: "lisk",
-    name: "Lisk",
-    link: "/lisk-sepolia-testnet",
-    src: require("../../../public/assets/grant/superchain/icon-lisk.png"),
     isComingSoon: true,
   },
 ];

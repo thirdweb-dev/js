@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { base } from "../../chains/chain-definitions/base.js";
@@ -91,5 +91,25 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: crypto-to-fiat", () => {
     ).rejects.toThrowError(
       `Error: ${TEST_ACCOUNT_A.address} on chainId: ${base.id} is not a valid contract address.`,
     );
+  });
+  it("should throw if response is not OK", async () => {
+    global.fetch = vi.fn();
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 400,
+      statusText: "Bad Request",
+    });
+    await expect(() =>
+      convertCryptoToFiat({
+        chain: base,
+        fromTokenAddress: NATIVE_TOKEN_ADDRESS,
+        fromAmount: 1,
+        to: "USD",
+        client: TEST_CLIENT,
+      }),
+    ).rejects.toThrowError(
+      `Failed to fetch USD value for token (${NATIVE_TOKEN_ADDRESS}) on chainId: ${base.id}`,
+    );
+    vi.restoreAllMocks();
   });
 });

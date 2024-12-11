@@ -1,5 +1,5 @@
 import type { Prettify } from "../../utils/type-utils.js";
-import { isCoinbaseSDKWallet } from "../coinbase/coinbaseWebSDK.js";
+import { isCoinbaseSDKWallet } from "../coinbase/coinbase-web.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
@@ -62,7 +62,7 @@ export async function getCapabilities<const ID extends WalletId = WalletId>({
 
   if (isCoinbaseSDKWallet(wallet)) {
     const { coinbaseSDKWalletGetCapabilities } = await import(
-      "../coinbase/coinbaseWebSDK.js"
+      "../coinbase/coinbase-web.js"
     );
     return coinbaseSDKWalletGetCapabilities({ wallet });
   }

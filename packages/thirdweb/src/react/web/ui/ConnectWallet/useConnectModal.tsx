@@ -5,7 +5,6 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import type { Theme } from "../../../core/design-system/index.js";
-import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
@@ -433,14 +432,6 @@ export type UseConnectModalOptions = {
    * If you want to hide the branding, set this prop to `false`
    */
   showThirdwebBranding?: boolean;
-
-  /**
-   * Enable SIWE (Sign in with Ethererum) by passing an object of type `SiweAuthOptions` to
-   * enforce the users to sign a message after connecting their wallet to authenticate themselves.
-   *
-   * Refer to the [`SiweAuthOptions`](https://portal.thirdweb.com/references/typescript/v5/SiweAuthOptions) for more details
-   */
-  auth?: SiweAuthOptions;
 };
 
 // TODO: consilidate Button/Embed/Modal props into one type with extras

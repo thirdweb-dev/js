@@ -38,7 +38,11 @@ export const CopyIcon: React.FC<{
             flex="row"
             center="both"
           >
-            {showCheckIcon ? <CheckIcon /> : <CopyIconSVG />}
+            {showCheckIcon ? (
+              <CheckIcon className="tw-check-icon" />
+            ) : (
+              <CopyIconSVG className="tw-copy-icon" />
+            )}
           </Container>
         </div>
       </ToolTip>
