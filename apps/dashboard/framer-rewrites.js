@@ -4,6 +4,7 @@ module.exports = [
   "/",
   "/pricing",
   "/bounties",
+  "/contact-us",
   // -- product landing pages --
   // -- connect
   "/connect",
