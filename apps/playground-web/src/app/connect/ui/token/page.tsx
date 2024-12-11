@@ -1,5 +1,4 @@
 import { APIHeader } from "@/components/blocks/APIHeader";
-import {} from "@/components/headless-ui/nft-examples";
 import {
   TokenCard,
   TokenImageBasic,
