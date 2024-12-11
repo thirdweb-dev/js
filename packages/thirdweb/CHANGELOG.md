@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.76.1
+
+### Patch Changes
+
+- [#5688](https://github.com/thirdweb-dev/js/pull/5688) [`da5d8ec`](https://github.com/thirdweb-dev/js/commit/da5d8ec53b4d60dd1ad6ed2cd9d638f466b22b3a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Autoconnect previously linked wallets
+
+- [#5682](https://github.com/thirdweb-dev/js/pull/5682) [`5b24faf`](https://github.com/thirdweb-dev/js/commit/5b24faf1f371a2df21f836ad159a2cf1a6e64ec3) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix ecosystem wallet AA detection in Pay modal
+
+- [#5674](https://github.com/thirdweb-dev/js/pull/5674) [`8020bdb`](https://github.com/thirdweb-dev/js/commit/8020bdbf2b811955ba071e4aa59df9153e9ca4e6) Thanks [@devfelipenunes](https://github.com/devfelipenunes)! - This pull request adds the complete Portuguese (Brazil) translation for the wallet connection module. It includes translations for connecting a wallet, sending/receiving funds, network management, and other wallet-related actions. This improves the user experience for Portuguese-speaking users.
+
 ## 5.76.0
 
 ### Minor Changes
