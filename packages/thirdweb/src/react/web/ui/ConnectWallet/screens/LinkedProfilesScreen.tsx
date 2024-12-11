@@ -77,46 +77,43 @@ export function LinkedProfilesScreen(props: {
         />
       </Container>
       <Line />
-      {isLoading ? (
-        <LoadingScreen />
-      ) : (
-        <Container
-          scrollY
-          style={{
-            height: "300px",
-          }}
-        >
-          <Spacer y="md" />
-          <Container px="sm">
-            <MenuButton
-              onClick={() => {
-                props.setScreen("link-profile");
-              }}
-              style={{
-                fontSize: fontSize.sm,
-              }}
-            >
-              <AddUserIcon size={iconSize.lg} />
-              <Text color="primaryText">
-                {props.locale.manageWallet.linkProfile}
-              </Text>
-            </MenuButton>
-            <Spacer y="xs" />
-            {/* Exclude guest as a profile */}
-            {connectedProfiles
-              ?.filter((profile) => profile.type !== "guest")
-              .map((profile) => (
-                <LinkedProfile
-                  key={`${JSON.stringify(profile)}`}
-                  enableUnlinking={connectedProfiles.length > 1}
-                  profile={profile}
-                  client={props.client}
-                />
-              ))}
-          </Container>
-          <Spacer y="md" />
+
+      <Container
+        scrollY
+        style={{
+          height: "300px",
+        }}
+      >
+        <Spacer y="md" />
+        <Container px="sm">
+          <MenuButton
+            onClick={() => {
+              props.setScreen("link-profile");
+            }}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <AddUserIcon size={iconSize.lg} />
+            <Text color="primaryText">
+              {props.locale.manageWallet.linkProfile}
+            </Text>
+          </MenuButton>
+          <Spacer y="xs" />
+          {/* Exclude guest as a profile */}
+          {connectedProfiles
+            ?.filter((profile) => profile.type !== "guest")
+            .map((profile) => (
+              <LinkedProfile
+                key={`${JSON.stringify(profile)}`}
+                enableUnlinking={connectedProfiles.length > 1}
+                profile={profile}
+                client={props.client}
+              />
+            ))}
         </Container>
-      )}
+        <Spacer y="md" />
+      </Container>
     </Container>
   );
 }
@@ -241,7 +238,7 @@ function LinkedProfile({
             <IconButton
               autoFocus
               type="button"
-              aria-label="Close"
+              aria-label="Unlink"
               onClick={() => unlinkProfileMutation()}
               style={{
                 pointerEvents: "auto",

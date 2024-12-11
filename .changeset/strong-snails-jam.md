@@ -11,15 +11,15 @@ For typescript users, the following code snippet is a simple example of how it'd
 ```typescript
 import { inAppWallet } from "thirdweb/wallets";
   
-   const wallet = inAppWallet();
-   wallet.connect({ strategy: "google" });
-  
-   const profiles = await getProfiles({
-    client,
-   });
-  
-   const updatedProfiles = await unlinkProfile({
- *  client,
- *  profileToUnlink: profiles[1],// assuming there is more than 1 profile linked to the user. 
- * });
+const wallet = inAppWallet();
+wallet.connect({ strategy: "google" });
+
+const profiles = await getProfiles({
+  client,
+});
+
+const updatedProfiles = await unlinkProfile({
+  client,
+  profileToUnlink: profiles[1],// assuming there is more than 1 profile linked to the user. 
+});
 ```
