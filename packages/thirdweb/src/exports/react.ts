@@ -269,3 +269,6 @@ export {
   ChainIcon,
   type ChainIconProps,
 } from "../react/web/ui/prebuilt/Chain/icon.js";
+
+// Utils
+export { getLastAuthProvider } from "../react/web/utils/storage.js";
