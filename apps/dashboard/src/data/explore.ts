@@ -192,6 +192,29 @@ const MODULAR_CONTRACTS = {
   ],
 } satisfies ExploreCategory;
 
+const CROSS_CHAIN = {
+  id: "cross-chain",
+  name: "cross-chain",
+  displayName: "Cross Chain",
+  description:
+    "Collection of contracts that are popular for building cross-chain applications.",
+  contracts: [
+    // erc20 drop
+    [
+      "deployer.thirdweb.eth/ERC20CoreInitializable", // TODO: replace this with the thirdweb published contract
+      [
+        "0xf2d22310905EaD92C19c7ef0003C1AD38e129cb1/SuperChainInterop", // TODO: replace this with the OP published contract
+        "deployer.thirdweb.eth/ClaimableERC20",
+      ],
+      {
+        title: "OP Superchain Modular Token Drop",
+        description:
+          "ERC-20 Tokens crosschain compatible across OP Superchains",
+      },
+    ],
+  ],
+} satisfies ExploreCategory;
+
 const AIRDROP = {
   id: "airdrop",
   name: "Airdrop",
@@ -281,6 +304,7 @@ const SMART_WALLET = {
 const CATEGORIES: Record<string, ExploreCategory> = {
   [POPULAR.id]: POPULAR,
   [MODULAR_CONTRACTS.id]: MODULAR_CONTRACTS,
+  [CROSS_CHAIN.id]: CROSS_CHAIN,
   [NFTS.id]: NFTS,
   [MARKETS.id]: MARKETS,
   [DROPS.id]: DROPS,
