@@ -44,7 +44,7 @@
     "@changesets/changelog-github": "0.5.0",
     "@changesets/cli": "2.27.10",
     "@manypkg/get-packages": "2.2.2",
-    "@types/node": "22.10.1",
+    "@types/node": "22.10.2",
     "turbo": "2.3.3",
     "typescript": "5.7.2"
   },
