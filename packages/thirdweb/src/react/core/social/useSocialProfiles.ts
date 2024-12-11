@@ -29,7 +29,7 @@ export function useSocialProfiles(options: {
   return useQuery({
     queryKey: ["social-profiles", address],
     enabled: !!address,
-    retry: 3,
+    retry: false,
     queryFn: async () => {
       if (!address) {
         throw new Error(
