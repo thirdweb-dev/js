@@ -30,9 +30,9 @@ export function NebulaWaitListPageUI(props: {
           title="You're on the waitlist"
           description="You should receive access to Nebula soon!"
           footer={
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-6">
               <ShareButton teamId={props.teamId} />
-              <p className="text-balance text-center text-muted-foreground">
+              <p className="w-full max-w-[340px] text-center text-muted-foreground text-sm">
                 Share this invite link and get moved up the list when your
                 friends sign up!
               </p>
@@ -97,7 +97,7 @@ function CenteredCard(props: {
               {props.description}
             </p>
 
-            <div className="h-10" />
+            <div className="h-6" />
 
             {props.footer}
           </div>
