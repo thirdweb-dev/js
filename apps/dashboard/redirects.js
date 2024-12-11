@@ -319,6 +319,12 @@ async function redirects() {
       destination: "/home",
       permanent: false,
     },
+    // redirect "/open-source" to "/bounties"
+    {
+      source: "/open-source",
+      destination: "/bounties",
+      permanent: false,
+    },
     ...legacyDashboardToTeamRedirects,
   ];
 }

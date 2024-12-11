@@ -3,6 +3,7 @@ module.exports = [
   // -- home
   "/",
   "/pricing",
+  "/bounties",
   // -- product landing pages --
   // -- connect
   "/connect",
@@ -31,4 +32,9 @@ module.exports = [
   // -- legal --
   "/terms",
   "/privacy-policy",
+  // -- community pages --
+  "/community/ambassadors",
+  "/community/ambassadors/startup-program",
+  // -- grants --
+  "/grant/superchain",
 ];
