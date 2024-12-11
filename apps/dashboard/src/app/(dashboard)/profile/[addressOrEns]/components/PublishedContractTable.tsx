@@ -87,7 +87,7 @@ export function PublishedContractTable(props: PublishedContractTableProps) {
         accessor: (row) => row.description,
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => (
-          <span className="line-clamp-2 text-muted-foreground">
+          <span className="line-clamp-2 max-w-[350px] whitespace-normal text-muted-foreground">
             {cell.value}
           </span>
         ),

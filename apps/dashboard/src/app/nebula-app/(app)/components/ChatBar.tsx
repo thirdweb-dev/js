@@ -23,6 +23,10 @@ export function Chatbar(props: {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={(e) => {
+          // ignore if shift key is pressed to allow entering new lines
+          if (e.shiftKey) {
+            return;
+          }
           if (e.key === "Enter" && !props.isChatStreaming) {
             setMessage("");
             props.sendMessage(message);
