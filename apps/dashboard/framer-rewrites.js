@@ -35,7 +35,7 @@ module.exports = [
   "/privacy-policy",
   // -- community pages --
   "/community/ambassadors",
-  "/community/ambassadors/startup-program",
+  "/community/startup-program",
   // -- grants --
   "/grant/superchain",
 ];
