@@ -9,6 +9,8 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
   formContext: form,
   solidityName,
   functionName,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  solidityType,
   ...inputProps
 }) => {
   const storageUpload = useDashboardStorageUpload();

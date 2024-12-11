@@ -25,6 +25,7 @@ import { Button, Text } from "tw-components";
 import { useEns, useFunctionParamsFromABI } from "../hooks";
 import { ContractParamsFieldset } from "./contract-params-fieldset";
 import { FactoryFieldset } from "./factory-fieldset";
+import { ImplementationParamsFieldset } from "./impl-params-fieldset";
 import { LandingFieldset } from "./landing-fieldset";
 import { NetworksFieldset } from "./networks-fieldset";
 
@@ -37,7 +38,7 @@ export function ContractPublishForm(props: {
   useLoggedInUser();
   const [customFactoryAbi, setCustomFactoryAbi] = useState<Abi>([]);
   const [fieldsetToShow, setFieldsetToShow] = useState<
-    "landing" | "factory" | "contractParams" | "networks"
+    "landing" | "factory" | "contractParams" | "implParams" | "networks"
   >("landing");
   const trackEvent = useTrack();
 
@@ -98,6 +99,7 @@ export function ContractPublishForm(props: {
         },
       },
       constructorParams: props.publishMetadata.constructorParams || {},
+      implConstructorParams: props.publishMetadata.implConstructorParams || {},
       networksForDeployment: props.publishMetadata?.networksForDeployment || {
         allNetworks: true,
       },
@@ -174,6 +176,9 @@ export function ContractPublishForm(props: {
       ? constructorParams
       : initializerParams;
 
+  const implDeployParams =
+    form.watch("deployType") === "autoFactory" ? constructorParams : [];
+
   // during loading and after success we should stay in loading state
   const isPending = sendTx.isPending || sendTx.isSuccess;
 
@@ -186,7 +191,7 @@ export function ContractPublishForm(props: {
 
   return (
     <FormProvider {...form}>
-      <Box w="100%">
+      <div className="w-full">
         <Flex
           as="form"
           id="contract-release-form"
@@ -309,7 +314,9 @@ export function ContractPublishForm(props: {
                     : fieldsetToShow === "contractParams" &&
                         form.watch("deployType") === "standard"
                       ? setFieldsetToShow("networks")
-                      : setFieldsetToShow("landing")
+                      : fieldsetToShow === "implParams"
+                        ? setFieldsetToShow("contractParams")
+                        : setFieldsetToShow("landing")
                 }
                 aria-label="Back"
                 icon={<ChevronFirstIcon className="size-6" />}
@@ -318,15 +325,22 @@ export function ContractPublishForm(props: {
               </IconButton>
             </div>
           )}
+
           {fieldsetToShow === "landing" && (
             <LandingFieldset
               latestVersion={latestVersion}
               placeholderVersion={placeholderVersion}
             />
           )}
+
           {fieldsetToShow === "contractParams" && (
             <ContractParamsFieldset deployParams={deployParams} />
           )}
+
+          {fieldsetToShow === "implParams" && implDeployParams?.length > 0 && (
+            <ImplementationParamsFieldset implParams={implDeployParams} />
+          )}
+
           {fieldsetToShow === "factory" && (
             <Flex flexDir="column" gap={24}>
               <FactoryFieldset
@@ -335,11 +349,13 @@ export function ContractPublishForm(props: {
               />
             </Flex>
           )}
+
           {fieldsetToShow === "networks" && (
             <Flex flexDir="column" gap={24}>
               <NetworksFieldset fromStandard />
             </Flex>
           )}
+
           <Flex flexDir="column" gap={6}>
             <Divider />
             <Flex
@@ -379,6 +395,7 @@ export function ContractPublishForm(props: {
                   </Button>
                 </>
               ) : fieldsetToShow !== "contractParams" &&
+                fieldsetToShow !== "implParams" &&
                 deployParams?.length > 0 ? (
                 <>
                   <Box />
@@ -386,6 +403,32 @@ export function ContractPublishForm(props: {
                     isDisabled={disableNext}
                     onClick={() => setFieldsetToShow("contractParams")}
                     colorScheme="primary"
+                  >
+                    Next
+                  </Button>
+                </>
+              ) : fieldsetToShow !== "contractParams" &&
+                fieldsetToShow !== "implParams" &&
+                deployParams?.length === 0 &&
+                implDeployParams?.length > 0 ? (
+                <>
+                  <Box />
+                  <Button
+                    isDisabled={disableNext}
+                    onClick={() => setFieldsetToShow("implParams")}
+                    colorScheme="primary"
+                  >
+                    Next
+                  </Button>
+                </>
+              ) : fieldsetToShow === "contractParams" &&
+                implDeployParams?.length > 0 ? (
+                <>
+                  <Box />
+                  <Button
+                    onClick={() => setFieldsetToShow("implParams")}
+                    colorScheme="primary"
+                    isDisabled={disableNext}
                   >
                     Next
                   </Button>
@@ -419,7 +462,7 @@ export function ContractPublishForm(props: {
             </Flex>
           </Flex>
         </Flex>
-      </Box>
+      </div>
     </FormProvider>
   );
 }

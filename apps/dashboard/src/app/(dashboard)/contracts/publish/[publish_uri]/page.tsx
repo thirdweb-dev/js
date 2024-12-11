@@ -73,7 +73,7 @@ export default async function PublishContractPage(
   }
 
   return (
-    <div className="container flex flex-col gap-8 py-8">
+    <div className="container flex max-w-[1130px] flex-col gap-8 py-8">
       <ChakraProviderSetup>
         <ContractPublishForm
           jwt={token}
