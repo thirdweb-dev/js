@@ -77,8 +77,15 @@ export function LoginAndOnboardingPage(props: {
         </header>
       </div>
 
-      <main className="container z-10 flex grow flex-col items-center justify-center gap-6 py-12">
-        <ClientOnly ssr={<LoadingCard />}>
+      <main className="container z-10 flex grow flex-col justify-center gap-6 py-12">
+        <ClientOnly
+          ssr={
+            <div className="flex justify-center">
+              <LoadingCard />
+            </div>
+          }
+          className="flex justify-center"
+        >
           <PageContent
             redirectPath={props.redirectPath}
             account={props.account}
@@ -94,7 +101,7 @@ export function LoginAndOnboardingPage(props: {
       />
 
       <Aurora
-        color="hsl(var(--foreground)/9%)"
+        color="hsl(var(--foreground)/7%)"
         pos={{ top: "55%", left: "50%" }}
         size={{ width: "1400px", height: "1300px" }}
       />
@@ -104,7 +111,7 @@ export function LoginAndOnboardingPage(props: {
 
 function LoadingCard() {
   return (
-    <div className="flex min-h-[450px] w-full items-center justify-center rounded-xl border border-border bg-background shadow-lg lg:w-[500px]">
+    <div className="flex min-h-[522px] w-full items-center justify-center rounded-xl border border-border bg-background shadow-lg max-sm:max-w-[358px] lg:min-h-[568px] lg:w-[728px]">
       <Spinner className="size-10" />
     </div>
   );
