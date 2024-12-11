@@ -4,6 +4,7 @@ import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
 import { getChainMetadata } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { getFunctionId } from "../../../../../utils/function-id.js";
 import { resolveScheme } from "../../../../../utils/ipfs.js";
 import { useChainContext } from "./provider.js";
 
@@ -121,7 +122,18 @@ export function ChainIcon({
 }: ChainIconProps) {
   const { chain } = useChainContext();
   const iconQuery = useQuery({
-    queryKey: ["_internal_chain_icon_", chain.id] as const,
+    queryKey: [
+      "_internal_chain_icon_",
+      chain.id,
+      {
+        resolver:
+          typeof iconResolver === "string"
+            ? iconResolver
+            : typeof iconResolver === "function"
+              ? getFunctionId(iconResolver)
+              : undefined,
+      },
+    ] as const,
     queryFn: async () => {
       if (typeof iconResolver === "string") {
         return iconResolver;

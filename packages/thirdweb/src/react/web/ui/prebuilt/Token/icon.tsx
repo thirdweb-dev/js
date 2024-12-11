@@ -6,6 +6,7 @@ import { getChainMetadata } from "../../../../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import { getContract } from "../../../../../contract/contract.js";
 import { getContractMetadata } from "../../../../../extensions/common/read/getContractMetadata.js";
+import { getFunctionId } from "../../../../../utils/function-id.js";
 import { resolveScheme } from "../../../../../utils/ipfs.js";
 import { useTokenContext } from "./provider.js";
 
@@ -117,7 +118,19 @@ export function TokenIcon({
 }: TokenIconProps) {
   const { address, client, chain } = useTokenContext();
   const iconQuery = useQuery({
-    queryKey: ["_internal_token_icon_", chain.id, address] as const,
+    queryKey: [
+      "_internal_token_icon_",
+      chain.id,
+      address,
+      {
+        resolver:
+          typeof iconResolver === "string"
+            ? iconResolver
+            : typeof iconResolver === "function"
+              ? getFunctionId(iconResolver)
+              : undefined,
+      },
+    ] as const,
     queryFn: async () => {
       if (typeof iconResolver === "string") {
         return iconResolver;

@@ -3,6 +3,7 @@
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
 import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { getFunctionId } from "../../../../../utils/function-id.js";
 import { MediaRenderer } from "../../MediaRenderer/MediaRenderer.js";
 import type { MediaRendererProps } from "../../MediaRenderer/types.js";
 import { useNFTContext } from "./provider.js";
@@ -140,7 +141,7 @@ export function NFTMedia({
           typeof mediaResolver === "object"
             ? mediaResolver
             : typeof mediaResolver === "function"
-              ? mediaResolver.toString()
+              ? getFunctionId(mediaResolver)
               : undefined,
       },
     ],

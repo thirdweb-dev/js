@@ -9,38 +9,38 @@ import {
 import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import { getFunctionId } from "../../../../../utils/function-id.js";
-import { fetchTokenSymbol, getQueryKeys } from "./symbol.js";
+import { fetchTokenName, getQueryKeys } from "./name.js";
 
 const client = TEST_CLIENT;
 
-describe.runIf(process.env.TW_SECRET_KEY)("TokenSymbol component", () => {
-  it("fetchTokenSymbol should respect the symbolResolver being a string", async () => {
-    const res = await fetchTokenSymbol({
+describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
+  it("fetchTokenName should respect the nameResolver being a string", async () => {
+    const res = await fetchTokenName({
       address: "thing",
       client,
       chain: ANVIL_CHAIN,
-      symbolResolver: "tw",
+      nameResolver: "tw",
     });
     expect(res).toBe("tw");
   });
 
-  it("fetchTokenSymbol should respect the symbolResolver being a non-async function", async () => {
-    const res = await fetchTokenSymbol({
+  it("fetchTokenName should respect the nameResolver being a non-async function", async () => {
+    const res = await fetchTokenName({
       address: "thing",
       client,
       chain: ANVIL_CHAIN,
-      symbolResolver: () => "tw",
+      nameResolver: () => "tw",
     });
 
     expect(res).toBe("tw");
   });
 
-  it("fetchTokenSymbol should respect the symbolResolver being an async function", async () => {
-    const res = await fetchTokenSymbol({
+  it("fetchTokenName should respect the nameResolver being an async function", async () => {
+    const res = await fetchTokenName({
       address: "thing",
       client,
       chain: ANVIL_CHAIN,
-      symbolResolver: async () => {
+      nameResolver: async () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
         return "tw";
       },
@@ -49,45 +49,45 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenSymbol component", () => {
     expect(res).toBe("tw");
   });
 
-  it("fetchTokenSymbol should work for contract with `symbol` function", async () => {
-    const res = await fetchTokenSymbol({
+  it("fetchTokenName should work for contract with `name` function", async () => {
+    const res = await fetchTokenName({
       address: USDT_CONTRACT.address,
       client,
       chain: USDT_CONTRACT.chain,
     });
 
-    expect(res).toBe("USDT");
+    expect(res).toBe("Tether USD");
   });
 
-  it("fetchTokenSymbol should work for native token", async () => {
-    const res = await fetchTokenSymbol({
+  it("fetchTokenName should work for native token", async () => {
+    const res = await fetchTokenName({
       address: NATIVE_TOKEN_ADDRESS,
       client,
       chain: ethereum,
     });
 
-    expect(res).toBe("ETH");
+    expect(res).toBe("Ether");
   });
 
-  it("fetchTokenSymbol should try to fallback to the contract metadata if fails to resolves from `symbol()`", async () => {
-    // todo: find a contract with symbol in contractMetadata, but does not have a symbol function
+  it("fetchTokenName should try to fallback to the contract metadata if fails to resolves from `name()`", async () => {
+    // todo: find a contract with name in contractMetadata, but does not have a name function
   });
 
-  it("fetchTokenSymbol should throw in the end where all fallback solutions failed to resolve to any symbol", async () => {
+  it("fetchTokenName should throw in the end where all fallback solutions failed to resolve to any name", async () => {
     await expect(() =>
-      fetchTokenSymbol({
+      fetchTokenName({
         address: UNISWAPV3_FACTORY_CONTRACT.address,
         client,
         chain: UNISWAPV3_FACTORY_CONTRACT.chain,
       }),
     ).rejects.toThrowError(
-      "Failed to resolve symbol from both symbol() and contract metadata",
+      "Failed to resolve name from both name() and contract metadata",
     );
   });
 
   it("getQueryKeys should work without resolver", () => {
     expect(getQueryKeys({ chainId: 1, address: "0x" })).toStrictEqual([
-      "_internal_token_symbol_",
+      "_internal_token_name_",
       1,
       "0x",
       {
@@ -98,9 +98,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenSymbol component", () => {
 
   it("getQueryKeys should work with resolver being a string", () => {
     expect(
-      getQueryKeys({ chainId: 1, address: "0x", symbolResolver: "tw" }),
+      getQueryKeys({ chainId: 1, address: "0x", nameResolver: "tw" }),
     ).toStrictEqual([
-      "_internal_token_symbol_",
+      "_internal_token_name_",
       1,
       "0x",
       {
@@ -113,9 +113,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenSymbol component", () => {
     const fn = () => "tw";
     const fnId = getFunctionId(fn);
     expect(
-      getQueryKeys({ chainId: 1, address: "0x", symbolResolver: fn }),
+      getQueryKeys({ chainId: 1, address: "0x", nameResolver: fn }),
     ).toStrictEqual([
-      "_internal_token_symbol_",
+      "_internal_token_name_",
       1,
       "0x",
       {
@@ -134,10 +134,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenSymbol component", () => {
       getQueryKeys({
         chainId: 1,
         address: "0x",
-        symbolResolver: fn,
+        nameResolver: fn,
       }),
     ).toStrictEqual([
-      "_internal_token_symbol_",
+      "_internal_token_name_",
       1,
       "0x",
       {

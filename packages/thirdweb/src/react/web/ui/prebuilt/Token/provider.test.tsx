@@ -5,6 +5,7 @@ import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import { TokenName } from "./name.js";
 import { TokenProvider } from "./provider.js";
+import { TokenSymbol } from "./symbol.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("TokenProvider component", () => {
   it("should render children correctly", () => {
@@ -29,12 +30,22 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenProvider component", () => {
         chain={ethereum}
       >
         <TokenName />
+        <TokenSymbol />
       </TokenProvider>,
     );
 
     waitFor(() =>
       expect(
         screen.getByText("Ether", {
+          exact: true,
+          selector: "span",
+        }),
+      ).toBeInTheDocument(),
+    );
+
+    waitFor(() =>
+      expect(
+        screen.getByText("ETH", {
           exact: true,
           selector: "span",
         }),
