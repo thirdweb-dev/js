@@ -123,6 +123,10 @@ export const navLinks: SidebarLink[] = [
         name: "NFT",
         href: "/connect/ui/nft",
       },
+      {
+        name: "Wallet",
+        href: "/connect/ui/wallet",
+      },
     ],
   },
 ];
