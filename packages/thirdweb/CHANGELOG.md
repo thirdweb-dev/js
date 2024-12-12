@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.77.0
+
+### Minor Changes
+
+- [#5697](https://github.com/thirdweb-dev/js/pull/5697) [`f778d30`](https://github.com/thirdweb-dev/js/commit/f778d306d6af2d648c0f8268f1d35b9d9f3778b6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds `getLastAuthProvider` to get the most recently used auth provider for login
+
+### Patch Changes
+
+- [#5657](https://github.com/thirdweb-dev/js/pull/5657) [`2fccfc0`](https://github.com/thirdweb-dev/js/commit/2fccfc01af3c195b5467ff3c5a5fe973cefb9b82) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix caching issues for headless component; improve code coverage
+
 ## 5.76.1
 
 ### Patch Changes
