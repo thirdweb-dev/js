@@ -52,6 +52,7 @@ function Component() {
   const [name, setName] = useState("MintableERC721");
   const [isBatchMetadataInstalled, setIsBatchMetadataInstalled] =
     useState(false);
+  const [isSplitRecipient, setIsSplitRecipient] = useState(false);
   async function updatePrimaryRecipientStub(values: UpdateFormValues) {
     console.log("submitting", values);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -101,6 +102,13 @@ function Component() {
             label="isBatchMetadataInstalled"
           />
 
+          <CheckboxWithLabel
+            value={isSplitRecipient}
+            onChange={setIsSplitRecipient}
+            id="isSplitRecipient"
+            label="isSplitRecipient"
+          />
+
           <Select value={name} onValueChange={(v) => setName(v)}>
             <SelectTrigger>
               <SelectValue />
@@ -119,6 +127,7 @@ function Component() {
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             primarySaleRecipient={""}
+            isSplitRecipient={isSplitRecipient}
             updatePrimaryRecipient={updatePrimaryRecipientStub}
             mint={mintStub}
             uninstallButton={{
@@ -138,6 +147,7 @@ function Component() {
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             primarySaleRecipient={testAddress1}
+            isSplitRecipient={isSplitRecipient}
             updatePrimaryRecipient={updatePrimaryRecipientStub}
             mint={mintStub}
             uninstallButton={{
@@ -157,6 +167,7 @@ function Component() {
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={true}
             primarySaleRecipient={testAddress1}
+            isSplitRecipient={isSplitRecipient}
             updatePrimaryRecipient={updatePrimaryRecipientStub}
             mint={mintStub}
             uninstallButton={{

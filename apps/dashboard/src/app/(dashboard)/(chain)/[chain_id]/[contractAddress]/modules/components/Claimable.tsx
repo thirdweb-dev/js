@@ -24,7 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { addDays, fromUnixTime } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
@@ -40,11 +40,13 @@ import { useFieldArray, useForm } from "react-hook-form";
 import {
   NATIVE_TOKEN_ADDRESS,
   type PreparedTransaction,
+  type ThirdwebClient,
   ZERO_ADDRESS,
   getContract,
   sendAndConfirmTransaction,
   toTokens,
 } from "thirdweb";
+import { getBytecode } from "thirdweb/contract";
 import { decimals } from "thirdweb/extensions/erc20";
 import {
   ClaimableERC20,
@@ -52,7 +54,9 @@ import {
   ClaimableERC1155,
 } from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
+import { isContractDeployed } from "thirdweb/utils";
 import { z } from "zod";
+import ConfigureSplit from "../../split-fees/ConfigureSplitFees";
 import { addressSchema } from "../zod-schemas";
 import { CurrencySelector } from "./CurrencySelector";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
@@ -70,6 +74,9 @@ export type ClaimConditionValue = {
 };
 
 const positiveIntegerRegex = /^[0-9]\d*$/;
+
+const splitWalletBytecode =
+  "0x3d3d3d3d363d3d37363d7341dc1be6e4c7698f46268251b88b1f789aa9df265af43d3d93803e602a57fd5bf3";
 
 function ClaimableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
@@ -107,6 +114,28 @@ function ClaimableModule(props: ModuleInstanceProps) {
       },
     },
   );
+
+  const splitRecipientContract = getContract({
+    address: primarySaleRecipientQuery.data || "",
+    chain: contract.chain,
+    client: contract.client,
+  });
+
+  const isSplitRecipientQuery = useQuery({
+    queryKey: ["isSplitRecipient", primarySaleRecipientQuery.data],
+    queryFn: async () => {
+      if (!primarySaleRecipientQuery.data) return false;
+
+      const contractDeployed = await isContractDeployed(splitRecipientContract);
+      if (!contractDeployed) return false;
+
+      const bytecode = await getBytecode(splitRecipientContract);
+      if (bytecode !== splitWalletBytecode) return false;
+
+      return true;
+    },
+    enabled: !!primarySaleRecipientQuery.data,
+  });
 
   const noClaimConditionSet =
     claimConditionQuery.data?.availableSupply === 0n &&
@@ -254,9 +283,13 @@ function ClaimableModule(props: ModuleInstanceProps) {
     <ClaimableModuleUI
       {...props}
       primarySaleRecipientSection={{
-        data: primarySaleRecipientQuery.data
-          ? { primarySaleRecipient: primarySaleRecipientQuery.data }
-          : undefined,
+        data:
+          primarySaleRecipientQuery.data && !isSplitRecipientQuery.isLoading
+            ? {
+                primarySaleRecipient: primarySaleRecipientQuery.data,
+                isSplitRecipient: isSplitRecipientQuery.data || false,
+              }
+            : undefined,
         setPrimarySaleRecipient,
       }}
       claimConditionSection={{
@@ -283,6 +316,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
       setTokenId={setTokenId}
       isValidTokenId={isValidTokenId}
       noClaimConditionSet={noClaimConditionSet}
+      client={contract.client}
       mintSection={{
         mint,
       }}
@@ -298,6 +332,7 @@ export function ClaimableModuleUI(
     setTokenId: Dispatch<SetStateAction<string>>;
     isValidTokenId: boolean;
     noClaimConditionSet: boolean;
+    client: ThirdwebClient;
     primarySaleRecipientSection: {
       setPrimarySaleRecipient: (
         values: PrimarySaleRecipientFormValues,
@@ -305,6 +340,7 @@ export function ClaimableModuleUI(
       data:
         | {
             primarySaleRecipient: string;
+            isSplitRecipient: boolean;
           }
         | undefined;
     };
@@ -410,6 +446,10 @@ export function ClaimableModuleUI(
                     props.primarySaleRecipientSection.setPrimarySaleRecipient
                   }
                   contractChainId={props.contractChainId}
+                  isSplitRecipient={
+                    props.primarySaleRecipientSection.data?.isSplitRecipient
+                  }
+                  client={props.client}
                 />
               ) : (
                 <Skeleton className="h-[74px]" />
@@ -470,8 +510,6 @@ function ClaimConditionSection(props: {
   const { idToChain } = useAllChainsData();
   const chain = idToChain.get(props.chainId);
   const { tokenId, claimCondition } = props;
-  const [addClaimConditionButtonClicked, setAddClaimConditionButtonClicked] =
-    useState(false);
 
   const form = useForm<ClaimConditionFormValues>({
     resolver: zodResolver(claimConditionFormSchema),
@@ -544,193 +582,181 @@ function ClaimConditionSection(props: {
 
   return (
     <div className="flex flex-col gap-6">
-      {props.noClaimConditionSet && !addClaimConditionButtonClicked && (
-        <>
-          <Alert variant="warning">
-            <CircleAlertIcon className="size-5 max-sm:hidden" />
-            <AlertTitle>No Claim Condition Set</AlertTitle>
-            <AlertDescription>
-              You have not set a claim condition for this token. You can set a
-              claim condition by clicking the "Set Claim Condition" button.
-            </AlertDescription>
-          </Alert>
-
-          <Button
-            onClick={() => setAddClaimConditionButtonClicked(true)}
-            variant="outline"
-            className="w-full"
-          >
-            Add Claim Condition
-          </Button>
-        </>
+      {props.noClaimConditionSet && (
+        <Alert variant="warning">
+          <CircleAlertIcon className="size-5 max-sm:hidden" />
+          <AlertTitle>No Claim Condition Set</AlertTitle>
+          <AlertDescription>
+            You have not set a claim condition for this token. You can set a
+            claim condition by clicking the "Set Claim Condition" button.
+          </AlertDescription>
+        </Alert>
       )}
 
-      {(!props.noClaimConditionSet || addClaimConditionButtonClicked) && (
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-6">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="pricePerToken"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Price Per Token</FormLabel>
-                      <FormControl>
-                        <Input {...field} disabled={!props.isOwnerAccount} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="pricePerToken"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Price Per Token</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={!props.isOwnerAccount} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="currencyAddress"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Currency</FormLabel>
-                      <CurrencySelector chain={chain} field={field} />
-                    </FormItem>
-                  )}
+              <FormField
+                control={form.control}
+                name="currencyAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Currency</FormLabel>
+                    <CurrencySelector chain={chain} field={field} />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="maxClaimableSupply"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Max Available Supply</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={!props.isOwnerAccount} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="maxClaimablePerWallet"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Maximum number of mints per wallet</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={!props.isOwnerAccount} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormFieldSetup
+              htmlFor="duration"
+              label="Duration"
+              isRequired
+              errorMessage={
+                form.formState.errors?.startTime?.message ||
+                form.formState.errors?.endTime?.message
+              }
+            >
+              <div>
+                <DatePickerWithRange
+                  from={startTime}
+                  to={endTime}
+                  setFrom={(from: Date) => form.setValue("startTime", from)}
+                  setTo={(to: Date) => form.setValue("endTime", to)}
                 />
               </div>
+            </FormFieldSetup>
 
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="maxClaimableSupply"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Max Available Supply</FormLabel>
-                      <FormControl>
-                        <Input {...field} disabled={!props.isOwnerAccount} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+            <Separator />
 
-                <FormField
-                  control={form.control}
-                  name="maxClaimablePerWallet"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Maximum number of mints per wallet</FormLabel>
-                      <FormControl>
-                        <Input {...field} disabled={!props.isOwnerAccount} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+            <div className="w-full space-y-2">
+              <FormLabel>Allowlist</FormLabel>
+              <div className="flex flex-col gap-3">
+                {allowListFields.fields.map((fieldItem, index) => (
+                  <div className="flex items-start gap-3" key={fieldItem.id}>
+                    <FormField
+                      control={form.control}
+                      name={`allowList.${index}.address`}
+                      render={({ field }) => (
+                        <FormItem className="grow">
+                          <FormControl>
+                            <Input
+                              placeholder="0x..."
+                              {...field}
+                              disabled={!props.isOwnerAccount}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <ToolTipLabel label="Remove address">
+                      <Button
+                        variant="outline"
+                        className="!text-destructive-text bg-background"
+                        onClick={() => {
+                          allowListFields.remove(index);
+                        }}
+                        disabled={!props.isOwnerAccount}
+                      >
+                        <Trash2Icon className="size-4" />
+                      </Button>
+                    </ToolTipLabel>
+                  </div>
+                ))}
+
+                {allowListFields.fields.length === 0 && (
+                  <Alert variant="warning">
+                    <CircleAlertIcon className="size-5 max-sm:hidden" />
+                    <AlertTitle className="max-sm:!pl-0">
+                      No allowlist configured
+                    </AlertTitle>
+                  </Alert>
+                )}
               </div>
 
-              <FormFieldSetup
-                htmlFor="duration"
-                label="Duration"
-                isRequired
-                errorMessage={
-                  form.formState.errors?.startTime?.message ||
-                  form.formState.errors?.endTime?.message
-                }
-              >
-                <div>
-                  <DatePickerWithRange
-                    from={startTime}
-                    to={endTime}
-                    setFrom={(from: Date) => form.setValue("startTime", from)}
-                    setTo={(to: Date) => form.setValue("endTime", to)}
-                  />
-                </div>
-              </FormFieldSetup>
+              <div className="h-1" />
 
-              <Separator />
-
-              <div className="w-full space-y-2">
-                <FormLabel>Allowlist</FormLabel>
-                <div className="flex flex-col gap-3">
-                  {allowListFields.fields.map((fieldItem, index) => (
-                    <div className="flex items-start gap-3" key={fieldItem.id}>
-                      <FormField
-                        control={form.control}
-                        name={`allowList.${index}.address`}
-                        render={({ field }) => (
-                          <FormItem className="grow">
-                            <FormControl>
-                              <Input
-                                placeholder="0x..."
-                                {...field}
-                                disabled={!props.isOwnerAccount}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <ToolTipLabel label="Remove address">
-                        <Button
-                          variant="outline"
-                          className="!text-destructive-text bg-background"
-                          onClick={() => {
-                            allowListFields.remove(index);
-                          }}
-                          disabled={!props.isOwnerAccount}
-                        >
-                          <Trash2Icon className="size-4" />
-                        </Button>
-                      </ToolTipLabel>
-                    </div>
-                  ))}
-
-                  {allowListFields.fields.length === 0 && (
-                    <Alert variant="warning">
-                      <CircleAlertIcon className="size-5 max-sm:hidden" />
-                      <AlertTitle className="max-sm:!pl-0">
-                        No allowlist configured
-                      </AlertTitle>
-                    </Alert>
-                  )}
-                </div>
-
-                <div className="h-1" />
-
-                <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      // add admin by default if adding the first input
-                      allowListFields.append({
-                        address: "",
-                      });
-                    }}
-                    className="gap-2"
-                    disabled={!props.isOwnerAccount}
-                  >
-                    <PlusIcon className="size-3" />
-                    Add Address
-                  </Button>
-                </div>
-              </div>
-
-              <div className="flex justify-end">
-                <TransactionButton
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
                   size="sm"
-                  className="min-w-24"
-                  disabled={updateMutation.isPending || !props.isOwnerAccount}
-                  type="submit"
-                  isPending={updateMutation.isPending}
-                  txChainID={props.chainId}
-                  transactionCount={1}
+                  onClick={() => {
+                    // add admin by default if adding the first input
+                    allowListFields.append({
+                      address: "",
+                    });
+                  }}
+                  className="gap-2"
+                  disabled={!props.isOwnerAccount}
                 >
-                  Update
-                </TransactionButton>
+                  <PlusIcon className="size-3" />
+                  Add Address
+                </Button>
               </div>
             </div>
-          </form>{" "}
-        </Form>
-      )}
+
+            <div className="flex justify-end">
+              <TransactionButton
+                size="sm"
+                className="min-w-24"
+                disabled={updateMutation.isPending || !props.isOwnerAccount}
+                type="submit"
+                isPending={updateMutation.isPending}
+                txChainID={props.chainId}
+                transactionCount={1}
+              >
+                Update
+              </TransactionButton>
+            </div>
+          </div>
+        </form>{" "}
+      </Form>
     </div>
   );
 }
@@ -747,7 +773,9 @@ function PrimarySaleRecipientSection(props: {
   primarySaleRecipient: string | undefined;
   update: (values: PrimarySaleRecipientFormValues) => Promise<void>;
   isOwnerAccount: boolean;
+  isSplitRecipient?: boolean;
   contractChainId: number;
+  client: ThirdwebClient;
 }) {
   const form = useForm<PrimarySaleRecipientFormValues>({
     resolver: zodResolver(primarySaleRecipientFormSchema),
@@ -771,6 +799,11 @@ function PrimarySaleRecipientSection(props: {
     updateMutation.mutateAsync(form.getValues());
   };
 
+  const postSplitConfigure = async (splitWallet: string) => {
+    form.setValue("primarySaleRecipient", splitWallet);
+    await onSubmit();
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -781,11 +814,32 @@ function PrimarySaleRecipientSection(props: {
             <FormItem className="flex-1">
               <FormLabel>Sale Recipient</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="0x..."
-                  {...field}
-                  disabled={!props.isOwnerAccount}
-                />
+                <div className="flex">
+                  <Input
+                    placeholder="0x..."
+                    {...field}
+                    disabled={!props.isOwnerAccount}
+                    className={
+                      props.isOwnerAccount ? "rounded-r-none border-r-0" : ""
+                    }
+                  />
+                  {props.isOwnerAccount && (
+                    <ConfigureSplit
+                      isNewSplit={!props.isSplitRecipient}
+                      client={props.client}
+                      splitWallet={props.primarySaleRecipient || ""}
+                      postSplitConfigure={
+                        props.isSplitRecipient ? undefined : postSplitConfigure
+                      }
+                    >
+                      <Button className="rounded-lg rounded-l-none border border-l-0 bg-foreground">
+                        {props.isSplitRecipient
+                          ? "Update Split"
+                          : "Create Split"}
+                      </Button>
+                    </ConfigureSplit>
+                  )}
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
