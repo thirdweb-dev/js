@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.5.0
+
+### Minor Changes
+
+- [#5708](https://github.com/thirdweb-dev/js/pull/5708) [`3ec808d`](https://github.com/thirdweb-dev/js/commit/3ec808dc782489ecf8cde136b36106793babe7ca) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update /use endpoint and types to v2
+
 ## 0.4.52
 
 ### Patch Changes
