@@ -1,7 +1,15 @@
 "use client";
+import { Cross2Icon } from "@radix-ui/react-icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { useActiveWallet } from "../../../../../react/core/hooks/wallets/useActiveWallet.js";
 import { shortenAddress } from "../../../../../utils/address.js";
+import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Profile } from "../../../../../wallets/in-app/core/authentication/types.js";
+import type { Ecosystem } from "../../../../../wallets/in-app/core/wallet/types.js";
+import { unlinkProfile } from "../../../../../wallets/in-app/web/lib/auth/index.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
 import { useSocialProfiles } from "../../../../core/social/useSocialProfiles.js";
 import { getSocialIcon } from "../../../../core/utils/walletIcon.js";
@@ -10,6 +18,7 @@ import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { Img } from "../../components/Img.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
+import { IconButton } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 import { Blobbie } from "../Blobbie.js";
 import { MenuButton } from "../MenuButton.js";
@@ -70,56 +79,88 @@ export function LinkedProfilesScreen(props: {
         />
       </Container>
       <Line />
-      {isLoading ? (
-        <LoadingScreen />
-      ) : (
-        <Container
-          scrollY
-          style={{
-            height: "300px",
-          }}
-        >
-          <Spacer y="md" />
-          <Container px="sm">
-            <MenuButton
-              onClick={() => {
-                props.setScreen("link-profile");
-              }}
-              style={{
-                fontSize: fontSize.sm,
-              }}
-            >
-              <AddUserIcon size={iconSize.lg} />
-              <Text color="primaryText">
-                {props.locale.manageWallet.linkProfile}
-              </Text>
-            </MenuButton>
-            <Spacer y="xs" />
-            {/* Exclude guest as a profile */}
-            {connectedProfiles
-              ?.filter((profile) => profile.type !== "guest")
-              .map((profile) => (
-                <LinkedProfile
-                  key={`${profile.type}-${getProfileDisplayName(profile)}`}
-                  profile={profile}
-                  client={props.client}
-                />
-              ))}
-          </Container>
-          <Spacer y="md" />
+
+      <Container
+        scrollY
+        style={{
+          height: "300px",
+        }}
+      >
+        <Spacer y="md" />
+        <Container px="sm">
+          <MenuButton
+            onClick={() => {
+              props.setScreen("link-profile");
+            }}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <AddUserIcon size={iconSize.lg} />
+            <Text color="primaryText">
+              {props.locale.manageWallet.linkProfile}
+            </Text>
+          </MenuButton>
+          <Spacer y="xs" />
+          {/* Exclude guest as a profile */}
+          {connectedProfiles
+            ?.filter((profile) => profile.type !== "guest")
+            .map((profile) => (
+              <LinkedProfile
+                key={`${JSON.stringify(profile)}`}
+                enableUnlinking={connectedProfiles.length > 1}
+                profile={profile}
+                client={props.client}
+              />
+            ))}
         </Container>
-      )}
+        <Spacer y="md" />
+      </Container>
     </Container>
   );
 }
 
 function LinkedProfile({
   profile,
+  enableUnlinking,
   client,
-}: { profile: Profile; client: ThirdwebClient }) {
+}: {
+  profile: Profile;
+  enableUnlinking: boolean;
+  client: ThirdwebClient;
+}) {
+  const activeWallet = useActiveWallet();
   const { data: socialProfiles } = useSocialProfiles({
     client,
     address: profile.details.address,
+  });
+  const queryClient = useQueryClient();
+  const { mutate: unlinkProfileMutation, isPending } = useMutation({
+    mutationFn: async () => {
+      let ecosystem: Ecosystem | undefined;
+
+      if (!activeWallet) {
+        throw new Error("No active wallet found");
+      }
+
+      if (isEcosystemWallet(activeWallet)) {
+        const ecosystemWallet = activeWallet as Wallet<EcosystemWalletId>;
+        const partnerId = ecosystemWallet.getConfig()?.partnerId;
+        ecosystem = {
+          id: ecosystemWallet.id,
+          partnerId,
+        };
+      }
+
+      await unlinkProfile({
+        client,
+        ecosystem,
+        profileToUnlink: profile,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profiles"] });
+    },
   });
 
   return (
@@ -128,6 +169,7 @@ function LinkedProfile({
         fontSize: fontSize.sm,
         cursor: "default",
       }}
+      as={"div"}
       disabled // disabled until we have more data to show on a dedicated profile screen
     >
       {socialProfiles?.some((p) => p.avatar) ? (
@@ -180,12 +222,41 @@ function LinkedProfile({
           {socialProfiles?.find((p) => p.avatar)?.name ||
             getProfileDisplayName(profile)}
         </Text>
-        {socialProfiles?.find((p) => p.avatar)?.name &&
-          profile.details.address && (
-            <Text color="secondaryText" size="sm">
-              {shortenAddress(profile.details.address, 4)}
-            </Text>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          {socialProfiles?.find((p) => p.avatar)?.name &&
+            profile.details.address && (
+              <Text color="secondaryText" size="sm">
+                {shortenAddress(profile.details.address, 4)}
+              </Text>
+            )}
+          {enableUnlinking && (
+            <IconButton
+              autoFocus
+              type="button"
+              aria-label="Unlink"
+              onClick={() => unlinkProfileMutation()}
+              style={{
+                pointerEvents: "auto",
+              }}
+              disabled={isPending}
+            >
+              <Cross2Icon
+                width={iconSize.md}
+                height={iconSize.md}
+                style={{
+                  color: "inherit",
+                }}
+              />
+            </IconButton>
           )}
+        </div>
       </div>
     </MenuButton>
   );
