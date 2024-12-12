@@ -14,6 +14,7 @@ import { EllipsisIcon, TrashIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { deleteSession } from "../api/session";
+import { useNewChatPageLink } from "../hooks/useNewChatPageLink";
 import { deletedSessionsStore } from "../stores";
 
 // TODO - add delete chat confirmation dialog
@@ -27,6 +28,7 @@ export function ChatSidebarLink(props: {
   const pathname = usePathname();
   const linkPath = `/chat/${props.sessionId}`;
   const isDeletingCurrentPage = pathname === linkPath;
+  const newChatLink = useNewChatPageLink();
   const deleteChat = useMutation({
     mutationFn: () => {
       return deleteSession({
@@ -38,7 +40,7 @@ export function ChatSidebarLink(props: {
       const prev = deletedSessionsStore.getValue();
       deletedSessionsStore.setValue([...prev, props.sessionId]);
       if (isDeletingCurrentPage) {
-        router.replace("/");
+        router.replace(newChatLink);
       }
     },
   });

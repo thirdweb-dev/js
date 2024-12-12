@@ -1,14 +1,13 @@
 "use client";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Button } from "@/components/ui/button";
-import { useStore } from "@/lib/reactive";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ChevronRightIcon, MessageSquareDashedIcon } from "lucide-react";
 import Link from "next/link";
 import type { TruncatedSessionInfo } from "../api/types";
+import { useNewChatPageLink } from "../hooks/useNewChatPageLink";
 import { useSessionsWithLocalOverrides } from "../hooks/useSessionsWithLocalOverrides";
 import { NebulaIcon } from "../icons/NebulaIcon";
-import { newChatPageUrlStore } from "../stores";
 import { ChatSidebarLink } from "./ChatSidebarLink";
 import { NebulaAccountButton } from "./NebulaAccountButton";
 
@@ -79,9 +78,4 @@ export function ChatSidebar(props: {
       />
     </div>
   );
-}
-
-export function useNewChatPageLink() {
-  const newChatPage = useStore(newChatPageUrlStore);
-  return newChatPage || "/chat";
 }

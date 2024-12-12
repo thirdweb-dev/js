@@ -66,17 +66,13 @@ export function ChatPageContent(props: {
     // update page URL without reloading
     window.history.replaceState({}, "", `/chat/${sessionId}`);
 
-    const url = new URL(window.location.origin);
-
     // if the current page is landing page, link to /chat
     // if current page is new /chat page, link to landing page
     if (props.type === "landing") {
-      url.pathname = "/chat";
+      newChatPageUrlStore.setValue("/chat");
     } else {
-      url.pathname = "/";
+      newChatPageUrlStore.setValue("/");
     }
-
-    newChatPageUrlStore.setValue(url.href);
   }
 
   const messagesEndRef = useRef<HTMLDivElement>(null);

@@ -12,7 +12,8 @@ import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { TruncatedSessionInfo } from "../api/types";
-import { ChatSidebar, useNewChatPageLink } from "./ChatSidebar";
+import { useNewChatPageLink } from "../hooks/useNewChatPageLink";
+import { ChatSidebar } from "./ChatSidebar";
 
 export function MobileNav(props: {
   sessions: TruncatedSessionInfo[];
