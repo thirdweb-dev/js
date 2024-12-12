@@ -48,7 +48,7 @@ export interface ChainNameProps
    * name was not fetched succesfully
    * @example
    * ```tsx
-   * <ChainName fallbackComponent={"Failed to load"}
+   * <ChainName fallbackComponent={<span>Failed to load</span>}
    * />
    * ```
    */

@@ -48,6 +48,7 @@ const ChainProviderContext = /* @__PURE__ */ createContext<
  * ```
  * @component
  * @chain
+ * @beta
  */
 export function ChainProvider(
   props: React.PropsWithChildren<ChainProviderProps>,
