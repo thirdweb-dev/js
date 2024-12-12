@@ -43,6 +43,6 @@ export function useResolvedMediaType(
 
   return {
     mediaInfo: { url: resolvedUrl, mimeType: resolvedMimeType.data },
-    isFetched: resolvedMimeType.isFetched,
+    isFetched: resolvedMimeType.isFetched || !!mimeType,
   };
 }
