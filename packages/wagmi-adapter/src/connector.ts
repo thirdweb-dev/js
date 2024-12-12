@@ -1,30 +1,33 @@
-import { EventEmitter } from "stream";
 import { type CreateConnectorFn, createConnector } from "@wagmi/core";
 import type { Prettify } from "@wagmi/core/chains";
-import { createThirdwebClient, defineChain, getAddress } from "thirdweb";
+import { type ThirdwebClient, defineChain, getAddress } from "thirdweb";
 import {
   EIP1193,
   type InAppWalletConnectionOptions,
+  type InAppWalletCreationOptions,
+  type MultiStepAuthArgsType,
+  type SingleStepAuthArgsType,
   ecosystemWallet,
   inAppWallet as thirdwebInAppWallet,
 } from "thirdweb/wallets";
-import type { InAppWalletCreationOptions } from "thirdweb/wallets/in-app";
 
 export type InAppWalletParameters = Prettify<
-  Omit<InAppWalletConnectionOptions, "client"> &
-    InAppWalletCreationOptions & {
-      clientId: string;
-      ecosystemId?: `ecosystem.${string}`;
-    }
+  InAppWalletCreationOptions & {
+    client: ThirdwebClient;
+    ecosystemId?: `ecosystem.${string}`;
+  }
+>;
+export type InAppWalletConnector = ReturnType<typeof inAppWalletConnector>;
+export type ConnectionOptions = Prettify<
+  (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
+    chainId?: number | undefined;
+    isReconnecting?: boolean | undefined;
+  }
 >;
 
 type Provider = EIP1193.EIP1193Provider | undefined;
 type Properties = {
-  connect(parameters?: {
-    chainId?: number | undefined;
-    isReconnecting?: boolean | undefined;
-    foo?: string;
-  }): Promise<{
+  connect(parameters?: ConnectionOptions): Promise<{
     accounts: readonly `0x${string}`[];
     chainId: number;
   }>;
@@ -39,13 +42,22 @@ type StorageItem = { "tw.lastChainId": number };
  * ```ts
  * import { http, createConfig } from "wagmi";
  * import { inAppWalletConnector } from "@thirdweb-dev/wagmi-adapter";
+ * import { createThirdwebClient, defineChain as thirdwebChain } from "thirdweb";
+ *
+ * const client = createThirdwebClient({
+ *   clientId: "...",
+ * });
  *
  * export const config = createConfig({
  *  chains: [sepolia],
  *  connectors: [
  *    inAppWalletConnector({
- *      clientId: "...",
- *      strategy: "google",
+ *      client,
+ *      // optional: turn on smart accounts
+ *      smartAccounts: {
+ *         sponsorGas: true,
+ *         chain: thirdwebChain(sepolia)
+ *      }
  *   }),
  *  ],
  *  transports: {
@@ -53,39 +65,57 @@ type StorageItem = { "tw.lastChainId": number };
  *  },
  * });
  * ```
+ *
+ * Then in your app, you can use the connector to connect with any supported strategy:
+ *
+ * ```ts
+ * const { connect, connectors } = useConnect();
+ *
+ * const onClick = () => {
+ *   const inAppWallet = connectors.find((x) => x.id === "in-app-wallet");
+ *   connect({
+ *     connector: inAppWallet, strategy: "google"
+ *   });
+ * };
+ * ```
+ * @beta
  */
 export function inAppWalletConnector(
   args: InAppWalletParameters,
 ): CreateConnectorFn<Provider, Properties, StorageItem> {
-  const client = createThirdwebClient({ clientId: args.clientId });
   const wallet = args.ecosystemId
     ? ecosystemWallet(args.ecosystemId, { partnerId: args.partnerId })
     : thirdwebInAppWallet(args);
+  const client = args.client;
   return createConnector<Provider, Properties, StorageItem>((config) => ({
     id: "in-app-wallet",
     name: "In-App wallet",
     type: "in-app",
     connect: async (params) => {
-      const inAppOptions = params && "client" in params ? params : undefined;
-      const wagmiConnectOptions =
-        params && "chainId" in params ? params : undefined;
-      console.log("inAppOPtions", inAppOptions);
-      console.log("wagmiConnectOptions", wagmiConnectOptions);
       const lastChainId = await config.storage?.getItem("tw.lastChainId");
-      const chain = defineChain(
-        wagmiConnectOptions?.chainId || lastChainId || 1,
-      );
-      const options = {
+      if (params?.isReconnecting) {
+        const account = await wallet.autoConnect({
+          client,
+          chain: defineChain(lastChainId || 1),
+        });
+        return {
+          accounts: [getAddress(account.address)],
+          chainId: lastChainId || 1,
+        };
+      }
+      const inAppOptions = params && "strategy" in params ? params : undefined;
+      if (!inAppOptions) {
+        throw new Error(
+          "Missing strategy prop, pass it to connect() when connecting to this connector",
+        );
+      }
+      const chain = defineChain(inAppOptions?.chainId || lastChainId || 1);
+      const decoratedOptions = {
+        ...inAppOptions,
         client,
         chain,
-        ...args,
-      } as unknown as InAppWalletConnectionOptions;
-      const account = wagmiConnectOptions?.isReconnecting
-        ? await wallet.autoConnect({
-            client,
-            chain,
-          })
-        : await wallet.connect(options);
+      } as InAppWalletConnectionOptions;
+      const account = await wallet.connect(decoratedOptions);
       await config.storage?.setItem("tw.lastChainId", chain.id);
       return { accounts: [getAddress(account.address)], chainId: chain.id };
     },
@@ -103,13 +133,21 @@ export function inAppWalletConnector(
       return wallet.getChain()?.id || 1;
     },
     getProvider: async (params) => {
+      const lastChainId = await config.storage?.getItem("tw.lastChainId");
+      const chain = defineChain(params?.chainId || lastChainId || 1);
+      if (!wallet.getAccount()) {
+        await wallet.autoConnect({
+          client,
+          chain,
+        });
+      }
       return EIP1193.toProvider({
         wallet,
         client,
-        chain: wallet.getChain() || defineChain(params?.chainId || 1),
+        chain: wallet.getChain() || chain,
       });
     },
-    isAuthorized: async () => true,
+    isAuthorized: async () => true, // always try to reconnect
     switchChain: async (params) => {
       const chain = config.chains.find((x) => x.id === params.chainId);
       if (!chain) {
@@ -129,13 +167,3 @@ export function inAppWalletConnector(
     },
   }));
 }
-
-const c = inAppWalletConnector({
-  clientId: "...",
-  strategy: "google",
-})({
-  chains: [sepolia],
-  emitter: new EventEmitter() as any,
-});
-
-c.connect({});

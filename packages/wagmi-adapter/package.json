@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wagmi-adapter",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -25,12 +25,12 @@
   },
   "files": ["dist/*", "src/*"],
   "devDependencies": {
-    "@wagmi/core": "0.0.0-canary-20241211210803",
+    "@wagmi/core": "2.16.0",
     "rimraf": "6.0.1",
     "thirdweb": "workspace:*"
   },
   "peerDependencies": {
-    "@wagmi/core": "^2",
+    "@wagmi/core": "^2.16.0",
     "thirdweb": "^5",
     "typescript": ">=5.0.4"
   },

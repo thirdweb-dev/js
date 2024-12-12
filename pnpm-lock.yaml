@@ -1129,8 +1129,8 @@ importers:
         version: 5.7.2
     devDependencies:
       '@wagmi/core':
-        specifier: 0.0.0-canary-20241211210803
-        version: 0.0.0-canary-20241211210803(@tanstack/query-core@5.62.7)(@types/react@19.0.1)(react@19.0.0)(typescript@5.7.2)(use-sync-external-store@1.2.2(react@19.0.0))(viem@2.21.54(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.10)(zod@3.24.1))
+        specifier: 2.16.0
+        version: 2.16.0(@tanstack/query-core@5.62.7)(@types/react@19.0.1)(react@19.0.0)(typescript@5.7.2)(use-sync-external-store@1.2.2(react@19.0.0))(viem@2.21.54(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.10)(zod@3.24.1))
       rimraf:
         specifier: 6.0.1
         version: 6.0.1
@@ -6035,12 +6035,12 @@ packages:
   '@vitest/utils@2.1.8':
     resolution: {integrity: sha512-dwSoui6djdwbfFmIgbIjX2ZhIoG7Ex/+xpxyiEgIGzjliY8xGkcpITKTlp6B4MgtGkF2ilvm97cPM96XZaAgcA==}
 
-  '@wagmi/core@0.0.0-canary-20241211210803':
-    resolution: {integrity: sha512-nkbRsJFcsUf7nx/EB6bbCTce+0dMNEPtsVkSqNht5tqNxcH9q7CyoZnX/Ph0LVK5PHqGoZsiQYowyNBNZ8RK8A==}
+  '@wagmi/core@2.16.0':
+    resolution: {integrity: sha512-sy4n7Jv6YCbT2jp4zQ/9H6l0A8StsN7P8mm2BRuODgW2w6Fj4j6h2xgYJD2tIjJHkLU/nvPJ7audZ55X7XQU/g==}
     peerDependencies:
       '@tanstack/query-core': '>=5.0.0'
       typescript: '>=5.0.4'
-      viem: 2.21.54
+      viem: 2.x
     peerDependenciesMeta:
       '@tanstack/query-core':
         optional: true
@@ -21290,7 +21290,7 @@ snapshots:
       loupe: 3.1.2
       tinyrainbow: 1.2.0
 
-  '@wagmi/core@0.0.0-canary-20241211210803(@tanstack/query-core@5.62.7)(@types/react@19.0.1)(react@19.0.0)(typescript@5.7.2)(use-sync-external-store@1.2.2(react@19.0.0))(viem@2.21.54(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.10)(zod@3.24.1))':
+  '@wagmi/core@2.16.0(@tanstack/query-core@5.62.7)(@types/react@19.0.1)(react@19.0.0)(typescript@5.7.2)(use-sync-external-store@1.2.2(react@19.0.0))(viem@2.21.54(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.10)(zod@3.24.1))':
     dependencies:
       eventemitter3: 5.0.1
       mipd: 0.0.7(typescript@5.7.2)
