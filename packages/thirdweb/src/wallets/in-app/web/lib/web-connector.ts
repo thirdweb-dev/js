@@ -11,6 +11,7 @@ import { customJwt } from "../../core/authentication/jwt.js";
 import {
   getLinkedProfilesInternal,
   linkAccount,
+  unlinkAccount,
 } from "../../core/authentication/linkAccount.js";
 import {
   loginWithPasskey,
@@ -25,6 +26,7 @@ import type {
   LogoutReturnType,
   MultiStepAuthArgsType,
   MultiStepAuthProviderType,
+  Profile,
   SingleStepAuthArgsType,
 } from "../../core/authentication/types.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
@@ -453,6 +455,15 @@ export class InAppWebConnector implements InAppConnector {
       tokenToLink: storedToken.cookieString,
       storage: this.storage,
       ecosystem: args.ecosystem || this.ecosystem,
+    });
+  }
+
+  async unlinkProfile(profile: Profile) {
+    return await unlinkAccount({
+      client: this.client,
+      storage: this.storage,
+      ecosystem: this.ecosystem,
+      profileToUnlink: profile,
     });
   }
 

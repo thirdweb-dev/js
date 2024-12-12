@@ -5,6 +5,7 @@ import type {
   GetAuthenticatedUserParams,
   PreAuthArgsType,
   SocialAuthArgsType,
+  UnlinkParams,
 } from "../../../core/authentication/types.js";
 import { getOrCreateInAppWalletConnector } from "../../../core/wallet/in-app-core.js";
 import type { Ecosystem } from "../../../core/wallet/types.js";
@@ -202,6 +203,36 @@ export async function authenticateWithRedirect(
 export async function linkProfile(args: AuthArgsType) {
   const connector = await getInAppWalletConnector(args.client, args.ecosystem);
   return await connector.linkProfile(args);
+}
+
+/**
+ * Disconnects an existing profile (authentication method) from the current user. Once disconnected, that profile can no longer be used to sign into the account.
+ *
+ * @param args - The object containing the profile that we want to unlink.
+ * @returns A promise that resolves to the updated linked profiles.
+ * @throws If the unlinking fails. This can happen if the account has no other associated profiles or if the profile that is being unlinked doesn't exists for the current logged in user.
+ *
+ * @example
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ *
+ * const wallet = inAppWallet();
+ * wallet.connect({ strategy: "google" });
+ *
+ * const profiles = await getProfiles({
+ *  client,
+ * });
+ *
+ * const updatedProfiles = await unlinkProfile({
+ *  client,
+ *  profileToUnlink: profiles[0],
+ * });
+ * ```
+ * @wallet
+ */
+export async function unlinkProfile(args: UnlinkParams) {
+  const connector = await getInAppWalletConnector(args.client, args.ecosystem);
+  return await connector.unlinkProfile(args.profileToUnlink);
 }
 
 /**

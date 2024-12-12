@@ -131,5 +131,30 @@ describe("LinkedProfilesScreen", () => {
       render(<LinkedProfilesScreen {...mockProps} />);
       expect(screen.queryByText("Guest")).not.toBeInTheDocument();
     });
+
+    it("should render unlink button when there are multiple profiles", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [
+          { type: "email", details: { email: "test@example.com" } },
+          { type: "google", details: { email: "google@example.com" } },
+        ],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
+
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getAllByLabelText("Unlink")).toHaveLength(2);
+    });
+
+    it("should not render unlink button when there is only one profile", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [{ type: "email", details: { email: "test@example.com" } }],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
+
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.queryByLabelText("Unlink")).not.toBeInTheDocument();
+    });
   });
 });

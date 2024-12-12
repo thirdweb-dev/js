@@ -98,6 +98,7 @@ export {
   getUserPhoneNumber,
   getProfiles,
   linkProfile,
+  unlinkProfile,
 } from "../wallets/in-app/native/auth/index.js";
 export type { Profile } from "../wallets/in-app/core/authentication/types.js";
 export const authenticateWithRedirect = () => {

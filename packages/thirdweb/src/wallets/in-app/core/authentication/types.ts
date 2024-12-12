@@ -250,3 +250,9 @@ export type GetAuthenticatedUserParams = {
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
 };
+
+export type UnlinkParams = {
+  client: ThirdwebClient;
+  ecosystem?: Ecosystem;
+  profileToUnlink: Profile;
+};
