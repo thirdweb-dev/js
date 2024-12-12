@@ -32,6 +32,13 @@ const SIGNATURE = {
   s: "0x2222222222222222222222222222222222222222222222222222222222222222",
 } as const;
 
+type Create2FactoryDeploymentInfo = {
+  valueToSend: bigint;
+  predictedAddress: `0x${string}`;
+  signerAddress: string;
+  transaction: `0x${string}`;
+};
+
 /**
  * Computes the address of the Create2 factory contract and checks if it is deployed.
  * @param options - The options for retrieving the Create2 factory address.
@@ -155,15 +162,28 @@ export async function deployCreate2Factory(options: ClientAndChainAndAccount) {
     chain,
   });
 
-  const gasPriceFetched = await getGasPrice(options);
-  const bin = _getNearestGasPriceBin(gasPriceFetched);
-  const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
-    gasPrice: bin,
-  });
+  let deploymentInfo: Create2FactoryDeploymentInfo;
+
+  if (CUSTOM_GAS_FOR_CHAIN[chainId]) {
+    const gasPrice = CUSTOM_GAS_FOR_CHAIN[chainId.toString()]?.gasPrice;
+    const gasLimit = CUSTOM_GAS_FOR_CHAIN[chainId.toString()]?.gasLimit;
+
+    deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
+      gasPrice,
+      gasLimit,
+    });
+  } else {
+    const gasPriceFetched = await getGasPrice(options);
+    const bin = _getNearestGasPriceBin(gasPriceFetched);
+    deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
+      gasPrice: bin,
+    });
+  }
 
   const balance = await eth_getBalance(rpcRequest, {
     address: deploymentInfo.signerAddress,
   });
+
   if (balance < deploymentInfo.valueToSend) {
     const transaction = prepareTransaction({
       chain,
@@ -193,7 +213,7 @@ export async function deployCreate2Factory(options: ClientAndChainAndAccount) {
 async function _getCreate2FactoryDeploymentInfo(
   chainId: number,
   gasOptions: { gasPrice?: bigint; gasLimit?: bigint },
-) {
+): Promise<Create2FactoryDeploymentInfo> {
   // 100000 is default deployment gas limit and 100 gwei is default gas price for create2 factory deployment
   // (See: https://github.com/Arachnid/deterministic-deployment-proxy?tab=readme-ov-file#deployment-gas-limit)
   const gasPrice = gasOptions.gasPrice ? gasOptions.gasPrice : 100n * 10n ** 9n;
@@ -277,6 +297,23 @@ const CUSTOM_GAS_FOR_CHAIN: Record<string, CustomChain> = {
     name: "Chiliz Chain",
     gasPrice: 2500n * 10n ** 9n,
     gasLimit: 200000n,
+  },
+  // SKALE chains
+  "1350216234": {
+    name: "Titan",
+    gasPrice: 100000n,
+  },
+  "1482601649": {
+    name: "Nebula",
+    gasPrice: 100000n,
+  },
+  "1564830818": {
+    name: "Calypso",
+    gasPrice: 100000n,
+  },
+  "2046399126": {
+    name: "Europa",
+    gasPrice: 100000n,
   },
 };
 
