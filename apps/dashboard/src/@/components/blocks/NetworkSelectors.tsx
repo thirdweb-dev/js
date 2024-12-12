@@ -85,17 +85,29 @@ export function MultiNetworkSelector(props: {
 export function SingleNetworkSelector(props: {
   chainId: number | undefined;
   onChange: (chainId: number) => void;
+  className?: string;
+  popoverContentClassName?: string;
+  // if specified - only these chains will be shown
+  chainIds?: number[];
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
+  const chainsToShow = useMemo(() => {
+    if (!props.chainIds) {
+      return allChains;
+    }
+    const chainIdSet = new Set(props.chainIds);
+    return allChains.filter((chain) => chainIdSet.has(chain.chainId));
+  }, [allChains, props.chainIds]);
+
   const options = useMemo(() => {
-    return allChains.map((chain) => {
+    return chainsToShow.map((chain) => {
       return {
         label: chain.name,
         value: String(chain.chainId),
       };
     });
-  }, [allChains]);
+  }, [chainsToShow]);
 
   const searchFn = useCallback(
     (option: Option, searchValue: string) => {
@@ -132,17 +144,22 @@ export function SingleNetworkSelector(props: {
     [idToChain],
   );
 
+  const isLoadingChains = allChains.length === 0;
+
   return (
     <SelectWithSearch
-      searchPlaceholder="Search by Name or Chain Id"
+      searchPlaceholder="Search by Name or Chain ID"
       value={String(props.chainId)}
       options={options}
       onValueChange={(chainId) => {
         props.onChange(Number(chainId));
       }}
-      placeholder="Select Chain"
+      placeholder={isLoadingChains ? "Loading Chains..." : "Select Chain"}
       overrideSearchFn={searchFn}
       renderOption={renderOption}
+      className={props.className}
+      popoverContentClassName={props.popoverContentClassName}
+      disabled={isLoadingChains}
     />
   );
 }
