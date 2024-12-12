@@ -37,8 +37,28 @@ export type SessionInfo = {
   archived_at: string | null;
   title: string | null;
   is_public: boolean | null;
+  context_filter: {
+    chain_ids: string[];
+    contract_addresses: string[];
+  } | null;
   // memory
   // action: array<object> | null; <-- type of this is not available on https://nebula-api.thirdweb-dev.com/docs#/default/get_session_session__session_id__get
+};
+
+export type UpdatedSessionInfo = {
+  title: string;
+  modal_name: string;
+  account_id: string;
+  execute_config: ExecuteConfig | null;
+  context_filter: {
+    chain_ids: string[];
+    contract_addresses: string[];
+  } | null;
+};
+
+export type DeletedSessionInfo = {
+  id: string;
+  deleted_at: string;
 };
 
 export type TruncatedSessionInfo = {

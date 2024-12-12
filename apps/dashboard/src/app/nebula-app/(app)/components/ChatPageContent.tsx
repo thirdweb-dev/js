@@ -38,7 +38,15 @@ export function ChatPageContent(props: {
   const [_config, setConfig] = useState<ExecuteConfig | null>();
   const [contextFilters, setContextFilters] = useState<
     ContextFilters | undefined
-  >(undefined);
+  >(() => {
+    const contextFilterRes = props.session?.context_filter;
+    if (contextFilterRes) {
+      return {
+        chainIds: contextFilterRes.chain_ids,
+        contractAddresses: contextFilterRes.contract_addresses,
+      };
+    }
+  });
 
   const config = _config || {
     mode: "client",
@@ -254,16 +262,12 @@ export function ChatPageContent(props: {
         // If no session exists, create a new one
         await initSession();
       } else {
-        const newSession = await updateSession({
+        await updateSession({
           authToken: props.authToken,
           config: newConfig,
           sessionId,
           contextFilters,
         });
-
-        if (newSession) {
-          setSessionId(newSession.id);
-        }
       }
     } catch (error) {
       console.error("Failed to update session", error);
@@ -292,16 +296,12 @@ export function ChatPageContent(props: {
           updateContextFilters={async (values) => {
             // if session is not yet created, don't need to update sessions - starting a chat will create a session with the context filters
             if (sessionId) {
-              const newSession = await updateSession({
+              await updateSession({
                 authToken: props.authToken,
                 config,
                 sessionId,
                 contextFilters: values,
               });
-              // setting new id - but it doesn't actually change if the session was already created ( which is the case here )
-              if (newSession) {
-                setSessionId(newSession.id);
-              }
             }
           }}
         />

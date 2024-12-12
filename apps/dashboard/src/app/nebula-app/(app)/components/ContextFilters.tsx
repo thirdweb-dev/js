@@ -52,22 +52,24 @@ export default function ContextFiltersButton(props: {
             : "Set context filters"}
         </Button>
       </DialogTrigger>
-      <ContextFilterDialogContent
-        contextFilters={props.contextFilters}
-        isPending={updateMutation.isPending}
-        updateFilters={async (data) => {
-          const promise = updateMutation.mutateAsync(data);
-          toast.promise(promise, {
-            success: "Context filters updated",
-            error: "Failed to update context filters",
-          });
+      <DialogContent className="p-0">
+        <ContextFilterDialogContent
+          contextFilters={props.contextFilters}
+          isPending={updateMutation.isPending}
+          updateFilters={async (data) => {
+            const promise = updateMutation.mutateAsync(data);
+            toast.promise(promise, {
+              success: "Context filters updated",
+              error: "Failed to update context filters",
+            });
 
-          promise.then(() => {
-            props.setContextFilters(data);
-            setIsOpen(false);
-          });
-        }}
-      />
+            promise.then(() => {
+              props.setContextFilters(data);
+              setIsOpen(false);
+            });
+          }}
+        />
+      </DialogContent>
     </Dialog>
   );
 }
@@ -137,76 +139,74 @@ function ContextFilterDialogContent(props: {
   }
 
   return (
-    <DialogContent className="p-0">
-      <Form {...form}>
-        <DialogHeader className="px-6 pt-6 pb-1">
-          <DialogTitle className="font-semibold text-xl">
-            Context Filters
-          </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            Provide context information to Nebula for your prompts
-          </DialogDescription>
-        </DialogHeader>
+    <Form {...form}>
+      <DialogHeader className="px-6 pt-6 pb-1">
+        <DialogTitle className="font-semibold text-xl">
+          Context Filters
+        </DialogTitle>
+        <DialogDescription className="text-muted-foreground">
+          Provide context information to Nebula for your prompts
+        </DialogDescription>
+      </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex flex-col gap-5 px-6">
-            <FormField
-              control={form.control}
-              name="chainIds"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Chain IDs</FormLabel>
-                  <FormControl>
-                    <MultiNetworkSelector
-                      selectedChainIds={form
-                        .watch()
-                        .chainIds.split(",")
-                        .filter(Boolean)
-                        .map(Number)}
-                      onChange={(values) => {
-                        console.log("values", values);
-                        form.setValue("chainIds", values.join(","));
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-5 px-6">
+          <FormField
+            control={form.control}
+            name="chainIds"
+            render={() => (
+              <FormItem>
+                <FormLabel>Chain IDs</FormLabel>
+                <FormControl>
+                  <MultiNetworkSelector
+                    selectedChainIds={form
+                      .watch()
+                      .chainIds.split(",")
+                      .filter(Boolean)
+                      .map(Number)}
+                    onChange={(values) => {
+                      console.log("values", values);
+                      form.setValue("chainIds", values.join(","));
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="contractAddresses"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contract Addresses</FormLabel>
-                  <FormControl>
-                    <AutoResizeTextarea
-                      {...field}
-                      placeholder="0x123..., 0x456..."
-                      className="min-h-[32px] resize-none"
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Comma separated list of contract addresses
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="contractAddresses"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contract Addresses</FormLabel>
+                <FormControl>
+                  <AutoResizeTextarea
+                    {...field}
+                    placeholder="0x123..., 0x456..."
+                    className="min-h-[32px] resize-none"
+                  />
+                </FormControl>
+                <FormDescription>
+                  Comma separated list of contract addresses
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-          <div className="mt-10 flex justify-end gap-3 border-t bg-muted/50 p-6">
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button className="min-w-28 gap-2" type="submit">
-              {props.isPending && <Spinner className="size-4" />}
-              Update
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </DialogContent>
+        <div className="mt-10 flex justify-end gap-3 border-t bg-muted/50 p-6">
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button className="min-w-28 gap-2" type="submit">
+            {props.isPending && <Spinner className="size-4" />}
+            Update
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }
