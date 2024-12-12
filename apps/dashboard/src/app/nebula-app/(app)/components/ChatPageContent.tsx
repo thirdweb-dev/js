@@ -242,13 +242,21 @@ export function ChatPageContent(props: {
         return;
       }
       console.error(error);
-      setMessages((prev) => [
-        ...prev,
-        {
+
+      setMessages((prev) => {
+        const newMessages = prev.slice(
+          0,
+          prev[prev.length - 1]?.type === "presence" ? -1 : undefined,
+        );
+
+        // add error message
+        newMessages.push({
           text: `Error: ${error instanceof Error ? error.message : "Failed to execute command"}`,
           type: "error",
-        },
-      ]);
+        });
+
+        return newMessages;
+      });
     } finally {
       setIsChatStreaming(false);
     }
