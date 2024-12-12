@@ -9,6 +9,7 @@ import { reservedScreens } from "../../ui/ConnectWallet/constants.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
+import type { SupportedSmsCountry } from "./supported-sms-countries.js";
 import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
 
 /**
@@ -25,6 +26,7 @@ function InAppWalletSelectionUI(props: {
   recommendedWallets: Wallet[] | undefined;
   chain: Chain | undefined;
   size: "compact" | "wide";
+  defaultCountryCode?: SupportedSmsCountry;
   // If true, all options will be disabled. Used for things like requiring TOS approval.
   disabled?: boolean;
 }) {
@@ -61,6 +63,7 @@ function InAppWalletSelectionUI(props: {
 
   return (
     <ConnectWalletSocialOptions
+      defaultCountryCode={props.defaultCountryCode}
       disabled={props.disabled}
       locale={locale}
       wallet={props.wallet}

@@ -18,6 +18,7 @@ import {
 } from "../../../core/design-system/index.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { sortWallets } from "../../utils/sortWallets.js";
+import type { SupportedSmsCountry } from "../../wallets/in-app/supported-sms-countries.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { Img } from "../components/Img.js";
 import { Spacer } from "../components/Spacer.js";
@@ -61,6 +62,7 @@ type WalletSelectorProps = {
   setModalVisibility: (value: boolean) => void;
   accountAbstraction?: SmartWalletOptions;
   size: "compact" | "wide";
+  defaultCountryCode?: SupportedSmsCountry;
   meta: {
     title?: string;
     titleIconUrl?: string;
@@ -276,6 +278,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   if (!isCompact) {
     topSection = (
       <WalletSelection
+        defaultCountryCode={props.defaultCountryCode}
         wallets={nonLocalWalletConfigs}
         selectWallet={handleSelect}
         done={props.done}
@@ -305,6 +308,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
     if (socialWallets.length === 0) {
       topSection = (
         <WalletSelection
+          defaultCountryCode={props.defaultCountryCode}
           wallets={nonLocalWalletConfigs}
           selectWallet={handleSelect}
           done={props.done}
@@ -351,6 +355,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
         topSection = (
           <Container px="xs">
             <WalletSelection
+              defaultCountryCode={props.defaultCountryCode}
               wallets={socialWallets}
               selectWallet={handleSelect}
               done={props.done}
@@ -422,6 +427,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
               <>
                 <Container px="lg">
                   <WalletSelection
+                    defaultCountryCode={props.defaultCountryCode}
                     wallets={eoaWallets}
                     selectWallet={handleSelect}
                     done={props.done}
@@ -462,6 +468,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       else {
         topSection = (
           <WalletSelection
+            defaultCountryCode={props.defaultCountryCode}
             wallets={eoaWallets}
             selectWallet={handleSelect}
             done={props.done}
@@ -598,6 +605,7 @@ const WalletSelection: React.FC<{
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
   chain: Chain | undefined;
+  defaultCountryCode?: SupportedSmsCountry;
   diableSelectionDataReset?: boolean;
   // If true, all options will be disabled. Used for things like requiring TOS approval.
   disabled?: boolean;
@@ -628,6 +636,7 @@ const WalletSelection: React.FC<{
                   select={() => props.selectWallet(wallet)}
                   wallet={wallet as Wallet<"inApp">}
                   goBack={props.goBack}
+                  defaultCountryCode={props.defaultCountryCode}
                   client={props.client}
                   connectLocale={props.connectLocale}
                   size={props.size}

@@ -38,6 +38,7 @@ import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { InputSelectionUI } from "../in-app/InputSelectionUI.js";
+import type { SupportedSmsCountry } from "../in-app/supported-sms-countries.js";
 import { validateEmail } from "../in-app/validateEmail.js";
 import { LoadingScreen } from "./LoadingScreen.js";
 import type { InAppWalletLocale } from "./locale/types.js";
@@ -74,6 +75,7 @@ type ConnectWalletSocialOptionsProps = {
   select: () => void;
   done: () => void;
   locale: InAppWalletLocale;
+  defaultCountryCode?: SupportedSmsCountry;
   wallet: Wallet<EcosystemWalletId> | Wallet<"inApp">;
   goBack?: () => void;
   chain: Chain | undefined;
@@ -426,6 +428,7 @@ export const ConnectWalletSocialOptions = (
         (inputMode === "phone" ? (
           <InputSelectionUI
             format="phone"
+            defaultCountryCode={props.defaultCountryCode}
             type={type}
             onSelect={(value) => {
               // removes white spaces and special characters

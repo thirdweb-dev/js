@@ -16,6 +16,7 @@ import { PassKeyLogin } from "../shared/PassKeyLogin.js";
 import { SocialLogin } from "../shared/SocialLogin.js";
 import { InAppWalletFormUIScreen } from "./InAppWalletFormUI.js";
 import { WalletAuth } from "./WalletAuth.js";
+import type { SupportedSmsCountry } from "./supported-sms-countries.js";
 import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
 
 /**
@@ -39,6 +40,7 @@ function InAppWalletConnectUI(props: {
   connectLocale: ConnectLocale;
   isLinking?: boolean;
   walletConnect: { projectId?: string } | undefined;
+  defaultCountryCode?: SupportedSmsCountry;
 }) {
   const data = useSelectionData();
   const setSelectionData = useSetSelectionData();
@@ -157,6 +159,7 @@ function InAppWalletConnectUI(props: {
   return (
     <InAppWalletFormUIScreen
       select={() => {}}
+      defaultCountryCode={props.defaultCountryCode}
       connectLocale={props.connectLocale}
       inAppWalletLocale={locale}
       done={done}

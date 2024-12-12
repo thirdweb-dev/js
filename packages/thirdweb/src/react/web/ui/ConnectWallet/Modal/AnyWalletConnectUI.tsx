@@ -15,6 +15,7 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../../core/design-system/index.js";
 import { useWalletInfo } from "../../../../core/utils/wallet.js";
+import type { SupportedSmsCountry } from "../../../wallets/in-app/supported-sms-countries.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
@@ -44,6 +45,7 @@ const EcosystemWalletConnectUI = /* @__PURE__ */ lazy(
  * @internal
  */
 export function AnyWalletConnectUI(props: {
+  defaultCountryCode?: SupportedSmsCountry;
   wallet: Wallet;
   done: () => void;
   onBack?: () => void;
@@ -241,6 +243,7 @@ export function AnyWalletConnectUI(props: {
       <Suspense fallback={<LoadingScreen />}>
         <InAppWalletConnectUI
           wallet={props.wallet as Wallet<"inApp">}
+          defaultCountryCode={props.defaultCountryCode}
           done={props.done}
           goBack={props.onBack}
           chain={props.chain}
@@ -259,6 +262,7 @@ export function AnyWalletConnectUI(props: {
       <Suspense fallback={<LoadingScreen />}>
         <EcosystemWalletConnectUI
           wallet={props.wallet as Wallet<EcosystemWalletId>}
+          defaultCountryCode={props.defaultCountryCode}
           done={props.done}
           goBack={props.onBack}
           chain={props.chain}
