@@ -14,6 +14,7 @@ import {
 } from "../../../../core/design-system/index.js";
 import { useConnectionManager } from "../../../../core/providers/connection-manager.js";
 import { useWalletInfo } from "../../../../core/utils/wallet.js";
+import type { SupportedSmsCountry } from "../../../wallets/in-app/supported-sms-countries.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSmartWalletLocale.js";
 import type { SmartWalletLocale } from "../../../wallets/smartWallet/locale/types.js";
@@ -32,6 +33,7 @@ import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 export function SmartConnectUI(props: {
   personalWallet: Wallet;
   done: (smartWallet: Wallet) => void;
+  defaultCountryCode?: SupportedSmsCountry;
   onBack?: () => void;
   accountAbstraction: SmartWalletOptions;
   setModalVisibility: (value: boolean) => void;
@@ -69,6 +71,7 @@ export function SmartConnectUI(props: {
           setKeyConnected(true);
         }}
         onBack={props.onBack}
+        defaultCountryCode={props.defaultCountryCode}
         setModalVisibility={props.setModalVisibility}
         chain={props.chain}
         chains={props.chains}

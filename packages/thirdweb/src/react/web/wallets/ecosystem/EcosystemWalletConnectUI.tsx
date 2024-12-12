@@ -9,6 +9,7 @@ import {
 } from "../../providers/wallet-ui-states-provider.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import { WalletAuth } from "../in-app/WalletAuth.js";
+import type { SupportedSmsCountry } from "../in-app/supported-sms-countries.js";
 import { useInAppWalletLocale } from "../in-app/useInAppWalletLocale.js";
 import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
 import { GuestLogin } from "../shared/GuestLogin.js";
@@ -29,6 +30,7 @@ function EcosystemWalletConnectUI(props: {
   client: ThirdwebClient;
   chain: Chain | undefined;
   connectLocale: ConnectLocale;
+  defaultCountryCode?: SupportedSmsCountry;
   size: "compact" | "wide";
   meta: {
     title?: string;

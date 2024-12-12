@@ -14,6 +14,7 @@ import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.
 import { useSetActiveWallet } from "../../../../core/hooks/wallets/useSetActiveWallet.js";
 import { useConnectionManager } from "../../../../core/providers/connection-manager.js";
 import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
+import type { SupportedSmsCountry } from "../../../wallets/in-app/supported-sms-countries.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { WalletSelector } from "../WalletSelector.js";
 import { onModalUnmount, reservedScreens } from "../constants.js";
@@ -58,6 +59,7 @@ export const ConnectModalContent = (props: {
   client: ThirdwebClient;
   hideHeader: boolean;
   recommendedWallets: Wallet[] | undefined;
+  defaultCountryCode?: SupportedSmsCountry;
   chain: Chain | undefined;
   chains: Chain[] | undefined;
   showAllWallets: boolean | undefined;
@@ -146,6 +148,7 @@ export const ConnectModalContent = (props: {
         setScreen(reservedScreens.showAll);
       }}
       done={handleConnected}
+      defaultCountryCode={props.defaultCountryCode}
       goBack={props.wallets.length > 1 ? handleBack : undefined}
       setModalVisibility={setModalVisibility}
       client={props.client}
@@ -194,6 +197,7 @@ export const ConnectModalContent = (props: {
       return (
         <SmartConnectUI
           key={wallet.id}
+          defaultCountryCode={props.defaultCountryCode}
           accountAbstraction={props.accountAbstraction}
           done={(smartWallet) => {
             handleConnected(smartWallet);
@@ -215,6 +219,7 @@ export const ConnectModalContent = (props: {
     return (
       <AnyWalletConnectUI
         key={wallet.id}
+        defaultCountryCode={props.defaultCountryCode}
         wallet={wallet}
         onBack={goBack}
         done={() => {

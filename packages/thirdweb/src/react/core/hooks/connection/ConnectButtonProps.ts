@@ -15,6 +15,7 @@ import type { WalletId } from "../../../../wallets/wallet-types.js";
 import type { NetworkSelectorProps } from "../../../web/ui/ConnectWallet/NetworkSelector.js";
 import type { WelcomeScreen } from "../../../web/ui/ConnectWallet/screens/types.js";
 import type { LocaleId } from "../../../web/ui/types.js";
+import type { SupportedSmsCountry } from "../../../web/wallets/in-app/supported-sms-countries.js";
 import type { Theme } from "../../design-system/index.js";
 import type {
   SupportedNFTs,
@@ -543,6 +544,11 @@ export type ConnectButtonProps = {
    * Refer to the [`LocaleId`](https://portal.thirdweb.com/references/typescript/v5/LocaleId) type for supported locales.
    */
   locale?: LocaleId;
+
+  /**
+   * Default country code to use for SMS verification.
+   */
+  defaultCountryCode?: SupportedSmsCountry;
 
   /**
    * Array of supported wallets. If not provided, default wallets will be used.

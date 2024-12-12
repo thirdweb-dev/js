@@ -11,6 +11,7 @@ import {
   useSetIsWalletModalOpen,
   useSetSelectionData,
 } from "../../../providers/wallet-ui-states-provider.js";
+import type { SupportedSmsCountry } from "../../../wallets/in-app/supported-sms-countries.js";
 import { Modal } from "../../components/Modal.js";
 import type { LocaleId } from "../../types.js";
 import { onModalUnmount, reservedScreens } from "../constants.js";
@@ -40,6 +41,7 @@ type ConnectModalOptions = {
   client: ThirdwebClient;
   recommendedWallets: Wallet[] | undefined;
   localeId: LocaleId;
+  defaultCountryCode?: SupportedSmsCountry;
   chain: Chain | undefined;
   showAllWallets: boolean | undefined;
   chains: Chain[] | undefined;
@@ -130,6 +132,7 @@ const ConnectModal = (props: ConnectModalOptions) => {
       }}
     >
       <ConnectModalContent
+        defaultCountryCode={props.defaultCountryCode}
         shouldSetActive={props.shouldSetActive}
         screenSetup={screenSetup}
         setModalVisibility={setModalVisibility}

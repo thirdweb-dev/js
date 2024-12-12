@@ -14,6 +14,7 @@ import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { ModalTitle } from "../../ui/components/modalElements.js";
 import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
 import type { InAppWalletLocale } from "../shared/locale/types.js";
+import type { SupportedSmsCountry } from "./supported-sms-countries.js";
 
 type InAppWalletFormUIProps = {
   select: () => void;
@@ -34,6 +35,7 @@ type InAppWalletFormUIProps = {
   client: ThirdwebClient;
   chain: Chain | undefined;
   isLinking?: boolean;
+  defaultCountryCode?: SupportedSmsCountry;
 };
 
 /**

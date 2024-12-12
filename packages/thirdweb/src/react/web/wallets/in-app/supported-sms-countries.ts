@@ -1,3 +1,6 @@
+export type SupportedSmsCountry =
+  (typeof supportedSmsCountries)[number]["countryIsoCode"];
+
 export const supportedSmsCountries = [
   {
     countryIsoCode: "AD",
@@ -1183,4 +1186,4 @@ export const supportedSmsCountries = [
     countryName: "Zimbabwe",
     phoneNumberCode: "263",
   },
-];
+] as const;

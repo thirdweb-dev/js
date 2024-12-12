@@ -359,6 +359,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         chains={props.chains}
         client={props.client}
         connectLocale={localeQuery.data}
+        defaultCountryCode={props.defaultCountryCode}
         meta={{
           title: props.connectModal?.title,
           titleIconUrl: props.connectModal?.titleIcon,

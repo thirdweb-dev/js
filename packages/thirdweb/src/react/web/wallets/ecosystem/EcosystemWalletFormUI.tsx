@@ -10,6 +10,7 @@ import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
+import type { SupportedSmsCountry } from "../in-app/supported-sms-countries.js";
 import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
 import type { InAppWalletLocale } from "../shared/locale/types.js";
 import { EcosystemWalletHeader } from "./EcosystemWalletHeader.js";
@@ -29,6 +30,7 @@ type EcosystemWalletFormUIProps = {
     privacyPolicyUrl?: string;
     requireApproval?: boolean;
   };
+  defaultCountryCode?: SupportedSmsCountry;
   client: ThirdwebClient;
   chain: Chain | undefined;
   connectLocale: ConnectLocale;
@@ -80,6 +82,7 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
         p={isCompact ? undefined : "lg"}
       >
         <ConnectWalletSocialOptions
+          defaultCountryCode={props.defaultCountryCode}
           disabled={props.meta.requireApproval && !isApproved}
           {...props}
         />
