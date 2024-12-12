@@ -1,4 +1,4 @@
-import type { ApiKeyMetadata } from "../api.js";
+import type { TeamAndProjectResponse } from "../api.js";
 import type { AuthorizationResult } from "./types.js";
 
 export type ClientAuthorizationPayload = {
@@ -9,42 +9,23 @@ export type ClientAuthorizationPayload = {
 
 export function authorizeClient(
   authOptions: ClientAuthorizationPayload,
-  apiKeyMeta: ApiKeyMetadata,
+  teamAndProjectResponse: TeamAndProjectResponse,
 ): AuthorizationResult {
-  const { origin, bundleId, secretKeyHash: providedSecretHash } = authOptions;
-  const { domains, bundleIds, secretHash } = apiKeyMeta;
+  const { origin, bundleId } = authOptions;
+  const { team, project } = teamAndProjectResponse;
 
   const authResult: AuthorizationResult = {
     authorized: true,
-    apiKeyMeta,
-    accountMeta: {
-      id: apiKeyMeta.accountId,
-      // TODO update this later
-      name: "",
-      creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
-      limits: apiKeyMeta.limits,
-      rateLimits: apiKeyMeta.rateLimits,
-      usage: apiKeyMeta.usage,
-    },
+    team,
+    project,
   };
 
-  // check for public restrictions
-  if (domains.includes("*")) {
+  if (!project) {
     return authResult;
   }
 
-  // check for secretHash
-  if (providedSecretHash) {
-    if (secretHash !== providedSecretHash) {
-      return {
-        authorized: false,
-        errorMessage:
-          "Incorrect key provided. You can view your active API keys at https://thirdweb.com/create-api-key",
-        errorCode: "SECRET_INVALID",
-        status: 401,
-      };
-    }
-
+  // check for public restrictions
+  if (project.domains.includes("*")) {
     return authResult;
   }
 
@@ -52,7 +33,7 @@ export function authorizeClient(
   if (origin) {
     if (
       authorizeDomain({
-        domains,
+        domains: project.domains,
         origin,
       })
     ) {
@@ -71,7 +52,7 @@ export function authorizeClient(
   if (bundleId) {
     if (
       authorizeBundleId({
-        bundleIds,
+        bundleIds: project.bundleIds,
         bundleId,
       })
     ) {

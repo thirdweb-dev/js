@@ -15,7 +15,6 @@ import type { CoreAuthInput } from "../core/types.js";
 export * from "../core/usage.js";
 export * from "../core/rateLimit/index.js";
 export * from "../core/services.js";
-export * from "../core/usageLimit/index.js";
 type NodeServiceConfig = CoreServiceConfig;
 
 export type AuthInput = CoreAuthInput & {

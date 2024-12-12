@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { validApiKeyMeta, validServiceConfig } from "../../mocks.js";
+import { validProjectResponse, validServiceConfig } from "../../mocks.js";
 import { updateRateLimitedAt } from "../api.js";
-import type { AuthorizationResult } from "../authorize/types.js";
 import { rateLimit } from "./index.js";
 
 const mockRedis = {
@@ -13,15 +12,6 @@ const mockRedis = {
 vi.mock("../../../src/core/api", () => ({
   updateRateLimitedAt: vi.fn(),
 }));
-
-const DEFAULT_AUTHZ_RESULT: AuthorizationResult = {
-  authorized: true,
-  apiKeyMeta: {
-    ...validApiKeyMeta,
-    rateLimits: { storage: 5 }, // Example limit of 5 reqs/sec
-  },
-  accountMeta: null,
-};
 
 describe("rateLimit", () => {
   beforeEach(() => {
@@ -37,11 +27,8 @@ describe("rateLimit", () => {
 
   it("should not rate limit if service scope is not in rate limits", async () => {
     const result = await rateLimit({
-      authzResult: {
-        ...DEFAULT_AUTHZ_RESULT,
-        // No rate limits in the authz response.
-        apiKeyMeta: { ...validApiKeyMeta, rateLimits: {} },
-      },
+      project: validProjectResponse,
+      limitPerSecond: 0,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
     });
@@ -57,7 +44,8 @@ describe("rateLimit", () => {
     mockRedis.incr.mockResolvedValue(50); // Current count is 50 requests in 10 seconds.
 
     const result = await rateLimit({
-      authzResult: DEFAULT_AUTHZ_RESULT,
+      project: validProjectResponse,
+      limitPerSecond: 5,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
     });
@@ -75,7 +63,8 @@ describe("rateLimit", () => {
     mockRedis.incr.mockResolvedValue(51); // Current count is 51 requests in 10 seconds.
 
     const result = await rateLimit({
-      authzResult: DEFAULT_AUTHZ_RESULT,
+      project: validProjectResponse,
+      limitPerSecond: 5,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
     });
@@ -93,7 +82,8 @@ describe("rateLimit", () => {
     mockRedis.incr.mockResolvedValue(101);
 
     const result = await rateLimit({
-      authzResult: DEFAULT_AUTHZ_RESULT,
+      project: validProjectResponse,
+      limitPerSecond: 5,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
     });
@@ -114,7 +104,8 @@ describe("rateLimit", () => {
     mockRedis.incr.mockResolvedValue(1);
 
     const result = await rateLimit({
-      authzResult: DEFAULT_AUTHZ_RESULT,
+      project: validProjectResponse,
+      limitPerSecond: 5,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
     });
@@ -132,7 +123,8 @@ describe("rateLimit", () => {
     vi.spyOn(global.Math, "random").mockReturnValue(0.08);
 
     const result = await rateLimit({
-      authzResult: DEFAULT_AUTHZ_RESULT,
+      project: validProjectResponse,
+      limitPerSecond: 5,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
       sampleRate: 0.1,
@@ -150,7 +142,8 @@ describe("rateLimit", () => {
     vi.spyOn(global.Math, "random").mockReturnValue(0.15);
 
     const result = await rateLimit({
-      authzResult: DEFAULT_AUTHZ_RESULT,
+      project: validProjectResponse,
+      limitPerSecond: 5,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
       sampleRate: 0.1,
