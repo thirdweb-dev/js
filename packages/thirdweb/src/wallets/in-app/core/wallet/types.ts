@@ -1,5 +1,6 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { SupportedSmsCountry } from "../../../../react/web/wallets/in-app/supported-sms-countries.js";
 import type { SmartWalletOptions } from "../../../smart/types.js";
 import type {
   AuthOption,
@@ -59,6 +60,10 @@ export type InAppWalletCreationOptions =
          * The domain of the passkey to use for authentication
          */
         passkeyDomain?: string;
+        /**
+         * The default country code to use for SMS authentication
+         */
+        defaultSmsCountryCode?: SupportedSmsCountry;
       };
       /**
        * Metadata to display in the Connect Modal

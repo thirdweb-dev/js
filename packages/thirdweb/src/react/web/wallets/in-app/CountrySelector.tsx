@@ -1,9 +1,22 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { radius, spacing } from "../../../core/design-system/index.js";
 import { StyledOption, StyledSelect } from "../../ui/design-system/elements.js";
+import {
+  type SupportedSmsCountry,
+  supportedSmsCountries,
+} from "./supported-sms-countries.js";
+
+export function getCountrySelector(countryIsoCode: SupportedSmsCountry) {
+  const country = supportedSmsCountries.find(
+    (country) => country.countryIsoCode === countryIsoCode,
+  );
+  if (!country) {
+    return "US +1";
+  }
+  return `${country.countryIsoCode} +${country.phoneNumberCode}`;
+}
 
 export function CountrySelector({
   countryCode,
@@ -14,17 +27,7 @@ export function CountrySelector({
 }) {
   const selectRef = useRef<HTMLSelectElement>(null);
 
-  const { data: supportedCountries } = useQuery({
-    queryKey: ["supported-sms-countries"],
-    queryFn: async () => {
-      const { supportedSmsCountries } = await import(
-        "./supported-sms-countries.js"
-      );
-      return supportedSmsCountries;
-    },
-  });
-
-  const supportedCountriesForSms = supportedCountries ?? [
+  const supportedCountriesForSms = supportedSmsCountries ?? [
     {
       countryIsoCode: "US",
       countryName: "United States",
@@ -58,7 +61,7 @@ export function CountrySelector({
           return (
             <Option
               key={country.countryIsoCode}
-              value={`${country.countryIsoCode} +${country.phoneNumberCode}`}
+              value={getCountrySelector(country.countryIsoCode)}
             >
               {country.countryName} +{country.phoneNumberCode}
             </Option>
