@@ -1,22 +1,38 @@
-import type { ApiKeyMetadata, CoreServiceConfig } from "../api.js";
+import type { CoreServiceConfig, TeamAndProjectResponse } from "../api.js";
 import type { AuthorizationResult } from "./types.js";
 
-export type ServiceAuthorizationPayload = { targetAddress?: string | string[] };
-
 export function authorizeService(
-  apiKeyMetadata: ApiKeyMetadata,
+  teamAndProjectResponse: TeamAndProjectResponse,
   serviceConfig: CoreServiceConfig,
-  authorizationPayload?: ServiceAuthorizationPayload,
 ): AuthorizationResult {
-  const { services } = apiKeyMetadata;
+  const { team, project } = teamAndProjectResponse;
+
+  if (!team.enabledScopes.includes(serviceConfig.serviceScope)) {
+    return {
+      authorized: false,
+      errorMessage: `Invalid request: Unauthorized service: ${serviceConfig.serviceScope}. You can view the restrictions for this team in your dashboard: https://thirdweb.com`,
+      errorCode: "SERVICE_UNAUTHORIZED",
+      status: 403,
+    };
+  }
+
+  if (!project) {
+    // acting on behalf of the team (ie. coming from dashboard), authorize
+    return {
+      authorized: true,
+      team,
+    };
+  }
+
   // validate services
+  const services = project.services;
   const service = services.find(
     (srv) => srv.name === serviceConfig.serviceScope,
   );
   if (!service) {
     return {
       authorized: false,
-      errorMessage: `Invalid request: Unauthorized service: ${serviceConfig.serviceScope}. You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key`,
+      errorMessage: `Invalid request: Unauthorized service: ${serviceConfig.serviceScope}. You can view the restrictions on this project in your dashboard: https://thirdweb.com`,
       errorCode: "SERVICE_UNAUTHORIZED",
       status: 403,
     };
@@ -24,7 +40,7 @@ export function authorizeService(
 
   // validate service actions
   if (serviceConfig.serviceAction) {
-    const isActionAllowed = service.actions.includes(
+    const isActionAllowed = (service.actions as string[]).includes(
       serviceConfig.serviceAction,
     );
     if (!isActionAllowed) {
@@ -37,38 +53,9 @@ export function authorizeService(
     }
   }
 
-  // validate service target addresses
-  // the service has to pass in the target address for this to be validated
-  if (authorizationPayload?.targetAddress) {
-    const checkedAddresses = Array.isArray(authorizationPayload.targetAddress)
-      ? authorizationPayload.targetAddress
-      : [authorizationPayload.targetAddress];
-
-    const allAllowed = service.targetAddresses.includes("*");
-
-    if (
-      !allAllowed &&
-      checkedAddresses.some((ta) => !service.targetAddresses.includes(ta))
-    ) {
-      return {
-        authorized: false,
-        errorMessage: `Invalid request: Unauthorized address: ${serviceConfig.serviceScope} ${checkedAddresses}. You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key`,
-        errorCode: "SERVICE_TARGET_ADDRESS_UNAUTHORIZED",
-        status: 403,
-      };
-    }
-  }
-
   return {
     authorized: true,
-    apiKeyMeta: apiKeyMetadata,
-    accountMeta: {
-      id: apiKeyMetadata.accountId,
-      name: "",
-      creatorWalletAddress: apiKeyMetadata.creatorWalletAddress,
-      limits: apiKeyMetadata.limits,
-      rateLimits: apiKeyMetadata.rateLimits,
-      usage: apiKeyMetadata.usage,
-    },
+    team,
+    project,
   };
 }
