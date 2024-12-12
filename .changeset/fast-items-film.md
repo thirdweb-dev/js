@@ -8,18 +8,11 @@ Adds a defaultSmsCountryCode configuration option to In-App and Ecosystem Wallet
 createWallet("inApp", {
     auth: {
       options: [
-        "google",
-        "discord",
-        "telegram",
         "email",
-        "passkey",
         "phone",
-        "farcaster",
-        "line",
       ],
       mode: "redirect",
-      passkeyDomain: getDomain(),
-      defaultSmsCountryCode: "AF",
+      defaultSmsCountryCode: "IN", // Default country code for SMS
     },
   }),
   ```
