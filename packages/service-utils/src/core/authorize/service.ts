@@ -5,7 +5,16 @@ export function authorizeService(
   teamAndProjectResponse: TeamAndProjectResponse,
   serviceConfig: CoreServiceConfig,
 ): AuthorizationResult {
-  const { team, project } = teamAndProjectResponse;
+  const { team, project, authMethod } = teamAndProjectResponse;
+
+  if (serviceConfig.serviceScope === null) {
+    // if explicitly set to null, we do not want to check for service level authorization
+    return {
+      authorized: true,
+      team,
+      authMethod,
+    };
+  }
 
   if (!team.enabledScopes.includes(serviceConfig.serviceScope)) {
     return {
@@ -21,6 +30,7 @@ export function authorizeService(
     return {
       authorized: true,
       team,
+      authMethod,
     };
   }
 
@@ -57,5 +67,6 @@ export function authorizeService(
     authorized: true,
     team,
     project,
+    authMethod,
   };
 }

@@ -148,5 +148,6 @@ export async function authorize(
     authorized: true,
     team: teamAndProjectResponse.team,
     project: teamAndProjectResponse.project,
+    authMethod: clientAuth.authMethod,
   };
 }

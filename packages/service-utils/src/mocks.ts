@@ -43,7 +43,7 @@ export const validTeamResponse: TeamResponse = {
   updatedAt: new Date("2024-06-01"),
   billingPlan: "free",
   billingEmail: "test@example.com",
-  billingStatus: "noCustomer",
+  billingStatus: "noPayment",
   growthTrialEligible: false,
   enabledScopes: ["storage", "rpc", "bundler"],
 };
@@ -51,6 +51,7 @@ export const validTeamResponse: TeamResponse = {
 export const validTeamAndProjectResponse: TeamAndProjectResponse = {
   team: validTeamResponse,
   project: validProjectResponse,
+  authMethod: "publishableKey",
 };
 
 export const validServiceConfig: CoreServiceConfig = {
