@@ -22,7 +22,6 @@ export type CoreServiceConfig = {
   serviceApiKey: string;
   serviceAction?: string;
   useWalletAuth?: boolean;
-  includeUsage?: boolean;
 };
 
 export type TeamAndProjectResponse = {
