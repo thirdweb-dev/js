@@ -4,11 +4,7 @@ import type {
   Response,
 } from "@cloudflare/workers-types";
 import type { Request } from "@cloudflare/workers-types";
-import type {
-  AccountMetadata,
-  ApiKeyMetadata,
-  CoreServiceConfig,
-} from "../core/api.js";
+import type { CoreServiceConfig, TeamAndProjectResponse } from "../core/api.js";
 import { authorize } from "../core/authorize/index.js";
 import type { AuthorizationInput } from "../core/authorize/index.js";
 import type { AuthorizationResult } from "../core/authorize/types.js";
@@ -17,7 +13,6 @@ import type { CoreAuthInput } from "../core/types.js";
 export * from "./usage.js";
 export * from "../core/services.js";
 export * from "../core/rateLimit/index.js";
-export * from "../core/usageLimit/index.js";
 
 export type WorkerServiceConfig = CoreServiceConfig & {
   kvStore: KVNamespace;
@@ -57,13 +52,13 @@ export async function authorizeWorker(
 
   return await authorize(authData, serviceConfig, {
     get: async (clientId: string) => serviceConfig.kvStore.get(clientId),
-    put: (clientId: string, apiKeyMeta: ApiKeyMetadata | AccountMetadata) =>
+    put: (clientId: string, data: TeamAndProjectResponse) =>
       serviceConfig.ctx.waitUntil(
         serviceConfig.kvStore.put(
           clientId,
           JSON.stringify({
             updatedAt: Date.now(),
-            apiKeyMeta,
+            data,
           }),
           {
             expirationTtl:

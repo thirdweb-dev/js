@@ -10,9 +10,7 @@ function isPrettierSupportedLang(lang: BundledLanguage) {
     lang === "ts" ||
     lang === "tsx" ||
     lang === "javascript" ||
-    lang === "typescript" ||
-    lang === "css" ||
-    lang === "json"
+    lang === "typescript"
   );
 }
 

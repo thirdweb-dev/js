@@ -1,5 +1,7 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { SupportedSmsCountry } from "../../../../react/web/wallets/in-app/supported-sms-countries.js";
+import type { Prettify } from "../../../../utils/type-utils.js";
 import type { SmartWalletOptions } from "../../../smart/types.js";
 import type {
   AuthOption,
@@ -19,14 +21,12 @@ export type Ecosystem = {
   partnerId?: string;
 };
 
-export type InAppWalletConnectionOptions = (
-  | MultiStepAuthArgsType
-  | SingleStepAuthArgsType
-) & {
-  client: ThirdwebClient;
-  chain?: Chain;
-  redirect?: boolean;
-};
+export type InAppWalletConnectionOptions = Prettify<
+  (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
+    client: ThirdwebClient;
+    chain?: Chain;
+  }
+>;
 
 export type InAppWalletAutoConnectOptions = {
   client: ThirdwebClient;
@@ -59,6 +59,10 @@ export type InAppWalletCreationOptions =
          * The domain of the passkey to use for authentication
          */
         passkeyDomain?: string;
+        /**
+         * The default country code to use for SMS authentication
+         */
+        defaultSmsCountryCode?: SupportedSmsCountry;
       };
       /**
        * Metadata to display in the Connect Modal

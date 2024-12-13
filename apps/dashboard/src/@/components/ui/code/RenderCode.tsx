@@ -6,6 +6,8 @@ export function RenderCode(props: {
   className?: string;
   scrollableClassName?: string;
   copyButtonClassName?: string;
+  scrollableContainerClassName?: string;
+  shadowColor?: string;
 }) {
   return (
     <CodeBlockContainer
@@ -13,6 +15,8 @@ export function RenderCode(props: {
       className={props.className}
       copyButtonClassName={props.copyButtonClassName}
       scrollableClassName={props.scrollableClassName}
+      scrollableContainerClassName={props.scrollableContainerClassName}
+      shadowColor={props.shadowColor}
     >
       <div
         // biome-ignore lint/security/noDangerouslySetInnerHtml: we know what we're doing here

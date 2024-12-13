@@ -48,3 +48,26 @@ string FailureMessage; // Failure message if any
 ```
 
 </Details>
+
+<Details summary="OnRamp Status">
+
+### OnRamp Status
+
+Possible status returned for a onramp transactions
+
+```csharp
+NONE - No status.
+PENDING_PAYMENT - Payment is pending.
+PAYMENT_FAILED - Payment has failed.
+PENDING_ON_RAMP_TRANSFER -  Pending on-ramp transfer.
+ON_RAMP_TRANSFER_IN_PROGRESS - On-ramp transfer is in progress.
+ON_RAMP_TRANSFER_COMPLETED - On-ramp transfer is completed
+ON_RAMP_TRANSFER_FAILED - On-ramp transfer has failed.
+CRYPTO_SWAP_REQUIRED - Crypto swap is required.
+CRYPTO_SWAP_COMPLETED - Crypto swap is completed.
+CRYPTO_SWAP_FALLBACK - Crypto swap fallback.
+CRYPTO_SWAP_IN_PROGRESS - Crypto swap is in progress.
+CRYPTO_SWAP_FAILED -  Crypto swap has failed.
+```
+
+</Details>
