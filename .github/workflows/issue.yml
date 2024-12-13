@@ -5,7 +5,7 @@ on:
     types: [opened, edited]
 
 env:
-  VALID_ISSUE_PREFIXES: "CNCT|DASH|PROT|INSIGHT"
+  VALID_ISSUE_PREFIXES: "CNCT|DASH|PROT|INSIGHT|ENGINE|CS|DES|BIL|DEVX|SOLU|NEB"
 
 jobs:
   linear:
