@@ -9,13 +9,16 @@ In traditional Ethereum transactions, users pay gas fees in the native cryptocur
 
 1. Install Connect SDK
 
+```bash
 npm install thirdweb
+```
 
 2. Configure the Paymaster In your SDK code, specify the ERC-20 token you wish to use for gas fees. 
 
 Currently you may use Lisk LSK, Base USDC or Celo CUSD.
 
-```
+
+```tsx
 import { base, lisk, celo } from "thirdweb/chains";
 import { TokenPaymaster, smartWallet } from "thirdweb/wallets";
 

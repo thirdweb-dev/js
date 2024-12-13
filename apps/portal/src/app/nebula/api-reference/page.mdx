@@ -18,7 +18,7 @@ Nebula provides a conversational interface to interact with blockchain data and 
 
 All API requests should be made to:
 
-```
+```bash
 https://nebula-api.thirdweb.com
 ```
 
@@ -26,12 +26,12 @@ https://nebula-api.thirdweb.com
 
 All API endpoints require authentication using the thirdweb secret key. Include this key in your request headers:
 
-```http
+```bash
 x-secret-key: YOUR_THIRDWEB_SECRET_KEY
 ```
 
 Example curl with authentication:
-```
+```bash
 curl -X POST https://nebula-api.thirdweb.com/chat \
   -H "Content-Type: application/json" \
   -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY" \
@@ -130,7 +130,7 @@ When `stream: true`, the API uses Server-Sent Events (SSE) to stream the respons
 5. `error`: Contains error information if something goes wrong
 
 **Example SSE Stream:**
-```
+```tsx
 event: init
 data: {
   "session_id": "f4b45429-9570-4ee8-8c8f-8b267429915a",
@@ -407,14 +407,14 @@ const result = await handleNebulaResponse(data);
 
 #### Execute Command
 
-```
+```bash
 POST /execute
 ```
 
 Execute specific blockchain commands or actions.
 
 **Request Body:**
-```
+```bash
 {
   "message": "Deploy a new ERC20 contract",
   "session_id": "sess_01HKW2ZH45JNQRTM0YPKJ6QXXX", // Optional
@@ -427,7 +427,7 @@ Execute specific blockchain commands or actions.
 ```
 
 **Example curl:**
-```
+```bash
 curl -X POST https://nebula-api.thirdweb.com/execute \
   -H "Content-Type: application/json" \
   -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY" \
@@ -440,25 +440,25 @@ curl -X POST https://nebula-api.thirdweb.com/execute \
     }
   }'
 ```
--->
+
 ### Sessions
 
 #### List Sessions
 
-```
+```bash
 GET /session/list
 ```
 
 Retrieve available sessions for the authenticated account.
 
 **Example curl:**
-```
+```bash
 curl -X GET https://nebula-api.thirdweb.com/session/list \
   -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY"
 ```
 
 **Response:**
-```
+```bash
 {
   "result": [
     {
@@ -475,20 +475,20 @@ curl -X GET https://nebula-api.thirdweb.com/session/list \
 
 #### Get Session
 
-```
+```bash
 GET /session/{session_id}
 ```
 
 Get details for a specific session.
 
 **Example curl:**
-```
+```bash
 curl -X GET https://nebula-api.thirdweb.com/session/abc123 \
   -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY"
 ```
 
 **Response:**
-```
+```tsx
 {
   "result": {
     "id": "string",
@@ -504,14 +504,14 @@ curl -X GET https://nebula-api.thirdweb.com/session/abc123 \
 
 #### Create Session
 
-```
+```bash
 POST /session
 ```
 
 Create a new chat session.
 
 **Request Body:**
-```
+```tsx
 {
   "title": "My DeFi Research",     // Optional: Custom session title
   "is_public": true,               // Optional: Make session publicly accessible
@@ -523,7 +523,7 @@ Create a new chat session.
 ```
 
 **Example curl:**
-```
+```bash
 curl -X POST https://nebula-api.thirdweb.com/session \
   -H "Content-Type: application/json" \
   -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY" \
@@ -538,14 +538,14 @@ curl -X POST https://nebula-api.thirdweb.com/session \
 
 #### Update Session
 
-```
+```bash
 PUT /session/{session_id}
 ```
 
 Update an existing session.
 
 **Example curl:**
-```
+```bash
 curl -X PUT https://nebula-api.thirdweb.com/session/abc123 \
   -H "Content-Type: application/json" \
   -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY" \
@@ -556,7 +556,7 @@ curl -X PUT https://nebula-api.thirdweb.com/session/abc123 \
 ```
 
 **Request Body:**
-```
+```tsx
 {
   "title": "string",
   "is_public": boolean
@@ -565,28 +565,28 @@ curl -X PUT https://nebula-api.thirdweb.com/session/abc123 \
 
 #### Clear Session
 
-```
+```bash
 POST /session/{session_id}/clear
 ```
 
 Clear a session's message history.
 
 **Example curl:**
-```
+```bash
 curl -X POST https://nebula-api.thirdweb.com/session/abc123/clear \
   -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY"
 ```
 
 #### Delete Session
 
-```
+```bash
 DELETE /session/{session_id}
 ```
 
 Delete a session.
 
 **Example curl:**
-```
+```bash
 curl -X DELETE https://nebula-api.thirdweb.com/session/abc123 \
   -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY"
 ```
@@ -595,7 +595,7 @@ curl -X DELETE https://nebula-api.thirdweb.com/session/abc123 \
 
 The API uses standard HTTP status codes and returns errors in this format:
 
-```
+```bash
 {
   "error": {
     "message": "Error description"
