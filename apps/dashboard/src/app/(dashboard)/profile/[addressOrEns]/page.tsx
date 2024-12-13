@@ -21,7 +21,7 @@ export default async function Page(props: PageProps) {
 
   return (
     <ProfileUI
-      ensName={resolvedInfo.ensName}
+      ensName={replaceDeployerAddress(resolvedInfo.ensName || "")}
       profileAddress={resolvedInfo.address}
     />
   );
