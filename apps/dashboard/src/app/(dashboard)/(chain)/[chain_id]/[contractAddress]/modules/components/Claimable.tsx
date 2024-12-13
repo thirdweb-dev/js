@@ -287,6 +287,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
             ? {
                 primarySaleRecipient: primarySaleRecipientQuery.data,
                 isSplitRecipient: isSplitRecipientQuery.data || false,
+                referenceContract: props.contract.address,
               }
             : undefined,
         setPrimarySaleRecipient,
@@ -338,6 +339,7 @@ export function ClaimableModuleUI(
         | {
             primarySaleRecipient: string;
             isSplitRecipient: boolean;
+            referenceContract: string;
           }
         | undefined;
     };
@@ -445,6 +447,9 @@ export function ClaimableModuleUI(
                   contractChainId={props.contractChainId}
                   isSplitRecipient={
                     props.primarySaleRecipientSection.data?.isSplitRecipient
+                  }
+                  referenceContract={
+                    props.primarySaleRecipientSection.data?.referenceContract
                   }
                 />
               ) : (
@@ -771,6 +776,7 @@ function PrimarySaleRecipientSection(props: {
   isOwnerAccount: boolean;
   isSplitRecipient?: boolean;
   contractChainId: number;
+  referenceContract: string;
 }) {
   const form = useForm<PrimarySaleRecipientFormValues>({
     resolver: zodResolver(primarySaleRecipientFormSchema),
@@ -822,6 +828,7 @@ function PrimarySaleRecipientSection(props: {
                     <ConfigureSplit
                       isNewSplit={!props.isSplitRecipient}
                       splitWallet={props.primarySaleRecipient || ""}
+                      referenceContract={props.referenceContract}
                       postSplitConfigure={
                         props.isSplitRecipient ? undefined : postSplitConfigure
                       }

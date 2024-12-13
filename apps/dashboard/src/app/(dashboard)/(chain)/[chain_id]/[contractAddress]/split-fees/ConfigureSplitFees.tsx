@@ -58,6 +58,7 @@ function ConfigureSplit(props: {
   children: React.ReactNode;
   isNewSplit: boolean;
   splitWallet: string;
+  referenceContract: string;
   postSplitConfigure?: (splitWallet: string) => void;
 }) {
   const activeAccount = useActiveAccount();
@@ -139,8 +140,8 @@ function ConfigureSplit(props: {
     const transaction = prepareContractCall({
       contract: splitFeesCore,
       method:
-        "function createSplit(address[] memory _recipients, uint256[] memory _allocations, address _controller)",
-      params: [recipients, allocations, controller],
+        "function createSplit(address[] memory _recipients, uint256[] memory _allocations, address _controller, address _referenceContract)",
+      params: [recipients, allocations, controller, props.referenceContract],
     });
 
     const receipt = await sendAndConfirmTransaction({
@@ -152,7 +153,7 @@ function ConfigureSplit(props: {
       events: [
         prepareEvent({
           signature:
-            "event SplitCreated(address indexed splitWallet, address[] recipients, uint256[] allocations, address controller)",
+            "event SplitCreated(address indexed splitWallet, address[] recipients, uint256[] allocations, address controller, address referenceContract)",
         }),
       ],
       logs: receipt.logs,
@@ -244,7 +245,7 @@ function ConfigureSplit(props: {
 }
 
 // TODO: place this somwhere appropriate
-const splitFeesCoreAddress = "0xB0293Be0b3d5D5946cfA074B45d507319659C95F";
+const splitFeesCoreAddress = "0x7d6Ba9e63eFb30c42b25db50dBD3C2F0a4578Ba2";
 
 const formSchema = z
   .object({
