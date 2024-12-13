@@ -18,7 +18,7 @@ export * from "../core/services.js";
 type NodeServiceConfig = CoreServiceConfig;
 
 export type AuthInput = CoreAuthInput & {
-  req: IncomingMessage;
+  req: IncomingMessage | Request;
 };
 
 /**
@@ -66,15 +66,21 @@ export async function authorizeNode(
   return await authorize(authData, serviceConfig, cacheOptions);
 }
 
+function isNodeHeaders(
+  headers: IncomingHttpHeaders | Headers,
+): headers is IncomingHttpHeaders {
+  return typeof headers === "object" && !("get" in headers);
+}
+
 function getHeader(
-  headers: IncomingHttpHeaders,
+  headers: IncomingHttpHeaders | Headers,
   headerName: string,
 ): string | null {
-  const header = headers[headerName];
-  if (Array.isArray(header)) {
-    return header?.[0] ?? null;
-  }
-  return header ?? null;
+  return isNodeHeaders(headers)
+    ? Array.isArray(headers[headerName])
+      ? (headers[headerName]?.[0] ?? null)
+      : (headers[headerName] ?? null)
+    : (headers.get(headerName) ?? null);
 }
 
 export function extractAuthorizationData(
@@ -85,7 +91,7 @@ export function extractAuthorizationData(
   try {
     requestUrl = new URL(
       authInput.req.url || "",
-      `http://${authInput.req.headers.host}`,
+      `http://${getHeader(authInput.req.headers, "host")}`,
     );
   } catch (error) {
     console.log("** Node URL Error **", error);
@@ -223,10 +229,10 @@ export function logHttpRequest({
         isAuthed,
         status: res.statusCode,
         statusMessage,
-        sdkName: headers["x-sdk-name"] ?? undefined,
-        sdkVersion: headers["x-sdk-version"] ?? undefined,
-        platform: headers["x-sdk-platform"] ?? undefined,
-        os: headers["x-sdk-os"] ?? undefined,
+        sdkName: getHeader(headers, "x-sdk-name"),
+        sdkVersion: getHeader(headers, "x-sdk-version"),
+        platform: getHeader(headers, "x-sdk-platform"),
+        os: getHeader(headers, "x-sdk-os"),
         latencyMs,
       }),
     );
