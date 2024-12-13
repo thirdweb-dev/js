@@ -5,7 +5,8 @@ import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMutation } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useActiveAccount } from "thirdweb/react";
 import { type ContextFilters, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
 import type { ExecuteConfig, SessionInfo } from "../api/types";
@@ -22,6 +23,7 @@ export function ChatPageContent(props: {
   type: "landing" | "new-chat";
   account: Account;
 }) {
+  const address = useActiveAccount()?.address;
   const client = useThirdwebClient();
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>(() => {
@@ -36,17 +38,47 @@ export function ChatPageContent(props: {
   });
 
   const [_config, setConfig] = useState<ExecuteConfig | null>();
-  const [contextFilters, setContextFilters] = useState<
+  const [hasUserUpdatedContextFilters, setHasUserUpdatedContextFilters] =
+    useState(false);
+
+  const [_contextFilters, _setContextFilters] = useState<
     ContextFilters | undefined
   >(() => {
     const contextFilterRes = props.session?.context_filter;
-    if (contextFilterRes) {
+    const value: ContextFilters = {
+      chainIds: contextFilterRes?.chain_ids || undefined,
+      contractAddresses: contextFilterRes?.contract_addresses || undefined,
+      walletAddresses: contextFilterRes?.wallet_addresses || undefined,
+    };
+
+    return value;
+  });
+
+  function setContextFilters(filters: ContextFilters | undefined) {
+    _setContextFilters(filters);
+    setHasUserUpdatedContextFilters(true);
+  }
+
+  const isNewSession = !props.session;
+
+  // if this is a new session, user has not manually updated context filters
+  // and no wallet address is set in context filters, add the current wallet address
+  const contextFilters = useMemo(() => {
+    if (
+      isNewSession &&
+      !hasUserUpdatedContextFilters &&
+      address &&
+      (!_contextFilters?.walletAddresses ||
+        _contextFilters.walletAddresses.length === 0)
+    ) {
       return {
-        chainIds: contextFilterRes.chain_ids,
-        contractAddresses: contextFilterRes.contract_addresses,
+        ..._contextFilters,
+        walletAddresses: [address],
       };
     }
-  });
+
+    return _contextFilters;
+  }, [_contextFilters, address, isNewSession, hasUserUpdatedContextFilters]);
 
   const config = _config || {
     mode: "client",
@@ -293,7 +325,7 @@ export function ChatPageContent(props: {
 
   return (
     <div className="flex grow flex-col overflow-hidden">
-      <header className="flex justify-end border-b bg-background p-4">
+      <header className="flex justify-start border-b bg-background p-4">
         <ContextFiltersButton
           contextFilters={contextFilters}
           setContextFilters={setContextFilters}
