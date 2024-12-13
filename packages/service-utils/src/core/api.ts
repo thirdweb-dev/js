@@ -85,6 +85,14 @@ export type ProjectResponse = {
         actions: never[];
       }
     | {
+        name: "analytics";
+        actions: never[];
+      }
+    | {
+        name: "social";
+        actions: never[];
+      }
+    | {
         name: "bundler";
         actions: never[];
         allowedChainIds?: number[] | null;

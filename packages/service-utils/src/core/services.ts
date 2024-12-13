@@ -73,6 +73,20 @@ export const SERVICE_DEFINITIONS = {
     // all actions allowed
     actions: [],
   },
+  analytics: {
+    name: "analytics",
+    title: "Analytics",
+    description: "Track usage across thirdweb services",
+    // all actions allowed
+    actions: [],
+  },
+  social: {
+    name: "social",
+    title: "Social",
+    description: "Get social data across decentralized protocols",
+    // all actions allowed
+    actions: [],
+  },
 } as const;
 
 export const SERVICE_NAMES = Object.keys(
