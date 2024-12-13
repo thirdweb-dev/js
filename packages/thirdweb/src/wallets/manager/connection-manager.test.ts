@@ -199,157 +199,157 @@ describe.runIf(process.env.TW_SECRET_KEY)("Connection Manager", () => {
     const definedChain = manager.activeWalletChainStore.getValue();
     expect(definedChain).toEqual(newChain);
   });
-});
 
-describe("handleSmartWalletConnection", () => {
-  let client: ThirdwebClient;
-  let eoaWallet: Wallet;
-  let smartWalletOptions: SmartWalletOptions;
+  describe("handleSmartWalletConnection", () => {
+    let client: ThirdwebClient;
+    let eoaWallet: Wallet;
+    let smartWalletOptions: SmartWalletOptions;
 
-  beforeEach(() => {
-    client = TEST_CLIENT;
-    eoaWallet = {
-      id: "eoa-wallet-id",
-      getAccount: vi.fn().mockReturnValue(TEST_ACCOUNT_A),
-      subscribe: vi.fn().mockReturnValue(vi.fn()),
-      disconnect: vi.fn(),
-      switchChain: vi.fn(),
-      getChain: vi.fn().mockReturnValue(sepolia),
-      getConfig: vi.fn(),
-    } as unknown as Wallet;
-    smartWalletOptions = {
-      chain: sepolia,
-    } as SmartWalletOptions;
-  });
+    beforeEach(() => {
+      client = TEST_CLIENT;
+      eoaWallet = {
+        id: "eoa-wallet-id",
+        getAccount: vi.fn().mockReturnValue(TEST_ACCOUNT_A),
+        subscribe: vi.fn().mockReturnValue(vi.fn()),
+        disconnect: vi.fn(),
+        switchChain: vi.fn(),
+        getChain: vi.fn().mockReturnValue(sepolia),
+        getConfig: vi.fn(),
+      } as unknown as Wallet;
+      smartWalletOptions = {
+        chain: sepolia,
+      } as SmartWalletOptions;
+    });
 
-  it("should connect a smart wallet and subscribe to disconnect event", async () => {
-    const onWalletDisconnect = vi.fn();
-    const smartWallet = await handleSmartWalletConnection(
-      eoaWallet,
-      client,
-      smartWalletOptions,
-      onWalletDisconnect,
-    );
-
-    expect(smartWallet.getAccount()).toBeTruthy();
-
-    expect(eoaWallet.subscribe).toHaveBeenCalledWith(
-      "disconnect",
-      expect.any(Function),
-    );
-  });
-
-  it("should call onWalletDisconnect when EOA wallet disconnects", async () => {
-    const onWalletDisconnect = vi.fn();
-    const smartWallet = await handleSmartWalletConnection(
-      eoaWallet,
-      client,
-      smartWalletOptions,
-      onWalletDisconnect,
-    );
-
-    // biome-ignore lint/suspicious/noExplicitAny: Mocked function
-    const disconnectCallback = (eoaWallet.subscribe as any).mock.calls[0][1];
-    disconnectCallback();
-
-    expect(onWalletDisconnect).toHaveBeenCalledWith(smartWallet);
-  });
-
-  it("should throw an error if EOA wallet has no account", async () => {
-    eoaWallet.getAccount = vi.fn().mockReturnValue(null);
-
-    await expect(
-      handleSmartWalletConnection(
+    it("should connect a smart wallet and subscribe to disconnect event", async () => {
+      const onWalletDisconnect = vi.fn();
+      const smartWallet = await handleSmartWalletConnection(
         eoaWallet,
         client,
         smartWalletOptions,
-        vi.fn(),
-      ),
-    ).rejects.toThrow("Cannot set a wallet without an account as active");
-  });
-});
+        onWalletDisconnect,
+      );
 
-describe("Connection Manager Error Handling", () => {
-  let storage: AsyncStorage;
-  let client: ThirdwebClient;
-  let wallet: Wallet;
+      expect(smartWallet.getAccount()).toBeTruthy();
 
-  beforeEach(() => {
-    storage = {
-      getItem: vi.fn(),
-      setItem: vi.fn(),
-      removeItem: vi.fn(),
-    };
-    client = TEST_CLIENT;
-    wallet = {
-      id: "wallet-id",
-      getAccount: vi.fn().mockReturnValue(null), // Simulate wallet without an account
-      subscribe: vi.fn(),
-      disconnect: vi.fn(),
-      switchChain: vi.fn(),
-      getChain: vi.fn().mockReturnValue(sepolia),
-      getConfig: vi.fn(),
-    } as unknown as Wallet;
-  });
+      expect(eoaWallet.subscribe).toHaveBeenCalledWith(
+        "disconnect",
+        expect.any(Function),
+      );
+    });
 
-  it("should throw an error if trying to set a wallet without an account as active", async () => {
-    const manager = createConnectionManager(storage);
+    it("should call onWalletDisconnect when EOA wallet disconnects", async () => {
+      const onWalletDisconnect = vi.fn();
+      const smartWallet = await handleSmartWalletConnection(
+        eoaWallet,
+        client,
+        smartWalletOptions,
+        onWalletDisconnect,
+      );
 
-    await expect(manager.setActiveWallet(wallet)).rejects.toThrow(
-      "Cannot set a wallet without an account as active",
-    );
-  });
+      // biome-ignore lint/suspicious/noExplicitAny: Mocked function
+      const disconnectCallback = (eoaWallet.subscribe as any).mock.calls[0][1];
+      disconnectCallback();
 
-  it("should throw an error if handleConnection is called with a wallet without an account", async () => {
-    const manager = createConnectionManager(storage);
+      expect(onWalletDisconnect).toHaveBeenCalledWith(smartWallet);
+    });
 
-    await expect(manager.handleConnection(wallet, { client })).rejects.toThrow(
-      "Cannot set a wallet without an account as active",
-    );
-  });
-});
+    it("should throw an error if EOA wallet has no account", async () => {
+      eoaWallet.getAccount = vi.fn().mockReturnValue(null);
 
-describe("Connection Manager Event Subscriptions", () => {
-  let storage: AsyncStorage;
-  let client: ThirdwebClient;
-  let wallet: Wallet;
-  let account: Account;
-
-  beforeEach(() => {
-    storage = {
-      getItem: vi.fn(),
-      setItem: vi.fn(),
-      removeItem: vi.fn(),
-    };
-    client = TEST_CLIENT;
-    account = TEST_ACCOUNT_A;
-    wallet = {
-      id: "wallet-id",
-      getAccount: vi.fn().mockReturnValue(account),
-      subscribe: vi.fn().mockReturnValue(vi.fn()),
-      disconnect: vi.fn(),
-      switchChain: vi.fn(),
-      getChain: vi.fn().mockReturnValue(sepolia),
-      getConfig: vi.fn(),
-    } as unknown as Wallet;
+      await expect(
+        handleSmartWalletConnection(
+          eoaWallet,
+          client,
+          smartWalletOptions,
+          vi.fn(),
+        ),
+      ).rejects.toThrow("Cannot set a wallet without an account as active");
+    });
   });
 
-  it("should subscribe to accountChanged, chainChanged, and disconnect events", async () => {
-    const manager = createConnectionManager(storage);
+  describe("Connection Manager Error Handling", () => {
+    let storage: AsyncStorage;
+    let client: ThirdwebClient;
+    let wallet: Wallet;
 
-    await manager.handleConnection(wallet, { client });
+    beforeEach(() => {
+      storage = {
+        getItem: vi.fn(),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+      };
+      client = TEST_CLIENT;
+      wallet = {
+        id: "wallet-id",
+        getAccount: vi.fn().mockReturnValue(null), // Simulate wallet without an account
+        subscribe: vi.fn(),
+        disconnect: vi.fn(),
+        switchChain: vi.fn(),
+        getChain: vi.fn().mockReturnValue(sepolia),
+        getConfig: vi.fn(),
+      } as unknown as Wallet;
+    });
 
-    expect(wallet.subscribe).toHaveBeenCalledWith(
-      "accountChanged",
-      expect.any(Function),
-    );
-    expect(wallet.subscribe).toHaveBeenCalledWith(
-      "chainChanged",
-      expect.any(Function),
-    );
-    expect(wallet.subscribe).toHaveBeenCalledWith(
-      "disconnect",
-      expect.any(Function),
-    );
+    it("should throw an error if trying to set a wallet without an account as active", async () => {
+      const manager = createConnectionManager(storage);
+
+      await expect(manager.setActiveWallet(wallet)).rejects.toThrow(
+        "Cannot set a wallet without an account as active",
+      );
+    });
+
+    it("should throw an error if handleConnection is called with a wallet without an account", async () => {
+      const manager = createConnectionManager(storage);
+
+      await expect(
+        manager.handleConnection(wallet, { client }),
+      ).rejects.toThrow("Cannot set a wallet without an account as active");
+    });
+  });
+
+  describe("Connection Manager Event Subscriptions", () => {
+    let storage: AsyncStorage;
+    let client: ThirdwebClient;
+    let wallet: Wallet;
+    let account: Account;
+
+    beforeEach(() => {
+      storage = {
+        getItem: vi.fn(),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+      };
+      client = TEST_CLIENT;
+      account = TEST_ACCOUNT_A;
+      wallet = {
+        id: "wallet-id",
+        getAccount: vi.fn().mockReturnValue(account),
+        subscribe: vi.fn().mockReturnValue(vi.fn()),
+        disconnect: vi.fn(),
+        switchChain: vi.fn(),
+        getChain: vi.fn().mockReturnValue(sepolia),
+        getConfig: vi.fn(),
+      } as unknown as Wallet;
+    });
+
+    it("should subscribe to accountChanged, chainChanged, and disconnect events", async () => {
+      const manager = createConnectionManager(storage);
+
+      await manager.handleConnection(wallet, { client });
+
+      expect(wallet.subscribe).toHaveBeenCalledWith(
+        "accountChanged",
+        expect.any(Function),
+      );
+      expect(wallet.subscribe).toHaveBeenCalledWith(
+        "chainChanged",
+        expect.any(Function),
+      );
+      expect(wallet.subscribe).toHaveBeenCalledWith(
+        "disconnect",
+        expect.any(Function),
+      );
+    });
   });
 });
