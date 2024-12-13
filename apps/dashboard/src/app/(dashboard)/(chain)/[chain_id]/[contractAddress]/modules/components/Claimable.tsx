@@ -40,7 +40,6 @@ import { useFieldArray, useForm } from "react-hook-form";
 import {
   NATIVE_TOKEN_ADDRESS,
   type PreparedTransaction,
-  type ThirdwebClient,
   ZERO_ADDRESS,
   getContract,
   sendAndConfirmTransaction,
@@ -316,7 +315,6 @@ function ClaimableModule(props: ModuleInstanceProps) {
       setTokenId={setTokenId}
       isValidTokenId={isValidTokenId}
       noClaimConditionSet={noClaimConditionSet}
-      client={contract.client}
       mintSection={{
         mint,
       }}
@@ -332,7 +330,6 @@ export function ClaimableModuleUI(
     setTokenId: Dispatch<SetStateAction<string>>;
     isValidTokenId: boolean;
     noClaimConditionSet: boolean;
-    client: ThirdwebClient;
     primarySaleRecipientSection: {
       setPrimarySaleRecipient: (
         values: PrimarySaleRecipientFormValues,
@@ -449,7 +446,6 @@ export function ClaimableModuleUI(
                   isSplitRecipient={
                     props.primarySaleRecipientSection.data?.isSplitRecipient
                   }
-                  client={props.client}
                 />
               ) : (
                 <Skeleton className="h-[74px]" />
@@ -775,7 +771,6 @@ function PrimarySaleRecipientSection(props: {
   isOwnerAccount: boolean;
   isSplitRecipient?: boolean;
   contractChainId: number;
-  client: ThirdwebClient;
 }) {
   const form = useForm<PrimarySaleRecipientFormValues>({
     resolver: zodResolver(primarySaleRecipientFormSchema),
@@ -826,7 +821,6 @@ function PrimarySaleRecipientSection(props: {
                   {props.isOwnerAccount && (
                     <ConfigureSplit
                       isNewSplit={!props.isSplitRecipient}
-                      client={props.client}
                       splitWallet={props.primarySaleRecipient || ""}
                       postSplitConfigure={
                         props.isSplitRecipient ? undefined : postSplitConfigure

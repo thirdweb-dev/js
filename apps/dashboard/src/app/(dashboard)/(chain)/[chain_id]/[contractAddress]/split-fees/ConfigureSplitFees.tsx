@@ -36,7 +36,6 @@ import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
-  type ThirdwebClient,
   getContract,
   parseEventLogs,
   prepareContractCall,
@@ -50,13 +49,6 @@ import {
 } from "thirdweb/react";
 import { z } from "zod";
 
-type Split = {
-  recipients: string[];
-  allocations: bigint[];
-  controller: string;
-  totalAllocation: bigint;
-};
-
 type Recipient = {
   address: string;
   percentage: string;
@@ -64,7 +56,6 @@ type Recipient = {
 
 function ConfigureSplit(props: {
   children: React.ReactNode;
-  client: ThirdwebClient;
   isNewSplit: boolean;
   splitWallet: string;
   postSplitConfigure?: (splitWallet: string) => void;
@@ -77,7 +68,7 @@ function ConfigureSplit(props: {
   const splitFeesCore = getContract({
     address: splitFeesCoreAddress,
     client,
-    chain,
+    chain: chain!,
   });
 
   const split = useReadContract({

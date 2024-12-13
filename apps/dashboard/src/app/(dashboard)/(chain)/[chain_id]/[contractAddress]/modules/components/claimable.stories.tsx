@@ -163,6 +163,7 @@ function Component() {
               ? undefined
               : {
                   primarySaleRecipient: testAddress1,
+                  isSplitRecipient: false,
                 },
             setPrimarySaleRecipient: updatePrimarySaleRecipientStub,
           }}

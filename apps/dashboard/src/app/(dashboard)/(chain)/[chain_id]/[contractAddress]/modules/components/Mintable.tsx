@@ -30,7 +30,6 @@ import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import {
   type PreparedTransaction,
-  type ThirdwebClient,
   getContract,
   sendAndConfirmTransaction,
 } from "thirdweb";
@@ -217,7 +216,6 @@ function MintableModule(props: ModuleInstanceProps) {
       name={props.contractInfo.name}
       isBatchMetadataInstalled={isBatchMetadataInstalled}
       contractChainId={contract.chain.id}
-      client={contract.client}
     />
   );
 }
@@ -233,7 +231,6 @@ export function MintableModuleUI(
     name: string;
     isBatchMetadataInstalled: boolean;
     contractChainId: number;
-    client: ThirdwebClient;
   },
 ) {
   return (
@@ -283,7 +280,6 @@ export function MintableModuleUI(
                   isSplitRecipient={props.isSplitRecipient}
                   update={props.updatePrimaryRecipient}
                   contractChainId={props.contractChainId}
-                  client={props.client}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -304,7 +300,6 @@ function PrimarySalesSection(props: {
   update: (values: UpdateFormValues) => Promise<void>;
   isOwnerAccount: boolean;
   contractChainId: number;
-  client: ThirdwebClient;
 }) {
   const form = useForm<UpdateFormValues>({
     resolver: zodResolver(primarySaleRecipientFormSchema),
@@ -355,7 +350,6 @@ function PrimarySalesSection(props: {
                   />
                   <ConfigureSplit
                     isNewSplit={!props.isSplitRecipient}
-                    client={props.client}
                     splitWallet={props.primarySaleRecipient || ""}
                     postSplitConfigure={
                       props.isSplitRecipient ? undefined : postSplitConfigure
