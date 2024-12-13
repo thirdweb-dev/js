@@ -11,7 +11,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
 }
 
 export const metadata = createMetadata({
-  title: "Nebula",
+  title: "thirdweb Nebula Documentation",
   description:
-    "Discover Nebula, the ultimate AI solution for seamless blockchain interaction, featuring real-time access to EVM chains and comprehensive on-chain data insights.",
+    "thirdweb Nebula Docs : explore the Nebula API Reference and unlock the most powerful AI to interact with the blockchain yet.",
 });

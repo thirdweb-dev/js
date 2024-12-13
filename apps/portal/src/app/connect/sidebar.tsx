@@ -173,6 +173,10 @@ export const sidebar: SideBar = {
               ],
             },
             {
+              name: "ERC-20 Paymaster",
+              href: `${aAslug}/erc-20-paymaster`,
+            },
+            {
               name: "Account Factories",
               href: `${aAslug}/factories`,
             },

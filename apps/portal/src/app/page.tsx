@@ -13,6 +13,7 @@ import {
   DotNetIcon,
   InfraEngineIcon,
   InfraInsightIcon,
+  NebulaIcon,
   PayIcon,
   ReactIcon,
   TypeScriptIcon,
@@ -368,14 +369,14 @@ function InsightSection() {
 function NebulaSection() {
   return (
     <section className="my-12">
-      <SectionTitle id="insight" title="Insight" />
+      <SectionTitle id="nebula" title="Nebula" />
       <div className="mb-6 border-b" />
       <Grid>
         <ArticleCardIndex
           href="/nebula"
           title="Nebula"
           description=""
-          icon={InfraInsightIcon}
+          icon={NebulaIcon}
         />
       </Grid>
     </section>
