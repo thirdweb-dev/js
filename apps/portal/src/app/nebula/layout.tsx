@@ -11,7 +11,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
 }
 
 export const metadata = createMetadata({
-  title: "Engine",
+  title: "Nebula",
   description:
-    "Engine is a backend HTTP server that calls smart contracts using your managed backend wallets.",
+    "Discover Nebula, the ultimate AI solution for seamless blockchain interaction, featuring real-time access to EVM chains and comprehensive on-chain data insights.",
 });
