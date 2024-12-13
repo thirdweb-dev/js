@@ -1,0 +1,266 @@
+# Nebula API Reference
+
+Nebula provides a conversational interface to interact with blockchain data and services, and access to thirdweb tools.
+
+## Authentication
+
+All API endpoints require authentication using the thirdweb secret key.
+
+Add the following header to your requests:
+
+```
+x-secret-key: YOUR_THIRDWEB_SECRET_KEY
+```
+
+## Sessions
+
+A session represents a conversation thread with the AI. Sessions can be:
+
+- Created explicitly via the `/session` endpoint
+- Created automatically when sending a message without a session_id
+- Reused to maintain context across multiple messages
+- Configured with specific execution parameters
+
+Sessions persist your conversation history and any custom configurations you've set for interacting with blockchain data and thirdweb tools.
+
+## Context Filtering
+
+The context filter allows you to control what blockchain data is used to inform AI responses:
+
+- Specify which blockchain networks to search via chain IDs (e.g. 1 for Ethereum mainnet)
+- Filter data by specific contract addresses
+- Control the context scope for more relevant AI responses
+- Optimize response relevance and token usage
+
+Example context filter:
+```json
+{
+  "context_filter": {
+    "chain_ids": [1],       // Ethereum mainnet
+    "contract_addresses": ["0x..."]  // Target contract address
+  }
+}
+```
+
+## Endpoints
+
+### Chat
+
+#### Send Message
+
+```http
+POST /chat
+```
+
+Send a message and get a response. Supports both streaming and non-streaming responses.
+
+Request body:
+
+```json
+{
+  "message": "Find the last 5 blocks",
+  "session_id": "abc",  // Optional - will create new session if omitted
+  "stream": true,        // Optional, default false
+  "context_filter": {       // Optional: Filter data sources for context
+    "chain_ids": [137],    // Optional: Array of chain IDs to search (e.g. 137 for Polygon)
+    "contract_addresses": ["0x.."] // Optional: Array of contract addresses 
+  }
+}
+```
+
+For non-streaming responses (stream: false):
+
+```json
+{
+  "result": {
+    "message": "The last 5 blocks on polygon are...",
+    "session_id": "abc",
+    "message_id": "1234",
+    "created_at": "2024-01-01T00:00:00Z",
+    "usage": {
+      "prompt_tokens": 10,
+      "completion_tokens": 15,
+      "total_tokens": 25 
+    }
+  }
+}
+```
+
+For streaming responses (stream: true), returns Server-Sent Events (SSE) with the following event types:
+
+- `message`: Contains a chunk of the response text
+- `error`: Contains error information if something goes wrong
+- `done`: Signals the end of the stream with complete message details
+
+Example SSE stream:
+
+```
+event: message
+data: {"text": "Hello", "message_id": "123"}
+
+event: message
+data: {"text": " world!", "message_id": "123"}
+
+event: done
+data: {
+  "message_id": "123",
+  "session_id": "abc",
+  "created_at": "2024-01-01T00:00:00Z",
+  "usage": {
+    "prompt_tokens": 10,
+    "completion_tokens": 15,
+    "total_tokens": 25
+  }
+}
+```
+
+### Execute
+
+#### Execute Command
+
+```http
+POST /execute
+```
+
+Execute a specific command or action.
+
+Request body:
+
+```json
+{
+  "message": "Deploy a new ERC20 contract",
+  "session_id": "sess_01HKW2ZH45JNQRTM0YPKJ6QXXX", // Optional
+  "config": {
+    "chain": "ethereum",
+    "contract_name": "MyToken",
+    "symbol": "MTK"
+  }
+}
+```
+
+
+### Sessions
+
+#### List Sessions
+
+```http
+GET /session/list
+```
+
+Returns a list of available sessions for the authenticated account.
+
+Response:
+
+```json
+{
+  "result": [
+    {
+      "id": "string",
+      "title": "string",
+      "model_name": "string",
+      "is_public": boolean,
+      "created_at": "datetime",
+      "updated_at": "datetime"
+    }
+  ]
+}
+```
+
+#### Get Session
+
+```http
+GET /session/{session_id}
+```
+
+Retrieves details for a specific session.
+
+Response:
+
+```json
+{
+  "result": {
+    "id": "string",
+    "title": "string",
+    "model_name": "string",
+    "is_public": boolean,
+    "created_at": "datetime",
+    "updated_at": "datetime",
+    "messages": []
+  }
+}
+```
+
+#### Create Session
+
+```http
+POST /session
+```
+
+Create a new chat session.
+
+Request body:
+
+```json
+{
+  "title": "My DeFi Research",     // Optional: Custom session title
+  "is_public": true,               // Optional: Make session publicly accessible
+  "context_filter": {       // Optional: Filter data sources for context
+    "chain_ids": [1],      // Optional: Array of chain IDs (e.g. 1 for Ethereum)
+    "contract_addresses": ["0x..."] // Array of contract addresses
+  }
+}
+```
+
+
+#### Update Session
+
+```http
+PUT /session/{session_id}
+```
+
+Update an existing session.
+
+Request body:
+
+```json
+{
+  "title": "string",
+  "is_public": boolean,
+}
+```
+
+#### Clear Session
+
+```http
+POST /session/{session_id}/clear
+```
+
+Clears the message history of a session.
+
+#### Delete Session
+
+```http
+DELETE /session/{session_id}
+```
+
+Deletes a session.
+
+
+## Error Handling
+
+The API uses standard HTTP status codes and returns error messages in the following format:
+
+```json
+{
+  "error": {
+    "message": "Error description"
+  }
+}
+```
+
+Common status codes:
+
+- 400: Bad Request
+- 401: Unauthorized
+- 404: Not Found
+- 500: Internal Server Error

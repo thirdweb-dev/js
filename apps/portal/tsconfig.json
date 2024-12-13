@@ -33,7 +33,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/react/v5/components/onchain/page.mdx"
+    "src/app/react/v5/components/onchain/page.mdx",
+    "src/app/nebula/page.mdx"
   ],
   "exclude": ["node_modules"],
   "ts-node": {
