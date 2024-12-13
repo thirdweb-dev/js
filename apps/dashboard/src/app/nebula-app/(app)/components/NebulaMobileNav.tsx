@@ -32,7 +32,7 @@ export function MobileNav(props: {
             onClick={() => setIsOpen(!isOpen)}
             className="h-auto w-auto p-0.5"
           >
-            <MenuIcon className="size-6" />
+            <MenuIcon className="size-8" />
           </Button>
         </SheetTrigger>
         <SheetContent
