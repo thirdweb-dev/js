@@ -143,7 +143,7 @@ export function ChainIcon({
       }
       // Check if the chain object already has "icon"
       if (chain.icon?.url) {
-        return chain.icon.url;
+        return resolveScheme({ uri: chain.icon.url, client });
       }
       const possibleUrl = await getChainMetadata(chain).then(
         (data) => data.icon?.url,

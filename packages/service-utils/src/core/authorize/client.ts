@@ -12,15 +12,22 @@ export function authorizeClient(
   teamAndProjectResponse: TeamAndProjectResponse,
 ): AuthorizationResult {
   const { origin, bundleId } = authOptions;
-  const { team, project } = teamAndProjectResponse;
+  const { team, project, authMethod } = teamAndProjectResponse;
 
   const authResult: AuthorizationResult = {
     authorized: true,
     team,
     project,
+    authMethod,
   };
 
+  // if there's no project, we'll return the authResult (JWT or teamId auth)
   if (!project) {
+    return authResult;
+  }
+
+  if (authMethod === "secretKey") {
+    // if the auth was done using secretKey, we do not want to enforce domains or bundleIds
     return authResult;
   }
 

@@ -48,12 +48,7 @@ export const CustomConnectWallet = (props: {
   // chains
   const favChainIdsQuery = useFavoriteChainIds();
   const recentChainIds = useStore(recentlyUsedChainIdsStore);
-  const { idToChain, allChains } = useAllChainsData();
-
-  const allChainsWithMetadata = useMemo(
-    () => allChains.map(mapV4ChainToV5Chain),
-    [allChains],
-  );
+  const { idToChain, allChainsV5 } = useAllChainsData();
 
   const recentlyUsedChainsWithMetadata = useMemo(
     () =>
@@ -170,7 +165,7 @@ export const CustomConnectWallet = (props: {
         detailsButton={{
           className: props.detailsButtonClassName,
         }}
-        chains={allChainsWithMetadata}
+        chains={allChainsV5}
         detailsModal={{
           networkSelector: {
             sections: chainSections,
