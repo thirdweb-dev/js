@@ -44,7 +44,7 @@ jobs:
         uses: ./.github/composite-actions/install
 
       - name: Build Packages
-        run: pnpm build:packages
+        run: pnpm build
 
   lint:
     needs: optimize_ci
@@ -112,7 +112,7 @@ jobs:
         uses: ./.github/composite-actions/install
 
       - name: Build Packages
-        run: pnpm build:packages
+        run: pnpm build
 
       - name: Install Yarn (if needed)
         if: matrix.package_manager == 'yarn'
