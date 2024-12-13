@@ -33,9 +33,9 @@
     "typedoc": "turbo run typedoc",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "node ./scripts/pre-release.mjs && turbo run update-version && pnpm build:release && changeset publish",
+    "release": "turbo run update-version && pnpm build:release && changeset publish",
     "version-packages:nightly": "node scripts/pre-nightly.mjs && changeset version --snapshot nightly",
-    "release:nightly": "node ./scripts/pre-release.mjs && turbo run update-version && pnpm build && changeset publish --tag nightly",
+    "release:nightly": "turbo run update-version && pnpm build && changeset publish --tag nightly",
     "hotlink-init": "node ./scripts/hotlink/hotlink-init.mjs",
     "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs"
   },
