@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import {
   Table,
   TableBody,
@@ -21,16 +21,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useQuery } from "@tanstack/react-query";
 import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { InfoIcon } from "lucide-react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
-import { useActiveWalletChain } from "thirdweb/react";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  type ThirdwebContract,
+  eth_getBalance,
+  getContract,
+  getRpcClient,
+  readContract,
+} from "thirdweb";
+import { getBalance, getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { CurrencySelector } from "../modules/components/CurrencySelector";
 
 export function ClaimFeesCard(props: {
@@ -38,56 +48,140 @@ export function ClaimFeesCard(props: {
   recipients: string[];
   allocations: bigint[];
   controller: string;
-  referenceContract: string;
+  splitFeesCore: ThirdwebContract;
 }) {
-  const isController = false;
-  const chain = useActiveWalletChain();
+  const _isController = false;
+  const { idToChain } = useAllChainsData();
+  const chain = idToChain.get(props.splitFeesCore.chain.id);
   const form = useForm<{ currencyAddress: string }>({
     values: {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
     },
   });
 
-  const _currencyAddress = form.watch("currencyAddress");
+  const currencyAddress = form.watch("currencyAddress");
+  const currencyMetadata = useQuery({
+    queryKey: ["currencyMetadata", currencyAddress],
+    queryFn: async () => {
+      const erc20Contract = getContract({
+        address: currencyAddress,
+        client: props.splitFeesCore.client,
+        chain: props.splitFeesCore.chain,
+      });
+      return getCurrencyMetadata({
+        contract: erc20Contract,
+      });
+    },
+    enabled: currencyAddress !== NATIVE_TOKEN_ADDRESS,
+  });
 
-  const columns: ColumnDef<{
-    recipient: string;
-    claimable: bigint;
-    claim: string;
-  }>[] = [
-    {
-      accessorKey: "recipient",
-      header: "Recipient",
+  const claimAmounts = useQuery({
+    queryKey: ["claimAmounts", currencyAddress],
+    queryFn: async () => {
+      const erc6909Balances = await Promise.all(
+        props.recipients.map(async (recipient) =>
+          readContract({
+            contract: props.splitFeesCore,
+            method:
+              "function balanceOf(address owner, uint256 id) returns (uint256 amount)",
+            params: [recipient, BigInt(currencyAddress)],
+          }),
+        ),
+      );
+      console.log("erc6909Balances: ", erc6909Balances);
+
+      let splitWalletBalance: bigint;
+      if (currencyAddress === NATIVE_TOKEN_ADDRESS) {
+        const rpcRequest = getRpcClient({
+          client: props.splitFeesCore.client,
+          chain: props.splitFeesCore.chain,
+        });
+        splitWalletBalance = await eth_getBalance(rpcRequest, {
+          address: props.splitWallet,
+        });
+      } else {
+        const { value } = await getBalance({
+          contract: props.splitFeesCore,
+          address: currencyAddress,
+        });
+        splitWalletBalance = value;
+      }
+      console.log("splitWalletBalance: ", splitWalletBalance);
+
+      const totalAllocation = props.allocations.reduce(
+        (acc, curr) => acc + curr,
+        0n,
+      );
+      console.log("totalAllocation: ", totalAllocation);
+      const claimAmounts = erc6909Balances.map(
+        (balance, i) =>
+          ((props.allocations[i] || 0n) * splitWalletBalance) /
+            totalAllocation +
+          balance,
+      );
+      console.log("claimAmounts: ", claimAmounts);
+
+      return claimAmounts;
     },
-    {
-      accessorKey: "claimable",
-      header: "Claimable Amount",
-    },
-    {
-      accessorKey: "claim",
-      header: "Claim",
-      cell: ({ row }) => {
-        return (
-          <Button onClick={() => {}} disabled={row.getValue("claimable") === 0}>
-            Claim
-          </Button>
-        );
+  });
+
+  const columns = useMemo<
+    ColumnDef<{ recipient: string; claimable: bigint; claim: string }>[]
+  >(
+    () => [
+      {
+        accessorKey: "recipient",
+        header: "Recipient",
       },
-    },
-  ];
+      {
+        accessorKey: "claimable",
+        header: "Claimable Amount",
+        cell: ({ row }) => {
+          if (
+            currencyAddress !== NATIVE_TOKEN_ADDRESS &&
+            !currencyMetadata.data
+          )
+            return null;
+          if (currencyAddress === NATIVE_TOKEN_ADDRESS) {
+            return (
+              <p>{(row.getValue("claimable") as bigint) / 10n ** 18n} ETH</p>
+            );
+          }
 
-  console.log("allocations: ", props.allocations);
-  console.log("recipients: ", props.recipients);
-
-  const totalAllocation = props.allocations.reduce(
-    (acc, curr) => acc + curr,
-    0n,
+          return (
+            <p>
+              {(row.getValue("claimable") as bigint) /
+                10n ** BigInt(currencyMetadata.data?.decimals || 0n)}{" "}
+              {currencyMetadata.data?.symbol}
+            </p>
+          );
+        },
+      },
+      {
+        accessorKey: "claim",
+        header: "Claim",
+        cell: ({ row }) => {
+          return (
+            <Button
+              onClick={() => {}}
+              disabled={row.getValue("claimable") === 0n}
+            >
+              Claim
+            </Button>
+          );
+        },
+      },
+    ],
+    [],
   );
-  const data = props.recipients.map((recipient, i) => ({
-    recipient: recipient,
-    allocation:
-      (Number(props.allocations[i] || 0n) / Number(totalAllocation)) * 100,
-  }));
+
+  const data = useMemo(() => {
+    return props.recipients.map((recipient, i) => ({
+      recipient,
+      claimable: claimAmounts?.data?.[i] ?? 0n,
+      claim: "", // dummy value for react-table
+    }));
+  }, [props.recipients, claimAmounts.data]);
 
   const table = useReactTable({
     data,
@@ -152,18 +246,24 @@ export function ClaimFeesCard(props: {
           </h3>
         </div>
 
-        <div className="h-5" />
+        <div className="h-2" />
 
-        <FormField
-          control={form.control}
-          name="currencyAddress"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Currency</FormLabel>
-              <CurrencySelector chain={chain} field={field} />
-            </FormItem>
-          )}
-        />
+        <Form {...form}>
+          <form>
+            <FormField
+              control={form.control}
+              name="currencyAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Currency</FormLabel>
+                  <CurrencySelector chain={chain} field={field} />
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
+
+        <div className="h-5" />
 
         <TableContainer>
           <Table>
@@ -204,12 +304,6 @@ export function ClaimFeesCard(props: {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
-
-      <div className="flex flex-row justify-end gap-3 border-border border-t p-4 lg:p-6">
-        <Button size="sm" className="min-w-24 gap-2" disabled={!isController}>
-          Update
-        </Button>
       </div>
     </section>
   );
