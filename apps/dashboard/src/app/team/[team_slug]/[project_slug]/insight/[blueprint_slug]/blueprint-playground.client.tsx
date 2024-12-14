@@ -28,8 +28,11 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
+import { useTrack } from "../../../../../../hooks/analytics/useTrack";
 import { getVercelEnv } from "../../../../../../lib/vercel-utils";
 import type { BlueprintParameter, BlueprintPathMetadata } from "../utils";
+
+const trackingCategory = "insightBlueprint";
 
 export function BlueprintPlayground(props: {
   metadata: BlueprintPathMetadata;
@@ -151,6 +154,7 @@ export function BlueprintPlaygroundUI(props: {
   projectSettingsLink: string;
   supportedChainIds: number[];
 }) {
+  const trackEvent = useTrack();
   const parameters = useMemo(() => {
     return modifyParametersForPlayground(props.metadata.parameters);
   }, [props.metadata.parameters]);
@@ -182,6 +186,12 @@ export function BlueprintPlaygroundUI(props: {
       intent: "run",
     });
 
+    trackEvent({
+      category: trackingCategory,
+      action: "click",
+      label: "run",
+      url: url,
+    });
     props.onRun(url);
   }
 
@@ -306,6 +316,8 @@ function PlaygroundHeader(props: {
   domain: string;
   path: string;
 }) {
+  const trackEvent = useTrack();
+
   const [hasCopied, setHasCopied] = useState(false);
   return (
     <div className="border-b px-4 py-4 lg:flex lg:justify-center lg:py-3">
@@ -325,6 +337,14 @@ function PlaygroundHeader(props: {
                 values: props.getFormValues(),
                 intent: "copy",
               });
+
+              trackEvent({
+                category: trackingCategory,
+                action: "click",
+                label: "copy-url",
+                url: url,
+              });
+
               setTimeout(() => {
                 setHasCopied(false);
               }, 500);
@@ -561,6 +581,7 @@ function ResponseSection(props: {
     | undefined;
   abortRequest: () => void;
 }) {
+  const trackEvent = useTrack();
   const formattedData = useMemo(() => {
     if (!props.response?.data) return undefined;
     try {
@@ -628,6 +649,13 @@ function ResponseSection(props: {
           scrollableContainerClassName="h-full"
           scrollableClassName="h-full"
           shadowColor="hsl(var(--muted)/50%)"
+          onCopy={() => {
+            trackEvent({
+              category: trackingCategory,
+              action: "click",
+              label: "copy-response",
+            });
+          }}
         />
       )}
     </div>

@@ -14,6 +14,7 @@ export function CodeBlockContainer(props: {
   scrollableContainerClassName?: string;
   copyButtonClassName?: string;
   shadowColor?: string;
+  onCopy?: (code: string) => void;
 }) {
   const { hasCopied, onCopy } = useClipboard(props.codeToCopy);
 
@@ -38,7 +39,10 @@ export function CodeBlockContainer(props: {
       <Button
         size="sm"
         variant="outline"
-        onClick={onCopy}
+        onClick={() => {
+          onCopy();
+          props.onCopy?.(props.codeToCopy);
+        }}
         className={cn(
           "absolute top-3.5 right-3.5 h-auto bg-background p-2",
           props.copyButtonClassName,
