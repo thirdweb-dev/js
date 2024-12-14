@@ -131,6 +131,10 @@ export const navLinks: SidebarLink[] = [
         name: "Chain",
         href: "/connect/ui/chain",
       },
+      {
+        name: "Wallet",
+        href: "/connect/ui/wallet",
+      },
     ],
   },
 ];
