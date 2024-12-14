@@ -24,6 +24,7 @@ export function useAutoConnectCore(
   props: AutoConnectProps & { wallets: Wallet[] },
   createWalletFn: (id: WalletId) => Wallet,
   getInstalledWallets?: () => Wallet[],
+  onTimeout?: () => void,
 ) {
   const manager = useConnectionManagerCtx("useAutoConnect");
   const setConnectionStatus = useSetActiveWalletConnectionStatus();
@@ -103,6 +104,10 @@ export function useAutoConnectCore(
         await timeoutPromise(handleWalletConnection(activeWallet), {
           ms: timeout,
           message: `AutoConnect timeout: ${timeout}ms limit exceeded.`,
+        }).catch(() => {
+          if (onTimeout) {
+            onTimeout();
+          }
         });
 
         // connected wallet could be activeWallet or smart wallet
