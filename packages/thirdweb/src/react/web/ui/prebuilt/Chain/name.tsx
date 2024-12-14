@@ -48,7 +48,7 @@ export interface ChainNameProps
    * name was not fetched succesfully
    * @example
    * ```tsx
-   * <ChainName fallbackComponent={"Failed to load"}
+   * <ChainName fallbackComponent={<span>Failed to load</span>}
    * />
    * ```
    */
@@ -157,18 +157,7 @@ export function ChainName({
 }: ChainNameProps) {
   const { chain } = useChainContext();
   const nameQuery = useQuery({
-    queryKey: [
-      "_internal_chain_name_",
-      chain.id,
-      {
-        resolver:
-          typeof nameResolver === "string"
-            ? nameResolver
-            : typeof nameResolver === "function"
-              ? getFunctionId(nameResolver)
-              : undefined,
-      },
-    ] as const,
+    queryKey: getQueryKeys({ chainId: chain.id, nameResolver }),
     queryFn: async () => fetchChainName({ chain, nameResolver }),
     ...queryOptions,
   });
@@ -204,4 +193,21 @@ export async function fetchChainName(props: {
     return chain.name;
   }
   return getChainMetadata(chain).then((data) => data.name);
+}
+
+/**
+ * @internal Exported for tests
+ */
+export function getQueryKeys(props: {
+  chainId: number;
+  nameResolver?: string | (() => string) | (() => Promise<string>);
+}) {
+  if (typeof props.nameResolver === "function") {
+    return [
+      "_internal_chain_name_",
+      props.chainId,
+      { resolver: getFunctionId(props.nameResolver) },
+    ] as const;
+  }
+  return ["_internal_chain_name_", props.chainId] as const;
 }
