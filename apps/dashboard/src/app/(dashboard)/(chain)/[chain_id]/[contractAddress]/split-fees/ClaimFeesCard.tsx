@@ -38,9 +38,12 @@ import {
   eth_getBalance,
   getContract,
   getRpcClient,
+  prepareContractCall,
   readContract,
+  sendAndConfirmTransaction,
 } from "thirdweb";
 import { getBalance, getCurrencyMetadata } from "thirdweb/extensions/erc20";
+import { useActiveAccount } from "thirdweb/react";
 import { CurrencySelector } from "../modules/components/CurrencySelector";
 
 export function ClaimFeesCard(props: {
@@ -50,9 +53,9 @@ export function ClaimFeesCard(props: {
   controller: string;
   splitFeesCore: ThirdwebContract;
 }) {
-  const _isController = false;
   const { idToChain } = useAllChainsData();
   const chain = idToChain.get(props.splitFeesCore.chain.id);
+  const account = useActiveAccount();
   const form = useForm<{ currencyAddress: string }>({
     values: {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
@@ -125,6 +128,42 @@ export function ClaimFeesCard(props: {
     },
   });
 
+  const claim = async (recipient: string) => {
+    if (!account) {
+      throw new Error("Account does not exist");
+    }
+    const splitWallet = getContract({
+      address: props.splitWallet,
+      client: props.splitFeesCore.client,
+      chain: props.splitFeesCore.chain,
+    });
+    const { value: splitWalletBalance } = await getBalance({
+      contract: splitWallet,
+      address: currencyAddress,
+    });
+    if (splitWalletBalance > 0n) {
+      const distributeTx = prepareContractCall({
+        contract: props.splitFeesCore,
+        method: "function distribute(address _splitWallet, address _token)",
+        params: [props.splitWallet, currencyAddress],
+      });
+      await sendAndConfirmTransaction({
+        account,
+        transaction: distributeTx,
+      });
+    }
+
+    const withdrawTx = prepareContractCall({
+      contract: props.splitFeesCore,
+      method: "function withdraw(address account, address _token)",
+      params: [recipient, currencyAddress],
+    });
+    await sendAndConfirmTransaction({
+      account,
+      transaction: withdrawTx,
+    });
+  };
+
   const columns = useMemo<
     ColumnDef<{ recipient: string; claimable: bigint; claim: string }>[]
   >(
@@ -163,7 +202,7 @@ export function ClaimFeesCard(props: {
         cell: ({ row }) => {
           return (
             <Button
-              onClick={() => {}}
+              onClick={() => claim(row.getValue("recipient"))}
               disabled={row.getValue("claimable") === 0n}
             >
               Claim
