@@ -86,6 +86,8 @@ function createAllChainsStore() {
     for (const c of chainOverrides) {
       if (c.isCustom) {
         allChains.push(c);
+        // eslint-disable-next-line no-restricted-syntax
+        allChainsV5.push(mapV4ChainToV5Chain(c));
         idToChain.set(c.chainId, c);
         nameToChain.set(c.name, c);
         slugToChain.set(c.slug, c);
