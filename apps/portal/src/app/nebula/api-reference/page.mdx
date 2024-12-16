@@ -407,22 +407,49 @@ const result = await handleNebulaResponse(data);
 
 #### Execute Command
 
+
+
 ```bash
 POST /execute
 ```
-
-Execute specific blockchain commands or actions.
+Execute specific blockchain commands or actions. This endpoint is designed for direct command execution without the conversational context of the chat endpoint.
 
 **Request Body:**
 ```bash
 {
-  "message": "Deploy a new ERC20 contract",
-  "session_id": "sess_01HKW2ZH45JNQRTM0YPKJ6QXXX", // Optional
-  "config": {
-    "chain": "ethereum",
-    "contract_name": "MyToken",
-    "symbol": "MTK"
+  "message": "send 0.0001 ETH on sepolia to vitalik.eth",
+  "user_id": "default-user",
+  "stream": false,
+  "execute_config": {
+    "mode": "client",
+    "signer_wallet_address": "0xc3F2b2a12Eba0f5989cD75B2964E31D56603a2cE"
   }
+}
+```
+
+**Request Parameters:**
+- `message` (required): The command to execute
+- `user_id` (optional): Identifier for the user making the request
+- `stream` (optional): Whether to stream the response
+- `execute_config` (optional): Configuration for transaction execution
+  - `mode`: Execution mode (currently only "client" is supported)
+  - `signer_wallet_address`: Address that will sign the transaction
+
+**Example Response:**
+```json
+{
+  "message": "The transaction is to transfer 0.0001 ETH to the address 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045. The transaction simulation indicates that it will most likely succeed. \n\nPlease go ahead and sign and confirm the transaction.",
+  "actions": [
+    {
+      "session_id": "d8ca7326-fea4-4bcc-9bb7-9c84dd138379",
+      "request_id": "40404a54-be4a-4540-8c97-d74f8c454d0e",
+      "type": "sign_transaction",
+      "source": "executor",
+      "data": "{\"maxPriorityFeePerGas\": \"0x6a392bd\", \"maxFeePerGas\": \"0x546126ce9\", \"chainId\": 11155111, \"from\": \"0xc3F2b2a12Eba0f5989cD75B2964E31D56603a2cE\", \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": \"0x5af3107a4000\", \"gas\": \"0x5208\"}"
+    }
+  ],
+  "session_id": "d8ca7326-fea4-4bcc-9bb7-9c84dd138379",
+  "request_id": "40404a54-be4a-4540-8c97-d74f8c454d0e"
 }
 ```
 
@@ -432,14 +459,34 @@ curl -X POST https://nebula-api.thirdweb.com/execute \
   -H "Content-Type: application/json" \
   -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY" \
   -d '{
-    "message": "Deploy a new ERC20 contract",
-    "config": {
-      "chain": "ethereum",
-      "contract_name": "MyToken",
-      "symbol": "MTK"
+    "message": "send 0.0001 ETH on sepolia to vitalik.eth",
+    "user_id": "default-user",
+    "stream": false,
+    "execute_config": {
+      "mode": "client",
+      "signer_wallet_address": "0xc3F2b2a12Eba0f5989cD75B2964E31D56603a2cE"
     }
   }'
 ```
+
+**Response Properties:**
+- `message`: A human-readable description of the action to be taken
+- `actions`: Array of actions to be executed
+  - `session_id`: Unique identifier for the session
+  - `request_id`: Unique identifier for this request
+  - `type`: The type of action (e.g., "sign_transaction")
+  - `source`: Origin of the action
+  - `data`: Transaction data in hexadecimal format including:
+    - `maxPriorityFeePerGas`: Maximum priority fee per gas in hex
+    - `maxFeePerGas`: Maximum fee per gas in hex
+    - `chainId`: Network identifier
+    - `from`: Sender's address
+    - `to`: Recipient's address
+    - `data`: Transaction data
+    - `value`: Amount to send in hex
+    - `gas`: Gas limit in hex
+- `session_id`: Session identifier for this execution
+- `request_id`: Unique identifier for this request
 
 ### Sessions
 
