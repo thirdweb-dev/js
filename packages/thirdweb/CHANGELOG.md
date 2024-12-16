@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.79.0
+
+### Minor Changes
+
+- [#5691](https://github.com/thirdweb-dev/js/pull/5691) [`5be197b`](https://github.com/thirdweb-dev/js/commit/5be197bac97393edf39bf7287b5fa258cf83ec06) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add headless components for Wallets: WalletProvider, WalletIcon and WalletName
+
+### Patch Changes
+
+- [#5746](https://github.com/thirdweb-dev/js/pull/5746) [`e42ffc6`](https://github.com/thirdweb-dev/js/commit/e42ffc6a931a8d80492a091d79e2d9b38e4ba1d7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix migration to enclave in react native
+
 ## 5.78.0
 
 ### Minor Changes
