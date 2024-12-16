@@ -1,377 +1,341 @@
 {
-	"name": "thirdweb",
-	"version": "5.78.0",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/thirdweb-dev/js.git#main"
-	},
-	"license": "Apache-2.0",
-	"bugs": {
-		"url": "https://github.com/thirdweb-dev/js/issues"
-	},
-	"author": "thirdweb eng <eng@thirdweb.com>",
-	"type": "module",
-	"bin": {
-		"thirdweb": "./dist/esm/cli/bin.js",
-		"thirdweb-cli": "./dist/esm/cli/bin.js"
-	},
-	"main": "./dist/cjs/exports/thirdweb.js",
-	"module": "./dist/esm/exports/thirdweb.js",
-	"types": "./dist/types/exports/thirdweb.d.ts",
-	"typings": "./dist/types/exports/thirdweb.d.ts",
-	"exports": {
-		".": {
-			"types": "./dist/types/exports/thirdweb.d.ts",
-			"import": "./dist/esm/exports/thirdweb.js",
-			"default": "./dist/cjs/exports/thirdweb.js"
-		},
-		"./adapters/*": {
-			"types": "./dist/types/exports/adapters/*.d.ts",
-			"import": "./dist/esm/exports/adapters/*.js",
-			"default": "./dist/cjs/exports/adapters/*.js"
-		},
-		"./auth": {
-			"types": "./dist/types/exports/auth.d.ts",
-			"import": "./dist/esm/exports/auth.js",
-			"default": "./dist/cjs/exports/auth.js"
-		},
-		"./chains": {
-			"types": "./dist/types/exports/chains.d.ts",
-			"import": "./dist/esm/exports/chains.js",
-			"default": "./dist/cjs/exports/chains.js"
-		},
-		"./contract": {
-			"types": "./dist/types/exports/contract.d.ts",
-			"import": "./dist/esm/exports/contract.js",
-			"default": "./dist/cjs/exports/contract.js"
-		},
-		"./deploys": {
-			"types": "./dist/types/exports/deploys.d.ts",
-			"import": "./dist/esm/exports/deploys.js",
-			"default": "./dist/cjs/exports/deploys.js"
-		},
-		"./event": {
-			"types": "./dist/types/exports/event.d.ts",
-			"import": "./dist/esm/exports/event.js",
-			"default": "./dist/cjs/exports/event.js"
-		},
-		"./extensions/*": {
-			"types": "./dist/types/exports/extensions/*.d.ts",
-			"import": "./dist/esm/exports/extensions/*.js",
-			"default": "./dist/cjs/exports/extensions/*.js"
-		},
-		"./pay": {
-			"types": "./dist/types/exports/pay.d.ts",
-			"import": "./dist/esm/exports/pay.js",
-			"default": "./dist/cjs/exports/pay.js"
-		},
-		"./react": {
-			"types": "./dist/types/exports/react.d.ts",
-			"import": "./dist/esm/exports/react.js",
-			"react-native": "./dist/esm/exports/react.native.js",
-			"default": "./dist/cjs/exports/react.js"
-		},
-		"./react-native": {
-			"types": "./dist/types/exports/react-native.d.ts",
-			"import": "./dist/esm/exports/react-native.js",
-			"default": "./dist/cjs/exports/react-native.js"
-		},
-		"./rpc": {
-			"types": "./dist/types/exports/rpc.d.ts",
-			"import": "./dist/esm/exports/rpc.js",
-			"default": "./dist/cjs/exports/rpc.js"
-		},
-		"./storage": {
-			"types": "./dist/types/exports/storage.d.ts",
-			"import": "./dist/esm/exports/storage.js",
-			"default": "./dist/cjs/exports/storage.js"
-		},
-		"./transaction": {
-			"types": "./dist/types/exports/transaction.d.ts",
-			"import": "./dist/esm/exports/transaction.js",
-			"default": "./dist/cjs/exports/transaction.js"
-		},
-		"./utils": {
-			"types": "./dist/types/exports/utils.d.ts",
-			"import": "./dist/esm/exports/utils.js",
-			"default": "./dist/cjs/exports/utils.js"
-		},
-		"./wallets": {
-			"types": "./dist/types/exports/wallets.d.ts",
-			"import": "./dist/esm/exports/wallets.js",
-			"react-native": "./dist/esm/exports/wallets.native.js",
-			"default": "./dist/cjs/exports/wallets.js"
-		},
-		"./wallets/in-app": {
-			"types": "./dist/types/exports/wallets/in-app.d.ts",
-			"import": "./dist/esm/exports/wallets/in-app.js",
-			"react-native": "./dist/esm/exports/wallets/in-app.native.js",
-			"default": "./dist/cjs/exports/wallets/in-app.js"
-		},
-		"./wallets/*": {
-			"types": "./dist/types/exports/wallets/*.d.ts",
-			"import": "./dist/esm/exports/wallets/*.js",
-			"default": "./dist/cjs/exports/wallets/*.js"
-		},
-		"./modules": {
-			"types": "./dist/types/exports/modules.d.ts",
-			"import": "./dist/esm/exports/modules.js",
-			"default": "./dist/cjs/exports/modules.js"
-		},
-		"./social": {
-			"types": "./dist/types/exports/social.d.ts",
-			"import": "./dist/esm/exports/social.js",
-			"default": "./dist/cjs/exports/social.js"
-		},
-		"./package.json": "./package.json"
-	},
-	"typesVersions": {
-		"*": {
-			"adapters/*": [
-				"./dist/types/exports/adapters/*.d.ts"
-			],
-			"auth": [
-				"./dist/types/exports/auth.d.ts"
-			],
-			"chains": [
-				"./dist/types/exports/chains.d.ts"
-			],
-			"contract": [
-				"./dist/types/exports/contract.d.ts"
-			],
-			"deploys": [
-				"./dist/types/exports/deploys.d.ts"
-			],
-			"event": [
-				"./dist/types/exports/event.d.ts"
-			],
-			"extensions/*": [
-				"./dist/types/exports/extensions/*.d.ts"
-			],
-			"pay": [
-				"./dist/types/exports/pay.d.ts"
-			],
-			"react": [
-				"./dist/types/exports/react.d.ts"
-			],
-			"react-native": [
-				"./dist/types/exports/react-native.d.ts"
-			],
-			"rpc": [
-				"./dist/types/exports/rpc.d.ts"
-			],
-			"storage": [
-				"./dist/types/exports/storage.d.ts"
-			],
-			"transaction": [
-				"./dist/types/exports/transaction.d.ts"
-			],
-			"utils": [
-				"./dist/types/exports/utils.d.ts"
-			],
-			"wallets": [
-				"./dist/types/exports/wallets.d.ts"
-			],
-			"wallets/*": [
-				"./dist/types/exports/wallets/*.d.ts"
-			],
-			"modules": [
-				"./dist/types/exports/modules.d.ts"
-			],
-			"social": [
-				"./dist/types/exports/social.d.ts"
-			]
-		}
-	},
-	"browser": {
-		"crypto": false
-	},
-	"sideEffects": false,
-	"files": [
-		"dist/*",
-		"src/*",
-		"!**/*.tsbuildinfo",
-		"!**/*.test.ts",
-		"!**/*.test.tsx",
-		"!**/*.test.ts.snap",
-		"!**/*.test-d.ts",
-		"!**/*.bench.ts",
-		"!tsconfig.build.json"
-	],
-	"dependencies": {
-		"@coinbase/wallet-sdk": "4.2.4",
-		"@emotion/react": "11.14.0",
-		"@emotion/styled": "11.14.0",
-		"@google/model-viewer": "2.1.1",
-		"@noble/curves": "1.7.0",
-		"@noble/hashes": "1.6.1",
-		"@passwordless-id/webauthn": "^2.1.2",
-		"@radix-ui/react-dialog": "1.1.2",
-		"@radix-ui/react-focus-scope": "1.1.0",
-		"@radix-ui/react-icons": "1.3.2",
-		"@radix-ui/react-tooltip": "1.1.4",
-		"@tanstack/react-query": "5.62.7",
-		"@walletconnect/ethereum-provider": "2.17.2",
-		"@walletconnect/sign-client": "2.17.2",
-		"abitype": "1.0.7",
-		"fuse.js": "7.0.0",
-		"input-otp": "^1.4.1",
-		"mipd": "0.0.7",
-		"ox": "0.4.1",
-		"uqr": "0.1.2",
-		"viem": "2.21.54"
-	},
-	"peerDependencies": {
-		"@aws-sdk/client-lambda": "^3",
-		"@aws-sdk/credential-providers": "^3",
-		"@coinbase/wallet-mobile-sdk": "^1",
-		"@mobile-wallet-protocol/client": "0.1.1",
-		"@react-native-async-storage/async-storage": "^1 || ^2",
-		"ethers": "^5 || ^6",
-		"expo-linking": "^6",
-		"expo-web-browser": "^13 || ^14",
-		"react": "^18 || ^19",
-		"react-native": "*",
-		"react-native-aes-gcm-crypto": "^0.2",
-		"react-native-passkey": "^3",
-		"react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
-		"react-native-svg": "^15",
-		"typescript": ">=5.0.4"
-	},
-	"peerDependenciesMeta": {
-		"react": {
-			"optional": true
-		},
-		"react-native": {
-			"optional": true
-		},
-		"ethers": {
-			"optional": true
-		},
-		"typescript": {
-			"optional": true
-		},
-		"react-native-aes-gcm-crypto": {
-			"optional": true
-		},
-		"expo-linking": {
-			"optional": true
-		},
-		"expo-web-browser": {
-			"optional": true
-		},
-		"react-native-quick-crypto": {
-			"optional": true
-		},
-		"react-native-passkey": {
-			"optional": true
-		},
-		"react-native-svg": {
-			"optional": true
-		},
-		"@aws-sdk/client-lambda": {
-			"optional": true
-		},
-		"@aws-sdk/client-kms": {
-			"optional": true
-		},
-		"@aws-sdk/credential-providers": {
-			"optional": true
-		},
-		"@react-native-async-storage/async-storage": {
-			"optional": true
-		},
-		"@coinbase/wallet-mobile-sdk": {
-			"optional": true
-		},
-		"@mobile-wallet-protocol/client": {
-			"optional": true
-		}
-	},
-	"scripts": {
-		"bench:compare": "bun run ./benchmarks/run.ts",
-		"bench": "vitest -c ./test/vitest.config.ts bench",
-		"format": "biome format ./src --write",
-		"lint": "knip && biome check ./src && tsc --project ./tsconfig.build.json --module esnext --noEmit",
-		"fix": "biome check ./src --fix",
-		"knip": "knip",
-		"build:generate": "bun scripts/generate/generate.ts",
-		"build:generate-wallets": "bun scripts/wallets/generate.ts",
-		"dev": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm --watch",
-		"dev:cjs": "printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json && tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false --watch",
-		"dev:esm": "printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json && tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm --watch",
-		"build": "pnpm clean && pnpm build:types && pnpm build:cjs && pnpm build:esm",
-		"build:cjs": "tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
-		"build:esm": "tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
-		"build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
-		"clean": "rimraf dist",
-		"size": "size-limit",
-		"test:watch": "vitest -c ./test/vitest.config.ts dev",
-		"test": "vitest run -c ./test/vitest.config.ts --coverage",
-		"test:cov": "vitest dev -c ./test/vitest.config.ts --coverage",
-		"test:ui": "vitest dev -c ./test/vitest.config.ts --coverage --ui",
-		"test:dev": "vitest run -c ./test/vitest.config.ts",
-		"test:react": "vitest run -c ./test/vitest.config.ts dev --ui src/react",
-		"typedoc": "node scripts/typedoc.mjs && node scripts/parse.mjs",
-		"update-version": "node scripts/version.mjs",
-		"storybook": "storybook dev -p 6006",
-		"build-storybook": "storybook build"
-	},
-	"engines": {
-		"node": ">=18"
-	},
-	"devDependencies": {
-		"@aws-sdk/client-kms": "3.709.0",
-		"@aws-sdk/client-lambda": "3.709.0",
-		"@aws-sdk/credential-providers": "3.709.0",
-		"@biomejs/biome": "1.9.4",
-		"@chromatic-com/storybook": "3.2.2",
-		"@codspeed/vitest-plugin": "4.0.0",
-		"@coinbase/wallet-mobile-sdk": "1.1.2",
-		"@mobile-wallet-protocol/client": "0.1.2",
-		"@react-native-async-storage/async-storage": "2.1.0",
-		"@size-limit/preset-big-lib": "11.1.6",
-		"@storybook/addon-essentials": "8.4.7",
-		"@storybook/addon-interactions": "8.4.7",
-		"@storybook/addon-links": "8.4.7",
-		"@storybook/addon-onboarding": "8.4.7",
-		"@storybook/react": "8.4.7",
-		"@storybook/react-vite": "8.4.7",
-		"@storybook/test": "8.4.7",
-		"@testing-library/jest-dom": "^6.6.3",
-		"@testing-library/react": "^16.1.0",
-		"@testing-library/user-event": "^14.5.2",
-		"@types/cross-spawn": "^6.0.6",
-		"@types/react": "19.0.1",
-		"@viem/anvil": "0.0.10",
-		"@vitejs/plugin-react": "^4.3.4",
-		"@vitest/coverage-v8": "2.1.8",
-		"@vitest/ui": "2.1.8",
-		"cross-spawn": "7.0.6",
-		"dotenv-mono": "^1.3.14",
-		"ethers5": "npm:ethers@5",
-		"ethers6": "npm:ethers@6",
-		"expo-linking": "7.0.3",
-		"expo-web-browser": "14.0.1",
-		"happy-dom": "15.11.7",
-		"knip": "5.39.4",
-		"msw": "2.6.8",
-		"prettier": "3.3.3",
-		"react": "19.0.0",
-		"react-dom": "19.0.0",
-		"react-native": "0.76.5",
-		"react-native-aes-gcm-crypto": "0.2.2",
-		"react-native-passkey": "3.0.0",
-		"react-native-quick-crypto": "0.7.8",
-		"react-native-svg": "15.10.1",
-		"rimraf": "6.0.1",
-		"sharp": "^0.33.5",
-		"size-limit": "11.1.6",
-		"storybook": "8.4.7",
-		"typedoc": "0.27.4",
-		"typedoc-better-json": "0.9.4",
-		"typescript": "5.7.2",
-		"vite": "6.0.3",
-		"vitest": "2.1.8"
-	}
+  "name": "thirdweb",
+  "version": "5.78.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thirdweb-dev/js.git#main"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "type": "module",
+  "bin": {
+    "thirdweb": "./dist/esm/cli/bin.js",
+    "thirdweb-cli": "./dist/esm/cli/bin.js"
+  },
+  "main": "./dist/cjs/exports/thirdweb.js",
+  "module": "./dist/esm/exports/thirdweb.js",
+  "types": "./dist/types/exports/thirdweb.d.ts",
+  "typings": "./dist/types/exports/thirdweb.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/exports/thirdweb.d.ts",
+      "import": "./dist/esm/exports/thirdweb.js",
+      "default": "./dist/cjs/exports/thirdweb.js"
+    },
+    "./adapters/*": {
+      "types": "./dist/types/exports/adapters/*.d.ts",
+      "import": "./dist/esm/exports/adapters/*.js",
+      "default": "./dist/cjs/exports/adapters/*.js"
+    },
+    "./auth": {
+      "types": "./dist/types/exports/auth.d.ts",
+      "import": "./dist/esm/exports/auth.js",
+      "default": "./dist/cjs/exports/auth.js"
+    },
+    "./chains": {
+      "types": "./dist/types/exports/chains.d.ts",
+      "import": "./dist/esm/exports/chains.js",
+      "default": "./dist/cjs/exports/chains.js"
+    },
+    "./contract": {
+      "types": "./dist/types/exports/contract.d.ts",
+      "import": "./dist/esm/exports/contract.js",
+      "default": "./dist/cjs/exports/contract.js"
+    },
+    "./deploys": {
+      "types": "./dist/types/exports/deploys.d.ts",
+      "import": "./dist/esm/exports/deploys.js",
+      "default": "./dist/cjs/exports/deploys.js"
+    },
+    "./event": {
+      "types": "./dist/types/exports/event.d.ts",
+      "import": "./dist/esm/exports/event.js",
+      "default": "./dist/cjs/exports/event.js"
+    },
+    "./extensions/*": {
+      "types": "./dist/types/exports/extensions/*.d.ts",
+      "import": "./dist/esm/exports/extensions/*.js",
+      "default": "./dist/cjs/exports/extensions/*.js"
+    },
+    "./pay": {
+      "types": "./dist/types/exports/pay.d.ts",
+      "import": "./dist/esm/exports/pay.js",
+      "default": "./dist/cjs/exports/pay.js"
+    },
+    "./react": {
+      "types": "./dist/types/exports/react.d.ts",
+      "import": "./dist/esm/exports/react.js",
+      "react-native": "./dist/esm/exports/react.native.js",
+      "default": "./dist/cjs/exports/react.js"
+    },
+    "./react-native": {
+      "types": "./dist/types/exports/react-native.d.ts",
+      "import": "./dist/esm/exports/react-native.js",
+      "default": "./dist/cjs/exports/react-native.js"
+    },
+    "./rpc": {
+      "types": "./dist/types/exports/rpc.d.ts",
+      "import": "./dist/esm/exports/rpc.js",
+      "default": "./dist/cjs/exports/rpc.js"
+    },
+    "./storage": {
+      "types": "./dist/types/exports/storage.d.ts",
+      "import": "./dist/esm/exports/storage.js",
+      "default": "./dist/cjs/exports/storage.js"
+    },
+    "./transaction": {
+      "types": "./dist/types/exports/transaction.d.ts",
+      "import": "./dist/esm/exports/transaction.js",
+      "default": "./dist/cjs/exports/transaction.js"
+    },
+    "./utils": {
+      "types": "./dist/types/exports/utils.d.ts",
+      "import": "./dist/esm/exports/utils.js",
+      "default": "./dist/cjs/exports/utils.js"
+    },
+    "./wallets": {
+      "types": "./dist/types/exports/wallets.d.ts",
+      "import": "./dist/esm/exports/wallets.js",
+      "react-native": "./dist/esm/exports/wallets.native.js",
+      "default": "./dist/cjs/exports/wallets.js"
+    },
+    "./wallets/in-app": {
+      "types": "./dist/types/exports/wallets/in-app.d.ts",
+      "import": "./dist/esm/exports/wallets/in-app.js",
+      "react-native": "./dist/esm/exports/wallets/in-app.native.js",
+      "default": "./dist/cjs/exports/wallets/in-app.js"
+    },
+    "./wallets/*": {
+      "types": "./dist/types/exports/wallets/*.d.ts",
+      "import": "./dist/esm/exports/wallets/*.js",
+      "default": "./dist/cjs/exports/wallets/*.js"
+    },
+    "./modules": {
+      "types": "./dist/types/exports/modules.d.ts",
+      "import": "./dist/esm/exports/modules.js",
+      "default": "./dist/cjs/exports/modules.js"
+    },
+    "./social": {
+      "types": "./dist/types/exports/social.d.ts",
+      "import": "./dist/esm/exports/social.js",
+      "default": "./dist/cjs/exports/social.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
+      "auth": ["./dist/types/exports/auth.d.ts"],
+      "chains": ["./dist/types/exports/chains.d.ts"],
+      "contract": ["./dist/types/exports/contract.d.ts"],
+      "deploys": ["./dist/types/exports/deploys.d.ts"],
+      "event": ["./dist/types/exports/event.d.ts"],
+      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
+      "pay": ["./dist/types/exports/pay.d.ts"],
+      "react": ["./dist/types/exports/react.d.ts"],
+      "react-native": ["./dist/types/exports/react-native.d.ts"],
+      "rpc": ["./dist/types/exports/rpc.d.ts"],
+      "storage": ["./dist/types/exports/storage.d.ts"],
+      "transaction": ["./dist/types/exports/transaction.d.ts"],
+      "utils": ["./dist/types/exports/utils.d.ts"],
+      "wallets": ["./dist/types/exports/wallets.d.ts"],
+      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
+      "modules": ["./dist/types/exports/modules.d.ts"],
+      "social": ["./dist/types/exports/social.d.ts"]
+    }
+  },
+  "browser": {
+    "crypto": false
+  },
+  "sideEffects": false,
+  "files": [
+    "dist/*",
+    "src/*",
+    "!**/*.tsbuildinfo",
+    "!**/*.test.ts",
+    "!**/*.test.tsx",
+    "!**/*.test.ts.snap",
+    "!**/*.test-d.ts",
+    "!**/*.bench.ts",
+    "!tsconfig.build.json"
+  ],
+  "dependencies": {
+    "@coinbase/wallet-sdk": "4.2.4",
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.0",
+    "@google/model-viewer": "2.1.1",
+    "@noble/curves": "1.7.0",
+    "@noble/hashes": "1.6.1",
+    "@passwordless-id/webauthn": "^2.1.2",
+    "@radix-ui/react-dialog": "1.1.2",
+    "@radix-ui/react-focus-scope": "1.1.0",
+    "@radix-ui/react-icons": "1.3.2",
+    "@radix-ui/react-tooltip": "1.1.4",
+    "@tanstack/react-query": "5.62.7",
+    "@walletconnect/ethereum-provider": "2.17.2",
+    "@walletconnect/sign-client": "2.17.2",
+    "abitype": "1.0.7",
+    "fuse.js": "7.0.0",
+    "input-otp": "^1.4.1",
+    "mipd": "0.0.7",
+    "ox": "0.4.1",
+    "uqr": "0.1.2",
+    "viem": "2.21.54"
+  },
+  "peerDependencies": {
+    "@aws-sdk/client-lambda": "^3",
+    "@aws-sdk/credential-providers": "^3",
+    "@coinbase/wallet-mobile-sdk": "^1",
+    "@mobile-wallet-protocol/client": "0.1.1",
+    "@react-native-async-storage/async-storage": "^1 || ^2",
+    "ethers": "^5 || ^6",
+    "expo-linking": "^6",
+    "expo-web-browser": "^13 || ^14",
+    "react": "^18 || ^19",
+    "react-native": "*",
+    "react-native-aes-gcm-crypto": "^0.2",
+    "react-native-passkey": "^3",
+    "react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
+    "react-native-svg": "^15",
+    "typescript": ">=5.0.4"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    },
+    "ethers": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    },
+    "react-native-aes-gcm-crypto": {
+      "optional": true
+    },
+    "expo-linking": {
+      "optional": true
+    },
+    "expo-web-browser": {
+      "optional": true
+    },
+    "react-native-quick-crypto": {
+      "optional": true
+    },
+    "react-native-passkey": {
+      "optional": true
+    },
+    "react-native-svg": {
+      "optional": true
+    },
+    "@aws-sdk/client-lambda": {
+      "optional": true
+    },
+    "@aws-sdk/client-kms": {
+      "optional": true
+    },
+    "@aws-sdk/credential-providers": {
+      "optional": true
+    },
+    "@react-native-async-storage/async-storage": {
+      "optional": true
+    },
+    "@coinbase/wallet-mobile-sdk": {
+      "optional": true
+    },
+    "@mobile-wallet-protocol/client": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "bench:compare": "bun run ./benchmarks/run.ts",
+    "bench": "vitest -c ./test/vitest.config.ts bench",
+    "format": "biome format ./src --write",
+    "lint": "knip && biome check ./src && tsc --project ./tsconfig.build.json --module esnext --noEmit",
+    "fix": "biome check ./src --fix",
+    "knip": "knip",
+    "build:generate": "bun scripts/generate/generate.ts",
+    "build:generate-wallets": "bun scripts/wallets/generate.ts",
+    "dev": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm --watch",
+    "dev:cjs": "printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json && tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false --watch",
+    "dev:esm": "printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json && tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm --watch",
+    "build": "pnpm clean && pnpm build:types && pnpm build:cjs && pnpm build:esm",
+    "build:cjs": "tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
+    "build:esm": "tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
+    "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
+    "clean": "rimraf dist",
+    "size": "size-limit",
+    "test:watch": "vitest -c ./test/vitest.config.ts dev",
+    "test": "vitest run -c ./test/vitest.config.ts --coverage",
+    "test:cov": "vitest dev -c ./test/vitest.config.ts --coverage",
+    "test:ui": "vitest dev -c ./test/vitest.config.ts --coverage --ui",
+    "test:dev": "vitest run -c ./test/vitest.config.ts",
+    "test:react": "vitest run -c ./test/vitest.config.ts dev --ui src/react",
+    "typedoc": "node scripts/typedoc.mjs && node scripts/parse.mjs",
+    "update-version": "node scripts/version.mjs",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-kms": "3.592.0",
+    "@aws-sdk/client-lambda": "3.592.0",
+    "@aws-sdk/credential-providers": "3.592.0",
+    "@biomejs/biome": "1.9.4",
+    "@chromatic-com/storybook": "3.2.2",
+    "@codspeed/vitest-plugin": "4.0.0",
+    "@coinbase/wallet-mobile-sdk": "1.1.2",
+    "@mobile-wallet-protocol/client": "0.1.2",
+    "@react-native-async-storage/async-storage": "2.1.0",
+    "@size-limit/preset-big-lib": "11.1.6",
+    "@storybook/addon-essentials": "8.4.7",
+    "@storybook/addon-interactions": "8.4.7",
+    "@storybook/addon-links": "8.4.7",
+    "@storybook/addon-onboarding": "8.4.7",
+    "@storybook/react": "8.4.7",
+    "@storybook/react-vite": "8.4.7",
+    "@storybook/test": "8.4.7",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/cross-spawn": "^6.0.6",
+    "@types/react": "19.0.1",
+    "@viem/anvil": "0.0.10",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "2.1.8",
+    "@vitest/ui": "2.1.8",
+    "cross-spawn": "7.0.6",
+    "dotenv-mono": "^1.3.14",
+    "ethers5": "npm:ethers@5",
+    "ethers6": "npm:ethers@6",
+    "expo-linking": "7.0.3",
+    "expo-web-browser": "14.0.1",
+    "happy-dom": "15.11.7",
+    "knip": "5.39.4",
+    "msw": "2.6.8",
+    "prettier": "3.3.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-native": "0.76.5",
+    "react-native-aes-gcm-crypto": "0.2.2",
+    "react-native-passkey": "3.0.0",
+    "react-native-quick-crypto": "0.7.8",
+    "react-native-svg": "15.10.1",
+    "rimraf": "6.0.1",
+    "sharp": "^0.33.5",
+    "size-limit": "11.1.6",
+    "storybook": "8.4.7",
+    "typedoc": "0.27.4",
+    "typedoc-better-json": "0.9.4",
+    "typescript": "5.7.2",
+    "vite": "6.0.3",
+    "vitest": "2.1.8"
+  }
 }
