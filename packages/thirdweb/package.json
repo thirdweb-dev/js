@@ -212,7 +212,7 @@
     "@radix-ui/react-tooltip": "1.1.4",
     "@tanstack/react-query": "5.62.7",
     "@walletconnect/ethereum-provider": "2.17.2",
-    "@walletconnect/sign-client": "2.17.2",
+    "@walletconnect/sign-client": "2.17.3",
     "abitype": "1.0.7",
     "fuse.js": "7.0.0",
     "input-otp": "^1.4.1",
