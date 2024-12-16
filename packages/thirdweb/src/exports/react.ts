@@ -273,3 +273,17 @@ export {
 
 // Utils
 export { getLastAuthProvider } from "../react/web/utils/storage.js";
+
+// Wallet
+export {
+  WalletProvider,
+  type WalletProviderProps,
+} from "../react/web/ui/prebuilt/Wallet/provider.js";
+export {
+  WalletIcon,
+  type WalletIconProps,
+} from "../react/web/ui/prebuilt/Wallet/icon.js";
+export {
+  WalletName,
+  type WalletNameProps,
+} from "../react/web/ui/prebuilt/Wallet/name.js";

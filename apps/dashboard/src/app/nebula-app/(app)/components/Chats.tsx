@@ -15,10 +15,13 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { sendTransaction } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import type { Account } from "thirdweb/wallets";
+import { getThirdwebClient } from "../../../../@/constants/thirdweb.server";
 import { TransactionButton } from "../../../../components/buttons/TransactionButton";
 import { MarkdownRenderer } from "../../../../components/contract-components/published-contract/markdown-renderer";
+import { useV5DashboardChain } from "../../../../lib/v5-adapter";
 import { submitFeedback } from "../api/feedback";
 import { NebulaIcon } from "../icons/NebulaIcon";
 
@@ -241,16 +244,28 @@ function SendTransactionButton(props: {
   twAccount: TWAccount;
 }) {
   const account = useActiveAccount();
+  const chain = useV5DashboardChain(props.txData?.chainId);
+
   const sendTxMutation = useMutation({
     mutationFn: () => {
       if (!account) {
         throw new Error("No active account");
       }
 
-      if (!props.txData) {
+      if (!props.txData || !chain) {
         throw new Error("Invalid transaction");
       }
-      return account.sendTransaction(props.txData);
+
+      return sendTransaction({
+        account,
+        transaction: {
+          ...props.txData,
+          nonce: Number(props.txData.nonce),
+          to: props.txData.to || undefined, // Get rid of the potential null value
+          chain,
+          client: getThirdwebClient(),
+        },
+      });
     },
   });
 

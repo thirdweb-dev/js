@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.78.0",
+  "version": "5.79.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -312,7 +312,7 @@
     "test:ui": "vitest dev -c ./test/vitest.config.ts --coverage --ui",
     "test:dev": "vitest run -c ./test/vitest.config.ts",
     "test:react": "vitest run -c ./test/vitest.config.ts dev --ui src/react",
-    "typedoc": "bun run scripts/typedoc.mjs",
+    "typedoc": "node scripts/typedoc.mjs && node scripts/parse.mjs",
     "update-version": "node scripts/version.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -321,9 +321,9 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@aws-sdk/client-kms": "3.709.0",
-    "@aws-sdk/client-lambda": "3.709.0",
-    "@aws-sdk/credential-providers": "3.709.0",
+    "@aws-sdk/client-kms": "3.592.0",
+    "@aws-sdk/client-lambda": "3.592.0",
+    "@aws-sdk/credential-providers": "3.592.0",
     "@biomejs/biome": "1.9.4",
     "@chromatic-com/storybook": "3.2.2",
     "@codspeed/vitest-plugin": "4.0.0",
@@ -369,6 +369,7 @@
     "size-limit": "11.1.6",
     "storybook": "8.4.7",
     "typedoc": "0.27.4",
+    "typedoc-better-json": "0.9.4",
     "typescript": "5.7.2",
     "vite": "6.0.3",
     "vitest": "2.1.8"

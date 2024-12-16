@@ -11,7 +11,7 @@ const nameValidation = z
 const domainsValidation = z.string().refine(
   (str) =>
     validStrList(str, (domain) => {
-      return domain.split(":")[0] === "localhost" || RE_DOMAIN.test(domain);
+      return domain.startsWith("localhost:") || RE_DOMAIN.test(domain);
     }),
   {
     message: "Some of the domains are invalid",
@@ -95,26 +95,55 @@ export const apiKeyCreateValidationSchema = z.object({
   services: servicesValidation,
 });
 
-export const apiKeyValidationSchema = z.object({
+function isValidRedirectURI(uri: string) {
+  // whitespace is not allowed
+  if (/\s/g.test(uri)) {
+    return false;
+  }
+
+  // foo://... is allowed
+  if (uri.includes("://")) {
+    return true;
+  }
+
+  // localhost:... is allowed
+  if (uri.startsWith("localhost:")) {
+    return true;
+  }
+
+  // valid url is allowed
+  try {
+    new URL(uri);
+    return true;
+  } catch {
+    // invalid
+  }
+
+  // everything else is invalid
+  return false;
+}
+
+const redirectUriSchema = z
+  .string()
+  .refine((str) => validStrList(str, isValidRedirectURI), {
+    message:
+      "Some of the redirect URIs are invalid. Make sure they are valid URIs and do not contain spaces.",
+  })
+  .refine((str) => str !== "*", {
+    message: "Wildcard redirect URIs are not allowed",
+  });
+
+// TODO: move this schema to project settings folder in separate PR
+export const projectSettingsPageFormSchema = z.object({
   name: nameValidation,
   domains: domainsValidation,
   services: servicesValidation,
   bundleIds: z.string().refine((str) => validStrList(str, RE_BUNDLE_ID), {
     message: "Some of the bundle ids are invalid",
   }),
-  redirectUrls: z
-    .string()
-    .refine(
-      (str) =>
-        validStrList(str, (url) => url.includes("://") && !/\s/g.test(url)),
-      {
-        message:
-          "Some of the redirect URIs are invalid. Make sure they are valid URIs and do not contain spaces.",
-      },
-    )
-    .refine((str) => str !== "*", {
-      message: "Wildcard redirect URIs are not allowed",
-    }),
+  // no strict validation for redirectUrls, because project general page does not render redirectUrls form field
+  // so if the user has already saved an invalid `redirectUrls` on in-app wallet project settings page ( which is fixed now ) - it won't prevent them from updating the general project settings
+  redirectUrls: z.string(),
 });
 
 export const apiKeyEmbeddedWalletsValidationSchema = z.object({
@@ -127,7 +156,7 @@ export const apiKeyEmbeddedWalletsValidationSchema = z.object({
       applicationImageUrl: applicationImageUrlValidation,
     }),
   ]),
-  redirectUrls: z.union([z.undefined(), z.string()]),
+  redirectUrls: redirectUriSchema,
 });
 
 export const apiKeyPayConfigValidationSchema = z.object({
@@ -138,7 +167,9 @@ export type ApiKeyCreateValidationSchema = z.infer<
   typeof apiKeyCreateValidationSchema
 >;
 
-export type ApiKeyValidationSchema = z.infer<typeof apiKeyValidationSchema>;
+export type ProjectSettingsPageFormSchema = z.infer<
+  typeof projectSettingsPageFormSchema
+>;
 
 export type ApiKeyEmbeddedWalletsValidationSchema = z.infer<
   typeof apiKeyEmbeddedWalletsValidationSchema
