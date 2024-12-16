@@ -32,6 +32,10 @@ const links = [
     name: "Insight",
     href: "/insight",
   },
+  {
+    name: "Nebula",
+    href: "/nebula",
+  },
 ];
 
 const toolLinks = [

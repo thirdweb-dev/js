@@ -29,6 +29,8 @@ export { WalletsAuthIcon } from "./products/wallets/WalletsAuthIcon";
 export { WalletsConnectIcon } from "./products/wallets/WalletsConnectIcon";
 export { WalletsInAppIcon } from "./products/wallets/WalletsInAppIcon";
 export { WalletsSmartIcon } from "./products/wallets/WalletsSmartIcon";
+//nebula
+export { NebulaIcon } from "./products/nebula/NebulaIcon";
 // solutions
 export { GamingIcon } from "./solutions/GamingIcon";
 

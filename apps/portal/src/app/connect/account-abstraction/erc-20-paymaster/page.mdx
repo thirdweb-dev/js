@@ -1,0 +1,51 @@
+
+
+# ERC-20 Paymaster
+
+In traditional Ethereum transactions, users pay gas fees in the native cryptocurrency of the network, such as ETH. This requirement can create friction, especially for applications where users interact with smart contracts without holding native tokens. ERC-20 Paymaster enables users pay gas fees using ERC-20 tokens. [Learn more about ERC-20 Paymasters.](https://blog.thirdweb.com/account-abstraction-paymaster-pay-evm-gas-fees-with-usdt-usdc-or-any-other-erc-20-token/)
+
+### Get Started
+
+
+1. Install Connect SDK
+
+```bash
+npm install thirdweb
+```
+
+2. Configure the Paymaster In your SDK code, specify the ERC-20 token you wish to use for gas fees. 
+
+Currently you may use Lisk LSK, Base USDC or Celo CUSD.
+
+
+```tsx
+import { base, lisk, celo } from "thirdweb/chains";
+import { TokenPaymaster, smartWallet } from "thirdweb/wallets";
+
+// Have users pay for gas in Base USDC
+const usdcWallet = smartWallet({
+  chain: base,
+  sponsorGas: true,
+  overrides: {
+    tokenPaymaster: TokenPaymaster.BASE_USDC,
+  },
+});
+
+// Have users pay for gas in Lisk LSK
+const lskWallet = smartWallet({
+  chain: lisk,
+  sponsorGas: true,
+  overrides: {
+    tokenPaymaster: TokenPaymaster.LISK_LSK,
+  },
+});
+
+// Have users pay for gas in Celo CUSD
+const cusdWallet = smartWallet({
+  chain: celo,
+  sponsorGas: true,
+  overrides: {
+    tokenPaymaster: TokenPaymaster.CELO_CUSD,
+  },
+});
+```
