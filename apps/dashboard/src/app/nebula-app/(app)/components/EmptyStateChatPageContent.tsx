@@ -2,14 +2,11 @@
 
 import { ArrowUpRightIcon } from "lucide-react";
 import { Button } from "../../../../@/components/ui/button";
-import type { ExecuteConfig } from "../api/types";
 import { NebulaIcon } from "../icons/NebulaIcon";
 import { Chatbar } from "./ChatBar";
 
 export function EmptyStateChatPageContent(props: {
-  updateConfig: (config: ExecuteConfig) => void;
   sendMessage: (message: string) => void;
-  config: ExecuteConfig;
 }) {
   return (
     <div className="py-16">
@@ -31,9 +28,7 @@ export function EmptyStateChatPageContent(props: {
         <div className="mx-auto max-w-[600px]">
           <Chatbar
             sendMessage={props.sendMessage}
-            config={props.config}
             isChatStreaming={false}
-            updateConfig={props.updateConfig}
             abortChatStream={() => {
               // the page will switch so, no need to handle abort here
             }}
