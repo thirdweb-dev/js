@@ -1,7 +1,4 @@
 "use client";
-
-/* eslint-disable no-restricted-syntax */
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -111,18 +108,8 @@ export function ChatPageContent(props: {
     [props.type],
   );
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isChatStreaming, setIsChatStreaming] = useState(false);
-  const [isUserSubmittedMessage, setIsUserSubmittedMessage] = useState(false);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!isUserSubmittedMessage) {
-      return;
-    }
-
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isUserSubmittedMessage]);
+  const [enableAutoScroll, setEnableAutoScroll] = useState(false);
 
   const initSession = useCallback(async () => {
     const session = await createSession({
@@ -148,7 +135,7 @@ export function ChatPageContent(props: {
       ]);
 
       setIsChatStreaming(true);
-      setIsUserSubmittedMessage(true);
+      setEnableAutoScroll(true);
       const abortController = new AbortController();
 
       try {
@@ -292,6 +279,7 @@ export function ChatPageContent(props: {
         });
       } finally {
         setIsChatStreaming(false);
+        setEnableAutoScroll(false);
       }
     },
     [
@@ -305,6 +293,8 @@ export function ChatPageContent(props: {
   );
 
   const hasDoneAutoPrompt = useRef(false);
+
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (
       props.initialPrompt &&
@@ -337,45 +327,40 @@ export function ChatPageContent(props: {
           }}
         />
       </header>
-      <div className="container relative flex max-w-[800px] grow flex-col overflow-hidden rounded-lg pb-6">
+      <div className="relative flex grow flex-col overflow-hidden rounded-lg pb-6">
         {showEmptyState ? (
-          <div className="fade-in-0 flex grow animate-in flex-col justify-center">
+          <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
             <EmptyStateChatPageContent sendMessage={handleSendMessage} />
           </div>
         ) : (
           <div className="fade-in-0 relative z-[0] flex max-h-full flex-1 animate-in flex-col overflow-hidden">
-            <ScrollShadow
-              className="flex-1"
-              scrollableClassName="max-h-full"
-              shadowColor="hsl(var(--background))"
-              shadowClassName="z-[1]"
-            >
-              <Chats
-                messages={messages}
-                isChatStreaming={isChatStreaming}
-                authToken={props.authToken}
-                sessionId={sessionId}
-                className="min-w-0 pt-10 pb-32"
-                twAccount={props.account}
-                client={client}
-              />
-              {/* Scroll anchor */}
-              <div ref={messagesEndRef} />
-            </ScrollShadow>
-
-            <Chatbar
-              sendMessage={handleSendMessage}
+            <Chats
+              messages={messages}
               isChatStreaming={isChatStreaming}
-              abortChatStream={() => {
-                chatAbortController?.abort();
-                setChatAbortController(undefined);
-                setIsChatStreaming(false);
-                // if last message is presence, remove it
-                if (messages[messages.length - 1]?.type === "presence") {
-                  setMessages((prev) => prev.slice(0, -1));
-                }
-              }}
+              authToken={props.authToken}
+              sessionId={sessionId}
+              className="min-w-0 pt-10 pb-32"
+              twAccount={props.account}
+              client={client}
+              enableAutoScroll={enableAutoScroll}
+              setEnableAutoScroll={setEnableAutoScroll}
             />
+
+            <div className="container max-w-[800px]">
+              <Chatbar
+                sendMessage={handleSendMessage}
+                isChatStreaming={isChatStreaming}
+                abortChatStream={() => {
+                  chatAbortController?.abort();
+                  setChatAbortController(undefined);
+                  setIsChatStreaming(false);
+                  // if last message is presence, remove it
+                  if (messages[messages.length - 1]?.type === "presence") {
+                    setMessages((prev) => prev.slice(0, -1));
+                  }
+                }}
+              />
+            </div>
           </div>
         )}
 

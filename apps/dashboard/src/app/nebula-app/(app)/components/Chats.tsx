@@ -1,7 +1,9 @@
 import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { cn } from "@/lib/utils";
 import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMutation } from "@tanstack/react-query";
@@ -12,13 +14,12 @@ import {
   ThumbsDownIcon,
   ThumbsUpIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { sendTransaction } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import type { Account } from "thirdweb/wallets";
-import { getThirdwebClient } from "../../../../@/constants/thirdweb.server";
 import { TransactionButton } from "../../../../components/buttons/TransactionButton";
 import { MarkdownRenderer } from "../../../../components/contract-components/published-contract/markdown-renderer";
 import { useV5DashboardChain } from "../../../../lib/v5-adapter";
@@ -51,97 +52,153 @@ export function Chats(props: {
   className?: string;
   twAccount: TWAccount;
   client: ThirdwebClient;
+  setEnableAutoScroll: (enable: boolean) => void;
+  enableAutoScroll: boolean;
 }) {
+  const { messages, setEnableAutoScroll, enableAutoScroll } = props;
+  const scrollAnchorRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  // auto scroll to bottom when messages change
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (!enableAutoScroll || messages.length === 0) {
+      return;
+    }
+
+    scrollAnchorRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, enableAutoScroll]);
+
+  // stop auto scrolling when user interacts with chat
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (!enableAutoScroll) {
+      return;
+    }
+
+    const chatScrollContainer =
+      chatContainerRef.current?.querySelector("[data-scrollable]");
+
+    if (!chatScrollContainer) {
+      return;
+    }
+
+    const disableScroll = () => {
+      setEnableAutoScroll(false);
+      chatScrollContainer.removeEventListener("mousedown", disableScroll);
+      chatScrollContainer.removeEventListener("wheel", disableScroll);
+    };
+
+    chatScrollContainer.addEventListener("mousedown", disableScroll);
+    chatScrollContainer.addEventListener("wheel", disableScroll);
+  }, [setEnableAutoScroll, enableAutoScroll]);
+
   return (
-    <div className={cn("flex flex-col gap-5 py-4", props.className)}>
-      {props.messages.map((message, index) => {
-        const isMessagePending =
-          props.isChatStreaming && index === props.messages.length - 1;
-        return (
-          <div
-            // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique key
-            key={index}
-          >
-            <div
-              className={cn(
-                "fade-in-0 flex min-w-0 animate-in gap-3 duration-300",
-              )}
-            >
-              <div className="-translate-y-[2px] relative shrink-0 ">
-                {message.type === "user" ? (
-                  <GradientAvatar
-                    id={props.twAccount?.id || "default"}
-                    // TODO- set account image when available in account object
-                    src={""}
-                    className="size-8 shrink-0 rounded-lg"
-                    client={props.client}
-                  />
-                ) : (
+    <div
+      className="flex max-h-full flex-1 flex-col overflow-hidden"
+      ref={chatContainerRef}
+    >
+      <ScrollShadow
+        className="flex-1"
+        scrollableClassName="max-h-full"
+        shadowColor="hsl(var(--background))"
+        shadowClassName="z-[1]"
+      >
+        <div className="container max-w-[800px]">
+          <div className={cn("flex flex-col gap-5 py-4", props.className)}>
+            {props.messages.map((message, index) => {
+              const isMessagePending =
+                props.isChatStreaming && index === props.messages.length - 1;
+              return (
+                <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique key
+                  key={index}
+                >
                   <div
                     className={cn(
-                      "flex size-8 items-center justify-center rounded-lg",
-                      message.type === "assistant" && "border bg-muted/50",
-                      message.type === "error" && "border",
-                      message.type === "presence" && "border bg-muted/50",
+                      "fade-in-0 flex min-w-0 animate-in gap-3 duration-300",
                     )}
                   >
-                    {message.type === "presence" && (
-                      <Spinner className="size-4" />
-                    )}
+                    <div className="-translate-y-[2px] relative shrink-0 ">
+                      {message.type === "user" ? (
+                        <GradientAvatar
+                          id={props.twAccount?.id || "default"}
+                          // TODO- set account image when available in account object
+                          src={""}
+                          className="size-8 shrink-0 rounded-lg"
+                          client={props.client}
+                        />
+                      ) : (
+                        <div
+                          className={cn(
+                            "flex size-8 items-center justify-center rounded-lg",
+                            message.type === "assistant" &&
+                              "border bg-muted/50",
+                            message.type === "error" && "border",
+                            message.type === "presence" && "border bg-muted/50",
+                          )}
+                        >
+                          {message.type === "presence" && (
+                            <Spinner className="size-4" />
+                          )}
 
-                    {message.type === "assistant" && (
-                      <NebulaIcon className="size-5 text-muted-foreground" />
-                    )}
+                          {message.type === "assistant" && (
+                            <NebulaIcon className="size-5 text-muted-foreground" />
+                          )}
 
-                    {message.type === "error" && (
-                      <AlertCircleIcon className="size-5 text-destructive-text" />
-                    )}
+                          {message.type === "error" && (
+                            <AlertCircleIcon className="size-5 text-destructive-text" />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0 grow">
+                      {message.type === "assistant" ? (
+                        <MarkdownRenderer
+                          skipHtml
+                          markdownText={message.text}
+                          code={{
+                            disableCodeHighlight: isMessagePending,
+                            ignoreFormattingErrors: true,
+                          }}
+                          className="text-foreground"
+                          p={{ className: "text-foreground" }}
+                          li={{ className: "text-foreground" }}
+                        />
+                      ) : message.type === "error" ? (
+                        <span className="text-destructive-text leading-loose">
+                          {message.text}
+                        </span>
+                      ) : message.type === "send_transaction" ? (
+                        <SendTransactionButton
+                          txData={message.data}
+                          twAccount={props.twAccount}
+                        />
+                      ) : (
+                        <span className="leading-loose">{message.text}</span>
+                      )}
+
+                      {message.type === "assistant" &&
+                        !props.isChatStreaming &&
+                        props.sessionId &&
+                        message.request_id && (
+                          <MessageActions
+                            messageText={message.text}
+                            authToken={props.authToken}
+                            requestId={message.request_id}
+                            sessionId={props.sessionId}
+                            className="mt-4"
+                          />
+                        )}
+                    </div>
                   </div>
-                )}
-              </div>
-              <div className="min-w-0 grow">
-                {message.type === "assistant" ? (
-                  <MarkdownRenderer
-                    skipHtml
-                    markdownText={message.text}
-                    code={{
-                      disableCodeHighlight: isMessagePending,
-                      ignoreFormattingErrors: true,
-                    }}
-                    className="text-foreground"
-                    p={{ className: "text-foreground" }}
-                    li={{ className: "text-foreground" }}
-                  />
-                ) : message.type === "error" ? (
-                  <span className="text-destructive-text leading-loose">
-                    {message.text}
-                  </span>
-                ) : message.type === "send_transaction" ? (
-                  <SendTransactionButton
-                    txData={message.data}
-                    twAccount={props.twAccount}
-                  />
-                ) : (
-                  <span className="leading-loose">{message.text}</span>
-                )}
-
-                {message.type === "assistant" &&
-                  !props.isChatStreaming &&
-                  props.sessionId &&
-                  message.request_id && (
-                    <MessageActions
-                      messageText={message.text}
-                      authToken={props.authToken}
-                      requestId={message.request_id}
-                      sessionId={props.sessionId}
-                      className="mt-4"
-                    />
-                  )}
-              </div>
-            </div>
+                </div>
+              );
+            })}
+            <div ref={scrollAnchorRef} />
           </div>
-        );
-      })}
+        </div>
+      </ScrollShadow>
     </div>
   );
 }
