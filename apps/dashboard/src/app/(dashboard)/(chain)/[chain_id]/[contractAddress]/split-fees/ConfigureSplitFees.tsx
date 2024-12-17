@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { Alert, AlertDescription, AlertTitle } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -36,17 +35,14 @@ import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
+  type ThirdwebContract,
   getContract,
   parseEventLogs,
   prepareContractCall,
   prepareEvent,
   sendAndConfirmTransaction,
 } from "thirdweb";
-import {
-  useActiveAccount,
-  useActiveWalletChain,
-  useReadContract,
-} from "thirdweb/react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { z } from "zod";
 
 type Recipient = {
@@ -57,19 +53,17 @@ type Recipient = {
 function ConfigureSplit(props: {
   children: React.ReactNode;
   isNewSplit: boolean;
-  splitWallet: string;
-  referenceContract: string;
+  splitWallet?: string;
+  referenceContract: ThirdwebContract;
   postSplitConfigure?: (splitWallet: string) => void;
 }) {
   const activeAccount = useActiveAccount();
-  const chain = useActiveWalletChain();
-  const client = useThirdwebClient();
   const [open, setOpen] = useState(false);
 
   const splitFeesCore = getContract({
     address: splitFeesCoreAddress,
-    client,
-    chain: chain!,
+    client: props.referenceContract.client,
+    chain: props.referenceContract.chain,
   });
 
   const split = useReadContract({
@@ -107,9 +101,9 @@ function ConfigureSplit(props: {
       ],
       stateMutability: "view",
     },
-    params: [props.splitWallet],
+    params: [props.splitWallet || ""],
     queryOptions: {
-      enabled: !!props.splitWallet && !!chain && !props.isNewSplit,
+      enabled: !!props.splitWallet && !props.isNewSplit,
     },
   });
 
@@ -127,21 +121,26 @@ function ConfigureSplit(props: {
     allocations: bigint[];
     controller: string;
   }) => {
-    if (!activeAccount || !chain) {
+    if (!activeAccount) {
       throw new Error("No account or chain selected");
     }
 
     const splitFeesCore = getContract({
       address: splitFeesCoreAddress,
-      client,
-      chain,
+      client: props.referenceContract.client,
+      chain: props.referenceContract.chain,
     });
 
     const transaction = prepareContractCall({
       contract: splitFeesCore,
       method:
         "function createSplit(address[] memory _recipients, uint256[] memory _allocations, address _controller, address _referenceContract)",
-      params: [recipients, allocations, controller, props.referenceContract],
+      params: [
+        recipients,
+        allocations,
+        controller,
+        props.referenceContract.address,
+      ],
     });
 
     const receipt = await sendAndConfirmTransaction({
@@ -183,16 +182,19 @@ function ConfigureSplit(props: {
     allocations: bigint[];
     controller: string;
   }) => {
-    if (!activeAccount || !chain) {
-      throw new Error("No account or chain selected");
+    if (!activeAccount) {
+      throw new Error("No account selected");
+    }
+    if (!props.splitWallet) {
+      throw new Error("No split wallet selected");
     }
 
     console.log("gets in update split");
 
     const splitFeesCore = getContract({
       address: splitFeesCoreAddress,
-      client,
-      chain,
+      client: props.referenceContract.client,
+      chain: props.referenceContract.chain,
     });
     console.log("split fees core: ", splitFeesCore);
 
@@ -218,14 +220,14 @@ function ConfigureSplit(props: {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
-        {chain && activeAccount ? (
+        {activeAccount ? (
           <ConfigureSplitUI
             isNewSplit={props.isNewSplit}
             activeAddress={activeAccount?.address}
             createSplit={createSplit}
             updateSplit={updateSplit}
             recipients={recipients}
-            chainId={chain.id}
+            chainId={props.referenceContract.chain.id}
           >
             {props.children}
           </ConfigureSplitUI>

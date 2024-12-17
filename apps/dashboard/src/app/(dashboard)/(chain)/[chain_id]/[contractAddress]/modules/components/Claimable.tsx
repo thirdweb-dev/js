@@ -40,6 +40,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import {
   NATIVE_TOKEN_ADDRESS,
   type PreparedTransaction,
+  type ThirdwebContract,
   ZERO_ADDRESS,
   getContract,
   sendAndConfirmTransaction,
@@ -312,7 +313,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
       }}
       isOwnerAccount={!!ownerAccount}
       name={props.contractInfo.name}
-      contractChainId={props.contract.chain.id}
+      contract={props.contract}
       setTokenId={setTokenId}
       isValidTokenId={isValidTokenId}
       noClaimConditionSet={noClaimConditionSet}
@@ -327,7 +328,7 @@ export function ClaimableModuleUI(
   props: Omit<ModuleCardUIProps, "children" | "updateButton"> & {
     isOwnerAccount: boolean;
     name: string;
-    contractChainId: number;
+    contract: ThirdwebContract;
     setTokenId: Dispatch<SetStateAction<string>>;
     isValidTokenId: boolean;
     noClaimConditionSet: boolean;
@@ -375,7 +376,7 @@ export function ClaimableModuleUI(
               <MintNFTSection
                 mint={props.mintSection.mint}
                 name={props.name}
-                contractChainId={props.contractChainId}
+                contractChainId={props.contract.chain.id}
               />
             </AccordionContent>
           </AccordionItem>
@@ -410,7 +411,7 @@ export function ClaimableModuleUI(
                     }
                     update={props.claimConditionSection.setClaimCondition}
                     name={props.name}
-                    chainId={props.contractChainId}
+                    chainId={props.contract.chain.id}
                     noClaimConditionSet={props.noClaimConditionSet}
                     currencyDecimals={
                       props.claimConditionSection.data?.currencyDecimals
@@ -444,7 +445,7 @@ export function ClaimableModuleUI(
                   update={
                     props.primarySaleRecipientSection.setPrimarySaleRecipient
                   }
-                  contractChainId={props.contractChainId}
+                  contract={props.contract}
                   isSplitRecipient={
                     props.primarySaleRecipientSection.data?.isSplitRecipient
                   }
@@ -775,7 +776,7 @@ function PrimarySaleRecipientSection(props: {
   update: (values: PrimarySaleRecipientFormValues) => Promise<void>;
   isOwnerAccount: boolean;
   isSplitRecipient?: boolean;
-  contractChainId: number;
+  contract: ThirdwebContract;
   referenceContract: string;
 }) {
   const form = useForm<PrimarySaleRecipientFormValues>({
@@ -828,7 +829,7 @@ function PrimarySaleRecipientSection(props: {
                     <ConfigureSplit
                       isNewSplit={!props.isSplitRecipient}
                       splitWallet={props.primarySaleRecipient || ""}
-                      referenceContract={props.referenceContract}
+                      referenceContract={props.contract}
                       postSplitConfigure={
                         props.isSplitRecipient ? undefined : postSplitConfigure
                       }
@@ -860,7 +861,7 @@ function PrimarySaleRecipientSection(props: {
             }
             type="submit"
             isPending={updateMutation.isPending}
-            txChainID={props.contractChainId}
+            txChainID={props.contract.chain.id}
             transactionCount={1}
           >
             Update

@@ -27,6 +27,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { InfoIcon } from "lucide-react";
+import { useMemo } from "react";
+import { useActiveAccount } from "thirdweb/react";
 
 export function SplitFeesCard(props: {
   splitWallet: string;
@@ -35,7 +37,8 @@ export function SplitFeesCard(props: {
   controller: string;
   referenceContract: string;
 }) {
-  const isController = false;
+  const account = useActiveAccount();
+  const isController = props.controller === account?.address;
 
   const columns: ColumnDef<{ allocation: number; recipient: string }>[] = [
     {
@@ -48,18 +51,19 @@ export function SplitFeesCard(props: {
     },
   ];
 
-  console.log("allocations: ", props.allocations);
-  console.log("recipients: ", props.recipients);
-
   const totalAllocation = props.allocations.reduce(
     (acc, curr) => acc + curr,
     0n,
   );
-  const data = props.recipients.map((recipient, i) => ({
-    recipient: recipient,
-    allocation:
-      (Number(props.allocations[i] || 0n) / Number(totalAllocation)) * 100,
-  }));
+  const data = useMemo(
+    () =>
+      props.recipients.map((recipient, i) => ({
+        recipient: recipient,
+        allocation:
+          (Number(props.allocations[i] || 0n) / Number(totalAllocation)) * 100,
+      })),
+    [props.recipients, props.allocations, totalAllocation],
+  );
 
   const table = useReactTable({
     data,

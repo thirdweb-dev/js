@@ -30,6 +30,7 @@ import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import {
   type PreparedTransaction,
+  type ThirdwebContract,
   getContract,
   sendAndConfirmTransaction,
 } from "thirdweb";
@@ -215,7 +216,7 @@ function MintableModule(props: ModuleInstanceProps) {
       isOwnerAccount={!!ownerAccount}
       name={props.contractInfo.name}
       isBatchMetadataInstalled={isBatchMetadataInstalled}
-      contractChainId={contract.chain.id}
+      contract={contract}
     />
   );
 }
@@ -230,7 +231,7 @@ export function MintableModuleUI(
     mint: (values: MintFormValues) => Promise<void>;
     name: string;
     isBatchMetadataInstalled: boolean;
-    contractChainId: number;
+    contract: ThirdwebContract;
   },
 ) {
   return (
@@ -252,7 +253,7 @@ export function MintableModuleUI(
                     mint={props.mint}
                     name={props.name}
                     isBatchMetadataInstalled={props.isBatchMetadataInstalled}
-                    contractChainId={props.contractChainId}
+                    contractChainId={props.contract.chain.id}
                   />
                 )}
                 {!props.isOwnerAccount && (
@@ -279,7 +280,7 @@ export function MintableModuleUI(
                   primarySaleRecipient={props.primarySaleRecipient}
                   isSplitRecipient={props.isSplitRecipient}
                   update={props.updatePrimaryRecipient}
-                  contractChainId={props.contractChainId}
+                  contract={props.contract}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -299,7 +300,7 @@ function PrimarySalesSection(props: {
   isSplitRecipient?: boolean;
   update: (values: UpdateFormValues) => Promise<void>;
   isOwnerAccount: boolean;
-  contractChainId: number;
+  contract: ThirdwebContract;
 }) {
   const form = useForm<UpdateFormValues>({
     resolver: zodResolver(primarySaleRecipientFormSchema),
@@ -354,6 +355,7 @@ function PrimarySalesSection(props: {
                     postSplitConfigure={
                       props.isSplitRecipient ? undefined : postSplitConfigure
                     }
+                    referenceContract={props.contract}
                   >
                     <Button className="rounded-lg rounded-l-none border border-l-0 bg-foreground">
                       {props.isSplitRecipient ? "Update Split" : "Create Split"}
@@ -374,7 +376,7 @@ function PrimarySalesSection(props: {
             type="submit"
             isPending={updateMutation.isPending}
             transactionCount={1}
-            txChainID={props.contractChainId}
+            txChainID={props.contract.chain.id}
           >
             Update
           </TransactionButton>

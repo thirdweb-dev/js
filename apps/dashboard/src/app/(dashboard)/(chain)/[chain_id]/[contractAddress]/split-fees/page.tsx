@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { notFound, redirect } from "next/navigation";
 import { getContractEvents, prepareEvent } from "thirdweb";
 import { type FetchDeployMetadataResult, getContract } from "thirdweb/contract";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
-import { ClaimFeesCard } from "./ClaimFeesCard";
+import SplitFees from "./SplitFees";
 
 export function getModuleInstallParams(mod: FetchDeployMetadataResult) {
   return (
@@ -76,20 +75,10 @@ export default async function Page(props: {
   console.log("splits: ", splits);
 
   return (
-    <div className="flex flex-col gap-4">
-      {splits.map((split) => (
-        <ClaimFeesCard
-          {...split}
-          splitFeesCore={splitFeesCore}
-          key={split.splitWallet}
-        />
-      ))}
-      {/*splits.map((split) => (
-        <SplitFeesCard {...split} key={split.splitWallet} />
-      ))*/}
-      <Button size="sm" className="self-end">
-        Create Split
-      </Button>
-    </div>
+    <SplitFees
+      splitFeesCore={splitFeesCore}
+      splits={splits}
+      coreContract={contract}
+    />
   );
 }
