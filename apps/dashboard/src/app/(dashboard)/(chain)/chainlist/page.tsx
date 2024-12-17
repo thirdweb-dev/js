@@ -11,10 +11,17 @@ import { ChainListView } from "./components/client/view";
 import { AddYourChainButton } from "./components/server/add-chain-button";
 import { ChainsData, type SearchParams } from "./components/server/chain-table";
 
+const title = "Chainlist: RPCs, Block Explorers, Faucets";
+const description =
+  "A list of EVM networks with RPCs, smart contracts, block explorers & faucets. Deploy smart contracts to all EVM chains with thirdweb.";
+
 export const metadata: Metadata = {
-  title: "Chainlist: RPCs, Block Explorers, Faucets",
-  description:
-    "A list of EVM networks with RPCs, smart contracts, block explorers & faucets. Deploy smart contracts to all EVM chains with thirdweb.",
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+  },
 };
 
 export default async function ChainListPage(props: {
