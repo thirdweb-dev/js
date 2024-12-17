@@ -2,7 +2,7 @@
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useActiveAccount } from "thirdweb/react";
+import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { type ContextFilters, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
 import type { ExecuteConfig, SessionInfo } from "../api/types";
@@ -21,6 +21,7 @@ export function ChatPageContent(props: {
   initialPrompt: string | undefined;
 }) {
   const address = useActiveAccount()?.address;
+  const activeChain = useActiveWalletChain();
   const client = useThirdwebClient();
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>(() => {
@@ -37,7 +38,7 @@ export function ChatPageContent(props: {
   const [hasUserUpdatedContextFilters, setHasUserUpdatedContextFilters] =
     useState(false);
 
-  const [_contextFilters, _setContextFilters] = useState<
+  const [contextFilters, _setContextFilters] = useState<
     ContextFilters | undefined
   >(() => {
     const contextFilterRes = props.session?.context_filter;
@@ -50,31 +51,37 @@ export function ChatPageContent(props: {
     return value;
   });
 
-  function setContextFilters(filters: ContextFilters | undefined) {
-    _setContextFilters(filters);
+  const setContextFilters = useCallback((v: ContextFilters | undefined) => {
+    _setContextFilters(v);
     setHasUserUpdatedContextFilters(true);
-  }
+  }, []);
 
   const isNewSession = !props.session;
 
   // if this is a new session, user has not manually updated context filters
-  // and no wallet address is set in context filters, add the current wallet address
-  const contextFilters = useMemo(() => {
+  // update the context filters to the current user's wallet address and chain id
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
     if (
-      isNewSession &&
-      !hasUserUpdatedContextFilters &&
-      address &&
-      (!_contextFilters?.walletAddresses ||
-        _contextFilters.walletAddresses.length === 0)
+      !isNewSession ||
+      hasUserUpdatedContextFilters ||
+      !address ||
+      !activeChain
     ) {
-      return {
-        ..._contextFilters,
-        walletAddresses: [address],
-      };
+      return;
     }
 
-    return _contextFilters;
-  }, [_contextFilters, address, isNewSession, hasUserUpdatedContextFilters]);
+    _setContextFilters((_contextFilters) => {
+      const updatedContextFilters: ContextFilters = _contextFilters
+        ? { ..._contextFilters }
+        : {};
+
+      updatedContextFilters.walletAddresses = [address];
+      updatedContextFilters.chainIds = [activeChain.id.toString()];
+
+      return updatedContextFilters;
+    });
+  }, [address, isNewSession, hasUserUpdatedContextFilters, activeChain]);
 
   const config: ExecuteConfig = useMemo(() => {
     return {
