@@ -5,6 +5,7 @@ import {
   arbitrum,
   base,
   blast,
+  defineChain,
   mainnet,
   optimism,
   zkSync,
@@ -19,7 +20,15 @@ export default function ConnectButton({
 
   return (
     <ThirdwebConnectButton
-      chains={[mainnet, base, optimism, arbitrum, blast, zkSync]}
+      chains={[
+        mainnet,
+        base,
+        optimism,
+        arbitrum,
+        blast,
+        zkSync,
+        defineChain(61166), // Treasure mainnet
+      ]}
       wallets={[ecosystemWallet(ecosystem)]}
       client={client}
       theme={theme === "light" ? "light" : "dark"}
