@@ -13,7 +13,6 @@ import {
   Spinner,
   Tooltip,
 } from "@chakra-ui/react";
-import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
 import { CopyIcon } from "lucide-react";
 import { useState } from "react";
@@ -91,7 +90,7 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
               </Flex>
             </div>
           ) : null}
-          <AnimatePresence initial={false}>
+          <div>
             {allEvents?.slice(0, 3).map((e) => (
               <EventsFeedItem
                 key={e.transactionHash}
@@ -100,7 +99,7 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
                 chainSlug={chainSlug}
               />
             ))}
-          </AnimatePresence>
+          </div>
         </List>
       </Card>
     </Flex>
@@ -126,31 +125,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
       <SimpleGrid
         columns={9}
         gap={2}
-        as={motion.li}
-        initial={{
-          y: -30,
-          opacity: 0,
-          paddingTop: 0,
-          paddingBottom: 0,
-          height: 0,
-        }}
-        animate={{
-          y: 0,
-          opacity: 1,
-          height: "auto",
-          paddingTop: "var(--chakra-space-3)",
-          paddingBottom: "var(--chakra-space-3)",
-          transition: { duration: 0.15 },
-        }}
-        exit={{
-          y: 30,
-          opacity: 0,
-          paddingTop: 0,
-          paddingBottom: 0,
-          height: 0,
-          transition: { duration: 0.3 },
-        }}
-        willChange="opacity, height, paddingTop, paddingBottom"
+        as="li"
         borderBottomWidth="1px"
         borderColor="borderColor"
         padding={4}

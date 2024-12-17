@@ -24,7 +24,6 @@ import {
   Switch,
   Tooltip,
 } from "@chakra-ui/react";
-import { AnimatePresence, motion } from "framer-motion";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { useClipboard } from "hooks/useClipboard";
 import { ChevronDownIcon, CircleHelpIcon, CopyIcon } from "lucide-react";
@@ -147,12 +146,7 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
               </Flex>
             </div>
           )}
-          <Accordion
-            as={AnimatePresence}
-            initial={false}
-            allowMultiple
-            defaultIndex={[]}
-          >
+          <Accordion allowMultiple defaultIndex={[]}>
             {filteredEvents?.slice(0, 10).map((e) => (
               <EventsFeedItem
                 key={e.transactionHash}
@@ -196,31 +190,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
         <SimpleGrid
           columns={12}
           gap={2}
-          as={motion.li}
-          initial={{
-            y: -30,
-            opacity: 0,
-            paddingTop: 0,
-            paddingBottom: 0,
-            height: 0,
-          }}
-          animate={{
-            y: 0,
-            opacity: 1,
-            height: "auto",
-            paddingTop: "var(--chakra-space-3)",
-            paddingBottom: "var(--chakra-space-3)",
-            transition: { duration: 0.15 },
-          }}
-          exit={{
-            y: 30,
-            opacity: 0,
-            paddingTop: 0,
-            paddingBottom: 0,
-            height: 0,
-            transition: { duration: 0.3 },
-          }}
-          willChange="opacity, height, paddingTop, paddingBottom"
+          as="li"
           borderBottomWidth="1px"
           borderColor="borderColor"
           padding={4}
