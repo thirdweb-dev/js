@@ -1,26 +1,18 @@
 # Order is important; the last matching pattern takes the most precedence.
 
 # default ownership group
-- @jnsdls @joaquim-verges @MananTank @gregfromstl
+@thirdweb-dev/developer-tools
 
 # packages
-packages/thirdweb/ @joaquim-verges @gregfromstl @jnsdls
+packages/thirdweb/ @thirdweb-dev/core-platform @thirdweb-dev/developer-tools
 
 ## specific thirdweb pieces
-packages/thirdweb/src/react/ @joaquim-verges @gregfromstl @MananTank @jnsdls @edwardysun
-packages/thirdweb/src/reactive/ @joaquim-verges @gregfromstl @MananTank @jnsdls
-packages/thirdweb/src/gas/ @joaquim-verges @jnsdls
-packages/thirdweb/src/pay/ @joaquim-verges @gregfromstl @MananTank @jnsdls @edwardysun
-packages/service-utils/ @arcoraven @jnsdls @joaquim-verges
-packages/eslint-config-thirdweb/ @jnsdls @joaquim-verges
-packages/tw-tsconfig/ @jnsdls @joaquim-verges
+packages/service-utils/ @thirdweb-dev/core-platform
+packages/eslint-config-thirdweb/ @thirdweb-dev/core-platform @edwardysun
+packages/tw-tsconfig/ @thirdweb-dev/core-platform @edwardysun
 
 # apps
-apps/ @jnsdls @joaquim-verges
-apps/dashboard/ @jnsdls @MananTank @joaquim-verges @jakubkrehel
-apps/playground-web/ @joaquim-verges @gregfromstl @jnsdls @joaquim-verges @jakubkrehel
-apps/wallet-ui/ @gregfromstl @jnsdls @joaquim-verges @MananTank @jakubkrehel
-apps/portal/ @thirdweb-dev/product @thirdweb-dev/platform @thirdweb-dev/infra
+apps/ @thirdweb-dev/developer-tools @thirdweb-dev/core-platform @jakubkrehel
 
 # .github folder + .changeset + turbo config is owned by jonas for now
 scripts/ @jnsdls @joaquim-verges
