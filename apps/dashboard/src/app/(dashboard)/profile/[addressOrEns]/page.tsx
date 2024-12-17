@@ -39,8 +39,15 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     replaceDeployerAddress(resolvedInfo.ensName || resolvedInfo.address),
   );
 
+  const title = displayName;
+  const description = `Visit ${displayName}'s profile. See their published contracts and deploy them in one click.`;
+
   return {
-    title: displayName,
-    description: `Visit ${displayName}'s profile. See their published contracts and deploy them in one click.`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
   };
 }
