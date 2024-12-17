@@ -1,7 +1,7 @@
 "use client";
 
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { useHeightObserver } from "@/components/ui/DynamicHeight";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -195,11 +195,6 @@ export function BlueprintPlaygroundUI(props: {
     props.onRun(url);
   }
 
-  // This allows us to always limit the grid height to whatever is the height of left section on desktop
-  // so that entire left section is always visible, but the right section has a scrollbar if it exceeds the height of left section
-  const { height, elementRef: leftSectionRef } = useHeightObserver();
-  const isMobile = useIsMobileViewport();
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -240,10 +235,7 @@ export function BlueprintPlaygroundUI(props: {
                 clientId={props.clientId}
               />
               <div className="grid grow grid-cols-1 lg:grid-cols-2">
-                <div
-                  className="flex grow flex-col max-sm:border-b lg:border-r"
-                  ref={leftSectionRef}
-                >
+                <div className="flex max-h-[500px] grow flex-col max-sm:border-b lg:max-h-[740px] lg:border-r">
                   <RequestConfigSection
                     domain={props.domain}
                     parameters={parameters}
@@ -253,12 +245,7 @@ export function BlueprintPlaygroundUI(props: {
                   />
                 </div>
 
-                <div
-                  className="flex min-h-[500px] grow flex-col lg:min-h-[740px]"
-                  style={{
-                    height: !isMobile && height ? `${height}px` : "auto",
-                  }}
-                >
+                <div className="flex h-[500px] grow flex-col lg:h-[740px]">
                   <ResponseSection
                     isPending={props.isPending}
                     response={props.response}
@@ -417,35 +404,37 @@ function RequestConfigSection(props: {
   const queryParams = props.parameters.filter((param) => param.in === "query");
 
   return (
-    <div className="flex grow flex-col">
+    <div className="flex grow flex-col overflow-hidden">
       <div className="flex min-h-[60px] items-center gap-2 border-b p-4 text-sm">
         <ArrowUpRightIcon className="size-5" />
         Request
       </div>
 
-      {pathVariables.length > 0 && (
-        <ParameterSection
-          parameters={pathVariables}
-          title="Path Variables"
-          form={props.form}
-          domain={props.domain}
-          path={props.path}
-          supportedChainIds={props.supportedChainIds}
-        />
-      )}
+      <ScrollShadow className="flex-1" scrollableClassName="max-h-full">
+        {pathVariables.length > 0 && (
+          <ParameterSection
+            parameters={pathVariables}
+            title="Path Variables"
+            form={props.form}
+            domain={props.domain}
+            path={props.path}
+            supportedChainIds={props.supportedChainIds}
+          />
+        )}
 
-      {pathVariables.length > 0 && queryParams.length > 0 && <Separator />}
+        {pathVariables.length > 0 && queryParams.length > 0 && <Separator />}
 
-      {queryParams.length > 0 && (
-        <ParameterSection
-          parameters={queryParams}
-          title="Query Parameters"
-          form={props.form}
-          domain={props.domain}
-          path={props.path}
-          supportedChainIds={props.supportedChainIds}
-        />
-      )}
+        {queryParams.length > 0 && (
+          <ParameterSection
+            parameters={queryParams}
+            title="Query Parameters"
+            form={props.form}
+            domain={props.domain}
+            path={props.path}
+            supportedChainIds={props.supportedChainIds}
+          />
+        )}
+      </ScrollShadow>
     </div>
   );
 }
@@ -757,23 +746,4 @@ function ElapsedTimeCounter() {
       {formatMilliseconds(ms)}
     </span>
   );
-}
-
-const isMobileMedia = () => {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(max-width: 640px)").matches;
-};
-
-function useIsMobileViewport() {
-  const [state, setState] = useState(isMobileMedia);
-
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const handleResize = () => setState(isMobileMedia());
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return state;
 }
