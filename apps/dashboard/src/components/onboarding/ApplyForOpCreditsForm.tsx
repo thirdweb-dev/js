@@ -216,6 +216,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
               "Soneium",
               "Lisk",
               "Arena-Z",
+              "Superseed",
             ].map((chain) => ({
               label: chain === "Optimism" ? "OP Mainnet" : chain,
               value: chain,
