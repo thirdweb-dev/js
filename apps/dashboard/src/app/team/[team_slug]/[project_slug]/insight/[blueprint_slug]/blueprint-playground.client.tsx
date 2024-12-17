@@ -526,6 +526,7 @@ function ParameterSection(props: {
                         <>
                           <Input
                             {...field}
+                            type={param.type === "string" ? "text" : "number"}
                             className={cn(
                               "h-auto truncate rounded-none border-0 bg-transparent py-3 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
                               param.description && "lg:pr-10",
