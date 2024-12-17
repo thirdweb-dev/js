@@ -22,7 +22,7 @@ export function ProfileHeader(props: {
       <div className="flex w-full flex-col items-center justify-between gap-4 border-border border-b pb-6 md:flex-row">
         <div className="flex w-full items-center gap-4">
           <AccountAvatar
-            className="size-20 rounded-full"
+            className="size-20 rounded-full object-cover"
             loadingComponent={<Skeleton className="size-20 rounded-full" />}
             fallbackComponent={
               <AccountBlobbie className="size-20 rounded-full" />
