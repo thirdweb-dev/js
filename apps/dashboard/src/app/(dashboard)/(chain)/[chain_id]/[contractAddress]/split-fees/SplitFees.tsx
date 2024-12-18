@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { TabButtons } from "@/components/ui/tabs";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { ClaimFeesCard } from "./ClaimFeesCard";
@@ -24,16 +25,25 @@ function SplitFees(props: {
     "splitFeesCard",
   );
 
+  const tabs = [
+    {
+      name: "Split Fees",
+      onClick: () => setTab("splitFeesCard"),
+      isActive: tab === "splitFeesCard",
+      isEnabled: true,
+    },
+    {
+      name: "Claim Fees",
+      onClick: () => setTab("claimFeesCard"),
+      isActive: tab === "claimFeesCard",
+      isEnabled: true,
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <button type="button" onClick={() => setTab("splitFeesCard")}>
-          Split Fees
-        </button>
-        <button type="button" onClick={() => setTab("claimFeesCard")}>
-          Claim Fees
-        </button>
-      </div>
+      <TabButtons tabs={tabs} />
+
       {tab === "splitFeesCard" &&
         props.splits.map((split) => (
           <ClaimFeesCard
