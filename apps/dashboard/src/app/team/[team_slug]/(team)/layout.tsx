@@ -54,8 +54,8 @@ export default async function TeamLayout(props: {
               exactMatch: true,
             },
             {
-              path: `/team/${params.team_slug}/~/projects`,
-              name: "Projects",
+              path: `/team/${params.team_slug}/~/analytics`,
+              name: "Analytics",
             },
             {
               path: `/team/${params.team_slug}/~/contracts`,

@@ -753,7 +753,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               thirdweb&apos;s infrastructure services. If you don&apos;t have
               any API keys yet you can create one by creating a project for free
               from the{" "}
-              <Link href="/team/~/~/projects" color="primary.500">
+              <Link href="/team" color="primary.500">
                 dashboard
               </Link>
               .
