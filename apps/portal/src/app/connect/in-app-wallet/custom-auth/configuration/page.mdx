@@ -146,7 +146,7 @@ import { useConnect } from "thirdweb/react";
 const { connect } = useConnect();
 
 const handlePostLogin = async (jwt: string) => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
