@@ -65,6 +65,7 @@ export function Img(props: imgElementProps) {
           "fade-in-0 object-cover transition-opacity duration-300",
           className,
         )}
+        decoding="async"
       />
 
       {status !== "loaded" && (
