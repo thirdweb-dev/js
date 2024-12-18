@@ -134,7 +134,14 @@ export async function verifyContractWalletSignature({
 
   return verifyHash({
     hash: messageHash,
-    signature: parsedSignature,
+    signature:
+      typeof parsedSignature === "string"
+        ? parsedSignature
+        : {
+            r: ox__Hex.toBigInt(parsedSignature.r),
+            s: ox__Hex.toBigInt(parsedSignature.s),
+            yParity: parsedSignature.yParity,
+          },
     address,
     client,
     chain,
