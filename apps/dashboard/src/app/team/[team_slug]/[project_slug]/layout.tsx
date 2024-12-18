@@ -1,9 +1,9 @@
 import { getProjects } from "@/api/projects";
 import { getTeamNebulaWaitList, getTeams } from "@/api/team";
-import { TabPathLinks } from "@/components/ui/tabs";
 import { notFound, redirect } from "next/navigation";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
+import { ProjectTabs } from "./tabs";
 
 export default async function TeamLayout(props: {
   children: React.ReactNode;
@@ -55,39 +55,9 @@ export default async function TeamLayout(props: {
           teamsAndProjects={teamsAndProjects}
           account={account}
         />
-        <TabPathLinks
-          tabContainerClassName="px-4 lg:px-6"
-          links={[
-            {
-              path: `/team/${params.team_slug}/${params.project_slug}`,
-              exactMatch: true,
-              name: "Overview",
-            },
-            {
-              path: `/team/${params.team_slug}/${params.project_slug}/connect`,
-              name: "Connect",
-            },
-            {
-              path: `/team/${params.team_slug}/${params.project_slug}/contracts`,
-              name: "Contracts",
-            },
-            ...(isOnNebulaWaitList
-              ? [
-                  {
-                    path: `/team/${params.team_slug}/${params.project_slug}/nebula`,
-                    name: "Nebula",
-                  },
-                ]
-              : []),
-            {
-              path: `/team/${params.team_slug}/${params.project_slug}/insight`,
-              name: "Insight",
-            },
-            {
-              path: `/team/${params.team_slug}/${params.project_slug}/settings`,
-              name: "Settings",
-            },
-          ]}
+        <ProjectTabs
+          layoutPath={`/team/${params.team_slug}/${params.project_slug}`}
+          isOnNebulaWaitList={!!isOnNebulaWaitList}
         />
       </div>
       <div className="flex grow flex-col">{props.children}</div>

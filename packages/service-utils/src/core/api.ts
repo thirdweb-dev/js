@@ -16,14 +16,16 @@ export type PolicyResult = {
 
 export type CoreServiceConfig = {
   apiUrl: string;
-  serviceScope: ServiceName;
+  // if EXPLICITLY set to null, service will not be checked for authorization
+  // this is meant for services that are not possible to be turned off by users, such as "social" and "analytics"
+  serviceScope: ServiceName | null;
   serviceApiKey: string;
   serviceAction?: string;
   useWalletAuth?: boolean;
-  includeUsage?: boolean;
 };
 
 export type TeamAndProjectResponse = {
+  authMethod: "secretKey" | "publishableKey" | "jwt" | "teamId";
   team: TeamResponse;
   project?: ProjectResponse | null;
 };
@@ -42,11 +44,11 @@ export type TeamResponse = {
   name: string;
   slug: string;
   image: string | null;
-  billingPlan: string;
+  billingPlan: "free" | "starter" | "growth" | "pro";
   createdAt: Date;
   updatedAt: Date | null;
   billingEmail: string | null;
-  billingStatus: string | null;
+  billingStatus: "noPayment" | "validPayment" | "invalidPayment" | null;
   growthTrialEligible: boolean | null;
   enabledScopes: ServiceName[];
 };

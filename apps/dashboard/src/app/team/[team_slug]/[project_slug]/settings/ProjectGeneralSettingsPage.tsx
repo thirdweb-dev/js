@@ -35,9 +35,9 @@ import { type FieldArrayWithId, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
 import { joinWithComma, toArrFromList } from "utils/string";
 import {
-  type ApiKeyValidationSchema,
   HIDDEN_SERVICES,
-  apiKeyValidationSchema,
+  type ProjectSettingsPageFormSchema,
+  projectSettingsPageFormSchema,
 } from "../../../../../components/settings/ApiKeys/validations";
 
 type EditProjectUIPaths = {
@@ -86,7 +86,7 @@ interface EditApiKeyProps {
   showNebulaSettings: boolean;
 }
 
-type UpdateAPIForm = UseFormReturn<ApiKeyValidationSchema>;
+type UpdateAPIForm = UseFormReturn<ProjectSettingsPageFormSchema>;
 
 export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
   props,
@@ -94,8 +94,8 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
   const { apiKey, updateMutation, deleteMutation } = props;
   const trackEvent = useTrack();
   const router = useDashboardRouter();
-  const form = useForm<ApiKeyValidationSchema>({
-    resolver: zodResolver(apiKeyValidationSchema),
+  const form = useForm<ProjectSettingsPageFormSchema>({
+    resolver: zodResolver(projectSettingsPageFormSchema),
     defaultValues: {
       name: apiKey.name,
       domains: joinWithComma(apiKey.domains),
@@ -484,7 +484,7 @@ function EnabledServicesSetting(props: {
   });
   const handleAction = (
     srvIdx: number,
-    srv: FieldArrayWithId<ApiKeyValidationSchema, "services", "id">,
+    srv: FieldArrayWithId<ProjectSettingsPageFormSchema, "services", "id">,
     actionName: string,
     checked: boolean,
   ) => {

@@ -15,6 +15,7 @@ function AnnouncementBanner(props: {
     useLocalStorage(`dismissed-${props.trackingLabel}`, false, true);
 
   if (
+    layoutSegment === "/_not-found" ||
     hasDismissedAnnouncement ||
     layoutSegment === "login" ||
     layoutSegment === "nebula-app"

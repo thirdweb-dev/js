@@ -37,6 +37,7 @@ const FORCE_GAS_PRICE_CHAIN_IDS = [
   2016, // MainnetZ Mainnet
   9768, // MainnetZ Testnet
   2442, // Polygon zkEVM Cardona Testnet
+  1942999413, // Humanity Testnet
 ];
 
 /**

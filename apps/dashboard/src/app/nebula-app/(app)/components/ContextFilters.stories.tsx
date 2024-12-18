@@ -31,20 +31,70 @@ export const Mobile: Story = {
 
 function Story() {
   return (
-    <div className="container flex max-w-[1000px] flex-col gap-8 lg:p-10">
+    <div className="container flex max-w-[1000px] flex-col gap-8 py-10 lg:p-10">
       <Variant contextFilters={undefined} label="No Filters Set" />
+
       <Variant
         contextFilters={{
-          chainIds: ["1", "2", "3"],
+          chainIds: ["137"],
         }}
-        label="Chain ids Set"
+        label="1 chain"
+      />
+
+      <Variant
+        contextFilters={{
+          chainIds: ["137", "10", "421614"],
+        }}
+        label="Few chains"
       />
 
       <Variant
         contextFilters={{
           contractAddresses: ["0x1E51e33F9838A5a043E099C60409f62aA564272f"],
         }}
-        label="Contract addresses set"
+        label="1 contract"
+      />
+
+      <Variant
+        contextFilters={{
+          contractAddresses: [
+            "0x1E51e33F9838A5a043E099C60409f62aA564272f",
+            "0xF61c8d5492139b40af09bDB353733d5F0a348aCf",
+          ],
+        }}
+        label="Few contracts"
+      />
+
+      <Variant
+        contextFilters={{
+          walletAddresses: ["0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37"],
+        }}
+        label="1 wallet"
+      />
+
+      <Variant
+        contextFilters={{
+          walletAddresses: [
+            "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
+            "0x83Dd93fA5D8343094f850f90B3fb90088C1bB425",
+          ],
+        }}
+        label="Few wallets"
+      />
+
+      <Variant
+        contextFilters={{
+          chainIds: ["137", "10", "421614"],
+          contractAddresses: [
+            "0x1E51e33F9838A5a043E099C60409f62aA564272f",
+            "0xF61c8d5492139b40af09bDB353733d5F0a348aCf",
+          ],
+          walletAddresses: [
+            "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
+            "0x83Dd93fA5D8343094f850f90B3fb90088C1bB425",
+          ],
+        }}
+        label="chains + wallets + contracts"
       />
       <Toaster richColors />
     </div>

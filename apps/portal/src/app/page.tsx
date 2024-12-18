@@ -8,12 +8,12 @@ import {
   ConnectOverviewIcon,
   ContractDeployIcon,
   ContractExploreIcon,
-  ContractInteractIcon,
   ContractModularContractIcon,
   ContractPublishIcon,
   DotNetIcon,
   InfraEngineIcon,
   InfraInsightIcon,
+  NebulaIcon,
   PayIcon,
   ReactIcon,
   TypeScriptIcon,
@@ -45,6 +45,7 @@ export default function Page() {
       <EngineSection />
       <ContractsSection />
       <InsightSection />
+      <NebulaSection />
     </main>
   );
 }
@@ -315,12 +316,6 @@ function ContractsSection() {
           icon={ContractModularContractIcon}
         />
         <ArticleCardIndex
-          title="Interact"
-          description="Add smart contract interactions in your app"
-          icon={ContractInteractIcon}
-          href="/contracts"
-        />
-        <ArticleCardIndex
           title="Explore"
           description="Ready-to-deploy contracts"
           href="/contracts/explore/overview"
@@ -365,6 +360,23 @@ function InsightSection() {
           title="Insight"
           description="Query, transform and analyze blockchain data"
           icon={InfraInsightIcon}
+        />
+      </Grid>
+    </section>
+  );
+}
+
+function NebulaSection() {
+  return (
+    <section className="my-12">
+      <SectionTitle id="nebula" title="Nebula" />
+      <div className="mb-6 border-b" />
+      <Grid>
+        <ArticleCardIndex
+          href="/nebula"
+          title="Nebula"
+          description=""
+          icon={NebulaIcon}
         />
       </Grid>
     </section>

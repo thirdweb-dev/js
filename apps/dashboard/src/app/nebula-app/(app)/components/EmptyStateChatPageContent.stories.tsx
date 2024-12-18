@@ -29,14 +29,7 @@ export const Mobile: Story = {
 function Story() {
   return (
     <div className="container flex max-w-[800px] grow flex-col justify-center overflow-hidden">
-      <EmptyStateChatPageContent
-        config={{
-          mode: "client",
-          signer_wallet_address: "xxxxx",
-        }}
-        sendMessage={() => {}}
-        updateConfig={() => {}}
-      />
+      <EmptyStateChatPageContent sendMessage={() => {}} />
     </div>
   );
 }

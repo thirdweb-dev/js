@@ -45,11 +45,6 @@ export default async function Layout(props: {
             path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets/users`,
             exactMatch: true,
           },
-          {
-            name: "Configuration",
-            path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets/config`,
-            exactMatch: true,
-          },
         ]}
       />
 

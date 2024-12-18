@@ -2,11 +2,16 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
-import { useMemo } from "react";
-import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
+import { useEffect, useMemo } from "react";
+import {
+  ThirdwebProvider,
+  useActiveAccount,
+  useConnectionManager,
+} from "thirdweb/react";
 import { CustomConnectWallet } from "../@3rdweb-sdk/react/components/connect-wallet";
 import { PosthogIdentifier } from "../components/wallets/PosthogIdentifier";
 import { isSanctionedAddress } from "../data/eth-sanctioned-addresses";
+import { useAllChainsData } from "../hooks/chains/allChains";
 import { SyncChainStores } from "../stores/chainStores";
 import { TWAutoConnect } from "./components/autoconnect";
 
@@ -17,6 +22,7 @@ export function AppRouterProviders(props: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <SyncChainStores />
       <ThirdwebProvider>
+        <SyncChainDefinitionsToConnectionManager />
         <TWAutoConnect />
         <PosthogIdentifier />
         <ThemeProvider
@@ -32,6 +38,23 @@ export function AppRouterProviders(props: { children: React.ReactNode }) {
       </ThirdwebProvider>
     </QueryClientProvider>
   );
+}
+
+function SyncChainDefinitionsToConnectionManager() {
+  const { allChainsV5 } = useAllChainsData();
+  const connectionManager = useConnectionManager();
+
+  // whenever user updates chains, update connection manager store
+  // This is the same pattern used in ConnectButton for updating the connection manager when props.chain or props.chains change
+  // this is added to root layout because ConnectButton is not always rendered in the page
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (allChainsV5.length > 0) {
+      connectionManager.defineChains(allChainsV5);
+    }
+  }, [allChainsV5, connectionManager]);
+
+  return null;
 }
 
 const SanctionedAddressesChecker = ({

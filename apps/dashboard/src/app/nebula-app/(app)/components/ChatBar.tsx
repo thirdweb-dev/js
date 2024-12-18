@@ -5,11 +5,8 @@ import { AutoResizeTextarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ArrowUpIcon, CircleStopIcon } from "lucide-react";
 import { useState } from "react";
-import type { ExecuteConfig } from "../api/types";
 
 export function Chatbar(props: {
-  updateConfig: (config: ExecuteConfig) => void;
-  config: ExecuteConfig;
   sendMessage: (message: string) => void;
   isChatStreaming: boolean;
   abortChatStream: () => void;
