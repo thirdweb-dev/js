@@ -114,7 +114,6 @@ export function useReadContract<
     queryOptions?: PickedQueryOptions;
   },
 ) {
-  console.error("extensionOrOptions: ", extensionOrOptions);
   // extension case
   if (typeof extensionOrOptions === "function") {
     if (!options) {
@@ -123,8 +122,6 @@ export function useReadContract<
       ) as never;
     }
     const { queryOptions, contract, ...params } = options;
-
-    console.error("contract: ", contract);
 
     const query = defineQuery({
       queryKey: [

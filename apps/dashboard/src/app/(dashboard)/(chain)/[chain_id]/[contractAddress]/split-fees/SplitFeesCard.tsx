@@ -27,18 +27,22 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { InfoIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
+import type { ThirdwebContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
+import ConfigureSplit from "./ConfigureSplitFees";
 
 export function SplitFeesCard(props: {
   splitWallet: string;
-  recipients: string[];
-  allocations: bigint[];
+  recipients: readonly string[];
+  allocations: readonly bigint[];
   controller: string;
-  referenceContract: string;
+  referenceContract: ThirdwebContract;
 }) {
   const account = useActiveAccount();
   const isController = props.controller === account?.address;
+  const router = useRouter();
 
   const columns: ColumnDef<{ allocation: number; recipient: string }>[] = [
     {
@@ -172,9 +176,15 @@ export function SplitFeesCard(props: {
       </div>
 
       <div className="flex flex-row justify-end gap-3 border-border border-t p-4 lg:p-6">
-        <Button size="sm" className="min-w-24 gap-2" disabled={!isController}>
-          Update
-        </Button>
+        <ConfigureSplit
+          splitWallet={props.splitWallet}
+          referenceContract={props.referenceContract}
+          postSplitConfigure={(_splitWallet: string) => router.refresh()}
+        >
+          <Button size="sm" className="min-w-24 gap-2" disabled={!isController}>
+            Update
+          </Button>
+        </ConfigureSplit>
       </div>
     </section>
   );

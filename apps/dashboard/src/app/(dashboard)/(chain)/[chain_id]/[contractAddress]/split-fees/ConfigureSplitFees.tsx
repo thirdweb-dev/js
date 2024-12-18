@@ -1,11 +1,10 @@
-"use client";
-
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,7 +25,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { Alert, AlertDescription, AlertTitle } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -52,19 +50,21 @@ type Recipient = {
 
 function ConfigureSplit(props: {
   children: React.ReactNode;
-  isNewSplit: boolean;
+  isNewSplit?: boolean;
   splitWallet?: string;
   referenceContract: ThirdwebContract;
-  postSplitConfigure?: (splitWallet: string) => void;
+  postSplitConfigure?: (splitWallet: string) => Promise<void> | void;
 }) {
   const activeAccount = useActiveAccount();
   const [open, setOpen] = useState(false);
 
+  console.log("reference contract: ", props.referenceContract);
   const splitFeesCore = getContract({
     address: splitFeesCoreAddress,
     client: props.referenceContract.client,
     chain: props.referenceContract.chain,
   });
+  console.log("gets here");
 
   const split = useReadContract({
     contract: splitFeesCore,
@@ -147,6 +147,7 @@ function ConfigureSplit(props: {
       transaction,
       account: activeAccount,
     });
+    console.log("receipt for create split: ", receipt);
 
     const decodedEvent = parseEventLogs({
       events: [
@@ -164,9 +165,10 @@ function ConfigureSplit(props: {
     }
 
     if (props.postSplitConfigure) {
-      props.postSplitConfigure(
-        (decodedEvent[0]?.args as { splitWallet: string }).splitWallet,
-      );
+      const { splitWallet } = decodedEvent[0]?.args as { splitWallet: string };
+      console.log("split wallet: ", splitWallet);
+      await props.postSplitConfigure(splitWallet);
+      console.log("post split configured");
     }
 
     split.refetch();
@@ -212,6 +214,11 @@ function ConfigureSplit(props: {
     });
     console.log("transaction sent");
 
+    if (props.postSplitConfigure) {
+      await props.postSplitConfigure("");
+      console.log("post split configured");
+    }
+
     split.refetch();
     setOpen(false);
   };
@@ -247,7 +254,7 @@ function ConfigureSplit(props: {
 }
 
 // TODO: place this somwhere appropriate
-const splitFeesCoreAddress = "0x7d6Ba9e63eFb30c42b25db50dBD3C2F0a4578Ba2";
+const splitFeesCoreAddress = "0x640a2bb44A4c3644B416aCA8e60C67B11E41C8DF";
 
 const formSchema = z
   .object({
@@ -350,7 +357,10 @@ function ConfigureSplitUI(props: {
     const recipients = values.recipients.map((r) => r.address);
     console.log("recipients in submit: ", recipients);
     console.log("is new split: ", props.isNewSplit);
-    (props.isNewSplit ? createSplitMutation : updateSplitMutation).mutateAsync({
+    await (props.isNewSplit
+      ? createSplitMutation
+      : updateSplitMutation
+    ).mutateAsync({
       recipients,
       allocations,
       controller: values.controller,

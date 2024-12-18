@@ -77,6 +77,7 @@ const positiveIntegerRegex = /^[0-9]\d*$/;
 
 const splitWalletBytecode =
   "0x3d3d3d3d363d3d37363d7341dc1be6e4c7698f46268251b88b1f789aa9df265af43d3d93803e602a57fd5bf3";
+("0x3d3d3d3d363d3d37363d73207d879bae9cbf900d5e1eec04019613cedc25455af43d3d93803e602a57fd5bf3");
 
 function ClaimableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;

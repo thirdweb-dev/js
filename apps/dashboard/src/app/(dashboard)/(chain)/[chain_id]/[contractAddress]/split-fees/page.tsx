@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { getContractEvents, prepareEvent } from "thirdweb";
+import { getContractEvents, prepareEvent, readContract } from "thirdweb";
 import { type FetchDeployMetadataResult, getContract } from "thirdweb/contract";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
@@ -14,7 +14,7 @@ export function getModuleInstallParams(mod: FetchDeployMetadataResult) {
 }
 
 // TODO: place this somwhere appropriate
-const splitFeesCoreAddress = "0x7d6Ba9e63eFb30c42b25db50dBD3C2F0a4578Ba2";
+const splitFeesCoreAddress = "0x640a2bb44A4c3644B416aCA8e60C67B11E41C8DF";
 
 export default async function Page(props: {
   params: Promise<{
@@ -56,22 +56,68 @@ export default async function Page(props: {
     blockRange: 123456n,
   });
 
-  const splits = events.map((e) => {
-    const args = e.args as {
-      splitWallet: string;
-      recipients: string[];
-      allocations: bigint[];
-      controller: string;
-      referenceContract: string;
-    };
-    return {
-      splitWallet: args.splitWallet,
-      recipients: args.recipients,
-      allocations: args.allocations,
-      controller: args.controller,
-      referenceContract: args.referenceContract,
-    };
-  });
+  const splits = await Promise.all(
+    events
+      .filter(
+        (e) =>
+          (e.args as { referenceContract: string }).referenceContract ===
+          contract.address,
+      )
+      .map(async (e) => {
+        const split = await readContract({
+          contract: splitFeesCore,
+          method: {
+            type: "function",
+            name: "getSplit",
+            inputs: [
+              {
+                name: "_splitWallet",
+                type: "address",
+                internalType: "address",
+              },
+            ],
+            outputs: [
+              {
+                name: "",
+                type: "tuple",
+                internalType: "struct Split",
+                components: [
+                  {
+                    name: "controller",
+                    type: "address",
+                    internalType: "address",
+                  },
+                  {
+                    name: "recipients",
+                    type: "address[]",
+                    internalType: "address[]",
+                  },
+                  {
+                    name: "allocations",
+                    type: "uint256[]",
+                    internalType: "uint256[]",
+                  },
+                  {
+                    name: "totalAllocation",
+                    type: "uint256",
+                    internalType: "uint256",
+                  },
+                ],
+              },
+            ],
+            stateMutability: "view",
+          },
+          params: [(e.args as { splitWallet: string }).splitWallet],
+        });
+        return {
+          splitWallet: (e.args as { splitWallet: string }).splitWallet,
+          recipients: split.recipients,
+          allocations: split.allocations,
+          controller: split.controller,
+          referenceContract: contract.address,
+        };
+      }),
+  );
   console.log("splits: ", splits);
 
   return (

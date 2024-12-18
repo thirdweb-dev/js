@@ -9,8 +9,8 @@ import { SplitFeesCard } from "./SplitFeesCard";
 
 type Split = {
   splitWallet: string;
-  recipients: string[];
-  allocations: bigint[];
+  recipients: readonly string[];
+  allocations: readonly bigint[];
   controller: string;
   referenceContract: string;
 };
@@ -46,7 +46,11 @@ function SplitFees(props: {
       {tab === "claimFeesCard" && (
         <>
           {props.splits.map((split) => (
-            <SplitFeesCard {...split} key={split.splitWallet} />
+            <SplitFeesCard
+              {...split}
+              referenceContract={props.coreContract}
+              key={split.splitWallet}
+            />
           ))}
 
           <ConfigureSplit isNewSplit referenceContract={props.coreContract}>

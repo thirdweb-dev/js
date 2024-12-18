@@ -2,6 +2,7 @@
 
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   type ColumnDef,
   flexRender,
@@ -29,6 +30,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useAllChainsData } from "hooks/chains/allChains";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { InfoIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -41,6 +43,8 @@ import {
   prepareContractCall,
   readContract,
   sendAndConfirmTransaction,
+  toEther,
+  toUnits,
 } from "thirdweb";
 import { getBalance, getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { useActiveAccount } from "thirdweb/react";
@@ -48,8 +52,8 @@ import { CurrencySelector } from "../modules/components/CurrencySelector";
 
 export function ClaimFeesCard(props: {
   splitWallet: string;
-  recipients: string[];
-  allocations: bigint[];
+  recipients: readonly string[];
+  allocations: readonly bigint[];
   controller: string;
   splitFeesCore: ThirdwebContract;
 }) {
@@ -127,6 +131,7 @@ export function ClaimFeesCard(props: {
       return claimAmounts;
     },
   });
+  console.log("claimAmounts: ", claimAmounts.data);
 
   const claim = async (recipient: string) => {
     if (!account) {
@@ -137,10 +142,25 @@ export function ClaimFeesCard(props: {
       client: props.splitFeesCore.client,
       chain: props.splitFeesCore.chain,
     });
-    const { value: splitWalletBalance } = await getBalance({
-      contract: splitWallet,
-      address: currencyAddress,
-    });
+    console.log("splitWallet: ", splitWallet);
+    let splitWalletBalance: bigint;
+    if (currencyAddress === NATIVE_TOKEN_ADDRESS) {
+      const rpcRequest = getRpcClient({
+        client: props.splitFeesCore.client,
+        chain: props.splitFeesCore.chain,
+      });
+      splitWalletBalance = await eth_getBalance(rpcRequest, {
+        address: props.splitWallet,
+      });
+    } else {
+      const { value } = await getBalance({
+        contract: props.splitFeesCore,
+        address: currencyAddress,
+      });
+      splitWalletBalance = value;
+    }
+    console.log("split balance in claim: ", splitWalletBalance);
+
     if (splitWalletBalance > 0n) {
       const distributeTx = prepareContractCall({
         contract: props.splitFeesCore,
@@ -164,6 +184,16 @@ export function ClaimFeesCard(props: {
     });
   };
 
+  const claimNotifications = useTxNotifications(
+    "Claim successful",
+    "Claim failed",
+  );
+  const claimMutation = useMutation({
+    mutationFn: claim,
+    onSuccess: claimNotifications.onSuccess,
+    onError: claimNotifications.onError,
+  });
+
   const columns = useMemo<
     ColumnDef<{ recipient: string; claimable: bigint; claim: string }>[]
   >(
@@ -182,15 +212,15 @@ export function ClaimFeesCard(props: {
           )
             return null;
           if (currencyAddress === NATIVE_TOKEN_ADDRESS) {
-            return (
-              <p>{(row.getValue("claimable") as bigint) / 10n ** 18n} ETH</p>
-            );
+            return <p>{toEther(row.getValue("claimable") as bigint)} ETH</p>;
           }
 
           return (
             <p>
-              {(row.getValue("claimable") as bigint) /
-                10n ** BigInt(currencyMetadata.data?.decimals || 0n)}{" "}
+              {toUnits(
+                row.getValue("claimable"),
+                currencyMetadata.data?.decimals || 18,
+              )}{" "}
               {currencyMetadata.data?.symbol}
             </p>
           );
@@ -202,16 +232,19 @@ export function ClaimFeesCard(props: {
         cell: ({ row }) => {
           return (
             <Button
-              onClick={() => claim(row.getValue("recipient"))}
-              disabled={row.getValue("claimable") === 0n}
+              onClick={() => claimMutation.mutate(row.getValue("recipient"))}
+              disabled={
+                row.getValue("claimable") === 0n || claimMutation.isPending
+              }
             >
               Claim
+              {claimMutation.isPending && <Spinner className="ml-2 h-4 w-4" />}
             </Button>
           );
         },
       },
     ],
-    [],
+    [currencyAddress, currencyMetadata.data],
   );
 
   const data = useMemo(() => {
