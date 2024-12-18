@@ -85,7 +85,7 @@ type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
  */
 type LogTopicType<
   TPrimitiveType = ox__Hex.Hex,
-  TTopic extends ox__Log = ox__Log,
+  TTopic extends ox__Log["topics"][0] = ox__Log["topics"][0],
 > = TTopic extends ox__Hex.Hex
   ? TPrimitiveType
   : TTopic extends ox__Hex.Hex[]
