@@ -52,6 +52,9 @@ import xaiBanner from "./temp-assets/xai-banner.jpg";
 import zytronBanner from "./temp-assets/zytronBanner.png";
 import zytronCTA from "./temp-assets/zytronCTA.jpg";
 
+import fhenixBanner from "./temp-assets/fhenixBanner.png";
+import fhenixCTA from "./temp-assets/fhenixCTA.png";
+
 // END TEMPORARY
 
 import { API_SERVER_URL } from "@/constants/env";
@@ -367,6 +370,18 @@ const chainMetaRecord = {
       backgroundImageUrl: etherlinkCTA.src,
       title: "The fast, fair and (nearly) free L2",
       buttonLink: "https://www.etherlink.com",
+      buttonText: "Learn More",
+    },
+  },
+  //fhenix Nitrogen
+  8008148: {
+    headerImgUrl: fhenixBanner.src,
+    about:
+      "Discover Fhenix—the first-ever FHE-based blockchain. Fhenix is an L2 built on Ethereum that brings powerful Fully Homomorphic Encryption (FHE) into the EVM space. This technology enables confidential computation on-chain, allowing users to explore a new generation of use cases.",
+    cta: {
+      backgroundImageUrl: fhenixCTA.src,
+      title: "Onchain confidentiality powered by the first FHE L2 Rollup",
+      buttonLink: "https://thirdweb.com/fhenix-nitrogen",
       buttonText: "Learn More",
     },
   },
