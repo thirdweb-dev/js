@@ -1,0 +1,59 @@
+import { Callout, DocImage, createMetadata, Steps, Step } from "@doc";
+import WalletconnectCreate from "../assets/walletconnect-create.png";
+import WalletconnectUrl from "../assets/walletconnect-url.png";
+import WalletconnectWallet from "../assets/walletconnect-wallet.png";
+import WalletconnectGuide from "../assets/walletconnect-guide.png";
+
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Ecosystem Wallet",
+		icon: "wallets",
+	},
+	title: "Register with WalletConnect - Ecosystem Wallet | thirdweb",
+	description: "Ecosystem Wallet - Own your own web3 identity stack",
+});
+
+# How to Register Your thirdweb Ecosystem Wallet with WalletConnect (now Reown)
+
+**Note:** WalletConnect Inc. is now Reown. [Read more here](https://reown.com/blog/walletconnect-is-now-reown).  
+
+Registering your Ecosystem Wallet with Reown allows it to appear in the WalletConnect Explorer for seamless integration with platforms like OpenSea and other third-party applications.
+
+<Steps>
+<Step title="Create a New Project in Reown">
+Visit the [Reown Dashboard](https://reown.com/) and select **"Create Project"**  
+- Enter your [Ecosystem Wallet's Explorer](https://thirdweb.com/team/~/~/ecosystem/) page URL as the **Homepage URL** and proceed.  
+- Choose **Wallet** as the project type and select **"Create"**
+</Step>
+
+<DocImage src={WalletconnectCreate} />
+<DocImage src={WalletconnectUrl} />
+<DocImage src={WalletconnectWallet} />
+
+<Step title="Complete Your Project Details">
+Navigate to the **WalletGuide** tab and fill out the following form:
+- **Wallet Name:** Provide your wallet's name.  
+- **Wallet Category:** Select **"Web App Wallets"**  
+- **Web App URL:** Use your Ecosystem Wallet's Explorer page URL.  
+- **Supported Chains:** Choose Ethereum and any other chains your wallet supports.  
+- **Logo:** Upload your wallet’s logo (this will appear on the WalletConnect Explorer).  
+- **Testing Instructions:** Provide clear testing instructions for the Reown team. For example: *"Log in via the specified URL and select an authentication method."*  
+</Step>
+
+<DocImage src={WalletconnectGuide} />
+
+<Step title="Submit for Review">
+Once you've completed the form, click **"Submit Review"**  
+- After approval, your wallet will appear live on the WalletConnect Explorer.
+</Step>
+
+<Step title="Verify Your Integration">
+Visit a platform like OpenSea and use WalletConnect to log in.  
+- Select your registered wallet from the list and authenticate.  
+- Your wallet should now seamlessly connect, allowing you to interact with the platform.
+</Step>
+</Steps>
+
+By following these steps, your branded Ecosystem Wallet will be accessible across all WalletConnect-enabled (Reown) applications.
+
