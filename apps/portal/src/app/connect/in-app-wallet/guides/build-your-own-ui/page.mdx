@@ -135,9 +135,9 @@ const preLogin = async (email: string) => {
 	});
 };
 
-const handleLogin = async (email: string, verificationCode: string) => {
+const handleLogin = (email: string, verificationCode: string) => {
 	// verify email and connect
-	await connect(() => {
+	connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
